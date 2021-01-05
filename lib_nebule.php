@@ -3,11 +3,10 @@
 $nebuleName			= 'library';
 $nebuleSurname		= 'nebule/library';
 $nebuleDescription	= 'Library of functions for nebule in php object-oriented.';
-					// Bibliothèque des fonctions de nebule en php orienté objet.
-$nebuleLibVersion	= '020200315';
-$nebuleLibLevel		= 'Developpement'; // Experimental | Developpement | Testing | Production
-$nebuleLicence		= 'GNU GPL 2010-2020';
 $nebuleAuthor		= 'Projet nebule';
+$nebuleLibLevel		= 'Experimental'; // Experimental | Developpement | Testing | Production
+$nebuleLibVersion	= '02020121';
+$nebuleLicence		= 'GNU GPL 2010-2020';
 $nebuleWebsite		= 'www.nebule.org';
 // ----------------------------------------------------------------------------------------
 
@@ -18,15 +17,14 @@ $nebuleWebsite		= 'www.nebule.org';
  /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
 ------------------------------------------------------------------------------------------
 
-    .     [FR] Toute modification de ce code entrainera une modification de son empreinte
-   / \           et entrainera donc automatiquement son invalidation !
-  / V \   [EN] Any changes to this code will cause a chage in its footprint and therefore
- /__°__\         automatically result in its invalidation!
-    N     [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
-    N            tanto lugar automáticamente a su anulación!
-    N
-    N                                                                       Projet nebule
-----N-------------------------------------------------------------------------------------
+ [FR] Toute modification de ce code entrainera une modification de son empreinte
+      et entrainera donc automatiquement son invalidation !
+ [EN] Any changes to this code will cause a change in its footprint and therefore
+      automatically result in its invalidation!
+ [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
+      tanto lugar automáticamente a su anulación!
+
+------------------------------------------------------------------------------------------
  /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
 ------------------------------------------------------------------------------------------
 */
@@ -35,6 +33,10 @@ $nebuleWebsite		= 'www.nebule.org';
 
 // Initialisation des logs de la librairie.
 closelog();
+if ( ! isset($bootstrapLogSession) )
+{
+    $bootstrapLogSession = bin2hex(openssl_random_pseudo_bytes(6,$false));
+}
 openlog($nebuleName.'/'.$bootstrapLogSession,LOG_NDELAY,LOG_USER);
 syslog(LOG_INFO, 'LogT=0 LogTabs='.(microtime(true)).' Loading nebule library');
 
@@ -44,7 +46,7 @@ syslog(LOG_INFO, 'LogT=0 LogTabs='.(microtime(true)).' Loading nebule library');
 $applicationName		= 'defolt';
 $applicationSurname		= 'nebule/defolt';
 $applicationDescription = 'Default web page for servers without interactive application.';
-						// Page web par défaut pour les serveurs sans application interactive.
+// Page web par défaut pour les serveurs sans application interactive.
 $applicationVersion		= $nebuleLibVersion;
 $applicationLevel		= $nebuleLibLevel;
 $applicationLicence		= $nebuleLicence;
@@ -113,6 +115,7 @@ class nebule
 	const DEFAULT_PERMIT_WRITE_CURRENCY						= true;
 	const DEFAULT_PERMIT_CREATE_CURRENCY					= false;
 	const DEFAULT_PERMIT_WRITE_TRANSACTION					= true;
+	const DEFAULT_PERMIT_OBFUSCATED_TRANSACTION				= false;
 	const DEFAULT_PERMIT_SYNCHRONIZE_APPLICATIONS			= false;
 	const DEFAULT_PERMIT_PUBLIC_SYNCHRONIZE_APPLICATIONS	= false;
 	const DEFAULT_PERMIT_PUBLIC_CREATE_ENTITY				= false;
@@ -800,6 +803,7 @@ class nebule
 			'permitWriteCurrency',
 			'permitCreateCurrency',
 			'permitWriteTransaction',
+			'permitObfuscatedTransaction',
 			'permitSynchronizeApplication',
 			'permitPublicSynchronizeApplication',
 			'permitDeleteObjectOnUnknowHash',
@@ -903,6 +907,7 @@ class nebule
 			'permitWriteCurrency'					=> 'Currencies',
 			'permitCreateCurrency'					=> 'Currencies',
 			'permitWriteTransaction'				=> 'Currencies',
+			'permitObfuscatedTransaction'			=> 'Currencies',
 			'permitSynchronizeApplication'			=> 'Applications',
 			'permitPublicSynchronizeApplication'	=> 'Applications',
 			'permitDeleteObjectOnUnknowHash'		=> 'Objects',
@@ -985,6 +990,7 @@ class nebule
 			'permitWriteCurrency'					=> 'boolean',
 			'permitCreateCurrency'					=> 'boolean',
 			'permitWriteTransaction'				=> 'boolean',
+			'permitObfuscatedTransaction'			=> 'boolean',
 			'permitSynchronizeApplication'			=> 'boolean',
 			'permitPublicSynchronizeApplication'	=> 'boolean',
 			'permitDeleteObjectOnUnknowHash'		=> 'boolean',
@@ -1063,6 +1069,7 @@ class nebule
 			'permitWriteCurrency'					=> true,
 			'permitCreateCurrency'					=> true,
 			'permitWriteTransaction'				=> true,
+			'permitObfuscatedTransaction'			=> true,
 			'permitSynchronizeApplication'			=> true,
 			'permitPublicSynchronizeApplication'	=> true,
 			'permitDeleteObjectOnUnknowHash'		=> false,
@@ -1140,6 +1147,7 @@ class nebule
 			'permitWriteCurrency'					=> nebule::DEFAULT_PERMIT_WRITE_CURRENCY,
 			'permitCreateCurrency'					=> nebule::DEFAULT_PERMIT_CREATE_CURRENCY,
 			'permitWriteTransaction'				=> nebule::DEFAULT_PERMIT_WRITE_TRANSACTION,
+			'permitObfuscatedTransaction'			=> nebule::DEFAULT_PERMIT_OBFUSCATED_TRANSACTION,
 			'permitSynchronizeApplication'			=> nebule::DEFAULT_PERMIT_SYNCHRONIZE_APPLICATIONS,
 			'permitPublicSynchronizeApplication'	=> nebule::DEFAULT_PERMIT_PUBLIC_SYNCHRONIZE_APPLICATIONS,
 			'permitDeleteObjectOnUnknowHash'		=> nebule::DEFAULT_PERMIT_DELETE_OBJECT_ON_UNKNOW_HASH,
@@ -1217,6 +1225,7 @@ class nebule
 			'permitWriteCurrency'					=> 'useful',
 			'permitCreateCurrency'					=> 'useful',
 			'permitWriteTransaction'				=> 'useful',
+			'permitObfuscatedTransaction'			=> 'careful',
 			'permitSynchronizeApplication'			=> 'careful',
 			'permitPublicSynchronizeApplication'	=> 'careful',
 			'permitDeleteObjectOnUnknowHash'		=> 'critical',
@@ -1295,6 +1304,7 @@ class nebule
 			'permitWriteCurrency'					=> 'The switch to permit currencies writing.',
 			'permitCreateCurrency'					=> 'The switch to permit currencies creation.',
 			'permitWriteTransaction'				=> 'The switch to permit transactions writing.',
+			'permitObfuscatedTransaction'			=> 'The switch to permit transactions on obfuscated links.',
 			'permitSynchronizeApplication'			=> 'The switch to permit to synchronize (update) applications from other localisations.',
 			'permitPublicSynchronizeApplication'	=> 'The switch to permit to synchronize (update) applications by anyone from other localisations.',
 			'permitDeleteObjectOnUnknowHash'		=> 'Permit erasing object if not valid hash type can be found.',
@@ -2499,7 +2509,7 @@ class nebule
 			// Nettoie un objet.
 			if ( isset($this->_cacheObjects[$id]) )
 			{
-				$this->_metrology->addLog(__METHOD__.' cache_supp_obj '.$id, Metrology::LOG_LEVEL_DEBUG); // Log
+				$this->_metrology->addLog(__METHOD__.' cache_supp_obj='.$id, Metrology::LOG_LEVEL_DEBUG); // Log
 				unset($this->_cacheObjects[$id]);
 			}
 			
@@ -3281,10 +3291,8 @@ class nebule
 	 * Attention, c'est un lien !
 	 *
 	 * @desc 020200315
-	 * @param string $id
-	 * @param array $param
-	 * @param boolean $protect
-	 * @param boolean $obfuscated
+	 * @param string $link
+	 * @param string $version
 	 * @return Transaction
 	 */
 	public function newTransaction($link, $version='UNKNOWN')
@@ -3326,7 +3334,7 @@ class nebule
 	 * Supprime le cache d'une transaction.
 	 *
 	 * @desc 020200315
-	 * @param string $id
+	 * @param string $link
 	 * @return boolean
 	 */
 	public function removeCacheTransaction($link)
@@ -3474,6 +3482,7 @@ class nebule
 	 * Retire le cache d'une monnaie.
 	 * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture de la monnaie.
 	 *
+	 * @desc 020200322
 	 * @param $id string
 	 * @return boolean
 	 */
@@ -3495,7 +3504,7 @@ class nebule
 				&& isset($this->_cacheCurrencies[$id])
 			)
 		{
-			unset($this->_cacheCurrencies[$id], $this->_cacheCurrencies[$id]);
+			unset($this->_cacheCurrencies[$id], $this->_cacheDateInsertion[$id]);
 		}
 		return true;
 	}
@@ -3504,6 +3513,7 @@ class nebule
 	 * Retire le cache d'un sac de jetons.
 	 * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture du sac de jetons.
 	 *
+	 * @desc 020200322
 	 * @param $id string
 	 * @return boolean
 	 */
@@ -3525,7 +3535,7 @@ class nebule
 				&& isset($this->_cacheTokenPools[$id])
 			)
 		{
-			unset($this->_cacheTokenPools[$id], $this->_cacheTokenPools[$id]);
+			unset($this->_cacheTokenPools[$id], $this->_cacheDateInsertion[$id]);
 		}
 		return true;
 	}
@@ -3534,6 +3544,7 @@ class nebule
 	 * Retire le cache d'un jeton.
 	 * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture du jeton.
 	 *
+	 * @desc 020200322
 	 * @param $id string
 	 * @return boolean
 	 */
@@ -3555,7 +3566,7 @@ class nebule
 				&& isset($this->_cacheTokens[$id])
 			)
 		{
-			unset($this->_cacheTokens[$id], $this->_cacheTokens[$id]);
+			unset($this->_cacheTokens[$id], $this->_cacheDateInsertion[$id]);
 		}
 		return true;
 	}
@@ -3564,6 +3575,7 @@ class nebule
 	 * Retire le cache d'un poretfeuille.
 	 * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture du poretfeuille.
 	 *
+	 * @desc 020200322
 	 * @param $id string
 	 * @return boolean
 	 */
@@ -3585,7 +3597,7 @@ class nebule
 				&& isset($this->_cacheWallets[$id])
 			)
 		{
-			unset($this->_cacheWallets[$id], $this->_cacheWallets[$id]);
+			unset($this->_cacheWallets[$id], $this->_cacheDateInsertion[$id]);
 		}
 		return true;
 	}
@@ -3594,28 +3606,29 @@ class nebule
 	 * Retire le cache d'une transaction.
 	 * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture de la transaction.
 	 *
-	 * @param $id string
+	 * @desc 020200322
+	 * @param $link string
 	 * @return boolean
 	 */
-	public function unsetTransactionCache($id)
+	public function unsetTransactionCache($link)
 	{
-		if ( is_a($id, 'Object') )
+		if ( is_a($link, 'Link') )
 		{
-			$id = $id->getID();
+			$link = $link->getID();
 		}
 		
-		if ( $id == ''
-				|| $id == '0'
+		if ( $link == ''
+				|| $link == '0'
 			)
 		{
 			return false;
 		}
 		
 		if ( ! $this->_flushCache
-				&& isset($this->_cacheTransactions[$id])
+				&& isset($this->_cacheTransactions[$link])
 			)
 		{
-			unset($this->_cacheTransactions[$id], $this->_cacheTransactions[$id]);
+			unset($this->_cacheTransactions[$link], $this->_cacheDateInsertion[$link]);
 		}
 		return true;
 	}
@@ -6668,8 +6681,9 @@ class nebule
 	 * Détermine si c'est un objet.
 	 * Retourne une instance appropriée en fonction du type d'objet.
 	 *
-	 * @param string|Object|Conversation|Group|Entity|Currency|TokenPool|Token|Transaction|Wallet $id
-	 * @return Object|Conversation|Group|Entity|Currency|TokenPool|Token|Transaction|Wallet
+	 * @desc 020200322
+	 * @param string|Object|Conversation|Group|Entity|Currency|TokenPool|Token|Wallet $id
+	 * @return Object|Conversation|Group|Entity|Currency|TokenPool|Token|Wallet
 	 */
 	public function convertIdToTypedObjectInstance($id)
 	{
@@ -6681,7 +6695,6 @@ class nebule
 				|| is_a($id, 'TokenPool')
 				|| is_a($id, 'Token')
 				|| is_a($id, 'Wallet')
-				|| is_a($id, 'Transaction')
 			)
 		{
 			return $id;
@@ -6697,14 +6710,10 @@ class nebule
 		}
 		else
 		{
-			$instance		= $this->_nebuleInstance->newObject($id);
+			$instance = $this->_nebuleInstance->newObject($id);
 			if ( $instance->getIsEntity($social) )
 			{
 				$instance = $this->_nebuleInstance->newEntity($id);
-			}
-			if ( $instance->getIsTransaction($social) )
-			{
-				$instance = $this->_nebuleInstance->newTransaction($id);
 			}
 			elseif ( $instance->getIsWallet($social) )
 			{
@@ -6826,6 +6835,7 @@ class Object
 	/**
 	 * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
 	 * 
+	 * @desc 020200322
 	 * @var array:string
 	 */
 	const SESSION_SAVED_VARS = array(
@@ -6854,7 +6864,6 @@ class Object
 			'_isTokenPool',
 			'_isToken',
 			'_isWallet',
-			'_isTransaction',
 	);
 	
 	/**
@@ -8606,34 +8615,6 @@ class Object
 		$this->_isWallet = $this->getHaveProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, nebule::REFERENCE_NEBULE_OBJET_MONNAIE_PORTEFEUILLE, $socialClass);
 		
 		return $this->_isWallet;
-	}
-
-
-
-	/**
-	 * Variable si l'objet est marqué comme une transaction.
-	 * @var boolean
-	 */
-	protected $_isTransaction = false;
-	
-	/**
-	 * Lit si l'objet est une transaction.
-	 * 
-	 * @return boolean
-	 */
-	public function getIsTransaction($socialClass = 'myself')
-	{
-		$this->_metrology->addLog(__METHOD__.' '.$this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
-		
-		// Si déjà marqué, donne le résultat tout de suite.
-		if ( $this->_isTransaction )
-		{
-			return true;
-		}
-		
-		$this->_isTransaction = $this->getHaveProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, nebule::REFERENCE_NEBULE_OBJET_MONNAIE_TRANSACTION, $socialClass);
-		
-		return $this->_isTransaction;
 	}
 
 
@@ -19436,6 +19417,11 @@ class Currency extends Object
 					<li><a href="#omjtv">OMJCTV / Transfert de valeur</a></li>
 					</ul>
 				</li>
+				<li><a href="#omjm">OMJM / Modes de transfert</a>
+					<ul>
+					<li><a href="#omjmlns">OMJMLNS / Mode LNS</a></li>
+					</ul>
+				</li>
 				<li><a href="#omjr">OMJR / Réservation</a></li>
 				<li><a href="#omjo">OMJO / Oubli</a></li>
 				</ul>
@@ -20022,7 +20008,7 @@ VAL:100
 
 <h5 id="omjcptrs">OMJCPTRS / TRS</h5>
 <p>Liste des méthodes de transaction supportées.</p>
-<p>Le code <code>LNS</code> désigne la méthode de base avec un lien (L) matérialisant une transaction et imposant un jeton non sécable (NS).</p>
+<p>Les modes sont définis dans le chapitre <a href="omjm">modes de transfert</a>. Les modes supportés sont écrits les uns après les autres sur une seule ligne et séparés par un caractère espace.</p>
 <p>Le contenu de cette propriété est hérité de la monnaie.</p>
 <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
@@ -20037,8 +20023,15 @@ VAL:100
 <h4 id="omjtv">OMJTV/ Transfert de valeur</h4>
 <p>Le transfert de valeur est appelé transaction.</p>
 <p>La transaction unitaire marque l'attribution univoque et unidirectionnel d'une valeur appartenant à une entité vers une autre entité. Cette transaction unitaire peut être faite en contrepartie d'une autre valeur physique ou virtuelle, mais cette autre valeur n'est pas directement représentée dans la transaction unitaire traitée.</p>
-<p>Ici nous appelerons transaction soit une transaction unitaire, soit un block de plusieurs transactions unitaires. Les valeurs attribuées dans un block de transaction sont soit des jetons complets, soit des parties de jetons. Cependant une transaction unitaire ne peut traiter qu'un unique jeton ou qu'une unique partie d'un unique jeton.</p>
+<p>Ici nous appelerons transaction soit une transaction unitaire, soit un block de plusieurs transactions unitaires. Les valeurs attribuées dans un block de transactions sont soit des jetons complets, soit des parties de jetons. Cependant une transaction unitaire ne peut traiter qu'un unique jeton ou qu'une unique partie d'un unique jeton. Dans un block de transactions, toutes les transactions unitaires doivent traiter de la même monnaie.</p>
+<p>Une contrepartie d'une autre valeur physique ou virtuelle peut au besoin être inscrite dans un jeton comme description. Ce mécanisme nécessite un suivi particulier qui n'est pas pris en charge ici.</p>
 <p>Dans le code, la transaction est traité comme un lien. Si le lien est suffisant, dans le mode LNS (cf <a href="omjcptrs">TRS</a>), alors l'attribution du jeton peut être faite sur le lien uniquement. Si le lien fait référence à un objet tier, celui est considéré comme un block de transaction et est lu afin d'en extraire toutes les transactions unitaires.</p>
+
+<h4 id="omjm">OMJM/ Modes de transfert</h4>
+
+<h5 id="omjmlns">OMJMLNS/ Mode LNS</h5>
+<p>Le code <code>LNS</code> désigne la méthode de base avec un lien (L) matérialisant une transaction et imposant un jeton non sécable (NS).</p>
+<p>A faire...</p>
 
 <h3 id="omjr">OMJR / Réservation</h3>
 <p>Les objets réservés spécifiquement pour les jetons :</p>
@@ -20086,6 +20079,7 @@ class TokenPool extends Currency
 	/**
 	 * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
 	 * 
+	 * @desc 020200322
 	 * @var array:string
 	 */
 	const SESSION_SAVED_VARS = array(
@@ -20114,7 +20108,6 @@ class TokenPool extends Currency
 			'_isTokenPool',
 			'_isToken',
 			'_isWallet',
-			'_isTransaction',
 			'_properties',
 			'_propertiesInherited',
 			'_propertiesForced',
@@ -20674,6 +20667,7 @@ class Token extends TokenPool
 	/**
 	 * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
 	 * 
+	 * @desc 020200322
 	 * @var array:string
 	 */
 	const SESSION_SAVED_VARS = array(
@@ -20702,7 +20696,6 @@ class Token extends TokenPool
 			'_isTokenPool',
 			'_isToken',
 			'_isWallet',
-			'_isTransaction',
 			'_properties',
 			'_propertiesInherited',
 			'_propertiesForced',
@@ -21276,6 +21269,7 @@ class Wallet extends Entity
 	/**
 	 * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
 	 * 
+	 * @desc 020200322
 	 * @var array:string
 	 */
 	const SESSION_SAVED_VARS = array(
@@ -21304,7 +21298,6 @@ class Wallet extends Entity
 			'_isTokenPool',
 			'_isToken',
 			'_isWallet',
-			'_isTransaction',
 	);
 	
 	/**
@@ -21545,14 +21538,67 @@ class Wallet extends Entity
  * La signature doit être explicitement demandée par l'appelle de sign() après la création du lien.
  *
  * Un lien peut être valide si sa structure est correcte, et peut être signé si la signature est valide.
+ * 
+ * Une transaction est un lien entre une monnaie, un jeton et un objet contenant la description de la transaction.
+ * La description de la transaction peut en fait contenir plusieurs transactions élémentaires.
  * ------------------------------------------------------------------------------------------
  */
 class Transaction extends Link
 {
 	/**
+	 * Booléen si le lien est une transaction ET qu'elle est valide.
+	 *
+	 * @var boolean
+	 */
+	private $_isTransaction = false;
+	
+	/**
+	 * ID de l'objet contenant les transactions.
+	 * Reste à null en mode LNS.
+	 * 
+	 * @desc 020200329
+	 * @var string
+	 */
+	private $_transactionsObjectID = null;
+	
+	/**
+	 * Mode de transaction, si valide dans la monnaie.
+	 * 
+	 * @desc 020200404
+	 * @var string
+	 */
+	private $_transactionsMode = null;
+	
+	/**
+	 * Date des transactions.
+	 * 
+	 * @desc 020200329
+	 * @var DateTime
+	 */
+	private $_transactionsTimestamp = null;
+	
+	/**
+	 * Table des transactions unitaires.
+	 * 
+	 * Les transactions unitaires sont incrémentées à partir de 0.
+	 * Chaque transaction unitaire est un sous-tableau :
+	 * - CID
+	 * - D : horodatage
+	 * - S : ID détenteur
+	 * - D : ID destinataire
+	 * - TID
+	 * - R : ratio du jeton utilisé, de 0 à 1, 1 = tout
+	 * - TRS : mode de transaction
+	 * 
+	 * @desc 020200329
+	 * @var array
+	 */
+	private $_transactionsArray = array();
+	
+	/**
 	 * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
 	 * 
-	 * @desc 020200315
+	 * @desc 020200322
 	 * @var array:string
 	 */
 	const SESSION_SAVED_VARS = array(
@@ -21580,12 +21626,102 @@ class Transaction extends Link
 	/**
 	 * Initialisation post-constructeur.
 	 * 
-	 * @desc 020200315
+	 * @desc 020200404
 	 * @return void
 	 */
-	public function _initialisation()
+	private function _initialisation()
 	{
-		// @todo
+		// Vérifications de base.
+		if ( $this->_action != 'f'
+				|| $this->_hashSource == '0'
+				|| $this->_hashTarget == '0'
+				|| $this->_hashMeta == '0'
+			)
+		{
+			return;
+		}
+		
+		$this->_extractByMode();
+	}
+	
+	/**
+	 * Tri par mode de transaction détecté.
+	 *
+	 * @desc 020200404
+	 * @return void
+	 */
+	private function _extractByMode()
+	{
+		// Si transaction en mode mode LNS.
+		$hashLNS = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_TRANSACTION);
+		if ( $this->_hashMeta == $hashLNS )
+		{
+			$this->_extractModeLNS();
+		}
+		else
+		{
+			$this->_isTransaction = false;
+		}
+	}
+	
+	/**
+	 * Extrait une transaction en mode LNS.
+	 *
+	 * Une transaction en mode LNS est marquée par un lien :
+	 * - hashsign : signataire et entité source disposant du jeton.
+	 * - date : date de la prise en compte de la transaction.
+	 * - action : type f.
+	 * - hashsource : ID du jeton.
+	 * - hashtarget : ID du destinataire.
+	 * - hashmeta : hash de 'nebule/objet/monnaie/transaction', marque que c'est une transaction.
+	 * Elle est repérée par rapport au champs méta.
+	 * Il faut vérifier que la source est un jeton et en extraire la monnaie affairante.
+	 * Il faut vérifier que la destination est une entité ou un dérivé.
+	 *
+	 * @desc 020200329
+	 * @return void
+	 */
+	private function _extractModeLNS()
+	{
+		$this->_transactionsMode = 'LNS';
+		
+		// Vérifie si l'objet source est un jeton.
+		$instanceSource = $this->_nebuleInstance->newToken($this->_hashSource);
+		$instanceTarget = $this->_nebuleInstance->newWallet($this->_hashTarget);
+		if ( $instanceSource->getID() != '0'
+				&& $instanceSource->getIsToken('all') // @todo modifier le filtre social.
+				&& $instanceSource->getID() != '0'
+				&& $instanceSource->getIsWallet('all') // @todo modifier le filtre social.
+			)
+		{
+			// Extrait la monnaie.
+			$CID = $instanceSource->getParam('CID');
+			$instanceCID = $this->_nebuleInstance->newCurrency($CID);
+			$modesCID = ' '.$instanceCID->getParam('TRS').' ';
+			
+			// Vérifie que le mode LNS est présent dans les modes supportés par la monnaie
+			if ( $modesCID != '  '
+					&& strpos($modesCID, ' LNS ') !== false
+				)
+			{
+				$this->_transactionsArray[0]['CID'] = $CID;
+				$this->_transactionsArray[0]['D'] = $this->_date;
+				$this->_transactionsArray[0]['S'] = $this->_hashSigner;
+				$this->_transactionsArray[0]['T'] = $this->_hashTarget;
+				$this->_transactionsArray[0]['TID'] = $this->_hashSource;
+				$this->_transactionsArray[0]['R'] = '1';
+				$this->_transactionsArray[0]['TRS'] = 'LNS';
+				$this->_isTransaction = true;
+			}
+			else
+			{
+				$this->_isTransaction = false;
+			}
+		}
+		else
+		{
+			$this->_isTransaction = false;
+		}
 	}
 
 	/**
@@ -21669,6 +21805,55 @@ class Transaction extends Link
 	public static function __callstatic($name, $args)
 	{
 		return;
+	}
+	
+	
+	
+	/**
+	 * Retourne si le lien est bien une transaction.
+	 * 
+	 * @desc 020200322
+	 * @return boolean
+	 */
+	public function getIsTransaction()
+	{
+		return $this->_isTransaction;
+	}
+	
+	/**
+	 * Retourne l'ID de l'objet des transactions.
+	 * Retourne null en mode LNS
+	 * 
+	 * @desc 020200329
+	 * @return string
+	 */
+	public function getTransactionsObjetID()
+	{
+		return $this->_transactionsObjectID;
+	}
+	
+	/**
+	 * Retourne la marque de temps des transactions.
+	 * Retourne null en mode LNS
+	 *
+	 * @desc 020200329
+	 * @return string
+	 */
+	public function getTransactionsTimestamp()
+	{
+		return $this->_transactionsTimestamp;
+	}
+	
+	/**
+	 * Retourne la liste des transactions unitaires.
+	 * Retourne null en mode LNS
+	 *
+	 * @desc 020200329
+	 * @return string
+	 */
+	public function getTransactionsArray()
+	{
+		return $this->_transactionsArray;
 	}
 }
 
@@ -21876,7 +22061,7 @@ class Link
 	/**
 	 * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
 	 *
-	 *@desc 020200315
+	 * @desc 020200315
 	 * @var array:string
 	 */
 	const SESSION_SAVED_VARS = array(
@@ -22077,15 +22262,17 @@ class Link
 	/**
 	 * Foncion de réveil de l'instance et de ré-initialisation de certaines variables non sauvegardées.
 	 *
+	 * @desc 020200322
 	 * @return null
 	 */
 	public function __wakeup()
 	{
 		global $nebuleInstance;
-		$this->_nebuleInstance = $nebuleInstance;
-		$this->_io = $nebuleInstance->getIO();
-		$this->_crypto = $nebuleInstance->getCrypto();
-		$this->_metrology = $nebuleInstance->getMetrologyInstance();
+		$this->_nebuleInstance		= $nebuleInstance;
+		$this->_io					= $nebuleInstance->getIO();
+		$this->_crypto				= $nebuleInstance->getCrypto();
+		$this->_metrology			= $nebuleInstance->getMetrologyInstance();
+		$this->_permitObfuscated	= $nebuleInstance->getOption('permitObfuscatedLink');
 	}
 
 
@@ -22096,7 +22283,7 @@ class Link
 	 * @desc 020200315
 	 * @return void
 	 */
-	public function _initialisation()
+	protected function _initialisation()
 	{
 		// Rien à faire ici.
 	}
@@ -22512,7 +22699,7 @@ class Link
 		$rebuildLink .= '_'.$this->_hashTarget;
 		$rebuildLink .= '_'.$this->_hashMeta;
 		
-		// Vérifie que le lien initial correcspond au lien netoyé reconstitué, sinon quitte et retourne le lien en erreur.
+		// Vérifie que le lien initial correspond au lien nettoyé reconstitué, sinon quitte et retourne le lien en erreur.
 		if ( $rebuildLink != $link )
 		{
 			$this->_verifyNumError  = 3;
@@ -22545,7 +22732,7 @@ class Link
 		$this->_valid    = false;
 		$this->_signed	 = false;
 		$this->_verified = false;
-
+		
 		// Vérifie les différents champs.
 		if ( ! $this->_verifyHashSigner() )
 		{
@@ -22571,10 +22758,10 @@ class Link
 		{
 			return false;
 		}
-
+		
 		// Ce lien est maintenant marqué comme ayant été vérifié et valide dans sa structure même si sa signature n'est pas encore reconnu valide.
-		$this->_valid           = true;
-		$this->_verified		= true;
+		$this->_valid		= true;
+		$this->_verified	= true;
 
 		//         La vérification est-elle permise ?
 		//   / \   DANGER !!! Si non permit, c'est très dangereux !!!
@@ -45901,604 +46088,3 @@ abstract class Modules
 		<?php
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-/**
- * ------------------------------------------------------------------------------------------
- * La classe nebdoctech.
- * ------------------------------------------------------------------------------------------
- *
- * La documentation technique de la librairie nebule.
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- *
- */
-class nebdoctech
-{
-	/**
-	 * Instance de la bilbiothèque nebule en PHP POO.
-	 *
-	 * @var nebule
-	 */
-	private $_nebuleInstance;
-	
-	/**
-	 * Constructeur.
-	 *
-	 * Toujours transmettre l'instance de la librairie nebule.
-	 *
-	 * @param nebule $nebuleInstance
-	 */
-	public function __construct(nebule $nebuleInstance)
-	{
-		$this->_nebuleInstance = $nebuleInstance;
-	}
-	
-	/**
-	 * Fonction de suppression de l'instance.
-	 *
-	 * @return boolean
-	 */
-	public function __destruct()
-	{
-		return true;
-	}
-	
-	/**
-	 * Fonction de lecture de variables internes à l'instance.
-	 * Désactivé.
-	 *
-	 * @param string $name
-	 * @return boolean
-	 */
-	public function __get(string $name)
-	{
-		return false;
-	}
-	
-	/**
-	 * Fonction d'écriture de variables internes à l'instance.
-	 * Désactivé.
-	 * Désactivé.
-	 *
-	 * @param string $name
-	 * @param mixed $value
-	 * @return void
-	 */
-	public function __set(string $name, $value)
-	{
-		return;
-	}
-	
-	/**
-	 * Fonction de test de présence de variables internes à l'instance.
-	 * Désactivé.
-	 *
-	 * @param string $name
-	 * @return boolean
-	 */
-	public function __isset($name)
-	{
-		return false;
-	}
-	
-	/**
-	 * Fonction de suppression de variables internes à l'instance.
-	 * Désactivé.
-	 *
-	 * @param string $name
-	 * @return void
-	 */
-	public function __unset($name)
-	{
-		return;
-	}
-	
-	/**
-	 * Fonction d'appel de méthodes.
-	 * Désactivé.
-	 *
-	 * @param string $name
-	 * @param string $args
-	 * @return void
-	 */
-	public function __call($name, $args)
-	{
-		return;
-	}
-	
-	/**
-	 * Fonction d'appel de méthodes statiques.
-	 * Désactivé.
-	 *
-	 * @param string $name
-	 * @param string $args
-	 * @return void
-	 */
-	public static function __callstatic($name, $args)
-	{
-		return;
-	}
-	
-	/**
-	 * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
-	 *
-	 * @return string
-	 */
-	public function __toString()
-	{
-		return 'Documentation technique nebule';
-	}
-	
-	/**
-	 * Fonction de mise en sommeil d'instance.
-	 * Désactivé.
-	 *
-	 * @return array
-	 */
-	public function __sleep()
-	{
-		return array();
-	}
-	/**
-	 * Fonction de réveil d'instance.
-	 * Désactivé.
-	 *
-	 * @return string
-	 */
-	public function __wakeup()
-	{
-		return;
-	}
-
-	
-	
-	/**
-	 * Affiche le contenu de la documentation technique de la bibliothèque nebule.
-	 *
-	 * @return void
-	 */
-	public function display_content()
-	{
-		// Début de la documentation technique nebule.
-		
-?>
-		
-
-<h1>Table des matières</h1>
-<ul>
-<li><a href="#f">F / Fondations</a></li>
-
-<?php Object::echoDocumentationTitles(); ?>
-
-<?php Link::echoDocumentationTitles(); ?>
-
-<li><a href="#c">C / Confiance</a>
-	<ul>
-	<li><a href="#cfo">CFO / Fable des Origines</a></li>
-	<li><a href="#co">CO / Confiance dans l’Objet</a></li>
-	<li><a href="#cl">CL / Confiance dans le Lien</a></li>
-	<li><a href="#coe">COE / Confiance dans l'Objet Entité</a></li>
-	<li><a href="#ca">CA / Autorités</a>
-		<ul>
-		<li><a href="#cam">CAM / Autorité Maîtresse</a></li>
-		<li><a href="#cams">CAMS / Autorité Maîtresse de la Sécurité</a></li>
-		<li><a href="#camc">CAMC / Autorité Maîtresse du Code</a></li>
-		<li><a href="#cama">CAMA / Autorité Maîtresse de l'Annuaire</a></li>
-		<li><a href="#camt">CAMT / Autorité Maîtresse du Temps</a></li>
-		</ul>
-	</li>
-	<li><a href="#cc">CC / Configuration</a>
-		<ul>
-		<li><a href="#cco">CCO / Options</a>
-			<ul>
-			<li><a href="#ccor">CCOR / Réservation</a></li>
-			<li><a href="#ccof">CCOF / Options via Fichier</a></li>
-			<li><a href="#ccol">CCOL / Options via Liens</a></li>
-			<li><a href="#ccos">CCOS / Subordination</a></li>
-			</ul>
-		</li>
-		</ul>
-	</li>
-	<li><a href="#ce">CE / Confiance dans les Échanges</a>
-		<ul>
-		<li><a href="#cems">CEMS / Moyens et Supports</a></li>
-		<li><a href="#cecto">CECTO / Comportement au Téléchargement d’Objets</a></li>
-		<li><a href="#cectl">CECTL / Comportement au Téléchargement de Liens</a></li>
-		<li><a href="#cecte">CECTE / Comportement au Téléchargement d'Entités</a></li>
-		</ul>
-	</li>
-	<li><a href="#ck">CK / Cryptographie</a>
-		<ul>
-		<li><a href="#ckl">CKL / Cryptographie du Lien</a></li>
-		<li><a href="#cko">CKO / Cryptographie de l'Objet</a>
-			<ul>
-			<li><a href="#ckode">CKODE / Cryptographie de l'Objet - Deux Étapes</a></li>
-			<li><a href="#ckoecs">CKOECS / Cryptographie de l'Objet - Étape Chiffrement Symétrique</a></li>
-			<li><a href="#ckoeca">CKOECA / Cryptographie de l'Objet - Étape Chiffrement Asymétrique</a></li>
-			<li><a href="#ckoep">CKOEP / Cryptographie de l'Objet - Ensemble du Processus</a></li>
-			<li><a href="#ckovi">CKOVI / Cryptographie de l'Objet - Vecteur Initial</a></li>
-			<li><a href="#ckoc">CKOC / Cryptographie de l'Objet - Compression</a></li>
-			<li><a href="#ckotm">CKOTM / Cryptographie de l'Objet - Type Mime</a></li>
-			<li><a href="#ckorc">CKORC / Cryptographie de l'Objet - Résolution de Conflits</a></li>
-			</ul>
-		</li>
-		<li><a href="#cka">CKA / Aléas cryptographiques</a></li>
-		</ul>
-	</li>
-	<li><a href="#cs">CS / Sociabilité</a></li>
-	<li><a href="#cn">CN / Nettoyage, suppression et oubli</a></li>
-	</ul>
-</li>
-</ul>
-
-<h1 id="f">F / Fondations</h1>
-<p>Le but du projet nebule, c’est le moteur de gestion des objets. La couche basse qui s’occupe du stockage des objets et liens, et de leur diffusion.</p>
-<p>L’interface utilisateur est un programme utilisé pour manipuler ces objets et traduire les liens à l’utilisateur ou les actions de l’utilisateur en liens.</p>
-<p>Le projet nebule se concrétise numériquement par trois piliers de base :</p>
-<ol>
-<li>l’objet</li>
-<li>le lien</li>
-<li>la confiance</li>
-</ol>
-
-<?php Object::echoDocumentationCore(); ?>
-
-<?php Link::echoDocumentationCore(); ?>
-
-<h1 id="c">C / Confiance</h1>
-<p>La confiance n’est pas quelque chose de palpable, même numériquement. Cela tient plus de la façon de concevoir les choses et le fait de faire en sorte que l’ensemble soit solide. L’ensemble doit être cohérent et résistant. On doit pouvoir compter sur ce que l’on a.</p>
-<p>La confiance est donc sous-jacente aux objets et aux liens.</p>
-<p>Les objets et les liens doivent tous être signés. Toute modification devient impossible <span style="font-weight:bold;">si l’on prend le temps de vérifier les signatures</span>.</p>
-<p>En l’absence de nouvelle découverte mathématique majeure, les algorithmes cryptographiques nous permettent aujourd’hui une offuscation forte et une prise d’empreinte fiable. C’est le chiffrement et la signature.</p>
-
-<h3 id="cfo">CFO / Fable des Origines</h3>
-<p style="text-align:center; margin-bottom:10px;"><span style="font-weight:bold; font-family:monospace;">- 001 -</span><br />Le premier jour, il créa l'<span style="font-weight:bold;">objet</span>, essence de toute chose.<br />Ainsi la matière de l'information naquit du néant de l'éther binaire.</p>
-<p style="text-align:center; margin-bottom:10px;"><span style="font-weight:bold; font-family:monospace;">- 010 -</span><br />Le deuxième jour, il créa le <span style="font-weight:bold;">lien</span>, pour les relier tous.<br />Ainsi apparurent les objets à la lumière, ils pouvaient se voir mutuellement.<br />Ainsi l'univers informationnel naquit des objets et des liens.</p>
-<p style="text-align:center; margin-bottom:10px;"><span style="font-weight:bold; font-family:monospace;">- 011 -</span><br />Le troisième jour, il créa l'<span style="font-weight:bold;">entité</span>.<br />La matière inerte et uniforme devint active et protéiforme.<br />Ainsi la vie naquit de l'univers informationnel.</p>
-<p style="text-align:center; margin-bottom:10px;"><span style="font-weight:bold; font-family:monospace;">- 100 -</span><br />Le quatrième jour, il créa la <span style="font-weight:bold;">signature</span>.<br />L'univers informationnel s'illumina  du feu des entités attirants inexorablement les objets.<br />Ainsi les nébuleuses naquirent des entités.</p>
-<p style="text-align:center; margin-bottom:10px;"><span style="font-weight:bold; font-family:monospace;">- 101 -</span><br />Le cinquième jour, il créa le <span style="font-weight:bold;">groupe</span>.<br />A l'intérieur des nébuleuses, les objets se rassemblèrent en orbite autour des groupes.<br />Ainsi les galaxies naquirent des nébuleuses.</p>
-<p style="text-align:center; margin-bottom:10px;"><span style="font-weight:bold; font-family:monospace;">- 110 -</span><br />Le sixième jour, il créa le <span style="font-weight:bold;">cryptogramme</span>.<br />Pour la première fois, la matière des objets commença à disparaître de la lumière.<br />Ainsi les trous noirs naquirent des galaxies.</p>
-<p style="text-align:center; margin-bottom:10px;"><span style="font-weight:bold; font-family:monospace;">- 111 -</span><br />Le septième jour, il créa l'<span style="font-weight:bold;">interface</span>.<br />Et permit à l'homme de voir l'univers.<br />Ainsi l'univers fut achevé.</p>
-<p style="text-align:center; margin-bottom:10px;"><span style="font-weight:bold; font-family:monospace;">- 8 -</span><br />Le huitième jour, au nom de lui, l'homme créa la religion.<br />Il s'appropria tous les objets et soumit toutes les entités sous une seule.<br />Ainsi disparut l'univers dans un trou noir super-massif.</p>
-
-<h2 id="co">CO / Confiance dans l’Objet</h2>
-<p>L’intégrité et la confidentialité des objets est garantie non pas par une <i>méta-donnée</i> mais par les mathématiques qui animent les algorithmes cryptographiques.</p>
-<p>Un objet numérique est identifié par une empreinte ou condensat (hash) numérique. Cette empreinte doit avoir des caractéristiques propres fortes correspondant à des fonctions de prise d’empreinte cryptographiques. C’est à dire :</p>
-<ol>
-	<li>L’espace des valeurs possibles est suffisamment grand ;</li>
-	<li>La répartition des valeurs possibles est équiprobable ;</li>
-	<li>La résistance aux collisions est forte ;</li>
-	<li>La fonction utilisée est non réversible.</li>
-</ol>
-<p>Il est donc extrêmement difficile de créer deux contenus différents ayants la même empreinte et extrêmement peu probable de trouver par hasard deux contenus différents ayants la même empreinte. Par 'extrêmement' on entend impossible avec les technologies actuelles ou prévisibles dans un proche avenir. Même à moyen terme, affabli, ces fonctions de prise d'empreinte seront à même d'empêcher une falsification massive des données.</p>
-<p>La fonction de prise d’empreinte actuellement recommandée est <code>sha256</code>. Elle remplie toutes les exigences évoquées ci-dessus. Aucune faille ne permet de remettre en question de façon significative sa résistance et sa non-réversibilité à cours terme.</p>
-<p>Pour certains petits besoins spécifiques, la fonction de prise d’empreinte peut être minimaliste, donc rapide et non sécurisée. Cependant, celle-ci doit faire au minimum 2 octets. Les valeurs sur un octets sont susceptibles d’être interprétées, comme la valeur <code>0</code> qui ne désigne aucun objet.</p>
-<p>Avec le temps, les fonctions de prise d'empreinte vont évoluer avec les besoins et la technologie.</p>
-<p>L’empreinte d’un objet doit être vérifiée lors de la fin de la réception de l’objet. L’empreinte d’un objet devrait être vérifiée avant chaque utilisation de cet objet. Un contenu d'objet avec une empreinte qui ne lui correspond pas doit être supprimé. Lors de la suppression d’un objet, les liens de cet objet sont conservés. La vérification de la validité des objets est complètement indépendante de celle des liens, et inversement (cf <a href="#oov">OOV</a> et <a href="#lv">LV</a>).</p>
-
-<h2 id="cl">CL / Confiance dans le Lien</h2>
-<p>L’intégrité des liens est garantie non pas par une <i>méta-donnée</i> mais par les fonctions mathématiques utilisées par les algorithmes cryptographiques.</p>
-<p>La signature du lien est obligatoire. La signature doit être réalisée par le signataire. La signature englobe tout le lien à l’exception d’elle-même. Un lien avec une signature invalide ou non vérifiable doit être ignoré et supprimé.</p>
-<p>Toute modification de l’un des champs du lien entraîne l’invalidation de tout le lien.</p>
-<p>L’empreinte du signataire est inclue dans la partie signée, ainsi il ne peut être modifier sans invalider tout le lien. On ne peut ainsi pas usurper une autre entité.</p>
-<p>La signature d’un lien doit être vérifiée lors de la fin de la réception du lien. La signature d’un lien devrait être vérifiée avant chaque utilisation de ce lien. Un lien avec une signature invalide doit être supprimé. Lors de la suppression d’un lien, les autres liens de cet objet ne sont pas supprimés et l'objet n'est pas supprimé. La vérification de la validité des objets est complètement indépendante de celle des liens, et inversement (cf <a href="#lv">LV</a> et <a href="#oov">OOV</a>).</p>
-
-<h3 id="coe">COE / Confiance dans l'Objet Entité</h3>
-<p>Une entité est un objet contenant une clé cryptographique publique. Cette clé permet de vérifier les liens signés par cette entité.</p>
-<p>A faire...</p>
-
-<h2 id="ca">CA / Autorités</h2>
-<p>Les entités autorités, au nombre de 5, permettent de structurer et de gérer la confiance dans le code et l'utilisation du code de la bibliothèque et de toutes les applications.</p>
-<p>Cette restriction à cinq entités est une facilité pour le développement aujourd'hui. Mais ce n'est pas un modèle viable à moyen terme. L'autorité maîtresse pourra être concurrencée par une entité désignée de l'entité de l'instance locale du serveur. Et les autres entités appartiendront à des groupes spécifique dépendants à la fois de l'autorité maîtresse et de l'entité désignée par l'entité de l'instance locale du serveur.</p>
-
-<h3 id="cam">CAM / Autorité Maîtresse</h3>
-<p>Autrement appelée entité maîtresse du tout, cette entité est la seule déclarée en dur dans le code de la bibliothèque. Toutes les autres entités sont définies par des liens de cette entité.</p>
-<p>Au besoin elle peut être remplacée par une autre entité via l'option <code>puppetmaster</code> dans le fichier de configuration. Cette option n'est pas utilisable via les liens.</p>
-<p>L'instance actuelle s'appelle <i>puppetmaster</i> et est localisée en <a href="http://puppetmaster.nebule.org">puppetmaster.nebule.org</a>.</p>
-<p>L'identifiant de cette entité est <code>88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea</code>.</p>
-
-<h4 id="cams">CAMS / Autorité Maîtresse de la Sécurité</h4>
-<p>Cette entité est dédignée par le puppetmaster par rapport au rôle de maître de la sécurité. Le rôle est définit pas l'objet réservé <code>nebule/objet/entite/maitre/securite</code>. Voir <a href="#oor">OOR</a> et <a href="#oer">OER</a>.</p>
-<p>A faire...</p>
-<p>L'instance actuelle s'appelle <i>cerberus</i> et est localisée en <a href="http://cerberus.nebule.org">cerberus.nebule.org</a>.</p>
-<p>Les enfers n'ayant pas encore ouvert, cette entité n'est pas utilisée.</p>
-
-<h4 id="camc">CAMC / Autorité Maîtresse du code</h4>
-<p>Cette entité est dédignée par le puppetmaster par rapport au rôle de maître du code. Le rôle est définit pas l'objet réservé <code>nebule/objet/entite/maitre/code</code>. Voir <a href="#oor">OOR</a> et <a href="#oer">OER</a>.</p>
-<p>A faire...</p>
-<p>L'instance actuelle s'appelle <i>bachue</i> et est localisée en <a href="http://bachue.nebule.org">bachue.nebule.org</a>.</p>
-
-<h4 id="cama">CAMA / Autorité Maîtresse de l'annuaire</h4>
-<p>Cette entité est dédignée par le puppetmaster par rapport au rôle de maître de l'annuaire. Le rôle est définit pas l'objet réservé <code>nebule/objet/entite/maitre/annuaire</code>. Voir <a href="#oor">OOR</a> et <a href="#oer">OER</a>.</p>
-<p>A faire...</p>
-<p>L'instance actuelle s'appelle <i>asabiyya</i> et est localisée en <a href="http://asabiyya.nebule.org">asabiyya.nebule.org</a>.</p>
-
-<h4 id="camt">CAMT / Autorité Maîtresse du temps</h4>
-<p>Cette entité est dédignée par le puppetmaster par rapport au rôle de maître du temps. Le rôle est définit pas l'objet réservé <code>nebule/objet/entite/maitre/temps</code>. Voir <a href="#oor">OOR</a> et <a href="#oer">OER</a>.</p>
-<p>A faire...</p>
-<p>L'instance actuelle s'appelle <i>kronos</i> et est localisée en <a href="http://kronos.nebule.org">kronos.nebule.org</a>.</p>
-
-<h2 id="cc">CC / Configuration</h2>
-<p>A faire...</p>
-
-<h3 id="cco">CCO / Options</h3>
-<p>Les options permettent de modifier le comportement du code de la bibliothèque et des applications.</p>
-<p>La sensibilité des options est variable. On compte trois niveau de sensibilité :</p>
-<ul>
-	<li>utile (useful)</li>
-	<li>important (careful)</li>
-	<li>critique (critical)</li>
-</ul>
-<p>Les options sont rangées par catégories, c'est juste de l'affichage :</p>
-<ul>
-<?php foreach ($this->_nebuleInstance->getListCategoriesOptions() as $item ) { echo "\t<li>".$item."</li>\n"; } ?>
-</ul>
-<p>Toutes les options ont une valeur par défaut. Les valeurs peuvent être modifiées via un fichier de configuration et via des liens. Les modifications appliquées dans le fichier de configuration ne sont pas écrasables par des modifications faites via des liens, cela force le comportement du code sur un serveur. Pour des raisons de sécurité, certaines options ne peuvent être modifiées que dans le fichier de configuration, elles sont dites en lecture seule.</p>
-<p>Liste des options :</p>
-<ul>
-<?php
-$options = $this->_nebuleInstance->getListOptions();
-$categories = $this->_nebuleInstance->getListCategoriesOptions();
-$optionsCategorie = $this->_nebuleInstance->getListOptionsCategory();
-$optionsType = $this->_nebuleInstance->getListOptionsType();
-$optionsWriteable = $this->_nebuleInstance->getListOptionsWritable();
-$optionsDefaultValue = $this->_nebuleInstance->getListOptionsDefaultValue();
-$optionsCriticality = $this->_nebuleInstance->getListOptionsCriticality();
-$optionsDescription = $this->_nebuleInstance->getListOptionsDescription();
-foreach ( $categories as $categorie )
-{
-	echo "\t<li>Catégorie '<code>".$categorie."</code>' :\n\t\t<ul>\n";
-	foreach ( $options as $option )
-	{
-		if ( $optionsCategorie[$option] == $categorie )
-		{
-			echo "\t\t\t<li>Option '<code>$option</code>' :\n\t\t\t\t<ul>\n";
-			echo "\t\t\t\t\t<li>Description : <code>$optionsDescription[$option]</code></li>\n";
-			echo "\t\t\t\t\t<li>Criticité : <code>$optionsCriticality[$option]</code></li>\n";
-			echo "\t\t\t\t\t<li>Type : <code>$optionsType[$option]</code></li>\n";
-			$value = '';
-			if ( $optionsType[$option] == 'boolean' )
-			{
-				if ( $optionsDefaultValue[$option] === true )
-				{
-					$value = 'true';
-				}
-				else
-				{
-					$value = 'false';
-				}
-			}
-			else
-			{
-				$value = $optionsDefaultValue[$option];
-			}
-			echo "\t\t\t\t\t<li>Valeur par défaut : <code>$value</code></li>\n";
-			if ( $optionsWriteable[$option] !== true )
-			{
-				echo "\t\t\t\t\t<li>En lecture seule.</li>\n";
-			}
-			echo "\t\t\t\t</ul>\n\t\t\t</li>\n";
-		}
-	}
-	echo "\t\t</ul>\n\t</li>\n";
-}
-?>
-</ul>
-
-<h4 id="ccor">CCOR / Réservation</h4>
-<p>Les objets réservés spécifiquement pour les options :</p>
-<ul>
-	<li>nebule/option</li>
-</ul>
-
-<h4 id="ccof">CCOF / Options via Fichier</h4>
-<p>Dans les deux méthodes pour gérer les options, il y a le fichier des options. Toutes les options inscrites dans ce fichier sont dites forcées et ne peuvent être surchargées par un lien d'option. Les options dites en lecture seule ne peuvent être changée que via le fichier des options.</p>
-<p>Le fichier contenant les options doit s'appeler <code>nebule.env</code>, doit être positionné à côté du fichier <code>index.php</code> utilisé, et doit être lisible de l'utilisateur du service web. Par sécurité, les fichiers <code>nebule.env</code> et <code>index.php</code> doivent être protégés en écriture, c'est à dire en lecture seule, pour l'utilisateur du service web.</p>
-<p>Chaque option est représentée sur une seule ligne commençant par le nom de l'option suivi du caractère <code>=</code> entouré ou non d'espaces. Tout ce qui est après le signe <code>=</code> constitue la valeur de l'option. La valeur ne nécessite par de simple ou double côte de protection.</p>
-<p>Dans le fichier des options, une ligne commençant par le caractère <code>#</code> est entièrement ignorée. C'est un commentaire. Une ligne ne contenant pas le signe <code>=</code> est ignorée mais cela peut être perçu comme ambiguë, à éviter.</p>
-<p>Si des espaces sont présents en début ou fin de ligne, ils sont ignorés lors du traitement de l'option. Les espaces autour du signe <code>=</code> sont ignorés lors du traitement de l'option.</p>
-<p>Le fichier des options peut contenir indifféremment des options pour plusieurs bibliothèques et applications. Le fichier des options n'est parcouru que lors de la recherche d'une options. Les options inconnues sont ignorées. Seule la première occurence d'une option est prise en compte.</p>
-<p>Les booléens sont comparés par rapport à la valeur par défaut de l'option correspondante. C'est à dire que toute valeur autre que l'option par défaut vaut inversion de la valeur par défaut.</p>
-<p>Par défaut, le fichier des options contient :</p>
-<pre>
-# nebule bash
-filesystemBaseDirectory=~/nebule
-filesystemPublicDirectory=~/nebule/pub
-filesystemPrivateDirectory=~/nebule/priv
-filesystemTemporaryDirectory=~/nebule/temp
-filesystemLogActivate=false
-filesystemLogFile=~/nebule/neb.log
-
-# nebule php
-<?php
-	foreach ( $options as $option )
-	{
-		$value = '';
-		if ( $optionsType[$option] == 'boolean' )
-		{
-			if ( $optionsDefaultValue[$option] === true )
-			{
-				$value = 'true';
-			}
-			else
-			{
-				$value = 'false';
-			}
-		}
-		else
-		{
-			$value = $optionsDefaultValue[$option];
-		}
-		echo '#'.$option.' = '.$value."\n";
-	}
-?>
-</pre>
-
-<h4 id="ccol">CCOL / Options via Liens</h4>
-<p>Dans les deux méthodes pour gérer les options, il y a le lien d'option. Toutes les options, à l'exception de celles dites en lecture seule, peuvent être définies par les liens d'options correspondants.</p>
-<p>Toutes les options définis par des liens sont attachées à des entités. C'est à dire que le lien d'une option doit contenir l'entité à laquelle s'applique le lien. L'utilisation ou non de l'option se fait par l'entité si le lien lui appartient ou si elle est subordonnée à l'entité signataire du lien (voir <a href="#ccos">CCOS</a>). Les liens de l'entité de subordination sont prioritaires sur les liens propres.</p>
-<p>Toutes les options inscrites dans le fichier des options sont dites forcées et ne peuvent être surchargées par un lien d'option.</p>
-<p>La valeur de l'option doit être présente ou écrite dans l'objet correspondant. Si la valeur de l'option ne peut être lu, elle ne sera pas prise en compte. Le nom de l'option n'a pas besoin d'être écrit dans l'objet correspondant, il est déjà défini dans le code.</p>
-<p>Les options définis par les liens ne sont pas prises en compte par la bibliothèque nebule en PHP procédurale du bootstrap.</p>
-<p>L'option se définit en créant un lien :</p>
-<ul>
-	<li>Signature du lien</li>
-	<li>Identifiant du signataire</li>
-	<li>Horodatage</li>
-	<li>action : <code>l</code></li>
-	<li>source : ID entité visée</li>
-	<li>cible : hash(valeur de l'option)</li>
-	<li>méta : hash(‘nebule/option/’ + nom de l'option)</li>
-</ul>
-<p>Liste des options non modifiables via des liens :</p>
-<ul>
-<?php
-foreach ( $options as $option )
-{
-	if ( $optionsWriteable[$option] !== true )
-	{
-		echo "\t<li>Option '<code>$option</code>'</li>\n";
-	}
-}
-?>
-</ul>
-<h4 id="ccos">CCOS / Subordination</h4>
-<p>Une entité peut définir ses propres options mais peut aussi se voir défini ses options par une autre entité. C'est principalement utilisé afin de piloter des instances sur des serveurs distants.</p>
-<p>La mise en place de ce mécanisme permet de maintenir autant que possible le contrôle sur un serveur que l'on ne maîtrise pas physiquement. Elle est mise en place via l'option <code>subordinationEntity</code> en lecture seule écrite dans le fichier des options. Cela veut dire aussi qu'une entité peut être compromise et pilotée à distance si le fichier des options est modifié par une entité tièrce.</p>
-<p>La subordination peut être faite vers une seule entité, défini par son identifiant, ou pour un groupe d'entités. La gestion du groupe n'est pas encore fonctionnel, seule une entité peut être défini.</p>
-<p>La subordination n'est pas prise en compte par la bibliothèque nebule en PHP procédurale du bootstrap.</p>
-
-<h2 id="ce">CE / Confiance dans les Échanges</h2>
-<p>A faire...</p>
-
-<h4 id="cems">CEMS / Moyens et Supports</h4>
-<p>Il est possible de télécharger des objets et des liens avec différents protocoles. Le plus simple étant le <i>http</i>. Le protocole et le serveur distant doivent être capable de transmettre une requête et de renvoyer en sens inverse une réponse.</p>
-<p>Côté serveur, c’est à dire la machine qui fait office de relais des objets et liens, tout ne peut pas être demandé. Les requêtes doivent être triviales à traiter, ne pas nécessiter de forte puissance de calcul ni d’empreinte mémoire démesurée. Une avalanche de requêtes diverses ne doit pas mettre à plat le serveur.</p>
-<p>A faire...</p>
-
-<h5 id="cecto">CECTO / Comportement au Téléchargement d’Objets</h5>
-<p>Comportement global (téléchargement sans localisation précisée) :</p>
-<ol>
-	<li>Si l’empreinte de l’objet demandé est 0, on quitte le processus de téléchargement.</li>
-	<li>Si l’objet existe déjà dans le répertoire public des objets, on quitte le processus de téléchargement.</li>
-	<li>Si l’objet existe déjà dans le répertoire privé des objets, on quitte le processus de téléchargement.</li>
-	<li>Si l’objet n’a pas de lien dans le répertoire public des liens, on quitte le processus de téléchargement.</li>
-	<li>Si l’objet n’a pas de lien dans le répertoire privé des liens, on quitte le processus de téléchargement.</li>
-	<li>On se réfère à l’objet <code>0f183d69e06108ac3791eb4fe5bf38beec824db0a2d9966caffcfef5bc563355</code> (<code>nebule/objet/entite/localisation</code>) pour trouver la localisation de toutes les entités connues.</li>
-	<li>On parcourt les différentes localisations une à une (cf <i>comportement local</i>) pour essayer de télécharger l’objet demandé jusqu’à en obtenir une copie valide si c’est possible.</li>
-</ol>
-<p>Comportement local (téléchargement sur une localisation précise) :</p>
-<ol>
-	<li>Si l’empreinte de l’objet demandé est 0, on quitte le processus de téléchargement.</li>
-	<li>Si l’objet existe déjà dans le répertoire public des objets, on quitte le processus de téléchargement.</li>
-	<li>Si l’objet existe déjà dans le répertoire privé des objets, on quitte le processus de téléchargement.</li>
-	<li>Si l’objet n’a pas de lien dans le répertoire public des liens, on quitte le processus de téléchargement.</li>
-	<li>Si l’objet n’a pas de lien dans le répertoire privé des liens, on quitte le processus de téléchargement.</li>
-	<li>On télécharge un objet sur une localisation précise vers le répertoire public des objets.</li>
-	<li>Si il est vide, on supprime l’objet.</li>
-	<li>Si l’empreinte est invalide, on supprime l’objet.</li>
-</ol>
-
-<h5 id="cectl">CECTL / Comportement au Téléchargement de Liens</h5>
-<p>A faire...</p>
-
-<h5 id="cecte">CECTE / Comportement au Téléchargement d'Entités</h5>
-<p>A faire...</p>
-
-<h2 id="ck">CK / Cryptographie</h2>
-
-<h3 id="ckl">CKL / Cryptographie du Lien</h3>
-<p>Le chiffrement permet de dissimuler des liens. Il est optionnel.</p>
-<p>A faire...</p>
-<p>L'option <code>permitObfuscatedLink</code> permet de désactiver la dissimulation (offuscation) des liens des objets. Dans ce cas le lien de type <code>c</code> est aussi rejeté comme invalide (cf <a href="#lrac">LRAC</a>).</p>
-
-<h3 id="cko">CKO / Cryptographie de l'Objet</h3>
-<p>Le chiffrement permet de cacher le contenu des objets. Il est optionnel.</p>
-<p>Ce chiffrement doit être résistant, c’est à dire correspondre à l’état de l’art en cryptographie appliquée. On doit être en mesure de parfaitement distinguer l’objet en clair de l’objet chiffré, même si le second est dérivé du premier.</p>
-<p>L'option <code>permitProtectedObject</code> permet de désactiver la protection (chiffrement) des objets. Dans ce cas le lien de type <code>k</code> est aussi rejeté comme invalide (cf <a href="#lrak">LRAK</a>).</p>
-
-<h5 id="ckode">CKODE / Cryptographie de l'Objet - Deux Étapes</h5>
-<p>Les entités sont des objets contenant le matériel cryptographique nécessaire au chiffrement asymétrique. Cependant, le chiffrement asymétrique est très consommateur en ressources CPU (calcul). On peut l’utiliser directement pour chiffrer les objets avec la clé publique d’un correspondant, mais cela devient rapidement catastrophique en terme de performances et donc en expérience utilisateur. D’un autre côté, le chiffrement symétrique est beaucoup plus performant, mais sa gestion des clés de chiffrement est délicate. Pour améliorer l’ensemble, il faut mixer les deux pour profiter des avantages de chacun.</p>
-<p>Ainsi, on va aborder le chiffrement en deux étapes distinctes.</p>
-<p>Pour la compréhension des schémas, ne pas oublier que les propriétés des objets sont elles-mêmes des objets…</p>
-
-<h6 id="ckoecs">CKOECS / Cryptographie de l'Objet - Étape Chiffrement Symétrique</h6>
-<p>Le chiffrement d’un objet peut prendre du temps, surtout si il est volumineux. On va donc privilégier le chiffrement symétrique qui est assez rapide. Nous avons besoin pour ce chiffrement de deux valeurs.</p>
-<p>La première valeur est une clé de chiffrement. Elle est dite clé de session. La longueur de celle-ci dépend de l’algorithme de chiffrement utilisé. Par exemple, elle fait 128bits pour l’AES. Elle est générée aléatoirement. C’est cette valeur qui va permettre le déchiffrement de l’objet et doit donc rester secrète. Mais il faut pouvoir la partager avec ses correspondants, c’est ce que l’on verra dans la deuxième étape.</p>
-<p>La seconde valeur est ce que l’on appelle une semence ou vecteur initial (IV = Initial Vector). Elle est utilisée dans la méthode de chiffrement sur plusieurs blocs, c’est à dire lorsque l’on chiffre un objet dont la taille dépasse le bloc, quantité de données que traite l’algorithme de chiffrement. Par exemple, le bloc fait 128bits pour l’AES, tout ce qui fait plus que cette taille doit être traité en plusieurs fois. Comme IV, je propose d’utiliser l’identifiant de l’objet à chiffrer, c’est à dire le hash de cet objet. Cela simplifie la diffusion de cette valeur qui n’a pas à être dissimulée.</p>
-<p>L’objet source que l’on voulait à l’origine protéger peut maintenant être marqué à supprimer. Il pourra être restauré depuis l’objet dérivé chiffré et la clé de session.</p>
-<p>Sur le schéma ci-dessous, la partie chiffrement symétrique est mise en valeur. On retrouve l’objet source en clair qui est ici une image de type JPEG. En chiffrant cet objet, cela génère un nouvel objet. Le chiffrement est matérialisé par un lien de type K. Ce lien associe aussi un objet contenant la clé de session. Le nouvel objet est de type AES-CTR, par exemple. Cela signifie qu’il est chiffré avec le protocole AES et la gestion des blocs CTR (CounTeR). L’objet contenant la clé de session est de type texte.</p>
-
-<h6 id="ckoeca">CKOECA / Cryptographie de l'Objet - Étape Chiffrement Asymétrique</h6>
-<p>Suite à la première étape de chiffrement, nous nous retrouvons avec un objet chiffré et un objet contenant la clé de session. Si le fichier chiffré est bien protégé (en principe) et peut donc être rendu public, l’objet avec la clé de session est au contraire bien embarrassant. C’est là qu’intervient le chiffrement asymétrique et les clés publiques/privées.</p>
-<p>Le système de clés publiques/privées va permettre de chiffrer l’objet contenant la clé de session avec la clé publique d’une entité. Ainsi on permet à cette entité, c’est à dire le destinataire, de récupérer la clé de session avec sa clé privé et donc de lire l’objet source. Et plus encore, en re-chiffrant cette même clé de session avec d’autres clés publiques, ce qui génère autant d’objets de clés chiffrés, nous permettons à autant de nouvelles entités de lire l’objet source.</p>
-<p>Le créateur de l’objet chiffré doit obligatoirement faire partie des entités destinataires si il souhaite pouvoir déchiffrer l’objet source plus tard. Sinon, il passe intégralement sous le contrôle d’une des entités destinataires.</p>
-<p>Sur le schéma ci-dessous, la partie chiffrement asymétrique est mise en valeur. On retrouve l’objet en clair qui est ici la clé des session. En chiffrant cet objet, cela génère un nouvel objet. Le chiffrement est matérialisé par un lien de type K. Ce lien associe aussi un objet contenant la clé publique d’une entité. Le nouvel objet est de type RSA.</p>
-
-<h5 id="ckoep">CKOEP / Cryptographie de l'Objet - Ensemble du Processus</h5>
-<p>Évidemment, ce schéma de chiffrement ne ré-invente pas la roue. C’est une façon de faire assez commune, voire un cas d’école. Mais il est ici adapté au fonctionnement particulier de nebule et de ses objets.</p>
-<p>Il y a deux points à vérifier : – Partager l’objet chiffré et permettre à une autre entité de le voir, c’est aussi lui donner accès à la clé de session. Rien n’empêche cette entité de rediffuser ensuite cette clé de session en clair ou re-chiffrée à d’autres entités. Cependant, la clé de session est unique et n’a pas de valeur en dehors de l’objet chiffré qu’elle protège. De même, l’objet source peut toujours être re-chiffré avec une nouvelle clé de session et d’autres clés publiques. On retombe sur un problème commun, insoluble et le même constat : on perd automatiquement le contrôle de toute information que l’on diffuse à autrui. – L’empreinte (hash) de la clé de session est publique. Peut-être que cela affaiblie le chiffrement et donc la solidité de la protection des objets. A voir…</p>
-<p>Par commodité, je pense qu’il serait intéressant de lier explicitement l’entité destinataire et l’objet chiffré.</p>
-
-<h5 id="ckovi">CKOVI / Cryptographie de l'Objet - Vecteur Initial</h5>
-<p>Pour la plupart des modes de chiffrements symétriques, un vecteur initial (semence ou IV) est nécessaire. Il est lié à l’objet chiffré pour permettre le déchiffrement de celui-ci. Par défaut, sa valeur est aléatoire.</p>
-<p>Si pas précisé, il est égale à 0.</p>
-<p>Du fait du fonctionnement du mode CTR (CounTeR), l’IV s’incrémente à chaque bloc chiffré.</p>
-
-<h4 id="ckoc">CKOC / Cryptographie de l'Objet - Compression</h4>
-<p>Il est préférable d’associer de la compression avec le chiffrement.</p>
-<p>La compression des données déjà chiffrées est impossible, non que l’on ne puisse le faire, mais le gain de compression sera nul. L’entropie détermine la limite théorique maximum vers laquelle un algorithme de compression sans pertes peut espérer compresser des données. Quelque soit l’entropie des données d’origine, une fois chiffrées leur entropie est maximale. Si un algorithme obtient une compression des données chiffrées, il faut sérieusement remettre en question la fiabilité de l’algorithme de chiffrement. CF <a class="external text" title="http://fr.wikipedia.org/wiki/Entropie_de_Shannon" href="http://fr.wikipedia.org/wiki/Entropie_de_Shannon" rel="nofollow">Wikipedia – Entropie de Shannon</a>.</p>
-<p>A cause de l’entropie après chiffrement, si on veut compresser les données il est donc nécessaire de le faire avant le chiffrement.</p>
-<p>Ensuite, il faut choisir l’algorithme de compression. On pourrait forcer par défaut cet algorithme, pour tout le monde. C’est notamment ce qui se passe pour le HTML5 avec le WebM ou le H.264… et c’est précisément ce qui pose problème. En dehors des problèmes de droits d’utilisation à s’acquitter, c’est une facilité pour l’implémentation de cette compression par défaut dans les programmes. Cela évite de devoir négocier préalablement l’algorithme de compression. Mais si il est difficile de présenter des vidéos en plusieurs formats à pré-négocier, ce n’est pas le cas de la plupart des données. On perd la capacité d’évolution que l’on a en acceptant de nouveaux algorithmes de compression. Et plus encore, on perd la capacité du choix de l’algorithme le plus adapté aux données à compresser. Il faut donc permettre l’utilisation de différents algorithmes de compression.</p>
-<p>Cependant, si l’objet à chiffrer est déjà compressé en interne, comme le PNG ou OGG par exemple, la compression avant chiffrement est inutile. Ce serait une sur compression qui bien souvent n’apporte rien. Le chiffrement n’implique donc pas automatiquement une compression.</p>
-<p>Lors du chiffrement, l’objet résultant chiffré est lié à l’objet source non chiffré par un lien <code>k</code>. Il est aussi marqué comme étant un objet de <i>type-mime</i> correspondant à l’algorithme de chiffrement, via un lien <code>l</code>. Pour marquer la compression avant chiffrement, un autre lien <code>l</code> est ajouté comme <i>type-mime</i> vers l’algorithme de compression utilisé. Ce lien n’est ajouté que dans le cas d’une compression réalisée en même temps que le chiffrement.</p>
-<p>La seule contrainte, c’est l’obligation d’utiliser un algorithme de compression sans perte. L’objet, une fois décompressé doit être vérifiable par sa signature. Il doit donc être strictement identique, aucune modification ou perte n’est tolérée.</p>
-
-<h5 id="ckotm">CKOTM / Cryptographie de l'Objet - Type Mime</h5>
-<p>Il n’existe pas de type mime généralistes pour des fichiers chiffrés. Comme les objets chiffrés ne sont liés à aucune application en particulier.</p>
-<p>Il faut aussi un moyen de préciser l’algorithme de chiffrement derrière. Une application aura besoin de connaître cet algorithme pour déchiffrer le <i>flux</i> d’octets. En suivant la <a class="external text" title="http://www.rfc-editor.org/rfc/rfc2046.txt" href="http://www.rfc-editor.org/rfc/rfc2046.txt" rel="nofollow">rfc2046</a>, il reste la possibilité de créer quelque chose en <code>application/x-...</code></p>
-<p>Voici donc comment seront définis les objets chiffrés dans nebule :</p>
-<ul>
-	<li><code>application/x-encrypted/aes-256-ctr</code></li>
-	<li><code>application/x-encrypted/aes-256-cbc</code></li>
-	<li><code>application/x-encrypted/rsa</code></li>
-	<li>Etc…</li>
-</ul>
-<p>En fonction de l’algorithme invoqué, on sait si c’est du chiffrement symétrique ou asymétrique, et donc en principe si c’est pour une clé de session ou pas.</p>
-
-<h5 id="ckorc">CKORC / Cryptographie de l'Objet - Résolution de Conflits</h5>
-<p>Comment se comporter face à un objet que l’on sait (lien k) chiffré dans un autre objet mais qui est disponible chez d’autres entités ? Si on est destinataire légitime de cet objet, on ne le propage pas en clair. On ne télécharge pas la version en clair. On garde la version chiffrée.</p>
-
-<h3 id="cka">CKA / Aléas cryptographiques</h3>
-<p>L'aléa de qualité cryptographique est défini comme une suite de bits reconnue comme aléatoire, c'est à dire lorsque son état futur est parfaitement imprédictible, y compris en disposant de l'intégralité de l'aléa généré par la machine dans le passé. Elle est nécessaire à certains processus cryptographiques.</p>
-<p>L'aléa de qualité cryptographique étant long à générer, il doit être utilisé avec précaution pour ne pas se retrouver épuisée lorsque le besoin est réel.</p>
-<p>Cependant, l'aléa peut être utile dans certaines fonctions sans pour autant nécessiter d'être de bonne qualité. Il faut donc disposer d'un aléa de qualité cryptographique et un aléa généraliste.</p>
-<p>La bibliothèque propose dans son code deux générations d'aléa.</p>
-
-<h2 id="cs">CS / Sociabilité</h2>
-<p>Lors de l'exploitation des liens, plusieurs méthodes permettent une analyse pré-définie de la validité dite sociale des liens afin de les trier ou de les filtrer.</p>
-<p>A faire...</p>
-
-<h2 id="cn">CN / Nettoyage, suppression et oubli</h2>
-<p>L'oubli vonlontaire de certains liens et objets n'est encore ni théorisé ni implémenté mais deviendra indispensable lorsque l'espace viendra à manquer (cf <a href="#ooo">OOO</a> et <a href="#lo">LO</a>).</p>
-
-
-<?php
-
-		// Fin de la documentation technique nebule.
-	}
-}
-
