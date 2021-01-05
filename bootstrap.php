@@ -1,0 +1,8379 @@
+<?php
+// ------------------------------------------------------------------------------------------
+$bootstrapName			= 'bootstrap';
+$bootstrapSurname		= 'nebule/bootstrap';
+$bootstrapDescription	= 'Loader of library and applications.';
+						// Chargeur de la bibliothèque et des applications.
+$bootstrapVersion		= '020200314';
+$bootstrapLevel			= 'Testing'; // Experimental | Developpement | Testing | Production
+$bootstrapLicence		= 'GNU GPL 2010-2020';
+$bootstrapAuthor		= 'Projet nebule';
+$bootstrapWebsite		= 'www.nebule.org';
+// ------------------------------------------------------------------------------------------
+
+
+
+/*
+------------------------------------------------------------------------------------------
+ /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
+------------------------------------------------------------------------------------------
+
+    .     [FR] Toute modification de ce code entrainera une modification de son empreinte
+   / \           et entrainera donc automatiquement son invalidation !
+  / V \   [EN] Any changes to this code will cause a chage in its footprint and therefore
+ /__°__\         automatically result in its invalidation!
+    N     [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
+    N            tanto lugar automáticamente a su anulación!
+    N
+    N                                                                       Projet nebule
+----N-------------------------------------------------------------------------------------
+ /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
+------------------------------------------------------------------------------------------
+*/
+
+
+
+// Interdit l'affichage jusqu'à ce qu'un choix de routage soit fait.
+ob_start();
+
+/**
+ * Variable de session de connexion.
+ * Elle est utilisée pour le suivi des logs jusqu'à l'application lors d'une connexion.
+ * C'est différent de la session de l'utilisateur.
+ *
+ * @var string $bootstrapLogSession
+ */
+$bootstrapLogSession = bin2hex(openssl_random_pseudo_bytes(6,$false));
+
+/**
+ * Démarrage du calcul du temps pour la métrologie.
+ *
+ * @var float $metrologyStartTime
+ */
+$metrologyStartTime = microtime(true);
+
+// Initialisation des logs.
+openlog($bootstrapName.'/'.$bootstrapLogSession, LOG_NDELAY, LOG_USER);
+syslog(LOG_INFO, 'LogT=0 LogTabs='.$metrologyStartTime.' --- start '.$bootstrapName );
+
+/*
+ * Constante d'activation des logs.
+ *  - à false, le strict minimum de log ainsi que des arguments spécifiques
+ *      et les erreurs sont quand même journalisés.
+ *  - à true, c'est un débugg du code du bootstrap.
+ */
+define('BOOTSTRAP_LOG', false);
+
+
+
+
+
+
+
+
+
+
+
+/*
+ ------------------------------------------------------------------------------------------
+  Initialisation de l'environnement et des variables du bootstrap.
+ ------------------------------------------------------------------------------------------
+
+    1
+  111
+    1
+    1
+    1
+  11111
+
+ ------------------------------------------------------------------------------------------
+ */
+bootstrapLogger('1 init');
+
+
+
+// ------------------------------------------------------------------------------------------
+// Arguments de commande du bootstrap.
+
+/*
+ * Constante d'argument d'arrêt de chargement du démarrage par l'utilisateur.
+ */
+define('ARG_BOOTSTRAP_BREAK', 'b');
+
+/*
+ * Constante d'argument de réinitialisation de la session PHP par l'utilisateur.
+ */
+define('ARG_FLUSH_SESSION', 'f');
+
+/*
+ * Constante d'argument de mise à jour de l'application par l'utilisateur.
+ */
+define('ARG_UPDATE_APPLICATION', 'u');
+
+/*
+ * Constante d'argument de changement d'application par l'utilisateur.
+ */
+define('ARG_SWITCH_APPLICATION', 'a');
+
+/*
+ * Constante d'argument de mode de récupération par l'utilisateur.
+ */
+define('ARG_RESCUE_MODE', 'r');
+
+/*
+ * Constante d'argument de mode d'affichage inserré en ligne par l'utilisateur.
+ */
+define('ARG_INLINE_DISPLAY', 'i');
+
+/*
+ * Constante d'argument d'affichage de l'ID de l'instance de serveur.
+ */
+define('ARG_SERVER_ENTITY', 'e');
+
+
+
+/*
+------------------------------------------------------------------------------------------
+ /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
+------------------------------------------------------------------------------------------
+ * Aide au développement. Doit être modifié avant mise en production.
+ * Helpful for development. Must be modified before production use.
+ */
+
+/*
+ * Constante d'arrêt forcé interne.
+ *
+ * ATTENTION !
+ * En production, doit être à false.
+ * In production, must be false.
+ */
+define('FORCE_BREAK', false);
+
+/*
+ * Constante de rechargement d'une application lorsqu'elle vient d'être pré-chargée.
+ *
+ * ATTENTION !
+ * En production, doit être à true.
+ * In production, must be true.
+ */
+define('AUTORELOAD_PRELOAD', true);
+
+/*
+ * Contante pour suivre tous les liens de références.
+ * C'est utilisé lors de la recherche de la bibliothèque et des applications.
+ *
+ * ATTENTION !
+ * En production, doit être à true.
+ * In production, must be true.
+ */
+define('REFERENCES_FOLLOW_ONLY_AUTORITY', true);
+
+/*
+ * Constante de l'entité de développement.
+ *
+ * ATTENTION !
+ * En production, doit être vide.
+ * In production, must be empty.
+ */
+define('REFERENCE_DEV_ID', '');
+
+
+
+/**
+ * Ajout dans les logs du message.
+ *
+ * @param string $message
+ */
+function bootstrapLogger( $message='' )
+{
+	global $metrologyStartTime;
+	
+	if ( ! is_string($message) )
+	{
+		return;
+	}
+	
+	if ( $message == '' )
+	{
+		$message = 'MARK';
+	}
+	
+	if ( BOOTSTRAP_LOG )
+	{
+		syslog(LOG_INFO, 'LogT='.(microtime(true)-$metrologyStartTime).' LogL=b '.$message);
+	}
+}
+
+/**
+ * Ajout dans les logs du message. Forcé.
+ *
+ * @param string $message
+ */
+function bootstrapLoggerForce( $message='' )
+{
+	global $metrologyStartTime;
+	
+	if ( ! is_string($message) )
+	{
+		return;
+	}
+
+	if ( $message == '' )
+	{
+		$message = 'MARK';
+	}
+
+	syslog(LOG_INFO, 'LogT='.(microtime(true)-$metrologyStartTime).' LogL=b '.$message);
+}
+
+/*
+ * Force les logs pour la bibliothèque PP.
+ */
+$nebulePermitLogs = false;
+
+
+
+// ------------------------------------------------------------------------------------------
+// Objets de référence.
+
+/*
+ * Constante de référence pour la recherche du bootstrap.
+ */
+define('REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP', 'nebule/objet/interface/web/php/bootstrap');
+
+/*
+ * Constante de référence pour la recherche de la bibliothèque.
+ */
+define('REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE', 'nebule/objet/interface/web/php/bibliotheque');
+
+/*
+ * Constante de référence pour la recherche des applications.
+ */
+define('REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS', 'nebule/objet/interface/web/php/applications');
+
+/*
+ * Constante de référence pour le non pré-chargement des applications.
+ */
+define('REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS_DIRECT', 'nebule/objet/interface/web/php/applications/direct');
+
+/*
+ * Constante de référence pour le non pré-chargement des applications.
+ */
+define('REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS_ACTIVE', 'nebule/objet/interface/web/php/applications/active');
+
+/*
+ * Constante image de référence du bootstrap.
+ */
+define('REFERENCE_BOOTSTRAP_ICON', "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAARoElEQVR42u2dbbCcZX2Hrz1JMBSUAoEECCiVkLAEEgKkSBAwgFgGwZFb6NBOSVJn0H5peXXqSwVrdQZF6Cd0RiQ4kiH415ZpOlUECpKABBLewkIAayFAAgRCGxBylJx+2KdDwHCS7Ov9PHtdMzt8IGf32f/ev+v+388riIiIiIiIiIiIiIhINalZgvKTUtoTmFy89gUmAXsDewC7F69dgV2AnYGdgLFb/P4jwO+BYeAN4HVgI/AqsAF4BXgRWAc8DzwLrImIV6y+ApDehHx/4LDiVQemAR8G9uzzpr0M/Bp4HGgAjwCPRMQafzUFIK2F/XDgOGB28TrkXf9kJMPfbmvb9BiwvHgtjYiH/XUVgLwz7GOBU4GTgZOKGT7noLcrhkeA24BbgVsi4neOAgUwaKE/ETgTOB04aMDL8RSwBLg5Iu5wdCiAKgb+j4BzgXOKmV7em1uBG4FFEfGG5VAAZQ39B4AFwHnAzAq19L1cMjwA/BC4NiI2WhoFUIbg/zXwOeAoQ99RGdwPfDcirrUsCiC30M8BLgQ+beh7IoOfAFdFxDLLogD6FfoacBFwCc2Tbgx972XwInAF8J2IGLEsCqAXwd8fuByY72yfVVdwHfBVT0BSAN0K/mzgm8Bcq5E1twN/HxHLLYUC6ETw5wJXAYc725eqK3gYuCAibrckCqCV4J8IXEPznHuDX14RPA583pOMFMD2Bn9msZ6cafArJYIHgfkR8aAlUQBbC/5EYCHwCYNf
+aRH8DJgXES9YEhiyBJBS+mea17qfqhgrP9mdCqxLKV1tSQZ8oKeU/qJo98c5FAaSYWBBRNygAAYr+PvRvALNdb7LghrNaw4+GRHPuQSofvgvp3lLqxl2QXbAxX9nAs+mlC6zA6hu8A+meSOKyY57GYVngZMi4gk7gOqE/zJgNbCf41u2wX7A6kHpBmoVD/6ewDJgquNaWmA1cGyV7348VOHwnw2sBw52HEuLHAy8XIwlBVCi8N8ALMY9/NJ+hzwCLC7GlEuAzIM/geYhHXf0STdYA8yKiPV2APmF/3jgJdzRJ91jMvBSMdYUQEbh/wJwpy2/9GhJcGdK6VKXAHmE/ybgM45N6QM/joizFUB/gl8DHuKdT9IR6TUPAzPLek/CWknDvxvNY7R72/JLnxkBXgCmRsT/KoDuh38y8AQw3vBLRhJ4E5hStguKhkoW/jrwjOGXDCfS8cCalNIhCqA74T8SeLTMSxepvAQAGimlWQqgs+E/huajoTzMJ7lLYARYkVL6U/cBdC789xh+Kdk+gRpwTETcqwDaa/ud+aXMEjgqIlYogB0Pf71Y8xt+KbsE6hHxmALY/vBPprm3H8MvFZAAwAER8awC2Hb4P0DzxIr3GX6pkAQ2ARNzO1loKLPw12ie4Wf4pUrUijG9uhjjCuA9eACYaPilohKYWIxxBbCV2X8xzVt1G36psgRmpJRuzGWDxmQS/i8Af+v4kAFher1e/22j0bg7ByP1O/zH07yZh8igcXxE3DWwAiju4fcSHuuXweP/x/yEiHh5UPcBrDD8MsD7A0aA
+lf3ciL4JoLjN8gGGXwZcAgeklH7Urw0Y06fwnwNc7u8vAsDh9Xr9sUaj8Wjl9wEUj+tab+sv0v/9Af1YAtxt+EW2uj9gWaWXAMUTV88y/CJblcCEer1Oo9G4s5cf2qvwT6F5M08RGZ0pEfFU1ZYAt/H2pZEi8t77A26v1BKgaP3PyKH1r9VcfViLrOtRA3br1VKg1oPwT6b5VNVsmDBhAuvXr3fEA6eddhrjx48f+DoMDw+zZMmS3DZrcrefMzC2B1/i38hsr/+JJ57I0qVLWbdu3cAP/HHjxjFu3Dj77pHsVqcjRXa6eovxru4DSCmdC8wks73+b731FieccAKTJk2yBZBsVyTAEUWGyikAYCEZ7/hTApJ7Y1JkqHwCSCldDYwj82P+SkAy7wLGpZSuKpUAUkoTKdENPpSAZM7fFZkqTQdwHSU75q8EJPOlwA9KIYCU0gzgzyjh6b5KQDJeCpxWZCv7DqB0s78SkEHtAjoqgOL+fkdQ8ot9lIBk2gXMKjKWbQfwPSpyvr8SkEy7gO9mKYCU0seAaVToUl8lIBl2AYeklE7MsQO4igpe7acEJMMu4OqsBJBSmk2Fn+qjBCSzLmBGkblsOoBvUvFr/ZWAZNYFfCMLAaSU9gfmMgC3+VICklEXcFJxqX3fO4DLBqnySkAy4vK+CqB41vmCQau6EpBMWNBXAQAXDmrllYDkQErpon4K4FIG+EafSkD6zAhwSV8EkFL6CLA3A36PfyUgfaQGTEwpHdOPDuBCvM23EpAcuoAL+yGAhE/4UQKSQxfwmZ4KIKU0
+37orAcmHlNK8XnYAn7P9VwKS1TLg8z0RQEppV2C27b8SkKyWAbNTSrv0ogNYYL2VgGTJgl4IYJ7tvxKQLJcB87oqgJTSeCpwyy8lIBVdBswqMtq1DuBc66wEJGvO7aYA/tz2XwlI1suAs7spgFNs/5WAZL0MOLUrAujkjQiVgBKQ7rEjtw7fkQ7gDEurBKQUnNkNAXzSuioBKQWnd1QAKaWxwEHWVQlIKTg4pTSmkx3AKdZUCUip+HgnBXCy9VQCUirmdlIAJ1lPJSCl4uROCmCG9VQCUipmdkQAKaVDraUSkPKRUjqsEx3AcZZSCUgpmdMJARyD5/8rASkbI0V22xbAUXj+vxKQslEDju6EAKZbSyUgpaTelgBSSvtZQyUg5SWltG87HYCH/5SAlJsZ7QjAQ4BKQMrN9HYEUMcjAEpAysrItvYDbEsA0/AIgBKQslIDprYjgCnWUAlIqZnSjgD2tH5KQErNhJYEkFLa3dopASk/KaU/bqUDOMDSKQGpBB9sRQCTrZsSkEowuRUBeBagEpBqsG8rApho3ZSAVIKJrQhgb+umBKT0jIyW5dEE4CFAJSDlpzZalkcTgIcBlYBUg91bEcBu1k0JSCVo6TyA91s3JSCVYNdWBLCLdVMCUgl2aUUA462bEpBKsHMrAtjJuikBqQQ7tSKAcdZNCUglGNuKAIasW7UlsNdeezE05M88AAwZcvkD5syZw1133WUhNMNW2Wx5qs3IyAjr16/njjvusBjVZnMrAviddRsMXnjhBSVQbX7figCGrZsSkEow3IoA3rRu
+SkAqwRutCOB166YEpBK83ooANlo3JSCV4LVWBPA/1k0JSCV4tRUBbLBuSkAJVIINrQjgZesmSqD0jIyW5dEE8KK1EyVQemqjZXk0AayzdqIEKsG6VgTwvHUTJVAJ1rYigGetmyiBSrCmFQE8Y91ECVSCZ3ZYABHhYUBRAhUgIlo6DwBgveUTJVBqXhrtf25LAE9aP1ECpeapdgSwmuaJBCJKoHyMAI+3I4AGzRMJRJRA+agVGW5ZAKusoSiBUrOqHQE8ZP1ECZSah1oWQER4NqAogRITEWvb6QBcBogSKC+Nbf2D7RHAfXgkQJRA2RgBlndCAL/CIwGiBMpGrchu2wJYZi1FCZSSZW0LICIetY6iBMpHRKxqWwAFD1pOUQKl4oHt+UfbK4BbracogVJxWycFcLv1FCUwuAK4xXqKEigVt3RMABHxFvCENRUlUApWR8TmTnYAAEusqyiBUrDdWd0RAdxsXUUJlIJ/7bgAIuKX1lWUQP5ExNJudAAAP8frAkQJ5MoI8LMd+YMdFcBivC5AlECu1IqMdk0Ai6yxKIGsWdQ1AUTEJmCFywBRAlm2//dHxHA3OwCAhS4DRAlk2f4v3NE/akUAP7DWogSy5LquCyAifgvc6zJAlEBW7f+vimx2vQMAuMZlgCiBrNr/a1r5w5YEEBHXW3NRAvkQET/smQAKfuwyQJRAFu3/Ta3+cTsCuNJlgCiBLNr/K3sugIi4F1hnFyBKoK+z/9qIWN5zARRcYRcgSqCvs/+32nmDtgQQEVc5DEUJ9I92MzjUgW241mEoSqAv
+fL/dN+iEAL7qEBQl0Bcu67sAIuI54Be4M1CUQK8YAW4pstf3DgDgS7gzUJRAr6gBX+zEG3VEABFxH80nkdgFiBLo/uy/MiJWZCOAggvsAkQJ9GT2v6BTb9YxAUTEnUDDLkCUQFdn/0Ynb9A71OENPN8uQJRAV2f/8zv5hh0VQHE74pV2AaIEujL7r9iRW373owMAmG8XIEqgK7P/vE6/accFEBEPA/9uFyBKoKOz/5KIWJW9AAoW2AWIEujo7L+gG2/cFQFExIvAdxxuogQ6wpUR8VJpBFBI4CJgk0sBUQJttf6bIuLibn3AUJe/wDyXAqIE2mr9z+vmB3RVABFxI3C/XYDkLoExY8bkOPvfFxGLu/khY3vwRc4EnsupssPDw45865B7J1ArstP1D+k6KaWvAF/Loqq1GiMjNiTWI/tafCUivl4JARQSeBrY330CItts/Z+JiA/14sOGevjF5hp+ke2alOf26sN6tuej0WhsqNfrm4GP+RuLjNr639xL2/SUlFIDmGY3IPIHrf9jEXFoLz90qA9fdE4Rfvc8ibwd/lqRDSotgIjYACQ7AJF3dOJnRcSrvf7gvpz90Gg0HqvX638CzPC3F+H6iPhmv8zTN1JK/w0cYDcgA9z6Px0RB/ZrA4b6XIAjtyiEyKCFf8sMDJ4AIuJl4KO4U1AGL/w14KMR8Uo/N6TvV0A0Go019Xr9NeBUx4UMCDXg4m5f6FMKARQSuKder08FDnNsyACwqJvX+O+oibIhpbQSOMLxIRXmgYiYlVMrQmYSeA7YB48MSPXW/Wsj
+Yr+cNmoow0JNA97EnYJSrfC/CUzNbcOyE0BEbAQOAjYrAalI+EeAD0fEawpg+yTwPFDHw4NS/vDXgGkRsTbHDRzKtXIR8QQwUwlIycM/MyKezHUjh3KuYEQ8BMxWAlLS8B9djOFsKcWe9pTS0cDyLQorUobw35/7xpYmTCmlmcADSkBKEP4jIuLBMmxwqYKUUpoKNIrtVgKSW/g3A4dGxOqybHTpQpRS2gf4NTBeCUhG4X8DmFIcwSoNQ2WrdHE4ZW9greNOMgn/88DEsoW/lB3Au7oBrx2QfpPVuf2V7wDe1Q3MAhZtYWKRXs36ADeUOfyQyeXA7dBoNH66xf0EPEIgvQh/DbgoIi4p+5epTFhSSscCS6v2vSTLmf+4iLi7Cl+oUkFJKe0BrAA+5FiVLvAb4Mji1vYogHxFsBA4zyWBdLDlXxgR86v25SobjpTSp4GfKAHpQPjPioifVvELVjoYKaXdgWXAIY5laYEGMKcfT+xRAJ0VwZeAr9sNyA7M+l+OiH+q+pcdmDCklA4E/hP4oGNcRuFpYG5E/NcgfNmBmw1TSl8G/tFuQAZ11h9oARQS2Be4GThKERh84D7gU2U8l18BtCeCc4DrgfeZhYFkE/BXEXHToBbAma8pgiuAS+wGBmrW/1ZEXDroxXCwvy2BCcC1wBmKoNLBvxn4bESstyQO8q2JYDqwkOZjmxVBdYK/AjgvIh61JApge0QwB/gecKgiKHXwHwXOj4hllkQBtCKC44GrgFmKoFTBXwlcEBG/tCQKoBMiOBL4BvBxq5E1Pwe+GBEr
+LYUC6IYI9gG+Bnz2XTOO9G+2B/g+8A+5PoJLAVRTBhcAFwP7KoK+BH8tcEVEXG1JFEA/RXA0cBFwjl1BT2b7xcC3y/DkHQUweDL4S+BvgI8og46G/m7gmoj4kWVRAGUQwc7AAmA+zXMKlMGOh34FcB1wbUS8aWkUQFllsBNwbrFE+IQVGZX/AG4CFkXEsOVQAFUUwnHAp4DTgakDXo7VwBLgXzxZRwEMogyGgFOAucDJNE84okJLhnd/h5XArcDtwC8iYrOjQAHIO6UwneZOxGOB2UB9G6HKMejQvKfecpo78O6JiFX+ugpAWpPCJGAGMJ3m9QlTgGnAhD5v2nrgceBJmufdrwIeioh1/moKQHojh/cDBwL70zwpaRLNJyjvAexevHYFdqF585Odildti9l7uHhtAl4HNgKvAhuAV4AXgXU0n4S7BvhNRGy0+iIiIiIiIiIiIiIiIjnyf9eV8VcbpfPFAAAAAElFTkSuQmCC");
+
+/*
+ * Constante image de référence de l'application.
+ */
+define('REFERENCE_APPLICATION_ICON', "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAADkElEQVRo3u2ZT0hUQRzHP9sGgoEh0T8kL8/Ag+tBsUNdCpmKjA7VQdzKwg6pdIoOnkQKPHgUtUOGSrt0qIUORTGIXepgZAc9eJCFMgmUEj0IQotdlJ03b1779u2IK/k7vTfvN/P7zm9+8/v3YI/+d4oEZxUHaaaBCZJyw4cjQgvn+MwLuWIZgKijg9tEgTl6SJggiAhxuqkCMowwKKesARDPiSuvRgiK+C1KyBu2AOj7XWSaKJUcphRYY4nvZIhxxM0mI9sFICAFAbBvp2/BbgAg2sIuHmRmNOcigzwKvb0rztH0mwKMUJSQ4pLhwxTjTDLLAqtAGRVUc4pG6gy8b7kq10MBECW846w2uMYAY3LGZ0YNt+ikVBv+wEV/CP8C8Maz+z565XKOIyuni4e6FmRT3gDEIO2a2u/LTwGN7zT92nEMyY68jFC0aaaXpEl+C2p76XnnGVXElKEG50f6a04NaD4/S09ke4hLOMQ94wdXjIi4It4X44SkjIf0AwlajB/qs5FSdUTmU5qiNbQfaMUckjsMGhAH+WW0iDNBTc/HHD8ahjMc2kpZshpoNorvK0Q8yE/0GU2/2XsEDQbGNXoLjja9rBlGG7wAJpjzsA3kcjsBdLDMgGdwjgkvgCQ9HghjViLumEd8D0mzH7jGS9X+Zb2dmC++KH5xkQdqRunOB1KMK2/j1rIOdaVpd0LrAiA3XDdh0hoAdaWoO5/WM6JK5XnWGoBZHwkGAIeV5wVrABZ8JBgAqMnEqjUAqz4SijErVr1WmTUpZT4SDACWlOcKawAqfCQYAHxXnqutAaj2kaADEBEyyuspawDUlTIi4gNARIi78rhGawDUlWLEVQhRrb4/obAed16lFy1EghpXgnuAWn4702mPBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf7Q4vfT7/xw0i2jaf6gUEjcx2joRUwaizYXZIUpad/OiepNbDHnGO52gw+pdkdn9JsIGd1LNp4qhWnrfJPXsof1cqyu3I4j+o4/dU56qoUYlx2ZtLzgU0vxXmtPH+82xoURdCi2fEmlU+rJj/ybc0EBmC4EcHJx/LzBLDXrN5eChto3lOi/bBY58L2AUho7bvr8pXBUtzFPSSsHYG8QT3DmxnzHDdJGdlS3NxscWQYpj7IH6Mi+G23R3v0FwbfFx3mQ2ZaAAAAAElFTkSuQmCC");
+
+/**
+ * Liste des applications autoriées par défaut.
+ * Ces applications ne peuvent être retiré de la liste des applications activées.
+ *
+ * @var array:string $bootstrapActiveApplicationsWhitelist
+ */
+$bootstrapActiveApplicationsWhitelist = array(
+		'2121510000000000006e6562756c65206170706c69636174696f6e73000000000000212151',
+);
+
+/*
+ * Constante de la première URL à utiliser après la création de l'entité instance du serveur.
+ */
+define('BOOTSTRAP_FIRST_URL_TO_OPTION', '?a=2121510000000000006e6562756c65206170706c69636174696f6e73000000000000212151&view=applications&ent=');
+
+/*
+ * Constante du nom du fichier contenant le bootstrap.
+ */
+define('BOOTSTRAP_FILE_NAME', 'index.php');
+
+
+
+// ------------------------------------------------------------------------------------------
+// Première synchronisation.
+
+/**
+ * Les url de première synchronisation.
+ *
+ * @var array:string $nebuleFirstLocalisations
+ */
+$nebuleFirstLocalisations = array(
+	'http://puppetmaster.nebule.org',
+//	'http://puppetmaster6.nebule.org',
+	'http://security.master.nebule.org',
+//	'http://security.master6.nebule.org',
+	'http://code.master.nebule.org',
+//	'http://code.master6.nebule.org',
+);
+
+/*
+ * Constante de la clé publique puppetmaster.
+ */
+define('FIRST_PUPPETMASTER_PUBLIC_KEY',
+'-----BEGIN PUBLIC KEY-----
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAudMrAyvG3uqI9JLZRtqi
+nlgiF6hAp/whKWlujNXE+x0p6ibJEaIAPS+VyR4Lw9819UqObpMI2fa+Ql8/dJPM
+9r7Js/eJbRy6U7+EtBJa8ZIBTRtGXjKdBhkyQcWm8TqglitTG0pIoJOlB1+CbP2W
+TtfbC6ZEFBFhlEH+qqy7Laua3m2yqVXqTY9FEBPYcX/Q2qpOeep+DkMQ/UwYyCZ0
+Pv7KJ0aLlbju2UpYAp+zNfl6OKo37Va29anhU1i7lfXug7h0d9Lc4Xpl+KLfKn4A
+g6VHSKXRAENvCXnGG3DM7UUdHM74NQXtwKzmtEwn7KT/3MKM6ohdbffkrAJFaeby
+EMCVqq9nH4CZUIOGzLsAICtA6FXD5bi0OKv1Y1fzH4MHlc8FL5fCEdJ2ZftlURDH
+Z2X2dE73Tx3TuyHr3e3A2xXMxcXZ0bs41Ey9wUWPRtBfEU6Yr3yXDQjMmLeCj/Vz
+0Z/92hX5zE6UDpxTbuoPSUzGH0xwwZzsLAOIM0TvOxDI1ATX8M0Di2veYdLJMqoF
+QMqFriycSa9a4U4SyXomUAqj9jBzn1dmPN+cvC+2ByqoRdGKkJQZAnLcfpN+G+lt
+/GJe8Xgw01QlOFGT8PV9IvZek96PociLNqoyOhye7q5/Ik0fsEEIzYW2jvLGnrkv
+6dEOw+BEVa0QiNx/ju9yzHMCAwEAAQ==
+-----END PUBLIC KEY-----');
+
+/*
+ * Constante du lien de hash de la clé publique puppetmaster.
+ */
+define('FIRST_PUPPETMASTER_HASH_LINK',
+'77575698703bf581b582457f64e13b2f0f00dd4be95be356c6a24b277161fd5bf331e8990688422d3ff63ebe3ea774b89289765027c9f1bb2082e8ea9ab2ad9b40543eb828018ef1bb70090c67ee7a50dcce95c5a118c47bb76d8702da2335a9d02b47c67f06fec530dddc04f8f486de95d23fc72518cd9d4e7462a8ef731520405e2168283da7ef7207f9960f055270b25786192c60f0157274c2889b8f925b51b40d6a56c3f861c41c1cc6e3996d252bf2c8234bac6142f5582a87fa0bda25d6bbe161c29dfd0a461b69805a3b0306967fec7af6411f68eaf9ff630914ad29b62ddaaa9b3fd8890f656713841dd7a6412117999938c2218625ccf601fd25668fe157d522a64d2d6c4a0c794610af6b2e078284b4514758bf48bb4bdfdca519c8121c3c84045c626ef37a5e9e120954acd42f47cf82a648e989c23746e90bd3a8d6657506a8715a155fe1da124e14ac2db8af17af7e209a159accaf9da183f7b180c1eaf44aee24e6e43767efbf6253ac4ef534752a7389f0be2cd7425e7775ca7d45eb2fcb8d2fcedc0af49893f41936384fb379d4c02aa623dcd24f49798b780294cd60e9388c2bff053a407d1906dcc9cb0a492f0a54d062a1bb10da4f856b4d8af3d2fe4869117fd500a97923e1cb9b505262a48f6f5c72f9c49e82b27e6beefdb8a700740d136c73cacbba955a84ff5aee7bd720da9053bea128b06acf.sha256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea_2013-03-12T20:29:37+0100_l_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea_5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e_8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec'
+);
+
+/*
+ * Constante du lien de type de la clé publique puppetmaster.
+ */
+define('FIRST_PUPPETMASTER_TYPE_LINK',
+'3c091432e6404b9634783e2b51debd017f07918d7ef88af0e01638955859bdb2ad88df9be624308a3b0cb0904763dd06576510aedf47c94da1ce2fe11d5e324b0947b069be01f1d7626e69d93c4919182ebad607a7b4daf52ad4a68e59a9c514a7021ba4df05fe344544867b890a94007e4867021a417491dcf036a97342f56ff88f0889fe078a3e92349f3f78d74696aaf258175432d9540dff5c889525f693230472b7c5b1c16f31d7f8c3efd444e856f7473e0be7773ed93c3516d074c373433919cfb3773dd272d0236b5db52ef1f3b3eb6c0653eaadb34bbda66e2a10627397a669d35b663a490efbd50d404942ceadf54618a29ada345788ebf0c0258973aac6cefab86e6021eabb67acfad34e6a67b7001351a1179f90d2c98558fd2993be458f3095cb0940fc36c7e40fd04b76a750af48bfa5e5cd26423983580bbd99cfe3daadb928ee0203125fe97940878ad6a1faf385c37fda47769d06153680974d42d145bb9fa5e621d249cac83863a585d2448cd985ae31af7033ce322833d3689bf09033410441e07869ff4c85244d86dea47679ef5daaf726c11650da7858317196bf465e9f930846db9328b20aa0aa7a4280b7515bce8fae32585c3a75dcb88351dabfba013b4970094860904d8f161909cd1164e5506486aac5ad29afccd4740324f889dc936ef7fb85ef16ffd55c8f04be08fd442feb882b23b24b94.sha256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea_2013-03-12T22:28:06+0100_l_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea_970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864_5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0'
+);
+
+/**
+ * Les premiers objets à créer pour un bon fonctionnement de la bibliothèque.
+ *
+ * @var array:string $nebuleFirstReservedObjects
+ */
+$nebuleFirstReservedObjects = array(
+		'application/x-pem-file',
+		'application/octet-stream',
+		'text/plain',
+		'sha224',
+		'sha256',
+		'sha384',
+		'sha512',
+		'nebule/objet',
+		'nebule/objet/hash',
+		'nebule/objet/homomorphe',
+		'nebule/objet/type',
+		'nebule/objet/localisation',
+		'nebule/objet/taille',
+		'nebule/objet/prenom',
+		'nebule/objet/nom',
+		'nebule/objet/surnom',
+		'nebule/objet/prefix',
+		'nebule/objet/suffix',
+		'nebule/objet/lien',
+		'nebule/objet/date',
+		'nebule/objet/entite',
+		'nebule/objet/entite/localisation',
+		'nebule/objet/entite/maitre',
+		'nebule/objet/entite/maitre/securite',
+		'nebule/objet/entite/maitre/code',
+		'nebule/objet/entite/maitre/annuaire',
+		'nebule/objet/entite/maitre/temps',
+		'nebule/objet/entite/autorite/locale',
+		'nebule/objet/entite/recouvrement',
+		'nebule/objet/interface/web/php/bootstrap',
+		'nebule/objet/interface/web/php/bibliotheque',
+		'nebule/objet/interface/web/php/applications',
+		'nebule/objet/interface/web/php/applications/modules',
+		'nebule/objet/interface/web/php/applications/direct',
+		'nebule/objet/interface/web/php/applications/active',
+		'nebule/option',
+		'nebule/danger',
+		'nebule/warning',
+		'nebule/reference'
+);
+
+/*
+ * Constante de taille du nom d'une nouvelle entité locale de serveur.
+ */
+define('FIRST_NAME_SIZE', 6);
+
+/*
+ * Constante de taille du mot de passe d'une nouvelle entité locale de serveur.
+ */
+define('FIRST_PASSWORD_SIZE', 14);
+
+/*
+ * Constante de temps d'attente entre deux pages lors de la première connexion.
+ */
+define('FIRST_RELOAD_DELAY', 3000);
+
+
+
+
+// ------------------------------------------------------------------------------------------
+// Active la possibilité d'ouvrir du code dans des fichiers externes.
+ini_set('allow_url_fopen',true);
+ini_set('allow_url_include',true);
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * Variable de raison d'interruption de chargement du bootstrap.
+ *
+ * @var array:string $bootstrapBreak
+ */
+$bootstrapBreak = array();
+
+/**
+ * Variable d'interruption de chargement du bootstrap par l'utilisateur.
+ *
+ * @var boolean $bootstrapUserBreak
+ */
+$bootstrapUserBreak = false;
+
+/*
+ * Lit si interruption volontaire de l'utilisateur.
+ */
+if( filter_has_var(INPUT_GET, ARG_BOOTSTRAP_BREAK)
+		|| filter_has_var(INPUT_POST, ARG_BOOTSTRAP_BREAK)
+	)
+{
+	bootstrapLoggerForce($bootstrapName.' - ask user interrupt');
+	$bootstrapBreak['12'] = 'User interrupt.';
+	$bootstrapUserBreak = true;
+}
+
+
+
+// ------------------------------------------------------------------------------------------
+/*
+ * Lit si interruption forcée.
+ */
+if( FORCE_BREAK )
+{
+	bootstrapLoggerForce($bootstrapName.' - internal interrupt');
+	$bootstrapBreak['11'] = 'Internal interrupt.';
+}
+
+
+
+// ------------------------------------------------------------------------------------------
+/*
+ * Préparation des variables des applications.
+ */
+/**
+ * Nom de l'application.
+ *
+ * @var string $applicationName
+ */
+$applicationName = $bootstrapName;
+
+/**
+ * Nom complet de l'application.
+ *
+ * @var string $applicationSurname
+ */
+$applicationSurname = $bootstrapSurname;
+
+/**
+ * Description somaire de l'utilité de l'application.
+ *
+ * @var string $applicationDescription
+ */
+$applicationDescription = $bootstrapDescription;
+
+/**
+ * Version de l'application.
+ *
+ * @var string $applicationVersion
+ */
+$applicationVersion = $bootstrapVersion;
+
+/**
+ * Niveau de stabilité et de pérénité de l'application.
+ *
+ * @var string $applicationLevel
+ */
+$applicationLevel = $bootstrapLevel;
+
+/**
+ * Licence de l'application.
+ *
+ * @var string $applicationLicence
+ */
+$applicationLicence = $bootstrapLicence;
+
+/**
+ * Auteur de l'application.
+ *
+ * @var string $applicationAuthor
+ */
+$applicationAuthor = $bootstrapAuthor;
+
+/**
+ * Site web de référence de l'application.
+ *
+ * @var string $applicationWebsite
+ */
+$applicationWebsite = $bootstrapWebsite;
+
+
+
+// ------------------------------------------------------------------------------------------
+/*
+ * Pré-initialise des variables de la bibliothèque.
+ * Ceci permet d'éviter une attaque par injection de variables passées en arguments de l'URL.
+ */
+$nebulePuppetmaster = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea';
+$nebuleLocalAuthorities = array();
+$nebuleServerEntityAsAuthority = false;
+$nebuleCurrentEntityAsAuthority = false;
+$nebuleHashAlgorithm = 'sha256';
+$nebuleSymetricAlgorithm = 'aes-256-ctr';
+$nebuleSymetricKeyLenght = '256';
+$nebuleAsymetricAlgorithm = 'rsa';
+$nebuleAsymetricKeyLenght = '2048';
+$nebuleCheckSignOnVerify = true;
+$nebuleCheckSignOnList = true;
+$nebuleListInvalidLinks = false;
+$nebulePermitWrite = false;
+$nebulePermitWriteLink = false;
+$nebulePermitWriteObject = false;
+$nebulePermitWriteEntity = false;
+$nebulePermitCreateEntityWithoutPassword = false;
+$nebulePermitSynchronizeLink = false;
+$nebulePermitSynchronizeObject = false;
+$nebule_createhistory = false;
+$nebule_followxonsamedate = true;
+$nebule_io_maxlink = 2000;
+$nebule_io_maxdata = 100000;
+$nebule_maxrecurse = 20;
+$nebule_maxupdates = 500;
+$nebule_usecache = true;
+$nebuleMimetypePathFile = '/etc/mime.types';
+
+
+
+// Log de la partie suivante, la bibliothèque PP.
+bootstrapLogger('2 libpp' );
+
+
+
+
+
+
+
+
+
+
+
+/*
+ * ------------------------------------------------------------------------------------------
+ * Bibliothèque nebule PHP en programmation procédurale (PHP PP).
+ * ------------------------------------------------------------------------------------------
+ *
+ *              b           ll
+ *              b            l
+ *              b            l
+ *  n nn   eee  bbbb  u   u  l     eee
+ *  nn  n e   e b   b u   u  l    e   e
+ *  n   n eeeee b   b u   u  l    eeeee
+ *  n   n e     b   b u   u  l    e
+ *  n   n e   e b   b u  uu  l    e   e
+ *  n   n  eee  bbbb   uu u   lll  eee
+ *
+ * ------------------------------------------------------------------------------------------
+ */
+
+
+
+/*
+ * ------------------------------------------------------------------------------------------
+ * Variables.
+ * ------------------------------------------------------------------------------------------
+ */
+
+/*
+ * Constante de bridage de la bibliothèque pour un usage intégré au bootstrap.
+ */
+define('NEBULE_PP_LIBRARY_VERSION', '020191006');
+
+/*
+ * Constante de bridage de la bibliothèque pour un usage intégré au bootstrap.
+ */
+define('NEBULE_PP_LIBRARY_MODE_BOOTSTRAP', true);
+
+/*
+ * Constante de version des liens supportés.
+ */
+define('LINK_VERSION', 'nebule/liens/version/1.3');
+
+/*
+ * Constante de l'ID par défaut du maître du tout.
+ */
+define('NEBULE_DEFAULT_PUPPETMASTER_ID', '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea');
+
+/*
+ * Constante du nom du fichier de définition de l'environnement.
+ */
+define('NEBULE_ENVIRONMENT_FILE', 'nebule.env');
+
+/*
+ * Constante du nom du fichier de définition de l'environnement.
+ */
+define('NEBULE_LOCAL_ENTITY_FILE', 'e');
+
+/*
+ * Constante du nom du fichier de définition de l'environnement.
+ */
+define('NEBULE_LOCAL_LINKS_FOLDER', 'l');
+
+/*
+ * Constante du nom du fichier de définition de l'environnement.
+ */
+define('NEBULE_LOCAL_OBJECTS_FOLDER', 'o');
+
+/*
+ * ID puppetmaster maître du tout.
+ *
+ * @var string $nebulePuppetmaster
+ */
+$forceValue = nebGetOpt('puppetmaster', 'string');
+if ( $forceValue != null )
+{
+	$nebulePuppetmaster = $forceValue;
+}
+if ( ! isset($nebulePuppetmaster) )
+{
+	$nebulePuppetmaster = NEBULE_DEFAULT_PUPPETMASTER_ID;
+}
+
+/**
+ * ID cerberus maître de la sécurité.
+ * Variable écrasée lors de l'initialisation de la bibliothèque.
+ *
+ * @var string $nebuleSecurityMaster
+ */
+$nebuleSecurityMaster = '0';
+
+/**
+ * ID bachue maître du code.
+ * Variable écrasée lors de l'initialisation de la bibliothèque.
+ *
+ * @var string $nebuleCodeMaster
+ */
+$nebuleCodeMaster = '0';
+
+/**
+ * ID asabiyya maître de l'annuaire.
+ * Variable écrasée lors de l'initialisation de la bibliothèque.
+ *
+ * @var string $nebuleDirectoryMaster
+ */
+$nebuleDirectoryMaster = '0';
+
+/**
+ * ID kronos maître du temps.
+ * Variable écrasée lors de l'initialisation de la bibliothèque.
+ *
+ * @var string $nebuleTimeMaster
+ */
+$nebuleTimeMaster = '0';
+
+/**
+ * ID de l'entité locale du serveur.
+ * Variable écrasée lors de l'initialisation de la bibliothèque.
+ *
+ * @var string $nebuleServerEntite
+ */
+$nebuleServerEntite = '';
+
+/**
+ * ID de l'entité par défaut.
+ * Variable écrasée lors de l'initialisation de la bibliothèque.
+ *
+ * @var string $nebuleDefaultEntite
+ */
+$nebuleDefaultEntite = '';
+
+/**
+ * ID de l'entité en cours.
+ * Variable écrasée lors de l'initialisation de la bibliothèque.
+ *
+ * @var string $nebulePublicEntite
+ */
+$nebulePublicEntite = '';
+
+/**
+ * Clé privée de l'entité en cours.
+ * Variable écrasée lors de l'initialisation de la bibliothèque.
+ *
+ * @var string $nebulePrivateEntite
+ */
+$nebulePrivateEntite = '';
+
+/**
+ * Mot de passe de l'entité en cours.
+ * Variable écrasée lors de l'initialisation de la bibliothèque.
+ *
+ * @var string $nebulePasswordEntite
+ */
+$nebulePasswordEntite = '';
+
+/**
+ * Liste des entités autorités locale.
+ *
+ * @var array $nebuleLocalAuthorities
+ */
+$nebuleLocalAuthorities = array();
+
+/*
+ * Autorise l'entité du serveur à être autorité locale.
+ *
+ * L'activation du mode de récupération interdit l'entité du serveur comme autorité locale.
+ * Le mode de récupération est prioritaire.
+ *
+ * @var boolean $nebuleServerEntityAsAuthority
+ */
+$forceValue = nebGetOpt('permitInstanceEntityAsAuthority', 'boolean');
+if ( $forceValue != null )
+{
+	$nebuleServerEntityAsAuthority = $forceValue;
+}
+if ( nebGetOpt('modeRescue', 'boolean') === true
+		|| ( nebGetOpt('permitOnlineRescue', 'boolean') === true
+				&& ( filter_has_var(INPUT_GET, ARG_RESCUE_MODE)
+						|| filter_has_var(INPUT_POST, ARG_RESCUE_MODE)
+					)
+			)
+	)
+{
+	$nebuleServerEntityAsAuthority = false;
+}
+if ( ! isset($nebuleServerEntityAsAuthority) )
+{
+	$nebuleServerEntityAsAuthority = false;
+}
+
+/*
+ * Autorise l'entité courante à être autorité locale.
+ *
+ * L'activation du mode de récupération interdit l'entité courante comme autorité locale.
+ * Le mode de récupération est prioritaire.
+ *
+ * @var boolean $nebuleCurrentEntityAsAuthority
+ */
+$forceValue = nebGetOpt('permitDefaultEntityAsAuthority', 'boolean');
+if ( $forceValue != null )
+{
+	$nebuleCurrentEntityAsAuthority = $forceValue;
+}
+if ( nebGetOpt('modeRescue', 'boolean') === true
+		|| ( nebGetOpt('permitOnlineRescue', 'boolean') === true
+				&& ( filter_has_var(INPUT_GET, ARG_RESCUE_MODE)
+						|| filter_has_var(INPUT_POST, ARG_RESCUE_MODE)
+					)
+			)
+	)
+{
+	$nebuleCurrentEntityAsAuthority = false;
+}
+if ( ! isset($nebuleCurrentEntityAsAuthority) )
+{
+	$nebuleCurrentEntityAsAuthority = false;
+}
+
+/*
+ * Cryptographie - Fonction de prise d'empreintes.
+ *
+ * @var string $nebuleHashAlgorithm
+ */
+$forceValue = nebGetOpt('cryptoHashAlgorithm', 'string');
+if ( $forceValue != null )
+{
+	$nebuleHashAlgorithm = $forceValue;
+}
+if ( ! isset($nebuleHashAlgorithm) )
+{
+	$nebuleHashAlgorithm = 'sha256';
+}
+
+/*
+ * Cryptographie - Fonction de chiffrement symétrique.
+ *
+ * @var string $nebuleSymetricAlgorithm
+ */
+$forceValue = nebGetOpt('cryptoSymetricAlgorithm', 'string');
+if ( $forceValue != null )
+{
+	$nebuleSymetricAlgorithm = $forceValue;
+}
+if ( ! isset($nebuleSymetricAlgorithm) )
+{
+	$nebuleSymetricAlgorithm = 'aes-256-ctr';
+}
+
+/**
+ * Cryptographie - Taille d'une clé et d'un bloc de chiffrement.
+ * @todo
+ *
+ * @var string $nebuleSymetricKeyLenght
+ */
+$nebuleSymetricKeyLenght = '256';
+
+/**
+ * Cryptographie - Fonction de chiffrement asymétrique (càd avec clé publique/privée).
+ * @todo
+ *
+ * @var string $nebuleAsymetricAlgorithm
+ */
+$nebuleAsymetricAlgorithm = 'rsa';
+
+/**
+ * Cryptographie - Taille d'une clé publique/privée.
+ * @todo
+ *
+ * @var string $nebuleAsymetricKeyLenght
+ */
+$nebuleAsymetricKeyLenght = '2048';
+
+/*
+ * Autorise ou non la vérification de la signature des liens.
+ * Utilisé par la fonction _l_vr et surtout lors d'un transfert.
+ *
+ * Devrait toujours être à true !
+ *
+ * @var boolean $nebuleCheckSignOnVerify
+ */
+$forceValue = nebGetOpt('permitCheckSignOnVerify', 'boolean');
+if ( $forceValue != null )
+{
+	$nebuleCheckSignOnVerify = $forceValue;
+}
+if ( ! isset($nebuleCheckSignOnVerify) )
+{
+	$nebuleCheckSignOnVerify = true;
+}
+
+/*
+ * Autorise ou non la vérification de la validité des liens lors de leur lecture, signature compris.
+ * Utilisé par la fonction _l_ls1.
+ *
+ * Affecte les performances.
+ *
+ * @var boolean $nebuleCheckSignOnList
+ */
+$forceValue = nebGetOpt('permitCheckSignOnList', 'boolean');
+if ( $forceValue != null )
+{
+	$nebuleCheckSignOnList = $forceValue;
+}
+if ( ! isset($nebuleCheckSignOnList) )
+{
+	$nebuleCheckSignOnList = true;
+}
+
+/*
+ * Autorise ou non l'affichage des liens invalides.
+ * C'est destiné à de l'affichage, les liens ne sont pas pris en compte.
+ * Utilisé par la fonction _l_ls1.
+ *
+ * @var boolean $nebuleListInvalidLinks
+ */
+if ( ! isset($nebuleListInvalidLinks) )
+{
+	$nebuleListInvalidLinks = false;
+}
+
+/*
+ * Autorise ou non l'écriture par le code php.
+ * Positionné à false, c'est une protection globale en lecture seule.
+ * Utilisé par les fonctions _e_gen, _o_gen, _o_dl1, _o_wr, _o_prt, _o_uprt, _o_del, _l_wr, _l_gen, __io_lw et __io_ow.
+ *
+ * @var boolean $nebulePermitWrite
+ */
+$forceValue = nebGetOpt('permitWrite', 'boolean');
+if ( $forceValue != null )
+{
+	$nebulePermitWrite = $forceValue;
+}
+if ( ! isset($nebulePermitWrite) )
+{
+	$nebulePermitWrite = false;
+}
+
+/*
+ * Autorise ou non la création de nouveaux liens par le code php.
+ * Utilisé par les fonctions _e_gen, _o_prt, _o_uprt, _l_wr, _l_gen et __io_lw.
+ *
+ * @var boolean $nebulePermitWriteLink
+ */
+$forceValue = nebGetOpt('permitWriteLink', 'boolean');
+if ( $forceValue != null )
+{
+	$nebulePermitWriteLink = $forceValue;
+}
+if ( ! isset($nebulePermitWriteLink) )
+{
+	$nebulePermitWriteLink = false;
+}
+
+/*
+ * Autorise ou non la création de nouveaux objets par le code php.
+ * Utilisé par les fonctions _e_gen, _o_gen, _o_wr, _o_prt, _o_uprt, _o_del et __io_ow.
+ *
+ * @var boolean $nebulePermitWriteObject
+ */
+$forceValue = nebGetOpt('permitWriteObject', 'boolean');
+if ( $forceValue != null )
+{
+	$nebulePermitWriteObject = $forceValue;
+}
+if ( ! isset($nebulePermitWriteObject) )
+{
+	$nebulePermitWriteObject = false;
+}
+
+/*
+ * Autorise ou non la création de nouvelles entités par le code php.
+ * Utilisé par la fonction _e_gen.
+ *
+ * @var boolean $nebulePermitWriteEntity
+ */
+$forceValue = nebGetOpt('permitWriteEntity', 'boolean');
+if ( $forceValue != null )
+{
+	$nebulePermitWriteEntity = $forceValue;
+}
+if ( ! isset($nebulePermitWriteEntity) )
+{
+	$nebulePermitWriteEntity = false;
+}
+
+/*
+ * Autorise ou non la création d'une entité sans mot de passe.
+ *
+ * Devrait toujours être à <u>false</u>.
+ *
+ * @var boolean $nebulePermitCreateEntityWithoutPassword
+ */
+if ( ! isset($nebulePermitCreateEntityWithoutPassword) )
+{
+	$nebulePermitCreateEntityWithoutPassword = false;
+}
+
+/*
+ * Autorise ou non le transfert de liens depuis un autre serveur nebule.
+ * Utilisé par la fonction _l_dl1.
+ *
+ * @var boolean $nebulePermitSynchronizeLink
+ */
+$forceValue = nebGetOpt('permitSynchronizeLink', 'boolean');
+if ( $forceValue != null )
+{
+	$nebulePermitSynchronizeLink = $forceValue;
+}
+if ( ! isset($nebulePermitSynchronizeLink) )
+{
+	$nebulePermitSynchronizeLink = false;
+}
+
+/*
+ * Autorise ou non le transfert d'objets depuis un autre serveur nebule.
+ * Utilisé par la fonction _o_dl1.
+ *
+ * @var boolean $nebulePermitSynchronizeObject
+ */
+$forceValue = nebGetOpt('permitSynchronizeObject', 'boolean');
+if ( $forceValue != null )
+{
+	$nebulePermitSynchronizeObject = $forceValue;
+}
+if ( ! isset($nebulePermitSynchronizeObject) )
+{
+	$nebulePermitSynchronizeObject = false;
+}
+
+/**
+ * Autorise ou non la tenue d'un historique des derniers liens créés.
+ * Cela crée un fichier de liens /l/f qui doit être nettoyé régulièrement.
+ * C'est utilisé pour exporter plus facilement les derniers liens créés sur une entité déconnectée du réseau.
+ *
+ * @var boolean $nebule_createhistory
+ */
+$nebule_createhistory = false;
+
+/**
+ * Prendre en compte le lien x si la date est identique avec un autre lien, ou pas.
+ *
+ * @var boolean $nebule_followxonsamedate
+ */
+$nebule_followxonsamedate = true;
+
+/*
+ * Autorise ou non les logs des fonctions appelées et temps de passage.
+ * Utilisé par la fonction addLog.
+ *
+ * @var boolean $nebulePermitLogs
+ */
+$forceValue = nebGetOpt('permitLogs', 'boolean');
+if ( $forceValue != null
+		&& nebGetOpt('logsLevel', 'string') == 'DEBUG'
+	)
+{
+	$nebulePermitLogs = $forceValue;
+}
+if ( ! isset($nebulePermitLogs) )
+{
+	$nebulePermitLogs = false;
+}
+
+/**
+ * Limite du nombre de liens à lire pour un objet, les suivants sont ignorés.
+ * Utilisé par les fonctions _l_ls1 et __io_lr.
+ *
+ * @var integer $nebule_io_maxlink
+ */
+//$nebule_io_maxlink = 1000;
+$nebule_io_maxlink = 2000;
+
+/**
+ * Limite de la quantité de données en octets à lire pour un objet, le reste est ignorés.
+ * Utilisé par les fonctions _o_dl1 et __io_or.
+ *
+ * @var integer $nebule_io_maxdata
+ */
+$nebule_io_maxdata = 100000;
+
+/**
+ * Définit le maximum de niveaux parcourus pour la recherche des objets enfants d'un objet.
+ *
+ * Affecte les performances.
+ *
+ * @var integer $nebule_maxrecurse
+ */
+//$nebule_maxrecurse = 10;
+$nebule_maxrecurse = 20;
+
+/**
+ * Définit le maximum de niveaux parcourus pour la recherche des mises à jours d'un objet.
+ *
+ * Affecte les performances.
+ *
+ * @var integer $nebule_maxupdates
+ */
+//$nebule_maxupdates = 100;
+$nebule_maxupdates = 500;
+
+// Usage interne, échange d'informations entre fonctions et métrologie.
+$nebule_error_string = 'pas de message';
+$nebule_result_list = array();
+$nebule_metrolog_l_ls = 0;
+$nebule_metrolog_l_vr = 0;
+$nebule_metrolog_o_ls = 0;
+$nebule_metrolog_o_vr = 0;
+
+/**
+ * Autorise ou non l'utilisation du cache.
+ *
+ * Affecte les performances.
+ *
+ * @var boolean $nebule_usecache
+ */
+$nebule_usecache = true;
+
+$nebule_cache_nebReadObjText1line = array();
+$nebule_cache_nebReadObjName = array();
+$nebule_cache_nebReadObjSize = array();
+$nebule_cache_nebReadEntityType = array();
+$nebule_cache_nebReadEntityLoc = array();
+$nebule_cache_nebReadEntityFName = array();
+$nebule_cache_nebReadEntityName = array();
+$nebule_cache_nebReadEntityPName = array();
+$nebule_cache_nebReadEntityFullName = array();
+$nebule_cache_nebFindObjType = array();
+$nebule_cache_nebReadObjTypeMime = array();
+$nebule_cache_nebReadObjTypeHash = array();
+$nebule_cache_nebIsText = array();
+$nebule_cache_nebIsBanned = array();
+$nebule_cache_nebIsNode = array();
+$nebule_cache_nebMaybeNode = array();
+$nebule_cache_nebIsSuppr = array();
+$nebule_cache_nebIsPubkey = array();
+$nebule_cache_nebIsPrivkey = array();
+$nebule_cache_nebIsEncrypt = array();
+$nebule_cache_nebFindPrivKey = '';
+$nebule_cache_o_vr = array();
+$nebule_cache_l_grx = array();
+
+/**
+ * Chemin du fichier pour trouver le type mime.
+ *
+ * @var string $nebuleMimetypePathFile
+ */
+$nebuleMimetypePathFile = '/etc/mime.types';
+
+
+
+/*
+ * ------------------------------------------------------------------------------------------
+ * Initialisation.
+ * ------------------------------------------------------------------------------------------
+ */
+nebInitLib();
+
+// Recherche et mémorise l'entité locale du serveur.
+if ( file_exists(NEBULE_LOCAL_ENTITY_FILE)
+		&& is_file(NEBULE_LOCAL_ENTITY_FILE)
+	)
+{
+	$nebuleServerEntite = filter_var(strtok(trim(file_get_contents(NEBULE_LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+}
+else
+{
+	$nebuleServerEntite = '';
+}
+if ( $nebuleServerEntite == ''
+		|| strlen($nebuleServerEntite) < ($nebuleSymetricKeyLenght/4)
+		|| ! ctype_xdigit($nebuleServerEntite)
+		|| ! __io_lp($nebuleServerEntite)
+		|| ! __io_op($nebuleServerEntite)
+	)
+{
+	$nebuleServerEntite = $nebuleCodeMaster;
+}
+
+// Si autorisée, l'entité locale du serveur devient autorité locale.
+if ( $nebuleServerEntityAsAuthority )
+{
+	$nebuleLocalAuthorities[3] = $nebuleServerEntite;
+}
+
+// Recherche et mémorise l'entité locale par défaut.
+$nebuleDefaultEntite = nebGetOpt('defaultCurrentEntity', 'string');
+if ( $nebuleDefaultEntite == ''
+		|| strlen($nebuleDefaultEntite) < ($nebuleSymetricKeyLenght/4)
+		|| ! ctype_xdigit($nebuleDefaultEntite)
+		|| ! __io_lp($nebuleDefaultEntite)
+		|| ! __io_op($nebuleDefaultEntite)
+	)
+{
+	$nebuleDefaultEntite = $nebuleCodeMaster;
+}
+
+// Si autorisée, l'entité locale par défaut devient autorité locale.
+if ( $nebuleCurrentEntityAsAuthority )
+{
+	$nebuleLocalAuthorities[4] = $nebuleDefaultEntite;
+}
+
+// Recherche et mémorise l'entité courante.
+if ( ! isset($nebulePublicEntite)
+		|| $nebulePublicEntite == ''
+		|| strlen($nebulePublicEntite) < ($nebuleSymetricKeyLenght/4)
+		|| ! ctype_xdigit($nebulePublicEntite)
+		|| ! __io_lp($nebulePublicEntite)
+		|| ! __io_op($nebulePublicEntite)
+	)
+{
+	$nebulePublicEntite = $nebuleDefaultEntite;
+}
+
+
+
+/*
+ * ------------------------------------------------------------------------------------------
+ * Fonctions haut niveau.
+ * ------------------------------------------------------------------------------------------
+ */
+
+/**
+ * Retourne la valeur d'une option forcée dans le fichier d'environnement.
+ *
+ * @param string $name
+ * @param string $type
+ * @return null|string|boolean|integer
+ */
+function nebGetOpt($name, $type = 'string')
+{
+	addLog("nebGetOpt($name)");
+	
+	if ( $name == '' )
+	{
+		return null;
+	}
+	
+	$result = null;
+	$value = '';
+	
+	// Lit le fichier d'environnement.
+	if ( file_exists(NEBULE_ENVIRONMENT_FILE) )
+	{
+		// Extrait un tableau avec une ligne par élément.
+		$file = file(NEBULE_ENVIRONMENT_FILE, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
+		foreach($file as $line)
+		{
+			$l = trim($line);
+	
+			// Si commentaire, passe à la ligne suivante.
+			if ( $l[0] == "#" )
+			{
+				continue;
+			}
+	
+			// Recherche l'option demandée.
+			if ( filter_var(trim(strtok($l, '=')), FILTER_SANITIZE_STRING) == $name )
+			{
+				$value = filter_var(trim(substr($l, strpos($l, '=') + 1)), FILTER_SANITIZE_STRING);
+				break;
+			}
+		}
+		unset($file, $line, $l);
+	}
+	
+	// Extrait la valeur en fonction du type de l'option.
+	switch ( $type )
+	{
+		case 'string' :
+			if ( $value != '' )
+			{
+				$result = $value;
+			}
+			else
+			{
+				$result = null;
+			}
+			break;
+		case 'boolean' :
+			if ( $value == 'true' )
+			{
+				$result = true;
+			}
+			elseif ( $value == 'false' )
+			{
+				$result = false;
+			}
+			else
+			{
+				$result = null;
+			}
+			break;
+		case 'integer' :
+			if ( $value != '' )
+			{
+				$result = (int)$value;
+			}
+			else
+			{
+				$result = null;
+			}
+			break;
+		default :
+			$result = null;
+	}
+	
+	return $result;
+}
+
+/**
+ * Ajoute une ligne dans les logs système.
+ *
+ * @param string $message
+ * @return null
+ */
+function addLog($message)
+{
+	global $nebulePermitLogs, $metrologyStartTime;
+	
+	if ( ! is_string($message) )
+	{
+		return;
+	}
+	
+	if ( $message == '' )
+	{
+		$message = 'MARK';
+	}
+	
+	if ( $nebulePermitLogs )
+	{
+		syslog(LOG_INFO, 'LogT='.(microtime(true)-$metrologyStartTime).' Mem='.memory_get_usage().' '.$message);
+	}
+}
+
+/**
+ * Initialisation de la bibliothèque.
+ *
+ * @return boolean
+ */
+function nebInitLib()
+{
+	global	$nebulePuppetmaster, $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster,
+			$nebuleLocalAuthorities, $nebuleHashAlgorithm;
+	
+	addLog("nebInitLib()");
+	
+	// Initialise les i/o.
+	__io_open();
+	
+	// Vérifie le maître du tout.
+	if ( ! ctype_xdigit($nebulePuppetmaster)
+			|| $nebulePuppetmaster == '0'
+			|| ! __io_op($nebulePuppetmaster)
+			|| ! __io_lp($nebulePuppetmaster)
+			|| ! _o_vr($nebulePuppetmaster)
+			|| ! nebIsPubkey($nebulePuppetmaster)
+		)
+	{
+		addLog('invalid puppetmaster');
+		return false;
+	}
+	
+	// Pour la suite, seul le puppetmaster est enregirstré.
+	// Une fois les autres entités trouvées, ajoute les autres autorités.
+	// Cela empêche qu'une entié compromise ne génère un lien qui passerait avant le puppetmaster
+	//   dans la recherche par référence nebFindByRef.
+	$nebuleLocalAuthorities[0] = $nebulePuppetmaster;
+	
+	// Recherche et vérifie le maître de la sécurité.
+	$entity = nebFindByRef(
+			hash( $nebuleHashAlgorithm, 'nebule/objet/entite/maitre/securite'),
+			'nebule/objet/entite/maitre/securite',
+			true);
+	if ( ! ctype_xdigit($entity)
+			|| $entity == '0'
+			|| ! __io_op($entity)
+			|| ! __io_lp($entity)
+			|| ! _o_vr($entity)
+			|| ! nebIsPubkey($entity)
+		)
+	{
+		addLog('invalid security master');
+		return false;
+	}
+	$nebuleSecurityMaster = $entity;
+	
+	// Recherche et vérifie le maître du code.
+	$entity = nebFindByRef(
+			hash( $nebuleHashAlgorithm, 'nebule/objet/entite/maitre/code'),
+			'nebule/objet/entite/maitre/code',
+			true);
+	if ( ! ctype_xdigit($entity)
+			|| $entity == '0'
+			|| ! __io_op($entity)
+			|| ! __io_lp($entity)
+			|| ! _o_vr($entity)
+			|| ! nebIsPubkey($entity)
+		)
+	{
+		addLog('invalid code master');
+		return false;
+	}
+	$nebuleCodeMaster = $entity;
+	
+	// Recherche et vérifie le maître de l'annuaire.
+	$entity = nebFindByRef(
+			hash( $nebuleHashAlgorithm, 'nebule/objet/entite/maitre/annuaire'),
+			'nebule/objet/entite/maitre/annuaire',
+			true);
+	if ( ! ctype_xdigit($entity)
+			|| $entity == '0'
+			|| ! __io_op($entity)
+			|| ! __io_lp($entity)
+			|| ! _o_vr($entity)
+			|| ! nebIsPubkey($entity)
+		)
+	{
+		addLog('invalid directory master');
+		return false;
+	}
+	$nebuleDirectoryMaster = $entity;
+	
+	// Recherche et vérifie le maître du temps.
+	$entity = nebFindByRef(
+			hash( $nebuleHashAlgorithm, 'nebule/objet/entite/maitre/temps'),
+			'nebule/objet/entite/maitre/temps',
+			true);
+	if ( ! ctype_xdigit($entity)
+			|| $entity == '0'
+			|| ! __io_op($entity)
+			|| ! __io_lp($entity)
+			|| ! _o_vr($entity)
+			|| ! nebIsPubkey($entity)
+		)
+	{
+		addLog('invalid time master');
+		return false;
+	}
+	$nebuleTimeMaster = $entity;
+	
+	// A partir de là on peut ajouter les autres autorités.
+	$nebuleLocalAuthorities[1] = $nebuleSecurityMaster;
+	$nebuleLocalAuthorities[2] = $nebuleCodeMaster;
+	
+	// Retour normal.
+	return true;
+}
+
+/**
+ * Vérification de la bibliothèque.
+ * @todo
+ *
+ * @return boolean
+ */
+function nebChkLib()
+{
+	global $nebulePuppetmaster, $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster;
+	
+	addLog('nebChkLib()');
+	
+	// Vérifie le maître du tout.
+	if ( ! ctype_xdigit($nebulePuppetmaster)
+			|| $nebulePuppetmaster == '0'
+			|| ! __io_op($nebulePuppetmaster)
+			|| ! __io_lp($nebulePuppetmaster)
+			|| ! _o_vr($nebulePuppetmaster)
+			|| ! nebIsPubkey($nebulePuppetmaster)
+		)
+	{
+		addLog('error check puppetmaster');
+		return false;
+	}
+	
+	// Vérifie le maître de la sécurité.
+	if ( ! ctype_xdigit($nebuleSecurityMaster)
+			|| $nebuleSecurityMaster == '0'
+			|| ! __io_op($nebuleSecurityMaster)
+			|| ! __io_lp($nebuleSecurityMaster)
+			|| ! _o_vr($nebuleSecurityMaster)
+			|| ! nebIsPubkey($nebuleSecurityMaster)
+		)
+	{
+		addLog('error check security master');
+		return false;
+	}
+	
+	// Vérifie le maître du code.
+	if ( ! ctype_xdigit($nebuleCodeMaster)
+			|| $nebuleCodeMaster == '0'
+			|| ! __io_op($nebuleCodeMaster)
+			|| ! __io_lp($nebuleCodeMaster)
+			|| ! _o_vr($nebuleCodeMaster)
+			|| ! nebIsPubkey($nebuleCodeMaster)
+		)
+	{
+		addLog('error check code master');
+		return false;
+	}
+	
+	// Vérifie le maître de l'annuaire.
+	if ( ! ctype_xdigit($nebuleDirectoryMaster)
+			|| $nebuleDirectoryMaster == '0'
+			|| ! __io_op($nebuleDirectoryMaster)
+			|| ! __io_lp($nebuleDirectoryMaster)
+			|| ! _o_vr($nebuleDirectoryMaster)
+			|| ! nebIsPubkey($nebuleDirectoryMaster)
+		)
+	{
+		addLog('error check directory master');
+		return false;
+	}
+	
+	// Vérifie le maître du temps.
+	if ( ! ctype_xdigit($nebuleTimeMaster)
+			|| $nebuleTimeMaster == '0'
+			|| ! __io_op($nebuleTimeMaster)
+			|| ! __io_lp($nebuleTimeMaster)
+			|| ! _o_vr($nebuleTimeMaster)
+			|| ! nebIsPubkey($nebuleTimeMaster)
+		)
+	{
+		addLog('error check time master');
+		return false;
+	}
+	
+	// Retour normal.
+	return true;
+}
+
+/**
+ * Recherche un objet par référence, c'est à dire référencé par un autre objet dédié.
+ * La recherche se fait dans les liens de $object.
+ *
+ * Si $strict est à true, les liens sont pré-filtrés sur les entités autorités locales.
+ * Si la liste des entités autorités locales est vide, tous les liens seront supprimés.
+ *
+ * Si pas trouvé, retourne '0'.
+ *
+ * @param string $object
+ * @param string $reference
+ * @param boolean $strict
+ * @return string
+ */
+function nebFindByRef($object, $reference, $strict = false )
+{
+	global $nebuleHashAlgorithm, $nebuleLocalAuthorities;
+	
+	addLog("nebFindByRef($object, $reference)");
+	
+	if ( $object == '0'
+			|| $object == ''
+			|| ! ctype_xdigit($object)
+		)
+	{
+		return '0';
+	}
+	if ( $reference == '' )
+	{
+		return '0';
+	}
+	
+	$referenceID = hash( $nebuleHashAlgorithm, $reference );
+	$result = '0';
+	$links = array();
+	$link = array();
+	//_l_fndi($object, $links, 'f', $referenceID, '', $referenceID, false);
+	_l_fndi($object, $links, 'f', $object, '', $referenceID, false);
+
+	$signer = '';
+	$authority = '';
+	foreach ( $links as $link )
+	{
+		// Au besoin, filtre les liens sur les autorités locales.
+		if ( $strict !== false )
+		{
+			$signer = $link[2];
+			$ok = false;
+			foreach ( $nebuleLocalAuthorities as $authority )
+			{
+				if ( $signer == $authority )
+				{
+					$ok = true;
+					break;
+				}
+			}
+			if ( $ok )
+			{
+				// Si le signataire est autorité locale, garde le dernier.
+				$result = $link[6];
+			}
+		}
+		else
+		{
+			// Garde le dernier.
+			$result = $link[6];
+		}
+	}
+	
+	unset($links, $link, $signer, $authority, $referenceID);
+	return $result;
+}
+
+/**
+ * Lit la première ligne d'un objet comme un texte, quel que soit son type mime.
+ * Supprime les caractères non imprimables.
+ *
+ * Fonction avec utilisation du cache si possible.
+ *
+ * @param string $object
+ * @param number $maxsize
+ * @return string
+ */
+function nebReadObjText1line( &$object, $maxsize )
+{
+	global $nebule_usecache, $nebule_cache_nebReadObjText1line;
+	
+	addLog("nebReadObjText1line($object)");
+	
+	if ( $nebule_usecache
+			&& isset( $nebule_cache_nebReadObjText1line [$object] )
+		)
+	{
+		return $nebule_cache_nebReadObjText1line [$object];
+	}
+	$readdata = '';
+	_o_ls1( $object, $readdata );
+	// Detecte l'encodage et convertit en UTF-8 au besoin.
+	$data = mb_convert_encoding( trim( strtok( filter_var( $readdata, FILTER_SANITIZE_STRING ), "\n" ) ), 'UTF-8' ); // WARNING problème de convertion du codage de caractères...
+	if ( strlen( $data ) > $maxsize )
+	{
+		$data = substr( $data, 0, ($maxsize - 3) ).'...';
+	}
+	unset( $readdata );
+	if ( $nebule_usecache )
+	{
+		$nebule_cache_nebReadObjText1line [$object] = $data;
+	}
+	return $data;
+}
+
+/**
+ * Lit le contenu d'un objet comme un texte, quel que soit son type mime.
+ * Supprime les caractères non imprimables.
+ *
+ * @param string $object
+ * @param number $maxsize
+ * @return string
+ */
+function nebReadObjText( &$object, $maxsize = 4096 )
+{
+	addLog("nebReadObjText($object)");
+	
+	$readdata = '';
+	_o_ls1( $object, $readdata );
+	// $data = mb_convert_encoding(filter_var($readdata, FILTER_SANITIZE_STRING), 'UTF-8');
+	$data = __fs( $readdata );
+	if ( strlen( $data ) > $maxsize )
+	{
+		$data = substr( $data, 0, ($maxsize - 3) ) . '...';
+	}
+	unset( $readdata );
+	return $data;
+}
+
+/**
+ * Lit les liens nettoyés d'un objet.
+ *
+ * @param string $object
+ * @param array $table
+ */
+function nebReadObjLinks( $object, &$table )
+{
+	addLog("nebReadObjLinks($object)");
+	
+	_l_lsx( $object, $table );
+}
+
+/**
+ * Cherche le nom complet d'un objet, càd avec préfix et suffix.
+ * Fonction avec utilisation du cache si possible.
+ *
+ * @param string $object
+ * @return string
+ */
+function nebReadObjName( &$object )
+{
+	global $nebule_usecache, $nebule_cache_nebReadObjName;
+	
+	addLog("nebReadObjName($object)");
+	
+	if ( $nebule_usecache
+			&& isset( $nebule_cache_nebReadObjName [$object] )
+		)
+	{
+		return $nebule_cache_nebReadObjName [$object];
+	}
+	nebINECreatObjText( 'nebule/objet/nom' );
+	nebINECreatObjText( 'nebule/objet/prenom' );
+	nebINECreatObjText( 'nebule/objet/surnom' );
+	nebINECreatObjText( 'nebule/objet/prefix' ); // @todo
+	nebINECreatObjText( 'nebule/objet/suffix' );
+	
+	// Recherche du nom.
+	$type = nebFindObjType( $object, 'nebule/objet/nom' );
+	$nom = '';
+	if ( __io_op( $type ) )
+	{
+		$nom = nebReadObjText1line( $type, 128 );
+	}
+	if ( $nom == '' )
+	{
+		$nom = $object;
+	}
+	
+	// Recherche du prénom.
+	$type = nebFindObjType( $object, 'nebule/objet/prenom' );
+	$prenom = '';
+	if ( __io_op( $type ) )
+	{
+		$prenom = nebReadObjText1line( $type, 128 );
+	}
+	if ( $prenom != '' )
+	{
+		$nom = "$prenom $nom";
+	}
+	
+	// Recherche du surnom.
+	$type = nebFindObjType( $object, 'nebule/objet/surnom' );
+	$surnom = '';
+	if ( __io_op( $type ) )
+	{
+		$surnom = nebReadObjText1line( $type, 128 );
+	}
+	if ( $surnom != '' )
+	{
+		$nom = "$nom $surnom";
+	}
+	
+	// Recherche du suffix.
+	$type = nebFindObjType( $object, 'nebule/objet/suffix' );
+	$suffix = '';
+	if ( __io_op( $type ) )
+	{
+		$suffix = nebReadObjText1line( $type, 128 );
+	}
+	if ( $suffix != '' )
+	{
+		$nom = "$nom.$suffix";
+	}
+	
+	unset( $type, $prenom, $surnom, $suffix );
+	
+	if ( $nebule_usecache )
+	{
+		$nebule_cache_nebReadObjName [$object] = $nom;
+	}
+	
+	return $nom;
+}
+function nebReadObjSize( &$object )
+{
+	// Cherche la taille d'un objet.
+	// Fonction avec utilisation du cache si possible.
+	global $nebule_usecache, $nebule_cache_nebReadObjSize;
+	addLog("nebReadObjSize($object)");
+	if ($nebule_usecache && isset( $nebule_cache_nebReadObjSize [$object] ))
+		return $nebule_cache_nebReadObjSize [$object];
+	nebINECreatObjText( 'nebule/objet/taille' );
+	$type = nebFindObjType( $object, 'nebule/objet/taille' ); // L'objet doit etre present et doit etre de type text/plain.
+	$text = '';
+	if (__io_op( $type ))
+	{
+		$text = nebReadObjText1line( $type, 128 );
+	}
+	if ($text == '')
+	{
+		$text = '-indéfini-';
+	}
+	unset( $type );
+	if ($nebule_usecache)
+		$nebule_cache_nebReadObjSize [$object] = $text;
+	return $text;
+}
+function nebReadEntityType( &$object )
+{
+	// Cherche le type d'une entite.
+	// Fonction avec utilisation du cache si possible.
+	global $nebule_usecache, $nebule_cache_nebReadEntityType;
+	addLog("nebReadEntityType($object)");
+	if ($nebule_usecache && isset( $nebule_cache_nebReadEntityType [$object] ))
+		return $nebule_cache_nebReadEntityType [$object];
+	nebINECreatObjText( 'nebule/objet/entite/type' );
+	$type = nebFindObjType( $object, 'nebule/objet/entite/type' ); // L'objet doit etre present et doit etre de type text/plain.
+	$text = '';
+	if (__io_op( $type ))
+	{
+		$text = nebReadObjText1line( $type, 128 );
+	}
+	if ($text == '')
+	{
+		$text = '-indéterminé-';
+	}
+	unset( $type );
+	if ($nebule_usecache)
+		$nebule_cache_nebReadEntityType [$object] = $text;
+	return $text;
+}
+function nebReadEntityLoc( &$object )
+{
+	// Cherche la localisation d'une entite.
+	// Fonction avec utilisation du cache si possible.
+	global $nebule_usecache, $nebule_cache_nebReadEntityLoc;
+	addLog("nebReadEntityLoc($object)");
+	if ($nebule_usecache && isset( $nebule_cache_nebReadEntityLoc [$object] ))
+		return $nebule_cache_nebReadEntityLoc [$object];
+	nebINECreatObjText( 'nebule/objet/entite/localisation' );
+	$type = nebFindObjType( $object, 'nebule/objet/entite/localisation' ); // L'objet doit etre present et doit etre de type text/plain.
+	$text = '';
+	if (__io_op( $type ))
+	{
+		$text = nebReadObjText1line( $type, 128 );
+	}
+	if ($text == '')
+	{
+		$text = '-indéterminé-';
+	}
+	unset( $type );
+	if ($nebule_usecache)
+		$nebule_cache_nebReadEntityLoc [$object] = $text;
+	return $text;
+}
+function nebReadEntityFName( &$entite )
+{
+	// Cherche le prénom d'une entite.
+	// Fonction avec utilisation du cache si possible.
+	global $nebule_usecache, $nebule_cache_nebReadEntityFName;
+	addLog("nebReadEntityFName($entite)");
+	if ($nebule_usecache && isset( $nebule_cache_nebReadEntityFName [$entite] ))
+		return $nebule_cache_nebReadEntityFName [$entite];
+	nebINECreatObjText( 'nebule/objet/prenom' );
+	$type = nebFindObjType( $entite, 'nebule/objet/prenom' ); // L'objet doit etre present et doit etre de type text/plain.
+	$text = '';
+	if (__io_op( $type ))
+	{
+		$text = nebReadObjText1line( $type, 128 );
+	}
+	unset( $type );
+	if ($nebule_usecache)
+		$nebule_cache_nebReadEntityFName [$entite] = $text;
+	return $text;
+}
+function nebReadEntityName( &$entite )
+{
+	// Cherche le nom d'une entite.
+	// Fonction avec utilisation du cache si possible.
+	global $nebule_usecache, $nebule_cache_nebReadEntityName;
+	addLog("nebReadEntityName($entite)");
+	if ($nebule_usecache && isset( $nebule_cache_nebReadEntityName [$entite] ))
+		return $nebule_cache_nebReadEntityName [$entite];
+	nebINECreatObjText( 'nebule/objet/nom' );
+	$type = nebFindObjType( $entite, 'nebule/objet/nom' ); // L'objet doit etre present et doit etre de type text/plain.
+	$text = '';
+	if (__io_op( $type ))
+	{
+		$text = nebReadObjText1line( $type, 128 );
+	}
+	unset( $type );
+	if ($nebule_usecache)
+		$nebule_cache_nebReadEntityName [$entite] = $text;
+	return $text;
+}
+function nebReadEntityPName( &$entite )
+{
+	// Cherche le postnom d'une entite.
+	// Fonction avec utilisation du cache si possible.
+	global $nebule_usecache, $nebule_cache_nebReadEntityPName;
+	addLog("nebReadEntityPName($entite)");
+	if ($nebule_usecache && isset( $nebule_cache_nebReadEntityPName [$entite] ))
+		return $nebule_cache_nebReadEntityPName [$entite];
+	nebINECreatObjText( 'nebule/objet/postnom' );
+	$type = nebFindObjType( $entite, 'nebule/objet/postnom' ); // L'objet doit etre present et doit etre de type text/plain.
+	$text = '';
+	if (__io_op( $type ))
+	{
+		$text = nebReadObjText1line( $type, 128 );
+	}
+	unset( $type );
+	if ($nebule_usecache)
+		$nebule_cache_nebReadEntityPName [$entite] = $text;
+	return $text;
+}
+function nebReadEntityFullName( &$entite )
+{
+	// Cherche le nom complet d'une entite, càd avec prénom et surnom.
+	// Fonction avec utilisation du cache si possible.
+	global $nebule_usecache, $nebule_cache_nebReadEntityFullName;
+	addLog("nebReadEntityFullName($entite)");
+	if ($nebule_usecache && isset( $nebule_cache_nebReadEntityFullName [$entite] ))
+		return $nebule_cache_nebReadEntityFullName [$entite];
+	$fname = nebReadEntityFName( $entite );
+	$name = nebReadEntityName( $entite );
+	$pname = nebReadEntityPName( $entite );
+	if ($name == '')
+	{
+		$fullname = "$entite";
+	}
+	else
+	{
+		$fullname = $name;
+	}
+	if ($fname != '')
+	{
+		$fullname = "$fname $fullname";
+	}
+	if ($pname != '')
+	{
+		$fullname = "$fullname $pname";
+	}
+	unset( $fname );
+	unset( $name );
+	unset( $pname );
+	if ($nebule_usecache)
+		$nebule_cache_nebReadEntityFullName [$entite] = $fullname;
+	return $fullname;
+}
+function nebFindObjType( &$object, $type )
+{
+	// Cherche l'objet contenant la description de l'objet pour une propriete type.
+	// Fonction avec utilisation du cache si possible.
+	global $nebuleHashAlgorithm, $nebulePublicEntite, $nebule_usecache, $nebule_cache_nebFindObjType;
+	addLog("nebFindObjType($object)");
+	if ($nebule_usecache && isset( $nebule_cache_nebFindObjType [$object] [$type] ))
+		return $nebule_cache_nebFindObjType [$object] [$type];
+	if ($object == '811ba947111090b4708da62494a84e5cfc13ea60e16dac94a678f395aa42da07')
+		return ''; // WARNING caca - Exception pour problème de performances : 'nebule/objet/entite/suivi'
+	$table = array ();
+	$hashtype = hash( $nebuleHashAlgorithm, $type );
+	$objdst = '';
+	_l_fnd( $object, $table, 'l', $object, '', $hashtype );
+	foreach ( $table as $itemtable )
+	{
+		if (($itemtable [2] == $nebulePublicEntite) && ($itemtable [7] == $hashtype) && ($itemtable [5] == $object) && ($itemtable [4] == 'l'))
+		{
+			$objdst = $itemtable [6];
+			break 1;
+		}
+		if (($itemtable [7] == $hashtype) && ($itemtable [5] == $object) && ($itemtable [4] == 'l'))
+		{
+			$objdst = $itemtable [6];
+		} // WARNING peut-être un problème de sécurité...
+	}
+	unset( $table );
+	unset( $hashtype );
+	if ($nebule_usecache)
+		$nebule_cache_nebFindObjType [$object] [$type] = $objdst;
+	return $objdst;
+}
+function nebReadObjTypeMime( &$object )
+{ // Cherche le type mime d'un objet.
+  // Fonction avec utilisation du cache si possible.
+	global $nebuleHashAlgorithm, $nebulePublicEntite, $nebule_usecache, $nebule_cache_nebReadObjTypeMime;
+	addLog("nebReadObjTypeMime($object)");
+	if ($nebule_usecache && isset( $nebule_cache_nebReadObjTypeMime [$object] ))
+		return $nebule_cache_nebReadObjTypeMime [$object];
+	if ($object == '' || $object == '0')
+		return '-indéfini-'; // L'objet doit etre present.
+	$table = array ();
+	nebINECreatObjText( 'nebule/objet/type' );
+	$hashtype = hash( $nebuleHashAlgorithm, 'nebule/objet/type' ); // 5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0
+	$type = '';
+	_l_fnd( $object, $table, 'l', $object, '', $hashtype );
+	rsort( $table );
+	foreach ( $table as $itemtable )
+	{
+		if (($itemtable [2] == $nebulePublicEntite) && ($itemtable [7] == $hashtype) && ($itemtable [5] == $object) && ($itemtable [4] == 'l'))
+		{
+			$type = $itemtable [6];
+			break 1;
+		}
+		if (($itemtable [7] == $hashtype) && ($itemtable [5] == $object) && ($itemtable [4] == 'l'))
+			$type = $itemtable [6]; // WARNING peut être un problème de sécurité...
+	}
+	unset( $table );
+	unset( $hashtype );
+	$text = '';
+	if (__io_op( $type ))
+	{
+		$text = nebReadObjText1line( $type, 128 );
+	}
+	if ($text == '')
+	{
+		$text = '-indéfini-';
+	}
+	unset( $type );
+	if ($nebule_usecache)
+		$nebule_cache_nebReadObjTypeMime [$object] = $text;
+	return $text;
+}
+function nebReadObjTypeHash( &$object )
+{ // Cherche le type de hash d'un objet.
+  // Fonction avec utilisation du cache si possible.
+	global $nebuleHashAlgorithm, $nebulePublicEntite, $nebule_usecache, $nebule_cache_nebReadObjTypeHash;
+	addLog("nebReadObjTypeHash($object)");
+	if ($nebule_usecache && isset( $nebule_cache_nebReadObjTypeHash [$object] ))
+		return $nebule_cache_nebReadObjTypeHash [$object];
+	if ($object == '' || $object == '0')
+		return '-indéfini-'; // L'objet doit etre present.
+	$table = array ();
+	nebINECreatObjText( 'nebule/objet/hash' );
+	$hashtype = hash( $nebuleHashAlgorithm, 'nebule/objet/hash' ); // 8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec
+	$type = '';
+	_l_fnd( $object, $table, 'l', $object, '', $hashtype );
+	foreach ( $table as $itemtable )
+	{
+		if (($itemtable [2] == $nebulePublicEntite) && ($itemtable [7] == $hashtype) && ($itemtable [5] == $object) && ($itemtable [4] == 'l'))
+		{
+			$type = $itemtable [6];
+			break 1;
+		}
+		if (($itemtable [7] == $hashtype) && ($itemtable [5] == $object) && ($itemtable [4] == 'l'))
+			$type = $itemtable [6]; // WARNING peut être un problème de sécurité...
+	}
+	unset( $table );
+	unset( $hashtype );
+	$text = '';
+	if (__io_op( $type ))
+	{
+		$text = nebReadObjText1line( $type, 32 );
+	}
+	if ($text == '')
+	{
+		$text = '-indéfini-';
+	}
+	unset( $type );
+	if ($nebule_usecache)
+		$nebule_cache_nebReadObjTypeHash [$object] = $text;
+	return $text;
+}
+function nebIsText( &$object )
+{ // Vérifie si l'objet est marqué comme un texte.
+  // Fonction avec utilisation du cache si possible.
+	global $nebulePublicEntite, $nebuleHashAlgorithm, $nebule_usecache, $nebule_cache_nebIsText;
+	addLog("nebIsText($object)");
+	if ($nebule_usecache && isset( $nebule_cache_nebIsText [$object] ))
+		return $nebule_cache_nebIsText [$object];
+	if ($object == '0')
+		return false;
+	$ok = false;
+	$table = array ();
+	$hashtype = hash( $nebuleHashAlgorithm, 'text/plain' );
+	$hashmeta = hash( $nebuleHashAlgorithm, 'nebule/objet/type' );
+	_l_fnd( $object, $table, 'l', $object, $hashtype, $hashmeta );
+	foreach ( $table as $link )
+	{
+		if (($link [2] == $nebulePublicEntite) && ($link [4] == 'l') && ($link [5] == $object) && ($link [6] == $hashtype) && ($link [7] == $hashmeta))
+		{
+			$ok = true;
+			break 1;
+		}
+		if (($link [4] == 'l') && ($link [5] == $object) && ($link [6] == $hashtype) && ($link [7] == $hashmeta))
+			$ok = true;
+	}
+	unset( $table );
+	if ($nebule_usecache)
+		$nebule_cache_nebIsText [$object] = $ok;
+	return $ok;
+}
+function nebAddObjTypeMime( &$object, $type )
+{ // Ajoute le type mime d'un objet.
+	global $nebuleHashAlgorithm, $nebulePublicEntite;
+	
+	addLog("nebAddObjTypeMime($object)");
+	if ($object == '' || $object == '0')
+		return false;
+	if ($type == '')
+		return false;
+	$hashtype = hash( $nebuleHashAlgorithm, $type );
+	nebINECreatObjText( 'nebule/objet/type' );
+	nebINECreatObjText( 'text/plain' );
+	$newlink = _l_gen( '-', 'l', $object, $hashtype, (hash( $nebuleHashAlgorithm, 'nebule/objet/type' )) ); // 5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+	if (! __io_op( $type ) && ! __io_lp( $type ))
+		_o_gen( $type, 'text/plain' );
+	unset( $hashtype );
+	unset( $newlink );
+	return true;
+}
+function nebIsBanned( &$object )
+{ // Vérifie si l'objet est marqué comme banni.
+  // Fonction avec utilisation du cache si possible.
+	global $nebulePublicEntite, $nebuleHashAlgorithm, $nebulePuppetmaster, $nebuleSecurityMaster, $nebule_usecache, $nebule_cache_nebIsBanned;
+	
+	addLog("nebIsBanned($object)");
+	if ($nebule_usecache && isset( $nebule_cache_nebIsBanned [$object] ))
+		return $nebule_cache_nebIsBanned [$object];
+	if ($object == '0')
+		return false;
+	$ok = false;
+	$table = array ();
+	$hashtype = hash( $nebuleHashAlgorithm, 'nebule/danger' ); // ac2323f77d7ee9f3ae841e8ccd8374397038160ec7cdb2fc86610c0f66eeeedb
+	                                                     // _l_lsx($object, $table, 'f', $hashtype);
+	_l_fnd( $object, $table, 'f', $hashtype, $object, '0' );
+	foreach ( $table as $link )
+	{
+		if (($link [2] == $nebulePublicEntite) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $object) && ($link [7] == '0'))
+			$ok = true;
+		if (($link [2] == $nebuleSecurityMaster) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $object) && ($link [7] == '0'))
+			$ok = true;
+		if (($link [2] == $nebulePuppetmaster) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $object) && ($link [7] == '0'))
+			$ok = true;
+	}
+	unset( $table );
+	unset( $hashtype );
+	if ($nebule_usecache)
+		$nebule_cache_nebIsBanned [$object] = $ok;
+	return $ok;
+}
+function nebIsNode( &$object )
+{ // Vérifie si l'objet est marqué comme un noeud.
+  // Fonction avec utilisation du cache si possible.
+	global $nebulePublicEntite, $nebuleHashAlgorithm, $nebule_usecache, $nebule_cache_nebIsNode;
+	
+	addLog("nebIsNode($object)");
+	if ($nebule_usecache && isset( $nebule_cache_nebIsNode [$object] ))
+		return $nebule_cache_nebIsNode [$object];
+	if ($object == '0')
+		return false;
+	$ok = false;
+	$table = array ();
+	nebINECreatObjText( 'nebule/objet/noeud' );
+	$hashtype = hash( $nebuleHashAlgorithm, 'nebule/objet/noeud' ); // 2df1f7d23473fa0e964acc0b621c1e6bfd8160003c6a1b7d9374c6f034c6aaf4
+	                                                          // _l_lsx($object, $table, 'f', $hashtype);
+	_l_fnd( $object, $table, 'f', $hashtype, $object, '0' );
+	foreach ( $table as $link )
+	{
+		if (($link [2] == $nebulePublicEntite) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $object) && ($link [7] == '0'))
+			$ok = true;
+	}
+	unset( $table );
+	unset( $link );
+	unset( $hashtype );
+	if ($nebule_usecache)
+		$nebule_cache_nebIsNode [$object] = $ok;
+	return $ok;
+}
+function nebMaybeNode( &$object )
+{ // Vérifie si l'objet est potentiellement un noeud.
+  // Fonction avec utilisation du cache si possible.
+	global $nebulePublicEntite, $nebuleHashAlgorithm, $nebule_usecache, $nebule_cache_nebMaybeNode;
+	
+	addLog("nebMaybeNode($object)");
+	if ($nebule_usecache && isset( $nebule_cache_nebMaybeNode [$object] ))
+		return $nebule_cache_nebMaybeNode [$object];
+	if ($object == '0')
+		return false;
+	$ok = false;
+	$table = array ();
+	_l_fnd( $object, $table, 'f', $object, '', $object );
+	foreach ( $table as $link )
+	{
+		if (($link [2] == $nebulePublicEntite) && ($link [4] == 'f') && ($link [5] == $object) && ($link [7] == $object))
+			$ok = true;
+	}
+	unset( $table );
+	if ($nebule_usecache)
+		$nebule_cache_nebMaybeNode [$object] = $ok;
+	return $ok;
+}
+function nebIsSuppr( &$object )
+{ // Vérifie si l'objet est marqué comme supprimé.
+  // Fonction avec utilisation du cache si possible.
+	global $nebulePublicEntite, $nebuleHashAlgorithm, $nebule_usecache, $nebule_cache_nebIsSuppr;
+	
+	addLog("nebIsSuppr($object)");
+	if ($nebule_usecache && isset( $nebule_cache_nebIsSuppr [$object] ))
+		return $nebule_cache_nebIsSuppr [$object];
+	if ($object == '0')
+		return false;
+	$ok = false;
+	$table = array ();
+	_l_fnd( $object, $table, 'd', $object, '0', '0' );
+	foreach ( $table as $link )
+	{
+		if (($link [2] == $nebulePublicEntite) && ($link [4] == 'd') && ($link [5] == $object) && ($link [6] == '0') && ($link [7] == '0'))
+		{
+			$ok = true;
+			break 1;
+		}
+	}
+	unset( $table );
+	if ($nebule_usecache)
+		$nebule_cache_nebIsSuppr [$object] = $ok;
+	return $ok;
+}
+
+/**
+ * nebIsPubkey()
+ * Vérifie si l'objet est une clé publique.
+ * Fonction avec utilisation du cache si possible.
+ *
+ * @param string $entite
+ * @return boolean
+ */
+function nebIsPubkey( &$entite )
+{
+	global $nebule_usecache, $nebule_cache_nebIsPubkey;
+	
+	addLog("nebIsPubkey($entite)");
+	if ( $nebule_usecache
+			&& isset( $nebule_cache_nebIsPubkey[$entite] )
+		)
+	{
+		return $nebule_cache_nebIsPubkey[$entite];
+	}
+	if ( ! is_string($entite)
+			|| $entite == '0'
+			|| ! ctype_xdigit($entite)
+			|| ! __io_lp($entite)
+		)
+	{
+		return;
+	}
+	nebINECreatObjText( 'application/x-pem-file' ); // 970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864
+	if ( nebReadObjTypeMime( $entite ) != 'application/x-pem-file' )
+	{
+		return false;
+	}
+	$line = nebReadObjText( $entite, 10000 );
+	if ( strstr( $line, 'BEGIN PUBLIC KEY' ) !== false )
+	{
+		if ( $nebule_usecache )
+		{
+			$nebule_cache_nebIsPubkey[$entite] = true;
+		}
+		return true;
+	}
+	else
+	{
+		if ( $nebule_usecache )
+		{
+			$nebule_cache_nebIsPubkey[$entite] = false;
+		}
+		return false;
+	}
+}
+
+function nebIsPrivkey( &$entite )
+{ // Vérifie si l'objet est une clé privée.
+  // Fonction avec utilisation du cache si possible.
+	global $nebuleHashAlgorithm, $nebule_usecache, $nebule_cache_nebIsPrivkey;
+	
+	addLog("nebIsPrivkey($entite)");
+	if ($nebule_usecache && isset( $nebule_cache_nebIsPrivkey [$entite] ))
+		return $nebule_cache_nebIsPrivkey [$entite];
+	if ($entite == '0')
+		return;
+	nebINECreatObjText( 'application/x-pem-file' ); // 970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864
+	if ((nebReadObjTypeMime( $entite )) != 'application/x-pem-file')
+		return false;
+	$line = nebReadObjText( $entite, 10000 );
+	if ((strstr( $line, 'BEGIN ENCRYPTED PRIVATE KEY' )) !== false)
+	{
+		if ($nebule_usecache)
+			$nebule_cache_nebIsPrivkey [$entite] = true;
+		return true;
+	}
+	else
+	{
+		if ($nebule_usecache)
+			$nebule_cache_nebIsPrivkey [$entite] = false;
+		return false;
+	}
+}
+function nebIsEncrypt( &$object )
+{ // Vérifie si l'objet est marqué comme protégé.
+  // Fonction avec utilisation du cache si possible.
+	global $nebule_usecache, $nebule_cache_nebIsEncrypt;
+	
+	addLog("nebIsEncrypt($object)");
+	if ($nebule_usecache && isset( $nebule_cache_nebIsEncrypt [$object] ))
+		return $nebule_cache_nebIsEncrypt [$object];
+	$table = array ();
+	$encrypt = false;
+	_l_fnd( $object, $table, 'k', $object, '', '' );
+	foreach ( $table as $itemtable )
+	{
+		if (($itemtable [4] == 'k') && ($itemtable [5] == $object))
+		{
+			$encrypt = true;
+			break 1;
+		}
+	}
+	_l_fnd( $object, $table, 'k', '', $object, '' );
+	foreach ( $table as $itemtable )
+	{
+		if (($itemtable [4] == 'k') && ($itemtable [6] == $object))
+		{
+			$encrypt = true;
+			break 1;
+		}
+	}
+	unset( $table );
+	if ($nebule_usecache)
+		$nebule_cache_nebIsEncrypt [$object] = $encrypt;
+	return $encrypt;
+}
+function nebFindEncryptFor( &$listdest, &$object )
+{ // Cherche l'entite destinataire.
+	
+	addLog("nebFindEncryptFor($object)");
+	$table = array ();
+	$i = 0;
+	_l_lsx( $object, $table, 'k' );
+	foreach ( $table as $itemtable )
+	{
+		if (($itemtable [4] == 'k') && ($itemtable [5] == $object))
+		{
+			$listdest [$i] = $itemtable [7];
+			$i ++;
+		}
+		if (($itemtable [4] == 'k') && ($itemtable [6] == $object))
+		{
+			$listdest [$i] = $itemtable [7];
+			$i ++;
+		}
+	}
+	unset( $table );
+	unset( $i );
+}
+function nebFindPrivKey()
+{ // Fonction avec utilisation du cache si possible.
+	global $nebulePublicEntite;
+	
+	addLog("nebFindPrivKey()");
+	$table = array ();
+	_l_fnd( $nebulePublicEntite, $table, 'f', '', $nebulePublicEntite, '0' );
+	$link = array ();
+	foreach ( $table as $link )
+	{
+		if (($link [2] == $nebulePublicEntite) && ($link [4] == 'f') && ($link [6] == $nebulePublicEntite) && ($link [7] == '0')) // && nebIsPrivkey($link[5]) ) à débugger...
+		{
+			return $link [5];
+		}
+	}
+	return '';
+}
+function nebCheckPrivkey()
+{ // Vérifie si le mot de passe de l'entité en cours est bien valide, c'est à dire qu'il donne accès à la clé privée.
+	global $nebulePublicEntite, $nebulePrivateEntite, $nebulePasswordEntite;
+	
+	addLog("nebCheckPrivkey()");
+	$privcert = nebReadObjText( $nebulePrivateEntite, 10000 );
+	// $privcert = __io_or($nebule_priv_entite);
+	$r = openssl_pkey_get_private( $privcert, $nebulePasswordEntite );
+	unset( $privcert );
+	if ($r === false)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+function nebListChildrenRecurse( $object, &$listchildren, &$node, $level = 1 )
+{ // Sous-boucle de recheche les objets enfants.
+  // Utiliser de préférence la fonction nebListChildren.
+	global $nebule_maxrecurse;
+	
+	addLog("nebListChildrenRecurse($object)");
+	$link = array ();
+	$links = array ();
+	_l_lsx( $object, $links, '-', '', true );
+	foreach ( $links as $link )
+	{
+		$c = count( $listchildren );
+		$exist = false;
+		if ((($link [4] == "l") || ($link [4] == "u") || ($link [4] == "e") || ($link [4] == "k")) && ($link [5] == $object || $link [6] == $object) && $level == 1)
+		{
+			foreach ( $listchildren as $item )
+			{
+				if ($item [0] == $link [6])
+					$exist = true;
+				break;
+			}
+			if (! $exist)
+			{
+				$listchildren [($c + 1)] [0] = $link [0];
+				$listchildren [($c + 1)] [1] = $link [1];
+				$listchildren [($c + 1)] [2] = $link [2];
+				$listchildren [($c + 1)] [3] = $link [3];
+				$listchildren [($c + 1)] [4] = $link [4];
+				$listchildren [($c + 1)] [5] = $link [5];
+				$listchildren [($c + 1)] [6] = $link [6];
+				$listchildren [($c + 1)] [7] = $link [7];
+				$listchildren [($c + 1)] [8] = $link [8];
+				$listchildren [($c + 1)] [9] = $link [9];
+				$listchildren [($c + 1)] [10] = $link [10];
+				$listchildren [($c + 1)] [11] = $link [11];
+				$listchildren [($c + 1)] [12] = $level;
+			}
+		}
+		elseif ($link [4] == "f" && $link [5] == $object)
+		{
+			foreach ( $listchildren as $item )
+			{
+				if ($item [0] == $link [6])
+					$exist = true;
+				break;
+			}
+			if (! $exist)
+			{
+				$listchildren [($c + 1)] [0] = $link [0];
+				$listchildren [($c + 1)] [1] = $link [1];
+				$listchildren [($c + 1)] [2] = $link [2];
+				$listchildren [($c + 1)] [3] = $link [3];
+				$listchildren [($c + 1)] [4] = $link [4];
+				$listchildren [($c + 1)] [5] = $link [5];
+				$listchildren [($c + 1)] [6] = $link [6];
+				$listchildren [($c + 1)] [7] = $link [7];
+				$listchildren [($c + 1)] [8] = $link [8];
+				$listchildren [($c + 1)] [9] = $link [9];
+				$listchildren [($c + 1)] [10] = $link [10];
+				$listchildren [($c + 1)] [11] = $link [11];
+				$listchildren [($c + 1)] [12] = $level;
+				if ($level < $nebule_maxrecurse && ($link [7] == $node || $level == 1))
+					nebListChildrenRecurse( $link [6], $listchildren, $node, ($level + 1) );
+			}
+		}
+		elseif ($link [4] == "f" && $link [6] == $object && $level == 1)
+		{
+			foreach ( $listchildren as $item )
+			{
+				if ($item [0] == $link [5])
+					$exist = true;
+				break;
+			}
+			if (! $exist)
+			{
+				$listchildren [($c + 1)] [0] = $link [0];
+				$listchildren [($c + 1)] [1] = $link [1];
+				$listchildren [($c + 1)] [2] = $link [2];
+				$listchildren [($c + 1)] [3] = $link [3];
+				$listchildren [($c + 1)] [4] = $link [4];
+				$listchildren [($c + 1)] [5] = $link [5];
+				$listchildren [($c + 1)] [6] = $link [6];
+				$listchildren [($c + 1)] [7] = $link [7];
+				$listchildren [($c + 1)] [8] = $link [8];
+				$listchildren [($c + 1)] [9] = $link [9];
+				$listchildren [($c + 1)] [10] = $link [10];
+				$listchildren [($c + 1)] [11] = $link [11];
+				$listchildren [($c + 1)] [12] = $level;
+			}
+		}
+	}
+	unset( $link );
+	unset( $links );
+	unset( $c );
+	unset( $exist );
+}
+function nebListChildren( &$object, &$listchildren )
+{ // Recheche les objets enfants, c'est à dire dérivés.
+	
+	addLog("nebListChildren($object)");
+	if ($object == '0')
+		return;
+	nebListChildrenRecurse( $object, $listchildren, $object, 1 );
+}
+function nebCreatObjText( &$text )
+{ // Création d'un nouvel objet texte.
+	global $nebuleHashAlgorithm, $nebulePermitWriteLink, $nebulePermitWriteObject;
+	
+	addLog("nebCreatObjText($text)");
+	if (! $nebulePermitWriteObject)
+		return false;
+	if (! $nebulePermitWriteLink)
+		return false;
+	if (strlen( $text ) == 0)
+		return false;
+	$object = hash( $nebuleHashAlgorithm, $text );
+	if (nebIsBanned( $object ))
+		return false;
+	_o_gen( $text, 'text/plain' );
+	unset( $object );
+	return true;
+}
+function nebINECreatObjText( $text )
+{ // If Not Exist - Création d'un nouvel objet texte.
+	global $nebuleHashAlgorithm, $nebulePermitWriteLink, $nebulePermitWriteObject;
+	
+	addLog("nebINECreatObjText($text)");
+	if (! $nebulePermitWriteObject)
+		return false;
+	if (! $nebulePermitWriteLink)
+		return false;
+	if (strlen( $text ) == 0)
+		return false;
+	$object = hash( $nebuleHashAlgorithm, $text );
+	if (__io_op( $object ))
+		return true;
+	if (nebIsBanned( $object ))
+		return false;
+	_o_gen( $text, 'text/plain' );
+	unset( $object );
+	return true;
+}
+function nebCreatObjDate( &$object )
+{ // Création d'une date pour un objet.
+	global $nebuleHashAlgorithm, $nebulePermitWriteLink;
+	
+	addLog("nebCreatObjDate($object)");
+	if (! $nebulePermitWriteLink)
+		return false;
+	if ($object == '')
+		return false;
+		// Prépare certaines valeurs si non présentes.
+	nebINECreatObjText( 'text/plain' );
+	nebINECreatObjText( 'nebule/objet/date' );
+	nebINECreatObjText( 'nebule/objet/date/annee' );
+	nebINECreatObjText( 'nebule/objet/date/mois' );
+	nebINECreatObjText( 'nebule/objet/date/jour' );
+	nebINECreatObjText( 'nebule/objet/date/heure' );
+	nebINECreatObjText( 'nebule/objet/date/minute' );
+	nebINECreatObjText( 'nebule/objet/date/seconde' );
+	nebINECreatObjText( 'nebule/objet/date/zone' );
+	// Ajoute la date longue, format ISO8601.
+	$crfulldate = date( DATE_ATOM );
+	$hashfulldate = hash( $nebuleHashAlgorithm, $crfulldate );
+	_o_gen( $crfulldate, 'text/plain' );
+	$newlink = _l_gen( $crfulldate, 'l', $object, $hashfulldate, (hash( $nebuleHashAlgorithm, 'nebule/objet/date' )) ); // 31e415a2fb3a47fd1ccd9de4e04d6d71c1386bef639ae38755dd218db9ed92a1
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+		// Ajoute l'année.
+	$crdate = date( 'Y' );
+	$hashdate = hash( $nebuleHashAlgorithm, $crdate );
+	_o_gen( $crdate, 'text/plain' );
+	$newlink = _l_gen( $crfulldate, 'l', $object, $hashdate, (hash( $nebuleHashAlgorithm, 'nebule/objet/date/annee' )) );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+		// Ajoute le mois.
+	$crdate = date( 'm' );
+	$hashdate = hash( $nebuleHashAlgorithm, $crdate );
+	_o_gen( $crdate, 'text/plain' );
+	$newlink = _l_gen( $crfulldate, 'l', $object, $hashdate, (hash( $nebuleHashAlgorithm, 'nebule/objet/date/mois' )) );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+		// Ajoute le jour.
+	$crdate = date( 'd' );
+	$hashdate = hash( $nebuleHashAlgorithm, $crdate );
+	_o_gen( $crdate, 'text/plain' );
+	$newlink = _l_gen( $crfulldate, 'l', $object, $hashdate, (hash( $nebuleHashAlgorithm, 'nebule/objet/date/jour' )) );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+		// Ajoute l'heure.
+	$crdate = date( 'H' );
+	$hashdate = hash( $nebuleHashAlgorithm, $crdate );
+	_o_gen( $crdate, 'text/plain' );
+	$newlink = _l_gen( $crfulldate, 'l', $object, $hashdate, (hash( $nebuleHashAlgorithm, 'nebule/objet/date/heure' )) );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+		// Ajoute la minute.
+	$crdate = date( 'i' );
+	$hashdate = hash( $nebuleHashAlgorithm, $crdate );
+	_o_gen( $crdate, 'text/plain' );
+	$newlink = _l_gen( $crfulldate, 'l', $object, $hashdate, (hash( $nebuleHashAlgorithm, 'nebule/objet/date/minute' )) );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+		// Ajoute la seconde.
+	$crdate = date( 's' );
+	$hashdate = hash( $nebuleHashAlgorithm, $crdate );
+	_o_gen( $crdate, 'text/plain' );
+	$newlink = _l_gen( $crfulldate, 'l', $object, $hashdate, (hash( $nebuleHashAlgorithm, 'nebule/objet/date/seconde' )) );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+		// Ajoute la zone.
+	$crdate = date( 'P' );
+	$hashdate = hash( $nebuleHashAlgorithm, $crdate );
+	_o_gen( $crdate, 'text/plain' );
+	$newlink = _l_gen( $crfulldate, 'l', $object, $hashdate, (hash( $nebuleHashAlgorithm, 'nebule/objet/date/zone' )) );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+	unset( $crfulldate );
+	unset( $crdate );
+	unset( $hashfulldate );
+	unset( $hashdate );
+	unset( $newlink );
+	return true;
+}
+function nebCreatObjHash( &$object )
+{ // Définition du hash pour un objet.
+	global $nebuleHashAlgorithm, $nebulePermitWriteLink;
+	
+	addLog("nebCreatObjHash($object)");
+	if (! $nebulePermitWriteLink)
+		return false;
+	if ($object == '')
+		return false;
+	nebINECreatObjText( 'nebule/objet/hash' );
+	nebINECreatObjText( $nebuleHashAlgorithm );
+	$newlink = _l_gen( '-', 'l', $object, $nebuleHashAlgorithm, (hash( $nebuleHashAlgorithm, 'nebule/objet/hash' )) ); // 8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+	unset( $newlink );
+	return true;
+}
+
+
+
+/*
+ * ------------------------------------------------------------------------------------------
+ * Fonctions élémentaires.
+ * ------------------------------------------------------------------------------------------
+ */
+
+function _e_gen( $type, $size, $algohash, &$hashpubkey, &$hashprivkey, $password = '' )
+{
+	// Crée une nouvelle entité.
+	global	$nebulePermitWrite, $nebulePermitWriteEntity, $nebulePermitWriteObject, $nebulePermitWriteLink,
+			$nebulePermitCreateEntityWithoutPassword, $nebuleHashAlgorithm;
+	
+	addLog("_e_gen()");
+	if (! $nebulePermitWrite)
+		return false;
+	if (! $nebulePermitWriteEntity)
+		return false;
+	if (! $nebulePermitWriteObject)
+		return false;
+	if (! $nebulePermitWriteLink)
+		return false;
+	if (($type != 'rsa') && ($type != 'dsa'))
+		return false;
+	if (($size != 512) && ($size != 1024) && ($size != 2048) && ($size != 4096))
+		return false;
+	if ($password == '' && ! $nebulePermitCreateEntityWithoutPassword)
+		return false;
+		// Génération de la clé.
+	switch ( $type )
+	{
+		case 'rsa' :
+			$config = array (
+					'digest_alg' => $algohash,
+					'private_key_bits' => (int) $size,
+					'private_key_type' => OPENSSL_KEYTYPE_RSA );
+			break;
+		case 'dsa' :
+			$config = array (
+					'digest_alg' => $algohash,
+					'private_key_bits' => (int) $size,
+					'private_key_type' => OPENSSL_KEYTYPE_DSA );
+			break;
+	}
+	$newpkey = openssl_pkey_new( $config );
+	unset( $config );
+	// Extraction de la clé publique.
+	$pubkey = openssl_pkey_get_details( $newpkey );
+	$pubkey = $pubkey ['key'];
+	$hashpubkey = hash( $nebuleHashAlgorithm, $pubkey );
+	_o_wr( $hashpubkey, $pubkey );
+	// Extraction de la clé privée.
+	if ($password != '')
+	{
+		openssl_pkey_export( $newpkey, $privkey, $password );
+	}
+	else
+	{
+		openssl_pkey_export( $newpkey, $privkey );
+	}
+	$hashprivkey = hash( $nebuleHashAlgorithm, $privkey );
+	_o_wr( $hashprivkey, $privkey );
+	$private_key = openssl_pkey_get_private( $privkey, $password );
+	if ($private_key === false)
+	{
+		return false;
+	}
+	// Calcul de hashs communs.
+	$date = date( DATE_ATOM );
+	$hexsign = '';
+	$binary_signature = '';
+	$refhashhash = hash( $nebuleHashAlgorithm, 'nebule/objet/hash' );
+	$refhashalgo = hash( $nebuleHashAlgorithm, $nebuleHashAlgorithm );
+	$refhashtype = hash( $nebuleHashAlgorithm, 'nebule/objet/type' );
+	$refhashpem = hash( $nebuleHashAlgorithm, 'application/x-pem-file' );
+	$refhashtext = hash( $nebuleHashAlgorithm, 'text/plain' );
+	// Création des objets annexes.
+	if (! __io_op( $refhashhash ))
+	{
+		$newtxt = 'nebule/objet/hash';
+		_o_wr( $refhashhash, $newtxt );
+		$data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashhash . '_' . $refhashalgo . '_' . $refhashhash;
+		$hashdata = hash( $nebuleHashAlgorithm, $data );
+		$binhash = pack( "H*", $hashdata );
+		openssl_private_encrypt( $binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING );
+		$hexsign = bin2hex( $binary_signature );
+		_l_wr( "$hexsign.$nebuleHashAlgorithm$data" );
+		$data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashhash . '_' . $refhashtext . '_' . $refhashtype;
+		$hashdata = hash( $nebuleHashAlgorithm, $data );
+		$binhash = pack( "H*", $hashdata );
+		openssl_private_encrypt( $binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING );
+		$hexsign = bin2hex( $binary_signature );
+		_l_wr( "$hexsign.$nebuleHashAlgorithm$data" );
+	}
+	if (! __io_op( $refhashalgo ))
+	{
+		_o_wr( $refhashalgo, $nebuleHashAlgorithm );
+		$data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashalgo . '_' . $refhashalgo . '_' . $refhashhash;
+		$hashdata = hash( $nebuleHashAlgorithm, $data );
+		$binhash = pack( "H*", $hashdata );
+		openssl_private_encrypt( $binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING );
+		$hexsign = bin2hex( $binary_signature );
+		_l_wr( "$hexsign.$nebuleHashAlgorithm$data" );
+		$data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashalgo . '_' . $refhashtext . '_' . $refhashtype;
+		$hashdata = hash( $nebuleHashAlgorithm, $data );
+		$binhash = pack( "H*", $hashdata );
+		openssl_private_encrypt( $binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING );
+		$hexsign = bin2hex( $binary_signature );
+		_l_wr( "$hexsign.$nebuleHashAlgorithm$data" );
+	}
+	if (! __io_op( $refhashtype ))
+	{
+		$newtxt = 'nebule/objet/type';
+		_o_wr( $refhashtype, $newtxt );
+		$data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtype . '_' . $refhashalgo . '_' . $refhashhash;
+		$hashdata = hash( $nebuleHashAlgorithm, $data );
+		$binhash = pack( "H*", $hashdata );
+		openssl_private_encrypt( $binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING );
+		$hexsign = bin2hex( $binary_signature );
+		_l_wr( "$hexsign.$nebuleHashAlgorithm$data" );
+		$data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtype . '_' . $refhashtext . '_' . $refhashtype;
+		$hashdata = hash( $nebuleHashAlgorithm, $data );
+		$binhash = pack( "H*", $hashdata );
+		openssl_private_encrypt( $binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING );
+		$hexsign = bin2hex( $binary_signature );
+		_l_wr( "$hexsign.$nebuleHashAlgorithm$data" );
+	}
+	if (! __io_op( $refhashpem ))
+	{
+		$newtxt = 'application/x-pem-file';
+		_o_wr( $refhashpem, $newtxt );
+		$data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashpem . '_' . $refhashalgo . '_' . $refhashhash;
+		$hashdata = hash( $nebuleHashAlgorithm, $data );
+		$binhash = pack( "H*", $hashdata );
+		openssl_private_encrypt( $binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING );
+		$hexsign = bin2hex( $binary_signature );
+		_l_wr( "$hexsign.$nebuleHashAlgorithm$data" );
+		$data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashpem . '_' . $refhashtext . '_' . $refhashtype;
+		$hashdata = hash( $nebuleHashAlgorithm, $data );
+		$binhash = pack( "H*", $hashdata );
+		openssl_private_encrypt( $binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING );
+		$hexsign = bin2hex( $binary_signature );
+		_l_wr( "$hexsign.$nebuleHashAlgorithm$data" );
+	}
+	if (! __io_op( $refhashtext ))
+	{
+		$newtxt = 'text/plain';
+		_o_wr( $refhashtext, $newtxt );
+		$data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtext . '_' . $refhashalgo . '_' . $refhashhash;
+		$hashdata = hash( $nebuleHashAlgorithm, $data );
+		$binhash = pack( "H*", $hashdata );
+		openssl_private_encrypt( $binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING );
+		$hexsign = bin2hex( $binary_signature );
+		_l_wr( "$hexsign.$nebuleHashAlgorithm$data" );
+		$data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtext . '_' . $refhashtext . '_' . $refhashtype;
+		$hashdata = hash( $nebuleHashAlgorithm, $data );
+		$binhash = pack( "H*", $hashdata );
+		openssl_private_encrypt( $binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING );
+		$hexsign = bin2hex( $binary_signature );
+		_l_wr( "$hexsign.$nebuleHashAlgorithm$data" );
+	}
+	// Génération du lien de hash de la clé publique.
+	$data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashpubkey . '_' . $refhashalgo . '_' . $refhashhash;
+	$hashdata = hash( $nebuleHashAlgorithm, $data );
+	$binhash = pack( "H*", $hashdata );
+	$ok1 = openssl_private_encrypt( $binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING );
+	$hexsign = bin2hex( $binary_signature );
+	_l_wr( "$hexsign.$nebuleHashAlgorithm$data" );
+	// Génération du lien de hash de la clé privée.
+	$data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashprivkey . '_' . $refhashalgo . '_' . $refhashhash;
+	$hashdata = hash( $nebuleHashAlgorithm, $data );
+	$binhash = pack( "H*", $hashdata );
+	$ok2 = openssl_private_encrypt( $binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING );
+	$hexsign = bin2hex( $binary_signature );
+	_l_wr( "$hexsign.$nebuleHashAlgorithm$data" );
+	// Génération du lien de typemime de la clé publique.
+	$data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashpubkey . '_' . $refhashpem . '_' . $refhashtype;
+	$hashdata = hash( $nebuleHashAlgorithm, $data );
+	$binhash = pack( "H*", $hashdata );
+	$ok3 = openssl_private_encrypt( $binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING );
+	$hexsign = bin2hex( $binary_signature );
+	_l_wr( "$hexsign.$nebuleHashAlgorithm$data" );
+	// Génération du lien de typemime de la clé privée.
+	$data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashprivkey . '_' . $refhashpem . '_' . $refhashtype;
+	$hashdata = hash( $nebuleHashAlgorithm, $data );
+	$binhash = pack( "H*", $hashdata );
+	$ok4 = openssl_private_encrypt( $binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING );
+	$hexsign = bin2hex( $binary_signature );
+	_l_wr( "$hexsign.$nebuleHashAlgorithm$data" );
+	// Génération du lien de jumelage des clés.
+	$data = '_' . $hashpubkey . '_' . $date . '_f_' . $hashprivkey . '_' . $hashpubkey . '_0';
+	$hashdata = hash( $nebuleHashAlgorithm, $data );
+	$binhash = pack( "H*", $hashdata );
+	$ok5 = openssl_private_encrypt( $binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING );
+	$hexsign = bin2hex( $binary_signature );
+	_l_wr( "$hexsign.$nebuleHashAlgorithm$data" );
+	// Nettoyage.
+	openssl_free_key( $private_key );
+	unset( $private_key );
+	unset( $hashprivkey );
+	unset( $hashpubkey );
+	unset( $data );
+	unset( $hashdata );
+	unset( $binhash );
+	unset( $refhashhash );
+	unset( $refhashalgo );
+	unset( $refhashtype );
+	unset( $refhashpem );
+	unset( $refhashtext );
+	unset( $date );
+	unset( $hexsign );
+	unset( $binary_signature );
+	if (! ($ok1 && $ok2 && $ok3 && $ok4 && $ok5))
+		return false;
+	return true;
+}
+
+function _e_apw( $pubkey, $privkey, $password )
+{ // Ajoute le mot de passe connu pour la clé privée d'une entité. Utilisé pour les entité esclaves d'une autre entité.
+  // - $pubkey : la clé public de l'entité, nécessaire pour un des liens.
+  // - $privkey : la clé privée de l'entité.
+  // - $password : le mot de passe à reconnaître pour la clé privée. Le mot de passe est vérifié sur la clé.
+	global $nebulePermitWrite, $nebulePermitWriteObject, $nebulePermitWriteLink, $nebulePermitCreateEntityWithoutPassword, $nebuleHashAlgorithm, $nebuleSymetricKeyLenght, $nebuleSymetricAlgorithm, $nebuleAsymetricAlgorithm, $nebulePublicEntite;
+	
+	addLog("_e_apw($privkey)");
+	if (! $nebulePermitWrite)
+		return false;
+	if (! $nebulePermitWriteObject)
+		return false;
+	if (! $nebulePermitWriteLink)
+		return false;
+	if ($password == '' && ! $nebulePermitCreateEntityWithoutPassword)
+		return false;
+	if (! __io_op( $pubkey ))
+		return false;
+	if (! __io_op( $privkey ))
+		return false;
+		// Vérifie que le mot de passe est valide.
+	$privcert = nebReadObjText( $privkey, 10000 );
+	$ok = openssl_pkey_get_private( $privcert, $password );
+	if ($ok === false)
+		return false;
+	unset( $privcert );
+	// Génère une clé de session.
+	$key = openssl_random_pseudo_bytes( $nebuleSymetricKeyLenght / 2, $true );
+	$hashkey = hash( $nebuleHashAlgorithm, $key );
+	// Génère un IV à zéro.
+	$hiv = '00000000000000000000000000000000';
+	$iv = pack( "H*", $hiv ); // A modifier pour des blocs de tailles différentes.
+	                                                               // Chiffrement de l'objet.
+	$cryptobj = openssl_encrypt( $password, $nebuleSymetricAlgorithm, $key, OPENSSL_RAW_DATA, $iv );
+	$hashpwd = hash( $nebuleHashAlgorithm, $password );
+	$hashcryptobj = hash( $nebuleHashAlgorithm, $cryptobj );
+	_o_gen( $cryptobj, "application/x-encrypted/$nebuleSymetricAlgorithm" );
+	// Chiffrement de la clé de session.
+	$cryptkey = '';
+	_o_vr( $pubkey );
+	$cert = __io_or( $pubkey );
+	$ok = openssl_public_encrypt( $key, $cryptkey, $cert, OPENSSL_PKCS1_PADDING );
+	if (! $ok)
+		return false;
+	$hashcryptkey = hash( $nebuleHashAlgorithm, $cryptkey );
+	_o_gen( $cryptkey, "application/x-encrypted/$nebuleAsymetricAlgorithm" );
+	// Génère le lien de chiffrement entre clé privée et publique avec le mot de passe.
+	$newlink = _l_gen( '-', 'k', $privkey, $pubkey, $hashpwd );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+		// Génère le lien de chiffrement symétrique.
+	$newlink = _l_gen( '-', 'k', $hashpwd, $hashcryptobj, $hashkey );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+		// Génère le lien de chiffrement asymétrique.
+	$newlink = _l_gen( '-', 'k', $hashkey, $hashcryptkey, $nebulePublicEntite );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+		// Suppression de la clé de session.
+	$newlink = _l_gen( '-', 'd', $hashkey, '0', '0' );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+		// Suppression de l'objet source.
+	$newlink = _l_gen( '-', 'd', $hashpwd, '0', '0' );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+	return true;
+}
+
+function _e_cpw( $entity, $password )
+{ // Change le mot de passe de l'entité.
+	global $nebulePermitWrite, $nebulePermitWriteObject, $nebulePermitWriteLink, $nebulePermitCreateEntityWithoutPassword;
+	
+	addLog("_e_cpw($entity)");
+	if (! $nebulePermitWrite)
+		return false;
+	if (! $nebulePermitWriteObject)
+		return false;
+	if (! $nebulePermitWriteLink)
+		return false;
+	if ($password == '' && ! $nebulePermitCreateEntityWithoutPassword)
+		return false;
+	// A faire...
+}
+
+function _o_gen( &$data, $typemime = '' )
+{ // Crée un nouvel objet.
+	global $nebulePermitWrite, $nebulePermitWriteObject, $nebuleHashAlgorithm;
+	
+	addLog("_o_gen($typemime)");
+	if (strlen( $data ) == 0)
+		return;
+	if (! $nebulePermitWrite)
+		return;
+	if (! $nebulePermitWriteObject)
+		return;
+	$dat = date( DATE_ATOM );
+	$hash = hash( $nebuleHashAlgorithm, $data );
+	// Ecrit l'objet.
+	if (! __io_op( $hash ))
+		_o_wr( $hash, $data );
+		// Ecrit le lien de hash.
+	$lnk = _l_gen( $dat, 'l', $hash, (hash( $nebuleHashAlgorithm, $nebuleHashAlgorithm )), (hash( $nebuleHashAlgorithm, 'nebule/objet/hash' )) ); // 8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec
+	if ((_l_vr( $lnk )) == 1)
+		_l_wr( $lnk );
+		// Ecrit le lien de type mime.
+	if ($typemime != '')
+	{
+		$lnk = _l_gen( $dat, 'l', $hash, (hash( $nebuleHashAlgorithm, $typemime )), (hash( $nebuleHashAlgorithm, 'nebule/objet/type' )) ); // 5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0
+		if ((_l_vr( $lnk )) == 1)
+			_l_wr( $lnk );
+	}
+	unset( $dat );
+	unset( $hash );
+	unset( $lnk );
+}
+
+function _o_flx( &$object ) // WARNING non fonctionnel !!!
+{ // Détermine l'objet à utiliser après prise en compte d'éventuelle mise à jour et suppression.
+  // L'objet doit être disponible.
+  // Le fonctionnement de la boucle est pseudo-arborescent pour éviter les appels récursifs de fonctions.
+	
+	addLog("_o_flx($object)");
+	return true;
+	$childrentable = array (); // Liste des enfants des objets.
+	$parentstable = array (); // Liste des parents des objets.
+	$ispresenttable = array (); // Liste des objets existants.
+	$objstatetable = array (); // Liste l'état des objets : vide si non lu ou R si déjà lu.
+	$readcount = 0; // Comptabilise les objets déjà lus.
+	$okobj = ''; // Contiendra l'objet en bout de branche si existant, ou en milieu de branche si existant et si non existant en bout de branche.
+	$checkobj = $object; // On démarre avec l'objet demandé.
+	while ( $okobj == '' )
+	{
+		if ($objstatetable [$checkobj] == '') // Si l'objet est inconnu.
+		{
+			$links = array (); // Liste temporaire des liens u pour un objet.
+			_l_lsx( $checkobj, $links, 'u' ); // Lit les liens u prè-traités x.
+			if (sizeof( $links ) != 0) // Si il y a des objest enfants.
+			{
+				$i = 0;
+				foreach ( $links as $link ) // Liste les liens.
+				{
+					$childrentable [$checkobj] [$i] = $link [6]; // Récupère les objets enfants.
+					$parentstable [$link [5]] = $checkobj; // Définit le parent de l'objet enfant.
+					$i ++; // Ne tient compte que du dernier parent trouvé.
+				}
+			}
+			unset( $links ); // Vide la liste temporaire des liens.
+			if (__io_op( $checkobj ))
+			{
+				$ispresenttable [$checkobj] = '1';
+			}
+			else
+			{
+				$ispresenttable [$checkobj] = '0';
+			} // Verifie la présence de l'objet.
+			$objstatetable [$checkobj] = 'R';
+			$readcount ++;
+		} // L'objet est maintenant connu.
+		if (sizeof( $childrentable [$checkobj] ) == 0) // Si pas d'enfants.
+		{
+			if ($ispresenttable [$checkobj] == '1')
+			{
+				$okobj = $checkobj;
+			} // Si l'objet est présent, c'est celui que l'on retient !
+			$checkobj = $parentstable [$checkobj]; // Sinon on continue avec l'objet parent.
+		}
+		else // Sinon on recherche le dernier objet enfant non testé.
+		{
+			$nextchild = '';
+			foreach ( $childrentable [$checkobj] as $child ) // Liste les objets enfants.
+			{
+				if ($objstatetable [$child] == '')
+				{
+					$nextchild = $child;
+				} // L'objet enfant est non testé, ne prend que le dernier non testé.
+			}
+			if ($nextchild != '') // Si un objet enfant est à tester.
+			{
+				$checkobj = $nextchild; // On continue la boucle avec l'objet enfant.
+			}
+			else // Sinon on remonte à l'objet parent.
+			{
+				if ($parentstable [$checkobj] == '')
+				{
+					$okobj = $checkobj;
+				} // Si c'est l'objet d'origine, on arrête là.
+				else
+				{
+					$checkobj = $parentstable [$checkobj];
+				} // Sinon on continue la boucle avec l'objet parent.
+			}
+		}
+	}
+	$object = $okobj;
+	unset( $childrentable );
+	unset( $ispresenttable );
+	unset( $objstatetable );
+	unset( $readcount );
+}
+
+/**
+ * Lit de contenu d'un objet après prise en compte d'éventuelle mise à jour et suppression.
+ *
+ * @param string $object
+ * @param string $data
+ * @return boolean
+ */
+function _o_lsx( $object, &$data )
+{
+	addLog("_o_lsx($object)");
+	
+	_o_flx( $object );
+	
+	if ( $object != '' )
+	{
+		return _o_ls1( $object, $data );
+	}
+	return false;
+}
+
+/**
+ * Lit le contenu d'un objet spécifique et le place dans $data.
+ * Si l'objet est protégé et que l'entité courante est déverrouillée et destinataire, l'objet est préalablement déchiffré.
+ *
+ * @param string $hashobj
+ * @param string $data
+ * @return boolean
+ */
+function _o_ls1( &$hashobj, &$data )
+{
+	global	$nebulePublicEntite, $nebulePrivateEntite, $nebulePasswordEntite, $nebuleHashAlgorithm,
+			$nebuleSymetricAlgorithm, $nebule_error_string, $ok_connexion;
+	
+	addLog("_o_ls1($hashobj)");
+	
+	$hashkey = '';
+	$hashcryptkey = '';
+	$hashcryptobj = '';
+	$object = '';
+	$nok = true;
+	
+	// Vérification de la consistance de l'objet.
+	_o_vr( $hashobj );
+	
+	// Si existe, extrait le contenu.
+	if (__io_op( $hashobj ))
+	{
+		$data = __io_or( $hashobj );
+		return true;
+	}
+	
+	// Sinon regarde si il est chiffré.
+	if ( $ok_connexion )
+	{
+		$table1 = array ();
+		_l_lsx( $hashobj, $table1, 'k', $hashobj );
+		foreach ( $table1 as $i1 )
+		{
+			// Recherche la clé de session.
+			if ( $i1 [4] == 'k'
+					&& ( $i1 [5] == $hashobj
+							|| $i1 [6] == $hashobj
+						)
+				)
+			{
+				$object = $i1 [5];
+				$hashcryptobj = $i1 [6];
+				$hashkey = $i1 [7];
+			}
+			$table2 = array ();
+			_l_fnd( $hashkey, $table2, 'k', $hashkey, '', $nebulePublicEntite );
+			foreach ( $table2 as $i2 )
+			{
+				// Recherche la version chiffrée de la clé de session.
+				if ( $i2 [4] == 'k'
+						&& $i2 [5] == $hashkey
+						&& $i2 [7] == $nebulePublicEntite
+					)
+				{
+					$hashcryptkey = $i2 [6];
+					
+					// Vérifie la présence des objets.
+					if ( __io_op( $hashcryptobj )
+							&& __io_op( $hashcryptkey )
+						)
+					{
+						$nok = false;
+					}
+				}
+			}
+		}
+		unset( $table1, $table2, $i1, $i2 );
+		
+		if ( $nok )
+		{
+			$nebule_error_string = 'Elément manquant dans la chaîne de déchiffrement';
+			return false;
+		}
+		
+		// Déchiffrement de l'objet.
+		$cryptkey = __io_or( $hashcryptkey );
+		$hiv = '00000000000000000000000000000000';
+		$iv = pack( "H*", $hiv ); // A modifier pour des blocs de tailles différentes.
+		if ( $cryptkey == '' )
+		{
+			$nebule_error_string = 'clé chiffre invalide';
+			return false;
+		}
+		
+		// Déchiffrement de la clé de session.
+		$key = '';
+		$privcert = __io_or( $nebulePrivateEntite );
+		$private_key = openssl_pkey_get_private( $privcert, $nebulePasswordEntite );
+		if ( $private_key === false )
+		{
+			$nebule_error_string = 'clé privé entité invalide';
+			return false;
+		}
+		
+		$ok = openssl_private_decrypt( $cryptkey, $key, $private_key, OPENSSL_PKCS1_PADDING );
+		openssl_free_key( $private_key );
+		unset( $private_key );
+		unset( $privcert );
+		if ( ! $ok )
+		{
+			$nebule_error_string = 'erreur déchiffrement asymétrique';
+			return false;
+		}
+		
+		// Déchiffrement de l'objet.
+		$cryptobj = __io_or( $hashcryptobj );
+		$data = openssl_decrypt( $cryptobj, $nebuleSymetricAlgorithm, $key, OPENSSL_RAW_DATA, $iv );
+		if ( $data === false )
+		{
+			$nebule_error_string = 'erreur déchiffrement symétrique';
+			$data = '';
+			return false;
+		}
+		
+		$hashdata = hash( $nebuleHashAlgorithm, $data );
+		if ( $hashdata != $object )
+		{
+			$nebule_error_string = 'empeinte invalide objet déchiffré ' . $hashdata;
+			$data = '';
+			return false;
+		}
+		return true;
+	}
+	$data = '';
+	return false;
+}
+
+function _o_dlx( $object )
+{ // Télécharge l'objet sur toutes localisations connues.
+	global $ok_connexion, $nebuleHashAlgorithm, $nebulePublicEntite, $nebulePuppetmaster, $nebuleSecurityMaster;
+	
+	addLog("_o_dlx($object)");
+	if ($object == '0')
+		return;
+	if (__io_op( $object ))
+		return;
+	$table = array ();
+	$hashtype = hash( $nebuleHashAlgorithm, 'nebule/objet/entite/localisation' );
+	$okobj = array ();
+	$count = 1;
+	$okobj [1] = '';
+	_l_lsx( $hashtype, $table );
+	foreach ( $table as $itemtable )
+	{
+		if (($itemtable [7] == $hashtype) && ($itemtable [4] == 'l') && (! __io_op( $object )))
+		{
+			$t = true;
+			for($j = 1; $j < $count; $j ++)
+			{
+				if ($itemtable [6] == $okobj [$j])
+				{
+					$t = false;
+				}
+			}
+			if ($t)
+			{
+				$lnk = '';
+				_o_lsx( $itemtable [6], $lnk );
+				if ($lnk != '')
+				{
+					_o_dl1( $object, $lnk );
+				}
+				$okobj [$count] = $itemtable [6];
+				$count ++;
+			}
+		}
+	}
+	unset( $count );
+	unset( $j );
+	unset( $t );
+	unset( $lnk );
+	unset( $table );
+	unset( $okobj );
+	unset( $hashtype );
+}
+
+/**
+ * _o_dl1()
+ * Télécharge l'objet sur une localisation précise (site web).
+ *  - $object l'objet à télécharger.
+ *  - $localisation le site web sur lequel aller télécharger l'objet.
+ *
+ * $nebule_result_list contient le site sur lequel a étté trouvé l'objet.
+ *
+ * @param string $object
+ * @param string $localisation
+ * @return null
+ */
+function _o_dl1( $object, $localisation )
+{
+	global	$ok_connexion, $nebuleHashAlgorithm, $nebulePublicEntite,
+			$nebulePuppetmaster, $nebuleSecurityMaster,
+			$nebulePermitSynchronizeObject, $nebulePermitWrite, $nebule_io_maxdata,
+			$nebule_result_list;
+	
+	addLog( "_o_dl1($object)" );
+	
+	if ( ! $nebulePermitWrite
+			|| ! $nebulePermitSynchronizeObject
+			|| $object == '0'
+			|| $object == ''
+			|| ! is_string($object)
+			|| ! ctype_xdigit($object)
+			|| $localisation == '0'
+			|| $localisation == ''
+			|| ! is_string($localisation)
+		)
+	{
+		addLog( '_o_dl1('.$object.') invalid arg '.$localisation );
+		return;
+	}
+	if ( __io_op( $object ) )
+	{
+		addLog( '_o_dl1('.$object.') already exist' );
+		return;
+	}
+	
+	// Recherche si banni.
+	$table = array ();
+	$hashtype = hash( $nebuleHashAlgorithm, 'nebule/danger' ); // ac2323f77d7ee9f3ae841e8ccd8374397038160ec7cdb2fc86610c0f66eeeedb
+	_l_lsx( $object, $table, '-', $hashtype );
+	foreach ( $table as $link )
+	{
+		if ( $link [2] == $nebulePublicEntite
+				&& $link [4] == 'f'
+				&& $link [5] == $hashtype
+				&& $link [6] == $object
+				&& $link [7] == '0'
+			)
+		{
+			addLog( '_o_dl1('.$object.') banned by '.$nebulePublicEntite );
+			return;
+		}
+		if ( $link [2] == $nebuleSecurityMaster
+				&& $link [4] == 'f'
+				&& $link [5] == $hashtype
+				&& $link [6] == $object
+				&& $link [7] == '0'
+			)
+		{
+			addLog( '_o_dl1('.$object.') banned by '.$nebuleSecurityMaster );
+			return;
+		}
+		if ( $link [2] == $nebulePuppetmaster
+				&& $link [4] == 'f'
+				&& $link [5] == $hashtype
+				&& $link [6] == $object
+				&& $link [7] == '0'
+			)
+		{
+			addLog( '_o_dl1('.$object.') banned by '.$nebulePuppetmaster );
+			return;
+		}
+	}
+	unset( $table, $hashtype );
+	
+	// Téléchargement de l'objet.
+	$hexid = __pr( 8 ); // id pour fichier temporaire.
+	$id = bin2hex( $hexid );
+	$idname = '_o_dl1_'.$id.'-'.$object;
+	$distobj = fopen( $localisation.'/o/'.$object, 'r' );
+	if ( $distobj )
+	{
+		addLog( '_o_dl1('.$object.') reading' );
+		$localobj = fopen( NEBULE_LOCAL_OBJECTS_FOLDER.'/'.$idname, 'w' ); // @todo refaire via les i/o.
+		if ( $localobj )
+		{
+			while ( ($line = fgets( $distobj, $nebule_io_maxdata )) !== false )
+			{
+				addLog( '_o_dl1('.$object.') writing' );
+				fputs( $localobj, $line );
+			}
+			fclose( $localobj );
+			$hash = hash_file( $nebuleHashAlgorithm, NEBULE_LOCAL_OBJECTS_FOLDER.'/'.$idname );
+			if ( $hash == $object )
+			{
+				addLog( '_o_dl1('.$object.') valid' );
+				rename( NEBULE_LOCAL_OBJECTS_FOLDER.'/'.$idname, NEBULE_LOCAL_OBJECTS_FOLDER.'/'.$object );
+				$nebule_result_list[0] = $localisation;
+			}
+			else
+			{
+				addLog( '_o_dl1('.$object.') invalid' );
+				unlink( NEBULE_LOCAL_OBJECTS_FOLDER.'/'.$idname );
+			}
+		}
+		fclose( $distobj );
+	}
+	unset( $hexid, $id, $line, $hash );
+}
+
+/**
+ * Vérifie la consistance d'un objet. Si l'objet est corrompu, il est supprimé.
+ * @todo refaire avec i/o
+ *
+ * @param string $object
+ * @return boolean
+ */
+function _o_vr( &$object )
+{
+	global $nebuleHashAlgorithm, $nebule_metrolog_o_vr, $nebule_usecache, $nebule_cache_o_vr;
+	
+	addLog("_o_vr($object)");
+	
+	if ( $object == '' )
+	{
+		return false;
+	}
+	
+	if ( ! __io_op($object) )
+	{
+		return true;
+	}
+	
+	// Si c'est l'objet 0, le supprime.
+	if ( $object == '0' )
+	{
+		if ( __io_op($object) )
+		{
+			__io_od($object);
+		}
+		return true;
+	}
+	
+	if ( $nebule_usecache
+			&& isset( $nebule_cache_o_vr[$object] )
+		)
+	{
+		return true;
+	}
+	
+	$nebule_metrolog_o_vr++;
+	$hash = hash_file( $nebuleHashAlgorithm, NEBULE_LOCAL_OBJECTS_FOLDER."/$object" ); // @todo refaire via les i/o.
+	
+	if ( $hash !== $object )
+	{
+		// Si invalide, suppression de l'objet localement.
+		__io_od( $object );
+	}
+	
+	if ( $nebule_usecache )
+	{
+		$nebule_cache_o_vr[$object] = true;
+	}
+	unset( $hash );
+	
+	return true;
+}
+
+function _o_wr( $object, &$data )
+{ // Ecrit le contenu d'un objet.
+	global $nebulePermitWrite, $nebulePermitWriteObject, $nebuleHashAlgorithm, $nebulePublicEntite, $nebuleSecurityMaster, $nebulePuppetmaster;
+	
+	addLog("_o_wr($object)");
+	if ($object == '0')
+		return false;
+	if (strlen( $data ) == 0)
+		return false;
+	if (! $nebulePermitWrite)
+		return false;
+	if (! $nebulePermitWriteObject)
+		return false;
+	if (__io_op( $object ))
+		return true;
+		// Recherche si banni.
+	$table = array ();
+	$hashtype = hash( $nebuleHashAlgorithm, 'nebule/danger' ); // ac2323f77d7ee9f3ae841e8ccd8374397038160ec7cdb2fc86610c0f66eeeedb
+	_l_lsx( $object, $table, '-', $hashtype );
+	foreach ( $table as $link )
+	{
+		if (($link [2] == $nebulePublicEntite) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $object) && ($link [7] == '0'))
+			return false;
+		if (($link [2] == $nebuleSecurityMaster) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $object) && ($link [7] == '0'))
+			return false;
+		if (($link [2] == $nebulePuppetmaster) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $object) && ($link [7] == '0'))
+			return false;
+	}
+	unset( $table );
+	unset( $hashtype );
+	// Ecriture de l'objet.
+	file_put_contents( NEBULE_LOCAL_OBJECTS_FOLDER."/$object", $data ); // @todo refaire via les i/o.
+	return true;
+}
+
+function _o_prt( &$object, $ent = '' )
+{ // Protection de l'objet par chiffrement.
+	global $nebuleSymetricKeyLenght, $nebuleHashAlgorithm, $nebulePermitWrite, $nebulePermitWriteLink, $nebulePermitWriteObject, $nebulePublicEntite, $nebuleSymetricAlgorithm, $nebuleAsymetricAlgorithm;
+	
+	if ( NEBULE_PP_LIBRARY_MODE_BOOTSTRAP )
+	{
+		return false;
+	}
+	
+	addLog("_o_prt($object)");
+	if (! $nebulePermitWrite)
+		return false;
+	if (! $nebulePermitWriteLink)
+		return false;
+	if (! $nebulePermitWriteObject)
+		return false;
+	if ($object == '0' || $object == '' || ! __io_op( $object ))
+		return false;
+	if ($ent == '')
+		$ent = $nebulePublicEntite;
+	if (! __io_op( $ent ))
+		return false;
+	if (! nebIsPubkey( $ent ))
+		return false;
+	$ok = false;
+	$l = openssl_get_cipher_methods( true );
+	foreach ( $l as $a )
+	{
+		if ($a == $nebuleSymetricAlgorithm)
+			$ok = true;
+	}
+	if (! $ok)
+		return false;
+	unset( $l );
+	unset( $a );
+	// Recheche si l'objet est déjà protégé.
+	$table = array ();
+	_l_fnd( $object, $table, 'k', $object, '', '' );
+	foreach ( $table as $itemtable )
+	{
+		if ($itemtable [4] == 'k' && $itemtable [5] == $object)
+			return true;
+	} // WARNING Vérifier si pas de problème de déni de chiffrement...
+	unset( $table );
+	
+	// Génère une clé de session.
+	$key = openssl_random_pseudo_bytes( $nebuleSymetricKeyLenght / 2, $true );
+	$hashkey = hash( $nebuleHashAlgorithm, $key );
+	// Génère un IV à zéro.
+	$hiv = '00000000000000000000000000000000';
+	$iv = pack( "H*", $hiv ); // A modifier pour des blocs de tailles différentes.
+	                                                               // Chiffrement de l'objet.
+	_o_vr( $object );
+	$data = __io_or( $object );
+	$cryptobj = openssl_encrypt( $data, $nebuleSymetricAlgorithm, $key, OPENSSL_RAW_DATA, $iv );
+	$hashcryptobj = hash( $nebuleHashAlgorithm, $cryptobj );
+	_o_gen( $cryptobj, "application/x-encrypted/$nebuleSymetricAlgorithm" );
+	// Chiffrement de la clé de session.
+	$cryptkey = '';
+	_o_vr( $ent );
+	$cert = __io_or( $ent );
+	$ok = openssl_public_encrypt( $key, $cryptkey, $cert, OPENSSL_PKCS1_PADDING );
+	if (! $ok)
+		return false;
+	$hashcryptkey = hash( $nebuleHashAlgorithm, $cryptkey );
+	_o_gen( $cryptkey, "application/x-encrypted/$nebuleAsymetricAlgorithm" );
+	// Génère le lien de chiffrement symétrique.
+	$newlink = _l_gen( '-', 'k', $object, $hashcryptobj, $hashkey );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+		// Génère le lien de chiffrement asymétrique.
+	$newlink = _l_gen( '-', 'k', $hashkey, $hashcryptkey, $ent );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+		// Suppression de la clé de session.
+	$newlink = _l_gen( '-', 'd', $hashkey, '0', '0' );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+		// Suppression de l'objet source.
+	$newlink = _l_gen( '-', 'd', $object, '0', '0' );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+	_o_del( $object );
+	return true;
+}
+function _o_uprt( &$hashobj )
+{ // Déprotection de l'objet. Déchiffrement symétrique pour accéder au contenu.
+  // Suite à cette fonction, l'objet non protégé est restauré et l'objet protégé est supprimé.
+	global $nebuleSymetricKeyLenght, $nebuleHashAlgorithm, $nebulePermitWrite, $nebulePermitWriteLink, $nebulePermitWriteObject, $nebulePublicEntite, $nebulePrivateEntite, $nebulePasswordEntite, $nebuleSymetricAlgorithm, $nebuleAsymetricAlgorithm, $nebule_error_string;
+	
+	if ( NEBULE_PP_LIBRARY_MODE_BOOTSTRAP )
+	{
+		return false;
+	}
+	
+	addLog("_o_uprt($hashobj)");
+	if (! $nebulePermitWrite)
+	{
+		$nebule_error_string = 'nebule_permitwrite=false';
+		return false;
+	}
+	if (! $nebulePermitWriteLink)
+	{
+		$nebule_error_string = 'nebule_permitcreatelink=false';
+		return false;
+	}
+	if (! $nebulePermitWriteObject)
+	{
+		$nebule_error_string = 'nebule_permitcreateobj=false';
+		return false;
+	}
+	if (! __io_op( $nebulePrivateEntite ))
+	{
+		$nebule_error_string = 'absence objet privé entité';
+		return false;
+	}
+	if ($hashobj == '0' || $hashobj == '')
+	{
+		$nebule_error_string = 'objet invalide';
+		return false;
+	}
+	
+	// Vérifie que l'entité peut le déchiffrer, récupère la clé de session.
+	$hashkey = '';
+	$hashcryptkey = '';
+	$hashcryptobj = '';
+	$object = '';
+	$table1 = array ();
+	$nok = true;
+	_l_lsx( $hashobj, $table1, 'k', $hashobj );
+	foreach ( $table1 as $i1 )
+	{
+		if (($i1 [4] == 'k') && (($i1 [5] == $hashobj) || ($i1 [6] == $hashobj)))
+		{
+			$object = $i1 [5];
+			$hashcryptobj = $i1 [6];
+			$hashkey = $i1 [7];
+		} // Recherche la clé de session.
+		$table2 = array ();
+		_l_fnd( $hashkey, $table2, 'k', $hashkey, '', $nebulePublicEntite );
+		foreach ( $table2 as $i2 )
+		{
+			if (($i2 [4] == 'k') && ($i2 [5] == $hashkey) && ($i2 [7] == $nebulePublicEntite)) // Recherche la version chiffrée de la clé de session.
+			{
+				$hashcryptkey = $i2 [6];
+				if (__io_op( $hashcryptobj ) && __io_op( $hashcryptkey ))
+					$nok = false; // Vérifie la présence des objets.
+			}
+		}
+	}
+	unset( $table1 );
+	unset( $table2 );
+	unset( $i1 );
+	unset( $i2 );
+	if ($nok)
+	{
+		$nebule_error_string = 'Elément manquant dans la chaîne de déchiffrement';
+		return false;
+	}
+	// Lecture de la clé de session chiffrée et de l'IV.
+	_o_vr( $hashcryptkey );
+	$cryptkey = __io_or( $hashcryptkey );
+	$hiv = '00000000000000000000000000000000';
+	$iv = pack( "H*", $hiv ); // A modifier pour des blocs de tailles différentes.
+	if ($cryptkey == '')
+	{
+		$nebule_error_string = 'clé chiffre invalide';
+		return false;
+	}
+	// Déchiffrement de la clé de session.
+	$key = '';
+	_o_vr( $nebulePrivateEntite );
+	$privcert = __io_or( $nebulePrivateEntite );
+	$private_key = openssl_pkey_get_private( $privcert, $nebulePasswordEntite );
+	if ($private_key === false)
+	{
+		$nebule_error_string = 'clé privé entité invalide';
+		return false;
+	}
+	$ok = openssl_private_decrypt( $cryptkey, $key, $private_key, OPENSSL_PKCS1_PADDING );
+	openssl_free_key( $private_key );
+	unset( $private_key );
+	unset( $privcert );
+	if (! $ok)
+	{
+		$nebule_error_string = 'erreur déchiffrement asymétrique';
+		return false;
+	}
+	// Déchiffrement de l'objet.
+	_o_vr( $hashcryptobj );
+	$cryptobj = __io_or( $hashcryptobj );
+	$data = openssl_decrypt( $cryptobj, $nebuleSymetricAlgorithm, $key, OPENSSL_RAW_DATA, $iv );
+	if ($data === false)
+	{
+		$nebule_error_string = 'erreur déchiffrement symétrique';
+		return false;
+	}
+	$hashdata = hash( $nebuleHashAlgorithm, $data );
+	if ($hashdata != $object)
+	{
+		$nebule_error_string = 'empeinte invalide objet déchiffré ' . $hashdata;
+		return false;
+	}
+	_o_wr( $object, $data );
+	// Suppression du lien de chiffrement symétrique.
+	$newlink = _l_gen( '-', 'x', $object, $hashcryptobj, $hashkey );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+		// Suppression du lien de chiffrement asymétrique.
+	$newlink = _l_gen( '-', 'x', $hashkey, $hashcryptkey, $nebulePublicEntite );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+		// Annule la suppression de l'objet source.
+	$newlink = _l_gen( '-', 'x', $object, '0', '0' );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+		// Suppression de l'objet chiffré.
+	$newlink = _l_gen( '-', 'd', $hashcryptobj, '0', '0' );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+	_o_del( $hashcryptobj );
+	return true;
+}
+
+/**
+ * Transmission d'un objet chiffré à une autre entité.
+ * On partage ici la clé de session (le secret) à une autre entité pour qu'elle puisse accéder au contenu de l'objet.
+ *
+ * @param unknown $hashobj
+ * @param unknown $entite
+ * @return boolean
+ */
+function _o_tprt( &$hashobj, $entite )
+{
+	global $nebuleSymetricKeyLenght, $nebuleHashAlgorithm, $nebulePermitWrite, $nebulePermitWriteLink,
+		$nebulePermitWriteObject, $nebulePublicEntite, $nebulePrivateEntite, $nebulePasswordEntite,
+		$nebuleSymetricAlgorithm, $nebuleAsymetricAlgorithm, $nebule_error_string;
+	
+	if ( NEBULE_PP_LIBRARY_MODE_BOOTSTRAP )
+	{
+		return false;
+	}
+	
+	{
+	addLog("_o_tprt($hashobj)");
+	}
+	
+	if (! $nebulePermitWrite)
+	{
+		$nebule_error_string = 'nebule_permitwrite=false';
+		return false;
+	}
+	if (! $nebulePermitWriteLink)
+	{
+		$nebule_error_string = 'nebule_permitcreatelink=false';
+		return false;
+	}
+	if (! $nebulePermitWriteObject)
+	{
+		$nebule_error_string = 'nebule_permitcreateobj=false';
+		return false;
+	}
+	if (! __io_op( $nebulePrivateEntite ))
+	{
+		$nebule_error_string = 'absence objet privé entité';
+		return false;
+	}
+	if ($hashobj == '0' || $hashobj == '')
+	{
+		$nebule_error_string = 'objet invalide';
+		return false;
+	}
+	
+	// Vérifie que l'entité peut le déchiffrer, récupère la clé de session.
+	$hashkey = '';
+	$hashcryptkey = '';
+	$hashcryptobj = '';
+	$object = '';
+	$table1 = array ();
+	$nok = true;
+	_l_lsx( $hashobj, $table1, 'k', $hashobj );
+	foreach ( $table1 as $i1 )
+	{
+		if (($i1 [4] == 'k') && (($i1 [5] == $hashobj) || ($i1 [6] == $hashobj)))
+		{
+			$object = $i1 [5];
+			$hashcryptobj = $i1 [6];
+			$hashkey = $i1 [7];
+		} // Recherche la clé de session.
+		$table2 = array ();
+		_l_fnd( $hashkey, $table2, 'k', $hashkey, '', $nebulePublicEntite );
+		foreach ( $table2 as $i2 )
+		{
+			if (($i2 [4] == 'k') && ($i2 [5] == $hashkey) && ($i2 [7] == $nebulePublicEntite)) // Recherche la version chiffrée de la clé de session.
+			{
+				$hashcryptkey = $i2 [6];
+				if (__io_op( $hashcryptobj ) && __io_op( $hashcryptkey ))
+					$nok = false; // Vérifie la présence des objets.
+			}
+		}
+	}
+	unset( $table1 );
+	unset( $table2 );
+	unset( $i1 );
+	unset( $i2 );
+	if ($nok)
+	{
+		$nebule_error_string = 'Elément manquant dans la chaîne de déchiffrement';
+		return false;
+	}
+	// Lecture de la clé de session chiffrée et de l'IV.
+	_o_vr( $hashcryptkey );
+	$cryptkey = __io_or( $hashcryptkey );
+	$hiv = '00000000000000000000000000000000';
+	$iv = pack( "H*", $hiv ); // A modifier pour des blocs de tailles différentes.
+	if ($cryptkey == '')
+	{
+		$nebule_error_string = 'clé chiffre invalide';
+		return false;
+	}
+	// Déchiffrement de la clé de session.
+	$key = '';
+	_o_vr( $nebulePrivateEntite );
+	$privcert = __io_or( $nebulePrivateEntite );
+	$private_key = openssl_pkey_get_private( $privcert, $nebulePasswordEntite );
+	if ($private_key === false)
+	{
+		$nebule_error_string = 'clé privé entité invalide';
+		return false;
+	}
+	$ok = openssl_private_decrypt( $cryptkey, $key, $private_key, OPENSSL_PKCS1_PADDING );
+	openssl_free_key( $private_key );
+	unset( $private_key );
+	unset( $privcert );
+	if (! $ok)
+	{
+		$nebule_error_string = 'erreur déchiffrement asymétrique';
+		return false;
+	}
+	
+	// Chiffrement de la clé de session pour la nouvelle entité.
+	$cryptkey = '';
+	_o_vr( $entite );
+	$cert = __io_or( $entite );
+	$ok = openssl_public_encrypt( $key, $cryptkey, $cert, OPENSSL_PKCS1_PADDING );
+	if (! $ok)
+		return false;
+	$hashcryptkey = hash( $nebuleHashAlgorithm, $cryptkey );
+	_o_gen( $cryptkey, "application/x-encrypted/$nebuleAsymetricAlgorithm" );
+	// Génère le lien de chiffrement asymétrique.
+	$newlink = _l_gen( '-', 'k', $hashkey, $hashcryptkey, $entite );
+	if ((_l_vr( $newlink )) == 1)
+		_l_wr( $newlink );
+	return true;
+}
+function _o_del( &$object )
+{ // Suppression de l'objet si non encore utilisé.
+  // - $object l'objet à supprimer.
+	global $nebulePermitWrite, $nebulePermitWriteObject, $nebulePublicEntite;
+	
+	addLog("_o_del($object)");
+	if (! $nebulePermitWrite)
+		return false;
+	if (! $nebulePermitWriteObject)
+		return false;
+	$ok = true;
+	$links = array ();
+	_l_lsx( $object, $links );
+	foreach ( $links as $link )
+	{
+		if ($link [2] != $nebulePublicEntite)
+		{
+			$ok = false;
+			break 1;
+		}
+	} // Vérifie si l'objet est utilisé par une autre entité.
+	unset( $links );
+	unset( $link );
+	if (! $ok)
+		return false;
+	return __io_od( $object );
+}
+function _l_svl( &$link )
+{ // Permet de déterminer la validité 'sociale' d'un lien.
+  // A faire...
+	
+	addLog("_l_svl($link)");
+	return 1;
+}
+function _l_gen( $dat, $typ, $src, $dst, $met )
+{ // Compile et signe un lien pour l'entité courante.
+  // - $dat la date de signature (anti-datage).
+  // - $typ le type de lien.
+  // - $src l'objet source.
+  // - $dst l'objet destination.
+  // - $met l'objet méta.
+	global $nebulePermitWriteLink, $nebulePublicEntite, $nebulePrivateEntite, $nebulePasswordEntite, $nebuleHashAlgorithm;
+	
+	addLog("_l_gen($src)");
+	if (! $nebulePermitWriteLink)
+		return false;
+	if ($nebulePublicEntite == '')
+		return false;
+	if ($nebulePrivateEntite == '')
+		return false;
+	if ($nebulePasswordEntite == '')
+		return false;
+	if (! __io_op( $nebulePrivateEntite ))
+		return false;
+	if ($typ == '')
+		return false;
+	if ($src == '')
+		return false;
+	if ($dst == '')
+		return false;
+	if ($met == '')
+		return false;
+	if ($dat == '-')
+		$dat = date( DATE_ATOM );
+	$privcert = (nebReadObjText( $nebulePrivateEntite, 10000 )); // WARNING A modifier pour ne pas appeler une fonction de haut niveau...
+	$private_key = openssl_pkey_get_private( $privcert, $nebulePasswordEntite );
+	if ($private_key === false)
+	{
+		return false;
+	}
+	$data = '_' . $nebulePublicEntite . '_' . $dat . '_' . $typ . '_' . $src . '_' . $dst . '_' . $met;
+	$hexsign = '';
+	$binary_signature = '';
+	$hashdata = hash( $nebuleHashAlgorithm, $data );
+	$binhash = pack( "H*", $hashdata );
+	$ok = openssl_private_encrypt( $binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING );
+	openssl_free_key( $private_key );
+	unset( $private_key );
+	unset( $hashdata );
+	unset( $binhash );
+	if ($ok === false)
+		return false;
+	$hexsign = bin2hex( $binary_signature );
+	return "$hexsign.$nebuleHashAlgorithm$data";
+}
+
+/**
+ * Résoud un embranchement de mise à jour d'un objet.
+ * Passer de préférence par la fonction _l_grx !
+ *
+ *  - $object est l'objet dont on veut trouver la mise à jour.
+ *  - $visited est une table des liens et objets déjà parcourus.
+ *  - $present permet de controler si l'on veut que l'objet final soit bien présent localement.
+ *  - $synchro permet ou non la synchronisation des liens et objets auprès d'entités tièrces,
+ *      en clair on télécharge ce qui manque au besoin lors du parcours du graphe.
+ *  - $restrict permet de ne parcourir les branche que sur des liens signés des entités marquées comme autorités.
+ *
+ * Fonction avec utilisation du cache si possible.
+ * Ne tient pas compte de $synchro pour le cache.
+ * Pas de cache si la recherche est restrainte aux autorités.
+ *
+ * @param string $object
+ * @param array:string $visited
+ * @param boolean $present
+ * @param boolean $synchro
+ * @param boolean $restrict
+ * @return string
+ */
+function _l_gr1( &$object, &$visited, $present = true, $synchro = false, $restrict = false )
+{
+	global $nebule_maxupdates, $nebulePermitSynchronizeLink, $nebulePermitSynchronizeObject, $nebuleLocalAuthorities;
+	
+	addLog("_l_gr1($object)");
+	$visited [$object] = true;
+	if (count( $visited ) > $nebule_maxupdates)
+	{
+		addLog('follow max updates '.$nebule_maxupdates);
+		return '0'; // Anti trou noir.
+	}
+	$links = array ();
+	_l_fnd( $object, $links, 'u', $object, '', '' ); // Liste les liens de mise à jour de l'objet.
+	$links = array_reverse( $links ); // Inverse le résultat pour avoir les liens les plus récents en premier.
+
+	// Recherche de nouveaux liens.
+	if ( $synchro
+			&& $nebulePermitSynchronizeLink
+			&& ( $nebulePermitSynchronizeObject
+					|| ! $present
+				)
+		)
+	{
+		_l_dlx( $object );
+	}
+	
+	// Supprime les boucles, càd les objets déjà traités.
+	$oklinks = array ();
+	foreach ( $links as $link )
+	{
+		if ( ! isset( $visited[$link[6]] ) )
+		{
+			array_push( $oklinks, $link );
+		}
+	}
+	unset( $links ); // Nettoyage du tableau des liens de mise à jour.
+
+	if (count( $oklinks ) == 0)
+	{
+		if ( ! $present
+				|| __io_op( $object )
+			)
+		{
+			return $object;
+		}
+		else
+		{
+			return '0';
+		}
+	} // Bout de branche.
+	                                                                                              
+	// Extrait le lien socialement le plus élevé, ou le plus récent. Supprime les objets non acceptables socialement.
+	$valinks = array ();
+	$vsoc = array ();
+	if ($restrict) // Ne prend en compte que les liens des entités marquées comme autorités locales.
+	{
+		foreach ( $oklinks as $link )
+		{
+			foreach ( $nebuleLocalAuthorities as $auth )
+			{
+				if ($link[2] == $auth)
+				{
+					array_push( $valinks, $link );
+					array_push( $vsoc, 1 );
+				}
+			}
+		}
+	}
+	else // Sinon regarde la validité sociale du lien.
+	{
+		foreach ( $oklinks as $link )
+		{
+			$slv = _l_svl( $link ); // WARNING actuellement tout le monde à 1.
+			if ($slv >= 1)
+			{
+				array_push( $valinks, $link );
+				array_push( $vsoc, $slv );
+			} // Tri par validité sociale.
+		}
+	}
+	unset( $oklinks ); // Nettoyage du tableau des liens de mise à jour vers des objets non déjà vus.
+	//array_multisort( $vsoc, SORT_ASC, $valinks ); // Tri sur la validité sociale. WARNING vérifier la pertinence, ne marche pas...
+	
+	if (count( $valinks ) == 0) // Bout de branche parce que sans branche valide.
+	{
+		if ( $synchro
+				&& $nebulePermitSynchronizeObject
+			)
+		{
+			_o_dlx( $object ); // Syncho de l'objet.
+		}
+		if ( ! $present
+				|| __io_op( $object )
+			)
+		{
+			return $object;
+		}
+		else
+		{
+			return '0';
+		}
+	}
+	
+	// Parcours les branches.
+	foreach ( $valinks as $link )
+	{
+		$res = _l_gr1( $link [6], $visited, $present );
+		if ($res != '0')
+		{
+			return $res;
+		}
+	}
+	
+	if ( ! $present
+			|| __io_op( $object )
+		)
+	{
+		return $object;
+	}
+	else
+	{
+		return '0'; // Bout de branche parce que sans branche avec objet présent.
+	}
+}
+
+/**
+ * Résoud le graphe des mises à jours d'un objet.
+ *
+ *  - $object est l'objet dont on veut trouver la mise à jour.
+ *  - $present permet de controler si l'on veut que l'objet final soit bien présent localement.
+ *  - $synchro permet ou non la synchronisation des liens et objets auprès d'entités tièrces,
+ *      en clair on télécharge ce qui manque au besoin lors du parcours du graphe.
+ *  - $restrict permet de ne parcourir les branche que sur des liens signés des entités marquées comme autorités.
+ *
+ * Fonction avec utilisation du cache si possible.
+ * Ne tient pas compte de $synchro pour le cache.
+ * Pas de cache si la recherche est restrainte aux autorités.
+ *
+ * @param string $object
+ * @param boolean $present
+ * @param boolean $synchro
+ * @param boolean $restrict
+ * @return string
+ */
+function _l_grx( $object, $present = true, $synchro = false, $restrict = false )
+{
+	global $nebule_permitautosync, $nebule_usecache, $nebule_cache_l_grx;
+	
+	addLog("_l_grx($object)");
+	
+	// Lit au besoin le cache.
+	if ( $nebule_usecache
+			&& ! $restrict
+			&& isset( $nebule_cache_l_grx[$object][$present] )
+		)
+	{
+		return $nebule_cache_l_grx[$object][$present];
+	}
+	
+	// Active la synchronisation automatique au besoin.
+	if ( $nebule_permitautosync )
+	{
+		$synchro = true;
+	}
+	
+	$visited = array();
+	$res = _l_gr1( $object, $visited, $present, $synchro, $restrict );
+	unset( $visited );
+	if ( $res == '0' )
+	{
+		$res = $object;
+	}
+	
+	// Ecrit au besoin le cache.
+	if ( $nebule_usecache
+			&& ! $restrict
+		)
+	{
+		$nebule_cache_l_grx[$object][$present] = $res;
+	}
+	
+	return $res;
+}
+
+function _l_fnd( $object, &$table, $action, $srcobj, $dstobj, $metobj, $withinvalid = false )
+{ // Liste et filtre les liens sur des actions et objets dans un ordre déterminé.
+  // - $object objet dont les liens sont à lire.
+  // - $table table dans laquelle seront retournés les liens.
+  // - $action filtre sur l'action.
+  // - $srcobj filtre sur un objet source.
+  // - $dstobj filtre sur un objet destination.
+  // - $metobj filtre sur un objet meta.
+  // - $withinvalid optionnel pour autoriser la lecture des liens invalides.
+  //
+  // Les liens sont triés par ordre chronologique et les liens marqués comme supprimés sont retirés de la liste.
+  //
+  // Version non inclusive, càd liens x de l'entité courante valable pour tous les liens ciblés.
+	global $nebulePublicEntite, $nebule_followxonsamedate; // $nebuleCheckSignOnList,
+	
+	addLog("_l_fnd($object)");
+	$linkdate = array ();
+	$tmptable = array ();
+	$i1 = 0;
+	_l_ls1( $object, $tmptable, $action, $metobj, $withinvalid );
+	foreach ( $tmptable as $n => $t )
+	{
+		$linkdate [$n] = $t [3];
+	}
+	array_multisort( $linkdate, SORT_STRING, SORT_ASC, $tmptable ); // Tri par date.
+	foreach ( $tmptable as $tline )
+	{
+		if ($tline [4] == 'x')
+			continue 1; // Suppression de l'affichage des liens x.
+		if ($action != '' && $tline [4] != $action)
+			continue 1;
+		if ($srcobj != '' && $tline [5] != $srcobj)
+			continue 1;
+		if ($dstobj != '' && $tline [6] != $dstobj)
+			continue 1;
+		if ($metobj != '' && $tline [7] != $metobj)
+			continue 1;
+		foreach ( $tmptable as $vline )
+		{
+			if (($vline [4] == 'x') && ($tline [4] != 'x') && ($tline [5] == $vline [5]) && ($tline [6] == $vline [6]) && ($tline [7] == $vline [7]) && (($vline [2] == $tline [2]) || ($vline [2] == $nebulePublicEntite)) && ((($nebule_followxonsamedate) && (strtotime( $tline [3] ) < strtotime( $vline [3] ))) || (strtotime( $tline [3] ) <= strtotime( $vline [3] ))))
+				continue 2;
+		}
+		foreach ( $table as $vline ) // Suppression de l'affichage des liens en double, même à des dates différentes.
+		{
+			if (($tline [2] == $vline [2]) && ($tline [4] == $vline [4]) && ($tline [5] == $vline [5]) && ($vline [9] == 1 || $vline [9] == - 1) && ($tline [6] == $vline [6]) && ($tline [7] == $vline [7]))
+				continue 2;
+		}
+		// Remplissage de la table des résultats.
+		$table [$i1] [0] = $tline [0];
+		$table [$i1] [1] = $tline [1];
+		$table [$i1] [2] = $tline [2];
+		$table [$i1] [3] = $tline [3];
+		$table [$i1] [4] = $tline [4];
+		$table [$i1] [5] = $tline [5];
+		$table [$i1] [6] = $tline [6];
+		$table [$i1] [7] = $tline [7];
+		$table [$i1] [8] = $tline [8];
+		$table [$i1] [9] = $tline [9];
+		$table [$i1] [10] = $tline [10];
+		$table [$i1] [11] = $tline [11];
+		$i1 ++;
+	}
+	unset( $linkdate );
+	unset( $i1 );
+	unset( $n );
+	unset( $t );
+	unset( $tline );
+}
+
+/**
+ * Liste et filtre les liens sur des actions et objets dans un ordre déterminé.
+ *  - $object objet dont les liens sont à lire.
+ *  - $table table dans laquelle seront retournés les liens.
+ *  - $action filtre sur l'action.
+ *  - $srcobj filtre sur un objet source.
+ *  - $dstobj filtre sur un objet destination.
+ *  - $metobj filtre sur un objet meta.
+ *  - $withinvalid optionnel pour autoriser la lecture des liens invalides.
+ *
+ * Les liens sont triés par ordre chronologique et les liens marqués comme supprimés sont retirés de la liste.
+ *
+ * Version inclusive, càd liens x valable uniquement sur les liens du même signataire.
+ *
+ * @param string $object
+ * @param array $table
+ * @param string $action
+ * @param string $srcobj
+ * @param string $dstobj
+ * @param string $metobj
+ * @param boolean $withinvalid
+ * @return null
+ */
+function _l_fndi( $object, &$table, $action, $srcobj, $dstobj, $metobj, $withinvalid = false )
+{
+	global $nebulePublicEntite, $nebuleCheckSignOnList, $nebule_followxonsamedate;
+	
+	
+	{
+	addLog("_l_fndi($object)");
+	}
+	
+	$linkdate = array ();
+	$tmptable = array ();
+	$i1 = 0;
+	
+	_l_ls1( $object, $tmptable, $action, $metobj, $withinvalid );
+	
+	foreach ( $tmptable as $n => $t )
+	{
+		$linkdate [$n] = $t [3];
+	}
+	
+	// Tri par date.
+	array_multisort( $linkdate, SORT_STRING, SORT_ASC, $tmptable );
+	
+	foreach ( $tmptable as $tline )
+	{
+		if ($tline [4] == 'x')
+		{
+			continue 1; // Suppression de l'affichage des liens x.
+		}
+		if ($action != '' && $tline [4] != $action)
+		{
+			continue 1;
+		}
+		if ($srcobj != '' && $tline [5] != $srcobj)
+		{
+			continue 1;
+		}
+		if ($dstobj != '' && $tline [6] != $dstobj)
+		{
+			continue 1;
+		}
+		if ($metobj != '' && $tline [7] != $metobj)
+		{
+			continue 1;
+		}
+		
+		// Filtre du lien.
+		foreach ( $tmptable as $vline )
+		{
+			if ( $vline [4] == 'x'
+					&& $tline [4] != 'x'
+					&& $tline [5] == $vline [5]
+					&& $tline [6] == $vline [6]
+					&& $tline [7] == $vline [7]
+					&& $vline [2] == $tline [2]
+					&& ($vline [9] == 1
+							|| $vline [9] == -1
+						)
+					&& ( ( $nebule_followxonsamedate
+								&& strtotime( $tline [3] ) < strtotime( $vline [3] )
+							)
+							|| strtotime( $tline [3] ) <= strtotime( $vline [3] )
+						)
+				)
+			{
+				continue 2;
+			}
+		}
+		
+		// Suppression de l'affichage des liens en double, même à des dates différentes.
+		foreach ( $table as $vline )
+		{
+			if ( $tline [2] == $vline [2]
+					&& $tline [4] == $vline [4]
+					&& $tline [5] == $vline [5]
+					&& $tline [6] == $vline [6]
+					&& $tline [7] == $vline [7]
+				)
+			{
+				continue 2;
+			}
+		}
+		// Remplissage de la table des résultats.
+		$table [$i1] [0] = $tline [0];
+		$table [$i1] [1] = $tline [1];
+		$table [$i1] [2] = $tline [2];
+		$table [$i1] [3] = $tline [3];
+		$table [$i1] [4] = $tline [4];
+		$table [$i1] [5] = $tline [5];
+		$table [$i1] [6] = $tline [6];
+		$table [$i1] [7] = $tline [7];
+		$table [$i1] [8] = $tline [8];
+		$table [$i1] [9] = $tline [9];
+		$table [$i1] [10] = $tline [10];
+		$table [$i1] [11] = $tline [11];
+		$i1 ++;
+	}
+	unset( $linkdate, $i1, $n, $t, $tline );
+}
+
+function _l_lsx( $object, &$table, $filtreact = '-', $filtreobj = '', $withinvalid = false )
+{ // Liste et filtre les liens sur des actions et objets dans un ordre indéterminé.
+  // - $object objet dont les liens sont à lire.
+  // - $table table dans laquelle seront retournés les liens.
+  // - $filtreact filtre optionnel sur l'action.
+  // - $filtreobj filtre optionnel sur un objet source, destination ou meta.
+  // - $withinvalid optionnel pour autoriser la lecture des liens invalides.
+  //
+  // Les liens sont triés par ordre chronologique et les liens marqués comme supprimés sont retirés de la liste.
+	global $nebulePublicEntite, $nebuleCheckSignOnList, $nebule_followxonsamedate;
+	
+	addLog("_l_lsx($object)");
+	$linkdate = array ();
+	$tmptable = array ();
+	$i1 = 0;
+	if ($filtreact == '')
+		$filtreact = '-';
+	_l_ls1( $object, $tmptable, $filtreact, $filtreobj, $withinvalid );
+	foreach ( $tmptable as $n => $t )
+	{
+		$linkdate [$n] = $t [3];
+	}
+	array_multisort( $linkdate, SORT_STRING, SORT_ASC, $tmptable ); // Tri par date.
+	foreach ( $tmptable as $tline )
+	{
+		if ($tline [4] == 'x')
+			continue 1; // Suppression de l'affichage des liens x.
+		foreach ( $tmptable as $vline ) // Suppression des liens marqués supprimés.
+		{
+			if (($vline [4] == 'x') && ($tline [4] != 'x') && ($tline [5] == $vline [5]) && ($tline [6] == $vline [6]) && ($tline [7] == $vline [7]) && (($vline [2] == $tline [2]) || ($vline [2] == $nebulePublicEntite)) && ($vline [9] == 1 || $vline [9] == - 1) && ((($nebule_followxonsamedate) && (strtotime( $tline [3] ) < strtotime( $vline [3] ))) || (strtotime( $tline [3] ) <= strtotime( $vline [3] ))))
+				continue 2;
+		}
+		foreach ( $table as $vline ) // Suppression de l'affichage des liens en double, même à des dates différentes.
+		{
+			if (($tline [2] == $vline [2]) && ($tline [4] == $vline [4]) && ($tline [5] == $vline [5]) && ($tline [6] == $vline [6]) && ($tline [7] == $vline [7]))
+				continue 2;
+		}
+		// Remplissage de la table des résultats.
+		$table [$i1] [0] = $tline [0];
+		$table [$i1] [1] = $tline [1];
+		$table [$i1] [2] = $tline [2];
+		$table [$i1] [3] = $tline [3];
+		$table [$i1] [4] = $tline [4];
+		$table [$i1] [5] = $tline [5];
+		$table [$i1] [6] = $tline [6];
+		$table [$i1] [7] = $tline [7];
+		$table [$i1] [8] = $tline [8];
+		$table [$i1] [9] = $tline [9];
+		$table [$i1] [10] = $tline [10];
+		$table [$i1] [11] = $tline [11];
+		$i1 ++;
+	}
+	unset( $linkdate );
+	unset( $i1 );
+	unset( $n );
+	unset( $t );
+	unset( $tline );
+}
+function _l_ls1( &$object, &$table, $filtreact = '-', $filtreobj = '', $withinvalid = false )
+{ // Lit tous les liens d'un objet.
+  // - $object objet dont les liens sont à lire.
+  // - $table table dans laquelle seront retournés les liens.
+  // - $filtreact filtre optionnel sur l'action.
+  // - $filtreobj filtre optionnel sur un objet source, destination ou meta.
+  // - $withinvalid optionnel pour autoriser la lecture des liens invalides.
+	global $nebule_io_maxlink, $nebuleCheckSignOnList, $nebuleListInvalidLinks, $nebule_metrolog_l_ls;
+	
+	addLog("_l_ls1($object)");
+	if ($object == '0')
+		return;
+	if (! __io_lp( $object ))
+		return;
+	if (! $nebuleListInvalidLinks)
+		$withinvalid = false; // Si pas autorisé, refuse de lire les liens invalides.
+	if ($filtreact == '')
+		$filtreact = '-';
+	$version = ''; // version du lien.
+	$n = 0; // indice dans la table des resultats.
+	$tline = array (); // table d'un lien en cours de lecture et d'analyse.
+	$lines = __io_lr( $object ); // liens a lire et analyser.
+	foreach ( $lines as $line )
+	{
+		$i = 1;
+		if (substr( $line, 0, 21 ) == 'nebule/liens/version/')
+		{
+			$version = $line;
+			continue 1;
+		} // Permet la prise en compte de differentes versions de liens - non utilise aujourd'hui.
+		$nebule_metrolog_l_ls ++; // Métrologie.
+		$okfiltre = false; // Résultat du filtre, sera à true si dans les critères.
+		$tline [0] = '';
+		$tline [1] = '';
+		$tline [2] = '';
+		$tline [3] = ''; // Initialisation des champs pour éviter les warn des logs.
+		$tline [4] = '';
+		$tline [5] = '';
+		$tline [6] = '';
+		$tline [7] = '';
+		$loopelem = strtok( trim( $line ), '_' );
+		while ( $loopelem !== false )
+		{
+			$tline [$i] = $loopelem;
+			$i ++;
+			$loopelem = strtok( '_' );
+		} // Extrait le lien.
+		if ($filtreobj == '' && ($tline [4] == $filtreact || $filtreact == '-'))
+			$okfiltre = true;
+		if (($tline [5] == $filtreobj || $tline [6] == $filtreobj || $tline [7] == $filtreobj) && ($tline [4] == $filtreact || $filtreact == '-'))
+			$okfiltre = true; // Vérifie le lien par rapport au filtre.
+		if ($tline [4] == 'u' || $tline [4] == 'e' || ($tline [4] == 'x' && $filtreact != 'x'))
+			$okfiltre = true; // Quelque soit le filtre, ajoute les liens de type u e et x.
+		if ($i != 8)
+			$okfiltre = false; // Si le lien est invalide, le filtre.
+		if ($okfiltre) // Si le lien correspond au filtre, l'enregistre dans la table des resultats.
+		{
+			if ($nebuleCheckSignOnList)
+				$verify = _l_vr( trim( $line ) );
+			else
+				$verify = - 1;
+			if ($verify == 1 || $verify == - 1 || $withinvalid) // Le lien doit être vérifié ou la vérification désactivée.
+			{
+				$table [$n] [0] = trim( $line ); // Remplit le tableau à retourner.
+				$table [$n] [1] = $tline [1];
+				$table [$n] [2] = $tline [2];
+				$table [$n] [3] = $tline [3];
+				$table [$n] [4] = $tline [4];
+				$table [$n] [5] = $tline [5];
+				$table [$n] [6] = $tline [6];
+				$table [$n] [7] = $tline [7];
+				$table [$n] [8] = $version;
+				$table [$n] [9] = $verify;
+				$table [$n] [10] = openssl_error_string();
+				$table [$n] [11] = 0; // Pour pondération.
+				$n ++;
+			}
+			if ($n >= $nebule_io_maxlink)
+			{
+				addLog('io max link read '.$nebule_io_maxlink);
+				break 1; // WARNING --- BEURK ---
+			}
+		}
+	}
+	unset( $count );
+	unset( $n );
+	unset( $i );
+	unset( $version );
+	unset( $okfiltre );
+	unset( $line );
+	unset( $tline );
+	unset( $loopelem );
+}
+
+function _l_dlx( $object )
+{ // Télécharge les liens de l'objet sur plusieurs localisations.
+  // - $object l'objet dont les liens sont à télécharger.
+	global $nebuleHashAlgorithm, $nebulePermitSynchronizeLink;
+	
+	addLog("_l_dlx($object)");
+	if (! $nebulePermitSynchronizeLink)
+		return;
+	if ($object == '0')
+		return;
+	$table = array ();
+	$hashtype = hash( $nebuleHashAlgorithm, 'nebule/objet/entite/localisation' );
+	$okobj = array ();
+	$count = 1;
+	$okobj [1] = '';
+	_l_lsx( $hashtype, $table );
+	foreach ( $table as $itemtable )
+	{
+		if (($itemtable [7] == $hashtype) && ($itemtable [4] == 'l'))
+		{
+			$t = true;
+			for($j = 1; $j < $count; $j ++)
+			{
+				if ($itemtable [6] == $okobj [$j])
+				{
+					$t = false;
+				}
+			}
+			if ($t)
+			{
+				$lnk = '';
+				_o_lsx( $itemtable [6], $lnk );
+				if ($lnk != '')
+				{
+					_l_dl1( $object, $lnk );
+				}
+				$okobj [$count] = $itemtable [6];
+				$count ++;
+			}
+		}
+	}
+	unset( $count );
+	unset( $j );
+	unset( $t );
+	unset( $lnk );
+	unset( $table );
+	unset( $okobj );
+	unset( $hashtype );
+}
+
+/**
+ * _l_dl1()
+ * Télécharge les liens de l'objet sur une localisation précise (un site web).
+ *  - $object l'objet dont les liens sont à télécharger.
+ *  - $localisation le site web sur lequel aller télécharger les liens.
+ * Les liens valides sont écrits.
+ *
+ * @param string $object
+ * @param string $localisation
+ * @return integer
+ */
+function _l_dl1( $object, $localisation )
+{
+	global $nebulePermitWrite, $nebulePermitSynchronizeLink;
+	
+	addLog("_l_dl1($object)");
+	
+	if ( ! $nebulePermitWrite
+			|| ! $nebulePermitSynchronizeLink
+			|| $object == '0'
+			|| $object == ''
+			|| ! is_string($object)
+			|| ! ctype_xdigit($object)
+			|| $localisation == '0'
+			|| $localisation == ''
+			|| ! is_string($localisation)
+		)
+	{
+		addLog( '_l_dl1('.$object.') invalid arg '.$localisation );
+		return 0;
+	}
+	
+	$count = 0;
+	
+	// WARNING ajouter vérification du lien type texte
+	$distobj = fopen( $localisation.'/l/'.$object, 'r' );
+	if ($distobj)
+	{
+		while ( ! feof( $distobj ) )
+		{
+			$line = trim( fgets( $distobj ) );
+			$verify = _l_vr( $line );
+			if ( $verify == 1
+					|| $verify == -1
+				)
+			{
+				_l_wr( $line );
+				$count++;
+			}
+		}
+		fclose( $distobj );
+	}
+	return $count;
+}
+
+function _l_vr( $link )
+{ // Vérification de la validité syntaxique ainsi que la signature du lien.
+  // - $link le lien à vérifier.
+  //
+  // Si la vérification est désactivée, retourne l'entier -1.
+  // Si la signature a une valeur nulle ou incorrecte, retourne la valeur 11.
+  // Si le signataire a une valeur nulle ou incorrecte, retourne 12.
+  // Si la date a une valeur nulle, retourne 13.
+  // Si l'action a une valeur nulle ou incorrecte, retourne 14.
+  // Si l'objet source a une valeur nulle ou incorrecte, retourne 15.
+  // Si l'objet destination a une valeur nulle ou incorrecte, retourne 16.
+  // Si l'objet méta a une valeur nulle ou incorrecte, retourne 17.
+  // Si un champs supplémentaire est présent, retourne 18.
+  // Si tous les champs lus sont différents du lien sans la signature, retourne 21.
+  // Si la première partie de la signature n'a pas une valeur correcte, retourne 22.
+  // Si la deuxième partie de la signature est nulle ou incorrecte, retourne 23.
+  // Si l'entité signataire est introuvable, retourne 31.
+  // Si le lien et sa signature sont valides, retourne 1.
+  // Si la vérification de la signature échoue, retourne 0, c'est clairement un lien invalide.
+  // Si une erreur a lieu lors de la vérification de la signature, retourne 32.
+  //
+  // Un lien n'est valide que si la fonction renvoie 1. Dans tous les autres cas le lien doit être assumé comme invalide et corrompu.
+  // Dans le cas ou la variable $nebuleCheckSignOnVerify serait à false, le résultat sera toujours -1. C'est un mode de fonctionnement dégradé
+  // dans lequel rien n'est fiable. Le programme qui appelle cette fonction dans cet état doit prendre en compte explicitement ce cas
+  // comme non fiable et le traiter de facon adéquate.
+	global $nebuleCheckSignOnVerify, $nebuleHashAlgorithm, $nebule_metrolog_l_vr;
+	
+	addLog("_l_vr($link)");
+	if (! $nebuleCheckSignOnVerify)
+		return - 1;
+	while ( $ok = openssl_error_string() )
+		; // Vide le cache des erreurs de openssl.
+	$signature = strtok( trim( $link ), '_' ); // Détermine la signature.
+	if (($signature == '') || ($signature == '0') || ($signature == $link) || ($signature != __fs( $signature )))
+		return 11; // Vérifie la valeur et la pertinence de la signature.
+	$signataire = strtok( '_' ); // Détermine le signataire.
+	if (($signataire == '') || ($signataire == '0') || (! ctype_xdigit( $signataire )))
+		return 12;
+	$date = strtok( '_' ); // Détermine la date.
+	if ($date == '')
+		return 13;
+	$type = strtok( '_' ); // Détermine la date.
+	if (($type == '') || (($type != 'l') && ($type != 'f') && ($type != 'u') && ($type != 'd') && ($type != 'e') && ($type != 'c') && ($type != 'k') && ($type != 's') && ($type != 'x')))
+		return 14;
+	$objsrc = strtok( '_' ); // Détermine l'objet source.
+	if (($objsrc == '') || ($objsrc == '0') || (! ctype_xdigit( $objsrc )))
+		return 15;
+	$objdst = strtok( '_' ); // Détermine l'objet destination.
+	if (($objdst == '') || (! ctype_xdigit( $objdst )))
+		return 16;
+	$objmet = strtok( '_' ); // Détermine l'objet meta.
+	if (($objmet == '') || (! ctype_xdigit( $objmet )))
+		return 17;
+	$autres = strtok( '' ); // Détermine si il y a d'autres champs non prévus.
+	if ($autres != '')
+		return 18;
+	$nt = strpos( $link, '_' );
+	$np = strpos( $link, '.' );
+	$datas = '_' . $signataire . '_' . $date . '_' . $type . '_' . $objsrc . '_' . $objdst . '_' . $objmet; // Vérifie que tous les champs lus sont identiques au lien à vérifier sans la signature.
+	$datasdiff = substr( $link, $nt );
+	if ($datas != $datasdiff)
+		return 21;
+	$sign = substr( $link, 0, $np ); // Vérifie la première partie de la signature.
+	if (! ctype_xdigit( $sign ))
+		return 22;
+	$prot = substr( $link, $np + 1, $nt - $np - 1 ); // Vérifie la deuxième partie de la signature.
+	if ($prot == '')
+		return 23;
+	$ok = 0;
+	$decrypted = '';
+	if (__io_op( $signataire ))
+	{
+		_o_vr( $signataire );
+		$cert = __io_or( $signataire ); // Lit la clé publique de l'entité signataire.
+		$hash = hash( $nebuleHashAlgorithm, $datas );
+		$pubkeyid = openssl_pkey_get_public( $cert );
+		if ($pubkeyid === false)
+			return 31; // Vérifie la présence et la cohérence de l'entité signataire.
+		$binsign = pack( 'H*', $sign ); // Encore la signature pour la vérification.
+		$okdec = openssl_public_decrypt( $binsign, $decrypted, $pubkeyid, OPENSSL_PKCS1_PADDING ); // Déchiffre la signature avec la clé publique de l'entité signataire.
+		$decrypted = (substr( bin2hex( $decrypted ), - 64, 64 )); // WARNING A faire pour le cas général.
+		if ($okdec) // Vérifie la signature.
+		{
+			if ($decrypted == $hash)
+				$ok = 1;
+			else
+				$ok = 0;
+			$nebule_metrolog_l_vr ++;
+		}
+		else
+			$ok = 32; // Si
+	}
+	unset( $signature );
+	unset( $signataire );
+	unset( $date );
+	unset( $type );
+	unset( $objsrc );
+	unset( $objdst );
+	unset( $objmet );
+	unset( $autres );
+	unset( $nt );
+	unset( $np );
+	unset( $datas );
+	unset( $datasdiff );
+	unset( $sign );
+	unset( $prot );
+	unset( $cert );
+	unset( $hash );
+	unset( $pubkeyid );
+	unset( $decrypted );
+	unset( $binsign );
+	unset( $okdec );
+	return $ok;
+}
+function _l_wr( $link )
+{ // Ecrit le lien dans les objets concernés.
+  // - $link le lien à écrire.
+  // Se charge de répartir les liens sur les objets concernés.
+  // Le lien de type c est géré un peu à part puisque tous les champs ne sont pas des objets.
+	global $ok_connexion, $nebulePermitWrite, $nebulePermitWriteLink, $nebule_createhistory;
+	
+	addLog("_l_wr($link)");
+	if (! $nebulePermitWrite)
+		return false;
+	if (! $nebulePermitWriteLink)
+		return false;
+	$sign = strtok( trim( $link ), '_' ); // Lit la signature.
+	if ($sign == '' || $sign == '0')
+		return false;
+	$objsig = strtok( '_' ); // Lit le signataire.
+	if ($objsig == '' || $objsig == '0' || ! ctype_xdigit( $objsig ))
+		return false;
+	$objtyp = strtok( '_' ); // Lit la date. N'est pas gardé.
+	$objtyp = strtok( '_' ); // Lit le type.
+	if ($objtyp != 'c' && $objtyp != 'd' && $objtyp != 'e' && $objtyp != 'f' && $objtyp != 'k' && $objtyp != 'l' && $objtyp != 's' && $objtyp != 'u' && $objtyp != 'x')
+		return false;
+	$objsrc = strtok( '_' ); // Lit l'objet source.
+	if ($objsrc == '' || $objsrc == '0' || ! ctype_xdigit( $objsrc ))
+		return false;
+	$objdst = strtok( '_' ); // Lit l'objet destination.
+	if ($objdst == '' || ! ctype_xdigit( $objdst ))
+		return false;
+	$objmet = strtok( '_' ); // Lit l'objet meta.
+	if ($objmet == '' || ! ctype_xdigit( $objmet ))
+		return false;
+		
+		// Recherche la pré-existance du lien.
+	$res = false;
+	if (__io_lp( $objsrc ))
+	{
+		$lines = __io_lr( $objsrc );
+		foreach ( $lines as $line )
+		{
+			if (! (substr( $line, 0, 21 ) == 'nebule/liens/version/'))
+			{
+				$lsign = strtok( trim( $line ), '_' );
+				if ($lsign == $sign)
+				{
+					$res = true;
+					break 1;
+				} // Si le lien est déjà présent, on arrête l'écriture.
+			}
+		}
+	}
+	if (! $res)
+	{
+		__io_lw( $objsig, $link ); // Ecrit le lien dans l'entité signataire. Nouveauté v1.2 .
+		if ($objtyp != 'c')
+		{
+			if ($objsrc != $objsig)
+				__io_lw( $objsrc, $link ); // Ecrit le lien dans l'objet source.
+			if ($objdst != $objsig && $objdst != '0')
+				__io_lw( $objdst, $link ); // Ecrit le lien dans l'objet destination.
+			if ($objmet != $objsig && $objmet != '0')
+				__io_lw( $objmet, $link ); // Ecrit le lien dans l'objet méta.
+		}
+	}
+	unset( $lines );
+	unset( $res );
+	unset( $sign );
+	unset( $objsig );
+	unset( $objtyp );
+	unset( $objsrc );
+	unset( $objdst );
+	unset( $objmet );
+	return true;
+}
+
+
+
+/*
+ * ------------------------------------------------------------------------------------------
+ * Fonctions bas niveau.
+ * ------------------------------------------------------------------------------------------
+ */
+
+// I/O sont les fonctions liées aux accès disque. Peut être modifié pour permettre un accès en BDD ou autre.
+/**
+ * I/O - Prépare les dossiers.
+ *
+ * @return null
+ */
+function __io_open()
+{
+	global $nebuleCodeMaster;
+	
+	if ( ! file_exists( NEBULE_LOCAL_LINKS_FOLDER ) )
+	{
+		mkdir( NEBULE_LOCAL_LINKS_FOLDER );
+	}
+	if ( ! file_exists( NEBULE_LOCAL_OBJECTS_FOLDER ) )
+	{
+		mkdir( NEBULE_LOCAL_OBJECTS_FOLDER );
+	}
+}
+
+/**
+ * I/O - Vérifie l'état des entrées/sorties.
+ * @todo
+ *
+ * @return boolean
+ */
+function __io_chk()
+{
+	if ( ! __io_lchk()
+			|| ! __io_ochk()
+		)
+	{
+		return false;
+	}
+	return true;
+}
+
+/**
+ * I/O - Vérifie l'état du dossier des liens.
+ *
+ * @return boolean
+ */
+function __io_lchk()
+{
+	global $nebulePermitWrite, $nebulePermitWriteLink;
+	
+	if ( ! file_exists( NEBULE_LOCAL_LINKS_FOLDER )
+			|| ! is_dir( NEBULE_LOCAL_LINKS_FOLDER )
+		)
+	{
+		return false;
+	}
+	if ( $nebulePermitWrite
+			&& $nebulePermitWriteLink
+		)
+	{
+		$data = hash('sha256', __pr(8).date( DATE_ATOM ) );
+		$name = NEBULE_LOCAL_LINKS_FOLDER.'/writest'.$data;
+		file_put_contents( $name, $data );
+		if ( ! file_exists( $name )
+				|| ! is_file( $name )
+			)
+		{
+			return false;
+		}
+		$read = file_get_contents( $name, NULL, NULL, 0, 1024 );
+		if ( $data != $read )
+		{
+			return false;
+		}
+		unset( $data, $read );
+		unlink( $name );
+		unset( $name );
+	}
+	return true;
+}
+
+/**
+ * I/O - Vérifie l'état du dossier des objets.
+ *
+ * @return boolean
+ */
+function __io_ochk()
+{
+	global $nebulePermitWrite, $nebulePermitWriteObject;
+	
+	if ( ! file_exists( NEBULE_LOCAL_OBJECTS_FOLDER )
+			|| ! is_dir( NEBULE_LOCAL_OBJECTS_FOLDER )
+		)
+	{
+		return false;
+	}
+	if ( $nebulePermitWrite
+			&& $nebulePermitWriteObject
+		)
+	{
+		$data = hash('sha256', __pr(8).date( DATE_ATOM ) );
+		$name = NEBULE_LOCAL_OBJECTS_FOLDER.'/writest'.$data;
+		file_put_contents( $name, $data );
+		if ( ! file_exists( $name )
+				|| ! is_file( $name )
+			)
+		{
+			return false;
+		}
+		$read = file_get_contents( $name, NULL, NULL, 0, 1024 );
+		if ( $data != $read )
+		{
+			return false;
+		}
+		unset( $data, $read );
+		unlink( $name );
+		unset( $name );
+	}
+	return true;
+}
+
+/**
+ * I/O - Indique true si l'objet a des liens, ou false sinon.
+ *
+ * @param string $o
+ * @return boolean
+ */
+function __io_lp( &$o )
+{
+	if ( file_exists( NEBULE_LOCAL_LINKS_FOLDER.'/'.$o ) )
+	{
+		return true;
+	}
+	return false;
+}
+
+/**
+ * I/O - Indique true si l'objet est présent, ou false sinon.
+ *
+ * @param string $o
+ * @return boolean
+ */
+function __io_op( &$o )
+{
+	if ( file_exists( NEBULE_LOCAL_OBJECTS_FOLDER.'/'.$o ) )
+	{
+		return true;
+	}
+	return false;
+}
+
+/**
+ * I/O - Lit les liens de l'objet.
+ * Retourne un tableau des liens lus, même vide.
+ *
+ * @param string $o
+ * @return boolean|array:string
+ */
+function __io_lr( &$o )
+{
+	global $nebule_io_maxlink;
+	
+	if ( ! file_exists( NEBULE_LOCAL_LINKS_FOLDER.'/'.$o ) )
+	{
+		return false;
+	}
+	$n = 0;
+	$t = array ();
+	$l = file( NEBULE_LOCAL_LINKS_FOLDER.'/'.$o );
+	foreach ( $l as $k )
+	{
+		$t [$n] = $k;
+		if ( $n > $nebule_io_maxlink )
+		{
+			break 1;
+		}
+		$n ++;
+	}
+	return $t;
+}
+
+/**
+ * I/O - Lit le contenu de l'objet.
+ * Retourne le contenu lu ou false si erreur.
+ *
+ * @param string $o
+ * @param number $m
+ * @return boolean|string
+ */
+function __io_or( &$o, $m = 0 )
+{
+	global $nebule_io_maxdata, $nebule_metrolog_o_ls;
+	
+	if ( $m == 0 )
+	{
+		$m = $nebule_io_maxdata;
+	}
+	if ( ! file_exists( NEBULE_LOCAL_OBJECTS_FOLDER.'/'.$o ) )
+	{
+		return false;
+	}
+	
+	$s = filesize(NEBULE_LOCAL_OBJECTS_FOLDER.'/'.$o);
+	if ( $s > $m )
+	{
+		$s = $m;
+	}
+	
+	$nebule_metrolog_o_ls++;
+	return file_get_contents( NEBULE_LOCAL_OBJECTS_FOLDER.'/'.$o, NULL, NULL, 0, $s );
+}
+
+/**
+ * I/O - Ecrit un lien de l'objet.
+ * Retourne le nombre d'octets écrits ou false si erreur.
+ *
+ * @param string $o
+ * @param string $l
+ * @return boolean|number
+ */
+function __io_lw( &$o, &$l )
+{
+	global $nebulePermitWrite, $nebulePermitWriteLink;
+	
+	if ( ! $nebulePermitWrite
+			|| ! $nebulePermitWriteLink
+		)
+	{
+		return false;
+	}
+	if ( ! __io_lp( $o ) )
+	{
+		file_put_contents( NEBULE_LOCAL_LINKS_FOLDER.'/'.$o, LINK_VERSION."\n" );
+	}
+	
+	//addLog('write link for '.$o);
+	return file_put_contents( NEBULE_LOCAL_LINKS_FOLDER.'/'.$o, "$l\n", FILE_APPEND );
+}
+
+/**
+ * I/O - Ecrit des données dans un objet.
+ * Retourne le nombre d'octets écrits ou false si erreur.
+ *
+ * @param string $d
+ * @return boolean|number
+ */
+function __io_ow( &$d )
+{
+	global $nebuleHashAlgorithm, $nebulePermitWrite, $nebulePermitWriteObject;
+	
+	if ( ! $nebulePermitWrite
+			|| ! $nebulePermitWriteObject
+		)
+	{
+		return false;
+	}
+	$h = hash( $nebuleHashAlgorithm, $d );
+	//addLog('write object '.$h);
+	return file_put_contents( NEBULE_LOCAL_OBJECTS_FOLDER.'/'.$h, $d );
+}
+
+/**
+ * I/O - Supprime le contenu d'un objet.
+ * Retourne true si la suppression a réussi ou false si erreur.
+ *
+ * @param string $o
+ * @return boolean
+ */
+function __io_od( &$o )
+{
+	global $nebulePermitWrite, $nebulePermitWriteObject;
+	
+	if ( ! $nebulePermitWrite
+			|| ! $nebulePermitWriteObject
+		)
+	{
+		return false;
+	}
+	if ( ! file_exists( NEBULE_LOCAL_OBJECTS_FOLDER.'/'.$o ) )
+	{
+		return true;
+	}
+	return unlink( NEBULE_LOCAL_OBJECTS_FOLDER.'/'.$o );
+}
+
+/**
+ * I/O - Fin de traitement.
+ *
+ * @return null
+ */
+function __io_clos()
+{
+	// Rien à fermer sur un fs.
+}
+
+
+
+/*
+ * ------------------------------------------------------------------------------------------
+ * Fonctions diverses.
+ * ------------------------------------------------------------------------------------------
+ */
+
+/**
+ * Lecture d'un champs spécifique $p dans le registre de lien $l.
+ *
+ * @param string $l
+ * @param integer $p
+ * @return string
+ */
+function __rf( &$l, $p )
+{
+	$r = strtok( $l, '_' );
+	if ($p > 1)
+	{
+		$r = strtok( '_' );
+	}
+	if ($p > 2)
+	{
+		$r = strtok( '_' );
+	}
+	if ($p > 3)
+	{
+		$r = strtok( '_' );
+	}
+	if ($p > 4)
+	{
+		$r = strtok( '_' );
+	}
+	if ($p > 5)
+	{
+		$r = strtok( '_' );
+	}
+	if ($p > 6)
+	{
+		$r = strtok( '_' );
+	}
+	return $r;
+}
+
+/**
+ * Lit le type mime d'un fichier par rapport à son extension et la table de correspondance $nebuleMimetypePathFile.
+ *
+ * @param string $f
+ * @return string
+ */
+function __tm( $f )
+{
+	global $nebuleMimetypePathFile;
+	
+	$e = substr( strrchr( $f, '.' ), 1 );
+	if ( empty( $e ) )
+	{
+		return 'application/octet-stream';
+	}
+	$r = "/^([\w\+\-\.\/]+)\s+(\w+\s)*($e\s)/i";
+	$ls = file( $nebuleMimetypePathFile );
+	foreach ( $ls as $l )
+	{
+		if ( substr( $l, 0, 1 ) == '#' )
+		{
+			continue;
+		}
+		$l = rtrim( $l ).' ';
+		if ( ! preg_match( $r, $l, $m ) )
+		{
+			continue;
+		}
+		return $m [1];
+	}
+	return 'application/octet-stream';
+}
+
+/**
+ * Filtre les chaines de caractères non imprimables mais conserve les retours chariots.
+ *
+ * @param string $i
+ * @return string
+ */
+function __fs( $i )
+{
+	return preg_replace( '/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', $i );
+}
+
+/**
+ * Génération d'aléa pseudo aléatoire.
+ * Retourne un nombre n d'octets.
+ *
+ * @param int b
+ * @return string
+ */
+function __pr( $n = 32 )
+{
+	global $nebuleServerEntite;
+	
+	if ( $n == 0
+			|| ! is_int($n)
+		)
+	{
+		return false;
+	}
+	
+	// Résultat à remplir.
+	$result = '';
+	
+	// Définit l'algorithme de divergence.
+	$algo = 'sha256';
+	
+	// Génère une graine avec la date pour le compteur interne.
+	$intcount = date(DATE_ATOM).microtime(false).NEBULE_PP_LIBRARY_VERSION.$nebuleServerEntite;
+	
+	// Boucle de remplissage.
+	while ( strlen($result) < $n )
+	{
+		$diffsize = $n - strlen($result);
+			
+		// Fait évoluer le compteur interne.
+		$intcount = hash($algo, $intcount);
+	
+		// Fait diverger le compteur interne pour la sortie.
+		// La concaténation avec un texte empêche de remonter à la valeur du compteur interne.
+		$outvalue = pack("H*", hash($algo, $intcount.'liberté égalité fraternité') );
+	
+		// Tronc au besoin la taille de la sortie.
+		if ( strlen($outvalue) > $diffsize )
+		{
+			$outvalue = substr($outvalue, 0, $diffsize);
+		}
+			
+		// Ajoute la sortie au résultat final.
+		$result .= $outvalue;
+	}
+	
+	// Nettoyage.
+	unset($intcount, $outvalue, $diffsize);
+	
+	return $result;
+}
+
+
+
+
+
+
+
+
+
+
+
+/*
+ ------------------------------------------------------------------------------------------
+  Lecture de la session PHP.
+ ------------------------------------------------------------------------------------------
+
+   333
+  3   3
+     3
+      3
+  3   3
+   333
+
+ ------------------------------------------------------------------------------------------
+ DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
+ ------------------------------------------------------------------------------------------
+ */
+bootstrapLogger('3 session');
+
+
+
+/*
+ * Vérifie que la bibliothèque nebule PHP PP s'est bien chargée.
+ */
+if ( ! nebChkLib() )
+{
+	$bootstrapBreak['21'] = 'Library init error';
+}
+
+/*
+ * Vérifie que le dossier des liens est fonctionnel.
+ */
+if ( ! __io_lchk() )
+{
+	$bootstrapBreak['22'] = "Library i/o link's folder error";
+}
+
+/*
+ * Vérifie que le dossier des objets est fonctionnel.
+ */
+if ( ! __io_ochk() )
+{
+	$bootstrapBreak['23'] = "Library i/o object's folder error";
+}
+
+
+
+// ------------------------------------------------------------------------------------------
+// Aide au développement.
+if ( ! REFERENCES_FOLLOW_ONLY_AUTORITY
+		&& REFERENCE_DEV_ID != ''
+		&& REFERENCE_DEV_ID != '0'
+	)
+{
+	bootstrapLoggerForce('add dev id as authority - for development only');
+	$nebuleLocalAuthorities[5] = REFERENCE_DEV_ID;
+}
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * Activation d'un nettoyage de session général.
+ *
+ * @var boolean $bootstrapFlush
+ */
+$bootstrapFlush = false;
+
+/*
+ * Lit si demande de l'utilisateur d'un nettoyage de session général.
+ * Dans ce cas, la session PHP est intégralement nettoyée et un nouvel identifiant de session est généré.
+ *
+ * Si la session est déjà vide, ne prend pas en compte la demande.
+ */
+// Ouvre la session utilisateur.
+session_start();
+
+if( filter_has_var(INPUT_GET, ARG_FLUSH_SESSION)
+		|| filter_has_var(INPUT_POST, ARG_FLUSH_SESSION)
+	)
+{
+	bootstrapLoggerForce('ask flush session');
+	
+	// Si la session n'est pas vide ou si interruption de l'utilisateur, la vide.
+	if ( isset($_SESSION['OKsession'])
+			|| $bootstrapUserBreak
+		)
+	{
+		// Mémorise pour la suite que la session est vidée.
+		$bootstrapFlush = true;
+		bootstrapLogger('flush session');
+		
+		// Vide la session.
+		session_unset();
+		session_destroy();
+		session_write_close();
+		setcookie(session_name(), '', 0, '/');
+		session_regenerate_id(true);
+	
+		// Reouvre une nouvelle session pour la suite.
+		session_start();
+	}
+	else
+	{
+		// Sinon marque la session.
+		$_SESSION['OKsession'] = true;
+	}
+}
+else
+{
+	// Sinon marque la session.
+	$_SESSION['OKsession'] = true;
+	
+}
+
+// Ecrit et ferme la session.
+session_write_close();
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * Activation d'une mise à jour des instances de bibliothèque et d'application.
+ *
+ * @var boolean $bootstrapUpdate
+ */
+$bootstrapUpdate = false;
+
+/*
+ * Lit si demande de l'utilisateur d'une mise à jour des instances de bibliothèque et d'application.
+ *
+ * Dans ce cas, la session PHP n'est pas exploitée.
+ */
+if( filter_has_var(INPUT_GET, ARG_UPDATE_APPLICATION)
+		|| filter_has_var(INPUT_POST, ARG_UPDATE_APPLICATION)
+		|| FORCE_BREAK
+	)
+{
+	bootstrapLoggerForce('ask update');
+	
+	// Ouvre la session utilisateur.
+	session_start();
+	
+	// Si la mise à jour est demandée mais pas déjà faite.
+	if ( ! isset($_SESSION['askUpdate']) )
+	{
+		$bootstrapUpdate = true;
+		bootstrapLogger('update');
+		$_SESSION['askUpdate'] = true;
+	}
+	else
+	{
+		unset($_SESSION['askUpdate']);
+	}
+	
+	// Ecrit et ferme la session.
+	session_write_close();
+}
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * Demande de changement d'application.
+ *
+ * @var string $bootstrapSwitchApplication
+ */
+$bootstrapSwitchApplication = '';
+
+/*
+ * Lit si demande de l'utilisateur d'un changement d'application.
+ */
+if ( ! $bootstrapFlush )
+{
+	$arg = '';
+	if( filter_has_var(INPUT_GET, ARG_SWITCH_APPLICATION) )
+	{
+		$arg = trim(filter_input(INPUT_GET, ARG_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+	}
+	elseif ( filter_has_var(INPUT_POST, ARG_SWITCH_APPLICATION) )
+	{
+		$arg = trim(filter_input(INPUT_POST, ARG_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+	}
+	if ( is_string($arg)
+			&& $arg != ''
+			&& ctype_xdigit($arg)
+			&& ( $arg == '0'
+					|| $arg == '1'
+					|| __io_lp($arg)
+				)
+		)
+	{
+		// Recherche si l'application est activée par l'entité instance de serveur.
+		// Ou si l'application est en liste blanche.
+		// Ou si c'est l'application par défaut.
+		// Ou si c'est l'application 0.
+		$activated = false;
+		foreach ( $bootstrapActiveApplicationsWhitelist as $item )
+		{
+			if ( $arg == $item )
+			{
+				$activated = true;
+			}
+		}
+		if ( $arg == nebGetOpt('defaultApplication', 'string') )
+		{
+			$activated = true;
+		}
+		if ( $arg == '0' )
+		{
+			$activated = true;
+		}
+		if ( $arg == '1' )
+		{
+			$activated = true;
+		}
+		if ( ! $activated )
+		{
+			$refActivated = hash($nebuleHashAlgorithm, REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS_ACTIVE);
+			$links = array();
+			_l_fndi($arg, $links, 'f', $arg, $refActivated, $arg);
+			
+			if ( sizeof($links) != 0 )
+			{
+				$signer = '';
+				$authority = '';
+				foreach ( $links as $link )
+				{
+					if ( $link[2] == $nebuleServerEntite )
+					{
+						// Si le lien est valide, active l'application.
+						$activated = true;
+						break;
+					}
+				}
+				unset($signer, $authority);
+			}
+			unset($links, $refActivated);
+		}
+		
+		if ( $activated )
+		{
+			$bootstrapSwitchApplication = $arg;
+			bootstrapLoggerForce('ask switch application to '.$bootstrapSwitchApplication);
+		}
+	}
+	unset($arg);
+}
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * ID de la bibliothèque mémorisé dans la session PHP.
+ *
+ * @var string $bootstrapLibraryID
+ */
+$bootstrapLibraryID = '';
+
+/**
+ * Instance non dé-sérialisée de la bibliothèque mémorisée dans la session PHP.
+ *
+ * @var string $bootstrapLibraryInstanceSleep
+ */
+$bootstrapLibraryInstanceSleep = '';
+
+/**
+ * ID de l'application mémorisé dans la session PHP.
+ *
+ * @var string $bootstrapApplicationID
+ */
+$bootstrapApplicationID = '';
+
+/**
+ * ID de départ de l'application mémorisé dans la session PHP.
+ *
+ * @var string $bootstrapApplicationStartID
+ */
+$bootstrapApplicationStartID = '';
+
+/**
+ * Instance non dé-sérialisée de l'application mémorisée dans la session PHP.
+ *
+ * @var string $bootstrapApplicationInstanceSleep
+ */
+$bootstrapApplicationInstanceSleep = '';
+
+/**
+ * Instance non dé-sérialisée de l'affichage de l'application mémorisée dans la session PHP.
+ *
+ * @var string $bootstrapApplicationDisplayInstanceSleep
+ */
+$bootstrapApplicationDisplayInstanceSleep = '';
+
+/**
+ * Instance non dé-sérialisée des actions de l'application mémorisée dans la session PHP.
+ *
+ * @var string $bootstrapApplicationActionInstanceSleep
+ */
+$bootstrapApplicationActionInstanceSleep = '';
+
+/**
+ * Instance non dé-sérialisée des traductions de l'application mémorisée dans la session PHP.
+ *
+ * @var string $bootstrapApplicationTraductionInstanceSleep
+ */
+$bootstrapApplicationTraductionInstanceSleep = '';
+
+/**
+ * Commutateur pour charger directement une application sans passer par le pré-chargement.
+ *
+ * @var boolean $bootstrapApplicationNoPreload
+ */
+$bootstrapApplicationNoPreload = false;
+
+// La recherche de la bibliothèque et de l'application nécessite une bibliothèque nebule PHP PP fonctionnnelle.
+if ( nebChkLib() )
+{
+	// Ouverture de la session PHP.
+	session_start();
+	
+	// Enregistre l'identifiant de session pour le suivi d'un utilisateur.
+	bootstrapLoggerForce('session hash id '.hash('sha256', session_id()) );
+	
+	// Vérifie l'ID de départ de l'application mémorisé.
+	if ( isset($_SESSION['bootstrapApplicationStartID'])
+			&& $_SESSION['bootstrapApplicationStartID'] != ''
+			&& ctype_xdigit($_SESSION['bootstrapApplicationStartID'])
+		)
+	{
+		// Mémorise l'ID de départ de l'application en cours.
+		$bootstrapApplicationStartID = $_SESSION['bootstrapApplicationStartID'];
+		
+		bootstrapLogger('find used start application '.$bootstrapApplicationStartID);
+	}
+		
+	/*
+	 * Lit la session PHP et place en cache les instances de la bibliothèque et de l'application.
+	 *
+	 * Si un changement d'application est demandé, tente de trouver une instance de l'application
+	 *   et l'instance de bibliothèque associée.
+	 *
+	 * A l'exception de l'ID '0', les variables d'ID font référence à des objets à charger.
+	 * Les variables d'instances font référence à des classes à ré-instancier par dé-sérialisation.
+	 *
+	 * Une dé-sérialisation peut échouer si la classe contenu dans l'objet a été modifiée dans sa structure.
+	 */
+	// Si pas de demande de changement d'application.
+	if ( $bootstrapSwitchApplication == ''
+			|| $bootstrapSwitchApplication == $bootstrapApplicationStartID
+		)
+	{
+		// Si demande de mise à jour de l'application en cours d'usage.
+		if ( $bootstrapUpdate )
+		{
+			// Recherche la dernière application depuis l'objet de référence sur lui-même.
+			$bootstrapApplicationID = nebFindByRef(
+					$bootstrapApplicationStartID,
+					REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS,
+					! REFERENCES_FOLLOW_ONLY_AUTORITY );
+			
+			bootstrapLogger('find updated application '.$bootstrapApplicationID);
+		}
+		else
+		{
+			// Vérifie l'ID de l'application mémorisé.
+			if ( isset($_SESSION['bootstrapApplicationID'])
+					&& $_SESSION['bootstrapApplicationID'] != ''
+					&& ctype_xdigit($_SESSION['bootstrapApplicationID'])
+					&& $_SESSION['bootstrapApplicationID'] == '0'
+					|| ( __io_lp($_SESSION['bootstrapApplicationID'])
+							&& __io_op($_SESSION['bootstrapApplicationID'])
+							&& _o_vr($_SESSION['bootstrapApplicationID'])
+						)
+				)
+			{
+				// Mémorise l'ID de l'application en cours.
+				$bootstrapApplicationID = $_SESSION['bootstrapApplicationID'];
+				
+				bootstrapLogger('find used application '.$bootstrapApplicationID);
+				
+				// Vérifie l'application non dé-sérialisée.
+				if ( isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID])
+						&& $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID] != ''
+						&& isset($_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID])
+						&& $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID] != ''
+						&& isset($_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID])
+						&& $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID] != ''
+						&& isset($_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID])
+						&& $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID] != ''
+					)
+				{
+					// Mémorise l'instance non dé-sérialisée de l'application en cours et de ses composants.
+					$bootstrapApplicationInstanceSleep = $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID];
+					$bootstrapApplicationDisplayInstanceSleep = $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID];
+					$bootstrapApplicationActionInstanceSleep = $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID];
+					$bootstrapApplicationTraductionInstanceSleep = $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID];
+					
+					bootstrapLogger('ok sleep application '.strlen($bootstrapApplicationInstanceSleep));
+					bootstrapLogger('ok sleep display '.strlen($bootstrapApplicationDisplayInstanceSleep));
+					bootstrapLogger('ok sleep action '.strlen($bootstrapApplicationActionInstanceSleep));
+					bootstrapLogger('ok sleep traduction '.strlen($bootstrapApplicationTraductionInstanceSleep));
+				}
+				else
+				{
+					// Sinon supprime l'ID de l'application en cours.
+					$bootstrapApplicationID = '';
+					
+					bootstrapLogger('invalid sleep application');
+				}
+				
+				// Vérifie la bibliothèque mémorisée pour l'application.
+				if ( $bootstrapApplicationStartID != ''
+						&& isset($_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID])
+						&& $_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID] != ''
+						&& $_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID] != '0'
+						&& ctype_xdigit($_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID])
+						&& __io_lp($_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID])
+						&& __io_op($_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID])
+						&& _o_vr($_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID])
+					)
+				{
+					// Mémorise l'ID de la bibliothèque.
+					$bootstrapLibraryID = $_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID];
+					
+					bootstrapLogger('find used library '.$bootstrapLibraryID);
+					
+					if ( isset($_SESSION['bootstrapLibrariesInstances'][$bootstrapLibraryID])
+							&& $_SESSION['bootstrapLibrariesInstances'][$bootstrapLibraryID] != ''
+						)
+					{
+						// Mémorise l'instance non dé-sérialisée de la bibliothèque.
+						$bootstrapLibraryInstanceSleep = $_SESSION['bootstrapLibrariesInstances'][$bootstrapLibraryID];
+						
+						bootstrapLogger('ok sleep library '.strlen($bootstrapLibraryInstanceSleep));
+					}
+					else
+					{
+						// Sinon supprime l'ID de la bibliothèque.
+						$bootstrapLibraryID = '';
+						
+						bootstrapLogger('invalid sleep library');
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		// Sinon essaie de trouver l'ID de l'application demandée.
+		if ( $bootstrapSwitchApplication == '0' )
+		{
+			bootstrapLogger('ask switch application 0');
+			
+			// Application 0 de sélection des applications.
+			$bootstrapApplicationStartID = '0';
+			$bootstrapApplicationID = '0';
+		}
+		elseif ( $bootstrapSwitchApplication == '1' )
+		{
+			bootstrapLogger('ask switch application 1');
+			
+			// Application 0 de sélection des applications.
+			$bootstrapApplicationStartID = '1';
+			$bootstrapApplicationID = '1';
+		}
+		elseif ( ctype_xdigit($bootstrapSwitchApplication)
+					&& __io_lp($bootstrapSwitchApplication)
+			)
+		{
+			$refAppsID = hash($nebuleHashAlgorithm, REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
+			$links = array();
+			_l_fndi($refAppsID, $links, 'f', $refAppsID, $bootstrapSwitchApplication, $refAppsID);
+			
+			// Vérifie que l'application est autorisée.
+			if ( sizeof($links) != 0 )
+			{
+				// Fait le changement d'application.
+				$bootstrapApplicationStartID = $bootstrapSwitchApplication;
+				
+				// Vérifie l'application non dé-sérialisée.
+				if ( isset($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+						&& $_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID] != ''
+						&& ctype_xdigit($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+						&& __io_lp($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+						&& __io_op($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+						&& _o_vr($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+						&& isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID])
+						&& $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID] != ''
+						&& isset($_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID])
+						&& $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID] != ''
+						&& isset($_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID])
+						&& $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID] != ''
+						&& isset($_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID])
+						&& $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID] != ''
+					)
+				{
+					// Mémorise l'instance non dé-sérialisée de l'application en cours et de ses composants.
+					$bootstrapApplicationID = $_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID];
+					$bootstrapApplicationInstanceSleep = $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID];
+					$bootstrapApplicationDisplayInstanceSleep = $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID];
+					$bootstrapApplicationActionInstanceSleep = $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID];
+					$bootstrapApplicationTraductionInstanceSleep = $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID];
+						
+					bootstrapLogger('ok sleep application '.strlen($bootstrapApplicationInstanceSleep));
+					bootstrapLogger('ok sleep display '.strlen($bootstrapApplicationDisplayInstanceSleep));
+					bootstrapLogger('ok sleep action '.strlen($bootstrapApplicationActionInstanceSleep));
+					bootstrapLogger('ok sleep traduction '.strlen($bootstrapApplicationTraductionInstanceSleep));
+				}
+				else
+				{
+					// Sinon recherche la dernière application depuis l'objet de référence sur lui-même.
+					$bootstrapApplicationID = nebFindByRef(
+							$bootstrapApplicationStartID,
+							REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS,
+							! REFERENCES_FOLLOW_ONLY_AUTORITY );
+				}
+				
+				bootstrapLogger('find switched application '.$bootstrapApplicationID);
+			}
+			unset($refAppsID, $links);
+			// Sinon l'application par défaut sera chargée, plus loin.
+		}
+	}
+	
+	// Fermeture de la session sans écriture pour gain de temps.
+	session_abort();
+	
+	// Désactivation des envois liés aux session après le premier usage. Evite tout un tas de logs inutiles.
+	session_cache_limiter('');
+	ini_set('session.use_cookies', 0);
+	ini_set('session.use_only_cookies', 0);
+	ini_set('session.use_trans_sid', 0);
+	
+	// Si pas d'application trouvée, recherche l'application par défaut
+	//   ou charge l'application '0' de sélection d'application.
+	if ( $bootstrapApplicationID == '' )
+	{
+		$forceValue = nebGetOpt('defaultApplication', 'string');
+		if ( $forceValue != null )
+		{
+			// Sinon fait le changement vers l'application par défaut.
+			$bootstrapApplicationStartID = $forceValue;
+			
+			// Recherche la dernière application depuis l'objet de référence sur lui-même.
+			$bootstrapApplicationID = nebFindByRef(
+					$bootstrapApplicationStartID,
+					REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS,
+					! REFERENCES_FOLLOW_ONLY_AUTORITY );
+		}
+		else
+		{
+			$bootstrapApplicationStartID = '0';
+			$bootstrapApplicationID = '0';
+		}
+		unset($forceValue);
+		
+		bootstrapLogger('find default application '.$bootstrapApplicationID);
+	}
+	
+	// Recherche si l'application ne doit pas être pré-chargée.
+	if ( $bootstrapApplicationStartID != '0'
+			&& $bootstrapApplicationStartID != '1'
+			&& $bootstrapApplicationInstanceSleep == ''
+		)
+	{
+		// Lit les liens de non pré-chargement pour l'application.
+		$refNoPreload = hash($nebuleHashAlgorithm, REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS_DIRECT);
+		$links = array();
+		_l_fndi($bootstrapApplicationStartID, $links, 'f', $bootstrapApplicationStartID, $refNoPreload, $bootstrapApplicationStartID);
+		
+		// Filtre sur les autorités locales.
+		$bootstrapApplicationNoPreload = false;
+		if ( sizeof($links) != 0 )
+		{
+			$signer = '';
+			$authority = '';
+			foreach ( $links as $link )
+			{
+				$signer = $link[2];
+				foreach ( $nebuleLocalAuthorities as $authority )
+				{
+					if ( $signer == $authority )
+					{
+						// Si le lien est valide, active le chargement direct de l'application.
+						$bootstrapApplicationNoPreload = true;
+						bootstrapLoggerForce('do not preload application');
+						break 2;
+					}
+				}
+			}
+			unset($signer, $authority);
+		}
+		unset($links, $refNoPreload);
+	}
+	
+	// Si pas de bibliothèque trouvée, recherche de dernière mise à jour de la bibliothèque.
+	if ( $bootstrapLibraryID == '' )
+	{
+		// Recherche la dernière bibliothèque depuis l'objet de référence sur lui-même.
+		$bootstrapLibraryID = nebFindByRef(
+				hash( $nebuleHashAlgorithm, REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE),
+				REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE,
+				! REFERENCES_FOLLOW_ONLY_AUTORITY );
+		
+		bootstrapLogger('find nebule library '.$bootstrapLibraryID);
+		
+		if ( $bootstrapLibraryID == ''
+				|| $bootstrapLibraryID == '0'
+				|| ! ctype_xdigit($bootstrapLibraryID)
+				|| ! __io_lp($bootstrapLibraryID)
+				|| ! __io_op($bootstrapLibraryID)
+				|| ! _o_vr($bootstrapLibraryID)
+			)
+		{
+			bootstrapLoggerForce('finding nebule library error');
+			
+			$bootstrapLibraryID = '';
+			$bootstrapBreak[31] = 'Finding nebule library error.';
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+/*
+ ------------------------------------------------------------------------------------------
+  Chargement de la bibliothèque nebule PHP en programmation orienté objet (POO).
+ ------------------------------------------------------------------------------------------
+
+      4
+     44
+    4 4
+   4  4
+   44444
+      4
+
+ ------------------------------------------------------------------------------------------
+ */
+bootstrapLogger('4 libpoo');
+
+
+
+/**
+ * Instance de la bibliothèque nebule en PHP orienté objet.
+ *
+ * @var null|nebule $nebuleInstance
+ */
+$nebuleInstance = null;
+
+/**
+ * loadLibrary()
+ * La fonction réalise le chargement et l'initialisation de la bibliothèque .
+ *
+ * Un certain nombre de variables globales sont initialisées au chargement de la bibliothèque,
+ *   elles doivent être présentes ici.
+ *
+ * @return null
+ */
+function loadLibrary()
+{
+	global	$bootstrapName, $bootstrapLogSession, $bootstrapBreak,
+			$nebuleInstance, $bootstrapLibraryID, $bootstrapLibraryInstanceSleep,
+			$nebuleName, $nebuleSurname, $nebuleDescription, $nebuleLibVersion,
+			$nebuleLibLevel, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
+	
+	if ( $bootstrapLibraryID != '' )
+	{
+		bootstrapLoggerForce('load library nebule '.$bootstrapLibraryID);
+		
+		// Charge l'objet de la bibliothèque. @todo faire via les i/o.
+		include("o/$bootstrapLibraryID");
+	
+		if ( $bootstrapLibraryInstanceSleep == '' )
+		{
+			// Instancie la bibliothèque.
+			$nebuleInstance = new nebule();
+		}
+		else
+		{
+			// Récupère l'instance de la bibliothèque.
+			$nebuleInstance = unserialize($bootstrapLibraryInstanceSleep);
+		}
+		
+		bootstrapLogger('end load library');
+		
+		// Ré-ouvre les logs pour le bootstrap.
+		closelog();
+		openlog($bootstrapName.'/'.$bootstrapLogSession, LOG_NDELAY, LOG_USER);
+	}
+	else
+	{
+		bootstrapLoggerForce('library nebule error');
+		
+		// Sinon erreur au chargement de la bibliothèque.
+		$bootstrapBreak['41'] = 'Library nebule error';
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+/*
+ ------------------------------------------------------------------------------------------
+ Affichage de la page web d'interruption du bootstrap.
+ ------------------------------------------------------------------------------------------
+
+  55555
+  5
+  5555
+      5
+  5   5
+   555
+
+ ------------------------------------------------------------------------------------------
+ */
+bootstrapLogger('5 break');
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * Variable de détection du mode de récupération.
+ *
+ * @var boolean $bootstrapRescueMode
+ */
+$bootstrapRescueMode = false;
+
+// Lit si activation du mode de récupération.
+if ( nebGetOpt('modeRescue', 'boolean') === true
+		|| ( nebGetOpt('permitOnlineRescue', 'boolean') === true
+				&& ( filter_has_var(INPUT_GET, ARG_RESCUE_MODE)
+						|| filter_has_var(INPUT_POST, ARG_RESCUE_MODE)
+					)
+			)
+	)
+{
+	bootstrapLoggerForce('ask rescue mode');
+	
+	// Activation du mode de récupération.
+	$bootstrapRescueMode = true;
+}
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * Variable de détection d'affichage inserré en ligne.
+ *
+ * @var boolean $bootstrapInlineDisplay
+ */
+$bootstrapInlineDisplay = false;
+
+// Lit si affichage inserré en ligne.
+if ( filter_has_var(INPUT_GET, ARG_INLINE_DISPLAY)
+		|| filter_has_var(INPUT_POST, ARG_INLINE_DISPLAY)
+	)
+{
+	bootstrapLogger('ask inline display');
+	
+	// Affichage inserré en ligne.
+	$bootstrapInlineDisplay = true;
+}
+
+
+
+// ------------------------------------------------------------------------------------------
+
+// Vérifie l'empreinte du bootstrap. @todo ajouter vérification de marquage de danger.
+$data = file_get_contents(BOOTSTRAP_FILE_NAME);
+$hash = hash( $nebuleHashAlgorithm, $data);
+unset($data);
+// Recherche les liens de validation.
+$hashRef = hash( $nebuleHashAlgorithm, REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP);
+$links = array();
+_l_fndi($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
+// Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
+$ok = false;
+$autority = '';
+foreach ( $links as $link )
+{
+	foreach ( $nebuleLocalAuthorities as $autority )
+	{
+		if ( $link[2] == $autority )
+		{
+			$ok = true;
+			break 2;
+		}
+	}
+}
+if ( ! $ok )
+{
+	bootstrapLoggerForce('unknown bootstrap hash - critical');
+	
+	// Arrêt du bootstrap.
+	$bootstrapBreak['52'] = 'Unknown bootstrap hash';
+}
+unset($hash, $hashRef, $links, $link, $autority);
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * Variable de détection d'affichage de l'ID de l'entité instance du serveur.
+ *
+ * @var boolean $bootstrapServerEntityDisplay
+ */
+$bootstrapServerEntityDisplay = false;
+
+// Lit si affichage de l'entité du serveur.
+if ( filter_has_var(INPUT_GET, ARG_SERVER_ENTITY)
+		|| filter_has_var(INPUT_POST, ARG_SERVER_ENTITY)
+	)
+{
+	bootstrapLogger('ask server instance display');
+
+	// Affichage de l'entité du serveur.
+	$bootstrapServerEntityDisplay = true;
+	$bootstrapBreak['52'] = 'Ask server instance';
+}
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * Affichage du début de la page HTML.
+ *
+ * @return void
+ */
+function bootstrapHtmlHeader()
+{
+	global	$bootstrapName, $bootstrapSurname, $bootstrapVersion, $bootstrapLevel, $bootstrapLicence, $bootstrapAuthor, $bootstrapWebsite,
+			$bootstrapRescueMode;
+	
+	?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	 	<title><?php echo $bootstrapName; if ( $bootstrapRescueMode ) echo ' - RESCUE' ?></title>
+		<link rel="icon" type="image/png" href="favicon.png" />
+		<meta name="author" content="<?php echo $bootstrapAuthor.' - '.$bootstrapWebsite.' - '.$bootstrapVersion.' - '.$bootstrapLevel; ?>" />
+		<meta name="licence" content="<?php echo $bootstrapLicence.' '.$bootstrapAuthor; ?>" />
+		<style type="text/css">
+			/* CSS reset. http://meyerweb.com/eric/tools/css/reset/ v2.0 20110126. Public domain */
+			* { margin:0; padding:0; }
+			html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+			a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp,
+			small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li,
+			fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td,
+			article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup,
+			menu, nav, output, ruby, section, summary, time, mark, audio, video { border:0; font-size:100%; font:inherit; vertical-align:baseline; }
+			article, aside, details, figure, figcaption, footer, header, hgroup, menu, nav, section { display:block; }
+			body { line-height:1; }
+			ol, ul { list-style:none; }
+			blockquote, q { quotes:none; }
+			blockquote:before, blockquote:after, q:before, q:after { content:''; content:none; }
+			table { border-collapse:collapse; border-spacing:0; }
+			
+			/* Balises communes. */
+			html { height:100%; width:100%; }
+			body { color:#ababab; font-family:monospace; background:#454545; height:100%; width:100%; min-height:480px; min-width:640px; }
+			img, embed, canvas, video, audio, picture { max-width:100%; height:auto; }
+			img { border:0; vertical-align: middle; }
+			a:link, a:visited { font-weight:bold; text-decoration:none; color:#ababab; }
+	   		a:hover, a:active { font-weight:bold; text-decoration:underline; color:#ffffff; }
+			input { background:#ffffff; color:#000000; margin:0; margin-top:5px; border:0; box-shadow:0; padding:5px; background-origin:border-box; }
+			input[type=submit] { font-weight:bold; }
+			input[type=password], input[type=text], input[type=email] { padding:6px; }
+			
+			/* Le bloc d'entête */
+			.layout-header { position:fixed; top:0; width:100%; text-align:center; }
+			.layout-header { height:68px; background:#ababab; border-bottom-style:solid; border-bottom-color:#c8c8c8; border-bottom-width:1px; }
+			.header-left { height:64px; width:64px; margin:2px; float:left; }
+	   		.header-left img { height:64px; width:64px; }
+	   		.header-right { height:64px; width:64px; margin:2px; float:right; }
+	   		.header-center { height:100%; display:inline-flex; }
+	   		.header-center p { margin:auto 3px 3px 3px; overflow:hidden; white-space:nowrap; color:#454545; text-align:center; }
+	   		
+			/* Le bloc de bas de page */
+			.layout-footer { position:fixed; bottom:0; width:100%; text-align:center; }
+			.layout-footer { height:68px; background:#ababab; border-top-style:solid; border-top-color:#c8c8c8; border-top-width:1px; }
+			.footer-center p { margin:3px; overflow:hidden; white-space:nowrap; color:#454545; text-align:center; }
+	   		.footer-center a:link, .footer-center a:visited { font-weight:normal; text-decoration:none; color:#454545; }
+	   		.footer-center a:hover, .footer-center a:active { font-weight:normal; text-decoration:underline; color:#ffffff; }
+			
+			/* Le corps de la page qui contient le contenu. Permet le centrage vertical universel */
+			.layout-main { width:100%; height:100%; display:flex; }
+			
+			/* Le centre de la page avec le contenu utile. Centrage vertical */
+			.layout-content { margin:auto; padding:74px 0 74px 0; }
+			
+			/* Spécifique bootstrap et app 0. */
+	   		.parts { margin-bottom: 12px; }
+	   		.partstitle { font-weight:bold; }
+	   		.preload { clear:both; margin-bottom:12px; min-height:64px; width:600px; }
+	   		.preload img { height:64px; width:64px; float:left; margin-right:8px; }
+	   		.preloadsync img { height:16px; width:16px; float:none; margin-left:0; margin-right:1px; }
+	   		.preloadstitle { font-weight:bold; color:#ffffff; font-size:1.4em; }
+	   		#appslist { }
+	   		#appslist a:link, #appslist a:visited { font-weight:normal; text-decoration:none; color:#ffffff; }
+	   		#appslist a:hover, #appslist a:active { font-weight:normal; text-decoration:none; color:#ffff80; }
+	   		.apps { float:left; margin:4px; height:64px; width:64px; padding:8px; color:#ffffff; overflow:hidden; }
+	   		.appstitle { font-size:2em; font-weight:normal; text-decoration:none; color:#ffffff; margin:0; }
+	   		.appsname { font-weight:bold; }
+	   		.appssigner { float:right; height:24px; width:24px; }
+	   		.appssigner img { height:24px; width:24px; }
+	   		#sync { clear:both; width:100%; height:50px; }
+	   		#footer { position:fixed; bottom:0; text-align:center; width:100%; padding:3px; background:#ababab; border-top-style:solid; border-top-color:#c8c8c8; border-top-width:1px; margin:0px; }
+	   		.error, .important { color:#ffffff; font-weight:bold; }
+	   		.diverror { color:#ffffff; padding-top:6px; padding-bottom:6px; }
+	   		.diverror pre { padding-left:6px; margin:3px; border-left-style:solid; border-left-color:#ababab; border-left-width:1px; }
+	   		#reload { padding-top:32px; clear:both; }
+	   		#reload a { color:#ffffff; font-weight:bold; }
+	   		.important { background:#ffffff; color:#000000; font-weight:bold; margin:10px; padding:10px; }
+	   		
+	   		/* Spécifique app 1. */
+	   		#layout_documentation { background:#ffffff; padding:20px; text-align:left; color:#000000; font-size:0.8rem; font-family:sans-serif; min-width:400px;  max-width:1200px; }
+			#title_documentation { margin-bottom:30px; }
+			#title_documentation p { text-align:center; color:#000000; font-size:0.7em; }
+			#title_documentation p a:link, #title_documentation p a:visited { font-weight:normal; text-decoration:none; color:#000000; }
+			#title_documentation p a:hover, #title_documentation p a:active { font-weight:normal; text-decoration:underline; color:#000000; }
+			#content_documentation { text-align:justify; color:#000000; font-size:1em; }
+			#content_documentation h1 { text-align:left; color:#454545; font-size:2em; font-weight:bold; margin-left:10px; margin-top:80px; margin-bottom:5px; }
+			#content_documentation h2 { text-align:left; color:#454545; font-size:1.8em; font-weight:bold; margin-left:10px; margin-top:60px; margin-bottom:5px; }
+			#content_documentation h3 { text-align:left; color:#454545; font-size:1.6em; font-weight:bold; margin-left:10px; margin-top:40px; margin-bottom:5px; }
+			#content_documentation h4 { text-align:left; color:#454545; font-size:1.4em; font-weight:bold; margin-left:10px; margin-top:30px; margin-bottom:5px; }
+			#content_documentation h5 { text-align:left; color:#454545; font-size:1.2em; font-weight:bold; margin-left:10px; margin-top:20px; margin-bottom:5px; }
+			#content_documentation h6 { text-align:left; color:#454545; font-size:1.1em; font-weight:bold; margin-left:10px; margin-top:20px; margin-bottom:5px; }
+			#content_documentation p { text-align:justify; margin-top:5px; }
+			.pcenter { text-align:center; }
+			#content_documentation a:link, #content_documentation a:visited { font-weight:normal; text-decoration:underline; color:#000000; }
+			#content_documentation a:hover, #content_documentation a:active { font-weight:normal; text-decoration:underline; color:#0000ab; }
+			code { font-family:monospace; }
+			#content_documentation pre { font-family:monospace; text-align:left; border-left-style:solid; border-left-color:#c8c8c8; border-left-width:1px; }
+			#content_documentation ol li , #content_documentation ul li { text-align:left; list-style-position:inside; margin-left:10px; }
+			#content_documentation ol { list-style-type:decimal-leading-zero; } 
+			#content_documentation ul { list-style-type:disc; }
+	  	</style>
+	  	<script language="javascript" type="text/javascript">
+			<!--
+			function replaceInlineContentFromURL(id, url)
+			{
+				document.getElementById(id).innerHTML = '<object class="inline" type="text/html" data="'+url+'" ></object>';
+			}
+			function followHref(url)
+			{
+				window.location.href = url;
+			}
+			//-->
+		</script>
+	</head>
+<?php
+}
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * Affichage de l'entête, du logo et du bas de page.
+ *
+ * @return void
+ */
+function bootstrapHtmlTop()
+{
+	global	$bootstrapName, $bootstrapSurname, $bootstrapVersion, $bootstrapLevel, $bootstrapLicence, $bootstrapAuthor, $bootstrapWebsite,
+			$nebuleServerEntite;
+	
+	$name = nebReadEntityFullName($nebuleServerEntite);
+	?>
+	<body>
+		<div class="layout-header">
+			<div class="header-left">
+				<a href="/?<?php echo ARG_SWITCH_APPLICATION; ?>=0">
+					<img title="App switch" alt="[]" src="<?php echo REFERENCE_BOOTSTRAP_ICON; ?>" />
+				</a>
+			</div>
+			<div class="header-right">
+				&nbsp;
+			</div>
+			<div class="header-center">
+	   			<p>
+	   				<?php
+	   	if ( $name != $nebuleServerEntite )
+	   	{
+	   		echo $name;
+	   	}
+	   	else
+	   	{
+	   		echo '/';
+	   	}
+	   	echo '<br />'.$nebuleServerEntite;
+?>
+	   			</p>
+	   		</div>
+	  	</div>
+	  	<div class="layout-footer">
+	  		<div class="footer-center">
+		   		<p>
+			   		<?php echo $bootstrapName; ?><br />
+			   		<?php echo $bootstrapVersion.' '.$bootstrapLevel; ?><br />
+			   		(c) <?php echo $bootstrapLicence.' '.$bootstrapAuthor; ?> - <a href="http://<?php echo $bootstrapWebsite; ?>" target="_blank" style="text-decoration:none;"><?php echo $bootstrapWebsite; ?></a>
+		   		</p>
+	   		</div>
+		</div>
+		<div class="layout-main">
+			<div class="layout-content">
+<?php
+}
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * bootstrapNormalDisplayOnBreak()
+ * La fonction bootstrapNormalDisplayOnBreak affiche l'écran du bootstrap en cas d'interruption.
+ * L'interruption peut être appelée par l'utilisateur ou provoqué par une erreur lors des
+ * vérifications de bon fonctionnement. Les vérifications ont lieu à chaque chargement de
+ * page. Au cours de l'affichage de la page du bootstrap, les vérifications de bon
+ * fonctionnement sont refait un par un avec affichage en direct du résultat.
+ *
+ * @return void
+ */
+function bootstrapDisplayOnBreak()
+{
+	global	$bootstrapName, $bootstrapSurname, $bootstrapVersion, $bootstrapLevel, $bootstrapLicence, $bootstrapAuthor, $bootstrapWebsite,
+			$nebuleInstance, $bootstrapBreak, $bootstrapRescueMode, $bootstrapFlush,
+			$bootstrapLibraryID, $bootstrapApplicationID, $bootstrapApplicationStartID, $metrologyStartTime,
+			$nebulePuppetmaster, $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster,
+			$nebuleLocalAuthorities, $nebuleServerEntite, $nebuleDefaultEntite, $nebulePublicEntite,
+			$nebuleLibVersion, $nebuleHashAlgorithm,
+			$nebule_metrolog_l_ls, $nebule_metrolog_l_vr, $nebule_metrolog_o_ls, $nebule_metrolog_o_vr,
+			$metrologyLibraryPOOLinksRead, $metrologyLibraryPOOLinksVerified, $metrologyLibraryPOOObjectsRead, $metrologyLibraryPOOObjectsVerified;
+	
+	echo 'CHK';
+	ob_end_clean();
+	
+	bootstrapHtmlHeader();
+	bootstrapHtmlTop();
+?>
+
+<div class="parts">
+	<span class="partstitle">#1 <?php echo $bootstrapName; ?> break on</span>
+<?php
+	foreach ( $bootstrapBreak as $number => $message )
+	{
+		if ( sizeof($bootstrapBreak) > 1 )
+		{
+			echo "<br />\n- ";
+		}
+		echo '['.$number.'] <span class="error">'.$message.'</span>';
+	}
+?><br />
+	Tb=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?><br />
+	<?php if ( $bootstrapRescueMode ) { echo "RESCUE mode<br />\n"; } ?>
+	<?php if ( $bootstrapFlush ) { echo "FLUSH<br />\n"; } ?>
+	<?php if ( ! REFERENCES_FOLLOW_ONLY_AUTORITY ) { echo "REFERENCES_FOLLOW_ONLY_AUTORITY=false<br />\n"; } ?>
+	<?php if ( sizeof($bootstrapBreak) != 0 && isset($bootstrapBreak[12]) ) { echo "<a href=\"?a=0\">&gt; Return to application 0</a><br />\n"; } ?>
+	<a href="?f">&gt; Flush PHP session</a> (<?php echo substr(hash('sha256', session_id()), 0, 6); ?>)<br />
+</div>
+<div class="parts">
+	<span class="partstitle">#2 <?php echo $bootstrapName; ?> nebule library PP</span><br />
+	library version &nbsp;: <?php echo NEBULE_PP_LIBRARY_VERSION ?><br />
+	puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $nebulePuppetmaster; ?> (local authority)<br />
+	security master &nbsp;: <?php echo $nebuleSecurityMaster; ?> (local authority)<br />
+	code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $nebuleCodeMaster; ?> (local authority)<br />
+	directory master : <?php echo $nebuleDirectoryMaster; ?><br />
+	time master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $nebuleTimeMaster; ?><br />
+	server entity &nbsp;&nbsp;&nbsp;: <?php echo $nebuleServerEntite; if ( isset($nebuleLocalAuthorities[3]) && $nebuleLocalAuthorities[3] == $nebuleServerEntite ) echo ' (local authority)'; ?><br />
+	default entity &nbsp;&nbsp;: <?php echo $nebuleDefaultEntite; if ( isset($nebuleLocalAuthorities[4]) && $nebuleLocalAuthorities[4] == $nebuleDefaultEntite ) echo ' (local authority)'; ?><br />
+	current entity &nbsp;&nbsp;: <?php echo $nebulePublicEntite; ?>
+</div>
+<div class="parts">
+	<span class="partstitle">#3 nebule library POO</span><br />
+<?php
+	flush();
+	
+	// Chargement de la bibliothèque PHP POO.
+	loadLibrary();
+	echo "Tl=".sprintf('%01.4fs', microtime(true) - $metrologyStartTime)."<br />\n";
+	echo 'library RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: '.hash( $nebuleHashAlgorithm, REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE)."<br />\n";
+
+	if ( ! is_a($nebuleInstance, 'nebule') )
+	{
+		echo "Not loaded.\n";
+	}
+	else
+	{
+		// Version.
+		echo 'library ID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: '.$bootstrapLibraryID."<br />\n";
+		echo 'library version &nbsp;: '.$nebuleLibVersion."<br />\n";
+		
+		$checkInstance = $nebuleInstance->checkInstance();
+		
+		// Test le puppetmaster.
+		echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ';
+		if ( $checkInstance == 0 )
+		{
+			echo "<span id=\"error\">ERROR!</span><br />\n";
+		}
+		else
+		{
+			echo "OK (local authority)<br />\n";
+			
+			// Test le security master.
+			echo 'security master &nbsp;: ';
+			if ( $checkInstance == 1 )
+			{
+				echo "<span id=\"error\">ERROR!</span><br />\n";
+			}
+			else
+			{
+				echo '<a href="o/'.$nebuleInstance->getSecurityMaster().'">'
+							.$nebuleInstance->getSecurityMasterInstance()->getName()."</a> OK (local authority)<br />\n";
+				
+				// Test le code master.
+				echo 'code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+				if ( $checkInstance == 2 )
+				{
+					echo "<span id=\"error\">ERROR!</span><br />\n";
+				}
+				else
+				{
+					echo '<a href="o/'.$nebuleInstance->getCodeMaster().'">'
+								.$nebuleInstance->getCodeMasterInstance()->getName()."</a> OK (local authority)<br />\n";
+					
+					// Test le directory master.
+					echo 'directory master : ';
+					if ( $checkInstance == 3 )
+					{
+						echo "<span id=\"error\">ERROR!</span><br />\n";
+					}
+					else
+					{
+						echo '<a href="o/'.$nebuleInstance->getDirectoryMaster().'">'
+								.$nebuleInstance->getDirectoryMasterInstance()->getName()."</a> OK<br />\n";
+					}
+					
+					// Test le time master.
+					echo 'time master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+					if ( $checkInstance == 4 )
+					{
+						echo "<span id=\"error\">ERROR!</span><br />\n";
+					}
+					else
+					{
+						echo '<a href="o/'.$nebuleInstance->getTimeMaster().'">'
+	 							.$nebuleInstance->getTimeMasterInstance()->getName()."</a> OK<br />\n";
+					}
+					
+					// Test l'entité de l'instance du serveur.
+					echo 'server entity &nbsp;&nbsp;&nbsp;: ';
+					if ( $checkInstance <= 32 )
+					{
+						echo "<span id=\"error\">ERROR!</span><br />\n";
+					}
+					else
+					{
+						echo '<a href="o/'.$nebuleInstance->getInstanceEntity().'">'
+								.$nebuleInstance->getInstanceEntityInstance()->getName().'</a> OK';
+						if ( $nebuleInstance->getIsLocalAuthority($nebuleInstance->getInstanceEntity()) )
+						{
+							echo ' (local authority)';
+						}
+	   					echo "<br />\n";
+					}
+				}
+			}
+		}
+		// Affichage de l'entité par défaut.
+		echo 'default entity &nbsp;&nbsp;: <a href="o/'.$nebuleInstance->getDefaultEntity().'">'
+	   			.$nebuleInstance->getDefaultEntityInstance()->getName().'</a>';
+		if ( $nebuleInstance->getIsLocalAuthority($nebuleInstance->getDefaultEntity()) )
+		{
+			echo ' (local authority)';
+		}
+	   	echo "<br />\n";
+	   	
+		// Affichage de l'entité courante.
+		echo 'current entity &nbsp;&nbsp;: <a href="o/'.$nebuleInstance->getCurrentEntity().'">'
+	   			.$nebuleInstance->getCurrentEntityInstance()->getName().'</a>';
+		if ( $nebuleInstance->getIsLocalAuthority($nebuleInstance->getCurrentEntity()) )
+		{
+			echo ' (local authority)';
+		}
+	   	echo "<br />\n";
+	   	
+		// Affichage de la subordination de l'instance.
+	   	echo 'subordination &nbsp;&nbsp;&nbsp;: ';
+	   	$entity = nebGetOpt('subordinationEntity', 'string');
+		if ( $entity != '' )
+		{
+			$instance = New Entity($nebuleInstance, $entity);
+			echo '<a href="o/'.$entity.'">'.$instance->getName().'</a>';
+			unset($instance);
+		}
+		else
+		{
+			echo '/';
+		}
+		if ( $nebuleInstance->getIsLocalAuthority($entity) )
+		{
+			echo ' (local authority)';
+		}
+		unset($entity);
+	   	echo "<br />\n";
+		
+		// Vérifie la cryptographie.
+		echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: ';
+		if ( ! is_object($nebuleInstance->getCrypto()) )
+		{
+			echo '<span class="error">ERROR!</span>';
+		}
+		else
+		{
+			echo get_class($nebuleInstance->getCrypto());
+	   		echo "<br />\n";
+			
+			// Vérifie la fonction de hash.
+			echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: hash '.$nebuleInstance->getCrypto()->hashAlgorithm().' ';
+			if ( $nebuleInstance->getCrypto()->checkHashFunction() )
+			{
+				echo 'OK';
+			}
+			else
+			{
+				echo '<span class="error">ERROR!</span>';
+			}
+	   		echo "<br />\n";
+			
+			// Vérifie la fonction de cryptographie symétrique.
+			echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: symetric '.$nebuleInstance->getCrypto()->symetricAlgorithm().' ';
+			if ( $nebuleInstance->getCrypto()->checkSymetricFunction() )
+			{
+				echo 'OK';
+			}
+			else
+			{
+				echo '<span class="error">ERROR!</span>';
+			}
+	   		echo "<br />\n";
+			
+			// Vérifie la fonction de cryptographie asymétrique.
+			echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: asymetric '.$nebuleInstance->getCrypto()->asymetricAlgorithm().' ';
+			if ( $nebuleInstance->getCrypto()->checkAsymetricFunction() )
+			{
+				echo 'OK';
+			}
+			else
+			{
+				echo '<span class="error">ERROR!</span>';
+			}
+	   		echo "<br />\n";
+			
+			// Vérifie la fonction de génération pseudo-aléatoire.
+			$random = $nebuleInstance->getCrypto()->getPseudoRandom(2048);
+			$entropy = $nebuleInstance->getCrypto()->getEntropy($random);
+			echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: pseudo-random '.substr(bin2hex($random), 0, 32).'('.$entropy.') ';
+			if ( $entropy > 7.85 )
+			{
+				echo 'OK';
+			}
+			else
+			{
+				echo '<span class="error">ERROR!</span>';
+			}
+		}
+		echo "<br />\n";
+		
+		// Vérifie des entrées/sorties (I/O).
+		if ( ! is_object($nebuleInstance->getIO()) )
+		{
+			echo 'i/o <span class="error">ERROR!</span>'."<br />\n";
+		}
+		else
+		{
+			$list = $nebuleInstance->getIO()->getModulesList();
+			foreach ( $list as $class )
+			{
+				$module = $nebuleInstance->getIO()->getModule($class);
+				echo 'i/o &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: '.$class.' ('.$module->getMode().') '.$module->getDefaultLocalisation().', links ';
+				if ( ! $module->checkLinksDirectory() )
+				{
+					echo 'directory <span class="error">ERROR!</span>';
+				}
+				else
+				{
+					if ( ! $module->checkLinksRead() )
+					{
+						echo 'read <span class="error">ERROR!</span>';
+					}
+					else
+					{
+						if ( ! $module->checkLinksWrite()
+								&& $module->getMode() == 'RW'
+							)
+						{
+							echo 'OK no write.';
+						}
+						else
+						{
+							echo 'OK';
+						}
+					}
+				}
+				echo ', objects ';
+				if ( ! $module->checkObjectsDirectory() )
+				{
+					echo 'directory <span class="error">ERROR!</span>';
+				}
+				else
+				{
+					if ( ! $module->checkObjectsRead() )
+					{
+						echo 'read <span class="error">ERROR!</span>';
+					}
+					else
+					{
+						if ( ! $module->checkObjectsWrite()
+								&& $module->getMode() == 'RW'
+							)
+						{
+							echo 'OK no write.';
+						}
+						else
+						{
+							echo 'OK';
+						}
+					}
+				}
+				echo "<br />\n";
+			}
+		}
+		
+		// Vérifie de la gestion des relations sociales.
+		if ( ! is_object($nebuleInstance->getSocial()) )
+		{
+			echo '<span class="error">ERROR!</span>'."<br />\n";
+		}
+		else
+		{
+			foreach ( $nebuleInstance->getSocial()->getList() as $moduleName )
+			{
+				echo 'social &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: '.$moduleName." OK<br />\n";
+			}
+		}
+		
+		// Vérifie le bootstrap. @todo ajouter vérification de marquage de danger.
+		$data = file_get_contents(BOOTSTRAP_FILE_NAME);
+		$hash = hash( $nebuleHashAlgorithm, $data);
+		unset($data);
+		echo 'bootstrap &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: '.$hash.' ';
+		// Recherche les liens de validation.
+		$hashRef = hash( $nebuleHashAlgorithm, REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP);
+		$links = array();
+		_l_fndi($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
+		// Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
+		$ok = false;
+		foreach ( $links as $link )
+		{
+			foreach ( $nebuleLocalAuthorities as $autority )
+			{
+				if ( $link[2] == $autority )
+				{
+					$ok = true;
+					break 2;
+				}
+			}
+		}
+		if ( $ok )
+		{
+			echo 'OK';
+		}
+		else
+		{
+			echo '<span class="error">ERROR!</span>';
+		}
+		echo "<br />\n";
+		
+		// Affichage des valeurs de métrologie.
+		echo "<br />\n";
+		$metrologyLibraryPOOLinksRead = $nebuleInstance->getMetrologyInstance()->getLinkRead();
+		$metrologyLibraryPOOLinksVerified = $nebuleInstance->getMetrologyInstance()->getLinkVerify();
+		$metrologyLibraryPOOObjectsRead = $nebuleInstance->getMetrologyInstance()->getObjectRead();
+		$metrologyLibraryPOOObjectsVerified = $nebuleInstance->getMetrologyInstance()->getObjectVerify();
+		$metrologyLibraryPOOLinkCache = $nebuleInstance->getCacheLinkSize();
+		$metrologyLibraryPOOObjectCache = $nebuleInstance->getCacheObjectSize();
+		$metrologyLibraryPOOEntityCache = $nebuleInstance->getCacheEntitySize();
+		$metrologyLibraryPOOGroupCache = $nebuleInstance->getCacheGroupSize();
+		$metrologyLibraryPOOConvertationCache = $nebuleInstance->getCacheConversationSize();
+		$metrologyLibraryPOOCurrencyCache = $nebuleInstance->getCacheCurrencySize();
+		$metrologyLibraryPOOTokenPoolCache = $nebuleInstance->getCacheTokenPoolSize();
+		$metrologyLibraryPOOTokenCache = $nebuleInstance->getCacheTokenSize();
+		$metrologyLibraryPOOWalletCache = $nebuleInstance->getCacheWalletSize();
+		$metrologyLibraryPOOTransactionCache = $nebuleInstance->getCacheTransactionSize();
+		echo 'L(r)='.$nebule_metrolog_l_ls.'+'.$metrologyLibraryPOOLinksRead.' ';
+		echo 'L(v)='.$nebule_metrolog_l_vr.'+'.$metrologyLibraryPOOLinksVerified.' ';
+		echo 'O(r)='.$nebule_metrolog_o_ls.'+'.$metrologyLibraryPOOObjectsRead.' ';
+		echo 'O(v)='.$nebule_metrolog_o_vr.'+'.$metrologyLibraryPOOObjectsVerified." (PP+POO)<br />\n";
+		echo 'L(c)='.$metrologyLibraryPOOLinkCache.' ';
+		echo 'O(c)='.$metrologyLibraryPOOObjectCache.' ';
+		echo 'E(c)='.$metrologyLibraryPOOEntityCache.' ';
+		echo 'G(c)='.$metrologyLibraryPOOGroupCache.' ';
+		echo 'C(c)='.$metrologyLibraryPOOConvertationCache.' ';
+		echo 'CU(c)='.$metrologyLibraryPOOCurrencyCache.' ';
+		echo 'CP(c)='.$metrologyLibraryPOOTokenPoolCache.' ';
+		echo 'CT(c)='.$metrologyLibraryPOOTokenCache.' ';
+		echo 'CW(c)='.$metrologyLibraryPOOWalletCache.' ';
+		echo 'CS(c)='.$metrologyLibraryPOOTransactionCache;
+	}
+?>
+
+</div>
+
+<div class="parts">
+	<span class="partstitle">#4 application</span><br />
+	application RID &nbsp;: <a href="/?<?php echo ARG_SWITCH_APPLICATION.'='.$bootstrapApplicationStartID; ?>"><?php echo $bootstrapApplicationStartID; ?></a><br />
+	application ID &nbsp;&nbsp;: <?php echo $bootstrapApplicationID; ?>
+</div>
+
+<span class="partstitle">#- end <?php echo $bootstrapName; ?></span><br />
+Te=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?><br />
+<?php
+
+	bootstrapHtmlBottom();
+}
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * bootstrapInlineDisplayOnBreak()
+ * La fonction bootstrapInlineDisplayOnBreak affiche l'écran du bootstrap en cas d'interruption.
+ * L'interruption peut être appelée par l'utilisateur ou provoqué par une erreur lors des
+ * vérifications de bon fonctionnement. Les vérifications ont lieu à chaque chargement de
+ * page. L'affichage est minimum, il est destiné à apparaître dans une page web déjà ouverte.
+ *
+ * @return void
+ */
+function bootstrapInlineDisplayOnBreak()
+{
+	global	$bootstrapName, $bootstrapSurname, $bootstrapVersion, $bootstrapLevel, $bootstrapLicence, $bootstrapAuthor, $bootstrapWebsite,
+			$bootstrapBreak, $bootstrapRescueMode, $bootstrapLibraryID, $bootstrapApplicationID, $metrologyStartTime;
+	ob_end_flush();
+
+	// Affichage.
+	echo "<div class=\"bootstrapErrorDiv\"><p>\n";
+	
+	echo '&gt; '.$bootstrapName.' '.$bootstrapVersion.' '.$bootstrapLevel."<br />\n";
+	
+	echo 'Bootstrap break on : ';
+	foreach ( $bootstrapBreak as $number => $message )
+	{
+		if ( sizeof($bootstrapBreak) > 1 )
+		{
+			echo "<br />\n- ";
+		}
+		echo '['.$number.'] '.$message;
+	}
+	echo "<br />\n";
+	
+	if ( $bootstrapRescueMode )
+	{
+		echo "RESCUE<br />\n";
+	}
+	
+	echo 'nebule loading library : '.$bootstrapLibraryID."<br />\n";
+	
+	echo 'Application loading : '.$bootstrapApplicationID."<br />\n";
+	
+	echo 'Tb='.sprintf('%01.4fs', microtime(true) - $metrologyStartTime)."<br />\n";
+	
+	echo "</p></div>\n";
+}
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * Affichage de la fermeture de la page HTML.
+ *
+ * @return void
+ */
+function bootstrapHtmlBottom()
+{
+	?>
+	
+			</div>
+		</div>
+	</body>
+</html>
+<?php
+}
+
+
+
+
+
+
+
+
+
+
+
+/*
+ ------------------------------------------------------------------------------------------
+  Affichage de la page de pré-chargement de l'application.
+ ------------------------------------------------------------------------------------------
+
+    66
+   6
+  6
+  6666
+  6   6
+   666
+ 
+ ------------------------------------------------------------------------------------------
+ */
+bootstrapLogger('6 preload');
+
+
+
+/**
+ * Instance de l'application.
+ *
+ * @var null|Applications $applicationInstance
+ */
+$applicationInstance = null;
+
+/**
+ * Instance d'affichage de l'application.
+ *
+ * @var null|Displays $applicationDisplayInstance
+ */
+$applicationDisplayInstance = null;
+
+/**
+ * Instance d'action de l'application.
+ *
+ * @var null|Actions $applicationActionInstance
+ */
+$applicationActionInstance = null;
+
+/**
+ * Instance de traduction de l'application.
+ *
+ * @var null|Translates $applicationTraductionInstance
+ */
+$applicationTraductionInstance = null;
+
+/**
+ * bootstrapDisplayPreloadApplication()
+ * La fonction affiche temporairement l'écran du bootstrap
+ *   le temps de charger les instances de la bibliothèque, de l'application et de ses classes annexes.
+ *
+ * Un certain nombre de variables globalles sont initialisées au chargement des applications,
+ *   elles doivent être présentes ici.
+ *
+ * @return void
+ */
+function bootstrapDisplayPreloadApplication()
+{
+	global	$nebuleInstance, $bootstrapLogSession, $bootstrapName, $metrologyStartTime,
+			$applicationInstance, $applicationDisplayInstance, $applicationActionInstance, $applicationTraductionInstance,
+			$bootstrapLibraryID, $bootstrapApplicationID, $bootstrapApplicationStartID,
+			$applicationName, $applicationSurname, $applicationDescription, $applicationVersion,
+			$applicationLevel, $applicationLicence, $applicationAuthor, $applicationWebsite;
+	
+	// Initialisation des logs
+	closelog();
+	openlog('preload/'.$bootstrapLogSession, LOG_NDELAY, LOG_USER);
+	bootstrapLoggerForce('Loading');
+	
+	echo 'CHK';
+	ob_end_clean();
+	
+	bootstrapHtmlHeader();
+	bootstrapHtmlTop();
+?>
+
+<div class="preload">
+	Please wait...<br />
+	Tb=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?>
+</div>
+
+<div class="preload">
+	<img title="bootstrap" style="background:#ababab;" alt="[]" src="<?php echo REFERENCE_BOOTSTRAP_ICON; ?>" />
+	Load nebule library POO<br />
+	ID=<?php echo $bootstrapLibraryID; ?><br />
+<?php
+	flush();
+	
+	// Chargement de la bibliothèque PHP POO.
+	loadLibrary();
+	
+	// Ré-initialisation des logs
+	closelog();
+	openlog('preload/'.$bootstrapLogSession, LOG_NDELAY, LOG_USER);
+?>
+
+	Tl=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?>
+</div>
+
+<div class="preload">
+	<img title="bootstrap" style="background:#<?php echo substr($bootstrapApplicationStartID.'000000',0,6); ?>;" alt="[]" src="<?php echo REFERENCE_APPLICATION_ICON; ?>" />
+	Load application<br />
+	ID=<?php echo $bootstrapApplicationID; ?><br />
+<?php
+	flush();
+	
+	syslog(LOG_INFO, 'LogT=0 LogTabs='.(microtime(true)).' load_application='.$bootstrapApplicationID);
+	
+	// Charge l'objet de l'application. @todo faire via les i/o.
+	include("o/$bootstrapApplicationID");
+	
+	// Instanciation des classes de l'application.
+	$applicationInstance = new Application($nebuleInstance);
+	$applicationTraductionInstance = new Traduction($applicationInstance);
+	$applicationDisplayInstance = new Display($applicationInstance);
+	$applicationActionInstance = new Action($applicationInstance);
+	
+	// Initialisation des instances.
+	$applicationInstance->initialisation();
+	$applicationTraductionInstance->initialisation();
+	$applicationDisplayInstance->initialisation();
+	$applicationActionInstance->initialisation();
+?>
+
+	Name=<?php echo $applicationInstance->getClassName(); ?><br />
+	sync<span class="preloadsync">
+<?php
+	
+	// Récupération des éléments annexes nécessaires à l'affichage de l'application.
+	$items = $applicationDisplayInstance->getNeededObjectsList();
+	$nb=0;
+	foreach ( $items as $item )
+	{
+		if ( ! $nebuleInstance->getIO()->checkObjectPresent($item) )
+		{
+			$instance = $nebuleInstance->newObject( $item, false, false );
+			$applicationDisplayInstance->displayInlineObjectColorNolink($instance);
+			echo "\n";
+			bootstrapLogger('try_sync='.$item);
+			$instance->syncObject(false);
+			$nb++;
+		}
+	}
+	unset($items);
+	
+	if ( $nb == 0 )
+	{
+		echo '-';
+	}
+?>
+
+	</span><br />
+	Ta=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?>
+</div>
+<?php
+	
+	bootstrapLogger('end_load_application');
+	
+	// On n'appelle pas l'application, on fait recharger la page...
+
+	// Si autorisé à recharger la page lorsque l'on vient de pré-charger une application.
+	if ( AUTORELOAD_PRELOAD )
+	{
+?>
+
+<div id="reload">
+&gt; <a onclick="javascript:window.location.assign('<?php echo $_SERVER['REQUEST_URI']; ?>');">Reloading application</a> ...
+<script language="javascript" type="text/javascript">
+<!--
+setTimeout(function(){window.location.assign('<?php echo $_SERVER['REQUEST_URI']; ?>') }, 500);
+//-->
+</script>
+</div>
+<?php
+	}
+	else
+	{
+?>
+
+<div id="reload">
+	<button onclick="javascript:window.location.assign('<?php echo $_SERVER['REQUEST_URI']; ?>');">Reload application</button>
+</div>
+<?php
+	}
+		
+	bootstrapHtmlBottom();
+}
+
+
+
+
+
+
+
+
+
+
+
+/*
+ ------------------------------------------------------------------------------------------
+  Affichage de la page de premier lancement.
+ ------------------------------------------------------------------------------------------
+
+  77777
+      7
+     7
+    7
+   7
+  7
+ 
+ ------------------------------------------------------------------------------------------
+ */
+bootstrapLogger('7 first');
+
+
+
+/**
+ * Variable de détection de premier démarrage de l'instance de serveur.
+ *
+ * @var boolean $bootstrapNeedFirstSynchronization
+ */
+$bootstrapNeedFirstSynchronization = false;
+
+/*
+ * Vérifie l'entité instance du serveur.
+ */
+$serverEntite = '';
+if ( file_exists(NEBULE_LOCAL_ENTITY_FILE)
+		&& is_file(NEBULE_LOCAL_ENTITY_FILE)
+	)
+{
+	$serverEntite = filter_var(strtok(trim(file_get_contents(NEBULE_LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+}
+else
+{
+	bootstrapLoggerForce($bootstrapName.' - need first synchronisation');
+	
+	// Interruption du chargement.
+	$bootstrapBreak['71'] = 'Need first synchronisation.';
+	
+	// Nécessite une première synchronisation.
+	$bootstrapNeedFirstSynchronization = true;
+}
+if ( $serverEntite == ''
+		|| $serverEntite == '0'
+		|| strlen($serverEntite) < ($nebuleSymetricKeyLenght/4)
+		|| ! ctype_xdigit($serverEntite)
+		|| ! __io_lp($serverEntite)
+		|| ! __io_op($serverEntite)
+	)
+{
+	$bootstrapBreak['72'] = "Local server entity error";
+	
+	// Nécessite une première synchronisation.
+	$bootstrapNeedFirstSynchronization = true;
+}
+unset($serverEntite);
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * bootstrapDisplayApplicationfirst()
+ * Affichage de l'initialisation de l'entité locale instance du serveur.
+ *
+ * @return void
+ */
+function bootstrapDisplayApplicationfirst()
+{
+	global	$nebuleInstance, $bootstrapLogSession, $bootstrapBreak, $metrologyStartTime,
+			$bootstrapName, $bootstrapRescueMode,
+			$nebule_usecache, $nebule_cache_nebIsPubkey,
+			$nebulePermitWrite, $nebulePermitWriteLink, $nebulePermitWriteObject,
+			$nebulePermitSynchronizeObject, $nebulePermitSynchronizeLink,
+			$nebulePermitWriteEntity;
+	
+	// Modifie temporairement la configuration de la bibliothèque PHP PP.
+	$nebulePermitWrite = true;
+	$nebulePermitWriteObject = true;
+	$nebulePermitSynchronizeObject = true;
+	$nebulePermitWriteLink = true;
+	$nebulePermitSynchronizeLink = true;
+	$nebulePermitWriteEntity = true;
+	$nebule_usecache = false;
+	$nebule_cache_nebIsPubkey = array();
+	
+	// Initialisation des logs
+	closelog();
+	openlog('first/'.$bootstrapLogSession, LOG_NDELAY, LOG_USER);
+	bootstrapLoggerForce('Loading');
+	
+	echo 'CHK';
+	ob_end_clean();
+	
+	bootstrapHtmlHeader();
+	bootstrapHtmlTop();
+?>
+
+<div class="parts">
+	<span class="partstitle">#1 <?php echo $bootstrapName; ?> break on</span>
+<?php
+	foreach ( $bootstrapBreak as $number => $message )
+	{
+		if ( sizeof($bootstrapBreak) > 1 )
+		{
+			echo "<br />\n- ";
+		}
+		echo '['.$number.'] <span class="error">'.$message.'</span>';
+	}
+?><br />
+	Tb=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?><br />
+	nebule library : <?php echo NEBULE_PP_LIBRARY_VERSION.' PHP PP'; ?><br />
+	<?php if ( $bootstrapRescueMode ) { echo "RESCUE<br />\n"; } ?>
+</div>
+
+<div class="parts">
+	<span class="partstitle">#2 create folders</span><br />
+<?php
+	if ( ! __io_chk() )
+	{
+?>
+
+	<span class="error">ERROR!</span>
+<?php
+		if ( ! __io_lchk() )
+		{
+			bootstrapLoggerForce('error links folder');
+?>
+
+	<div class="diverror">
+Unable to create folder <b><?php echo NEBULE_LOCAL_LINKS_FOLDER; ?></b> for links.<br />
+On the same path as <b>index.php</b>, please create folder manually,<br />
+and give it to web server process.<br />
+As <i>root</i>, run :<br />
+<pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
+
+mkdir <?php echo NEBULE_LOCAL_LINKS_FOLDER; ?>
+
+chown <?php echo getenv('APACHE_RUN_USER').'.'.getenv('APACHE_RUN_GROUP').' '.NEBULE_LOCAL_LINKS_FOLDER; ?>
+
+chmod 755 <?php echo NEBULE_LOCAL_LINKS_FOLDER; ?>
+</pre>
+	</div>
+<?php
+		}
+		
+		if ( ! __io_ochk() )
+		{
+			bootstrapLoggerForce('error objects folder');
+?>
+
+	<div class="diverror">
+Unable to create folder <b><?php echo NEBULE_LOCAL_OBJECTS_FOLDER; ?></b> for objects.<br />
+On the same path as <b>index.php</b>, please create folder manually,<br />
+and give it to web server process.<br />
+As <i>root</i>, run :<br />
+<pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
+
+mkdir <?php echo NEBULE_LOCAL_OBJECTS_FOLDER; ?>
+
+chown <?php echo getenv('APACHE_RUN_USER').'.'.getenv('APACHE_RUN_GROUP').' '.NEBULE_LOCAL_OBJECTS_FOLDER; ?>
+
+chmod 755 <?php echo NEBULE_LOCAL_OBJECTS_FOLDER; ?>
+</pre>
+	</div>
+<?php
+		}
+?>
+
+</div>
+
+<div id="reload">
+	<button onclick="javascript:window.location.reload(true);">Reload</button>
+</div>
+<?php
+	}
+	else
+	{
+		bootstrapLoggerForce('ok folders');
+?>
+
+	ok
+<?php
+		echo "</div>\n";
+		bootstrapFirstCreateObjects();
+	}
+	
+	bootstrapHtmlBottom();
+}
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * bootstrapFirstCreateObjects()
+ * Création des objets nécessaires au bon fonctionnement de la bibliothèque.
+ *
+ *  @return void
+ */
+function bootstrapFirstCreateObjects()
+{
+	global $nebuleFirstLocalisations, $nebuleFirstReservedObjects, $nebuleHashAlgorithm, $bootstrapName;
+
+?>
+
+<div class="parts">
+	<span class="partstitle">#3 nebule needed library objects</span><br />
+<?php
+	// Si il manque un des objets, recrée les objets.
+	$hash = hash( $nebuleHashAlgorithm, $nebuleFirstReservedObjects[10] );
+	if ( ! __io_op($hash) )
+	{
+		bootstrapLoggerForce('need create objects');
+		
+		// Ecrit les objets de localisation.
+		foreach ( $nebuleFirstLocalisations as $data )
+		{
+			__io_ow( $data );
+			echo '.';
+		}
+		
+		// Ecrit les objets réservés.
+		foreach ( $nebuleFirstReservedObjects as $data )
+		{
+			__io_ow( $data );
+			echo '.';
+		}
+?>
+	OK
+</div>
+&gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo $bootstrapName; ?></a> ...
+<script type="text/javascript">
+<!--
+setTimeout(function(){window.location.reload(true) }, <?php echo FIRST_RELOAD_DELAY; ?>);
+//-->
+</script>
+<?php
+	}
+	else
+	{
+		bootstrapLoggerForce('ok create objects');
+?>
+	ok
+<?php
+		echo "</div>\n";
+		// Si c'est bon on continue avec la synchronisation des entités.
+		bootstrapFirstSynchronizingEntities();
+	}
+}
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * bootstrapFirstSynchronizingEntities()
+ * Synchronisation du minimum d'entités sur internet pour fonctionner.
+ *
+ *  @return void
+ */
+function bootstrapFirstSynchronizingEntities()
+{
+	global	$nebuleFirstLocalisations, $bootstrapName, $nebuleHashAlgorithm, $nebuleLocalAuthorities,
+			$nebulePuppetmaster, $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster;
+
+?>
+
+<div class="parts">
+	<span class="partstitle">#4 synchronizing entities</span><br />
+<?php
+	// Si la bibliothèque ne se charge pas correctement, fait une première synchronisation des entités.
+	if ( ! nebChkLib() )
+	{
+?>
+
+	puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;:
+<?php
+		bootstrapLoggerForce('need puppetmaster');
+		echo ' '.$nebulePuppetmaster.' ';
+		
+		// Ecriture de la clé publique par défaut.
+		$data = FIRST_PUPPETMASTER_PUBLIC_KEY;
+		__io_ow( $data );
+		$object = NEBULE_DEFAULT_PUPPETMASTER_ID;
+		$link = FIRST_PUPPETMASTER_HASH_LINK;
+		__io_lw( $object, $link);
+		$link = FIRST_PUPPETMASTER_TYPE_LINK;
+		__io_lw( $object, $link);
+		unset($data, $object, $link);
+		
+		// Activation comme autorité locale.
+		$nebuleLocalAuthorities[0] = $nebulePuppetmaster;
+		
+		// Recherche des autres liens.
+		foreach ( $nebuleFirstLocalisations as $localisation )
+		{
+			_o_dl1( $nebulePuppetmaster, $localisation );
+			_l_dl1( $nebulePuppetmaster, $localisation );
+			echo '.';
+		}
+		echo ' ';
+		flush();
+		foreach ( $nebuleFirstLocalisations as $localisation )
+		{
+			_l_dl1( hash( $nebuleHashAlgorithm, 'nebule/objet/entite/maitre/securite'), $localisation );
+			echo '.';
+			_l_dl1( hash( $nebuleHashAlgorithm, 'nebule/objet/entite/maitre/code'), $localisation );
+			echo '.';
+			_l_dl1( hash( $nebuleHashAlgorithm, 'nebule/objet/entite/maitre/annuaire'), $localisation );
+			echo '.';
+			_l_dl1( hash( $nebuleHashAlgorithm, 'nebule/objet/entite/maitre/temps'), $localisation );
+			echo '.';
+		}
+		flush();
+?><br />
+
+	security master &nbsp;:
+<?php
+		// Recherche l'ID de l'entité par référence du maître du tout.
+		bootstrapLoggerForce('need sync security master');
+		// Recherche via l'objet de référence.
+		$entity = nebFindByRef(
+				hash( $nebuleHashAlgorithm, 'nebule/objet/entite/maitre/securite'),
+				'nebule/objet/entite/maitre/securite',
+				! REFERENCES_FOLLOW_ONLY_AUTORITY );
+		echo ' '.$entity.' ';
+		if ( ctype_xdigit($entity)
+				&& $entity != '0'
+				&& __io_lp($entity)
+			)
+		{
+			// Recherche de l'objet et des liens de l'entité.
+			$nebuleSecurityMaster = $entity;
+			foreach ( $nebuleFirstLocalisations as $localisation )
+			{
+				_o_dl1( $nebuleSecurityMaster, $localisation );
+				_l_dl1( $nebuleSecurityMaster, $localisation );
+				echo '.';
+			}
+		}
+		else
+		{
+			echo " <span class=\"error\">fail!</span>\n";
+		}
+		flush();
+?><br />
+
+	code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+<?php
+		// Recherche l'ID de l'entité par référence du maître du tout.
+		bootstrapLoggerForce('need sync code master');
+		// Recherche via l'objet de référence.
+		$entity = nebFindByRef(
+				hash( $nebuleHashAlgorithm, 'nebule/objet/entite/maitre/code'),
+				'nebule/objet/entite/maitre/code',
+				! REFERENCES_FOLLOW_ONLY_AUTORITY );
+		echo ' '.$entity.' ';
+		if ( ctype_xdigit($entity)
+				&& $entity != '0'
+				&& __io_lp($entity)
+			)
+		{
+			// Recherche de l'objet et des liens de l'entité.
+			$nebuleCodeMaster = $entity;
+			foreach ( $nebuleFirstLocalisations as $localisation )
+			{
+				_o_dl1( $nebuleCodeMaster, $localisation );
+				_l_dl1( $nebuleCodeMaster, $localisation );
+				echo '.';
+			}
+		}
+		else
+		{
+			echo " <span class=\"error\">fail!</span>\n";
+		}
+		flush();
+?><br />
+	
+	directory master :
+<?php
+		// Recherche l'ID de l'entité par référence du maître du tout.
+		bootstrapLoggerForce('need sync directory master');
+		// Recherche via l'objet de référence.
+		$entity = nebFindByRef(
+				hash( $nebuleHashAlgorithm, 'nebule/objet/entite/maitre/annuaire'),
+				'nebule/objet/entite/maitre/annuaire',
+				! REFERENCES_FOLLOW_ONLY_AUTORITY );
+		echo ' '.$entity.' ';
+		if ( ctype_xdigit($entity)
+				&& $entity != '0'
+				&& __io_lp($entity)
+			)
+		{
+			// Recherche de l'objet et des liens de l'entité.
+			$nebuleDirectoryMaster = $entity;
+			foreach ( $nebuleFirstLocalisations as $localisation )
+			{
+				_o_dl1( $nebuleDirectoryMaster, $localisation );
+				_l_dl1( $nebuleDirectoryMaster, $localisation );
+				echo '.';
+			}
+		}
+		else
+		{
+			echo " <span class=\"error\">fail!</span>\n";
+		}
+		flush();
+?><br />
+
+	time master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+<?php
+		// Recherche l'ID de l'entité par référence du maître du tout.
+		bootstrapLoggerForce('need sync time master');
+		// Recherche via l'objet de référence.
+		$entity = nebFindByRef(
+				hash( $nebuleHashAlgorithm, 'nebule/objet/entite/maitre/temps'),
+				'nebule/objet/entite/maitre/temps',
+				! REFERENCES_FOLLOW_ONLY_AUTORITY );
+		echo ' '.$entity.' ';
+		if ( ctype_xdigit($entity)
+				&& $entity != '0'
+				&& __io_lp($entity)
+			)
+		{
+			// Recherche de l'objet et des liens de l'entité.
+			$nebuleTimeMaster = $entity;
+			foreach ( $nebuleFirstLocalisations as $localisation )
+			{
+				_o_dl1( $nebuleTimeMaster, $localisation );
+				_l_dl1( $nebuleTimeMaster, $localisation );
+				echo '.';
+			}
+		}
+		else
+		{
+			echo " <span class=\"error\">fail!</span>\n";
+		}
+?>
+
+</div>
+
+<div id="reload">
+<?php
+		if ( nebChkLib() )
+		{
+?>
+
+&gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo $bootstrapName; ?></a> ...
+<script type="text/javascript">
+<!--
+setTimeout(function(){window.location.reload(true) }, <?php echo FIRST_RELOAD_DELAY; ?>);
+//-->
+</script>
+<?php
+		}
+		else
+		{
+?>
+
+<button onclick="javascript:window.location.reload(true);">when ready, reload <?php echo $bootstrapName; ?></button>
+<?php
+		}
+?>
+
+</div>
+<?php
+	}
+	else
+	{
+		bootstrapLoggerForce('ok sync entities');
+?>
+
+	ok
+<?php
+		echo "</div>\n";
+		// Sinon c'est bon pour la première synchronisation.
+		bootstrapFirstSynchronizingObjects();
+	}
+	
+}
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * bootstrapFirstSynchronizingObjects()
+ * Synchronisation des objets sur internet pour fonctionner.
+ *
+ *  @return void
+ */
+function bootstrapFirstSynchronizingObjects()
+{
+	global	$nebuleFirstLocalisations, $nebuleFirstReservedObjects, $nebuleHashAlgorithm, $bootstrapName, $nebuleLocalAuthorities;
+
+	$refApps = REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS;
+	$refAppsID = hash($nebuleHashAlgorithm, $refApps);
+	$refLib = REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE;
+	$refLibID = hash( $nebuleHashAlgorithm, $refLib);
+	$refBoot = REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP;
+	$refBootID = hash( $nebuleHashAlgorithm, $refBoot);
+?>
+
+<div class="parts">
+	<span class="partstitle">#5 synchronizing objets</span><br />
+<?php
+	$count = 0;
+	// Si la bibliothèque ne se charge pas correctement, fait une première synchronisation des entités.
+	if ( ! __io_op($refAppsID)
+			&& ! __io_op($refLibID)
+			&& ! __io_lp($refBootID)
+		)
+	{
+		bootstrapLoggerForce('need sync objects');
+		
+		// Ecrit les objets de localisation.
+		echo 'objects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+		foreach ( $nebuleFirstLocalisations as $data )
+		{
+			$hash = hash( $nebuleHashAlgorithm, $data );;
+			foreach ( $nebuleFirstLocalisations as $localisation )
+			{
+				$count = _l_dl1( $hash, $localisation );
+				echo '.';
+				if ( $count != 0 )
+				{
+					break 1;
+				}
+			}
+			echo ' ';
+			flush();
+		}
+		
+		// Ecrit les objets réservés.
+		foreach ( $nebuleFirstReservedObjects as $data )
+		{
+			$hash = hash( $nebuleHashAlgorithm, $data );;
+			foreach ( $nebuleFirstLocalisations as $localisation )
+			{
+				$count = _l_dl1( $hash, $localisation );
+				echo '.';
+				if ( $count != 0 )
+				{
+					break 1;
+				}
+			}
+			echo ' ';
+			flush();
+		}
+		
+		$data = REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS;
+		__io_ow( $data );
+		
+		$data = REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE;
+		__io_ow( $data );
+		
+		// Chargement bachue développement. Doit être désactivé en production.
+		if ( ! REFERENCES_FOLLOW_ONLY_AUTORITY )
+		{
+			foreach ( $nebuleFirstLocalisations as $localisation )
+			{
+				_o_dl1( REFERENCE_DEV_ID, $localisation );
+				echo 'D';
+			}
+			// Activation comme autorité locale.
+			$nebuleLocalAuthorities[3] = REFERENCE_DEV_ID;
+		}
+?><br />
+
+	bootstrap start &nbsp;&nbsp;&nbsp;:
+<?php
+		echo $refBoot.' ';
+		flush();
+		foreach ( $nebuleFirstLocalisations as $localisation )
+		{
+			_l_dl1( $refBootID, $localisation );
+			echo '.';
+		}
+?><br />
+
+	library start &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+<?php
+		echo $refLib.' ';
+		flush();
+		foreach ( $nebuleFirstLocalisations as $localisation )
+		{
+			_l_dl1( $refLibID, $localisation );
+			echo '.';
+		}
+?><br />
+
+	synchronization &nbsp;&nbsp;&nbsp;:
+<?php
+		// Recherche par référence.
+		$lastID = nebFindByRef(
+				$refLibID,
+				$refLib,
+				! REFERENCES_FOLLOW_ONLY_AUTORITY );
+		echo $lastID.' ';
+		if ( $lastID != '0' )
+		{
+			foreach ( $nebuleFirstLocalisations as $localisation )
+			{
+				_o_dl1( $lastID, $localisation );
+				echo '.';
+			}
+		}
+		else
+		{
+			echo '<span id="error">ERROR!</span>';
+		}
+?><br />
+
+	applications list &nbsp;:
+<?php
+		echo $refAppsID.' ';
+		flush();
+		foreach ( $nebuleFirstLocalisations as $localisation )
+		{
+			_l_dl1( $refAppsID, $localisation );
+			echo '.';
+		}
+?><br />
+
+	application list &nbsp;&nbsp;:
+<?php
+		// Pour chaque application, faire une synchronisation.
+		$links = array();
+		_l_fndi($refAppsID, $links, 'f', $refAppsID, '', $refAppsID, false);
+		
+		// Tri sur autorités locales.
+		$signer = '';
+		$authority = '';
+		foreach ( $links as $i => $link )
+		{
+			$signer = $link[2];
+			$ok = false;
+			foreach ( $nebuleLocalAuthorities as $authority )
+			{
+				if ( $signer == $authority )
+				{
+					$ok = true;
+					break;
+				}
+			}
+			if ( $ok )
+			{
+				echo '.';
+			}
+			else
+			{
+				// Si le signataire n'est pas autorité locale, supprime le lien.
+				unset($links[$i]);
+			}
+		}
+		echo "<br />\n";
+		
+		// Pour toutes les applications, les télécharge et recherche leurs noms.
+		$refName = 'nebule/objet/nom';
+		foreach ( $links as $app )
+		{
+?>
+
+	synchronization &nbsp;&nbsp;&nbsp;:
+<?php
+			$appID = $app[6];
+			echo $appID.' ';
+			// Recherche par référence.
+			$lastID = nebFindByRef(
+					$appID,
+					$refApps,
+					! REFERENCES_FOLLOW_ONLY_AUTORITY );
+			bootstrapLogger('find app '.$appID.' as '.$lastID);
+			if ( $lastID != '0' )
+			{
+				foreach ( $nebuleFirstLocalisations as $localisation )
+				{
+					_o_dl1( $lastID, $localisation );
+					_l_dl1( $lastID, $localisation );
+					echo '.';
+				}
+				echo ' ';
+				// Cherche le nom.
+				$nameID = nebFindObjType(
+						$lastID,
+						$refName );
+				if ( $nameID == '0' )
+				{
+					$nameID = nebFindObjType(
+							$appID,
+							$refName );
+				}
+				if ( $nameID != '0' )
+				{
+					foreach ( $nebuleFirstLocalisations as $localisation )
+					{
+						_o_dl1( $nameID, $localisation );
+						_l_dl1( $nameID, $localisation );
+						echo '.';
+					}
+				}
+			}
+			else
+			{
+				echo '<span id="error">ERROR!</span>';
+			}
+?><br />
+
+<?php
+		}
+?>
+
+</div>
+&gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo $bootstrapName; ?></a> ...
+<script type="text/javascript">
+<!--
+setTimeout(function(){window.location.reload(true) }, <?php echo FIRST_RELOAD_DELAY; ?>);
+//-->
+</script>
+<?php
+	}
+	else
+	{
+		bootstrapLoggerForce('ok sync objects');
+?>
+	ok
+<?php
+		echo "</div>\n";
+		// Si c'est bon on continue la création du fichier des options par défaut.
+		bootstrapFirstCreateOptionsFile();
+	}
+}
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * bootstrapFirstCreateOptionsFile()
+ * Crée le fichier des options par défaut.
+ *
+ *  @return void
+ */
+function bootstrapFirstCreateOptionsFile()
+{
+	global	$bootstrapName, $bootstrapSurname, $bootstrapAuthor, $bootstrapVersion, $bootstrapLevel, $bootstrapWebsite,
+			$nebulePuppetmaster;
+
+?>
+
+<div class="parts">
+	<span class="partstitle">#6 options file</span><br />
+<?php
+	if ( ! file_exists( NEBULE_ENVIRONMENT_FILE ) )
+	{
+		bootstrapLoggerForce('need create options file');
+		
+		$defaultOptions  = "# Generated by the ".$bootstrapName.", part of the ".$bootstrapAuthor.".\n";
+		$defaultOptions .= "# Default options file generated after the first synchronization.\n";
+		$defaultOptions .= "# ".$bootstrapSurname."\n";
+		$defaultOptions .= "# Version : ".$bootstrapVersion."\n";
+		$defaultOptions .= "# Level : ".$bootstrapLevel."\n";
+		$defaultOptions .= "# http://".$bootstrapWebsite."\n";
+		$defaultOptions .= "\n";
+		$defaultOptions .= "# nebule bash\n";
+		$defaultOptions .= "filesystemBaseDirectory = ~/nebule\n";
+		$defaultOptions .= "filesystemPublicDirectory = ~/nebule/pub\n";
+		$defaultOptions .= "filesystemPrivateDirectory = ~/nebule/priv\n";
+		$defaultOptions .= "filesystemTemporaryDirectory = ~/nebule/temp\n";
+		$defaultOptions .= "filesystemLogActivate = false\n";
+		$defaultOptions .= "filesystemLogFile = ~/nebule/neb.log\n";
+		$defaultOptions .= "\n";
+		$defaultOptions .= "# nebule php\n";
+		$defaultOptions .= "# Options writen here are write-protected for the library and all applications.\n";
+		$defaultOptions .= "puppetmaster = ".$nebulePuppetmaster."\n";
+		$defaultOptions .= "permitWrite = true\n";
+		$defaultOptions .= "permitListInvalidLinks = false\n";
+		$defaultOptions .= "permitInstanceEntityAsAuthority = false\n";
+		$defaultOptions .= "permitDefaultEntityAsAuthority = false\n";
+		$defaultOptions .= "modeRescue = false\n";
+		$defaultOptions .= "displayUnsecureURL = true\n";
+		$defaultOptions .= "\n";
+		file_put_contents( NEBULE_ENVIRONMENT_FILE, $defaultOptions);
+		if ( file_exists( NEBULE_ENVIRONMENT_FILE ) )
+		{
+			echo "ok created.\n";
+?>
+
+</div>
+&gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo $bootstrapName; ?></a> ...
+<script type="text/javascript">
+<!--
+setTimeout(function(){window.location.reload(true) }, <?php echo FIRST_RELOAD_DELAY; ?>);
+//-->
+</script>
+<?php
+		}
+		else
+		{
+			echo " <span class=\"error\">ERROR!</span><br />\n";
+?>
+
+	<div class="diverror">
+Unable to create options file <b><?php echo NEBULE_ENVIRONMENT_FILE; ?></b> .<br />
+On the same path as <b>index.php</b>, please create file manually.<br />
+As <i>root</i>, run :<br />
+<pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
+
+cat &gt; <?php echo NEBULE_ENVIRONMENT_FILE; ?> &lt;&lt; EOF
+<?php echo $defaultOptions; ?>
+
+EOF
+chmod 644 <?php echo NEBULE_ENVIRONMENT_FILE; ?>
+</pre>
+	</div>
+<button onclick="javascript:window.location.reload(true);">when ready, reload <?php echo $bootstrapName; ?></button>
+</div>
+<?php
+		}
+		unset($defaultOptions);
+	}
+	else
+	{
+		bootstrapLoggerForce('ok create options file');
+?>
+	ok
+<?php
+		echo "</div>\n";
+		// Si c'est bon on continue.
+		bootstrapFirstCreateLocaleEntity();
+	}
+}
+
+
+
+// ------------------------------------------------------------------------------------------
+/**
+ * bootstrapFirstCreateLocaleEntity()
+ * Crée le fichier des options par défaut.
+ *
+ *  @return void
+ */
+function bootstrapFirstCreateLocaleEntity()
+{
+	global	$bootstrapName, $nebuleHashAlgorithm, $nebuleAsymetricAlgorithm, $nebuleAsymetricKeyLenght,
+			$nebulePublicEntite, $nebulePrivateEntite, $nebulePasswordEntite;
+?>
+
+<div class="parts">
+	<span class="partstitle">#7 local entity for server</span><br />
+<?php
+	if ( //file_exists(NEBULE_LOCAL_ENTITY_FILE)
+			//&& is_file(NEBULE_LOCAL_ENTITY_FILE)
+			//&& file_put_contents( NEBULE_LOCAL_ENTITY_FILE, '0') !== false
+			file_put_contents( NEBULE_LOCAL_ENTITY_FILE, '0') !== false
+		)
+	{
+		// Génère un mot de passe.
+		$nebulePasswordEntite = '';
+		$padding = '';
+		$genpasswd = openssl_random_pseudo_bytes(512);
+		// Filtrage des caractères du mdp dans un espace restreint. Alphadécimal, à revoir...
+		for($i=0; $i<strlen($genpasswd); $i++)
+		{
+			$a = ord($genpasswd[$i]);
+			if ( ! ( $a <48 || $a >102 || ($a >57 && $a <97) ) )
+			{
+				$nebulePasswordEntite .= $genpasswd[$i];
+			}
+			$padding .= '0';
+		}
+		$nebulePasswordEntite = substr($nebulePasswordEntite.$padding, 0, FIRST_PASSWORD_SIZE);
+		unset($genpasswd, $padding, $i, $a);
+		
+		$nebulePublicEntite = '0';
+		$nebulePrivateEntite = '0';
+		// Génère une nouvelle entité.
+		_e_gen($nebuleAsymetricAlgorithm, (int)$nebuleAsymetricKeyLenght, $nebuleHashAlgorithm, $nebulePublicEntite, $nebulePrivateEntite, $nebulePasswordEntite);
+		
+		// Définit l'entité comme entité instance du serveur.
+		file_put_contents( NEBULE_LOCAL_ENTITY_FILE, $nebulePublicEntite);
+		
+		// Calcul le nom.
+		$genname = hex2bin($nebulePublicEntite.$nebulePrivateEntite);
+		$name = '';
+		// Filtrage des caractères du nom dans un espace restreint.
+		for($i=0; $i<strlen($genname); $i++)
+		{
+			$a = ord($genname[$i]);
+			if ( ( $a > 96 && $a < 123 ) )
+			{
+				$name .= $genname[$i];
+				// Insertion de voyelles.
+				if ( ($i % 3) == 0 )
+				{
+					$car = hexdec(bin2hex(openssl_random_pseudo_bytes(1) ) ) % 14;
+					switch ($car)
+					{
+						case 0 :
+						case 6 :
+							$name .= 'a';
+							break;
+						case 1 :
+						case 7 :
+						case 11 :
+						case 13 :
+							$name .= 'e';
+							break;
+						case 2 :
+						case 8 :
+							$name .= 'i';
+							break;
+						case 3 :
+						case 9 :
+							$name .= 'o';
+							break;
+						case 4 :
+						case 10 :
+						case 12 :
+							$name .= 'u';
+							break;
+						case 5 :
+							$name .= 'y';
+							break;
+					}
+				}
+			}
+		}
+		$name = substr($name.'robott', 0, FIRST_NAME_SIZE);
+		
+		// Enregistrement du nom.
+		nebINECreatObjText( $name );
+		$refHashName = hash( $nebuleHashAlgorithm, 'nebule/objet/nom' );
+		$hashName = hash( $nebuleHashAlgorithm, $name );
+		$newlink = _l_gen( '-', 'l', $nebulePublicEntite, $hashName, $refHashName );
+		if ( _l_vr( $newlink ) == 1 )
+		{
+			_l_wr( $newlink );
+		}
+		unset( $newlink );
+		
+?>
+new server entity<br />
+public ID &nbsp;: <?php echo $nebulePublicEntite; ?><br />
+private ID : <?php echo $nebulePrivateEntite; ?>
+
+<div class="important">
+name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $name; ?><br />
+public ID : <?php echo $nebulePublicEntite; ?><br />
+password &nbsp;: <?php echo $nebulePasswordEntite; ?><br />
+Please keep and save securely thoses private informations!
+</div>
+<form method="post" action="<?php echo BOOTSTRAP_FIRST_URL_TO_OPTION.$nebulePublicEntite; ?>">
+	<input type="hidden" name="pwd" value="<?php echo $nebulePasswordEntite; ?>">
+	<input type="hidden" name="switch" value="true">
+	<input type="submit" value="when ready, click here to go to options">
+</form>
+<br /><br />
+	<button onclick="javascript:window.location.assign('<?php echo BOOTSTRAP_FIRST_URL_TO_OPTION; ?>');">when ready, click here to go to options</button>
+<?php
+	}
+	else
+	{
+		file_put_contents( NEBULE_LOCAL_ENTITY_FILE, '0');
+		echo " <span class=\"error\">ERROR!</span><br />\n";
+?>
+
+	<div class="diverror">
+Unable to create local entity file <b><?php echo NEBULE_LOCAL_ENTITY_FILE; ?></b> .<br />
+On the same path as <b>index.php</b>, please create file manually.<br />
+As <i>root</i>, run :<br />
+<pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
+
+touch <?php echo NEBULE_LOCAL_ENTITY_FILE; ?>
+
+chown <?php echo getenv('APACHE_RUN_USER').'.'.getenv('APACHE_RUN_GROUP').' '.NEBULE_LOCAL_ENTITY_FILE; ?>
+
+chmod 644 <?php echo NEBULE_LOCAL_ENTITY_FILE; ?>
+</pre>
+	</div>
+	<button onclick="javascript:window.location.reload(true);">when ready, reload <?php echo $bootstrapName; ?></button>
+<?php
+	}
+?>
+
+</div>
+<?php
+}
+
+
+
+
+
+
+
+
+
+
+
+/*
+ ------------------------------------------------------------------------------------------
+  Affichage de l'application 0 de sélection d'application.
+ ------------------------------------------------------------------------------------------
+
+   888     000
+  8   8   0  00
+   888    0 0 0
+  8   8   0 0 0
+  8   8   00  0
+   888  o  000
+ 
+ ------------------------------------------------------------------------------------------
+ */
+bootstrapLogger('8 app0');
+
+
+
+function bootstrapDisplayApplication0()
+{
+	global	$nebuleInstance, $bootstrapLogSession, $bootstrapActiveApplicationsWhitelist;
+	
+	// Initialisation des logs
+	closelog();
+	openlog('app0/'.$bootstrapLogSession, LOG_NDELAY, LOG_USER);
+	bootstrapLoggerForce('Loading');
+	
+	echo 'CHK';
+	ob_end_clean();
+	
+	$alogo = 'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAADkElEQVRo3u2ZT0hUQRzHP9sGgoEh0T8kL8/Ag+tBsUNdCpmKjA7VQdzKwg6pdIoOnkQKPHgUtUOGSrt0qIUORTGIXepgZAc9eJCFMgmUEj0IQotdlJ03b1779u2IK/k7vTfvN/P7zm9+8/v3YI/+d4oEZxUHaaaBCZJyw4cjQgvn+MwLuWIZgKijg9tEgTl6SJggiAhxuqkCMowwKKesARDPiSuvRgiK+C1KyBu2AOj7XWSaKJUcphRYY4nvZIhxxM0mI9sFICAFAbBvp2/BbgAg2sIuHmRmNOcigzwKvb0rztH0mwKMUJSQ4pLhwxTjTDLLAqtAGRVUc4pG6gy8b7kq10MBECW846w2uMYAY3LGZ0YNt+ikVBv+wEV/CP8C8Maz+z565XKOIyuni4e6FmRT3gDEIO2a2u/LTwGN7zT92nEMyY68jFC0aaaXpEl+C2p76XnnGVXElKEG50f6a04NaD4/S09ke4hLOMQ94wdXjIi4It4X44SkjIf0AwlajB/qs5FSdUTmU5qiNbQfaMUckjsMGhAH+WW0iDNBTc/HHD8ahjMc2kpZshpoNorvK0Q8yE/0GU2/2XsEDQbGNXoLjja9rBlGG7wAJpjzsA3kcjsBdLDMgGdwjgkvgCQ9HghjViLumEd8D0mzH7jGS9X+Zb2dmC++KH5xkQdqRunOB1KMK2/j1rIOdaVpd0LrAiA3XDdh0hoAdaWoO5/WM6JK5XnWGoBZHwkGAIeV5wVrABZ8JBgAqMnEqjUAqz4SijErVr1WmTUpZT4SDACWlOcKawAqfCQYAHxXnqutAaj2kaADEBEyyuspawDUlTIi4gNARIi78rhGawDUlWLEVQhRrb4/obAed16lFy1EghpXgnuAWn4702mPBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf7Q4vfT7/xw0i2jaf6gUEjcx2joRUwaizYXZIUpad/OiepNbDHnGO52gw+pdkdn9JsIGd1LNp4qhWnrfJPXsof1cqyu3I4j+o4/dU56qoUYlx2ZtLzgU0vxXmtPH+82xoURdCi2fEmlU+rJj/ybc0EBmC4EcHJx/LzBLDXrN5eChto3lOi/bBY58L2AUho7bvr8pXBUtzFPSSsHYG8QT3DmxnzHDdJGdlS3NxscWQYpj7IH6Mi+G23R3v0FwbfFx3mQ2ZaAAAAAElFTkSuQmCC';
+	
+	bootstrapHtmlHeader();
+	bootstrapHtmlTop();
+
+	// Chargement de la bibliothèque PHP POO.
+	loadLibrary();
+
+	// Ré-initialisation des logs
+	closelog();
+	openlog('app0/'.$bootstrapLogSession, LOG_NDELAY, LOG_USER);
+
+?>
+
+<div id="appslist">
+<?php
+	// Extraire la liste des applications disponibles.
+	$refAppsID = $nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
+	$instanceAppsID = New Object($nebuleInstance, $refAppsID);
+	$applicationsList = array();
+	$signersList = array();
+	$hashTarget = '';
+	
+	// Liste les applications reconnues par le maître du code.
+	$linksList = $instanceAppsID->readLinksFilterFull($nebuleInstance->getCodeMaster(), '', 'f', $refAppsID, '', $refAppsID);
+	$link = null;
+	foreach ( $linksList as $link )
+	{
+		$hashTarget = $link->getHashTarget();
+		bootstrapLogger('find application '.$hashTarget.' by code master');
+		$applicationsList[$hashTarget] = $hashTarget;
+		$signersList[$hashTarget] = $link->getHashSigner();
+	}
+	
+	// Liste les applications reconnues par l'entité instance du serveur, si autorité locale et pas en mode de récupération.
+	if ( $nebuleInstance->getOption('permitInstanceEntityAsAuthority')
+			&& ! $nebuleInstance->getModeRescue()
+		)
+	{
+		$linksList = $instanceAppsID->readLinksFilterFull($nebuleInstance->getInstanceEntity(), '', 'f', $refAppsID, '', $refAppsID);
+		foreach ( $linksList as $link )
+		{
+			$hashTarget = $link->getHashTarget();
+			bootstrapLogger('find application '.$hashTarget.' by instance entity');
+			$applicationsList[$hashTarget] = $hashTarget;
+			$signersList[$hashTarget] = $link->getHashSigner();
+		}
+	}
+	
+	// Liste les applications reconnues par l'entité par défaut, si autorité locale et pas en mode de récupération.
+	if ( $nebuleInstance->getOption('permitDefaultEntityAsAuthority')
+			&& ! $nebuleInstance->getModeRescue()
+		)
+	{
+		$linksList = $instanceAppsID->readLinksFilterFull($nebuleInstance->getDefaultEntity(), '', 'f', $refAppsID, '', $refAppsID);
+		foreach ( $linksList as $link )
+		{
+			$hashTarget = $link->getHashTarget();
+			bootstrapLogger('find application '.$hashTarget.' by default entity');
+			$applicationsList[$hashTarget] = $hashTarget;
+			$signersList[$hashTarget] = $link->getHashSigner();
+		}
+	}
+	
+	// Liste les applications reconnues par l'id de développement, si autorité locale et pas en mode de récupération.
+	if ( ! REFERENCES_FOLLOW_ONLY_AUTORITY
+			&& REFERENCE_DEV_ID != ''
+			&& REFERENCE_DEV_ID != '0'
+			&& ! $nebuleInstance->getModeRescue()
+		)
+	{
+		$linksList = $instanceAppsID->readLinksFilterFull(REFERENCE_DEV_ID, '', 'f', $refAppsID, '', $refAppsID);
+		foreach ( $linksList as $link )
+		{
+			$hashTarget = $link->getHashTarget();
+			$applicationsList[$hashTarget] = $hashTarget;
+			$signersList[$hashTarget] = $link->getHashSigner();
+		}
+	}
+	unset($refAppsID, $linksList, $link, $hashTarget, $instanceAppsID);
+	
+	// Affiche la page d'interruption.
+	echo '<a href="/?b">';
+	echo '<div class="apps" style="background:#000000;">';
+	echo '<span class="appstitle">Nb</span><br /><span class="appsname">break</span>';
+	echo "</div></a>\n";
+	
+	// Lister les applications.
+	$application = '';
+	foreach ( $applicationsList as $application )
+	{
+		$instance = New Object($nebuleInstance, $application);
+		
+		// Recherche si l'application est activée par l'entité instance de serveur.
+		// Ou si l'application est en liste blanche.
+		// Ou si c'est l'application par défaut.
+		$activated = false;
+		foreach ( nebule::ACTIVE_APPLICATIONS_WHITELIST as $item )
+		{
+			if ( $application == $item )
+			{
+				$activated = true;
+			}
+		}
+		if ( $application == $nebuleInstance->getOption('defaultApplication') )
+		{
+			$activated = true;
+		}
+		if ( ! $activated )
+		{
+			$refActivated = $nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE);
+			$linksList = $instance->readLinksFilterFull($nebuleInstance->getInstanceEntity(), '', 'f', $application, $refActivated, $application);
+			if ( sizeof($linksList) != 0 )
+			{
+				$activated = true;
+			}
+			unset($linksList);
+		}
+		
+		// En fonction de l'état d'activation, affiche ou non l'appication.
+		if ( $activated )
+		{
+			bootstrapLogger('application enabled : '.$application);
+		}
+		else
+		{
+			bootstrapLogger('application disabled : '.$application);
+			continue;
+		}
+		
+		$color = '#'.substr($application.'000000',0,6);
+		//$colorSigner = '#'.substr($signersList[$application].'000000',0,6);
+		$title = $instance->getName();
+		$shortName = substr($instance->getSurname().'--', 0, 2);
+		$shortName = strtoupper(substr($shortName, 0, 1)).strtolower(substr($shortName, 1, 1));
+		echo '<a href="/?'.ARG_SWITCH_APPLICATION.'='.$application.'">';
+		//echo '<div class="apps" style="background:'.$color.';" onclick="followHref(\'/?'.ARG_SWITCH_APPLICATION.'='.$application.'\')">';
+		echo '<div class="apps" style="background:'.$color.';">';
+		//echo '<div class="appssigner" style="background:'.$color.';"><img alt="'.$signersList[$application].'" src="data:image/png;base64,'.$alogo.'" /></div>';
+		echo '<span class="appstitle">'.$shortName.'</span><br /><span class="appsname">'.$title.'</span>';
+		echo "</div></a>\n";
+	}
+	unset($alogo, $application, $applicationsList, $instance, $color, $title, $shortName);
+?>
+
+</div>
+<div id="sync">
+</div>
+<?php
+	bootstrapHtmlBottom();
+}
+
+
+
+
+
+
+
+
+
+
+
+/*
+ ------------------------------------------------------------------------------------------
+  Affichage de l'application 1 de documentation technique de la bibliothèque de nebule.
+ ------------------------------------------------------------------------------------------
+
+   888      1
+  8   8   111
+   888      1
+  8   8     1
+  8   8     1
+   888  o 11111
+
+ ------------------------------------------------------------------------------------------
+ */
+bootstrapLogger('8 app1');
+
+
+
+function bootstrapDisplayApplication1()
+{
+	global	$nebuleInstance, $bootstrapLogSession, $nebuleLibLevel, $nebuleLibVersion, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
+
+	// Initialisation des logs
+	closelog();
+	openlog('app1/'.$bootstrapLogSession, LOG_NDELAY, LOG_USER);
+	bootstrapLoggerForce('Loading');
+
+	echo 'CHK';
+	ob_end_clean();
+
+	$alogo = 'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAADkElEQVRo3u2ZT0hUQRzHP9sGgoEh0T8kL8/Ag+tBsUNdCpmKjA7VQdzKwg6pdIoOnkQKPHgUtUOGSrt0qIUORTGIXepgZAc9eJCFMgmUEj0IQotdlJ03b1779u2IK/k7vTfvN/P7zm9+8/v3YI/+d4oEZxUHaaaBCZJyw4cjQgvn+MwLuWIZgKijg9tEgTl6SJggiAhxuqkCMowwKKesARDPiSuvRgiK+C1KyBu2AOj7XWSaKJUcphRYY4nvZIhxxM0mI9sFICAFAbBvp2/BbgAg2sIuHmRmNOcigzwKvb0rztH0mwKMUJSQ4pLhwxTjTDLLAqtAGRVUc4pG6gy8b7kq10MBECW846w2uMYAY3LGZ0YNt+ikVBv+wEV/CP8C8Maz+z565XKOIyuni4e6FmRT3gDEIO2a2u/LTwGN7zT92nEMyY68jFC0aaaXpEl+C2p76XnnGVXElKEG50f6a04NaD4/S09ke4hLOMQ94wdXjIi4It4X44SkjIf0AwlajB/qs5FSdUTmU5qiNbQfaMUckjsMGhAH+WW0iDNBTc/HHD8ahjMc2kpZshpoNorvK0Q8yE/0GU2/2XsEDQbGNXoLjja9rBlGG7wAJpjzsA3kcjsBdLDMgGdwjgkvgCQ9HghjViLumEd8D0mzH7jGS9X+Zb2dmC++KH5xkQdqRunOB1KMK2/j1rIOdaVpd0LrAiA3XDdh0hoAdaWoO5/WM6JK5XnWGoBZHwkGAIeV5wVrABZ8JBgAqMnEqjUAqz4SijErVr1WmTUpZT4SDACWlOcKawAqfCQYAHxXnqutAaj2kaADEBEyyuspawDUlTIi4gNARIi78rhGawDUlWLEVQhRrb4/obAed16lFy1EghpXgnuAWn4702mPBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf7Q4vfT7/xw0i2jaf6gUEjcx2joRUwaizYXZIUpad/OiepNbDHnGO52gw+pdkdn9JsIGd1LNp4qhWnrfJPXsof1cqyu3I4j+o4/dU56qoUYlx2ZtLzgU0vxXmtPH+82xoURdCi2fEmlU+rJj/ybc0EBmC4EcHJx/LzBLDXrN5eChto3lOi/bBY58L2AUho7bvr8pXBUtzFPSSsHYG8QT3DmxnzHDdJGdlS3NxscWQYpj7IH6Mi+G23R3v0FwbfFx3mQ2ZaAAAAAElFTkSuQmCC';
+
+	bootstrapHtmlHeader();
+	bootstrapHtmlTop();
+
+	// Chargement de la bibliothèque PHP POO.
+	loadLibrary();
+
+	// Ré-initialisation des logs
+	closelog();
+	openlog('app1/'.$bootstrapLogSession, LOG_NDELAY, LOG_USER);
+	
+	// Instancie la classe de la documentation.
+	$instance = new nebdoctech($nebuleInstance);
+	
+	// Affiche la documentation.
+	echo '<div id="layout_documentation">'."\n";
+	echo ' <div id="title_documentation"><p>Documentation technique de '.$nebuleInstance->__toString().'<br />Version '.$nebuleInstance->getOption('defaultLinksVersion').' - '.$nebuleLibVersion.' '.$nebuleLibLevel.'<br />(c) '.$nebuleLicence.' '.$nebuleAuthor.' - <a href="'.$nebuleWebsite.'">'.$nebuleWebsite."</a></p></div>\n";
+	echo ' <div id="content_documentation">'."\n";
+	$instance->display_content();
+	echo " </div>\n";
+	echo "</div>\n";
+	
+	bootstrapHtmlBottom();
+}
+
+
+
+
+
+
+
+
+
+
+
+/*
+ ------------------------------------------------------------------------------------------
+  Affichage de la page web.
+ ------------------------------------------------------------------------------------------
+
+   999
+  9   9
+   9999
+      9
+     9
+   99
+
+ ------------------------------------------------------------------------------------------
+ */
+bootstrapLogger('9 router');
+
+
+
+// Calcul du temps de chargement du bootstrap.
+$bootstrapLoadingTime = microtime(true) - $metrologyStartTime;
+
+// Métrologie.
+$metrologyLibraryPOOLinksRead = 0;
+$metrologyLibraryPOOLinksVerified = 0;
+$metrologyLibraryPOOObjectsRead = 0;
+$metrologyLibraryPOOObjectsVerified = 0;
+$metrologyLibraryPOOLinkCache = 0;
+$metrologyLibraryPOOObjectCache = 0;
+$metrologyLibraryPOOEntityCache = 0;
+$metrologyLibraryPOOGroupCache = 0;
+$metrologyLibraryPOOConvertationCache = 0;
+
+
+
+if ( sizeof($bootstrapBreak) == 0 )
+{
+	unset($bootstrapBreak, $bootstrapRescueMode, $bootstrapInlineDisplay);
+	
+	// Ferme les I/O de la bibliothèque PHP PP.
+	__io_clos();
+	
+	// Fin de la bufferisation de la sortie avec effacement du buffer.
+	// Ecrit dans le buffer pour test, ne devra jamais apparaître.
+	echo 'CHK';
+	// Tout ce qui aurait éventuellement essayé d'être affiché est perdu.
+	ob_end_clean();
+	
+	if ( $bootstrapApplicationID == '0' )
+	{
+		bootstrapLoggerForce('load application 0');
+		
+		bootstrapDisplayApplication0();
+	
+		// Change les logs au nom du bootstrap.
+		closelog();
+		openlog($bootstrapName.'/'.$bootstrapLogSession, LOG_NDELAY, LOG_USER);
+	}
+	elseif ( $bootstrapApplicationID == '1' )
+	{
+		bootstrapLoggerForce('load application 1');
+		
+		bootstrapDisplayApplication1();
+	
+		// Change les logs au nom du bootstrap.
+		closelog();
+		openlog($bootstrapName.'/'.$bootstrapLogSession, LOG_NDELAY, LOG_USER);
+	}
+	else
+	{
+		// Si tout est déjà pré-chargé, on déserialise.
+		if ( isset($bootstrapApplicationInstanceSleep)
+				&& $bootstrapApplicationInstanceSleep != ''
+				&& isset($bootstrapApplicationDisplayInstanceSleep)
+				&& $bootstrapApplicationDisplayInstanceSleep != ''
+				&& isset($bootstrapApplicationActionInstanceSleep)
+				&& $bootstrapApplicationActionInstanceSleep != ''
+				&& isset($bootstrapApplicationTraductionInstanceSleep)
+				&& $bootstrapApplicationTraductionInstanceSleep != ''
+			)
+		{
+			// Chargement de la bibliothèque PHP POO.
+			loadLibrary();
+			
+			bootstrapLoggerForce('load application '.$bootstrapApplicationID);
+			
+			// Charge l'objet de l'application. @todo faire via les i/o.
+			include('o/'.$bootstrapApplicationID);
+			
+			// Change les logs au nom de l'application.
+			closelog();
+			openlog($applicationName.'/'.$bootstrapLogSession, LOG_NDELAY, LOG_USER);
+			bootstrapLogger('Loading application '.$applicationName);
+			
+			// Désérialise les instances.
+			$applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
+			$applicationDisplayInstance = unserialize($bootstrapApplicationDisplayInstanceSleep);
+			$applicationActionInstance = unserialize($bootstrapApplicationActionInstanceSleep);
+			$applicationTraductionInstance = unserialize($bootstrapApplicationTraductionInstanceSleep);
+			
+			// Initialisation de réveil de l'instance de l'application.
+			$applicationInstance->initialisation2();
+			
+			// Si la requête web est un téléchargement d'objet ou de lien, des accélérations pruvent être prévues dans ce cas.
+			if ( ! $applicationInstance->askDownload() )
+			{
+				// Initialisation de réveil des instances.
+				$applicationTraductionInstance->initialisation2();
+				$applicationDisplayInstance->initialisation2();
+				$applicationActionInstance->initialisation2();
+				
+				// Réalise les tests de sécurité.
+				$applicationInstance->checkSecurity();
+			}
+			
+			// Appel de l'application.
+			$applicationInstance->router();
+		}
+		elseif ( $bootstrapApplicationNoPreload )
+		{
+			// Si l'application ne doit être pré-chargée,
+			//   réalise maintenant le pré-chargement de façon transparente et lance l'application.
+			// Ainsi, le pré-chargement n'est pas fait sur une page web à part.
+			
+			// Chargement de la bibliothèque PHP POO.
+			loadLibrary();
+			
+			bootstrapLoggerForce('load application whitout preload '.$bootstrapApplicationID);
+				
+			// Charge l'objet de l'application. @todo faire via les i/o.
+			include('o/'.$bootstrapApplicationID);
+				
+			// Change les logs au nom de l'application.
+			closelog();
+			openlog($applicationName.'/'.$bootstrapLogSession, LOG_NDELAY, LOG_USER);
+			bootstrapLogger('Loading application '.$applicationName);
+				
+			// Instanciation des classes de l'application.
+			$applicationInstance = new Application($nebuleInstance);
+			$applicationTraductionInstance = new Traduction($applicationInstance);
+			$applicationDisplayInstance = new Display($applicationInstance);
+			$applicationActionInstance = new Action($applicationInstance);
+			
+			// Initialisation des instances.
+			$applicationInstance->initialisation();
+			$applicationTraductionInstance->initialisation();
+			$applicationDisplayInstance->initialisation();
+			$applicationActionInstance->initialisation();
+			
+			// Réalise les tests de sécurité.
+			$applicationInstance->checkSecurity();
+			
+			// Appel de l'application.
+			$applicationInstance->router();
+		}
+		else
+		{
+			// Sinon on va faire un pré-chargement.
+			bootstrapDisplayPreloadApplication();
+		}
+	
+		// Change les logs au nom du bootstrap.
+		closelog();
+		openlog($bootstrapName.'/'.$bootstrapLogSession,LOG_NDELAY,LOG_USER);
+		bootstrapLogger('save session');
+		
+		// Ouverture de la session PHP.
+		session_start();
+		
+		// Sauve les ID dans la session PHP.
+		$_SESSION['bootstrapApplicationID'] = $bootstrapApplicationID;
+		$_SESSION['bootstrapApplicationStartID'] = $bootstrapApplicationStartID;
+		$_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID] = $bootstrapApplicationID;
+		$_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID] = $bootstrapLibraryID;
+		
+		// Sérialise les instances et les sauve dans la session PHP.
+		$_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID] = serialize($applicationInstance);
+		$_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID] = serialize($applicationDisplayInstance);
+		$_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID] = serialize($applicationActionInstance);
+		$_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID] = serialize($applicationTraductionInstance);
+		$_SESSION['bootstrapLibrariesInstances'][$bootstrapLibraryID] = serialize($nebuleInstance);
+		
+		// Fermeture de la session avec écriture.
+		session_write_close();
+		
+		// Métrologie.
+		$metrologyLibraryPOOLinksRead = $nebuleInstance->getMetrologyInstance()->getLinkRead();
+		$metrologyLibraryPOOLinksVerified = $nebuleInstance->getMetrologyInstance()->getLinkVerify();
+		$metrologyLibraryPOOObjectsRead = $nebuleInstance->getMetrologyInstance()->getObjectRead();
+		$metrologyLibraryPOOObjectsVerified = $nebuleInstance->getMetrologyInstance()->getObjectVerify();
+		$metrologyLibraryPOOLinkCache = $nebuleInstance->getCacheLinkSize();
+		$metrologyLibraryPOOObjectCache = $nebuleInstance->getCacheObjectSize();
+		$metrologyLibraryPOOEntityCache = $nebuleInstance->getCacheEntitySize();
+		$metrologyLibraryPOOGroupCache = $nebuleInstance->getCacheGroupSize();
+		$metrologyLibraryPOOConvertationCache = $nebuleInstance->getCacheConversationSize();
+	}
+}
+else
+{
+	if ( $bootstrapNeedFirstSynchronization )
+	{
+		bootstrapLoggerForce('load first');
+		
+		// Affichage sur interruption du chargement.
+		if ( $bootstrapInlineDisplay )
+		{
+			bootstrapInlineDisplayApplicationfirst();
+		}
+		else
+		{
+			bootstrapDisplayApplicationfirst();
+		}
+	}
+	elseif ( $bootstrapServerEntityDisplay )
+	{
+		if ( file_exists( NEBULE_LOCAL_ENTITY_FILE ) )
+		{
+			echo file_get_contents( NEBULE_LOCAL_ENTITY_FILE, NULL, NULL, -1, $nebule_io_maxdata );
+		}
+		else
+		{
+			echo '0';
+		}
+	}
+	else
+	{
+		bootstrapLoggerForce('load break');
+	
+		// Affichage sur interruption du chargement.
+		if ( $bootstrapInlineDisplay )
+		{
+			bootstrapInlineDisplayOnBreak();
+		}
+		else
+		{
+			bootstrapDisplayOnBreak();
+		}
+	}
+	
+	// Change les logs au nom du bootstrap.
+	closelog();
+	openlog($bootstrapName.'/'.$bootstrapLogSession,LOG_NDELAY,LOG_USER);
+}
+
+// Métrologie.
+bootstrapLoggerForce('Mp='.memory_get_peak_usage()
+	.' - Lr='.$nebule_metrolog_l_ls.'+'.$metrologyLibraryPOOLinksRead
+	.' Lv='.$nebule_metrolog_l_vr.'+'.$metrologyLibraryPOOLinksVerified
+	.' Or='.$nebule_metrolog_o_ls.'+'.$metrologyLibraryPOOObjectsRead
+	.' Ov='.$nebule_metrolog_o_vr.'+'.$metrologyLibraryPOOObjectsVerified
+	.' (PP+POO) -'
+	.' LC='.$metrologyLibraryPOOLinkCache
+	.' OC='.$metrologyLibraryPOOObjectCache
+	.' EC='.$metrologyLibraryPOOEntityCache
+	.' GC='.$metrologyLibraryPOOGroupCache
+	.' CC='.$metrologyLibraryPOOConvertationCache);
+
+// Fermeture des logs.
+bootstrapLoggerForce('--- end '.$bootstrapName);
+//closelog();
+?>
