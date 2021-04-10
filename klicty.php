@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
+
 namespace Nebule\Application\Klicty;
 // ------------------------------------------------------------------------------------------
-$applicationName		= 'klicty';
-$applicationSurname		= 'nebule/klicty';
-$applicationDescription	= 'Open and protected space to share information with limit in time.';
-						// Espace ouvert et protégé de partage d'information à durée limitée.
-$applicationVersion		= '020200222';
-$applicationLevel		= 'Developpement'; // Experimental | Developpement | Testing | Production
-$applicationLicence		= 'GNU GPL 2015-2020';
-$applicationAuthor		= 'Projet nebule';
-$applicationWebsite		= 'www.klicty.org';
+$applicationName = 'klicty';
+$applicationSurname = 'nebule/klicty';
+$applicationDescription = 'Open and protected space to share information with limit in time.';
+// Espace ouvert et protégé de partage d'information à durée limitée.
+$applicationVersion = '020200222';
+$applicationLevel = 'Development'; // Experimental | Development | Testing | Production
+$applicationLicence = 'GNU GPL 2015-2020';
+$applicationAuthor = 'Projet nebule';
+$applicationWebsite = 'www.klicty.org';
 // ------------------------------------------------------------------------------------------
-
 
 
 /*
@@ -20,27 +20,15 @@ $applicationWebsite		= 'www.klicty.org';
  /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
 ------------------------------------------------------------------------------------------
 
-    .     [FR] Toute modification de ce code entrainera une modification de son empreinte
-   / \           et entrainera donc automatiquement son invalidation !
-  / V \   [EN] Any changes to this code will cause a chage in its footprint and therefore
- /__°__\         automatically result in its invalidation!
-    N     [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
-    N            tanto lugar automáticamente a su anulación!
-    N
-    N                                                                       Projet nebule
-----N-------------------------------------------------------------------------------------
- /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
+ [FR] Toute modification de ce code entrainera une modification de son empreinte
+      et entrainera donc automatiquement son invalidation !
+ [EN] Any changes to this code will cause a change in its footprint and therefore
+      automatically result in its invalidation!
+ [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
+      tanto lugar automáticamente a su anulación!
+
 ------------------------------------------------------------------------------------------
 */
-
-
-
-
-
-
-
-
-
 
 
 /**
@@ -56,60 +44,59 @@ $applicationWebsite		= 'www.klicty.org';
  */
 class Application extends Applications
 {
-	const APPLICATION_LICENCE_NAME	= 'klicty';
-	const APPLICATION_LICENCE_LINK	= 'http://www.klicty.org/';
-	const APPLICATION_LICENCE_DATE	= '2015-2016';
-	const APPLICATION_LICENCE_LOGO	= 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAA
+    const APPLICATION_LICENCE_NAME = 'klicty';
+    const APPLICATION_LICENCE_LINK = 'http://www.klicty.org/';
+    const APPLICATION_LICENCE_DATE = '2015-2016';
+    const APPLICATION_LICENCE_LOGO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAA
 CxMAAAsTAQCanBgAAAAHdElNRQffChcUJhhjX2MDAAABq0lEQVRIx52VPzMDQRiHn7uJGZVxCjTGZBgak0ipQSuNZgspTHyD6CioKJR8AxRG8VLShkZ7SaeRQhMpRIwZhSKKu1zuXzbLW+3uu/vsb3fv
 fq+FJlQWB2hLY/AcK3XhKjtsMB0aanLPuTwaAFSJUyYHbNeiItcagBqnSh591FiTTipA5XDTjxSLLgWpJQAqRw3zWO4hrED8u9HufRWOd5CMP1D1l39xw6h24QqzgEWVQqBAlbgKphzLofbbuGTbb5bk
 GmwATkMzDtSJVrwdtM78rlqLvfveEEQvJtWqxysnUqaIsgcopqTMEEUPMJWaNEFMg62yA9MGCJW1cTT54QgnExu4ZYmFCAL29a/ajvR/ZJGXqAp0Ktp2zG26wLw5Qho28BYb7Bojmt4z3iW4pog7D3CR
 Is0McQE2yAOtfyFa8tj7t3YjlxggZI7nGOKI76BXCTuS65vpK08hZ7IYYTMm7ZMxAFwphB1p3be0GWaGfHtjvtL1iD3IB8vwJ1PtxPxF6uTDN6D1xbzUkwaF1JkwsHYXp788rbRtcfbv0hYprsWI0ZgX
 17+W91+F34OCKNnSgAAAAABJRU5ErkJggg==';
-	const NEBULE_LICENCE_LOGO	= 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAABrElEQVRIx52Vv0oDQRCHvztEEIKk
+    const NEBULE_LICENCE_LOGO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAABrElEQVRIx52Vv0oDQRCHvztEEIKk
 iEWaFKk97QUTu7zAghEEU6ROmUKfQOxiKUICghbzAumM4gNoUqcQJEVSeCJYKDmLO8/1vD+bTLVzs/Pt7M3dbyxSTJUpADMZJ++xYhOrNKhR1B5N6NOVgQFA7XPORsJxU1pykwJQ69yzRbo9sStvsQC1
 yRAv/lKaeVg4MvoHUJsMMbcQYYXFuyxmeXEBVgL3Pij+nVxk4xWrmjdnhxLgccd2WIGqcx1s6PHCsZ4vkXeirqkHywO5ARuAThhfkxPOUku3w1UncFX1b9+lnYH4sQ1V9XmNaMQY0fABtf8RQ0TNBxTj
 YkaIItiqnBQ1QaiyTSE5LG0uMwgFOz0uTXVBRldnGWc01WlKdGanqU1g7WSEjG1gsjRi4rexb9DxeETfB3SNvro4RBdskAHTpRBTGfzoQSv8necZiC8+Qq+lK9IjDhbwzAP6t/HJYQTiS47HULZ1Rarw
 CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD6bzIeP8G1Zl6c0qQU/YAAAAASUVORK5CYII=';
 
-	const APPLICATION_ENVIRONMENT_FILE					= 'nebule.env';
-	const APPLICATION_DEFAULT_DISPLAY_METROLOGY				= false;
-	const APPLICATION_DEFAULT_DISPLAY_UNSECURE_URL			= true;
-	const APPLICATION_DEFAULT_DISPLAY_UNVERIFY_LARGE_CONTENT	= false;
-	const APPLICATION_DEFAULT_DISPLAY_NAME_SIZE				= 128;
-	const APPLICATION_DEFAULT_IO_READ_MAX_DATA				= 1000000;
-	const APPLICATION_DEFAULT_PERMIT_UPLOAD_OBJECT			= false;
-	const APPLICATION_DEFAULT_PERMIT_UPLOAD_LINKS			= false;
-	const APPLICATION_DEFAULT_PERMIT_PUBLIC_UPLOAD_OBJECT	= false;
-	const APPLICATION_DEFAULT_PERMIT_PUBLIC_UPLOAD_LINKS		= false;
-	const APPLICATION_DEFAULT_LOG_UNLOCK_ENTITY				= false;
-	const APPLICATION_DEFAULT_LOG_LOCK_ENTITY				= false;
+    const APPLICATION_ENVIRONMENT_FILE = 'nebule.env';
+    const APPLICATION_DEFAULT_DISPLAY_METROLOGY = false;
+    const APPLICATION_DEFAULT_DISPLAY_UNSECURE_URL = true;
+    const APPLICATION_DEFAULT_DISPLAY_UNVERIFY_LARGE_CONTENT = false;
+    const APPLICATION_DEFAULT_DISPLAY_NAME_SIZE = 128;
+    const APPLICATION_DEFAULT_IO_READ_MAX_DATA = 1000000;
+    const APPLICATION_DEFAULT_PERMIT_UPLOAD_OBJECT = false;
+    const APPLICATION_DEFAULT_PERMIT_UPLOAD_LINKS = false;
+    const APPLICATION_DEFAULT_PERMIT_PUBLIC_UPLOAD_OBJECT = false;
+    const APPLICATION_DEFAULT_PERMIT_PUBLIC_UPLOAD_LINKS = false;
+    const APPLICATION_DEFAULT_LOG_UNLOCK_ENTITY = false;
+    const APPLICATION_DEFAULT_LOG_LOCK_ENTITY = false;
 
-	// Références de types mimes.
-	const REFERENCE_OBJECT_TEXT		= 'text/plain';
+    // Références de types mimes.
+    const REFERENCE_OBJECT_TEXT = 'text/plain';
 
-	// Gestion des expirations d'objets.
-	const APPLICATION_EXPIRATION_DATE	= 'klicty/expiration/date';
-	const APPLICATION_EXPIRATION_COUNT	= 'klicty/expiration/count';
+    // Gestion des expirations d'objets.
+    const APPLICATION_EXPIRATION_DATE = 'klicty/expiration/date';
+    const APPLICATION_EXPIRATION_COUNT = 'klicty/expiration/count';
 
-	
-	
-	/**
-	 * Constructeur.
-	 *
-	 * @param nebule $nebuleInstance
-	 * @return void
-	 */
-	public function __construct(nebule $nebuleInstance)
-	{
-		$this->_nebuleInstance = $nebuleInstance;
-	}
-	
-	/**
-	 * Constructeur. @todo
-	 *
-	 * @param nebule $nebuleInstance
-	 */
-/*	public function __construct(nebule $nebuleInstance)
+
+    /**
+     * Constructeur.
+     *
+     * @param nebule $nebuleInstance
+     * @return void
+     */
+    public function __construct(nebule $nebuleInstance)
+    {
+        $this->_nebuleInstance = $nebuleInstance;
+    }
+
+    /**
+     * Constructeur. @param nebule $nebuleInstance
+     * @todo
+     *
+     */
+    /*	public function __construct(nebule $nebuleInstance)
 	{
 		$this->_applicationInstance	= $this;
 		$this->_nebuleInstance		= $nebuleInstance;
@@ -119,449 +106,484 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
 	}*/
 
 
+    public static function getOption($name)
+    {
+        if ($name == '' || !is_string($name)) return false;
+        $r = ''; // Va contenir le résultat à retourner.
+        $t = '';
 
-	public static function getOption($name)
-	{
-		if ( $name == '' || ! is_string($name) ) return false;
-		$r = ''; // Va contenir le résultat à retourner.
-		$t = '';
+        // Lit le fichier d'environnement.
+        if (file_exists(self::APPLICATION_ENVIRONMENT_FILE)) {
+            $f = file(self::APPLICATION_ENVIRONMENT_FILE, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
+            foreach ($f as $o) {
+                $l = trim($o);
 
-		// Lit le fichier d'environnement.
-		if ( file_exists(self::APPLICATION_ENVIRONMENT_FILE) )
-		{
-			$f = file(self::APPLICATION_ENVIRONMENT_FILE, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
-			foreach($f as $o)
-			{
-				$l = trim($o);
+                // Si commentaire, passe à la ligne suivante.
+                if ($l[0] == "#")
+                    continue;
 
-				// Si commentaire, passe à la ligne suivante.
-				if ( $l[0] == "#" )
-					continue;
+                // Recherche l'option demandée.
+                if (filter_var(trim(strtok($l, '=')), FILTER_SANITIZE_STRING) == $name) {
+                    $t = filter_var(trim(substr($l, strpos($l, '=') + 1)), FILTER_SANITIZE_STRING);
+                    break;
+                }
+            }
+            unset($f, $o, $l);
+        }
 
-				// Recherche l'option demandée.
-				if ( filter_var(trim(strtok($l, '=')), FILTER_SANITIZE_STRING) == $name )
-				{
-					$t = filter_var(trim(substr($l, strpos($l, '=') + 1)), FILTER_SANITIZE_STRING);
-					break;
-				}
-			}
-			unset($f, $o, $l);
-		}
-
-		// Vérifie que c'est une option connue et qu'elle a une valeur.
-		switch ($name)
-		{
-			case 'klictyDisplayMetrology' :				if ( $t == 'true' )		$r = true;		else $r = self::APPLICATION_DEFAULT_DISPLAY_METROLOGY;				break;
-			case 'klictyDisplayUnsecureURL' :			if ( $t == 'false' )	$r = false;		else $r = self::APPLICATION_DEFAULT_DISPLAY_UNSECURE_URL;			break;
-			case 'klictyDisplayUnverifyLargeContent' :	if ( $t == 'true' )		$r = true;		else $r = self::APPLICATION_DEFAULT_DISPLAY_UNVERIFY_LARGE_CONTENT;	break;
-			case 'klictyDisplayNameSize' :				if ( $t != '' )			$r = (int)$t;	else $r = self::APPLICATION_DEFAULT_DISPLAY_NAME_SIZE;				break;
-			case 'klictyIOReadMaxDataPHP' :				if ( $t != '' )			$r = (int)$t;	else $r = self::APPLICATION_DEFAULT_IO_READ_MAX_DATA;				break;
-			case 'klictyPermitUploadObject' :			if ( $t == 'true' )		$r = true;		else $r = self::APPLICATION_DEFAULT_PERMIT_UPLOAD_OBJECT;			break;
-			case 'klictyPermitUploadLinks' :			if ( $t == 'true' )		$r = true;		else $r = self::APPLICATION_DEFAULT_PERMIT_UPLOAD_LINKS;				break;
-			case 'klictyPermitPublicUploadObject' :		if ( $t == 'true' )		$r = true;		else $r = self::APPLICATION_DEFAULT_PERMIT_PUBLIC_UPLOAD_OBJECT;		break;
-			case 'klictyPermitPublicUploadLinks' :		if ( $t == 'true' )		$r = true;		else $r = self::APPLICATION_DEFAULT_PERMIT_PUBLIC_UPLOAD_LINKS;		break;
+        // Vérifie que c'est une option connue et qu'elle a une valeur.
+        switch ($name) {
+            case 'klictyDisplayMetrology' :
+                if ($t == 'true') $r = true; else $r = self::APPLICATION_DEFAULT_DISPLAY_METROLOGY;
+                break;
+            case 'klictyDisplayUnsecureURL' :
+                if ($t == 'false') $r = false; else $r = self::APPLICATION_DEFAULT_DISPLAY_UNSECURE_URL;
+                break;
+            case 'klictyDisplayUnverifyLargeContent' :
+                if ($t == 'true') $r = true; else $r = self::APPLICATION_DEFAULT_DISPLAY_UNVERIFY_LARGE_CONTENT;
+                break;
+            case 'klictyDisplayNameSize' :
+                if ($t != '') $r = (int)$t; else $r = self::APPLICATION_DEFAULT_DISPLAY_NAME_SIZE;
+                break;
+            case 'klictyIOReadMaxDataPHP' :
+                if ($t != '') $r = (int)$t; else $r = self::APPLICATION_DEFAULT_IO_READ_MAX_DATA;
+                break;
+            case 'klictyPermitUploadObject' :
+                if ($t == 'true') $r = true; else $r = self::APPLICATION_DEFAULT_PERMIT_UPLOAD_OBJECT;
+                break;
+            case 'klictyPermitUploadLinks' :
+                if ($t == 'true') $r = true; else $r = self::APPLICATION_DEFAULT_PERMIT_UPLOAD_LINKS;
+                break;
+            case 'klictyPermitPublicUploadObject' :
+                if ($t == 'true') $r = true; else $r = self::APPLICATION_DEFAULT_PERMIT_PUBLIC_UPLOAD_OBJECT;
+                break;
+            case 'klictyPermitPublicUploadLinks' :
+                if ($t == 'true') $r = true; else $r = self::APPLICATION_DEFAULT_PERMIT_PUBLIC_UPLOAD_LINKS;
+                break;
 //			case 'klictyLogUnlockEntity' :				if ( $t == 'true' )		$r = true;		else $r = self::APPLICATION_DEFAULT_LOG_UNLOCK_ENTITY;				break;
 //			case 'klictyLogLockEntity' :				if ( $t == 'true' )		$r = true;		else $r = self::APPLICATION_DEFAULT_LOG_LOCK_ENTITY;					break;
-			case 'klictyLoadModules' :					if ( $t != '' )			$r = $t;		else $r = self::APPLICATION_DEFAULT_LOAD_MODULES;					break;
-			default : $r = false; // Si l'option est inconnue, retourne false.
-		}
-		unset($t);
-		return $r;
-	}
+            case 'klictyLoadModules' :
+                if ($t != '') $r = $t; else $r = self::APPLICATION_DEFAULT_LOAD_MODULES;
+                break;
+            default :
+                $r = false; // Si l'option est inconnue, retourne false.
+        }
+        unset($t);
+        return $r;
+    }
 
 
+    /**
+     * Marque un objet.
+     *
+     * @param string $object
+     */
+    public function setMarkObject($object)
+    {
+        $list = $this->_nebuleInstance->getSessionStore('klictyObjectMarkList');
+        if ($list === false)
+            $list = array();
+        $list[$object] = true;
+        $this->_nebuleInstance->setSessionStore('klictyObjectMarkList', $list);
+        unset($list);
+    }
 
-	/**
-	 * Marque un objet.
-	 *
-	 * @param string $object
-	 */
-	public function setMarkObject($object)
-	{
-		$list = $this->_nebuleInstance->getSessionStore('klictyObjectMarkList');
-		if ( $list === false )
-			$list = array();
-		$list[$object] = true;
-		$this->_nebuleInstance->setSessionStore('klictyObjectMarkList', $list);
-		unset($list);
-	}
+    /**
+     * Supprime la marque d'un objet.
+     *
+     * @param string $object
+     */
+    public function setUnmarkObject($object)
+    {
+        $list = $this->_nebuleInstance->getSessionStore('klictyObjectMarkList');
+        if ($list === false)
+            return;
+        unset($list[$object]);
+        $this->_nebuleInstance->setSessionStore('klictyObjectMarkList', $list);
+        unset($list);
+    }
 
-	/**
-	 * Supprime la marque d'un objet.
-	 *
-	 * @param string $object
-	 */
-	public function setUnmarkObject($object)
-	{
-		$list = $this->_nebuleInstance->getSessionStore('klictyObjectMarkList');
-		if ( $list === false )
-			return;
-		unset($list[$object]);
-		$this->_nebuleInstance->setSessionStore('klictyObjectMarkList', $list);
-		unset($list);
-	}
+    /**
+     * Supprime les marques de tous les objets.
+     *
+     */
+    public function setUnmarkAllObjects()
+    {
+        $list = array();
+        $this->_nebuleInstance->setSessionStore('klictyObjectMarkList', $list);
+        unset($list);
+    }
 
-	/**
-	 * Supprime les marques de tous les objets.
-	 *
-	 */
-	public function setUnmarkAllObjects()
-	{
-		$list = array();
-		$this->_nebuleInstance->setSessionStore('klictyObjectMarkList', $list);
-		unset($list);
-	}
+    /**
+     * Lit si un objet est marqué.
+     *
+     * @param string $object
+     * @return boolean
+     */
+    public function getMarkObject($object)
+    {
+        $list = $this->_nebuleInstance->getSessionStore('klictyObjectMarkList');
+        if ($list === false)
+            return false;
+        if (isset($list[$object]))
+            return true;
+        return false;
+    }
 
-	/**
-	 * Lit si un objet est marqué.
-	 *
-	 * @param string $object
-	 * @return boolean
-	 */
-	public function getMarkObject($object)
-	{
-		$list = $this->_nebuleInstance->getSessionStore('klictyObjectMarkList');
-		if ( $list === false )
-			return false;
-		if ( isset($list[$object]) )
-			return true;
-		return false;
-	}
-
-	/**
-	 * Lit la liste des objets marqués.
-	 *
-	 * @return array
-	 */
-	public function getMarkObjectList()
-	{
-		$list = $this->_nebuleInstance->getSessionStore('klictyObjectMarkList');
-		if ( $list === false )
-			$list = array();
-		return $list;
-	}
-
+    /**
+     * Lit la liste des objets marqués.
+     *
+     * @return array
+     */
+    public function getMarkObjectList()
+    {
+        $list = $this->_nebuleInstance->getSessionStore('klictyObjectMarkList');
+        if ($list === false)
+            $list = array();
+        return $list;
+    }
 
 
-	/**
-	 * Lit le temps de vie de l'objet.
-	 *
-	 * @param string $object
-	 * @return string
-	 */
-	public function getObjectLifetime(Node $object)
-	{
-		return $object->getProperty(Application::APPLICATION_EXPIRATION_DATE, 'all');
-	}
+    /**
+     * Lit le temps de vie de l'objet.
+     *
+     * @param string $object
+     * @return string
+     */
+    public function getObjectLifetime(Node $object)
+    {
+        return $object->getProperty(Application::APPLICATION_EXPIRATION_DATE, 'all');
+    }
 
-	/**
-	 * Lit le nombre de vues de l'objet.
-	 *
-	 * @param string $object
-	 * @return string
-	 */
-	public function getObjectShowtime(Node $object)
-	{
-		return $object->getProperty(Application::APPLICATION_EXPIRATION_COUNT, 'all');
-	}
+    /**
+     * Lit le nombre de vues de l'objet.
+     *
+     * @param string $object
+     * @return string
+     */
+    public function getObjectShowtime(Node $object)
+    {
+        return $object->getProperty(Application::APPLICATION_EXPIRATION_COUNT, 'all');
+    }
 
-	/**
-	 * Lit si l'objet est expiré en temps de vie.
-	 * Un objet sans durée de vie n'expire jamais.
-	 *
-	 * @param Node $object
-	 * @return boolean
-	 */
-	public function getObjectLifetimeExpired(Node $object)
-	{
-		// Liste les liens à la recherche de la propriété.
-		$link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
-		if ( ! is_a($link, 'link') )
-		{
-			return false;
-		}
+    /**
+     * Lit si l'objet est expiré en temps de vie.
+     * Un objet sans durée de vie n'expire jamais.
+     *
+     * @param Node $object
+     * @return boolean
+     */
+    public function getObjectLifetimeExpired(Node $object)
+    {
+        // Liste les liens à la recherche de la propriété.
+        $link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
+        if (!is_a($link, 'link')) {
+            return false;
+        }
 
-		// Extrait la date du lien d'expiration.
-		$objectEndDate = date_create($link->getDate());
-		if ( ! $objectEndDate )
-		{
-			return false;
-		}
+        // Extrait la date du lien d'expiration.
+        $objectEndDate = date_create($link->getDate());
+        if (!$objectEndDate) {
+            return false;
+        }
 
-		// Extrait la date courante.
-		$currentDate = date_create('now');
+        // Extrait la date courante.
+        $currentDate = date_create('now');
 
-		// Calcul la fin du temps de vie.
-		switch ( $this->getObjectLifetime($object) )
-		{
-			case '1h': date_add($objectEndDate, date_interval_create_from_date_string('1 hour'));	break;
-			case '2h': date_add($objectEndDate, date_interval_create_from_date_string('2 hours'));	break;
-			case '1d': date_add($objectEndDate, date_interval_create_from_date_string('1 days'));	break;
-			case '2d': date_add($objectEndDate, date_interval_create_from_date_string('2 days'));	break;
-			case '1w': date_add($objectEndDate, date_interval_create_from_date_string('1 week'));	break;
-			case '2w': date_add($objectEndDate, date_interval_create_from_date_string('2 weeks'));	break;
-			case '1m': date_add($objectEndDate, date_interval_create_from_date_string('1 month'));	break;
-			case '2m': date_add($objectEndDate, date_interval_create_from_date_string('2 months'));	break;
-			case '1y': date_add($objectEndDate, date_interval_create_from_date_string('1 year'));	break;
-			case '2y': date_add($objectEndDate, date_interval_create_from_date_string('2 years'));	break;
-		}
+        // Calcul la fin du temps de vie.
+        switch ($this->getObjectLifetime($object)) {
+            case '1h':
+                date_add($objectEndDate, date_interval_create_from_date_string('1 hour'));
+                break;
+            case '2h':
+                date_add($objectEndDate, date_interval_create_from_date_string('2 hours'));
+                break;
+            case '1d':
+                date_add($objectEndDate, date_interval_create_from_date_string('1 days'));
+                break;
+            case '2d':
+                date_add($objectEndDate, date_interval_create_from_date_string('2 days'));
+                break;
+            case '1w':
+                date_add($objectEndDate, date_interval_create_from_date_string('1 week'));
+                break;
+            case '2w':
+                date_add($objectEndDate, date_interval_create_from_date_string('2 weeks'));
+                break;
+            case '1m':
+                date_add($objectEndDate, date_interval_create_from_date_string('1 month'));
+                break;
+            case '2m':
+                date_add($objectEndDate, date_interval_create_from_date_string('2 months'));
+                break;
+            case '1y':
+                date_add($objectEndDate, date_interval_create_from_date_string('1 year'));
+                break;
+            case '2y':
+                date_add($objectEndDate, date_interval_create_from_date_string('2 years'));
+                break;
+        }
 
-		if ( $currentDate > $objectEndDate )
-		{
-			return true;
-		}
+        if ($currentDate > $objectEndDate) {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * Lit si l'objet a ou avait une expiration en temps de vie.
-	 *
-	 * @param Node $object
-	 * @return boolean
-	 */
-	public function getObjectHaveLifetime(Node $object)
-	{
-		// Liste les liens à la recherche de la propriété.
-		$link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
-		if ( is_a($link, 'link') )
-		{
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Lit si l'objet a ou avait une expiration en temps de vie.
+     *
+     * @param Node $object
+     * @return boolean
+     */
+    public function getObjectHaveLifetime(Node $object)
+    {
+        // Liste les liens à la recherche de la propriété.
+        $link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
+        if (is_a($link, 'link')) {
+            return true;
+        }
+        return false;
+    }
 
-	/**
-	 * Lit si l'objet est expiré en nombre de vues.
-	 *
-	 * @param Node $object
-	 * @return boolean
-	 */
-	public function getObjectShowtimeExpired(Node $object)
-	{
-		$count = $object->getProperty(Application::APPLICATION_EXPIRATION_COUNT, 'all');
-		if ( $count == '' )
-		{
-			return false;
-		}
-		// ...
-		return false;
-	}
+    /**
+     * Lit si l'objet est expiré en nombre de vues.
+     *
+     * @param Node $object
+     * @return boolean
+     */
+    public function getObjectShowtimeExpired(Node $object)
+    {
+        $count = $object->getProperty(Application::APPLICATION_EXPIRATION_COUNT, 'all');
+        if ($count == '') {
+            return false;
+        }
+        // ...
+        return false;
+    }
 
-	/**
-	 * Lit le temps de vie restant de l'objet.
-	 *
-	 * @param Node $object
-	 * @return string
-	 */
-	public function getObjectLifetimeToLive(Node $object)
-	{
-		// Liste les liens à la recherche de la propriété.
-		$link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
-		if ( ! is_a($link, 'link') )
-		{
-			return '/';
-		}
+    /**
+     * Lit le temps de vie restant de l'objet.
+     *
+     * @param Node $object
+     * @return string
+     */
+    public function getObjectLifetimeToLive(Node $object)
+    {
+        // Liste les liens à la recherche de la propriété.
+        $link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
+        if (!is_a($link, 'link')) {
+            return '/';
+        }
 
-		// Extrait la date courante.
-		$currentDate = new DateTime('now');
+        // Extrait la date courante.
+        $currentDate = new DateTime('now');
 
-		// Extrait la date du lien d'expiration.
-		$objectEndDate = new DateTime($link->getDate());
-		if ( $objectEndDate === false )
-		{
-			return '/';
-		}
+        // Extrait la date du lien d'expiration.
+        $objectEndDate = new DateTime($link->getDate());
+        if ($objectEndDate === false) {
+            return '/';
+        }
 
-		// Calcul la fin du temps de vie.
-		switch ( $this->getObjectLifetime($object) )
-		{
-			case '1h': $objectEndDate->add(date_interval_create_from_date_string('1 hour'));	break;
-			case '2h': $objectEndDate->add(date_interval_create_from_date_string('2 hours'));	break;
-			case '1d': $objectEndDate->add(date_interval_create_from_date_string('1 days'));	break;
-			case '2d': $objectEndDate->add(date_interval_create_from_date_string('2 days'));	break;
-			case '1w': $objectEndDate->add(date_interval_create_from_date_string('1 week'));	break;
-			case '2w': $objectEndDate->add(date_interval_create_from_date_string('2 weeks'));	break;
-			case '1m': $objectEndDate->add(date_interval_create_from_date_string('1 month'));	break;
-			case '2m': $objectEndDate->add(date_interval_create_from_date_string('2 months'));	break;
-			case '1y': $objectEndDate->add(date_interval_create_from_date_string('1 year'));	break;
-			case '2y': $objectEndDate->add(date_interval_create_from_date_string('2 years'));	break;
-		}
+        // Calcul la fin du temps de vie.
+        switch ($this->getObjectLifetime($object)) {
+            case '1h':
+                $objectEndDate->add(date_interval_create_from_date_string('1 hour'));
+                break;
+            case '2h':
+                $objectEndDate->add(date_interval_create_from_date_string('2 hours'));
+                break;
+            case '1d':
+                $objectEndDate->add(date_interval_create_from_date_string('1 days'));
+                break;
+            case '2d':
+                $objectEndDate->add(date_interval_create_from_date_string('2 days'));
+                break;
+            case '1w':
+                $objectEndDate->add(date_interval_create_from_date_string('1 week'));
+                break;
+            case '2w':
+                $objectEndDate->add(date_interval_create_from_date_string('2 weeks'));
+                break;
+            case '1m':
+                $objectEndDate->add(date_interval_create_from_date_string('1 month'));
+                break;
+            case '2m':
+                $objectEndDate->add(date_interval_create_from_date_string('2 months'));
+                break;
+            case '1y':
+                $objectEndDate->add(date_interval_create_from_date_string('1 year'));
+                break;
+            case '2y':
+                $objectEndDate->add(date_interval_create_from_date_string('2 years'));
+                break;
+        }
 
-		// Calcule le différentiel de date.
-		$ttl = $objectEndDate->diff($currentDate);
+        // Calcule le différentiel de date.
+        $ttl = $objectEndDate->diff($currentDate);
 
-		// Vérifie le différentiel de date.
-		if ( $objectEndDate <= $currentDate )
-		{
-			return '/';
-		}
+        // Vérifie le différentiel de date.
+        if ($objectEndDate <= $currentDate) {
+            return '/';
+        }
 
-		$result = '';
+        $result = '';
 
-		// Calcule les intervales.
-		$years		= $ttl->format('%y');
-		$months		= $ttl->format('%m');
-		$days		= $ttl->format('%d');
-		$hours		= $ttl->format('%h');
-		$minutes	= $ttl->format('%i');
-		$seconds	= $ttl->format('%s');
+        // Calcule les intervales.
+        $years = $ttl->format('%y');
+        $months = $ttl->format('%m');
+        $days = $ttl->format('%d');
+        $hours = $ttl->format('%h');
+        $minutes = $ttl->format('%i');
+        $seconds = $ttl->format('%s');
 
-		// Affichage.
-		if ( $years != 0 )
-		{
-			$result .= $years.' ';
-			if ( $years > 1 )	$result .= $this->_traductionInstance->getTraduction('::Years');
-			else				$result .= $this->_traductionInstance->getTraduction('::Year');
-			if ( $months != 0 )
-			{
-				$result .= ' '.$this->_traductionInstance->getTraduction('::and').' '.$months.' ';
-				if ( $months > 1 )	$result .= $this->_traductionInstance->getTraduction('::Months');
-				else				$result .= $this->_traductionInstance->getTraduction('::Month');
-			}
-		}
-		elseif ( $months != 0 )
-		{
-			$result .= $months.' ';
-			if ( $months > 1 )	$result .= $this->_traductionInstance->getTraduction('::Months');
-			else				$result .= $this->_traductionInstance->getTraduction('::Month');
-			if ( $days != 0 )
-			{
-				$result .= ' '.$this->_traductionInstance->getTraduction('::and').' '.$days.' ';
-				if ( $days > 1 )	$result .= $this->_traductionInstance->getTraduction('::Days');
-				else				$result .= $this->_traductionInstance->getTraduction('::Day');
-			}
-		}
-		elseif ( $days != 0 )
-		{
-			$result .= $days.' ';
-			if ( $days > 1 )	$result .= $this->_traductionInstance->getTraduction('::Days');
-			else				$result .= $this->_traductionInstance->getTraduction('::Day');
-			if ( $hours != 0 )
-			{
-				$result .= ' '.$this->_traductionInstance->getTraduction('::and').' '.$hours.' ';
-				if ( $hours > 1 )	$result .= $this->_traductionInstance->getTraduction('::Hours');
-				else				$result .= $this->_traductionInstance->getTraduction('::Hour');
-			}
-		}
-		elseif ( $hours != 0 )
-		{
-			$result .= $hours.' ';
-			if ( $hours > 1 )	$result .= $this->_traductionInstance->getTraduction('::Hours');
-			else				$result .= $this->_traductionInstance->getTraduction('::Hour');
-			if ( $minutes != 0 )
-			{
-				$result .= ' '.$this->_traductionInstance->getTraduction('::and').' '.$minutes.' ';
-				if ( $minutes > 1 )	$result .= $this->_traductionInstance->getTraduction('::Minutes');
-				else				$result .= $this->_traductionInstance->getTraduction('::Minute');
-			}
-		}
-		elseif ( $minutes != 0 )
-		{
-			$result .= $minutes.' ';
-			if ( $minutes > 1 )	$result .= $this->_traductionInstance->getTraduction('::Minutes');
-			else				$result .= $this->_traductionInstance->getTraduction('::Minute');
-			$result .= ' '.$this->_traductionInstance->getTraduction('::and').' '.$seconds.' ';
-			if ( $seconds > 1 )	$result .= $this->_traductionInstance->getTraduction('::Seconds');
-			else				$result .= $this->_traductionInstance->getTraduction('::Second');
-		}
-		elseif ( $seconds != 0 )
-		{
-			$result .= $seconds.' ';
-			if ( $seconds > 1 )	$result .= $this->_traductionInstance->getTraduction('::Seconds');
-			else				$result .= $this->_traductionInstance->getTraduction('::Second');
-		}
+        // Affichage.
+        if ($years != 0) {
+            $result .= $years . ' ';
+            if ($years > 1) $result .= $this->_traductionInstance->getTraduction('::Years');
+            else                $result .= $this->_traductionInstance->getTraduction('::Year');
+            if ($months != 0) {
+                $result .= ' ' . $this->_traductionInstance->getTraduction('::and') . ' ' . $months . ' ';
+                if ($months > 1) $result .= $this->_traductionInstance->getTraduction('::Months');
+                else                $result .= $this->_traductionInstance->getTraduction('::Month');
+            }
+        } elseif ($months != 0) {
+            $result .= $months . ' ';
+            if ($months > 1) $result .= $this->_traductionInstance->getTraduction('::Months');
+            else                $result .= $this->_traductionInstance->getTraduction('::Month');
+            if ($days != 0) {
+                $result .= ' ' . $this->_traductionInstance->getTraduction('::and') . ' ' . $days . ' ';
+                if ($days > 1) $result .= $this->_traductionInstance->getTraduction('::Days');
+                else                $result .= $this->_traductionInstance->getTraduction('::Day');
+            }
+        } elseif ($days != 0) {
+            $result .= $days . ' ';
+            if ($days > 1) $result .= $this->_traductionInstance->getTraduction('::Days');
+            else                $result .= $this->_traductionInstance->getTraduction('::Day');
+            if ($hours != 0) {
+                $result .= ' ' . $this->_traductionInstance->getTraduction('::and') . ' ' . $hours . ' ';
+                if ($hours > 1) $result .= $this->_traductionInstance->getTraduction('::Hours');
+                else                $result .= $this->_traductionInstance->getTraduction('::Hour');
+            }
+        } elseif ($hours != 0) {
+            $result .= $hours . ' ';
+            if ($hours > 1) $result .= $this->_traductionInstance->getTraduction('::Hours');
+            else                $result .= $this->_traductionInstance->getTraduction('::Hour');
+            if ($minutes != 0) {
+                $result .= ' ' . $this->_traductionInstance->getTraduction('::and') . ' ' . $minutes . ' ';
+                if ($minutes > 1) $result .= $this->_traductionInstance->getTraduction('::Minutes');
+                else                $result .= $this->_traductionInstance->getTraduction('::Minute');
+            }
+        } elseif ($minutes != 0) {
+            $result .= $minutes . ' ';
+            if ($minutes > 1) $result .= $this->_traductionInstance->getTraduction('::Minutes');
+            else                $result .= $this->_traductionInstance->getTraduction('::Minute');
+            $result .= ' ' . $this->_traductionInstance->getTraduction('::and') . ' ' . $seconds . ' ';
+            if ($seconds > 1) $result .= $this->_traductionInstance->getTraduction('::Seconds');
+            else                $result .= $this->_traductionInstance->getTraduction('::Second');
+        } elseif ($seconds != 0) {
+            $result .= $seconds . ' ';
+            if ($seconds > 1) $result .= $this->_traductionInstance->getTraduction('::Seconds');
+            else                $result .= $this->_traductionInstance->getTraduction('::Second');
+        }
 
-		return $result;
-	}
+        return $result;
+    }
 
 
-	/**
-	 * Lit le temps de vie limite de l'objet.
-	 *
-	 * @param Node $object
-	 * @return DateTime
-	 */
-	public function getObjectLifetimeEnd(Node $object)
-	{
-		// Liste les liens à la recherche de la propriété.
-		$link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
-		if ( ! is_a($link, 'link') )
-		{
-			return '';
-		}
+    /**
+     * Lit le temps de vie limite de l'objet.
+     *
+     * @param Node $object
+     * @return DateTime
+     */
+    public function getObjectLifetimeEnd(Node $object)
+    {
+        // Liste les liens à la recherche de la propriété.
+        $link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
+        if (!is_a($link, 'link')) {
+            return '';
+        }
 
-		// Extrait la date du lien d'expiration.
-		$objectEndDate = date_create($link->getDate());
-		if ( ! $objectEndDate )
-		{
-			return '';
-		}
+        // Extrait la date du lien d'expiration.
+        $objectEndDate = date_create($link->getDate());
+        if (!$objectEndDate) {
+            return '';
+        }
 
-		// Calcul la fin du temps de vie.
-		switch ( $this->getObjectLifetime($object) )
-		{
-			case '1h': date_add($objectEndDate, date_interval_create_from_date_string('1 hour'));	break;
-			case '2h': date_add($objectEndDate, date_interval_create_from_date_string('2 hours'));	break;
-			case '1d': date_add($objectEndDate, date_interval_create_from_date_string('1 days'));	break;
-			case '2d': date_add($objectEndDate, date_interval_create_from_date_string('2 days'));	break;
-			case '1w': date_add($objectEndDate, date_interval_create_from_date_string('1 week'));	break;
-			case '2w': date_add($objectEndDate, date_interval_create_from_date_string('2 weeks'));	break;
-			case '1m': date_add($objectEndDate, date_interval_create_from_date_string('1 month'));	break;
-			case '2m': date_add($objectEndDate, date_interval_create_from_date_string('2 months'));	break;
-			case '1y': date_add($objectEndDate, date_interval_create_from_date_string('1 year'));	break;
-			case '2y': date_add($objectEndDate, date_interval_create_from_date_string('2 years'));	break;
-		}
+        // Calcul la fin du temps de vie.
+        switch ($this->getObjectLifetime($object)) {
+            case '1h':
+                date_add($objectEndDate, date_interval_create_from_date_string('1 hour'));
+                break;
+            case '2h':
+                date_add($objectEndDate, date_interval_create_from_date_string('2 hours'));
+                break;
+            case '1d':
+                date_add($objectEndDate, date_interval_create_from_date_string('1 days'));
+                break;
+            case '2d':
+                date_add($objectEndDate, date_interval_create_from_date_string('2 days'));
+                break;
+            case '1w':
+                date_add($objectEndDate, date_interval_create_from_date_string('1 week'));
+                break;
+            case '2w':
+                date_add($objectEndDate, date_interval_create_from_date_string('2 weeks'));
+                break;
+            case '1m':
+                date_add($objectEndDate, date_interval_create_from_date_string('1 month'));
+                break;
+            case '2m':
+                date_add($objectEndDate, date_interval_create_from_date_string('2 months'));
+                break;
+            case '1y':
+                date_add($objectEndDate, date_interval_create_from_date_string('1 year'));
+                break;
+            case '2y':
+                date_add($objectEndDate, date_interval_create_from_date_string('2 years'));
+                break;
+        }
 
-		return date_format($objectEndDate,'c');
+        return date_format($objectEndDate, 'c');
 
-	}
+    }
 
-	/**
-	 * Lit nombre de vues de l'objet.
-	 *
-	 * @param Node $object
-	 * @return integer
-	 */
-	public function getObjectShowtimeCount(Node $object)
-	{
-		$count = $object->getProperty(Application::APPLICATION_EXPIRATION_COUNT, 'all');
-		if ( $count == '' )
-		{
-			return 0;
-		}
-		
-		// ...
-		return 0;
-	}
+    /**
+     * Lit nombre de vues de l'objet.
+     *
+     * @param Node $object
+     * @return integer
+     */
+    public function getObjectShowtimeCount(Node $object)
+    {
+        $count = $object->getProperty(Application::APPLICATION_EXPIRATION_COUNT, 'all');
+        if ($count == '') {
+            return 0;
+        }
 
-	/**
-	 * Lit les entités qui ont vue l'objet.
-	 *
-	 * @param Node $object
-	 * @return array
-	 */
-	public function getObjectShowtimeList(Node $object)
-	{
-		$count = $object->getProperty(Application::APPLICATION_EXPIRATION_COUNT, 'all');
-		if ( $count == '' )
-		{
-			return array();
-		}
-		
-		// ...
-		return array();
-	}
+        // ...
+        return 0;
+    }
+
+    /**
+     * Lit les entités qui ont vue l'objet.
+     *
+     * @param Node $object
+     * @return array
+     */
+    public function getObjectShowtimeList(Node $object)
+    {
+        $count = $object->getProperty(Application::APPLICATION_EXPIRATION_COUNT, 'all');
+        if ($count == '') {
+            return array();
+        }
+
+        // ...
+        return array();
+    }
 }
-
-
-
-
-
-
-
-
-
 
 
 /**
@@ -574,21 +596,21 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
  */
 class Display extends Displays
 {
-	const DEFAULT_DISPLAY_MODE				= 'hlp';
-	const DEFAULT_DISPLAY_VIEW				= '1st';
-	//const DEFAULT_LINK_COMMAND				= 'lnk';
-	const DEFAULT_ABOUT_COMMAND				= 'about';
-	const DEFAULT_OBJECT_LIST_COMMAND		= 'objlst';
-	const DEFAULT_ENTITY_LIST_COMMAND		= 'entlst';
-	const DEFAULT_GROUP_LIST_COMMAND		= 'grplst';
-	const DEFAULT_OBJECT_ADD_COMMAND		= 'objadd';
-	const DEFAULT_ENTITY_ADD_COMMAND		= 'entadd';
-	const DEFAULT_GROUP_OBJECT_ADD_COMMAND	= 'grpobjadd';
-	const DEFAULT_GROUP_ENTITY_ADD_COMMAND	= 'grpentadd';
-	const DEFAULT_ENTITY_SYNC_COMMAND		= 'entsync';
-	const DEFAULT_PROTEC_COMMAND			= 'prt';
-	const DEFAULT_AUTH_COMMAND				= 'auth';
-	const DEFAULT_APPLICATION_LOGO			= "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAGF0lEQVR42u2bT0gbWRzH35vJTCZ0
+    const DEFAULT_DISPLAY_MODE = 'hlp';
+    const DEFAULT_DISPLAY_VIEW = '1st';
+    //const DEFAULT_LINK_COMMAND				= 'lnk';
+    const DEFAULT_ABOUT_COMMAND = 'about';
+    const DEFAULT_OBJECT_LIST_COMMAND = 'objlst';
+    const DEFAULT_ENTITY_LIST_COMMAND = 'entlst';
+    const DEFAULT_GROUP_LIST_COMMAND = 'grplst';
+    const DEFAULT_OBJECT_ADD_COMMAND = 'objadd';
+    const DEFAULT_ENTITY_ADD_COMMAND = 'entadd';
+    const DEFAULT_GROUP_OBJECT_ADD_COMMAND = 'grpobjadd';
+    const DEFAULT_GROUP_ENTITY_ADD_COMMAND = 'grpentadd';
+    const DEFAULT_ENTITY_SYNC_COMMAND = 'entsync';
+    const DEFAULT_PROTEC_COMMAND = 'prt';
+    const DEFAULT_AUTH_COMMAND = 'auth';
+    const DEFAULT_APPLICATION_LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAGF0lEQVR42u2bT0gbWRzH35vJTCZ0
 Qv4wA1JEqYVWLS0kBxsjrLZePDgUiobtJmehFwWpbj1lb3ZrIeghpZeeYrs0trCkSxNaq+4h3uJBSsNC1RQWhQRNzWQzmTEze4q43aLzLxN3ze84YSbvfeb3fr/f973fQADAT+AMGwLOuDUANAA0ADQA
 nGkzGf2HKIpCgiAQHMchgiAQAABEUZR4npc4jhMrlYr0vwPg9Xrtbrfb2dbWZmttbbXTNG0lSdJiNptNAABQLpcPWJYtZbPZQiaTyW9sbHxJpVK7yWQy/58FYLVa0enpaVd/f38nRVE2kiRJgiBwOfdy
 HMezLMvmcrn84uLix6mpqbVCoVCpxTih3pWgxWJBIpFIH8Mw3RiG6QJYEISDWCy2GggElkulkngqATQ1NeGTk5NX7t69OyD3TSs1juP4cDgcn5mZ+bCzs8PrEpMAAH1aH+L3+5ufPn3KMAzjMZlMaM3W
@@ -603,435 +625,561 @@ f64oJgiCcDA1NbWmG4BCoVCJxWKrWiKy2hSpRkXGYrGk3IYK2aVwIBBYVpINTooJtUqRHMfxgUBA9vNl
 B0XPBApbZPx+f/OTJ09+OHfunG77BHpYsVgsjYyMzD979uxPJfcpPh1eX1/fp2m61NXVdem0HI+LoiiFw+E3jx49+kPpvar6AxKJxLbT6Sx4PJ7LpwHA7Ozs6/Hx8TU196ruEHn79u2OzWbbr6cniKIo
 zc7Ovr53796a4S0ykiSBeDy+7XA4ClevXm3BcRwzes2Hw+E34+Pja1o0g+YusUQisZ3JZDKdnZ0OiqIcRkw+nU5vTkxM/KpmzesOoBoYX758+RFF0T2Xy3WhVr2CHMfxc3Nzv42MjCytrq7q0kfcaJUF
 Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFCCJnLgSUAAAAASUVORK5CYII=";
-	// Voir const DEFAULT_LOGO_WELCOME à la fin...
-	const DEFAULT_APPLICATION_LOGO_LINK		= '?view=about';
-	const DEFAULT_LOGO_MENUS				= '15eb7dcf0554d76797ffb388e4bb5b866e70a3a33e7d394a120e68899a16c690';
-	const DEFAULT_CSS_BACKGROUND			= 'f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499';
+    // Voir const DEFAULT_LOGO_WELCOME à la fin...
+    const DEFAULT_APPLICATION_LOGO_LINK = '?view=about';
+    const DEFAULT_LOGO_MENUS = '15eb7dcf0554d76797ffb388e4bb5b866e70a3a33e7d394a120e68899a16c690';
+    const DEFAULT_CSS_BACKGROUND = 'f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499';
 
-	// Icônes de marquage.
-	const DEFAULT_ICON_MARK					= '65fb7dbaaa90465da5cb270da6d3f49614f6fcebb3af8c742e4efaa2715606f0';
-	const DEFAULT_ICON_UNMARK				= 'ee1d761617468ade89cd7a77ac96d4956d22a9d4cbedbec048b0c0c1bd3d00d2';
-	const DEFAULT_ICON_UNMARKALL			= 'fa40e3e73b9c11cb5169f3916b28619853023edbbf069d3bd9be76387f03a859';
-	
-
-	
-	/**
-	 * Liste des objets nécessaires au bon fonctionnement.
-	 *
-	 * @var array
-	 */
-	protected $_neededObjectsList = array(
-			self::DEFAULT_LOGO_MENUS,
-			self::DEFAULT_ICON_ALPHA_COLOR,
-			self::DEFAULT_ICON_LC,
-			self::DEFAULT_ICON_LD,
-			self::DEFAULT_ICON_LE,
-			self::DEFAULT_ICON_LF,
-			self::DEFAULT_ICON_LK,
-			self::DEFAULT_ICON_LL,
-			self::DEFAULT_ICON_LLL,
-			self::DEFAULT_ICON_LO,
-			self::DEFAULT_ICON_LS,
-			self::DEFAULT_ICON_LU,
-			self::DEFAULT_ICON_LX,
-			self::DEFAULT_ICON_IOK,
-			self::DEFAULT_ICON_IWARN,
-			self::DEFAULT_ICON_IERR,
-			self::DEFAULT_ICON_IINFO,
-			self::DEFAULT_ICON_IMLOG,
-			self::DEFAULT_ICON_IMODIFY,
-			self::DEFAULT_ICON_IDOWNLOAD,
-			self::DEFAULT_ICON_HELP,
-			self::DEFAULT_ICON_WORLD );
-
-	/**
-	 * Constructeur.
-	 *
-	 * @param Applications $applicationInstance
-	 * @return void
-	 */
-	public function __construct(Applications $applicationInstance)
-	{
-		$this->_applicationInstance = $applicationInstance;
-	}
-	
-	/**
-	 * Initialisation des variables et instances interdépendantes.
-	 *
-	 * @return void
-	 */
-	public function initialisation()
-	{
-		$this->_nebuleInstance			= $this->_applicationInstance->getNebuleInstance();
-		$this->_ioInstance				= $this->_nebuleInstance->getIO();
-		$this->_metrologyInstance		= $this->_nebuleInstance->getMetrologyInstance();
-		$this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL); // Log
-		$this->_traductionInstance		= $this->_applicationInstance->getTraductionInstance();
-		$this->_actionInstance			= $this->_applicationInstance->getActionInstance();
-		$this->_unlocked				= $this->_nebuleInstance->getCurrentEntityUnlocked();
-		
-		$this->setHtlinkObjectPrefix('?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-				.'&'.nebule::COMMAND_SELECT_OBJECT.'=');
-		$this->setHtlinkGroupPrefix( '?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-				.'&'.nebule::COMMAND_SELECT_OBJECT.'=');
-		$this->setHtlinkConversationPrefix( '?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-				.'&'.nebule::COMMAND_SELECT_OBJECT.'=');
-		$this->setHtlinkEntityPrefix('?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-				.'&'.nebule::COMMAND_SELECT_OBJECT.'=');
-		$this->setHtlinkCurrencyPrefix('?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-				.'&'.nebule::COMMAND_SELECT_OBJECT.'=');
-		$this->setHtlinkTokenPoolPrefix('?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-				.'&'.nebule::COMMAND_SELECT_OBJECT.'=');
-		$this->setHtlinkTokenPrefix('?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-				.'&'.nebule::COMMAND_SELECT_OBJECT.'=');
-		$this->setHtlinkTransactionPrefix('?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-				.'&'.nebule::COMMAND_SELECT_OBJECT.'=');
-		$this->setHtlinkWalletPrefix('?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-				.'&'.nebule::COMMAND_SELECT_OBJECT.'=');
-		
-		$this->_findLogoApplication();
-		$this->_findLogoApplicationLink();
-		$this->_findLogoApplicationName();
-		$this->_findCurrentDisplayView();
-		$this->_findCurrentAction();
-		$this->_findInlineContentID();
-		
-		// Si en mode téléchargement d'objet ou de lien, pas de traduction.
-		if ( $this->_traductionInstance !== null )
-		{
-			$this->_currentDisplayLanguage	= $this->_traductionInstance->getCurrentLanguage();
-		}
-	}
-	
-	/**
-	 * Initialisation des variables et instances interdépendantes.
-	 *
-	 * @return void
-	 */
-	public function initialisation2()
-	{
-		$this->_nebuleInstance			= $this->_applicationInstance->getNebuleInstance();
-		$this->_ioInstance				= $this->_nebuleInstance->getIO();
-		$this->_metrologyInstance		= $this->_nebuleInstance->getMetrologyInstance();
-		$this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL); // Log
-		$this->_traductionInstance		= $this->_applicationInstance->getTraductionInstance();
-		$this->_actionInstance			= $this->_applicationInstance->getActionInstance();
-		$this->_unlocked				= $this->_nebuleInstance->getCurrentEntityUnlocked();
-		
-		$this->setHtlinkObjectPrefix('?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-				.'&'.nebule::COMMAND_SELECT_OBJECT.'=');
-		$this->setHtlinkGroupPrefix( '?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-				.'&'.nebule::COMMAND_SELECT_OBJECT.'=');
-		$this->setHtlinkConversationPrefix( '?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-				.'&'.nebule::COMMAND_SELECT_OBJECT.'=');
-		$this->setHtlinkEntityPrefix('?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-				.'&'.nebule::COMMAND_SELECT_OBJECT.'=');
-		$this->setHtlinkCurrencyPrefix('?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-				.'&'.nebule::COMMAND_SELECT_OBJECT.'=');
-		$this->setHtlinkTokenPoolPrefix('?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-				.'&'.nebule::COMMAND_SELECT_OBJECT.'=');
-		$this->setHtlinkTokenPrefix('?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-				.'&'.nebule::COMMAND_SELECT_OBJECT.'=');
-		$this->setHtlinkTransactionPrefix('?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-				.'&'.nebule::COMMAND_SELECT_OBJECT.'=');
-		$this->setHtlinkWalletPrefix('?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-				.'&'.nebule::COMMAND_SELECT_OBJECT.'=');
-		
-		$this->_findLogoApplication();
-		$this->_findLogoApplicationLink();
-		$this->_findLogoApplicationName();
-		$this->_findCurrentDisplayView();
-		$this->_findCurrentAction();
-		$this->_findInlineContentID();
-		
-		// Si en mode téléchargement d'objet ou de lien, pas de traduction.
-		if ( $this->_traductionInstance !== null )
-		{
-			$this->_currentDisplayLanguage	= $this->_traductionInstance->getCurrentLanguage();
-		}
-	}
+    // Icônes de marquage.
+    const DEFAULT_ICON_MARK = '65fb7dbaaa90465da5cb270da6d3f49614f6fcebb3af8c742e4efaa2715606f0';
+    const DEFAULT_ICON_UNMARK = 'ee1d761617468ade89cd7a77ac96d4956d22a9d4cbedbec048b0c0c1bd3d00d2';
+    const DEFAULT_ICON_UNMARKALL = 'fa40e3e73b9c11cb5169f3916b28619853023edbbf069d3bd9be76387f03a859';
 
 
+    /**
+     * Liste des objets nécessaires au bon fonctionnement.
+     *
+     * @var array
+     */
+    protected $_neededObjectsList = array(
+        self::DEFAULT_LOGO_MENUS,
+        self::DEFAULT_ICON_ALPHA_COLOR,
+        self::DEFAULT_ICON_LC,
+        self::DEFAULT_ICON_LD,
+        self::DEFAULT_ICON_LE,
+        self::DEFAULT_ICON_LF,
+        self::DEFAULT_ICON_LK,
+        self::DEFAULT_ICON_LL,
+        self::DEFAULT_ICON_LLL,
+        self::DEFAULT_ICON_LO,
+        self::DEFAULT_ICON_LS,
+        self::DEFAULT_ICON_LU,
+        self::DEFAULT_ICON_LX,
+        self::DEFAULT_ICON_IOK,
+        self::DEFAULT_ICON_IWARN,
+        self::DEFAULT_ICON_IERR,
+        self::DEFAULT_ICON_IINFO,
+        self::DEFAULT_ICON_IMLOG,
+        self::DEFAULT_ICON_IMODIFY,
+        self::DEFAULT_ICON_IDOWNLOAD,
+        self::DEFAULT_ICON_HELP,
+        self::DEFAULT_ICON_WORLD);
 
-	/**
-	 * Revérifie le verrouillage de l'entité en cours.
-	 */
-	public function refreshUnlocked()
-	{
-		$this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
-	}
+    /**
+     * Constructeur.
+     *
+     * @param Applications $applicationInstance
+     * @return void
+     */
+    public function __construct(Applications $applicationInstance)
+    {
+        $this->_applicationInstance = $applicationInstance;
+    }
+
+    /**
+     * Initialisation des variables et instances interdépendantes.
+     *
+     * @return void
+     */
+    public function initialisation()
+    {
+        $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
+        $this->_ioInstance = $this->_nebuleInstance->getIO();
+        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
+        $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL); // Log
+        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
+        $this->_actionInstance = $this->_applicationInstance->getActionInstance();
+        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+
+        $this->setHtlinkObjectPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+        $this->setHtlinkGroupPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+        $this->setHtlinkConversationPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+        $this->setHtlinkEntityPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+        $this->setHtlinkCurrencyPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+        $this->setHtlinkTokenPoolPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+        $this->setHtlinkTokenPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+        $this->setHtlinkTransactionPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+        $this->setHtlinkWalletPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+
+        $this->_findLogoApplication();
+        $this->_findLogoApplicationLink();
+        $this->_findLogoApplicationName();
+        $this->_findCurrentDisplayView();
+        $this->_findCurrentAction();
+        $this->_findInlineContentID();
+
+        // Si en mode téléchargement d'objet ou de lien, pas de traduction.
+        if ($this->_traductionInstance !== null) {
+            $this->_currentDisplayLanguage = $this->_traductionInstance->getCurrentLanguage();
+        }
+    }
+
+    /**
+     * Initialisation des variables et instances interdépendantes.
+     *
+     * @return void
+     */
+    public function initialisation2()
+    {
+        $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
+        $this->_ioInstance = $this->_nebuleInstance->getIO();
+        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
+        $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL); // Log
+        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
+        $this->_actionInstance = $this->_applicationInstance->getActionInstance();
+        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+
+        $this->setHtlinkObjectPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+        $this->setHtlinkGroupPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+        $this->setHtlinkConversationPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+        $this->setHtlinkEntityPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+        $this->setHtlinkCurrencyPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+        $this->setHtlinkTokenPoolPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+        $this->setHtlinkTokenPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+        $this->setHtlinkTransactionPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+        $this->setHtlinkWalletPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+
+        $this->_findLogoApplication();
+        $this->_findLogoApplicationLink();
+        $this->_findLogoApplicationName();
+        $this->_findCurrentDisplayView();
+        $this->_findCurrentAction();
+        $this->_findInlineContentID();
+
+        // Si en mode téléchargement d'objet ou de lien, pas de traduction.
+        if ($this->_traductionInstance !== null) {
+            $this->_currentDisplayLanguage = $this->_traductionInstance->getCurrentLanguage();
+        }
+    }
+
+
+    /**
+     * Revérifie le verrouillage de l'entité en cours.
+     */
+    public function refreshUnlocked()
+    {
+        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+    }
 
 
 
-	/*
+    /*
 	 * --------------------------------------------------------------------------------
 	 * La personnalisation.
 	 * --------------------------------------------------------------------------------
 	 *
 	 * Pour l'instant, rien n'est personnalisable dans le style, mais ça viendra...
 	 */
-	/**
-	 * Variable du logo de l'application.
-	 * @var string
-	 */
-	private $_logoApplication = '';
-	
-	/**
-	 * Variable du logo de l'application.
-	 * @var string
-	 */
-	private $_logoApplicationWelcome = '';
-	
-	/**
-	 * Recherche le logo de l'application.
-	 */
-	private function _findLogoApplication()
-	{
-		$this->_logoApplication = self::DEFAULT_APPLICATION_LOGO;
-		$this->_logoApplicationWelcome = self::DEFAULT_LOGO_WELCOME;
-		// A faire...
-	}
-	
-	/**
-	 * Variable du lien du logo de l'application.
-	 * @var string
-	 */
-	private $_logoApplicationLink = '';
-	
-	/**
-	 * Recherche le lien du logo de l'application.
-	 */
-	private function _findLogoApplicationLink()
-	{
-		$this->_logoApplicationLink = self::DEFAULT_APPLICATION_LOGO_LINK;
-		// A faire...
-	}
-	
-	/**
-	 * Variable du nom de l'application.
-	 * @var string
-	 */
-	private $_logoApplicationName = '';
-	
-	/**
-	 * Recherche le nom de l'application.
-	 */
-	private function _findLogoApplicationName()
-	{
-		$this->_logoApplicationName = Application::APPLICATION_LICENCE_NAME;
-		// A faire...
-	}
+    /**
+     * Variable du logo de l'application.
+     * @var string
+     */
+    private $_logoApplication = '';
+
+    /**
+     * Variable du logo de l'application.
+     * @var string
+     */
+    private $_logoApplicationWelcome = '';
+
+    /**
+     * Recherche le logo de l'application.
+     */
+    private function _findLogoApplication()
+    {
+        $this->_logoApplication = self::DEFAULT_APPLICATION_LOGO;
+        $this->_logoApplicationWelcome = self::DEFAULT_LOGO_WELCOME;
+        // A faire...
+    }
+
+    /**
+     * Variable du lien du logo de l'application.
+     * @var string
+     */
+    private $_logoApplicationLink = '';
+
+    /**
+     * Recherche le lien du logo de l'application.
+     */
+    private function _findLogoApplicationLink()
+    {
+        $this->_logoApplicationLink = self::DEFAULT_APPLICATION_LOGO_LINK;
+        // A faire...
+    }
+
+    /**
+     * Variable du nom de l'application.
+     * @var string
+     */
+    private $_logoApplicationName = '';
+
+    /**
+     * Recherche le nom de l'application.
+     */
+    private function _findLogoApplicationName()
+    {
+        $this->_logoApplicationName = Application::APPLICATION_LICENCE_NAME;
+        // A faire...
+    }
 
 
-
-	/**
-	 * Liste des vues disponibles.
-	 *
-	 * @var array of string
-	 */
-	protected $_listDisplayViews = array(
-			self::DEFAULT_ABOUT_COMMAND,
-			self::DEFAULT_OBJECT_LIST_COMMAND,
-			self::DEFAULT_ENTITY_LIST_COMMAND,
-			self::DEFAULT_GROUP_LIST_COMMAND,
-			nebule::COMMAND_SELECT_OBJECT,
-			nebule::COMMAND_SELECT_GROUP,
-			self::DEFAULT_OBJECT_ADD_COMMAND,
-			self::DEFAULT_ENTITY_ADD_COMMAND,
-			self::DEFAULT_GROUP_ENTITY_ADD_COMMAND,
-			self::DEFAULT_ENTITY_SYNC_COMMAND,
-			self::DEFAULT_AUTH_COMMAND,
-			self::DEFAULT_PROTEC_COMMAND);
-	
+    /**
+     * Liste des vues disponibles.
+     *
+     * @var array of string
+     */
+    protected $_listDisplayViews = array(
+        self::DEFAULT_ABOUT_COMMAND,
+        self::DEFAULT_OBJECT_LIST_COMMAND,
+        self::DEFAULT_ENTITY_LIST_COMMAND,
+        self::DEFAULT_GROUP_LIST_COMMAND,
+        nebule::COMMAND_SELECT_OBJECT,
+        nebule::COMMAND_SELECT_GROUP,
+        self::DEFAULT_OBJECT_ADD_COMMAND,
+        self::DEFAULT_ENTITY_ADD_COMMAND,
+        self::DEFAULT_GROUP_ENTITY_ADD_COMMAND,
+        self::DEFAULT_ENTITY_SYNC_COMMAND,
+        self::DEFAULT_AUTH_COMMAND,
+        self::DEFAULT_PROTEC_COMMAND);
 
 
-	/**
-	 * Vérifie que toutes les icônes déclarées soient présentes.
-	 * Sinon les synchronises.
-	 */
-	private function _checkDefinedIcons()
-	{
+    /**
+     * Vérifie que toutes les icônes déclarées soient présentes.
+     * Sinon les synchronises.
+     */
+    private function _checkDefinedIcons()
+    {
 
-	}
+    }
 
 
-
-	/**
-	 * Affichage de la page.
-	 */
-	public function display()
-	{
-		/*
+    /**
+     * Affichage de la page.
+     */
+    public function display()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
  		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Lit si la variable GET existe.
-		if ( filter_has_var(INPUT_GET, self::DEFAULT_INLINE_COMMAND) )
-		{
-			$this->_displayInline();
-		}
-		else
-		{
-			$this->_displayFull();
-		}
-	}
+        // Lit si la variable GET existe.
+        if (filter_has_var(INPUT_GET, self::DEFAULT_INLINE_COMMAND)) {
+            $this->_displayInline();
+        } else {
+            $this->_displayFull();
+        }
+    }
 
-	/**
-	 * Affichage de la page complète.
-	 */
-	private function _displayFull()
-	{
-		global	$applicationName, $applicationSurname, $applicationLicence, $applicationAuthor,
-				$applicationWebsite;
-		
-		$this->_metrologyInstance->addLog('Display full', Metrology::LOG_LEVEL_NORMAL); // Log
+    /**
+     * Affichage de la page complète.
+     */
+    private function _displayFull()
+    {
+        global $applicationName, $applicationSurname, $applicationLicence, $applicationAuthor,
+               $applicationWebsite;
 
-		// Récupère l'instance de la classe 'Actions' des actions génériques, celle-ci est instanciée après celle de 'Display'.
-		//$this->_actionInstance = $this->_applicationInstance->getActionInstance();
+        $this->_metrologyInstance->addLog('Display full', Metrology::LOG_LEVEL_NORMAL); // Log
 
-?>
-<!DOCTYPE html>
-<html lang="<?php echo $this->_currentDisplayLanguage; ?>">
-	<head>
-		<meta charset="utf-8" />
-		<title><?php echo $applicationName.' - '.$this->_nebuleInstance->getCurrentEntityInstance()->getFullName('all'); ?></title>
-		<link rel="icon" type="image/png" href="favicon.png" />
-		<meta name="keywords" content="<?php echo $applicationSurname; ?>" />
-		<meta name="description" content="<?php echo $applicationName.' - '; $this->_traductionInstance->echoTraduction('::::HtmlHeadDescription'); ?>" />
-		<meta name="author" content="<?php echo $applicationAuthor.' - '.$applicationWebsite; ?>" />
-		<meta name="licence" content="<?php echo $applicationLicence; ?>" />
-<?php
-		$this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG); // Log
-		$this->commonCSS();
-		$this->displayCSS();
+        // Récupère l'instance de la classe 'Actions' des actions génériques, celle-ci est instanciée après celle de 'Display'.
+        //$this->_actionInstance = $this->_applicationInstance->getActionInstance();
 
-		$this->_metrologyInstance->addLog('Display vbs', Metrology::LOG_LEVEL_DEBUG); // Log
-		$this->_displayScripts();
-?>
+        ?>
+        <!DOCTYPE html>
+        <html lang="<?php echo $this->_currentDisplayLanguage; ?>">
+        <head>
+            <meta charset="utf-8"/>
+            <title><?php echo $applicationName . ' - ' . $this->_nebuleInstance->getCurrentEntityInstance()->getFullName('all'); ?></title>
+            <link rel="icon" type="image/png" href="favicon.png"/>
+            <meta name="keywords" content="<?php echo $applicationSurname; ?>"/>
+            <meta name="description" content="<?php echo $applicationName . ' - ';
+            $this->_traductionInstance->echoTraduction('::::HtmlHeadDescription'); ?>"/>
+            <meta name="author" content="<?php echo $applicationAuthor . ' - ' . $applicationWebsite; ?>"/>
+            <meta name="licence" content="<?php echo $applicationLicence; ?>"/>
+            <?php
+            $this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->commonCSS();
+            $this->displayCSS();
 
-	</head>
-	<body>
-<?php
-		$this->_metrologyInstance->addLog('Display actions', Metrology::LOG_LEVEL_DEBUG); // Log
-		$this->_displayActions();
+            $this->_metrologyInstance->addLog('Display vbs', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_displayScripts();
+            ?>
 
-		$this->_metrologyInstance->addLog('Display header', Metrology::LOG_LEVEL_DEBUG); // Log
-		$this->_displayHeader();
+        </head>
+        <body>
+        <?php
+        $this->_metrologyInstance->addLog('Display actions', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_displayActions();
 
-		$this->_metrologyInstance->addLog('Display menu apps', Metrology::LOG_LEVEL_DEBUG); // Log
-		$this->_displayMenuApplications();
-?>
-		<div class="layout-main">
-				<div class="layout-main">
-					<div class="layout-content">
-						<div id="curseur" class="infobulle"></div>
-						<div class="content">
-<?php
-		$this->_metrologyInstance->addLog('Display checks', Metrology::LOG_LEVEL_DEBUG); // Log
-		$this->_displayChecks();
+        $this->_metrologyInstance->addLog('Display header', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_displayHeader();
 
-		$this->_metrologyInstance->addLog('Display content', Metrology::LOG_LEVEL_DEBUG); // Log
-		$this->_displayContent();
+        $this->_metrologyInstance->addLog('Display menu apps', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_displayMenuApplications();
+        ?>
+        <div class="layout-main">
+        <div class="layout-main">
+            <div class="layout-content">
+                <div id="curseur" class="infobulle"></div>
+                <div class="content">
+                    <?php
+                    $this->_metrologyInstance->addLog('Display checks', Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_displayChecks();
 
-		$this->_metrologyInstance->addLog('Display metrology', Metrology::LOG_LEVEL_DEBUG); // Log
-		$this->_displayMetrology();
-?>
+                    $this->_metrologyInstance->addLog('Display content', Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_displayContent();
 
-						</div>
-					</div>
-				</div>
-<?php
-		$this->_metrologyInstance->addLog('Display footer', Metrology::LOG_LEVEL_DEBUG); // Log
-		$this->_displayFooter();
-	}
+                    $this->_metrologyInstance->addLog('Display metrology', Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_displayMetrology();
+                    ?>
 
-	/**
-	 * Affichage de la partie de page en ligne.
-	 */
-	private function _displayInline()
-	{
-		$this->_metrologyInstance->addLog('Display inline', Metrology::LOG_LEVEL_NORMAL); // Log
-		$this->_displayInlineContent();
-	}
+                </div>
+            </div>
+        </div>
+        <?php
+        $this->_metrologyInstance->addLog('Display footer', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_displayFooter();
+    }
 
-	/**
-	 * Affichage du style CSS.
-	 */
-	public function displayCSS()
-	{
-		// Recherche l'image de fond.
-		$bgobj = $this->_nebuleInstance->newObject(self::DEFAULT_CSS_BACKGROUND);
-		$background = $bgobj->findUpdate(true, false);
-?>
+    /**
+     * Affichage de la partie de page en ligne.
+     */
+    private function _displayInline()
+    {
+        $this->_metrologyInstance->addLog('Display inline', Metrology::LOG_LEVEL_NORMAL); // Log
+        $this->_displayInlineContent();
+    }
 
-		<style type="text/css">
-			html, body { font-family:Sans-Serif, monospace, Arial, Helvetica; font-stretch: condensed; font-size:0.9em; text-align:left; }
-			@media screen { body { background:#f0f0f0 url("<?php echo "o/$background"; ?>") no-repeat; background-position:center center; background-size:cover; background-attachment:fixed; -webkit-background-size:cover; -moz-background-size:cover; -o-background-size:cover; } }
-			@media print { body { background:#ffffff; } }
-			
-			.floatLeft { float:left; margin-right:5px; }
-			.floatRight { float:right; margin-left:5px; }
-			.textAlignLeft { text-align:left; }
-			.textAlignRight { text-align:right; }
-			.textAlignCenter { text-align:center; }
-			.iconInlineDisplay { height:16px; width:16px; }
-			.iconNormalDisplay { height:64px; width:64px; }
-			.hideOnSmallMedia { display:block; }
-			.divHeaderH1, .divHeaderH2 { overflow:hidden; }
-			.layout-header { height:74px; background:rgba(34,34,34,0.8); color:#ffffff; }
-			.layout-header { border-bottom-style:solid; border-bottom-color:#222222; border-bottom-width:5px; }
-	   		.layout-footer { height:auto; background:rgba(34,34,34,0.8); color:#ffffff; }
-			.layout-footer { border-top-style:solid; border-top-color:#222222; border-top-width:5px; }
-			.header-left { margin:5px 0 5px 5px; }
-			.header-left2 { margin:5px; height:64px; width:207px; float:left; }
-			.header-left2 img { margin-right:5px; }
-			.layout-header .layoutObject { float:left; }
-			.layout-header .layoutObject .objectTitle .objectTitleText .objectTitleMediumName { overflow:visible; }
-			.layout-header .layoutObject .objectTitle .objectTitleText { background:none; color:#ffffff; }
-			.layout-header .layoutObject .objectTitle .objectTitleText a { color:#ffffff; }
-			.header-right { margin:5px; }
-			
-			.informationDisplayMessage { background:rgba(0,0,0,0.5); }
-			.informationDisplayInfo { background:rgba(255,255,255,0.5); }
-			.titleContentDiv { background:rgba(255,255,255,0.5); }
-			.titleContent h1 { color:#333333; }
-			
-			/* Liserets de verrouillage. */
-			.headerUnlock { border-bottom-color:#e0000e; }
-			.footerUnlock { border-top-color:#e0000e; }
-			
-			/* Les menus */
-			.menuListContentActionDiv a:link, .menuListContentActionDiv a:visited { font-weight: normal; text-decoration:none; }
-			.menuListContentActionDiv a:hover, .menuListContentActionDiv a:active { font-weight: bold; text-decoration:none; }
-			.menuListContentAction { background:rgba(255,255,255,0.5); height:64px; margin-bottom:5px; margin-right:5px; text-align:left; color:#000000; }
-			
-			
-			/* Les rubriques */
-			#lang { }
-			#recovery { }
-			#help { }
+    /**
+     * Affichage du style CSS.
+     */
+    public function displayCSS()
+    {
+        // Recherche l'image de fond.
+        $bgobj = $this->_nebuleInstance->newObject(self::DEFAULT_CSS_BACKGROUND);
+        $background = $bgobj->findUpdate(true, false);
+        ?>
 
-			/* Spécifique à la partie authentification */
-			/*.klictyModuleEntityAuthCheckOK { min-height:32px; background:rgba(0,224,14,0.5); margin:0; padding:5px; clear:both; text-align:center; }
+        <style type="text/css">
+            html, body {
+                font-family: Sans-Serif, monospace, Arial, Helvetica;
+                font-stretch: condensed;
+                font-size: 0.9em;
+                text-align: left;
+            }
+
+            @media screen {
+                body {
+                    background: #f0f0f0 url("<?php echo "o/$background"; ?>") no-repeat;
+                    background-position: center center;
+                    background-size: cover;
+                    background-attachment: fixed;
+                    -webkit-background-size: cover;
+                    -moz-background-size: cover;
+                    -o-background-size: cover;
+                }
+            }
+
+            @media print {
+                body {
+                    background: #ffffff;
+                }
+            }
+
+            .floatLeft {
+                float: left;
+                margin-right: 5px;
+            }
+
+            .floatRight {
+                float: right;
+                margin-left: 5px;
+            }
+
+            .textAlignLeft {
+                text-align: left;
+            }
+
+            .textAlignRight {
+                text-align: right;
+            }
+
+            .textAlignCenter {
+                text-align: center;
+            }
+
+            .iconInlineDisplay {
+                height: 16px;
+                width: 16px;
+            }
+
+            .iconNormalDisplay {
+                height: 64px;
+                width: 64px;
+            }
+
+            .hideOnSmallMedia {
+                display: block;
+            }
+
+            .divHeaderH1, .divHeaderH2 {
+                overflow: hidden;
+            }
+
+            .layout-header {
+                height: 74px;
+                background: rgba(34, 34, 34, 0.8);
+                color: #ffffff;
+            }
+
+            .layout-header {
+                border-bottom-style: solid;
+                border-bottom-color: #222222;
+                border-bottom-width: 5px;
+            }
+
+            .layout-footer {
+                height: auto;
+                background: rgba(34, 34, 34, 0.8);
+                color: #ffffff;
+            }
+
+            .layout-footer {
+                border-top-style: solid;
+                border-top-color: #222222;
+                border-top-width: 5px;
+            }
+
+            .header-left {
+                margin: 5px 0 5px 5px;
+            }
+
+            .header-left2 {
+                margin: 5px;
+                height: 64px;
+                width: 207px;
+                float: left;
+            }
+
+            .header-left2 img {
+                margin-right: 5px;
+            }
+
+            .layout-header .layoutObject {
+                float: left;
+            }
+
+            .layout-header .layoutObject .objectTitle .objectTitleText .objectTitleMediumName {
+                overflow: visible;
+            }
+
+            .layout-header .layoutObject .objectTitle .objectTitleText {
+                background: none;
+                color: #ffffff;
+            }
+
+            .layout-header .layoutObject .objectTitle .objectTitleText a {
+                color: #ffffff;
+            }
+
+            .header-right {
+                margin: 5px;
+            }
+
+            .informationDisplayMessage {
+                background: rgba(0, 0, 0, 0.5);
+            }
+
+            .informationDisplayInfo {
+                background: rgba(255, 255, 255, 0.5);
+            }
+
+            .titleContentDiv {
+                background: rgba(255, 255, 255, 0.5);
+            }
+
+            .titleContent h1 {
+                color: #333333;
+            }
+
+            /* Liserets de verrouillage. */
+            .headerUnlock {
+                border-bottom-color: #e0000e;
+            }
+
+            .footerUnlock {
+                border-top-color: #e0000e;
+            }
+
+            /* Les menus */
+            .menuListContentActionDiv a:link, .menuListContentActionDiv a:visited {
+                font-weight: normal;
+                text-decoration: none;
+            }
+
+            .menuListContentActionDiv a:hover, .menuListContentActionDiv a:active {
+                font-weight: bold;
+                text-decoration: none;
+            }
+
+            .menuListContentAction {
+                background: rgba(255, 255, 255, 0.5);
+                height: 64px;
+                margin-bottom: 5px;
+                margin-right: 5px;
+                text-align: left;
+                color: #000000;
+            }
+
+
+            /* Les rubriques */
+            #lang {
+            }
+
+            #recovery {
+            }
+
+            #help {
+            }
+
+            /* Spécifique à la partie authentification */
+            /*.klictyModuleEntityAuthCheckOK { min-height:32px; background:rgba(0,224,14,0.5); margin:0; padding:5px; clear:both; text-align:center; }
 			.klictyModuleEntityAuthCheckOK img { width:32px; height:32px; }
 			.klictyModuleEntityAuthCheckWarn { min-height:32px; background:rgba(224,224,0,1); margin:0; padding:5px; clear:both; text-align:center; }
 			.klictyModuleEntityAuthCheckWarn img { width:32px; height:32px; }
@@ -1043,35 +1191,108 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 			#klictyModuleEntityAuthLock p	{ color:#b00000; text-align:center; }
 			.klictyInput { margin-top:2px; margin-bottom:2px; }*/
 
-			/* Spécifique à la première page */
-			#welcome { padding-top:140px; padding-bottom:140px; background:none; font-size:2em;  }
-			#iconsWelcome { padding:20px; clear:both; font-size:1.2em; background:rgba(255,255,255,0.25); background-origin:border-box; text-align:center; font-weight:bold; color:#000000; min-height:80px; }
-			#iconWelcome1 { position:absolute; left:33%; width:120px; margin-left:-60px; }
-			#iconWelcome2 { position:absolute; right:50%; width:120px; margin-right:-60px; }
-			#iconWelcome3 { position:absolute; right:33%; width:120px; margin-right:-60px; }
-			#welcomeFooter { padding:20px; margin-top:120px; }
-			#welcomeFooter p { padding:20px; text-align:center; color:#000000; }
-			#welcomeFooter a { font-weight: bold; text-decoration:none; }
-			#welcomeFooter a:link, #welcomeFooter a:visited { color:#545454; }
-			#welcomeFooter a:hover, #welcomeFooter a:active { color:#ababab; }
-			@media screen and (max-height:500px) { #welcomeFooter { padding:5px; margin-top:0; } #welcomeFooter p { padding:0; } }
+            /* Spécifique à la première page */
+            #welcome {
+                padding-top: 140px;
+                padding-bottom: 140px;
+                background: none;
+                font-size: 2em;
+            }
 
-			/* Pour les bulles d'aide. */
-			.infobulle { position:absolute; visibility:hidden; padding:5px; color:#ffffff; background:rgba(0,0,0,0.6); width:700px; text-align:justify; }
-			
-			/* Connexion */
-			#klictyModuleEntityConnect { text-align:center; }
-		</style>
-<?php
-	}
+            #iconsWelcome {
+                padding: 20px;
+                clear: both;
+                font-size: 1.2em;
+                background: rgba(255, 255, 255, 0.25);
+                background-origin: border-box;
+                text-align: center;
+                font-weight: bold;
+                color: #000000;
+                min-height: 80px;
+            }
 
-	/**
-	 * Affichage des scripts JS.
-	 */
-	private function _displayScripts()
-	{
-		$this->commonScripts();
-/* ?>
+            #iconWelcome1 {
+                position: absolute;
+                left: 33%;
+                width: 120px;
+                margin-left: -60px;
+            }
+
+            #iconWelcome2 {
+                position: absolute;
+                right: 50%;
+                width: 120px;
+                margin-right: -60px;
+            }
+
+            #iconWelcome3 {
+                position: absolute;
+                right: 33%;
+                width: 120px;
+                margin-right: -60px;
+            }
+
+            #welcomeFooter {
+                padding: 20px;
+                margin-top: 120px;
+            }
+
+            #welcomeFooter p {
+                padding: 20px;
+                text-align: center;
+                color: #000000;
+            }
+
+            #welcomeFooter a {
+                font-weight: bold;
+                text-decoration: none;
+            }
+
+            #welcomeFooter a:link, #welcomeFooter a:visited {
+                color: #545454;
+            }
+
+            #welcomeFooter a:hover, #welcomeFooter a:active {
+                color: #ababab;
+            }
+
+            @media screen and (max-height: 500px) {
+                #welcomeFooter {
+                    padding: 5px;
+                    margin-top: 0;
+                }
+
+                #welcomeFooter p {
+                    padding: 0;
+                }
+            }
+
+            /* Pour les bulles d'aide. */
+            .infobulle {
+                position: absolute;
+                visibility: hidden;
+                padding: 5px;
+                color: #ffffff;
+                background: rgba(0, 0, 0, 0.6);
+                width: 700px;
+                text-align: justify;
+            }
+
+            /* Connexion */
+            #klictyModuleEntityConnect {
+                text-align: center;
+            }
+        </style>
+        <?php
+    }
+
+    /**
+     * Affichage des scripts JS.
+     */
+    private function _displayScripts()
+    {
+        $this->commonScripts();
+        /* ?>
 
 		<script language="javascript" type="text/javascript">
 			<!--
@@ -1152,1591 +1373,1469 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 			//-->
 		</script>
 <?php */
-	}
-
-
-
-	/**
-	 * Affichage des actions.
-	 */
-	private function _displayActions()
-	{
-?>
-
-		<div class="layout-footer footer<?php if ($this->_unlocked) { echo 'Unlock'; } ?>">
-			<p>
-<?php
-		// Vérifie le ticket.
-		if ( $this->_nebuleInstance->checkActionTicket() )
-		{
-			// Appelle les actions spéciales.
-			$this->_actionInstance->specialActions();
-
-			// Appelle les actions génériques.
-			$this->_actionInstance->genericActions();
-		}
-?>
-
-			</p>
-		</div>
-<?php
-	}
-	private function _displayInlineActions()
-	{
-?>
-
-		<div class="inlineaction">
-			<p>
-<?php
-		// Vérifie le ticket.
-		if ( $this->_nebuleInstance->checkActionTicket() )
-		{
-			// Appelle les actions génériques.
-			$this->_actionInstance->genericActions();
-		}
-?>
-
-			</p>
-		</div>
-<?php
-	}
-
-
-
-	/**
-	 * Affichage de la barre supérieure.
-	 *
-	 * La partie gauche présente le menu et l'entité déverrouillée ou des icônes de navigation hors connexion.
-	 *
-	 * La partie droite présente :
-	 * - Un warning si il y a un problème. En mode rescue, on peut quand même verrouiller/déverrouiller l'entité.
-	 * - Une erreur si il y a un gros problème. Il n'est pas possible de déverrouiller l'entité.
-	 */
-	private function _displayHeader()
-	{
-?>
-
-		<div class="layout-header header<?php if ($this->_unlocked) { echo 'Unlock'; } ?>">
-			<div class="header-left">
-				<img src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>" alt="[M]" title="<?php echo $this->_traductionInstance->getTraduction('::menu'); ?>" onclick="display_menu('layout-menu-applications');" />
-			</div>
-<?php
-		// Si l'entité n'est en cours n'est pas l'entité par défaut.
-		if ( $this->_nebuleInstance->getCurrentEntity() != $this->_nebuleInstance->getOption('defaultCurrentEntity') )
-		{
-			// Affiche l'entité et son image.
-			$param = array(
-					'enableDisplayColor' => true,
-					'enableDisplayIcon' => true,
-					'enableDisplayRefs' => false,
-					'enableDisplayName' => true,
-					'enableDisplayID' => false,
-					'enableDisplayFlags' => true,
-					'enableDisplayFlagProtection' => false,
-					'enableDisplayFlagObfuscate' => false,
-					'enableDisplayFlagUnlocked' => true,
-					'enableDisplayFlagState' => true,
-					'enableDisplayFlagEmotions' => false,
-					'enableDisplayStatus' => false,
-					'enableDisplayContent' => false,
-					'displaySize' => 'medium',
-					'displayRatio' => 'short',
-					'enableDisplayRefs' => true,
-					'enableDisplayJS' => false,
-					'enableDisplayObjectActions' => false,
-					'objectRefs' => $this->_nebuleInstance->getListEntitiesUnlockedInstances()
-			);
-			if ( $this->_unlocked )
-			{
-				$param['flagUnlockedLink'] = '?'.Display::DEFAULT_DISPLAY_COMMAND_VIEW.'=auth'
-						.'&'.nebule::COMMAND_LOGOUT_ENTITY
-						.'&'.nebule::COMMAND_FLUSH;
-			}
-			else
-			{
-				$param['flagUnlockedLink'] = '?'.Display::DEFAULT_DISPLAY_COMMAND_VIEW.'=auth'
-						.'&'.nebule::COMMAND_SELECT_ENTITY.'='.$this->_nebuleInstance->getCurrentEntity();
-			}
-			echo $this->getDisplayObject($this->_nebuleInstance->getCurrentEntity(), $param);
-		}
-		else
-		{
-?>
-
-			<div class="header-left2">
-				<?php
-			$this->displayHypertextLink(
-					$this->convertUpdateImage(
-							self::DEFAULT_ICON_LSTENT,
-							'::EntitiesList'),
-					'?'.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_ENTITY_LIST_COMMAND);
-			$this->displayHypertextLink(
-					$this->convertUpdateImage(
-							self::DEFAULT_ICON_ADDENT,
-							'::EntityAdd'),
-					'?'.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_ENTITY_ADD_COMMAND);
-			$this->displayHypertextLink(
-					$this->convertUpdateImage(
-							self::DEFAULT_ICON_WORLD,
-							':::SelectLanguage'),
-					'?'.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_ABOUT_COMMAND.'#lang');
-?>
-
-			</div>
-<?php
-		}
-?>
-
-			<div class="header-right">
-<?php
-		if ( $this->_applicationInstance->getCheckSecurityAll() == 'OK' )
-		{
-			echo "&nbsp;\n";
-		}
-		// Si un test est en warning maximum.
-		elseif ( $this->_applicationInstance->getCheckSecurityAll() == 'WARN' )
-		{
-			// Si mode rescue et en warning.
-			if ( $this->_nebuleInstance->getModeRescue() )
-			{
-				// Si l'entité est déverrouillées.
-				if ( $this->_unlocked )
-				{
-					// Affiche le lien de verrouillage sans les effets.
-					$this->displayHypertextLink(
-							$this->convertUpdateImage(
-									$this->_iconIwarn,'Etat déverrouillé, verrouiller ?',
-									'',
-									'',
-									'name="ico_lock"'),
-							'?'.Display::DEFAULT_DISPLAY_COMMAND_VIEW.'=auth'
-							.'&'.nebule::COMMAND_LOGOUT_ENTITY
-							.'&'.nebule::COMMAND_FLUSH);
-				}
-				else
-				{
-					// Affiche de lien de déverrouillage sans les effets.
-					$this->displayHypertextLink(
-							$this->convertUpdateImage(
-									$this->_iconIwarn,'Etat verrouillé, déverrouiller ?',
-									'',
-									'',
-									'name="ico_lock"'),
-							'?'.Display::DEFAULT_DISPLAY_COMMAND_VIEW.'=auth'
-							.'&'.nebule::COMMAND_SELECT_ENTITY.'='.$this->_nebuleInstance->getCurrentEntity());
-				}
-			}
-			// Sinon affiche le warning.
-			else
-			{
-				$this->displayHypertextLink(
-						$this->convertUpdateImage(
-								self::DEFAULT_ICON_IWARN,
-								'WARNING'),
-						'?'.nebule::COMMAND_LOGOUT_ENTITY
-						.'&'.nebule::COMMAND_SWITCH_TO_ENTITY);
-			}
-		}
-		// Sinon c'est une erreur.
-		else
-		{
-			$this->displayHypertextLink(
-					$this->convertUpdateImage(
-							self::DEFAULT_ICON_IERR,
-							'ERROR'),
-					'?'.nebule::COMMAND_LOGOUT_ENTITY
-					.'&'.nebule::COMMAND_FLUSH);
-		}
-?>
-
-			</div>
-			<div class="header-center">
-	   			<?php $this->_displayHeaderCenter(); ?>
-
-	   		</div>
-	  	</div>
-<?php
-	}
-
-
-
-	/**
-	 * Affiche la partie centrale de l'entête.
-	 * Non utilisé.
-	 */
-	private function _displayHeaderCenter()
-	{
-		//...
-	}
-
-
-
-	/**
-	 * Affiche le menu des applications.
-	 */
-	private function _displayMenuApplications()
-	{
-		global	$applicationName, $applicationVersion, $applicationLicence, $applicationAuthor, $applicationWebsite, $applicationLevel,
-				$bootstrapName;
-		
-		$linkApplicationWebsite = $applicationWebsite;
-		if ( strpos($applicationWebsite, '://') === false )
-		{
-			$linkApplicationWebsite = 'http://'.$applicationWebsite;
-		}
-?>
-
-				<div class="layout-menu-applications" id="layout-menu-applications">
-					<div class="menu-applications-sign">
-						<img alt="<?php echo $applicationName; ?>" src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>" /><br />
-						<?php echo $applicationName; ?><br />
-						(c) <?php echo $applicationLicence.' '.$applicationAuthor; ?><br />
-						<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Version'); echo ' : '.$applicationVersion.' '.$applicationLevel; ?><br />
-						<a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo $applicationWebsite; ?></a>
-					</div>
-					<div class="menu-applications-logo">
-						<img src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>" alt="[M]" title="<?php echo $this->_traductionInstance->getTraduction('::menu'); ?>" onclick="display_menu('layout-menu-applications');" />
-					</div>
-					<div class="menu-applications">
-<?php
-		if ( $this->_unlocked )
-		{
-			$modulesName = array(
-					'::ShowObjectsOf',
-					'::ObjectAdd',
-					'::EntitiesList',
-					'::EntitiesGroupList',
-					'::EntitiesGroupAdd',
-					'::Help',
-					':::SelectLanguage',
-					'::Lock');
-			$modulesIcon = array(
-					self::DEFAULT_ICON_LSTOBJ,
-					self::DEFAULT_ICON_ADDOBJ,
-					self::DEFAULT_ICON_LSTENT,
-					self::DEFAULT_ICON_GRPENT,
-					self::DEFAULT_ICON_GRPENTADD,
-					self::DEFAULT_ICON_HELP,
-					self::DEFAULT_ICON_WORLD,
-					self::DEFAULT_ICON_ENTITY_LOCK);
-			$modulesLink = array(
-					self::DEFAULT_OBJECT_LIST_COMMAND.'&'.nebule::COMMAND_SELECT_ENTITY.'='.$this->_nebuleInstance->getCurrentEntity(),
-					self::DEFAULT_OBJECT_ADD_COMMAND,
-					self::DEFAULT_ENTITY_LIST_COMMAND,
-					self::DEFAULT_GROUP_LIST_COMMAND.'&'.nebule::COMMAND_SELECT_ENTITY.'='.$this->_nebuleInstance->getCurrentEntity(),
-					self::DEFAULT_GROUP_ENTITY_ADD_COMMAND,
-					self::DEFAULT_ABOUT_COMMAND.'#help',
-					self::DEFAULT_ABOUT_COMMAND.'#lang',
-					self::DEFAULT_ABOUT_COMMAND.'&'.nebule::COMMAND_LOGOUT_ENTITY.'&'.nebule::COMMAND_FLUSH);
-		}
-		else
-		{
-			$modulesName = array(
-					'::ObjectsList',
-					'::EntitiesList',
-					'::EntitySync',
-					'::EntityAdd',
-					':::Flush',
-					'::Help',
-					':::SelectLanguage'
-			);
-			$modulesIcon = array(
-					self::DEFAULT_ICON_LSTOBJ,
-					self::DEFAULT_ICON_LSTENT,
-					self::DEFAULT_ICON_SYNENT,
-					self::DEFAULT_ICON_ADDENT,
-					self::DEFAULT_ICON_FLUSH,
-					self::DEFAULT_ICON_HELP,
-					self::DEFAULT_ICON_WORLD
-			);
-			$modulesLink = array(
-					self::DEFAULT_OBJECT_LIST_COMMAND.'&'.nebule::COMMAND_SELECT_ENTITY.'='.$this->_nebuleInstance->getCurrentEntity(),
-					self::DEFAULT_ENTITY_LIST_COMMAND,
-					self::DEFAULT_ENTITY_SYNC_COMMAND,
-					self::DEFAULT_ENTITY_ADD_COMMAND,
-					self::DEFAULT_ABOUT_COMMAND.'&'.nebule::COMMAND_FLUSH,
-					self::DEFAULT_ABOUT_COMMAND.'#help',
-					self::DEFAULT_ABOUT_COMMAND.'#lang'
-			);
-		}
-
-		foreach ($modulesName as $i => $module)
-		{
-			$name = $this->_applicationInstance->getTraductionInstance()->getTraduction($module);
-			$icon = $modulesIcon[$i];
-			$link = '?'.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.$modulesLink[$i];
-?>
-
-						<div class="menu-applications-one">
-							<div class="menu-applications-icon">
-								<?php $this->displayHypertextLink($this->convertUpdateImage($icon, $name), $link); ?>
-							</div>
-							<div class="menu-applications-title">
-								<p><?php $this->displayHypertextLink($name, $link); ?></p>
-							</div>
-						</div>
-<?php
-		}
-?>
-
-						<div class="menu-applications-one">
-							<div class="menu-applications-icon">
-								<?php $this->displayHypertextLink('<img src="'.parent::DEFAULT_APPLICATION_LOGO.'" alt="'.$bootstrapName.'" />', '?'.Action::DEFAULT_COMMAND_NEBULE_BOOTSTRAP); ?>
-								
-							</div>
-							<div class="menu-applications-title">
-								<p><?php echo $bootstrapName; ?></p>
-							</div>
-						</div>
-					</div>
-				</div>
-<?php
-	}
-
-
-
-	/**
-	 * Affiche les alertes.
-	 */
-	private function _displayChecks()
-	{
-		if ( $this->_nebuleInstance->getModeRescue() )
-		{
-			$this->displayMessageWarning('::::RESCUE');
-		}
-		if ( $this->_applicationInstance->getCheckSecurityCryptoHash()	== 'WARN' )
-		{
-			$this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
-		}
-		if ( $this->_applicationInstance->getCheckSecurityCryptoHash()	== 'ERROR' )
-		{
-			$this->displayMessageError(  $this->_applicationInstance->getCheckSecurityCryptoHashMessage());
-		}
-		if ( $this->_applicationInstance->getCheckSecurityCryptoSym()	== 'WARN' )
-		{
-			$this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
-		}
-		if ( $this->_applicationInstance->getCheckSecurityCryptoSym()	== 'ERROR' )
-		{
-			$this->displayMessageError(  $this->_applicationInstance->getCheckSecurityCryptoSymMessage());
-		}
-		if ( $this->_applicationInstance->getCheckSecurityCryptoAsym()	== 'WARN' )
-		{
-			$this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
-		}
-		if ( $this->_applicationInstance->getCheckSecurityCryptoAsym()	== 'ERROR' )
-		{
-			$this->displayMessageError(  $this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
-		}
-		if ( $this->_applicationInstance->getCheckSecurityBootstrap()	== 'ERROR' )
-		{
-			$this->displayMessageError(  $this->_applicationInstance->getCheckSecurityBootstrapMessage());
-		}
-		if ( $this->_applicationInstance->getCheckSecurityBootstrap()	== 'WARN' )
-		{
-			$this->displayMessageWarning(  $this->_applicationInstance->getCheckSecurityBootstrapMessage());
-		}
-		if ( $this->_applicationInstance->getCheckSecuritySign()		== 'WARN' )
-		{
-			$this->displayMessageWarning($this->_applicationInstance->getCheckSecuritySignMessage());
-		}
-		if ( $this->_applicationInstance->getCheckSecuritySign()		== 'ERROR' )
-		{
-			$this->displayMessageError(  $this->_applicationInstance->getCheckSecuritySignMessage());
-		}
-		if ( $this->_applicationInstance->getCheckSecurityURL()			== 'WARN' )
-		{
-			$this->displayMessageWarning($this->_applicationInstance->getCheckSecurityURLMessage());
-		}
-		if ( ! $this->_nebuleInstance->getOption('permitWrite') )
-		{
-			$this->displayMessageWarning(':::warn_ServNotPermitWrite');
-		}
-		if ( $this->_nebuleInstance->getFlushCache() )
-		{
-			$this->displayMessageWarning(':::warn_flushSessionAndCache');
-		}
-	}
-
-
-
-	/**
-	 * Contenu de la page.
-	 *
-	 * Affiche le contenu des pages en fonction du mode demandé.
-	 * Un seul type de vue est pris en compte pour l'affichage, les autres sont ignorés.
-	 *
-	 * Chaque page peut faire appel à des contenus en ligne gérés par _displayInlineContent.
-	 */
-	private function _displayContent()
-	{
-		switch ( $this->_currentDisplayView )
-    	{
-	    	case self::DEFAULT_ABOUT_COMMAND :
-	    		$this->_displayContentAbout();
-	    		break;
-	    	case self::DEFAULT_OBJECT_LIST_COMMAND :
-	    		$this->_displayContentObjectList();
-	    		break;
-	    	case self::DEFAULT_ENTITY_LIST_COMMAND :
-	    		$this->_displayContentEntityList();
-	    		break;
-	    	case self::DEFAULT_GROUP_LIST_COMMAND :
-	    		$this->_displayContentEntityGroupList();
-	    		break;
-	    	case nebule::COMMAND_SELECT_OBJECT :
-	    		$this->_displayContentObject();
-	    		break;
-	    	case self::DEFAULT_OBJECT_ADD_COMMAND :
-	    		$this->_displayContentObjectAdd();
-	    		break;
-	    	case self::DEFAULT_ENTITY_ADD_COMMAND :
-	    		$this->_displayContentEntityAdd();
-	    		break;
-	    	case self::DEFAULT_GROUP_ENTITY_ADD_COMMAND :
-	    		$this->_displayContentEntityGroupAdd();
-	    		break;
-	    	case self::DEFAULT_ENTITY_SYNC_COMMAND :
-	    		$this->_displayContentEntitySync();
-	    		break;
-	    	case self::DEFAULT_PROTEC_COMMAND :
-	    		$this->_displayContentProtection();
-	    		break;
-	    	case self::DEFAULT_AUTH_COMMAND :
-	    		$this->_displayContentAuth();
-	    		break;
-	    	default:
-	    		$this->_displayContentAbout();
-	    		break;
-    	}
-
-    	// Lance l'affichage des contenus inline.
-    	$this->_displayInlineContentID();
-	}
-
-	/**
-	 * Contenu en ligne de la page.
-	 *
-	 * Affiche le contenu des pages en fonction du mode demandé.
-	 * Un seul type de vue est pris en compte pour l'affichage, les autres sont ignorés.
-	 *
-	 * Ces contenus sont 'en ligne', c'est à dire sans fenêtrage. Ils ne sont pas destinés à être appellés seuls.
-	 */
-	private function _displayInlineContent()
-	{
-		switch ( $this->_currentDisplayView )
-		{
-			case self::DEFAULT_ABOUT_COMMAND :
-				$this->_displayInlineContentAbout();
-				break;
-			case self::DEFAULT_OBJECT_LIST_COMMAND :
-				$this->_displayInlineContentObjectList();
-				break;
-			case self::DEFAULT_ENTITY_LIST_COMMAND :
-				$this->_displayInlineContentEntityList();
-				break;
-			case self::DEFAULT_GROUP_LIST_COMMAND :
-	    		$this->_displayInlineContentEntityGroupList();
-	    		break;
-	    	case nebule::COMMAND_SELECT_OBJECT :
-				$this->_displayInlineContentObject();
-				break;
-	    	case self::DEFAULT_OBJECT_ADD_COMMAND :
-				$this->_displayInlineContentObjectAdd();
-				break;
-	    	case self::DEFAULT_ENTITY_SYNC_COMMAND :
-				$this->_displayInlineContentEntitySync();
-				break;
-			case self::DEFAULT_PROTEC_COMMAND :
-				$this->_displayInlineContentProtection();
-				break;
-			default:
-				$this->_displayInlineContentAbout();
-				break;
-		}
-
-    	// Lance l'affichage des contenus inline.
-    	//$this->_displayInlineContentID();
-	}
-
-
-
-	private function _displayContentObjectList()
-	{
-		// Titre.
-		echo $this->getDisplayTitle('::ObjectList', self::DEFAULT_ICON_LSTOBJ);
-		
-		// Appel l'affichage en ligne.
-		$this->registerInlineContentID('objectlist');
-	}
-	
-	private function _displayInlineContentObjectList()
-	{
-		echo '<div class="layoutObjectsList">'."\n";
-		echo '<div class="objectsListContent">'."\n";
-		
-		// Extrait la liste des objets.
-		$list = array();
-		$DisplayedList = array();
-		$id = $this->_applicationInstance->getCurrentEntity();
-		$meta = $this->_nebuleInstance->getCrypto()->hash( Application::APPLICATION_EXPIRATION_DATE );
-		$instance = $this->_nebuleInstance->newObject($meta);
-		
-		// Si c'est l'entité du serveur, affiche tous les objets.
-		if ( $id == $this->_nebuleInstance->getOption('defaultCurrentEntity') )
-		{
-			$list = $instance->readLinksFilterFull('', '', 'l', '', '', $meta);
-		}
-		// Sinon affiche les objets de l'entité.
-		else
-		{
-			$list = $instance->readLinksFilterFull($id, '', 'l', '', '', $meta);
-		}
-
-		// Fait un pré-tri.
-		foreach ( $list as $i => $item )
-		{
-			$id2 = $item->getHashSource();
-			$instance = $this->_nebuleInstance->newObject($id2);
-			$lifetimeExpired = $this->_applicationInstance->getObjectLifetimeExpired($instance);
-			if ( $lifetimeExpired )
-			{
-				unset($list[$i]);
-			}
-		}
-		
-		// Liste tous les objets.
-		foreach ( $list as $item )
-		{
-			$id = $item->getHashSource();
-			$entity = $item->getHashSigner();
-			$instance = $this->_nebuleInstance->newObject($id);
-			$id = $instance->getID();
-			$present = $this->_nebuleInstance->getIO()->checkObjectPresent($id);
-			$ban = $instance->getMarkDanger(); // @todo
-			$warn = $instance->getMarkWarning(); // @todo
-			$lifetimeExpired = $this->_applicationInstance->getObjectLifetimeExpired($instance);
-			$haveLifetime = $this->_applicationInstance->getObjectHaveLifetime($instance);
-			if ( ! $lifetimeExpired )
-			{
-				$lifetime = $this->_applicationInstance->getTraductionInstance()->getTraduction('::ExpireIn')
-					.' '.$this->_applicationInstance->getObjectLifetimeToLive($instance);
-			}
-			
-			// Si l'objet n'est pas expiré.
-			if ( ! $lifetimeExpired && $haveLifetime && $DisplayedList[$id] !== true )
-			{
-				$param = array(
-						'enableDisplayColor' => true,
-						'enableDisplayIcon' => true,
-						'enableDisplayRefs' => true,
-						'enableDisplayName' => true,
-						'enableDisplayID' => false,
-						'enableDisplayFlags' => true,
-						'enableDisplayFlagEmotions' => true,
-						'enableDisplayFlagProtection' => true,
-						'flagProtection' => $instance->getMarkProtected(),
-						'enableDisplayStatus' => true,
-						'enableDisplayContent' => false,
-						'displaySize' => 'medium',
-						'displayRatio' => 'short',
-						'enableDisplayJS' => false,
-						'status' => $this->_applicationInstance->getTraductionInstance()->getTraduction($instance->getType('all')),
-						'flagMessage' => $lifetime,
-				);
-				$param['objectRefs'][0] = $entity;
-				echo $this->getDisplayObject($instance, $param);
-			}
-			$DisplayedList[$id] = true;
-		}
-		
-		// Refait une recherche et un affichage pour les objets protégés partagés.
-		$list = array();
-		$id = $this->_applicationInstance->getCurrentEntity();
-		if ( $id != $this->_nebuleInstance->getOption('defaultCurrentEntity') )
-		{
-			$listK = $this->_applicationInstance->getCurrentEntityInstance()->readLinksFilterFull(
-					'',
-					'',
-					'k',
-					'',
-					'',
-					$id
-					);
-			$listS = array();
-			
-			// Fait un pré-tri.
-			if ( sizeof($listK) != 0 )
-			{
-				foreach ( $listK as $i => $item )
-				{
-					// Vérifie le signataire.
-					$signer = $item->getHashSigner();
-					if ( $signer != $id )
-					{
-						// Recherche du lien de chiffrement des objets.
-						$source = $item->getHashSource();
-						$instance = $this->_nebuleInstance->newObject($source);
-						$list2 = $instance->readLinksFilterFull(
-								'',
-								'',
-								'k',
-								'',
-								'',
-								$source
-								);
-			
-						// Extrait l'objet protégé.
-						if ( sizeof($list2) != 0 )
-						{
-							$source = $list2[0]->getHashSource();
-							$instance = $this->_nebuleInstance->newObject($source);
-							$lifetimeExpired = $this->_applicationInstance->getObjectLifetimeExpired($instance);
-							$haveLifetime = $this->_applicationInstance->getObjectHaveLifetime($instance);
-							// Si l'objet n'est pas expiré.
-							if ( ! $lifetimeExpired
-									&& $haveLifetime
-									&& $DisplayedList[$source] !== true
-								)
-							{
-								// Valide l'objet partagé.
-								$listS[$source] = $signer;
-								$list[] = $source;
-							}
-						}
-					}
-				}
-			}
-			
-			foreach ( $list as $item )
-			{
-				// Extrait et affiche l'objet protégé.
-				$entity = $listS[$item];
-				$instance = $this->_nebuleInstance->newObject($item);
-				$id = $instance->getID();
-				$lifetimeExpired = $this->_applicationInstance->getObjectLifetimeExpired($instance);
-				$haveLifetime = $this->_applicationInstance->getObjectHaveLifetime($instance);
-				if ( ! $lifetimeExpired )
-				{
-					$lifetime = $this->_applicationInstance->getTraductionInstance()->getTraduction('::ExpireIn')
-					.' '.$this->_applicationInstance->getObjectLifetimeToLive($instance);
-				}
-				
-				// Si l'objet n'est pas expiré.
-				if ( ! $lifetimeExpired && $haveLifetime && $DisplayedList[$id] !== true )
-				{
-					$param = array(
-							'enableDisplayColor' => true,
-							'enableDisplayIcon' => true,
-							'enableDisplayRefs' => true,
-							'enableDisplayName' => true,
-							'enableDisplayID' => false,
-							'enableDisplayFlags' => true,
-							'enableDisplayFlagEmotions' => true,
-							'enableDisplayFlagProtection' => true,
-							'flagProtection' => $instance->getMarkProtected(),
-							'enableDisplayStatus' => true,
-							'enableDisplayContent' => false,
-							'displaySize' => 'medium',
-							'displayRatio' => 'short',
-							'enableDisplayJS' => false,
-							'status' => $this->_applicationInstance->getTraductionInstance()->getTraduction($instance->getType('all')),
-							'flagMessage' => $lifetime,
-					);
-					$param['objectRefs'][0] = $entity;
-					echo $this->getDisplayObject($instance, $param);
-				}
-				$DisplayedList[$id] = true;
-			}
-		}
-		
-		// Messages en fin de liste ou si liste vide.
-		if ( sizeof($DisplayedList) == 0 )
-		{
-			$param = array(
-					'enableDisplayIcon' => true,
-					'displaySize' => 'medium',
-					'displayRatio' => 'short',
-					'informationType' => 'information',
-			);
-			echo $this->getDisplayInformation('::NoFile', $param);
-		}
-		elseif ( ! $this->_unlocked )
-		{
-			// Si pas déverrouillé, affiche un message.
-			$param = array(
-					'enableDisplayIcon' => true,
-					'displaySize' => 'medium',
-					'displayRatio' => 'short',
-					'informationType' => 'warn',
-			);
-			echo $this->getDisplayInformation('::AllNotDisplayed', $param);
-		}
-		
-		echo '</div>'."\n";
-		echo '</div>'."\n";
-	}
-
-	private function _displayContentEntityList()
-	{
-		// Titre.
-		echo $this->getDisplayTitle('::EntitiesList', self::DEFAULT_ICON_LSTENT);
-		
-		// Appel l'affichage en ligne.
-		$this->registerInlineContentID('listentities');
-	}
-	
-	private function _displayInlineContentEntityList()
-	{
-		echo '<div class="layoutObjectsList">'."\n";
-		echo '<div class="objectsListContent">'."\n";
-		
-		$hashType = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
-		$hashEntity = $this->_nebuleInstance->getCrypto()->hash('application/x-pem-file');
-		$hashEntityObject = $this->_nebuleInstance->newObject($hashEntity);
-
-		// Liste des entités à ne pas afficher.
-		$listOkEntities = $this->_nebuleInstance->getSpecialEntities();
-		if ( $this->_unlocked )
-		{
-			$listOkEntities[$this->_applicationInstance->getCurrentEntity()] = true;
-		}
-
-		// Liste toutes les autres entités.
-		$links = $hashEntityObject->readLinksFilterFull(
-				'',
-				'',
-				'l',
-				'',
-				$hashEntity,
-				$hashType
-		);
-
-		// Affiche les entités.
-		foreach ( $links as $link )
-		{
-			$id = $link->getHashSource();
-			$instance = $this->_nebuleInstance->newEntity($id);
-			if ( ! isset($listOkEntities[$id])
-					&& $instance->getType('all') == Entity::ENTITY_TYPE
-					&& $instance->getIsPublicKey()
-				)
-			{
-				$param = array(
-						'enableDisplayColor' => true,
-						'enableDisplayIcon' => true,
-						'enableDisplayRefs' => false,
-						'enableDisplayName' => true,
-						'enableDisplayID' => false,
-						'enableDisplayFlags' => false,
-						'enableDisplayStatus' => false,
-						'enableDisplayContent' => false,
-						'displaySize' => 'medium',
-						'displayRatio' => 'short',
-						'enableDisplayJS' => false,
-				);
-				$param['selfHookList'] = array();
-
-				// Se connecter avec cette entité.
-				$param['selfHookList'][0]['name'] = '::ConnectWith';
-				$param['selfHookList'][0]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
-				$param['selfHookList'][0]['link'] = '?'
-					.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_AUTH_COMMAND
-					.'&'.nebule::COMMAND_LOGOUT_ENTITY
-					.'&'.nebule::COMMAND_SWITCH_TO_ENTITY
-					.'&'.nebule::COMMAND_SELECT_ENTITY.'='.$id;
-				
-				echo $this->getDisplayObject($instance, $param);
-
-				// Marque comme vu.
-				$listOkEntities[$id] = true;
-			}
-		}
-		
-		if ( sizeof($listOkEntities) == 0 )
-		{
-			// Pas d'entité.
-			$param = array(
-					'enableDisplayIcon' => true,
-					'displaySize' => 'medium',
-					'displayRatio' => 'short',
-					'informationType' => 'information',
-			);
-			echo $this->getDisplayInformation('::NoEntity', $param);
-		}
-		
-		echo '</div>'."\n";
-		echo '</div>'."\n";
-	}
-
-	private function _displayContentEntityGroupList()
-	{
-		// Titre.
-		echo $this->getDisplayTitle('::EntitiesGroupList', self::DEFAULT_ICON_GRPENT);
-		
-		// Appel l'affichage en ligne.
-		$this->registerInlineContentID('listgroups');
-	}
-	
-	private function _displayInlineContentEntityGroupList()
-	{
-		echo '<div class="layoutObjectsList">'."\n";
-		echo '<div class="objectsListContent">'."\n";
-		
-		// Liste des groupes à ne pas afficher.
-		$listOkGroups = array();
-		
-		// Liste tous les groupes.
-		$listGroups = $this->_nebuleInstance->getListGroupsID($this->_applicationInstance->getCurrentEntity(), '');
-		
-		// Affiche les groupes.
-		foreach ( $listGroups as $id )
-		{
-			$instance = $this->_nebuleInstance->newEntity($id);
-			if ( ! isset($listOkGroups[$id]) )
-			{
-				$param = array(
-						'enableDisplayColor' => true,
-						'enableDisplayIcon' => true,
-						'enableDisplayRefs' => false,
-						'enableDisplayName' => true,
-						'enableDisplayID' => false,
-						'enableDisplayFlags' => false,
-						'enableDisplayStatus' => false,
-						'enableDisplayContent' => false,
-						'displaySize' => 'medium',
-						'displayRatio' => 'short',
-						'enableDisplayJS' => false,
-				);
-				$param['selfHookList'] = array();
-
-				// Supprimer ce groupes.
-				if ( $this->_unlocked
-						&& $this->_nebuleInstance->getOption('permitWrite')
-						&& $this->_nebuleInstance->getOption('permitWriteLink')
-						&& $this->_nebuleInstance->getOption('permitWriteGroup')
-					)
-				{
-					$param['selfHookList'][0]['name'] = '::DeleteGroup';
-					$param['selfHookList'][0]['icon'] = self::DEFAULT_ICON_LX;
-					$param['selfHookList'][0]['link'] = '?'
-							.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_GROUP_LIST_COMMAND
-							.'&'.Action::DEFAULT_COMMAND_ACTION_DELETE_GROUP.'='.$id
-							.$this->_nebuleInstance->getActionTicket();
-				}
-				
-				echo $this->getDisplayObject($instance, $param);
-
-				// Marque comme vu.
-				$listOkGroups[$id] = true;
-			}
-		}
-		
-		if ( sizeof($listOkGroups) == 0 )
-		{
-			// Pas d'entité.
-			$param = array(
-					'enableDisplayIcon' => true,
-					'displaySize' => 'medium',
-					'displayRatio' => 'short',
-					'informationType' => 'information',
-			);
-			echo $this->getDisplayInformation('::NoEntityGroup', $param);
-		}
-		
-		echo '</div>'."\n";
-		echo '</div>'."\n";
-		unset($listGroups, $listOkGroups);
-	}
-
-	private function _displayContentEntityGroupAdd()
-	{
-		// Si un groupe à été créé.
-		if ( $this->_actionInstance->getCreateGroup() )
-		{
-			$createGroupID				= $this->_actionInstance->getCreateGroupID();
-			$createGroupInstance		= $this->_actionInstance->getCreateGroupInstance();
-			$createGroupError			= $this->_actionInstance->getCreateGroupError();
-			$createGroupErrorMessage	= $this->_actionInstance->getCreateGroupErrorMessage();
-
-			// Si la création à réussi.
-			if ( ! $createGroupError
-					&& is_a($createGroupInstance, 'Group')
-				)
-			{
-				// Affiche le titre.
-				echo $this->getDisplayTitle('::CreatedGroup', self::DEFAULT_ICON_GRPENT);
-
-				// Affiche la nouvelle entité.
-				echo '<div class="layoutObjectsList">'."\n";
-				echo '<div class="objectsListContent">'."\n";
-				
-				$param = array(
-						'enableDisplayColor' => true,
-						'enableDisplayIcon' => true,
-						'enableDisplayRefs' => false,
-						'enableDisplayName' => true,
-						'enableDisplayID' => false,
-						'enableDisplayFlags' => false,
-						'enableDisplayStatus' => false,
-						'enableDisplayContent' => false,
-						'displaySize' => 'medium',
-						'displayRatio' => 'short',
-						'enableDisplayJS' => false,
-				);
-				$param['selfHookList'] = array();
-				echo $this->getDisplayObject($createGroupID, $param);
-		
-				echo '</div>'."\n";
-				echo '</div>'."\n";
-			}
-			else
-			{
-				$param = array(
-						'enableDisplayAlone' => true,
-						'enableDisplayIcon' => true,
-						'informationType' => 'error',
-						'displayRatio' => 'long',
-				);
-				echo $this->getDisplayInformation('::NOKCreateGroup', $param);
-			}
-		}
-		else
-		{
-			// Affiche le titre.
-			echo $this->getDisplayTitle('::EntitiesGroupAdd', self::DEFAULT_ICON_GRPENTADD);
-	
-			// Si autorisé à créer un groupe.
-			if ( $this->_nebuleInstance->getOption('permitWrite')
-					&& $this->_nebuleInstance->getOption('permitWriteObject')
-					&& $this->_nebuleInstance->getOption('permitWriteLink')
-					&& $this->_nebuleInstance->getOption('permitWriteGroup')
-					&& $this->_unlocked
-				)
-			{
-?>
-
-<div class="text">
-	<p>
-
-
-		<form method="post"
-			action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_GROUP_ENTITY_ADD_COMMAND.
-							'&'.Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP
-							.$this->_nebuleInstance->getActionTicket(); ?>">
-		<div class="floatRight textAlignRight">
-    		<input type="checkbox"
-				name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP_CLOSED; ?>"
-				value="y" checked>
-    		<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::GroupeFerme'); ?>
-		</div>
-		<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Nom'); ?>
-		<input type="text"
-			name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP_NAME;		?>"
-			size="20" value="" class="klictyModuleEntityInput"><br />
-		<input type="submit"
-			value="<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::CreateTheGroup'); ?>"
-			class="klictyModuleEntityInput">
-		</form>
-<?php
-
-?>
-
-	</p>
-</div>
-<?php
-			}
-			else
-			{
-				$param = array(
-						'enableDisplayAlone' => true,
-						'enableDisplayIcon' => true,
-						'informationType' => 'error',
-						'displayRatio' => 'long',
-				);
-				echo $this->getDisplayInformation(':::err_NotPermit', $param);
-			}
-		}
-	}
-
-	private function _displayContentObject()
-	{
-		echo '<div class="layoutObjectsList">'."\n";
-		echo '<div class="objectsListContent">'."\n";
-
-		$instance = $this->_nebuleInstance->convertIdToTypedObjectInstance($this->_applicationInstance->getCurrentObject());
-		$param = array(
-				'enableDisplayColor' => true,
-				'enableDisplayIcon' => true,
-				'enableDisplayRefs' => false,
-				'enableDisplayName' => true,
-				'enableDisplayID' => false,
-				'enableDisplayFlags' => true,
-				'enableDisplayFlagEmotions' => true,
-				'enableDisplayFlagProtection' => true,
-				'flagProtection' => $instance->getMarkProtected(),
-				'enableDisplayStatus' => true,
-				'enableDisplayContent' => true,
-				'displaySize' => 'medium',
-				'displayRatio' => 'long',
-				'status' => $this->_applicationInstance->getTraductionInstance()->getTraduction($instance->getType('all')),
-				'enableDisplayJS' => true,
-				'enableDisplayContent' => true,
-		);
-		echo $this->getDisplayObject($instance, $param);
-
-		echo '</div>'."\n";
-		echo '</div>'."\n";
-		
-		return;
-		
-		$object = $this->_nebuleInstance->convertIdToTypedObjectInstance($this->_applicationInstance->getCurrentObject());
-
-		// Affichage de l'entête.
-		$this->displayObjectDivHeaderH1($object);
-
-		// Affiche les émotions.
-		$this->displayInlineEmotions($this->_applicationInstance->getCurrentObject());
-		
-		// Affiche le contenu en ligne.
-		$this->registerInlineContentID('objectcontent');
-	}
-	
-	private function _displayInlineContentObject()
-	{
-		$object = $this->_nebuleInstance->convertIdToTypedObjectInstance($this->_applicationInstance->getCurrentObject());
-
-		$isGroup = $object->getIsGroup('myself');
-
-		// Affichage les actions possibles.
-		$actionList = array();
-		$id = $object->getID();
-		$isEntity = $object->getIsEntity('all');
-
-		// Modifie le type au besoin.
-		if ( $isEntity && ! is_a($object, 'Entity') )
-		{
-			$object = $this->_nebuleInstance->newEntity($object->getID());
-		}
-		if ( $isGroup && ! is_a($object, 'Group') )
-		{
-			$object = $this->_nebuleInstance->newGroup($object->getID());
-		}
-
-		// Détermine si l'objet est protégé.
-		$protected = $object->getMarkProtected();
-
-		// Affiche le menu des actions.
-		if ( $isGroup )
-		{
-			if ( $this->_unlocked
-					&& $this->_nebuleInstance->getOption('permitWrite')
-					&& $this->_nebuleInstance->getOption('permitWriteLink')
-					&& $this->_nebuleInstance->getOption('permitWriteGroup')
-				)
-			{
-				// Supprimer le groupe.
-				$actionList[0]['name'] = '::DeleteGroup';
-				$actionList[0]['icon'] = self::DEFAULT_ICON_LX;
-				$actionList[0]['desc'] = '';
-				$actionList[0]['css']  = 'oneAction-bg-warn';
-				$actionList[0]['link'] = '?'
-					.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-					.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$this->_applicationInstance->getCurrentObject()
-					.'&'.Action::DEFAULT_COMMAND_ACTION_DELETE_GROUP.'='.$this->_applicationInstance->getCurrentObject()
-					.$this->_nebuleInstance->getActionTicket();
-			}
-		}
-		if ( $isEntity )
-		{
-			// Se connecter avec l'entité.
-			if ( ! $this->_unlocked || $id != $this->_nebuleInstance->getCurrentEntity() )
-			{
-				$actionList[1]['name']  = '::ConnectWith';
-				$actionList[1]['icon']  = self::DEFAULT_ICON_ENTITY_LOCK;
-				$actionList[1]['desc']  = '';
-				$actionList[1]['link']  = '?'
-					.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_AUTH_COMMAND
-					.'&'.nebule::COMMAND_LOGOUT_ENTITY.'&'.nebule::COMMAND_SWITCH_TO_ENTITY
-					.'&'.nebule::COMMAND_SELECT_ENTITY.'='.$id;
-			}
-
-			if ( $this->_nebuleInstance->getOption('permitSynchronizeLink') && $this->_nebuleInstance->getOption('permitSynchronizeObject') )
-			{
-				// Synchroniser l'entité.
-				$actionList[2]['name'] = '::SynchronizeEntity';
-				$actionList[2]['icon'] = self::DEFAULT_ICON_SYNENT;
-				$actionList[2]['desc']  = '';
-				$actionList[2]['link']  = '?'
-					.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-					.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$id
-					.'&'.Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY.'='.$id
-					.$this->_nebuleInstance->getActionTicket();
-			}
-
-			if ( $this->_unlocked && $id == $this->_nebuleInstance->getCurrentEntity() )
-			{
-				// Verrouiller l'entité.
-				$actionList[3]['name'] = '::Lock';
-				$actionList[3]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
-				$actionList[3]['desc'] = '';
-				$actionList[3]['css']  = 'oneAction-bg-warn';
-				$actionList[3]['link'] = '?'
-					.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_ABOUT_COMMAND
-					.'&'.nebule::COMMAND_LOGOUT_ENTITY.'&'.nebule::COMMAND_FLUSH;
-			}
-
-			// Voir les objets.
-			$actionList[4]['name'] = '::ShowObjectsOf';
-			$actionList[4]['icon'] = self::DEFAULT_ICON_LSTOBJ;
-			$actionList[4]['desc'] = '';
-			$actionList[4]['link'] = '?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_OBJECT_LIST_COMMAND
-				.'&'.nebule::COMMAND_SELECT_ENTITY.'='.$id;
-
-			// Voir les groupes.
-			$actionList[5]['name'] = '::EntitiesGroupList';
-			$actionList[5]['icon'] = self::DEFAULT_ICON_GRPENT;
-			$actionList[5]['desc'] = '';
-			$actionList[5]['link'] = '?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_GROUP_LIST_COMMAND
-				.'&'.nebule::COMMAND_SELECT_ENTITY.'='.$id;
-		}
-		if ( ! $isEntity
-				&& ! $isGroup
-			)
-		{
-			// Si le contenu de l'objet est présent.
-			if ( $object->checkPresent() )
-			{
-				// Télécharger l'objet.
-				$actionList[0]['name'] = '::DownloadObject';
-				$actionList[0]['icon'] = self::DEFAULT_ICON_IDOWNLOAD;
-				$actionList[0]['desc'] = '';
-				$actionList[0]['link'] = '?'.nebule::NEBULE_LOCAL_OBJECTS_FOLDER.'='.$id;
-
-				// Si l'entité est déverrouillée ou que l'objet est protégé.
-				if ( $this->_unlocked
-						|| $protected
-					)
-				{
-					// Voir la protection de l'objet.
-					$actionList[1]['name'] = '::ProtectionOfObject';
-					$actionList[1]['icon'] = self::DEFAULT_ICON_LK;
-					$actionList[1]['desc'] = '';
-					$actionList[1]['link'] = '?'
-						.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_PROTEC_COMMAND
-						.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$id;
-				}
-
-				// Si l'entité est déverrouillée.
-				if ( $this->_unlocked )
-				{
-					// Supprimer l'objet.
-					$actionList[2]['name'] = '::DeleteObject';
-					$actionList[2]['icon'] = self::DEFAULT_ICON_LD;
-					$actionList[2]['desc'] = '';
-					$actionList[2]['css']  = 'oneAction-bg-warn';
-					$actionList[2]['link'] = '?'
-						.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-						.'&'.Action::DEFAULT_COMMAND_ACTION_DELETE_OBJECT.'='.$this->_applicationInstance->getCurrentObject()
-						.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$id
-						.$this->_nebuleInstance->getActionTicket();
-
-					// Renouveler le bail de durée de vie.
-					$link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
-					if ( is_a($link, 'Link') )
-					{
-						$source = $link->getHashSource();
-						$target = $link->getHashTarget();
-						$meta = $link->getHashMeta();
-						unset($link);
-						$actionList[3]['name'] = '::RenewLiveTimeFile';
-						$actionList[3]['icon'] = self::DEFAULT_ICON_SYNLNK;
-						$actionList[3]['desc'] = '';
-						$actionList[3]['link'] = '?'
-							.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-							.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$this->_applicationInstance->getCurrentObject()
-							.'&'.Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1.'=l_'.$source.'_'.$target.'_'.$meta
-							.$this->_nebuleInstance->getActionTicket();
-					}
-				}
-			}
-		}
-		$this->displayActionList($actionList);
-		unset($actionList);
-
-		// Affiche le contenu de l'objet.
-		$this->displayObjectContentFull($object);
-
-		// Affiche un complément d'information en fonction du type d'objet.
-		if ( $isEntity )
-		{
-			// Liste des groupes fermés dont l'objet est membre.
-			$listGroupsMember = $this->_nebuleInstance->getListGroupsID($this->_applicationInstance->getCurrentEntity(), '');
-			$listOkGroups = array();
-			$i = 0;
-
-			// Affiche l'ajout à un groupe.
-			if ( sizeof($listGroupsMember) != 0 )
-			{
-?>
-
-<div class="sequence"></div>
-<?php $this->displayDivTextTitleH2(self::DEFAULT_ICON_GRPENT, '::GroupList'); ?>
-<div class="text">
-	<p>
-		<form method="post" action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-						.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$object
-						.$this->_nebuleInstance->getActionTicket(); ?>">
-			<input type="submit"
-				value="<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::AddToGroup'); ?>"
-				class="klictyModuleEntityInput">
-			<select
-				name="<?php echo Action::DEFAULT_COMMAND_ACTION_ADD_TO_GROUP; ?>"
-				class="klictyModuleEntityInput">
-<?php
-				foreach ($listGroupsMember as $group)
-				{
-					$instance = $this->_nebuleInstance->newGroup($group);
-					echo '<option value="'.$group.'">'.$instance->getFullName('myself')."</option>\n";
-				}
-				unset($instance);
-?>
-
-			</select>
-		</form>
-	</p>
-</div>
-<?php
-			}
-
-			// Prépare l'affichage des groupes.
-			if ( sizeof($listGroupsMember) != 0 )
-			{
-				$list = array();
-				foreach ( $listGroupsMember as $group )
-				{
-					if ( ! isset($listOkGroups[$group]) )
-					{
-						$instance = $this->_nebuleInstance->newGroup($group);
-
-						// Si c'est un grupe, l'affiche.
-						if ( $instance->getIsGroup('myself') )
-						{
-							$list[$i]['object'] = $instance;
-							$list[$i]['entity'] = '';
-							$list[$i]['icon'] = '';
-							$list[$i]['link'] = '?'.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-								.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$group;
-							$list[$i]['desc'] = '';
-							$list[$i]['actions'] = array();
-
-							// Retirer l'objet du groupe.
-							if ( $this->_unlocked
-									&& $this->_nebuleInstance->getOption('permitWrite')
-									&& $this->_nebuleInstance->getOption('permitWriteLink')
-									&& $this->_nebuleInstance->getOption('permitWriteGroup')
-								)
-							{
-								$list[$i]['actions'][0]['name'] = '::RemoveFromGroup';
-								$list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
-								$list[$i]['actions'][0]['link'] = '?'.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-									.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$this->_applicationInstance->getCurrentObject()
-									.'&'.Action::DEFAULT_COMMAND_ACTION_REMOVE_FROM_GROUP.'='.$group
-									.$this->_nebuleInstance->getActionTicket();
-							}
-						}
-
-						// Marque comme vu.
-						$listOkGroups[$group] = true;
-						$i++;
-					}
-				}
-				unset($group, $instance);
-				// Affichage
-				if ( sizeof($list) != 0 )
-					$this->displayItemList($list);
-				unset($list);
-			}
-			else
-			{
-				// Pas d'entité.
-				$this->displayMessageInformation('::NoGroupMember');
-			}
-			unset($listGroupsMember, $listOkGroups);
-
-			// Affiche la possibilité d'ajouter l'entité à un groupe.
-		}
-		if ( $isGroup )
-		{
-			// Liste tous les groupes.
-			$groupListID = $object->getListMembersID('self', null);
-
-			//Prépare l'affichage.
-			if ( sizeof($groupListID) != 0 )
-			{
-				$list = array();
-				$listOkItems = array( $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE) => true,
-						$this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_FERME) => true );
-				$i = 0;
-				foreach ( $groupListID as $item )
-				{
-					if ( ! isset($listOkItems[$item]) )
-					{
-						$instance = $this->_nebuleInstance->convertIdToTypedObjectInstance($item);
-
-						$list[$i]['object'] = $instance;
-						$list[$i]['entity'] = '';
-						$list[$i]['icon'] = '';
-						$list[$i]['link'] = '?'.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-							.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$item;
-						$list[$i]['desc'] = '';
-						$list[$i]['actions'] = array();
-
-						// Supprimer le groupe.
-						if ( $this->_unlocked
-								&& $this->_nebuleInstance->getOption('permitWrite')
-								&& $this->_nebuleInstance->getOption('permitWriteLink')
-								&& $this->_nebuleInstance->getOption('permitWriteGroup')
-							)
-						{
-							$list[$i]['actions'][0]['name'] = '::RemoveFromGroup';
-							$list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
-							$list[$i]['actions'][0]['link'] = '?'.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-								.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$this->_applicationInstance->getCurrentObject()
-								.'&'.Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP.'='.$item
-								.$this->_nebuleInstance->getActionTicket();
-						}
-
-						// Marque comme vu.
-						$listOkItems[$item] = true;
-						$i++;
-					}
-				}
-				unset($item, $instance);
-				// Affichage
-				if ( sizeof($list) != 0 )
-					$this->displayItemList($list);
-				unset($list);
-			}
-			else
-			{
-				// Pas d'entité.
-				$this->displayMessageInformation('::NoEntityGroup');
-			}
-			unset($groupListID, $listOkItems);
-		}
-		if ( ! $isEntity && ! $isGroup )
-		{
-			// Prépare l'affichage des contraintes de temps et de vues.
-			$lifetimeString		= $this->_applicationInstance->getTraductionInstance()->getTraduction('::LiveTime').' : ';
-			$showtimeString		= $this->_applicationInstance->getTraductionInstance()->getTraduction('::ShowTime').' : ';
-			$lifetimeExpired	= $this->_applicationInstance->getObjectLifetimeExpired($object);
-			$showtimeExpired	= $this->_applicationInstance->getObjectShowtimeExpired($object);
-
-			// Affiche les attributs de temps de vie et nombre de vues.
-			if ( ! $lifetimeExpired )
-			{
-				$lifetime		= $this->_applicationInstance->getObjectLifetime($object);
-				$lifetimeToLive	= $this->_applicationInstance->getObjectLifetimeToLive($object);
-				$lifetimeEnd	= $this->_applicationInstance->getObjectLifetimeEnd($object);
-				if ( $lifetime != '' )
-				{
-					$lifetimeString .= $this->_applicationInstance->getTraductionInstance()->getTraduction('::'.$lifetime);
-					$lifetimeString .= '.<br />';
-					$lifetimeString .= $this->_applicationInstance->getTraductionInstance()->getTraduction('::ExpireIn').' ';
-					$lifetimeString .= '<b>'.$lifetimeToLive.'</b>.<br />';
-					$lifetimeString .= $this->_applicationInstance->getTraductionInstance()->getTraduction('::Limit').' : ';
-					$lifetimeString .= $lifetimeEnd.".<br />\n";
-				}
-				else
-				{
-					$lifetimeString .= $this->_applicationInstance->getTraductionInstance()->getTraduction('::Unlimited');
-				}
-			}
-			else
-			{
-				$lifetimeString .= $this->_applicationInstance->getTraductionInstance()->getTraduction('::Expired');
-			}
-
-			// Emetteurs.
-			if ( $lifetime != '' )
-			{
-				$lifetimeString .= $this->_applicationInstance->getTraductionInstance()->getTraduction('::AddBy').' : ';
-				$links = $object->getPropertiesLinks(Application::APPLICATION_EXPIRATION_DATE, 'all');
-				$signers = array();
-				foreach ($links as $link)
-				{
-					$signers[$link->getHashSigner()] = $link->getHashSigner();
-				}
-				unset($links, $link);
-				$f = false;
-				foreach ($signers as $signer)
-				{
-					if ( $f )
-					{
-						$lifetimeString .= ', ';
-					}
-					$f = true;
-					$lifetimeString .= $this->convertInlineObjectColorIconName($signer);
-				}
-				unset($signers, $signer);
-				$lifetimeString .= ".<br />\n";
-			}
-
-			if ( ! $showtimeExpired )
-			{
-				$showtime = $this->_applicationInstance->getObjectShowtime($object);
-				$showtimeCount = $this->_applicationInstance->getObjectShowtimeCount($object);
-				$showtimeList = $this->_applicationInstance->getObjectShowtimeList($object);
-				if ( $showtime != '' )
-				{
-					$showtimeString .= $this->_applicationInstance->getTraductionInstance()->getTraduction('::'.$showtime);
-				}
-				else
-				{
-					$showtimeString .= $this->_applicationInstance->getTraductionInstance()->getTraduction('::Unlimited');
-				}
-			}
-			else
-			{
-				$showtimeString .= $this->_applicationInstance->getTraductionInstance()->getTraduction('::Expired');
-			}
-
-			if ( $lifetimeExpired )
-			{
-				$this->displayMessageError('::Expired');
-			}
-?>
-
-<div class="text">
-	<p>
-		<?php if ( ! $lifetimeExpired ) echo $lifetimeString."<br /><br />\n"; ?>
-		<?php // echo $showtimeString; ?>
-	</p>
-</div>
-<?php
-		}
-	}
-
-	private function _displayContentObjectAdd()
-	{
-		// Si autorisé à transferer des fichier.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_applicationInstance->getOption('klictyPermitUploadObject')
-				&& $this->_unlocked
-			)
-		{
-			// Si il y a eu le téléchargement d'un fichier.
-			if ( $this->_applicationInstance->getActionInstance()->getUploadObject() )
-			{
-				// Affiche le titre.
-				$this->displayDivTextTitleH2(self::DEFAULT_ICON_LO, '::UploadedNewFile', '', '');
-
-				// Si pas d'erreur.
-				if ( ! $this->_applicationInstance->getActionInstance()->getUploadObjectError() )
-				{
-					// Affiche un message OK.
-					$this->displayMessageOk('::UploadedNewFileOK');
-
-					$id = $this->_applicationInstance->getActionInstance()->getUploadObjectID();
-					$instance = $this->_nebuleInstance->newObject($id);
-					$name = $instance->getName('all');
-					$desc = $instance->getType('all');
-					$htlink = '?'.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-						.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$id;
-?>
-
-<div class="textAction">
-	<div class="oneActionItem" id="selfEntity">
-		<div class="oneActionItem-top">
-			<div class="oneAction-icon">
-				<?php $this->displayObjectColorIcon($id, $htlink, self::DEFAULT_ICON_LO); ?>
-			</div>
-			<div class="oneAction-entityname">
-				<p><?php $this->displayInlineObjectColorIconName($this->_applicationInstance->getCurrentEntity()); ?></p>
-			</div>
-			<div class="oneAction-title">
-				<p><?php $this->displayHypertextLink($name, $htlink); ?></p>
-			</div>
-			<div class="oneAction-text">
-				<p><?php echo $desc; ?></p>
-			</div>
-		</div>
-	</div>
-	<div class="oneAction-close"></div>
-</div>
-<?php
-				}
-				else
-				{
-					$this->displayMessageError('::UploadedNewFileError');
-?>
-
-		<div class="text">
-			<p>
-				(<?php echo $this->_applicationInstance->getActionInstance()->getUploadObjectErrorMessage(); ?>)
-			</p>
-		</div>
-		<?php
-				}
-			}
-
-			// Affiche le titre.
-			$this->displayDivTextTitleH2(self::DEFAULT_ICON_ADDOBJ, '::ObjectAdd', '::SelectUploadFile', '');
-?>
-
-		<div class="text">
-			<form enctype="multipart/form-data" method="post" action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_OBJECT_ADD_COMMAND
-							.$this->_nebuleInstance->getActionTicket(); ?>">
-				<input type="hidden"
-    				name="MAX_FILE_SIZE"
-    				value="<?php echo $this->_applicationInstance->getOption('klictyIOReadMaxDataPHP'); ?>" />
-    			<input type="file"
-    				name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_FILE; ?>" /><br />
-    			<div class="floatRight textAlignRight">
-    				<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::SubmitProtectFile'); ?>
-    				<input type="checkbox"
-						name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_PROTECT; ?>"
-						value="y"><br />
-					<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::SubmitLiveTimeFile'); ?> :
-					<select
-						name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LIFETIME; ?>"
-						class="klictyInput">
-						<option value="1h">
-							<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::1h'); ?>
-						</option>
-						<option value="2h">
-							<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::2h'); ?>
-						</option>
-						<option value="1d">
-							<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::1d'); ?>
-						</option>
-						<option value="2d">
-							<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::2d'); ?>
-						</option>
-						<option value="1w">
-							<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::1w'); ?>
-						</option>
-						<option value="2w">
-							<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::2w'); ?>
-						</option>
-						<option value="1m" selected>
-							<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::1m'); ?>
-						</option>
-						<option value="2m">
-							<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::2m'); ?>
-						</option>
-						<option value="1y">
-							<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::1y'); ?>
-						</option>
-						<option value="2y">
-							<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::2y'); ?>
-						</option>
-					</select><?php /* <br />
+    }
+
+
+    /**
+     * Affichage des actions.
+     */
+    private function _displayActions()
+    {
+        ?>
+
+        <div class="layout-footer footer<?php if ($this->_unlocked) {
+            echo 'Unlock';
+        } ?>">
+            <p>
+                <?php
+                // Vérifie le ticket.
+                if ($this->_nebuleInstance->checkActionTicket()) {
+                    // Appelle les actions spéciales.
+                    $this->_actionInstance->specialActions();
+
+                    // Appelle les actions génériques.
+                    $this->_actionInstance->genericActions();
+                }
+                ?>
+
+            </p>
+        </div>
+        <?php
+    }
+
+    private function _displayInlineActions()
+    {
+        ?>
+
+        <div class="inlineaction">
+            <p>
+                <?php
+                // Vérifie le ticket.
+                if ($this->_nebuleInstance->checkActionTicket()) {
+                    // Appelle les actions génériques.
+                    $this->_actionInstance->genericActions();
+                }
+                ?>
+
+            </p>
+        </div>
+        <?php
+    }
+
+
+    /**
+     * Affichage de la barre supérieure.
+     *
+     * La partie gauche présente le menu et l'entité déverrouillée ou des icônes de navigation hors connexion.
+     *
+     * La partie droite présente :
+     * - Un warning si il y a un problème. En mode rescue, on peut quand même verrouiller/déverrouiller l'entité.
+     * - Une erreur si il y a un gros problème. Il n'est pas possible de déverrouiller l'entité.
+     */
+    private function _displayHeader()
+    {
+        ?>
+
+        <div class="layout-header header<?php if ($this->_unlocked) {
+            echo 'Unlock';
+        } ?>">
+            <div class="header-left">
+                <img src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>" alt="[M]"
+                     title="<?php echo $this->_traductionInstance->getTraduction('::menu'); ?>"
+                     onclick="display_menu('layout-menu-applications');"/>
+            </div>
+            <?php
+            // Si l'entité n'est en cours n'est pas l'entité par défaut.
+            if ($this->_nebuleInstance->getCurrentEntity() != $this->_nebuleInstance->getOption('defaultCurrentEntity')) {
+                // Affiche l'entité et son image.
+                $param = array(
+                    'enableDisplayColor' => true,
+                    'enableDisplayIcon' => true,
+                    'enableDisplayRefs' => false,
+                    'enableDisplayName' => true,
+                    'enableDisplayID' => false,
+                    'enableDisplayFlags' => true,
+                    'enableDisplayFlagProtection' => false,
+                    'enableDisplayFlagObfuscate' => false,
+                    'enableDisplayFlagUnlocked' => true,
+                    'enableDisplayFlagState' => true,
+                    'enableDisplayFlagEmotions' => false,
+                    'enableDisplayStatus' => false,
+                    'enableDisplayContent' => false,
+                    'displaySize' => 'medium',
+                    'displayRatio' => 'short',
+                    'enableDisplayRefs' => true,
+                    'enableDisplayJS' => false,
+                    'enableDisplayObjectActions' => false,
+                    'objectRefs' => $this->_nebuleInstance->getListEntitiesUnlockedInstances(),
+                );
+                if ($this->_unlocked) {
+                    $param['flagUnlockedLink'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
+                        . '&' . nebule::COMMAND_LOGOUT_ENTITY
+                        . '&' . nebule::COMMAND_FLUSH;
+                } else {
+                    $param['flagUnlockedLink'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
+                        . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
+                }
+                echo $this->getDisplayObject($this->_nebuleInstance->getCurrentEntity(), $param);
+            } else {
+                ?>
+
+                <div class="header-left2">
+                    <?php
+                    $this->displayHypertextLink(
+                        $this->convertUpdateImage(
+                            self::DEFAULT_ICON_LSTENT,
+                            '::EntitiesList'),
+                        '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_LIST_COMMAND);
+                    $this->displayHypertextLink(
+                        $this->convertUpdateImage(
+                            self::DEFAULT_ICON_ADDENT,
+                            '::EntityAdd'),
+                        '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_ADD_COMMAND);
+                    $this->displayHypertextLink(
+                        $this->convertUpdateImage(
+                            self::DEFAULT_ICON_WORLD,
+                            ':::SelectLanguage'),
+                        '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ABOUT_COMMAND . '#lang');
+                    ?>
+
+                </div>
+                <?php
+            }
+            ?>
+
+            <div class="header-right">
+                <?php
+                if ($this->_applicationInstance->getCheckSecurityAll() == 'OK') {
+                    echo "&nbsp;\n";
+                } // Si un test est en warning maximum.
+                elseif ($this->_applicationInstance->getCheckSecurityAll() == 'WARN') {
+                    // Si mode rescue et en warning.
+                    if ($this->_nebuleInstance->getModeRescue()) {
+                        // Si l'entité est déverrouillées.
+                        if ($this->_unlocked) {
+                            // Affiche le lien de verrouillage sans les effets.
+                            $this->displayHypertextLink(
+                                $this->convertUpdateImage(
+                                    $this->_iconIwarn, 'Etat déverrouillé, verrouiller ?',
+                                    '',
+                                    '',
+                                    'name="ico_lock"'),
+                                '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
+                                . '&' . nebule::COMMAND_LOGOUT_ENTITY
+                                . '&' . nebule::COMMAND_FLUSH);
+                        } else {
+                            // Affiche de lien de déverrouillage sans les effets.
+                            $this->displayHypertextLink(
+                                $this->convertUpdateImage(
+                                    $this->_iconIwarn, 'Etat verrouillé, déverrouiller ?',
+                                    '',
+                                    '',
+                                    'name="ico_lock"'),
+                                '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
+                                . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity());
+                        }
+                    } // Sinon affiche le warning.
+                    else {
+                        $this->displayHypertextLink(
+                            $this->convertUpdateImage(
+                                self::DEFAULT_ICON_IWARN,
+                                'WARNING'),
+                            '?' . nebule::COMMAND_LOGOUT_ENTITY
+                            . '&' . nebule::COMMAND_SWITCH_TO_ENTITY);
+                    }
+                } // Sinon c'est une erreur.
+                else {
+                    $this->displayHypertextLink(
+                        $this->convertUpdateImage(
+                            self::DEFAULT_ICON_IERR,
+                            'ERROR'),
+                        '?' . nebule::COMMAND_LOGOUT_ENTITY
+                        . '&' . nebule::COMMAND_FLUSH);
+                }
+                ?>
+
+            </div>
+            <div class="header-center">
+                <?php $this->_displayHeaderCenter(); ?>
+
+            </div>
+        </div>
+        <?php
+    }
+
+
+    /**
+     * Affiche la partie centrale de l'entête.
+     * Non utilisé.
+     */
+    private function _displayHeaderCenter()
+    {
+        //...
+    }
+
+
+    /**
+     * Affiche le menu des applications.
+     */
+    private function _displayMenuApplications()
+    {
+        global $applicationName, $applicationVersion, $applicationLicence, $applicationAuthor, $applicationWebsite, $applicationLevel,
+               $bootstrapName;
+
+        $linkApplicationWebsite = $applicationWebsite;
+        if (strpos($applicationWebsite, '://') === false) {
+            $linkApplicationWebsite = 'http://' . $applicationWebsite;
+        }
+        ?>
+
+        <div class="layout-menu-applications" id="layout-menu-applications">
+            <div class="menu-applications-sign">
+                <img alt="<?php echo $applicationName; ?>" src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>"/><br/>
+                <?php echo $applicationName; ?><br/>
+                (c) <?php echo $applicationLicence . ' ' . $applicationAuthor; ?><br/>
+                <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Version');
+                echo ' : ' . $applicationVersion . ' ' . $applicationLevel; ?><br/>
+                <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo $applicationWebsite; ?></a>
+            </div>
+            <div class="menu-applications-logo">
+                <img src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>" alt="[M]"
+                     title="<?php echo $this->_traductionInstance->getTraduction('::menu'); ?>"
+                     onclick="display_menu('layout-menu-applications');"/>
+            </div>
+            <div class="menu-applications">
+                <?php
+                if ($this->_unlocked) {
+                    $modulesName = array(
+                        '::ShowObjectsOf',
+                        '::ObjectAdd',
+                        '::EntitiesList',
+                        '::EntitiesGroupList',
+                        '::EntitiesGroupAdd',
+                        '::Help',
+                        ':::SelectLanguage',
+                        '::Lock');
+                    $modulesIcon = array(
+                        self::DEFAULT_ICON_LSTOBJ,
+                        self::DEFAULT_ICON_ADDOBJ,
+                        self::DEFAULT_ICON_LSTENT,
+                        self::DEFAULT_ICON_GRPENT,
+                        self::DEFAULT_ICON_GRPENTADD,
+                        self::DEFAULT_ICON_HELP,
+                        self::DEFAULT_ICON_WORLD,
+                        self::DEFAULT_ICON_ENTITY_LOCK);
+                    $modulesLink = array(
+                        self::DEFAULT_OBJECT_LIST_COMMAND . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity(),
+                        self::DEFAULT_OBJECT_ADD_COMMAND,
+                        self::DEFAULT_ENTITY_LIST_COMMAND,
+                        self::DEFAULT_GROUP_LIST_COMMAND . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity(),
+                        self::DEFAULT_GROUP_ENTITY_ADD_COMMAND,
+                        self::DEFAULT_ABOUT_COMMAND . '#help',
+                        self::DEFAULT_ABOUT_COMMAND . '#lang',
+                        self::DEFAULT_ABOUT_COMMAND . '&' . nebule::COMMAND_LOGOUT_ENTITY . '&' . nebule::COMMAND_FLUSH);
+                } else {
+                    $modulesName = array(
+                        '::ObjectsList',
+                        '::EntitiesList',
+                        '::EntitySync',
+                        '::EntityAdd',
+                        ':::Flush',
+                        '::Help',
+                        ':::SelectLanguage',
+                    );
+                    $modulesIcon = array(
+                        self::DEFAULT_ICON_LSTOBJ,
+                        self::DEFAULT_ICON_LSTENT,
+                        self::DEFAULT_ICON_SYNENT,
+                        self::DEFAULT_ICON_ADDENT,
+                        self::DEFAULT_ICON_FLUSH,
+                        self::DEFAULT_ICON_HELP,
+                        self::DEFAULT_ICON_WORLD,
+                    );
+                    $modulesLink = array(
+                        self::DEFAULT_OBJECT_LIST_COMMAND . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity(),
+                        self::DEFAULT_ENTITY_LIST_COMMAND,
+                        self::DEFAULT_ENTITY_SYNC_COMMAND,
+                        self::DEFAULT_ENTITY_ADD_COMMAND,
+                        self::DEFAULT_ABOUT_COMMAND . '&' . nebule::COMMAND_FLUSH,
+                        self::DEFAULT_ABOUT_COMMAND . '#help',
+                        self::DEFAULT_ABOUT_COMMAND . '#lang',
+                    );
+                }
+
+                foreach ($modulesName as $i => $module) {
+                    $name = $this->_applicationInstance->getTraductionInstance()->getTraduction($module);
+                    $icon = $modulesIcon[$i];
+                    $link = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $modulesLink[$i];
+                    ?>
+
+                    <div class="menu-applications-one">
+                        <div class="menu-applications-icon">
+                            <?php $this->displayHypertextLink($this->convertUpdateImage($icon, $name), $link); ?>
+                        </div>
+                        <div class="menu-applications-title">
+                            <p><?php $this->displayHypertextLink($name, $link); ?></p>
+                        </div>
+                    </div>
+                    <?php
+                }
+                ?>
+
+                <div class="menu-applications-one">
+                    <div class="menu-applications-icon">
+                        <?php $this->displayHypertextLink('<img src="' . parent::DEFAULT_APPLICATION_LOGO . '" alt="' . $bootstrapName . '" />', '?' . Action::DEFAULT_COMMAND_NEBULE_BOOTSTRAP); ?>
+
+                    </div>
+                    <div class="menu-applications-title">
+                        <p><?php echo $bootstrapName; ?></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
+
+    /**
+     * Affiche les alertes.
+     */
+    private function _displayChecks()
+    {
+        if ($this->_nebuleInstance->getModeRescue()) {
+            $this->displayMessageWarning('::::RESCUE');
+        }
+        if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'WARN') {
+            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
+        }
+        if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'ERROR') {
+            $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
+        }
+        if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'WARN') {
+            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
+        }
+        if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'ERROR') {
+            $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
+        }
+        if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'WARN') {
+            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
+        }
+        if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'ERROR') {
+            $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
+        }
+        if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'ERROR') {
+            $this->displayMessageError($this->_applicationInstance->getCheckSecurityBootstrapMessage());
+        }
+        if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'WARN') {
+            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityBootstrapMessage());
+        }
+        if ($this->_applicationInstance->getCheckSecuritySign() == 'WARN') {
+            $this->displayMessageWarning($this->_applicationInstance->getCheckSecuritySignMessage());
+        }
+        if ($this->_applicationInstance->getCheckSecuritySign() == 'ERROR') {
+            $this->displayMessageError($this->_applicationInstance->getCheckSecuritySignMessage());
+        }
+        if ($this->_applicationInstance->getCheckSecurityURL() == 'WARN') {
+            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityURLMessage());
+        }
+        if (!$this->_nebuleInstance->getOption('permitWrite')) {
+            $this->displayMessageWarning(':::warn_ServNotPermitWrite');
+        }
+        if ($this->_nebuleInstance->getFlushCache()) {
+            $this->displayMessageWarning(':::warn_flushSessionAndCache');
+        }
+    }
+
+
+    /**
+     * Contenu de la page.
+     *
+     * Affiche le contenu des pages en fonction du mode demandé.
+     * Un seul type de vue est pris en compte pour l'affichage, les autres sont ignorés.
+     *
+     * Chaque page peut faire appel à des contenus en ligne gérés par _displayInlineContent.
+     */
+    private function _displayContent()
+    {
+        switch ($this->_currentDisplayView) {
+            case self::DEFAULT_ABOUT_COMMAND :
+                $this->_displayContentAbout();
+                break;
+            case self::DEFAULT_OBJECT_LIST_COMMAND :
+                $this->_displayContentObjectList();
+                break;
+            case self::DEFAULT_ENTITY_LIST_COMMAND :
+                $this->_displayContentEntityList();
+                break;
+            case self::DEFAULT_GROUP_LIST_COMMAND :
+                $this->_displayContentEntityGroupList();
+                break;
+            case nebule::COMMAND_SELECT_OBJECT :
+                $this->_displayContentObject();
+                break;
+            case self::DEFAULT_OBJECT_ADD_COMMAND :
+                $this->_displayContentObjectAdd();
+                break;
+            case self::DEFAULT_ENTITY_ADD_COMMAND :
+                $this->_displayContentEntityAdd();
+                break;
+            case self::DEFAULT_GROUP_ENTITY_ADD_COMMAND :
+                $this->_displayContentEntityGroupAdd();
+                break;
+            case self::DEFAULT_ENTITY_SYNC_COMMAND :
+                $this->_displayContentEntitySync();
+                break;
+            case self::DEFAULT_PROTEC_COMMAND :
+                $this->_displayContentProtection();
+                break;
+            case self::DEFAULT_AUTH_COMMAND :
+                $this->_displayContentAuth();
+                break;
+            default:
+                $this->_displayContentAbout();
+                break;
+        }
+
+        // Lance l'affichage des contenus inline.
+        $this->_displayInlineContentID();
+    }
+
+    /**
+     * Contenu en ligne de la page.
+     *
+     * Affiche le contenu des pages en fonction du mode demandé.
+     * Un seul type de vue est pris en compte pour l'affichage, les autres sont ignorés.
+     *
+     * Ces contenus sont 'en ligne', c'est à dire sans fenêtrage. Ils ne sont pas destinés à être appellés seuls.
+     */
+    private function _displayInlineContent()
+    {
+        switch ($this->_currentDisplayView) {
+            case self::DEFAULT_ABOUT_COMMAND :
+                $this->_displayInlineContentAbout();
+                break;
+            case self::DEFAULT_OBJECT_LIST_COMMAND :
+                $this->_displayInlineContentObjectList();
+                break;
+            case self::DEFAULT_ENTITY_LIST_COMMAND :
+                $this->_displayInlineContentEntityList();
+                break;
+            case self::DEFAULT_GROUP_LIST_COMMAND :
+                $this->_displayInlineContentEntityGroupList();
+                break;
+            case nebule::COMMAND_SELECT_OBJECT :
+                $this->_displayInlineContentObject();
+                break;
+            case self::DEFAULT_OBJECT_ADD_COMMAND :
+                $this->_displayInlineContentObjectAdd();
+                break;
+            case self::DEFAULT_ENTITY_SYNC_COMMAND :
+                $this->_displayInlineContentEntitySync();
+                break;
+            case self::DEFAULT_PROTEC_COMMAND :
+                $this->_displayInlineContentProtection();
+                break;
+            default:
+                $this->_displayInlineContentAbout();
+                break;
+        }
+
+        // Lance l'affichage des contenus inline.
+        //$this->_displayInlineContentID();
+    }
+
+
+    private function _displayContentObjectList()
+    {
+        // Titre.
+        echo $this->getDisplayTitle('::ObjectList', self::DEFAULT_ICON_LSTOBJ);
+
+        // Appel l'affichage en ligne.
+        $this->registerInlineContentID('objectlist');
+    }
+
+    private function _displayInlineContentObjectList()
+    {
+        echo '<div class="layoutObjectsList">' . "\n";
+        echo '<div class="objectsListContent">' . "\n";
+
+        // Extrait la liste des objets.
+        $list = array();
+        $DisplayedList = array();
+        $id = $this->_applicationInstance->getCurrentEntity();
+        $meta = $this->_nebuleInstance->getCrypto()->hash(Application::APPLICATION_EXPIRATION_DATE);
+        $instance = $this->_nebuleInstance->newObject($meta);
+
+        // Si c'est l'entité du serveur, affiche tous les objets.
+        if ($id == $this->_nebuleInstance->getOption('defaultCurrentEntity')) {
+            $list = $instance->readLinksFilterFull('', '', 'l', '', '', $meta);
+        } // Sinon affiche les objets de l'entité.
+        else {
+            $list = $instance->readLinksFilterFull($id, '', 'l', '', '', $meta);
+        }
+
+        // Fait un pré-tri.
+        foreach ($list as $i => $item) {
+            $id2 = $item->getHashSource();
+            $instance = $this->_nebuleInstance->newObject($id2);
+            $lifetimeExpired = $this->_applicationInstance->getObjectLifetimeExpired($instance);
+            if ($lifetimeExpired) {
+                unset($list[$i]);
+            }
+        }
+
+        // Liste tous les objets.
+        foreach ($list as $item) {
+            $id = $item->getHashSource();
+            $entity = $item->getHashSigner();
+            $instance = $this->_nebuleInstance->newObject($id);
+            $id = $instance->getID();
+            $present = $this->_nebuleInstance->getIO()->checkObjectPresent($id);
+            $ban = $instance->getMarkDanger(); // @todo
+            $warn = $instance->getMarkWarning(); // @todo
+            $lifetimeExpired = $this->_applicationInstance->getObjectLifetimeExpired($instance);
+            $haveLifetime = $this->_applicationInstance->getObjectHaveLifetime($instance);
+            if (!$lifetimeExpired) {
+                $lifetime = $this->_applicationInstance->getTraductionInstance()->getTraduction('::ExpireIn')
+                    . ' ' . $this->_applicationInstance->getObjectLifetimeToLive($instance);
+            }
+
+            // Si l'objet n'est pas expiré.
+            if (!$lifetimeExpired && $haveLifetime && $DisplayedList[$id] !== true) {
+                $param = array(
+                    'enableDisplayColor' => true,
+                    'enableDisplayIcon' => true,
+                    'enableDisplayRefs' => true,
+                    'enableDisplayName' => true,
+                    'enableDisplayID' => false,
+                    'enableDisplayFlags' => true,
+                    'enableDisplayFlagEmotions' => true,
+                    'enableDisplayFlagProtection' => true,
+                    'flagProtection' => $instance->getMarkProtected(),
+                    'enableDisplayStatus' => true,
+                    'enableDisplayContent' => false,
+                    'displaySize' => 'medium',
+                    'displayRatio' => 'short',
+                    'enableDisplayJS' => false,
+                    'status' => $this->_applicationInstance->getTraductionInstance()->getTraduction($instance->getType('all')),
+                    'flagMessage' => $lifetime,
+                );
+                $param['objectRefs'][0] = $entity;
+                echo $this->getDisplayObject($instance, $param);
+            }
+            $DisplayedList[$id] = true;
+        }
+
+        // Refait une recherche et un affichage pour les objets protégés partagés.
+        $list = array();
+        $id = $this->_applicationInstance->getCurrentEntity();
+        if ($id != $this->_nebuleInstance->getOption('defaultCurrentEntity')) {
+            $listK = $this->_applicationInstance->getCurrentEntityInstance()->readLinksFilterFull(
+                '',
+                '',
+                'k',
+                '',
+                '',
+                $id
+            );
+            $listS = array();
+
+            // Fait un pré-tri.
+            if (sizeof($listK) != 0) {
+                foreach ($listK as $i => $item) {
+                    // Vérifie le signataire.
+                    $signer = $item->getHashSigner();
+                    if ($signer != $id) {
+                        // Recherche du lien de chiffrement des objets.
+                        $source = $item->getHashSource();
+                        $instance = $this->_nebuleInstance->newObject($source);
+                        $list2 = $instance->readLinksFilterFull(
+                            '',
+                            '',
+                            'k',
+                            '',
+                            '',
+                            $source
+                        );
+
+                        // Extrait l'objet protégé.
+                        if (sizeof($list2) != 0) {
+                            $source = $list2[0]->getHashSource();
+                            $instance = $this->_nebuleInstance->newObject($source);
+                            $lifetimeExpired = $this->_applicationInstance->getObjectLifetimeExpired($instance);
+                            $haveLifetime = $this->_applicationInstance->getObjectHaveLifetime($instance);
+                            // Si l'objet n'est pas expiré.
+                            if (!$lifetimeExpired
+                                && $haveLifetime
+                                && $DisplayedList[$source] !== true
+                            ) {
+                                // Valide l'objet partagé.
+                                $listS[$source] = $signer;
+                                $list[] = $source;
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach ($list as $item) {
+                // Extrait et affiche l'objet protégé.
+                $entity = $listS[$item];
+                $instance = $this->_nebuleInstance->newObject($item);
+                $id = $instance->getID();
+                $lifetimeExpired = $this->_applicationInstance->getObjectLifetimeExpired($instance);
+                $haveLifetime = $this->_applicationInstance->getObjectHaveLifetime($instance);
+                if (!$lifetimeExpired) {
+                    $lifetime = $this->_applicationInstance->getTraductionInstance()->getTraduction('::ExpireIn')
+                        . ' ' . $this->_applicationInstance->getObjectLifetimeToLive($instance);
+                }
+
+                // Si l'objet n'est pas expiré.
+                if (!$lifetimeExpired && $haveLifetime && $DisplayedList[$id] !== true) {
+                    $param = array(
+                        'enableDisplayColor' => true,
+                        'enableDisplayIcon' => true,
+                        'enableDisplayRefs' => true,
+                        'enableDisplayName' => true,
+                        'enableDisplayID' => false,
+                        'enableDisplayFlags' => true,
+                        'enableDisplayFlagEmotions' => true,
+                        'enableDisplayFlagProtection' => true,
+                        'flagProtection' => $instance->getMarkProtected(),
+                        'enableDisplayStatus' => true,
+                        'enableDisplayContent' => false,
+                        'displaySize' => 'medium',
+                        'displayRatio' => 'short',
+                        'enableDisplayJS' => false,
+                        'status' => $this->_applicationInstance->getTraductionInstance()->getTraduction($instance->getType('all')),
+                        'flagMessage' => $lifetime,
+                    );
+                    $param['objectRefs'][0] = $entity;
+                    echo $this->getDisplayObject($instance, $param);
+                }
+                $DisplayedList[$id] = true;
+            }
+        }
+
+        // Messages en fin de liste ou si liste vide.
+        if (sizeof($DisplayedList) == 0) {
+            $param = array(
+                'enableDisplayIcon' => true,
+                'displaySize' => 'medium',
+                'displayRatio' => 'short',
+                'informationType' => 'information',
+            );
+            echo $this->getDisplayInformation('::NoFile', $param);
+        } elseif (!$this->_unlocked) {
+            // Si pas déverrouillé, affiche un message.
+            $param = array(
+                'enableDisplayIcon' => true,
+                'displaySize' => 'medium',
+                'displayRatio' => 'short',
+                'informationType' => 'warn',
+            );
+            echo $this->getDisplayInformation('::AllNotDisplayed', $param);
+        }
+
+        echo '</div>' . "\n";
+        echo '</div>' . "\n";
+    }
+
+    private function _displayContentEntityList()
+    {
+        // Titre.
+        echo $this->getDisplayTitle('::EntitiesList', self::DEFAULT_ICON_LSTENT);
+
+        // Appel l'affichage en ligne.
+        $this->registerInlineContentID('listentities');
+    }
+
+    private function _displayInlineContentEntityList()
+    {
+        echo '<div class="layoutObjectsList">' . "\n";
+        echo '<div class="objectsListContent">' . "\n";
+
+        $hashType = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+        $hashEntity = $this->_nebuleInstance->getCrypto()->hash('application/x-pem-file');
+        $hashEntityObject = $this->_nebuleInstance->newObject($hashEntity);
+
+        // Liste des entités à ne pas afficher.
+        $listOkEntities = $this->_nebuleInstance->getSpecialEntities();
+        if ($this->_unlocked) {
+            $listOkEntities[$this->_applicationInstance->getCurrentEntity()] = true;
+        }
+
+        // Liste toutes les autres entités.
+        $links = $hashEntityObject->readLinksFilterFull(
+            '',
+            '',
+            'l',
+            '',
+            $hashEntity,
+            $hashType
+        );
+
+        // Affiche les entités.
+        foreach ($links as $link) {
+            $id = $link->getHashSource();
+            $instance = $this->_nebuleInstance->newEntity($id);
+            if (!isset($listOkEntities[$id])
+                && $instance->getType('all') == Entity::ENTITY_TYPE
+                && $instance->getIsPublicKey()
+            ) {
+                $param = array(
+                    'enableDisplayColor' => true,
+                    'enableDisplayIcon' => true,
+                    'enableDisplayRefs' => false,
+                    'enableDisplayName' => true,
+                    'enableDisplayID' => false,
+                    'enableDisplayFlags' => false,
+                    'enableDisplayStatus' => false,
+                    'enableDisplayContent' => false,
+                    'displaySize' => 'medium',
+                    'displayRatio' => 'short',
+                    'enableDisplayJS' => false,
+                );
+                $param['selfHookList'] = array();
+
+                // Se connecter avec cette entité.
+                $param['selfHookList'][0]['name'] = '::ConnectWith';
+                $param['selfHookList'][0]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
+                $param['selfHookList'][0]['link'] = '?'
+                    . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
+                    . '&' . nebule::COMMAND_LOGOUT_ENTITY
+                    . '&' . nebule::COMMAND_SWITCH_TO_ENTITY
+                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id;
+
+                echo $this->getDisplayObject($instance, $param);
+
+                // Marque comme vu.
+                $listOkEntities[$id] = true;
+            }
+        }
+
+        if (sizeof($listOkEntities) == 0) {
+            // Pas d'entité.
+            $param = array(
+                'enableDisplayIcon' => true,
+                'displaySize' => 'medium',
+                'displayRatio' => 'short',
+                'informationType' => 'information',
+            );
+            echo $this->getDisplayInformation('::NoEntity', $param);
+        }
+
+        echo '</div>' . "\n";
+        echo '</div>' . "\n";
+    }
+
+    private function _displayContentEntityGroupList()
+    {
+        // Titre.
+        echo $this->getDisplayTitle('::EntitiesGroupList', self::DEFAULT_ICON_GRPENT);
+
+        // Appel l'affichage en ligne.
+        $this->registerInlineContentID('listgroups');
+    }
+
+    private function _displayInlineContentEntityGroupList()
+    {
+        echo '<div class="layoutObjectsList">' . "\n";
+        echo '<div class="objectsListContent">' . "\n";
+
+        // Liste des groupes à ne pas afficher.
+        $listOkGroups = array();
+
+        // Liste tous les groupes.
+        $listGroups = $this->_nebuleInstance->getListGroupsID($this->_applicationInstance->getCurrentEntity(), '');
+
+        // Affiche les groupes.
+        foreach ($listGroups as $id) {
+            $instance = $this->_nebuleInstance->newEntity($id);
+            if (!isset($listOkGroups[$id])) {
+                $param = array(
+                    'enableDisplayColor' => true,
+                    'enableDisplayIcon' => true,
+                    'enableDisplayRefs' => false,
+                    'enableDisplayName' => true,
+                    'enableDisplayID' => false,
+                    'enableDisplayFlags' => false,
+                    'enableDisplayStatus' => false,
+                    'enableDisplayContent' => false,
+                    'displaySize' => 'medium',
+                    'displayRatio' => 'short',
+                    'enableDisplayJS' => false,
+                );
+                $param['selfHookList'] = array();
+
+                // Supprimer ce groupes.
+                if ($this->_unlocked
+                    && $this->_nebuleInstance->getOption('permitWrite')
+                    && $this->_nebuleInstance->getOption('permitWriteLink')
+                    && $this->_nebuleInstance->getOption('permitWriteGroup')
+                ) {
+                    $param['selfHookList'][0]['name'] = '::DeleteGroup';
+                    $param['selfHookList'][0]['icon'] = self::DEFAULT_ICON_LX;
+                    $param['selfHookList'][0]['link'] = '?'
+                        . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_GROUP_LIST_COMMAND
+                        . '&' . Action::DEFAULT_COMMAND_ACTION_DELETE_GROUP . '=' . $id
+                        . $this->_nebuleInstance->getActionTicket();
+                }
+
+                echo $this->getDisplayObject($instance, $param);
+
+                // Marque comme vu.
+                $listOkGroups[$id] = true;
+            }
+        }
+
+        if (sizeof($listOkGroups) == 0) {
+            // Pas d'entité.
+            $param = array(
+                'enableDisplayIcon' => true,
+                'displaySize' => 'medium',
+                'displayRatio' => 'short',
+                'informationType' => 'information',
+            );
+            echo $this->getDisplayInformation('::NoEntityGroup', $param);
+        }
+
+        echo '</div>' . "\n";
+        echo '</div>' . "\n";
+        unset($listGroups, $listOkGroups);
+    }
+
+    private function _displayContentEntityGroupAdd()
+    {
+        // Si un groupe à été créé.
+        if ($this->_actionInstance->getCreateGroup()) {
+            $createGroupID = $this->_actionInstance->getCreateGroupID();
+            $createGroupInstance = $this->_actionInstance->getCreateGroupInstance();
+            $createGroupError = $this->_actionInstance->getCreateGroupError();
+            $createGroupErrorMessage = $this->_actionInstance->getCreateGroupErrorMessage();
+
+            // Si la création à réussi.
+            if (!$createGroupError
+                && is_a($createGroupInstance, 'Group')
+            ) {
+                // Affiche le titre.
+                echo $this->getDisplayTitle('::CreatedGroup', self::DEFAULT_ICON_GRPENT);
+
+                // Affiche la nouvelle entité.
+                echo '<div class="layoutObjectsList">' . "\n";
+                echo '<div class="objectsListContent">' . "\n";
+
+                $param = array(
+                    'enableDisplayColor' => true,
+                    'enableDisplayIcon' => true,
+                    'enableDisplayRefs' => false,
+                    'enableDisplayName' => true,
+                    'enableDisplayID' => false,
+                    'enableDisplayFlags' => false,
+                    'enableDisplayStatus' => false,
+                    'enableDisplayContent' => false,
+                    'displaySize' => 'medium',
+                    'displayRatio' => 'short',
+                    'enableDisplayJS' => false,
+                );
+                $param['selfHookList'] = array();
+                echo $this->getDisplayObject($createGroupID, $param);
+
+                echo '</div>' . "\n";
+                echo '</div>' . "\n";
+            } else {
+                $param = array(
+                    'enableDisplayAlone' => true,
+                    'enableDisplayIcon' => true,
+                    'informationType' => 'error',
+                    'displayRatio' => 'long',
+                );
+                echo $this->getDisplayInformation('::NOKCreateGroup', $param);
+            }
+        } else {
+            // Affiche le titre.
+            echo $this->getDisplayTitle('::EntitiesGroupAdd', self::DEFAULT_ICON_GRPENTADD);
+
+            // Si autorisé à créer un groupe.
+            if ($this->_nebuleInstance->getOption('permitWrite')
+                && $this->_nebuleInstance->getOption('permitWriteObject')
+                && $this->_nebuleInstance->getOption('permitWriteLink')
+                && $this->_nebuleInstance->getOption('permitWriteGroup')
+                && $this->_unlocked
+            ) {
+                ?>
+
+                <div class="text">
+                    <p>
+
+
+                    <form method="post"
+                          action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_GROUP_ENTITY_ADD_COMMAND .
+                              '&' . Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP
+                              . $this->_nebuleInstance->getActionTicket(); ?>">
+                        <div class="floatRight textAlignRight">
+                            <input type="checkbox"
+                                   name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP_CLOSED; ?>"
+                                   value="y" checked>
+                            <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::GroupeFerme'); ?>
+                        </div>
+                        <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Nom'); ?>
+                        <input type="text"
+                               name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP_NAME; ?>"
+                               size="20" value="" class="klictyModuleEntityInput"><br/>
+                        <input type="submit"
+                               value="<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::CreateTheGroup'); ?>"
+                               class="klictyModuleEntityInput">
+                    </form>
+                    <?php
+
+                    ?>
+
+                    </p>
+                </div>
+                <?php
+            } else {
+                $param = array(
+                    'enableDisplayAlone' => true,
+                    'enableDisplayIcon' => true,
+                    'informationType' => 'error',
+                    'displayRatio' => 'long',
+                );
+                echo $this->getDisplayInformation(':::err_NotPermit', $param);
+            }
+        }
+    }
+
+    private function _displayContentObject()
+    {
+        echo '<div class="layoutObjectsList">' . "\n";
+        echo '<div class="objectsListContent">' . "\n";
+
+        $instance = $this->_nebuleInstance->convertIdToTypedObjectInstance($this->_applicationInstance->getCurrentObject());
+        $param = array(
+            'enableDisplayColor' => true,
+            'enableDisplayIcon' => true,
+            'enableDisplayRefs' => false,
+            'enableDisplayName' => true,
+            'enableDisplayID' => false,
+            'enableDisplayFlags' => true,
+            'enableDisplayFlagEmotions' => true,
+            'enableDisplayFlagProtection' => true,
+            'flagProtection' => $instance->getMarkProtected(),
+            'enableDisplayStatus' => true,
+            'enableDisplayContent' => true,
+            'displaySize' => 'medium',
+            'displayRatio' => 'long',
+            'status' => $this->_applicationInstance->getTraductionInstance()->getTraduction($instance->getType('all')),
+            'enableDisplayJS' => true,
+            'enableDisplayContent' => true,
+        );
+        echo $this->getDisplayObject($instance, $param);
+
+        echo '</div>' . "\n";
+        echo '</div>' . "\n";
+
+        return;
+
+        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($this->_applicationInstance->getCurrentObject());
+
+        // Affichage de l'entête.
+        $this->displayObjectDivHeaderH1($object);
+
+        // Affiche les émotions.
+        $this->displayInlineEmotions($this->_applicationInstance->getCurrentObject());
+
+        // Affiche le contenu en ligne.
+        $this->registerInlineContentID('objectcontent');
+    }
+
+    private function _displayInlineContentObject()
+    {
+        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($this->_applicationInstance->getCurrentObject());
+
+        $isGroup = $object->getIsGroup('myself');
+
+        // Affichage les actions possibles.
+        $actionList = array();
+        $id = $object->getID();
+        $isEntity = $object->getIsEntity('all');
+
+        // Modifie le type au besoin.
+        if ($isEntity && !is_a($object, 'Entity')) {
+            $object = $this->_nebuleInstance->newEntity($object->getID());
+        }
+        if ($isGroup && !is_a($object, 'Group')) {
+            $object = $this->_nebuleInstance->newGroup($object->getID());
+        }
+
+        // Détermine si l'objet est protégé.
+        $protected = $object->getMarkProtected();
+
+        // Affiche le menu des actions.
+        if ($isGroup) {
+            if ($this->_unlocked
+                && $this->_nebuleInstance->getOption('permitWrite')
+                && $this->_nebuleInstance->getOption('permitWriteLink')
+                && $this->_nebuleInstance->getOption('permitWriteGroup')
+            ) {
+                // Supprimer le groupe.
+                $actionList[0]['name'] = '::DeleteGroup';
+                $actionList[0]['icon'] = self::DEFAULT_ICON_LX;
+                $actionList[0]['desc'] = '';
+                $actionList[0]['css'] = 'oneAction-bg-warn';
+                $actionList[0]['link'] = '?'
+                    . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObject()
+                    . '&' . Action::DEFAULT_COMMAND_ACTION_DELETE_GROUP . '=' . $this->_applicationInstance->getCurrentObject()
+                    . $this->_nebuleInstance->getActionTicket();
+            }
+        }
+        if ($isEntity) {
+            // Se connecter avec l'entité.
+            if (!$this->_unlocked || $id != $this->_nebuleInstance->getCurrentEntity()) {
+                $actionList[1]['name'] = '::ConnectWith';
+                $actionList[1]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
+                $actionList[1]['desc'] = '';
+                $actionList[1]['link'] = '?'
+                    . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
+                    . '&' . nebule::COMMAND_LOGOUT_ENTITY . '&' . nebule::COMMAND_SWITCH_TO_ENTITY
+                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id;
+            }
+
+            if ($this->_nebuleInstance->getOption('permitSynchronizeLink') && $this->_nebuleInstance->getOption('permitSynchronizeObject')) {
+                // Synchroniser l'entité.
+                $actionList[2]['name'] = '::SynchronizeEntity';
+                $actionList[2]['icon'] = self::DEFAULT_ICON_SYNENT;
+                $actionList[2]['desc'] = '';
+                $actionList[2]['link'] = '?'
+                    . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                    . '&' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY . '=' . $id
+                    . $this->_nebuleInstance->getActionTicket();
+            }
+
+            if ($this->_unlocked && $id == $this->_nebuleInstance->getCurrentEntity()) {
+                // Verrouiller l'entité.
+                $actionList[3]['name'] = '::Lock';
+                $actionList[3]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
+                $actionList[3]['desc'] = '';
+                $actionList[3]['css'] = 'oneAction-bg-warn';
+                $actionList[3]['link'] = '?'
+                    . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ABOUT_COMMAND
+                    . '&' . nebule::COMMAND_LOGOUT_ENTITY . '&' . nebule::COMMAND_FLUSH;
+            }
+
+            // Voir les objets.
+            $actionList[4]['name'] = '::ShowObjectsOf';
+            $actionList[4]['icon'] = self::DEFAULT_ICON_LSTOBJ;
+            $actionList[4]['desc'] = '';
+            $actionList[4]['link'] = '?'
+                . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_OBJECT_LIST_COMMAND
+                . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id;
+
+            // Voir les groupes.
+            $actionList[5]['name'] = '::EntitiesGroupList';
+            $actionList[5]['icon'] = self::DEFAULT_ICON_GRPENT;
+            $actionList[5]['desc'] = '';
+            $actionList[5]['link'] = '?'
+                . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_GROUP_LIST_COMMAND
+                . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id;
+        }
+        if (!$isEntity
+            && !$isGroup
+        ) {
+            // Si le contenu de l'objet est présent.
+            if ($object->checkPresent()) {
+                // Télécharger l'objet.
+                $actionList[0]['name'] = '::DownloadObject';
+                $actionList[0]['icon'] = self::DEFAULT_ICON_IDOWNLOAD;
+                $actionList[0]['desc'] = '';
+                $actionList[0]['link'] = '?' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '=' . $id;
+
+                // Si l'entité est déverrouillée ou que l'objet est protégé.
+                if ($this->_unlocked
+                    || $protected
+                ) {
+                    // Voir la protection de l'objet.
+                    $actionList[1]['name'] = '::ProtectionOfObject';
+                    $actionList[1]['icon'] = self::DEFAULT_ICON_LK;
+                    $actionList[1]['desc'] = '';
+                    $actionList[1]['link'] = '?'
+                        . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
+                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id;
+                }
+
+                // Si l'entité est déverrouillée.
+                if ($this->_unlocked) {
+                    // Supprimer l'objet.
+                    $actionList[2]['name'] = '::DeleteObject';
+                    $actionList[2]['icon'] = self::DEFAULT_ICON_LD;
+                    $actionList[2]['desc'] = '';
+                    $actionList[2]['css'] = 'oneAction-bg-warn';
+                    $actionList[2]['link'] = '?'
+                        . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+                        . '&' . Action::DEFAULT_COMMAND_ACTION_DELETE_OBJECT . '=' . $this->_applicationInstance->getCurrentObject()
+                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                        . $this->_nebuleInstance->getActionTicket();
+
+                    // Renouveler le bail de durée de vie.
+                    $link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
+                    if (is_a($link, 'Link')) {
+                        $source = $link->getHashSource();
+                        $target = $link->getHashTarget();
+                        $meta = $link->getHashMeta();
+                        unset($link);
+                        $actionList[3]['name'] = '::RenewLiveTimeFile';
+                        $actionList[3]['icon'] = self::DEFAULT_ICON_SYNLNK;
+                        $actionList[3]['desc'] = '';
+                        $actionList[3]['link'] = '?'
+                            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObject()
+                            . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $source . '_' . $target . '_' . $meta
+                            . $this->_nebuleInstance->getActionTicket();
+                    }
+                }
+            }
+        }
+        $this->displayActionList($actionList);
+        unset($actionList);
+
+        // Affiche le contenu de l'objet.
+        $this->displayObjectContentFull($object);
+
+        // Affiche un complément d'information en fonction du type d'objet.
+        if ($isEntity) {
+            // Liste des groupes fermés dont l'objet est membre.
+            $listGroupsMember = $this->_nebuleInstance->getListGroupsID($this->_applicationInstance->getCurrentEntity(), '');
+            $listOkGroups = array();
+            $i = 0;
+
+            // Affiche l'ajout à un groupe.
+            if (sizeof($listGroupsMember) != 0) {
+                ?>
+
+                <div class="sequence"></div>
+                <?php $this->displayDivTextTitleH2(self::DEFAULT_ICON_GRPENT, '::GroupList'); ?>
+                <div class="text">
+                    <p>
+                    <form method="post"
+                          action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+                              . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object
+                              . $this->_nebuleInstance->getActionTicket(); ?>">
+                        <input type="submit"
+                               value="<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::AddToGroup'); ?>"
+                               class="klictyModuleEntityInput">
+                        <select
+                                name="<?php echo Action::DEFAULT_COMMAND_ACTION_ADD_TO_GROUP; ?>"
+                                class="klictyModuleEntityInput">
+                            <?php
+                            foreach ($listGroupsMember as $group) {
+                                $instance = $this->_nebuleInstance->newGroup($group);
+                                echo '<option value="' . $group . '">' . $instance->getFullName('myself') . "</option>\n";
+                            }
+                            unset($instance);
+                            ?>
+
+                        </select>
+                    </form>
+                    </p>
+                </div>
+                <?php
+            }
+
+            // Prépare l'affichage des groupes.
+            if (sizeof($listGroupsMember) != 0) {
+                $list = array();
+                foreach ($listGroupsMember as $group) {
+                    if (!isset($listOkGroups[$group])) {
+                        $instance = $this->_nebuleInstance->newGroup($group);
+
+                        // Si c'est un grupe, l'affiche.
+                        if ($instance->getIsGroup('myself')) {
+                            $list[$i]['object'] = $instance;
+                            $list[$i]['entity'] = '';
+                            $list[$i]['icon'] = '';
+                            $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+                                . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $group;
+                            $list[$i]['desc'] = '';
+                            $list[$i]['actions'] = array();
+
+                            // Retirer l'objet du groupe.
+                            if ($this->_unlocked
+                                && $this->_nebuleInstance->getOption('permitWrite')
+                                && $this->_nebuleInstance->getOption('permitWriteLink')
+                                && $this->_nebuleInstance->getOption('permitWriteGroup')
+                            ) {
+                                $list[$i]['actions'][0]['name'] = '::RemoveFromGroup';
+                                $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
+                                $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+                                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObject()
+                                    . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_FROM_GROUP . '=' . $group
+                                    . $this->_nebuleInstance->getActionTicket();
+                            }
+                        }
+
+                        // Marque comme vu.
+                        $listOkGroups[$group] = true;
+                        $i++;
+                    }
+                }
+                unset($group, $instance);
+                // Affichage
+                if (sizeof($list) != 0)
+                    $this->displayItemList($list);
+                unset($list);
+            } else {
+                // Pas d'entité.
+                $this->displayMessageInformation('::NoGroupMember');
+            }
+            unset($listGroupsMember, $listOkGroups);
+
+            // Affiche la possibilité d'ajouter l'entité à un groupe.
+        }
+        if ($isGroup) {
+            // Liste tous les groupes.
+            $groupListID = $object->getListMembersID('self', null);
+
+            //Prépare l'affichage.
+            if (sizeof($groupListID) != 0) {
+                $list = array();
+                $listOkItems = array($this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE) => true,
+                    $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_FERME) => true);
+                $i = 0;
+                foreach ($groupListID as $item) {
+                    if (!isset($listOkItems[$item])) {
+                        $instance = $this->_nebuleInstance->convertIdToTypedObjectInstance($item);
+
+                        $list[$i]['object'] = $instance;
+                        $list[$i]['entity'] = '';
+                        $list[$i]['icon'] = '';
+                        $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $item;
+                        $list[$i]['desc'] = '';
+                        $list[$i]['actions'] = array();
+
+                        // Supprimer le groupe.
+                        if ($this->_unlocked
+                            && $this->_nebuleInstance->getOption('permitWrite')
+                            && $this->_nebuleInstance->getOption('permitWriteLink')
+                            && $this->_nebuleInstance->getOption('permitWriteGroup')
+                        ) {
+                            $list[$i]['actions'][0]['name'] = '::RemoveFromGroup';
+                            $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
+                            $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+                                . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObject()
+                                . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item
+                                . $this->_nebuleInstance->getActionTicket();
+                        }
+
+                        // Marque comme vu.
+                        $listOkItems[$item] = true;
+                        $i++;
+                    }
+                }
+                unset($item, $instance);
+                // Affichage
+                if (sizeof($list) != 0)
+                    $this->displayItemList($list);
+                unset($list);
+            } else {
+                // Pas d'entité.
+                $this->displayMessageInformation('::NoEntityGroup');
+            }
+            unset($groupListID, $listOkItems);
+        }
+        if (!$isEntity && !$isGroup) {
+            // Prépare l'affichage des contraintes de temps et de vues.
+            $lifetimeString = $this->_applicationInstance->getTraductionInstance()->getTraduction('::LiveTime') . ' : ';
+            $showtimeString = $this->_applicationInstance->getTraductionInstance()->getTraduction('::ShowTime') . ' : ';
+            $lifetimeExpired = $this->_applicationInstance->getObjectLifetimeExpired($object);
+            $showtimeExpired = $this->_applicationInstance->getObjectShowtimeExpired($object);
+
+            // Affiche les attributs de temps de vie et nombre de vues.
+            if (!$lifetimeExpired) {
+                $lifetime = $this->_applicationInstance->getObjectLifetime($object);
+                $lifetimeToLive = $this->_applicationInstance->getObjectLifetimeToLive($object);
+                $lifetimeEnd = $this->_applicationInstance->getObjectLifetimeEnd($object);
+                if ($lifetime != '') {
+                    $lifetimeString .= $this->_applicationInstance->getTraductionInstance()->getTraduction('::' . $lifetime);
+                    $lifetimeString .= '.<br />';
+                    $lifetimeString .= $this->_applicationInstance->getTraductionInstance()->getTraduction('::ExpireIn') . ' ';
+                    $lifetimeString .= '<b>' . $lifetimeToLive . '</b>.<br />';
+                    $lifetimeString .= $this->_applicationInstance->getTraductionInstance()->getTraduction('::Limit') . ' : ';
+                    $lifetimeString .= $lifetimeEnd . ".<br />\n";
+                } else {
+                    $lifetimeString .= $this->_applicationInstance->getTraductionInstance()->getTraduction('::Unlimited');
+                }
+            } else {
+                $lifetimeString .= $this->_applicationInstance->getTraductionInstance()->getTraduction('::Expired');
+            }
+
+            // Emetteurs.
+            if ($lifetime != '') {
+                $lifetimeString .= $this->_applicationInstance->getTraductionInstance()->getTraduction('::AddBy') . ' : ';
+                $links = $object->getPropertiesLinks(Application::APPLICATION_EXPIRATION_DATE, 'all');
+                $signers = array();
+                foreach ($links as $link) {
+                    $signers[$link->getHashSigner()] = $link->getHashSigner();
+                }
+                unset($links, $link);
+                $f = false;
+                foreach ($signers as $signer) {
+                    if ($f) {
+                        $lifetimeString .= ', ';
+                    }
+                    $f = true;
+                    $lifetimeString .= $this->convertInlineObjectColorIconName($signer);
+                }
+                unset($signers, $signer);
+                $lifetimeString .= ".<br />\n";
+            }
+
+            if (!$showtimeExpired) {
+                $showtime = $this->_applicationInstance->getObjectShowtime($object);
+                $showtimeCount = $this->_applicationInstance->getObjectShowtimeCount($object);
+                $showtimeList = $this->_applicationInstance->getObjectShowtimeList($object);
+                if ($showtime != '') {
+                    $showtimeString .= $this->_applicationInstance->getTraductionInstance()->getTraduction('::' . $showtime);
+                } else {
+                    $showtimeString .= $this->_applicationInstance->getTraductionInstance()->getTraduction('::Unlimited');
+                }
+            } else {
+                $showtimeString .= $this->_applicationInstance->getTraductionInstance()->getTraduction('::Expired');
+            }
+
+            if ($lifetimeExpired) {
+                $this->displayMessageError('::Expired');
+            }
+            ?>
+
+            <div class="text">
+                <p>
+                    <?php if (!$lifetimeExpired) echo $lifetimeString . "<br /><br />\n"; ?>
+                    <?php // echo $showtimeString;
+                    ?>
+                </p>
+            </div>
+            <?php
+        }
+    }
+
+    private function _displayContentObjectAdd()
+    {
+        // Si autorisé à transferer des fichier.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_applicationInstance->getOption('klictyPermitUploadObject')
+            && $this->_unlocked
+        ) {
+            // Si il y a eu le téléchargement d'un fichier.
+            if ($this->_applicationInstance->getActionInstance()->getUploadObject()) {
+                // Affiche le titre.
+                $this->displayDivTextTitleH2(self::DEFAULT_ICON_LO, '::UploadedNewFile', '', '');
+
+                // Si pas d'erreur.
+                if (!$this->_applicationInstance->getActionInstance()->getUploadObjectError()) {
+                    // Affiche un message OK.
+                    $this->displayMessageOk('::UploadedNewFileOK');
+
+                    $id = $this->_applicationInstance->getActionInstance()->getUploadObjectID();
+                    $instance = $this->_nebuleInstance->newObject($id);
+                    $name = $instance->getName('all');
+                    $desc = $instance->getType('all');
+                    $htlink = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id;
+                    ?>
+
+                    <div class="textAction">
+                        <div class="oneActionItem" id="selfEntity">
+                            <div class="oneActionItem-top">
+                                <div class="oneAction-icon">
+                                    <?php $this->displayObjectColorIcon($id, $htlink, self::DEFAULT_ICON_LO); ?>
+                                </div>
+                                <div class="oneAction-entityname">
+                                    <p><?php $this->displayInlineObjectColorIconName($this->_applicationInstance->getCurrentEntity()); ?></p>
+                                </div>
+                                <div class="oneAction-title">
+                                    <p><?php $this->displayHypertextLink($name, $htlink); ?></p>
+                                </div>
+                                <div class="oneAction-text">
+                                    <p><?php echo $desc; ?></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="oneAction-close"></div>
+                    </div>
+                    <?php
+                } else {
+                    $this->displayMessageError('::UploadedNewFileError');
+                    ?>
+
+                    <div class="text">
+                        <p>
+                            (<?php echo $this->_applicationInstance->getActionInstance()->getUploadObjectErrorMessage(); ?>
+                            )
+                        </p>
+                    </div>
+                    <?php
+                }
+            }
+
+            // Affiche le titre.
+            $this->displayDivTextTitleH2(self::DEFAULT_ICON_ADDOBJ, '::ObjectAdd', '::SelectUploadFile', '');
+            ?>
+
+            <div class="text">
+                <form enctype="multipart/form-data" method="post"
+                      action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_OBJECT_ADD_COMMAND
+                          . $this->_nebuleInstance->getActionTicket(); ?>">
+                    <input type="hidden"
+                           name="MAX_FILE_SIZE"
+                           value="<?php echo $this->_applicationInstance->getOption('klictyIOReadMaxDataPHP'); ?>"/>
+                    <input type="file"
+                           name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_FILE; ?>"/><br/>
+                    <div class="floatRight textAlignRight">
+                        <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::SubmitProtectFile'); ?>
+                        <input type="checkbox"
+                               name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_PROTECT; ?>"
+                               value="y"><br/>
+                        <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::SubmitLiveTimeFile'); ?>
+                        :
+                        <select
+                                name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LIFETIME; ?>"
+                                class="klictyInput">
+                            <option value="1h">
+                                <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::1h'); ?>
+                            </option>
+                            <option value="2h">
+                                <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::2h'); ?>
+                            </option>
+                            <option value="1d">
+                                <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::1d'); ?>
+                            </option>
+                            <option value="2d">
+                                <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::2d'); ?>
+                            </option>
+                            <option value="1w">
+                                <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::1w'); ?>
+                            </option>
+                            <option value="2w">
+                                <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::2w'); ?>
+                            </option>
+                            <option value="1m" selected>
+                                <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::1m'); ?>
+                            </option>
+                            <option value="2m">
+                                <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::2m'); ?>
+                            </option>
+                            <option value="1y">
+                                <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::1y'); ?>
+                            </option>
+                            <option value="2y">
+                                <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::2y'); ?>
+                            </option>
+                        </select><?php /* <br />
 					<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::SubmitShowTimeFile'); ?> :
 <?php					<select
 						name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_SHOWTIME; ?>"
@@ -2755,930 +2854,887 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 						<option value="9">9</option>
 						<option value="10">10</option>
 					</select> */ ?>
-				</div>
-    			<input type="submit"
-    				value="<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::SubmitFile') ?>" /><br />
-    				<br />&nbsp;
-    		</form>
-		</div>
-		<?php
-		$this->displayMessageInformation($this->_applicationInstance->getTraductionInstance()->getTraduction('::UploadMaxFileSize').' : '.$this->_applicationInstance->getOption('klictyIOReadMaxDataPHP').'o');
-		}
-		else
-		{
-			$this->displayMessageError(':::err_NotPermit');
-		}
-	}
-	private function _displayInlineContentObjectAdd()
-	{
-	}
+                    </div>
+                    <input type="submit"
+                           value="<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::SubmitFile') ?>"/><br/>
+                    <br/>&nbsp;
+                </form>
+            </div>
+            <?php
+            $this->displayMessageInformation($this->_applicationInstance->getTraductionInstance()->getTraduction('::UploadMaxFileSize') . ' : ' . $this->_applicationInstance->getOption('klictyIOReadMaxDataPHP') . 'o');
+        } else {
+            $this->displayMessageError(':::err_NotPermit');
+        }
+    }
 
-	private function _displayContentEntityAdd()
-	{
-		// Si une nouvelle entité vient d'être créée par l'instance des actions.
-		if ( $this->_actionInstance->getCreateEntity() )
-		{
-			$createEntityAction			= $this->_actionInstance->getCreateEntity();
-			$createEntityID				= $this->_actionInstance->getCreateEntityID();
-			$createEntityInstance		= $this->_actionInstance->getCreateEntityInstance();
-			$createEntityError			= $this->_actionInstance->getCreateEntityError();
-			$createEntityErrorMessage	= $this->_actionInstance->getCreateEntityErrorMessage();
+    private function _displayInlineContentObjectAdd()
+    {
+    }
 
-			// Si il n'y a pas d'erreur de création.
-			if ( ! $createEntityError
-					&& is_a($createEntityInstance, 'Entity')
-				)
-			{
-				// Affiche le titre.
-				echo $this->getDisplayTitle('::NewEntityCreated', self::DEFAULT_ICON_ADDENT);
-				
-				// Affiche la nouvelle entité.
-				echo '<div class="layoutObjectsList">'."\n";
-				echo '<div class="objectsListContent">'."\n";
-				
-				$param = array(
-						'enableDisplayColor' => true,
-						'enableDisplayIcon' => true,
-						'enableDisplayRefs' => false,
-						'enableDisplayName' => true,
-						'enableDisplayID' => false,
-						'enableDisplayFlags' => false,
-						'enableDisplayStatus' => false,
-						'enableDisplayContent' => false,
-						'displaySize' => 'medium',
-						'displayRatio' => 'short',
-						'enableDisplayJS' => false,
-				);
-				$param['selfHookList'] = array();
-				
-				// Se connecter avec cette entité.
-				$param['selfHookList'][0]['name'] = '::ConnectWith';
-				$param['selfHookList'][0]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
-				$param['selfHookList'][0]['link'] = '?'
-						.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_AUTH_COMMAND
-						.'&'.nebule::COMMAND_LOGOUT_ENTITY
-						.'&'.nebule::COMMAND_SWITCH_TO_ENTITY
-						.'&'.nebule::COMMAND_SELECT_ENTITY.'='.$createEntityInstance;
-				
-				echo $this->getDisplayObject($createEntityInstance, $param);
-				
-				echo '</div>'."\n";
-				echo '</div>'."\n";
-			}
-			else
-			{
-				$param = array(
-						'enableDisplayAlone' => true,
-						'enableDisplayIcon' => true,
-						'informationType' => 'error',
-						'displayRatio' => 'long',
-				);
-				echo $this->getDisplayInformation('::EntityAddError', $param);
-			}
-		}
-		else
-		{
-			// Affiche le titre.
-			echo $this->getDisplayTitle('::CreateEntity', self::DEFAULT_ICON_ADDENT);
+    private function _displayContentEntityAdd()
+    {
+        // Si une nouvelle entité vient d'être créée par l'instance des actions.
+        if ($this->_actionInstance->getCreateEntity()) {
+            $createEntityAction = $this->_actionInstance->getCreateEntity();
+            $createEntityID = $this->_actionInstance->getCreateEntityID();
+            $createEntityInstance = $this->_actionInstance->getCreateEntityInstance();
+            $createEntityError = $this->_actionInstance->getCreateEntityError();
+            $createEntityErrorMessage = $this->_actionInstance->getCreateEntityErrorMessage();
 
-			// Si autorisé à créer une entité.
-			if ( $this->_nebuleInstance->getOption('permitWrite')
-					&& $this->_nebuleInstance->getOption('permitWriteObject')
-					&& $this->_nebuleInstance->getOption('permitWriteLink')
-					&& $this->_nebuleInstance->getOption('permitWriteEntity')
-					&& ! $this->_unlocked
-					&& $this->_nebuleInstance->getOption('permitPublicCreateEntity')
-				)
-			{
-			?>
+            // Si il n'y a pas d'erreur de création.
+            if (!$createEntityError
+                && is_a($createEntityInstance, 'Entity')
+            ) {
+                // Affiche le titre.
+                echo $this->getDisplayTitle('::NewEntityCreated', self::DEFAULT_ICON_ADDENT);
 
-<div class="text">
-	<p>
+                // Affiche la nouvelle entité.
+                echo '<div class="layoutObjectsList">' . "\n";
+                echo '<div class="objectsListContent">' . "\n";
+
+                $param = array(
+                    'enableDisplayColor' => true,
+                    'enableDisplayIcon' => true,
+                    'enableDisplayRefs' => false,
+                    'enableDisplayName' => true,
+                    'enableDisplayID' => false,
+                    'enableDisplayFlags' => false,
+                    'enableDisplayStatus' => false,
+                    'enableDisplayContent' => false,
+                    'displaySize' => 'medium',
+                    'displayRatio' => 'short',
+                    'enableDisplayJS' => false,
+                );
+                $param['selfHookList'] = array();
+
+                // Se connecter avec cette entité.
+                $param['selfHookList'][0]['name'] = '::ConnectWith';
+                $param['selfHookList'][0]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
+                $param['selfHookList'][0]['link'] = '?'
+                    . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
+                    . '&' . nebule::COMMAND_LOGOUT_ENTITY
+                    . '&' . nebule::COMMAND_SWITCH_TO_ENTITY
+                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $createEntityInstance;
+
+                echo $this->getDisplayObject($createEntityInstance, $param);
+
+                echo '</div>' . "\n";
+                echo '</div>' . "\n";
+            } else {
+                $param = array(
+                    'enableDisplayAlone' => true,
+                    'enableDisplayIcon' => true,
+                    'informationType' => 'error',
+                    'displayRatio' => 'long',
+                );
+                echo $this->getDisplayInformation('::EntityAddError', $param);
+            }
+        } else {
+            // Affiche le titre.
+            echo $this->getDisplayTitle('::CreateEntity', self::DEFAULT_ICON_ADDENT);
+
+            // Si autorisé à créer une entité.
+            if ($this->_nebuleInstance->getOption('permitWrite')
+                && $this->_nebuleInstance->getOption('permitWriteObject')
+                && $this->_nebuleInstance->getOption('permitWriteLink')
+                && $this->_nebuleInstance->getOption('permitWriteEntity')
+                && !$this->_unlocked
+                && $this->_nebuleInstance->getOption('permitPublicCreateEntity')
+            ) {
+                ?>
+
+                <div class="text">
+                    <p>
 
 
-	<form method="post"
-		action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_ENTITY_ADD_COMMAND
-							.'&'.Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY
-							.$this->_nebuleInstance->getActionTicket(); ?>">
-		<table>
-			<tr>
-				<td></td>
-				<td><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Prenom'); ?></td>
-				<td><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Nom'); ?></td>
-			</tr>
-			<tr>
-				<td><b><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Nommage'); ?></b></td>
-				<td><input type="text"
-					name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME;	?>"
-					size="10" value="" class="klictyModuleEntityInput"></td>
-				<td><input type="text"
-					name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME;		?>"
-					size="20" value="" class="klictyModuleEntityInput"></td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-			</tr>
-			<tr>
-				<td><b><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Password'); ?></b></td>
-				<td colspan=2><input type="password"
-					name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1; ?>"
-					size="30" value="" class="klictyModuleEntityInput"></td>
-			</tr>
-			<tr>
-				<td><b><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Confirmation'); ?></b></td>
-				<td colspan=2><input type="password"
-					name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2; ?>"
-					size="30" value="" class="klictyModuleEntityInput"></td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td><input type="submit"
-					value="<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::CreateAnEntity'); ?>"
-					class="klictyModuleEntityInput"></td>
-			</tr>
-		</table>
-	</form>
-	<?php
+                    <form method="post"
+                          action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_ADD_COMMAND
+                              . '&' . Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY
+                              . $this->_nebuleInstance->getActionTicket(); ?>">
+                        <table>
+                            <tr>
+                                <td></td>
+                                <td><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Prenom'); ?></td>
+                                <td><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Nom'); ?></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Nommage'); ?></b>
+                                </td>
+                                <td><input type="text"
+                                           name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME; ?>"
+                                           size="10" value="" class="klictyModuleEntityInput"></td>
+                                <td><input type="text"
+                                           name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME; ?>"
+                                           size="20" value="" class="klictyModuleEntityInput"></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Password'); ?></b>
+                                </td>
+                                <td colspan=2><input type="password"
+                                                     name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1; ?>"
+                                                     size="30" value="" class="klictyModuleEntityInput"></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Confirmation'); ?></b>
+                                </td>
+                                <td colspan=2><input type="password"
+                                                     name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2; ?>"
+                                                     size="30" value="" class="klictyModuleEntityInput"></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><input type="submit"
+                                           value="<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::CreateAnEntity'); ?>"
+                                           class="klictyModuleEntityInput"></td>
+                            </tr>
+                        </table>
+                    </form>
+                    <?php
 
-	?>
+                    ?>
 
-	</p>
-</div>
-<?php
-			}
-			else
-			{
-				$param = array(
-						'enableDisplayAlone' => true,
-						'enableDisplayIcon' => true,
-						'informationType' => 'error',
-						'displayRatio' => 'long',
-				);
-				echo $this->getDisplayInformation(':::err_NotPermit', $param);
-			}
-		}
-	}
+                    </p>
+                </div>
+                <?php
+            } else {
+                $param = array(
+                    'enableDisplayAlone' => true,
+                    'enableDisplayIcon' => true,
+                    'informationType' => 'error',
+                    'displayRatio' => 'long',
+                );
+                echo $this->getDisplayInformation(':::err_NotPermit', $param);
+            }
+        }
+    }
 
-	private function _displayContentEntitySync()
-	{
-		// Affiche le titre.
-		echo $this->getDisplayTitle('::EntitySync', self::DEFAULT_ICON_SYNENT);
+    private function _displayContentEntitySync()
+    {
+        // Affiche le titre.
+        echo $this->getDisplayTitle('::EntitySync', self::DEFAULT_ICON_SYNENT);
 
-		// Si autorisé à synchroniser une entité.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitSynchronizeObject')
-				&& $this->_nebuleInstance->getOption('permitSynchronizeLink')
-				&& ! $this->_unlocked
-			)
-		{
-?>
-<div class="text">
+        // Si autorisé à synchroniser une entité.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
+            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+            && !$this->_unlocked
+        ) {
+            ?>
+            <div class="text">
 
-	<form method="post"
-		action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_ENTITY_SYNC_COMMAND
-							.$this->_nebuleInstance->getActionTicket(); ?>">
-		<table>
-			<tr>
-				<td></td>
-				<td><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::EntityLocalisation'); ?></td>
-			</tr>
-			<tr>
-				<td><b><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::URL'); ?> </b></td>
-				<td><input type="text"
-					name="<?php echo Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_NEW_ENTITY; ?>"
-					size="40" value="" class="klictyModuleEntityInput"></td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td><input type="submit"
-					value="<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::SynchronizeEntity'); ?>"
-					class="klictyModuleEntityInput"></td>
-			</tr>
-		</table>
-	</form>
-	<?php
+                <form method="post"
+                      action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_SYNC_COMMAND
+                          . $this->_nebuleInstance->getActionTicket(); ?>">
+                    <table>
+                        <tr>
+                            <td></td>
+                            <td><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::EntityLocalisation'); ?></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::URL'); ?> </b>
+                            </td>
+                            <td><input type="text"
+                                       name="<?php echo Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_NEW_ENTITY; ?>"
+                                       size="40" value="" class="klictyModuleEntityInput"></td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><input type="submit"
+                                       value="<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::SynchronizeEntity'); ?>"
+                                       class="klictyModuleEntityInput"></td>
+                        </tr>
+                    </table>
+                </form>
+                <?php
 
-	?>
+                ?>
 
-</div>
-<?php
-		}
-		else
-		{
-			$param = array(
-					'enableDisplayAlone' => true,
-					'enableDisplayIcon' => true,
-					'informationType' => 'error',
-					'displayRatio' => 'long',
-			);
-			echo $this->getDisplayInformation(':::err_NotPermit', $param);
-		}
-	}
-	
-	private function _displayInlineContentEntitySync()
-	{
-	}
+            </div>
+            <?php
+        } else {
+            $param = array(
+                'enableDisplayAlone' => true,
+                'enableDisplayIcon' => true,
+                'informationType' => 'error',
+                'displayRatio' => 'long',
+            );
+            echo $this->getDisplayInformation(':::err_NotPermit', $param);
+        }
+    }
 
-	private function _displayContentProtection()
-	{
-		$object = $this->_applicationInstance->getCurrentObjectInstance();
-		$protect = $object->getMarkProtected();
+    private function _displayInlineContentEntitySync()
+    {
+    }
 
-		// Affichage de l'entête.
-		$this->displayObjectDivHeaderH1($object);
+    private function _displayContentProtection()
+    {
+        $object = $this->_applicationInstance->getCurrentObjectInstance();
+        $protect = $object->getMarkProtected();
 
-		// Si l'objet est présent.
-		if ( $object->checkPresent() )
-		{
-			if ( $protect )
-			{
-				$this->displayMessageOK('::ProtectedObject');
-?>
+        // Affichage de l'entête.
+        $this->displayObjectDivHeaderH1($object);
 
-<div class="text">
-	<table border="0">
-		<tr>
-			<td><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::ProtectedID'); ?></td><td>&nbsp;<?php $this->displayInlineObjectColorIconName($object->getProtectedID()); ?></td>
-		</tr>
-		<tr>
-			<td><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::UnprotectedID'); ?></td><td>&nbsp;<?php $this->displayInlineObjectColorIconName($object->getUnprotectedID()); ?></td>
-		</tr>
-	</table>
-</div>
-<?php
-			}
+        // Si l'objet est présent.
+        if ($object->checkPresent()) {
+            if ($protect) {
+                $this->displayMessageOK('::ProtectedObject');
+                ?>
 
-			// Affiche en ligne les entités pour qui c'est partagé.
-			$this->registerInlineContentID('objectprotectionshared');
+                <div class="text">
+                    <table border="0">
+                        <tr>
+                            <td><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::ProtectedID'); ?></td>
+                            <td>&nbsp;<?php $this->displayInlineObjectColorIconName($object->getProtectedID()); ?></td>
+                        </tr>
+                        <tr>
+                            <td><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::UnprotectedID'); ?></td>
+                            <td>
+                                &nbsp;<?php $this->displayInlineObjectColorIconName($object->getUnprotectedID()); ?></td>
+                        </tr>
+                    </table>
+                </div>
+                <?php
+            }
 
-			if ( $protect )
-			{
-				echo "<div class=\"sequence\"></div>\n";
+            // Affiche en ligne les entités pour qui c'est partagé.
+            $this->registerInlineContentID('objectprotectionshared');
 
-				// Affiche le titre.
-				$this->displayDivTextTitleH2(self::DEFAULT_ICON_LK, '::ShareProtectObject', '', '');
+            if ($protect) {
+                echo "<div class=\"sequence\"></div>\n";
 
-				// Avertissement.
-				$this->displayMessageWarning('::WarningSharedProtection');
+                // Affiche le titre.
+                $this->displayDivTextTitleH2(self::DEFAULT_ICON_LK, '::ShareProtectObject', '', '');
 
-				// Affiche en ligne les entités pour qui c'est partagé.
-				$this->registerInlineContentID('objectprotectionshareto');
-			}
-		}
-		else
-		{
-			$this->displayMessageError(':::display:content:errorNotAvailable');
-		}
-	}
-	private function _displayInlineContentProtection()
-	{
-		switch ( $this->getInlineContentID() )
-		{
-			case 'objectprotectionshared':	$this->_displayInlineContentProtectionShared();		break;
-			case 'objectprotectionshareto':	$this->_displayInlineContentProtectionShareTo();	break;
-		}
-	}
-	private function _displayInlineContentProtectionShared()
-	{
-		$object = $this->_applicationInstance->getCurrentObjectInstance();
+                // Avertissement.
+                $this->displayMessageWarning('::WarningSharedProtection');
 
-		// Affichage les actions possibles.
-		$actionList = array();
-		$id = $object->getID();
-		$protect = $object->getMarkProtected();
+                // Affiche en ligne les entités pour qui c'est partagé.
+                $this->registerInlineContentID('objectprotectionshareto');
+            }
+        } else {
+            $this->displayMessageError(':::display:content:errorNotAvailable');
+        }
+    }
 
-		// Si l'objet est présent.
-		if ( $object->checkPresent()
-				&& $protect
-			)
-		{
-			// Prépare l'affichage.
-			$listOkEntities = array();
-			$shareTo = $object->getProtectedTo();
-			if ( sizeof($shareTo) != 0 )
-			{
-				$list = array();
-				$i = 0;
-				foreach ( $shareTo as $entity )
-				{
-					$instance = $this->_nebuleInstance->newEntity($entity);
-					$type = $instance->getIsEntity('all');
-					if ( ! isset($listOkEntities[$entity]) && $type )
-					{
-						$list[$i]['object'] = $instance;
-						$list[$i]['entity'] = '';
-						$list[$i]['icon'] = '';
-						$list[$i]['link'] = '?'.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-							.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$entity;
-						$list[$i]['desc'] = '';
-						$list[$i]['actions'] = array();
+    private function _displayInlineContentProtection()
+    {
+        switch ($this->getInlineContentID()) {
+            case 'objectprotectionshared':
+                $this->_displayInlineContentProtectionShared();
+                break;
+            case 'objectprotectionshareto':
+                $this->_displayInlineContentProtectionShareTo();
+                break;
+        }
+    }
 
-						if ( $this->_unlocked
-								&& $this->_nebuleInstance->getOption('permitWrite')
-								&& $this->_nebuleInstance->getOption('permitWriteLink')
-								&& $this->_nebuleInstance->getOption('permitWriteObject')
-							)
-						{
-							if ( $entity == $this->_nebuleInstance->getCurrentEntity() )
-							{
-								// Déprotéger l'objet.
-								$list[$i]['actions'][0]['name'] = '::UnprotectObject';
-								$list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LK;
-								$list[$i]['actions'][0]['link'] = '?'.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_PROTEC_COMMAND
-									.'&'.Action::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT.'='.$id
-									.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$id
-									.$this->_nebuleInstance->getActionTicket();
-							}
-							elseif ( ! $this->_nebuleInstance->getIsRecoveryEntity($entity)
-										|| $this->_nebuleInstance->getOption('permitRecoveryRemoveEntity')
-								)
-							{
-								// Annuler le partage de protection. Non fiable...
-								$list[$i]['actions'][0]['name'] = '::RemoveShareProtect';
-								$list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
-								$list[$i]['actions'][0]['link'] = '?'.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_PROTEC_COMMAND
-									.'&'.Action::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY.'='.$entity
-									.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$id
-									.$this->_nebuleInstance->getActionTicket();
-							}
-						}
+    private function _displayInlineContentProtectionShared()
+    {
+        $object = $this->_applicationInstance->getCurrentObjectInstance();
 
-						// Marque comme vu.
-						$listOkEntities[$entity] = true;
-						$i++;
-					}
-				}
-				unset($entity, $instance, $type);
-				// Affichage
-				if ( sizeof($list) != 0 )
-					$this->displayItemList($list);
-				unset($list);
-			}
-			else
-			{
-				// Pas d'entité.
-				$this->displayMessageInformation('::NoEntity');
-			}
-			unset($shareTo);
-		}
-		else
-		{
-			$this->displayMessageInformation('::UnprotectedObject');
+        // Affichage les actions possibles.
+        $actionList = array();
+        $id = $object->getID();
+        $protect = $object->getMarkProtected();
 
-			// Si l'entité est déverrouillée.
-			if ( $this->_unlocked
-					&& $this->_nebuleInstance->getOption('permitWrite')
-					&& $this->_nebuleInstance->getOption('permitWriteLink')
-					&& $this->_nebuleInstance->getOption('permitWriteObject')
-				)
-			{
-				// Protéger l'objet.
-				$actionList[0]['name'] = '::ProtectObject';
-				$actionList[0]['icon'] = self::DEFAULT_ICON_LK;
-				$actionList[0]['desc'] = '';
-				$actionList[0]['link'] = '?'.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_PROTEC_COMMAND
-					.'&'.Action::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT.'='.$id
-					.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$id
-					.$this->_nebuleInstance->getActionTicket();
-				$this->displayActionList($actionList);
-				unset($actionList);
+        // Si l'objet est présent.
+        if ($object->checkPresent()
+            && $protect
+        ) {
+            // Prépare l'affichage.
+            $listOkEntities = array();
+            $shareTo = $object->getProtectedTo();
+            if (sizeof($shareTo) != 0) {
+                $list = array();
+                $i = 0;
+                foreach ($shareTo as $entity) {
+                    $instance = $this->_nebuleInstance->newEntity($entity);
+                    $type = $instance->getIsEntity('all');
+                    if (!isset($listOkEntities[$entity]) && $type) {
+                        $list[$i]['object'] = $instance;
+                        $list[$i]['entity'] = '';
+                        $list[$i]['icon'] = '';
+                        $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $entity;
+                        $list[$i]['desc'] = '';
+                        $list[$i]['actions'] = array();
 
-				$this->displayMessageWarning('::WarningProtectObject');
-			}
-		}
-	}
-	private function _displayInlineContentProtectionShareTo()
-	{
-		$object = $this->_applicationInstance->getCurrentObjectInstance();
+                        if ($this->_unlocked
+                            && $this->_nebuleInstance->getOption('permitWrite')
+                            && $this->_nebuleInstance->getOption('permitWriteLink')
+                            && $this->_nebuleInstance->getOption('permitWriteObject')
+                        ) {
+                            if ($entity == $this->_nebuleInstance->getCurrentEntity()) {
+                                // Déprotéger l'objet.
+                                $list[$i]['actions'][0]['name'] = '::UnprotectObject';
+                                $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LK;
+                                $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
+                                    . '&' . Action::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT . '=' . $id
+                                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                                    . $this->_nebuleInstance->getActionTicket();
+                            } elseif (!$this->_nebuleInstance->getIsRecoveryEntity($entity)
+                                || $this->_nebuleInstance->getOption('permitRecoveryRemoveEntity')
+                            ) {
+                                // Annuler le partage de protection. Non fiable...
+                                $list[$i]['actions'][0]['name'] = '::RemoveShareProtect';
+                                $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
+                                $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
+                                    . '&' . Action::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY . '=' . $entity
+                                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                                    . $this->_nebuleInstance->getActionTicket();
+                            }
+                        }
 
-		// Affichage les entités pour partage.
-		$id = $object->getID();
-		$protect = $object->getMarkProtected();
+                        // Marque comme vu.
+                        $listOkEntities[$entity] = true;
+                        $i++;
+                    }
+                }
+                unset($entity, $instance, $type);
+                // Affichage
+                if (sizeof($list) != 0)
+                    $this->displayItemList($list);
+                unset($list);
+            } else {
+                // Pas d'entité.
+                $this->displayMessageInformation('::NoEntity');
+            }
+            unset($shareTo);
+        } else {
+            $this->displayMessageInformation('::UnprotectedObject');
 
-		// Si l'objet est présent et protégé et si l'entité est déverrouillée
-		if ( $object->checkPresent()
-				&& $protect
-				&& $this->_unlocked
-				&& $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-			)
-		{
-			// Liste tous les groupes.
-			$listGroups = $this->_nebuleInstance->getListGroupsID($this->_nebuleInstance->getCurrentEntity(), '');
+            // Si l'entité est déverrouillée.
+            if ($this->_unlocked
+                && $this->_nebuleInstance->getOption('permitWrite')
+                && $this->_nebuleInstance->getOption('permitWriteLink')
+                && $this->_nebuleInstance->getOption('permitWriteObject')
+            ) {
+                // Protéger l'objet.
+                $actionList[0]['name'] = '::ProtectObject';
+                $actionList[0]['icon'] = self::DEFAULT_ICON_LK;
+                $actionList[0]['desc'] = '';
+                $actionList[0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
+                    . '&' . Action::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT . '=' . $id
+                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                    . $this->_nebuleInstance->getActionTicket();
+                $this->displayActionList($actionList);
+                unset($actionList);
 
-			//Prépare l'affichage des groupes.
-			$list = array();
-			$i = 0;
-			if ( sizeof($listGroups) != 0 )
-			{
-				$listOkGroups = array();
-				foreach ( $listGroups as $group )
-				{
-					if ( ! isset($listOkGroups[$group]) )
-					{
-						$instance = $this->_nebuleInstance->newGroup($group);
+                $this->displayMessageWarning('::WarningProtectObject');
+            }
+        }
+    }
 
-						// Si c'est un groupe fermé.
-						$typeClosed = $instance->getMarkClosed();
+    private function _displayInlineContentProtectionShareTo()
+    {
+        $object = $this->_applicationInstance->getCurrentObjectInstance();
 
-						$list[$i]['object'] = $instance;
-						$list[$i]['entity'] = '';
-						$list[$i]['icon'] = '';
-						$list[$i]['link'] = '?'.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-							.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$group;
-						if ( $typeClosed )
-							$list[$i]['desc'] = '::GroupeFerme';
-						else
-							$list[$i]['desc'] = '::GroupeOuvert';
-						$list[$i]['actions'] = array();
+        // Affichage les entités pour partage.
+        $id = $object->getID();
+        $protect = $object->getMarkProtected();
 
-						// Partager la protection avec le groupe.
-						$list[$i]['actions'][0]['name'] = '::ShareProtectObject';
-						$list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LL;
-						if ( $typeClosed )
-							$list[$i]['actions'][0]['link'] = '?'.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_PROTEC_COMMAND
-								.'&'.Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED.'='.$group
-								.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$id
-								.$this->_nebuleInstance->getActionTicket();
-						else
-							$list[$i]['actions'][0]['link'] = '?'.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_PROTEC_COMMAND
-								.'&'.Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED.'='.$group
-								.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$id
-								.$this->_nebuleInstance->getActionTicket();
+        // Si l'objet est présent et protégé et si l'entité est déverrouillée
+        if ($object->checkPresent()
+            && $protect
+            && $this->_unlocked
+            && $this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+        ) {
+            // Liste tous les groupes.
+            $listGroups = $this->_nebuleInstance->getListGroupsID($this->_nebuleInstance->getCurrentEntity(), '');
 
-						// Marque comme vu.
-						$listOkGroups[$group] = true;
-						$i++;
-					}
-					unset($instance, $typeClosed);
-				}
-				unset($listGroups, $group);
-			}
+            //Prépare l'affichage des groupes.
+            $list = array();
+            $i = 0;
+            if (sizeof($listGroups) != 0) {
+                $listOkGroups = array();
+                foreach ($listGroups as $group) {
+                    if (!isset($listOkGroups[$group])) {
+                        $instance = $this->_nebuleInstance->newGroup($group);
 
-			$hashType = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
-			$hashEntity = $this->_nebuleInstance->getCrypto()->hash('application/x-pem-file');
-			$hashEntityObject = $this->_nebuleInstance->newObject($hashEntity);
+                        // Si c'est un groupe fermé.
+                        $typeClosed = $instance->getMarkClosed();
 
-			// Ajoute des entités à ne pas afficher.
-			$listOkEntities[$this->_applicationInstance->getCurrentEntity()]		= true;
-			$listOkEntities[$this->_nebuleInstance->getInstanceEntity()]	= true;
-			$listOkEntities[$this->_nebuleInstance->getPuppetmaster()]		= true;
-			$listOkEntities[$this->_nebuleInstance->getSecurityMaster()]	= true;
-			$listOkEntities[$this->_nebuleInstance->getCodeMaster()]		= true;
-			$listOkEntities[$this->_nebuleInstance->getDirectoryMaster()]	= true;
-			$listOkEntities[$this->_nebuleInstance->getTimeMaster()]		= true;
-			$listOkEntities[$this->_nebuleInstance->getCurrentEntity()]		= true;
+                        $list[$i]['object'] = $instance;
+                        $list[$i]['entity'] = '';
+                        $list[$i]['icon'] = '';
+                        $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $group;
+                        if ($typeClosed)
+                            $list[$i]['desc'] = '::GroupeFerme';
+                        else
+                            $list[$i]['desc'] = '::GroupeOuvert';
+                        $list[$i]['actions'] = array();
 
-			// Liste toutes les autres entités.
-			$links = $hashEntityObject->readLinksFilterFull('' , '', 'l', '', $hashEntity, $hashType);
+                        // Partager la protection avec le groupe.
+                        $list[$i]['actions'][0]['name'] = '::ShareProtectObject';
+                        $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LL;
+                        if ($typeClosed)
+                            $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
+                                . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED . '=' . $group
+                                . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                                . $this->_nebuleInstance->getActionTicket();
+                        else
+                            $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
+                                . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED . '=' . $group
+                                . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                                . $this->_nebuleInstance->getActionTicket();
 
-			// Enlève les entités pour lequelles la protection est déjà faite.
-			$shareTo = $object->getProtectedTo();
-			foreach ( $shareTo as $entity )
-			{
-				$listOkEntities[$entity] = true;
-			}
-			unset($shareTo);
+                        // Marque comme vu.
+                        $listOkGroups[$group] = true;
+                        $i++;
+                    }
+                    unset($instance, $typeClosed);
+                }
+                unset($listGroups, $group);
+            }
 
-			//Prépare l'affichage des entités.
-			if ( sizeof($links) != 0 )
-			{
-				foreach ( $links as $link )
-				{
-					$instance = $this->_nebuleInstance->newEntity($link->getHashSource());
-					$type = $instance->getIsEntity('all');
-					if ( ! isset($listOkEntities[$link->getHashSource()]) && $type )
-					{
-						$list[$i]['object'] = $instance;
-						$list[$i]['entity'] = '';
-						$list[$i]['icon'] = '';
-						$list[$i]['link'] = '?'.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.nebule::COMMAND_SELECT_OBJECT
-							.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$link->getHashSource();
-						$list[$i]['desc'] = '';
-						$list[$i]['actions'] = array();
+            $hashType = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+            $hashEntity = $this->_nebuleInstance->getCrypto()->hash('application/x-pem-file');
+            $hashEntityObject = $this->_nebuleInstance->newObject($hashEntity);
 
-						// Se connecter avec cette entité.
-						$list[$i]['actions'][0]['name'] = '::ShareProtectObject';
-						$list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LL;
-						$list[$i]['actions'][0]['link']  = '?'.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_PROTEC_COMMAND
-							.'&'.Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY.'='.$link->getHashSource()
-							.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$id
-							.$this->_nebuleInstance->getActionTicket();
+            // Ajoute des entités à ne pas afficher.
+            $listOkEntities[$this->_applicationInstance->getCurrentEntity()] = true;
+            $listOkEntities[$this->_nebuleInstance->getInstanceEntity()] = true;
+            $listOkEntities[$this->_nebuleInstance->getPuppetmaster()] = true;
+            $listOkEntities[$this->_nebuleInstance->getSecurityMaster()] = true;
+            $listOkEntities[$this->_nebuleInstance->getCodeMaster()] = true;
+            $listOkEntities[$this->_nebuleInstance->getDirectoryMaster()] = true;
+            $listOkEntities[$this->_nebuleInstance->getTimeMaster()] = true;
+            $listOkEntities[$this->_nebuleInstance->getCurrentEntity()] = true;
 
-						// Marque comme vu.
-						$listOkEntities[$link->getHashSource()] = true;
-						$i++;
-					}
-				}
-				unset($links, $link, $instance, $type);
-			}
-			unset($hashType, $hashEntity, $hashEntityObject, $listOkGroups, $listOkEntities);
+            // Liste toutes les autres entités.
+            $links = $hashEntityObject->readLinksFilterFull('', '', 'l', '', $hashEntity, $hashType);
 
-			// Affichage
-			if ( sizeof($list) != 0 )
-				$this->displayItemList($list);
-			else
-				$this->displayMessageInformation('::NoEntity');
-			unset($list);
-		}
-	}
+            // Enlève les entités pour lequelles la protection est déjà faite.
+            $shareTo = $object->getProtectedTo();
+            foreach ($shareTo as $entity) {
+                $listOkEntities[$entity] = true;
+            }
+            unset($shareTo);
 
-	private function _displayContentAuth()
-	{
-		echo '<div class="layoutAloneItem">'."\n";
-		echo '<div class="aloneItemContent">'."\n";
-		$param = array(
-				'enableDisplayColor' => true,
-				'enableDisplayIcon' => true,
-				'enableDisplayRefs' => false,
-				'enableDisplayName' => true,
-				'enableDisplayID' => true,
-				'enableDisplayFlags' => true,
-				'enableDisplayFlagProtection' => false,
-				'enableDisplayFlagObfuscate' => false,
-				'enableDisplayFlagUnlocked' => true,
-				//'flagUnlocked' => $this->_unlocked,
-				'enableDisplayFlagState' => true,
-				'enableDisplayFlagEmotions' => false,
-				'enableDisplayStatus' => true,
-				'enableDisplayContent' => false,
-				'displaySize' => 'medium',
-				'displayRatio' => 'short',
-		);
-		echo $this->_applicationInstance->getDisplayInstance()->getDisplayObject($this->_applicationInstance->getCurrentEntityInstance(), $param);
-		echo '</div>'."\n";
-		echo '</div>'."\n";
-		
-		if ( $this->_applicationInstance->getCurrentEntityInstance()->checkPrivateKeyPassword()
-				|| ( $this->_applicationInstance->getCurrentEntity() == $this->_nebuleInstance->getCurrentEntity()
-						&& $this->_unlocked
-					)
-			)
-		{
-			echo $this->_applicationInstance->getDisplayInstance()->getDisplayTitle('::EntityUnlocked', Display::DEFAULT_ICON_KEY);
-		}
-		else
-		{
-			echo $this->_applicationInstance->getDisplayInstance()->getDisplayTitle('::EntityLocked', Display::DEFAULT_ICON_ENTITY_LOCK);
-		}
-		
-		// Extrait les états de tests en warning ou en erreur.
-		$idCheck = 'Error';
-		if ( $this->_applicationInstance->getCheckSecurityAll() == 'OK' )
-		{
-			$idCheck = 'Ok';
-		}
-		elseif ( $this->_applicationInstance->getCheckSecurityAll() == 'WARN' )
-		{
-			$idCheck = 'Warn';
-		}
-		
-		// Affiche les tests.
-		if ( $idCheck != 'Ok' )
-		{
-			$list = array();
-			$check = array(
-					$this->_applicationInstance->getCheckSecurityBootstrap(),
-					$this->_applicationInstance->getCheckSecurityCryptoHash(),
-					$this->_applicationInstance->getCheckSecurityCryptoSym(),
-					$this->_applicationInstance->getCheckSecurityCryptoAsym(),
-					$this->_applicationInstance->getCheckSecuritySign(),
-					$this->_applicationInstance->getCheckSecurityURL(),
-			);
-			$chnam = array('Bootstrap', 'Crypto Hash', 'Crypto Sym', 'Crypto Asym', 'Link Sign', 'URL');
-			for ( $i = 0 ; $i < sizeof($check) ; $i++ )
-			{
-				$list[$i]['param'] = array(
-						'enableDisplayIcon' => true,
-						'enableDisplayAlone' => false,
-						'displayRatio' => 'short',
-				);
-				$list[$i]['information'] = $chnam[$i];
-				$list[$i]['object'] = '1';
-				$list[$i]['param']['informationType'] = 'error';
-				if ( $check[$i] == 'OK' )
-				{
-					$list[$i]['param']['informationType'] = 'ok';
-				}
-				elseif ( $check[$i] == 'WARN' )
-				{
-					$list[$i]['param']['informationType'] = 'warn';
-				}
-			}
-			echo $this->_applicationInstance->getDisplayInstance()->getDisplayObjectsList($list, 'small');
-		}
-		else
-		{
-			$param = array(
-					'enableDisplayIcon' => true,
-					'enableDisplayAlone' => true,
-					'informationType' => 'ok',
-					'displaySize' => 'small',
-					'displayRatio' => 'short',
-			);
-			echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation('::::SecurityChecks', $param);
-		}
-		
-		// Affiche le champs de mot de passe.
-		if ( $idCheck != 'Error' )
-		{
-			if ( $this->_applicationInstance->getCurrentEntityInstance()->checkPrivateKeyPassword()
-					|| ( $this->_applicationInstance->getCurrentEntity() == $this->_nebuleInstance->getCurrentEntity()
-							&& $this->_unlocked
-						)
-				)
-			{
-				// Propose de la verrouiller.
-				$list = array();
-				$list[0]['title'] = $this->_traductionInstance->getTraduction('::Lock');
-				$list[0]['desc'] = $this->_traductionInstance->getTraduction('::EntityUnlocked');
-				$list[0]['icon'] = Display::DEFAULT_ICON_ENTITY_LOCK;
-				$list[0]['htlink'] = '?'.Display::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_AUTH_COMMAND
-						.'&'.nebule::COMMAND_LOGOUT_ENTITY
-						.'&'.nebule::COMMAND_FLUSH;
-				echo $this->_applicationInstance->getDisplayInstance()->getDisplayMenuList($list, 'Medium');
-			}
-			else
-			{
-				echo '<div class="layoutAloneItem">'."\n";
-				echo '<div class="aloneItemContent">'."\n";
-				$param['displaySize'] = 'small';
-				$param['displayRatio'] = 'long';
-				$param['objectIcon'] = Display::DEFAULT_ICON_KEY;
-				echo $this->_applicationInstance->getDisplayInstance()->getDisplayObject($this->_nebuleInstance->getCurrentEntityPrivateKey(), $param);
-				echo '</div>'."\n";
-				echo '</div>'."\n";
-				
-				echo '<div class="layoutAloneItem">'."\n";
-				echo '<div class="aloneItemContent">'."\n";
-				
-				echo '<div class="layoutObject layoutInformation">'."\n";
-				echo '<div class="objectTitle objectDisplayMediumShort objectTitleMedium objectDisplayShortMedium informationDisplay informationDisplayMedium informationDisplay'.$idCheck.'">'."\n";
-				
-				echo '<div class="objectTitleText objectTitleMediumText objectTitleText0 informationTitleText">'."\n";
-				
-				echo '<div class="objectTitleRefs objectTitleMediumRefs informationTitleRefs informationTitleRefs'.$idCheck.'" id="klictyModuleEntityConnect">'."\n";
-				echo $this->_traductionInstance->getTraduction('::Password')."<br />\n";
-				echo '</div>'."\n";
-				
-				echo '<div class="objectTitleName objectTitleMediumName informationTitleName informationTitleName'.$idCheck.' informationTitleMediumName" id="klictyModuleEntityConnect">'."\n";
-?>
-<form method="post" action="?<?php echo Display::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_AUTH_COMMAND
-				.'&'.nebule::COMMAND_SELECT_ENTITY.'='.$this->_applicationInstance->getCurrentEntity(); ?>">
-	<input type="hidden" name="ent" value="<?php echo $this->_applicationInstance->getCurrentEntity(); ?>">
-	<input type="password" name="pwd">
-	<input type="submit" value="<?php echo $this->_traductionInstance->getTraduction('::Unlock'); ?>">
-</form>
-<?php
-				echo '</div>'."\n";
-				
-				echo '</div>'."\n";
-				
-				echo '</div>'."\n";
-				echo '</div>'."\n";
-				
-				echo '</div>'."\n";
-				echo '</div>'."\n";
-			}
-		}
-		else
-		{
-			if ( $this->_applicationInstance->getCurrentEntityInstance()->checkPrivateKeyPassword()
-					|| ( $this->_applicationInstance->getCurrentEntity() == $this->_nebuleInstance->getCurrentEntity()
-							&& $this->_unlocked
-						)
-				)
-			{
-				// Propose de la verrouiller.
-				$list = array();
-				$list[0]['title'] = $this->_traductionInstance->getTraduction('::Lock');
-				$list[0]['desc'] = $this->_traductionInstance->getTraduction('::EntityUnlocked');
-				$list[0]['icon'] = Display::DEFAULT_ICON_ENTITY_LOCK;
-				$list[0]['htlink'] = '?'.Display::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_AUTH_COMMAND
-						.'&'.nebule::COMMAND_LOGOUT_ENTITY
-						.'&'.nebule::COMMAND_FLUSH;
-				echo $this->_applicationInstance->getDisplayInstance()->getDisplayMenuList($list, 'Medium');
-			}
-			else
-			{
-				// Affiche un message d'erreur.
-				$param = array(
-						'enableDisplayIcon' => true,
-						'enableDisplayAlone' => true,
-						'informationType' => 'error',
-						'displaySize' => 'medium',
-						'displayRatio' => 'short',
-				);
-				echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::err_NotPermit', $param);
-			}
-		}
-	}
+            //Prépare l'affichage des entités.
+            if (sizeof($links) != 0) {
+                foreach ($links as $link) {
+                    $instance = $this->_nebuleInstance->newEntity($link->getHashSource());
+                    $type = $instance->getIsEntity('all');
+                    if (!isset($listOkEntities[$link->getHashSource()]) && $type) {
+                        $list[$i]['object'] = $instance;
+                        $list[$i]['entity'] = '';
+                        $list[$i]['icon'] = '';
+                        $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $link->getHashSource();
+                        $list[$i]['desc'] = '';
+                        $list[$i]['actions'] = array();
 
-	private function _displayContentAbout()
-	{
-		global	$applicationName, $applicationSurname, $applicationWebsite,
-				$applicationVersion, $applicationLevel, $nebuleSurname, $nebuleWebsite;
-?>
+                        // Se connecter avec cette entité.
+                        $list[$i]['actions'][0]['name'] = '::ShareProtectObject';
+                        $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LL;
+                        $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
+                            . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY . '=' . $link->getHashSource()
+                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                            . $this->_nebuleInstance->getActionTicket();
 
-<div class="textcenter" id="welcome">
-	<p>
-		<img alt="klicty" src="<?php echo $this->_logoApplicationWelcome; ?>" /><br />
-		<?php echo $applicationName; ?>
-	</p>
-</div>
-<div id="about"></div>
-<div id="iconsWelcome">
-	<div id="iconWelcome1">
-		<?php $this->displayUpdateImage(self::DEFAULT_ICON_LL, '::Share', 'iconNormalDisplay') ?><br />
-		<?php $this->_traductionInstance->echoTraduction('::Share'); ?>
-	</div>
-	<div id="iconWelcome2">
-		<?php $this->displayUpdateImage(self::DEFAULT_ICON_LK, '::Protection', 'iconNormalDisplay') ?><br />
-		<?php $this->_traductionInstance->echoTraduction('::Protection'); ?>
-	</div>
-	<div id="iconWelcome3">
-		<?php $this->displayUpdateImage(self::DEFAULT_ICON_TIME, '::TimeLimited', 'iconNormalDisplay') ?><br />
-		<?php $this->_traductionInstance->echoTraduction('::TimeLimited'); ?>
-	</div>
+                        // Marque comme vu.
+                        $listOkEntities[$link->getHashSource()] = true;
+                        $i++;
+                    }
+                }
+                unset($links, $link, $instance, $type);
+            }
+            unset($hashType, $hashEntity, $hashEntityObject, $listOkGroups, $listOkEntities);
+
+            // Affichage
+            if (sizeof($list) != 0)
+                $this->displayItemList($list);
+            else
+                $this->displayMessageInformation('::NoEntity');
+            unset($list);
+        }
+    }
+
+    private function _displayContentAuth()
+    {
+        echo '<div class="layoutAloneItem">' . "\n";
+        echo '<div class="aloneItemContent">' . "\n";
+        $param = array(
+            'enableDisplayColor' => true,
+            'enableDisplayIcon' => true,
+            'enableDisplayRefs' => false,
+            'enableDisplayName' => true,
+            'enableDisplayID' => true,
+            'enableDisplayFlags' => true,
+            'enableDisplayFlagProtection' => false,
+            'enableDisplayFlagObfuscate' => false,
+            'enableDisplayFlagUnlocked' => true,
+            //'flagUnlocked' => $this->_unlocked,
+            'enableDisplayFlagState' => true,
+            'enableDisplayFlagEmotions' => false,
+            'enableDisplayStatus' => true,
+            'enableDisplayContent' => false,
+            'displaySize' => 'medium',
+            'displayRatio' => 'short',
+        );
+        echo $this->_applicationInstance->getDisplayInstance()->getDisplayObject($this->_applicationInstance->getCurrentEntityInstance(), $param);
+        echo '</div>' . "\n";
+        echo '</div>' . "\n";
+
+        if ($this->_applicationInstance->getCurrentEntityInstance()->checkPrivateKeyPassword()
+            || ($this->_applicationInstance->getCurrentEntity() == $this->_nebuleInstance->getCurrentEntity()
+                && $this->_unlocked
+            )
+        ) {
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayTitle('::EntityUnlocked', Display::DEFAULT_ICON_KEY);
+        } else {
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayTitle('::EntityLocked', Display::DEFAULT_ICON_ENTITY_LOCK);
+        }
+
+        // Extrait les états de tests en warning ou en erreur.
+        $idCheck = 'Error';
+        if ($this->_applicationInstance->getCheckSecurityAll() == 'OK') {
+            $idCheck = 'Ok';
+        } elseif ($this->_applicationInstance->getCheckSecurityAll() == 'WARN') {
+            $idCheck = 'Warn';
+        }
+
+        // Affiche les tests.
+        if ($idCheck != 'Ok') {
+            $list = array();
+            $check = array(
+                $this->_applicationInstance->getCheckSecurityBootstrap(),
+                $this->_applicationInstance->getCheckSecurityCryptoHash(),
+                $this->_applicationInstance->getCheckSecurityCryptoSym(),
+                $this->_applicationInstance->getCheckSecurityCryptoAsym(),
+                $this->_applicationInstance->getCheckSecuritySign(),
+                $this->_applicationInstance->getCheckSecurityURL(),
+            );
+            $chnam = array('Bootstrap', 'Crypto Hash', 'Crypto Sym', 'Crypto Asym', 'Link Sign', 'URL');
+            for ($i = 0; $i < sizeof($check); $i++) {
+                $list[$i]['param'] = array(
+                    'enableDisplayIcon' => true,
+                    'enableDisplayAlone' => false,
+                    'displayRatio' => 'short',
+                );
+                $list[$i]['information'] = $chnam[$i];
+                $list[$i]['object'] = '1';
+                $list[$i]['param']['informationType'] = 'error';
+                if ($check[$i] == 'OK') {
+                    $list[$i]['param']['informationType'] = 'ok';
+                } elseif ($check[$i] == 'WARN') {
+                    $list[$i]['param']['informationType'] = 'warn';
+                }
+            }
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayObjectsList($list, 'small');
+        } else {
+            $param = array(
+                'enableDisplayIcon' => true,
+                'enableDisplayAlone' => true,
+                'informationType' => 'ok',
+                'displaySize' => 'small',
+                'displayRatio' => 'short',
+            );
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation('::::SecurityChecks', $param);
+        }
+
+        // Affiche le champs de mot de passe.
+        if ($idCheck != 'Error') {
+            if ($this->_applicationInstance->getCurrentEntityInstance()->checkPrivateKeyPassword()
+                || ($this->_applicationInstance->getCurrentEntity() == $this->_nebuleInstance->getCurrentEntity()
+                    && $this->_unlocked
+                )
+            ) {
+                // Propose de la verrouiller.
+                $list = array();
+                $list[0]['title'] = $this->_traductionInstance->getTraduction('::Lock');
+                $list[0]['desc'] = $this->_traductionInstance->getTraduction('::EntityUnlocked');
+                $list[0]['icon'] = Display::DEFAULT_ICON_ENTITY_LOCK;
+                $list[0]['htlink'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
+                    . '&' . nebule::COMMAND_LOGOUT_ENTITY
+                    . '&' . nebule::COMMAND_FLUSH;
+                echo $this->_applicationInstance->getDisplayInstance()->getDisplayMenuList($list, 'Medium');
+            } else {
+                echo '<div class="layoutAloneItem">' . "\n";
+                echo '<div class="aloneItemContent">' . "\n";
+                $param['displaySize'] = 'small';
+                $param['displayRatio'] = 'long';
+                $param['objectIcon'] = Display::DEFAULT_ICON_KEY;
+                echo $this->_applicationInstance->getDisplayInstance()->getDisplayObject($this->_nebuleInstance->getCurrentEntityPrivateKey(), $param);
+                echo '</div>' . "\n";
+                echo '</div>' . "\n";
+
+                echo '<div class="layoutAloneItem">' . "\n";
+                echo '<div class="aloneItemContent">' . "\n";
+
+                echo '<div class="layoutObject layoutInformation">' . "\n";
+                echo '<div class="objectTitle objectDisplayMediumShort objectTitleMedium objectDisplayShortMedium informationDisplay informationDisplayMedium informationDisplay' . $idCheck . '">' . "\n";
+
+                echo '<div class="objectTitleText objectTitleMediumText objectTitleText0 informationTitleText">' . "\n";
+
+                echo '<div class="objectTitleRefs objectTitleMediumRefs informationTitleRefs informationTitleRefs' . $idCheck . '" id="klictyModuleEntityConnect">' . "\n";
+                echo $this->_traductionInstance->getTraduction('::Password') . "<br />\n";
+                echo '</div>' . "\n";
+
+                echo '<div class="objectTitleName objectTitleMediumName informationTitleName informationTitleName' . $idCheck . ' informationTitleMediumName" id="klictyModuleEntityConnect">' . "\n";
+                ?>
+                <form method="post"
+                      action="?<?php echo Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
+                          . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntity(); ?>">
+                    <input type="hidden" name="ent"
+                           value="<?php echo $this->_applicationInstance->getCurrentEntity(); ?>">
+                    <input type="password" name="pwd">
+                    <input type="submit" value="<?php echo $this->_traductionInstance->getTraduction('::Unlock'); ?>">
+                </form>
+                <?php
+                echo '</div>' . "\n";
+
+                echo '</div>' . "\n";
+
+                echo '</div>' . "\n";
+                echo '</div>' . "\n";
+
+                echo '</div>' . "\n";
+                echo '</div>' . "\n";
+            }
+        } else {
+            if ($this->_applicationInstance->getCurrentEntityInstance()->checkPrivateKeyPassword()
+                || ($this->_applicationInstance->getCurrentEntity() == $this->_nebuleInstance->getCurrentEntity()
+                    && $this->_unlocked
+                )
+            ) {
+                // Propose de la verrouiller.
+                $list = array();
+                $list[0]['title'] = $this->_traductionInstance->getTraduction('::Lock');
+                $list[0]['desc'] = $this->_traductionInstance->getTraduction('::EntityUnlocked');
+                $list[0]['icon'] = Display::DEFAULT_ICON_ENTITY_LOCK;
+                $list[0]['htlink'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
+                    . '&' . nebule::COMMAND_LOGOUT_ENTITY
+                    . '&' . nebule::COMMAND_FLUSH;
+                echo $this->_applicationInstance->getDisplayInstance()->getDisplayMenuList($list, 'Medium');
+            } else {
+                // Affiche un message d'erreur.
+                $param = array(
+                    'enableDisplayIcon' => true,
+                    'enableDisplayAlone' => true,
+                    'informationType' => 'error',
+                    'displaySize' => 'medium',
+                    'displayRatio' => 'short',
+                );
+                echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::err_NotPermit', $param);
+            }
+        }
+    }
+
+private function _displayContentAbout()
+{
+    global $applicationName, $applicationSurname, $applicationWebsite,
+           $applicationVersion, $applicationLevel, $nebuleSurname, $nebuleWebsite;
+    ?>
+
+    <div class="textcenter" id="welcome">
+        <p>
+            <img alt="klicty" src="<?php echo $this->_logoApplicationWelcome; ?>"/><br/>
+            <?php echo $applicationName; ?>
+        </p>
+    </div>
+    <div id="about"></div>
+    <div id="iconsWelcome">
+        <div id="iconWelcome1">
+            <?php $this->displayUpdateImage(self::DEFAULT_ICON_LL, '::Share', 'iconNormalDisplay') ?><br/>
+            <?php $this->_traductionInstance->echoTraduction('::Share'); ?>
+        </div>
+        <div id="iconWelcome2">
+            <?php $this->displayUpdateImage(self::DEFAULT_ICON_LK, '::Protection', 'iconNormalDisplay') ?><br/>
+            <?php $this->_traductionInstance->echoTraduction('::Protection'); ?>
+        </div>
+        <div id="iconWelcome3">
+            <?php $this->displayUpdateImage(self::DEFAULT_ICON_TIME, '::TimeLimited', 'iconNormalDisplay') ?><br/>
+            <?php $this->_traductionInstance->echoTraduction('::TimeLimited'); ?>
+        </div>
+    </div>
+
+    <div class="layoutMenuList">
+        <div class="menuListContent">
+            <?php
+            $param = array(
+                'enableDisplayIcon' => true,
+                'informationType' => 'ok',
+            );
+            echo $this->getDisplayInformation('::Welcome', $param);
+
+            if ($applicationLevel == 'Experimental'
+                || $applicationLevel == 'Developpement'
+            ) {
+                $param['informationType'] = 'warn';
+                echo $this->getDisplayInformation('::::' . $applicationLevel, $param);
+            }
+            $param['informationType'] = 'information';
+            echo $this->getDisplayInformation($this->_traductionInstance->getTraduction('::Version') . ' : ' . $applicationVersion, $param);
+            ?>
+        </div>
+    </div>
+
+    <div class="sequence" id="about"></div>
+    <?php
+    $param = array(
+        'enableDisplayAlone' => true,
+        'enableDisplayIcon' => true,
+        'informationType' => 'information',
+        'displayRatio' => 'long',
+    );
+    echo $this->getDisplayInformation('::AboutMessage', $param);
+    ?>
 </div>
 
-<div class="layoutMenuList">
-	<div class="menuListContent">
+    <div class="sequence" id="lang"></div>
 <?php
-		$param = array(
-				'enableDisplayIcon' => true,
-				'informationType' => 'ok',
-		);
-		echo $this->getDisplayInformation('::Welcome', $param);
-		
-		if ( $applicationLevel == 'Experimental'
-				|| $applicationLevel == 'Developpement'
-			)
-		{
-			$param['informationType'] = 'warn';
-			echo $this->getDisplayInformation('::::'.$applicationLevel, $param);
-		}
-		$param['informationType'] = 'information';
-		echo $this->getDisplayInformation($this->_traductionInstance->getTraduction('::Version').' : '.$applicationVersion, $param);
-?>
-	</div>
-</div>
-
-<div class="sequence" id="about"></div>
-<?php
-		$param = array(
-				'enableDisplayAlone' => true,
-				'enableDisplayIcon' => true,
-				'informationType' => 'information',
-				'displayRatio' => 'long',
-		);
-		echo $this->getDisplayInformation('::AboutMessage', $param);
-?>
-</div>
-
-<div class="sequence" id="lang"></div>
-<?php
-		echo $this->getDisplayTitle(':::SelectLanguage', self::DEFAULT_ICON_WORLD);
-		$i = 0;
-		foreach ( $this->_traductionInstance->getLanguageList() as $lang )
-		{
-			$actionList[$i]['title'] = $this->_traductionInstance->getTraduction(':::Language:'.$lang);
-			$actionList[$i]['icon'] = $this->_traductionInstance->getLanguageIcon($lang);
-			$actionList[$i]['desc'] = '';
-			$actionList[$i]['htlink'] = '?'
-				.self::DEFAULT_DISPLAY_COMMAND_VIEW.'='.self::DEFAULT_ABOUT_COMMAND.
-				'&'.Traductions::DEFAULT_COMMAND_LANGUAGE.'='.$lang.'#about';
-			$i++;
-		}
-		// Affichage.
-		echo $this->getDisplayMenuList($actionList, 'Medium');
-		unset($actionList);
+echo $this->getDisplayTitle(':::SelectLanguage', self::DEFAULT_ICON_WORLD);
+$i = 0;
+foreach ($this->_traductionInstance->getLanguageList() as $lang) {
+    $actionList[$i]['title'] = $this->_traductionInstance->getTraduction(':::Language:' . $lang);
+    $actionList[$i]['icon'] = $this->_traductionInstance->getLanguageIcon($lang);
+    $actionList[$i]['desc'] = '';
+    $actionList[$i]['htlink'] = '?'
+        . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ABOUT_COMMAND .
+        '&' . Traductions::DEFAULT_COMMAND_LANGUAGE . '=' . $lang . '#about';
+    $i++;
+}
+// Affichage.
+echo $this->getDisplayMenuList($actionList, 'Medium');
+unset($actionList);
 ?>
 
-<div class="sequence" id="help"></div>
+    <div class="sequence" id="help"></div>
 <?php echo $this->getDisplayTitle('::Help', self::DEFAULT_ICON_HELP); ?>
 
 <?php
-		$param = array(
-				'enableDisplayAlone' => true,
-				'enableDisplayIcon' => true,
-				'informationType' => 'information',
-				'displayRatio' => 'long',
-		);
-		echo $this->getDisplayInformation('::HelpMessage', $param);
+$param = array(
+    'enableDisplayAlone' => true,
+    'enableDisplayIcon' => true,
+    'informationType' => 'information',
+    'displayRatio' => 'long',
+);
+echo $this->getDisplayInformation('::HelpMessage', $param);
 ?>
 
-<div class="sequence" id="recovery"></div>
+    <div class="sequence" id="recovery"></div>
 <?php echo $this->getDisplayTitle('::ProtectionRecovery', self::DEFAULT_ICON_LC); ?>
 <?php $this->registerInlineContentID('listrecovery'); ?>
 
 <?php
-		$param = array(
-				'enableDisplayAlone' => true,
-				'enableDisplayIcon' => true,
-				'informationType' => 'information',
-				'displayRatio' => 'long',
-		);
-		echo $this->getDisplayInformation('::HelpRecoveryEntity', $param);
+$param = array(
+    'enableDisplayAlone' => true,
+    'enableDisplayIcon' => true,
+    'informationType' => 'information',
+    'displayRatio' => 'long',
+);
+echo $this->getDisplayInformation('::HelpRecoveryEntity', $param);
 ?>
 
-<div id="welcomeFooter">
-	<p><?php $this->_traductionInstance->echoTraduction('::Citation'); ?></p>
-	<p>
-		<a href="http://<?php echo $applicationWebsite; ?>" target="_blank"><?php echo $applicationSurname; ?> <img alt="<?php echo $applicationSurname; ?>" src="<?php echo Application::APPLICATION_LICENCE_LOGO; ?>" /></a>&nbsp;&nbsp;&nbsp;
-		<a href="http://<?php echo $nebuleWebsite; ?>" target="_blank"><img alt="<?php echo $nebuleSurname; ?>" src="<?php echo Application::NEBULE_LICENCE_LOGO; ?>" /> <?php echo $nebuleSurname; ?></a>
-	</p>
-</div>
-<?php
-	}
-	
-	private function _displayInlineContentAbout()
-	{
-		// Lit les entités de recouvrement.
-		$listEntities	= $this->_nebuleInstance->getRecoveryEntitiesInstance();
-		$listSigners	= $this->_nebuleInstance->getRecoveryEntitiesSigners();
-		
-		$list = array();
-		$i = 0;
-		foreach ( $listEntities as $instance )
-		{
-			$id = $instance->getID();
-			$list[$i]['object'] = $instance;
-			$list[$i]['param'] = array(
-					'enableDisplayColor' => true,
-					'enableDisplayIcon' => true,
-					'enableDisplayRefs' => true,
-					'enableDisplayName' => true,
-					'enableDisplayID' => false,
-					'enableDisplayFlags' => false,
-					'enableDisplayStatus' => false,
-					'enableDisplayContent' => false,
-					'displaySize' => 'medium',
-					'displayRatio' => 'short',
-			);
-			if ( $listSigners[$id] != '0'
-					&& $listSigners[$id] != ''
-				)
-			{
-				$list[$i]['param']['objectRefs'][0] = $listSigners[$id];
-			}
-			$i++;
-		}
-		unset($listEntities, $listSigners, $instance, $id);
-		
-		// Affichage
-		if ( sizeof($list) != 0 )
-		{
-			echo $this->getDisplayObjectsList($list, 'Medium');
-		}
-		else
-		{
-			$param = array(
-					'enableDisplayIcon' => true,
-					'informationType' => 'information',
-			);
-			echo $this->getDisplayInformation('::NoRecoveryEntity', $param);
-		}
-		unset($list);
-	}
+    <div id="welcomeFooter">
+        <p><?php $this->_traductionInstance->echoTraduction('::Citation'); ?></p>
+        <p>
+            <a href="http://<?php echo $applicationWebsite; ?>" target="_blank"><?php echo $applicationSurname; ?> <img
+                        alt="<?php echo $applicationSurname; ?>"
+                        src="<?php echo Application::APPLICATION_LICENCE_LOGO; ?>"/></a>&nbsp;&nbsp;&nbsp;
+            <a href="http://<?php echo $nebuleWebsite; ?>" target="_blank"><img alt="<?php echo $nebuleSurname; ?>"
+                                                                                src="<?php echo Application::NEBULE_LICENCE_LOGO; ?>"/> <?php echo $nebuleSurname; ?>
+            </a>
+        </p>
+    </div>
+    <?php
+}
+
+    private function _displayInlineContentAbout()
+    {
+        // Lit les entités de recouvrement.
+        $listEntities = $this->_nebuleInstance->getRecoveryEntitiesInstance();
+        $listSigners = $this->_nebuleInstance->getRecoveryEntitiesSigners();
+
+        $list = array();
+        $i = 0;
+        foreach ($listEntities as $instance) {
+            $id = $instance->getID();
+            $list[$i]['object'] = $instance;
+            $list[$i]['param'] = array(
+                'enableDisplayColor' => true,
+                'enableDisplayIcon' => true,
+                'enableDisplayRefs' => true,
+                'enableDisplayName' => true,
+                'enableDisplayID' => false,
+                'enableDisplayFlags' => false,
+                'enableDisplayStatus' => false,
+                'enableDisplayContent' => false,
+                'displaySize' => 'medium',
+                'displayRatio' => 'short',
+            );
+            if ($listSigners[$id] != '0'
+                && $listSigners[$id] != ''
+            ) {
+                $list[$i]['param']['objectRefs'][0] = $listSigners[$id];
+            }
+            $i++;
+        }
+        unset($listEntities, $listSigners, $instance, $id);
+
+        // Affichage
+        if (sizeof($list) != 0) {
+            echo $this->getDisplayObjectsList($list, 'Medium');
+        } else {
+            $param = array(
+                'enableDisplayIcon' => true,
+                'informationType' => 'information',
+            );
+            echo $this->getDisplayInformation('::NoRecoveryEntity', $param);
+        }
+        unset($list);
+    }
 
 
+    /**
+     * Affiche la métrologie.
+     */
+    private function _displayMetrology()
+    {
+        if ($this->_applicationInstance->getOption('klictyDisplayMetrology')) {
+            ?>
 
-	/**
-	 * Affiche la métrologie.
-	 */
-	private function _displayMetrology()
-	{
-		if ( $this->_applicationInstance->getOption('klictyDisplayMetrology') )
-		{
-?>
-
-							<?php $this->displayDivTextTitle(self::DEFAULT_ICON_IMLOG, 'Métrologie','Mesures quantitatives et temporelles.') ?>
-							<div class="text">
-								<p>
-<?php
-//		aff_title('::bloc_metrolog','imlog');
-		// Affiche les valeurs de la librairie.
-/*		echo 'Bootstrap : ';
+            <?php $this->displayDivTextTitle(self::DEFAULT_ICON_IMLOG, 'Métrologie', 'Mesures quantitatives et temporelles.') ?>
+            <div class="text">
+                <p>
+                    <?php
+                    //		aff_title('::bloc_metrolog','imlog');
+                    // Affiche les valeurs de la librairie.
+                    /*		echo 'Bootstrap : ';
 		$this->_traductionInstance->echoTraduction('%01.0f liens lus,','',$this->_bootstrapInstance->getMetrologyInstance()->getLinkRead()); echo ' ';
 		$this->_traductionInstance->echoTraduction('%01.0f liens vérifiés,','',$this->_bootstrapInstance->getMetrologyInstance()->getLinkVerify()); echo ' ';
 		$this->_traductionInstance->echoTraduction('%01.0f objets vérifiés.','',$this->_bootstrapInstance->getMetrologyInstance()->getObjectVerify()); echo "<br />\n";*/
-		echo 'Lib nebule : ';
-		$this->_traductionInstance->echoTraduction('%01.0f liens lus,','',$this->_metrologyInstance->getLinkRead()); echo ' ';
-		$this->_traductionInstance->echoTraduction('%01.0f liens vérifiés,','',$this->_metrologyInstance->getLinkVerify()); echo ' ';
-		$this->_traductionInstance->echoTraduction('%01.0f objets lus.','',$this->_metrologyInstance->getObjectRead()); echo ' ';
-		$this->_traductionInstance->echoTraduction('%01.0f objets vérifiés.','',$this->_metrologyInstance->getObjectVerify()); echo "<br />\n";
-		// Calcul de temps de chargement de la page - stop
-/*		$bootstrapTimeList = $this->_bootstrapInstance->getMetrologyInstance()->getTimeArray();
+                    echo 'Lib nebule : ';
+                    $this->_traductionInstance->echoTraduction('%01.0f liens lus,', '', $this->_metrologyInstance->getLinkRead());
+                    echo ' ';
+                    $this->_traductionInstance->echoTraduction('%01.0f liens vérifiés,', '', $this->_metrologyInstance->getLinkVerify());
+                    echo ' ';
+                    $this->_traductionInstance->echoTraduction('%01.0f objets lus.', '', $this->_metrologyInstance->getObjectRead());
+                    echo ' ';
+                    $this->_traductionInstance->echoTraduction('%01.0f objets vérifiés.', '', $this->_metrologyInstance->getObjectVerify());
+                    echo "<br />\n";
+                    // Calcul de temps de chargement de la page - stop
+                    /*		$bootstrapTimeList = $this->_bootstrapInstance->getMetrologyInstance()->getTimeArray();
 		$bootstrap_time_total = 0;
 		foreach ( $bootstrapTimeList as $time )
 		{
@@ -3692,565 +3748,514 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 		}
 		echo " )\n";
 		echo "<br />\n";*/
-		$this->_metrologyInstance->addTime();
-		$klictyTimeList = $this->_metrologyInstance->getTimeArray();
-		$klicty_time_total = 0;
-		foreach ( $klictyTimeList as $time )
-		{
-			$klicty_time_total = $klicty_time_total + $time;
-		}
-		$this->_traductionInstance->echoTraduction('Le serveur à pris %01.4fs pour calculer la page.','',$klicty_time_total);
-		echo ' (';
-		foreach ( $klictyTimeList as $time )
-		{
-			echo sprintf(" %1.4fs", $time);
-		}
-		echo " )\n";
-?>
+                    $this->_metrologyInstance->addTime();
+                    $klictyTimeList = $this->_metrologyInstance->getTimeArray();
+                    $klicty_time_total = 0;
+                    foreach ($klictyTimeList as $time) {
+                        $klicty_time_total = $klicty_time_total + $time;
+                    }
+                    $this->_traductionInstance->echoTraduction('Le serveur à pris %01.4fs pour calculer la page.', '', $klicty_time_total);
+                    echo ' (';
+                    foreach ($klictyTimeList as $time) {
+                        echo sprintf(" %1.4fs", $time);
+                    }
+                    echo " )\n";
+                    ?>
 
-								</p>
-							</div>
-<?php
-		}
-	}
+                </p>
+            </div>
+            <?php
+        }
+    }
 
-	// Affiche la fin de page.
-	private function _displayFooter()
-	{
-?>
+    // Affiche la fin de page.
+    private function _displayFooter()
+    {
+        ?>
 
-		</div>
-	</body>
-</html>
-<?php
-	}
+        </div>
+        </body>
+        </html>
+        <?php
+    }
 
 
-
-
-
-
-
-
-
-
-	/* --------------------------------------------------------------------------------
+    /* --------------------------------------------------------------------------------
 	 *  Affichage des objets.
 	 * -------------------------------------------------------------------------------- */
-	public function displayObjectDivHeaderH1($object, $help='', $desc='')
-	{
-		$object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
-		// Prépare le type mime.
-		$typemime = $object->getType('all');
-		if ( $desc == '' )
-			$desc = $this->_applicationInstance->getTraductionInstance()->getTraduction($typemime);
+    public function displayObjectDivHeaderH1($object, $help = '', $desc = '')
+    {
+        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
+        // Prépare le type mime.
+        $typemime = $object->getType('all');
+        if ($desc == '')
+            $desc = $this->_applicationInstance->getTraductionInstance()->getTraduction($typemime);
 
-		// Détermine si c'est une entité.
-		$objHead = $object->readOneLineAsText(Entity::ENTITY_MAX_SIZE);
-		$isEntity = ($typemime == nebule::REFERENCE_OBJECT_ENTITY && strpos($objHead, nebule::REFERENCE_ENTITY_HEADER) !== false);
+        // Détermine si c'est une entité.
+        $objHead = $object->readOneLineAsText(Entity::ENTITY_MAX_SIZE);
+        $isEntity = ($typemime == nebule::REFERENCE_OBJECT_ENTITY && strpos($objHead, nebule::REFERENCE_ENTITY_HEADER) !== false);
 
-		// Détermine si c'est un groupe.
-		$isGroup = $object->getIsGroup('all');
+        // Détermine si c'est un groupe.
+        $isGroup = $object->getIsGroup('all');
 
-		// Modifie le type au besoin.
-		if ( $isEntity && ! is_a($object, 'Entity') )
-			$object = $this->_nebuleInstance->newEntity($object->getID());
-		if ( $isGroup && ! is_a($object, 'Group') )
-			$object = $this->_nebuleInstance->newGroup($object->getID());
+        // Modifie le type au besoin.
+        if ($isEntity && !is_a($object, 'Entity'))
+            $object = $this->_nebuleInstance->newEntity($object->getID());
+        if ($isGroup && !is_a($object, 'Group'))
+            $object = $this->_nebuleInstance->newGroup($object->getID());
 
-		// Vérifie si il est protégé
-		$protected = $object->getMarkProtected();
+        // Vérifie si il est protégé
+        $protected = $object->getMarkProtected();
 
-		$name = $object->getFullName('all');
-		$present = $object->checkPresent();
+        $name = $object->getFullName('all');
+        $present = $object->checkPresent();
 
-		// Si le contenu est présent.
-		if ( $protected && $object->getID() == $object->getProtectedID() )
-		{
-			$status = 'protected';
-		}
-		elseif ( $present )
-		{
-			// Prépare l'état de l'objet.
-			$status = 'ok';
-			$content = $object->getContent(0);
-			if ( $content == null )
-				$status = 'tooBig';
-			unset($content);
-		}
-		else
-		{
-			$status = 'notPresent';
-		}
-		if ( $object->getMarkWarning() )
-			$status = 'warning';
-		if ( $object->getMarkDanger() )
-			$status = 'danger';
-		// Prépare l'aide en ligne.
-		if ( $help == '' )
-		{
-			if ( $isEntity )
-				$help = ':::display:default:help:Entity';
-			elseif ( $isGroup )
-				$help = ':::display:default:help:Group';
-			else
-				$help = ':::display:default:help:Object';
-		}
-?>
+        // Si le contenu est présent.
+        if ($protected && $object->getID() == $object->getProtectedID()) {
+            $status = 'protected';
+        } elseif ($present) {
+            // Prépare l'état de l'objet.
+            $status = 'ok';
+            $content = $object->getContent(0);
+            if ($content == null)
+                $status = 'tooBig';
+            unset($content);
+        } else {
+            $status = 'notPresent';
+        }
+        if ($object->getMarkWarning())
+            $status = 'warning';
+        if ($object->getMarkDanger())
+            $status = 'danger';
+        // Prépare l'aide en ligne.
+        if ($help == '') {
+            if ($isEntity)
+                $help = ':::display:default:help:Entity';
+            elseif ($isGroup)
+                $help = ':::display:default:help:Group';
+            else
+                $help = ':::display:default:help:Object';
+        }
+        ?>
 
-<div class="textTitle">
-<?php
-		$this->_displayDivOnlineHelp($help);
-?>
+        <div class="textTitle">
+            <?php
+            $this->_displayDivOnlineHelp($help);
+            ?>
 
-	<div class="floatRight">
-<?php
-		switch ($status)
-		{
-			case 'notPresent':
-				$msg = $this->_traductionInstance->getTraduction(':::display:content:errorNotAvailable');
-				$this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
-				break;
-			case 'tooBig':
-				if ( $this->_applicationInstance->getOption('klictyDisplayUnverifyLargeContent') )
-				{
-					$msg = $this->_traductionInstance->getTraduction(':::display:content:warningTooBig');
-					$this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
-				}
-				else
-				{
-					$msg = $this->_traductionInstance->getTraduction(':::display:content:errorTooBig');
-					$this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
-				}
-				break;
-			case 'warning':
-				$msg = $this->_traductionInstance->getTraduction(':::display:content:warningTaggedWarning');
-				$this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
-				break;
-			case 'danger':
-				$msg = $this->_traductionInstance->getTraduction(':::display:content:errorBan');
-				$this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
-				break;
-			case 'protected':
-				$msg = $this->_traductionInstance->getTraduction(':::display:content:ObjectProctected');
-				$this->displayIcon(self::DEFAULT_ICON_IOK, $msg, 'iconNormalDisplay');
-				break;
-			default:
-				$msg = $this->_traductionInstance->getTraduction(':::display:content:OK');
-				$this->displayIcon(self::DEFAULT_ICON_IOK, $msg, 'iconNormalDisplay');
-				break;
-		}
-		unset($msg);
-?>
+            <div class="floatRight">
+                <?php
+                switch ($status) {
+                    case 'notPresent':
+                        $msg = $this->_traductionInstance->getTraduction(':::display:content:errorNotAvailable');
+                        $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
+                        break;
+                    case 'tooBig':
+                        if ($this->_applicationInstance->getOption('klictyDisplayUnverifyLargeContent')) {
+                            $msg = $this->_traductionInstance->getTraduction(':::display:content:warningTooBig');
+                            $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
+                        } else {
+                            $msg = $this->_traductionInstance->getTraduction(':::display:content:errorTooBig');
+                            $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
+                        }
+                        break;
+                    case 'warning':
+                        $msg = $this->_traductionInstance->getTraduction(':::display:content:warningTaggedWarning');
+                        $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
+                        break;
+                    case 'danger':
+                        $msg = $this->_traductionInstance->getTraduction(':::display:content:errorBan');
+                        $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
+                        break;
+                    case 'protected':
+                        $msg = $this->_traductionInstance->getTraduction(':::display:content:ObjectProctected');
+                        $this->displayIcon(self::DEFAULT_ICON_IOK, $msg, 'iconNormalDisplay');
+                        break;
+                    default:
+                        $msg = $this->_traductionInstance->getTraduction(':::display:content:OK');
+                        $this->displayIcon(self::DEFAULT_ICON_IOK, $msg, 'iconNormalDisplay');
+                        break;
+                }
+                unset($msg);
+                ?>
 
-	</div>
-	<div style="float:left;">
-<?php
-		$this->displayObjectColorIcon($object);
-?>
+            </div>
+            <div style="float:left;">
+                <?php
+                $this->displayObjectColorIcon($object);
+                ?>
 
-	</div>
-	<h1 class="divHeaderH1"><?php echo $name; ?></h1>
-	<p class="hideOnSmallMedia"><?php echo $desc; ?></p>
-</div>
-<?php
-		unset($name, $typemime, $isEntity, $isGroup);
-	}
-	/**
-	 * Affiche dans les barres de titres l'icône d'aide contextuelle.
-	 * @param string $help
-	 */
-	private function _displayDivOnlineHelp($help)
-	{
-		// Si authorisé à afficher l'aide.
-		if ( $this->_applicationInstance->getOption('klictyDisplayOnlineHelp') )
-		{
-			// Prépare le texte à afficher dans la bulle.
-			$txt = $this->_applicationInstance->getTraductionInstance()->getTraduction($help);
-			$txt = str_replace('&','&amp;',$txt);
-			$txt = str_replace('"','&quot;',$txt);
-			$txt = str_replace("'",'&acute;',$txt);
-			//$txt = str_replace('<','&lt;',$txt);
-			$txt = str_replace("\n",' ',$txt);
-			// Prépare l'extension de lien.
-			$linkext = 'onmouseover="montre(\'<b>'.$this->_applicationInstance->getTraductionInstance()->getTraduction('Aide').' :</b><br />'.$txt.'\');" onmouseout="cache();"';
-			unset($txt);
-			// Affiche la bulle et le texte.
-?>
+            </div>
+            <h1 class="divHeaderH1"><?php echo $name; ?></h1>
+            <p class="hideOnSmallMedia"><?php echo $desc; ?></p>
+        </div>
+        <?php
+        unset($name, $typemime, $isEntity, $isGroup);
+    }
 
-	<div style="float:right;">
-<?php
-			$image = $this->prepareIcon(self::DEFAULT_ICON_HELP);
-?>
+    /**
+     * Affiche dans les barres de titres l'icône d'aide contextuelle.
+     * @param string $help
+     */
+    private function _displayDivOnlineHelp($help)
+    {
+        // Si authorisé à afficher l'aide.
+        if ($this->_applicationInstance->getOption('klictyDisplayOnlineHelp')) {
+            // Prépare le texte à afficher dans la bulle.
+            $txt = $this->_applicationInstance->getTraductionInstance()->getTraduction($help);
+            $txt = str_replace('&', '&amp;', $txt);
+            $txt = str_replace('"', '&quot;', $txt);
+            $txt = str_replace("'", '&acute;', $txt);
+            //$txt = str_replace('<','&lt;',$txt);
+            $txt = str_replace("\n", ' ', $txt);
+            // Prépare l'extension de lien.
+            $linkext = 'onmouseover="montre(\'<b>' . $this->_applicationInstance->getTraductionInstance()->getTraduction('Aide') . ' :</b><br />' . $txt . '\');" onmouseout="cache();"';
+            unset($txt);
+            // Affiche la bulle et le texte.
+            ?>
 
-		<img alt="[]" src="<?php echo $image; ?>" class="iconNormalDisplay" id="idhelp<?php echo $this->_idHelp; ?>" <?php echo $linkext; ?> />
-	</div>
-<?php
-			unset($linkext, $image);
-			$this->_idHelp++;
-		}
-	}
-	private $_idHelp = 0;
+            <div style="float:right;">
+                <?php
+                $image = $this->prepareIcon(self::DEFAULT_ICON_HELP);
+                ?>
+
+                <img alt="[]" src="<?php echo $image; ?>" class="iconNormalDisplay"
+                     id="idhelp<?php echo $this->_idHelp; ?>" <?php echo $linkext; ?> />
+            </div>
+            <?php
+            unset($linkext, $image);
+            $this->_idHelp++;
+        }
+    }
+
+    private $_idHelp = 0;
 
 
+    /**
+     * Affiche le titre pour un paragraphe de texte. Par défaut, affiche le titre H1.
+     * @param string $icon
+     * @param string $title
+     * @param string $desc
+     * @param string $help
+     */
+    public function displayDivTextTitle($icon, $title = '', $desc = '', $help = '')
+    {
+        $this->displayDivTextTitleH1($icon, $title, $desc, $help);
+    }
+
+    /**
+     * Affiche le titre H1 pour un paragraphe de texte.
+     * @param string $icon
+     * @param string $title
+     * @param string $desc
+     * @param string $help
+     */
+    public function displayDivTextTitleH1($icon, $title = '', $desc = '', $help = '')
+    {
+        ?>
+
+        <div class="textTitle">
+            <?php
+            if ($title != '')
+                $title = $this->_applicationInstance->getTraductionInstance()->getTraduction($title);
+            if ($desc == '')
+                $desc = '-';
+            else
+                $desc = $this->_applicationInstance->getTraductionInstance()->getTraduction($desc);
+            $this->_displayDivOnlineHelp($help);
+            ?>
+
+            <div style="float:left;">
+                <?php $this->displayUpdateImage($icon, $title, 'iconegrandepuce'); ?>
+
+            </div>
+            <h1 class="divHeaderH1"><?php echo $title; ?></h1>
+            <p class="hideOnSmallMedia"><?php echo $desc; ?></p>
+        </div>
+        <?php
+
+    }
+
+    /**
+     * Affiche le titre H2 pour un paragraphe de texte.
+     * @param string $icon
+     * @param string $title
+     * @param string $desc
+     * @param string $help
+     */
+    public function displayDivTextTitleH2($icon, $title = '', $desc = '', $help = '')
+    {
+        ?>
+
+        <div class="textTitle2">
+            <?php
+            if ($title != '')
+                $title = $this->_applicationInstance->getTraductionInstance()->getTraduction($title);
+            if ($desc == '')
+                $desc = '-';
+            else
+                $desc = $this->_applicationInstance->getTraductionInstance()->getTraduction($desc);
+            $this->_displayDivOnlineHelp($help);
+            ?>
+
+            <div style="float:left;">
+                <?php $this->displayUpdateImage($icon, $title, 'iconegrandepuce'); ?>
+
+            </div>
+            <h2 class="divHeaderH2"><?php echo $title; ?></h2>
+            <p class="hideOnSmallMedia"><?php echo $desc; ?></p>
+        </div>
+        <?php
+
+    }
 
 
+    public function displayActionList($actionList)
+    {
+        if (sizeof($actionList) == 0)
+            return;
+        ?>
+
+        <div class="textAction">
+            <?php
+            foreach ($actionList as $appHook) {
+                if ($appHook['name'] != '') {
+                    $name = $this->_applicationInstance->getTraductionInstance()->getTraduction($appHook['name']);
+                    $icon = $appHook['icon'];
+                    if ($icon == '')
+                        $icon = self::DEFAULT_ICON_LSTOBJ;
+                    $desc = $this->_applicationInstance->getTraductionInstance()->getTraduction($appHook['desc']);
+                    $link = $appHook['link'];
+                    if (isset($appHook['css']) && $appHook['css'] != '')
+                        $cssid = 'id="' . $appHook['css'] . '"';
+                    else
+                        $cssid = '';
+                    ?>
+
+                    <div class="oneAction" <?php echo $cssid; ?>>
+                        <div class="oneAction-icon">
+                            <?php $this->displayHypertextLink($this->convertUpdateImage($icon, $name), $link); ?>
+                        </div>
+                        <div class="oneAction-title">
+                            <p><?php $this->displayHypertextLink($name, $link); ?></p>
+                        </div>
+                        <div class="oneAction-text">
+                            <p><?php echo $desc; ?></p>
+                        </div>
+                    </div>
+                    <?php
+                }
+            }
+            unset($appHook, $name, $icon, $desc, $link, $cssid);
+            ?>
+
+            <div class="oneAction-close"></div>
+        </div>
+        <?php
+    }
 
 
+    /**
+     * Affiche un élément de l'arborescence.
+     * @param array $item
+     */
+    private function _displayArboItem($item)
+    {
+        if (sizeof($item) == 0) {
+            return;
+        }
+        if (!is_a($item['object'], 'Node')
+            && !is_a($item['object'], 'entity')
+            && !is_a($item['object'], 'group')
+            && !is_a($item['object'], 'conversation')
+        ) {
+            return;
+        }
+
+        // Extraction.
+        $object = $item['object'];
+
+        $entity = null;
+        $entityID = '0';
+        if (is_a($item['entity'], 'entity')) {
+            $entity = $item['entity'];
+            $entityID = $entity->getID();
+        } elseif ($item['entity'] != ''
+            && $item['entity'] != '0'
+            && ctype_xdigit($item['entity'])
+            && $this->_nebuleInstance->getIO()->checkObjectPresent($item['entity'])
+            && $this->_nebuleInstance->getIO()->checkLinkPresent($item['entity'])
+        ) {
+            $entity = $this->_nebuleInstance->newEntity($item['entity']);
+            $entityID = $entity->getID();
+        }
+
+        $htlink = '';
+        if (isset($item['link'])) {
+            $htlink = $item['link'];
+        }
+
+        $desc = '';
+        if (isset($item['desc'])) {
+            $desc = $this->_traductionInstance->getTraduction($item['desc']);
+        }
+
+        $icon = '';
+        if (isset($item['icon'])) {
+            $icon = $item['icon'];
+        }
+
+        $type = $object->getType('all');
+        // Extrait un nom d'objet à afficher de façon correcte.
+        $entityName = '';
+        if ($entityID != '0') {
+            $entityName = $entity->getFullName('all');
+        }
+
+        if ($object->getIsEntity('all')) {
+            $name = $object->getFullName('all');
+        } else {
+            $name = $object->getName('all');
+        }
+        $namesize = 21;
+        $shortname = $name;
+
+        // Normalise la variable si vide.
+        $htlink = $this->prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
+        ?>
+
+        <div class="oneActionItem"
+             id="<?php if ($entityID == $this->_applicationInstance->getCurrentEntity()) echo 'selfEntity'; else echo 'otherEntity'; ?>">
+            <div class="oneActionItem-top">
+                <div class="oneAction-icon">
+                    <?php $this->displayObjectColorIcon($object, $htlink, $icon); ?>
+                </div>
+                <?php
+                if ($entityName != '') {
+                    ?>
+
+                    <div class="oneAction-entityname">
+                        <p><?php $this->displayInlineObjectColorIconName($entity); ?></p>
+                    </div>
+                    <?php
+                }
+                ?>
+
+                <div class="oneAction-title">
+                    <p><?php $this->displayHypertextLink($shortname, $htlink); ?></p>
+                </div>
+                <?php
+                if (isset($item['desc'])
+                    && strlen($item['desc']) != 0
+                ) {
+                    ?>
+
+                    <div class="oneAction-text">
+                        <p><?php echo $desc; ?></p>
+                    </div>
+                    <?php
+                }
+                ?>
+
+            </div>
+            <?php
+            if ($object->getMarkWarning() || $object->getMarkDanger() || $object->getMarkProtected() || (isset($item['actions']) && sizeof($item['actions']) != 0)) {
+                ?>
+
+                <div class="oneActionItem-bottom">
+                    <?php
+                    if ($object->getMarkWarning()) {
+                        ?>
+
+                        <div class="oneAction-warn">
+                            <p><?php $this->displayUpdateImage(
+                                    self::DEFAULT_ICON_IWARN,
+                                    ':::display:content:warningTaggedWarning',
+                                    'iconInlineDisplay');
+                                echo ' ';
+                                $this->_traductionInstance->echoTraduction(':::display:content:warningTaggedWarning'); ?></p>
+                        </div>
+                        <?php
+                    }
+                    if ($object->getMarkDanger()) {
+                        ?>
+
+                        <div class="oneAction-error">
+                            <p><?php $this->displayUpdateImage(
+                                    self::DEFAULT_ICON_IERR,
+                                    ':::display:content:errorBan',
+                                    'iconInlineDisplay');
+                                echo ' ';
+                                $this->_traductionInstance->echoTraduction(':::display:content:errorBan'); ?></p>
+                        </div>
+                        <?php
+                    }
+                    if ($object->getMarkProtected()) {
+                        ?>
+
+                        <div class="oneAction-ok">
+                            <p><?php $this->displayUpdateImage(
+                                    self::DEFAULT_ICON_LK,
+                                    ':::display:content:ObjectProctected',
+                                    'iconInlineDisplay');
+                                echo ' ';
+                                $this->_traductionInstance->echoTraduction(':::display:content:ObjectProctected'); ?></p>
+                        </div>
+                        <?php
+                    }
+                    if (isset($item['actions'])
+                        && sizeof($item['actions']) != 0
+                    ) {
+                        ?>
+
+                        <div class="oneAction-actions">
+                            <?php
+                            foreach ($item['actions'] as $action) {
+                                $actionIcon = $this->convertUpdateImage($action['icon'], $action['name'], 'iconInlineDisplay');
+                                $actionName = $this->_traductionInstance->getTraduction($action['name']);
+                                echo '<p>' . $actionIcon . ' ' . $this->convertHypertextLink($actionName, $action['link']) . "</p>\n";
+                                unset($actionIcon, $actionName);
+                            }
+                            ?>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                </div>
+                <?php
+            }
+            ?>
+
+        </div>
+        <?php
+        unset($object, $type, $entityName, $name, $shortname, $icon, $desc);
+    }
+
+    /**
+     * Retourne le nom tronqué d'une entité.
+     *
+     * @param string $name
+     * @param int $maxsize
+     * @return string
+     */
+    private function _truncateName($name, $maxsize)
+    {
+        if ($maxsize == 0
+            || $maxsize > $this->_nebuleInstance->getOption('displayNameSize')
+        ) {
+            $maxsize = $this->_nebuleInstance->getOption('displayNameSize');
+        }
+        if ($maxsize < 4) {
+            $maxsize = 4;
+        }
+        if (strlen($name) > $maxsize) {
+            $name = substr($name, 0, ($maxsize - 3)) . '...';
+        }
+        return $name;
+    }
 
 
-
-
-
-	/**
-	 * Affiche le titre pour un paragraphe de texte. Par défaut, affiche le titre H1.
-	 * @param string $icon
-	 * @param string $title
-	 * @param string $desc
-	 * @param string $help
-	 */
-	public function displayDivTextTitle($icon, $title='', $desc='', $help='')
-	{
-		$this->displayDivTextTitleH1($icon, $title, $desc, $help);
-	}
-	/**
-	 * Affiche le titre H1 pour un paragraphe de texte.
-	 * @param string $icon
-	 * @param string $title
-	 * @param string $desc
-	 * @param string $help
-	 */
-	public function displayDivTextTitleH1($icon, $title='', $desc='', $help='')
-	{
-?>
-
-						<div class="textTitle">
-							<?php
-		if ( $title != '' )
-			$title = $this->_applicationInstance->getTraductionInstance()->getTraduction($title);
-		if ( $desc == '' )
-			$desc = '-';
-		else
-			$desc = $this->_applicationInstance->getTraductionInstance()->getTraduction($desc);
-		$this->_displayDivOnlineHelp($help);
-?>
-
-							<div style="float:left;">
-								<?php $this->displayUpdateImage($icon, $title, 'iconegrandepuce'); ?>
-
-							</div>
-							<h1 class="divHeaderH1"><?php echo $title; ?></h1>
-							<p class="hideOnSmallMedia"><?php echo $desc; ?></p>
-						</div>
-<?php
-
-	}
-	/**
-	 * Affiche le titre H2 pour un paragraphe de texte.
-	 * @param string $icon
-	 * @param string $title
-	 * @param string $desc
-	 * @param string $help
-	 */
-	public function displayDivTextTitleH2($icon, $title='', $desc='', $help='')
-	{
-?>
-
-						<div class="textTitle2">
-							<?php
-		if ( $title != '' )
-			$title = $this->_applicationInstance->getTraductionInstance()->getTraduction($title);
-		if ( $desc == '' )
-			$desc = '-';
-		else
-			$desc = $this->_applicationInstance->getTraductionInstance()->getTraduction($desc);
-		$this->_displayDivOnlineHelp($help);
-?>
-
-							<div style="float:left;">
-								<?php $this->displayUpdateImage($icon, $title, 'iconegrandepuce'); ?>
-
-							</div>
-							<h2 class="divHeaderH2"><?php echo $title; ?></h2>
-							<p class="hideOnSmallMedia"><?php echo $desc; ?></p>
-						</div>
-<?php
-
-	}
-
-
-	public function displayActionList($actionList)
-	{
-		if ( sizeof($actionList) == 0 )
-			return;
-?>
-
-<div class="textAction">
-<?php
-		foreach ( $actionList as $appHook )
-		{
-			if ( $appHook['name'] != '' )
-			{
-				$name = $this->_applicationInstance->getTraductionInstance()->getTraduction($appHook['name']);
-				$icon = $appHook['icon'];
-				if ( $icon == '' )
-					$icon = self::DEFAULT_ICON_LSTOBJ;
-				$desc = $this->_applicationInstance->getTraductionInstance()->getTraduction($appHook['desc']);
-				$link = $appHook['link'];
-				if ( isset($appHook['css']) && $appHook['css'] != '' )
-					$cssid = 'id="'.$appHook['css'].'"';
-				else
-					$cssid = '';
-?>
-
-	<div class="oneAction" <?php echo $cssid; ?>>
-		<div class="oneAction-icon">
-			<?php $this->displayHypertextLink($this->convertUpdateImage($icon, $name), $link); ?>
-		</div>
-		<div class="oneAction-title">
-			<p><?php $this->displayHypertextLink($name, $link); ?></p>
-		</div>
-		<div class="oneAction-text">
-			<p><?php echo $desc; ?></p>
-		</div>
-	</div>
-<?php
-			}
-		}
-		unset($appHook, $name, $icon, $desc, $link, $cssid);
-?>
-
-	<div class="oneAction-close"></div>
-</div>
-<?php
-	}
-
-
-
-	/**
-	 * Affiche un élément de l'arborescence.
-	 * @param array $item
-	 */
-	private function _displayArboItem($item)
-	{
-		if ( sizeof($item) == 0 )
-		{
-			return;
-		}
-		if ( ! is_a($item['object'], 'Node')
-				&& ! is_a($item['object'], 'entity')
-				&& ! is_a($item['object'], 'group')
-				&& ! is_a($item['object'], 'conversation')
-			)
-		{
-			return;
-		}
-
-		// Extraction.
-		$object	= $item['object'];
-		
-		$entity = null;
-		$entityID = '0';
-		if ( is_a($item['entity'], 'entity') )
-		{
-			$entity	= $item['entity'];
-			$entityID = $entity->getID();
-		}
-		elseif ( $item['entity'] != ''
-				&& $item['entity'] != '0'
-				&& ctype_xdigit($item['entity'])
-				&& $this->_nebuleInstance->getIO()->checkObjectPresent($item['entity'])
-				&& $this->_nebuleInstance->getIO()->checkLinkPresent($item['entity'])
-			)
-		{
-			$entity = $this->_nebuleInstance->newEntity($item['entity']);
-			$entityID = $entity->getID();
-		}
-		
-		$htlink = '';
-		if ( isset($item['link']) )
-		{
-			$htlink	= $item['link'];
-		}
-		
-		$desc	= '';
-		if ( isset($item['desc']) )
-		{
-			$desc = $this->_traductionInstance->getTraduction($item['desc']);
-		}
-		
-		$icon	= '';
-		if ( isset($item['icon']) )
-		{
-			$icon	= $item['icon'];
-		}
-
-		$type = $object->getType('all');
-		// Extrait un nom d'objet à afficher de façon correcte.
-		$entityName = '';
-		if ( $entityID != '0' )
-		{
-			$entityName = $entity->getFullName('all');
-		}
-		
-		if ( $object->getIsEntity('all') )
-		{
-			$name = $object->getFullName('all');
-		}
-		else
-		{
-			$name = $object->getName('all');
-		}
-		$namesize = 21;
-		$shortname = $name;
-
-		// Normalise la variable si vide.
-		$htlink = $this->prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
-?>
-
-		<div class="oneActionItem" id="<?php if ( $entityID == $this->_applicationInstance->getCurrentEntity() ) echo 'selfEntity'; else echo 'otherEntity'; ?>">
-			<div class="oneActionItem-top">
-				<div class="oneAction-icon">
-					<?php $this->displayObjectColorIcon($object, $htlink, $icon); ?>
-				</div>
-<?php
-		if ( $entityName != '' )
-		{
-?>
-
-				<div class="oneAction-entityname">
-					<p><?php $this->displayInlineObjectColorIconName($entity); ?></p>
-				</div>
-<?php
-		}
-?>
-
-				<div class="oneAction-title">
-					<p><?php $this->displayHypertextLink($shortname, $htlink); ?></p>
-				</div>
-<?php
-		if ( isset($item['desc'])
-				&& strlen($item['desc']) != 0
-			)
-		{
-?>
-
-				<div class="oneAction-text">
-					<p><?php echo $desc; ?></p>
-				</div>
-<?php
-		}
-?>
-
-			</div>
-<?php
-		if ( $object->getMarkWarning() || $object->getMarkDanger() || $object->getMarkProtected() || ( isset($item['actions']) && sizeof($item['actions']) != 0 ) )
-		{
-?>
-
-			<div class="oneActionItem-bottom">
-<?php
-			if ( $object->getMarkWarning() )
-			{
-?>
-
-				<div class="oneAction-warn">
-					<p><?php $this->displayUpdateImage(
-							self::DEFAULT_ICON_IWARN,
-							':::display:content:warningTaggedWarning',
-							'iconInlineDisplay');
-					echo ' ';
-					$this->_traductionInstance->echoTraduction(':::display:content:warningTaggedWarning'); ?></p>
-				</div>
-<?php
-			}
-			if ( $object->getMarkDanger() )
-			{
-?>
-
-				<div class="oneAction-error">
-					<p><?php $this->displayUpdateImage(
-							self::DEFAULT_ICON_IERR,
-							':::display:content:errorBan',
-							'iconInlineDisplay');
-					echo ' ';
-					$this->_traductionInstance->echoTraduction(':::display:content:errorBan'); ?></p>
-				</div>
-<?php
-			}
-			if ( $object->getMarkProtected() )
-			{
-?>
-
-				<div class="oneAction-ok">
-					<p><?php $this->displayUpdateImage(
-							self::DEFAULT_ICON_LK,
-							':::display:content:ObjectProctected',
-							'iconInlineDisplay');
-					echo ' ';
-					$this->_traductionInstance->echoTraduction(':::display:content:ObjectProctected'); ?></p>
-				</div>
-<?php
-			}
-			if ( isset($item['actions'])
-					&& sizeof($item['actions']) != 0
-				)
-			{
-?>
-
-				<div class="oneAction-actions">
-<?php
-				foreach ( $item['actions'] as $action )
-				{
-					$actionIcon = $this->convertUpdateImage($action['icon'], $action['name'], 'iconInlineDisplay');
-					$actionName = $this->_traductionInstance->getTraduction($action['name']);
-					echo '<p>'.$actionIcon.' '.$this->convertHypertextLink($actionName, $action['link'])."</p>\n";
-					unset($actionIcon, $actionName);
-				}
-?>
-				</div>
-<?php
-			}
-?>
-			</div>
-<?php
-		}
-?>
-
-		</div>
-<?php
-		unset($object, $type, $entityName, $name, $shortname, $icon, $desc);
-	}
-
-	/**
-	 * Retourne le nom tronqué d'une entité.
-	 *
-	 * @param string $name
-	 * @param int $maxsize
-	 * @return string
-	 */
-	private function _truncateName($name, $maxsize)
-	{
-		if ( $maxsize == 0
-				|| $maxsize > $this->_nebuleInstance->getOption('displayNameSize')
-			)
-		{
-			$maxsize = $this->_nebuleInstance->getOption('displayNameSize');
-		}
-		if ( $maxsize < 4 )
-		{
-			$maxsize = 4;
-		}
-		if ( strlen($name) > $maxsize )
-		{
-			$name = substr($name, 0, ($maxsize-3)).'...';
-		}
-		return $name;
-	}
-
-
-
-	const DEFAULT_LOGO_WELCOME = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAgAElEQVR42uy9aXAd5nWm+dx93/cL3Atc7AsBcAEpkpJIUaTlSDKtJZZtRXa3o7Jd6XamPYkzVV1T1VXj7h+eZGrmR3umqqumy9PdVfFkku44yUSK5bYsywpp7htIEBsBXAB33/f93vkhf9/YU9U13TOd
+    const DEFAULT_LOGO_WELCOME = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAgAElEQVR42uy9aXAd5nWm+dx93/cL3Atc7AsBcAEpkpJIUaTlSDKtJZZtRXa3o7Jd6XamPYkzVV1T1VXj7h+eZGrmR3umqqumy9PdVfFkku44yUSK5bYsywpp7htIEBsBXAB33/f93vkhf9/YU9U13TOd
 jpPg/KF+iARw8X3nO+c97/seOIzDOIzDOIzDOIzDOIzDOIzDOIzDOIzDOIzDOIzDOIzDOIy/naE4/Aj+ZselS5dUOp1uNJ/Ph9xu91Cr1Qpks1nf6dOnPbu7uy6n02nP5XK2TCZjGRoaMiaTSf3s7Kxuc3NTrdPplPF4HLvd3v/yl7/ctVgsrX/5L/9lc29vrx4Ohyt2
 u73kcDiKwWAw90d/9EeZmZmZVLFYTHQ6nVi5XN6fmJjY/bf/9t/2Dn8LhwngMP6K44033vB3u90j3W53LpfLTft8vqlCoTBRqVRGnU4ng8EApVLJ/v4+rVaLoaEhNBoNrVYLm81Gu92mUqmg1+txOp20221sNhsArVaLv//3/z4HBwc8evSIGzduEAwGOXXqFO+//z75
 fJ5er4fNZiMSibCyssJgMKDRaOB2u3dDodCWw+HYqNfr63t7e6vPPvvsw3/2z/5Z8vC39ssf6sOP4JcvlpaW/Gaz+VQ+nz85OTl5fGJi4ujGxkbQ4XDw5MkTeYlzuRyNRoNqtYpCocBut6PT6VhYWGBzcxO32025XKZer2M2m2m1WrRaLUZGRiiXy5w/f55Go0EsFiOf
@@ -4677,15 +4682,6 @@ XMnzfCnGuGhmrTzPGyGE02ZWs+/NhKDkOQ8h3Igx7oYQdmKMQzPrm1nXzDpmdj2EcNXMLpvZxRDCd8zs
 }
 
 
-
-
-
-
-
-
-
-
-
 /**
  * Classe Action
  *
@@ -4696,2618 +4692,2596 @@ XMnzfCnGuGhmrTzPGyGE02ZWs+/NhKDkOQ8h3Igx7oYQdmKMQzPrm1nXzDpmdj2EcNXMLpvZxRDCd8zs
  */
 class Action extends Actions
 {
-	/*
+    /*
 	 * Définition des constantes pour les actions.
 	 */
-	const DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LIFETIME	= 'upfilelt';
-	const DEFAULT_COMMAND_ACTION_UPLOAD_FILE_SHOWTIME	= 'upfilest';
-		
-	private $_actionUploadFileLifeTime	= '1m',
-			$_actionUploadFileShowTime	= 0;
+    const DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LIFETIME = 'upfilelt';
+    const DEFAULT_COMMAND_ACTION_UPLOAD_FILE_SHOWTIME = 'upfilest';
+
+    private $_actionUploadFileLifeTime = '1m',
+        $_actionUploadFileShowTime = 0;
 
 
+    /**
+     * Constructeur.
+     *
+     * @param Applications $applicationInstance
+     * @return void
+     */
+    public function __construct(Applications $applicationInstance)
+    {
+        $this->_applicationInstance = $applicationInstance;
+    }
 
-	/**
-	 * Constructeur.
-	 *
-	 * @param Applications $applicationInstance
-	 * @return void
-	 */
-	public function __construct(Applications $applicationInstance)
-	{
-		$this->_applicationInstance = $applicationInstance;
-	}
-	
 
-	
-	/**
-	 * Extrait pour action si un fichier est téléchargé vers le serveur.
-	 */
-	protected function _extractActionUploadFile()
-	{
-		// Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Extract action upload file', Metrology::LOG_LEVEL_NORMAL); // Log
+    /**
+     * Extrait pour action si un fichier est téléchargé vers le serveur.
+     */
+    protected function _extractActionUploadFile()
+    {
+        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action upload file', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			/*
+            /*
 			 *  ------------------------------------------------------------------------------------------
 			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 			 *  ------------------------------------------------------------------------------------------
 			 */
-			// Lit le contenu de la variable _FILE si un fichier est téléchargé.
-			if ( isset( $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['error'] )
-					&& $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['error'] == UPLOAD_ERR_OK
-					&& trim($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['name']) != ''
-				)
-			{
-				// Extraction des méta données du fichier.
-				$upfname	= mb_convert_encoding(strtok(trim(filter_var($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['name'], FILTER_SANITIZE_STRING)), "\n"), 'UTF-8');
-				$upinfo		= pathinfo($upfname);
-				$upext		= $upinfo['extension'];
-				$upname		= basename($upfname,'.'.$upext);
-				$upsize		= $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['size'];
-				$uppath		= $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['tmp_name'];
-				$uptype		= '';
-				// Si le fichier est bien téléchargé.
-				if ( file_exists($uppath) )
-				{
-					// Si le fichier n'est pas trop gros.
-					if ( $upsize <= $this->_applicationInstance->getOption('klictyIOReadMaxDataPHP') )
-					{
-						// Lit le type mime.
-						$finfo	= finfo_open(FILEINFO_MIME_TYPE);
-						$uptype	= finfo_file($finfo, $uppath);
-						finfo_close($finfo);
-						if ( $uptype == 'application/octet-stream' )
-							$uptype = $this->_getFilenameTypeMime("$upname.$upext");
+            // Lit le contenu de la variable _FILE si un fichier est téléchargé.
+            if (isset($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['error'])
+                && $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['error'] == UPLOAD_ERR_OK
+                && trim($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['name']) != ''
+            ) {
+                // Extraction des méta données du fichier.
+                $upfname = mb_convert_encoding(strtok(trim(filter_var($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['name'], FILTER_SANITIZE_STRING)), "\n"), 'UTF-8');
+                $upinfo = pathinfo($upfname);
+                $upext = $upinfo['extension'];
+                $upname = basename($upfname, '.' . $upext);
+                $upsize = $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['size'];
+                $uppath = $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['tmp_name'];
+                $uptype = '';
+                // Si le fichier est bien téléchargé.
+                if (file_exists($uppath)) {
+                    // Si le fichier n'est pas trop gros.
+                    if ($upsize <= $this->_applicationInstance->getOption('klictyIOReadMaxDataPHP')) {
+                        // Lit le type mime.
+                        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                        $uptype = finfo_file($finfo, $uppath);
+                        finfo_close($finfo);
+                        if ($uptype == 'application/octet-stream')
+                            $uptype = $this->_getFilenameTypeMime("$upname.$upext");
 
-						// Extrait les options de téléchargement.
-						$argUpd	= filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_UPDATE);
-						$argPrt	= filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_PROTECT);
-						$argObf	= filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_OBFUSCATE_LINKS);
+                        // Extrait les options de téléchargement.
+                        $argUpd = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_UPDATE);
+                        $argPrt = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_PROTECT);
+                        $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_OBFUSCATE_LINKS);
 
-						// Spécifique klicty.
-						$argLifeTime	= trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LIFETIME, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-						if ( $argLifeTime != '1h' && $argLifeTime != '2h'
-								&& $argLifeTime != '1d' && $argLifeTime != '2d'
-								&& $argLifeTime != '1w' && $argLifeTime != '2w'
-								&& $argLifeTime != '1m' && $argLifeTime != '2m'
-								&& $argLifeTime != '1y' && $argLifeTime != '2y'
-								)
-							$argLifeTime = '1m';
-						$argShowTime	= intval(trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_SHOWTIME, FILTER_SANITIZE_STRING)));
-						if ( $argShowTime < 0 || $argShowTime > 10 )
-							$argShowTime = 0;
+                        // Spécifique klicty.
+                        $argLifeTime = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LIFETIME, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+                        if ($argLifeTime != '1h' && $argLifeTime != '2h'
+                            && $argLifeTime != '1d' && $argLifeTime != '2d'
+                            && $argLifeTime != '1w' && $argLifeTime != '2w'
+                            && $argLifeTime != '1m' && $argLifeTime != '2m'
+                            && $argLifeTime != '1y' && $argLifeTime != '2y'
+                        )
+                            $argLifeTime = '1m';
+                        $argShowTime = intval(trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_SHOWTIME, FILTER_SANITIZE_STRING)));
+                        if ($argShowTime < 0 || $argShowTime > 10)
+                            $argShowTime = 0;
 
-						// Ecriture des variables.
-						$this->_actionUploadFile				= true;
-						$this->_actionUploadFileName			= $upname;
-						$this->_actionUploadFileExtension		= $upext;
-						$this->_actionUploadFileType			= $uptype;
-						$this->_actionUploadFileSize			= $upsize;
-						$this->_actionUploadFilePath			= $uppath;
-						$this->_actionUploadFileUpdate			= $argUpd;
-						$this->_actionUploadFileProtect			= $argPrt;
-						$this->_actionUploadFileObfuscateLinks	= $argObf;
+                        // Ecriture des variables.
+                        $this->_actionUploadFile = true;
+                        $this->_actionUploadFileName = $upname;
+                        $this->_actionUploadFileExtension = $upext;
+                        $this->_actionUploadFileType = $uptype;
+                        $this->_actionUploadFileSize = $upsize;
+                        $this->_actionUploadFilePath = $uppath;
+                        $this->_actionUploadFileUpdate = $argUpd;
+                        $this->_actionUploadFileProtect = $argPrt;
+                        $this->_actionUploadFileObfuscateLinks = $argObf;
 
-						// Spécifique klicty.
-						$this->_actionUploadFileLifeTime		= $argLifeTime;
-						$this->_actionUploadFileShowTime		= $argShowTime;
-					}
-					else
-					{
-						$this->_actionUploadFileError = true;
-						$this->_actionUploadFileErrorMessage = 'Le fichier dépasse la taille limite de transfert.';
-					}
-				}
-				else
-				{
-					$this->_actionUploadFileError = true;
-					$this->_actionUploadFileErrorMessage = "Le fichier n'a pas été correctement transferé vers le serveur.";
-				}
-				unset($upfname, $upinfo, $upext, $upname, $upsize, $uppath, $uptype);
-			}
-		}
-	}
+                        // Spécifique klicty.
+                        $this->_actionUploadFileLifeTime = $argLifeTime;
+                        $this->_actionUploadFileShowTime = $argShowTime;
+                    } else {
+                        $this->_actionUploadFileError = true;
+                        $this->_actionUploadFileErrorMessage = 'Le fichier dépasse la taille limite de transfert.';
+                    }
+                } else {
+                    $this->_actionUploadFileError = true;
+                    $this->_actionUploadFileErrorMessage = "Le fichier n'a pas été correctement transferé vers le serveur.";
+                }
+                unset($upfname, $upinfo, $upext, $upname, $upsize, $uppath, $uptype);
+            }
+        }
+    }
 
 
+    /**
+     * Transfert un fichier et le nebulise.
+     */
+    protected function _actionUploadFile()
+    {
+        // Vérifie que la création d'objet soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Action upload file', Metrology::LOG_LEVEL_NORMAL); // Log
 
-	/**
-	 * Transfert un fichier et le nebulise.
-	 */
-	protected function _actionUploadFile()
-	{
-		// Vérifie que la création d'objet soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Action upload file', Metrology::LOG_LEVEL_NORMAL); // Log
+            // Lit le contenu du fichier.
+            $data = file_get_contents($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['tmp_name']);
 
-			// Lit le contenu du fichier.
-			$data = file_get_contents($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['tmp_name']);
+            // Ecrit le contenu dans l'objet.
+            $instance = new Node($this->_nebuleInstance, '0', $data, $this->_actionUploadFileProtect);
+            if ($instance === false) {
+                $this->_actionUploadFileError = true;
+                $this->_actionUploadFileErrorMessage = "L'instance de l'objet n'a pas pu être créée.";
+                return false;
+            }
 
-			// Ecrit le contenu dans l'objet.
-			$instance = New Node($this->_nebuleInstance, '0', $data, $this->_actionUploadFileProtect);
-			if ( $instance === false )
-			{
-				$this->_actionUploadFileError = true;
-				$this->_actionUploadFileErrorMessage = "L'instance de l'objet n'a pas pu être créée.";
-				return false;
-			}
+            // Lit l'ID.
+            $id = $instance->getID();
+            unset($data);
+            if ($id == '0') {
+                $this->_actionUploadFileError = true;
+                $this->_actionUploadFileErrorMessage = "L'objet n'a pas pu être créé.";
+                return false;
+            }
+            $this->_actionUploadFileID = $id;
 
-			// Lit l'ID.
-			$id = $instance->getID();
-			unset($data);
-			if ( $id == '0' )
-			{
-				$this->_actionUploadFileError = true;
-				$this->_actionUploadFileErrorMessage = "L'objet n'a pas pu être créé.";
-				return false;
-			}
-			$this->_actionUploadFileID = $id;
+            // Définition de la date et le signataire.
+            $date = date(DATE_ATOM);
+            $signer = $this->_nebuleInstance->getCurrentEntity();
 
-			// Définition de la date et le signataire.
-			$date = date(DATE_ATOM);
-			$signer	= $this->_nebuleInstance->getCurrentEntity();
+            // Création du type mime.
+            if ($this->_actionUploadFileType != '') {
+                // Crée l'objet avec le texte.
+                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileType);
+                if ($textID !== false) {
+                    // Crée le lien.
+                    $action = 'l';
+                    $source = $id;
+                    $target = $textID;
+                    $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/type');
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+                }
+            }
 
-			// Création du type mime.
-			if ( $this->_actionUploadFileType != '' )
-			{
-				// Crée l'objet avec le texte.
-				$textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileType);
-				if ( $textID !== false )
-				{
-					// Crée le lien.
-					$action	= 'l';
-					$source	= $id;
-					$target	= $textID;
-					$meta	= $this->_nebuleInstance->getCrypto()->hash( 'nebule/objet/type' );
-					$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
-				}
-			}
+            // Crée l'objet du nom.
+            if ($this->_actionUploadFileName != '') {
+                // Crée l'objet avec le texte.
+                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileName);
+                if ($textID !== false) {
+                    // Crée le lien.
+                    $action = 'l';
+                    $source = $id;
+                    $target = $textID;
+                    $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/nom');
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+                }
+            }
 
-			// Crée l'objet du nom.
-			if ( $this->_actionUploadFileName != '' )
-			{
-				// Crée l'objet avec le texte.
-				$textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileName);
-				if ( $textID !== false )
-				{
-					// Crée le lien.
-					$action	= 'l';
-					$source	= $id;
-					$target	= $textID;
-					$meta	= $this->_nebuleInstance->getCrypto()->hash( 'nebule/objet/nom' );
-					$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
-				}
-			}
+            // Crée l'objet de l'extension.
+            if ($this->_actionUploadFileExtension != '') {
+                // Crée l'objet avec le texte.
+                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileExtension);
+                if ($textID !== false) {
+                    // Crée le lien.
+                    $action = 'l';
+                    $source = $id;
+                    $target = $textID;
+                    $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/suffix');
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+                }
+            }
 
-			// Crée l'objet de l'extension.
-			if ( $this->_actionUploadFileExtension != '' )
-			{
-				// Crée l'objet avec le texte.
-				$textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileExtension);
-				if ( $textID !== false )
-				{
-					// Crée le lien.
-					$action	= 'l';
-					$source	= $id;
-					$target	= $textID;
-					$meta	= $this->_nebuleInstance->getCrypto()->hash( 'nebule/objet/suffix' );
-					$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
-				}
-			}
+            // Spécifique klicty.
+            // Crée l'objet du temps de vie.
+            if ($this->_actionUploadFileLifeTime != '') {
+                // Crée l'objet avec le texte.
+                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileLifeTime);
+                if ($textID !== false) {
+                    // Crée le lien.
+                    $action = 'l';
+                    $source = $id;
+                    $target = $textID;
+                    $meta = $this->_nebuleInstance->getCrypto()->hash(Application::APPLICATION_EXPIRATION_DATE);
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
+                }
+            }
+            // Crée l'objet du nombre de vues.
+            if ($this->_actionUploadFileShowTime != 0) {
+                // Crée l'objet avec le texte.
+                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileShowTime);
+                if ($textID !== false) {
+                    // Crée le lien.
+                    $action = 'l';
+                    $source = $id;
+                    $target = $textID;
+                    $meta = $this->_nebuleInstance->getCrypto()->hash(Application::APPLICATION_EXPIRATION_COUNT);
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
+                }
+            }
 
-			// Spécifique klicty.
-			// Crée l'objet du temps de vie.
-			if ( $this->_actionUploadFileLifeTime != '' )
-			{
-				// Crée l'objet avec le texte.
-				$textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileLifeTime);
-				if ( $textID !== false )
-				{
-					// Crée le lien.
-					$action	= 'l';
-					$source	= $id;
-					$target	= $textID;
-					$meta	= $this->_nebuleInstance->getCrypto()->hash( Application::APPLICATION_EXPIRATION_DATE );
-					$this->_createLink($signer, $date, $action, $source, $target, $meta, false);
-				}
-			}
-			// Crée l'objet du nombre de vues.
-			if ( $this->_actionUploadFileShowTime != 0 )
-			{
-				// Crée l'objet avec le texte.
-				$textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileShowTime);
-				if ( $textID !== false )
-				{
-					// Crée le lien.
-					$action	= 'l';
-					$source	= $id;
-					$target	= $textID;
-					$meta	= $this->_nebuleInstance->getCrypto()->hash( Application::APPLICATION_EXPIRATION_COUNT );
-					$this->_createLink($signer, $date, $action, $source, $target, $meta, false);
-				}
-			}
+            // Si mise à jour de l'objet en cours.
+            if ($this->_actionUploadFileUpdate) {
+                // Crée le lien.
+                $action = 'u';
+                $source = $this->_applicationInstance->getCurrentObject();
+                $target = $id;
+                $meta = '0';
+                $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+            }
 
-			// Si mise à jour de l'objet en cours.
-			if ( $this->_actionUploadFileUpdate )
-			{
-				// Crée le lien.
-				$action	= 'u';
-				$source	= $this->_applicationInstance->getCurrentObject();
-				$target	= $id;
-				$meta	= '0';
-				$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
-			}
+            unset($date, $signer, $source, $target, $meta, $link, $newLink, $textID);
 
-			unset($date, $signer, $source, $target, $meta, $link, $newLink, $textID);
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
 }
 
 
 abstract class DisabledAction // extends Actions
 {
-	/**
-	 * Traitement des actions spéciales, qui peuvent être réalisées sans entité déverrouillée.
-	 */
-	public function specialActions()
-	{
-		$this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_NORMAL); // Log
+    /**
+     * Traitement des actions spéciales, qui peuvent être réalisées sans entité déverrouillée.
+     */
+    public function specialActions()
+    {
+        $this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_NORMAL); // Log
 
-		// Nettoye les objets expirés.
-		$this->_actionFlushExpiredObjects();
+        // Nettoye les objets expirés.
+        $this->_actionFlushExpiredObjects();
 
-		// Vérifie que l'action de création d'entité soit permise entité verrouillée.
-		if ( $this->_unlocked || $this->_nebuleInstance->getOption('permitPublicCreateEntity') )
-		{
-			$this->_extractActionCreateEntity();
-			if ( $this->_actionCreateEntity ) $this->_actionCreateEntity();
-		}
+        // Vérifie que l'action de création d'entité soit permise entité verrouillée.
+        if ($this->_unlocked || $this->_nebuleInstance->getOption('permitPublicCreateEntity')) {
+            $this->_extractActionCreateEntity();
+            if ($this->_actionCreateEntity) $this->_actionCreateEntity();
+        }
 
-		// Vérifie que l'action de chargement de lien soit permise entité verrouillée.
-		if ( $this->_unlocked || $this->_applicationInstance->getOption('klictyPermitPublicUploadLinks') )
-		{
-			$this->_extractActionSignLink1();
-			$this->_extractActionSignLink2();
-			$this->_extractActionSignLink3();
-			if ( $this->_actionSignLinkInstance1 != '' && is_a($this->_actionSignLinkInstance1, 'Link') )			$this->_actionSignLink($this->_actionSignLinkInstance1);
-			if ( $this->_actionSignLinkInstance2 != '' && is_a($this->_actionSignLinkInstance2, 'Link') )			$this->_actionSignLink($this->_actionSignLinkInstance2);
-			if ( $this->_actionSignLinkInstance3 != '' && is_a($this->_actionSignLinkInstance3, 'Link') )			$this->_actionSignLink($this->_actionSignLinkInstance3);
-		}
+        // Vérifie que l'action de chargement de lien soit permise entité verrouillée.
+        if ($this->_unlocked || $this->_applicationInstance->getOption('klictyPermitPublicUploadLinks')) {
+            $this->_extractActionSignLink1();
+            $this->_extractActionSignLink2();
+            $this->_extractActionSignLink3();
+            if ($this->_actionSignLinkInstance1 != '' && is_a($this->_actionSignLinkInstance1, 'Link')) $this->_actionSignLink($this->_actionSignLinkInstance1);
+            if ($this->_actionSignLinkInstance2 != '' && is_a($this->_actionSignLinkInstance2, 'Link')) $this->_actionSignLink($this->_actionSignLinkInstance2);
+            if ($this->_actionSignLinkInstance3 != '' && is_a($this->_actionSignLinkInstance3, 'Link')) $this->_actionSignLink($this->_actionSignLinkInstance3);
+        }
 
-		// Gère les synchronisations (toujours les objets avant les liens).
-		$this->_extractActionSynchronizeObject();
-		$this->_extractActionSynchronizeEntity();
-		$this->_extractActionSynchronizeObjectLinks();
-		$this->_extractActionSynchronizeNewEntity();
-		if ( $this->_actionSynchronizeObjectInstance != '' )
-			$this->_actionSynchronizeObject();
-		if ( $this->_actionSynchronizeEntityInstance != '' )
-			$this->_actionSynchronizeEntity();
-		if ( $this->_actionSynchronizeObjectLinksInstance != '' )
-			$this->_actionSynchronizeObjectLinks();
-		if ( $this->_actionSynchronizeNewEntityID != '' )
-			$this->_actionSynchronizeNewEntity();
+        // Gère les synchronisations (toujours les objets avant les liens).
+        $this->_extractActionSynchronizeObject();
+        $this->_extractActionSynchronizeEntity();
+        $this->_extractActionSynchronizeObjectLinks();
+        $this->_extractActionSynchronizeNewEntity();
+        if ($this->_actionSynchronizeObjectInstance != '')
+            $this->_actionSynchronizeObject();
+        if ($this->_actionSynchronizeEntityInstance != '')
+            $this->_actionSynchronizeEntity();
+        if ($this->_actionSynchronizeObjectLinksInstance != '')
+            $this->_actionSynchronizeObjectLinks();
+        if ($this->_actionSynchronizeNewEntityID != '')
+            $this->_actionSynchronizeNewEntity();
 
-		$this->_metrology->addLog('Special actions end', Metrology::LOG_LEVEL_NORMAL); // Log
-	}
-	/**
-	 * Traitement des actions génériques.
-	 */
-	public function genericActions()
-	{
-		$this->_metrology->addLog('Generic actions', Metrology::LOG_LEVEL_NORMAL); // Log
+        $this->_metrology->addLog('Special actions end', Metrology::LOG_LEVEL_NORMAL); // Log
+    }
 
-		// Vérifie que l'entité est déverrouillée.
-		if ( ! $this->_unlocked ) return;
+    /**
+     * Traitement des actions génériques.
+     */
+    public function genericActions()
+    {
+        $this->_metrology->addLog('Generic actions', Metrology::LOG_LEVEL_NORMAL); // Log
 
-		// Extrait les actions demandées.
-		$this->_extractGenericActionsArguments();
+        // Vérifie que l'entité est déverrouillée.
+        if (!$this->_unlocked) return;
 
-		// Répartit les actions à traiter.
-		$this->_routerGenericActions();
+        // Extrait les actions demandées.
+        $this->_extractGenericActionsArguments();
 
-		$this->_metrology->addLog('Generic actions end', Metrology::LOG_LEVEL_NORMAL); // Log
-	}
+        // Répartit les actions à traiter.
+        $this->_routerGenericActions();
 
+        $this->_metrology->addLog('Generic actions end', Metrology::LOG_LEVEL_NORMAL); // Log
+    }
 
 
+    /**
+     * Extrait les actions demandées.
+     */
+    private function _extractGenericActionsArguments()
+    {
+        $this->_metrology->addLog('Extract actions arguments', Metrology::LOG_LEVEL_NORMAL); // Log
 
+        $this->_extractActionObfuscateLink();
+        $this->_extractActionDeleteObject();
+        $this->_extractActionProtectObject();
+        $this->_extractActionUnprotectObject();
+        $this->_extractActionShareProtectObjectToEntity();
+        $this->_extractActionShareProtectObjectToGroupOpened();
+        $this->_extractActionShareProtectObjectToGroupClosed();
+        $this->_extractActionCancelShareProtectObjectToEntity();
+        //$this->_extractActionSynchronizeObject();
+        //$this->_extractActionSynchronizeEntity();
+        //$this->_extractActionSynchronizeObjectLinks();
+        $this->_extractActionMarkObject();
+        $this->_extractActionUnmarkObject();
+        $this->_extractActionUnmarkAllObjects();
+        $this->_extractActionUploadFile();
+        $this->_extractActionUploadText();
+        $this->_extractActionCreateGroup();
+        $this->_extractActionDeleteGroup();
+        $this->_extractActionAddToGroup();
+        $this->_extractActionRemoveFromGroup();
+        $this->_extractActionAddItemToGroup();
+        $this->_extractActionRemoveItemFromGroup();
+    }
 
-
-
-
-
-
-	/**
-	 * Extrait les actions demandées.
-	 */
-	private function _extractGenericActionsArguments()
-	{
-		$this->_metrology->addLog('Extract actions arguments', Metrology::LOG_LEVEL_NORMAL); // Log
-
-		$this->_extractActionObfuscateLink();
-		$this->_extractActionDeleteObject();
-		$this->_extractActionProtectObject();
-		$this->_extractActionUnprotectObject();
-		$this->_extractActionShareProtectObjectToEntity();
-		$this->_extractActionShareProtectObjectToGroupOpened();
-		$this->_extractActionShareProtectObjectToGroupClosed();
-		$this->_extractActionCancelShareProtectObjectToEntity();
-		//$this->_extractActionSynchronizeObject();
-		//$this->_extractActionSynchronizeEntity();
-		//$this->_extractActionSynchronizeObjectLinks();
-		$this->_extractActionMarkObject();
-		$this->_extractActionUnmarkObject();
-		$this->_extractActionUnmarkAllObjects();
-		$this->_extractActionUploadFile();
-		$this->_extractActionUploadText();
-		$this->_extractActionCreateGroup();
-		$this->_extractActionDeleteGroup();
-		$this->_extractActionAddToGroup();
-		$this->_extractActionRemoveFromGroup();
-		$this->_extractActionAddItemToGroup();
-		$this->_extractActionRemoveItemFromGroup();
-	}
-
-	/**
-	 * Extrait pour action si on doit signer un lien (1).
-	 */
-	private function _extractActionSignLink1()
-	{
-		/*
+    /**
+     * Extrait pour action si on doit signer un lien (1).
+     */
+    private function _extractActionSignLink1()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Extract action sign link 1', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action sign link 1', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Si le champs est vide, extrait le contenu de la variable POST.
-			if ( $arg == '' )
-				$arg = filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+            // Si le champs est vide, extrait le contenu de la variable POST.
+            if ($arg == '')
+                $arg = filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 
-			// Extraction du lien et stockage pour traitement.
-			if ( $arg != ''
-					&& strlen($arg) != 0
-				)
-				$this->_actionSignLinkInstance1 = $this->_nebuleInstance->flatLinkExtractAsInstance($arg);
-			unset($arg);
-		}
-	}
-	private $_actionSignLinkInstance1 = '';
+            // Extraction du lien et stockage pour traitement.
+            if ($arg != ''
+                && strlen($arg) != 0
+            )
+                $this->_actionSignLinkInstance1 = $this->_nebuleInstance->flatLinkExtractAsInstance($arg);
+            unset($arg);
+        }
+    }
 
-	/**
-	 * Extrait pour action si on doit signer un lien (2).
-	 */
-	private function _extractActionSignLink2()
-	{
-		/*
+    private $_actionSignLinkInstance1 = '';
+
+    /**
+     * Extrait pour action si on doit signer un lien (2).
+     */
+    private function _extractActionSignLink2()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-			// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Extract action sign link 2', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action sign link 2', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Si le champs est vide, extrait le contenu de la variable POST.
-			if ( $arg == '' )
-				$arg = filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+            // Si le champs est vide, extrait le contenu de la variable POST.
+            if ($arg == '')
+                $arg = filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 
-			// Extraction du lien et stockage pour traitement.
-			if ( $arg != ''
-					&& strlen($arg) != 0
-				)
-				$this->_actionSignLinkInstance2 = $this->_nebuleInstance->flatLinkExtractAsInstance($arg);
-			unset($arg);
-		}
-	}
-	private $_actionSignLinkInstance2 = '';
+            // Extraction du lien et stockage pour traitement.
+            if ($arg != ''
+                && strlen($arg) != 0
+            )
+                $this->_actionSignLinkInstance2 = $this->_nebuleInstance->flatLinkExtractAsInstance($arg);
+            unset($arg);
+        }
+    }
 
-	/**
-	 * Extrait pour action si on doit signer un lien (3).
-	 */
-	private function _extractActionSignLink3()
-	{
-		/*
+    private $_actionSignLinkInstance2 = '';
+
+    /**
+     * Extrait pour action si on doit signer un lien (3).
+     */
+    private function _extractActionSignLink3()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-			// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Extract action sign link 3', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action sign link 3', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Si le champs est vide, extrait le contenu de la variable POST.
-			if ( $arg == '' )
-				$arg = filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+            // Si le champs est vide, extrait le contenu de la variable POST.
+            if ($arg == '')
+                $arg = filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 
-			// Extraction du lien et stockage pour traitement.
-			if ( $arg != ''
-					&& strlen($arg) != 0
-				)
-				$this->_actionSignLinkInstance3 = $this->_nebuleInstance->flatLinkExtractAsInstance($arg);
-			unset($arg);
-		}
-	}
-	private $_actionSignLinkInstance3 = '';
+            // Extraction du lien et stockage pour traitement.
+            if ($arg != ''
+                && strlen($arg) != 0
+            )
+                $this->_actionSignLinkInstance3 = $this->_nebuleInstance->flatLinkExtractAsInstance($arg);
+            unset($arg);
+        }
+    }
 
-	/**
-	 * Extrait pour action si on doit dissimuler un lien.
-	 */
-	private function _extractActionObfuscateLink()
-	{
-		/*
+    private $_actionSignLinkInstance3 = '';
+
+    /**
+     * Extrait pour action si on doit dissimuler un lien.
+     */
+    private function _extractActionObfuscateLink()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_unlocked
-		)
-		{
-			$this->_metrology->addLog('Extract action obfuscate link', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action obfuscate link', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_OBFUSCATE_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_OBFUSCATE_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Si le champs est vide, extrait le contenu de la variable POST.
-			if ( $arg == '' )
-				$arg = filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_OBFUSCATE_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+            // Si le champs est vide, extrait le contenu de la variable POST.
+            if ($arg == '')
+                $arg = filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_OBFUSCATE_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 
-			// Extraction du lien et stockage pour traitement.
-			if ( $arg != ''
-					&& strlen($arg) != 0
-				)
-				$this->_actionObfuscateLinkInstance = $this->_nebuleInstance->flatLinkExtractAsInstance($arg);
-			unset($arg);
-		}
-	}
-	private $_actionObfuscateLinkInstance = '';
+            // Extraction du lien et stockage pour traitement.
+            if ($arg != ''
+                && strlen($arg) != 0
+            )
+                $this->_actionObfuscateLinkInstance = $this->_nebuleInstance->flatLinkExtractAsInstance($arg);
+            unset($arg);
+        }
+    }
 
-	/**
-	 * Renvoie si l'action de suppression d'objet est validée.
-	 */
-	public function getDeleteObject() { return $this->_actionDeleteObject; }
-	/**
-	 * Renvoie l'ID de l'objet supprimé.
-	 */
-	public function getDeleteObjectID() { return $this->_actionDeleteObjectID; }
-	/**
-	 * Extrait pour action si on doit supprimer l'objet en cours.
-	 */
-	private function _extractActionDeleteObject()
-	{
-		/*
+    private $_actionObfuscateLinkInstance = '';
+
+    /**
+     * Renvoie si l'action de suppression d'objet est validée.
+     */
+    public function getDeleteObject()
+    {
+        return $this->_actionDeleteObject;
+    }
+
+    /**
+     * Renvoie l'ID de l'objet supprimé.
+     */
+    public function getDeleteObjectID()
+    {
+        return $this->_actionDeleteObjectID;
+    }
+
+    /**
+     * Extrait pour action si on doit supprimer l'objet en cours.
+     */
+    private function _extractActionDeleteObject()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Extract action delete object', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action delete object', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$argObject		= trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-			$argForce		= filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT_FORCE);
-			$argObfuscate	= filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT_OBFUSCATE);
+            // Lit et nettoye le contenu de la variable GET.
+            $argObject = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $argForce = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT_FORCE);
+            $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT_OBFUSCATE);
 
-			// Extraction de l'objet à supprimer.
-			if ( $argObject != ''
-					&& strlen($argObject) >= nebule::NEBULE_MINIMUM_ID_SIZE
-					&& ctype_xdigit($argObject)
-				)
-			{
-				$this->_actionDeleteObjectID = $argObject;
-				$this->_actionDeleteObjectInstance = $this->_nebuleInstance->newObject($argObject);
-				$this->_actionDeleteObject = true;
-			}
-			// Extraction si la suppression doit être forcée.
-			if ( $argForce )
-				$this->_actionDeleteObjectForce = true;
-			// Extraction si la suppression doit être cachée.
-			if ( $argObfuscate )
-				$this->_actionDeleteObjectObfuscate = true;
+            // Extraction de l'objet à supprimer.
+            if ($argObject != ''
+                && strlen($argObject) >= nebule::NEBULE_MINIMUM_ID_SIZE
+                && ctype_xdigit($argObject)
+            ) {
+                $this->_actionDeleteObjectID = $argObject;
+                $this->_actionDeleteObjectInstance = $this->_nebuleInstance->newObject($argObject);
+                $this->_actionDeleteObject = true;
+            }
+            // Extraction si la suppression doit être forcée.
+            if ($argForce)
+                $this->_actionDeleteObjectForce = true;
+            // Extraction si la suppression doit être cachée.
+            if ($argObfuscate)
+                $this->_actionDeleteObjectObfuscate = true;
 
-			unset($argObject, $argForce, $argObfuscate);
-		}
-	}
-	private $_actionDeleteObject = false;
-	private $_actionDeleteObjectID = '0';
-	private $_actionDeleteObjectInstance = '';
-	private $_actionDeleteObjectForce = '';
-	private $_actionDeleteObjectObfuscate = '';
+            unset($argObject, $argForce, $argObfuscate);
+        }
+    }
 
-	/**
-	 * Extrait pour action si on doit protéger l'objet en cours.
-	 */
-	private function _extractActionProtectObject()
-	{
-		/*
+    private $_actionDeleteObject = false;
+    private $_actionDeleteObjectID = '0';
+    private $_actionDeleteObjectInstance = '';
+    private $_actionDeleteObjectForce = '';
+    private $_actionDeleteObjectObfuscate = '';
+
+    /**
+     * Extrait pour action si on doit protéger l'objet en cours.
+     */
+    private function _extractActionProtectObject()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Extract action protect object', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action protect object', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Extraction du lien et stockage pour traitement.
-			if ( $arg != ''
-					&& strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-					&& ctype_xdigit($arg)
-				)
-				$this->_actionProtectObjectInstance = $this->_nebuleInstance->newObject($arg);
-			unset($arg);
-		}
-	}
-	private $_actionProtectObjectInstance = '';
+            // Extraction du lien et stockage pour traitement.
+            if ($arg != ''
+                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
+                && ctype_xdigit($arg)
+            )
+                $this->_actionProtectObjectInstance = $this->_nebuleInstance->newObject($arg);
+            unset($arg);
+        }
+    }
 
-	/**
-	 * Extrait pour action si on doit déprotéger l'objet en cours.
-	 */
-	private function _extractActionUnprotectObject()
-	{
-		/*
+    private $_actionProtectObjectInstance = '';
+
+    /**
+     * Extrait pour action si on doit déprotéger l'objet en cours.
+     */
+    private function _extractActionUnprotectObject()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_unlocked
-		)
-		{
-			$this->_metrology->addLog('Extract action unprotect object', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action unprotect object', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Extraction du lien et stockage pour traitement.
-			if ( $arg != ''
-					&& strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-					&& ctype_xdigit($arg)
-				)
-				$this->_actionUnprotectObjectInstance = $this->_nebuleInstance->newObject($arg);
-			unset($arg);
-		}
-	}
-	private $_actionUnprotectObjectInstance = '';
+            // Extraction du lien et stockage pour traitement.
+            if ($arg != ''
+                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
+                && ctype_xdigit($arg)
+            )
+                $this->_actionUnprotectObjectInstance = $this->_nebuleInstance->newObject($arg);
+            unset($arg);
+        }
+    }
 
-	/**
-	 * Extrait pour action si on doit partager la protection de l'objet à une entité.
-	 */
-	private function _extractActionShareProtectObjectToEntity()
-	{
-		/*
+    private $_actionUnprotectObjectInstance = '';
+
+    /**
+     * Extrait pour action si on doit partager la protection de l'objet à une entité.
+     */
+    private function _extractActionShareProtectObjectToEntity()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Extract action share protect object to entity', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action share protect object to entity', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Extraction du lien et stockage pour traitement.
-			if ( $arg != ''
-					&& strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-					&& ctype_xdigit($arg)
-				)
-				$this->_actionShareProtectObjectToEntity = $arg;
-			unset($arg);
-		}
-	}
-	private $_actionShareProtectObjectToEntity = '';
+            // Extraction du lien et stockage pour traitement.
+            if ($arg != ''
+                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
+                && ctype_xdigit($arg)
+            )
+                $this->_actionShareProtectObjectToEntity = $arg;
+            unset($arg);
+        }
+    }
 
-	/**
-	 * Extrait pour action si on doit partager la protection de l'objet à un groupe ouvert.
-	 */
-	private function _extractActionShareProtectObjectToGroupOpened()
-	{
-		/*
+    private $_actionShareProtectObjectToEntity = '';
+
+    /**
+     * Extrait pour action si on doit partager la protection de l'objet à un groupe ouvert.
+     */
+    private function _extractActionShareProtectObjectToGroupOpened()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Extract action share protect object to opened group', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action share protect object to opened group', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Extraction du lien et stockage pour traitement.
-			if ( $arg != ''
-					&& strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-					&& ctype_xdigit($arg)
-				)
-				$this->_actionShareProtectObjectToGroupOpened = $arg;
-			unset($arg);
-		}
-	}
-	private $_actionShareProtectObjectToGroupOpened = '';
+            // Extraction du lien et stockage pour traitement.
+            if ($arg != ''
+                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
+                && ctype_xdigit($arg)
+            )
+                $this->_actionShareProtectObjectToGroupOpened = $arg;
+            unset($arg);
+        }
+    }
 
-	/**
-	 * Extrait pour action si on doit partager la protection de l'objet à un groupe ouvert.
-	 */
-	private function _extractActionShareProtectObjectToGroupClosed()
-	{
-		/*
+    private $_actionShareProtectObjectToGroupOpened = '';
+
+    /**
+     * Extrait pour action si on doit partager la protection de l'objet à un groupe ouvert.
+     */
+    private function _extractActionShareProtectObjectToGroupClosed()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Extract action share protect object to closed group', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action share protect object to closed group', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Extraction du lien et stockage pour traitement.
-			if ( $arg != ''
-					&& strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-					&& ctype_xdigit($arg)
-				)
-				$this->_actionShareProtectObjectToGroupClosed = $arg;
-			unset($arg);
-		}
-	}
-	private $_actionShareProtectObjectToGroupClosed = '';
+            // Extraction du lien et stockage pour traitement.
+            if ($arg != ''
+                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
+                && ctype_xdigit($arg)
+            )
+                $this->_actionShareProtectObjectToGroupClosed = $arg;
+            unset($arg);
+        }
+    }
 
-	/**
-	 * Extrait pour action si on doit annuler le partage la protection de l'objet à une entité.
-	 */
-	private function _extractActionCancelShareProtectObjectToEntity()
-	{
-		/*
+    private $_actionShareProtectObjectToGroupClosed = '';
+
+    /**
+     * Extrait pour action si on doit annuler le partage la protection de l'objet à une entité.
+     */
+    private function _extractActionCancelShareProtectObjectToEntity()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Extract action cancel share protect object to entity', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action cancel share protect object to entity', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Extraction du lien et stockage pour traitement.
-			if ( $arg != ''
-					&& strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-					&& ctype_xdigit($arg)
-				)
-				$this->_actionCancelShareProtectObjectToEntity = $arg;
-			unset($arg);
-		}
-	}
-	private $_actionCancelShareProtectObjectToEntity = '';
+            // Extraction du lien et stockage pour traitement.
+            if ($arg != ''
+                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
+                && ctype_xdigit($arg)
+            )
+                $this->_actionCancelShareProtectObjectToEntity = $arg;
+            unset($arg);
+        }
+    }
+
+    private $_actionCancelShareProtectObjectToEntity = '';
 
 
+    /**
+     * Retourne l'objet synchronisé.
+     * @return string|entity
+     */
+    public function getSynchronizeObjectInstance()
+    {
+        return $this->_actionSynchronizeObjectInstance;
+    }
 
-	/**
-	 * Retourne l'objet synchronisé.
-	 * @return string|entity
-	 */
-	public function getSynchronizeObjectInstance() { return $this->_actionSynchronizeObjectInstance; }
-	/**
-	 * Extrait pour action si on doit synchroniser un objet.
-	 */
-	private function _extractActionSynchronizeObject()
-	{
-		/*
+    /**
+     * Extrait pour action si on doit synchroniser un objet.
+     */
+    private function _extractActionSynchronizeObject()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que l'écriture d'objets soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitSynchronizeObject')
-			)
-		{
-			$this->_metrology->addLog('Extract action synchronize object', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que l'écriture d'objets soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
+        ) {
+            $this->_metrology->addLog('Extract action synchronize object', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Extraction de l'id et stockage pour traitement.
-			if ( $arg != ''
-					&& strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-					&& ctype_xdigit($arg)
-				)
-				$this->_actionSynchronizeObjectInstance = $this->_nebuleInstance->newObject($arg);
-			unset($arg);
-		}
-	}
-	private $_actionSynchronizeObjectInstance = '';
+            // Extraction de l'id et stockage pour traitement.
+            if ($arg != ''
+                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
+                && ctype_xdigit($arg)
+            )
+                $this->_actionSynchronizeObjectInstance = $this->_nebuleInstance->newObject($arg);
+            unset($arg);
+        }
+    }
 
-	/**
-	 * Retourne l'entité synchronisée.
-	 * @return string|entity
-	 */
-	public function getSynchronizeEntityInstance() { return $this->_actionSynchronizeEntityInstance; }
-	/**
-	 * Extrait pour action si on doit synchroniser une entité.
-	 */
-	private function _extractActionSynchronizeEntity()
-	{
-		/*
+    private $_actionSynchronizeObjectInstance = '';
+
+    /**
+     * Retourne l'entité synchronisée.
+     * @return string|entity
+     */
+    public function getSynchronizeEntityInstance()
+    {
+        return $this->_actionSynchronizeEntityInstance;
+    }
+
+    /**
+     * Extrait pour action si on doit synchroniser une entité.
+     */
+    private function _extractActionSynchronizeEntity()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que l'écriture d'objets soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitSynchronizeObject')
-				&& $this->_nebuleInstance->getOption('permitSynchronizeLink')
-			)
-		{
-			$this->_metrology->addLog('Extract action synchronize entity', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que l'écriture d'objets soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
+            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        ) {
+            $this->_metrology->addLog('Extract action synchronize entity', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Extraction de l'id et stockage pour traitement.
-			if ( $arg != ''
-					&& strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-					&& ctype_xdigit($arg)
-				)
-				$this->_actionSynchronizeEntityInstance = $this->_nebuleInstance->newEntity($arg);
-			unset($arg);
-		}
-	}
-	private $_actionSynchronizeEntityInstance = '';
+            // Extraction de l'id et stockage pour traitement.
+            if ($arg != ''
+                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
+                && ctype_xdigit($arg)
+            )
+                $this->_actionSynchronizeEntityInstance = $this->_nebuleInstance->newEntity($arg);
+            unset($arg);
+        }
+    }
 
-	/**
-	 * Retourne l'objet synchronisé.
-	 * @return string|entity
-	 */
-	public function getSynchronizeObjectLinksInstance() { return $this->_actionSynchronizeObjectLinksInstance; }
-	/**
-	 * Extrait pour action si on doit synchroniser les liens d'un objet.
-	 */
-	private function _extractActionSynchronizeObjectLinks()
-	{
-		/*
+    private $_actionSynchronizeEntityInstance = '';
+
+    /**
+     * Retourne l'objet synchronisé.
+     * @return string|entity
+     */
+    public function getSynchronizeObjectLinksInstance()
+    {
+        return $this->_actionSynchronizeObjectLinksInstance;
+    }
+
+    /**
+     * Extrait pour action si on doit synchroniser les liens d'un objet.
+     */
+    private function _extractActionSynchronizeObjectLinks()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitSynchronizeLink')
-			)
-		{
-			$this->_metrology->addLog('Extract action synchronize object links', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        ) {
+            $this->_metrology->addLog('Extract action synchronize object links', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_LINKS, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_LINKS, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Extraction de l'id et stockage pour traitement.
-			if ( $arg != ''
-					&& strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-					&& ctype_xdigit($arg)
-				)
-				$this->_actionSynchronizeObjectLinksInstance = $this->_nebuleInstance->newObject($arg);
-			unset($arg);
-		}
-	}
-	private $_actionSynchronizeObjectLinksInstance = '';
+            // Extraction de l'id et stockage pour traitement.
+            if ($arg != ''
+                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
+                && ctype_xdigit($arg)
+            )
+                $this->_actionSynchronizeObjectLinksInstance = $this->_nebuleInstance->newObject($arg);
+            unset($arg);
+        }
+    }
 
-	/**
-	 * Retourne l'entité synchronisée depuis une URL.
-	 * @return string|entity
-	 */
-	public function getSynchronizeNewEntityInstance() { return $this->_actionSynchronizeNewEntityInstance; }
-	/**
-	 * Extrait pour action si on doit synchroniser l'objet en cours.
-	 */
-	private function _extractActionSynchronizeNewEntity()
-	{
-		/*
+    private $_actionSynchronizeObjectLinksInstance = '';
+
+    /**
+     * Retourne l'entité synchronisée depuis une URL.
+     * @return string|entity
+     */
+    public function getSynchronizeNewEntityInstance()
+    {
+        return $this->_actionSynchronizeNewEntityInstance;
+    }
+
+    /**
+     * Extrait pour action si on doit synchroniser l'objet en cours.
+     */
+    private function _extractActionSynchronizeNewEntity()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que l'écriture d'objets soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitSynchronizeObject')
-				&& $this->_nebuleInstance->getOption('permitSynchronizeLink')
-			)
-		{
-			$this->_metrology->addLog('Extract action synchronize new entity', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que l'écriture d'objets soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
+            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        ) {
+            $this->_metrology->addLog('Extract action synchronize new entity', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_NEW_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_NEW_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Extraction de l'URL et stockage pour traitement.
-			if ( $arg != ''
-					&& strlen($arg) >= 9
-					&& ctype_print($arg)
-				)
-			{
-				// Décompose l'URL.
-				$parseURL = parse_url($arg);
-				// Extrait le protocol.
-				if ( isset($parseURL['scheme']) && ( $parseURL['scheme'] == 'http' || $parseURL['scheme'] == 'https' ) )
-					$scheme = $parseURL['scheme'];
-				else
-				{
-					// Il manque le protocol, suppose que c'est http.
-					$scheme = 'http';
-					$parseURL = parse_url($scheme.'://'.$arg);
-				}
-				// Vérifie les champs de l'URL.
-				if ( $parseURL['host'] != '' && $parseURL['path'] != '' && substr( $parseURL['path'], 0, 3 ) == '/o/' )
-				{
-					// Extrait l'ID de l'objet de l'entité à synchroniser.
-					$id = substr( $parseURL['path'], 3 );
-					$this->_metrology->addLog('Extract action synchronize new entity - ID='.$id, Metrology::LOG_LEVEL_NORMAL); // Log
-					// Vérifie l'ID.
-					if ( ! $this->_io->checkObjectPresent($id) && ctype_xdigit($id) )
-					{
-						// Si c'est bon on prépare pour la synchronisation.
-						$this->_actionSynchronizeNewEntityID = $id;
-						$this->_actionSynchronizeNewEntityURL = $scheme.'://'.$parseURL['host'];
-						if ( isset( $parseURL['port']) )
-						{
-							$port = $parseURL['port'];
-							$this->_actionSynchronizeNewEntityURL .= ':'.$port;
-						}
-						$this->_metrology->addLog('Extract action synchronize new entity - URL='.$this->_actionSynchronizeNewEntityURL, Metrology::LOG_LEVEL_NORMAL); // Log
-					}
-				}
-			}
-			unset($arg);
-		}
-	}
-	private $_actionSynchronizeNewEntityID			= '';
-	private $_actionSynchronizeNewEntityURL			= '';
-	private $_actionSynchronizeNewEntityInstance	= '';
+            // Extraction de l'URL et stockage pour traitement.
+            if ($arg != ''
+                && strlen($arg) >= 9
+                && ctype_print($arg)
+            ) {
+                // Décompose l'URL.
+                $parseURL = parse_url($arg);
+                // Extrait le protocol.
+                if (isset($parseURL['scheme']) && ($parseURL['scheme'] == 'http' || $parseURL['scheme'] == 'https'))
+                    $scheme = $parseURL['scheme'];
+                else {
+                    // Il manque le protocol, suppose que c'est http.
+                    $scheme = 'http';
+                    $parseURL = parse_url($scheme . '://' . $arg);
+                }
+                // Vérifie les champs de l'URL.
+                if ($parseURL['host'] != '' && $parseURL['path'] != '' && substr($parseURL['path'], 0, 3) == '/o/') {
+                    // Extrait l'ID de l'objet de l'entité à synchroniser.
+                    $id = substr($parseURL['path'], 3);
+                    $this->_metrology->addLog('Extract action synchronize new entity - ID=' . $id, Metrology::LOG_LEVEL_NORMAL); // Log
+                    // Vérifie l'ID.
+                    if (!$this->_io->checkObjectPresent($id) && ctype_xdigit($id)) {
+                        // Si c'est bon on prépare pour la synchronisation.
+                        $this->_actionSynchronizeNewEntityID = $id;
+                        $this->_actionSynchronizeNewEntityURL = $scheme . '://' . $parseURL['host'];
+                        if (isset($parseURL['port'])) {
+                            $port = $parseURL['port'];
+                            $this->_actionSynchronizeNewEntityURL .= ':' . $port;
+                        }
+                        $this->_metrology->addLog('Extract action synchronize new entity - URL=' . $this->_actionSynchronizeNewEntityURL, Metrology::LOG_LEVEL_NORMAL); // Log
+                    }
+                }
+            }
+            unset($arg);
+        }
+    }
 
-	/**
-	 * Extrait pour action si on doit marquer un objet.
-	 */
-	private function _extractActionMarkObject()
-	{
-		/*
+    private $_actionSynchronizeNewEntityID = '';
+    private $_actionSynchronizeNewEntityURL = '';
+    private $_actionSynchronizeNewEntityInstance = '';
+
+    /**
+     * Extrait pour action si on doit marquer un objet.
+     */
+    private function _extractActionMarkObject()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		$this->_metrology->addLog('Extract action mark object', Metrology::LOG_LEVEL_NORMAL); // Log
+        $this->_metrology->addLog('Extract action mark object', Metrology::LOG_LEVEL_NORMAL); // Log
 
-		// Lit et nettoye le contenu de la variable GET.
-		$arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_MARK_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        // Lit et nettoye le contenu de la variable GET.
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_MARK_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-		// Extraction du lien et stockage pour traitement.
-		if ( $arg != ''
-				&& strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-				&& ctype_xdigit($arg)
-			)
-			$this->_actionMarkObject = $arg;
-		unset($arg);
-	}
-	private $_actionMarkObject = '';
+        // Extraction du lien et stockage pour traitement.
+        if ($arg != ''
+            && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
+            && ctype_xdigit($arg)
+        )
+            $this->_actionMarkObject = $arg;
+        unset($arg);
+    }
 
-	/**
-	 * Extrait pour action si on doit retirer la marque d'un objet.
-	 */
-	private function _extractActionUnmarkObject()
-	{
-		/*
+    private $_actionMarkObject = '';
+
+    /**
+     * Extrait pour action si on doit retirer la marque d'un objet.
+     */
+    private function _extractActionUnmarkObject()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		$this->_metrology->addLog('Extract action unmark object', Metrology::LOG_LEVEL_NORMAL); // Log
+        $this->_metrology->addLog('Extract action unmark object', Metrology::LOG_LEVEL_NORMAL); // Log
 
-		// Lit et nettoye le contenu de la variable GET.
-		$arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        // Lit et nettoye le contenu de la variable GET.
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-		// Extraction du lien et stockage pour traitement.
-		if ( $arg != ''
-				&& strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-				&& ctype_xdigit($arg)
-			)
-			$this->_actionUnmarkObject = $arg;
-		unset($arg);
-	}
-	private $_actionUnmarkObject = '';
+        // Extraction du lien et stockage pour traitement.
+        if ($arg != ''
+            && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
+            && ctype_xdigit($arg)
+        )
+            $this->_actionUnmarkObject = $arg;
+        unset($arg);
+    }
 
-	/**
-	 * Extrait pour action si on doit supprimer toutes les marques des objets.
-	 */
-	private function _extractActionUnmarkAllObjects()
-	{
-		/*
+    private $_actionUnmarkObject = '';
+
+    /**
+     * Extrait pour action si on doit supprimer toutes les marques des objets.
+     */
+    private function _extractActionUnmarkAllObjects()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		$this->_metrology->addLog('Extract action unmark all objects', Metrology::LOG_LEVEL_NORMAL); // Log
+        $this->_metrology->addLog('Extract action unmark all objects', Metrology::LOG_LEVEL_NORMAL); // Log
 
-		// Lit et nettoye le contenu de la variable GET.
-		$arg = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNMARK_ALL_OBJECT);
+        // Lit et nettoye le contenu de la variable GET.
+        $arg = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNMARK_ALL_OBJECT);
 
-		// Extraction du lien et stockage pour traitement.
-		if ( $arg !== false )
-			$this->_actionUnmarkAllObjects = true;
-		unset($arg);
-	}
-	private $_actionUnmarkAllObjects = false;
+        // Extraction du lien et stockage pour traitement.
+        if ($arg !== false)
+            $this->_actionUnmarkAllObjects = true;
+        unset($arg);
+    }
 
-	/*
+    private $_actionUnmarkAllObjects = false;
+
+    /*
 	 * Transfert de fichier et nébulisation.
 	 */
-	protected $_actionUploadFile					= false,
-				$_actionUploadFileID				= '0',
-				$_actionUploadFileName				= '',
-				$_actionUploadFileExtension			= '',
-				$_actionUploadFileType				= '',
-				$_actionUploadFileSize				= '',
-				$_actionUploadFilePath				= '',
-				$_actionUploadFileUpdate			= false,
-				$_actionUploadFileProtect			= false,
-				$_actionUploadFileObfuscateLinks	= false,
-				$_actionUploadFileError				= false,
-				$_actionUploadFileErrorMessage		= 'Initialisation du transfert.';
+    protected $_actionUploadFile = false,
+        $_actionUploadFileID = '0',
+        $_actionUploadFileName = '',
+        $_actionUploadFileExtension = '',
+        $_actionUploadFileType = '',
+        $_actionUploadFileSize = '',
+        $_actionUploadFilePath = '',
+        $_actionUploadFileUpdate = false,
+        $_actionUploadFileProtect = false,
+        $_actionUploadFileObfuscateLinks = false,
+        $_actionUploadFileError = false,
+        $_actionUploadFileErrorMessage = 'Initialisation du transfert.';
 
-	// Spécifique klicty.
-	private $_actionUploadFileLifeTime			= '1m',
-			$_actionUploadFileShowTime			= 0;
+    // Spécifique klicty.
+    private $_actionUploadFileLifeTime = '1m',
+        $_actionUploadFileShowTime = 0;
 
-	/**
-	 * Renvoie si l'action de transfert de fichier vers le serveur est validée.
-	 */
-	public function getUploadObject() { return $this->_actionUploadFile; }
-	/**
-	 * Renvoie l'ID du fichier téléchargé vers le serveur.
-	 */
-	public function getUploadObjectID() { return $this->_actionUploadFileID; }
-	/**
-	 * Renvoie le code erreur.
-	 */
-	public function getUploadObjectError() { return $this->_actionUploadFileError; }
-	/**
-	 * Renvoie le message d'erreur.
-	 */
-	public function getUploadObjectErrorMessage() { return $this->_actionUploadFileErrorMessage; }
-	/**
-	 * Extrait pour action si un fichier est téléchargé vers le serveur.
-	 */
-	private function _extractActionUploadFile()
-	{
-		/*
+    /**
+     * Renvoie si l'action de transfert de fichier vers le serveur est validée.
+     */
+    public function getUploadObject()
+    {
+        return $this->_actionUploadFile;
+    }
+
+    /**
+     * Renvoie l'ID du fichier téléchargé vers le serveur.
+     */
+    public function getUploadObjectID()
+    {
+        return $this->_actionUploadFileID;
+    }
+
+    /**
+     * Renvoie le code erreur.
+     */
+    public function getUploadObjectError()
+    {
+        return $this->_actionUploadFileError;
+    }
+
+    /**
+     * Renvoie le message d'erreur.
+     */
+    public function getUploadObjectErrorMessage()
+    {
+        return $this->_actionUploadFileErrorMessage;
+    }
+
+    /**
+     * Extrait pour action si un fichier est téléchargé vers le serveur.
+     */
+    private function _extractActionUploadFile()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Extract action upload file', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action upload file', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit le contenu de la variable _FILE si un fichier est téléchargé.
-			if ( isset( $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['error'] )
-					&& $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['error'] == UPLOAD_ERR_OK
-					&& trim($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['name']) != ''
-				)
-			{
-				// Extraction des méta données du fichier.
-				$upfname	= mb_convert_encoding(strtok(trim(filter_var($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['name'], FILTER_SANITIZE_STRING)), "\n"), 'UTF-8');
-				$upinfo		= pathinfo($upfname);
-				$upext		= $upinfo['extension'];
-				$upname		= basename($upfname,'.'.$upext);
-				$upsize		= $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['size'];
-				$uppath		= $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['tmp_name'];
-				$uptype		= '';
-				// Si le fichier est bien téléchargé.
-				if ( file_exists($uppath) )
-				{
-					// Si le fichier n'est pas trop gros.
-					if ( $upsize <= $this->_applicationInstance->getOption('klictyIOReadMaxDataPHP') )
-					{
-						// Lit le type mime.
-						$finfo	= finfo_open(FILEINFO_MIME_TYPE);
-						$uptype	= finfo_file($finfo, $uppath);
-						finfo_close($finfo);
-						if ( $uptype == 'application/octet-stream' )
-							$uptype = $this->_getFilenameTypeMime("$upname.$upext");
+            // Lit le contenu de la variable _FILE si un fichier est téléchargé.
+            if (isset($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['error'])
+                && $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['error'] == UPLOAD_ERR_OK
+                && trim($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['name']) != ''
+            ) {
+                // Extraction des méta données du fichier.
+                $upfname = mb_convert_encoding(strtok(trim(filter_var($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['name'], FILTER_SANITIZE_STRING)), "\n"), 'UTF-8');
+                $upinfo = pathinfo($upfname);
+                $upext = $upinfo['extension'];
+                $upname = basename($upfname, '.' . $upext);
+                $upsize = $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['size'];
+                $uppath = $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['tmp_name'];
+                $uptype = '';
+                // Si le fichier est bien téléchargé.
+                if (file_exists($uppath)) {
+                    // Si le fichier n'est pas trop gros.
+                    if ($upsize <= $this->_applicationInstance->getOption('klictyIOReadMaxDataPHP')) {
+                        // Lit le type mime.
+                        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                        $uptype = finfo_file($finfo, $uppath);
+                        finfo_close($finfo);
+                        if ($uptype == 'application/octet-stream')
+                            $uptype = $this->_getFilenameTypeMime("$upname.$upext");
 
-						// Extrait les options de téléchargement.
-						$argUpd	= filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_UPDATE);
-						$argPrt	= filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_PROTECT);
-						$argObf	= filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_OBFUSCATE_LINKS);
+                        // Extrait les options de téléchargement.
+                        $argUpd = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_UPDATE);
+                        $argPrt = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_PROTECT);
+                        $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_OBFUSCATE_LINKS);
 
-						// Spécifique klicty.
-						$argLifeTime	= trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LIFETIME, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-						if ( $argLifeTime != '1h' && $argLifeTime != '2h'
-								&& $argLifeTime != '1d' && $argLifeTime != '2d'
-								&& $argLifeTime != '1w' && $argLifeTime != '2w'
-								&& $argLifeTime != '1m' && $argLifeTime != '2m'
-								&& $argLifeTime != '1y' && $argLifeTime != '2y'
-								)
-							$argLifeTime = '1m';
-						$argShowTime	= intval(trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_SHOWTIME, FILTER_SANITIZE_STRING)));
-						if ( $argShowTime < 0 || $argShowTime > 10 )
-							$argShowTime = 0;
+                        // Spécifique klicty.
+                        $argLifeTime = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LIFETIME, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+                        if ($argLifeTime != '1h' && $argLifeTime != '2h'
+                            && $argLifeTime != '1d' && $argLifeTime != '2d'
+                            && $argLifeTime != '1w' && $argLifeTime != '2w'
+                            && $argLifeTime != '1m' && $argLifeTime != '2m'
+                            && $argLifeTime != '1y' && $argLifeTime != '2y'
+                        )
+                            $argLifeTime = '1m';
+                        $argShowTime = intval(trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_SHOWTIME, FILTER_SANITIZE_STRING)));
+                        if ($argShowTime < 0 || $argShowTime > 10)
+                            $argShowTime = 0;
 
-						// Ecriture des variables.
-						$this->_actionUploadFile				= true;
-						$this->_actionUploadFileName			= $upname;
-						$this->_actionUploadFileExtension		= $upext;
-						$this->_actionUploadFileType			= $uptype;
-						$this->_actionUploadFileSize			= $upsize;
-						$this->_actionUploadFilePath			= $uppath;
-						$this->_actionUploadFileUpdate			= $argUpd;
-						$this->_actionUploadFileProtect			= $argPrt;
-						$this->_actionUploadFileObfuscateLinks	= $argObf;
+                        // Ecriture des variables.
+                        $this->_actionUploadFile = true;
+                        $this->_actionUploadFileName = $upname;
+                        $this->_actionUploadFileExtension = $upext;
+                        $this->_actionUploadFileType = $uptype;
+                        $this->_actionUploadFileSize = $upsize;
+                        $this->_actionUploadFilePath = $uppath;
+                        $this->_actionUploadFileUpdate = $argUpd;
+                        $this->_actionUploadFileProtect = $argPrt;
+                        $this->_actionUploadFileObfuscateLinks = $argObf;
 
-						// Spécifique klicty.
-						$this->_actionUploadFileLifeTime		= $argLifeTime;
-						$this->_actionUploadFileShowTime		= $argShowTime;
-					}
-					else
-					{
-						$this->_actionUploadFileError = true;
-						$this->_actionUploadFileErrorMessage = 'Le fichier dépasse la taille limite de transfert.';
-					}
-				}
-				else
-				{
-					$this->_actionUploadFileError = true;
-					$this->_actionUploadFileErrorMessage = "Le fichier n'a pas été correctement transferé vers le serveur.";
-				}
-				unset($upfname, $upinfo, $upext, $upname, $upsize, $uppath, $uptype);
-			}
-		}
-	}
-	/**
-	 * Lit le type mime d'un fichier par rapport à son extension et la table de correspondance $nebule_mimepathfile.
-	 * @param string $f
-	 */
-	private function _getFilenameTypeMime($f)
-	{
-		$m = '/etc/mime.types'; // Chemin du fichier pour trouver le type mime.
-		$e = substr(strrchr($f,'.'),1);
-		if ( empty($e) )
-			return 'application/octet-stream';
-		$r = "/^([\w\+\-\.\/]+)\s+(\w+\s)*($e\s)/i";
-		$ls = file($m);
-		foreach ( $ls as $l )
-		{
-			if ( substr($l,0,1) == '#' )
-				continue;
-			$l = rtrim($l).' ';
-			if ( ! preg_match($r,$l,$m) )
-				continue;
-			return $m[1];
-		}
-		return 'application/octet-stream';
-	}
+                        // Spécifique klicty.
+                        $this->_actionUploadFileLifeTime = $argLifeTime;
+                        $this->_actionUploadFileShowTime = $argShowTime;
+                    } else {
+                        $this->_actionUploadFileError = true;
+                        $this->_actionUploadFileErrorMessage = 'Le fichier dépasse la taille limite de transfert.';
+                    }
+                } else {
+                    $this->_actionUploadFileError = true;
+                    $this->_actionUploadFileErrorMessage = "Le fichier n'a pas été correctement transferé vers le serveur.";
+                }
+                unset($upfname, $upinfo, $upext, $upname, $upsize, $uppath, $uptype);
+            }
+        }
+    }
 
-	/*
+    /**
+     * Lit le type mime d'un fichier par rapport à son extension et la table de correspondance $nebule_mimepathfile.
+     * @param string $f
+     */
+    private function _getFilenameTypeMime($f)
+    {
+        $m = '/etc/mime.types'; // Chemin du fichier pour trouver le type mime.
+        $e = substr(strrchr($f, '.'), 1);
+        if (empty($e))
+            return 'application/octet-stream';
+        $r = "/^([\w\+\-\.\/]+)\s+(\w+\s)*($e\s)/i";
+        $ls = file($m);
+        foreach ($ls as $l) {
+            if (substr($l, 0, 1) == '#')
+                continue;
+            $l = rtrim($l) . ' ';
+            if (!preg_match($r, $l, $m))
+                continue;
+            return $m[1];
+        }
+        return 'application/octet-stream';
+    }
+
+    /*
 	 * Transfert de texte et nébulisation.
 	 */
-	/**
-	 * Renvoie si l'action de transfert de texte vers le serveur est validée.
-	 */
-	public function getUploadText() { return $this->_actionUploadText; }
-	/**
-	 * Renvoie le nom du texte téléchargé vers le serveur.
-	 */
-	public function getUploadTextName() { return $this->_actionUploadTextName; }
-	/**
-	 * Renvoie l'ID du texte téléchargé vers le serveur.
-	 */
-	public function getUploadTextID() { return $this->_actionUploadTextID; }
-	/**
-	 * Renvoie le code erreur.
-	 */
-	public function getUploadTextError() { return $this->_actionUploadTextError; }
-	/**
-	 * Renvoie le message d'erreur.
-	 */
-	public function getUploadTextErrorMessage() { return $this->_actionUploadTextErrorMessage; }
-	/**
-	 * Extrait pour action si un texte est téléchargé vers le serveur.
-	 */
-	private function _extractActionUploadText()
-	{
-		/*
+    /**
+     * Renvoie si l'action de transfert de texte vers le serveur est validée.
+     */
+    public function getUploadText()
+    {
+        return $this->_actionUploadText;
+    }
+
+    /**
+     * Renvoie le nom du texte téléchargé vers le serveur.
+     */
+    public function getUploadTextName()
+    {
+        return $this->_actionUploadTextName;
+    }
+
+    /**
+     * Renvoie l'ID du texte téléchargé vers le serveur.
+     */
+    public function getUploadTextID()
+    {
+        return $this->_actionUploadTextID;
+    }
+
+    /**
+     * Renvoie le code erreur.
+     */
+    public function getUploadTextError()
+    {
+        return $this->_actionUploadTextError;
+    }
+
+    /**
+     * Renvoie le message d'erreur.
+     */
+    public function getUploadTextErrorMessage()
+    {
+        return $this->_actionUploadTextErrorMessage;
+    }
+
+    /**
+     * Extrait pour action si un texte est téléchargé vers le serveur.
+     */
+    private function _extractActionUploadText()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Extract action upload text', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action upload text', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit si la variable POST existe.
-			$arg = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT);
+            // Lit si la variable POST existe.
+            $arg = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT);
 
-			// Extraction du lien et stockage pour traitement.
-			if ( $arg !== false )
-			{
-				// Lit et nettoye le contenu des variables POST.
-				$argText = filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-				$argName = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+            // Extraction du lien et stockage pour traitement.
+            if ($arg !== false) {
+                // Lit et nettoye le contenu des variables POST.
+                $argText = filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+                $argName = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
 
-				// Extrait les options de téléchargement.
-				$argPrt	= filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_PROTECT);
-				$argObf	= filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_OBFUSCATE_LINKS);
+                // Extrait les options de téléchargement.
+                $argPrt = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_PROTECT);
+                $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_OBFUSCATE_LINKS);
 
-				if ( strlen($argText) != 0 )
-				{
-					$this->_actionUploadText				= true;
-					$this->_actionUploadTextContent			= $argText;
-					$this->_actionUploadTextName			= $argName;
+                if (strlen($argText) != 0) {
+                    $this->_actionUploadText = true;
+                    $this->_actionUploadTextContent = $argText;
+                    $this->_actionUploadTextName = $argName;
 
-					$this->_actionUploadTextProtect			= $argPrt;
-					$this->_actionUploadTextObfuscateLinks	= $argObf;
-				}
-				unset($argText, $argName, $argPrt, $argObf);
-			}
-			unset($arg);
-		}
-	}
-	private $_actionUploadText					= false,
-			$_actionUploadTextName				= '',
-			$_actionUploadTextContent			= '',
-			$_actionUploadTextID				= '0',
-			$_actionUploadTextProtect			= false,
-			$_actionUploadTextObfuscateLinks	= false,
-			$_actionUploadTextError				= false,
-			$_actionUploadTextErrorMessage		= 'Initialisation du transfert.';
+                    $this->_actionUploadTextProtect = $argPrt;
+                    $this->_actionUploadTextObfuscateLinks = $argObf;
+                }
+                unset($argText, $argName, $argPrt, $argObf);
+            }
+            unset($arg);
+        }
+    }
+
+    private $_actionUploadText = false,
+        $_actionUploadTextName = '',
+        $_actionUploadTextContent = '',
+        $_actionUploadTextID = '0',
+        $_actionUploadTextProtect = false,
+        $_actionUploadTextObfuscateLinks = false,
+        $_actionUploadTextError = false,
+        $_actionUploadTextErrorMessage = 'Initialisation du transfert.';
 
 
+    /**
+     * Renvoie si l'action de création d'entité a été faite.
+     */
+    public function getCreateEntity()
+    {
+        return $this->_actionCreateEntity;
+    }
 
-	/**
-	 * Renvoie si l'action de création d'entité a été faite.
-	 */
-	public function getCreateEntity()				{ return $this->_actionCreateEntity; }
-	/**
-	 * Revoie l'ID de la nouvelle entité.
-	 */
-	public function getCreateEntityID()				{ return $this->_actionCreateEntityID; }
-	/**
-	 * Revoie l'instance de la nouvelle entité.
-	 */
-	public function getCreateEntityInstance()		{ return $this->_actionCreateEntityInstance; }
-	/**
-	 * Revoie le code erreur de création de la nouvelle entité.
-	 */
-	public function getCreateEntityError()			{ return $this->_actionCreateEntityError; }
-	/**
-	 * Revoie le message d'erreur de création de la nouvelle entité.
-	 */
-	public function getCreateEntityErrorMessage()	{ return $this->_actionCreateEntityErrorMessage; }
-	/**
-	 * Extrait pour action si une entité doit être créée.
-	 */
-	private function _extractActionCreateEntity()
-	{
-		/*
+    /**
+     * Revoie l'ID de la nouvelle entité.
+     */
+    public function getCreateEntityID()
+    {
+        return $this->_actionCreateEntityID;
+    }
+
+    /**
+     * Revoie l'instance de la nouvelle entité.
+     */
+    public function getCreateEntityInstance()
+    {
+        return $this->_actionCreateEntityInstance;
+    }
+
+    /**
+     * Revoie le code erreur de création de la nouvelle entité.
+     */
+    public function getCreateEntityError()
+    {
+        return $this->_actionCreateEntityError;
+    }
+
+    /**
+     * Revoie le message d'erreur de création de la nouvelle entité.
+     */
+    public function getCreateEntityErrorMessage()
+    {
+        return $this->_actionCreateEntityErrorMessage;
+    }
+
+    /**
+     * Extrait pour action si une entité doit être créée.
+     */
+    private function _extractActionCreateEntity()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteEntity')
-				&& ( $this->_unlocked || $this->_nebuleInstance->getOption('permitPublicCreateEntity') )
-			)
-		{
-			$this->_metrology->addLog('Extract action create entity', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteEntity')
+            && ($this->_unlocked || $this->_nebuleInstance->getOption('permitPublicCreateEntity'))
+        ) {
+            $this->_metrology->addLog('Extract action create entity', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY);
+            // Lit et nettoye le contenu de la variable GET.
+            $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY);
 
-			// Extraction du lien et stockage pour traitement.
-			if ( $argCreate !== false )
-				$this->_actionCreateEntity = true;
-			unset($argCreate);
+            // Extraction du lien et stockage pour traitement.
+            if ($argCreate !== false)
+                $this->_actionCreateEntity = true;
+            unset($argCreate);
 
-			// Si on crée une nouvelle entité.
-			if ( $this->_actionCreateEntity )
-			{
-				// Lit et nettoye le contenu des variables GET.
-				$argPrefix	= trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PREFIX,		FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-				$argSuffix	= trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_SUFFIX,		FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-				$argFstnam	= trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME,	FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-				$argNiknam	= trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NIKENAME,	FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-				$argName	= trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME,		FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-				$argPasswd1	= trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1,	FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-				$argPasswd2	= trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2,	FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-				$argType	= trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_TYPE,		FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Si on crée une nouvelle entité.
+            if ($this->_actionCreateEntity) {
+                // Lit et nettoye le contenu des variables GET.
+                $argPrefix = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PREFIX, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+                $argSuffix = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_SUFFIX, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+                $argFstnam = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+                $argNiknam = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NIKENAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+                $argName = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+                $argPasswd1 = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+                $argPasswd2 = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+                $argType = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_TYPE, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-				// Extrait les options de téléchargement.
-				$argObf		= filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_OBFUSCATE_LINKS);
+                // Extrait les options de téléchargement.
+                $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_OBFUSCATE_LINKS);
 
-				// Sauvegarde les valeurs.
-				$this->_actionCreateEntityPrefix			= $argPrefix;
-				$this->_actionCreateEntitySuffix			= $argSuffix;
-				$this->_actionCreateEntityFirstname			= $argFstnam;
-				$this->_actionCreateEntityNikename			= $argNiknam;
-				$this->_actionCreateEntityName				= $argName;
-				$this->_actionCreateEntityObfuscateLinks	= $argObf;
+                // Sauvegarde les valeurs.
+                $this->_actionCreateEntityPrefix = $argPrefix;
+                $this->_actionCreateEntitySuffix = $argSuffix;
+                $this->_actionCreateEntityFirstname = $argFstnam;
+                $this->_actionCreateEntityNikename = $argNiknam;
+                $this->_actionCreateEntityName = $argName;
+                $this->_actionCreateEntityObfuscateLinks = $argObf;
 
-				if ( $argPasswd1 == $argPasswd2 )
-					$this->_actionCreateEntityPassword	= $argPasswd1;
-				else
-				{
-					$this->_actionCreateEntityError = true;
-					$this->_actionCreateEntityErrorMessage = 'Les mots de passes ne sont pas identiques.';
-				}
+                if ($argPasswd1 == $argPasswd2)
+                    $this->_actionCreateEntityPassword = $argPasswd1;
+                else {
+                    $this->_actionCreateEntityError = true;
+                    $this->_actionCreateEntityErrorMessage = 'Les mots de passes ne sont pas identiques.';
+                }
 
-				if ( $argType == 'human' || $argType == 'robot' )
-					$this->_actionCreateEntityType = $argType;
-				else
-					$this->_actionCreateEntityType = '';
+                if ($argType == 'human' || $argType == 'robot')
+                    $this->_actionCreateEntityType = $argType;
+                else
+                    $this->_actionCreateEntityType = '';
 
-				unset($argPrefix, $argSuffix, $argFstnam, $argNiknam, $argName, $argPasswd1, $argPasswd2, $argType);
-			}
-		}
-		else
-		{
-			$this->_actionCreateEntityError = true;
-			$this->_actionCreateEntityErrorMessage = 'Non autorisé.';
-		}
-	}
-	private $_actionCreateEntity				= false,
-			$_actionCreateEntityPrefix			= '',
-			$_actionCreateEntitySuffix			= '',
-			$_actionCreateEntityFirstname		= '',
-			$_actionCreateEntityNikename		= '',
-			$_actionCreateEntityName			= '',
-			$_actionCreateEntityPassword		= '',
-			$_actionCreateEntityType			= '',
-			$_actionCreateEntityID				= '0',
-			$_actionCreateEntityObfuscateLinks	= false,
-			$_actionCreateEntityInstance		= '',
-			$_actionCreateEntityError			= false,
-			$_actionCreateEntityErrorMessage	= 'Initialisation de la création.';
+                unset($argPrefix, $argSuffix, $argFstnam, $argNiknam, $argName, $argPasswd1, $argPasswd2, $argType);
+            }
+        } else {
+            $this->_actionCreateEntityError = true;
+            $this->_actionCreateEntityErrorMessage = 'Non autorisé.';
+        }
+    }
+
+    private $_actionCreateEntity = false,
+        $_actionCreateEntityPrefix = '',
+        $_actionCreateEntitySuffix = '',
+        $_actionCreateEntityFirstname = '',
+        $_actionCreateEntityNikename = '',
+        $_actionCreateEntityName = '',
+        $_actionCreateEntityPassword = '',
+        $_actionCreateEntityType = '',
+        $_actionCreateEntityID = '0',
+        $_actionCreateEntityObfuscateLinks = false,
+        $_actionCreateEntityInstance = '',
+        $_actionCreateEntityError = false,
+        $_actionCreateEntityErrorMessage = 'Initialisation de la création.';
 
 
+    /**
+     * Renvoie si l'action de création du groupe a été faite.
+     */
+    public function getCreateGroup()
+    {
+        return $this->_actionCreateGroup;
+    }
 
-	/**
-	 * Renvoie si l'action de création du groupe a été faite.
-	 */
-	public function getCreateGroup()				{ return $this->_actionCreateGroup; }
-	/**
-	 * Revoie l'ID du nouveau groupe.
-	 */
-	public function getCreateGroupID()				{ return $this->_actionCreateGroupID; }
-	/**
-	 * Revoie l'instance du nouveau groupe.
-	 */
-	public function getCreateGroupInstance()		{ return $this->_actionCreateGroupInstance; }
-	/**
-	 * Revoie le code erreur de création du nouveau groupe.
-	 */
-	public function getCreateGroupError()			{ return $this->_actionCreateGroupError; }
-	/**
-	 * Revoie le message d'erreur de création du nouveau groupe.
-	 */
-	public function getCreateGroupErrorMessage()	{ return $this->_actionCreateGroupErrorMessage; }
-	/**
-	 * Extrait pour action si un groupe doit être créé.
-	 */
-	private function _extractActionCreateGroup()
-	{
-		/*
+    /**
+     * Revoie l'ID du nouveau groupe.
+     */
+    public function getCreateGroupID()
+    {
+        return $this->_actionCreateGroupID;
+    }
+
+    /**
+     * Revoie l'instance du nouveau groupe.
+     */
+    public function getCreateGroupInstance()
+    {
+        return $this->_actionCreateGroupInstance;
+    }
+
+    /**
+     * Revoie le code erreur de création du nouveau groupe.
+     */
+    public function getCreateGroupError()
+    {
+        return $this->_actionCreateGroupError;
+    }
+
+    /**
+     * Revoie le message d'erreur de création du nouveau groupe.
+     */
+    public function getCreateGroupErrorMessage()
+    {
+        return $this->_actionCreateGroupErrorMessage;
+    }
+
+    /**
+     * Extrait pour action si un groupe doit être créé.
+     */
+    private function _extractActionCreateGroup()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteGroup')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Extract action create group', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteGroup')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action create group', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP);
+            // Lit et nettoye le contenu de la variable GET.
+            $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP);
 
-			// Extraction du lien et stockage pour traitement.
-			if ( $argCreate !== false )
-				$this->_actionCreateGroup = true;
-			unset($argCreate);
+            // Extraction du lien et stockage pour traitement.
+            if ($argCreate !== false)
+                $this->_actionCreateGroup = true;
+            unset($argCreate);
 
-			// Si on crée une nouvelle entité.
-			if ( $this->_actionCreateGroup )
-			{
-				// Lit et nettoye le contenu des variables GET.
-				$argName	= trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP_NAME,		FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+            // Si on crée une nouvelle entité.
+            if ($this->_actionCreateGroup) {
+                // Lit et nettoye le contenu des variables GET.
+                $argName = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
 
-				// Extrait les options de téléchargement.
-				$argCld		= filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP_CLOSED);
-				$argObf		= filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP_OBFUSCATE_LINKS);
+                // Extrait les options de téléchargement.
+                $argCld = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP_CLOSED);
+                $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP_OBFUSCATE_LINKS);
 
-				// Sauvegarde les valeurs.
-				$this->_actionCreateGroupName			= $argName;
-				$this->_actionCreateGroupClosed			= $argCld;
-				$this->_actionCreateGroupObfuscateLinks	= $argObf;
+                // Sauvegarde les valeurs.
+                $this->_actionCreateGroupName = $argName;
+                $this->_actionCreateGroupClosed = $argCld;
+                $this->_actionCreateGroupObfuscateLinks = $argObf;
 
-				unset($argName);
-			}
-		}
-		else
-		{
-			$this->_actionCreateGroupError = true;
-			$this->_actionCreateGroupErrorMessage = 'Non autorisé.';
-		}
-	}
-	private $_actionCreateGroup					= false,
-			$_actionCreateGroupName				= '',
-			$_actionCreateGroupID				= '0',
-			$_actionCreateGroupClosed			= false,
-			$_actionCreateGroupObfuscateLinks	= false,
-			$_actionCreateGroupInstance			= '',
-			$_actionCreateGroupError			= false,
-			$_actionCreateGroupErrorMessage		= 'Initialisation de la création.';
+                unset($argName);
+            }
+        } else {
+            $this->_actionCreateGroupError = true;
+            $this->_actionCreateGroupErrorMessage = 'Non autorisé.';
+        }
+    }
+
+    private $_actionCreateGroup = false,
+        $_actionCreateGroupName = '',
+        $_actionCreateGroupID = '0',
+        $_actionCreateGroupClosed = false,
+        $_actionCreateGroupObfuscateLinks = false,
+        $_actionCreateGroupInstance = '',
+        $_actionCreateGroupError = false,
+        $_actionCreateGroupErrorMessage = 'Initialisation de la création.';
 
 
+    /**
+     * Renvoie si l'action de suppression du groupe a été faite.
+     */
+    public function getDeleteGroup()
+    {
+        return $this->_actionDeleteGroup;
+    }
 
-	/**
-	 * Renvoie si l'action de suppression du groupe a été faite.
-	 */
-	public function getDeleteGroup()				{ return $this->_actionDeleteGroup; }
-	/**
-	 * Revoie l'ID du groupe.
-	 */
-	public function getDeleteGroupID()				{ return $this->_actionDeleteGroupID; }
-	/**
-	 * Revoie le code erreur de suppression du groupe.
-	 */
-	public function getDeleteGroupError()			{ return $this->_actionDeleteGroupError; }
-	/**
-	 * Revoie le message d'erreur de suppression du groupe.
-	 */
-	public function getDeleteGroupErrorMessage()	{ return $this->_actionDeleteGroupErrorMessage; }
-	/**
-	 * Extrait pour action si un groupe doit être supprimé.
-	 */
-	private function _extractActionDeleteGroup()
-	{
-		/*
+    /**
+     * Revoie l'ID du groupe.
+     */
+    public function getDeleteGroupID()
+    {
+        return $this->_actionDeleteGroupID;
+    }
+
+    /**
+     * Revoie le code erreur de suppression du groupe.
+     */
+    public function getDeleteGroupError()
+    {
+        return $this->_actionDeleteGroupError;
+    }
+
+    /**
+     * Revoie le message d'erreur de suppression du groupe.
+     */
+    public function getDeleteGroupErrorMessage()
+    {
+        return $this->_actionDeleteGroupErrorMessage;
+    }
+
+    /**
+     * Extrait pour action si un groupe doit être supprimé.
+     */
+    private function _extractActionDeleteGroup()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que la suppression de liens et d'objets soit authorisée et que l'action soit demandée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteGroup')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Extract action delete group', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que la suppression de liens et d'objets soit authorisée et que l'action soit demandée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteGroup')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action delete group', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$argDelete = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $argDelete = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Extraction du lien et stockage pour traitement.
-			if ( $argDelete !== ''
-					&& strlen($argDelete) >= nebule::NEBULE_MINIMUM_ID_SIZE
-					&& ctype_xdigit($argDelete)
-				)
-			{
-				$this->_actionDeleteGroup = true;
-				$this->_actionDeleteGroupID = $argDelete;
-			}
-			unset($argDelete);
-		}
-		else
-		{
-			$this->_actionDeleteGroupError = true;
-			$this->_actionDeleteGroupErrorMessage = 'Non autorisé.';
-		}
-	}
-	private $_actionDeleteGroup					= false,
-			$_actionDeleteGroupID				= '0',
-			$_actionDeleteGroupError			= false,
-			$_actionDeleteGroupErrorMessage		= 'Initialisation de la supression.';
+            // Extraction du lien et stockage pour traitement.
+            if ($argDelete !== ''
+                && strlen($argDelete) >= nebule::NEBULE_MINIMUM_ID_SIZE
+                && ctype_xdigit($argDelete)
+            ) {
+                $this->_actionDeleteGroup = true;
+                $this->_actionDeleteGroupID = $argDelete;
+            }
+            unset($argDelete);
+        } else {
+            $this->_actionDeleteGroupError = true;
+            $this->_actionDeleteGroupErrorMessage = 'Non autorisé.';
+        }
+    }
+
+    private $_actionDeleteGroup = false,
+        $_actionDeleteGroupID = '0',
+        $_actionDeleteGroupError = false,
+        $_actionDeleteGroupErrorMessage = 'Initialisation de la supression.';
 
 
+    /**
+     * Renvoie si l'action d'ajout de objet courant au groupe a été faite.
+     */
+    public function getAddToGroup()
+    {
+        return $this->_actionAddToGroup;
+    }
 
-	/**
-	 * Renvoie si l'action d'ajout de objet courant au groupe a été faite.
-	 */
-	public function getAddToGroup() { return $this->_actionAddToGroup; }
-	/**
-	 * Extrait pour action si l'objet courant doit être ajouté à un groupe.
-	 */
-	private function _extractActionAddToGroup()
-	{
-		/*
+    /**
+     * Extrait pour action si l'objet courant doit être ajouté à un groupe.
+     */
+    private function _extractActionAddToGroup()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que l'ajout de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteGroup')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Extract action add to group', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que l'ajout de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteGroup')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action add to group', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_TO_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_TO_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Extraction du lien et stockage pour traitement.
-			if ( $arg !== ''
-					&& strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-					&& ctype_xdigit($arg)
-				)
-			{
-				$this->_actionAddToGroup = $arg;
-			}
-			unset($arg);
-		}
-	}
-	private $_actionAddToGroup = '';
+            // Extraction du lien et stockage pour traitement.
+            if ($arg !== ''
+                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
+                && ctype_xdigit($arg)
+            ) {
+                $this->_actionAddToGroup = $arg;
+            }
+            unset($arg);
+        }
+    }
 
+    private $_actionAddToGroup = '';
 
 
-	/**
-	 * Renvoie si l'action de suppression de l'objet courant du groupe a été faite.
-	 */
-	public function getRemoveFromGroup() { return $this->_actionRemoveFromGroup; }
-	/**
-	 * Extrait pour action si l'objet courant doit être retirer d'un groupe.
-	 */
-	private function _extractActionRemoveFromGroup()
-	{
-		/*
+    /**
+     * Renvoie si l'action de suppression de l'objet courant du groupe a été faite.
+     */
+    public function getRemoveFromGroup()
+    {
+        return $this->_actionRemoveFromGroup;
+    }
+
+    /**
+     * Extrait pour action si l'objet courant doit être retirer d'un groupe.
+     */
+    private function _extractActionRemoveFromGroup()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que l'ajout de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteGroup')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Extract action remove from group', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que l'ajout de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteGroup')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action remove from group', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_FROM_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_FROM_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Extraction du lien et stockage pour traitement.
-			if ( $arg !== ''
-					&& strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-					&& ctype_xdigit($arg)
-				)
-			{
-				$this->_actionRemoveFromGroup = $arg;
-			}
-			unset($arg);
-		}
-	}
-	private $_actionRemoveFromGroup = '';
+            // Extraction du lien et stockage pour traitement.
+            if ($arg !== ''
+                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
+                && ctype_xdigit($arg)
+            ) {
+                $this->_actionRemoveFromGroup = $arg;
+            }
+            unset($arg);
+        }
+    }
 
+    private $_actionRemoveFromGroup = '';
 
 
-	/**
-	 * Renvoie si l'action d'ajout d'un objet au groupe courant a été faite.
-	 */
-	public function getAddItemToGroup() { return $this->_actionAddItemToGroup; }
-	/**
-	 * Extrait pour action si un objet doit être ajouté au groupe courant.
-	 */
-	private function _extractActionAddItemToGroup()
-	{
-		/*
+    /**
+     * Renvoie si l'action d'ajout d'un objet au groupe courant a été faite.
+     */
+    public function getAddItemToGroup()
+    {
+        return $this->_actionAddItemToGroup;
+    }
+
+    /**
+     * Extrait pour action si un objet doit être ajouté au groupe courant.
+     */
+    private function _extractActionAddItemToGroup()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que l'ajout de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteGroup')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Extract action add item to group', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que l'ajout de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteGroup')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action add item to group', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_ITEM_TO_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_ITEM_TO_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Extraction du lien et stockage pour traitement.
-			if ( $arg !== ''
-					&& strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-					&& ctype_xdigit($arg)
-				)
-			{
-				$this->_actionAddItemToGroup = $arg;
-			}
-			unset($arg);
-		}
-	}
-	private $_actionAddItemToGroup = '';
+            // Extraction du lien et stockage pour traitement.
+            if ($arg !== ''
+                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
+                && ctype_xdigit($arg)
+            ) {
+                $this->_actionAddItemToGroup = $arg;
+            }
+            unset($arg);
+        }
+    }
 
+    private $_actionAddItemToGroup = '';
 
 
-	/**
-	 * Renvoie si l'action de retrait du groupe a été faite.
-	 */
-	public function getRemoveItemFromGroup() { return $this->_actionRemoveItemFromGroup; }
-	/**
-	 * Extrait pour action si un objet doit être retiré au groupe courant.
-	 */
-	private function _extractActionRemoveItemFromGroup()
-	{
-		/*
+    /**
+     * Renvoie si l'action de retrait du groupe a été faite.
+     */
+    public function getRemoveItemFromGroup()
+    {
+        return $this->_actionRemoveItemFromGroup;
+    }
+
+    /**
+     * Extrait pour action si un objet doit être retiré au groupe courant.
+     */
+    private function _extractActionRemoveItemFromGroup()
+    {
+        /*
 		 *  ------------------------------------------------------------------------------------------
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-		// Vérifie que l'ajout de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteGroup')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Extract action remove item from group', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Vérifie que l'ajout de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteGroup')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Extract action remove item from group', Metrology::LOG_LEVEL_NORMAL); // Log
 
-			// Lit et nettoye le contenu de la variable GET.
-			$arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            // Lit et nettoye le contenu de la variable GET.
+            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-			// Extraction du lien et stockage pour traitement.
-			if ( $arg !== ''
-					&& strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-					&& ctype_xdigit($arg)
-				)
-			{
-				$this->_actionRemoveItemFromGroup = $arg;
-			}
-			unset($arg);
-		}
-	}
-	private $_actionRemoveItemFromGroup = '';
+            // Extraction du lien et stockage pour traitement.
+            if ($arg !== ''
+                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
+                && ctype_xdigit($arg)
+            ) {
+                $this->_actionRemoveItemFromGroup = $arg;
+            }
+            unset($arg);
+        }
+    }
 
+    private $_actionRemoveItemFromGroup = '';
 
 
+    /**
+     * Répartit les actions à traiter.
+     */
+    private function _routerGenericActions()
+    {
+        $this->_metrology->addLog('Router actions', Metrology::LOG_LEVEL_NORMAL); // Log
 
+        // Gère la dissimulation d'un lien.
+        if ($this->_actionObfuscateLinkInstance != ''
+            && is_a($this->_actionObfuscateLinkInstance, 'Link'))
+            $this->_actionObfuscateLink();
 
+        // Gère la suppression d'un objet.
+        if ($this->_actionDeleteObject
+            && is_a($this->_actionDeleteObjectInstance, 'Node')
+        )
+            $this->_actionDeleteObject();
 
+        // Gère la protection/déprotection d'un objet.
+        if ($this->_actionProtectObjectInstance != ''
+            && is_a($this->_actionProtectObjectInstance, 'Node')
+        )
+            $this->_actionProtectObject();
+        if ($this->_actionUnprotectObjectInstance != ''
+            && is_a($this->_actionUnprotectObjectInstance, 'Node')
+        )
+            $this->_actionUnprotectObject();
+        if ($this->_actionShareProtectObjectToEntity != '')
+            $this->_actionShareProtectObjectToEntity();
+        if ($this->_actionShareProtectObjectToGroupOpened != '')
+            $this->_actionShareProtectObjectToGroupOpened();
+        if ($this->_actionShareProtectObjectToGroupClosed != '')
+            $this->_actionShareProtectObjectToGroupClosed();
+        if ($this->_actionCancelShareProtectObjectToEntity != '')
+            $this->_actionCancelShareProtectObjectToEntity();
 
-
-
-
-	/**
-	 * Répartit les actions à traiter.
-	 */
-	private function _routerGenericActions()
-	{
-		$this->_metrology->addLog('Router actions', Metrology::LOG_LEVEL_NORMAL); // Log
-
-		// Gère la dissimulation d'un lien.
-		if ( $this->_actionObfuscateLinkInstance != ''
-				&& is_a($this->_actionObfuscateLinkInstance, 'Link'))
-			$this->_actionObfuscateLink();
-
-		// Gère la suppression d'un objet.
-		if ( $this->_actionDeleteObject
-				&& is_a($this->_actionDeleteObjectInstance, 'Node')
-			)
-			$this->_actionDeleteObject();
-
-		// Gère la protection/déprotection d'un objet.
-		if ( $this->_actionProtectObjectInstance != ''
-				&& is_a($this->_actionProtectObjectInstance, 'Node')
-			)
-			$this->_actionProtectObject();
-		if ( $this->_actionUnprotectObjectInstance != ''
-				&& is_a($this->_actionUnprotectObjectInstance, 'Node')
-			)
-			$this->_actionUnprotectObject();
-		if ( $this->_actionShareProtectObjectToEntity != '' )
-			$this->_actionShareProtectObjectToEntity();
-		if ( $this->_actionShareProtectObjectToGroupOpened != '' )
-			$this->_actionShareProtectObjectToGroupOpened();
-		if ( $this->_actionShareProtectObjectToGroupClosed != '' )
-			$this->_actionShareProtectObjectToGroupClosed();
-		if ( $this->_actionCancelShareProtectObjectToEntity != '' )
-			$this->_actionCancelShareProtectObjectToEntity();
-
-		// Gère les synchronisations (toujours les objets avant les liens).
-/*		if ( $this->_actionSynchronizeObjectInstance != '' )
+        // Gère les synchronisations (toujours les objets avant les liens).
+        /*		if ( $this->_actionSynchronizeObjectInstance != '' )
 			$this->_actionSynchronizeObject();
 		if ( $this->_actionSynchronizeEntityInstance != '' )
 			$this->_actionSynchronizeEntity();
 		if ( $this->_actionSynchronizeObjectLinksInstance != '' )
 			$this->_actionSynchronizeObjectLinks();
 */
-		// Gère les marques des objets.
-		if ( $this->_actionMarkObject != '' )
-			$this->_actionMarkObject();
-		if ( $this->_actionUnmarkObject != '' )
-			$this->_actionUnmarkObject();
-		if ( $this->_actionUnmarkAllObjects )
-			$this->_actionUnmarkAllObjects();
-
-		// Gère les téléchargements.
-		if ( $this->_actionUploadFile )
-			$this->_actionUploadFile();
-		if ( $this->_actionUploadText )
-			$this->_actionUploadText();
-
-		// Gère les groupes.
-		if ( $this->_actionCreateGroup )
-			$this->_actionCreateGroup();
-		if ( $this->_actionDeleteGroup )
-			$this->_actionDeleteGroup();
-		if ( $this->_actionAddToGroup != '' )
-			$this->_actionAddToGroup();
-		if ( $this->_actionRemoveFromGroup != '' )
-			$this->_actionRemoveFromGroup();
-		if ( $this->_actionAddItemToGroup != '' )
-			$this->_actionAddItemToGroup();
-		if ( $this->_actionRemoveItemFromGroup != '' )
-			$this->_actionRemoveItemFromGroup();
-	}
-
-
-
-	/**
-	 * Signe un lien.
-	 * @param Link $link
-	 * @param boolean $obfuscate
-	 */
-	private function _actionSignLink(Link $link, $obfuscate = 'default')
-	{
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_applicationInstance->getOption('klictyPermitUploadLinks')
-			)
-		{
-			if ( $this->_unlocked )
-			{
-				$this->_metrology->addLog('Action sign link', Metrology::LOG_LEVEL_NORMAL); // Log
-
-				// On cache le lien ?
-				if ( $obfuscate !== false && $obfuscate !== true )
-				{
-					$obfuscate = $this->_nebuleInstance->getOption('defaultObfuscateLinks');
-				}
-				//...
-
-				// Signature du lien.
-				$link->signWrite();
-			}
-			elseif ( $this->_applicationInstance->getOption('klictyPermitPublicUploadLinks') )
-			{
-				$this->_metrology->addLog('Action sign link', Metrology::LOG_LEVEL_NORMAL); // Log
-
-				// Affichage du lien.
-				echo $this->_display->convertInlineIconFace('DEFAULT_ICON_ADDLNK').$this->_display->convertInlineLinkFace($link);
-
-				// Si signé, écriture du lien.
-				if ( $link->getSigned() )
-					$link->write();
-			}
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
-
-
-
-	/**
-	 * Dissimule un lien.
-	 */
-	private function _actionObfuscateLink()
-	{
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_applicationInstance->getOption('klictyPermitUploadLinks')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Action obfuscate link', Metrology::LOG_LEVEL_NORMAL); // Log
-
-			// On dissimule le lien.
-			$this->_actionObfuscateLinkInstance->obfuscateWrite();
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
-
-
-
-	/**
-	 * Supprime un objet.
-	 */
-	private function _actionDeleteObject()
-	{
-		// Vérifie que la création de liens et l'écriture d'objets soient authorisés.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Action delete object', Metrology::LOG_LEVEL_NORMAL); // Log
-
-			// Suppression de l'objet.
-			if ( $this->_actionDeleteObjectForce )
-				$this->_actionDeleteObjectInstance->deleteForceObject();
-			else
-				$this->_actionDeleteObjectInstance->deleteObject();
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
-
-
-
-	/**
-	 * Protège un objet.
-	 */
-	private function _actionProtectObject()
-	{
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Action protect object', Metrology::LOG_LEVEL_NORMAL); // Log
-
-			// Demande de protection de l'objet.
-			$this->_actionProtectObjectInstance->setProtected();
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
-
-	/**
-	 * Déprotège un objet.
-	 */
-	private function _actionUnprotectObject()
-	{
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Action unprotect object', Metrology::LOG_LEVEL_NORMAL); // Log
-
-			// Demande de protection de l'objet.
-			$this->_actionUnprotectObjectInstance->setUnprotected();
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
-
-	/**
-	 * Partage la protection d'un objet pour une entité.
-	 */
-	private function _actionShareProtectObjectToEntity()
-	{
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Action share protect object to entity '.$this->_actionShareProtectObjectToEntity, Metrology::LOG_LEVEL_NORMAL); // Log
-
-			// Demande de protection de l'objet.
-			$this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($this->_actionShareProtectObjectToEntity);
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
-
-	/**
-	 * Partage la protection d'un objet pour un groupe ouvert.
-	 */
-	private function _actionShareProtectObjectToGroupOpened()
-	{
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Action share protect object to opened group', Metrology::LOG_LEVEL_NORMAL); // Log
-
-			// Demande de protection de l'objet.
-			$group = $this->_nebuleInstance->newGroup($this->_actionShareProtectObjectToGroupOpened);
-			foreach ( $group->getListMembersID('myself', null) as $id )
-			{
-				$this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($id);
-			}
-			unset($group, $id);
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
-
-	/**
-	 * Partage la protection d'un objet pour un groupe fermé.
-	 */
-	private function _actionShareProtectObjectToGroupClosed()
-	{
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Action share protect object to closed group', Metrology::LOG_LEVEL_NORMAL); // Log
-
-			// Demande de protection de l'objet.
-			$group = $this->_nebuleInstance->newGroup($this->_actionShareProtectObjectToGroupClosed);
-			foreach ( $group->getListMembersID('myself', null) as $id )
-			{
-				$this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($id);
-			}
-			unset($group, $id);
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
-
-	/**
-	 * Annule le partage de la protection d'un objet pour une entité.
-	 */
-	private function _actionCancelShareProtectObjectToEntity()
-	{
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Action cancel share protect object to entity', Metrology::LOG_LEVEL_NORMAL); // Log
-
-			// Demande d'annulation de protection de l'objet.
-			$this->_nebuleInstance->getCurrentObjectInstance()->cancelShareProtectionTo($this->_actionCancelShareProtectObjectToEntity);
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
-
-
-
-	/**
-	 * Synchronise l'objet.
-	 */
-	private function _actionSynchronizeObject()
-	{
-		// Vérifie que la création d'objet soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitSynchronizeObject')
-			)
-		{
-			$this->_metrology->addLog('Action synchronize object', Metrology::LOG_LEVEL_NORMAL); // Log
-
-			echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNOBJ').$this->_display->convertInlineObjectColor($this->_actionSynchronizeObjectInstance);
-
-			// Synchronisation.
-			$this->_actionSynchronizeObjectInstance->syncObject();
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
-
-
-
-	/**
-	 * Synchronise l'entité.
-	 */
-	private function _actionSynchronizeEntity()
-	{
-		// Vérifie que la création d'objet soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitSynchronizeObject')
-				&& $this->_nebuleInstance->getOption('permitSynchronizeLink')
-			)
-		{
-			$this->_metrology->addLog('Action synchronize entity', Metrology::LOG_LEVEL_NORMAL); // Log
-
-			echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNENT').$this->_display->convertInlineObjectColor($this->_actionSynchronizeEntityInstance);
-
-			// Synchronisation des liens (l'objet est forcément présent).
-			$this->_actionSynchronizeEntityInstance->syncLinks();
-
-			// Liste des liens l pour l'entité en source.
-			$links = $this->_actionSynchronizeEntityInstance->readLinksFilterFull('', '', 'l', $this->_actionSynchronizeEntityInstance->getID(), '', '');
-			// Synchronise l'objet cible.
-			$object = null;
-			foreach ( $links as $link )
-			{
-				$object = $this->_nebuleInstance->newObject($link->getHashTarget());
-				// Synchronise les liens (avant).
-				$object->syncLinks();
-				// Synchronise l'objet.
-				$object->syncObject();
-			}
-			// Liste des liens l pour l'entité en cible.
-			$links = $this->_actionSynchronizeEntityInstance->readLinksFilterFull('', '', 'l', '', $this->_actionSynchronizeEntityInstance->getID(), '');
-			// Synchronise l'objet source.
-			$object = null;
-			foreach ( $links as $link )
-			{
-				$object = $this->_nebuleInstance->newObject($link->getHashSource());
-				// Synchronise les liens (avant).
-				$object->syncLinks();
-				// Synchronise l'objet.
-				$object->syncObject();
-			}
-			unset($links, $link, $object);
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
-
-
-
-	/**
-	 * Synchronise les liens de l'objet.
-	 */
-	private function _actionSynchronizeObjectLinks()
-	{
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitSynchronizeLink')
-			)
-		{
-			$this->_metrology->addLog('Action synchronize object links', Metrology::LOG_LEVEL_NORMAL); // Log
-
-			echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNLNK').$this->_display->convertInlineObjectColor($this->_actionSynchronizeObjectLinksInstance);
-
-			// Synchronisation.
-			$this->_actionSynchronizeObjectLinksInstance->syncLinks();
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
-
-
-
-	/**
-	 * Synchronise une entité externe depuis une URL.
-	 */
-	private function _actionSynchronizeNewEntity()
-	{
-		// Vérifie que la création d'objet soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitSynchronizeObject')
-				&& $this->_nebuleInstance->getOption('permitSynchronizeLink')
-			)
-		{
-			$this->_metrology->addLog('Action synchronize new entity', Metrology::LOG_LEVEL_NORMAL); // Log
-
-			// Vérifie si l'objet est déjà présent.
-			$present = $this->_io->checkObjectPresent($this->_actionSynchronizeNewEntityID);
-			// Lecture de l'objet.
-			$data = $this->_io->objectRead($this->_actionSynchronizeNewEntityID, Entity::ENTITY_MAX_SIZE, $this->_actionSynchronizeNewEntityURL);
-			// Calcul de l'empreinte.
-			$hash = hash($this->_nebuleInstance->getCrypto()->hashAlgorithmName(), $data);
-			if ( $hash != $this->_actionSynchronizeNewEntityID )
-			{
-				$this->_metrology->addLog('Action synchronize new entity - Hash error', Metrology::LOG_LEVEL_NORMAL); // Log
-				unset($data);
-				echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNENT').
-					$this->_display->convertInlineObjectColor($this->_actionSynchronizeNewEntityID).
-					$this->_display->convertInlineIconFace('DEFAULT_ICON_IERR');
-				$this->_actionSynchronizeNewEntityID = '';
-				$this->_actionSynchronizeNewEntityURL = '';
-				return false;
-			}
-			// Ecriture de l'objet.
-			$this->_io->objectWrite($data);
-
-			$this->_actionSynchronizeNewEntityInstance = $this->_nebuleInstance->newEntity($this->_actionSynchronizeNewEntityID);
-
-			if ( ! $this->_actionSynchronizeNewEntityInstance->getTypeVerify() )
-			{
-				$this->_metrology->addLog('Action synchronize new entity - Not entity', Metrology::LOG_LEVEL_NORMAL); // Log
-				if ( ! $present )
-					$this->_actionSynchronizeNewEntityInstance->deleteObject();
-			}
-
-			echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNENT').$this->_display->convertInlineObjectColor($this->_actionSynchronizeNewEntityInstance);
-
-			// Synchronisation des liens.
-			$this->_actionSynchronizeNewEntityInstance->syncLinks();
-
-			// Liste des liens l pour l'entité en source.
-			$links = $this->_actionSynchronizeNewEntityInstance->readLinksFilterFull('', '', 'l', $hash, '', '');
-			// Synchronise l'objet cible.
-			$object = null;
-			foreach ( $links as $link )
-			{
-				$object = $this->_nebuleInstance->newObject($link->getHashTarget());
-				// Synchronise les liens (avant).
-				$object->syncLinks();
-				// Synchronise l'objet.
-				$object->syncObject();
-			}
-			// Liste des liens l pour l'entité en cible.
-			$links = $this->_actionSynchronizeNewEntityInstance->readLinksFilterFull('', '', 'l', '', $hash, '');
-			// Synchronise l'objet source.
-			$object = null;
-			foreach ( $links as $link )
-			{
-				$object = $this->_nebuleInstance->newObject($link->getHashSource());
-				// Synchronise les liens (avant).
-				$object->syncLinks();
-				// Synchronise l'objet.
-				$object->syncObject();
-			}
-			unset($links, $link, $object);
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
-
-
-
-	/**
-	 * Marque un objet.
-	 */
-	private function _actionMarkObject()
-	{
-		$this->_metrology->addLog('Action mark object', Metrology::LOG_LEVEL_NORMAL); // Log
-
-		$this->_applicationInstance->setMarkObject($this->_actionMarkObject);
-
-		// Affichage des actions.
-		$this->_display->displayInlineAllActions();
-	}
-
-
-
-	/**
-	 * Supprime la marque d'un objet.
-	 */
-	private function _actionUnmarkObject()
-	{
-		$this->_metrology->addLog('Action unmark object', Metrology::LOG_LEVEL_NORMAL); // Log
-
-		$this->_applicationInstance->setUnmarkObject($this->_actionUnmarkObject);
-
-		// Affichage des actions.
-		$this->_display->displayInlineAllActions();
-	}
-
-
-
-	/**
-	 * Supprime les marques de tous les objets.
-	 */
-	private function _actionUnmarkAllObjects()
-	{
-		$this->_metrology->addLog('Action unmark all objects', Metrology::LOG_LEVEL_NORMAL); // Log
-
-		$this->_applicationInstance->setUnmarkAllObjects();
-
-		// Affichage des actions.
-		$this->_display->displayInlineAllActions();
-	}
-
-
-
-	/**
-	 * Transfert un fichier et le nebulise.
-	 */
-	private function _actionUploadFile()
-	{
-		// Vérifie que la création d'objet soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Action upload file', Metrology::LOG_LEVEL_NORMAL); // Log
-
-			// Lit le contenu du fichier.
-			$data = file_get_contents($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['tmp_name']);
-
-			// Ecrit le contenu dans l'objet.
-			$instance = New Node($this->_nebuleInstance, '0', $data, $this->_actionUploadFileProtect);
-			if ( $instance === false )
-			{
-				$this->_actionUploadFileError = true;
-				$this->_actionUploadFileErrorMessage = "L'instance de l'objet n'a pas pu être créée.";
-				return false;
-			}
-
-			// Lit l'ID.
-			$id = $instance->getID();
-			unset($data);
-			if ( $id == '0' )
-			{
-				$this->_actionUploadFileError = true;
-				$this->_actionUploadFileErrorMessage = "L'objet n'a pas pu être créé.";
-				return false;
-			}
-			$this->_actionUploadFileID = $id;
-
-			// Définition de la date et le signataire.
-			$date = date(DATE_ATOM);
-			$signer	= $this->_nebuleInstance->getCurrentEntity();
-
-			// Création du type mime.
-			if ( $this->_actionUploadFileType != '' )
-			{
-				// Crée l'objet avec le texte.
-				$textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileType);
-				if ( $textID !== false )
-				{
-					// Crée le lien.
-					$action	= 'l';
-					$source	= $id;
-					$target	= $textID;
-					$meta	= $this->_nebuleInstance->getCrypto()->hash( 'nebule/objet/type' );
-					$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
-				}
-			}
-
-			// Crée l'objet du nom.
-			if ( $this->_actionUploadFileName != '' )
-			{
-				// Crée l'objet avec le texte.
-				$textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileName);
-				if ( $textID !== false )
-				{
-					// Crée le lien.
-					$action	= 'l';
-					$source	= $id;
-					$target	= $textID;
-					$meta	= $this->_nebuleInstance->getCrypto()->hash( 'nebule/objet/nom' );
-					$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
-				}
-			}
-
-			// Crée l'objet de l'extension.
-			if ( $this->_actionUploadFileExtension != '' )
-			{
-				// Crée l'objet avec le texte.
-				$textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileExtension);
-				if ( $textID !== false )
-				{
-					// Crée le lien.
-					$action	= 'l';
-					$source	= $id;
-					$target	= $textID;
-					$meta	= $this->_nebuleInstance->getCrypto()->hash( 'nebule/objet/suffix' );
-					$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
-				}
-			}
-
-			// Spécifique klicty.
-			// Crée l'objet du temps de vie.
-			if ( $this->_actionUploadFileLifeTime != '' )
-			{
-				// Crée l'objet avec le texte.
-				$textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileLifeTime);
-				if ( $textID !== false )
-				{
-					// Crée le lien.
-					$action	= 'l';
-					$source	= $id;
-					$target	= $textID;
-					$meta	= $this->_nebuleInstance->getCrypto()->hash( Application::APPLICATION_EXPIRATION_DATE );
-					$this->_createLink($signer, $date, $action, $source, $target, $meta, false);
-				}
-			}
-			// Crée l'objet du nombre de vues.
-			if ( $this->_actionUploadFileShowTime != 0 )
-			{
-				// Crée l'objet avec le texte.
-				$textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileShowTime);
-				if ( $textID !== false )
-				{
-					// Crée le lien.
-					$action	= 'l';
-					$source	= $id;
-					$target	= $textID;
-					$meta	= $this->_nebuleInstance->getCrypto()->hash( Application::APPLICATION_EXPIRATION_COUNT );
-					$this->_createLink($signer, $date, $action, $source, $target, $meta, false);
-				}
-			}
-
-			// Si mise à jour de l'objet en cours.
-			if ( $this->_actionUploadFileUpdate )
-			{
-				// Crée le lien.
-				$action	= 'u';
-				$source	= $this->_applicationInstance->getCurrentObject();
-				$target	= $id;
-				$meta	= '0';
-				$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
-			}
-
-			unset($date, $signer, $source, $target, $meta, $link, $newLink, $textID);
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
-
-
-
-	/**
-	 * Transfert un texte et le nebulise.
-	 */
-	private function _actionUploadText()
-	{
-		// Vérifie que la création d'objet soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Action upload text', Metrology::LOG_LEVEL_NORMAL); // Log
-
-			// Crée l'instance de l'objet.
-			$instance = New Node($this->_nebuleInstance, '0', $this->_actionUploadTextContent, $this->_actionUploadTextProtect);
-			if ( $instance === false )
-			{
-				$this->_actionUploadFileError = true;
-				$this->_actionUploadFileErrorMessage = "L'instance de l'objet n'a pas pu être créée.";
-				return false;
-			}
-
-			// Lit l'ID.
-			$id = $instance->getID();
-			if ( $id == '0' )
-			{
-				$this->_actionUploadFileError = true;
-				$this->_actionUploadFileErrorMessage = "L'objet n'a pas pu être créé.";
-				return false;
-			}
-			unset($instance);
-			$this->_actionUploadTextID = $id;
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-
-			// Définition de la date et du signataire.
-			$signer	= $this->_nebuleInstance->getCurrentEntity();
-			$date = date(DATE_ATOM);
-
-			// Création du type mime.
-			$type = Klicty::REFERENCE_OBJECT_TEXT;
-			$typeID = $this->_nebuleInstance->createTextAsObject($type);
-			if ( $typeID !== false )
-			{
-				// Crée le lien.
-				$action	= 'l';
-				$source	= $id;
-				$target	= $typeID;
-				$meta	= $this->_nebuleInstance->getCrypto()->hash( 'nebule/objet/type' );
-				$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadTextObfuscateLinks);
-			}
-
-			// Crée l'objet du nom.
-			if ( $this->_actionUploadTextName != '' )
-			{
-				// Crée l'objet avec le texte.
-				$textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadTextName);
-				if ( $textID !== false )
-				{
-					// Crée le lien.
-					$action	= 'l';
-					$source	= $id;
-					$target	= $textID;
-					$meta	= $this->_nebuleInstance->getCrypto()->hash( 'nebule/objet/nom' );
-					$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadTextObfuscateLinks);
-				}
-				if ( $typeID !== false )
-				{
-					// Crée le lien.
-					$action	= 'l';
-					$source	= $textID;
-					$target	= $typeID;
-					$meta	= $this->_nebuleInstance->getCrypto()->hash( 'nebule/objet/type' );
-					$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadTextObfuscateLinks);
-				}
-			}
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-
-			unset($id, $type, $typeID, $text, $textID, $signer, $date, $action, $source, $target, $meta);
-		}
-	}
-
-
-
-	/**
-	 * Crée une nouvelle entité.
-	 */
-	private function _actionCreateEntity()
-	{
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteEntity')
-				&& ( $this->_unlocked || $this->_nebuleInstance->getOption('permitPublicCreateEntity') )
-				&& $this->_actionCreateEntity
-				&& ! $this->_actionCreateEntityError
-			)
-		{
-			$this->_metrology->addLog('Action create entity', Metrology::LOG_LEVEL_NORMAL); // Log
-
-			// Création de la nouvelle entité nebule.
-			$instance = New Entity($this->_nebuleInstance, 'new');
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-
-			if ( is_a($instance, 'Entity') && $instance->getID() != '0' )
-			{
-				$this->_actionCreateEntityError = false;
-
-				// Enregistre l'instance créée.
-				$this->_actionCreateEntityInstance = $instance;
-				$this->_actionCreateEntityID = $instance->getID();
-
-				// Modifie le mot de passe de clé privée.
-				$this->_actionCreateEntityInstance->changePrivateKeyPassword($this->_actionCreateEntityPassword);
-
-				// Active l'entité créée comme l'entité courante.
-				$this->_nebuleInstance->setCurrentEntity($instance);
-				$this->_applicationInstance->getDisplayInstance()->refreshUnlocked();
-				$this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
-				unset($instance);
-
-				// Affichage des actions.
-				$this->_display->displayInlineAllActions();
-
-				// Définition de la date et du signataire.
-				$date	= date(DATE_ATOM);
-				$signer	= $this->_actionCreateEntityID;
-
-				// Si prénom et pas de nom, le prénom devient le nom.
-				if ( $this->_actionCreateEntityName == '' && $this->_actionCreateEntityFirstname != '')
-				{
-					$this->_actionCreateEntityName = $this->_actionCreateEntityFirstname;
-					$this->_actionCreateEntityFirstname = '';
-				}
-
-				// Nomme l'entité.
-				if ( $this->_actionCreateEntityName != '' )
-				{
-					// Crée l'objet avec le texte.
-					$textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityName);
-					if ( $textID !== false )
-					{
-						// Crée le lien.
-						$action	= 'l';
-						$source	= $this->_actionCreateEntityID;
-						$target	= $textID;
-						$meta	= $this->_nebuleInstance->getCrypto()->hash( 'nebule/objet/nom' );
-						$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
-					}
-				}
-				if ( $this->_actionCreateEntityFirstname != '' )
-				{
-					// Crée l'objet avec le texte.
-					$textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityFirstname);
-					if ( $textID !== false )
-					{
-						// Crée le lien.
-						$action	= 'l';
-						$source	= $this->_actionCreateEntityID;
-						$target	= $textID;
-						$meta	= $this->_nebuleInstance->getCrypto()->hash( 'nebule/objet/prenom' );
-						$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
-					}
-				}
-				if ( $this->_actionCreateEntityNikename != '' )
-				{
-					// Crée l'objet avec le texte.
-					$textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityNikename);
-					if ( $textID !== false )
-					{
-						// Crée le lien.
-						$action	= 'l';
-						$source	= $this->_actionCreateEntityID;
-						$target	= $textID;
-						$meta	= $this->_nebuleInstance->getCrypto()->hash( 'nebule/objet/surnom' );
-						$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
-					}
-				}
-
-				// Affichage des actions.
-				$this->_display->displayInlineAllActions();
-
-				if ( $this->_actionCreateEntityPrefix != '' )
-				{
-					// Crée l'objet avec le texte.
-					$textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityPrefix);
-					if ( $textID !== false )
-					{
-						// Crée le lien.
-						$action	= 'l';
-						$source	= $this->_actionCreateEntityID;
-						$target	= $textID;
-						$meta	= $this->_nebuleInstance->getCrypto()->hash( 'nebule/objet/prefix' );
-						$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
-					}
-				}
-				if ( $this->_actionCreateEntitySuffix != '' )
-				{
-					// Crée l'objet avec le texte.
-					$textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntitySuffix);
-					if ( $textID !== false )
-					{
-						// Crée le lien.
-						$action	= 'l';
-						$source	= $this->_actionCreateEntityID;
-						$target	= $textID;
-						$meta	= $this->_nebuleInstance->getCrypto()->hash( 'nebule/objet/suffix' );
-						$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
-					}
-				}
-				if ( $this->_actionCreateEntityType != '' )
-				{
-					// Crée l'objet avec le texte.
-					$textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityType);
-					if ( $textID !== false )
-					{
-						// Crée le lien.
-						$action	= 'l';
-						$source	= $this->_actionCreateEntityID;
-						$target	= $textID;
-						$meta	= $this->_nebuleInstance->getCrypto()->hash( 'nebule/objet/entite/type' );
-						$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
-					}
-				}
-
-				unset($date, $source, $target, $meta, $link, $newLink, $textID);
-			}
-			else
-			{
-				// Si ce n'est pas bon.
-				$this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
-				$this->_actionCreateEntityError = true;
-				$this->_actionCreateEntityErrorMessage = 'Echec de la génération.';
-			}
-
-
-/*
+        // Gère les marques des objets.
+        if ($this->_actionMarkObject != '')
+            $this->_actionMarkObject();
+        if ($this->_actionUnmarkObject != '')
+            $this->_actionUnmarkObject();
+        if ($this->_actionUnmarkAllObjects)
+            $this->_actionUnmarkAllObjects();
+
+        // Gère les téléchargements.
+        if ($this->_actionUploadFile)
+            $this->_actionUploadFile();
+        if ($this->_actionUploadText)
+            $this->_actionUploadText();
+
+        // Gère les groupes.
+        if ($this->_actionCreateGroup)
+            $this->_actionCreateGroup();
+        if ($this->_actionDeleteGroup)
+            $this->_actionDeleteGroup();
+        if ($this->_actionAddToGroup != '')
+            $this->_actionAddToGroup();
+        if ($this->_actionRemoveFromGroup != '')
+            $this->_actionRemoveFromGroup();
+        if ($this->_actionAddItemToGroup != '')
+            $this->_actionAddItemToGroup();
+        if ($this->_actionRemoveItemFromGroup != '')
+            $this->_actionRemoveItemFromGroup();
+    }
+
+
+    /**
+     * Signe un lien.
+     * @param Link $link
+     * @param boolean $obfuscate
+     */
+    private function _actionSignLink(Link $link, $obfuscate = 'default')
+    {
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_applicationInstance->getOption('klictyPermitUploadLinks')
+        ) {
+            if ($this->_unlocked) {
+                $this->_metrology->addLog('Action sign link', Metrology::LOG_LEVEL_NORMAL); // Log
+
+                // On cache le lien ?
+                if ($obfuscate !== false && $obfuscate !== true) {
+                    $obfuscate = $this->_nebuleInstance->getOption('defaultObfuscateLinks');
+                }
+                //...
+
+                // Signature du lien.
+                $link->signWrite();
+            } elseif ($this->_applicationInstance->getOption('klictyPermitPublicUploadLinks')) {
+                $this->_metrology->addLog('Action sign link', Metrology::LOG_LEVEL_NORMAL); // Log
+
+                // Affichage du lien.
+                echo $this->_display->convertInlineIconFace('DEFAULT_ICON_ADDLNK') . $this->_display->convertInlineLinkFace($link);
+
+                // Si signé, écriture du lien.
+                if ($link->getSigned())
+                    $link->write();
+            }
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
+
+
+    /**
+     * Dissimule un lien.
+     */
+    private function _actionObfuscateLink()
+    {
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_applicationInstance->getOption('klictyPermitUploadLinks')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Action obfuscate link', Metrology::LOG_LEVEL_NORMAL); // Log
+
+            // On dissimule le lien.
+            $this->_actionObfuscateLinkInstance->obfuscateWrite();
+
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
+
+
+    /**
+     * Supprime un objet.
+     */
+    private function _actionDeleteObject()
+    {
+        // Vérifie que la création de liens et l'écriture d'objets soient authorisés.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Action delete object', Metrology::LOG_LEVEL_NORMAL); // Log
+
+            // Suppression de l'objet.
+            if ($this->_actionDeleteObjectForce)
+                $this->_actionDeleteObjectInstance->deleteForceObject();
+            else
+                $this->_actionDeleteObjectInstance->deleteObject();
+
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
+
+
+    /**
+     * Protège un objet.
+     */
+    private function _actionProtectObject()
+    {
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Action protect object', Metrology::LOG_LEVEL_NORMAL); // Log
+
+            // Demande de protection de l'objet.
+            $this->_actionProtectObjectInstance->setProtected();
+
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
+
+    /**
+     * Déprotège un objet.
+     */
+    private function _actionUnprotectObject()
+    {
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Action unprotect object', Metrology::LOG_LEVEL_NORMAL); // Log
+
+            // Demande de protection de l'objet.
+            $this->_actionUnprotectObjectInstance->setUnprotected();
+
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
+
+    /**
+     * Partage la protection d'un objet pour une entité.
+     */
+    private function _actionShareProtectObjectToEntity()
+    {
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Action share protect object to entity ' . $this->_actionShareProtectObjectToEntity, Metrology::LOG_LEVEL_NORMAL); // Log
+
+            // Demande de protection de l'objet.
+            $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($this->_actionShareProtectObjectToEntity);
+
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
+
+    /**
+     * Partage la protection d'un objet pour un groupe ouvert.
+     */
+    private function _actionShareProtectObjectToGroupOpened()
+    {
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Action share protect object to opened group', Metrology::LOG_LEVEL_NORMAL); // Log
+
+            // Demande de protection de l'objet.
+            $group = $this->_nebuleInstance->newGroup($this->_actionShareProtectObjectToGroupOpened);
+            foreach ($group->getListMembersID('myself', null) as $id) {
+                $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($id);
+            }
+            unset($group, $id);
+
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
+
+    /**
+     * Partage la protection d'un objet pour un groupe fermé.
+     */
+    private function _actionShareProtectObjectToGroupClosed()
+    {
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Action share protect object to closed group', Metrology::LOG_LEVEL_NORMAL); // Log
+
+            // Demande de protection de l'objet.
+            $group = $this->_nebuleInstance->newGroup($this->_actionShareProtectObjectToGroupClosed);
+            foreach ($group->getListMembersID('myself', null) as $id) {
+                $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($id);
+            }
+            unset($group, $id);
+
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
+
+    /**
+     * Annule le partage de la protection d'un objet pour une entité.
+     */
+    private function _actionCancelShareProtectObjectToEntity()
+    {
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Action cancel share protect object to entity', Metrology::LOG_LEVEL_NORMAL); // Log
+
+            // Demande d'annulation de protection de l'objet.
+            $this->_nebuleInstance->getCurrentObjectInstance()->cancelShareProtectionTo($this->_actionCancelShareProtectObjectToEntity);
+
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
+
+
+    /**
+     * Synchronise l'objet.
+     */
+    private function _actionSynchronizeObject()
+    {
+        // Vérifie que la création d'objet soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
+        ) {
+            $this->_metrology->addLog('Action synchronize object', Metrology::LOG_LEVEL_NORMAL); // Log
+
+            echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNOBJ') . $this->_display->convertInlineObjectColor($this->_actionSynchronizeObjectInstance);
+
+            // Synchronisation.
+            $this->_actionSynchronizeObjectInstance->syncObject();
+
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
+
+
+    /**
+     * Synchronise l'entité.
+     */
+    private function _actionSynchronizeEntity()
+    {
+        // Vérifie que la création d'objet soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
+            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        ) {
+            $this->_metrology->addLog('Action synchronize entity', Metrology::LOG_LEVEL_NORMAL); // Log
+
+            echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNENT') . $this->_display->convertInlineObjectColor($this->_actionSynchronizeEntityInstance);
+
+            // Synchronisation des liens (l'objet est forcément présent).
+            $this->_actionSynchronizeEntityInstance->syncLinks();
+
+            // Liste des liens l pour l'entité en source.
+            $links = $this->_actionSynchronizeEntityInstance->readLinksFilterFull('', '', 'l', $this->_actionSynchronizeEntityInstance->getID(), '', '');
+            // Synchronise l'objet cible.
+            $object = null;
+            foreach ($links as $link) {
+                $object = $this->_nebuleInstance->newObject($link->getHashTarget());
+                // Synchronise les liens (avant).
+                $object->syncLinks();
+                // Synchronise l'objet.
+                $object->syncObject();
+            }
+            // Liste des liens l pour l'entité en cible.
+            $links = $this->_actionSynchronizeEntityInstance->readLinksFilterFull('', '', 'l', '', $this->_actionSynchronizeEntityInstance->getID(), '');
+            // Synchronise l'objet source.
+            $object = null;
+            foreach ($links as $link) {
+                $object = $this->_nebuleInstance->newObject($link->getHashSource());
+                // Synchronise les liens (avant).
+                $object->syncLinks();
+                // Synchronise l'objet.
+                $object->syncObject();
+            }
+            unset($links, $link, $object);
+
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
+
+
+    /**
+     * Synchronise les liens de l'objet.
+     */
+    private function _actionSynchronizeObjectLinks()
+    {
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        ) {
+            $this->_metrology->addLog('Action synchronize object links', Metrology::LOG_LEVEL_NORMAL); // Log
+
+            echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNLNK') . $this->_display->convertInlineObjectColor($this->_actionSynchronizeObjectLinksInstance);
+
+            // Synchronisation.
+            $this->_actionSynchronizeObjectLinksInstance->syncLinks();
+
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
+
+
+    /**
+     * Synchronise une entité externe depuis une URL.
+     */
+    private function _actionSynchronizeNewEntity()
+    {
+        // Vérifie que la création d'objet soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
+            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        ) {
+            $this->_metrology->addLog('Action synchronize new entity', Metrology::LOG_LEVEL_NORMAL); // Log
+
+            // Vérifie si l'objet est déjà présent.
+            $present = $this->_io->checkObjectPresent($this->_actionSynchronizeNewEntityID);
+            // Lecture de l'objet.
+            $data = $this->_io->objectRead($this->_actionSynchronizeNewEntityID, Entity::ENTITY_MAX_SIZE, $this->_actionSynchronizeNewEntityURL);
+            // Calcul de l'empreinte.
+            $hash = hash($this->_nebuleInstance->getCrypto()->hashAlgorithmName(), $data);
+            if ($hash != $this->_actionSynchronizeNewEntityID) {
+                $this->_metrology->addLog('Action synchronize new entity - Hash error', Metrology::LOG_LEVEL_NORMAL); // Log
+                unset($data);
+                echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNENT') .
+                    $this->_display->convertInlineObjectColor($this->_actionSynchronizeNewEntityID) .
+                    $this->_display->convertInlineIconFace('DEFAULT_ICON_IERR');
+                $this->_actionSynchronizeNewEntityID = '';
+                $this->_actionSynchronizeNewEntityURL = '';
+                return false;
+            }
+            // Ecriture de l'objet.
+            $this->_io->objectWrite($data);
+
+            $this->_actionSynchronizeNewEntityInstance = $this->_nebuleInstance->newEntity($this->_actionSynchronizeNewEntityID);
+
+            if (!$this->_actionSynchronizeNewEntityInstance->getTypeVerify()) {
+                $this->_metrology->addLog('Action synchronize new entity - Not entity', Metrology::LOG_LEVEL_NORMAL); // Log
+                if (!$present)
+                    $this->_actionSynchronizeNewEntityInstance->deleteObject();
+            }
+
+            echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNENT') . $this->_display->convertInlineObjectColor($this->_actionSynchronizeNewEntityInstance);
+
+            // Synchronisation des liens.
+            $this->_actionSynchronizeNewEntityInstance->syncLinks();
+
+            // Liste des liens l pour l'entité en source.
+            $links = $this->_actionSynchronizeNewEntityInstance->readLinksFilterFull('', '', 'l', $hash, '', '');
+            // Synchronise l'objet cible.
+            $object = null;
+            foreach ($links as $link) {
+                $object = $this->_nebuleInstance->newObject($link->getHashTarget());
+                // Synchronise les liens (avant).
+                $object->syncLinks();
+                // Synchronise l'objet.
+                $object->syncObject();
+            }
+            // Liste des liens l pour l'entité en cible.
+            $links = $this->_actionSynchronizeNewEntityInstance->readLinksFilterFull('', '', 'l', '', $hash, '');
+            // Synchronise l'objet source.
+            $object = null;
+            foreach ($links as $link) {
+                $object = $this->_nebuleInstance->newObject($link->getHashSource());
+                // Synchronise les liens (avant).
+                $object->syncLinks();
+                // Synchronise l'objet.
+                $object->syncObject();
+            }
+            unset($links, $link, $object);
+
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
+
+
+    /**
+     * Marque un objet.
+     */
+    private function _actionMarkObject()
+    {
+        $this->_metrology->addLog('Action mark object', Metrology::LOG_LEVEL_NORMAL); // Log
+
+        $this->_applicationInstance->setMarkObject($this->_actionMarkObject);
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
+    }
+
+
+    /**
+     * Supprime la marque d'un objet.
+     */
+    private function _actionUnmarkObject()
+    {
+        $this->_metrology->addLog('Action unmark object', Metrology::LOG_LEVEL_NORMAL); // Log
+
+        $this->_applicationInstance->setUnmarkObject($this->_actionUnmarkObject);
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
+    }
+
+
+    /**
+     * Supprime les marques de tous les objets.
+     */
+    private function _actionUnmarkAllObjects()
+    {
+        $this->_metrology->addLog('Action unmark all objects', Metrology::LOG_LEVEL_NORMAL); // Log
+
+        $this->_applicationInstance->setUnmarkAllObjects();
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
+    }
+
+
+    /**
+     * Transfert un fichier et le nebulise.
+     */
+    private function _actionUploadFile()
+    {
+        // Vérifie que la création d'objet soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Action upload file', Metrology::LOG_LEVEL_NORMAL); // Log
+
+            // Lit le contenu du fichier.
+            $data = file_get_contents($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['tmp_name']);
+
+            // Ecrit le contenu dans l'objet.
+            $instance = new Node($this->_nebuleInstance, '0', $data, $this->_actionUploadFileProtect);
+            if ($instance === false) {
+                $this->_actionUploadFileError = true;
+                $this->_actionUploadFileErrorMessage = "L'instance de l'objet n'a pas pu être créée.";
+                return false;
+            }
+
+            // Lit l'ID.
+            $id = $instance->getID();
+            unset($data);
+            if ($id == '0') {
+                $this->_actionUploadFileError = true;
+                $this->_actionUploadFileErrorMessage = "L'objet n'a pas pu être créé.";
+                return false;
+            }
+            $this->_actionUploadFileID = $id;
+
+            // Définition de la date et le signataire.
+            $date = date(DATE_ATOM);
+            $signer = $this->_nebuleInstance->getCurrentEntity();
+
+            // Création du type mime.
+            if ($this->_actionUploadFileType != '') {
+                // Crée l'objet avec le texte.
+                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileType);
+                if ($textID !== false) {
+                    // Crée le lien.
+                    $action = 'l';
+                    $source = $id;
+                    $target = $textID;
+                    $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/type');
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+                }
+            }
+
+            // Crée l'objet du nom.
+            if ($this->_actionUploadFileName != '') {
+                // Crée l'objet avec le texte.
+                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileName);
+                if ($textID !== false) {
+                    // Crée le lien.
+                    $action = 'l';
+                    $source = $id;
+                    $target = $textID;
+                    $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/nom');
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+                }
+            }
+
+            // Crée l'objet de l'extension.
+            if ($this->_actionUploadFileExtension != '') {
+                // Crée l'objet avec le texte.
+                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileExtension);
+                if ($textID !== false) {
+                    // Crée le lien.
+                    $action = 'l';
+                    $source = $id;
+                    $target = $textID;
+                    $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/suffix');
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+                }
+            }
+
+            // Spécifique klicty.
+            // Crée l'objet du temps de vie.
+            if ($this->_actionUploadFileLifeTime != '') {
+                // Crée l'objet avec le texte.
+                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileLifeTime);
+                if ($textID !== false) {
+                    // Crée le lien.
+                    $action = 'l';
+                    $source = $id;
+                    $target = $textID;
+                    $meta = $this->_nebuleInstance->getCrypto()->hash(Application::APPLICATION_EXPIRATION_DATE);
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
+                }
+            }
+            // Crée l'objet du nombre de vues.
+            if ($this->_actionUploadFileShowTime != 0) {
+                // Crée l'objet avec le texte.
+                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileShowTime);
+                if ($textID !== false) {
+                    // Crée le lien.
+                    $action = 'l';
+                    $source = $id;
+                    $target = $textID;
+                    $meta = $this->_nebuleInstance->getCrypto()->hash(Application::APPLICATION_EXPIRATION_COUNT);
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
+                }
+            }
+
+            // Si mise à jour de l'objet en cours.
+            if ($this->_actionUploadFileUpdate) {
+                // Crée le lien.
+                $action = 'u';
+                $source = $this->_applicationInstance->getCurrentObject();
+                $target = $id;
+                $meta = '0';
+                $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+            }
+
+            unset($date, $signer, $source, $target, $meta, $link, $newLink, $textID);
+
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
+
+
+    /**
+     * Transfert un texte et le nebulise.
+     */
+    private function _actionUploadText()
+    {
+        // Vérifie que la création d'objet soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Action upload text', Metrology::LOG_LEVEL_NORMAL); // Log
+
+            // Crée l'instance de l'objet.
+            $instance = new Node($this->_nebuleInstance, '0', $this->_actionUploadTextContent, $this->_actionUploadTextProtect);
+            if ($instance === false) {
+                $this->_actionUploadFileError = true;
+                $this->_actionUploadFileErrorMessage = "L'instance de l'objet n'a pas pu être créée.";
+                return false;
+            }
+
+            // Lit l'ID.
+            $id = $instance->getID();
+            if ($id == '0') {
+                $this->_actionUploadFileError = true;
+                $this->_actionUploadFileErrorMessage = "L'objet n'a pas pu être créé.";
+                return false;
+            }
+            unset($instance);
+            $this->_actionUploadTextID = $id;
+
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+
+            // Définition de la date et du signataire.
+            $signer = $this->_nebuleInstance->getCurrentEntity();
+            $date = date(DATE_ATOM);
+
+            // Création du type mime.
+            $type = Klicty::REFERENCE_OBJECT_TEXT;
+            $typeID = $this->_nebuleInstance->createTextAsObject($type);
+            if ($typeID !== false) {
+                // Crée le lien.
+                $action = 'l';
+                $source = $id;
+                $target = $typeID;
+                $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/type');
+                $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadTextObfuscateLinks);
+            }
+
+            // Crée l'objet du nom.
+            if ($this->_actionUploadTextName != '') {
+                // Crée l'objet avec le texte.
+                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadTextName);
+                if ($textID !== false) {
+                    // Crée le lien.
+                    $action = 'l';
+                    $source = $id;
+                    $target = $textID;
+                    $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/nom');
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadTextObfuscateLinks);
+                }
+                if ($typeID !== false) {
+                    // Crée le lien.
+                    $action = 'l';
+                    $source = $textID;
+                    $target = $typeID;
+                    $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/type');
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadTextObfuscateLinks);
+                }
+            }
+
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+
+            unset($id, $type, $typeID, $text, $textID, $signer, $date, $action, $source, $target, $meta);
+        }
+    }
+
+
+    /**
+     * Crée une nouvelle entité.
+     */
+    private function _actionCreateEntity()
+    {
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteEntity')
+            && ($this->_unlocked || $this->_nebuleInstance->getOption('permitPublicCreateEntity'))
+            && $this->_actionCreateEntity
+            && !$this->_actionCreateEntityError
+        ) {
+            $this->_metrology->addLog('Action create entity', Metrology::LOG_LEVEL_NORMAL); // Log
+
+            // Création de la nouvelle entité nebule.
+            $instance = new Entity($this->_nebuleInstance, 'new');
+
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+
+            if (is_a($instance, 'Entity') && $instance->getID() != '0') {
+                $this->_actionCreateEntityError = false;
+
+                // Enregistre l'instance créée.
+                $this->_actionCreateEntityInstance = $instance;
+                $this->_actionCreateEntityID = $instance->getID();
+
+                // Modifie le mot de passe de clé privée.
+                $this->_actionCreateEntityInstance->changePrivateKeyPassword($this->_actionCreateEntityPassword);
+
+                // Active l'entité créée comme l'entité courante.
+                $this->_nebuleInstance->setCurrentEntity($instance);
+                $this->_applicationInstance->getDisplayInstance()->refreshUnlocked();
+                $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+                unset($instance);
+
+                // Affichage des actions.
+                $this->_display->displayInlineAllActions();
+
+                // Définition de la date et du signataire.
+                $date = date(DATE_ATOM);
+                $signer = $this->_actionCreateEntityID;
+
+                // Si prénom et pas de nom, le prénom devient le nom.
+                if ($this->_actionCreateEntityName == '' && $this->_actionCreateEntityFirstname != '') {
+                    $this->_actionCreateEntityName = $this->_actionCreateEntityFirstname;
+                    $this->_actionCreateEntityFirstname = '';
+                }
+
+                // Nomme l'entité.
+                if ($this->_actionCreateEntityName != '') {
+                    // Crée l'objet avec le texte.
+                    $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityName);
+                    if ($textID !== false) {
+                        // Crée le lien.
+                        $action = 'l';
+                        $source = $this->_actionCreateEntityID;
+                        $target = $textID;
+                        $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/nom');
+                        $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
+                    }
+                }
+                if ($this->_actionCreateEntityFirstname != '') {
+                    // Crée l'objet avec le texte.
+                    $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityFirstname);
+                    if ($textID !== false) {
+                        // Crée le lien.
+                        $action = 'l';
+                        $source = $this->_actionCreateEntityID;
+                        $target = $textID;
+                        $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/prenom');
+                        $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
+                    }
+                }
+                if ($this->_actionCreateEntityNikename != '') {
+                    // Crée l'objet avec le texte.
+                    $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityNikename);
+                    if ($textID !== false) {
+                        // Crée le lien.
+                        $action = 'l';
+                        $source = $this->_actionCreateEntityID;
+                        $target = $textID;
+                        $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/surnom');
+                        $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
+                    }
+                }
+
+                // Affichage des actions.
+                $this->_display->displayInlineAllActions();
+
+                if ($this->_actionCreateEntityPrefix != '') {
+                    // Crée l'objet avec le texte.
+                    $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityPrefix);
+                    if ($textID !== false) {
+                        // Crée le lien.
+                        $action = 'l';
+                        $source = $this->_actionCreateEntityID;
+                        $target = $textID;
+                        $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/prefix');
+                        $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
+                    }
+                }
+                if ($this->_actionCreateEntitySuffix != '') {
+                    // Crée l'objet avec le texte.
+                    $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntitySuffix);
+                    if ($textID !== false) {
+                        // Crée le lien.
+                        $action = 'l';
+                        $source = $this->_actionCreateEntityID;
+                        $target = $textID;
+                        $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/suffix');
+                        $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
+                    }
+                }
+                if ($this->_actionCreateEntityType != '') {
+                    // Crée l'objet avec le texte.
+                    $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityType);
+                    if ($textID !== false) {
+                        // Crée le lien.
+                        $action = 'l';
+                        $source = $this->_actionCreateEntityID;
+                        $target = $textID;
+                        $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/entite/type');
+                        $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
+                    }
+                }
+
+                unset($date, $source, $target, $meta, $link, $newLink, $textID);
+            } else {
+                // Si ce n'est pas bon.
+                $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
+                $this->_actionCreateEntityError = true;
+                $this->_actionCreateEntityErrorMessage = 'Echec de la génération.';
+            }
+
+
+            /*
 // Action - Création d'une entité.
 // Dans le mode ent, on peut créer une nouvelle entité. Cette entité peut être indépendante (autonome) ou rattachée à l'entité en cours.
 // Si elle est indépendante, elle doit avoir un mot de passe.
@@ -7420,307 +7394,266 @@ if (($sel_action == 'mkent') && ($ok_connexion || $klicty_permitpubcreatentity) 
 }
  */
 
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-		else
-		{
-			$this->_actionCreateEntityError = true;
-			$this->_actionCreateEntityErrorMessage = 'Non autorisé.';
-		}
-	}
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        } else {
+            $this->_actionCreateEntityError = true;
+            $this->_actionCreateEntityErrorMessage = 'Non autorisé.';
+        }
+    }
 
 
+    /**
+     * Crée un nouveau groupe.
+     */
+    private function _actionCreateGroup()
+    {
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteGroup')
+            && $this->_unlocked
+            && !$this->_actionCreateGroupError
+        ) {
+            $this->_metrology->addLog('Action create group', Metrology::LOG_LEVEL_NORMAL); // Log
 
-	/**
-	 * Crée un nouveau groupe.
-	 */
-	private function _actionCreateGroup()
-	{
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteGroup')
-				&& $this->_unlocked
-				&& ! $this->_actionCreateGroupError
-			)
-		{
-			$this->_metrology->addLog('Action create group', Metrology::LOG_LEVEL_NORMAL); // Log
+            // Création du nouveau groupe.
+            $instance = new Group($this->_nebuleInstance, 'new', $this->_actionCreateGroupClosed);
 
-			// Création du nouveau groupe.
-			$instance = New Group($this->_nebuleInstance, 'new', $this->_actionCreateGroupClosed);
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
 
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
+            if (is_a($instance, 'Group') && $instance->getID() != '0') {
+                $this->_actionCreateGroupError = false;
+                $instance->setName($this->_actionCreateGroupName);
 
-			if ( is_a($instance, 'Group') && $instance->getID() != '0' )
-			{
-				$this->_actionCreateGroupError = false;
-				$instance->setName($this->_actionCreateGroupName);
+                $this->_actionCreateGroupInstance = $instance;
+                $this->_actionCreateGroupID = $instance->getID();
+            } else {
+                // Si ce n'est pas bon.
+                $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
+                $this->_actionCreateGroupError = true;
+                $this->_actionCreateGroupErrorMessage = 'Echec de la génération.';
+            }
 
-				$this->_actionCreateGroupInstance = $instance;
-				$this->_actionCreateGroupID = $instance->getID();
-			}
-			else
-			{
-				// Si ce n'est pas bon.
-				$this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
-				$this->_actionCreateGroupError = true;
-				$this->_actionCreateGroupErrorMessage = 'Echec de la génération.';
-			}
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-		else
-		{
-			$this->_actionCreateGroupError = true;
-			$this->_actionCreateGroupErrorMessage = 'Non autorisé.';
-		}
-	}
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        } else {
+            $this->_actionCreateGroupError = true;
+            $this->_actionCreateGroupErrorMessage = 'Non autorisé.';
+        }
+    }
 
 
+    /**
+     * Supprime un groupe.
+     */
+    private function _actionDeleteGroup()
+    {
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteGroup')
+            && $this->_unlocked
+            && !$this->_actionDeleteGroupError
+        ) {
+            $this->_metrology->addLog('Action delete group ' . $this->_actionDeleteGroupID, Metrology::LOG_LEVEL_DEBUG); // Log
 
-	/**
-	 * Supprime un groupe.
-	 */
-	private function _actionDeleteGroup()
-	{
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteGroup')
-				&& $this->_unlocked
-				&& ! $this->_actionDeleteGroupError
-			)
-		{
-			$this->_metrology->addLog('Action delete group '.$this->_actionDeleteGroupID, Metrology::LOG_LEVEL_DEBUG); // Log
-			
-			/**
-			 * Instance du groupe.
-			 * @var Group $instance
-			 */
-			$instance = $this->_nebuleInstance->newGroup($this->_actionDeleteGroupID);
-			
-			// Vérification.
-			if ( $instance->getID() == '0'
-					|| ! $instance->getIsGroup('all')
-				)
-			{
-				$this->_actionDeleteGroupError = false;
-				$this->_actionDeleteGroupErrorMessage = 'Pas un groupe.';
-				$this->_metrology->addLog('Action delete not a group', Metrology::LOG_LEVEL_DEBUG); // Log
-				return;
-			}
-			
-			// Suppression.
-			if ( $instance->getMarkClosed() )
-			{
-				$this->_metrology->addLog('Action delete group closed', Metrology::LOG_LEVEL_DEBUG); // Log
-				$instance->unsetMarkClosed();
-			}
-			$instance->unsetGroup();
+            /**
+             * Instance du groupe.
+             * @var Group $instance
+             */
+            $instance = $this->_nebuleInstance->newGroup($this->_actionDeleteGroupID);
 
-			// Vérification.
-			if ( $instance->getIsGroup('myself') )
-			{
-				// Si ce n'est pas bon.
-				$this->_metrology->addLog('Action _actionDeleteGroup cant generate', Metrology::LOG_LEVEL_ERROR); // Log
-				$this->_actionDeleteGroupError = true;
-				$this->_actionDeleteGroupErrorMessage = 'Echec de la génération.';
-			}
-			unset($instance);
+            // Vérification.
+            if ($instance->getID() == '0'
+                || !$instance->getIsGroup('all')
+            ) {
+                $this->_actionDeleteGroupError = false;
+                $this->_actionDeleteGroupErrorMessage = 'Pas un groupe.';
+                $this->_metrology->addLog('Action delete not a group', Metrology::LOG_LEVEL_DEBUG); // Log
+                return;
+            }
 
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-		else
-		{
-			$this->_metrology->addLog('Action _actionDeleteGroup not autorized', Metrology::LOG_LEVEL_ERROR); // Log
-			$this->_actionDeleteGroupError = true;
-			$this->_actionDeleteGroupErrorMessage = 'Non autorisé.';
-		}
-	}
+            // Suppression.
+            if ($instance->getMarkClosed()) {
+                $this->_metrology->addLog('Action delete group closed', Metrology::LOG_LEVEL_DEBUG); // Log
+                $instance->unsetMarkClosed();
+            }
+            $instance->unsetGroup();
+
+            // Vérification.
+            if ($instance->getIsGroup('myself')) {
+                // Si ce n'est pas bon.
+                $this->_metrology->addLog('Action _actionDeleteGroup cant generate', Metrology::LOG_LEVEL_ERROR); // Log
+                $this->_actionDeleteGroupError = true;
+                $this->_actionDeleteGroupErrorMessage = 'Echec de la génération.';
+            }
+            unset($instance);
+
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        } else {
+            $this->_metrology->addLog('Action _actionDeleteGroup not autorized', Metrology::LOG_LEVEL_ERROR); // Log
+            $this->_actionDeleteGroupError = true;
+            $this->_actionDeleteGroupErrorMessage = 'Non autorisé.';
+        }
+    }
 
 
+    /**
+     * Ajoute l'objet courant à un groupe.
+     *
+     * @return void
+     */
+    private function _actionAddToGroup()
+    {
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteGroup')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Action add to group ' . $this->_actionAddToGroup, Metrology::LOG_LEVEL_DEBUG); // Log
+            $instanceGroupe = $this->_nebuleInstance->newGroup($this->_actionAddToGroup);
+            $instanceGroupe->setMember($this->_nebuleInstance->getCurrentObjectInstance());
+            unset($instanceGroupe);
 
-	/**
-	 * Ajoute l'objet courant à un groupe.
-	 * 
-	 * @return void
-	 */
-	private function _actionAddToGroup()
-	{
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteGroup')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Action add to group '.$this->_actionAddToGroup, Metrology::LOG_LEVEL_DEBUG); // Log
-			$instanceGroupe = $this->_nebuleInstance->newGroup($this->_actionAddToGroup);
-			$instanceGroupe->setMember($this->_nebuleInstance->getCurrentObjectInstance());
-			unset($instanceGroupe);
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
 
 
+    /**
+     * Retire l'objet courant d'un groupe.
+     *
+     * @return void
+     */
+    private function _actionRemoveFromGroup()
+    {
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteGroup')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Action remove from group ' . $this->_actionRemoveFromGroup, Metrology::LOG_LEVEL_DEBUG); // Log
+            $instanceGroupe = $this->_nebuleInstance->newGroup($this->_actionRemoveFromGroup);
+            $instanceGroupe->unsetMember($this->_nebuleInstance->getCurrentObjectInstance());
+            unset($instanceGroupe);
 
-	/**
-	 * Retire l'objet courant d'un groupe.
-	 * 
-	 * @return void
-	 */
-	private function _actionRemoveFromGroup()
-	{
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteGroup')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Action remove from group '.$this->_actionRemoveFromGroup, Metrology::LOG_LEVEL_DEBUG); // Log
-			$instanceGroupe = $this->_nebuleInstance->newGroup($this->_actionRemoveFromGroup);
-			$instanceGroupe->unsetMember($this->_nebuleInstance->getCurrentObjectInstance());
-			unset($instanceGroupe);
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
 
 
+    /**
+     * Ajoute un objet au groupe courant.
+     */
+    private function _actionAddItemToGroup()
+    {
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteGroup')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Action add item to group ' . $this->_actionAddItemToGroup, Metrology::LOG_LEVEL_NORMAL); // Log
+            $this->_nebuleInstance->getCurrentGroupInstance()->setMember($this->_actionAddItemToGroup);
 
-	/**
-	 * Ajoute un objet au groupe courant.
-	 */
-	private function _actionAddItemToGroup()
-	{
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteGroup')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Action add item to group '.$this->_actionAddItemToGroup, Metrology::LOG_LEVEL_NORMAL); // Log
-			$this->_nebuleInstance->getCurrentGroupInstance()->setMember($this->_actionAddItemToGroup);
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
 
 
+    /**
+     * Retire un objet courant du groupe courant.
+     */
+    private function _actionRemoveItemFromGroup()
+    {
+        // Vérifie que la création de liens soit authorisée.
+        if ($this->_nebuleInstance->getOption('permitWrite')
+            && $this->_nebuleInstance->getOption('permitWriteLink')
+            && $this->_nebuleInstance->getOption('permitWriteGroup')
+            && $this->_unlocked
+        ) {
+            $this->_metrology->addLog('Action remove item from group ' . $this->_actionRemoveItemFromGroup, Metrology::LOG_LEVEL_NORMAL); // Log
+            $this->_nebuleInstance->getCurrentGroupInstance()->unsetMember($this->_actionRemoveItemFromGroup);
 
-	/**
-	 * Retire un objet courant du groupe courant.
-	 */
-	private function _actionRemoveItemFromGroup()
-	{
-		// Vérifie que la création de liens soit authorisée.
-		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitWriteGroup')
-				&& $this->_unlocked
-			)
-		{
-			$this->_metrology->addLog('Action remove item from group '.$this->_actionRemoveItemFromGroup, Metrology::LOG_LEVEL_NORMAL); // Log
-			$this->_nebuleInstance->getCurrentGroupInstance()->unsetMember($this->_actionRemoveItemFromGroup);
-
-			// Affichage des actions.
-			$this->_display->displayInlineAllActions();
-		}
-	}
+            // Affichage des actions.
+            $this->_display->displayInlineAllActions();
+        }
+    }
 
 
+    /**
+     * Crée un lien.
+     */
+    private function _createLink($signer, $date, $action, $source, $target, $meta, $obfuscate = false)
+    {
+        $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
+        $newLink = new Link($this->_nebuleInstance, $link);
+        // Signe le lien.
+        $newLink->sign($signer);
+        // Si besoin, obfuscation du lien.
+        if ($obfuscate)
+            $newLink->obfuscate();
+        // Ecrit le lien.
+        $newLink->write();
+    }
 
-	/**
-	 * Crée un lien.
-	 */
-	private function _createLink($signer, $date, $action, $source, $target, $meta, $obfuscate = false)
-	{
-		$link	= '0_'.$signer.'_'.$date.'_'.$action.'_'.$source.'_'.$target.'_'.$meta;
-		$newLink = New Link($this->_nebuleInstance, $link);
-		// Signe le lien.
-		$newLink->sign($signer);
-		// Si besoin, obfuscation du lien.
-		if ( $obfuscate )
-			$newLink->obfuscate();
-		// Ecrit le lien.
-		$newLink->write();
-	}
 
+    private function _actionFlushExpiredObjects()
+    {
+        $this->_metrology->addLog('Check expired objects', Metrology::LOG_LEVEL_NORMAL); // Log
 
-	private function _actionFlushExpiredObjects()
-	{
-		$this->_metrology->addLog('Check expired objects', Metrology::LOG_LEVEL_NORMAL); // Log
+        // Extrait la liste des objets.
+        $id = $this->_applicationInstance->getCurrentEntity();
+        $meta = $this->_nebuleInstance->getCrypto()->hash(Application::APPLICATION_EXPIRATION_DATE);
+        $instance = $this->_nebuleInstance->newObject($meta);
+        // Si c'est l'entité du serveur, affiche tous les objets.
+        if ($id == $this->_nebuleInstance->getOption('defaultCurrentEntity')) {
+            $list = $instance->readLinksFilterFull('', '', 'l', '', '', $meta);
+        } // Sinon affiche les objets de l'entité.
+        else {
+            $list = $instance->readLinksFilterFull($id, '', 'l', '', '', $meta);
+        }
 
-		// Extrait la liste des objets.
-		$id = $this->_applicationInstance->getCurrentEntity();
-		$meta = $this->_nebuleInstance->getCrypto()->hash( Application::APPLICATION_EXPIRATION_DATE );
-		$instance = $this->_nebuleInstance->newObject($meta);
-		// Si c'est l'entité du serveur, affiche tous les objets.
-		if ( $id == $this->_nebuleInstance->getOption('defaultCurrentEntity') )
-		{
-			$list = $instance->readLinksFilterFull('', '', 'l', '', '', $meta);
-		}
-		// Sinon affiche les objets de l'entité.
-		else
-		{
-			$list = $instance->readLinksFilterFull($id, '', 'l', '', '', $meta);
-		}
+        // Liste tous les objets.
+        if (sizeof($list) > 0) {
+            foreach ($list as $item) {
+                $id = $item->getHashSource();
+                $object = $this->_nebuleInstance->newObject($id);
+                $protected = $object->getMarkProtectedFast();
+                if ($this->_applicationInstance->getObjectLifetimeExpired($object) && $object->checkPresent()) {
+                    // Supprime l'objet.
+                    $r = $this->_nebuleInstance->getIO()->objectDelete($id);
 
-		// Liste tous les objets.
-		if ( sizeof($list) > 0 )
-		{
-			foreach ( $list as $item )
-			{
-				$id = $item->getHashSource();
-				$object = $this->_nebuleInstance->newObject($id);
-				$protected = $object->getMarkProtectedFast();
-				if ( $this->_applicationInstance->getObjectLifetimeExpired($object) && $object->checkPresent() )
-				{
-					// Supprime l'objet.
-					$r = $this->_nebuleInstance->getIO()->objectDelete($id);
+                    // Métrologie.
+                    $this->_nebuleInstance->getMetrologyInstance()->addAction('delobj', $id, $r);
 
-					// Métrologie.
-					$this->_nebuleInstance->getMetrologyInstance()->addAction('delobj', $id, $r);
+                    if ($protected) {
+                        $idp = $object->getProtectedID();
 
-					if ( $protected )
-					{
-						$idp = $object->getProtectedID();
+                        // Supprime l'objet.
+                        $r = $this->_nebuleInstance->getIO()->objectDelete($idp);
 
-						// Supprime l'objet.
-						$r = $this->_nebuleInstance->getIO()->objectDelete($idp);
+                        // Métrologie.
+                        $this->_nebuleInstance->getMetrologyInstance()->addAction('delobj', $idp, $r);
+                    }
+                }
+            }
+        }
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
 
-						// Métrologie.
-						$this->_nebuleInstance->getMetrologyInstance()->addAction('delobj', $idp, $r);
-					}
-				}
-			}
-		}
-		// Affichage des actions.
-		$this->_display->displayInlineAllActions();
-
-		$this->_metrology->addLog('Check expired objects end', Metrology::LOG_LEVEL_NORMAL); // Log
-	}
+        $this->_metrology->addLog('Check expired objects end', Metrology::LOG_LEVEL_NORMAL); // Log
+    }
 }
-
-
-
-
-
-
-
-
-
 
 
 /**
@@ -7733,82 +7666,80 @@ if (($sel_action == 'mkent') && ($ok_connexion || $klicty_permitpubcreatentity) 
  */
 class Traduction extends Traductions
 {
-	/**
-	 * langue par défaut.
-	 *
-	 * @var string
-	 */
-	protected $DEFAULT_LANGUAGE = 'fr-fr';
-	
-	/**
-	 * Liste des languages supportés.
-	 *
-	 * @var array
-	 */
-	protected $LANGUAGE_LIST = array('fr-fr', 'en-en', 'es-co');
-	
-	/**
-	 * Liste des icônes des languages supportés.
-	 *
-	 * @var array
-	 */
-	protected $LANGUAGE_ICON_LIST = array(
-			'fr-fr' => 'b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac',
-			'en-en' => '7796077f1b865951946dd40ab852f6f4d21e702e7c4f47bd5fa6cb9ce94a4c5f',
-			'es-co' => '7425a5a9dfdaaa084fba0dff69b3a6267a90ef42cb0fa093d5a4b47a8bc062dd');
+    /**
+     * langue par défaut.
+     *
+     * @var string
+     */
+    protected $DEFAULT_LANGUAGE = 'fr-fr';
+
+    /**
+     * Liste des languages supportés.
+     *
+     * @var array
+     */
+    protected $LANGUAGE_LIST = array('fr-fr', 'en-en', 'es-co');
+
+    /**
+     * Liste des icônes des languages supportés.
+     *
+     * @var array
+     */
+    protected $LANGUAGE_ICON_LIST = array(
+        'fr-fr' => 'b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac',
+        'en-en' => '7796077f1b865951946dd40ab852f6f4d21e702e7c4f47bd5fa6cb9ce94a4c5f',
+        'es-co' => '7425a5a9dfdaaa084fba0dff69b3a6267a90ef42cb0fa093d5a4b47a8bc062dd');
 
 
+    /**
+     * Constructeur.
+     *
+     * @param Application $applicationInstance
+     * @return void
+     */
+    public function __construct(Application $applicationInstance)
+    {
+        $this->_applicationInstance = $applicationInstance;
+    }
 
-	/**
-	 * Constructeur.
-	 *
-	 * @param Application $applicationInstance
-	 * @return void
-	 */
-	public function __construct(Application $applicationInstance)
-	{
-		$this->_applicationInstance = $applicationInstance;
-	}
-	
-	
-	
-	/**
-	 * Initialisation de la table de traduction.
-	 */
-	protected function _initTable()
-	{
-		$this->_table['fr-fr']['::Welcome']='Bienvenue sur <i>klicty</i>.';
-		$this->_table['en-en']['::Welcome']='Welcome to <i>klicty</i>.';
-		$this->_table['es-co']['::Welcome']='Bienvenido en <i>klicty</i>.';
-		#$this->_table['fr-fr']['::PleaseSelectEntity']='Sélectionner une entité existante<br />ou en créer une nouvelle :';
-		#$this->_table['en-en']['::PleaseSelectEntity']='Select an entity<br />or create a new one:';
-		#$this->_table['es-co']['::PleaseSelectEntity']='Select an entity<br />or create a new one:';
-		$this->_table['fr-fr']['::Version']='Version';
-		$this->_table['en-en']['::Version']='Version';
-		$this->_table['es-co']['::Version']='Version';
-		$this->_table['fr-fr']['::About']='A propos';
-		$this->_table['en-en']['::About']='About';
-		$this->_table['es-co']['::About']='About';
-		$this->_table['fr-fr']['::Help']='Aide';
-		$this->_table['en-en']['::Help']='Help';
-		$this->_table['es-co']['::Help']='Help';
-		$this->_table['fr-fr'][':::err_NotPermit']='Non autorisé !';
-		$this->_table['en-en'][':::err_NotPermit']='Unauthorized!';
-		$this->_table['es-co'][':::err_NotPermit']='Unauthorized!';
-		$this->_table['fr-fr'][':::Flush']='Réinitialisation';
-		$this->_table['en-en'][':::Flush']='Flush';
-		$this->_table['es-co'][':::Flush']='Flush';
-		$this->_table['fr-fr']['::Share']='Partage';
-		$this->_table['en-en']['::Share']='Share';
-		$this->_table['es-co']['::Share']='Share';
-		$this->_table['fr-fr']['::Protection']='Protection';
-		$this->_table['en-en']['::Protection']='Protection';
-		$this->_table['es-co']['::Protection']='Protection';
-		$this->_table['fr-fr']['::TimeLimited']='Durée limitée';
-		$this->_table['en-en']['::TimeLimited']='Time limited';
-		$this->_table['es-co']['::TimeLimited']='Time limited';
 
-		$this->_table['fr-fr']['::AboutMessage']="C'est un <b>espace ouvert et protégé</b> de <b>partage d'information</b> à <b>durée limitée</b>.<br />
+    /**
+     * Initialisation de la table de traduction.
+     */
+    protected function _initTable()
+    {
+        $this->_table['fr-fr']['::Welcome'] = 'Bienvenue sur <i>klicty</i>.';
+        $this->_table['en-en']['::Welcome'] = 'Welcome to <i>klicty</i>.';
+        $this->_table['es-co']['::Welcome'] = 'Bienvenido en <i>klicty</i>.';
+        #$this->_table['fr-fr']['::PleaseSelectEntity']='Sélectionner une entité existante<br />ou en créer une nouvelle :';
+        #$this->_table['en-en']['::PleaseSelectEntity']='Select an entity<br />or create a new one:';
+        #$this->_table['es-co']['::PleaseSelectEntity']='Select an entity<br />or create a new one:';
+        $this->_table['fr-fr']['::Version'] = 'Version';
+        $this->_table['en-en']['::Version'] = 'Version';
+        $this->_table['es-co']['::Version'] = 'Version';
+        $this->_table['fr-fr']['::About'] = 'A propos';
+        $this->_table['en-en']['::About'] = 'About';
+        $this->_table['es-co']['::About'] = 'About';
+        $this->_table['fr-fr']['::Help'] = 'Aide';
+        $this->_table['en-en']['::Help'] = 'Help';
+        $this->_table['es-co']['::Help'] = 'Help';
+        $this->_table['fr-fr'][':::err_NotPermit'] = 'Non autorisé !';
+        $this->_table['en-en'][':::err_NotPermit'] = 'Unauthorized!';
+        $this->_table['es-co'][':::err_NotPermit'] = 'Unauthorized!';
+        $this->_table['fr-fr'][':::Flush'] = 'Réinitialisation';
+        $this->_table['en-en'][':::Flush'] = 'Flush';
+        $this->_table['es-co'][':::Flush'] = 'Flush';
+        $this->_table['fr-fr']['::Share'] = 'Partage';
+        $this->_table['en-en']['::Share'] = 'Share';
+        $this->_table['es-co']['::Share'] = 'Share';
+        $this->_table['fr-fr']['::Protection'] = 'Protection';
+        $this->_table['en-en']['::Protection'] = 'Protection';
+        $this->_table['es-co']['::Protection'] = 'Protection';
+        $this->_table['fr-fr']['::TimeLimited'] = 'Durée limitée';
+        $this->_table['en-en']['::TimeLimited'] = 'Time limited';
+        $this->_table['es-co']['::TimeLimited'] = 'Time limited';
+
+        $this->_table['fr-fr']['::AboutMessage'] = "C'est un <b>espace ouvert et protégé</b> de <b>partage d'information</b> à <b>durée limitée</b>.<br />
 <br />
 <h2>&gt; Partage</h2>
 Les fichiers téléchargés deviennent des objets. Sous forme d'objets, ils sont strictement identifiés et leurs contenus sont complètement verrouillés. Ainsi, ils peuvent être conservés et partagés avec une grande fiabilité.<br />
@@ -7819,7 +7750,7 @@ Les objets peuvent être publics ou protégés. Les objets protégés bénéfici
 <h2>&gt; Durée limitée</h2>
 Les objets ainsi partagés ont tous une durée de vie limitée sur ce serveur. Ils sont supprimés à l'issue.<br />
 La durée de vie est une limite imposée spécifiquement sur <i>klicty</i>.";
-		$this->_table['en-en']['::AboutMessage']="This is a <b>open and protected space</b> to <b>share information</b> with <b>limit in time</b>.<br />
+        $this->_table['en-en']['::AboutMessage'] = "This is a <b>open and protected space</b> to <b>share information</b> with <b>limit in time</b>.<br />
 <br />
 <h2>&gt; Share</h2>
 Files uploaded become objects. As objects, they are strictly identified and there contents are completly locked. Thus, they can be stored and shared with high reliability.<br />
@@ -7830,7 +7761,7 @@ Objects can be publics ou protected. Protected objects have strong cryptography 
 <h2>&gt; Time limited</h2>
 All the shared objects have a limited time to live on this server. They are removed at the end.<br />
 The time to live is a limit imposed specifically on <i>klicty</i>.";
-		$this->_table['es-co']['::AboutMessage']="This is a <b>open and protected space</b> to <b>share information</b> with <b>limit in time</b>.<br />
+        $this->_table['es-co']['::AboutMessage'] = "This is a <b>open and protected space</b> to <b>share information</b> with <b>limit in time</b>.<br />
 <br />
 <h2>&gt; Share</h2>
 Files uploaded become objects. As objects, they are strictly identified and there contents are completly locked. Thus, they can be stored and shared with high reliability.<br />
@@ -7842,556 +7773,556 @@ Objects can be publics ou protected. Protected objects have strong cryptography 
 All the shared objects have a limited time to live on this server. They are removed at the end.<br />
 The time to live is a limit imposed specifically on <i>klicty</i>.";
 
-		$this->_table['fr-fr']['::HelpMessage']="L'ensemble repose sur le projet <i>nebule</i> et sa façon spécifique de gérer les objets.<br /><br />
+        $this->_table['fr-fr']['::HelpMessage'] = "L'ensemble repose sur le projet <i>nebule</i> et sa façon spécifique de gérer les objets.<br /><br />
 Aide en cours de rédaction...";
-		$this->_table['en-en']['::HelpMessage']="All is based on the 'projet <i>nebule</i>' and his way specifically to manage objets.<br /><br />
+        $this->_table['en-en']['::HelpMessage'] = "All is based on the 'projet <i>nebule</i>' and his way specifically to manage objets.<br /><br />
 Help in progess...";
-		$this->_table['es-co']['::HelpMessage']="All is based on the 'projet <i>nebule</i>' and his way specifically to manage objets.<br /><br />
+        $this->_table['es-co']['::HelpMessage'] = "All is based on the 'projet <i>nebule</i>' and his way specifically to manage objets.<br /><br />
 Help in progess...";
 
-		$this->_table['fr-fr']['::HelpRecoveryEntity']="Les entités de recouvrement permettent en cas de besoin de déprotéger un objet.<br />
+        $this->_table['fr-fr']['::HelpRecoveryEntity'] = "Les entités de recouvrement permettent en cas de besoin de déprotéger un objet.<br />
 Cela peut être une politique de sécurité dans une société ou une contrainte légale dans certains pays.<br />
 <br />
 Quelque soit l'entité qui protège un objet, la protection est automatiquement et silencieusement partagée avec toutes les entités de recouvrement.<br />
 Toutes les entités de recouvrement sont affichées ici, aucune n'est cachée.";
-		$this->_table['en-en']['::HelpRecoveryEntity']="The recovery entities can, if needed, unprotect an object.<br />
+        $this->_table['en-en']['::HelpRecoveryEntity'] = "The recovery entities can, if needed, unprotect an object.<br />
 This can be a security choise in an enterprise or legal contraint in some contries.<br />
 <br />
 Whatever the entity that protect an object, the protection is automatically and silently shared with recovery entities.<br />
 All recovery entities are displayed here, none are hidden.";
-		$this->_table['es-co']['::HelpRecoveryEntity']="The recovery entities can, if needed, unprotect an object.<br />
+        $this->_table['es-co']['::HelpRecoveryEntity'] = "The recovery entities can, if needed, unprotect an object.<br />
 This can be a security choise in an enterprise or legal contraint in some contries.<br />
 <br />
 Whatever the entity that protect an object, the protection is automatically and silently shared with recovery entities.<br />
 All recovery entities are displayed here, none are hidden.";
 
-		$this->_table['fr-fr'][':::SelectLanguage']='Sélectionner la langue';
-		$this->_table['en-en'][':::SelectLanguage']='Select language';
-		$this->_table['es-co'][':::SelectLanguage']='Select language';
-		$this->_table['fr-fr'][':::Language:fr-fr']='Français (France)';
-		$this->_table['en-en'][':::Language:fr-fr']='Français (France)';
-		$this->_table['es-co'][':::Language:fr-fr']='Français (France)';
-		$this->_table['fr-fr'][':::Language:en-en']='English (England)';
-		$this->_table['en-en'][':::Language:en-en']='English (England)';
-		$this->_table['es-co'][':::Language:en-en']='English (England)';
-		$this->_table['fr-fr'][':::Language:es-co']='Español (Colombia)';
-		$this->_table['en-en'][':::Language:es-co']='Español (Colombia)';
-		$this->_table['es-co'][':::Language:es-co']='Español (Colombia)';
+        $this->_table['fr-fr'][':::SelectLanguage'] = 'Sélectionner la langue';
+        $this->_table['en-en'][':::SelectLanguage'] = 'Select language';
+        $this->_table['es-co'][':::SelectLanguage'] = 'Select language';
+        $this->_table['fr-fr'][':::Language:fr-fr'] = 'Français (France)';
+        $this->_table['en-en'][':::Language:fr-fr'] = 'Français (France)';
+        $this->_table['es-co'][':::Language:fr-fr'] = 'Français (France)';
+        $this->_table['fr-fr'][':::Language:en-en'] = 'English (England)';
+        $this->_table['en-en'][':::Language:en-en'] = 'English (England)';
+        $this->_table['es-co'][':::Language:en-en'] = 'English (England)';
+        $this->_table['fr-fr'][':::Language:es-co'] = 'Español (Colombia)';
+        $this->_table['en-en'][':::Language:es-co'] = 'Español (Colombia)';
+        $this->_table['es-co'][':::Language:es-co'] = 'Español (Colombia)';
 
-		$this->_table['fr-fr']['::::INFO']='Information';
-		$this->_table['en-en']['::::INFO']='Information';
-		$this->_table['es-co']['::::INFO']='Information';
-		$this->_table['fr-fr']['::::OK']='OK';
-		$this->_table['en-en']['::::OK']='OK';
-		$this->_table['es-co']['::::OK']='OK';
-		$this->_table['fr-fr']['::::INFORMATION']='Message';
-		$this->_table['en-en']['::::INFORMATION']='Message';
-		$this->_table['es-co']['::::INFORMATION']='Mensaje';
-		$this->_table['fr-fr']['::::WARN']='ATTENTION !';
-		$this->_table['en-en']['::::WARN']='WARNING!';
-		$this->_table['es-co']['::::WARN']='¡ADVERTENCIA!';
-		$this->_table['fr-fr']['::::ERROR']='ERREUR !';
-		$this->_table['en-en']['::::ERROR']='ERROR!';
-		$this->_table['es-co']['::::ERROR']='¡ERROR!';
-		$this->_table['fr-fr']['::::HtmlHeadDescription']="Espace ouvert et protégé de partage d'information à durée limitée.";
-		$this->_table['en-en']['::::HtmlHeadDescription']='Open and protected space to share information with limit in time.';
-		$this->_table['es-co']['::::HtmlHeadDescription']='Open and protected space to share information with limit in time.';
-		$this->_table['fr-fr']['::::Experimental']='[Experimental]';
-		$this->_table['en-en']['::::Experimental']='[Experimental]';
-		$this->_table['es-co']['::::Experimental']='[Experimental]';
-		$this->_table['fr-fr']['::::Developpement']='[En cours de développement]';
-		$this->_table['en-en']['::::Developpement']='[Under developpement]';
-		$this->_table['es-co']['::::Developpement']='[Under developpement]';
-		$this->_table['fr-fr']['::::SecurityChecks']='Tests de sécurité';
-		$this->_table['en-en']['::::SecurityChecks']='Security checks';
-		$this->_table['es-co']['::::SecurityChecks']='Controles de seguridad';
+        $this->_table['fr-fr']['::::INFO'] = 'Information';
+        $this->_table['en-en']['::::INFO'] = 'Information';
+        $this->_table['es-co']['::::INFO'] = 'Information';
+        $this->_table['fr-fr']['::::OK'] = 'OK';
+        $this->_table['en-en']['::::OK'] = 'OK';
+        $this->_table['es-co']['::::OK'] = 'OK';
+        $this->_table['fr-fr']['::::INFORMATION'] = 'Message';
+        $this->_table['en-en']['::::INFORMATION'] = 'Message';
+        $this->_table['es-co']['::::INFORMATION'] = 'Mensaje';
+        $this->_table['fr-fr']['::::WARN'] = 'ATTENTION !';
+        $this->_table['en-en']['::::WARN'] = 'WARNING!';
+        $this->_table['es-co']['::::WARN'] = '¡ADVERTENCIA!';
+        $this->_table['fr-fr']['::::ERROR'] = 'ERREUR !';
+        $this->_table['en-en']['::::ERROR'] = 'ERROR!';
+        $this->_table['es-co']['::::ERROR'] = '¡ERROR!';
+        $this->_table['fr-fr']['::::HtmlHeadDescription'] = "Espace ouvert et protégé de partage d'information à durée limitée.";
+        $this->_table['en-en']['::::HtmlHeadDescription'] = 'Open and protected space to share information with limit in time.';
+        $this->_table['es-co']['::::HtmlHeadDescription'] = 'Open and protected space to share information with limit in time.';
+        $this->_table['fr-fr']['::::Experimental'] = '[Experimental]';
+        $this->_table['en-en']['::::Experimental'] = '[Experimental]';
+        $this->_table['es-co']['::::Experimental'] = '[Experimental]';
+        $this->_table['fr-fr']['::::Developpement'] = '[En cours de développement]';
+        $this->_table['en-en']['::::Developpement'] = '[Under developpement]';
+        $this->_table['es-co']['::::Developpement'] = '[Under developpement]';
+        $this->_table['fr-fr']['::::SecurityChecks'] = 'Tests de sécurité';
+        $this->_table['en-en']['::::SecurityChecks'] = 'Security checks';
+        $this->_table['es-co']['::::SecurityChecks'] = 'Controles de seguridad';
 
-		$this->_table['fr-fr']['::ObjectsList']='Lister les objets';
-		$this->_table['en-en']['::ObjectsList']='List of objects';
-		$this->_table['es-co']['::ObjectsList']='List of objects';
-		$this->_table['fr-fr']['::ObjectAdd']='Ajouter un objet';
-		$this->_table['en-en']['::ObjectAdd']='Add an object';
-		$this->_table['es-co']['::ObjectAdd']='Add an object';
-		$this->_table['fr-fr']['::EntitiesList']='Liste des entités';
-		$this->_table['en-en']['::EntitiesList']='List of entities';
-		$this->_table['es-co']['::EntitiesList']='List of entities';
-		$this->_table['fr-fr']['::EntitiesGroup']="Groupe d'entités";
-		$this->_table['en-en']['::EntitiesGroup']='Group of entities';
-		$this->_table['es-co']['::EntitiesGroup']='Group of entities';
-		$this->_table['fr-fr']['::EntitiesGroupList']="Lister les groupes d'entités";
-		$this->_table['en-en']['::EntitiesGroupList']='List groups of entities';
-		$this->_table['es-co']['::EntitiesGroupList']='List groups of entities';
-		$this->_table['fr-fr']['::EntitiesGroupAdd']="Ajouter un groupe d'entités";
-		$this->_table['en-en']['::EntitiesGroupAdd']='Add a group of entities';
-		$this->_table['es-co']['::EntitiesGroupAdd']='Add a group of entities';
-		$this->_table['fr-fr']['::EntityAdd']='Créer une entité';
-		$this->_table['en-en']['::EntityAdd']='Create an entity';
-		$this->_table['es-co']['::EntityAdd']='Create an entity';
-		$this->_table['fr-fr']['::EntityAddError']="Erreur lors de la création de l'entité !";
-		$this->_table['en-en']['::EntityAddError']='Create entity error!';
-		$this->_table['es-co']['::EntityAddError']='Create  entity error!';
-		$this->_table['fr-fr']['::EntitySync']='Synchroniser une entité';
-		$this->_table['en-en']['::EntitySync']='Synchronize an entity';
-		$this->_table['es-co']['::EntitySync']='Synchronize an entity';
+        $this->_table['fr-fr']['::ObjectsList'] = 'Lister les objets';
+        $this->_table['en-en']['::ObjectsList'] = 'List of objects';
+        $this->_table['es-co']['::ObjectsList'] = 'List of objects';
+        $this->_table['fr-fr']['::ObjectAdd'] = 'Ajouter un objet';
+        $this->_table['en-en']['::ObjectAdd'] = 'Add an object';
+        $this->_table['es-co']['::ObjectAdd'] = 'Add an object';
+        $this->_table['fr-fr']['::EntitiesList'] = 'Liste des entités';
+        $this->_table['en-en']['::EntitiesList'] = 'List of entities';
+        $this->_table['es-co']['::EntitiesList'] = 'List of entities';
+        $this->_table['fr-fr']['::EntitiesGroup'] = "Groupe d'entités";
+        $this->_table['en-en']['::EntitiesGroup'] = 'Group of entities';
+        $this->_table['es-co']['::EntitiesGroup'] = 'Group of entities';
+        $this->_table['fr-fr']['::EntitiesGroupList'] = "Lister les groupes d'entités";
+        $this->_table['en-en']['::EntitiesGroupList'] = 'List groups of entities';
+        $this->_table['es-co']['::EntitiesGroupList'] = 'List groups of entities';
+        $this->_table['fr-fr']['::EntitiesGroupAdd'] = "Ajouter un groupe d'entités";
+        $this->_table['en-en']['::EntitiesGroupAdd'] = 'Add a group of entities';
+        $this->_table['es-co']['::EntitiesGroupAdd'] = 'Add a group of entities';
+        $this->_table['fr-fr']['::EntityAdd'] = 'Créer une entité';
+        $this->_table['en-en']['::EntityAdd'] = 'Create an entity';
+        $this->_table['es-co']['::EntityAdd'] = 'Create an entity';
+        $this->_table['fr-fr']['::EntityAddError'] = "Erreur lors de la création de l'entité !";
+        $this->_table['en-en']['::EntityAddError'] = 'Create entity error!';
+        $this->_table['es-co']['::EntityAddError'] = 'Create  entity error!';
+        $this->_table['fr-fr']['::EntitySync'] = 'Synchroniser une entité';
+        $this->_table['en-en']['::EntitySync'] = 'Synchronize an entity';
+        $this->_table['es-co']['::EntitySync'] = 'Synchronize an entity';
 
-		$this->_table['fr-fr']['::Password']='Mot de passe';
-		$this->_table['en-en']['::Password']='Password';
-		$this->_table['es-co']['::Password']='Password';
-		$this->_table['fr-fr']['::EntityLocked']='Entité verrouillée. Déverrouiller ?';
-		$this->_table['en-en']['::EntityLocked']='Entity locked. Unlock?';
-		$this->_table['es-co']['::EntityLocked']='Entidad bloqueada. Desbloquear?';
-		$this->_table['fr-fr']['::EntityUnlocked']='Entité déverrouillée. Verrouiller ?';
-		$this->_table['en-en']['::EntityUnlocked']='Entity unlocked. Lock?';
-		$this->_table['es-co']['::EntityUnlocked']='Entidad desbloqueada. Bloquear?';
-		$this->_table['fr-fr']['::Lock']='Verrouiller';
-		$this->_table['en-en']['::Lock']='Lock';
-		$this->_table['es-co']['::Lock']='Lock';
-		$this->_table['fr-fr']['::Unlock']='Déverrouiller';
-		$this->_table['en-en']['::Unlock']='Unlock';
-		$this->_table['es-co']['::Unlock']='Unlock';
-		#$this->_table['fr-fr']['::ListOrAddObject']='Lister mes objets ou en ajouter un nouveau :';
-		#$this->_table['en-en']['::ListOrAddObject']='List my objects or add a new one:';
-		#$this->_table['es-co']['::ListOrAddObject']='List my objects or add a new one:';
-		$this->_table['fr-fr']['::OKConnect']='Connexion réussi !';
-		$this->_table['en-en']['::OKConnect']='Login successful!';
-		$this->_table['es-co']['::OKConnect']='Login successful!';
+        $this->_table['fr-fr']['::Password'] = 'Mot de passe';
+        $this->_table['en-en']['::Password'] = 'Password';
+        $this->_table['es-co']['::Password'] = 'Password';
+        $this->_table['fr-fr']['::EntityLocked'] = 'Entité verrouillée. Déverrouiller ?';
+        $this->_table['en-en']['::EntityLocked'] = 'Entity locked. Unlock?';
+        $this->_table['es-co']['::EntityLocked'] = 'Entidad bloqueada. Desbloquear?';
+        $this->_table['fr-fr']['::EntityUnlocked'] = 'Entité déverrouillée. Verrouiller ?';
+        $this->_table['en-en']['::EntityUnlocked'] = 'Entity unlocked. Lock?';
+        $this->_table['es-co']['::EntityUnlocked'] = 'Entidad desbloqueada. Bloquear?';
+        $this->_table['fr-fr']['::Lock'] = 'Verrouiller';
+        $this->_table['en-en']['::Lock'] = 'Lock';
+        $this->_table['es-co']['::Lock'] = 'Lock';
+        $this->_table['fr-fr']['::Unlock'] = 'Déverrouiller';
+        $this->_table['en-en']['::Unlock'] = 'Unlock';
+        $this->_table['es-co']['::Unlock'] = 'Unlock';
+        #$this->_table['fr-fr']['::ListOrAddObject']='Lister mes objets ou en ajouter un nouveau :';
+        #$this->_table['en-en']['::ListOrAddObject']='List my objects or add a new one:';
+        #$this->_table['es-co']['::ListOrAddObject']='List my objects or add a new one:';
+        $this->_table['fr-fr']['::OKConnect'] = 'Connexion réussi !';
+        $this->_table['en-en']['::OKConnect'] = 'Login successful!';
+        $this->_table['es-co']['::OKConnect'] = 'Login successful!';
 
-		$this->_table['fr-fr']['::ConnectWith']='Se connecter avec cette entité';
-		$this->_table['en-en']['::ConnectWith']='Connect with this entity';
-		$this->_table['es-co']['::ConnectWith']='Connect with this entity';
-		$this->_table['fr-fr']['::SynchronizeEntity']="Synchroniser l'entité";
-		$this->_table['en-en']['::SynchronizeEntity']='Synchronize entity';
-		$this->_table['es-co']['::SynchronizeEntity']='Synchronize entity';
-		$this->_table['fr-fr']['::ShowObjectsOf']="Voir les objets de l'entité";
-		$this->_table['en-en']['::ShowObjectsOf']="See entity's objects";
-		$this->_table['es-co']['::ShowObjectsOf']="See entity's objects";
-		$this->_table['fr-fr']['::ShowPublicObjectsOf']="Voir les objets publics de l'entité";
-		$this->_table['en-en']['::ShowPublicObjectsOf']="See entity's publics objects";
-		$this->_table['es-co']['::ShowPublicObjectsOf']="See entity's publics objects";
-		$this->_table['fr-fr']['::URL']='URL';
-		$this->_table['en-en']['::URL']='URL';
-		$this->_table['es-co']['::URL']='URL';
-		$this->_table['fr-fr']['::EntityLocalisation']="Localisation de l'entité";
-		$this->_table['en-en']['::EntityLocalisation']="Entity's Localisation";
-		$this->_table['es-co']['::EntityLocalisation']="Entity's Localisation";
-		$this->_table['fr-fr']['::progress']='Chargement en cours...';
-		$this->_table['en-en']['::progress']='In progress...';
-		$this->_table['es-co']['::progress']='In progress...';
+        $this->_table['fr-fr']['::ConnectWith'] = 'Se connecter avec cette entité';
+        $this->_table['en-en']['::ConnectWith'] = 'Connect with this entity';
+        $this->_table['es-co']['::ConnectWith'] = 'Connect with this entity';
+        $this->_table['fr-fr']['::SynchronizeEntity'] = "Synchroniser l'entité";
+        $this->_table['en-en']['::SynchronizeEntity'] = 'Synchronize entity';
+        $this->_table['es-co']['::SynchronizeEntity'] = 'Synchronize entity';
+        $this->_table['fr-fr']['::ShowObjectsOf'] = "Voir les objets de l'entité";
+        $this->_table['en-en']['::ShowObjectsOf'] = "See entity's objects";
+        $this->_table['es-co']['::ShowObjectsOf'] = "See entity's objects";
+        $this->_table['fr-fr']['::ShowPublicObjectsOf'] = "Voir les objets publics de l'entité";
+        $this->_table['en-en']['::ShowPublicObjectsOf'] = "See entity's publics objects";
+        $this->_table['es-co']['::ShowPublicObjectsOf'] = "See entity's publics objects";
+        $this->_table['fr-fr']['::URL'] = 'URL';
+        $this->_table['en-en']['::URL'] = 'URL';
+        $this->_table['es-co']['::URL'] = 'URL';
+        $this->_table['fr-fr']['::EntityLocalisation'] = "Localisation de l'entité";
+        $this->_table['en-en']['::EntityLocalisation'] = "Entity's Localisation";
+        $this->_table['es-co']['::EntityLocalisation'] = "Entity's Localisation";
+        $this->_table['fr-fr']['::progress'] = 'Chargement en cours...';
+        $this->_table['en-en']['::progress'] = 'In progress...';
+        $this->_table['es-co']['::progress'] = 'In progress...';
 
-		$this->_table['fr-fr']['::ObjectHaveUpdate']='Cet objet a une mise à jour.';
-		$this->_table['en-en']['::ObjectHaveUpdate']='This object have an update.';
-		$this->_table['es-co']['::ObjectHaveUpdate']='This object have an update.';
-		$this->_table['fr-fr']['::DownloadObject']="Télécharger l'objet";
-		$this->_table['en-en']['::DownloadObject']='Download the object';
-		$this->_table['es-co']['::DownloadObject']='Download the object';
-		$this->_table['fr-fr']['::DeleteObject']="Supprimer l'objet";
-		$this->_table['en-en']['::DeleteObject']='Delete the object';
-		$this->_table['es-co']['::DeleteObject']='Delete the object';
-		$this->_table['fr-fr']['::UnprotectObject']="Déprotéger l'objet";
-		$this->_table['en-en']['::UnprotectObject']='Unprotect the object';
-		$this->_table['es-co']['::UnprotectObject']='Unprotect the object';
-		$this->_table['fr-fr']['::ProtectObject']="Protéger l'objet";
-		$this->_table['en-en']['::ProtectObject']='Protect the object';
-		$this->_table['es-co']['::ProtectObject']='Protect the object';
-		$this->_table['fr-fr']['::ProtectionOfObject']="Protection de l'objet";
-		$this->_table['en-en']['::ProtectionOfObject']='Protection of the object';
-		$this->_table['es-co']['::ProtectionOfObject']='Protection of the object';
-		$this->_table['fr-fr']['::ShareProtectObject']="Partager la protection de l'objet";
-		$this->_table['en-en']['::ShareProtectObject']='Share protection of the object';
-		$this->_table['es-co']['::ShareProtectObject']='Share protection of the object';
-		$this->_table['fr-fr']['::WarningSharedProtection']="Lorsque la protection d'un objet est partagée, son annulation est incertaine !";
-		$this->_table['en-en']['::WarningSharedProtection']='When protection of an object is shared, its cancellation is uncertain!';
-		$this->_table['es-co']['::WarningSharedProtection']='Donde se comparte la protección de un objeto, su cancelación esta incierto!';
-		$this->_table['fr-fr']['::RemoveShareProtect']='Annuler le partager de protection';
-		$this->_table['en-en']['::RemoveShareProtect']='Cancel share protection';
-		$this->_table['es-co']['::RemoveShareProtect']='Cancel share protection';
-		$this->_table['fr-fr']['::ProtectedObject']='Cet objet est protégé.';
-		$this->_table['en-en']['::ProtectedObject']='This object is protected.';
-		$this->_table['es-co']['::ProtectedObject']='This object is protected.';
-		$this->_table['fr-fr']['::WarningProtectObject']="La protection d'un objet déjà existant est incertaine !";
-		$this->_table['en-en']['::WarningProtectObject']='The protection of an existing object is uncertain!';
-		$this->_table['es-co']['::WarningProtectObject']='The protection of an existing object is uncertain!';
-		$this->_table['fr-fr']['::UnprotectedObject']="Cet objet n'est pas protégé.";
-		$this->_table['en-en']['::UnprotectedObject']='This object is not protected.';
-		$this->_table['es-co']['::UnprotectedObject']='This object is not protected.';
-		$this->_table['fr-fr']['::NoEntity']="Pas d'entité à afficher.";
-		$this->_table['en-en']['::NoEntity']='No entity to display.';
-		$this->_table['es-co']['::NoEntity']='No entity to display.';
-		$this->_table['fr-fr']['::NoEntityGroup']="Pas de groupe d'entité à afficher.";
-		$this->_table['en-en']['::NoEntityGroup']='No group of entity to display.';
-		$this->_table['es-co']['::NoEntityGroup']='No group of entity to display.';
-		$this->_table['fr-fr']['::UniqueID']='Identifiant universel : %s';
-		$this->_table['en-en']['::UniqueID']='Universal identifier : %s';
-		$this->_table['es-co']['::UniqueID']='Universal identifier : %s';
-		$this->_table['fr-fr']['::UploadedNewFile']='Nouveau fichier envoyé';
-		$this->_table['en-en']['::UploadedNewFile']='New file send';
-		$this->_table['es-co']['::UploadedNewFile']='New file send';
-		$this->_table['fr-fr']['::UploadedNewFileOK']='Transfert réussi.';
-		$this->_table['en-en']['::UploadedNewFileOK']='Upload successful.';
-		$this->_table['es-co']['::UploadedNewFileOK']='Upload successful.';
-		$this->_table['fr-fr']['::UploadedNewFileError']='Transfert échoué !';
-		$this->_table['en-en']['::UploadedNewFileError']='Upload failed!';
-		$this->_table['es-co']['::UploadedNewFileError']='Upload failed!';
-		$this->_table['fr-fr']['::AddBy']='Ajouté par';
-		$this->_table['en-en']['::AddBy']='Added by';
-		$this->_table['es-co']['::AddBy']='Added by';
+        $this->_table['fr-fr']['::ObjectHaveUpdate'] = 'Cet objet a une mise à jour.';
+        $this->_table['en-en']['::ObjectHaveUpdate'] = 'This object have an update.';
+        $this->_table['es-co']['::ObjectHaveUpdate'] = 'This object have an update.';
+        $this->_table['fr-fr']['::DownloadObject'] = "Télécharger l'objet";
+        $this->_table['en-en']['::DownloadObject'] = 'Download the object';
+        $this->_table['es-co']['::DownloadObject'] = 'Download the object';
+        $this->_table['fr-fr']['::DeleteObject'] = "Supprimer l'objet";
+        $this->_table['en-en']['::DeleteObject'] = 'Delete the object';
+        $this->_table['es-co']['::DeleteObject'] = 'Delete the object';
+        $this->_table['fr-fr']['::UnprotectObject'] = "Déprotéger l'objet";
+        $this->_table['en-en']['::UnprotectObject'] = 'Unprotect the object';
+        $this->_table['es-co']['::UnprotectObject'] = 'Unprotect the object';
+        $this->_table['fr-fr']['::ProtectObject'] = "Protéger l'objet";
+        $this->_table['en-en']['::ProtectObject'] = 'Protect the object';
+        $this->_table['es-co']['::ProtectObject'] = 'Protect the object';
+        $this->_table['fr-fr']['::ProtectionOfObject'] = "Protection de l'objet";
+        $this->_table['en-en']['::ProtectionOfObject'] = 'Protection of the object';
+        $this->_table['es-co']['::ProtectionOfObject'] = 'Protection of the object';
+        $this->_table['fr-fr']['::ShareProtectObject'] = "Partager la protection de l'objet";
+        $this->_table['en-en']['::ShareProtectObject'] = 'Share protection of the object';
+        $this->_table['es-co']['::ShareProtectObject'] = 'Share protection of the object';
+        $this->_table['fr-fr']['::WarningSharedProtection'] = "Lorsque la protection d'un objet est partagée, son annulation est incertaine !";
+        $this->_table['en-en']['::WarningSharedProtection'] = 'When protection of an object is shared, its cancellation is uncertain!';
+        $this->_table['es-co']['::WarningSharedProtection'] = 'Donde se comparte la protección de un objeto, su cancelación esta incierto!';
+        $this->_table['fr-fr']['::RemoveShareProtect'] = 'Annuler le partager de protection';
+        $this->_table['en-en']['::RemoveShareProtect'] = 'Cancel share protection';
+        $this->_table['es-co']['::RemoveShareProtect'] = 'Cancel share protection';
+        $this->_table['fr-fr']['::ProtectedObject'] = 'Cet objet est protégé.';
+        $this->_table['en-en']['::ProtectedObject'] = 'This object is protected.';
+        $this->_table['es-co']['::ProtectedObject'] = 'This object is protected.';
+        $this->_table['fr-fr']['::WarningProtectObject'] = "La protection d'un objet déjà existant est incertaine !";
+        $this->_table['en-en']['::WarningProtectObject'] = 'The protection of an existing object is uncertain!';
+        $this->_table['es-co']['::WarningProtectObject'] = 'The protection of an existing object is uncertain!';
+        $this->_table['fr-fr']['::UnprotectedObject'] = "Cet objet n'est pas protégé.";
+        $this->_table['en-en']['::UnprotectedObject'] = 'This object is not protected.';
+        $this->_table['es-co']['::UnprotectedObject'] = 'This object is not protected.';
+        $this->_table['fr-fr']['::NoEntity'] = "Pas d'entité à afficher.";
+        $this->_table['en-en']['::NoEntity'] = 'No entity to display.';
+        $this->_table['es-co']['::NoEntity'] = 'No entity to display.';
+        $this->_table['fr-fr']['::NoEntityGroup'] = "Pas de groupe d'entité à afficher.";
+        $this->_table['en-en']['::NoEntityGroup'] = 'No group of entity to display.';
+        $this->_table['es-co']['::NoEntityGroup'] = 'No group of entity to display.';
+        $this->_table['fr-fr']['::UniqueID'] = 'Identifiant universel : %s';
+        $this->_table['en-en']['::UniqueID'] = 'Universal identifier : %s';
+        $this->_table['es-co']['::UniqueID'] = 'Universal identifier : %s';
+        $this->_table['fr-fr']['::UploadedNewFile'] = 'Nouveau fichier envoyé';
+        $this->_table['en-en']['::UploadedNewFile'] = 'New file send';
+        $this->_table['es-co']['::UploadedNewFile'] = 'New file send';
+        $this->_table['fr-fr']['::UploadedNewFileOK'] = 'Transfert réussi.';
+        $this->_table['en-en']['::UploadedNewFileOK'] = 'Upload successful.';
+        $this->_table['es-co']['::UploadedNewFileOK'] = 'Upload successful.';
+        $this->_table['fr-fr']['::UploadedNewFileError'] = 'Transfert échoué !';
+        $this->_table['en-en']['::UploadedNewFileError'] = 'Upload failed!';
+        $this->_table['es-co']['::UploadedNewFileError'] = 'Upload failed!';
+        $this->_table['fr-fr']['::AddBy'] = 'Ajouté par';
+        $this->_table['en-en']['::AddBy'] = 'Added by';
+        $this->_table['es-co']['::AddBy'] = 'Added by';
 
-		$this->_table['fr-fr']['::NewEntityCreated']='Nouvelle entité créée';
-		$this->_table['en-en']['::NewEntityCreated']='New entity created';
-		$this->_table['es-co']['::NewEntityCreated']='New entity created';
-		$this->_table['fr-fr']['::PublID']='Identifiant public';
-		$this->_table['en-en']['::PublID']='Public identifier';
-		$this->_table['es-co']['::PublID']='Public identifier';
-		$this->_table['fr-fr']['::PrivID']='Identifiant privé';
-		$this->_table['en-en']['::PrivID']='Private identifier';
-		$this->_table['es-co']['::PrivID']='Private identifier';
-		$this->_table['fr-fr']['::ProtectedID']='Identifiant objet protégé';
-		$this->_table['en-en']['::ProtectedID']='Protected object identifier';
-		$this->_table['es-co']['::ProtectedID']='Protected object identifier';
-		$this->_table['fr-fr']['::UnprotectedID']='Identifiant objet non protégé';
-		$this->_table['en-en']['::UnprotectedID']='Unprotected object identifier';
-		$this->_table['es-co']['::UnprotectedID']='Unprotected object identifier';
-		$this->_table['fr-fr']['::CreateEntity']="Créer l'entité";
-		$this->_table['en-en']['::CreateEntity']='Create entity';
-		$this->_table['es-co']['::CreateEntity']='Create entity';
-		$this->_table['fr-fr']['::Prenom']='Prénom';
-		$this->_table['en-en']['::Prenom']='First name';
-		$this->_table['es-co']['::Prenom']='First name';
-		$this->_table['fr-fr']['::Nom']='Nom';
-		$this->_table['en-en']['::Nom']='Name';
-		$this->_table['es-co']['::Nom']='Name';
-		$this->_table['fr-fr']['::Nommage']='Nommage';
-		$this->_table['en-en']['::Nommage']='Naming';
-		$this->_table['es-co']['::Nommage']='Naming';
-		$this->_table['fr-fr']['::Password']='Mot de passe';
-		$this->_table['en-en']['::Password']='Password';
-		$this->_table['es-co']['::Password']='Password';
-		$this->_table['fr-fr']['::Confirmation']='Confirmation';
-		$this->_table['en-en']['::Confirmation']='Confirmation';
-		$this->_table['es-co']['::Confirmation']='Confirmation';
-		$this->_table['fr-fr']['::CreateAnEntity']='Créer une entité';
-		$this->_table['en-en']['::CreateAnEntity']='Create an entity';
-		$this->_table['es-co']['::CreateAnEntity']='Create an entity';
+        $this->_table['fr-fr']['::NewEntityCreated'] = 'Nouvelle entité créée';
+        $this->_table['en-en']['::NewEntityCreated'] = 'New entity created';
+        $this->_table['es-co']['::NewEntityCreated'] = 'New entity created';
+        $this->_table['fr-fr']['::PublID'] = 'Identifiant public';
+        $this->_table['en-en']['::PublID'] = 'Public identifier';
+        $this->_table['es-co']['::PublID'] = 'Public identifier';
+        $this->_table['fr-fr']['::PrivID'] = 'Identifiant privé';
+        $this->_table['en-en']['::PrivID'] = 'Private identifier';
+        $this->_table['es-co']['::PrivID'] = 'Private identifier';
+        $this->_table['fr-fr']['::ProtectedID'] = 'Identifiant objet protégé';
+        $this->_table['en-en']['::ProtectedID'] = 'Protected object identifier';
+        $this->_table['es-co']['::ProtectedID'] = 'Protected object identifier';
+        $this->_table['fr-fr']['::UnprotectedID'] = 'Identifiant objet non protégé';
+        $this->_table['en-en']['::UnprotectedID'] = 'Unprotected object identifier';
+        $this->_table['es-co']['::UnprotectedID'] = 'Unprotected object identifier';
+        $this->_table['fr-fr']['::CreateEntity'] = "Créer l'entité";
+        $this->_table['en-en']['::CreateEntity'] = 'Create entity';
+        $this->_table['es-co']['::CreateEntity'] = 'Create entity';
+        $this->_table['fr-fr']['::Prenom'] = 'Prénom';
+        $this->_table['en-en']['::Prenom'] = 'First name';
+        $this->_table['es-co']['::Prenom'] = 'First name';
+        $this->_table['fr-fr']['::Nom'] = 'Nom';
+        $this->_table['en-en']['::Nom'] = 'Name';
+        $this->_table['es-co']['::Nom'] = 'Name';
+        $this->_table['fr-fr']['::Nommage'] = 'Nommage';
+        $this->_table['en-en']['::Nommage'] = 'Naming';
+        $this->_table['es-co']['::Nommage'] = 'Naming';
+        $this->_table['fr-fr']['::Password'] = 'Mot de passe';
+        $this->_table['en-en']['::Password'] = 'Password';
+        $this->_table['es-co']['::Password'] = 'Password';
+        $this->_table['fr-fr']['::Confirmation'] = 'Confirmation';
+        $this->_table['en-en']['::Confirmation'] = 'Confirmation';
+        $this->_table['es-co']['::Confirmation'] = 'Confirmation';
+        $this->_table['fr-fr']['::CreateAnEntity'] = 'Créer une entité';
+        $this->_table['en-en']['::CreateAnEntity'] = 'Create an entity';
+        $this->_table['es-co']['::CreateAnEntity'] = 'Create an entity';
 
-		$this->_table['fr-fr']['::CreateTheGroup']='Créer le groupe';
-		$this->_table['en-en']['::CreateTheGroup']='Create the group';
-		$this->_table['es-co']['::CreateTheGroup']='Create the group';
-		$this->_table['fr-fr']['::GroupeFerme']='Groupe fermé';
-		$this->_table['en-en']['::GroupeFerme']='Closed group';
-		$this->_table['es-co']['::GroupeFerme']='Closed group';
-		$this->_table['fr-fr']['::GroupeOuvert']='Groupe ouvert';
-		$this->_table['en-en']['::GroupeOuvert']='Opened group';
-		$this->_table['es-co']['::GroupeOuvert']='Opened group';
-		$this->_table['fr-fr']['::CreatedGroup']='Groupe créé';
-		$this->_table['en-en']['::CreatedGroup']='Created group';
-		$this->_table['es-co']['::CreatedGroup']='Created group';
-		$this->_table['fr-fr']['::OKCreateGroup']='Le groupe a été créé.';
-		$this->_table['en-en']['::OKCreateGroup']='The group have been created.';
-		$this->_table['es-co']['::OKCreateGroup']='The group have been created.';
-		$this->_table['fr-fr']['::NOKCreateGroup']="Le groupe n'a pas été créé ! %s";
-		$this->_table['en-en']['::NOKCreateGroup']='The group have not been created! %s';
-		$this->_table['es-co']['::NOKCreateGroup']='The group have not been created! %s';
-		$this->_table['fr-fr']['::DeleteGroup']='Supprimer le groupe';
-		$this->_table['en-en']['::DeleteGroup']='Delete the group';
-		$this->_table['es-co']['::DeleteGroup']='Delete the group';
-		$this->_table['fr-fr']['::AddToGroup']='Ajouter au groupe';
-		$this->_table['en-en']['::AddToGroup']='Add to group';
-		$this->_table['es-co']['::AddToGroup']='Add to group';
-		$this->_table['fr-fr']['::RemoveFromGroup']='Retirer du groupe';
-		$this->_table['en-en']['::RemoveFromGroup']='Remove from group';
-		$this->_table['es-co']['::RemoveFromGroup']='Remove from group';
-		$this->_table['fr-fr']['::NoGroupMember']="L'entité n'est pas membre d'un groupe.";
-		$this->_table['en-en']['::NoGroupMember']='This entity is member of any group.';
-		$this->_table['es-co']['::NoGroupMember']='This entity is member of any group.';
-		$this->_table['fr-fr']['::GroupList']='Liste des groupes';
-		$this->_table['en-en']['::GroupList']='List of groups';
-		$this->_table['es-co']['::GroupList']='List of groups';
+        $this->_table['fr-fr']['::CreateTheGroup'] = 'Créer le groupe';
+        $this->_table['en-en']['::CreateTheGroup'] = 'Create the group';
+        $this->_table['es-co']['::CreateTheGroup'] = 'Create the group';
+        $this->_table['fr-fr']['::GroupeFerme'] = 'Groupe fermé';
+        $this->_table['en-en']['::GroupeFerme'] = 'Closed group';
+        $this->_table['es-co']['::GroupeFerme'] = 'Closed group';
+        $this->_table['fr-fr']['::GroupeOuvert'] = 'Groupe ouvert';
+        $this->_table['en-en']['::GroupeOuvert'] = 'Opened group';
+        $this->_table['es-co']['::GroupeOuvert'] = 'Opened group';
+        $this->_table['fr-fr']['::CreatedGroup'] = 'Groupe créé';
+        $this->_table['en-en']['::CreatedGroup'] = 'Created group';
+        $this->_table['es-co']['::CreatedGroup'] = 'Created group';
+        $this->_table['fr-fr']['::OKCreateGroup'] = 'Le groupe a été créé.';
+        $this->_table['en-en']['::OKCreateGroup'] = 'The group have been created.';
+        $this->_table['es-co']['::OKCreateGroup'] = 'The group have been created.';
+        $this->_table['fr-fr']['::NOKCreateGroup'] = "Le groupe n'a pas été créé ! %s";
+        $this->_table['en-en']['::NOKCreateGroup'] = 'The group have not been created! %s';
+        $this->_table['es-co']['::NOKCreateGroup'] = 'The group have not been created! %s';
+        $this->_table['fr-fr']['::DeleteGroup'] = 'Supprimer le groupe';
+        $this->_table['en-en']['::DeleteGroup'] = 'Delete the group';
+        $this->_table['es-co']['::DeleteGroup'] = 'Delete the group';
+        $this->_table['fr-fr']['::AddToGroup'] = 'Ajouter au groupe';
+        $this->_table['en-en']['::AddToGroup'] = 'Add to group';
+        $this->_table['es-co']['::AddToGroup'] = 'Add to group';
+        $this->_table['fr-fr']['::RemoveFromGroup'] = 'Retirer du groupe';
+        $this->_table['en-en']['::RemoveFromGroup'] = 'Remove from group';
+        $this->_table['es-co']['::RemoveFromGroup'] = 'Remove from group';
+        $this->_table['fr-fr']['::NoGroupMember'] = "L'entité n'est pas membre d'un groupe.";
+        $this->_table['en-en']['::NoGroupMember'] = 'This entity is member of any group.';
+        $this->_table['es-co']['::NoGroupMember'] = 'This entity is member of any group.';
+        $this->_table['fr-fr']['::GroupList'] = 'Liste des groupes';
+        $this->_table['en-en']['::GroupList'] = 'List of groups';
+        $this->_table['es-co']['::GroupList'] = 'List of groups';
 
-		//$this->_table['fr-fr']['::UploadFile']='Transfert de fichier';
-		//$this->_table['en-en']['::UploadFile']='File upload';
-		//$this->_table['es-co']['::UploadFile']='File upload';
-		$this->_table['fr-fr']['::SelectUploadFile']='Sélectionner un fichier à envoyer';
-		$this->_table['en-en']['::SelectUploadFile']='Select file to upload';
-		$this->_table['es-co']['::SelectUploadFile']='Select file to upload';
-		$this->_table['fr-fr']['::SubmitProtectFile']='Protéger le fichier après le transfert';
-		$this->_table['en-en']['::SubmitProtectFile']='Protect file after upload';
-		$this->_table['es-co']['::SubmitProtectFile']='Protect file after upload';
-		$this->_table['fr-fr']['::SubmitLiveTimeFile']='Durée de vie du fichier';
-		$this->_table['en-en']['::SubmitLiveTimeFile']='Time to live of file';
-		$this->_table['es-co']['::SubmitLiveTimeFile']='Time to live of file';
-		$this->_table['fr-fr']['::RenewLiveTimeFile']='Renouveler la durée de vie';
-		$this->_table['en-en']['::RenewLiveTimeFile']='Renew the time to live';
-		$this->_table['es-co']['::RenewLiveTimeFile']='Renew the time to live';
-		$this->_table['fr-fr']['::SubmitShowTimeFile']='Nombre de visualisation du fichier';
-		$this->_table['en-en']['::SubmitShowTimeFile']='Display count of file';
-		$this->_table['es-co']['::SubmitShowTimeFile']='Display count of file';
-		$this->_table['fr-fr']['::LiveTime']='Durée de vie';
-		$this->_table['en-en']['::LiveTime']='Time to live';
-		$this->_table['es-co']['::LiveTime']='Time to live';
-		$this->_table['fr-fr']['::ShowTime']='Nombre de vues';
-		$this->_table['en-en']['::ShowTime']='Display count';
-		$this->_table['es-co']['::ShowTime']='Display count';
-		$this->_table['fr-fr']['::SubmitFile']='Envoyer';
-		$this->_table['en-en']['::SubmitFile']='Upload';
-		$this->_table['es-co']['::SubmitFile']='Upload';
-		$this->_table['fr-fr']['::UploadMaxFileSize']='Taille maximum du fichier accepté';
-		$this->_table['en-en']['::UploadMaxFileSize']='Maximum autorized file size';
-		$this->_table['es-co']['::UploadMaxFileSize']='Maximum autorized file size';
-		$this->_table['fr-fr']['::1h']='1 heure';
-		$this->_table['en-en']['::1h']='1 hour';
-		$this->_table['es-co']['::1h']='1 hour';
-		$this->_table['fr-fr']['::2h']='2 heures';
-		$this->_table['en-en']['::2h']='2 hours';
-		$this->_table['es-co']['::2h']='2 hours';
-		$this->_table['fr-fr']['::1d']='1 jour';
-		$this->_table['en-en']['::1d']='1 day';
-		$this->_table['es-co']['::1d']='1 day';
-		$this->_table['fr-fr']['::2d']='2 jours';
-		$this->_table['en-en']['::2d']='2 days';
-		$this->_table['es-co']['::2d']='2 days';
-		$this->_table['fr-fr']['::1w']='1 semaine';
-		$this->_table['en-en']['::1w']='1 week';
-		$this->_table['es-co']['::1w']='1 week';
-		$this->_table['fr-fr']['::2w']='2 semaines';
-		$this->_table['en-en']['::2w']='2 weeks';
-		$this->_table['es-co']['::2w']='2 weeks';
-		$this->_table['fr-fr']['::1m']='1 mois';
-		$this->_table['en-en']['::1m']='1 mouth';
-		$this->_table['es-co']['::1m']='1 mouth';
-		$this->_table['fr-fr']['::2m']='2 mois';
-		$this->_table['en-en']['::2m']='2 mouths';
-		$this->_table['es-co']['::2m']='2 mouths';
-		$this->_table['fr-fr']['::1y']='1 an';
-		$this->_table['en-en']['::1y']='1 year';
-		$this->_table['es-co']['::1y']='1 year';
-		$this->_table['fr-fr']['::2y']='2 ans';
-		$this->_table['en-en']['::2y']='2 years';
-		$this->_table['es-co']['::2y']='2 years';
-		$this->_table['fr-fr']['::Unlimited']='illimité';
-		$this->_table['en-en']['::Unlimited']='unlimited';
-		$this->_table['es-co']['::Unlimited']='unlimited';
-		$this->_table['fr-fr']['::Expired']='Expiré';
-		$this->_table['en-en']['::Expired']='Expired';
-		$this->_table['es-co']['::Expired']='Expired';
-		$this->_table['fr-fr']['::Limit']='Limite';
-		$this->_table['en-en']['::Limit']='Limit';
-		$this->_table['es-co']['::Limit']='Limit';
-		$this->_table['fr-fr']['::ExpireIn']='Expire dans';
-		$this->_table['en-en']['::ExpireIn']='Expire in';
-		$this->_table['es-co']['::ExpireIn']='Expire in';
-		$this->_table['fr-fr']['::and']='et';
-		$this->_table['en-en']['::and']='and';
-		$this->_table['es-co']['::and']='and';
-		$this->_table['fr-fr']['::Second']='seconde';
-		$this->_table['en-en']['::Second']='second';
-		$this->_table['es-co']['::Second']='second';
-		$this->_table['fr-fr']['::Seconds']='secondes';
-		$this->_table['en-en']['::Seconds']='seconds';
-		$this->_table['es-co']['::Seconds']='seconds';
-		$this->_table['fr-fr']['::Minute']='minute';
-		$this->_table['en-en']['::Minute']='minute';
-		$this->_table['es-co']['::Minute']='minute';
-		$this->_table['fr-fr']['::Minutes']='minutes';
-		$this->_table['en-en']['::Minutes']='minutes';
-		$this->_table['es-co']['::Minutes']='minutes';
-		$this->_table['fr-fr']['::Hour']='heure';
-		$this->_table['en-en']['::Hour']='hour';
-		$this->_table['es-co']['::Hour']='hour';
-		$this->_table['fr-fr']['::Hours']='heures';
-		$this->_table['en-en']['::Hours']='hours';
-		$this->_table['es-co']['::Hours']='hours';
-		$this->_table['fr-fr']['::Day']='jour';
-		$this->_table['en-en']['::Day']='day';
-		$this->_table['es-co']['::Day']='day';
-		$this->_table['fr-fr']['::Days']='jours';
-		$this->_table['en-en']['::Days']='days';
-		$this->_table['es-co']['::Days']='days';
-		$this->_table['fr-fr']['::Month']='mois';
-		$this->_table['en-en']['::Month']='mouth';
-		$this->_table['es-co']['::Month']='mouth';
-		$this->_table['fr-fr']['::Months']='mois';
-		$this->_table['en-en']['::Months']='mouths';
-		$this->_table['es-co']['::Months']='mouths';
-		$this->_table['fr-fr']['::Year']='an';
-		$this->_table['en-en']['::Year']='year';
-		$this->_table['es-co']['::Year']='year';
-		$this->_table['fr-fr']['::Years']='ans';
-		$this->_table['en-en']['::Years']='years';
-		$this->_table['es-co']['::Years']='years';
+        //$this->_table['fr-fr']['::UploadFile']='Transfert de fichier';
+        //$this->_table['en-en']['::UploadFile']='File upload';
+        //$this->_table['es-co']['::UploadFile']='File upload';
+        $this->_table['fr-fr']['::SelectUploadFile'] = 'Sélectionner un fichier à envoyer';
+        $this->_table['en-en']['::SelectUploadFile'] = 'Select file to upload';
+        $this->_table['es-co']['::SelectUploadFile'] = 'Select file to upload';
+        $this->_table['fr-fr']['::SubmitProtectFile'] = 'Protéger le fichier après le transfert';
+        $this->_table['en-en']['::SubmitProtectFile'] = 'Protect file after upload';
+        $this->_table['es-co']['::SubmitProtectFile'] = 'Protect file after upload';
+        $this->_table['fr-fr']['::SubmitLiveTimeFile'] = 'Durée de vie du fichier';
+        $this->_table['en-en']['::SubmitLiveTimeFile'] = 'Time to live of file';
+        $this->_table['es-co']['::SubmitLiveTimeFile'] = 'Time to live of file';
+        $this->_table['fr-fr']['::RenewLiveTimeFile'] = 'Renouveler la durée de vie';
+        $this->_table['en-en']['::RenewLiveTimeFile'] = 'Renew the time to live';
+        $this->_table['es-co']['::RenewLiveTimeFile'] = 'Renew the time to live';
+        $this->_table['fr-fr']['::SubmitShowTimeFile'] = 'Nombre de visualisation du fichier';
+        $this->_table['en-en']['::SubmitShowTimeFile'] = 'Display count of file';
+        $this->_table['es-co']['::SubmitShowTimeFile'] = 'Display count of file';
+        $this->_table['fr-fr']['::LiveTime'] = 'Durée de vie';
+        $this->_table['en-en']['::LiveTime'] = 'Time to live';
+        $this->_table['es-co']['::LiveTime'] = 'Time to live';
+        $this->_table['fr-fr']['::ShowTime'] = 'Nombre de vues';
+        $this->_table['en-en']['::ShowTime'] = 'Display count';
+        $this->_table['es-co']['::ShowTime'] = 'Display count';
+        $this->_table['fr-fr']['::SubmitFile'] = 'Envoyer';
+        $this->_table['en-en']['::SubmitFile'] = 'Upload';
+        $this->_table['es-co']['::SubmitFile'] = 'Upload';
+        $this->_table['fr-fr']['::UploadMaxFileSize'] = 'Taille maximum du fichier accepté';
+        $this->_table['en-en']['::UploadMaxFileSize'] = 'Maximum autorized file size';
+        $this->_table['es-co']['::UploadMaxFileSize'] = 'Maximum autorized file size';
+        $this->_table['fr-fr']['::1h'] = '1 heure';
+        $this->_table['en-en']['::1h'] = '1 hour';
+        $this->_table['es-co']['::1h'] = '1 hour';
+        $this->_table['fr-fr']['::2h'] = '2 heures';
+        $this->_table['en-en']['::2h'] = '2 hours';
+        $this->_table['es-co']['::2h'] = '2 hours';
+        $this->_table['fr-fr']['::1d'] = '1 jour';
+        $this->_table['en-en']['::1d'] = '1 day';
+        $this->_table['es-co']['::1d'] = '1 day';
+        $this->_table['fr-fr']['::2d'] = '2 jours';
+        $this->_table['en-en']['::2d'] = '2 days';
+        $this->_table['es-co']['::2d'] = '2 days';
+        $this->_table['fr-fr']['::1w'] = '1 semaine';
+        $this->_table['en-en']['::1w'] = '1 week';
+        $this->_table['es-co']['::1w'] = '1 week';
+        $this->_table['fr-fr']['::2w'] = '2 semaines';
+        $this->_table['en-en']['::2w'] = '2 weeks';
+        $this->_table['es-co']['::2w'] = '2 weeks';
+        $this->_table['fr-fr']['::1m'] = '1 mois';
+        $this->_table['en-en']['::1m'] = '1 mouth';
+        $this->_table['es-co']['::1m'] = '1 mouth';
+        $this->_table['fr-fr']['::2m'] = '2 mois';
+        $this->_table['en-en']['::2m'] = '2 mouths';
+        $this->_table['es-co']['::2m'] = '2 mouths';
+        $this->_table['fr-fr']['::1y'] = '1 an';
+        $this->_table['en-en']['::1y'] = '1 year';
+        $this->_table['es-co']['::1y'] = '1 year';
+        $this->_table['fr-fr']['::2y'] = '2 ans';
+        $this->_table['en-en']['::2y'] = '2 years';
+        $this->_table['es-co']['::2y'] = '2 years';
+        $this->_table['fr-fr']['::Unlimited'] = 'illimité';
+        $this->_table['en-en']['::Unlimited'] = 'unlimited';
+        $this->_table['es-co']['::Unlimited'] = 'unlimited';
+        $this->_table['fr-fr']['::Expired'] = 'Expiré';
+        $this->_table['en-en']['::Expired'] = 'Expired';
+        $this->_table['es-co']['::Expired'] = 'Expired';
+        $this->_table['fr-fr']['::Limit'] = 'Limite';
+        $this->_table['en-en']['::Limit'] = 'Limit';
+        $this->_table['es-co']['::Limit'] = 'Limit';
+        $this->_table['fr-fr']['::ExpireIn'] = 'Expire dans';
+        $this->_table['en-en']['::ExpireIn'] = 'Expire in';
+        $this->_table['es-co']['::ExpireIn'] = 'Expire in';
+        $this->_table['fr-fr']['::and'] = 'et';
+        $this->_table['en-en']['::and'] = 'and';
+        $this->_table['es-co']['::and'] = 'and';
+        $this->_table['fr-fr']['::Second'] = 'seconde';
+        $this->_table['en-en']['::Second'] = 'second';
+        $this->_table['es-co']['::Second'] = 'second';
+        $this->_table['fr-fr']['::Seconds'] = 'secondes';
+        $this->_table['en-en']['::Seconds'] = 'seconds';
+        $this->_table['es-co']['::Seconds'] = 'seconds';
+        $this->_table['fr-fr']['::Minute'] = 'minute';
+        $this->_table['en-en']['::Minute'] = 'minute';
+        $this->_table['es-co']['::Minute'] = 'minute';
+        $this->_table['fr-fr']['::Minutes'] = 'minutes';
+        $this->_table['en-en']['::Minutes'] = 'minutes';
+        $this->_table['es-co']['::Minutes'] = 'minutes';
+        $this->_table['fr-fr']['::Hour'] = 'heure';
+        $this->_table['en-en']['::Hour'] = 'hour';
+        $this->_table['es-co']['::Hour'] = 'hour';
+        $this->_table['fr-fr']['::Hours'] = 'heures';
+        $this->_table['en-en']['::Hours'] = 'hours';
+        $this->_table['es-co']['::Hours'] = 'hours';
+        $this->_table['fr-fr']['::Day'] = 'jour';
+        $this->_table['en-en']['::Day'] = 'day';
+        $this->_table['es-co']['::Day'] = 'day';
+        $this->_table['fr-fr']['::Days'] = 'jours';
+        $this->_table['en-en']['::Days'] = 'days';
+        $this->_table['es-co']['::Days'] = 'days';
+        $this->_table['fr-fr']['::Month'] = 'mois';
+        $this->_table['en-en']['::Month'] = 'mouth';
+        $this->_table['es-co']['::Month'] = 'mouth';
+        $this->_table['fr-fr']['::Months'] = 'mois';
+        $this->_table['en-en']['::Months'] = 'mouths';
+        $this->_table['es-co']['::Months'] = 'mouths';
+        $this->_table['fr-fr']['::Year'] = 'an';
+        $this->_table['en-en']['::Year'] = 'year';
+        $this->_table['es-co']['::Year'] = 'year';
+        $this->_table['fr-fr']['::Years'] = 'ans';
+        $this->_table['en-en']['::Years'] = 'years';
+        $this->_table['es-co']['::Years'] = 'years';
 
-		$this->_table['fr-fr']['::ObjectList']='Liste des objets';
-		$this->_table['en-en']['::ObjectList']='Objects list';
-		$this->_table['es-co']['::ObjectList']='Objects list';
-		$this->_table['fr-fr']['::AllNotDisplayed']='Les objets protégés ne sont pas accessibles.';
-		$this->_table['en-en']['::AllNotDisplayed']='Protected objects are not be displayed.';
-		$this->_table['es-co']['::AllNotDisplayed']='Protected objects are not be displayed.';
-		$this->_table['fr-fr']['::NoFile']="Pas d'objet à afficher !";
-		$this->_table['en-en']['::NoFile']='No object to display!';
-		$this->_table['es-co']['::NoFile']='No object to display!';
+        $this->_table['fr-fr']['::ObjectList'] = 'Liste des objets';
+        $this->_table['en-en']['::ObjectList'] = 'Objects list';
+        $this->_table['es-co']['::ObjectList'] = 'Objects list';
+        $this->_table['fr-fr']['::AllNotDisplayed'] = 'Les objets protégés ne sont pas accessibles.';
+        $this->_table['en-en']['::AllNotDisplayed'] = 'Protected objects are not be displayed.';
+        $this->_table['es-co']['::AllNotDisplayed'] = 'Protected objects are not be displayed.';
+        $this->_table['fr-fr']['::NoFile'] = "Pas d'objet à afficher !";
+        $this->_table['en-en']['::NoFile'] = 'No object to display!';
+        $this->_table['es-co']['::NoFile'] = 'No object to display!';
 
-		$this->_table['fr-fr']['::EmptyList']='Liste vide.';
-		$this->_table['en-en']['::EmptyList']='Empty list.';
-		$this->_table['es-co']['::EmptyList']='Empty list.';
-		
-		$this->_table['fr-fr']['::NoRecoveryEntity']="Pas d'entité de recouvrement des objets protégés sur ce serveur.";
-		$this->_table['en-en']['::NoRecoveryEntity']='No recovery entity for protected objects on this server.';
-		$this->_table['es-co']['::NoRecoveryEntity']='No recovery entity for protected objects on this server.';
-		$this->_table['fr-fr']['::ProtectionRecovery']='Recouvrement des objets protégés';
-		$this->_table['en-en']['::ProtectionRecovery']='Recovery of protected objects';
-		$this->_table['es-co']['::ProtectionRecovery']='Recovery of protected objects';
-		
-		$this->_table['fr-fr']['::MarkAdd']='Marquer';
-		$this->_table['en-en']['::MarkAdd']='Mark';
-		$this->_table['es-co']['::MarkAdd']='Mark';
-		$this->_table['fr-fr']['::MarkRemove']='Démarquer';
-		$this->_table['en-en']['::MarkRemove']='Unmark';
-		$this->_table['es-co']['::MarkRemove']='Unmark';
-		$this->_table['fr-fr']['::MarkRemoveAll']='Démarquer tout';
-		$this->_table['en-en']['::MarkRemoveAll']='Unmark all';
-		$this->_table['es-co']['::MarkRemoveAll']='Unmark all';
+        $this->_table['fr-fr']['::EmptyList'] = 'Liste vide.';
+        $this->_table['en-en']['::EmptyList'] = 'Empty list.';
+        $this->_table['es-co']['::EmptyList'] = 'Empty list.';
 
-		$this->_table['fr-fr'][':::display:content:errorBan']='Cet objet est banni, il ne peut pas être affiché !';
-		$this->_table['fr-fr'][':::display:content:warningTaggedWarning']='Cet objet est marqué comme dangereux, attention à son contenu !';
-		$this->_table['fr-fr'][':::display:content:ObjectProctected']='Cet objet est protégé !';
-		$this->_table['fr-fr'][':::display:content:warningObjectProctected']='Cet objet est marqué comme protégé, attention à la divulgation de son contenu en public !!!';
-		$this->_table['fr-fr'][':::display:content:OK']='Cet objet est valide, son contenu a été vérifié.';
-		$this->_table['fr-fr'][':::display:content:warningTooBig']="Cet objet est trop volumineux, son contenu n'a pas été vérifié !";
-		$this->_table['fr-fr'][':::display:content:errorNotDisplayable']='Cet objet ne peut pas être affiché !';
-		$this->_table['fr-fr'][':::display:content:errorNotAvailable']="Cet objet n'est pas disponible, il ne peut pas être affiché !";
-		$this->_table['fr-fr'][':::display:content:errorNotAvailableS']="Cet objet n'est pas disponible !";
-		$this->_table['fr-fr'][':::display:content:ObjectHaveUpdate']='Cet objet a été mis à jour vers :';
-		$this->_table['en-en'][':::display:content:errorBan']="This object is banned, it can't be displayed!";
-		$this->_table['en-en'][':::display:content:warningTaggedWarning']="This object is marked as dangerous, be carfull with it's content!";
-		$this->_table['en-en'][':::display:content:ObjectProctected']="This object is marked as protected!";
-		$this->_table['en-en'][':::display:content:warningObjectProctected']="This object is marked as protected, be careful when it's content is displayed in public!";
-		$this->_table['en-en'][':::display:content:OK']="This object is valid, it's content have been checked!";
-		$this->_table['en-en'][':::display:content:warningTooBig']="This object is too big, it's content have not been checked!";
-		$this->_table['en-en'][':::display:content:errorNotDisplayable']="This object can't be displayed!";
-		$this->_table['en-en'][':::display:content:errorNotAvailable']="This object is not available, it can't be displayed!";
-		$this->_table['en-en'][':::display:content:errorNotAvailableS']="This object is not available!";
-		$this->_table['en-en'][':::display:content:ObjectHaveUpdate']='This object have been updated to:';
-		$this->_table['es-co'][':::display:content:errorBan']="This object is banned, it can't be displayed!";
-		$this->_table['es-co'][':::display:content:warningTaggedWarning']="This object is marked as dangerous, be carfull with it's content!";
-		$this->_table['es-co'][':::display:content:ObjectProctected']="This object is marked as protected!";
-		$this->_table['es-co'][':::display:content:warningObjectProctected']="This object is marked as protected, be careful when it's content is displayed in public!";
-		$this->_table['es-co'][':::display:content:OK']="This object is valid, it's content have been checked!";
-		$this->_table['es-co'][':::display:content:warningTooBig']="This object is too big, it's content have not been checked!";
-		$this->_table['es-co'][':::display:content:errorNotDisplayable']="This object can't be displayed!";
-		$this->_table['es-co'][':::display:content:errorNotAvailable']="This object is not available, it can't be displayed!";
-		$this->_table['es-co'][':::display:content:errorNotAvailableS']="This object is not available!";
-		$this->_table['es-co'][':::display:content:ObjectHaveUpdate']='This object have been updated to:';
-		
-		$this->_table['fr-fr'][':::warn_ServNotPermitWrite'] = "Ce serveur n'autorise pas les modifications.";
-		$this->_table['fr-fr'][':::warn_flushSessionAndCache'] = "Toutes les données de connexion ont été effacées.";
-		$this->_table['fr-fr'][':::err_NotPermit']='Non autorisé sur ce serveur !';
-		$this->_table['fr-fr'][':::act_chk_errCryptHash']="La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !";
-		$this->_table['fr-fr'][':::act_chk_warnCryptHashkey']="La taille de l'empreinte cryptographique est trop petite !";
-		$this->_table['fr-fr'][':::act_chk_errCryptHashkey']="La taille de l'empreinte cryptographique est invalide !";
-		$this->_table['fr-fr'][':::act_chk_errCryptSym']="La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !";
-		$this->_table['fr-fr'][':::act_chk_warnCryptSymkey']="La taille de clé de chiffrement cryptographique symétrique est trop petite !";
-		$this->_table['fr-fr'][':::act_chk_errCryptSymkey']="La taille de clé de chiffrement cryptographique symétrique est invalide !";
-		$this->_table['fr-fr'][':::act_chk_errCryptAsym']="La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !";
-		$this->_table['fr-fr'][':::act_chk_warnCryptAsymkey']="La taille de clé de chiffrement cryptographique asymétrique est trop petite !";
-		$this->_table['fr-fr'][':::act_chk_errCryptAsymkey']="La taille de clé de chiffrement cryptographique asymétrique est invalide !";
-		$this->_table['fr-fr'][':::act_chk_errBootstrap']="L'empreinte cryptographique du bootstrap est invalide !";
-		$this->_table['fr-fr'][':::act_chk_warnSigns']='La vérification des signatures de liens est désactivée !';
-		$this->_table['fr-fr'][':::act_chk_errSigns']='La vérification des signatures de liens ne fonctionne pas !';
-		$this->_table['en-en'][':::warn_ServNotPermitWrite'] = 'This server do not permit modifications.';
-		$this->_table['en-en'][':::warn_flushSessionAndCache'] = 'All datas of this connexion have been flushed.';
-		$this->_table['en-en'][':::err_NotPermit']='Non autorisé sur ce serveur !';
-		$this->_table['en-en'][':::act_chk_errCryptHash']="La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !";
-		$this->_table['en-en'][':::act_chk_warnCryptHashkey']="La taille de l'empreinte cryptographique est trop petite !";
-		$this->_table['en-en'][':::act_chk_errCryptHashkey']="La taille de l'empreinte cryptographique est invalide !";
-		$this->_table['en-en'][':::act_chk_errCryptSym']="La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !";
-		$this->_table['en-en'][':::act_chk_warnCryptSymkey']="La taille de clé de chiffrement cryptographique symétrique est trop petite !";
-		$this->_table['en-en'][':::act_chk_errCryptSymkey']="La taille de clé de chiffrement cryptographique symétrique est invalide !";
-		$this->_table['en-en'][':::act_chk_errCryptAsym']="La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !";
-		$this->_table['en-en'][':::act_chk_warnCryptAsymkey']="La taille de clé de chiffrement cryptographique asymétrique est trop petite !";
-		$this->_table['en-en'][':::act_chk_errCryptAsymkey']="La taille de clé de chiffrement cryptographique asymétrique est invalide !";
-		$this->_table['en-en'][':::act_chk_errBootstrap']="L'empreinte cryptographique du bootstrap est invalide !";
-		$this->_table['en-en'][':::act_chk_warnSigns']='La vérification des signatures de liens est désactivée !';
-		$this->_table['en-en'][':::act_chk_errSigns']='La vérification des signatures de liens ne fonctionne pas !';
-		$this->_table['es-co'][':::warn_ServNotPermitWrite'] = 'This server do not permit modifications.';
-		$this->_table['es-co'][':::warn_flushSessionAndCache'] = 'All datas of this connexion have been flushed';
-		$this->_table['es-co'][':::err_NotPermit']='Non autorisé sur ce serveur !';
-		$this->_table['es-co'][':::act_chk_errCryptHash']="La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !";
-		$this->_table['es-co'][':::act_chk_warnCryptHashkey']="La taille de l'empreinte cryptographique est trop petite !";
-		$this->_table['es-co'][':::act_chk_errCryptHashkey']="La taille de l'empreinte cryptographique est invalide !";
-		$this->_table['es-co'][':::act_chk_errCryptSym']="La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !";
-		$this->_table['es-co'][':::act_chk_warnCryptSymkey']="La taille de clé de chiffrement cryptographique symétrique est trop petite !";
-		$this->_table['es-co'][':::act_chk_errCryptSymkey']="La taille de clé de chiffrement cryptographique symétrique est invalide !";
-		$this->_table['es-co'][':::act_chk_errCryptAsym']="La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !";
-		$this->_table['es-co'][':::act_chk_warnCryptAsymkey']="La taille de clé de chiffrement cryptographique asymétrique est trop petite !";
-		$this->_table['es-co'][':::act_chk_errCryptAsymkey']="La taille de clé de chiffrement cryptographique asymétrique est invalide !";
-		$this->_table['es-co'][':::act_chk_errBootstrap']="L'empreinte cryptographique du bootstrap est invalide !";
-		$this->_table['es-co'][':::act_chk_warnSigns']='La vérification des signatures de liens est désactivée !';
-		$this->_table['es-co'][':::act_chk_errSigns']='La vérification des signatures de liens ne fonctionne pas !';
-		
-		$this->_table['fr-fr'][':::display:object:flag:protected'] = 'Cet objet est protégé.';
-		$this->_table['en-en'][':::display:object:flag:protected'] = 'This object is protected.';
-		$this->_table['es-co'][':::display:object:flag:protected'] = 'Este objeto está protegido.';
-		$this->_table['fr-fr'][':::display:object:flag:unprotected'] = "Cet objet n'est pas protégé.";
-		$this->_table['en-en'][':::display:object:flag:unprotected'] = 'This object is not protected.';
-		$this->_table['es-co'][':::display:object:flag:unprotected'] = 'Este objeto no está protegido.';
-		$this->_table['fr-fr'][':::display:object:flag:obfuscated'] = 'Cet objet est dissimulé.';
-		$this->_table['en-en'][':::display:object:flag:obfuscated'] = 'This object is obfuscated.';
-		$this->_table['es-co'][':::display:object:flag:obfuscated'] = 'Este objeto está oculto.';
-		$this->_table['fr-fr'][':::display:object:flag:unobfuscated'] = "Cet objet n'est pas dissimulé.";
-		$this->_table['en-en'][':::display:object:flag:unobfuscated'] = 'This object is not obfuscated.';
-		$this->_table['es-co'][':::display:object:flag:unobfuscated'] = 'Este objeto no está oculto.';
-		$this->_table['fr-fr'][':::display:object:flag:locked'] = 'Cet entité est déverrouillée.';
-		$this->_table['en-en'][':::display:object:flag:locked'] = 'This entity is unlocked.';
-		$this->_table['es-co'][':::display:object:flag:locked'] = 'Esta entidad está desbloqueada.';
-		$this->_table['fr-fr'][':::display:object:flag:unlocked'] = 'Cet entité est verrouillée.';
-		$this->_table['en-en'][':::display:object:flag:unlocked'] = 'This entity is locked.';
-		$this->_table['es-co'][':::display:object:flag:unlocked'] = 'Esta entidad está bloqueada.';
+        $this->_table['fr-fr']['::NoRecoveryEntity'] = "Pas d'entité de recouvrement des objets protégés sur ce serveur.";
+        $this->_table['en-en']['::NoRecoveryEntity'] = 'No recovery entity for protected objects on this server.';
+        $this->_table['es-co']['::NoRecoveryEntity'] = 'No recovery entity for protected objects on this server.';
+        $this->_table['fr-fr']['::ProtectionRecovery'] = 'Recouvrement des objets protégés';
+        $this->_table['en-en']['::ProtectionRecovery'] = 'Recovery of protected objects';
+        $this->_table['es-co']['::ProtectionRecovery'] = 'Recovery of protected objects';
 
-		// Type mime
-		$this->_table['fr-fr'][Application::REFERENCE_OBJECT_TEXT]='Texte brute';
-		$this->_table['fr-fr']['application/x-pem-file']='Entité';
-		$this->_table['fr-fr']['image/jpeg']='Image JPEG';
-		$this->_table['fr-fr']['image/png']='Image PNG';
-		$this->_table['fr-fr']['application/x-bzip2']='Archive BZIP2';
-		$this->_table['fr-fr']['text/html']='Page HTML';
-		$this->_table['fr-fr']['application/x-php']='Code PHP';
-		$this->_table['fr-fr']['text/x-php']='Code PHP';
-		$this->_table['fr-fr']['text/css']='Feuille de style CSS';
-		$this->_table['fr-fr']['audio/mpeg']='Audio MP3';
-		$this->_table['fr-fr']['audio/x-vorbis+ogg']='Audio OGG';
-		$this->_table['fr-fr']['application/x-encrypted/rsa']='Chiffré';
-		$this->_table['fr-fr']['application/x-encrypted/aes-256-ctr']='Chiffré';
-		$this->_table['fr-fr']['application/x-folder']='Dossier';
-		$this->_table['en-en'][Application::REFERENCE_OBJECT_TEXT]='RAW text';
-		$this->_table['en-en']['application/x-pem-file']='Entity';
-		$this->_table['en-en']['image/jpeg']='JPEG picture';
-		$this->_table['en-en']['image/png']='PNG picture';
-		$this->_table['en-en']['application/x-bzip2']='Archive BZIP2';
-		$this->_table['en-en']['text/html']='HTML page';
-		$this->_table['en-en']['application/x-php']='PHP code';
-		$this->_table['en-en']['text/x-php']='PHP code';
-		$this->_table['en-en']['text/css']='Cascading Style Sheet CSS';
-		$this->_table['en-en']['audio/mpeg']='Audio MP3';
-		$this->_table['en-en']['audio/x-vorbis+ogg']='Audio OGG';
-		$this->_table['en-en']['application/x-encrypted/rsa']='Encrypted';
-		$this->_table['en-en']['application/x-encrypted/aes-256-ctr']='Encrypted';
-		$this->_table['en-en']['application/x-folder']='Folder';
-		$this->_table['es-co'][Application::REFERENCE_OBJECT_TEXT]='Texto en bruto';
-		$this->_table['es-co']['application/x-pem-file']='Entidad';
-		$this->_table['es-co']['image/jpeg']='JPEG gráfico';
-		$this->_table['es-co']['image/png']='PNG gráfico';
-		$this->_table['es-co']['application/x-bzip2']='Archivo BZIP2';
-		$this->_table['es-co']['text/html']='Página HTML';
-		$this->_table['es-co']['application/x-php']='Código PHP';
-		$this->_table['es-co']['text/x-php']='Código PHP';
-		$this->_table['es-co']['text/css']='Hojas de estilo en cascada CSS';
-		$this->_table['es-co']['audio/mpeg']='Audio MP3';
-		$this->_table['es-co']['audio/x-vorbis+ogg']='Audio OGG';
-		$this->_table['es-co']['application/x-encrypted/rsa']='Encriptado';
-		$this->_table['es-co']['application/x-encrypted/aes-256-ctr']='Encriptado';
-		$this->_table['es-co']['application/x-folder']='Archivo';
+        $this->_table['fr-fr']['::MarkAdd'] = 'Marquer';
+        $this->_table['en-en']['::MarkAdd'] = 'Mark';
+        $this->_table['es-co']['::MarkAdd'] = 'Mark';
+        $this->_table['fr-fr']['::MarkRemove'] = 'Démarquer';
+        $this->_table['en-en']['::MarkRemove'] = 'Unmark';
+        $this->_table['es-co']['::MarkRemove'] = 'Unmark';
+        $this->_table['fr-fr']['::MarkRemoveAll'] = 'Démarquer tout';
+        $this->_table['en-en']['::MarkRemoveAll'] = 'Unmark all';
+        $this->_table['es-co']['::MarkRemoveAll'] = 'Unmark all';
 
-		$this->_table['fr-fr']['::Citation']="<i>\"Une donnée que l'on transmet à autrui, c'est une donnée sur laquelle on perd irrémédiablement tout contrôle.\"</i>";
-		$this->_table['en-en']['::Citation']='<i>\"A data we share with someone, this is a data on while we definitively lose all control.\"</i>';
-		$this->_table['es-co']['::Citation']='<i>\"A data we share with someone, this is a data on while we definitively lose all control.\"</i>';
-	}
+        $this->_table['fr-fr'][':::display:content:errorBan'] = 'Cet objet est banni, il ne peut pas être affiché !';
+        $this->_table['fr-fr'][':::display:content:warningTaggedWarning'] = 'Cet objet est marqué comme dangereux, attention à son contenu !';
+        $this->_table['fr-fr'][':::display:content:ObjectProctected'] = 'Cet objet est protégé !';
+        $this->_table['fr-fr'][':::display:content:warningObjectProctected'] = 'Cet objet est marqué comme protégé, attention à la divulgation de son contenu en public !!!';
+        $this->_table['fr-fr'][':::display:content:OK'] = 'Cet objet est valide, son contenu a été vérifié.';
+        $this->_table['fr-fr'][':::display:content:warningTooBig'] = "Cet objet est trop volumineux, son contenu n'a pas été vérifié !";
+        $this->_table['fr-fr'][':::display:content:errorNotDisplayable'] = 'Cet objet ne peut pas être affiché !';
+        $this->_table['fr-fr'][':::display:content:errorNotAvailable'] = "Cet objet n'est pas disponible, il ne peut pas être affiché !";
+        $this->_table['fr-fr'][':::display:content:errorNotAvailableS'] = "Cet objet n'est pas disponible !";
+        $this->_table['fr-fr'][':::display:content:ObjectHaveUpdate'] = 'Cet objet a été mis à jour vers :';
+        $this->_table['en-en'][':::display:content:errorBan'] = "This object is banned, it can't be displayed!";
+        $this->_table['en-en'][':::display:content:warningTaggedWarning'] = "This object is marked as dangerous, be carfull with it's content!";
+        $this->_table['en-en'][':::display:content:ObjectProctected'] = "This object is marked as protected!";
+        $this->_table['en-en'][':::display:content:warningObjectProctected'] = "This object is marked as protected, be careful when it's content is displayed in public!";
+        $this->_table['en-en'][':::display:content:OK'] = "This object is valid, it's content have been checked!";
+        $this->_table['en-en'][':::display:content:warningTooBig'] = "This object is too big, it's content have not been checked!";
+        $this->_table['en-en'][':::display:content:errorNotDisplayable'] = "This object can't be displayed!";
+        $this->_table['en-en'][':::display:content:errorNotAvailable'] = "This object is not available, it can't be displayed!";
+        $this->_table['en-en'][':::display:content:errorNotAvailableS'] = "This object is not available!";
+        $this->_table['en-en'][':::display:content:ObjectHaveUpdate'] = 'This object have been updated to:';
+        $this->_table['es-co'][':::display:content:errorBan'] = "This object is banned, it can't be displayed!";
+        $this->_table['es-co'][':::display:content:warningTaggedWarning'] = "This object is marked as dangerous, be carfull with it's content!";
+        $this->_table['es-co'][':::display:content:ObjectProctected'] = "This object is marked as protected!";
+        $this->_table['es-co'][':::display:content:warningObjectProctected'] = "This object is marked as protected, be careful when it's content is displayed in public!";
+        $this->_table['es-co'][':::display:content:OK'] = "This object is valid, it's content have been checked!";
+        $this->_table['es-co'][':::display:content:warningTooBig'] = "This object is too big, it's content have not been checked!";
+        $this->_table['es-co'][':::display:content:errorNotDisplayable'] = "This object can't be displayed!";
+        $this->_table['es-co'][':::display:content:errorNotAvailable'] = "This object is not available, it can't be displayed!";
+        $this->_table['es-co'][':::display:content:errorNotAvailableS'] = "This object is not available!";
+        $this->_table['es-co'][':::display:content:ObjectHaveUpdate'] = 'This object have been updated to:';
+
+        $this->_table['fr-fr'][':::warn_ServNotPermitWrite'] = "Ce serveur n'autorise pas les modifications.";
+        $this->_table['fr-fr'][':::warn_flushSessionAndCache'] = "Toutes les données de connexion ont été effacées.";
+        $this->_table['fr-fr'][':::err_NotPermit'] = 'Non autorisé sur ce serveur !';
+        $this->_table['fr-fr'][':::act_chk_errCryptHash'] = "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !";
+        $this->_table['fr-fr'][':::act_chk_warnCryptHashkey'] = "La taille de l'empreinte cryptographique est trop petite !";
+        $this->_table['fr-fr'][':::act_chk_errCryptHashkey'] = "La taille de l'empreinte cryptographique est invalide !";
+        $this->_table['fr-fr'][':::act_chk_errCryptSym'] = "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !";
+        $this->_table['fr-fr'][':::act_chk_warnCryptSymkey'] = "La taille de clé de chiffrement cryptographique symétrique est trop petite !";
+        $this->_table['fr-fr'][':::act_chk_errCryptSymkey'] = "La taille de clé de chiffrement cryptographique symétrique est invalide !";
+        $this->_table['fr-fr'][':::act_chk_errCryptAsym'] = "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !";
+        $this->_table['fr-fr'][':::act_chk_warnCryptAsymkey'] = "La taille de clé de chiffrement cryptographique asymétrique est trop petite !";
+        $this->_table['fr-fr'][':::act_chk_errCryptAsymkey'] = "La taille de clé de chiffrement cryptographique asymétrique est invalide !";
+        $this->_table['fr-fr'][':::act_chk_errBootstrap'] = "L'empreinte cryptographique du bootstrap est invalide !";
+        $this->_table['fr-fr'][':::act_chk_warnSigns'] = 'La vérification des signatures de liens est désactivée !';
+        $this->_table['fr-fr'][':::act_chk_errSigns'] = 'La vérification des signatures de liens ne fonctionne pas !';
+        $this->_table['en-en'][':::warn_ServNotPermitWrite'] = 'This server do not permit modifications.';
+        $this->_table['en-en'][':::warn_flushSessionAndCache'] = 'All datas of this connexion have been flushed.';
+        $this->_table['en-en'][':::err_NotPermit'] = 'Non autorisé sur ce serveur !';
+        $this->_table['en-en'][':::act_chk_errCryptHash'] = "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !";
+        $this->_table['en-en'][':::act_chk_warnCryptHashkey'] = "La taille de l'empreinte cryptographique est trop petite !";
+        $this->_table['en-en'][':::act_chk_errCryptHashkey'] = "La taille de l'empreinte cryptographique est invalide !";
+        $this->_table['en-en'][':::act_chk_errCryptSym'] = "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !";
+        $this->_table['en-en'][':::act_chk_warnCryptSymkey'] = "La taille de clé de chiffrement cryptographique symétrique est trop petite !";
+        $this->_table['en-en'][':::act_chk_errCryptSymkey'] = "La taille de clé de chiffrement cryptographique symétrique est invalide !";
+        $this->_table['en-en'][':::act_chk_errCryptAsym'] = "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !";
+        $this->_table['en-en'][':::act_chk_warnCryptAsymkey'] = "La taille de clé de chiffrement cryptographique asymétrique est trop petite !";
+        $this->_table['en-en'][':::act_chk_errCryptAsymkey'] = "La taille de clé de chiffrement cryptographique asymétrique est invalide !";
+        $this->_table['en-en'][':::act_chk_errBootstrap'] = "L'empreinte cryptographique du bootstrap est invalide !";
+        $this->_table['en-en'][':::act_chk_warnSigns'] = 'La vérification des signatures de liens est désactivée !';
+        $this->_table['en-en'][':::act_chk_errSigns'] = 'La vérification des signatures de liens ne fonctionne pas !';
+        $this->_table['es-co'][':::warn_ServNotPermitWrite'] = 'This server do not permit modifications.';
+        $this->_table['es-co'][':::warn_flushSessionAndCache'] = 'All datas of this connexion have been flushed';
+        $this->_table['es-co'][':::err_NotPermit'] = 'Non autorisé sur ce serveur !';
+        $this->_table['es-co'][':::act_chk_errCryptHash'] = "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !";
+        $this->_table['es-co'][':::act_chk_warnCryptHashkey'] = "La taille de l'empreinte cryptographique est trop petite !";
+        $this->_table['es-co'][':::act_chk_errCryptHashkey'] = "La taille de l'empreinte cryptographique est invalide !";
+        $this->_table['es-co'][':::act_chk_errCryptSym'] = "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !";
+        $this->_table['es-co'][':::act_chk_warnCryptSymkey'] = "La taille de clé de chiffrement cryptographique symétrique est trop petite !";
+        $this->_table['es-co'][':::act_chk_errCryptSymkey'] = "La taille de clé de chiffrement cryptographique symétrique est invalide !";
+        $this->_table['es-co'][':::act_chk_errCryptAsym'] = "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !";
+        $this->_table['es-co'][':::act_chk_warnCryptAsymkey'] = "La taille de clé de chiffrement cryptographique asymétrique est trop petite !";
+        $this->_table['es-co'][':::act_chk_errCryptAsymkey'] = "La taille de clé de chiffrement cryptographique asymétrique est invalide !";
+        $this->_table['es-co'][':::act_chk_errBootstrap'] = "L'empreinte cryptographique du bootstrap est invalide !";
+        $this->_table['es-co'][':::act_chk_warnSigns'] = 'La vérification des signatures de liens est désactivée !';
+        $this->_table['es-co'][':::act_chk_errSigns'] = 'La vérification des signatures de liens ne fonctionne pas !';
+
+        $this->_table['fr-fr'][':::display:object:flag:protected'] = 'Cet objet est protégé.';
+        $this->_table['en-en'][':::display:object:flag:protected'] = 'This object is protected.';
+        $this->_table['es-co'][':::display:object:flag:protected'] = 'Este objeto está protegido.';
+        $this->_table['fr-fr'][':::display:object:flag:unprotected'] = "Cet objet n'est pas protégé.";
+        $this->_table['en-en'][':::display:object:flag:unprotected'] = 'This object is not protected.';
+        $this->_table['es-co'][':::display:object:flag:unprotected'] = 'Este objeto no está protegido.';
+        $this->_table['fr-fr'][':::display:object:flag:obfuscated'] = 'Cet objet est dissimulé.';
+        $this->_table['en-en'][':::display:object:flag:obfuscated'] = 'This object is obfuscated.';
+        $this->_table['es-co'][':::display:object:flag:obfuscated'] = 'Este objeto está oculto.';
+        $this->_table['fr-fr'][':::display:object:flag:unobfuscated'] = "Cet objet n'est pas dissimulé.";
+        $this->_table['en-en'][':::display:object:flag:unobfuscated'] = 'This object is not obfuscated.';
+        $this->_table['es-co'][':::display:object:flag:unobfuscated'] = 'Este objeto no está oculto.';
+        $this->_table['fr-fr'][':::display:object:flag:locked'] = 'Cet entité est déverrouillée.';
+        $this->_table['en-en'][':::display:object:flag:locked'] = 'This entity is unlocked.';
+        $this->_table['es-co'][':::display:object:flag:locked'] = 'Esta entidad está desbloqueada.';
+        $this->_table['fr-fr'][':::display:object:flag:unlocked'] = 'Cet entité est verrouillée.';
+        $this->_table['en-en'][':::display:object:flag:unlocked'] = 'This entity is locked.';
+        $this->_table['es-co'][':::display:object:flag:unlocked'] = 'Esta entidad está bloqueada.';
+
+        // Type mime
+        $this->_table['fr-fr'][Application::REFERENCE_OBJECT_TEXT] = 'Texte brute';
+        $this->_table['fr-fr']['application/x-pem-file'] = 'Entité';
+        $this->_table['fr-fr']['image/jpeg'] = 'Image JPEG';
+        $this->_table['fr-fr']['image/png'] = 'Image PNG';
+        $this->_table['fr-fr']['application/x-bzip2'] = 'Archive BZIP2';
+        $this->_table['fr-fr']['text/html'] = 'Page HTML';
+        $this->_table['fr-fr']['application/x-php'] = 'Code PHP';
+        $this->_table['fr-fr']['text/x-php'] = 'Code PHP';
+        $this->_table['fr-fr']['text/css'] = 'Feuille de style CSS';
+        $this->_table['fr-fr']['audio/mpeg'] = 'Audio MP3';
+        $this->_table['fr-fr']['audio/x-vorbis+ogg'] = 'Audio OGG';
+        $this->_table['fr-fr']['application/x-encrypted/rsa'] = 'Chiffré';
+        $this->_table['fr-fr']['application/x-encrypted/aes-256-ctr'] = 'Chiffré';
+        $this->_table['fr-fr']['application/x-folder'] = 'Dossier';
+        $this->_table['en-en'][Application::REFERENCE_OBJECT_TEXT] = 'RAW text';
+        $this->_table['en-en']['application/x-pem-file'] = 'Entity';
+        $this->_table['en-en']['image/jpeg'] = 'JPEG picture';
+        $this->_table['en-en']['image/png'] = 'PNG picture';
+        $this->_table['en-en']['application/x-bzip2'] = 'Archive BZIP2';
+        $this->_table['en-en']['text/html'] = 'HTML page';
+        $this->_table['en-en']['application/x-php'] = 'PHP code';
+        $this->_table['en-en']['text/x-php'] = 'PHP code';
+        $this->_table['en-en']['text/css'] = 'Cascading Style Sheet CSS';
+        $this->_table['en-en']['audio/mpeg'] = 'Audio MP3';
+        $this->_table['en-en']['audio/x-vorbis+ogg'] = 'Audio OGG';
+        $this->_table['en-en']['application/x-encrypted/rsa'] = 'Encrypted';
+        $this->_table['en-en']['application/x-encrypted/aes-256-ctr'] = 'Encrypted';
+        $this->_table['en-en']['application/x-folder'] = 'Folder';
+        $this->_table['es-co'][Application::REFERENCE_OBJECT_TEXT] = 'Texto en bruto';
+        $this->_table['es-co']['application/x-pem-file'] = 'Entidad';
+        $this->_table['es-co']['image/jpeg'] = 'JPEG gráfico';
+        $this->_table['es-co']['image/png'] = 'PNG gráfico';
+        $this->_table['es-co']['application/x-bzip2'] = 'Archivo BZIP2';
+        $this->_table['es-co']['text/html'] = 'Página HTML';
+        $this->_table['es-co']['application/x-php'] = 'Código PHP';
+        $this->_table['es-co']['text/x-php'] = 'Código PHP';
+        $this->_table['es-co']['text/css'] = 'Hojas de estilo en cascada CSS';
+        $this->_table['es-co']['audio/mpeg'] = 'Audio MP3';
+        $this->_table['es-co']['audio/x-vorbis+ogg'] = 'Audio OGG';
+        $this->_table['es-co']['application/x-encrypted/rsa'] = 'Encriptado';
+        $this->_table['es-co']['application/x-encrypted/aes-256-ctr'] = 'Encriptado';
+        $this->_table['es-co']['application/x-folder'] = 'Archivo';
+
+        $this->_table['fr-fr']['::Citation'] = "<i>\"Une donnée que l'on transmet à autrui, c'est une donnée sur laquelle on perd irrémédiablement tout contrôle.\"</i>";
+        $this->_table['en-en']['::Citation'] = '<i>\"A data we share with someone, this is a data on while we definitively lose all control.\"</i>';
+        $this->_table['es-co']['::Citation'] = '<i>\"A data we share with someone, this is a data on while we definitively lose all control.\"</i>';
+    }
 }
