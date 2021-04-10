@@ -30,10 +30,7 @@ $nebuleWebsite = 'www.nebule.org';
 
 // Initialisation des logs de la librairie.
 closelog();
-if (!isset($bootstrapLogSessionID)) {
-    $bootstrapLogSessionID = bin2hex(openssl_random_pseudo_bytes(6, $false));
-}
-openlog($nebuleName . '/' . $bootstrapLogSessionID, LOG_NDELAY, LOG_USER);
+openlog($nebuleName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
 syslog(LOG_INFO, 'LogT=0 LogTabs=' . (microtime(true)) . ' Loading nebule library');
 
 
@@ -41,7 +38,6 @@ syslog(LOG_INFO, 'LogT=0 LogTabs=' . (microtime(true)) . ' Loading nebule librar
 $applicationName = 'defolt';
 $applicationSurname = 'nebule/defolt';
 $applicationDescription = 'Default web page for servers without interactive application.';
-// Page web par défaut pour les serveurs sans application interactive.
 $applicationVersion = $nebuleLibVersion;
 $applicationLicence = $nebuleLicence;
 $applicationAuthor = $nebuleAuthor;
