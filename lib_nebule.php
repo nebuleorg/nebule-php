@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
+namespace Nebule\Library;
 // ----------------------------------------------------------------------------------------
 $nebuleName = 'library';
 $nebuleSurname = 'nebule/library';
 $nebuleDescription = 'Library of functions for nebule in php object-oriented.';
 $nebuleAuthor = 'Projet nebule';
-$nebuleLibLevel = 'Experimental'; // Experimental | Developpement | Testing | Production
+$nebuleLibLevel = 'Experimental'; // Experimental | Development | Testing | Production
 $nebuleLibVersion = '02020121';
 $nebuleLicence = 'GNU GPL 2010-2020';
 $nebuleWebsite = 'www.nebule.org';

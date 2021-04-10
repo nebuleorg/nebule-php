@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
+namespace Nebule\Application\Upload;
 // ------------------------------------------------------------------------------------------
 $applicationName = 'upload';
 $applicationSurname = 'nebule/upload';
 $applicationDescription = 'Web page to upload links and objects from code master.';
-// Page web de chargement des liens et objets de l'autorité du code.
 $applicationVersion = '020200202';
-$applicationLevel = 'Testing'; // Experimental | Developpement | Testing | Production
+$applicationLevel = 'Testing'; // Experimental | Development | Testing | Production
 $applicationLicence = 'GNU GPL 2016-2020';
 $applicationAuthor = 'Projet nebule';
 $applicationWebsite = 'www.nebule.org';

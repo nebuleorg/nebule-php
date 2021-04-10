@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
+namespace Nebule\Application\Option;
 // ------------------------------------------------------------------------------------------
 $applicationName = 'option';
 $applicationSurname = 'nebule/option';
 $applicationDescription = 'Web page to manage options and applications.';
-// Page web de gestion des options et applications.
 $applicationVersion = '020200202';
-$applicationLevel = 'Developpement'; // Experimental | Developpement | Testing | Production
+$applicationLevel = 'Developpement'; // Experimental | Development | Testing | Production
 $applicationLicence = 'GNU GPL 2016-2020';
 $applicationAuthor = 'Projet nebule';
 $applicationWebsite = 'www.nebule.org';
