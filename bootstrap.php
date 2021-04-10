@@ -5165,7 +5165,7 @@ function loadLibrary(): void
         addLog('load library nebule ' . $bootstrapLibraryID);
 
         // Charge l'objet de la bibliothèque. @todo faire via les i/o.
-        include("o/$bootstrapLibraryID");
+        include( NEBULE_LOCAL_OBJECTS_FOLDER . '/' . '$bootstrapLibraryID' );
 
         if ($bootstrapLibraryInstanceSleep == '') {
             // Instancie la bibliothèque.
@@ -6411,7 +6411,7 @@ function bootstrapDisplayPreloadApplication()
         syslog(LOG_INFO, 'LogT=0 LogTabs=' . (microtime(true)) . ' load_application=' . $bootstrapApplicationID);
 
         // Charge l'objet de l'application. @todo faire via les i/o.
-        include("o/$bootstrapApplicationID");
+        include( NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID );
 
         // Instanciation des classes de l'application.
         $applicationInstance = new Application($nebuleInstance);
@@ -7703,7 +7703,7 @@ if (sizeof($bootstrapBreak) == 0) {
             addLog('load application ' . $bootstrapApplicationID);
 
             // Charge l'objet de l'application. @todo faire via les i/o.
-            include('o/' . $bootstrapApplicationID);
+            include( NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID );
 
             // Change les logs au nom de l'application.
             closelog();
@@ -7742,7 +7742,7 @@ if (sizeof($bootstrapBreak) == 0) {
             addLog('load application whitout preload ' . $bootstrapApplicationID);
 
             // Charge l'objet de l'application. @todo faire via les i/o.
-            include( 'o/'.$bootstrapApplicationID );
+            include( NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID );
 
             // Change les logs au nom de l'application.
             closelog();
