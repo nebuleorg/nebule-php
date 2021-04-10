@@ -12,22 +12,18 @@ $applicationWebsite		= 'www.sylabe.org';
 // ------------------------------------------------------------------------------------------
 
 
-
 /*
 ------------------------------------------------------------------------------------------
  /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
 ------------------------------------------------------------------------------------------
 
-    .     [FR] Toute modification de ce code entrainera une modification de son empreinte
-   / \           et entrainera donc automatiquement son invalidation !
-  / V \   [EN] Any changes to this code will cause a chage in its footprint and therefore
- /__°__\         automatically result in its invalidation!
-    N     [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
-    N            tanto lugar automáticamente a su anulación!
-    N
-    N                                                                       Projet nebule
-----N-------------------------------------------------------------------------------------
- /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
+ [FR] Toute modification de ce code entrainera une modification de son empreinte
+      et entrainera donc automatiquement son invalidation !
+ [EN] Any changes to this code will cause a change in its footprint and therefore
+      automatically result in its invalidation!
+ [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
+      tanto lugar automáticamente a su anulación!
+
 ------------------------------------------------------------------------------------------
 */
 

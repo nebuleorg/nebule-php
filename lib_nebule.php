@@ -25,19 +25,17 @@ $nebuleWebsite		= 'www.nebule.org';
       tanto lugar automáticamente a su anulación!
 
 ------------------------------------------------------------------------------------------
- /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
-------------------------------------------------------------------------------------------
 */
 
 
 
 // Initialisation des logs de la librairie.
 closelog();
-if ( ! isset($bootstrapLogSession) )
+if ( ! isset($bootstrapLogSessionID) )
 {
-    $bootstrapLogSession = bin2hex(openssl_random_pseudo_bytes(6,$false));
+    $bootstrapLogSessionID = bin2hex(openssl_random_pseudo_bytes(6,$false));
 }
-openlog($nebuleName.'/'.$bootstrapLogSession,LOG_NDELAY,LOG_USER);
+openlog($nebuleName.'/'.$bootstrapLogSessionID,LOG_NDELAY,LOG_USER);
 syslog(LOG_INFO, 'LogT=0 LogTabs='.(microtime(true)).' Loading nebule library');
 
 

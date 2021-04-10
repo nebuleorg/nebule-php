@@ -33,21 +33,19 @@ $bootstrapWebsite = 'www.nebule.org';
 ob_start();
 
 /**
- * Variable de session de connexion.
- * Elle est utilisée pour le suivi des logs jusqu'à l'application lors d'une connexion.
- * C'est différent de la session de l'utilisateur.
+ * Log unique ID for one run.
  */
-$bootstrapLogSession = bin2hex(openssl_random_pseudo_bytes(6, $false));
+$bootstrapLogSessionID = bin2hex(openssl_random_pseudo_bytes(6, $false));
 
 /**
- * Démarrage du calcul du temps pour la métrologie.
+ * Start timer for metrology.
  *
  * @var float $metrologyStartTime
  */
 $metrologyStartTime = microtime(true);
 
 // Initialize logs.
-openlog($bootstrapName . '/' . $bootstrapLogSession, LOG_NDELAY, LOG_USER);
+openlog($bootstrapName . '/' . $bootstrapLogSessionID, LOG_NDELAY, LOG_USER);
 syslog(LOG_INFO, 'LogT=0 LogTabs=' . $metrologyStartTime . ' --- start ' . $bootstrapName);
 
 
@@ -5135,7 +5133,7 @@ $nebuleInstance = null;
 function loadLibrary(): void
 {
     global $bootstrapName,
-           $bootstrapLogSession,
+           $bootstrapLogSessionID,
            $bootstrapBreak,
            $nebuleInstance,
            $bootstrapLibraryID,
@@ -5157,7 +5155,7 @@ function loadLibrary(): void
 
         // Ré-ouvre les logs pour le bootstrap.
         closelog();
-        openlog($bootstrapName . '/' . $bootstrapLogSession, LOG_NDELAY, LOG_USER);
+        openlog($bootstrapName . '/' . $bootstrapLogSessionID, LOG_NDELAY, LOG_USER);
     } else {
         addLog('library nebule error');
 
@@ -5843,7 +5841,8 @@ $name = nebReadEntityFullName($nebuleServerEntite);
     </div>
 </div>
 <div class="layout-main">
-    <div class="layout-content"><?php
+    <div class="layout-content">
+        <?php
         }
 
         // ------------------------------------------------------------------------------------------
@@ -6333,7 +6332,7 @@ $applicationTraductionInstance = null;
 function bootstrapDisplayPreloadApplication()
 {
     global $nebuleInstance,
-           $bootstrapLogSession,
+           $bootstrapLogSessionID,
            $metrologyStartTime,
            $applicationInstance,
            $applicationDisplayInstance,
@@ -6345,7 +6344,7 @@ function bootstrapDisplayPreloadApplication()
 
     // Initialisation des logs
     closelog();
-    openlog('preload/' . $bootstrapLogSession, LOG_NDELAY, LOG_USER);
+    openlog('preload/' . $bootstrapLogSessionID, LOG_NDELAY, LOG_USER);
     addLog('Loading');
 
     echo 'CHK';
@@ -6372,7 +6371,7 @@ function bootstrapDisplayPreloadApplication()
 
         // Ré-initialisation des logs
         closelog();
-        openlog('preload/' . $bootstrapLogSession, LOG_NDELAY, LOG_USER);
+        openlog('preload/' . $bootstrapLogSessionID, LOG_NDELAY, LOG_USER);
         ?>
 
         Tl=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?>
@@ -6527,7 +6526,7 @@ unset($serverEntite);
  */
 function bootstrapDisplayApplicationfirst()
 {
-    global $bootstrapLogSession,
+    global $bootstrapLogSessionID,
            $bootstrapBreak,
            $metrologyStartTime,
            $bootstrapName,
@@ -6553,7 +6552,7 @@ function bootstrapDisplayApplicationfirst()
 
     // Initialisation des logs
     closelog();
-    openlog('first/' . $bootstrapLogSession, LOG_NDELAY, LOG_USER);
+    openlog('first/' . $bootstrapLogSessionID, LOG_NDELAY, LOG_USER);
     addLog('Loading');
 
     echo 'CHK';
@@ -7413,11 +7412,11 @@ chmod 644 <?php echo NEBULE_LOCAL_ENTITY_FILE; ?>
 function bootstrapDisplayApplication0()
 {
     global $nebuleInstance,
-           $bootstrapLogSession;
+           $bootstrapLogSessionID;
 
     // Initialisation des logs
     closelog();
-    openlog('app0/' . $bootstrapLogSession, LOG_NDELAY, LOG_USER);
+    openlog('app0/' . $bootstrapLogSessionID, LOG_NDELAY, LOG_USER);
     addLog('Loading');
 
     echo 'CHK';
@@ -7433,7 +7432,7 @@ function bootstrapDisplayApplication0()
 
     // Ré-initialisation des logs
     closelog();
-    openlog('app0/' . $bootstrapLogSession, LOG_NDELAY, LOG_USER);
+    openlog('app0/' . $bootstrapLogSessionID, LOG_NDELAY, LOG_USER);
 
     ?>
 
@@ -7570,11 +7569,11 @@ function bootstrapDisplayApplication0()
 
 function bootstrapDisplayApplication1()
 {
-    global $nebuleInstance, $bootstrapLogSession, $nebuleLibLevel, $nebuleLibVersion, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
+    global $nebuleInstance, $bootstrapLogSessionID, $nebuleLibLevel, $nebuleLibVersion, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
 
     // Initialisation des logs
     closelog();
-    openlog('app1/' . $bootstrapLogSession, LOG_NDELAY, LOG_USER);
+    openlog('app1/' . $bootstrapLogSessionID, LOG_NDELAY, LOG_USER);
     addLog('Loading');
 
     echo 'CHK';
@@ -7588,7 +7587,7 @@ function bootstrapDisplayApplication1()
 
     // Ré-initialisation des logs
     closelog();
-    openlog('app1/' . $bootstrapLogSession, LOG_NDELAY, LOG_USER);
+    openlog('app1/' . $bootstrapLogSessionID, LOG_NDELAY, LOG_USER);
 
     // Instancie la classe de la documentation.
     $instance = new nebdoctech($nebuleInstance);
@@ -7655,7 +7654,7 @@ if (sizeof($bootstrapBreak) == 0) {
 
         // Change les logs au nom du bootstrap.
         closelog();
-        openlog($bootstrapName . '/' . $bootstrapLogSession, LOG_NDELAY, LOG_USER);
+        openlog($bootstrapName . '/' . $bootstrapLogSessionID, LOG_NDELAY, LOG_USER);
     } elseif ($bootstrapApplicationID == '1') {
         addLog('load application 1');
 
@@ -7663,7 +7662,7 @@ if (sizeof($bootstrapBreak) == 0) {
 
         // Change les logs au nom du bootstrap.
         closelog();
-        openlog($bootstrapName . '/' . $bootstrapLogSession, LOG_NDELAY, LOG_USER);
+        openlog($bootstrapName . '/' . $bootstrapLogSessionID, LOG_NDELAY, LOG_USER);
     } else {
         // Si tout est déjà pré-chargé, on déserialise.
         if (isset($bootstrapApplicationInstanceSleep)
@@ -7685,7 +7684,7 @@ if (sizeof($bootstrapBreak) == 0) {
 
             // Change les logs au nom de l'application.
             closelog();
-            openlog($applicationName . '/' . $bootstrapLogSession, LOG_NDELAY, LOG_USER);
+            openlog($applicationName . '/' . $bootstrapLogSessionID, LOG_NDELAY, LOG_USER);
 
             // Désérialise les instances.
             $applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
@@ -7724,7 +7723,7 @@ if (sizeof($bootstrapBreak) == 0) {
 
             // Change les logs au nom de l'application.
             closelog();
-            openlog($applicationName . '/' . $bootstrapLogSession, LOG_NDELAY, LOG_USER);
+            openlog($applicationName . '/' . $bootstrapLogSessionID, LOG_NDELAY, LOG_USER);
 
             // Instanciation des classes de l'application.
             $applicationInstance = new Application($nebuleInstance);
@@ -7750,7 +7749,7 @@ if (sizeof($bootstrapBreak) == 0) {
 
         // Change les logs au nom du bootstrap.
         closelog();
-        openlog($bootstrapName . '/' . $bootstrapLogSession, LOG_NDELAY, LOG_USER);
+        openlog($bootstrapName . '/' . $bootstrapLogSessionID, LOG_NDELAY, LOG_USER);
 
         // Ouverture de la session PHP.
         session_start();
@@ -7811,7 +7810,7 @@ if (sizeof($bootstrapBreak) == 0) {
 
     // Change les logs au nom du bootstrap.
     closelog();
-    openlog($bootstrapName . '/' . $bootstrapLogSession, LOG_NDELAY, LOG_USER);
+    openlog($bootstrapName . '/' . $bootstrapLogSessionID, LOG_NDELAY, LOG_USER);
 }
 
 // Métrologie.
