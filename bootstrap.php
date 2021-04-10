@@ -1,7 +1,9 @@
 <?php
 declare( strict_types = 1 );
 namespace Nebule\Bootstrap;
+//use nebule;
 // ------------------------------------------------------------------------------------------
+
 $bootstrapName = 'bootstrap';
 $bootstrapSurname = 'nebule/bootstrap';
 $bootstrapDescription = 'Loader of library and applications.';
@@ -4130,7 +4132,8 @@ function l_checkSIG( string &$bh, string &$bl, string &$sig, string &$nid ): boo
  */
 function l_checkhashalgo( string &$algo, string &$size): bool
 {
-
+    // TODO
+    return true;
 }
 
 /**
