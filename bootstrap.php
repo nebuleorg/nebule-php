@@ -37,8 +37,6 @@ ob_start();
  * Variable de session de connexion.
  * Elle est utilisée pour le suivi des logs jusqu'à l'application lors d'une connexion.
  * C'est différent de la session de l'utilisateur.
- *
- * @var string $bootstrapLogSession
  */
 $bootstrapLogSession = bin2hex(openssl_random_pseudo_bytes(6, $false));
 
@@ -52,14 +50,6 @@ $metrologyStartTime = microtime(true);
 // Initialize logs.
 openlog($bootstrapName . '/' . $bootstrapLogSession, LOG_NDELAY, LOG_USER);
 syslog(LOG_INFO, 'LogT=0 LogTabs=' . $metrologyStartTime . ' --- start ' . $bootstrapName);
-
-/*
- * Constante d'activation des logs.
- *  - à false, le strict minimum de log ainsi que des arguments spécifiques
- *      et les erreurs sont quand même journalisés.
- *  - à true, c'est un débugg du code du bootstrap.
- */
-define('BOOTSTRAP_LOG', false);
 
 
 
@@ -254,9 +244,9 @@ define('BOOTSTRAP_FILE_NAME', 'index.php');
  * @var array:string $nebuleFirstLocalisations
  */
 $nebuleFirstLocalisations = array(
+    'http://code.master.nebule.org',
     'http://puppetmaster.nebule.org',
     'http://security.master.nebule.org',
-    'http://code.master.nebule.org',
 );
 
 /*
@@ -359,8 +349,8 @@ define('FIRST_RELOAD_DELAY', 3000);
 
 // ------------------------------------------------------------------------------------------
 // Active la possibilité d'ouvrir du code dans des fichiers externes.
-ini_set('allow_url_fopen', true);
-ini_set('allow_url_include', true);
+ini_set('allow_url_fopen', '1');
+ini_set('allow_url_include', '1');
 
 
 // ------------------------------------------------------------------------------------------
@@ -2721,6 +2711,8 @@ function e_changepasswd($entity, $password): bool
         return false;
     if (!$nebulePermitWriteLink)
         return false;
+    if ($entity == '' )
+        return false;
     if ($password == '' && !$nebulePermitCreateEntityWithoutPassword)
         return false;
     // A faire...
@@ -3090,26 +3082,26 @@ function o_checkNID(string &$nid, bool $permitnull = false): bool
         return true;
 
     // Check hash value.
-    $hash = strok( $nid, '.' );
+    $hash = strtok( $nid, '.' );
     if ( strlen( $hash ) < NID_MIN_HASH_SIZE ) return false;
     if ( strlen( $hash ) > NID_MAX_HASH_SIZE ) return false;
     if ( ! ctype_xdigit( $hash ) ) return false;
 
     // Check algo value.
-    $algo = strok( '.' );
+    $algo = strtok( '.' );
     if ( strlen( $algo ) < NID_MIN_ALGO_SIZE ) return false;
     if ( strlen( $algo ) > NID_MAX_ALGO_SIZE ) return false;
     if ( ! ctype_alnum( $algo ) ) return false;
 
     // Check size value.
-    $size = strok( '.' );
+    $size = strtok( '.' );
     if ( ! ctype_digit( $size ) ) return false; // Check content before!
     if ( (int)$size < NID_MIN_HASH_SIZE ) return false;
     if ( (int)$size > NID_MAX_HASH_SIZE ) return false;
     if ( strlen( $hash ) != (int)$size ) return false;
 
     // Check item overflow
-    if ( strlen( strok( '.' ) ) != 0 ) return false;
+    if ( strlen( strtok( '.' ) ) != 0 ) return false;
 
     return true;
 }
@@ -3214,7 +3206,6 @@ function l_generate(string $CHR, string $REQ, string $NID1, string $NID2 = '', s
         return '';
     }
     $data = '_' . $nebulePublicEntity . '_' . $CHR . '_' . $REQ . '_' . $NID1 . '_' . $NID2 . '_' . $NID3;
-    $hexsign = '';
     $binary_signature = '';
     $hashdata = hash(getOption('cryptoHashAlgorithm'), $data);
     $binhash = pack("H*", $hashdata);
@@ -3859,11 +3850,11 @@ function l_checkBH( string &$bh ):bool
 {
     if ( strlen( $bh ) > 4096 ) return false; // TODO à revoir.
 
-    $rf = strok( $bh, '/' );
-    $rv = strok( '/' );
+    $rf = strtok( $bh, '/' );
+    $rv = strtok( '/' );
 
     // Check bloc overflow
-    if ( strlen( strok( '/' ) ) != 0 ) return false;
+    if ( strlen( strtok( '/' ) ) != 0 ) return false;
 
     // Check RF and RV.
     if ( ! l_checkRF( $rf ) ) return false;
@@ -3883,13 +3874,13 @@ function l_checkRF( string &$rf ):bool
     if ( strlen( $rf ) > 4096 ) return false; // TODO à revoir.
 
     // Check items from RF : APP:TYP
-    $app = strok( $rf, ':' );
+    $app = strtok( $rf, ':' );
     if ( $app != 'nebule' ) return false;
-    $typ = strok( ':' );
+    $typ = strtok( ':' );
     if ( $typ != 'link' ) return false;
 
     // Check registry overflow
-    if ( strlen( strok( ':' ) ) != 0 ) return false;
+    if ( strlen( strtok( ':' ) ) != 0 ) return false;
 
     return true;
 }
@@ -3905,13 +3896,13 @@ function l_checkRV( string &$rv ):bool
     if ( strlen( $rv ) > 4096 ) return false; // TODO à revoir.
 
     // Check items from RV : VER:SUB
-    $ver = strok( $rv, ':' );
+    $ver = strtok( $rv, ':' );
     if ( $ver != '2' ) return false;
-    $sub = strok( ':' );
+    $sub = strtok( ':' );
     if ( $sub != '0' ) return false;
 
     // Check registry overflow
-    if ( strlen( strok( ':' ) ) != 0 ) return false;
+    if ( strlen( strtok( ':' ) ) != 0 ) return false;
 
     return true;
 }
@@ -3926,11 +3917,11 @@ function l_checkBL( string &$bl ):bool
 {
     if ( strlen( $bl ) > 4096 ) return false; // TODO à revoir.
 
-    $rc = strok( $bl, '/' );
-    $rl = strok( '/' );
+    $rc = strtok( $bl, '/' );
+    $rl = strtok( '/' );
 
     // Check bloc overflow
-    if ( strlen( strok( '/' ) ) != 0 ) return false;
+    if ( strlen( strtok( '/' ) ) != 0 ) return false;
 
     // Check RC and RL.
     if ( ! l_checkRC( $rc ) ) return false;
@@ -3950,14 +3941,14 @@ function l_checkRC( string &$rc ): bool
     if ( strlen( $rc ) > 4096 ) return false; // TODO à revoir.
 
     // Check items from RC : MOD>CHR
-    $mod = strok( $rc, '>' );
+    $mod = strtok( $rc, '>' );
     if ( $mod != '0' ) return false;
-    $chr = strok( '>' );
+    $chr = strtok( '>' );
     if ( strlen( $chr ) != 15 ) return false;
     if ( ! ctype_digit( $chr ) ) return false;
 
     // Check registry overflow
-    if ( strlen( strok( '>' ) ) != 0 ) return false;
+    if ( strlen( strtok( '>' ) ) != 0 ) return false;
 
     // TODO check MOD
     // TODO check CHR
@@ -3976,16 +3967,16 @@ function l_checkRL( string &$rl ): bool
     if ( strlen( $rl ) > 4096 ) return false; // TODO à revoir.
 
     // Extract items from RL 1 : REQ>NID>NID>NID
-    $req = strok( $rl, '>' );
-    $rl1nid1 = strok( '>' );
+    $req = strtok( $rl, '>' );
+    $rl1nid1 = strtok( '>' );
     if ( $rl1nid1 === false ) $rl1nid1 = '';
-    $rl1nid2 = strok( '>' );
+    $rl1nid2 = strtok( '>' );
     if ( $rl1nid2 === false ) $rl1nid2 = '';
-    $rl1nid3 = strok( '>' );
+    $rl1nid3 = strtok( '>' );
     if ( $rl1nid3 === false ) $rl1nid3 = '';
 
     // Check registry overflow
-    if ( strlen( strok( '>' ) ) != 0 ) return false;
+    if ( strlen( strtok( '>' ) ) != 0 ) return false;
 
     // --- --- --- --- --- --- --- --- ---
     // Check REQ, NID1, NID2 and NID4.
@@ -4024,10 +4015,10 @@ function l_checkBS( string &$bh, string &$bl, string &$bs ):bool
 {
     if ( strlen( $bs ) > 4096 ) return false; // TODO à revoir.
 
-    $rs = strok( $bs, '/' );
+    $rs = strtok( $bs, '/' );
 
     // Check bloc overflow
-    if ( strlen( strok( '/' ) ) != 0 ) return false;
+    if ( strlen( strtok( '/' ) ) != 0 ) return false;
 
     // Check content RS 1 NID 1 : hash.algo.size
     if ( ! o_checkNID( $rs1nid1, false ) ) return false;
@@ -4049,11 +4040,11 @@ function l_checkRS( string &$rs, string &$bh, string &$bl ):bool
     if ( strlen( $rs ) > 4096 ) return false; // TODO à revoir.
 
     // Extract items from RS : NID>SIG
-    $nid = strok( $rs, '>' );
-    $sig = strok( '>' );
+    $nid = strtok( $rs, '>' );
+    $sig = strtok( '>' );
 
     // Check registry overflow
-    if ( strlen( strok( '>' ) ) != 0 ) return false;
+    if ( strlen( strtok( '>' ) ) != 0 ) return false;
 
     // --- --- --- --- --- --- --- --- ---
     // Check content RS 1 NID 1 : hash.algo.size
@@ -4079,26 +4070,26 @@ function l_checkSIG( string &$bh, string &$bl, string &$sig, string &$nid ): boo
     if ( strlen( $sig ) > 4096 ) return false; // TODO à revoir.
 
     // Check hash value.
-    $sign = strok( $sig, '.' );
+    $sign = strtok( $sig, '.' );
     if ( strlen( $sign ) < NID_MIN_HASH_SIZE ) return false;
     if ( strlen( $sign ) > NID_MAX_HASH_SIZE ) return false;
     if ( ! ctype_xdigit( $sign ) ) return false;
 
     // Check algo value.
-    $algo = strok( '.' );
+    $algo = strtok( '.' );
     if ( strlen( $algo ) < NID_MIN_ALGO_SIZE ) return false;
     if ( strlen( $algo ) > NID_MAX_ALGO_SIZE ) return false;
     if ( ! ctype_alnum( $algo ) ) return false;
 
     // Check size value.
-    $size = strok( '.' );
+    $size = strtok( '.' );
     if ( ! ctype_digit( $size ) ) return false; // Check content before!
     if ( (int)$size < NID_MIN_HASH_SIZE ) return false;
     if ( (int)$size > NID_MAX_HASH_SIZE ) return false;
     if ( strlen( $sign ) != (int)$size ) return false;
 
     // Check item overflow
-    if ( strlen( strok( '.' ) ) != 0 ) return false;
+    if ( strlen( strtok( '.' ) ) != 0 ) return false;
 
     // --- --- --- --- --- --- --- --- ---
     // Check sign.
@@ -4163,12 +4154,12 @@ function l_verifylink(string $link): bool
     if ( strlen( $link ) > 4096 ) return false; // TODO à revoir.
 
     // Extract blocs from link L : BH_BL_BS
-    $bh = strok( trim( $link ), '_' );
-    $bl = strok( '_' );
-    $bs = strok( '_' );
+    $bh = strtok( trim( $link ), '_' );
+    $bl = strtok( '_' );
+    $bs = strtok( '_' );
 
     // Check link overflow
-    if ( strlen( strok( '_' ) ) != 0 ) return false;
+    if ( strlen( strtok( '_' ) ) != 0 ) return false;
 
     // Check BH, BL and BS.
     if ( ! l_checkBH( $bh ) ) return false;
@@ -4318,7 +4309,7 @@ function io_checklinkfolder(): bool
         ) {
             return false;
         }
-        $read = file_get_contents($name, NULL, NULL, 0, 1024);
+        $read = file_get_contents($name, false, NULL, 0, 1024);
         if ($data != $read) {
             return false;
         }
@@ -4354,7 +4345,7 @@ function io_checkobjectfolder()
         ) {
             return false;
         }
-        $read = file_get_contents($name, NULL, NULL, 0, 1024);
+        $read = file_get_contents($name, false, NULL, 0, 1024);
         if ($data != $read) {
             return false;
         }
@@ -4445,7 +4436,7 @@ function io_objectread(&$o, $m = 0)
     }
 
     $nebuleMetrologyObjectList++;
-    return file_get_contents(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $o, NULL, NULL, 0, $s);
+    return file_get_contents(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $o, false, NULL, 0, $s);
 }
 
 /** FIXME
@@ -5046,9 +5037,9 @@ if (nebLibppCheck()) {
 
     // Désactivation des envois liés aux session après le premier usage. Evite tout un tas de logs inutiles.
     session_cache_limiter('');
-    ini_set('session.use_cookies', 0);
-    ini_set('session.use_only_cookies', 0);
-    ini_set('session.use_trans_sid', 0);
+    ini_set('session.use_cookies', '0');
+    ini_set('session.use_only_cookies', '0');
+    ini_set('session.use_trans_sid', '0');
 
     // Si pas d'application trouvée, recherche l'application par défaut
     //   ou charge l'application '0' de sélection d'application.
@@ -7814,7 +7805,7 @@ if (sizeof($bootstrapBreak) == 0) {
         }
     } elseif ($bootstrapServerEntityDisplay) {
         if (file_exists(NEBULE_LOCAL_ENTITY_FILE)) {
-            echo file_get_contents(NEBULE_LOCAL_ENTITY_FILE, NULL, NULL, -1, $nebuleIOMaxdata);
+            echo file_get_contents(NEBULE_LOCAL_ENTITY_FILE, false, NULL, -1, $nebuleIOMaxdata);
         } else {
             echo '0';
         }
