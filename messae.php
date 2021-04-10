@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
+namespace Nebule\Application\Messae;
 // ------------------------------------------------------------------------------------------
 $applicationName		= 'messae';
 $applicationSurname		= 'nebule/messae';
 $applicationDescription = 'Open and protected space to exchange messages and conversations.';
-						// Espace ouvert et protégé d'échange de messages et de conversations.
 $applicationVersion		= '020200222';
 $applicationLevel		= 'Developpement'; // Experimental | Developpement | Testing | Production
 $applicationLicence		= 'GNU GPL 2016-2020';

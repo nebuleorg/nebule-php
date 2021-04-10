@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
+namespace Nebule\Application\Qantion;
 // ------------------------------------------------------------------------------------------
 $applicationName		= 'qantion';
 $applicationSurname		= 'nebule/qantion';
 $applicationDescription = 'Smallest common quantization element.';
-                        // Plus petit élément de quantification commun.
 $applicationVersion		= '020200315';
 $applicationLevel		= 'Experimental'; // Experimental | Developpement | Testing | Production
 $applicationLicence		= 'GNU GPL 2019-2020';
