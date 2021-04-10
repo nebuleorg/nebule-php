@@ -1,5 +1,5 @@
 <?php
-declare( strict_types = 1 );
+declare(strict_types=1);
 namespace Nebule\Bootstrap;
 //use nebule;
 // ------------------------------------------------------------------------------------------
@@ -11,7 +11,6 @@ $bootstrapVersion = '020201120';
 $bootstrapLicence = 'GNU GPL 2010-2020';
 $bootstrapWebsite = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
-
 
 
 /*
@@ -28,7 +27,6 @@ $bootstrapWebsite = 'www.nebule.org';
 
 ------------------------------------------------------------------------------------------
 */
-
 
 
 // Disable display until routing choice have been made.
@@ -51,14 +49,6 @@ $metrologyStartTime = microtime(true);
 // Initialize logs.
 openlog($bootstrapName . '/' . $bootstrapLogSession, LOG_NDELAY, LOG_USER);
 syslog(LOG_INFO, 'LogT=0 LogTabs=' . $metrologyStartTime . ' --- start ' . $bootstrapName);
-
-
-
-
-
-
-
-
 
 
 /*
@@ -329,7 +319,7 @@ $nebuleFirstReservedObjects = array(
     'nebule/option',
     'nebule/danger',
     'nebule/warning',
-    'nebule/reference'
+    'nebule/reference',
 );
 
 /*
@@ -499,76 +489,76 @@ define('NID_MAX_ALGO_SIZE', 12);
  * @var array:string
  */
 $listOptionsType = array(
-        'puppetmaster'							=> 'string',
-        'hostURL'								=> 'string',
-        'permitWrite'							=> 'boolean',
-        'permitWriteObject'						=> 'boolean',
-        'permitCreateObject'					=> 'boolean',
-        'permitSynchronizeObject'				=> 'boolean',
-        'permitProtectedObject'					=> 'boolean',
-        'permitWriteLink'						=> 'boolean',
-        'permitCreateLink'						=> 'boolean',
-        'permitSynchronizeLink'					=> 'boolean',
-        'permitUploadLink'						=> 'boolean',
-        'permitPublicUploadLink'				=> 'boolean',
-        'permitPublicUploadCodeMasterLink'		=> 'boolean',
-        'permitObfuscatedLink'					=> 'boolean',
-        'permitWriteEntity'						=> 'boolean',
-        'permitPublicCreateEntity'				=> 'boolean',
-        'permitWriteGroup'						=> 'boolean',
-        'permitWriteConversation'				=> 'boolean',
-        'permitCurrency'						=> 'boolean',
-        'permitWriteCurrency'					=> 'boolean',
-        'permitCreateCurrency'					=> 'boolean',
-        'permitWriteTransaction'				=> 'boolean',
-        'permitObfuscatedTransaction'			=> 'boolean',
-        'permitSynchronizeApplication'			=> 'boolean',
-        'permitPublicSynchronizeApplication'	=> 'boolean',
-        'permitDeleteObjectOnUnknowHash'		=> 'boolean',
-        'permitCheckSignOnVerify'				=> 'boolean',
-        'permitCheckSignOnList'					=> 'boolean',
-        'permitCheckObjectHash'					=> 'boolean',
-        'permitListInvalidLinks'				=> 'boolean',
-        'permitHistoryLinksSign'				=> 'boolean',
-        'permitInstanceEntityAsAuthority'		=> 'boolean',
-        'permitDefaultEntityAsAuthority'		=> 'boolean',
-        'permitLocalSecondaryAuthorities'		=> 'boolean',
-        'permitRecoveryEntities'				=> 'boolean',
-        'permitRecoveryRemoveEntity'			=> 'boolean',
-        'permitInstanceEntityAsRecovery'		=> 'boolean',
-        'permitDefaultEntityAsRecovery'			=> 'boolean',
-        'permitAddLinkToSigner'					=> 'boolean',
-        'permitListOtherHash'					=> 'boolean',
-        'permitLocalisationStats'				=> 'boolean',
-        'permitFollowUpdates'					=> 'boolean',
-        'permitOnlineRescue'					=> 'boolean',
-        'permitLogs'							=> 'boolean',
-        'permitJavaScript'						=> 'boolean',
-        'logsLevel'								=> 'string',
-        'modeRescue'							=> 'boolean',
-        'cryptoLibrary'							=> 'string',
-        'cryptoHashAlgorithm'					=> 'string',
-        'cryptoSymetricAlgorithm'				=> 'string',
-        'cryptoAsymetricAlgorithm'				=> 'string',
-        'socialLibrary'							=> 'string',
-        'ioLibrary'								=> 'string',
-        'ioReadMaxLinks'						=> 'integer',
-        'ioReadMaxData'							=> 'integer',
-        'ioReadMaxUpload'						=> 'integer',
-        'ioTimeout'								=> 'integer',
-        'displayUnsecureURL'					=> 'boolean',
-        'displayNameSize'						=> 'integer',
-        'displayEmotions'						=> 'boolean',
-        'forceDisplayEntityOnTitle'				=> 'boolean',
-        'maxFollowedUpdates'					=> 'integer',
-        'permitSessionOptions'					=> 'boolean',
-        'permitSessionBuffer'					=> 'boolean',
-        'sessionBufferSize'						=> 'integer',
-        'defaultCurrentEntity'					=> 'string',
-        'defaultApplication'					=> 'string',
-        'defaultObfuscateLinks'					=> 'boolean',
-        'defaultLinksVersion'					=> 'string',
-        'subordinationEntity'					=> 'string',
+    'puppetmaster' => 'string',
+    'hostURL' => 'string',
+    'permitWrite' => 'boolean',
+    'permitWriteObject' => 'boolean',
+    'permitCreateObject' => 'boolean',
+    'permitSynchronizeObject' => 'boolean',
+    'permitProtectedObject' => 'boolean',
+    'permitWriteLink' => 'boolean',
+    'permitCreateLink' => 'boolean',
+    'permitSynchronizeLink' => 'boolean',
+    'permitUploadLink' => 'boolean',
+    'permitPublicUploadLink' => 'boolean',
+    'permitPublicUploadCodeMasterLink' => 'boolean',
+    'permitObfuscatedLink' => 'boolean',
+    'permitWriteEntity' => 'boolean',
+    'permitPublicCreateEntity' => 'boolean',
+    'permitWriteGroup' => 'boolean',
+    'permitWriteConversation' => 'boolean',
+    'permitCurrency' => 'boolean',
+    'permitWriteCurrency' => 'boolean',
+    'permitCreateCurrency' => 'boolean',
+    'permitWriteTransaction' => 'boolean',
+    'permitObfuscatedTransaction' => 'boolean',
+    'permitSynchronizeApplication' => 'boolean',
+    'permitPublicSynchronizeApplication' => 'boolean',
+    'permitDeleteObjectOnUnknowHash' => 'boolean',
+    'permitCheckSignOnVerify' => 'boolean',
+    'permitCheckSignOnList' => 'boolean',
+    'permitCheckObjectHash' => 'boolean',
+    'permitListInvalidLinks' => 'boolean',
+    'permitHistoryLinksSign' => 'boolean',
+    'permitInstanceEntityAsAuthority' => 'boolean',
+    'permitDefaultEntityAsAuthority' => 'boolean',
+    'permitLocalSecondaryAuthorities' => 'boolean',
+    'permitRecoveryEntities' => 'boolean',
+    'permitRecoveryRemoveEntity' => 'boolean',
+    'permitInstanceEntityAsRecovery' => 'boolean',
+    'permitDefaultEntityAsRecovery' => 'boolean',
+    'permitAddLinkToSigner' => 'boolean',
+    'permitListOtherHash' => 'boolean',
+    'permitLocalisationStats' => 'boolean',
+    'permitFollowUpdates' => 'boolean',
+    'permitOnlineRescue' => 'boolean',
+    'permitLogs' => 'boolean',
+    'permitJavaScript' => 'boolean',
+    'logsLevel' => 'string',
+    'modeRescue' => 'boolean',
+    'cryptoLibrary' => 'string',
+    'cryptoHashAlgorithm' => 'string',
+    'cryptoSymetricAlgorithm' => 'string',
+    'cryptoAsymetricAlgorithm' => 'string',
+    'socialLibrary' => 'string',
+    'ioLibrary' => 'string',
+    'ioReadMaxLinks' => 'integer',
+    'ioReadMaxData' => 'integer',
+    'ioReadMaxUpload' => 'integer',
+    'ioTimeout' => 'integer',
+    'displayUnsecureURL' => 'boolean',
+    'displayNameSize' => 'integer',
+    'displayEmotions' => 'boolean',
+    'forceDisplayEntityOnTitle' => 'boolean',
+    'maxFollowedUpdates' => 'integer',
+    'permitSessionOptions' => 'boolean',
+    'permitSessionBuffer' => 'boolean',
+    'sessionBufferSize' => 'integer',
+    'defaultCurrentEntity' => 'string',
+    'defaultApplication' => 'string',
+    'defaultObfuscateLinks' => 'boolean',
+    'defaultLinksVersion' => 'string',
+    'subordinationEntity' => 'string',
 );
 
 /**
@@ -577,76 +567,76 @@ $listOptionsType = array(
  * @var array:string|boolean|integer
  */
 $listOptionsDefaultValue = array(
-        'puppetmaster'							=> NEBULE_DEFAULT_PUPPETMASTER_ID,
-        'hostURL'								=> 'localhost',
-        'permitWrite'							=> true,
-        'permitWriteObject'						=> true,
-        'permitCreateObject'					=> true,
-        'permitSynchronizeObject'				=> true,
-        'permitProtectedObject'					=> false,
-        'permitWriteLink'						=> true,
-        'permitCreateLink'						=> true,
-        'permitSynchronizeLink'					=> true,
-        'permitUploadLink'						=> false,
-        'permitPublicUploadLink'				=> false,
-        'permitPublicUploadCodeMasterLink'		=> false,
-        'permitObfuscatedLink'					=> false,
-        'permitWriteEntity'						=> true,
-        'permitPublicCreateEntity'				=> true,
-        'permitWriteGroup'						=> true,
-        'permitWriteConversation'				=> false,
-        'permitCurrency'						=> false,
-        'permitWriteCurrency'					=> false,
-        'permitCreateCurrency'					=> false,
-        'permitWriteTransaction'				=> false,
-        'permitObfuscatedTransaction'			=> false,
-        'permitSynchronizeApplication'			=> true,
-        'permitPublicSynchronizeApplication'	=> true,
-        'permitDeleteObjectOnUnknowHash'		=> true,
-        'permitCheckSignOnVerify'				=> true,
-        'permitCheckSignOnList'					=> true,
-        'permitCheckObjectHash'					=> true,
-        'permitListInvalidLinks'				=> false,
-        'permitHistoryLinksSign'				=> false,
-        'permitInstanceEntityAsAuthority'		=> false,
-        'permitDefaultEntityAsAuthority'		=> false,
-        'permitLocalSecondaryAuthorities'		=> true,
-        'permitRecoveryEntities'				=> false,
-        'permitRecoveryRemoveEntity'			=> false,
-        'permitInstanceEntityAsRecovery'		=> false,
-        'permitDefaultEntityAsRecovery'			=> false,
-        'permitAddLinkToSigner'					=> true,
-        'permitListOtherHash'					=> false,
-        'permitLocalisationStats'				=> true,
-        'permitFollowUpdates'					=> true,
-        'permitOnlineRescue'					=> false,
-        'permitLogs'							=> false,
-        'permitJavaScript'						=> false,
-        'logsLevel'								=> 'NORMAL',
-        'modeRescue'							=> false,
-        'cryptoLibrary'							=> 'openssl',
-        'cryptoHashAlgorithm'					=> 'sha256',
-        'cryptoSymetricAlgorithm'				=> 'aes-256-ctr',
-        'cryptoAsymetricAlgorithm'				=> 'rsa2048',
-        'socialLibrary'							=> 'strict',
-        'ioLibrary'								=> 'ioFileSystem',
-        'ioReadMaxLinks'						=> 2000,
-        'ioReadMaxData'							=> 10000,
-        'ioReadMaxUpload'						=> 2000000,
-        'ioTimeout'								=> 1,
-        'displayUnsecureURL'					=> true,
-        'displayNameSize'						=> 128,
-        'displayEmotions'						=> false,
-        'forceDisplayEntityOnTitle'				=> false,
-        'maxFollowedUpdates'					=> 100,
-        'permitSessionOptions'					=> true,
-        'permitSessionBuffer'					=> true,
-        'sessionBufferSize'						=> 1000,
-        'defaultCurrentEntity'					=> NEBULE_DEFAULT_PUPPETMASTER_ID,
-        'defaultApplication'					=> '0',
-        'defaultObfuscateLinks'					=> false,
-        'defaultLinksVersion'					=> '2.0',
-        'subordinationEntity'					=> '',
+    'puppetmaster' => NEBULE_DEFAULT_PUPPETMASTER_ID,
+    'hostURL' => 'localhost',
+    'permitWrite' => true,
+    'permitWriteObject' => true,
+    'permitCreateObject' => true,
+    'permitSynchronizeObject' => true,
+    'permitProtectedObject' => false,
+    'permitWriteLink' => true,
+    'permitCreateLink' => true,
+    'permitSynchronizeLink' => true,
+    'permitUploadLink' => false,
+    'permitPublicUploadLink' => false,
+    'permitPublicUploadCodeMasterLink' => false,
+    'permitObfuscatedLink' => false,
+    'permitWriteEntity' => true,
+    'permitPublicCreateEntity' => true,
+    'permitWriteGroup' => true,
+    'permitWriteConversation' => false,
+    'permitCurrency' => false,
+    'permitWriteCurrency' => false,
+    'permitCreateCurrency' => false,
+    'permitWriteTransaction' => false,
+    'permitObfuscatedTransaction' => false,
+    'permitSynchronizeApplication' => true,
+    'permitPublicSynchronizeApplication' => true,
+    'permitDeleteObjectOnUnknowHash' => true,
+    'permitCheckSignOnVerify' => true,
+    'permitCheckSignOnList' => true,
+    'permitCheckObjectHash' => true,
+    'permitListInvalidLinks' => false,
+    'permitHistoryLinksSign' => false,
+    'permitInstanceEntityAsAuthority' => false,
+    'permitDefaultEntityAsAuthority' => false,
+    'permitLocalSecondaryAuthorities' => true,
+    'permitRecoveryEntities' => false,
+    'permitRecoveryRemoveEntity' => false,
+    'permitInstanceEntityAsRecovery' => false,
+    'permitDefaultEntityAsRecovery' => false,
+    'permitAddLinkToSigner' => true,
+    'permitListOtherHash' => false,
+    'permitLocalisationStats' => true,
+    'permitFollowUpdates' => true,
+    'permitOnlineRescue' => false,
+    'permitLogs' => false,
+    'permitJavaScript' => false,
+    'logsLevel' => 'NORMAL',
+    'modeRescue' => false,
+    'cryptoLibrary' => 'openssl',
+    'cryptoHashAlgorithm' => 'sha256',
+    'cryptoSymetricAlgorithm' => 'aes-256-ctr',
+    'cryptoAsymetricAlgorithm' => 'rsa2048',
+    'socialLibrary' => 'strict',
+    'ioLibrary' => 'ioFileSystem',
+    'ioReadMaxLinks' => 2000,
+    'ioReadMaxData' => 10000,
+    'ioReadMaxUpload' => 2000000,
+    'ioTimeout' => 1,
+    'displayUnsecureURL' => true,
+    'displayNameSize' => 128,
+    'displayEmotions' => false,
+    'forceDisplayEntityOnTitle' => false,
+    'maxFollowedUpdates' => 100,
+    'permitSessionOptions' => true,
+    'permitSessionBuffer' => true,
+    'sessionBufferSize' => 1000,
+    'defaultCurrentEntity' => NEBULE_DEFAULT_PUPPETMASTER_ID,
+    'defaultApplication' => '0',
+    'defaultObfuscateLinks' => false,
+    'defaultLinksVersion' => '2.0',
+    'subordinationEntity' => '',
 );
 
 /**
@@ -661,58 +651,57 @@ $listOptionsBuffer = array();
  * @param string $type
  * @return null|string|boolean|integer
  */
-function getOption(string $name )
+function getOption(string $name)
 {
     global $listOptionsType, $listOptionsDefaultValue, $listOptionsBuffer;
 
     $result = null;
-    $value  = '';
+    $value = '';
 
-    if ( $name == ''
-        || ! is_string($name)
-        || ! isset($listOptionsType[$name])
+    if ($name == ''
+        || !is_string($name)
+        || !isset($listOptionsType[$name])
     )
         return null;
 
     // Use cache if found.
-    if ( isset($listOptionsBuffer[$name]) )
+    if (isset($listOptionsBuffer[$name]))
         return $listOptionsBuffer[$name];
 
     // Read file and extract asked option.
-    if ( file_exists( NEBULE_ENVIRONMENT_FILE ) )
-    {
-        $file = file( NEBULE_ENVIRONMENT_FILE, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES );
-        foreach ( $file as $line ) {
-            $l = trim( filter_var( $line, FILTER_SANITIZE_STRING ) );
+    if (file_exists(NEBULE_ENVIRONMENT_FILE)) {
+        $file = file(NEBULE_ENVIRONMENT_FILE, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
+        foreach ($file as $line) {
+            $l = trim(filter_var($line, FILTER_SANITIZE_STRING));
 
-            if ( $l == '' || $l[0] == "#" || strpos( $l, '=' ) === false )
+            if ($l == '' || $l[0] == "#" || strpos($l, '=') === false)
                 continue;
 
-            if ( trim( strtok( $l, '=' ) ) == $name) {
-                $value = trim( strtok( '=' ) );
+            if (trim(strtok($l, '=')) == $name) {
+                $value = trim(strtok('='));
                 break;
             }
         }
     }
 
     // If not found, read default value.
-    if ( $value == '' )
+    if ($value == '')
         $value = $listOptionsDefaultValue[$name];
 
     // Convert value onto asked type.
-    switch ( $listOptionsType[$name] ) {
+    switch ($listOptionsType[$name]) {
         case 'string' :
             $result = $value;
             break;
         case 'boolean' :
-            if ( $value == 'true' ) {
+            if ($value == 'true') {
                 $result = true;
             } else {
                 $result = false;
             }
             break;
         case 'integer' :
-            if ( $value != '' ) {
+            if ($value != '') {
                 $result = (int)$value;
             } else {
                 $result = 0;
@@ -1183,7 +1172,7 @@ if (!isset($nebulePublicEntity)
  */
 
 //  FIXME
-function checkMasterEntity( string $n )
+function checkMasterEntity(string $n)
 {
 
 }
@@ -2491,13 +2480,13 @@ function e_generate($type, $size, $algohash, &$hashpubkey, &$hashprivkey, $passw
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign.".getOption('cryptoHashAlgorithm')."$data");
+        l_writecontent("$hexsign." . getOption('cryptoHashAlgorithm') . "$data");
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashhash . '_' . $refhashtext . '_' . $refhashtype;
         $hashdata = hash(getOption('cryptoHashAlgorithm'), $data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign.".getOption('cryptoHashAlgorithm')."$data");
+        l_writecontent("$hexsign." . getOption('cryptoHashAlgorithm') . "$data");
     }
     if (!io_testobjectpresent($refhashalgo)) {
         $cryptoHashAlgorithm = getOption('cryptoHashAlgorithm');
@@ -2507,13 +2496,13 @@ function e_generate($type, $size, $algohash, &$hashpubkey, &$hashprivkey, $passw
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign.".getOption('cryptoHashAlgorithm')."$data");
+        l_writecontent("$hexsign." . getOption('cryptoHashAlgorithm') . "$data");
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashalgo . '_' . $refhashtext . '_' . $refhashtype;
         $hashdata = hash(getOption('cryptoHashAlgorithm'), $data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign.".getOption('cryptoHashAlgorithm')."$data");
+        l_writecontent("$hexsign." . getOption('cryptoHashAlgorithm') . "$data");
     }
     if (!io_testobjectpresent($refhashtype)) {
         $newtxt = 'nebule/objet/type';
@@ -2523,13 +2512,13 @@ function e_generate($type, $size, $algohash, &$hashpubkey, &$hashprivkey, $passw
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign.".getOption('cryptoHashAlgorithm')."$data");
+        l_writecontent("$hexsign." . getOption('cryptoHashAlgorithm') . "$data");
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtype . '_' . $refhashtext . '_' . $refhashtype;
         $hashdata = hash(getOption('cryptoHashAlgorithm'), $data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign.".getOption('cryptoHashAlgorithm')."$data");
+        l_writecontent("$hexsign." . getOption('cryptoHashAlgorithm') . "$data");
     }
     if (!io_testobjectpresent($refhashpem)) {
         $newtxt = 'application/x-pem-file';
@@ -2539,13 +2528,13 @@ function e_generate($type, $size, $algohash, &$hashpubkey, &$hashprivkey, $passw
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign.".getOption('cryptoHashAlgorithm')."$data");
+        l_writecontent("$hexsign." . getOption('cryptoHashAlgorithm') . "$data");
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashpem . '_' . $refhashtext . '_' . $refhashtype;
         $hashdata = hash(getOption('cryptoHashAlgorithm'), $data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign.".getOption('cryptoHashAlgorithm')."$data");
+        l_writecontent("$hexsign." . getOption('cryptoHashAlgorithm') . "$data");
     }
     if (!io_testobjectpresent($refhashtext)) {
         $newtxt = 'text/plain';
@@ -2555,13 +2544,13 @@ function e_generate($type, $size, $algohash, &$hashpubkey, &$hashprivkey, $passw
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign.".getOption('cryptoHashAlgorithm')."$data");
+        l_writecontent("$hexsign." . getOption('cryptoHashAlgorithm') . "$data");
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtext . '_' . $refhashtext . '_' . $refhashtype;
         $hashdata = hash(getOption('cryptoHashAlgorithm'), $data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign.".getOption('cryptoHashAlgorithm')."$data");
+        l_writecontent("$hexsign." . getOption('cryptoHashAlgorithm') . "$data");
     }
     // Génération du lien de hash de la clé publique.
     $data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashpubkey . '_' . $refhashalgo . '_' . $refhashhash;
@@ -2569,35 +2558,35 @@ function e_generate($type, $size, $algohash, &$hashpubkey, &$hashprivkey, $passw
     $binhash = pack("H*", $hashdata);
     $ok1 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
-    l_writecontent("$hexsign.".getOption('cryptoHashAlgorithm')."$data");
+    l_writecontent("$hexsign." . getOption('cryptoHashAlgorithm') . "$data");
     // Génération du lien de hash de la clé privée.
     $data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashprivkey . '_' . $refhashalgo . '_' . $refhashhash;
     $hashdata = hash(getOption('cryptoHashAlgorithm'), $data);
     $binhash = pack("H*", $hashdata);
     $ok2 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
-    l_writecontent("$hexsign.".getOption('cryptoHashAlgorithm')."$data");
+    l_writecontent("$hexsign." . getOption('cryptoHashAlgorithm') . "$data");
     // Génération du lien de typemime de la clé publique.
     $data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashpubkey . '_' . $refhashpem . '_' . $refhashtype;
     $hashdata = hash(getOption('cryptoHashAlgorithm'), $data);
     $binhash = pack("H*", $hashdata);
     $ok3 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
-    l_writecontent("$hexsign.".getOption('cryptoHashAlgorithm')."$data");
+    l_writecontent("$hexsign." . getOption('cryptoHashAlgorithm') . "$data");
     // Génération du lien de typemime de la clé privée.
     $data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashprivkey . '_' . $refhashpem . '_' . $refhashtype;
     $hashdata = hash(getOption('cryptoHashAlgorithm'), $data);
     $binhash = pack("H*", $hashdata);
     $ok4 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
-    l_writecontent("$hexsign.".getOption('cryptoHashAlgorithm')."$data");
+    l_writecontent("$hexsign." . getOption('cryptoHashAlgorithm') . "$data");
     // Génération du lien de jumelage des clés.
     $data = '_' . $hashpubkey . '_' . $date . '_f_' . $hashprivkey . '_' . $hashpubkey . '_0';
     $hashdata = hash(getOption('cryptoHashAlgorithm'), $data);
     $binhash = pack("H*", $hashdata);
     $ok5 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
-    l_writecontent("$hexsign.".getOption('cryptoHashAlgorithm')."$data");
+    l_writecontent("$hexsign." . getOption('cryptoHashAlgorithm') . "$data");
     // Nettoyage.
     openssl_free_key($private_key);
     unset($private_key);
@@ -2712,7 +2701,7 @@ function e_changepasswd($entity, $password): bool
         return false;
     if (!$nebulePermitWriteLink)
         return false;
-    if ($entity == '' )
+    if ($entity == '')
         return false;
     if ($password == '' && !$nebulePermitCreateEntityWithoutPassword)
         return false;
@@ -2867,8 +2856,7 @@ function o_getupdatedcontent($object, &$data)
 function o_getcontent(&$nid, &$data): bool
 {
     // If exist and not corrupted, extract content to $data.
-    if ( io_testobjectpresent($nid) && o_checkcontent($nid) )
-    {
+    if (io_testobjectpresent($nid) && o_checkcontent($nid)) {
         $data = io_objectread($nid);
         return true;
     }
@@ -3079,30 +3067,30 @@ function o_checkcontent(&$nid)
 function o_checkNID(string &$nid, bool $permitnull = false): bool
 {
     // May be null in some case.
-    if ( $permitnull && $nid == '' )
+    if ($permitnull && $nid == '')
         return true;
 
     // Check hash value.
-    $hash = strtok( $nid, '.' );
-    if ( strlen( $hash ) < NID_MIN_HASH_SIZE ) return false;
-    if ( strlen( $hash ) > NID_MAX_HASH_SIZE ) return false;
-    if ( ! ctype_xdigit( $hash ) ) return false;
+    $hash = strtok($nid, '.');
+    if (strlen($hash) < NID_MIN_HASH_SIZE) return false;
+    if (strlen($hash) > NID_MAX_HASH_SIZE) return false;
+    if (!ctype_xdigit($hash)) return false;
 
     // Check algo value.
-    $algo = strtok( '.' );
-    if ( strlen( $algo ) < NID_MIN_ALGO_SIZE ) return false;
-    if ( strlen( $algo ) > NID_MAX_ALGO_SIZE ) return false;
-    if ( ! ctype_alnum( $algo ) ) return false;
+    $algo = strtok('.');
+    if (strlen($algo) < NID_MIN_ALGO_SIZE) return false;
+    if (strlen($algo) > NID_MAX_ALGO_SIZE) return false;
+    if (!ctype_alnum($algo)) return false;
 
     // Check size value.
-    $size = strtok( '.' );
-    if ( ! ctype_digit( $size ) ) return false; // Check content before!
-    if ( (int)$size < NID_MIN_HASH_SIZE ) return false;
-    if ( (int)$size > NID_MAX_HASH_SIZE ) return false;
-    if ( strlen( $hash ) != (int)$size ) return false;
+    $size = strtok('.');
+    if (!ctype_digit($size)) return false; // Check content before!
+    if ((int)$size < NID_MIN_HASH_SIZE) return false;
+    if ((int)$size > NID_MAX_HASH_SIZE) return false;
+    if (strlen($hash) != (int)$size) return false;
 
     // Check item overflow
-    if ( strlen( strtok( '.' ) ) != 0 ) return false;
+    if (strlen(strtok('.')) != 0) return false;
 
     return true;
 }
@@ -3178,7 +3166,7 @@ function o_delete(string &$object): bool
  * @param string $NID3
  * @return string
  */
-function l_generate(string $CHR, string $REQ, string $NID1, string $NID2 = '', string $NID3 = '' )
+function l_generate(string $CHR, string $REQ, string $NID1, string $NID2 = '', string $NID3 = '')
 {
     global $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite;
 
@@ -3192,11 +3180,11 @@ function l_generate(string $CHR, string $REQ, string $NID1, string $NID2 = '', s
         return '';
     if ($REQ == '')
         return '';
-    if ( ! o_checkNID($NID1) )
+    if (!o_checkNID($NID1))
         return '';
-    if ( ! o_checkNID($NID2, true) )
+    if (!o_checkNID($NID2, true))
         return '';
-    if ( ! o_checkNID($NID3, true) )
+    if (!o_checkNID($NID3, true))
         return '';
     if ($CHR == '-')
         $CHR = date(DATE_ATOM);
@@ -3219,7 +3207,7 @@ function l_generate(string $CHR, string $REQ, string $NID1, string $NID2 = '', s
         return '';
     $hexsign = bin2hex($binary_signature);
 
-    return "$hexsign.".getOption('cryptoHashAlgorithm')."$data";
+    return "$hexsign." . getOption('cryptoHashAlgorithm') . "$data";
 }
 
 /** FIXME
@@ -3847,19 +3835,19 @@ function l_downloadlinkonlocation($object, $localisation)
  * @param string $bh
  * @return bool
  */
-function l_checkBH( string &$bh ):bool
+function l_checkBH(string &$bh): bool
 {
-    if ( strlen( $bh ) > 4096 ) return false; // TODO à revoir.
+    if (strlen($bh) > 4096) return false; // TODO à revoir.
 
-    $rf = strtok( $bh, '/' );
-    $rv = strtok( '/' );
+    $rf = strtok($bh, '/');
+    $rv = strtok('/');
 
     // Check bloc overflow
-    if ( strlen( strtok( '/' ) ) != 0 ) return false;
+    if (strlen(strtok('/')) != 0) return false;
 
     // Check RF and RV.
-    if ( ! l_checkRF( $rf ) ) return false;
-    if ( ! l_checkRV( $rv ) ) return false;
+    if (!l_checkRF($rf)) return false;
+    if (!l_checkRV($rv)) return false;
 
     return true;
 }
@@ -3870,18 +3858,18 @@ function l_checkBH( string &$bh ):bool
  * @param string $rf
  * @return bool
  */
-function l_checkRF( string &$rf ):bool
+function l_checkRF(string &$rf): bool
 {
-    if ( strlen( $rf ) > 4096 ) return false; // TODO à revoir.
+    if (strlen($rf) > 4096) return false; // TODO à revoir.
 
     // Check items from RF : APP:TYP
-    $app = strtok( $rf, ':' );
-    if ( $app != 'nebule' ) return false;
-    $typ = strtok( ':' );
-    if ( $typ != 'link' ) return false;
+    $app = strtok($rf, ':');
+    if ($app != 'nebule') return false;
+    $typ = strtok(':');
+    if ($typ != 'link') return false;
 
     // Check registry overflow
-    if ( strlen( strtok( ':' ) ) != 0 ) return false;
+    if (strlen(strtok(':')) != 0) return false;
 
     return true;
 }
@@ -3892,18 +3880,18 @@ function l_checkRF( string &$rf ):bool
  * @param string $rv
  * @return bool
  */
-function l_checkRV( string &$rv ):bool
+function l_checkRV(string &$rv): bool
 {
-    if ( strlen( $rv ) > 4096 ) return false; // TODO à revoir.
+    if (strlen($rv) > 4096) return false; // TODO à revoir.
 
     // Check items from RV : VER:SUB
-    $ver = strtok( $rv, ':' );
-    if ( $ver != '2' ) return false;
-    $sub = strtok( ':' );
-    if ( $sub != '0' ) return false;
+    $ver = strtok($rv, ':');
+    if ($ver != '2') return false;
+    $sub = strtok(':');
+    if ($sub != '0') return false;
 
     // Check registry overflow
-    if ( strlen( strtok( ':' ) ) != 0 ) return false;
+    if (strlen(strtok(':')) != 0) return false;
 
     return true;
 }
@@ -3914,19 +3902,19 @@ function l_checkRV( string &$rv ):bool
  * @param string $bl
  * @return bool
  */
-function l_checkBL( string &$bl ):bool
+function l_checkBL(string &$bl): bool
 {
-    if ( strlen( $bl ) > 4096 ) return false; // TODO à revoir.
+    if (strlen($bl) > 4096) return false; // TODO à revoir.
 
-    $rc = strtok( $bl, '/' );
-    $rl = strtok( '/' );
+    $rc = strtok($bl, '/');
+    $rl = strtok('/');
 
     // Check bloc overflow
-    if ( strlen( strtok( '/' ) ) != 0 ) return false;
+    if (strlen(strtok('/')) != 0) return false;
 
     // Check RC and RL.
-    if ( ! l_checkRC( $rc ) ) return false;
-    if ( ! l_checkRL( $rl ) ) return false;
+    if (!l_checkRC($rc)) return false;
+    if (!l_checkRL($rl)) return false;
 
     return true;
 }
@@ -3937,19 +3925,19 @@ function l_checkBL( string &$bl ):bool
  * @param string $rc
  * @return bool
  */
-function l_checkRC( string &$rc ): bool
+function l_checkRC(string &$rc): bool
 {
-    if ( strlen( $rc ) > 4096 ) return false; // TODO à revoir.
+    if (strlen($rc) > 4096) return false; // TODO à revoir.
 
     // Check items from RC : MOD>CHR
-    $mod = strtok( $rc, '>' );
-    if ( $mod != '0' ) return false;
-    $chr = strtok( '>' );
-    if ( strlen( $chr ) != 15 ) return false;
-    if ( ! ctype_digit( $chr ) ) return false;
+    $mod = strtok($rc, '>');
+    if ($mod != '0') return false;
+    $chr = strtok('>');
+    if (strlen($chr) != 15) return false;
+    if (!ctype_digit($chr)) return false;
 
     // Check registry overflow
-    if ( strlen( strtok( '>' ) ) != 0 ) return false;
+    if (strlen(strtok('>')) != 0) return false;
 
     // TODO check MOD
     // TODO check CHR
@@ -3963,28 +3951,28 @@ function l_checkRC( string &$rc ): bool
  * @param string $rl
  * @return bool
  */
-function l_checkRL( string &$rl ): bool
+function l_checkRL(string &$rl): bool
 {
-    if ( strlen( $rl ) > 4096 ) return false; // TODO à revoir.
+    if (strlen($rl) > 4096) return false; // TODO à revoir.
 
     // Extract items from RL 1 : REQ>NID>NID>NID
-    $req = strtok( $rl, '>' );
-    $rl1nid1 = strtok( '>' );
-    if ( $rl1nid1 === false ) $rl1nid1 = '';
-    $rl1nid2 = strtok( '>' );
-    if ( $rl1nid2 === false ) $rl1nid2 = '';
-    $rl1nid3 = strtok( '>' );
-    if ( $rl1nid3 === false ) $rl1nid3 = '';
+    $req = strtok($rl, '>');
+    $rl1nid1 = strtok('>');
+    if ($rl1nid1 === false) $rl1nid1 = '';
+    $rl1nid2 = strtok('>');
+    if ($rl1nid2 === false) $rl1nid2 = '';
+    $rl1nid3 = strtok('>');
+    if ($rl1nid3 === false) $rl1nid3 = '';
 
     // Check registry overflow
-    if ( strlen( strtok( '>' ) ) != 0 ) return false;
+    if (strlen(strtok('>')) != 0) return false;
 
     // --- --- --- --- --- --- --- --- ---
     // Check REQ, NID1, NID2 and NID4.
-    if ( ! l_checkREQ( $req ) ) return false;
-    if ( ! o_checkNID( $rl1nid1, false ) ) return false;
-    if ( ! o_checkNID( $rl1nid2, true  ) ) return false;
-    if ( ! o_checkNID( $rl1nid3, true  ) ) return false;
+    if (!l_checkREQ($req)) return false;
+    if (!o_checkNID($rl1nid1, false)) return false;
+    if (!o_checkNID($rl1nid2, true)) return false;
+    if (!o_checkNID($rl1nid3, true)) return false;
 
     return true;
 }
@@ -3995,9 +3983,9 @@ function l_checkRL( string &$rl ): bool
  * @param string $req
  * @return bool
  */
-function l_checkREQ( string &$req ): bool
+function l_checkREQ(string &$req): bool
 {
-    if ( $req != 'l' && $req != 'f' && $req != 'u' && $req != 'd' && $req != 'e' && $req != 'c' && $req != 'k' && $req != 's' && $req != 'x' ) return false;
+    if ($req != 'l' && $req != 'f' && $req != 'u' && $req != 'd' && $req != 'e' && $req != 'c' && $req != 'k' && $req != 's' && $req != 'x') return false;
 
     return true;
 }
@@ -4012,18 +4000,18 @@ function l_checkREQ( string &$req ): bool
  * @param string $bs
  * @return bool
  */
-function l_checkBS( string &$bh, string &$bl, string &$bs ):bool
+function l_checkBS(string &$bh, string &$bl, string &$bs): bool
 {
-    if ( strlen( $bs ) > 4096 ) return false; // TODO à revoir.
+    if (strlen($bs) > 4096) return false; // TODO à revoir.
 
-    $rs = strtok( $bs, '/' );
+    $rs = strtok($bs, '/');
 
     // Check bloc overflow
-    if ( strlen( strtok( '/' ) ) != 0 ) return false;
+    if (strlen(strtok('/')) != 0) return false;
 
     // Check content RS 1 NID 1 : hash.algo.size
-    if ( ! o_checkNID( $rs1nid1, false ) ) return false;
-    if ( ! l_checkRS( $rs, $bh, $bl ) ) return false;
+    if (!o_checkNID($rs1nid1, false)) return false;
+    if (!l_checkRS($rs, $bh, $bl)) return false;
 
     return true;
 }
@@ -4036,21 +4024,21 @@ function l_checkBS( string &$bh, string &$bl, string &$bs ):bool
  * @param string $bl
  * @return bool
  */
-function l_checkRS( string &$rs, string &$bh, string &$bl ):bool
+function l_checkRS(string &$rs, string &$bh, string &$bl): bool
 {
-    if ( strlen( $rs ) > 4096 ) return false; // TODO à revoir.
+    if (strlen($rs) > 4096) return false; // TODO à revoir.
 
     // Extract items from RS : NID>SIG
-    $nid = strtok( $rs, '>' );
-    $sig = strtok( '>' );
+    $nid = strtok($rs, '>');
+    $sig = strtok('>');
 
     // Check registry overflow
-    if ( strlen( strtok( '>' ) ) != 0 ) return false;
+    if (strlen(strtok('>')) != 0) return false;
 
     // --- --- --- --- --- --- --- --- ---
     // Check content RS 1 NID 1 : hash.algo.size
-    if ( ! o_checkNID( $nid, false ) ) return false;
-    if ( ! l_checkSIG( $bh, $bl, $sig, $nid ) ) return false;
+    if (!o_checkNID($nid, false)) return false;
+    if (!l_checkSIG($bh, $bl, $sig, $nid)) return false;
 
     return true;
 }
@@ -4064,55 +4052,55 @@ function l_checkRS( string &$rs, string &$bh, string &$bl ):bool
  * @param string $nid
  * @return bool
  */
-function l_checkSIG( string &$bh, string &$bl, string &$sig, string &$nid ): bool
+function l_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): bool
 {
     global $nebuleCheckSignOnVerify, $nebuleMetrologyLinkVerify;
 
-    if ( strlen( $sig ) > 4096 ) return false; // TODO à revoir.
+    if (strlen($sig) > 4096) return false; // TODO à revoir.
 
     // Check hash value.
-    $sign = strtok( $sig, '.' );
-    if ( strlen( $sign ) < NID_MIN_HASH_SIZE ) return false;
-    if ( strlen( $sign ) > NID_MAX_HASH_SIZE ) return false;
-    if ( ! ctype_xdigit( $sign ) ) return false;
+    $sign = strtok($sig, '.');
+    if (strlen($sign) < NID_MIN_HASH_SIZE) return false;
+    if (strlen($sign) > NID_MAX_HASH_SIZE) return false;
+    if (!ctype_xdigit($sign)) return false;
 
     // Check algo value.
-    $algo = strtok( '.' );
-    if ( strlen( $algo ) < NID_MIN_ALGO_SIZE ) return false;
-    if ( strlen( $algo ) > NID_MAX_ALGO_SIZE ) return false;
-    if ( ! ctype_alnum( $algo ) ) return false;
+    $algo = strtok('.');
+    if (strlen($algo) < NID_MIN_ALGO_SIZE) return false;
+    if (strlen($algo) > NID_MAX_ALGO_SIZE) return false;
+    if (!ctype_alnum($algo)) return false;
 
     // Check size value.
-    $size = strtok( '.' );
-    if ( ! ctype_digit( $size ) ) return false; // Check content before!
-    if ( (int)$size < NID_MIN_HASH_SIZE ) return false;
-    if ( (int)$size > NID_MAX_HASH_SIZE ) return false;
-    if ( strlen( $sign ) != (int)$size ) return false;
+    $size = strtok('.');
+    if (!ctype_digit($size)) return false; // Check content before!
+    if ((int)$size < NID_MIN_HASH_SIZE) return false;
+    if ((int)$size > NID_MAX_HASH_SIZE) return false;
+    if (strlen($sign) != (int)$size) return false;
 
     // Check item overflow
-    if ( strlen( strtok( '.' ) ) != 0 ) return false;
+    if (strlen(strtok('.')) != 0) return false;
 
     // --- --- --- --- --- --- --- --- ---
     // Check sign.
-    if ( ! $nebuleCheckSignOnVerify ) return true;
-    if ( io_testobjectpresent( $nid ) ) {
-        $hash = hash( getOption('cryptoHashAlgorithm'), $bh . '_' . $bl ); // TODO remplacer getOption('cryptoHashAlgorithm') par une convertion des algo et size.
+    if (!$nebuleCheckSignOnVerify) return true;
+    if (io_testobjectpresent($nid)) {
+        $hash = hash(getOption('cryptoHashAlgorithm'), $bh . '_' . $bl); // TODO remplacer getOption('cryptoHashAlgorithm') par une convertion des algo et size.
 
         // Read signer's public key.
-        o_checkcontent( $nid );
-        $cert = io_objectread( $nid );
-        $pubkeyid = openssl_pkey_get_public( $cert );
-        if ( $pubkeyid === false ) return false;
+        o_checkcontent($nid);
+        $cert = io_objectread($nid);
+        $pubkeyid = openssl_pkey_get_public($cert);
+        if ($pubkeyid === false) return false;
 
         $nebuleMetrologyLinkVerify++;
 
         // Encoding sign before check.
-        $binsign = pack( 'H*', $sign );
+        $binsign = pack('H*', $sign);
 
         // Decode sign with public key.
-        if ( openssl_public_decrypt( $binsign, $bindecrypted, $pubkeyid, OPENSSL_PKCS1_PADDING ) ) {
-            $decrypted = ( substr( bin2hex( $bindecrypted ), -64, 64 ) ); // TODO A faire pour le cas général.
-            if ( $decrypted == $hash )
+        if (openssl_public_decrypt($binsign, $bindecrypted, $pubkeyid, OPENSSL_PKCS1_PADDING)) {
+            $decrypted = (substr(bin2hex($bindecrypted), -64, 64)); // TODO A faire pour le cas général.
+            if ($decrypted == $hash)
                 return true;
         }
     }
@@ -4129,7 +4117,7 @@ function l_checkSIG( string &$bh, string &$bl, string &$sig, string &$nid ): boo
  * @param string $size
  * @return bool
  */
-function l_checkhashalgo( string &$algo, string &$size): bool
+function l_checkhashalgo(string &$algo, string &$size): bool
 {
     // TODO
     return true;
@@ -4153,20 +4141,20 @@ function l_checkhashalgo( string &$algo, string &$size): bool
  */
 function l_verifylink(string $link): bool
 {
-    if ( strlen( $link ) > 4096 ) return false; // TODO à revoir.
+    if (strlen($link) > 4096) return false; // TODO à revoir.
 
     // Extract blocs from link L : BH_BL_BS
-    $bh = strtok( trim( $link ), '_' );
-    $bl = strtok( '_' );
-    $bs = strtok( '_' );
+    $bh = strtok(trim($link), '_');
+    $bl = strtok('_');
+    $bs = strtok('_');
 
     // Check link overflow
-    if ( strlen( strtok( '_' ) ) != 0 ) return false;
+    if (strlen(strtok('_')) != 0) return false;
 
     // Check BH, BL and BS.
-    if ( ! l_checkBH( $bh ) ) return false;
-    if ( ! l_checkBL( $bl ) ) return false;
-    if ( ! l_checkBS( $bh, $bl, $bs ) ) return false;
+    if (!l_checkBH($bh)) return false;
+    if (!l_checkBL($bl)) return false;
+    if (!l_checkBS($bh, $bl, $bs)) return false;
 
     return true;
 }
@@ -4261,14 +4249,14 @@ function l_writecontent($link)
  */
 function io_open(): bool
 {
-    if ( ! file_exists( NEBULE_LOCAL_LINKS_FOLDER ) )
+    if (!file_exists(NEBULE_LOCAL_LINKS_FOLDER))
         mkdir(NEBULE_LOCAL_LINKS_FOLDER);
-    if ( ! io_checklinkfolder() )
+    if (!io_checklinkfolder())
         return false;
 
-    if ( ! file_exists( NEBULE_LOCAL_OBJECTS_FOLDER ) )
+    if (!file_exists(NEBULE_LOCAL_OBJECTS_FOLDER))
         mkdir(NEBULE_LOCAL_OBJECTS_FOLDER);
-    if ( ! io_checkobjectfolder() )
+    if (!io_checkobjectfolder())
         return false;
 
     return true;
@@ -4281,7 +4269,7 @@ function io_open(): bool
  */
 function io_check(): bool
 {
-    if ( ! io_checklinkfolder() || ! io_checkobjectfolder() )
+    if (!io_checklinkfolder() || !io_checkobjectfolder())
         return false;
     return true;
 }
@@ -4311,7 +4299,7 @@ function io_checklinkfolder(): bool
         ) {
             return false;
         }
-        $read = file_get_contents($name, false, NULL, 0, 1024);
+        $read = file_get_contents($name, false, null, 0, 1024);
         if ($data != $read) {
             return false;
         }
@@ -4347,7 +4335,7 @@ function io_checkobjectfolder()
         ) {
             return false;
         }
-        $read = file_get_contents($name, false, NULL, 0, 1024);
+        $read = file_get_contents($name, false, null, 0, 1024);
         if ($data != $read) {
             return false;
         }
@@ -4438,7 +4426,7 @@ function io_objectread(&$o, $m = 0)
     }
 
     $nebuleMetrologyObjectList++;
-    return file_get_contents(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $o, false, NULL, 0, $s);
+    return file_get_contents(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $o, false, null, 0, $s);
 }
 
 /** FIXME
@@ -4587,14 +4575,6 @@ function getpseudorandom($n = 32): string
 
     return $result;
 }
-
-
-
-
-
-
-
-
 
 
 /*
@@ -5165,7 +5145,7 @@ function loadLibrary(): void
         addLog('load library nebule ' . $bootstrapLibraryID);
 
         // Charge l'objet de la bibliothèque. @todo faire via les i/o.
-        include( NEBULE_LOCAL_OBJECTS_FOLDER . '/' . '$bootstrapLibraryID' );
+        include(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . '$bootstrapLibraryID');
 
         if ($bootstrapLibraryInstanceSleep == '') {
             // Instancie la bibliothèque.
@@ -5863,10 +5843,25 @@ $name = nebReadEntityFullName($nebuleServerEntite);
     </div>
 </div>
 <div class="layout-main">
-    <div class="layout-content">
+    <div class="layout-content"><?php
+        }
+
+        // ------------------------------------------------------------------------------------------
+        /**
+         * Affichage de la fermeture de la page HTML.
+         *
+         * @return void
+         */
+        function bootstrapHtmlBottom()
+        {
+        ?>
+
+    </div>
+</div>
+</body>
+</html>
 <?php
 }
-
 
 
 // ------------------------------------------------------------------------------------------
@@ -6290,23 +6285,6 @@ function bootstrapInlineDisplayOnBreak()
 }
 
 
-// ------------------------------------------------------------------------------------------
-/**
- * Affichage de la fermeture de la page HTML.
- *
- * @return void
- */
-function bootstrapHtmlBottom()
-{
-?>
-
-    </div>
-</div>
-</body>
-</html>
-<?php
-}
-
 /*
  ------------------------------------------------------------------------------------------
   Affichage de la page de pré-chargement de l'application.
@@ -6411,7 +6389,7 @@ function bootstrapDisplayPreloadApplication()
         syslog(LOG_INFO, 'LogT=0 LogTabs=' . (microtime(true)) . ' load_application=' . $bootstrapApplicationID);
 
         // Charge l'objet de l'application. @todo faire via les i/o.
-        include( NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID );
+        include(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
 
         // Instanciation des classes de l'application.
         $applicationInstance = new Application($nebuleInstance);
@@ -7151,25 +7129,25 @@ function bootstrapFirstSynchronizingObjects()
         }
         ?>
 
-        </div>
-        &gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo $bootstrapName; ?></a> ...
-        <script type="text/javascript">
-            <!--
-            setTimeout(function () {
-                window.location.reload(true)
-            }, <?php echo FIRST_RELOAD_DELAY; ?>);
-            //-->
-        </script>
-        <?php
-    } else {
-        addLog('ok sync objects');
-        ?>
-        ok
-        <?php
-        echo "</div>\n";
-        // Si c'est bon on continue la création du fichier des options par défaut.
-        bootstrapFirstCreateOptionsFile();
-    }
+    </div>
+    &gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo $bootstrapName; ?></a> ...
+    <script type="text/javascript">
+        <!--
+        setTimeout(function () {
+            window.location.reload(true)
+        }, <?php echo FIRST_RELOAD_DELAY; ?>);
+        //-->
+    </script>
+    <?php
+} else {
+    addLog('ok sync objects');
+    ?>
+    ok
+    <?php
+    echo "</div>\n";
+    // Si c'est bon on continue la création du fichier des options par défaut.
+    bootstrapFirstCreateOptionsFile();
+}
 }
 
 
@@ -7703,7 +7681,7 @@ if (sizeof($bootstrapBreak) == 0) {
             addLog('load application ' . $bootstrapApplicationID);
 
             // Charge l'objet de l'application. @todo faire via les i/o.
-            include( NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID );
+            include(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
 
             // Change les logs au nom de l'application.
             closelog();
@@ -7742,7 +7720,7 @@ if (sizeof($bootstrapBreak) == 0) {
             addLog('load application whitout preload ' . $bootstrapApplicationID);
 
             // Charge l'objet de l'application. @todo faire via les i/o.
-            include( NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID );
+            include(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
 
             // Change les logs au nom de l'application.
             closelog();
@@ -7816,7 +7794,7 @@ if (sizeof($bootstrapBreak) == 0) {
         }
     } elseif ($bootstrapServerEntityDisplay) {
         if (file_exists(NEBULE_LOCAL_ENTITY_FILE)) {
-            echo file_get_contents(NEBULE_LOCAL_ENTITY_FILE, false, NULL, -1, $nebuleIOMaxdata);
+            echo file_get_contents(NEBULE_LOCAL_ENTITY_FILE, false, null, -1, $nebuleIOMaxdata);
         } else {
             echo '0';
         }
