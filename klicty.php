@@ -1,15 +1,12 @@
 <?php
 declare(strict_types=1);
-
 namespace Nebule\Application\Klicty;
 // ------------------------------------------------------------------------------------------
 $applicationName = 'klicty';
 $applicationSurname = 'nebule/klicty';
 $applicationDescription = 'Open and protected space to share information with limit in time.';
-// Espace ouvert et protégé de partage d'information à durée limitée.
-$applicationVersion = '020200222';
-$applicationLevel = 'Development'; // Experimental | Development | Testing | Production
-$applicationLicence = 'GNU GPL 2015-2020';
+$applicationVersion = '020210410';
+$applicationLicence = 'GNU GPL 2015-2021';
 $applicationAuthor = 'Projet nebule';
 $applicationWebsite = 'www.klicty.org';
 // ------------------------------------------------------------------------------------------

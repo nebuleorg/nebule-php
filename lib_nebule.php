@@ -6,9 +6,8 @@ $nebuleName = 'library';
 $nebuleSurname = 'nebule/library';
 $nebuleDescription = 'Library of functions for nebule in php object-oriented.';
 $nebuleAuthor = 'Projet nebule';
-$nebuleLibLevel = 'Experimental'; // Experimental | Development | Testing | Production
-$nebuleLibVersion = '02020121';
-$nebuleLicence = 'GNU GPL 2010-2020';
+$nebuleLibVersion = '020210410';
+$nebuleLicence = 'GNU GPL 2010-2021';
 $nebuleWebsite = 'www.nebule.org';
 // ----------------------------------------------------------------------------------------
 
@@ -44,7 +43,6 @@ $applicationSurname = 'nebule/defolt';
 $applicationDescription = 'Default web page for servers without interactive application.';
 // Page web par défaut pour les serveurs sans application interactive.
 $applicationVersion = $nebuleLibVersion;
-$applicationLevel = $nebuleLibLevel;
 $applicationLicence = $nebuleLicence;
 $applicationAuthor = $nebuleAuthor;
 $applicationWebsite = $nebuleWebsite;
@@ -29481,7 +29479,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     private function _displayFull()
     {
-        global $applicationVersion, $applicationLevel, $applicationLicence, $applicationWebsite, $applicationName, $applicationSurname, $applicationAuthor;
+        global $applicationVersion, $applicationLicence, $applicationWebsite, $applicationName, $applicationSurname, $applicationAuthor;
         ?>
         <!DOCTYPE html>
         <html>
@@ -29529,7 +29527,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             <div class="footer-center">
                 <p>
                     <?php echo $applicationName; ?><br/>
-                    <?php echo $applicationVersion . ' ' . $applicationLevel; ?><br/>
+                    <?php echo $applicationVersion; ?><br/>
                     (c) <?php echo $applicationLicence . ' ' . $applicationAuthor; ?> - <a
                             href="http://<?php echo $applicationWebsite; ?>" target="_blank"
                             style="text-decoration:none;"><?php echo $applicationWebsite; ?></a>
@@ -43435,7 +43433,6 @@ abstract class Applications
             <li>$applicationSurname</li>
             <li>$applicationDescription</li>
             <li>$applicationVersion</li>
-            <li>$applicationLevel</li>
             <li>$applicationLicence</li>
             <li>$applicationAuthor</li>
             <li>$applicationWebsite</li>
@@ -43650,9 +43647,8 @@ abstract class Applications
 $applicationName		= 'Share';
 $applicationSurname		= 'Share All';
 $applicationDescription	= 'Web page for sharing all you want.';
-$applicationVersion		= '020200202';
-$applicationLevel		= 'Developpement'; // Experimental | Developpement | Testing | Production
-$applicationLicence		= 'GNU GPL 2020';
+$applicationVersion		= '020210410';
+$applicationLicence		= 'GNU GPL 2021';
 $applicationAuthor		= 'Me';
 $applicationWebsite		= 'notme.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -43735,7 +43731,7 @@ hBCAAAAJhx/QGiUnc0nJCIeAAAAABJRU5ErkJggg==';
 	 */
 	public function display()
 	{
-		global $applicationVersion, $applicationLevel, $applicationLicence, $applicationWebsite,
+		global $applicationVersion, $applicationLicence, $applicationWebsite,
 				$applicationName, $applicationSurname, $applicationAuthor;
 		?>
 &lt;!DOCTYPE html>

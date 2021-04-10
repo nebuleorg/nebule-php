@@ -6,9 +6,8 @@ namespace Nebule\Application\Messae;
 $applicationName = 'messae';
 $applicationSurname = 'nebule/messae';
 $applicationDescription = 'Open and protected space to exchange messages and conversations.';
-$applicationVersion = '020200222';
-$applicationLevel = 'Development'; // Experimental | Development | Testing | Production
-$applicationLicence = 'GNU GPL 2016-2020';
+$applicationVersion = '020210410';
+$applicationLicence = 'GNU GPL 2016-2021';
 $applicationAuthor = 'Projet nebule';
 $applicationWebsite = 'www.messae.org';
 // ------------------------------------------------------------------------------------------
@@ -1321,7 +1320,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
      */
     private function _displayMenuApplications()
     {
-        global $applicationName, $applicationVersion, $applicationLicence, $applicationAuthor, $applicationWebsite, $applicationLevel;
+        global $applicationName, $applicationVersion, $applicationLicence, $applicationAuthor, $applicationWebsite;
 
         $linkApplicationWebsite = $applicationWebsite;
         if (strpos($applicationWebsite, '://') === false) {
@@ -1335,7 +1334,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 <?php echo $applicationName; ?><br/>
                 (c) <?php echo $applicationLicence . ' ' . $applicationAuthor; ?><br/>
                 <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Version');
-                echo ' : ' . $applicationVersion . ' ' . $applicationLevel; ?><br/>
+                echo ' : ' . $applicationVersion; ?><br/>
                 <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo $applicationWebsite; ?></a>
             </div>
             <div class="menu-applications-logo">
@@ -2274,7 +2273,7 @@ class ModuleHelp extends Modules
      */
     private function _displayHlpAbout()
     {
-        global $applicationName, $applicationVersion, $applicationLevel, $applicationLicence, $applicationAuthor, $applicationWebsite;
+        global $applicationName, $applicationVersion, $applicationLicence, $applicationAuthor, $applicationWebsite;
 
         // Affiche les informations de l'application.
         $param = array(
@@ -2289,7 +2288,7 @@ class ModuleHelp extends Modules
         $list[0]['param'] = $param;
         $list[0]['param']['icon'] = Display::DEFAULT_APPLICATION_LOGO;
         $list[0]['object'] = '1';
-        $list[1]['information'] = $this->_applicationInstance->getTraductionInstance()->getTraduction('::Version') . ' : ' . $applicationVersion . ' ' . $applicationLevel;
+        $list[1]['information'] = $this->_applicationInstance->getTraductionInstance()->getTraduction('::Version') . ' : ' . $applicationVersion;
         $list[1]['param'] = $param;
         $list[2]['information'] = $applicationLicence . ' ' . $applicationAuthor;
         $list[2]['param'] = $param;

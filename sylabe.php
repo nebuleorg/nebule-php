@@ -5,9 +5,8 @@ namespace Nebule\Application\Sylabe;
 $applicationName = 'sylabe';
 $applicationSurname = 'nebule/sylabe';
 $applicationDescription = 'Reference web page for nebule capabilities.';
-$applicationVersion = '020200315';
-$applicationLevel = 'Development'; // Experimental | Development | Testing | Production
-$applicationLicence = 'GNU GPL 2013-2020';
+$applicationVersion = '020210410';
+$applicationLicence = 'GNU GPL 2013-2021';
 $applicationAuthor = 'Projet nebule';
 $applicationWebsite = 'www.sylabe.org';
 // ------------------------------------------------------------------------------------------
@@ -1460,7 +1459,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
      */
     private function _displayMenuApplications()
     {
-        global $applicationName, $applicationVersion, $applicationLicence, $applicationAuthor, $applicationWebsite, $applicationLevel;
+        global $applicationName, $applicationVersion, $applicationLicence, $applicationAuthor, $applicationWebsite;
 
         $linkApplicationWebsite = $applicationWebsite;
         if (strpos($applicationWebsite, '://') === false) {
@@ -1474,7 +1473,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 <?php echo $applicationName; ?><br/>
                 (c) <?php echo $applicationLicence . ' ' . $applicationAuthor; ?><br/>
                 <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Version');
-                echo ' : ' . $applicationVersion . ' ' . $applicationLevel; ?><br/>
+                echo ' : ' . $applicationVersion; ?><br/>
                 <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo $applicationWebsite; ?></a>
             </div>
             <div class="menu-applications-logo">
@@ -3623,7 +3622,6 @@ class ModuleHelp extends Modules
     {
         global $applicationSurname,
                $applicationVersion,
-               $applicationLevel,
                $applicationLicence,
                $applicationAuthor,
                $applicationWebsite,
@@ -3645,7 +3643,7 @@ class ModuleHelp extends Modules
         //$list[0]['object'] = '1';
         $list[1]['information'] = '<a href="http://' . $applicationWebsite . '" target="_blank">' . $applicationWebsite . '</a>';
         $list[1]['param'] = $param;
-        $list[2]['information'] = $this->_applicationInstance->getTraductionInstance()->getTraduction('::Version') . ' : ' . $applicationVersion . ' ' . $applicationLevel;
+        $list[2]['information'] = $this->_applicationInstance->getTraductionInstance()->getTraduction('::Version') . ' : ' . $applicationVersion;
         $list[2]['param'] = $param;
         $list[3]['information'] = $applicationLicence . ' ' . $applicationAuthor;
         $list[3]['param'] = $param;

@@ -5,9 +5,8 @@ namespace Nebule\Application\Option;
 $applicationName = 'option';
 $applicationSurname = 'nebule/option';
 $applicationDescription = 'Web page to manage options and applications.';
-$applicationVersion = '020200202';
-$applicationLevel = 'Developpement'; // Experimental | Development | Testing | Production
-$applicationLicence = 'GNU GPL 2016-2020';
+$applicationVersion = '020210410';
+$applicationLicence = 'GNU GPL 2016-2021';
 $applicationAuthor = 'Projet nebule';
 $applicationWebsite = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------

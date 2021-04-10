@@ -5,9 +5,8 @@ namespace Nebule\Application\Defolt;
 $applicationName = 'defolt';
 $applicationSurname = 'nebule/defolt';
 $applicationDescription = 'Default web page for servers without interactive application.';
-$applicationVersion = '020200222';
-$applicationLevel = 'Testing'; // Experimental | Development | Testing | Production
-$applicationLicence = 'GNU GPL 2016-2020';
+$applicationVersion = '020210410';
+$applicationLicence = 'GNU GPL 2016-2021';
 $applicationAuthor = 'Projet nebule';
 $applicationWebsite = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------

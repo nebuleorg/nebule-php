@@ -5,9 +5,8 @@ namespace Nebule\Application\Upload;
 $applicationName = 'upload';
 $applicationSurname = 'nebule/upload';
 $applicationDescription = 'Web page to upload links and objects from code master.';
-$applicationVersion = '020200202';
-$applicationLevel = 'Testing'; // Experimental | Development | Testing | Production
-$applicationLicence = 'GNU GPL 2016-2020';
+$applicationVersion = '020210410';
+$applicationLicence = 'GNU GPL 2016-2021';
 $applicationAuthor = 'Projet nebule';
 $applicationWebsite = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
