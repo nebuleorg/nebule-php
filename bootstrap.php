@@ -366,15 +366,11 @@ ini_set('allow_url_include', true);
 // ------------------------------------------------------------------------------------------
 /**
  * Variable de raison d'interruption de chargement du bootstrap.
- *
- * @var array:string $bootstrapBreak
  */
 $bootstrapBreak = array();
 
 /**
  * Variable d'interruption de chargement du bootstrap par l'utilisateur.
- *
- * @var boolean $bootstrapUserBreak
  */
 $bootstrapUserBreak = false;
 
