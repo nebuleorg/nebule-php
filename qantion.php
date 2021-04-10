@@ -1828,7 +1828,7 @@ class ModuleHelp extends Modules
 		{
 			$object = $this->_applicationInstance->getCurrentObject();
 		}
-		if ( is_a($object, 'Object') )
+		if ( is_a($object, 'Node') )
 		{
 			$object = $object->getID();
 		}
@@ -2343,7 +2343,7 @@ class ModuleAdmin extends Modules
 		{
 			$object = $this->_applicationInstance->getCurrentObject();
 		}
-		if ( is_a($object, 'Object') )
+		if ( is_a($object, 'Node') )
 		{
 			$object = $object->getID();
 		}
@@ -2916,7 +2916,7 @@ class ModuleEntities extends Modules
 	/**
 	 * L'instance de l'objet de référence des entités.
 	 *
-	 * @var Object
+	 * @var Node
 	 */
 	private $_hashEntityObject;
 	
@@ -2964,7 +2964,7 @@ class ModuleEntities extends Modules
 	 * Ajout de fonctionnalités à des points d'ancrage.
 	 *
 	 * @param string $hookName
-	 * @param string|object $object
+	 * @param string|Node $object
 	 * @return array
 	 */
 	public function getHookList($hookName, $object='none')
@@ -2974,7 +2974,7 @@ class ModuleEntities extends Modules
 		{
 			$object = $this->_nebuleInstance->getCurrentEntity();
 		}
-		if ( is_a($object, 'Object') )
+		if ( is_a($object, 'Node') )
 		{
 			$object = $object->getID();
 		}
@@ -3904,7 +3904,7 @@ class ModuleEntities extends Modules
 					$signer			= $link->getHashSigner();
 					$date			= $link->getDate();
 					$object			= $link->getHashTarget();
-					$objectInstance	= New Object($this->_nebuleInstance, $object);
+					$objectInstance	= New Node($this->_nebuleInstance, $object);
 ?>
 
 	<div class="sylabeModuleEntityActionDivIcon">
@@ -3930,7 +3930,7 @@ class ModuleEntities extends Modules
 					$signer			= $link->getHashSigner();
 					$date			= $link->getDate();
 					$object			= $link->getHashTarget();
-					$objectInstance	= New Object($this->_nebuleInstance, $object);
+					$objectInstance	= New Node($this->_nebuleInstance, $object);
 ?>
 
 	<div class="sylabeModuleEntityActionDivIcon">
@@ -3956,7 +3956,7 @@ class ModuleEntities extends Modules
 					$signer			= $link->getHashSigner();
 					$date			= $link->getDate();
 					$object			= $link->getHashTarget();
-					$objectInstance	= New Object($this->_nebuleInstance, $object);
+					$objectInstance	= New Node($this->_nebuleInstance, $object);
 ?>
 
 	<div class="sylabeModuleEntityActionDivIcon">
@@ -5517,7 +5517,7 @@ class ModuleGroups extends Modules
 	 * Ajout de fonctionnalités à des points d'ancrage.
 	 *
 	 * @param string $hookName
-	 * @param string|object $object
+	 * @param string|Node $object
 	 * @return array
 	 */
 	public function getHookList($hookName, $object='none')
@@ -5527,7 +5527,7 @@ class ModuleGroups extends Modules
 		{
 			$object = $this->_nebuleInstance->getCurrentGroup();
 		}
-		if ( is_a($object, 'Object') )
+		if ( is_a($object, 'Node') )
 		{
 			$object = $object->getID();
 		}
@@ -6641,7 +6641,7 @@ class ModuleObjects extends Modules
 	 * Ajout de fonctionnalités à des points d'ancrage.
 	 *
 	 * @param string $hookName
-	 * @param string|object $object
+	 * @param string|Node $object
 	 * @return array
 	 */
 	public function getHookList($hookName, $object='none')
@@ -6651,7 +6651,7 @@ class ModuleObjects extends Modules
 		{
 			$object = $this->_applicationInstance->getCurrentObject();
 		}
-		if ( is_a($object, 'Object') )
+		if ( is_a($object, 'Node') )
 		{
 			$object = $object->getID();
 		}
@@ -8299,7 +8299,7 @@ class Moduleqantion extends Modules
 	 * Ajout de fonctionnalités à des points d'ancrage.
 	 *
 	 * @param string $hookName
-	 * @param string|object $object
+	 * @param string|Node $object
 	 * @return array
 	 */
 	public function getHookList($hookName, $object='none')
@@ -8308,7 +8308,7 @@ class Moduleqantion extends Modules
 		{
 			$object = $this->_applicationInstance->getCurrentObject();
 		}
-		if ( is_a($object, 'Object') )
+		if ( is_a($object, 'Node') )
 		{
 			$object = $object->getID();
 		}
@@ -10923,7 +10923,7 @@ class Moduleqantion extends Modules
 	/**
 	 * Recherche les monnaies.
 	 *
-	 * @param Object|string $entity
+	 * @param Node|string $entity
 	 * @return array
 	 */
 	private function _getCurrencies($entity='')
@@ -10931,7 +10931,7 @@ class Moduleqantion extends Modules
 		$result = array();
 		
 		// Prépare l'entité.
-		if ( is_a($entity, 'Object') )
+		if ( is_a($entity, 'Node') )
 		{
 			$entity = $entity->getID();
 		}
@@ -10961,8 +10961,8 @@ class Moduleqantion extends Modules
 	/**
 	 * Détermine si l'objet est une monnaie de l'entité affichée.
 	 *
-	 * @param Object|string $object
-	 * @param Object|string $entity
+	 * @param Node|string $object
+	 * @param Node|string $entity
 	 * @return boolean
 	 */
 	private function _isCurrency($object, $entity='')
@@ -10971,7 +10971,7 @@ class Moduleqantion extends Modules
 		$object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
 		
 		// Prépare l'entité.
-		if ( is_a($entity, 'Object') )
+		if ( is_a($entity, 'Node') )
 		{
 			$entity = $entity->getID();
 		}
@@ -11002,7 +11002,7 @@ class Moduleqantion extends Modules
 	/**
 	 * Détermine les entités ayant définit l'objet comme monnaie.
 	 *
-	 * @param Object|string $object
+	 * @param Node|string $object
 	 * @return array
 	 */
 	private function _getByIsCurrency($object)
@@ -11044,7 +11044,7 @@ class Moduleqantion extends Modules
 	/**
 	 * Recherche les sacs de jetons.
 	 *
-	 * @param Object|string $entity
+	 * @param Node|string $entity
 	 * @return array
 	 */
 	private function _getPools($entity='')
@@ -11052,7 +11052,7 @@ class Moduleqantion extends Modules
 		$result = array();
 		
 		// Prépare l'entité.
-		if ( is_a($entity, 'Object') )
+		if ( is_a($entity, 'Node') )
 		{
 			$entity = $entity->getID();
 		}
@@ -11082,8 +11082,8 @@ class Moduleqantion extends Modules
 	/**
 	 * Détermine si l'objet est un sac de jetons de l'entité affichée.
 	 *
-	 * @param Object|string $object
-	 * @param Object|string $entity
+	 * @param Node|string $object
+	 * @param Node|string $entity
 	 * @return boolean
 	 */
 	private function _isPool($object, $entity='')
@@ -11092,7 +11092,7 @@ class Moduleqantion extends Modules
 		$object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
 		
 		// Prépare l'entité.
-		if ( is_a($entity, 'Object') )
+		if ( is_a($entity, 'Node') )
 		{
 			$entity = $entity->getID();
 		}
@@ -11123,7 +11123,7 @@ class Moduleqantion extends Modules
 	/**
 	 * Détermine les entités ayant définit l'objet comme sac de jetons.
 	 *
-	 * @param Object|string $object
+	 * @param Node|string $object
 	 * @return array
 	 */
 	private function _getByIsPool($object)
@@ -11404,7 +11404,7 @@ class ModuleTranslateFRFR extends Modules
 	 * Ajout de fonctionnalités à des points d'ancrage.
 	 *
 	 * @param string $hookName
-	 * @param string|object $object
+	 * @param string|Node $object
 	 * @return array
 	 */
 	public function getHookList($hookName, $object='none')
@@ -11413,7 +11413,7 @@ class ModuleTranslateFRFR extends Modules
 		{
 			$object = $this->_applicationInstance->getCurrentObject();
 		}
-		if ( is_a($object, 'Object') )
+		if ( is_a($object, 'Node') )
 		{
 			$object = $object->getID();
 		}
@@ -12169,7 +12169,7 @@ class ModuleTranslateENEN extends Modules
 	 * Ajout de fonctionnalités à des points d'ancrage.
 	 *
 	 * @param string $hookName
-	 * @param string|object $object
+	 * @param string|Node $object
 	 * @return array
 	 */
 	public function getHookList($hookName, $object='none')
@@ -12178,7 +12178,7 @@ class ModuleTranslateENEN extends Modules
 		{
 			$object = $this->_applicationInstance->getCurrentObject();
 		}
-		if ( is_a($object, 'Object') )
+		if ( is_a($object, 'Node') )
 		{
 			$object = $object->getID();
 		}

@@ -1828,7 +1828,7 @@ class ModuleHelp extends Modules
 		{
 			$object = $this->_applicationInstance->getCurrentObject();
 		}
-		if ( is_a($object, 'Object') )
+		if ( is_a($object, 'Node') )
 		{
 			$object = $object->getID();
 		}
@@ -2342,7 +2342,7 @@ class ModuleAdmin extends Modules
 		{
 			$object = $this->_applicationInstance->getCurrentObject();
 		}
-		if ( is_a($object, 'Object') )
+		if ( is_a($object, 'Node') )
 		{
 			$object = $object->getID();
 		}
@@ -2915,7 +2915,7 @@ class ModuleEntities extends Modules
 	/**
 	 * L'instance de l'objet de référence des entités.
 	 *
-	 * @var Object
+	 * @var Node
 	 */
 	private $_hashEntityObject;
 	
@@ -2963,7 +2963,7 @@ class ModuleEntities extends Modules
 	 * Ajout de fonctionnalités à des points d'ancrage.
 	 *
 	 * @param string $hookName
-	 * @param string|object $object
+	 * @param string|Node $object
 	 * @return array
 	 */
 	public function getHookList($hookName, $object='none')
@@ -2973,7 +2973,7 @@ class ModuleEntities extends Modules
 		{
 			$object = $this->_nebuleInstance->getCurrentEntity();
 		}
-		if ( is_a($object, 'Object') )
+		if ( is_a($object, 'Node') )
 		{
 			$object = $object->getID();
 		}
@@ -3903,7 +3903,7 @@ class ModuleEntities extends Modules
 					$signer			= $link->getHashSigner();
 					$date			= $link->getDate();
 					$object			= $link->getHashTarget();
-					$objectInstance	= New Object($this->_nebuleInstance, $object);
+					$objectInstance	= New Node($this->_nebuleInstance, $object);
 ?>
 
 	<div class="sylabeModuleEntityActionDivIcon">
@@ -3929,7 +3929,7 @@ class ModuleEntities extends Modules
 					$signer			= $link->getHashSigner();
 					$date			= $link->getDate();
 					$object			= $link->getHashTarget();
-					$objectInstance	= New Object($this->_nebuleInstance, $object);
+					$objectInstance	= New Node($this->_nebuleInstance, $object);
 ?>
 
 	<div class="sylabeModuleEntityActionDivIcon">
@@ -3955,7 +3955,7 @@ class ModuleEntities extends Modules
 					$signer			= $link->getHashSigner();
 					$date			= $link->getDate();
 					$object			= $link->getHashTarget();
-					$objectInstance	= New Object($this->_nebuleInstance, $object);
+					$objectInstance	= New Node($this->_nebuleInstance, $object);
 ?>
 
 	<div class="sylabeModuleEntityActionDivIcon">
@@ -5516,7 +5516,7 @@ class ModuleGroups extends Modules
 	 * Ajout de fonctionnalités à des points d'ancrage.
 	 *
 	 * @param string $hookName
-	 * @param string|object $object
+	 * @param string|Node $object
 	 * @return array
 	 */
 	public function getHookList($hookName, $object='none')
@@ -5526,7 +5526,7 @@ class ModuleGroups extends Modules
 		{
 			$object = $this->_nebuleInstance->getCurrentGroup();
 		}
-		if ( is_a($object, 'Object') )
+		if ( is_a($object, 'Node') )
 		{
 			$object = $object->getID();
 		}
@@ -6640,7 +6640,7 @@ class ModuleObjects extends Modules
 	 * Ajout de fonctionnalités à des points d'ancrage.
 	 *
 	 * @param string $hookName
-	 * @param string|object $object
+	 * @param string|Node $object
 	 * @return array
 	 */
 	public function getHookList($hookName, $object='none')
@@ -6650,7 +6650,7 @@ class ModuleObjects extends Modules
 		{
 			$object = $this->_applicationInstance->getCurrentObject();
 		}
-		if ( is_a($object, 'Object') )
+		if ( is_a($object, 'Node') )
 		{
 			$object = $object->getID();
 		}
@@ -8291,7 +8291,7 @@ class ModuleMessenger extends Modules
 	 * Ajout de fonctionnalités à des points d'ancrage.
 	 *
 	 * @param string $hookName
-	 * @param string|object $object
+	 * @param string|Node $object
 	 * @return array
 	 */
 	public function getHookList($hookName, $object='none')
@@ -8300,7 +8300,7 @@ class ModuleMessenger extends Modules
 		{
 			$object = $this->_conversation;
 		}
-		if ( is_a($object, 'Object') )
+		if ( is_a($object, 'Node') )
 		{
 			$objectInstance = $object;
 			$object = $object->getID();
@@ -11467,7 +11467,7 @@ class ModuleTranslateFRFR extends Modules
 	 * Ajout de fonctionnalités à des points d'ancrage.
 	 *
 	 * @param string $hookName
-	 * @param string|object $object
+	 * @param string|Node $object
 	 * @return array
 	 */
 	public function getHookList($hookName, $object='none')
@@ -11476,7 +11476,7 @@ class ModuleTranslateFRFR extends Modules
 		{
 			$object = $this->_applicationInstance->getCurrentObject();
 		}
-		if ( is_a($object, 'Object') )
+		if ( is_a($object, 'Node') )
 		{
 			$object = $object->getID();
 		}
@@ -12232,7 +12232,7 @@ class ModuleTranslateENEN extends Modules
 	 * Ajout de fonctionnalités à des points d'ancrage.
 	 *
 	 * @param string $hookName
-	 * @param string|object $object
+	 * @param string|Node $object
 	 * @return array
 	 */
 	public function getHookList($hookName, $object='none')
@@ -12241,7 +12241,7 @@ class ModuleTranslateENEN extends Modules
 		{
 			$object = $this->_applicationInstance->getCurrentObject();
 		}
-		if ( is_a($object, 'Object') )
+		if ( is_a($object, 'Node') )
 		{
 			$object = $object->getID();
 		}

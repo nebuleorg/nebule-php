@@ -2022,7 +2022,7 @@ class nebule
 		$this->_metrology->addLog('Set option value = '.$writeValue, Metrology::LOG_LEVEL_DEBUG); // Log
 		
 		// Crée l'instance de l'objet de la valeur.
-		$instance = New Object($this->_nebuleInstance, '0', $writeValue);
+		$instance = New Node($this->_nebuleInstance, '0', $writeValue);
 		if ( $instance === false )
 		{
 			$this->_metrology->addLog("L'instance de l'objet n'a pas pu être créée.", Metrology::LOG_LEVEL_ERROR); // Log
@@ -2300,7 +2300,7 @@ class nebule
 					$id = $instance->getID();
 					$this->_cacheEntities[$id] = $instance;
 				}
-				elseif ( is_a($instance, 'Object') )
+				elseif ( is_a($instance, 'Node') )
 				{
 					$id = $instance->getID();
 					$this->_cacheObjects[$id] = $instance;
@@ -2646,7 +2646,7 @@ class nebule
 	 * @param string $id
 	 * @param boolean $protect
 	 * @param boolean $obfuscated
-	 * @return Object
+	 * @return Node
 	 */
 	public function newObject($id, $protect=false, $obfuscated=false)
 	{
@@ -2671,7 +2671,7 @@ class nebule
 			$this->_getCacheNeedOnePlace();
 			
 			// Génère une instance.
-			$instance = New Object($this, $id, '', $protect, $obfuscated);
+			$instance = New Node($this, $id, '', $protect, $obfuscated);
 			
 			// Si le cache est activé.
 			if ( $this->getOption('permitSessionBuffer') )
@@ -3367,7 +3367,7 @@ class nebule
 	 */
 	public function unsetObjectCache($id)
 	{
-		if ( is_a($id, 'Object') )
+		if ( is_a($id, 'Node') )
 		{
 			$id = $id->getID();
 		}
@@ -3397,7 +3397,7 @@ class nebule
 	 */
 	public function unsetEntityCache($id)
 	{
-		if ( is_a($id, 'Object') )
+		if ( is_a($id, 'Node') )
 		{
 			$id = $id->getID();
 		}
@@ -3427,7 +3427,7 @@ class nebule
 	 */
 	public function unsetGroupCache($id)
 	{
-		if ( is_a($id, 'Object') )
+		if ( is_a($id, 'Node') )
 		{
 			$id = $id->getID();
 		}
@@ -3457,7 +3457,7 @@ class nebule
 	 */
 	public function unsetConversationCache($id)
 	{
-		if ( is_a($id, 'Object') )
+		if ( is_a($id, 'Node') )
 		{
 			$id = $id->getID();
 		}
@@ -3488,7 +3488,7 @@ class nebule
 	 */
 	public function unsetCurrencyCache($id)
 	{
-		if ( is_a($id, 'Object') )
+		if ( is_a($id, 'Node') )
 		{
 			$id = $id->getID();
 		}
@@ -3519,7 +3519,7 @@ class nebule
 	 */
 	public function unsetTokenPoolCache($id)
 	{
-		if ( is_a($id, 'Object') )
+		if ( is_a($id, 'Node') )
 		{
 			$id = $id->getID();
 		}
@@ -3550,7 +3550,7 @@ class nebule
 	 */
 	public function unsetTokenCache($id)
 	{
-		if ( is_a($id, 'Object') )
+		if ( is_a($id, 'Node') )
 		{
 			$id = $id->getID();
 		}
@@ -3581,7 +3581,7 @@ class nebule
 	 */
 	public function unsetWalletCache($id)
 	{
-		if ( is_a($id, 'Object') )
+		if ( is_a($id, 'Node') )
 		{
 			$id = $id->getID();
 		}
@@ -3689,7 +3689,7 @@ class nebule
 	/**
 	 * Instance de l'objet en cours.
 	 *
-	 * @var Object|null
+	 * @var Node|null
 	 */
 	private $_currentObjectInstance = null;
 	
@@ -3760,7 +3760,7 @@ class nebule
 	/**
 	 * Donne l'instance de l'objet en cours.
 	 *
-	 * @return Object|null
+	 * @return Node|null
 	 */
 	public function getCurrentObjectInstance()
 	{
@@ -4001,7 +4001,7 @@ class nebule
 	/**
 	 * Instance de la clé privée de l'entité.
 	 *
-	 * @var Object|null
+	 * @var Node|null
 	 */
 	private $_currentEntityPrivateKeyInstance = null;
 	
@@ -4040,7 +4040,7 @@ class nebule
 		}
 		
 		if ( $arg_switch
-				&& is_a($itc_ent, 'Object')
+				&& is_a($itc_ent, 'Node')
 				&& $itc_ent->getType('all') == Entity::ENTITY_TYPE
 			)
 		{
@@ -4089,7 +4089,7 @@ class nebule
 				{
 					$itc_ent = $this->newObject($ext_ent);
 				}
-				if ( is_a($itc_ent, 'Object') && $itc_ent->getType('all') == Entity::ENTITY_TYPE )
+				if ( is_a($itc_ent, 'Node') && $itc_ent->getType('all') == Entity::ENTITY_TYPE )
 				{
 					unset($itc_ent);
 					// Ecrit l'entité dans la session et dans la variable globale.
@@ -4254,7 +4254,7 @@ class nebule
 	/**
 	 * Lit l'instance de la clé privée de l'entité en cours.
 	 *
-	 * @return Object
+	 * @return Node
 	 */
 	public function getCurrentEntityPrivateKeyInstance()
 	{
@@ -4442,7 +4442,7 @@ class nebule
 	 */
 	public function removeListEntitiesUnlocked($id)
 	{
-		if ( is_a($id, 'Object') )
+		if ( is_a($id, 'Node') )
 		{
 			$id = $id->getID();
 		}
@@ -5642,7 +5642,7 @@ class nebule
 	 */
 	public function getIsLocalAuthority($entity)
 	{
-		if ( is_a($entity, 'Object') )
+		if ( is_a($entity, 'Node') )
 		{
 			$entity = $entity->getID();
 		}
@@ -5847,7 +5847,7 @@ class nebule
 	 */
 	public function getIsRecoveryEntity($entity)
 	{
-		if ( is_a($entity, 'Object') )
+		if ( is_a($entity, 'Node') )
 		{
 			$entity = $entity->getID();
 		}
@@ -6241,7 +6241,7 @@ class nebule
 				return $id;
 
 			// Ecrit l'objet.
-			$instance = New Object($this, '0', $text, $protect, $obfuscate);
+			$instance = New Node($this, '0', $text, $protect, $obfuscate);
 			$id = $instance->getID();
 			if ( $id == '0' )
 				return false;
@@ -6319,12 +6319,12 @@ class nebule
 	 *
 	 * $entity Permet de ne sélectionner que les liens générés par une entité.
 	 * 
-	 * @todo ajouter un filtre sur le type mime des objets.
-	 *
-	 * @param string|Object $type
+	 * @param string|Node $type
 	 * @param string $socialClass
 	 * @param string|Entity $entity
 	 * @return array:Link
+	 *@todo ajouter un filtre sur le type mime des objets.
+	 *
 	 */
 	public function getListLinksByType($type, $entity = '', $socialClass = '')
 	{
@@ -6347,7 +6347,7 @@ class nebule
 		$hashEntity = '';
 		
 		// Si le type est une instance, récupère l'ID de l'instance de l'objet du type.
-		if ( is_a($type, 'Object') )
+		if ( is_a($type, 'Node'))
 		{
 			$hashType = $type->getID();
 		}
@@ -6374,7 +6374,7 @@ class nebule
 		}
 		
 		// Si l'entité est une instance, récupère l'ID de l'instance de l'entité.
-		if ( is_a($entity, 'Object') )
+		if ( is_a($entity, 'Node'))
 		{
 			$hashEntity = $entity->getID();
 		}
@@ -6416,7 +6416,7 @@ class nebule
 	 *
 	 * $entity Permet de ne sélectionner que les liens générés par une entité.
 	 *
-	 * @param string|Object $type
+	 * @param string|Node $type
 	 * @param string $socialClass
 	 * @param string|Entity $entity
 	 * @return array:Link
@@ -6682,13 +6682,13 @@ class nebule
 	 * Retourne une instance appropriée en fonction du type d'objet.
 	 *
 	 * @desc 020200322
-	 * @param string|Object|Conversation|Group|Entity|Currency|TokenPool|Token|Wallet $id
-	 * @return Object|Conversation|Group|Entity|Currency|TokenPool|Token|Wallet
+	 * @param string|Node|Conversation|Group|Entity|Currency|TokenPool|Token|Wallet $id
+	 * @return Node|Conversation|Group|Entity|Currency|TokenPool|Token|Wallet
 	 */
 	public function convertIdToTypedObjectInstance($id)
 	{
-		if ( is_a($id, 'Object')
-				|| is_a($id, 'Group')
+		if ( is_a($id, 'Node')
+            || is_a($id, 'Group')
 				|| is_a($id, 'Entity')
 				|| is_a($id, 'Conversation')
 				|| is_a($id, 'Currency')
@@ -6828,7 +6828,7 @@ class nebule
  * L'ID d'un objet est forcément un texte en hexadécimal.
  * ------------------------------------------------------------------------------------------
  */
-class Object
+class Node
 {
 	const CRYPTO_SESSION_KEY_SIZE	= 117; // @todo utilisé par setProtected(), à refaire pour le cas général.
 	
@@ -7841,7 +7841,7 @@ class Object
 		}
 		
 		// extrait l'ID de l'entité si c'est un objet.
-		if ( is_a($entity, 'Object') )
+		if ( is_a($entity, 'Node'))
 		{
 			$entity = $entity->getID();
 		}
@@ -9149,7 +9149,7 @@ class Object
 			}
 
 			// Ecrit le contenu chiffré.
-			$codeInstance = New Object($this->_nebuleInstance, '0', $code, false);
+			$codeInstance = New Node($this->_nebuleInstance, '0', $code, false);
 			$codeID = $codeInstance->getID();
 			$this->_metrology->addLog('Protect object, code : '.$codeID, Metrology::LOG_LEVEL_DEBUG);
 
@@ -9160,7 +9160,7 @@ class Object
 			}
 
 			// Ecrit la clé de session chiffrée.
-			$codeKeyInstance = New Object($this->_nebuleInstance, '0', $codeKey, false);
+			$codeKeyInstance = New Node($this->_nebuleInstance, '0', $codeKey, false);
 			$codeKeyID = $codeKeyInstance->getID();
 			$this->_metrology->addLog('Protect object, code key : '.$codeKeyID, Metrology::LOG_LEVEL_DEBUG);
 
@@ -9321,7 +9321,7 @@ class Object
 						}
 						
 						// Ecrit la clé de session chiffrée.
-						$codeKeyInstance = New Object($this->_nebuleInstance, '0', $codeKey, false);
+						$codeKeyInstance = New Node($this->_nebuleInstance, '0', $codeKey, false);
 						$codeKeyID = $codeKeyInstance->getID();
 						$this->_metrology->addLog('Protect object, code key : '.$codeKeyID, Metrology::LOG_LEVEL_DEBUG);
 						
@@ -9497,7 +9497,7 @@ class Object
 		}
 
 		// Ecrit la clé chiffrée.
-		$codeKeyInstance = New Object($this->_nebuleInstance, '0', $codeKey, false);
+		$codeKeyInstance = New Node($this->_nebuleInstance, '0', $codeKey, false);
 		$codeKeyID = $codeKeyInstance->getID();
 		$this->_metrology->addLog('Protect object, code key : '.$codeKeyID, Metrology::LOG_LEVEL_NORMAL); // Log
 
@@ -9672,7 +9672,7 @@ class Object
 	 *
 	 * @param string $emotion
 	 * @param string $socialClass
-	 * @param string|Object $context
+	 * @param string|Node $context
 	 * @return boolean
 	 */
 	public function getMarkEmotion($emotion, $socialClass = '', $context = '')
@@ -9688,15 +9688,15 @@ class Object
 	
 	/**
 	 * Lit la liste des entités qui ont marqué une émotion pour l'objet.
-	 * @todo hash alternatifs.
+	 * @param string $emotion
+	 * @param string $socialClass
+	 * @param string|Node $context
+	 * @return array:Link
+	 *@todo hash alternatifs.
 	 *
 	 * Par défaut, le contexte de recherche est vide.
 	 * Dans ce cas, on ne garde que les liens avec comme contexte l'entité qui a signé le lien.
 	 *
-	 * @param string $emotion
-	 * @param string $socialClass
-	 * @param string|Object $context
-	 * @return array:Link
 	 */
 	public function getMarkEmotionList($emotion, $socialClass = '', $context = '')
 	{
@@ -9706,8 +9706,8 @@ class Object
 		
 		// Nettoyage du contexte.
 		if ( is_a( $context, 'entity' )
-				|| is_a( $context, 'object' )
-				|| is_a( $context, 'group' )
+				|| is_a( $context, 'Node')
+            || is_a( $context, 'group' )
 				|| is_a( $context, 'conversation' )
 				)
 		{
@@ -9776,7 +9776,7 @@ class Object
 	 *
 	 * @param string $emotion
 	 * @param string $socialClass
-	 * @param string|Object $context
+	 * @param string|Node $context
 	 * @return array:Link
 	 */
 	public function getMarkEmotionSize($emotion, $socialClass = '', $context = '')
@@ -9791,7 +9791,7 @@ class Object
 	 * Lit toute les émotions pour l'objet.
 	 *
 	 * @param string $socialClass
-	 * @param string|Object $context
+	 * @param string|Node $context
 	 * @return array:string
 	 */
 	public function getMarkEmotions($socialClass = '', $context = '')
@@ -9854,8 +9854,8 @@ class Object
 		
 		// Nettoyage du contexte.
 		if ( is_a( $context, 'entity' )
-				|| is_a( $context, 'object' )
-				|| is_a( $context, 'group' )
+				|| is_a( $context, 'Node')
+            || is_a( $context, 'group' )
 				|| is_a( $context, 'conversation' )
 			)
 		{
@@ -9920,8 +9920,8 @@ class Object
 		
 		// Nettoyage de l'entité demandé.
 		if ( is_a( $entity, 'entity' )
-				|| is_a( $entity, 'object' )
-				|| is_a( $entity, 'group' )
+				|| is_a( $entity, 'Node')
+            || is_a( $entity, 'group' )
 				|| is_a( $entity, 'conversation' )
 			)
 		{
@@ -11422,8 +11422,8 @@ class Object
 	 *
 	 * @param string $reference
 	 * @param string $socialClass
-	 * @return Object
-	 */
+	 * @return Node
+     */
 	public function getReferencedObjectInstance($reference, $socialClass = '')
 	{
 		$this->_metrology->addLog(__METHOD__.' '.$this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
@@ -12226,7 +12226,7 @@ unset($list, $item);
  *   suffit à créer le groupe.
  * ------------------------------------------------------------------------------------------
  */
-class Group extends Object
+class Group extends Node
 {
 	// Suffixe d'identifiant de nouveaux groupes.
 	const DEFAULT_SUFFIX_NEW_GROUP = '006e6562756c652f6f626a65742f67726f757065';
@@ -12557,7 +12557,7 @@ class Group extends Object
 	 * Extrait l'ID de l'entité.
 	 * Filtre l'entité et s'assure que c'est une entité.
 	 * 
-	 * @param string|object|entity $entity
+	 * @param string|Node|entity $entity
 	 * @return string
 	 */
 	protected function _checkExtractEntityID($entity)
@@ -12581,7 +12581,7 @@ class Group extends Object
 				$entityInstance	= $this->_nebuleInstance->newEntity($id);
 			}
 		}
-		elseif ( is_a($entity, 'Object') )
+		elseif ( is_a($entity, 'Node'))
 		{
 			$id = $entity->getID();
 			if ( $id == '0' )
@@ -12617,7 +12617,7 @@ class Group extends Object
 	/**
 	 * Filtre l'objet.
 	 * 
-	 * @param string|object $object
+	 * @param string|Node $object
 	 * @return string
 	 */
 	private function _checkExtractObjectID($object)
@@ -12639,7 +12639,7 @@ class Group extends Object
 				$id = $object;
 			}
 		}
-		elseif ( is_a($object, 'object') )
+		elseif ( is_a($object, 'Node'))
 		{
 			$id = $object->getID();
 			if ( $id == '0' )
@@ -12818,7 +12818,7 @@ class Group extends Object
 	 * Retourne si le groupe est marqué comme fermé.
 	 * En sélectionnant une entité, fait la recherche de marquage pour cette entité comme contributrice.
 	 *
-	 * @param string|object|entity $entity
+	 * @param string|Node|entity $entity
 	 * @return boolean
 	 */
 	public function getMarkClosed($entity = '')
@@ -12871,7 +12871,7 @@ class Group extends Object
 	/**
 	 * Ecrit l'objet comme un groupe fermé.
 	 * 
-	 * @param string|object|entity $entity
+	 * @param string|Node|entity $entity
 	 * @param boolean $obfuscated
 	 * @return boolean
 	 */
@@ -12943,7 +12943,7 @@ class Group extends Object
 	 * Ecrit l'objet comme n'étant pas un groupe fermé.
 	 * @todo détecter le lien dissimulé d'origine, et dissimuler en conséquence.
 	 * 
-	 * @param string|object|entity $entity
+	 * @param string|Node|entity $entity
 	 * @return boolean
 	 */
 	public function unsetMarkClosed($entity = '')
@@ -13008,7 +13008,7 @@ class Group extends Object
 	 * Retourne si le groupe est marqué comme protégé.
 	 * En sélectionnant une entité, fait la recherche de marquage pour cette entité comme contributrice.
 	 *
-	 * @param string|object|entity $entity
+	 * @param string|Node|entity $entity
 	 * @return boolean
 	 */
 	public function getMarkProtected($entity = '')
@@ -13061,7 +13061,7 @@ class Group extends Object
 	/**
 	 * Ecrit l'objet comme un groupe protégé.
 	 * 
-	 * @param string|object|entity $entity
+	 * @param string|Node|entity $entity
 	 * @param boolean $obfuscated
 	 * @return boolean
 	 */
@@ -13133,7 +13133,7 @@ class Group extends Object
 	 * Ecrit l'objet comme n'étant pas un groupe protégé.
 	 * @todo détecter le lien dissimulé d'origine, et dissimuler en conséquence.
 	 * 
-	 * @param string|object|entity $entity
+	 * @param string|Node|entity $entity
 	 * @return boolean
 	 */
 	public function unsetMarkProtected($entity = '')
@@ -13198,7 +13198,7 @@ class Group extends Object
 	 * Retourne si le groupe est marqué comme dissimulé.
 	 * En sélectionnant une entité, fait la recherche de marquage pour cette entité comme contributrice.
 	 *
-	 * @param string|object|entity $entity
+	 * @param string|Node|entity $entity
 	 * @return boolean
 	 */
 	public function getMarkObfuscated($entity = '')
@@ -13257,7 +13257,7 @@ class Group extends Object
 	/**
 	 * Ecrit l'objet comme un groupe dissimulé.
 	 * 
-	 * @param string|object|entity $entity
+	 * @param string|Node|entity $entity
 	 * @param boolean $obfuscated
 	 * @return boolean
 	 */
@@ -13335,7 +13335,7 @@ class Group extends Object
 	 * Ecrit l'objet comme n'étant pas un groupe dissimulé.
 	 * @todo détecter le lien dissimulé d'origine, et dissimuler en conséquence.
 	 * 
-	 * @param string|object|entity $entity
+	 * @param string|Node|entity $entity
 	 * @return boolean
 	 */
 	public function unsetMarkObfuscated($entity = '')
@@ -13399,7 +13399,7 @@ class Group extends Object
 	/**
 	 * Retourne si l'objet est membre du groupe.
 	 * 
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @param string $socialClass
 	 * @return boolean
 	 */
@@ -13439,7 +13439,7 @@ class Group extends Object
 	/**
 	 * Ajoute un objet comme membre dans le groupe.
 	 * 
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @param boolean $obfuscated
 	 * @return boolean
 	 */
@@ -13500,7 +13500,7 @@ class Group extends Object
 	 * 
 	 * @todo retirer la dissimulation déjà faite dans le code.
 	 * 
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @param boolean $obfuscated
 	 * @return boolean
 	 */
@@ -13632,7 +13632,7 @@ class Group extends Object
 	/**
 	 * Retourne si l'entité est à l'écoute du groupe.
 	 *
-	 * @param string|Object $entity
+	 * @param string|Node $entity
 	 * @param string $socialClass
 	 * @param array:string $socialListID
 	 * @return boolean
@@ -13675,7 +13675,7 @@ class Group extends Object
 	/**
 	 * Ajoute une entité comme à l'écoute du groupe.
 	 *
-	 * @param string|Object $entity
+	 * @param string|Node $entity
 	 * @param boolean $obfuscated
 	 * @return boolean
 	 */
@@ -13736,7 +13736,7 @@ class Group extends Object
 	 *
 	 * @todo retirer la dissimulation déjà faite dans le code.
 	 *
-	 * @param string|Object $entity
+	 * @param string|Node $entity
 	 * @param boolean $obfuscated
 	 * @return boolean
 	 */
@@ -14404,7 +14404,7 @@ class Group extends Object
  * Si une erreur survient lors de la lecture de l'entité ou lors de la création, assigne l'ID 0.
  * ------------------------------------------------------------------------------------------
  */
-class Entity extends Object
+class Entity extends Node
 {
 	const ENTITY_MAX_SIZE			= 16000;
 	const ENTITY_PASSWORD_SALT_SIZE	= 128;
@@ -15935,7 +15935,7 @@ class Entity extends Object
  * La localisation est forcément un texte et est passée automatiquement en minuscule.
  * ------------------------------------------------------------------------------------------
  */
-class Localisation extends Object
+class Localisation extends Node
 {
 	private $_localisation = '', $_protocol = '', $_communication, $_ioDefaultPrefix = '';
 
@@ -16618,7 +16618,7 @@ class Conversation extends Group
 	/**
 	 * Retourne si l'entité est à l'écoute du groupe.
 	 *
-	 * @param string|Object|Entity $entity
+	 * @param string|Node|Entity $entity
 	 * @param string $socialClass
 	 * @param array:string $socialListID
 	 * @return boolean
@@ -16667,7 +16667,7 @@ class Conversation extends Group
 	/**
 	 * Ajoute une entité comme à l'écoute du groupe.
 	 *
-	 * @param string|Object $entity
+	 * @param string|Node $entity
 	 * @param boolean $obfuscated
 	 * @return boolean
 	 */
@@ -16728,7 +16728,7 @@ class Conversation extends Group
 	 *
 	 * @todo retirer la dissimulation déjà faite dans le code.
 	 *
-	 * @param string|Object $entity
+	 * @param string|Node $entity
 	 * @param boolean $obfuscated
 	 * @return boolean
 	 */
@@ -17355,7 +17355,7 @@ class Conversation extends Group
 * Si une erreur survient lors de la lecture de la monnaie ou lors de la création, assigne l'ID 0.
 * ------------------------------------------------------------------------------------------
 */
-class Currency extends Object
+class Currency extends Node
 {
 	/**
 	 * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
@@ -18331,14 +18331,14 @@ class Currency extends Object
 					{
 						$value = 'false';
 					}
-					$object = New Object($this->_nebuleInstance, '0', $value, false, false);
+					$object = New Node($this->_nebuleInstance, '0', $value, false, false);
 					$object->setType(nebule::REFERENCE_OBJECT_TEXT);
 					$target	= $object->getID();
 				}
 				elseif ( $property['type'] == 'number' )
 				{
 					$value = (string)$param[$name];
-					$object = New Object($this->_nebuleInstance, '0', $value, false, false);
+					$object = New Node($this->_nebuleInstance, '0', $value, false, false);
 					$object->setType(nebule::REFERENCE_OBJECT_TEXT);
 					$target	= $object->getID();
 				}
@@ -18350,7 +18350,7 @@ class Currency extends Object
 				else
 				{
 					$value = $param[$name];
-					$object = New Object($this->_nebuleInstance, '0', $value, false, false);
+					$object = New Node($this->_nebuleInstance, '0', $value, false, false);
 					$object->setType(nebule::REFERENCE_OBJECT_TEXT);
 					$target	= $object->getID();
 				}
@@ -18792,8 +18792,8 @@ class Currency extends Object
 			$instance = $this->_nebuleInstance->newObject($id);
 		}
 		
-		if ( is_a($instance, 'Object')
-				&& $instance->getID() != '0'
+		if ( is_a($instance, 'Node')
+            && $instance->getID() != '0'
 			)
 		{
 			// Extrait la valeur en fonction du type.
@@ -20545,14 +20545,14 @@ class TokenPool extends Currency
 					{
 						$value = 'false';
 					}
-					$object = New Object($this->_nebuleInstance, '0', $value, false, false);
+					$object = New Node($this->_nebuleInstance, '0', $value, false, false);
 					$object->setType(nebule::REFERENCE_OBJECT_TEXT);
 					$target	= $object->getID();
 				}
 				elseif ( $property['type'] == 'number' )
 				{
 					$value = (string)$param[$name];
-					$object = New Object($this->_nebuleInstance, '0', $value, false, false);
+					$object = New Node($this->_nebuleInstance, '0', $value, false, false);
 					$object->setType(nebule::REFERENCE_OBJECT_TEXT);
 					$target	= $object->getID();
 				}
@@ -20564,7 +20564,7 @@ class TokenPool extends Currency
 				else
 				{
 					$value = $param[$name];
-					$object = New Object($this->_nebuleInstance, '0', $value, false, false);
+					$object = New Node($this->_nebuleInstance, '0', $value, false, false);
 					$object->setType(nebule::REFERENCE_OBJECT_TEXT);
 					$target	= $object->getID();
 				}
@@ -21138,14 +21138,14 @@ class Token extends TokenPool
 					{
 						$value = 'false';
 					}
-					$object = New Object($this->_nebuleInstance, '0', $value, false, false);
+					$object = New Node($this->_nebuleInstance, '0', $value, false, false);
 					$object->setType(nebule::REFERENCE_OBJECT_TEXT);
 					$target	= $object->getID();
 				}
 				elseif ( $property['type'] == 'number' )
 				{
 					$value = (string)$param[$name];
-					$object = New Object($this->_nebuleInstance, '0', $value, false, false);
+					$object = New Node($this->_nebuleInstance, '0', $value, false, false);
 					$object->setType(nebule::REFERENCE_OBJECT_TEXT);
 					$target	= $object->getID();
 				}
@@ -21157,7 +21157,7 @@ class Token extends TokenPool
 				else
 				{
 					$value = $param[$name];
-					$object = New Object($this->_nebuleInstance, '0', $value, false, false);
+					$object = New Node($this->_nebuleInstance, '0', $value, false, false);
 					$object->setType(nebule::REFERENCE_OBJECT_TEXT);
 					$target	= $object->getID();
 				}
@@ -26222,7 +26222,7 @@ class Metrology
 			}
 			
 			// Ajoute la marque de temps.
-			$message = 'LogT='.(microtime(true)-$this->_timeStart).' '.$message;
+			$message = 'LogT='.(microtime(true)-$this->_timeStart).' LogL=L LogM="'.$message.'"';
 			
 			syslog(LOG_INFO, $message);
 		}
@@ -30692,7 +30692,7 @@ function display_hide(menuid)
 	/**
 	 * Prépare à afficher le contenu d'un objet suivant sont type.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @param string $size [full|half|small]
 	 * @return string
 	 */
@@ -30708,8 +30708,8 @@ function display_hide(menuid)
 			$size = 'half';
 		}
 		// Vérifie que c'est un objet.
-		if ( ! is_a($object, 'Object')
-				&& ! is_a($object, 'Group')
+		if ( ! is_a($object, 'Node')
+            && ! is_a($object, 'Group')
 				&& ! is_a($object, 'Entity')
 				&& ! is_a($object, 'Conversation')
 				&& ! is_a($object, 'Currency')
@@ -30838,7 +30838,7 @@ function display_hide(menuid)
 	/**
 	 * Prépare à afficher le contenu d'un objet suivant sont type. Version full.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @return string
 	 */
 	public function convertObjectContentFull($object, $permitWarnProtected=true)
@@ -30849,7 +30849,7 @@ function display_hide(menuid)
 	/**
 	 * Afficher le contenu d'un objet suivant sont type. Version full.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @return string
 	 */
 	public function displayObjectContentFull($object, $permitWarnProtected=true)
@@ -30860,7 +30860,7 @@ function display_hide(menuid)
 	/**
 	 * Prépare à afficher le contenu d'un objet suivant sont type. Version half.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @return string
 	 */
 	public function convertObjectContentHalf($object, $permitWarnProtected=true)
@@ -30871,7 +30871,7 @@ function display_hide(menuid)
 	/**
 	 * Afficher le contenu d'un objet suivant sont type. Version half.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @return string
 	 */
 	public function displayObjectContentHalf($object, $permitWarnProtected=true)
@@ -30882,7 +30882,7 @@ function display_hide(menuid)
 	/**
 	 * Prépare à afficher le contenu d'un objet suivant sont type. Version small.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @return string
 	 */
 	public function convertObjectContentSmall($object, $permitWarnProtected=true)
@@ -30893,7 +30893,7 @@ function display_hide(menuid)
 	/**
 	 * Afficher le contenu d'un objet suivant sont type. Version small.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @return string
 	 */
 	public function displayObjectContentSmall($object, $permitWarnProtected=true)
@@ -30909,7 +30909,7 @@ function display_hide(menuid)
 	 * Affiche un objet sans tenir compte de son type nebule (Entity|Group|Conversation).
 	 * Mais affiche l'objet en fonction de son type mime déclaré.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @param string $size [full|half|small]
 	 * @return string
 	 */
@@ -30925,8 +30925,8 @@ function display_hide(menuid)
 			$size = 'half';
 		}
 		// Vérifie que c'est un objet.
-		if ( ! is_a($object, 'Object')
-				&& ! is_a($object, 'Group')
+		if ( ! is_a($object, 'Node')
+            && ! is_a($object, 'Group')
 				&& ! is_a($object, 'Entity')
 				&& ! is_a($object, 'Conversation')
 				&& ! is_a($object, 'Currency')
@@ -31120,7 +31120,7 @@ function display_hide(menuid)
 	/**
 	 * Prépare à afficher le contenu d'un objet comme objet pur. Version full.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @return string
 	 */
 	public function convertAsObjectContentFull($object, $permitWarnProtected=true)
@@ -31131,7 +31131,7 @@ function display_hide(menuid)
 	/**
 	 * Afficher le contenu d'un objet comme objet pur. Version full.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @return string
 	 */
 	public function displayAsObjectContentFull($object, $permitWarnProtected=true)
@@ -31142,7 +31142,7 @@ function display_hide(menuid)
 	/**
 	 * Prépare à afficher le contenu d'un objet comme objet pur. Version half.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @return string
 	 */
 	public function convertAsObjectContentHalf($object, $permitWarnProtected=true)
@@ -31153,7 +31153,7 @@ function display_hide(menuid)
 	/**
 	 * Afficher le contenu d'un objet comme objet pur. Version half.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @return string
 	 */
 	public function displayAsObjectContentHalf($object, $permitWarnProtected=true)
@@ -31164,7 +31164,7 @@ function display_hide(menuid)
 	/**
 	 * Prépare à afficher le contenu d'un objet comme objet pur. Version small.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @return string
 	 */
 	public function convertAsObjectContentSmall($object, $permitWarnProtected=true)
@@ -31175,7 +31175,7 @@ function display_hide(menuid)
 	/**
 	 * Afficher le contenu d'un objet comme objet pur. Version small.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @return string
 	 */
 	public function displayAsObjectContentSmall($object, $permitWarnProtected=true)
@@ -31186,7 +31186,7 @@ function display_hide(menuid)
 	/**
 	 * Prépare à afficher un objet comme image avec éventuellement un texte et un identifiant CSS.
 	 *
-	 * @param object|Object $object
+	 * @param Node|Node $object
 	 * @param string $alt
 	 * @param string $class
 	 * @param string $id
@@ -31196,7 +31196,7 @@ function display_hide(menuid)
 	public function convertImage($object, $alt='', $class='', $id='', $args='')
 	{
 		// Récupère une instance de l'objet.
-		if ( ! is_a($object, 'Object') )
+		if ( ! is_a($object, 'Node'))
 		{
 			$object = $this->_nebuleInstance->newObject($object);
 		}
@@ -31240,13 +31240,13 @@ function display_hide(menuid)
 	/**
 	 * Prépare à afficher un objet comme image avec éventuellement un texte et un identifiant CSS.
 	 *
-	 * @param object|Object $object
+	 * @param Node|Node $object
 	 * @return string
 	 */
 	public function convertImageURL($object)
 	{
 		// Récupère une instance de l'objet.
-		if ( ! is_a($object, 'Object') )
+		if ( ! is_a($object, 'Node'))
 		{
 			$object = $this->_nebuleInstance->newObject($object);
 		}
@@ -31263,7 +31263,7 @@ function display_hide(menuid)
 	/**
 	 * Affiche un objet comme image avec éventuellement un texte et un identifiant CSS.
 	 *
-	 * @param object|Object $object
+	 * @param Node|Node $object
 	 * @param string $alt
 	 * @param string $class
 	 * @param string $id
@@ -31282,7 +31282,7 @@ function display_hide(menuid)
 	 * Si l'objet commence par data: c'est une image encodée en base64.
 	 * Retourne dans ce cas un affichage d'image.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @param string $alt
 	 * @param string $class
 	 * @param string $id
@@ -31299,7 +31299,7 @@ function display_hide(menuid)
 		}
 		
 		// Récupère une instance de l'objet.
-		if ( ! is_a($object, 'Object') )
+		if ( ! is_a($object, 'Node'))
 		{
 			$object = $this->_nebuleInstance->newObject($object);
 		}
@@ -31327,7 +31327,7 @@ function display_hide(menuid)
 	 * Affiche un objet comme image avec éventuellement un texte et un identifiant CSS.
 	 * Une recherche préalable est faite pour trouver la mise à jour la plus récente de l'objet.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @param string $alt
 	 * @param string $id
 	 * @param string $args
@@ -31341,20 +31341,19 @@ function display_hide(menuid)
 	/**
 	 * Prépare à un objet comme image avec éventuellement un texte et un identifiant CSS.
 	 * L'objet est un objet virtuel qui permet juste d'adresser l'image attendu.
-	 * @todo
-	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @param string $alt
 	 * @param string $class
 	 * @param string $id
 	 * @param string $args
 	 * @return string
+	 *@todo
+	 *
 	 */
 	public function convertReferenceImage($object, $alt='', $class='', $id='', $args='')
 	{
 		// Récupère une instance de l'objet.
-		if ( ! is_a($object, 'Object') )
-		{
+		if ( ! is_a($object, 'Node')) {
 			$object = $this->_nebuleInstance->newObject($object);
 		}
 		
@@ -31381,7 +31380,7 @@ function display_hide(menuid)
 	 * Affiche un objet comme image avec éventuellement un texte et un identifiant CSS.
 	 * L'objet est un objet virtuel qui permet juste d'adresser l'image attendu.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @param string $alt
 	 * @param string $class
 	 * @param string $id
@@ -31430,7 +31429,7 @@ function display_hide(menuid)
 	/**
 	 * Prépare un lien par défaut pour un objet ou un groupe ou une conversation ou une entité si aucun lien hypertexte n'est donné.
 	 *
-	 * @param Object|Entity|Group|Conversation $object
+	 * @param Node|Entity|Group|Conversation $object
 	 * @param string $htlink
 	 * @return string
 	 */
@@ -31442,7 +31441,7 @@ function display_hide(menuid)
 	/**
 	 * Prépare un lien par défaut pour un objet ou un groupe ou une conversation ou une entité si aucun lien hypertexte n'est donné.
 	 *
-	 * @param Object|Entity|Group|Conversation $object
+	 * @param Node|Entity|Group|Conversation $object
 	 * @param string $htlink
 	 * @return string
 	 */
@@ -31615,7 +31614,7 @@ function display_hide(menuid)
 	 *
 	 * Fait une mise en cache du résultat.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @param boolean $useBuffer
 	 * @return string
 	 */
@@ -31627,8 +31626,7 @@ function display_hide(menuid)
 		}
 		
 		// Récupère une instance de l'objet.
-		if ( ! is_a($object, 'Object') )
-		{
+		if ( ! is_a($object, 'Node')) {
 			$object = $this->_nebuleInstance->newObject($object);
 		}
 		
@@ -31668,7 +31666,7 @@ function display_hide(menuid)
 	 *
 	 * Fait une mise en cache du résultat.
 	 *
-	 * @param string|Object $reference
+	 * @param string|Node $reference
 	 * @param boolean $useBuffer
 	 * @return string
 	 */
@@ -31680,8 +31678,7 @@ function display_hide(menuid)
 		}
 		
 		// Récupère une instance de l'objet.
-		if ( ! is_a($reference, 'Object') )
-		{
+		if ( ! is_a($reference, 'Node')) {
 			$reference = $this->_nebuleInstance->newObject($reference);
 		}
 		
@@ -31769,7 +31766,7 @@ function display_hide(menuid)
 	/**
 	 * Prépare l'image de l'icône pour un objet sans lien hypertexte.
 	 *
-	 * @param object/entity $object
+	 * @param Node/entity $object
 	 * @param string $icon
 	 * @param string $class
 	 * @return string
@@ -31789,7 +31786,7 @@ function display_hide(menuid)
 	/**
 	 * Prépare l'image du carré de couleur de l'objet ou de l'entité sans lien hypertexte.
 	 *
-	 * @param object/entity $object
+	 * @param Node/entity $object
 	 * @param string $class
 	 * @param string $title
 	 * @return string
@@ -31811,7 +31808,7 @@ function display_hide(menuid)
 	/**
 	 * Prépare l'image de l'objet ou de l'entité sans lien hypertexte.
 	 *
-	 * @param object/entity $object
+	 * @param Node/entity $object
 	 * @param string $class
 	 * @return string
 	 */
@@ -32251,64 +32248,63 @@ function display_hide(menuid)
 	 *     String
 	 *
 	 * Exemple de table de paramètres avec les valeurs par défaut :
-
-$param = array(
-		'enableDisplayColor' => true,
-		'enableDisplayIcon' => true,
-		'enableDisplayIconApp' => false,
-		'enableDisplayRefs' => false,
-		'enableDisplayName' => true,
-		'enableDisplayID' => false,
-		'enableDisplayFlags' => false,
-		'enableDisplayFlagEmotions' => true,
-		'enableDisplayFlagProtection' => false,
-		'enableDisplayFlagObfuscate' => false,
-		'enableDisplayFlagUnlocked' => false,
-		'enableDisplayFlagActivated' => false,
-		'enableDisplayFlagState' => false,
-		'enableDisplayStatus' => false,
-		'enableDisplayContent' => false,
-		'enableDisplayLink2Object' => true,
-		'enableDisplayObjectActions' => true,
-		'enableDisplayLink2Refs' => true,
-		'enableDisplaySelfHook' => true,
-		'enableDisplayTypeHook' => true,
-		'enableDisplayJS' => true,
-		'social' => '',
-		'objectType' => null,
-		'objectName' => null,
-		'objectAppShortName' => null,
-		'objectIcon' => null,
-		'objectRefs' => array(),
-		'link2Object' => '',
-		'flagProtection' => false,
-		'flagProtectionIcon' => '',
-		'flagProtectionText' => '',
-		'flagProtectionLink' => '',
-		'flagObfuscate' => false,
-		'flagObfuscateIcon' => '',
-		'flagObfuscateText' => '',
-		'flagObfuscateLink' => '',
-		'flagUnlocked' => false,
-		'flagUnlockedIcon' => '',
-		'flagUnlockedText' => '',
-		'flagUnlockedLink' => '',
-		'flagActivated' => false,
-		'flagActivatedDesc' => '',
-		'flagState' => '',
-		'flagStateDesc' => '',
-		'flagMessage' => '',
-		'flagTargetObject' => '',
-		'status' => '',
-		'displaySize' => 'medium',
-		'displayRatio' => 'short',
-		'selfHookList' => array(),
-		'selfHookName' => '',
-		'typeHookName' => '',
-	);
-
-	 *
-	 * @param string|object|entity $object
+ *
+* $param = array(
+		* 'enableDisplayColor' => true,
+		* 'enableDisplayIcon' => true,
+		* 'enableDisplayIconApp' => false,
+		* 'enableDisplayRefs' => false,
+		* 'enableDisplayName' => true,
+		* 'enableDisplayID' => false,
+		* 'enableDisplayFlags' => false,
+		* 'enableDisplayFlagEmotions' => true,
+		* 'enableDisplayFlagProtection' => false,
+		* 'enableDisplayFlagObfuscate' => false,
+		* 'enableDisplayFlagUnlocked' => false,
+		* 'enableDisplayFlagActivated' => false,
+		* 'enableDisplayFlagState' => false,
+		* 'enableDisplayStatus' => false,
+		* 'enableDisplayContent' => false,
+		* 'enableDisplayLink2Object' => true,
+		* 'enableDisplayObjectActions' => true,
+		* 'enableDisplayLink2Refs' => true,
+		* 'enableDisplaySelfHook' => true,
+		* 'enableDisplayTypeHook' => true,
+		* 'enableDisplayJS' => true,
+		* 'social' => '',
+		* 'objectType' => null,
+		* 'objectName' => null,
+		* 'objectAppShortName' => null,
+		* 'objectIcon' => null,
+		* 'objectRefs' => array(),
+		* 'link2Object' => '',
+		* 'flagProtection' => false,
+		* 'flagProtectionIcon' => '',
+		* 'flagProtectionText' => '',
+		* 'flagProtectionLink' => '',
+		* 'flagObfuscate' => false,
+		* 'flagObfuscateIcon' => '',
+		* 'flagObfuscateText' => '',
+		* 'flagObfuscateLink' => '',
+		* 'flagUnlocked' => false,
+		* 'flagUnlockedIcon' => '',
+		* 'flagUnlockedText' => '',
+		* 'flagUnlockedLink' => '',
+		* 'flagActivated' => false,
+		* 'flagActivatedDesc' => '',
+		* 'flagState' => '',
+		* 'flagStateDesc' => '',
+		* 'flagMessage' => '',
+		* 'flagTargetObject' => '',
+		* 'status' => '',
+		* 'displaySize' => 'medium',
+		* 'displayRatio' => 'short',
+		* 'selfHookList' => array(),
+     * 'selfHookName' => '',
+     * 'typeHookName' => '',
+     * );
+     *
+     * @param string|Node|entity $object
 	 * @param array $param
 	 * @return string
 	 */
@@ -33640,17 +33636,17 @@ $param = array(
 	 * Une mise à jour éventuelle de l'icône est recherchée.
 	 * Si l'objet de l'icône est présent, génère un chemin direct pour améliorer les performances.
 	 *
-	 * @param Object $object
+	 * @param Node $object
 	 * @param string $icon
 	 * @return string
 	 */
 	private function _getDisplayObjectIcon($object, $icon)
-	{
-		if ( $icon != ''
+    {
+        if ( $icon != ''
 				&& $this->_ioInstance->checkLinkPresent($icon)
 			)
 		{
-			if ( ! is_a($icon, 'Object') )
+			if ( ! is_a($icon, 'Node') )
 			{
 				$icon = $this->_nebuleInstance->newObject($icon);
 			}
@@ -33807,7 +33803,7 @@ $param = array(
 	 * Pour les fonctions getDisplayObject() et getDisplayMessage().
 	 * Prépare les icônes des émotions avec ou sans les compteurs ($counts).
 	 *
-	 * @param Object $object
+	 * @param Node $object
 	 * @param boolean $counts
 	 * @return string
 	 */
@@ -34392,13 +34388,13 @@ $param = array(
 		$result .= $divDisplayClose;
 		
 		return $result;
-	}
-	
-	/**
+    }
+
+    /**
 	 * Pour la fonction getDisplayMessage().
 	 * Prépare les icônes des drapeaux.
 	 *
-	 * @param Object $messageInstance
+	 * @param Node $messageInstance
 	 * @param Link $link
 	 * @param array $param
 	 * @param string $cssCode
@@ -34516,7 +34512,7 @@ $param = array(
 	 *
 	 * @param string $selfHookName
 	 * @param string $typeHookName
-	 * @param Object $object
+	 * @param Node $object
 	 * @param boolean $enableDisplayJS
 	 * @param string $size
 	 * @param array $appHookList
@@ -34900,13 +34896,13 @@ $param = array(
 			.objectContentImage { background:rgba(255,255,255,0.12); text-align:center; }
 			.objectContentImage img { height:auto; max-width:100%; }
 		</style>
-<?php
+        <?php
 	}
 	
 	/**
 	 * Prépare à afficher le contenu d'un objet suivant sont type.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @param string $sizeCSS [tiny|small|medium|large|full]
 	 * @param string $ratioCSS [short|long]
 	 * @return string
@@ -34933,7 +34929,7 @@ $param = array(
 		}
 		
 		// Vérifie que c'est un objet.
-		if ( ! is_a($object, 'Object')
+		if ( ! is_a($object, 'Node')
 				&& ! is_a($object, 'Group')
 				&& ! is_a($object, 'Entity')
 				&& ! is_a($object, 'Conversation')
@@ -35053,7 +35049,7 @@ $param = array(
 	 * Affiche un objet sans tenir compte de son type nebule (Entity|Group|Conversation).
 	 * Mais affiche l'objet en fonction de son type mime déclaré.
 	 *
-	 * @param string|Object $object
+	 * @param string|Node $object
 	 * @param string $sizeCSS [tiny|small|medium|large|full]
 	 * @param string $ratioCSS [short|long]
 	 * @return string
@@ -35080,7 +35076,7 @@ $param = array(
 		}
 		
 		// Vérifie que c'est un objet.
-		if ( ! is_a($object, 'Object')
+		if ( ! is_a($object, 'Node')
 				&& ! is_a($object, 'Group')
 				&& ! is_a($object, 'Entity')
 				&& ! is_a($object, 'Conversation')
@@ -35338,7 +35334,7 @@ $param = array(
 			
 			// Détermine si c'est un objet ou un message à afficher.
 			if ( isset($item['object'])
-					&& ( is_a($item['object'], 'Object')
+					&& ( is_a($item['object'], 'Node')
 						|| $item['object'] != ''
 					)
 				)
@@ -36232,7 +36228,7 @@ $param = array(
 	/**
 	 * Affiche l'image du carré de couleur de l'objet ou de l'entité, lien vers l'objet.
 	 *
-	 * @param string|object|entity $object
+	 * @param string|Node|entity $object
 	 * @param string $htlink
 	 * @return null
 	 */
@@ -36244,7 +36240,7 @@ $param = array(
 	/**
 	 * Prépare l'image du carré de couleur de l'objet ou de l'entité, lien vers l'objet.
 	 *
-	 * @param string|object|entity $object
+	 * @param string|Node|entity $object
 	 * @param string $htlink
 	 * @return string
 	 */
@@ -36281,11 +36277,11 @@ $param = array(
 		$color = $this->_prepareObjectColor($object, 'iconInlineDisplay');
 		return $color;
 	}
-	
-	/**
+
+    /**
 	 * Affiche l'image de l'icône de l'objet ou de l'entité, lien vers l'objet.
 	 *
-	 * @param string|object|entity $object
+	 * @param string|Node|entity $object
 	 * @param string $htlink
 	 * @return null
 	 */
@@ -36293,11 +36289,11 @@ $param = array(
 	{
 		echo $this->convertObjectIcon($object, $htlink, $icon);
 	}
-	
-	/**
+
+    /**
 	 * Prépare l'image de l'icône de l'objet ou de l'entité, lien vers l'objet.
 	 *
-	 * @param string|object|entity $object
+	 * @param string|Node|entity $object
 	 * @param string $htlink
 	 * @return string
 	 */
@@ -36319,7 +36315,7 @@ $param = array(
 	/**
 	 * Affiche l'image du carré de couleur et l'icône de l'objet ou de l'entité, lien vers l'objet.
 	 *
-	 * @param string|object|entity $object
+	 * @param string|Node|entity $object
 	 * @param string $htlink
 	 * @return null
 	 */
@@ -36331,7 +36327,7 @@ $param = array(
 	/**
 	 * Prépare l'image du carré de couleur et l'icône de l'objet ou de l'entité, lien vers l'objet.
 	 *
-	 * @param string|object|entity $object
+	 * @param string|Node|entity $object
 	 * @param string $htlink
 	 * @return string
 	 */
@@ -36354,7 +36350,7 @@ $param = array(
 	/**
 	 * Prépare en version inserré au texte l'image du carré de couleur de l'objet ou de l'entité, lien vers l'objet.
 	 *
-	 * @param string|object|entity $object
+	 * @param string|Node|entity $object
 	 * @param string $htlink
 	 * @return string
 	 */
@@ -36935,7 +36931,7 @@ $param = array(
 		foreach ( $list as $item )
 		{
 			// Affichage.
-			if ( is_a($item['object'], 'object') )
+			if ( is_a($item['object'], 'Node') )
 			{
 				$this->_displayArboItem($item);
 			}
@@ -36960,7 +36956,7 @@ $param = array(
 		{
 			return;
 		}
-		if ( ! is_a($item['object'], 'Object')
+		if ( ! is_a($item['object'], 'Node')
 				&& ! is_a($item['object'], 'Entity')
 				&& ! is_a($item['object'], 'Group')
 				&& ! is_a($item['object'], 'Conversation')
@@ -37576,21 +37572,21 @@ abstract class Actions
 
 		// Gère la suppression d'un objet.
 		if ( $this->_actionDeleteObject
-				&& is_a($this->_actionDeleteObjectInstance, 'Object')
+				&& is_a($this->_actionDeleteObjectInstance, 'Node')
 			)
 		{
 			$this->_actionDeleteObject();
 		}
 
 		// Gère la protection/déprotection d'un objet.
-		if ( $this->_actionProtectObjectInstance != ''
-				&& is_a($this->_actionProtectObjectInstance, 'Object')
+        if ( $this->_actionProtectObjectInstance != ''
+				&& is_a($this->_actionProtectObjectInstance, 'Node')
 			)
 		{
 			$this->_actionProtectObject();
-		}
-		if ( $this->_actionUnprotectObjectInstance != ''
-				&& is_a($this->_actionUnprotectObjectInstance, 'Object')
+        }
+        if ( $this->_actionUnprotectObjectInstance != ''
+				&& is_a($this->_actionUnprotectObjectInstance, 'Node')
 			)
 		{
 			$this->_actionUnprotectObject();
@@ -41306,7 +41302,7 @@ abstract class Actions
 			$data = file_get_contents($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['tmp_name']);
 	
 			// Ecrit le contenu dans l'objet.
-			$instance = New Object($this->_nebuleInstance, '0', $data, $this->_actionUploadFileProtect);
+			$instance = New Node($this->_nebuleInstance, '0', $data, $this->_actionUploadFileProtect);
 			if ( $instance === false )
 			{
 				$this->_metrology->addLog('Action _actionUploadFile cant create object instance', Metrology::LOG_LEVEL_ERROR); // Log
@@ -41375,7 +41371,7 @@ abstract class Actions
 			$this->_metrology->addLog('Action upload text', Metrology::LOG_LEVEL_DEBUG); // Log
 	
 			// Crée l'instance de l'objet.
-			$instance = New Object($this->_nebuleInstance, '0', $this->_actionUploadTextContent, $this->_actionUploadTextProtect);
+			$instance = New Node($this->_nebuleInstance, '0', $this->_actionUploadTextContent, $this->_actionUploadTextProtect);
 			if ( $instance === false )
 			{
 				$this->_metrology->addLog('Action _actionUploadText cant create object instance', Metrology::LOG_LEVEL_ERROR); // Log
@@ -42165,7 +42161,7 @@ abstract class Actions
 			// Affichage des actions.
 			$this->_display->displayInlineAllActions();
 	
-			if ( is_a($instanceMessage, 'Object')
+			if ( is_a($instanceMessage, 'Node')
 					&& $instanceMessage->getID() != '0'
 				)
 			{
@@ -42826,7 +42822,7 @@ abstract class Applications
 	/**
 	 * Retourne l'instance de l'objet en cours d'utilisation.
 	 *
-	 * @return Object
+	 * @return Node
 	 */
 	public function getCurrentObjectInstance()
 	{
@@ -43580,7 +43576,7 @@ abstract class Applications
 	 * Lit si le module est activé.
 	 * Ne pend en charge que les modules activables, c'est à dire non intégrés à l'application.
 	 * 
-	 * @param Object $module
+	 * @param Node $module
 	 * @return boolean
 	 */
 	public function getIsModuleActivated($module)

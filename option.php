@@ -1161,7 +1161,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 		
 			$color = '#'.substr($application.'000000',0,6);
 			//$colorSigner = '#'.substr($signersList[$application].'000000',0,6);
-			$instance = New Object($nebuleInstance, $application);
+			$instance = New Node($nebuleInstance, $application);
 			$title = $instance->getName('strict');
 			$shortName = substr($instance->getSurname('strict').'--', 0, 2);
 			$shortName = strtoupper(substr($shortName, 0, 1)).strtolower(substr($shortName, 1, 1));

@@ -247,7 +247,7 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
 	 * @param string $object
 	 * @return string
 	 */
-	public function getObjectLifetime(object $object)
+	public function getObjectLifetime(Node $object)
 	{
 		return $object->getProperty(Application::APPLICATION_EXPIRATION_DATE, 'all');
 	}
@@ -258,7 +258,7 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
 	 * @param string $object
 	 * @return string
 	 */
-	public function getObjectShowtime(object $object)
+	public function getObjectShowtime(Node $object)
 	{
 		return $object->getProperty(Application::APPLICATION_EXPIRATION_COUNT, 'all');
 	}
@@ -267,10 +267,10 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
 	 * Lit si l'objet est expiré en temps de vie.
 	 * Un objet sans durée de vie n'expire jamais.
 	 *
-	 * @param object $object
+	 * @param Node $object
 	 * @return boolean
 	 */
-	public function getObjectLifetimeExpired(object $object)
+	public function getObjectLifetimeExpired(Node $object)
 	{
 		// Liste les liens à la recherche de la propriété.
 		$link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
@@ -315,10 +315,10 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
 	/**
 	 * Lit si l'objet a ou avait une expiration en temps de vie.
 	 *
-	 * @param object $object
+	 * @param Node $object
 	 * @return boolean
 	 */
-	public function getObjectHaveLifetime(object $object)
+	public function getObjectHaveLifetime(Node $object)
 	{
 		// Liste les liens à la recherche de la propriété.
 		$link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
@@ -332,10 +332,10 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
 	/**
 	 * Lit si l'objet est expiré en nombre de vues.
 	 *
-	 * @param object $object
+	 * @param Node $object
 	 * @return boolean
 	 */
-	public function getObjectShowtimeExpired(object $object)
+	public function getObjectShowtimeExpired(Node $object)
 	{
 		$count = $object->getProperty(Application::APPLICATION_EXPIRATION_COUNT, 'all');
 		if ( $count == '' )
@@ -349,10 +349,10 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
 	/**
 	 * Lit le temps de vie restant de l'objet.
 	 *
-	 * @param object $object
+	 * @param Node $object
 	 * @return string
 	 */
-	public function getObjectLifetimeToLive(object $object)
+	public function getObjectLifetimeToLive(Node $object)
 	{
 		// Liste les liens à la recherche de la propriété.
 		$link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
@@ -477,10 +477,10 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
 	/**
 	 * Lit le temps de vie limite de l'objet.
 	 *
-	 * @param object $object
+	 * @param Node $object
 	 * @return DateTime
 	 */
-	public function getObjectLifetimeEnd(object $object)
+	public function getObjectLifetimeEnd(Node $object)
 	{
 		// Liste les liens à la recherche de la propriété.
 		$link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
@@ -518,10 +518,10 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
 	/**
 	 * Lit nombre de vues de l'objet.
 	 *
-	 * @param object $object
+	 * @param Node $object
 	 * @return integer
 	 */
-	public function getObjectShowtimeCount(object $object)
+	public function getObjectShowtimeCount(Node $object)
 	{
 		$count = $object->getProperty(Application::APPLICATION_EXPIRATION_COUNT, 'all');
 		if ( $count == '' )
@@ -536,10 +536,10 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
 	/**
 	 * Lit les entités qui ont vue l'objet.
 	 *
-	 * @param object $object
+	 * @param Node $object
 	 * @return array
 	 */
-	public function getObjectShowtimeList(object $object)
+	public function getObjectShowtimeList(Node $object)
 	{
 		$count = $object->getProperty(Application::APPLICATION_EXPIRATION_COUNT, 'all');
 		if ( $count == '' )
@@ -4035,7 +4035,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 		{
 			return;
 		}
-		if ( ! is_a($item['object'], 'object')
+		if ( ! is_a($item['object'], 'Node')
 				&& ! is_a($item['object'], 'entity')
 				&& ! is_a($item['object'], 'group')
 				&& ! is_a($item['object'], 'conversation')
@@ -4833,7 +4833,7 @@ class Action extends Actions
 			$data = file_get_contents($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['tmp_name']);
 
 			// Ecrit le contenu dans l'objet.
-			$instance = New Object($this->_nebuleInstance, '0', $data, $this->_actionUploadFileProtect);
+			$instance = New Node($this->_nebuleInstance, '0', $data, $this->_actionUploadFileProtect);
 			if ( $instance === false )
 			{
 				$this->_actionUploadFileError = true;
@@ -6390,17 +6390,17 @@ abstract class DisabledAction // extends Actions
 
 		// Gère la suppression d'un objet.
 		if ( $this->_actionDeleteObject
-				&& is_a($this->_actionDeleteObjectInstance, 'Object')
+				&& is_a($this->_actionDeleteObjectInstance, 'Node')
 			)
 			$this->_actionDeleteObject();
 
 		// Gère la protection/déprotection d'un objet.
 		if ( $this->_actionProtectObjectInstance != ''
-				&& is_a($this->_actionProtectObjectInstance, 'Object')
+				&& is_a($this->_actionProtectObjectInstance, 'Node')
 			)
 			$this->_actionProtectObject();
 		if ( $this->_actionUnprotectObjectInstance != ''
-				&& is_a($this->_actionUnprotectObjectInstance, 'Object')
+				&& is_a($this->_actionUnprotectObjectInstance, 'Node')
 			)
 			$this->_actionUnprotectObject();
 		if ( $this->_actionShareProtectObjectToEntity != '' )
@@ -6939,7 +6939,7 @@ abstract class DisabledAction // extends Actions
 			$data = file_get_contents($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['tmp_name']);
 
 			// Ecrit le contenu dans l'objet.
-			$instance = New Object($this->_nebuleInstance, '0', $data, $this->_actionUploadFileProtect);
+			$instance = New Node($this->_nebuleInstance, '0', $data, $this->_actionUploadFileProtect);
 			if ( $instance === false )
 			{
 				$this->_actionUploadFileError = true;
@@ -7077,7 +7077,7 @@ abstract class DisabledAction // extends Actions
 			$this->_metrology->addLog('Action upload text', Metrology::LOG_LEVEL_NORMAL); // Log
 
 			// Crée l'instance de l'objet.
-			$instance = New Object($this->_nebuleInstance, '0', $this->_actionUploadTextContent, $this->_actionUploadTextProtect);
+			$instance = New Node($this->_nebuleInstance, '0', $this->_actionUploadTextContent, $this->_actionUploadTextProtect);
 			if ( $instance === false )
 			{
 				$this->_actionUploadFileError = true;
