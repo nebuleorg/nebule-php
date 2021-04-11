@@ -647,10 +647,9 @@ $listOptionsBuffer = array();
  * Return option's value. Options presents on environment file are forced.
  *
  * @param string $name
- * @param string $type
  * @return null|string|boolean|integer
  */
-function getOption(string $name)
+function getOption(string $name): mixed
 {
     global $listOptionsType, $listOptionsDefaultValue, $listOptionsBuffer;
 
@@ -1451,7 +1450,11 @@ function nebReadObjText1line(string &$oid, int $maxsize = 128): string
 
     $data = '';
     o_getcontent($oid, $data);
-    $data = trim(strtok(filter_var($data, FILTER_SANITIZE_STRING), "\n"));
+    $data = strtok(filter_var($data, FILTER_SANITIZE_STRING), "\n");
+    if (! is_string($data))
+        return '';
+
+    $data = trim($data);
 
     if (extension_loaded('mbstring'))
         $data = mb_convert_encoding($data, 'UTF-8');
