@@ -1446,29 +1446,34 @@ function nebFindByRef($object, $reference, $strict = false)
  *
  * Fonction avec utilisation du cache si possible.
  *
- * @param string $object
- * @param number $maxsize
+ * @param string $oid
+ * @param integer $maxsize
  * @return string
  */
-function nebReadObjText1line(&$object, $maxsize)
+function nebReadObjText1line(string &$oid, int $maxsize = 128): string
 {
     global $nebuleUseCache, $nebuleCacheReadObjText1line;
 
     if ($nebuleUseCache
-        && isset($nebuleCacheReadObjText1line [$object])
+        && isset($nebuleCacheReadObjText1line [$oid])
     ) {
-        return $nebuleCacheReadObjText1line [$object];
+        return $nebuleCacheReadObjText1line [$oid];
     }
-    $readdata = '';
-    o_getcontent($object, $readdata);
-    // Detecte l'encodage et convertit en UTF-8 au besoin.
-    $data = mb_convert_encoding(trim(strtok(filter_var($readdata, FILTER_SANITIZE_STRING), "\n")), 'UTF-8'); // WARNING problème de convertion du codage de caractères...
+    $data = '';
+    o_getcontent($oid, $data);
+    $data = trim(strtok(filter_var($data, FILTER_SANITIZE_STRING), "\n"));
+
+    if (extension_loaded('mbstring'))
+        $data = mb_convert_encoding($data, 'UTF-8');
+    else
+        addLog('mbstring extension not installed or activated!');
+
     if (strlen($data) > $maxsize) {
         $data = substr($data, 0, ($maxsize - 3)) . '...';
     }
-    unset($readdata);
+
     if ($nebuleUseCache) {
-        $nebuleCacheReadObjText1line [$object] = $data;
+        $nebuleCacheReadObjText1line [$oid] = $data;
     }
     return $data;
 }
@@ -1477,20 +1482,20 @@ function nebReadObjText1line(&$object, $maxsize)
  * Lit le contenu d'un objet comme un texte, quel que soit son type mime.
  * Supprime les caractères non imprimables.
  *
- * @param string $object
- * @param number $maxsize
+ * @param string $oid
+ * @param integer $maxsize
  * @return string
  */
-function nebReadObjText(&$object, $maxsize = 4096)
+function nebReadObjText(string &$oid, int $maxsize = 4096): string
 {
-    $readdata = '';
-    o_getcontent($object, $readdata);
-    // $data = mb_convert_encoding(filter_var($readdata, FILTER_SANITIZE_STRING), 'UTF-8');
-    $data = filterprinteablestring($readdata);
+    $data = '';
+    o_getcontent($oid, $data);
+    $data = filterprinteablestring(filter_var($data, FILTER_SANITIZE_STRING));
+
     if (strlen($data) > $maxsize) {
         $data = substr($data, 0, ($maxsize - 3)) . '...';
     }
-    unset($readdata);
+
     return $data;
 }
 
@@ -4140,6 +4145,7 @@ function l_checkhashalgo(string &$algo, string &$size): bool
 function l_verifylink(string $link): bool
 {
     if (strlen($link) > 4096) return false; // TODO à revoir.
+    if (strlen($link) == 0) return false;
 
     // Extract blocs from link L : BH_BL_BS
     $bh = strtok(trim($link), '_');
