@@ -649,7 +649,7 @@ $listOptionsBuffer = array();
  * @param string $name
  * @return null|string|boolean|integer
  */
-function getOption(string $name): mixed
+function getOption(string $name)
 {
     global $listOptionsType, $listOptionsDefaultValue, $listOptionsBuffer;
 
@@ -3078,7 +3078,7 @@ function o_checkNID(string &$nid, bool $permitnull = false): bool
     if (strlen($hash) != (int)$size) return false;
 
     // Check item overflow
-    if (strlen(strtok('.')) != 0) return false;
+    if (strtok('.') !== false) return false;
 
     return true;
 }
@@ -3821,7 +3821,7 @@ function l_checkBH(string &$bh): bool
     $rv = strtok('/');
 
     // Check bloc overflow
-    if (strlen(strtok('/')) != 0) return false;
+    if (strtok('/') !== false) return false;
 
     // Check RF and RV.
     if (!l_checkRF($rf)) return false;
@@ -3847,7 +3847,7 @@ function l_checkRF(string &$rf): bool
     if ($typ != 'link') return false;
 
     // Check registry overflow
-    if (strlen(strtok(':')) != 0) return false;
+    if (strtok(':') !== false) return false;
 
     return true;
 }
@@ -3869,7 +3869,7 @@ function l_checkRV(string &$rv): bool
     if ($sub != '0') return false;
 
     // Check registry overflow
-    if (strlen(strtok(':')) != 0) return false;
+    if (strtok(':') !== false) return false;
 
     return true;
 }
@@ -3888,7 +3888,7 @@ function l_checkBL(string &$bl): bool
     $rl = strtok('/');
 
     // Check bloc overflow
-    if (strlen(strtok('/')) != 0) return false;
+    if (strtok('/') !== false) return false;
 
     // Check RC and RL.
     if (!l_checkRC($rc)) return false;
@@ -3915,7 +3915,7 @@ function l_checkRC(string &$rc): bool
     if (!ctype_digit($chr)) return false;
 
     // Check registry overflow
-    if (strlen(strtok('>')) != 0) return false;
+    if (strtok('>') !== false) return false;
 
     // TODO check MOD
     // TODO check CHR
@@ -3943,7 +3943,7 @@ function l_checkRL(string &$rl): bool
     if ($rl1nid3 === false) $rl1nid3 = '';
 
     // Check registry overflow
-    if (strlen(strtok('>')) != 0) return false;
+    if (strtok('>') !== false) return false;
 
     // --- --- --- --- --- --- --- --- ---
     // Check REQ, NID1, NID2 and NID4.
@@ -3985,7 +3985,7 @@ function l_checkBS(string &$bh, string &$bl, string &$bs): bool
     $rs = strtok($bs, '/');
 
     // Check bloc overflow
-    if (strlen(strtok('/')) != 0) return false;
+    if (strtok('/') !== false) return false;
 
     // Check content RS 1 NID 1 : hash.algo.size
     if (!o_checkNID($rs1nid1, false)) return false;
@@ -4011,7 +4011,7 @@ function l_checkRS(string &$rs, string &$bh, string &$bl): bool
     $sig = strtok('>');
 
     // Check registry overflow
-    if (strlen(strtok('>')) != 0) return false;
+    if (strtok('>') !== false) return false;
 
     // --- --- --- --- --- --- --- --- ---
     // Check content RS 1 NID 1 : hash.algo.size
@@ -4056,7 +4056,7 @@ function l_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): bool
     if (strlen($sign) != (int)$size) return false;
 
     // Check item overflow
-    if (strlen(strtok('.')) != 0) return false;
+    if (strtok('.') !== false) return false;
 
     // --- --- --- --- --- --- --- --- ---
     // Check sign.
@@ -4128,7 +4128,7 @@ function l_verifylink(string $link): bool
     $bs = strtok('_');
 
     // Check link overflow
-    if (strlen(strtok('_')) != 0) return false;
+    if (strtok('_') !== false) return false;
 
     // Check BH, BL and BS.
     if (!l_checkBH($bh)) return false;
