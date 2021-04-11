@@ -3766,31 +3766,29 @@ function l_downloadlinkanywhere($object)
  *  - $localisation le site web sur lequel aller télécharger les liens.
  * Les liens valides sont écrits.
  *
- * @param string $object
+ * @param string $oid
  * @param string $localisation
  * @return integer
  */
-function l_downloadlinkonlocation($object, $localisation)
+function l_downloadlinkonlocation($oid, $localisation)
 {
     global $nebulePermitWrite, $nebulePermitSynchronizeLink;
 
     if (!$nebulePermitWrite
-        || !$nebulePermitSynchronizeLink
-        || $object == '0'
-        || $object == ''
-        || !is_string($object)
-        || !ctype_xdigit($object)
+        || !getOption('nebulePermitSynchronizeLink')
+        || $oid == '0'
+        || $oid == ''
+        || !is_string($oid)
         || $localisation == '0'
         || $localisation == ''
         || !is_string($localisation)
-    ) {
+    )
         return 0;
-    }
 
     $count = 0;
 
     // WARNING ajouter vérification du lien type texte
-    $distobj = fopen($localisation . '/l/' . $object, 'r');
+    $distobj = fopen($localisation . '/l/' . $oid, 'r');
     if ($distobj) {
         while (!feof($distobj)) {
             $line = trim(fgets($distobj));
