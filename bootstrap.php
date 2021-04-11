@@ -438,7 +438,6 @@ $nebuleIOMaxlink = 2000;
 $nebuleIOMaxdata = 100000;
 $nebuleMaxRecurse = 20;
 $nebuleMaxUpdates = 500;
-$nebuleUseCache = true;
 $nebuleMimetypePathFile = '/etc/mime.types';
 
 /*
@@ -551,6 +550,7 @@ $listOptionsType = array(
     'maxFollowedUpdates' => 'integer',
     'permitSessionOptions' => 'boolean',
     'permitSessionBuffer' => 'boolean',
+    'permitBufferIO' => 'boolean',
     'sessionBufferSize' => 'integer',
     'defaultCurrentEntity' => 'string',
     'defaultApplication' => 'string',
@@ -629,6 +629,7 @@ $listOptionsDefaultValue = array(
     'maxFollowedUpdates' => 100,
     'permitSessionOptions' => true,
     'permitSessionBuffer' => true,
+    'permitBufferIO' => true,
     'sessionBufferSize' => 1000,
     'defaultCurrentEntity' => NEBULE_DEFAULT_PUPPETMASTER_ID,
     'defaultApplication' => '0',
@@ -1065,15 +1066,6 @@ $nebuleMetrologyLinkVerify = 0;
 $nebuleMetrologyObjectList = 0;
 $nebuleMetrologyObjectVerify = 0;
 
-/**
- * Autorise ou non l'utilisation du cache.
- *
- * Affecte les performances.
- *
- * @var boolean $nebuleUseCache
- */
-$nebuleUseCache = true;
-
 $nebuleCacheReadObjText1line = array();
 $nebuleCacheReadObjName = array();
 $nebuleCacheReadObjSize = array();
@@ -1452,13 +1444,11 @@ function nebFindByRef($object, $reference, $strict = false)
  */
 function nebReadObjText1line(string &$oid, int $maxsize = 128): string
 {
-    global $nebuleUseCache, $nebuleCacheReadObjText1line;
+    global $nebuleCacheReadObjText1line;
 
-    if ($nebuleUseCache
-        && isset($nebuleCacheReadObjText1line [$oid])
-    ) {
+    if (isset($nebuleCacheReadObjText1line [$oid]))
         return $nebuleCacheReadObjText1line [$oid];
-    }
+
     $data = '';
     o_getcontent($oid, $data);
     $data = trim(strtok(filter_var($data, FILTER_SANITIZE_STRING), "\n"));
@@ -1472,9 +1462,9 @@ function nebReadObjText1line(string &$oid, int $maxsize = 128): string
         $data = substr($data, 0, ($maxsize - 3)) . '...';
     }
 
-    if ($nebuleUseCache) {
+    if (getOption('permitBufferIO'))
         $nebuleCacheReadObjText1line [$oid] = $data;
-    }
+
     return $data;
 }
 
@@ -1519,13 +1509,11 @@ function nebReadObjLinks($object, &$table)
  */
 function nebReadObjName(&$object)
 {
-    global $nebuleUseCache, $nebuleCacheReadObjName;
+    global $nebuleCacheReadObjName;
 
-    if ($nebuleUseCache
-        && isset($nebuleCacheReadObjName [$object])
-    ) {
+    if (isset($nebuleCacheReadObjName [$object]))
         return $nebuleCacheReadObjName [$object];
-    }
+
     nebINECreatObjText('nebule/objet/nom');
     nebINECreatObjText('nebule/objet/prenom');
     nebINECreatObjText('nebule/objet/surnom');
@@ -1574,9 +1562,8 @@ function nebReadObjName(&$object)
 
     unset($type, $prenom, $surnom, $suffix);
 
-    if ($nebuleUseCache) {
+    if (getOption('permitBufferIO'))
         $nebuleCacheReadObjName [$object] = $nom;
-    }
 
     return $nom;
 }
@@ -1586,10 +1573,11 @@ function nebReadObjSize(&$object)
 {
     // Cherche la taille d'un objet.
     // Fonction avec utilisation du cache si possible.
-    global $nebuleUseCache, $nebuleCacheReadObjSize;
+    global $nebuleCacheReadObjSize;
 
-    if ($nebuleUseCache && isset($nebuleCacheReadObjSize [$object]))
+    if (isset($nebuleCacheReadObjSize [$object]))
         return $nebuleCacheReadObjSize [$object];
+
     nebINECreatObjText('nebule/objet/taille');
     $type = nebFindObjType($object, 'nebule/objet/taille'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
@@ -1600,8 +1588,10 @@ function nebReadObjSize(&$object)
         $text = '-indéfini-';
     }
     unset($type);
-    if ($nebuleUseCache)
+
+    if (getOption('permitBufferIO'))
         $nebuleCacheReadObjSize [$object] = $text;
+
     return $text;
 }
 
@@ -1610,10 +1600,11 @@ function nebReadEntityType(&$object)
 {
     // Cherche le type d'une entite.
     // Fonction avec utilisation du cache si possible.
-    global $nebuleUseCache, $nebuleCacheReadEntityType;
+    global $nebuleCacheReadEntityType;
 
-    if ($nebuleUseCache && isset($nebuleCacheReadEntityType [$object]))
+    if (isset($nebuleCacheReadEntityType [$object]))
         return $nebuleCacheReadEntityType [$object];
+
     nebINECreatObjText('nebule/objet/entite/type');
     $type = nebFindObjType($object, 'nebule/objet/entite/type'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
@@ -1624,8 +1615,10 @@ function nebReadEntityType(&$object)
         $text = '-indéterminé-';
     }
     unset($type);
-    if ($nebuleUseCache)
+
+    if (getOption('permitBufferIO'))
         $nebuleCacheReadEntityType [$object] = $text;
+
     return $text;
 }
 
@@ -1634,10 +1627,11 @@ function nebReadEntityLoc(&$object)
 {
     // Cherche la localisation d'une entite.
     // Fonction avec utilisation du cache si possible.
-    global $nebuleUseCache, $nebuleCacheReadEntityLoc;
+    global $nebuleCacheReadEntityLoc;
 
-    if ($nebuleUseCache && isset($nebuleCacheReadEntityLoc [$object]))
+    if (isset($nebuleCacheReadEntityLoc [$object]))
         return $nebuleCacheReadEntityLoc [$object];
+
     nebINECreatObjText('nebule/objet/entite/localisation');
     $type = nebFindObjType($object, 'nebule/objet/entite/localisation'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
@@ -1648,8 +1642,10 @@ function nebReadEntityLoc(&$object)
         $text = '-indéterminé-';
     }
     unset($type);
-    if ($nebuleUseCache)
+
+    if (getOption('permitBufferIO'))
         $nebuleCacheReadEntityLoc [$object] = $text;
+
     return $text;
 }
 
@@ -1658,10 +1654,11 @@ function nebReadEntityFName(&$entite)
 {
     // Cherche le prénom d'une entite.
     // Fonction avec utilisation du cache si possible.
-    global $nebuleUseCache, $nebuleCacheReadEntityFName;
+    global $nebuleCacheReadEntityFName;
 
-    if ($nebuleUseCache && isset($nebuleCacheReadEntityFName [$entite]))
+    if (isset($nebuleCacheReadEntityFName [$entite]))
         return $nebuleCacheReadEntityFName [$entite];
+
     nebINECreatObjText('nebule/objet/prenom');
     $type = nebFindObjType($entite, 'nebule/objet/prenom'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
@@ -1669,8 +1666,10 @@ function nebReadEntityFName(&$entite)
         $text = nebReadObjText1line($type, 128);
     }
     unset($type);
-    if ($nebuleUseCache)
+
+    if (getOption('permitBufferIO'))
         $nebuleCacheReadEntityFName [$entite] = $text;
+
     return $text;
 }
 
@@ -1679,10 +1678,11 @@ function nebReadEntityName(&$entite)
 {
     // Cherche le nom d'une entite.
     // Fonction avec utilisation du cache si possible.
-    global $nebuleUseCache, $nebuleCacheReadEntityName;
+    global $nebuleCacheReadEntityName;
 
-    if ($nebuleUseCache && isset($nebuleCacheReadEntityName [$entite]))
+    if (isset($nebuleCacheReadEntityName [$entite]))
         return $nebuleCacheReadEntityName [$entite];
+
     nebINECreatObjText('nebule/objet/nom');
     $type = nebFindObjType($entite, 'nebule/objet/nom'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
@@ -1690,8 +1690,10 @@ function nebReadEntityName(&$entite)
         $text = nebReadObjText1line($type, 128);
     }
     unset($type);
-    if ($nebuleUseCache)
+
+    if (getOption('permitBufferIO'))
         $nebuleCacheReadEntityName [$entite] = $text;
+
     return $text;
 }
 
@@ -1700,10 +1702,11 @@ function nebReadEntityPName(&$entite)
 {
     // Cherche le postnom d'une entite.
     // Fonction avec utilisation du cache si possible.
-    global $nebuleUseCache, $nebuleCacheReadEntityPName;
+    global $nebuleCacheReadEntityPName;
 
-    if ($nebuleUseCache && isset($nebuleCacheReadEntityPName [$entite]))
+    if (isset($nebuleCacheReadEntityPName [$entite]))
         return $nebuleCacheReadEntityPName [$entite];
+
     nebINECreatObjText('nebule/objet/postnom');
     $type = nebFindObjType($entite, 'nebule/objet/postnom'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
@@ -1711,8 +1714,10 @@ function nebReadEntityPName(&$entite)
         $text = nebReadObjText1line($type, 128);
     }
     unset($type);
-    if ($nebuleUseCache)
+
+    if (getOption('permitBufferIO'))
         $nebuleCacheReadEntityPName [$entite] = $text;
+
     return $text;
 }
 
@@ -1721,10 +1726,11 @@ function nebReadEntityFullName(&$entite)
 {
     // Cherche le nom complet d'une entite, càd avec prénom et surnom.
     // Fonction avec utilisation du cache si possible.
-    global $nebuleUseCache, $nebuleCacheReadEntityFullName;
+    global $nebuleCacheReadEntityFullName;
 
-    if ($nebuleUseCache && isset($nebuleCacheReadEntityFullName [$entite]))
+    if (isset($nebuleCacheReadEntityFullName [$entite]))
         return $nebuleCacheReadEntityFullName [$entite];
+
     $fname = nebReadEntityFName($entite);
     $name = nebReadEntityName($entite);
     $pname = nebReadEntityPName($entite);
@@ -1742,8 +1748,10 @@ function nebReadEntityFullName(&$entite)
     unset($fname);
     unset($name);
     unset($pname);
-    if ($nebuleUseCache)
+
+    if (getOption('permitBufferIO'))
         $nebuleCacheReadEntityFullName [$entite] = $fullname;
+
     return $fullname;
 }
 
@@ -1752,12 +1760,14 @@ function nebFindObjType(&$object, $type)
 {
     // Cherche l'objet contenant la description de l'objet pour une propriete type.
     // Fonction avec utilisation du cache si possible.
-    global $nebulePublicEntity, $nebuleUseCache, $nebuleCacheFindObjType;
+    global $nebulePublicEntity, $nebuleCacheFindObjType;
 
-    if ($nebuleUseCache && isset($nebuleCacheFindObjType [$object] [$type]))
+    if (isset($nebuleCacheFindObjType [$object] [$type]))
         return $nebuleCacheFindObjType [$object] [$type];
+
     if ($object == '811ba947111090b4708da62494a84e5cfc13ea60e16dac94a678f395aa42da07')
         return ''; // WARNING caca - Exception pour problème de performances : 'nebule/objet/entite/suivi'
+
     $table = array();
     $hashtype = hash(getOption('cryptoHashAlgorithm'), $type);
     $objdst = '';
@@ -1773,8 +1783,10 @@ function nebFindObjType(&$object, $type)
     }
     unset($table);
     unset($hashtype);
-    if ($nebuleUseCache)
+
+    if (getOption('permitBufferIO'))
         $nebuleCacheFindObjType [$object] [$type] = $objdst;
+
     return $objdst;
 }
 
@@ -1782,12 +1794,14 @@ function nebFindObjType(&$object, $type)
 function nebReadObjTypeMime(&$object)
 { // Cherche le type mime d'un objet.
     // Fonction avec utilisation du cache si possible.
-    global $nebulePublicEntity, $nebuleUseCache, $nebuleCacheReadObjTypeMime;
+    global $nebulePublicEntity, $nebuleCacheReadObjTypeMime;
 
-    if ($nebuleUseCache && isset($nebuleCacheReadObjTypeMime [$object]))
+    if (isset($nebuleCacheReadObjTypeMime [$object]))
         return $nebuleCacheReadObjTypeMime [$object];
+
     if ($object == '' || $object == '0')
         return '-indéfini-'; // L'objet doit etre present.
+
     $table = array();
     nebINECreatObjText('nebule/objet/type');
     $hashtype = hash(getOption('cryptoHashAlgorithm'), 'nebule/objet/type'); // 5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0
@@ -1812,8 +1826,10 @@ function nebReadObjTypeMime(&$object)
         $text = '-indéfini-';
     }
     unset($type);
-    if ($nebuleUseCache)
+
+    if (getOption('permitBufferIO'))
         $nebuleCacheReadObjTypeMime [$object] = $text;
+
     return $text;
 }
 
@@ -1821,12 +1837,14 @@ function nebReadObjTypeMime(&$object)
 function nebReadObjTypeHash(&$object)
 { // Cherche le type de hash d'un objet.
     // Fonction avec utilisation du cache si possible.
-    global $nebulePublicEntity, $nebuleUseCache, $nebuleCacheReadObjTypeHash;
+    global $nebulePublicEntity, $nebuleCacheReadObjTypeHash;
 
-    if ($nebuleUseCache && isset($nebuleCacheReadObjTypeHash [$object]))
+    if (isset($nebuleCacheReadObjTypeHash [$object]))
         return $nebuleCacheReadObjTypeHash [$object];
+
     if ($object == '' || $object == '0')
         return '-indéfini-'; // L'objet doit etre present.
+
     $table = array();
     nebINECreatObjText('nebule/objet/hash');
     $hashtype = hash(getOption('cryptoHashAlgorithm'), 'nebule/objet/hash'); // 8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec
@@ -1850,8 +1868,10 @@ function nebReadObjTypeHash(&$object)
         $text = '-indéfini-';
     }
     unset($type);
-    if ($nebuleUseCache)
+
+    if (getOption('permitBufferIO'))
         $nebuleCacheReadObjTypeHash [$object] = $text;
+
     return $text;
 }
 
@@ -1859,12 +1879,14 @@ function nebReadObjTypeHash(&$object)
 function nebIsText(&$object)
 { // Vérifie si l'objet est marqué comme un texte.
     // Fonction avec utilisation du cache si possible.
-    global $nebulePublicEntity, $nebuleUseCache, $nebuleCacheIsText;
+    global $nebulePublicEntity, $nebuleCacheIsText;
 
-    if ($nebuleUseCache && isset($nebuleCacheIsText [$object]))
+    if (isset($nebuleCacheIsText [$object]))
         return $nebuleCacheIsText [$object];
+
     if ($object == '0')
         return false;
+
     $ok = false;
     $table = array();
     $hashtype = hash(getOption('cryptoHashAlgorithm'), 'text/plain');
@@ -1879,8 +1901,10 @@ function nebIsText(&$object)
             $ok = true;
     }
     unset($table);
-    if ($nebuleUseCache)
+
+    if (getOption('permitBufferIO'))
         $nebuleCacheIsText [$object] = $ok;
+
     return $ok;
 }
 
@@ -1908,12 +1932,14 @@ function nebAddObjTypeMime(&$object, $type)
 function nebIsBanned(&$object)
 { // Vérifie si l'objet est marqué comme banni.
     // Fonction avec utilisation du cache si possible.
-    global $nebulePublicEntity, $nebulePuppetmaster, $nebuleSecurityMaster, $nebuleUseCache, $nebuleCacheIsBanned;
+    global $nebulePublicEntity, $nebulePuppetmaster, $nebuleSecurityMaster, $nebuleCacheIsBanned;
 
-    if ($nebuleUseCache && isset($nebuleCacheIsBanned [$object]))
+    if (isset($nebuleCacheIsBanned [$object]))
         return $nebuleCacheIsBanned [$object];
+
     if ($object == '0')
         return false;
+
     $ok = false;
     $table = array();
     $hashtype = hash(getOption('cryptoHashAlgorithm'), 'nebule/danger'); // ac2323f77d7ee9f3ae841e8ccd8374397038160ec7cdb2fc86610c0f66eeeedb
@@ -1929,59 +1955,10 @@ function nebIsBanned(&$object)
     }
     unset($table);
     unset($hashtype);
-    if ($nebuleUseCache)
+
+    if (getOption('permitBufferIO'))
         $nebuleCacheIsBanned [$object] = $ok;
-    return $ok;
-}
 
-// FIXME
-function nebIsNode(&$object)
-{ // Vérifie si l'objet est marqué comme un noeud.
-    // Fonction avec utilisation du cache si possible.
-    global $nebulePublicEntity, $nebuleUseCache, $nebuleCacheIsNode;
-
-    if ($nebuleUseCache && isset($nebuleCacheIsNode [$object]))
-        return $nebuleCacheIsNode [$object];
-    if ($object == '0')
-        return false;
-    $ok = false;
-    $table = array();
-    nebINECreatObjText('nebule/objet/noeud');
-    $hashtype = hash(getOption('cryptoHashAlgorithm'), 'nebule/objet/noeud'); // 2df1f7d23473fa0e964acc0b621c1e6bfd8160003c6a1b7d9374c6f034c6aaf4
-    // _neblibpp_l_lsx($object, $table, 'f', $hashtype);
-    l_find($object, $table, 'f', $hashtype, $object, '0');
-    foreach ($table as $link) {
-        if (($link [2] == $nebulePublicEntity) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $object) && ($link [7] == '0'))
-            $ok = true;
-    }
-    unset($table);
-    unset($link);
-    unset($hashtype);
-    if ($nebuleUseCache)
-        $nebuleCacheIsNode [$object] = $ok;
-    return $ok;
-}
-
-// FIXME
-function nebMaybeNode(&$object)
-{ // Vérifie si l'objet est potentiellement un noeud.
-    // Fonction avec utilisation du cache si possible.
-    global $nebulePublicEntity, $nebuleUseCache, $nebuleCacheMaybeNode;
-
-    if ($nebuleUseCache && isset($nebuleCacheMaybeNode [$object]))
-        return $nebuleCacheMaybeNode [$object];
-    if ($object == '0')
-        return false;
-    $ok = false;
-    $table = array();
-    l_find($object, $table, 'f', $object, '', $object);
-    foreach ($table as $link) {
-        if (($link [2] == $nebulePublicEntity) && ($link [4] == 'f') && ($link [5] == $object) && ($link [7] == $object))
-            $ok = true;
-    }
-    unset($table);
-    if ($nebuleUseCache)
-        $nebuleCacheMaybeNode [$object] = $ok;
     return $ok;
 }
 
@@ -1989,10 +1966,11 @@ function nebMaybeNode(&$object)
 function nebIsSuppr(&$object)
 { // Vérifie si l'objet est marqué comme supprimé.
     // Fonction avec utilisation du cache si possible.
-    global $nebulePublicEntity, $nebuleUseCache, $nebuleCacheIsSuppr;
+    global $nebulePublicEntity, $nebuleCacheIsSuppr;
 
-    if ($nebuleUseCache && isset($nebuleCacheIsSuppr [$object]))
+    if (isset($nebuleCacheIsSuppr [$object]))
         return $nebuleCacheIsSuppr [$object];
+
     if ($object == '0')
         return false;
     $ok = false;
@@ -2005,8 +1983,10 @@ function nebIsSuppr(&$object)
         }
     }
     unset($table);
-    if ($nebuleUseCache)
+
+    if (getOption('permitBufferIO'))
         $nebuleCacheIsSuppr [$object] = $ok;
+
     return $ok;
 }
 
@@ -2020,13 +2000,11 @@ function nebIsSuppr(&$object)
  */
 function nebIsPubkey(&$entite): bool
 {
-    global $nebuleUseCache, $nebuleCacheIsPubkey;
+    global $nebuleCacheIsPubkey;
 
-    if ($nebuleUseCache
-        && isset($nebuleCacheIsPubkey[$entite])
-    ) {
+    if (isset($nebuleCacheIsPubkey[$entite]))
         return $nebuleCacheIsPubkey[$entite];
-    }
+
     if (!is_string($entite)
         || $entite == '0'
         || !ctype_xdigit($entite)
@@ -2039,13 +2017,14 @@ function nebIsPubkey(&$entite): bool
         return false;
     }
     $line = nebReadObjText($entite, 10000);
+
     if (strstr($line, 'BEGIN PUBLIC KEY') !== false) {
-        if ($nebuleUseCache) {
-            $nebuleCacheIsPubkey[$entite] = true;
+        if (getOption('permitBufferIO')) {
+            $nebuleCacheIsPubkey[$entite] = true; // FIXME
         }
         return true;
     } else {
-        if ($nebuleUseCache) {
+        if (getOption('permitBufferIO')) {
             $nebuleCacheIsPubkey[$entite] = false;
         }
         return false;
@@ -2056,22 +2035,25 @@ function nebIsPubkey(&$entite): bool
 function nebIsPrivkey(&$entite): bool
 { // Vérifie si l'objet est une clé privée.
     // Fonction avec utilisation du cache si possible.
-    global $nebuleUseCache, $nebuleCacheIsPrivkey;
+    global $nebuleCacheIsPrivkey;
 
-    if ($nebuleUseCache && isset($nebuleCacheIsPrivkey [$entite]))
+    if (isset($nebuleCacheIsPrivkey [$entite]))
         return $nebuleCacheIsPrivkey [$entite];
+
     if ($entite == '0')
         return false;
+
     nebINECreatObjText('application/x-pem-file'); // 970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864
     if ((nebReadObjTypeMime($entite)) != 'application/x-pem-file')
         return false;
     $line = nebReadObjText($entite, 10000);
+
     if ((strstr($line, 'BEGIN ENCRYPTED PRIVATE KEY')) !== false) {
-        if ($nebuleUseCache)
-            $nebuleCacheIsPrivkey [$entite] = true;
+        if (getOption('permitBufferIO'))
+            $nebuleCacheIsPrivkey [$entite] = true; // FIXME
         return true;
     } else {
-        if ($nebuleUseCache)
+        if (getOption('permitBufferIO'))
             $nebuleCacheIsPrivkey [$entite] = false;
         return false;
     }
@@ -2081,10 +2063,11 @@ function nebIsPrivkey(&$entite): bool
 function nebIsEncrypt(&$object)
 { // Vérifie si l'objet est marqué comme protégé.
     // Fonction avec utilisation du cache si possible.
-    global $nebuleUseCache, $nebuleCacheIsEncrypt;
+    global $nebuleCacheIsEncrypt;
 
-    if ($nebuleUseCache && isset($nebuleCacheIsEncrypt [$object]))
+    if (isset($nebuleCacheIsEncrypt [$object]))
         return $nebuleCacheIsEncrypt [$object];
+
     $table = array();
     $encrypt = false;
     l_find($object, $table, 'k', $object, '', '');
@@ -2102,8 +2085,10 @@ function nebIsEncrypt(&$object)
         }
     }
     unset($table);
-    if ($nebuleUseCache)
+
+    if (getOption('permitBufferIO'))
         $nebuleCacheIsEncrypt [$object] = $encrypt;
+
     return $encrypt;
 }
 
@@ -3020,7 +3005,7 @@ function o_downloadcontent(string $object, string $localisation): void
  */
 function o_checkcontent(&$nid)
 {
-    global $nebuleMetrologyObjectVerify, $nebuleUseCache, $nebuleCachelibpp_o_vr;
+    global $nebuleMetrologyObjectVerify, $nebuleCachelibpp_o_vr;
 
     if ($nid == '') {
         return false;
@@ -3038,11 +3023,8 @@ function o_checkcontent(&$nid)
         return true;
     }
 
-    if ($nebuleUseCache
-        && isset($nebuleCachelibpp_o_vr[$nid])
-    ) {
+    if (isset($nebuleCachelibpp_o_vr[$nid]))
         return true;
-    }
 
     $nebuleMetrologyObjectVerify++;
     $hash = hash_file(getOption('cryptoHashAlgorithm'), NEBULE_LOCAL_OBJECTS_FOLDER . "/$nid"); // @todo refaire via les i/o.
@@ -3052,7 +3034,7 @@ function o_checkcontent(&$nid)
         io_objectdelete($nid);
     }
 
-    if ($nebuleUseCache) {
+    if (getOption('permitBufferIO')) {
         $nebuleCachelibpp_o_vr[$nid] = true;
     }
     unset($hash);
@@ -3356,34 +3338,24 @@ function l_graphresolvone(&$object, &$visited, $present = true, $synchro = false
  */
 function l_graphresolv($object, $present = true, $synchro = false, $restrict = false)
 {
-    global $nebule_permitautosync, $nebuleUseCache, $nebuleCachelibpp_l_grx;
+    global $nebule_permitautosync, $nebuleCachelibpp_l_grx;
 
     // Lit au besoin le cache.
-    if ($nebuleUseCache
-        && !$restrict
-        && isset($nebuleCachelibpp_l_grx[$object][$present])
-    ) {
+    if (!$restrict && isset($nebuleCachelibpp_l_grx[$object][$present]))
         return $nebuleCachelibpp_l_grx[$object][$present];
-    }
 
     // Active la synchronisation automatique au besoin.
-    if ($nebule_permitautosync) {
+    if ($nebule_permitautosync)
         $synchro = true;
-    }
 
     $visited = array();
     $res = l_graphresolvone($object, $visited, $present, $synchro, $restrict);
     unset($visited);
-    if ($res == '0') {
+    if ($res == '0')
         $res = $object;
-    }
 
-    // Ecrit au besoin le cache.
-    if ($nebuleUseCache
-        && !$restrict
-    ) {
+    if (getOption('permitBufferIO') && !$restrict)
         $nebuleCachelibpp_l_grx[$object][$present] = $res;
-    }
 
     return $res;
 }
@@ -6530,30 +6502,19 @@ unset($serverEntite);
  *
  * @return void
  */
-function bootstrapDisplayApplicationfirst()
+function bootstrapDisplayApplicationfirst(): void
 {
-    global $loggerSessionID,
-           $bootstrapBreak,
-           $metrologyStartTime,
-           $bootstrapName,
-           $bootstrapRescueMode,
-           $nebuleUseCache,
-           $nebuleCacheIsPubkey,
-           $nebulePermitWrite,
-           $nebulePermitWriteLink,
-           $nebulePermitWriteObject,
-           $nebulePermitSynchronizeObject,
-           $nebulePermitSynchronizeLink,
-           $nebulePermitWriteEntity;
+    global $loggerSessionID, $bootstrapBreak, $metrologyStartTime, $bootstrapName, $bootstrapRescueMode,
+           $listOptionsBuffer, $nebuleCacheIsPubkey;
 
     // Modifie temporairement la configuration de la bibliothèque PHP PP.
-    $nebulePermitWrite = true;
-    $nebulePermitWriteObject = true;
-    $nebulePermitSynchronizeObject = true;
-    $nebulePermitWriteLink = true;
-    $nebulePermitSynchronizeLink = true;
-    $nebulePermitWriteEntity = true;
-    $nebuleUseCache = false;
+    $listOptionsBuffer['nebulePermitWrite'] = true;
+    $listOptionsBuffer['nebulePermitWriteObject'] = true;
+    $listOptionsBuffer['nebulePermitSynchronizeObject'] = true;
+    $listOptionsBuffer['nebulePermitWriteLink'] = true;
+    $listOptionsBuffer['nebulePermitSynchronizeLink'] = true;
+    $listOptionsBuffer['nebulePermitWriteEntity'] = true;
+    $listOptionsBuffer['permitBufferIO'] = false;
     $nebuleCacheIsPubkey = array();
 
     // Initialisation des logs

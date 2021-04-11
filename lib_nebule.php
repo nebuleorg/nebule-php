@@ -139,6 +139,7 @@ class nebule
     const DEFAULT_MAX_FOLLOWED_UPDATES = 100;
     const DEFAULT_PERMIT_SESSION_OPTIONS = true;
     const DEFAULT_PERMIT_SESSION_BUFFER = true;
+    const DEFAULT_PERMIT_BUFFER_IO = true;
     const DEFAULT_SESSION_BUFFER_SIZE = 1000;
     const DEFAULT_APPLICATION = '0';
     const DEFAULT_OBFUSCATE_LINKS = false;
@@ -821,6 +822,7 @@ class nebule
         'maxFollowedUpdates',
         'permitSessionOptions',
         'permitSessionBuffer',
+        'permitBufferIO', //  TODO Need to be used on the library in side of permitSessionBuffer...
         'sessionBufferSize',
         'defaultCurrentEntity',
         'defaultApplication',
@@ -925,6 +927,7 @@ class nebule
         'maxFollowedUpdates' => 'Links',
         'permitSessionOptions' => 'I/O',
         'permitSessionBuffer' => 'I/O',
+        'permitBufferIO' => 'I/O',
         'sessionBufferSize' => 'I/O',
         'defaultCurrentEntity' => 'Entities',
         'defaultApplication' => 'Applications',
@@ -1008,6 +1011,7 @@ class nebule
         'maxFollowedUpdates' => 'integer',
         'permitSessionOptions' => 'boolean',
         'permitSessionBuffer' => 'boolean',
+        'permitBufferIO' => 'boolean',
         'sessionBufferSize' => 'integer',
         'defaultCurrentEntity' => 'string',
         'defaultApplication' => 'string',
@@ -1087,6 +1091,7 @@ class nebule
         'maxFollowedUpdates' => true,
         'permitSessionOptions' => true,
         'permitSessionBuffer' => true,
+        'permitBufferIO' => true,
         'sessionBufferSize' => true,
         'defaultCurrentEntity' => true,
         'defaultApplication' => true,
@@ -1165,6 +1170,7 @@ class nebule
         'maxFollowedUpdates' => nebule::DEFAULT_MAX_FOLLOWED_UPDATES,
         'permitSessionOptions' => nebule::DEFAULT_PERMIT_SESSION_OPTIONS,
         'permitSessionBuffer' => nebule::DEFAULT_PERMIT_SESSION_BUFFER,
+        'permitBufferIO' => nebule::DEFAULT_PERMIT_BUFFER_IO,
         'sessionBufferSize' => nebule::DEFAULT_SESSION_BUFFER_SIZE,
         'defaultCurrentEntity' => nebule::PUPPETMASTER,
         'defaultApplication' => nebule::DEFAULT_APPLICATION,
@@ -1243,6 +1249,7 @@ class nebule
         'maxFollowedUpdates' => 'useful',
         'permitSessionOptions' => 'careful',
         'permitSessionBuffer' => 'careful',
+        'permitBufferIO' => 'careful',
         'sessionBufferSize' => 'useful',
         'defaultCurrentEntity' => 'useful',
         'defaultApplication' => 'useful',
@@ -1322,6 +1329,7 @@ class nebule
         'maxFollowedUpdates' => 'Todo description...',
         'permitSessionOptions' => 'Todo description...',
         'permitSessionBuffer' => 'Todo description...',
+        'permitBufferIO' => 'Todo description...',
         'sessionBufferSize' => 'Todo description...',
         'defaultCurrentEntity' => 'Todo description...',
         'defaultApplication' => 'Todo description...',
