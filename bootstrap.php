@@ -32,22 +32,6 @@ $bootstrapWebsite = 'www.nebule.org';
 // Disable display until routing choice have been made.
 ob_start();
 
-/**
- * Log unique ID for one run.
- */
-$loggerSessionID = bin2hex(openssl_random_pseudo_bytes(6, $false));
-
-/**
- * Start timer for metrology.
- *
- * @var float $metrologyStartTime
- */
-$metrologyStartTime = microtime(true);
-
-// Initialize logs.
-openlog($bootstrapName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
-syslog(LOG_INFO, 'LogT=0 LogTabs=' . $metrologyStartTime . ' --- start ' . $bootstrapName);
-
 
 /*
  ------------------------------------------------------------------------------------------
@@ -112,15 +96,6 @@ define('ARG_SERVER_ENTITY', 'e');
  */
 
 /*
- * Constante de rechargement d'une application lorsqu'elle vient d'être pré-chargée.
- *
- * ATTENTION !
- * En production, doit être à true.
- * In production, must be true.
- */
-define('AUTORELOAD_PRELOAD', true);
-
-/*
  * Contante pour suivre tous les liens de références.
  * C'est utilisé lors de la recherche de la bibliothèque et des applications.
  *
@@ -139,6 +114,24 @@ define('REFERENCES_FOLLOW_ONLY_AUTORITY', true);
  */
 define('REFERENCE_DEV_ID', '');
 
+// ------------------------------------------------------------------------------------------
+// Logs setting and initializing.
+/**
+ * Log unique ID for one run.
+ */
+$loggerSessionID = bin2hex(openssl_random_pseudo_bytes(6, $false));
+
+/**
+ * Start timer for metrology.
+ *
+ * @var float $metrologyStartTime
+ */
+$metrologyStartTime = microtime(true);
+
+// Initialize logs.
+openlog($bootstrapName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+syslog(LOG_INFO, 'LogT=0 LogTabs=' . $metrologyStartTime . ' --- start ' . $bootstrapName);
+
 /**
  * Add message to logs.
  *
@@ -152,43 +145,26 @@ function addLog(string $message): void
     syslog(LOG_INFO, 'LogT=' . (microtime(true) - $metrologyStartTime) . ' LogL=B LogM="' . $message . '"');
 }
 
-/*
- * Force les logs pour la bibliothèque PP.
- */
-$nebulePermitLogs = false;
-
 
 // ------------------------------------------------------------------------------------------
 // Objets de référence.
 
-/*
- * Constante de référence pour la recherche du bootstrap.
- */
+// Constante de référence pour la recherche du bootstrap.
 define('REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP', 'nebule/objet/interface/web/php/bootstrap');
 
-/*
- * Constante de référence pour la recherche de la bibliothèque.
- */
+// Constante de référence pour la recherche de la bibliothèque.
 define('REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE', 'nebule/objet/interface/web/php/bibliotheque');
 
-/*
- * Constante de référence pour la recherche des applications.
- */
+// Constante de référence pour la recherche des applications.
 define('REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS', 'nebule/objet/interface/web/php/applications');
 
-/*
- * Constante de référence pour le non pré-chargement des applications.
- */
+// Constante de référence pour le non pré-chargement des applications.
 define('REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS_DIRECT', 'nebule/objet/interface/web/php/applications/direct');
 
-/*
- * Constante de référence pour le non pré-chargement des applications.
- */
+// Constante de référence pour le non pré-chargement des applications.
 define('REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS_ACTIVE', 'nebule/objet/interface/web/php/applications/active');
 
-/*
- * Constante image de référence du bootstrap.
- */
+// Constante image de référence du bootstrap.
 define('REFERENCE_BOOTSTRAP_ICON', "data:image/png;base64,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
@@ -198,9 +174,7 @@ fL/dN+iEAL7qEBQl0Bcu67sAIuI54Be4M1CUQK8YAW4pstf3DgDgS7gzUJRAr6gBX+zEG3VEABFxH80n
 Yr+cNmoow0JNA97EnYJSrfC/CUzNbcOyE0BEbAQOAjYrAalI+EeAD0fEawpg+yTwPFDHw4NS/vDXgGkRsTbHDRzKtXIR8QQwUwlIycM/MyKezHUjh3KuYEQ8BMxWAlLS8B9djOFsKcWe9pTS0cDyLQorUobw35/7xpYmTCmlmcADSkBKEP4jIuLBMmxwqYKUUpoKNIrtVgKSW/g3A4dGxOqybHTpQpRS2gf4NTBeCUhG4X8DmFIcwSoNQ2WrdHE4ZW9greNOMgn/88DEsoW/lB3Au7oBrx2QfpPVuf2V7wDe1Q3MAhZtYWKRXs36ADeUOfyQyeXA7dBoNH66xf0EPEIgvQh/DbgoIi4p+5epTFhSSscCS6v2vSTLmf+4iLi7Cl+oUkFJKe0BrAA+5FiVLvAb4Mji1vYogHxFsBA4zyWBdLDlXxgR86v25SobjpTSp4GfKAHpQPjPioifVvELVjoYKaXdgWXAIY5laYEGMKcfT+xRAJ0VwZeAr9sNyA7M+l+OiH+q+pcdmDCklA4E/hP4oGNcRuFpYG5E/NcgfNmBmw1TSl8G/tFuQAZ11h9oARQS2Be4GThKERh84D7gU2U8l18BtCeCc4DrgfeZhYFkE/BXEXHToBbAma8pgiuAS+wGBmrW/1ZEXDroxXCwvy2BCcC1wBmKoNLBvxn4bESstyQO8q2JYDqwkOZjmxVBdYK/AjgvIh61JApge0QwB/gecKgiKHXwHwXOj4hllkQBtCKC44GrgFmKoFTBXwlcEBG/tCQKoBMiOBL4BvBxq5E1Pwe+GBEr
 LYUC6IYI9gG+Bnz2XTOO9G+2B/g+8A+5PoJLAVRTBhcAFwP7KoK+BH8tcEVEXG1JFEA/RXA0cBFwjl1BT2b7xcC3y/DkHQUweDL4S+BvgI8og46G/m7gmoj4kWVRAGUQwc7AAmA+zXMKlMGOh34FcB1wbUS8aWkUQFllsBNwbrFE+IQVGZX/AG4CFkXEsOVQAFUUwnHAp4DTgakDXo7VwBLgXzxZRwEMogyGgFOAucDJNE84okJLhnd/h5XArcDtwC8iYrOjQAHIO6UwneZOxGOB2UB9G6HKMejQvKfecpo78O6JiFX+ugpAWpPCJGAGMJ3m9QlTgGnAhD5v2nrgceBJmufdrwIeioh1/moKQHojh/cDBwL70zwpaRLNJyjvAexevHYFdqF585Odildti9l7uHhtAl4HNgKvAhuAV4AXgXU0n4S7BvhNRGy0+iIiIiIiIiIiIiIiIjnyf9eV8VcbpfPFAAAAAElFTkSuQmCC");
 
-/*
- * Constante image de référence de l'application.
- */
+// Constante image de référence de l'application.
 define('REFERENCE_APPLICATION_ICON', "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAADkElEQVRo3u2ZT0hUQRzHP9sGgoEh0T8kL8/Ag+tBsUNdCpmKjA7VQdzKwg6pdIoOnkQKPHgUtUOGSrt0qIUORTGIXepgZAc9eJCFMgmUEj0IQotdlJ03b1779u2IK/k7vTfvN/P7zm9+8/v3YI/+d4oEZxUHaaaBCZJyw4cjQgvn+MwLuWIZgKijg9tEgTl6SJggiAhxuqkCMowwKKesARDPiSuvRgiK+C1KyBu2AOj7XWSaKJUcphRYY4nvZIhxxM0mI9sFICAFAbBvp2/BbgAg2sIuHmRmNOcigzwKvb0rztH0mwKMUJSQ4pLhwxTjTDLLAqtAGRVUc4pG6gy8b7kq10MBECW846w2uMYAY3LGZ0YNt+ikVBv+wEV/CP8C8Maz+z565XKOIyuni4e6FmRT3gDEIO2a2u/LTwGN7zT92nEMyY68jFC0aaaXpEl+C2p76XnnGVXElKEG50f6a04NaD4/S09ke4hLOMQ94wdXjIi4It4X44SkjIf0AwlajB/qs5FSdUTmU5qiNbQfaMUckjsMGhAH+WW0iDNBTc/HHD8ahjMc2kpZshpoNorvK0Q8yE/0GU2/2XsEDQbGNXoLjja9rBlGG7wAJpjzsA3kcjsBdLDMgGdwjgkvgCQ9HghjViLumEd8D0mzH7jGS9X+Zb2dmC++KH5xkQdqRunOB1KMK2/j1rIOdaVpd0LrAiA3XDdh0hoAdaWoO5/WM6JK5XnWGoBZHwkGAIeV5wVrABZ8JBgAqMnEqjUAqz4SijErVr1WmTUpZT4SDACWlOcKawAqfCQYAHxXnqutAaj2kaADEBEyyuspawDUlTIi4gNARIi78rhGawDUlWLEVQhRrb4/obAed16lFy1EghpXgnuAWn4702mPBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf7Q4vfT7/xw0i2jaf6gUEjcx2joRUwaizYXZIUpad/OiepNbDHnGO52gw+pdkdn9JsIGd1LNp4qhWnrfJPXsof1cqyu3I4j+o4/dU56qoUYlx2ZtLzgU0vxXmtPH+82xoURdCi2fEmlU+rJj/ybc0EBmC4EcHJx/LzBLDXrN5eChto3lOi/bBY58L2AUho7bvr8pXBUtzFPSSsHYG8QT3DmxnzHDdJGdlS3NxscWQYpj7IH6Mi+G23R3v0FwbfFx3mQ2ZaAAAAAElFTkSuQmCC");
 
 /**
@@ -213,19 +187,15 @@ $bootstrapActiveApplicationsWhitelist = array(
     '2121510000000000006e6562756c65206170706c69636174696f6e73000000000000212151',
 );
 
-/*
- * Constante de la première URL à utiliser après la création de l'entité instance du serveur.
- */
+// Constante de la première URL à utiliser après la création de l'entité instance du serveur.
 define('BOOTSTRAP_FIRST_URL_TO_OPTION', '?a=2121510000000000006e6562756c65206170706c69636174696f6e73000000000000212151&view=applications&ent=');
 
-/*
- * Constante du nom du fichier contenant le bootstrap.
- */
+// Constante du nom du fichier contenant le bootstrap.
 define('BOOTSTRAP_FILE_NAME', 'index.php');
 
 
 // ------------------------------------------------------------------------------------------
-// Première synchronisation.
+// First synchronization.
 
 /**
  * Les url de première synchronisation.
@@ -238,9 +208,7 @@ $nebuleFirstLocalisations = array(
     'http://security.master.nebule.org',
 );
 
-/*
- * Constante de la clé publique puppetmaster.
- */
+// Public key of puppetmaster.
 define('FIRST_PUPPETMASTER_PUBLIC_KEY',
     '-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAudMrAyvG3uqI9JLZRtqi
@@ -999,32 +967,12 @@ $nebuleCreateHistory = false;
 
 /**
  * Prendre en compte le lien x si la date est identique avec un autre lien, ou pas.
- *
- * @var boolean $nebuleFollowXOnSameDate
  */
 $nebuleFollowXOnSameDate = true;
-
-/*
- * Autorise ou non les logs des fonctions appelées et temps de passage.
- * Utilisé par la fonction addLog.
- *
- * @var boolean $nebulePermitLogs
- */
-$forceValue = getOption('permitLogs');
-if ($forceValue != null
-    && getOption('logsLevel') == 'DEBUG'
-) {
-    $nebulePermitLogs = $forceValue;
-}
-if (!isset($nebulePermitLogs)) {
-    $nebulePermitLogs = false;
-}
 
 /**
  * Limite du nombre de liens à lire pour un objet, les suivants sont ignorés.
  * Utilisé par les fonctions _neblibpp_l_ls1 et _neblibpp_io_lr.
- *
- * @var integer $nebuleIOMaxlink
  */
 //$nebule_neblibpp_io_maxlink = 1000;
 $nebuleIOMaxlink = 2000;
@@ -1032,8 +980,6 @@ $nebuleIOMaxlink = 2000;
 /**
  * Limite de la quantité de données en octets à lire pour un objet, le reste est ignorés.
  * Utilisé par les fonctions _neblibpp_o_dl1 et _neblibpp_io_or.
- *
- * @var integer $nebuleIOMaxdata
  */
 $nebuleIOMaxdata = 100000;
 
@@ -1041,8 +987,6 @@ $nebuleIOMaxdata = 100000;
  * Définit le maximum de niveaux parcourus pour la recherche des objets enfants d'un objet.
  *
  * Affecte les performances.
- *
- * @var integer $nebuleMaxRecurse
  */
 //$nebule_maxrecurse = 10;
 $nebuleMaxRecurse = 20;
@@ -1051,8 +995,6 @@ $nebuleMaxRecurse = 20;
  * Définit le maximum de niveaux parcourus pour la recherche des mises à jours d'un objet.
  *
  * Affecte les performances.
- *
- * @var integer $nebuleMaxUpdates
  */
 //$nebule_maxupdates = 100;
 $nebuleMaxUpdates = 500;
@@ -1089,8 +1031,6 @@ $nebuleCachelibpp_l_grx = array();
 
 /**
  * Chemin du fichier pour trouver le type mime.
- *
- * @var string $nebuleMimetypePathFile
  */
 $nebuleMimetypePathFile = '/etc/mime.types';
 
@@ -6406,36 +6346,18 @@ if ($nb == 0) {
 	</span><br/>
         Ta=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?>
     </div>
+    <div id="reload">
+        &gt; <a onclick="javascript:window.location.assign('<?php echo $_SERVER['REQUEST_URI']; ?>');">Reloading
+            application</a> ...
+        <script language="javascript" type="text/javascript">
+            <!--
+            setTimeout(function () {
+                window.location.assign('<?php echo $_SERVER['REQUEST_URI']; ?>')
+            }, 500);
+            //-->
+        </script>
+    </div>
     <?php
-
-    // On n'appelle pas l'application, on fait recharger la page...
-
-    // Si autorisé à recharger la page lorsque l'on vient de pré-charger une application.
-    if (AUTORELOAD_PRELOAD) {
-        ?>
-
-        <div id="reload">
-            &gt; <a onclick="javascript:window.location.assign('<?php echo $_SERVER['REQUEST_URI']; ?>');">Reloading
-                application</a> ...
-            <script language="javascript" type="text/javascript">
-                <!--
-                setTimeout(function () {
-                    window.location.assign('<?php echo $_SERVER['REQUEST_URI']; ?>')
-                }, 500);
-                //-->
-            </script>
-        </div>
-        <?php
-    } else {
-        ?>
-
-        <div id="reload">
-            <button onclick="javascript:window.location.assign('<?php echo $_SERVER['REQUEST_URI']; ?>');">Reload
-                application
-            </button>
-        </div>
-        <?php
-    }
 
     bootstrapHtmlBottom();
 }
@@ -6457,8 +6379,6 @@ if ($nb == 0) {
 
 /**
  * Variable de détection de premier démarrage de l'instance de serveur.
- *
- * @var boolean $bootstrapNeedFirstSynchronization
  */
 $bootstrapNeedFirstSynchronization = false;
 
