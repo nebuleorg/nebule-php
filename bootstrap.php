@@ -62,42 +62,17 @@ ob_start();
  ------------------------------------------------------------------------------------------
  */
 
-// ------------------------------------------------------------------------------------------
-// Arguments de commande du bootstrap.
+// Command line args.
 
-/*
- * Constante d'argument d'arrêt de chargement du démarrage par l'utilisateur.
- */
 define('ARG_BOOTSTRAP_BREAK', 'b');
-
-/*
- * Constante d'argument de réinitialisation de la session PHP par l'utilisateur.
- */
 define('ARG_FLUSH_SESSION', 'f');
-
-/*
- * Constante d'argument de mise à jour de l'application par l'utilisateur.
- */
 define('ARG_UPDATE_APPLICATION', 'u');
-
-/*
- * Constante d'argument de changement d'application par l'utilisateur.
- */
 define('ARG_SWITCH_APPLICATION', 'a');
-
-/*
- * Constante d'argument de mode de récupération par l'utilisateur.
- */
 define('ARG_RESCUE_MODE', 'r');
-
-/*
- * Constante d'argument de mode d'affichage inserré en ligne par l'utilisateur.
- */
 define('ARG_INLINE_DISPLAY', 'i');
-
-/*
- * Constante d'argument d'affichage de l'ID de l'instance de serveur.
- */
+define('ARG_STATIC_DISPLAY', 's');
+define('ARG_NODE_OBJECT', 'o');
+define('ARG_NODE_LINK', 'l');
 define('ARG_SERVER_ENTITY', 'e');
 
 
@@ -397,14 +372,14 @@ $nebuleMimetypePathFile = '/etc/mime.types';
  ------------------------------------------------------------------------------------------
  */
 
-define('NEBULE_PP_LIBRARY_VERSION', '020210316');
-define('NEBULE_PP_LIBRARY_MODE_BOOTSTRAP', true);
+define('NEBULE_LIBPP_VERSION', '020210316');
+define('NEBULE_LIBPP_MODE_BOOTSTRAP', true);
 define('LINK_VERSION', 'nebule/liens/version/2.0');
-define('NEBULE_DEFAULT_PUPPETMASTER_ID', '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea');
+define('NEBULE_DEFAULT_PUPPETMASTER_ID', '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256');
 define('NEBULE_ENVIRONMENT_FILE', 'nebule.env');
-define('NEBULE_LOCAL_ENTITY_FILE', 'e');
-define('NEBULE_LOCAL_LINKS_FOLDER', 'l');
-define('NEBULE_LOCAL_OBJECTS_FOLDER', 'o');
+define('LOCAL_ENTITY_FILE', 'e');
+define('LOCAL_LINKS_FOLDER', 'l');
+define('LOCAL_OBJECTS_FOLDER', 'o');
 define('NID_MIN_HASH_SIZE', 128);
 define('NID_MAX_HASH_SIZE', 8192);
 define('NID_MIN_ALGO_SIZE', 2);
@@ -920,10 +895,10 @@ $nebuleMimetypePathFile = '/etc/mime.types';
 initLibpp();
 
 // Recherche et mémorise l'entité locale du serveur.
-if (file_exists(NEBULE_LOCAL_ENTITY_FILE)
-    && is_file(NEBULE_LOCAL_ENTITY_FILE)
+if (file_exists(LOCAL_ENTITY_FILE)
+    && is_file(LOCAL_ENTITY_FILE)
 ) {
-    $nebuleServerEntite = filter_var(strtok(trim(file_get_contents(NEBULE_LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+    $nebuleServerEntite = filter_var(strtok(trim(file_get_contents(LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 } else {
     $nebuleServerEntite = '';
 }
@@ -975,29 +950,22 @@ if (!isset($nebulePublicEntity)
  * ------------------------------------------------------------------------------------------
  */
 
-//  FIXME
-function checkMasterEntity(string $n)
-{
-
-}
-
 /**
- * Verify the puppetmaster.
- *
- * @return boolean
+ * Check a master entity.
+ * @param string $nid
+ * @param string $name
+ * @return bool
  */
-function checkPuppetMaster(): bool
+function checkMasterEntity(string $nid, string $name=''): bool
 {
-    global $nebulePuppetmaster;
-    // Vérifie le maître du tout.
-    if (!ctype_xdigit($nebulePuppetmaster)
-        || $nebulePuppetmaster == '0'
-        || !io_testobjectpresent($nebulePuppetmaster)
-        || !io_testlinkpresent($nebulePuppetmaster)
-        || !o_checkcontent($nebulePuppetmaster)
-        || !nebIsPubkey($nebulePuppetmaster)
+    if (!o_checkNID($nid, false)
+        || $nid == '0'
+        || !io_testobjectpresent($nid)
+        || !io_testlinkpresent($nid)
+        || !o_checkcontent($nid)
+        || !nebIsPubkey($nid)
     ) {
-        addLog('invalid puppetmaster');
+        addLog('msg="invalid master entity" name="'.$name.'" nid='.$nid);
         return false;
     }
     return true;
@@ -1005,50 +973,31 @@ function checkPuppetMaster(): bool
 
 /** FIXME
  * Initialisation de la bibliothèque.
- *
  * @return boolean
  */
 function initLibpp(): bool
 {
-    global $nebulePuppetmaster, $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster,
-           $nebuleLocalAuthorities;
+    global $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster, $nebuleLocalAuthorities;
 
-    // Initialise les i/o.
+    // Initialize i/o.
     io_open();
 
-    // Vérifie le maître du tout.
-    if (!ctype_xdigit($nebulePuppetmaster)
-        || $nebulePuppetmaster == '0'
-        || !io_testobjectpresent($nebulePuppetmaster)
-        || !io_testlinkpresent($nebulePuppetmaster)
-        || !o_checkcontent($nebulePuppetmaster)
-        || !nebIsPubkey($nebulePuppetmaster)
-    ) {
-        addLog('invalid puppetmaster');
+    if (!checkMasterEntity(getOption('puppetmaster'), 'puppetmaster'))
         return false;
-    }
 
     // Pour la suite, seul le puppetmaster est enregirstré.
     // Une fois les autres entités trouvées, ajoute les autres autorités.
     // Cela empêche qu'une entié compromise ne génère un lien qui passerait avant le puppetmaster
     //   dans la recherche par référence nebFindByRef.
-    $nebuleLocalAuthorities[0] = $nebulePuppetmaster;
+    $nebuleLocalAuthorities[0] = getOption('puppetmaster');
 
     // Recherche et vérifie le maître de la sécurité.
     $entity = nebFindByRef(
         hash(getOption('cryptoHashAlgorithm'), 'nebule/objet/entite/maitre/securite'),
         'nebule/objet/entite/maitre/securite',
         true);
-    if (!ctype_xdigit($entity)
-        || $entity == '0'
-        || !io_testobjectpresent($entity)
-        || !io_testlinkpresent($entity)
-        || !o_checkcontent($entity)
-        || !nebIsPubkey($entity)
-    ) {
-        addLog('invalid security master');
+    if (!checkMasterEntity($entity, 'security master'))
         return false;
-    }
     $nebuleSecurityMaster = $entity;
 
     // Recherche et vérifie le maître du code.
@@ -1056,16 +1005,8 @@ function initLibpp(): bool
         hash(getOption('cryptoHashAlgorithm'), 'nebule/objet/entite/maitre/code'),
         'nebule/objet/entite/maitre/code',
         true);
-    if (!ctype_xdigit($entity)
-        || $entity == '0'
-        || !io_testobjectpresent($entity)
-        || !io_testlinkpresent($entity)
-        || !o_checkcontent($entity)
-        || !nebIsPubkey($entity)
-    ) {
-        addLog('invalid code master');
+    if (!checkMasterEntity($entity, 'code master'))
         return false;
-    }
     $nebuleCodeMaster = $entity;
 
     // Recherche et vérifie le maître de l'annuaire.
@@ -1073,16 +1014,8 @@ function initLibpp(): bool
         hash(getOption('cryptoHashAlgorithm'), 'nebule/objet/entite/maitre/annuaire'),
         'nebule/objet/entite/maitre/annuaire',
         true);
-    if (!ctype_xdigit($entity)
-        || $entity == '0'
-        || !io_testobjectpresent($entity)
-        || !io_testlinkpresent($entity)
-        || !o_checkcontent($entity)
-        || !nebIsPubkey($entity)
-    ) {
-        addLog('invalid directory master');
+    if (!checkMasterEntity($entity, 'directory master'))
         return false;
-    }
     $nebuleDirectoryMaster = $entity;
 
     // Recherche et vérifie le maître du temps.
@@ -1090,16 +1023,8 @@ function initLibpp(): bool
         hash(getOption('cryptoHashAlgorithm'), 'nebule/objet/entite/maitre/temps'),
         'nebule/objet/entite/maitre/temps',
         true);
-    if (!ctype_xdigit($entity)
-        || $entity == '0'
-        || !io_testobjectpresent($entity)
-        || !io_testlinkpresent($entity)
-        || !o_checkcontent($entity)
-        || !nebIsPubkey($entity)
-    ) {
-        addLog('invalid time master');
+    if (!checkMasterEntity($entity, 'time master'))
         return false;
-    }
     $nebuleTimeMaster = $entity;
 
     // A partir de là on peut ajouter les autres autorités.
@@ -1111,76 +1036,28 @@ function initLibpp(): bool
 }
 
 /** FIXME
- * Vérification de la bibliothèque.
+ * Check le library.
  * @return boolean
- * @todo
- *
  */
 function nebLibppCheck(): bool
 {
-    global $nebulePuppetmaster, $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster;
+    global $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster;
 
-    // Vérifie le maître du tout.
-    if (!ctype_xdigit($nebulePuppetmaster)
-        || $nebulePuppetmaster == '0'
-        || !io_testobjectpresent($nebulePuppetmaster)
-        || !io_testlinkpresent($nebulePuppetmaster)
-        || !o_checkcontent($nebulePuppetmaster)
-        || !nebIsPubkey($nebulePuppetmaster)
-    ) {
-        addLog('error check puppetmaster');
+    if (!checkMasterEntity(getOption('puppetmaster'), 'puppetmaster'))
         return false;
-    }
 
-    // Vérifie le maître de la sécurité.
-    if (!ctype_xdigit($nebuleSecurityMaster)
-        || $nebuleSecurityMaster == '0'
-        || !io_testobjectpresent($nebuleSecurityMaster)
-        || !io_testlinkpresent($nebuleSecurityMaster)
-        || !o_checkcontent($nebuleSecurityMaster)
-        || !nebIsPubkey($nebuleSecurityMaster)
-    ) {
-        addLog('error check security master');
+    if (!checkMasterEntity($nebuleSecurityMaster, 'security master'))
         return false;
-    }
 
-    // Vérifie le maître du code.
-    if (!ctype_xdigit($nebuleCodeMaster)
-        || $nebuleCodeMaster == '0'
-        || !io_testobjectpresent($nebuleCodeMaster)
-        || !io_testlinkpresent($nebuleCodeMaster)
-        || !o_checkcontent($nebuleCodeMaster)
-        || !nebIsPubkey($nebuleCodeMaster)
-    ) {
-        addLog('error check code master');
+    if (!checkMasterEntity($nebuleCodeMaster, 'code master'))
         return false;
-    }
 
-    // Vérifie le maître de l'annuaire.
-    if (!ctype_xdigit($nebuleDirectoryMaster)
-        || $nebuleDirectoryMaster == '0'
-        || !io_testobjectpresent($nebuleDirectoryMaster)
-        || !io_testlinkpresent($nebuleDirectoryMaster)
-        || !o_checkcontent($nebuleDirectoryMaster)
-        || !nebIsPubkey($nebuleDirectoryMaster)
-    ) {
-        addLog('error check directory master');
+    if (!checkMasterEntity($nebuleDirectoryMaster, 'directory master'))
         return false;
-    }
 
-    // Vérifie le maître du temps.
-    if (!ctype_xdigit($nebuleTimeMaster)
-        || $nebuleTimeMaster == '0'
-        || !io_testobjectpresent($nebuleTimeMaster)
-        || !io_testlinkpresent($nebuleTimeMaster)
-        || !o_checkcontent($nebuleTimeMaster)
-        || !nebIsPubkey($nebuleTimeMaster)
-    ) {
-        addLog('error check time master');
+    if (!checkMasterEntity($nebuleTimeMaster, 'time master'))
         return false;
-    }
 
-    // Retour normal.
     return true;
 }
 
@@ -2779,18 +2656,18 @@ function o_downloadcontent(string $object, string $localisation): void
     $idname = '_neblibpp_o_dl1_' . $id . '-' . $object;
     $distobj = fopen($localisation . '/o/' . $object, 'r');
     if ($distobj) {
-        $localobj = fopen(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $idname, 'w'); // @todo refaire via les i/o.
+        $localobj = fopen(LOCAL_OBJECTS_FOLDER . '/' . $idname, 'w'); // @todo refaire via les i/o.
         if ($localobj) {
             while (($line = fgets($distobj, $nebuleIOMaxdata)) !== false) {
                 fputs($localobj, $line);
             }
             fclose($localobj);
-            $hash = hash_file(getOption('cryptoHashAlgorithm'), NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $idname);
+            $hash = hash_file(getOption('cryptoHashAlgorithm'), LOCAL_OBJECTS_FOLDER . '/' . $idname);
             if ($hash == $object) {
-                rename(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $idname, NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object);
+                rename(LOCAL_OBJECTS_FOLDER . '/' . $idname, LOCAL_OBJECTS_FOLDER . '/' . $object);
                 $nebuleResultList[0] = $localisation;
             } else {
-                unlink(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $idname);
+                unlink(LOCAL_OBJECTS_FOLDER . '/' . $idname);
             }
         }
         fclose($distobj);
@@ -2832,7 +2709,7 @@ function o_checkcontent(&$nid)
         return true;
 
     $nebuleMetrologyObjectVerify++;
-    $hash = hash_file(getOption('cryptoHashAlgorithm'), NEBULE_LOCAL_OBJECTS_FOLDER . "/$nid"); // @todo refaire via les i/o.
+    $hash = hash_file(getOption('cryptoHashAlgorithm'), LOCAL_OBJECTS_FOLDER . "/$nid"); // @todo refaire via les i/o.
 
     if ($hash !== $nid) {
         // Si invalide, suppression de l'objet localement.
@@ -2907,7 +2784,7 @@ function o_writecontent(string $object, string &$data): bool
     }
 
     // Ecriture de l'objet.
-    if (file_put_contents(NEBULE_LOCAL_OBJECTS_FOLDER . "/$object", $data) === false) // @todo refaire via les i/o.
+    if (file_put_contents(LOCAL_OBJECTS_FOLDER . "/$object", $data) === false) // @todo refaire via les i/o.
     {
         return false;
     }
@@ -4020,13 +3897,13 @@ function l_writecontent($link)
  */
 function io_open(): bool
 {
-    if (!file_exists(NEBULE_LOCAL_LINKS_FOLDER))
-        mkdir(NEBULE_LOCAL_LINKS_FOLDER);
+    if (!file_exists(LOCAL_LINKS_FOLDER))
+        mkdir(LOCAL_LINKS_FOLDER);
     if (!io_checklinkfolder())
         return false;
 
-    if (!file_exists(NEBULE_LOCAL_OBJECTS_FOLDER))
-        mkdir(NEBULE_LOCAL_OBJECTS_FOLDER);
+    if (!file_exists(LOCAL_OBJECTS_FOLDER))
+        mkdir(LOCAL_OBJECTS_FOLDER);
     if (!io_checkobjectfolder())
         return false;
 
@@ -4052,8 +3929,8 @@ function io_check(): bool
  */
 function io_checklinkfolder(): bool
 {
-    if (!file_exists(NEBULE_LOCAL_LINKS_FOLDER)
-        || !is_dir(NEBULE_LOCAL_LINKS_FOLDER)
+    if (!file_exists(LOCAL_LINKS_FOLDER)
+        || !is_dir(LOCAL_LINKS_FOLDER)
     ) {
         return false;
     }
@@ -4061,7 +3938,7 @@ function io_checklinkfolder(): bool
         && getOption('permitWriteLink')
     ) {
         $data = hash('sha256', getpseudorandom(8) . date(DATE_ATOM));
-        $name = NEBULE_LOCAL_LINKS_FOLDER . '/writest' . $data;
+        $name = LOCAL_LINKS_FOLDER . '/writest' . $data;
         file_put_contents($name, $data);
         if (!file_exists($name)
             || !is_file($name)
@@ -4086,8 +3963,8 @@ function io_checklinkfolder(): bool
  */
 function io_checkobjectfolder()
 {
-    if (!file_exists(NEBULE_LOCAL_OBJECTS_FOLDER)
-        || !is_dir(NEBULE_LOCAL_OBJECTS_FOLDER)
+    if (!file_exists(LOCAL_OBJECTS_FOLDER)
+        || !is_dir(LOCAL_OBJECTS_FOLDER)
     ) {
         return false;
     }
@@ -4095,7 +3972,7 @@ function io_checkobjectfolder()
         && getOption('permitWriteObject')
     ) {
         $data = hash('sha256', getpseudorandom(8) . date(DATE_ATOM));
-        $name = NEBULE_LOCAL_OBJECTS_FOLDER . '/writest' . $data;
+        $name = LOCAL_OBJECTS_FOLDER . '/writest' . $data;
         file_put_contents($name, $data);
         if (!file_exists($name)
             || !is_file($name)
@@ -4121,7 +3998,7 @@ function io_checkobjectfolder()
  */
 function io_testlinkpresent(&$nid): bool
 {
-    if (file_exists(NEBULE_LOCAL_LINKS_FOLDER . '/' . $nid)) {
+    if (file_exists(LOCAL_LINKS_FOLDER . '/' . $nid)) {
         return true;
     }
     return false;
@@ -4135,7 +4012,7 @@ function io_testlinkpresent(&$nid): bool
  */
 function io_testobjectpresent(&$nid): bool
 {
-    if (file_exists(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $nid)) {
+    if (file_exists(LOCAL_OBJECTS_FOLDER . '/' . $nid)) {
         return true;
     }
     return false;
@@ -4152,12 +4029,12 @@ function io_linksread(&$o)
 {
     global $nebuleIOMaxlink;
 
-    if (!file_exists(NEBULE_LOCAL_LINKS_FOLDER . '/' . $o)) {
+    if (!file_exists(LOCAL_LINKS_FOLDER . '/' . $o)) {
         return false;
     }
     $n = 0;
     $t = array();
-    $l = file(NEBULE_LOCAL_LINKS_FOLDER . '/' . $o);
+    $l = file(LOCAL_LINKS_FOLDER . '/' . $o);
     foreach ($l as $k) {
         $t [$n] = $k;
         if ($n > $nebuleIOMaxlink) {
@@ -4183,17 +4060,17 @@ function io_objectread(&$o, $m = 0)
     if ($m == 0) {
         $m = $nebuleIOMaxdata;
     }
-    if (!file_exists(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $o)) {
+    if (!file_exists(LOCAL_OBJECTS_FOLDER . '/' . $o)) {
         return false;
     }
 
-    $s = filesize(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $o);
+    $s = filesize(LOCAL_OBJECTS_FOLDER . '/' . $o);
     if ($s > $m) {
         $s = $m;
     }
 
     $nebuleMetrologyObjectList++;
-    return file_get_contents(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $o, false, null, 0, $s);
+    return file_get_contents(LOCAL_OBJECTS_FOLDER . '/' . $o, false, null, 0, $s);
 }
 
 /** FIXME
@@ -4212,10 +4089,10 @@ function io_linkwrite(&$o, &$l)
         return false;
     }
     if (!io_testlinkpresent($o)) {
-        file_put_contents(NEBULE_LOCAL_LINKS_FOLDER . '/' . $o, LINK_VERSION . "\n");
+        file_put_contents(LOCAL_LINKS_FOLDER . '/' . $o, LINK_VERSION . "\n");
     }
 
-    return file_put_contents(NEBULE_LOCAL_LINKS_FOLDER . '/' . $o, "$l\n", FILE_APPEND);
+    return file_put_contents(LOCAL_LINKS_FOLDER . '/' . $o, "$l\n", FILE_APPEND);
 }
 
 /** FIXME
@@ -4233,7 +4110,7 @@ function io_objectwrite(&$d)
         return false;
     }
     $h = hash(getOption('cryptoHashAlgorithm'), $d);
-    return file_put_contents(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $h, $d);
+    return file_put_contents(LOCAL_OBJECTS_FOLDER . '/' . $h, $d);
 }
 
 /** FIXME
@@ -4250,10 +4127,10 @@ function io_objectdelete(&$o)
     ) {
         return false;
     }
-    if (!file_exists(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $o)) {
+    if (!file_exists(LOCAL_OBJECTS_FOLDER . '/' . $o)) {
         return true;
     }
-    return unlink(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $o);
+    return unlink(LOCAL_OBJECTS_FOLDER . '/' . $o);
 }
 
 /** FIXME
@@ -4309,7 +4186,7 @@ function getpseudorandom($n = 32): string
     $algo = 'sha256';
 
     // Génère une graine avec la date pour le compteur interne.
-    $intcount = date(DATE_ATOM) . microtime(false) . NEBULE_PP_LIBRARY_VERSION . $nebuleServerEntite;
+    $intcount = date(DATE_ATOM) . microtime(false) . NEBULE_LIBPP_VERSION . $nebuleServerEntite;
 
     // Boucle de remplissage.
     while (strlen($result) < $n) {
@@ -4890,7 +4767,7 @@ function loadLibrary(): void
         addLog('load library nebule ' . $bootstrapLibraryID);
 
         // Charge l'objet de la bibliothèque. @todo faire via les i/o.
-        include(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . '$bootstrapLibraryID');
+        include(LOCAL_OBJECTS_FOLDER . '/' . '$bootstrapLibraryID');
 
         if ($bootstrapLibraryInstanceSleep == '') {
             // Instancie la bibliothèque.
@@ -5681,7 +5558,7 @@ function bootstrapDisplayOnBreak(): void
     </div>
     <div class="parts">
         <span class="partstitle">#2 <?php echo $bootstrapName; ?> nebule library PP</span><br/>
-        library version &nbsp;: <?php echo NEBULE_PP_LIBRARY_VERSION ?><br/>
+        library version &nbsp;: <?php echo NEBULE_LIBPP_VERSION ?><br/>
         puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $nebulePuppetmaster; ?> (local authority)<br/>
         security master &nbsp;: <?php echo $nebuleSecurityMaster; ?> (local authority)<br/>
         code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $nebuleCodeMaster; ?> (local authority)<br/>
@@ -6129,7 +6006,7 @@ function bootstrapDisplayPreloadApplication()
         syslog(LOG_INFO, 'LogT=0 LogTabs=' . (microtime(true)) . ' load_application=' . $bootstrapApplicationID);
 
         // Charge l'objet de l'application. @todo faire via les i/o.
-        include(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+        include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
 
         // Instanciation des classes de l'application.
         $applicationInstance = new Application($nebuleInstance);
@@ -6209,10 +6086,10 @@ $bootstrapNeedFirstSynchronization = false;
  * Vérifie l'entité instance du serveur.
  */
 $serverEntite = '';
-if (file_exists(NEBULE_LOCAL_ENTITY_FILE)
-    && is_file(NEBULE_LOCAL_ENTITY_FILE)
+if (file_exists(LOCAL_ENTITY_FILE)
+    && is_file(LOCAL_ENTITY_FILE)
 ) {
-    $serverEntite = filter_var(strtok(trim(file_get_contents(NEBULE_LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+    $serverEntite = filter_var(strtok(trim(file_get_contents(LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 } else {
     addLog($bootstrapName . ' - need first synchronisation');
 
@@ -6282,7 +6159,7 @@ function bootstrapDisplayApplicationfirst(): void
         }
         ?><br/>
         Tb=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?><br/>
-        nebule library : <?php echo NEBULE_PP_LIBRARY_VERSION . ' PHP PP'; ?><br/>
+        nebule library : <?php echo NEBULE_LIBPP_VERSION . ' PHP PP'; ?><br/>
         <?php if ($bootstrapRescueMode) {
             echo "RESCUE<br />\n";
         } ?>
@@ -6301,17 +6178,17 @@ function bootstrapDisplayApplicationfirst(): void
             ?>
 
             <div class="diverror">
-                Unable to create folder <b><?php echo NEBULE_LOCAL_LINKS_FOLDER; ?></b> for links.<br/>
+                Unable to create folder <b><?php echo LOCAL_LINKS_FOLDER; ?></b> for links.<br/>
                 On the same path as <b>index.php</b>, please create folder manually,<br/>
                 and give it to web server process.<br/>
                 As <i>root</i>, run :<br/>
                 <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
 
-mkdir <?php echo NEBULE_LOCAL_LINKS_FOLDER; ?>
+mkdir <?php echo LOCAL_LINKS_FOLDER; ?>
 
-chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . ' ' . NEBULE_LOCAL_LINKS_FOLDER; ?>
+chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . ' ' . LOCAL_LINKS_FOLDER; ?>
 
-chmod 755 <?php echo NEBULE_LOCAL_LINKS_FOLDER; ?>
+chmod 755 <?php echo LOCAL_LINKS_FOLDER; ?>
 </pre>
             </div>
             <?php
@@ -6322,17 +6199,17 @@ chmod 755 <?php echo NEBULE_LOCAL_LINKS_FOLDER; ?>
             ?>
 
             <div class="diverror">
-                Unable to create folder <b><?php echo NEBULE_LOCAL_OBJECTS_FOLDER; ?></b> for objects.<br/>
+                Unable to create folder <b><?php echo LOCAL_OBJECTS_FOLDER; ?></b> for objects.<br/>
                 On the same path as <b>index.php</b>, please create folder manually,<br/>
                 and give it to web server process.<br/>
                 As <i>root</i>, run :<br/>
                 <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
 
-mkdir <?php echo NEBULE_LOCAL_OBJECTS_FOLDER; ?>
+mkdir <?php echo LOCAL_OBJECTS_FOLDER; ?>
 
-chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . ' ' . NEBULE_LOCAL_OBJECTS_FOLDER; ?>
+chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . ' ' . LOCAL_OBJECTS_FOLDER; ?>
 
-chmod 755 <?php echo NEBULE_LOCAL_OBJECTS_FOLDER; ?>
+chmod 755 <?php echo LOCAL_OBJECTS_FOLDER; ?>
 </pre>
             </div>
             <?php
@@ -6965,7 +6842,7 @@ function bootstrapFirstCreateLocaleEntity()
         if ( //file_exists(NEBULE_LOCAL_ENTITY_FILE)
             //&& is_file(NEBULE_LOCAL_ENTITY_FILE)
             //&& file_put_contents( NEBULE_LOCAL_ENTITY_FILE, '0') !== false
-            file_put_contents(NEBULE_LOCAL_ENTITY_FILE, '0') !== false
+            file_put_contents(LOCAL_ENTITY_FILE, '0') !== false
         ) {
             // Génère un mot de passe.
             $nebulePasswordEntite = '';
@@ -6988,7 +6865,7 @@ function bootstrapFirstCreateLocaleEntity()
             e_generate($nebuleAsymetricAlgorithm, (int)$nebuleAsymetricKeyLenght, getOption('cryptoHashAlgorithm'), $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite);
 
             // Définit l'entité comme entité instance du serveur.
-            file_put_contents(NEBULE_LOCAL_ENTITY_FILE, $nebulePublicEntity);
+            file_put_contents(LOCAL_ENTITY_FILE, $nebulePublicEntity);
 
             // Calcul le nom.
             $genname = hex2bin($nebulePublicEntity . $nebulePrivateEntite);
@@ -7066,21 +6943,21 @@ function bootstrapFirstCreateLocaleEntity()
             </button>
             <?php
         } else {
-            file_put_contents(NEBULE_LOCAL_ENTITY_FILE, '0');
+            file_put_contents(LOCAL_ENTITY_FILE, '0');
             echo " <span class=\"error\">ERROR!</span><br />\n";
             ?>
 
             <div class="diverror">
-                Unable to create local entity file <b><?php echo NEBULE_LOCAL_ENTITY_FILE; ?></b> .<br/>
+                Unable to create local entity file <b><?php echo LOCAL_ENTITY_FILE; ?></b> .<br/>
                 On the same path as <b>index.php</b>, please create file manually.<br/>
                 As <i>root</i>, run :<br/>
                 <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
 
-touch <?php echo NEBULE_LOCAL_ENTITY_FILE; ?>
+touch <?php echo LOCAL_ENTITY_FILE; ?>
 
-chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . ' ' . NEBULE_LOCAL_ENTITY_FILE; ?>
+chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . ' ' . LOCAL_ENTITY_FILE; ?>
 
-chmod 644 <?php echo NEBULE_LOCAL_ENTITY_FILE; ?>
+chmod 644 <?php echo LOCAL_ENTITY_FILE; ?>
 </pre>
             </div>
             <button onclick="javascript:window.location.reload(true);">when ready,
@@ -7362,7 +7239,7 @@ if (sizeof($bootstrapBreak) == 0) {
             addLog('load application ' . $bootstrapApplicationID);
 
             // Charge l'objet de l'application. @todo faire via les i/o.
-            include(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+            include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
 
             // Change les logs au nom de l'application.
             closelog();
@@ -7401,7 +7278,7 @@ if (sizeof($bootstrapBreak) == 0) {
             addLog('load application whitout preload ' . $bootstrapApplicationID);
 
             // Charge l'objet de l'application. @todo faire via les i/o.
-            include(NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+            include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
 
             // Change les logs au nom de l'application.
             closelog();
@@ -7474,8 +7351,8 @@ if (sizeof($bootstrapBreak) == 0) {
             bootstrapDisplayApplicationfirst();
         }
     } elseif ($bootstrapServerEntityDisplay) {
-        if (file_exists(NEBULE_LOCAL_ENTITY_FILE)) {
-            echo file_get_contents(NEBULE_LOCAL_ENTITY_FILE, false, null, -1, $nebuleIOMaxdata);
+        if (file_exists(LOCAL_ENTITY_FILE)) {
+            echo file_get_contents(LOCAL_ENTITY_FILE, false, null, -1, $nebuleIOMaxdata);
         } else {
             echo '0';
         }
