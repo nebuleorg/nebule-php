@@ -7,7 +7,7 @@ $bootstrapName = 'bootstrap';
 $bootstrapSurname = 'nebule/bootstrap';
 $bootstrapDescription = 'Loader of library and applications.';
 $bootstrapAuthor = 'Project nebule';
-$bootstrapVersion = '020210410';
+$bootstrapVersion = '020210417';
 $bootstrapLicence = 'GNU GPL 2010-2021';
 $bootstrapWebsite = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -86,33 +86,6 @@ define('ARG_INLINE_DISPLAY', 'i');
  */
 define('ARG_SERVER_ENTITY', 'e');
 
-
-/*
-------------------------------------------------------------------------------------------
- /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
-------------------------------------------------------------------------------------------
- * Aide au développement. Doit être modifié avant mise en production.
- * Helpful for development. Must be modified before production use.
- */
-
-/*
- * Contante pour suivre tous les liens de références.
- * C'est utilisé lors de la recherche de la bibliothèque et des applications.
- *
- * ATTENTION !
- * En production, doit être à true.
- * In production, must be true.
- */
-define('REFERENCES_FOLLOW_ONLY_AUTORITY', true);
-
-/*
- * Constante de l'entité de développement.
- *
- * ATTENTION !
- * En production, doit être vide.
- * In production, must be empty.
- */
-define('REFERENCE_DEV_ID', '');
 
 // ------------------------------------------------------------------------------------------
 // Logs setting and initializing.
@@ -432,9 +405,9 @@ define('NID_MIN_ALGO_SIZE', 2);
 define('NID_MAX_ALGO_SIZE', 12);
 
 /**
- * Liste des types des options.
+ * List of options types.
  *
- * Les types supportés :
+ * Supported types :
  * - string
  * - boolean
  * - integer
@@ -514,9 +487,7 @@ define('LIST_OPTIONS_TYPE', array(
 );
 
 /**
- * Liste des valeurs par défaut des options.
- *
- * @var array:string|boolean|integer
+ * Default options values if not defined in option file.
  */
 define('LIST_OPTIONS_DEFAULT_VALUE', array(
     'puppetmaster' => NEBULE_DEFAULT_PUPPETMASTER_ID,
@@ -667,7 +638,7 @@ function getOption(string $name)
 }
 
 /*
- * ID puppetmaster maître du tout.
+ * ID puppetmaster.
  */
 $forceValue = getOption('puppetmaster');
 if ($forceValue != null) {
@@ -4401,17 +4372,6 @@ if (!io_checkobjectfolder()) {
 
 
 // ------------------------------------------------------------------------------------------
-// Aide au développement.
-if (!REFERENCES_FOLLOW_ONLY_AUTORITY
-    && REFERENCE_DEV_ID != ''
-    && REFERENCE_DEV_ID != '0'
-) {
-    addLog('add dev id as authority - for development only');
-    $nebuleLocalAuthorities[5] = REFERENCE_DEV_ID;
-}
-
-
-// ------------------------------------------------------------------------------------------
 /**
  * Activation d'un nettoyage de session général.
  *
@@ -4675,7 +4635,7 @@ if (nebLibppCheck()) {
             $bootstrapApplicationID = nebFindByRef(
                 $bootstrapApplicationStartID,
                 REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS,
-                !REFERENCES_FOLLOW_ONLY_AUTORITY);
+                false);
         } else {
             // Vérifie l'ID de l'application mémorisé.
             if (isset($_SESSION['bootstrapApplicationID'])
@@ -4788,7 +4748,7 @@ if (nebLibppCheck()) {
                     $bootstrapApplicationID = nebFindByRef(
                         $bootstrapApplicationStartID,
                         REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS,
-                        !REFERENCES_FOLLOW_ONLY_AUTORITY);
+                        false);
                 }
 
                 addLog('find switched application ' . $bootstrapApplicationID);
@@ -4819,7 +4779,7 @@ if (nebLibppCheck()) {
             $bootstrapApplicationID = nebFindByRef(
                 $bootstrapApplicationStartID,
                 REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS,
-                !REFERENCES_FOLLOW_ONLY_AUTORITY);
+                false);
         } else {
             $bootstrapApplicationStartID = '0';
             $bootstrapApplicationID = '0';
@@ -4866,7 +4826,7 @@ if (nebLibppCheck()) {
         $bootstrapLibraryID = nebFindByRef(
             hash(getOption('cryptoHashAlgorithm'), REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE),
             REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE,
-            !REFERENCES_FOLLOW_ONLY_AUTORITY);
+            false);
 
         addLog('find nebule library ' . $bootstrapLibraryID);
 
@@ -5714,9 +5674,6 @@ function bootstrapDisplayOnBreak(): void
         <?php if ($bootstrapFlush) {
             echo "FLUSH<br />\n";
         } ?>
-        <?php if (!REFERENCES_FOLLOW_ONLY_AUTORITY) {
-            echo "REFERENCES_FOLLOW_ONLY_AUTORITY=false<br />\n";
-        } ?>
         <?php if (sizeof($bootstrapBreak) != 0 && isset($bootstrapBreak[12])) {
             echo "<a href=\"?a=0\">&gt; Return to application 0</a><br />\n";
         } ?>
@@ -6542,7 +6499,7 @@ function bootstrapFirstSynchronizingEntities()
         $entity = nebFindByRef(
             hash(getOption('cryptoHashAlgorithm'), 'nebule/objet/entite/maitre/securite'),
             'nebule/objet/entite/maitre/securite',
-            !REFERENCES_FOLLOW_ONLY_AUTORITY);
+            false);
         echo ' ' . $entity . ' ';
         if (ctype_xdigit($entity)
             && $entity != '0'
@@ -6569,7 +6526,7 @@ function bootstrapFirstSynchronizingEntities()
         $entity = nebFindByRef(
             hash(getOption('cryptoHashAlgorithm'), 'nebule/objet/entite/maitre/code'),
             'nebule/objet/entite/maitre/code',
-            !REFERENCES_FOLLOW_ONLY_AUTORITY);
+            false);
         echo ' ' . $entity . ' ';
         if (ctype_xdigit($entity)
             && $entity != '0'
@@ -6596,7 +6553,7 @@ function bootstrapFirstSynchronizingEntities()
         $entity = nebFindByRef(
             hash(getOption('cryptoHashAlgorithm'), 'nebule/objet/entite/maitre/annuaire'),
             'nebule/objet/entite/maitre/annuaire',
-            !REFERENCES_FOLLOW_ONLY_AUTORITY);
+            false);
         echo ' ' . $entity . ' ';
         if (ctype_xdigit($entity)
             && $entity != '0'
@@ -6623,7 +6580,7 @@ function bootstrapFirstSynchronizingEntities()
         $entity = nebFindByRef(
             hash(getOption('cryptoHashAlgorithm'), 'nebule/objet/entite/maitre/temps'),
             'nebule/objet/entite/maitre/temps',
-            !REFERENCES_FOLLOW_ONLY_AUTORITY);
+            false);
         echo ' ' . $entity . ' ';
         if (ctype_xdigit($entity)
             && $entity != '0'
@@ -6749,16 +6706,6 @@ function bootstrapFirstSynchronizingObjects()
 
         $data = REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE;
         io_objectwrite($data);
-
-        // Chargement bachue développement. Doit être désactivé en production.
-        if (!REFERENCES_FOLLOW_ONLY_AUTORITY) {
-            foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-                o_downloadcontent(REFERENCE_DEV_ID, $localisation);
-                echo 'D';
-            }
-            // Activation comme autorité locale.
-            $nebuleLocalAuthorities[3] = REFERENCE_DEV_ID;
-        }
         ?><br/>
 
         bootstrap start &nbsp;&nbsp;&nbsp;:
@@ -6787,7 +6734,7 @@ function bootstrapFirstSynchronizingObjects()
         $lastID = nebFindByRef(
             $refLibID,
             $refLib,
-            !REFERENCES_FOLLOW_ONLY_AUTORITY);
+            false);
         echo $lastID . ' ';
         if ($lastID != '0') {
             foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
@@ -6849,7 +6796,7 @@ function bootstrapFirstSynchronizingObjects()
             $lastID = nebFindByRef(
                 $appID,
                 $refApps,
-                !REFERENCES_FOLLOW_ONLY_AUTORITY);
+                false);
             addLog('find app ' . $appID . ' as ' . $lastID);
             if ($lastID != '0') {
                 foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
@@ -7226,20 +7173,6 @@ function bootstrapDisplayApplication0()
             && !$nebuleInstance->getModeRescue()
         ) {
             $linksList = $instanceAppsID->readLinksFilterFull($nebuleInstance->getDefaultEntity(), '', 'f', $refAppsID, '', $refAppsID);
-            foreach ($linksList as $link) {
-                $hashTarget = $link->getHashTarget();
-                $applicationsList[$hashTarget] = $hashTarget;
-                $signersList[$hashTarget] = $link->getHashSigner();
-            }
-        }
-
-        // Liste les applications reconnues par l'id de développement, si autorité locale et pas en mode de récupération.
-        if (!REFERENCES_FOLLOW_ONLY_AUTORITY
-            && REFERENCE_DEV_ID != ''
-            && REFERENCE_DEV_ID != '0'
-            && !$nebuleInstance->getModeRescue()
-        ) {
-            $linksList = $instanceAppsID->readLinksFilterFull(REFERENCE_DEV_ID, '', 'f', $refAppsID, '', $refAppsID);
             foreach ($linksList as $link) {
                 $hashTarget = $link->getHashTarget();
                 $applicationsList[$hashTarget] = $hashTarget;
