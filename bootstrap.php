@@ -387,13 +387,7 @@ $nebuleAsymetricKeyLenght = '2048';
 $nebuleCheckSignOnVerify = true;
 $nebuleCheckSignOnList = true;
 $nebuleListInvalidLinks = false;
-$nebulePermitWrite = false;
-$nebulePermitWriteLink = false;
-$nebulePermitWriteObject = false;
-$nebulePermitWriteEntity = false;
 $nebulePermitCreateEntityWithoutPassword = false;
-$nebulePermitSynchronizeLink = false;
-$nebulePermitSynchronizeObject = false;
 $nebuleCreateHistory = false;
 $nebuleFollowXOnSameDate = true;
 $nebuleIOMaxlink = 2000;
@@ -444,10 +438,8 @@ define('NID_MAX_ALGO_SIZE', 12);
  * - string
  * - boolean
  * - integer
- *
- * @var array:string
  */
-$listOptionsType = array(
+define('LIST_OPTIONS_TYPE', array(
     'puppetmaster' => 'string',
     'hostURL' => 'string',
     'permitWrite' => 'boolean',
@@ -518,7 +510,7 @@ $listOptionsType = array(
     'defaultApplication' => 'string',
     'defaultObfuscateLinks' => 'boolean',
     'defaultLinksVersion' => 'string',
-    'subordinationEntity' => 'string',
+    'subordinationEntity' => 'string',)
 );
 
 /**
@@ -526,7 +518,7 @@ $listOptionsType = array(
  *
  * @var array:string|boolean|integer
  */
-$listOptionsDefaultValue = array(
+define('LIST_OPTIONS_DEFAULT_VALUE', array(
     'puppetmaster' => NEBULE_DEFAULT_PUPPETMASTER_ID,
     'hostURL' => 'localhost',
     'permitWrite' => true,
@@ -597,7 +589,7 @@ $listOptionsDefaultValue = array(
     'defaultApplication' => '0',
     'defaultObfuscateLinks' => false,
     'defaultLinksVersion' => '2.0',
-    'subordinationEntity' => '',
+    'subordinationEntity' => '',)
 );
 
 /**
@@ -613,14 +605,13 @@ $listOptionsBuffer = array();
  */
 function getOption(string $name)
 {
-    global $listOptionsType, $listOptionsDefaultValue, $listOptionsBuffer;
+    global $listOptionsBuffer;
 
-    $result = null;
     $value = '';
 
     if ($name == ''
         || !is_string($name)
-        || !isset($listOptionsType[$name])
+        || !isset(LIST_OPTIONS_TYPE[$name])
     )
         return null;
 
@@ -646,10 +637,10 @@ function getOption(string $name)
 
     // If not found, read default value.
     if ($value == '')
-        $value = $listOptionsDefaultValue[$name];
+        $value = LIST_OPTIONS_DEFAULT_VALUE[$name];
 
     // Convert value onto asked type.
-    switch ($listOptionsType[$name]) {
+    switch (LIST_OPTIONS_TYPE[$name]) {
         case 'string' :
             $result = $value;
             break;
@@ -855,63 +846,6 @@ if (!isset($nebuleListInvalidLinks)) {
 }
 
 /*
- * Autorise ou non l'écriture par le code php.
- * Positionné à false, c'est une protection globale en lecture seule.
- * Utilisé par les fonctions _neblibpp_e_gen, _neblibpp_o_gen, _neblibpp_o_dl1, _neblibpp_o_wr, _neblibpp_o_del, _neblibpp_l_wr, _neblibpp_l_gen, _neblibpp_io_lw et _neblibpp_io_ow.
- *
- * @var boolean $nebulePermitWrite
- */
-$forceValue = getOption('permitWrite');
-if ($forceValue != null) {
-    $nebulePermitWrite = $forceValue;
-}
-if (!isset($nebulePermitWrite)) {
-    $nebulePermitWrite = false;
-}
-
-/*
- * Autorise ou non la création de nouveaux liens par le code php.
- * Utilisé par les fonctions _neblibpp_e_gen, _neblibpp_l_wr, _neblibpp_l_gen et _neblibpp_io_lw.
- *
- * @var boolean $nebulePermitWriteLink
- */
-$forceValue = getOption('permitWriteLink');
-if ($forceValue != null) {
-    $nebulePermitWriteLink = $forceValue;
-}
-if (!isset($nebulePermitWriteLink)) {
-    $nebulePermitWriteLink = false;
-}
-
-/*
- * Autorise ou non la création de nouveaux objets par le code php.
- * Utilisé par les fonctions _neblibpp_e_gen, _neblibpp_o_gen, _neblibpp_o_wr, _neblibpp_o_del et _neblibpp_io_ow.
- *
- * @var boolean $nebulePermitWriteObject
- */
-$forceValue = getOption('permitWriteObject');
-if ($forceValue != null) {
-    $nebulePermitWriteObject = $forceValue;
-}
-if (!isset($nebulePermitWriteObject)) {
-    $nebulePermitWriteObject = false;
-}
-
-/*
- * Autorise ou non la création de nouvelles entités par le code php.
- * Utilisé par la fonction _neblibpp_e_gen.
- *
- * @var boolean $nebulePermitWriteEntity
- */
-$forceValue = getOption('permitWriteEntity');
-if ($forceValue != null) {
-    $nebulePermitWriteEntity = $forceValue;
-}
-if (!isset($nebulePermitWriteEntity)) {
-    $nebulePermitWriteEntity = false;
-}
-
-/*
  * Autorise ou non la création d'une entité sans mot de passe.
  *
  * Devrait toujours être à <u>false</u>.
@@ -920,34 +854,6 @@ if (!isset($nebulePermitWriteEntity)) {
  */
 if (!isset($nebulePermitCreateEntityWithoutPassword)) {
     $nebulePermitCreateEntityWithoutPassword = false;
-}
-
-/*
- * Autorise ou non le transfert de liens depuis un autre serveur nebule.
- * Utilisé par la fonction _neblibpp_l_dl1.
- *
- * @var boolean $nebulePermitSynchronizeLink
- */
-$forceValue = getOption('permitSynchronizeLink');
-if ($forceValue != null) {
-    $nebulePermitSynchronizeLink = $forceValue;
-}
-if (!isset($nebulePermitSynchronizeLink)) {
-    $nebulePermitSynchronizeLink = false;
-}
-
-/*
- * Autorise ou non le transfert d'objets depuis un autre serveur nebule.
- * Utilisé par la fonction _neblibpp_o_dl1.
- *
- * @var boolean $nebulePermitSynchronizeObject
- */
-$forceValue = getOption('permitSynchronizeObject');
-if ($forceValue != null) {
-    $nebulePermitSynchronizeObject = $forceValue;
-}
-if (!isset($nebulePermitSynchronizeObject)) {
-    $nebulePermitSynchronizeObject = false;
 }
 
 /**
@@ -2176,11 +2082,9 @@ function nebListChildren(&$object, &$listchildren)
 // FIXME
 function nebCreatObjText(&$text)
 { // Création d'un nouvel objet texte.
-    global $nebulePermitWriteLink, $nebulePermitWriteObject;
-
-    if (!$nebulePermitWriteObject)
+    if (!getOption('permitWriteObject'))
         return false;
-    if (!$nebulePermitWriteLink)
+    if (!getOption('permitWriteLink'))
         return false;
     if (strlen($text) == 0)
         return false;
@@ -2195,11 +2099,9 @@ function nebCreatObjText(&$text)
 // FIXME
 function nebINECreatObjText($text)
 { // If Not Exist - Création d'un nouvel objet texte.
-    global $nebulePermitWriteLink, $nebulePermitWriteObject;
-
-    if (!$nebulePermitWriteObject)
+    if (!getOption('permitWriteObject'))
         return false;
-    if (!$nebulePermitWriteLink)
+    if (!getOption('permitWriteLink'))
         return false;
     if (strlen($text) == 0)
         return false;
@@ -2216,9 +2118,7 @@ function nebINECreatObjText($text)
 // FIXME
 function nebCreatObjDate(&$object)
 { // Création d'une date pour un objet.
-    global $nebulePermitWriteLink;
-
-    if (!$nebulePermitWriteLink)
+    if (!getOption('permitWriteLink'))
         return false;
     if ($object == '')
         return false;
@@ -2299,9 +2199,7 @@ function nebCreatObjDate(&$object)
 // FIXME
 function nebCreatObjHash(&$object)
 { // Définition du hash pour un objet.
-    global $nebulePermitWriteLink;
-
-    if (!$nebulePermitWriteLink)
+    if (!getOption('permitWriteLink'))
         return false;
     if ($object == '')
         return false;
@@ -2335,16 +2233,15 @@ function nebCreatObjHash(&$object)
 function e_generate($type, $size, $algohash, &$hashpubkey, &$hashprivkey, $password = '')
 {
     // Crée une nouvelle entité.
-    global $nebulePermitWrite, $nebulePermitWriteEntity, $nebulePermitWriteObject, $nebulePermitWriteLink,
-           $nebulePermitCreateEntityWithoutPassword;
+    global $nebulePermitCreateEntityWithoutPassword;
 
-    if (!$nebulePermitWrite)
+    if (!getOption('permitWrite'))
         return false;
-    if (!$nebulePermitWriteEntity)
+    if (!getOption('permitWriteEntity'))
         return false;
-    if (!$nebulePermitWriteObject)
+    if (!getOption('permitWriteObject'))
         return false;
-    if (!$nebulePermitWriteLink)
+    if (!getOption('permitWriteLink'))
         return false;
     if (($type != 'rsa') && ($type != 'dsa'))
         return false;
@@ -2544,13 +2441,13 @@ function e_addpasswd($pubkey, $privkey, $password)
     // - $pubkey : la clé public de l'entité, nécessaire pour un des liens.
     // - $privkey : la clé privée de l'entité.
     // - $password : le mot de passe à reconnaître pour la clé privée. Le mot de passe est vérifié sur la clé.
-    global $nebulePermitWrite, $nebulePermitWriteObject, $nebulePermitWriteLink, $nebulePermitCreateEntityWithoutPassword, $nebuleSymetricKeyLenght, $nebuleSymetricAlgorithm, $nebuleAsymetricAlgorithm, $nebulePublicEntity;
+    global $nebulePermitCreateEntityWithoutPassword, $nebuleSymetricKeyLenght, $nebuleSymetricAlgorithm, $nebuleAsymetricAlgorithm, $nebulePublicEntity;
 
-    if (!$nebulePermitWrite)
+    if (!getOption('permitWrite'))
         return false;
-    if (!$nebulePermitWriteObject)
+    if (!getOption('permitWriteObject'))
         return false;
-    if (!$nebulePermitWriteLink)
+    if (!getOption('permitWriteLink'))
         return false;
     if ($password == '' && !$nebulePermitCreateEntityWithoutPassword)
         return false;
@@ -2616,13 +2513,13 @@ function e_addpasswd($pubkey, $privkey, $password)
  */
 function e_changepasswd($entity, $password): bool
 { // Change le mot de passe de l'entité.
-    global $nebulePermitWrite, $nebulePermitWriteObject, $nebulePermitWriteLink, $nebulePermitCreateEntityWithoutPassword;
+    global $nebulePermitCreateEntityWithoutPassword;
 
-    if (!$nebulePermitWrite)
+    if (!getOption('permitWrite'))
         return false;
-    if (!$nebulePermitWriteObject)
+    if (!getOption('permitWriteObject'))
         return false;
-    if (!$nebulePermitWriteLink)
+    if (!getOption('permitWriteLink'))
         return false;
     if ($entity == '')
         return false;
@@ -2640,13 +2537,11 @@ function e_changepasswd($entity, $password): bool
  */
 function o_generate(&$data, $typemime = '')
 { // Crée un nouvel objet.
-    global $nebulePermitWrite, $nebulePermitWriteObject;
-
     if (strlen($data) == 0)
         return;
-    if (!$nebulePermitWrite)
+    if (!getOption('permitWrite'))
         return;
-    if (!$nebulePermitWriteObject)
+    if (!getOption('permitWriteObject'))
         return;
     $dat = date(DATE_ATOM);
     $hash = hash(getOption('cryptoHashAlgorithm'), $data);
@@ -2847,13 +2742,11 @@ function o_downloadcontent(string $object, string $localisation): void
     global $nebulePublicEntity,
            $nebulePuppetmaster,
            $nebuleSecurityMaster,
-           $nebulePermitSynchronizeObject,
-           $nebulePermitWrite,
            $nebuleIOMaxdata,
            $nebuleResultList;
 
-    if (!$nebulePermitWrite
-        || !$nebulePermitSynchronizeObject
+    if (!getOption('permitWrite')
+        || !getOption('permitSynchronizeObject')
         || $object == '0'
         || $object == ''
         || !is_string($object)
@@ -3024,12 +2917,10 @@ function o_checkNID(string &$nid, bool $permitnull = false): bool
  */
 function o_writecontent(string $object, string &$data): bool
 {
-    global $nebulePermitWrite, $nebulePermitWriteObject;
-
     if ($object == '0'
         || strlen($data) == 0
-        || !$nebulePermitWrite
-        || !$nebulePermitWriteObject
+        || !getOption('permitWrite')
+        || !getOption('permitWriteObject')
     ) {
         return false;
     }
@@ -3054,11 +2945,11 @@ function o_writecontent(string $object, string &$data): bool
  */
 function o_delete(string &$object): bool
 {
-    global $nebulePermitWrite, $nebulePermitWriteObject, $nebulePublicEntity;
+    global $nebulePublicEntity;
 
-    if (!$nebulePermitWrite)
+    if (!getOption('permitWrite'))
         return false;
-    if (!$nebulePermitWriteObject)
+    if (!getOption('permitWriteObject'))
         return false;
     $ok = true;
     $links = array();
@@ -3154,7 +3045,7 @@ function l_generate(string $CHR, string $REQ, string $NID1, string $NID2 = '', s
  */
 function l_graphresolvone(&$object, &$visited, $present = true, $synchro = false, $restrict = false)
 {
-    global $nebuleMaxUpdates, $nebulePermitSynchronizeLink, $nebulePermitSynchronizeObject, $nebuleLocalAuthorities;
+    global $nebuleMaxUpdates, $nebuleLocalAuthorities;
 
     $visited [$object] = true;
     if (count($visited) > $nebuleMaxUpdates) {
@@ -3166,8 +3057,8 @@ function l_graphresolvone(&$object, &$visited, $present = true, $synchro = false
 
     // Recherche de nouveaux liens.
     if ($synchro
-        && $nebulePermitSynchronizeLink
-        && ($nebulePermitSynchronizeObject
+        && getOption('permitSynchronizeLink')
+        && (getOption('permitSynchronizeObject')
             || !$present
         )
     ) {
@@ -3222,7 +3113,7 @@ function l_graphresolvone(&$object, &$visited, $present = true, $synchro = false
     if (count($valinks) == 0) // Bout de branche parce que sans branche valide.
     {
         if ($synchro
-            && $nebulePermitSynchronizeObject
+            && getOption('permitSynchronizeObject')
         ) {
             o_downloadupdatedcontent($object); // Syncho de l'objet.
         }
@@ -3650,9 +3541,7 @@ function l_listonelink(&$object, &$table, $filtreact = '-', $filtreobj = '', $wi
 function l_downloadlinkanywhere($object)
 { // Télécharge les liens de l'objet sur plusieurs localisations.
     // - $object l'objet dont les liens sont à télécharger.
-    global $nebulePermitSynchronizeLink;
-
-    if (!$nebulePermitSynchronizeLink)
+    if (!getOption('permitSynchronizeLink'))
         return;
     if ($object == '0')
         return;
@@ -3704,9 +3593,7 @@ function l_downloadlinkanywhere($object)
  */
 function l_downloadlinkonlocation($oid, $localisation)
 {
-    global $nebulePermitWrite, $nebulePermitSynchronizeLink;
-
-    if (!$nebulePermitWrite
+    if (!getOption('permitWrite')
         || !getOption('nebulePermitSynchronizeLink')
         || $oid == '0'
         || $oid == ''
@@ -4081,11 +3968,9 @@ function l_writecontent($link)
     // - $link le lien à écrire.
     // Se charge de répartir les liens sur les objets concernés.
     // Le lien de type c est géré un peu à part puisque tous les champs ne sont pas des objets.
-    global $nebulePermitWrite, $nebulePermitWriteLink;
-
-    if (!$nebulePermitWrite)
+    if (!getOption('permitWrite'))
         return false;
-    if (!$nebulePermitWriteLink)
+    if (!getOption('permitWriteLink'))
         return false;
     $sign = strtok(trim($link), '_'); // Lit la signature.
     if ($sign == '' || $sign == '0')
@@ -4190,15 +4075,13 @@ function io_check(): bool
  */
 function io_checklinkfolder(): bool
 {
-    global $nebulePermitWrite, $nebulePermitWriteLink;
-
     if (!file_exists(NEBULE_LOCAL_LINKS_FOLDER)
         || !is_dir(NEBULE_LOCAL_LINKS_FOLDER)
     ) {
         return false;
     }
-    if ($nebulePermitWrite
-        && $nebulePermitWriteLink
+    if (getOption('permitWrite')
+        && getOption('permitWriteLink')
     ) {
         $data = hash('sha256', getpseudorandom(8) . date(DATE_ATOM));
         $name = NEBULE_LOCAL_LINKS_FOLDER . '/writest' . $data;
@@ -4226,15 +4109,13 @@ function io_checklinkfolder(): bool
  */
 function io_checkobjectfolder()
 {
-    global $nebulePermitWrite, $nebulePermitWriteObject;
-
     if (!file_exists(NEBULE_LOCAL_OBJECTS_FOLDER)
         || !is_dir(NEBULE_LOCAL_OBJECTS_FOLDER)
     ) {
         return false;
     }
-    if ($nebulePermitWrite
-        && $nebulePermitWriteObject
+    if (getOption('permitWrite')
+        && getOption('permitWriteObject')
     ) {
         $data = hash('sha256', getpseudorandom(8) . date(DATE_ATOM));
         $name = NEBULE_LOCAL_OBJECTS_FOLDER . '/writest' . $data;
@@ -4348,10 +4229,8 @@ function io_objectread(&$o, $m = 0)
  */
 function io_linkwrite(&$o, &$l)
 {
-    global $nebulePermitWrite, $nebulePermitWriteLink;
-
-    if (!$nebulePermitWrite
-        || !$nebulePermitWriteLink
+    if (!getOption('permitWrite')
+        || !getOption('permitWriteLink')
     ) {
         return false;
     }
@@ -4371,10 +4250,8 @@ function io_linkwrite(&$o, &$l)
  */
 function io_objectwrite(&$d)
 {
-    global $nebulePermitWrite, $nebulePermitWriteObject;
-
-    if (!$nebulePermitWrite
-        || !$nebulePermitWriteObject
+    if (!getOption('permitWrite')
+        || !getOption('permitWriteObject')
     ) {
         return false;
     }
@@ -4391,10 +4268,8 @@ function io_objectwrite(&$d)
  */
 function io_objectdelete(&$o)
 {
-    global $nebulePermitWrite, $nebulePermitWriteObject;
-
-    if (!$nebulePermitWrite
-        || !$nebulePermitWriteObject
+    if (!getOption('permitWrite')
+        || !getOption('permitWriteObject')
     ) {
         return false;
     }
