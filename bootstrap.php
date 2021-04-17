@@ -196,16 +196,10 @@ define('BOOTSTRAP_FILE_NAME', 'index.php');
 
 // ------------------------------------------------------------------------------------------
 // First synchronization.
-
-/**
- * Les url de première synchronisation.
- *
- * @var array:string $nebuleFirstLocalisations
- */
-$nebuleFirstLocalisations = array(
+define('BOOTSTRAP_FIRST_LOCALISATIONS', array(
     'http://code.master.nebule.org',
     'http://puppetmaster.nebule.org',
-    'http://security.master.nebule.org',
+    'http://security.master.nebule.org',)
 );
 
 // Public key of puppetmaster.
@@ -6556,7 +6550,7 @@ function bootstrapInlineDisplayApplicationfirst()
  */
 function bootstrapFirstCreateObjects()
 {
-    global $nebuleFirstLocalisations, $nebuleFirstReservedObjects, $bootstrapName;
+    global $nebuleFirstReservedObjects, $bootstrapName;
 
     ?>
 
@@ -6570,7 +6564,7 @@ function bootstrapFirstCreateObjects()
         addLog('need create objects');
 
         // Ecrit les objets de localisation.
-        foreach ($nebuleFirstLocalisations as $data) {
+        foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $data) {
             io_objectwrite($data);
             echo '.';
         }
@@ -6614,7 +6608,7 @@ else {
  */
 function bootstrapFirstSynchronizingEntities()
 {
-    global $nebuleFirstLocalisations, $bootstrapName, $nebuleLocalAuthorities,
+    global $bootstrapName, $nebuleLocalAuthorities,
            $nebulePuppetmaster, $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster;
 
     ?>
@@ -6645,14 +6639,14 @@ function bootstrapFirstSynchronizingEntities()
         $nebuleLocalAuthorities[0] = $nebulePuppetmaster;
 
         // Recherche des autres liens.
-        foreach ($nebuleFirstLocalisations as $localisation) {
+        foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
             o_downloadcontent($nebulePuppetmaster, $localisation);
             l_downloadlinkonlocation($nebulePuppetmaster, $localisation);
             echo '.';
         }
         echo ' ';
         flush();
-        foreach ($nebuleFirstLocalisations as $localisation) {
+        foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
             l_downloadlinkonlocation(hash(getOption('cryptoHashAlgorithm'), 'nebule/objet/entite/maitre/securite'), $localisation);
             echo '.';
             l_downloadlinkonlocation(hash(getOption('cryptoHashAlgorithm'), 'nebule/objet/entite/maitre/code'), $localisation);
@@ -6681,7 +6675,7 @@ function bootstrapFirstSynchronizingEntities()
         ) {
             // Recherche de l'objet et des liens de l'entité.
             $nebuleSecurityMaster = $entity;
-            foreach ($nebuleFirstLocalisations as $localisation) {
+            foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
                 o_downloadcontent($nebuleSecurityMaster, $localisation);
                 l_downloadlinkonlocation($nebuleSecurityMaster, $localisation);
                 echo '.';
@@ -6708,7 +6702,7 @@ function bootstrapFirstSynchronizingEntities()
         ) {
             // Recherche de l'objet et des liens de l'entité.
             $nebuleCodeMaster = $entity;
-            foreach ($nebuleFirstLocalisations as $localisation) {
+            foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
                 o_downloadcontent($nebuleCodeMaster, $localisation);
                 l_downloadlinkonlocation($nebuleCodeMaster, $localisation);
                 echo '.';
@@ -6735,7 +6729,7 @@ function bootstrapFirstSynchronizingEntities()
         ) {
             // Recherche de l'objet et des liens de l'entité.
             $nebuleDirectoryMaster = $entity;
-            foreach ($nebuleFirstLocalisations as $localisation) {
+            foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
                 o_downloadcontent($nebuleDirectoryMaster, $localisation);
                 l_downloadlinkonlocation($nebuleDirectoryMaster, $localisation);
                 echo '.';
@@ -6762,7 +6756,7 @@ function bootstrapFirstSynchronizingEntities()
         ) {
             // Recherche de l'objet et des liens de l'entité.
             $nebuleTimeMaster = $entity;
-            foreach ($nebuleFirstLocalisations as $localisation) {
+            foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
                 o_downloadcontent($nebuleTimeMaster, $localisation);
                 l_downloadlinkonlocation($nebuleTimeMaster, $localisation);
                 echo '.';
@@ -6825,7 +6819,7 @@ function bootstrapFirstSynchronizingEntities()
  */
 function bootstrapFirstSynchronizingObjects()
 {
-    global $nebuleFirstLocalisations, $nebuleFirstReservedObjects, $bootstrapName, $nebuleLocalAuthorities;
+    global $nebuleFirstReservedObjects, $bootstrapName, $nebuleLocalAuthorities;
 
     $refApps = REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS;
     $refAppsID = hash(getOption('cryptoHashAlgorithm'), $refApps);
@@ -6848,9 +6842,9 @@ function bootstrapFirstSynchronizingObjects()
 
         // Ecrit les objets de localisation.
         echo 'objects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
-        foreach ($nebuleFirstLocalisations as $data) {
+        foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $data) {
             $hash = hash(getOption('cryptoHashAlgorithm'), $data);;
-            foreach ($nebuleFirstLocalisations as $localisation) {
+            foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
                 $count = l_downloadlinkonlocation($hash, $localisation);
                 echo '.';
                 if ($count != 0) {
@@ -6864,7 +6858,7 @@ function bootstrapFirstSynchronizingObjects()
         // Ecrit les objets réservés.
         foreach ($nebuleFirstReservedObjects as $data) {
             $hash = hash(getOption('cryptoHashAlgorithm'), $data);;
-            foreach ($nebuleFirstLocalisations as $localisation) {
+            foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
                 $count = l_downloadlinkonlocation($hash, $localisation);
                 echo '.';
                 if ($count != 0) {
@@ -6883,7 +6877,7 @@ function bootstrapFirstSynchronizingObjects()
 
         // Chargement bachue développement. Doit être désactivé en production.
         if (!REFERENCES_FOLLOW_ONLY_AUTORITY) {
-            foreach ($nebuleFirstLocalisations as $localisation) {
+            foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
                 o_downloadcontent(REFERENCE_DEV_ID, $localisation);
                 echo 'D';
             }
@@ -6896,7 +6890,7 @@ function bootstrapFirstSynchronizingObjects()
         <?php
         echo $refBoot . ' ';
         flush();
-        foreach ($nebuleFirstLocalisations as $localisation) {
+        foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
             l_downloadlinkonlocation($refBootID, $localisation);
             echo '.';
         }
@@ -6906,7 +6900,7 @@ function bootstrapFirstSynchronizingObjects()
         <?php
         echo $refLib . ' ';
         flush();
-        foreach ($nebuleFirstLocalisations as $localisation) {
+        foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
             l_downloadlinkonlocation($refLibID, $localisation);
             echo '.';
         }
@@ -6921,7 +6915,7 @@ function bootstrapFirstSynchronizingObjects()
             !REFERENCES_FOLLOW_ONLY_AUTORITY);
         echo $lastID . ' ';
         if ($lastID != '0') {
-            foreach ($nebuleFirstLocalisations as $localisation) {
+            foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
                 o_downloadcontent($lastID, $localisation);
                 echo '.';
             }
@@ -6934,7 +6928,7 @@ function bootstrapFirstSynchronizingObjects()
         <?php
         echo $refAppsID . ' ';
         flush();
-        foreach ($nebuleFirstLocalisations as $localisation) {
+        foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
             l_downloadlinkonlocation($refAppsID, $localisation);
             echo '.';
         }
@@ -6983,7 +6977,7 @@ function bootstrapFirstSynchronizingObjects()
                 !REFERENCES_FOLLOW_ONLY_AUTORITY);
             addLog('find app ' . $appID . ' as ' . $lastID);
             if ($lastID != '0') {
-                foreach ($nebuleFirstLocalisations as $localisation) {
+                foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
                     o_downloadcontent($lastID, $localisation);
                     l_downloadlinkonlocation($lastID, $localisation);
                     echo '.';
@@ -6999,7 +6993,7 @@ function bootstrapFirstSynchronizingObjects()
                         $refName);
                 }
                 if ($nameID != '0') {
-                    foreach ($nebuleFirstLocalisations as $localisation) {
+                    foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
                         o_downloadcontent($nameID, $localisation);
                         l_downloadlinkonlocation($nameID, $localisation);
                         echo '.';
