@@ -338,10 +338,7 @@ $applicationWebsite = '';
  * Pré-initialise des variables de la bibliothèque.
  * Ceci permet d'éviter une attaque par injection de variables passées en arguments de l'URL.
  */
-$nebulePuppetmaster = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea';
 $nebuleLocalAuthorities = array();
-$nebuleServerEntityAsAuthority = false;
-$nebuleCurrentEntityAsAuthority = false;
 $nebuleSymetricAlgorithm = 'aes-256-ctr';
 $nebuleSymetricKeyLenght = '256';
 $nebuleAsymetricAlgorithm = 'rsa';
@@ -551,7 +548,7 @@ $listOptionsBuffer = array();
 
 /**
  * Return option's value. Options presents on environment file are forced.
- *
+ * TODO faire un préchargement des options
  * @param string $name
  * @return null|string|boolean|integer
  */
@@ -618,17 +615,6 @@ function getOption(string $name)
     return $result;
 }
 
-/*
- * ID puppetmaster.
- */
-$forceValue = getOption('puppetmaster');
-if ($forceValue != null) {
-    $nebulePuppetmaster = $forceValue;
-}
-if (!isset($nebulePuppetmaster)) {
-    $nebulePuppetmaster = NEBULE_DEFAULT_PUPPETMASTER_ID;
-}
-
 /**
  * ID cerberus maître de la sécurité.
  */
@@ -678,52 +664,6 @@ $nebulePasswordEntite = '';
  * Liste des entités autorités locale.
  */
 $nebuleLocalAuthorities = array();
-
-/*
- * Autorise l'entité du serveur à être autorité locale.
- *
- * L'activation du mode de récupération interdit l'entité du serveur comme autorité locale.
- * Le mode de récupération est prioritaire.
- */
-$forceValue = getOption('permitInstanceEntityAsAuthority');
-if ($forceValue != null) {
-    $nebuleServerEntityAsAuthority = $forceValue;
-}
-if (getOption('modeRescue') === true
-    || (getOption('permitOnlineRescue') === true
-        && (filter_has_var(INPUT_GET, ARG_RESCUE_MODE)
-            || filter_has_var(INPUT_POST, ARG_RESCUE_MODE)
-        )
-    )
-) {
-    $nebuleServerEntityAsAuthority = false;
-}
-if (!isset($nebuleServerEntityAsAuthority)) {
-    $nebuleServerEntityAsAuthority = false;
-}
-
-/*
- * Autorise l'entité courante à être autorité locale.
- *
- * L'activation du mode de récupération interdit l'entité courante comme autorité locale.
- * Le mode de récupération est prioritaire.
- */
-$forceValue = getOption('permitDefaultEntityAsAuthority');
-if ($forceValue != null) {
-    $nebuleCurrentEntityAsAuthority = $forceValue;
-}
-if (getOption('modeRescue') === true
-    || (getOption('permitOnlineRescue') === true
-        && (filter_has_var(INPUT_GET, ARG_RESCUE_MODE)
-            || filter_has_var(INPUT_POST, ARG_RESCUE_MODE)
-        )
-    )
-) {
-    $nebuleCurrentEntityAsAuthority = false;
-}
-if (!isset($nebuleCurrentEntityAsAuthority)) {
-    $nebuleCurrentEntityAsAuthority = false;
-}
 
 /*
  * Cryptographie - Fonction de chiffrement symétrique.
@@ -892,7 +832,7 @@ $nebuleMimetypePathFile = '/etc/mime.types';
  * Initialisation.
  * ------------------------------------------------------------------------------------------
  */
-initLibpp();
+libppInit();
 
 // Recherche et mémorise l'entité locale du serveur.
 if (file_exists(LOCAL_ENTITY_FILE)
@@ -912,9 +852,8 @@ if ($nebuleServerEntite == ''
 }
 
 // Si autorisée, l'entité locale du serveur devient autorité locale.
-if ($nebuleServerEntityAsAuthority) {
+if (getOption('permitInstanceEntityAsAuthority') && !getModeRescue())
     $nebuleLocalAuthorities[3] = $nebuleServerEntite;
-}
 
 // Recherche et mémorise l'entité locale par défaut.
 $nebuleDefaultEntity = getOption('defaultCurrentEntity');
@@ -923,14 +862,12 @@ if ($nebuleDefaultEntity == ''
     || !ctype_xdigit($nebuleDefaultEntity)
     || !io_testlinkpresent($nebuleDefaultEntity)
     || !io_testobjectpresent($nebuleDefaultEntity)
-) {
+)
     $nebuleDefaultEntity = $nebuleCodeMaster;
-}
 
 // Si autorisée, l'entité locale par défaut devient autorité locale.
-if ($nebuleCurrentEntityAsAuthority) {
+if (getOption('permitDefaultEntityAsAuthority') && !getModeRescue())
     $nebuleLocalAuthorities[4] = $nebuleDefaultEntity;
-}
 
 // Recherche et mémorise l'entité courante.
 if (!isset($nebulePublicEntity)
@@ -950,39 +887,18 @@ if (!isset($nebulePublicEntity)
  * ------------------------------------------------------------------------------------------
  */
 
-/**
- * Check a master entity.
- * @param string $nid
- * @param string $name
- * @return bool
- */
-function checkMasterEntity(string $nid, string $name=''): bool
-{
-    if (!o_checkNID($nid, false)
-        || $nid == '0'
-        || !io_testobjectpresent($nid)
-        || !io_testlinkpresent($nid)
-        || !o_checkcontent($nid)
-        || !nebIsPubkey($nid)
-    ) {
-        addLog('msg="invalid master entity" name="'.$name.'" nid='.$nid);
-        return false;
-    }
-    return true;
-}
-
 /** FIXME
  * Initialisation de la bibliothèque.
  * @return boolean
  */
-function initLibpp(): bool
+function libppInit(): bool
 {
     global $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster, $nebuleLocalAuthorities;
 
     // Initialize i/o.
     io_open();
 
-    if (!checkMasterEntity(getOption('puppetmaster'), 'puppetmaster'))
+    if (!e_check(getOption('puppetmaster'), 'puppetmaster'))
         return false;
 
     // Pour la suite, seul le puppetmaster est enregirstré.
@@ -996,7 +912,7 @@ function initLibpp(): bool
         hash(getOption('cryptoHashAlgorithm'), 'nebule/objet/entite/maitre/securite'),
         'nebule/objet/entite/maitre/securite',
         true);
-    if (!checkMasterEntity($entity, 'security master'))
+    if (!e_check($entity, 'security master'))
         return false;
     $nebuleSecurityMaster = $entity;
 
@@ -1005,7 +921,7 @@ function initLibpp(): bool
         hash(getOption('cryptoHashAlgorithm'), 'nebule/objet/entite/maitre/code'),
         'nebule/objet/entite/maitre/code',
         true);
-    if (!checkMasterEntity($entity, 'code master'))
+    if (!e_check($entity, 'code master'))
         return false;
     $nebuleCodeMaster = $entity;
 
@@ -1014,7 +930,7 @@ function initLibpp(): bool
         hash(getOption('cryptoHashAlgorithm'), 'nebule/objet/entite/maitre/annuaire'),
         'nebule/objet/entite/maitre/annuaire',
         true);
-    if (!checkMasterEntity($entity, 'directory master'))
+    if (!e_check($entity, 'directory master'))
         return false;
     $nebuleDirectoryMaster = $entity;
 
@@ -1023,7 +939,7 @@ function initLibpp(): bool
         hash(getOption('cryptoHashAlgorithm'), 'nebule/objet/entite/maitre/temps'),
         'nebule/objet/entite/maitre/temps',
         true);
-    if (!checkMasterEntity($entity, 'time master'))
+    if (!e_check($entity, 'time master'))
         return false;
     $nebuleTimeMaster = $entity;
 
@@ -1039,26 +955,47 @@ function initLibpp(): bool
  * Check le library.
  * @return boolean
  */
-function nebLibppCheck(): bool
+function libppCheckAll(): bool
 {
     global $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster;
 
-    if (!checkMasterEntity(getOption('puppetmaster'), 'puppetmaster'))
+    if (!e_check(getOption('puppetmaster'), 'puppetmaster'))
         return false;
 
-    if (!checkMasterEntity($nebuleSecurityMaster, 'security master'))
+    if (!e_check($nebuleSecurityMaster, 'security master'))
         return false;
 
-    if (!checkMasterEntity($nebuleCodeMaster, 'code master'))
+    if (!e_check($nebuleCodeMaster, 'code master'))
         return false;
 
-    if (!checkMasterEntity($nebuleDirectoryMaster, 'directory master'))
+    if (!e_check($nebuleDirectoryMaster, 'directory master'))
         return false;
 
-    if (!checkMasterEntity($nebuleTimeMaster, 'time master'))
+    if (!e_check($nebuleTimeMaster, 'time master'))
         return false;
 
     return true;
+}
+
+/**
+ * Check rescue mode asked and authorized.
+ * Can be activated by option modeRescue.
+ * Can be activated by line argument if permitted by option permitOnlineRescue.
+ * This rescue mode is useful when the code loaded crash.
+ * By default, rescue mode is not activated.
+ * @return bool
+ */
+function getModeRescue(): bool
+{
+    if (getOption('modeRescue') === true
+        || (getOption('permitOnlineRescue') === true
+            && (filter_has_var(INPUT_GET, ARG_RESCUE_MODE)
+                || filter_has_var(INPUT_POST, ARG_RESCUE_MODE)
+                )
+            )
+    )
+        return true;
+    return false;
 }
 
 /** FIXME
@@ -1627,7 +1564,7 @@ function nebAddObjTypeMime(&$object, $type)
 function nebIsBanned(&$object)
 { // Vérifie si l'objet est marqué comme banni.
     // Fonction avec utilisation du cache si possible.
-    global $nebulePublicEntity, $nebulePuppetmaster, $nebuleSecurityMaster, $nebuleCacheIsBanned;
+    global $nebulePublicEntity, $nebuleSecurityMaster, $nebuleCacheIsBanned;
 
     if (isset($nebuleCacheIsBanned [$object]))
         return $nebuleCacheIsBanned [$object];
@@ -1644,8 +1581,6 @@ function nebIsBanned(&$object)
         if (($link [2] == $nebulePublicEntity) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $object) && ($link [7] == '0'))
             $ok = true;
         if (($link [2] == $nebuleSecurityMaster) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $object) && ($link [7] == '0'))
-            $ok = true;
-        if (($link [2] == $nebulePuppetmaster) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $object) && ($link [7] == '0'))
             $ok = true;
     }
     unset($table);
@@ -2282,6 +2217,25 @@ function e_generate($type, $size, $algohash, &$hashpubkey, &$hashprivkey, $passw
     return true;
 }
 
+/**
+ * Check a entity.
+ * @param string $nid
+ * @param string $name
+ * @return bool
+ */
+function e_check(string $nid, string $name=''): bool
+{
+    if (!o_checkNID($nid, false)
+        || $nid == '0'
+        || !io_testobjectpresent($nid)
+        || !io_testlinkpresent($nid)
+        || !o_checkcontent($nid)
+        || !nebIsPubkey($nid)
+    )
+        return false;
+    return true;
+}
+
 /** FIXME
  * Entity -
  *
@@ -2594,7 +2548,6 @@ function o_downloadupdatedcontent(string $object): void
 function o_downloadcontent(string $object, string $localisation): void
 {
     global $nebulePublicEntity,
-           $nebulePuppetmaster,
            $nebuleSecurityMaster,
            $nebuleIOMaxdata,
            $nebuleResultList;
@@ -2636,15 +2589,6 @@ function o_downloadcontent(string $object, string $localisation): void
             && $link [7] == '0'
         ) {
             addLog('_neblibpp_o_dl1(' . $object . ') banned by ' . $nebuleSecurityMaster);
-            return;
-        }
-        if ($link [2] == $nebulePuppetmaster
-            && $link [4] == 'f'
-            && $link [5] == $hashtype
-            && $link [6] == $object
-            && $link [7] == '0'
-        ) {
-            addLog('_neblibpp_o_dl1(' . $object . ') banned by ' . $nebulePuppetmaster);
             return;
         }
     }
@@ -4231,7 +4175,7 @@ function getpseudorandom($n = 32): string
 /*
  * Vérifie que la bibliothèque nebule PHP PP s'est bien chargée.
  */
-if (!nebLibppCheck()) {
+if (!libppCheckAll()) {
     $bootstrapBreak['21'] = 'Library init error';
 }
 
@@ -4477,7 +4421,7 @@ $bootstrapApplicationTraductionInstanceSleep = '';
 $bootstrapApplicationNoPreload = false;
 
 // La recherche de la bibliothèque et de l'application nécessite une bibliothèque nebule PHP PP fonctionnnelle.
-if (nebLibppCheck()) {
+if (libppCheckAll()) {
     // Ouverture de la session PHP.
     session_start();
 
@@ -4803,28 +4747,6 @@ function loadLibrary(): void
  TODO.
  ------------------------------------------------------------------------------------------
  */
-
-// ------------------------------------------------------------------------------------------
-/**
- * Variable de détection du mode de récupération.
- *
- * @var boolean $bootstrapRescueMode
- */
-$bootstrapRescueMode = false;
-
-// Lit si activation du mode de récupération.
-if (getOption('modeRescue') === true
-    || (getOption('permitOnlineRescue') === true
-        && (filter_has_var(INPUT_GET, ARG_RESCUE_MODE)
-            || filter_has_var(INPUT_POST, ARG_RESCUE_MODE)
-        )
-    )
-) {
-    addLog('ask rescue mode');
-
-    // Activation du mode de récupération.
-    $bootstrapRescueMode = true;
-}
 
 
 // ------------------------------------------------------------------------------------------
@@ -5508,7 +5430,6 @@ function bootstrapDisplayOnBreak(): void
            $bootstrapApplicationID,
            $bootstrapApplicationStartID,
            $metrologyStartTime,
-           $nebulePuppetmaster,
            $nebuleSecurityMaster,
            $nebuleCodeMaster,
            $nebuleDirectoryMaster,
@@ -5559,7 +5480,7 @@ function bootstrapDisplayOnBreak(): void
     <div class="parts">
         <span class="partstitle">#2 <?php echo $bootstrapName; ?> nebule library PP</span><br/>
         library version &nbsp;: <?php echo NEBULE_LIBPP_VERSION ?><br/>
-        puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $nebulePuppetmaster; ?> (local authority)<br/>
+        puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: <?php echo getOption('puppetmaster'); ?> (local authority)<br/>
         security master &nbsp;: <?php echo $nebuleSecurityMaster; ?> (local authority)<br/>
         code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $nebuleCodeMaster; ?> (local authority)<br/>
         directory master : <?php echo $nebuleDirectoryMaster; ?><br/>
@@ -6315,7 +6236,7 @@ else {
 function bootstrapFirstSynchronizingEntities()
 {
     global $bootstrapName, $nebuleLocalAuthorities,
-           $nebulePuppetmaster, $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster;
+           $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster;
 
     ?>
 
@@ -6323,13 +6244,13 @@ function bootstrapFirstSynchronizingEntities()
     <span class="partstitle">#4 synchronizing entities</span><br/>
     <?php
     // Si la bibliothèque ne se charge pas correctement, fait une première synchronisation des entités.
-    if (!nebLibppCheck()) {
+    if (!libppCheckAll()) {
         ?>
 
         puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;:
         <?php
         addLog('need puppetmaster');
-        echo ' ' . $nebulePuppetmaster . ' ';
+        echo ' ' . getOption('puppetmaster') . ' ';
 
         // Ecriture de la clé publique par défaut.
         $data = FIRST_PUPPETMASTER_PUBLIC_KEY;
@@ -6342,12 +6263,12 @@ function bootstrapFirstSynchronizingEntities()
         unset($data, $object, $link);
 
         // Activation comme autorité locale.
-        $nebuleLocalAuthorities[0] = $nebulePuppetmaster;
+        $nebuleLocalAuthorities[0] = getOption('puppetmaster');
 
         // Recherche des autres liens.
         foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-            o_downloadcontent($nebulePuppetmaster, $localisation);
-            l_downloadlinkonlocation($nebulePuppetmaster, $localisation);
+            o_downloadcontent(getOption('puppetmaster'), $localisation);
+            l_downloadlinkonlocation(getOption('puppetmaster'), $localisation);
             echo '.';
         }
         echo ' ';
@@ -6476,7 +6397,7 @@ function bootstrapFirstSynchronizingEntities()
 
         <div id="reload">
             <?php
-            if (nebLibppCheck()) {
+            if (libppCheckAll()) {
                 ?>
 
                 &gt; <a
@@ -6735,8 +6656,7 @@ function bootstrapFirstSynchronizingObjects()
  */
 function bootstrapFirstCreateOptionsFile()
 {
-    global $bootstrapName, $bootstrapSurname, $bootstrapAuthor, $bootstrapVersion, $bootstrapWebsite,
-           $nebulePuppetmaster;
+    global $bootstrapName, $bootstrapSurname, $bootstrapAuthor, $bootstrapVersion, $bootstrapWebsite;
 
     ?>
 
@@ -6763,7 +6683,7 @@ function bootstrapFirstCreateOptionsFile()
         $defaultOptions .= "\n";
         $defaultOptions .= "# nebule php\n";
         $defaultOptions .= "# Options writen here are write-protected for the library and all applications.\n";
-        $defaultOptions .= "puppetmaster = " . $nebulePuppetmaster . "\n";
+        $defaultOptions .= "puppetmaster = " . getOption('puppetmaster') . "\n";
         $defaultOptions .= "permitWrite = true\n";
         $defaultOptions .= "permitListInvalidLinks = false\n";
         $defaultOptions .= "permitInstanceEntityAsAuthority = false\n";
