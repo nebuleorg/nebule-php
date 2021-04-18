@@ -3,13 +3,13 @@ declare(strict_types=1);
 namespace Nebule\Bootstrap;
 //use nebule;
 // ------------------------------------------------------------------------------------------
-$bootstrapName        = 'bootstrap';
-$bootstrapSurname     = 'nebule/bootstrap';
+$bootstrapName = 'bootstrap';
+$bootstrapSurname = 'nebule/bootstrap';
 $bootstrapDescription = 'Loader of library and applications.';
-$bootstrapAuthor      = 'Project nebule';
-$bootstrapVersion     = '020210417';
-$bootstrapLicence     = 'GNU GPL 2010-2021';
-$bootstrapWebsite     = 'www.nebule.org';
+$bootstrapAuthor = 'Project nebule';
+$bootstrapVersion = '020210417';
+$bootstrapLicence = 'GNU GPL 2010-2021';
+$bootstrapWebsite = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
 
 
@@ -159,9 +159,9 @@ define('BOOTSTRAP_FILE_NAME', 'index.php');
 // ------------------------------------------------------------------------------------------
 // First synchronization.
 define('BOOTSTRAP_FIRST_LOCALISATIONS', array(
-    'http://code.master.nebule.org',
-    'http://puppetmaster.nebule.org',
-    'http://security.master.nebule.org',)
+        'http://code.master.nebule.org',
+        'http://puppetmaster.nebule.org',
+        'http://security.master.nebule.org',)
 );
 
 // Public key of puppetmaster.
@@ -391,154 +391,154 @@ define('NID_MAX_ALGO_SIZE', 12);
  * - integer
  */
 define('LIST_OPTIONS_TYPE', array(
-    'puppetmaster' => 'string',
-    'hostURL' => 'string',
-    'permitWrite' => 'boolean',
-    'permitWriteObject' => 'boolean',
-    'permitCreateObject' => 'boolean',
-    'permitSynchronizeObject' => 'boolean',
-    'permitProtectedObject' => 'boolean',
-    'permitWriteLink' => 'boolean',
-    'permitCreateLink' => 'boolean',
-    'permitSynchronizeLink' => 'boolean',
-    'permitUploadLink' => 'boolean',
-    'permitPublicUploadLink' => 'boolean',
-    'permitPublicUploadCodeMasterLink' => 'boolean',
-    'permitObfuscatedLink' => 'boolean',
-    'permitWriteEntity' => 'boolean',
-    'permitPublicCreateEntity' => 'boolean',
-    'permitWriteGroup' => 'boolean',
-    'permitWriteConversation' => 'boolean',
-    'permitCurrency' => 'boolean',
-    'permitWriteCurrency' => 'boolean',
-    'permitCreateCurrency' => 'boolean',
-    'permitWriteTransaction' => 'boolean',
-    'permitObfuscatedTransaction' => 'boolean',
-    'permitSynchronizeApplication' => 'boolean',
-    'permitPublicSynchronizeApplication' => 'boolean',
-    'permitDeleteObjectOnUnknowHash' => 'boolean',
-    'permitCheckSignOnVerify' => 'boolean',
-    'permitCheckSignOnList' => 'boolean',
-    'permitCheckObjectHash' => 'boolean',
-    'permitListInvalidLinks' => 'boolean',
-    'permitHistoryLinksSign' => 'boolean',
-    'permitInstanceEntityAsAuthority' => 'boolean',
-    'permitDefaultEntityAsAuthority' => 'boolean',
-    'permitLocalSecondaryAuthorities' => 'boolean',
-    'permitRecoveryEntities' => 'boolean',
-    'permitRecoveryRemoveEntity' => 'boolean',
-    'permitInstanceEntityAsRecovery' => 'boolean',
-    'permitDefaultEntityAsRecovery' => 'boolean',
-    'permitAddLinkToSigner' => 'boolean',
-    'permitListOtherHash' => 'boolean',
-    'permitLocalisationStats' => 'boolean',
-    'permitFollowUpdates' => 'boolean',
-    'permitOnlineRescue' => 'boolean',
-    'permitLogs' => 'boolean',
-    'permitJavaScript' => 'boolean',
-    'logsLevel' => 'string',
-    'modeRescue' => 'boolean',
-    'cryptoLibrary' => 'string',
-    'cryptoHashAlgorithm' => 'string',
-    'cryptoSymetricAlgorithm' => 'string',
-    'cryptoAsymetricAlgorithm' => 'string',
-    'socialLibrary' => 'string',
-    'ioLibrary' => 'string',
-    'ioReadMaxLinks' => 'integer',
-    'ioReadMaxData' => 'integer',
-    'ioReadMaxUpload' => 'integer',
-    'ioTimeout' => 'integer',
-    'displayUnsecureURL' => 'boolean',
-    'displayNameSize' => 'integer',
-    'displayEmotions' => 'boolean',
-    'forceDisplayEntityOnTitle' => 'boolean',
-    'maxFollowedUpdates' => 'integer',
-    'permitSessionOptions' => 'boolean',
-    'permitSessionBuffer' => 'boolean',
-    'permitBufferIO' => 'boolean',
-    'sessionBufferSize' => 'integer',
-    'defaultCurrentEntity' => 'string',
-    'defaultApplication' => 'string',
-    'defaultObfuscateLinks' => 'boolean',
-    'defaultLinksVersion' => 'string',
-    'subordinationEntity' => 'string',)
+        'puppetmaster' => 'string',
+        'hostURL' => 'string',
+        'permitWrite' => 'boolean',
+        'permitWriteObject' => 'boolean',
+        'permitCreateObject' => 'boolean',
+        'permitSynchronizeObject' => 'boolean',
+        'permitProtectedObject' => 'boolean',
+        'permitWriteLink' => 'boolean',
+        'permitCreateLink' => 'boolean',
+        'permitSynchronizeLink' => 'boolean',
+        'permitUploadLink' => 'boolean',
+        'permitPublicUploadLink' => 'boolean',
+        'permitPublicUploadCodeMasterLink' => 'boolean',
+        'permitObfuscatedLink' => 'boolean',
+        'permitWriteEntity' => 'boolean',
+        'permitPublicCreateEntity' => 'boolean',
+        'permitWriteGroup' => 'boolean',
+        'permitWriteConversation' => 'boolean',
+        'permitCurrency' => 'boolean',
+        'permitWriteCurrency' => 'boolean',
+        'permitCreateCurrency' => 'boolean',
+        'permitWriteTransaction' => 'boolean',
+        'permitObfuscatedTransaction' => 'boolean',
+        'permitSynchronizeApplication' => 'boolean',
+        'permitPublicSynchronizeApplication' => 'boolean',
+        'permitDeleteObjectOnUnknowHash' => 'boolean',
+        'permitCheckSignOnVerify' => 'boolean',
+        'permitCheckSignOnList' => 'boolean',
+        'permitCheckObjectHash' => 'boolean',
+        'permitListInvalidLinks' => 'boolean',
+        'permitHistoryLinksSign' => 'boolean',
+        'permitInstanceEntityAsAuthority' => 'boolean',
+        'permitDefaultEntityAsAuthority' => 'boolean',
+        'permitLocalSecondaryAuthorities' => 'boolean',
+        'permitRecoveryEntities' => 'boolean',
+        'permitRecoveryRemoveEntity' => 'boolean',
+        'permitInstanceEntityAsRecovery' => 'boolean',
+        'permitDefaultEntityAsRecovery' => 'boolean',
+        'permitAddLinkToSigner' => 'boolean',
+        'permitListOtherHash' => 'boolean',
+        'permitLocalisationStats' => 'boolean',
+        'permitFollowUpdates' => 'boolean',
+        'permitOnlineRescue' => 'boolean',
+        'permitLogs' => 'boolean',
+        'permitJavaScript' => 'boolean',
+        'logsLevel' => 'string',
+        'modeRescue' => 'boolean',
+        'cryptoLibrary' => 'string',
+        'cryptoHashAlgorithm' => 'string',
+        'cryptoSymetricAlgorithm' => 'string',
+        'cryptoAsymetricAlgorithm' => 'string',
+        'socialLibrary' => 'string',
+        'ioLibrary' => 'string',
+        'ioReadMaxLinks' => 'integer',
+        'ioReadMaxData' => 'integer',
+        'ioReadMaxUpload' => 'integer',
+        'ioTimeout' => 'integer',
+        'displayUnsecureURL' => 'boolean',
+        'displayNameSize' => 'integer',
+        'displayEmotions' => 'boolean',
+        'forceDisplayEntityOnTitle' => 'boolean',
+        'maxFollowedUpdates' => 'integer',
+        'permitSessionOptions' => 'boolean',
+        'permitSessionBuffer' => 'boolean',
+        'permitBufferIO' => 'boolean',
+        'sessionBufferSize' => 'integer',
+        'defaultCurrentEntity' => 'string',
+        'defaultApplication' => 'string',
+        'defaultObfuscateLinks' => 'boolean',
+        'defaultLinksVersion' => 'string',
+        'subordinationEntity' => 'string',)
 );
 
 /**
  * Default options values if not defined in option file.
  */
 define('LIST_OPTIONS_DEFAULT_VALUE', array(
-    'puppetmaster' => NEBULE_DEFAULT_PUPPETMASTER_ID,
-    'hostURL' => 'localhost',
-    'permitWrite' => true,
-    'permitWriteObject' => true,
-    'permitCreateObject' => true,
-    'permitSynchronizeObject' => true,
-    'permitProtectedObject' => false,
-    'permitWriteLink' => true,
-    'permitCreateLink' => true,
-    'permitSynchronizeLink' => true,
-    'permitUploadLink' => false,
-    'permitPublicUploadLink' => false,
-    'permitPublicUploadCodeMasterLink' => false,
-    'permitObfuscatedLink' => false,
-    'permitWriteEntity' => true,
-    'permitPublicCreateEntity' => true,
-    'permitWriteGroup' => true,
-    'permitWriteConversation' => false,
-    'permitCurrency' => false,
-    'permitWriteCurrency' => false,
-    'permitCreateCurrency' => false,
-    'permitWriteTransaction' => false,
-    'permitObfuscatedTransaction' => false,
-    'permitSynchronizeApplication' => true,
-    'permitPublicSynchronizeApplication' => true,
-    'permitDeleteObjectOnUnknowHash' => true,
-    'permitCheckSignOnVerify' => true,
-    'permitCheckSignOnList' => true,
-    'permitCheckObjectHash' => true,
-    'permitListInvalidLinks' => false,
-    'permitHistoryLinksSign' => false,
-    'permitInstanceEntityAsAuthority' => false,
-    'permitDefaultEntityAsAuthority' => false,
-    'permitLocalSecondaryAuthorities' => true,
-    'permitRecoveryEntities' => false,
-    'permitRecoveryRemoveEntity' => false,
-    'permitInstanceEntityAsRecovery' => false,
-    'permitDefaultEntityAsRecovery' => false,
-    'permitAddLinkToSigner' => true,
-    'permitListOtherHash' => false,
-    'permitLocalisationStats' => true,
-    'permitFollowUpdates' => true,
-    'permitOnlineRescue' => false,
-    'permitLogs' => false,
-    'permitJavaScript' => false,
-    'logsLevel' => 'NORMAL',
-    'modeRescue' => false,
-    'cryptoLibrary' => 'openssl',
-    'cryptoHashAlgorithm' => 'sha256',
-    'cryptoSymetricAlgorithm' => 'aes-256-ctr',
-    'cryptoAsymetricAlgorithm' => 'rsa2048',
-    'socialLibrary' => 'strict',
-    'ioLibrary' => 'ioFileSystem',
-    'ioReadMaxLinks' => 2000,
-    'ioReadMaxData' => 10000,
-    'ioReadMaxUpload' => 2000000,
-    'ioTimeout' => 1,
-    'displayUnsecureURL' => true,
-    'displayNameSize' => 128,
-    'displayEmotions' => false,
-    'forceDisplayEntityOnTitle' => false,
-    'maxFollowedUpdates' => 100,
-    'permitSessionOptions' => true,
-    'permitSessionBuffer' => true,
-    'permitBufferIO' => true,
-    'sessionBufferSize' => 1000,
-    'defaultCurrentEntity' => NEBULE_DEFAULT_PUPPETMASTER_ID,
-    'defaultApplication' => '0',
-    'defaultObfuscateLinks' => false,
-    'defaultLinksVersion' => '2.0',
-    'subordinationEntity' => '',)
+        'puppetmaster' => NEBULE_DEFAULT_PUPPETMASTER_ID,
+        'hostURL' => 'localhost',
+        'permitWrite' => true,
+        'permitWriteObject' => true,
+        'permitCreateObject' => true,
+        'permitSynchronizeObject' => true,
+        'permitProtectedObject' => false,
+        'permitWriteLink' => true,
+        'permitCreateLink' => true,
+        'permitSynchronizeLink' => true,
+        'permitUploadLink' => false,
+        'permitPublicUploadLink' => false,
+        'permitPublicUploadCodeMasterLink' => false,
+        'permitObfuscatedLink' => false,
+        'permitWriteEntity' => true,
+        'permitPublicCreateEntity' => true,
+        'permitWriteGroup' => true,
+        'permitWriteConversation' => false,
+        'permitCurrency' => false,
+        'permitWriteCurrency' => false,
+        'permitCreateCurrency' => false,
+        'permitWriteTransaction' => false,
+        'permitObfuscatedTransaction' => false,
+        'permitSynchronizeApplication' => true,
+        'permitPublicSynchronizeApplication' => true,
+        'permitDeleteObjectOnUnknowHash' => true,
+        'permitCheckSignOnVerify' => true,
+        'permitCheckSignOnList' => true,
+        'permitCheckObjectHash' => true,
+        'permitListInvalidLinks' => false,
+        'permitHistoryLinksSign' => false,
+        'permitInstanceEntityAsAuthority' => false,
+        'permitDefaultEntityAsAuthority' => false,
+        'permitLocalSecondaryAuthorities' => true,
+        'permitRecoveryEntities' => false,
+        'permitRecoveryRemoveEntity' => false,
+        'permitInstanceEntityAsRecovery' => false,
+        'permitDefaultEntityAsRecovery' => false,
+        'permitAddLinkToSigner' => true,
+        'permitListOtherHash' => false,
+        'permitLocalisationStats' => true,
+        'permitFollowUpdates' => true,
+        'permitOnlineRescue' => false,
+        'permitLogs' => false,
+        'permitJavaScript' => false,
+        'logsLevel' => 'NORMAL',
+        'modeRescue' => false,
+        'cryptoLibrary' => 'openssl',
+        'cryptoHashAlgorithm' => 'sha256',
+        'cryptoSymetricAlgorithm' => 'aes-256-ctr',
+        'cryptoAsymetricAlgorithm' => 'rsa2048',
+        'socialLibrary' => 'strict',
+        'ioLibrary' => 'ioFileSystem',
+        'ioReadMaxLinks' => 2000,
+        'ioReadMaxData' => 10000,
+        'ioReadMaxUpload' => 2000000,
+        'ioTimeout' => 1,
+        'displayUnsecureURL' => true,
+        'displayNameSize' => 128,
+        'displayEmotions' => false,
+        'forceDisplayEntityOnTitle' => false,
+        'maxFollowedUpdates' => 100,
+        'permitSessionOptions' => true,
+        'permitSessionBuffer' => true,
+        'permitBufferIO' => true,
+        'sessionBufferSize' => 1000,
+        'defaultCurrentEntity' => NEBULE_DEFAULT_PUPPETMASTER_ID,
+        'defaultApplication' => '0',
+        'defaultObfuscateLinks' => false,
+        'defaultLinksVersion' => '2.0',
+        'subordinationEntity' => '',)
 );
 
 /**
@@ -548,7 +548,6 @@ $configurationList = array();
 
 /**
  * Return option's value. Options presents on environment file are forced.
- * TODO faire un préchargement des options
  * @param string $name
  * @return null|string|boolean|integer
  */
@@ -991,8 +990,8 @@ function getModeRescue(): bool
         || (getConfiguration('permitOnlineRescue') === true
             && (filter_has_var(INPUT_GET, ARG_RESCUE_MODE)
                 || filter_has_var(INPUT_POST, ARG_RESCUE_MODE)
-                )
             )
+        )
     )
         return true;
     return false;
@@ -1080,7 +1079,7 @@ function nebReadObjText1line(string &$oid, int $maxsize = 128): string
     $data = '';
     o_getcontent($oid, $data);
     $data = strtok(filter_var($data, FILTER_SANITIZE_STRING), "\n");
-    if (! is_string($data))
+    if (!is_string($data))
         return '';
 
     $data = trim($data);
@@ -2223,7 +2222,7 @@ function e_generate($type, $size, $algohash, &$hashpubkey, &$hashprivkey, $passw
  * @param string $name
  * @return bool
  */
-function e_check(string $nid, string $name=''): bool
+function e_check(string $nid, string $name = ''): bool
 {
     if (!o_checkNID($nid, false)
         || $nid == '0'
