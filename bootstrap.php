@@ -334,26 +334,12 @@ $applicationWebsite = '';
 
 
 // ------------------------------------------------------------------------------------------
-/*
- * Pré-initialise des variables de la bibliothèque.
- * Ceci permet d'éviter une attaque par injection de variables passées en arguments de l'URL.
- */
 $nebuleLocalAuthorities = array();
 $nebuleSymetricAlgorithm = 'aes-256-ctr';
 $nebuleSymetricKeyLenght = '256';
 $nebuleAsymetricAlgorithm = 'rsa';
 $nebuleAsymetricKeyLenght = '2048';
-$nebuleCheckSignOnVerify = true;
-$nebuleCheckSignOnList = true;
-$nebuleListInvalidLinks = false;
-$nebulePermitCreateEntityWithoutPassword = false;
-$nebuleCreateHistory = false;
-$nebuleFollowXOnSameDate = true;
-$nebuleIOMaxlink = 2000;
-$nebuleIOMaxdata = 100000;
-$nebuleMaxRecurse = 20;
-$nebuleMaxUpdates = 500;
-$nebuleMimetypePathFile = '/etc/mime.types';
+$nebuleMaxRecurse = 20; // TODO vérifier l'utilité dans la lib PP.
 
 
 /*
@@ -664,132 +650,6 @@ $nebulePasswordEntite = '';
  */
 $nebuleLocalAuthorities = array();
 
-/*
- * Cryptographie - Fonction de chiffrement symétrique.
- */
-$forceValue = getConfiguration('cryptoSymetricAlgorithm');
-if ($forceValue != null) {
-    $nebuleSymetricAlgorithm = $forceValue;
-}
-if (!isset($nebuleSymetricAlgorithm)) {
-    $nebuleSymetricAlgorithm = 'aes-256-ctr';
-}
-
-/**
- * Cryptographie - Taille d'une clé et d'un bloc de chiffrement.
- * @todo
- */
-$nebuleSymetricKeyLenght = '256';
-
-/**
- * Cryptographie - Fonction de chiffrement asymétrique (càd avec clé publique/privée).
- * @todo
- */
-$nebuleAsymetricAlgorithm = 'rsa';
-
-/**
- * Cryptographie - Taille d'une clé publique/privée.
- * @todo
- */
-$nebuleAsymetricKeyLenght = '2048';
-
-/*
- * Autorise ou non la vérification de la signature des liens.
- * Utilisé par la fonction _neblibpp_l_vr et surtout lors d'un transfert.
- *
- * Devrait toujours être à true !
- *
- * @var boolean $nebuleCheckSignOnVerify
- */
-$forceValue = getConfiguration('permitCheckSignOnVerify');
-if ($forceValue != null) {
-    $nebuleCheckSignOnVerify = $forceValue;
-}
-if (!isset($nebuleCheckSignOnVerify)) {
-    $nebuleCheckSignOnVerify = true;
-}
-
-/*
- * Autorise ou non la vérification de la validité des liens lors de leur lecture, signature compris.
- * Utilisé par la fonction _neblibpp_l_ls1.
- *
- * Affecte les performances.
- *
- * @var boolean $nebuleCheckSignOnList
- */
-$forceValue = getConfiguration('permitCheckSignOnList');
-if ($forceValue != null) {
-    $nebuleCheckSignOnList = $forceValue;
-}
-if (!isset($nebuleCheckSignOnList)) {
-    $nebuleCheckSignOnList = true;
-}
-
-/*
- * Autorise ou non l'affichage des liens invalides.
- * C'est destiné à de l'affichage, les liens ne sont pas pris en compte.
- * Utilisé par la fonction _neblibpp_l_ls1.
- *
- * @var boolean $nebuleListInvalidLinks
- */
-if (!isset($nebuleListInvalidLinks)) {
-    $nebuleListInvalidLinks = false;
-}
-
-/*
- * Autorise ou non la création d'une entité sans mot de passe.
- *
- * Devrait toujours être à <u>false</u>.
- *
- * @var boolean $nebulePermitCreateEntityWithoutPassword
- */
-if (!isset($nebulePermitCreateEntityWithoutPassword)) {
-    $nebulePermitCreateEntityWithoutPassword = false;
-}
-
-/**
- * Autorise ou non la tenue d'un historique des derniers liens créés.
- * Cela crée un fichier de liens /l/f qui doit être nettoyé régulièrement.
- * C'est utilisé pour exporter plus facilement les derniers liens créés sur une entité déconnectée du réseau.
- *
- * @var boolean $nebuleCreateHistory
- */
-$nebuleCreateHistory = false;
-
-/**
- * Prendre en compte le lien x si la date est identique avec un autre lien, ou pas.
- */
-$nebuleFollowXOnSameDate = true;
-
-/**
- * Limite du nombre de liens à lire pour un objet, les suivants sont ignorés.
- * Utilisé par les fonctions _neblibpp_l_ls1 et _neblibpp_io_lr.
- */
-//$nebule_neblibpp_io_maxlink = 1000;
-$nebuleIOMaxlink = 2000;
-
-/**
- * Limite de la quantité de données en octets à lire pour un objet, le reste est ignorés.
- * Utilisé par les fonctions _neblibpp_o_dl1 et _neblibpp_io_or.
- */
-$nebuleIOMaxdata = 100000;
-
-/**
- * Définit le maximum de niveaux parcourus pour la recherche des objets enfants d'un objet.
- *
- * Affecte les performances.
- */
-//$nebule_maxrecurse = 10;
-$nebuleMaxRecurse = 20;
-
-/**
- * Définit le maximum de niveaux parcourus pour la recherche des mises à jours d'un objet.
- *
- * Affecte les performances.
- */
-//$nebule_maxupdates = 100;
-$nebuleMaxUpdates = 500;
-
 // Usage interne, échange d'informations entre fonctions et métrologie.
 $nebuleErrorMessage = 'pas de message';
 $nebuleResultList = array();
@@ -819,11 +679,6 @@ $nebuleCacheIsEncrypt = array();
 $nebuleCacheFindPrivKey = '';
 $nebuleCachelibpp_o_vr = array();
 $nebuleCachelibpp_l_grx = array();
-
-/**
- * Chemin du fichier pour trouver le type mime.
- */
-$nebuleMimetypePathFile = '/etc/mime.types';
 
 
 /*
@@ -2020,9 +1875,6 @@ function nebCreatObjHash(&$object)
  */
 function e_generate($type, $size, $algohash, &$hashpubkey, &$hashprivkey, $password = '')
 {
-    // Crée une nouvelle entité.
-    global $nebulePermitCreateEntityWithoutPassword;
-
     if (!getConfiguration('permitWrite'))
         return false;
     if (!getConfiguration('permitWriteEntity'))
@@ -2035,7 +1887,7 @@ function e_generate($type, $size, $algohash, &$hashpubkey, &$hashprivkey, $passw
         return false;
     if (($size != 512) && ($size != 1024) && ($size != 2048) && ($size != 4096))
         return false;
-    if ($password == '' && !$nebulePermitCreateEntityWithoutPassword)
+    if ($password == '')
         return false;
     // Génération de la clé.
     switch ($type) {
@@ -2248,7 +2100,7 @@ function e_addpasswd($pubkey, $privkey, $password)
     // - $pubkey : la clé public de l'entité, nécessaire pour un des liens.
     // - $privkey : la clé privée de l'entité.
     // - $password : le mot de passe à reconnaître pour la clé privée. Le mot de passe est vérifié sur la clé.
-    global $nebulePermitCreateEntityWithoutPassword, $nebuleSymetricKeyLenght, $nebuleSymetricAlgorithm, $nebuleAsymetricAlgorithm, $nebulePublicEntity;
+    global $nebuleSymetricKeyLenght, $nebuleSymetricAlgorithm, $nebuleAsymetricAlgorithm, $nebulePublicEntity;
 
     if (!getConfiguration('permitWrite'))
         return false;
@@ -2256,7 +2108,7 @@ function e_addpasswd($pubkey, $privkey, $password)
         return false;
     if (!getConfiguration('permitWriteLink'))
         return false;
-    if ($password == '' && !$nebulePermitCreateEntityWithoutPassword)
+    if ($password == '')
         return false;
     if (!io_testobjectpresent($pubkey))
         return false;
@@ -2319,9 +2171,7 @@ function e_addpasswd($pubkey, $privkey, $password)
  * @return bool
  */
 function e_changepasswd($entity, $password): bool
-{ // Change le mot de passe de l'entité.
-    global $nebulePermitCreateEntityWithoutPassword;
-
+{
     if (!getConfiguration('permitWrite'))
         return false;
     if (!getConfiguration('permitWriteObject'))
@@ -2330,7 +2180,7 @@ function e_changepasswd($entity, $password): bool
         return false;
     if ($entity == '')
         return false;
-    if ($password == '' && !$nebulePermitCreateEntityWithoutPassword)
+    if ($password == '')
         return false;
     // A faire...
     return true;
@@ -2548,7 +2398,6 @@ function o_downloadcontent(string $object, string $localisation): void
 {
     global $nebulePublicEntity,
            $nebuleSecurityMaster,
-           $nebuleIOMaxdata,
            $nebuleResultList;
 
     if (!getConfiguration('permitWrite')
@@ -2601,7 +2450,7 @@ function o_downloadcontent(string $object, string $localisation): void
     if ($distobj) {
         $localobj = fopen(LOCAL_OBJECTS_FOLDER . '/' . $idname, 'w'); // @todo refaire via les i/o.
         if ($localobj) {
-            while (($line = fgets($distobj, $nebuleIOMaxdata)) !== false) {
+            while (($line = fgets($distobj, getConfiguration('ioReadMaxData'))) !== false) {
                 fputs($localobj, $line);
             }
             fclose($localobj);
@@ -2842,10 +2691,10 @@ function l_generate(string $CHR, string $REQ, string $NID1, string $NID2 = '', s
  */
 function l_graphresolvone(&$object, &$visited, $present = true, $synchro = false, $restrict = false)
 {
-    global $nebuleMaxUpdates, $nebuleLocalAuthorities;
+    global $nebuleLocalAuthorities;
 
     $visited [$object] = true;
-    if (count($visited) > $nebuleMaxUpdates) {
+    if (count($visited) > getConfiguration('maxFollowedUpdates')) {
         return '0'; // Anti trou noir.
     }
     $links = array();
@@ -3007,7 +2856,9 @@ function l_find($object, &$table, $action, $srcobj, $dstobj, $metobj, $withinval
     // Les liens sont triés par ordre chronologique et les liens marqués comme supprimés sont retirés de la liste.
     //
     // Version non inclusive, càd liens x de l'entité courante valable pour tous les liens ciblés.
-    global $nebulePublicEntity, $nebuleFollowXOnSameDate; // $nebuleCheckSignOnList,
+    global $nebulePublicEntity;
+
+    $followXOnSameDate = true; // TODO à supprimer.
 
     $linkdate = array();
     $tmptable = array();
@@ -3029,7 +2880,7 @@ function l_find($object, &$table, $action, $srcobj, $dstobj, $metobj, $withinval
         if ($metobj != '' && $tline [7] != $metobj)
             continue 1;
         foreach ($tmptable as $vline) {
-            if (($vline [4] == 'x') && ($tline [4] != 'x') && ($tline [5] == $vline [5]) && ($tline [6] == $vline [6]) && ($tline [7] == $vline [7]) && (($vline [2] == $tline [2]) || ($vline [2] == $nebulePublicEntity)) && ((($nebuleFollowXOnSameDate) && (strtotime($tline [3]) < strtotime($vline [3]))) || (strtotime($tline [3]) <= strtotime($vline [3]))))
+            if (($vline [4] == 'x') && ($tline [4] != 'x') && ($tline [5] == $vline [5]) && ($tline [6] == $vline [6]) && ($tline [7] == $vline [7]) && (($vline [2] == $tline [2]) || ($vline [2] == $nebulePublicEntity)) && ((($followXOnSameDate) && (strtotime($tline [3]) < strtotime($vline [3]))) || (strtotime($tline [3]) <= strtotime($vline [3]))))
                 continue 2;
         }
         foreach ($table as $vline) // Suppression de l'affichage des liens en double, même à des dates différentes.
@@ -3084,7 +2935,7 @@ function l_find($object, &$table, $action, $srcobj, $dstobj, $metobj, $withinval
  */
 function l_findinclusive($object, &$table, $action, $srcobj, $dstobj, $metobj, $withinvalid = false): void
 {
-    global $nebuleFollowXOnSameDate;
+    $followXOnSameDate = true; // TODO à supprimer.
 
     $linkdate = array();
     $tmptable = array();
@@ -3127,7 +2978,7 @@ function l_findinclusive($object, &$table, $action, $srcobj, $dstobj, $metobj, $
                 && ($vline [9] == 1
                     || $vline [9] == -1
                 )
-                && (($nebuleFollowXOnSameDate
+                && (($followXOnSameDate
                         && strtotime($tline [3]) < strtotime($vline [3])
                     )
                     || strtotime($tline [3]) <= strtotime($vline [3])
@@ -3186,7 +3037,9 @@ function l_listlinks($object, &$table, $filtreact = '-', $filtreobj = '', $withi
     // - $withinvalid optionnel pour autoriser la lecture des liens invalides.
     //
     // Les liens sont triés par ordre chronologique et les liens marqués comme supprimés sont retirés de la liste.
-    global $nebulePublicEntity, $nebuleFollowXOnSameDate;
+    global $nebulePublicEntity;
+
+    $followXOnSameDate = true; // TODO à supprimer.
 
     $linkdate = array();
     $tmptable = array();
@@ -3203,7 +3056,7 @@ function l_listlinks($object, &$table, $filtreact = '-', $filtreobj = '', $withi
             continue 1; // Suppression de l'affichage des liens x.
         foreach ($tmptable as $vline) // Suppression des liens marqués supprimés.
         {
-            if (($vline [4] == 'x') && ($tline [4] != 'x') && ($tline [5] == $vline [5]) && ($tline [6] == $vline [6]) && ($tline [7] == $vline [7]) && (($vline [2] == $tline [2]) || ($vline [2] == $nebulePublicEntity)) && ($vline [9] == 1 || $vline [9] == -1) && ((($nebuleFollowXOnSameDate) && (strtotime($tline [3]) < strtotime($vline [3]))) || (strtotime($tline [3]) <= strtotime($vline [3]))))
+            if (($vline [4] == 'x') && ($tline [4] != 'x') && ($tline [5] == $vline [5]) && ($tline [6] == $vline [6]) && ($tline [7] == $vline [7]) && (($vline [2] == $tline [2]) || ($vline [2] == $nebulePublicEntity)) && ($vline [9] == 1 || $vline [9] == -1) && ((($followXOnSameDate) && (strtotime($tline [3]) < strtotime($vline [3]))) || (strtotime($tline [3]) <= strtotime($vline [3]))))
                 continue 2;
         }
         foreach ($table as $vline) // Suppression de l'affichage des liens en double, même à des dates différentes.
@@ -3249,13 +3102,15 @@ function l_listonelink(&$object, &$table, $filtreact = '-', $filtreobj = '', $wi
     // - $filtreact filtre optionnel sur l'action.
     // - $filtreobj filtre optionnel sur un objet source, destination ou meta.
     // - $withinvalid optionnel pour autoriser la lecture des liens invalides.
-    global $nebuleIOMaxlink, $nebuleCheckSignOnList, $nebuleListInvalidLinks, $nebuleMetrologyLinkList;
+    global $nebuleMetrologyLinkList;
+
+    $checkSignOnList = getConfiguration('permitCheckSignOnList');
 
     if ($object == '0')
         return;
     if (!io_testlinkpresent($object))
         return;
-    if (!$nebuleListInvalidLinks)
+    if (!getConfiguration('permitListInvalidLinks'))
         $withinvalid = false; // Si pas autorisé, refuse de lire les liens invalides.
     if ($filtreact == '')
         $filtreact = '-';
@@ -3263,6 +3118,7 @@ function l_listonelink(&$object, &$table, $filtreact = '-', $filtreobj = '', $wi
     $n = 0; // indice dans la table des resultats.
     $tline = array(); // table d'un lien en cours de lecture et d'analyse.
     $lines = io_linksread($object); // liens a lire et analyser.
+    $IOMaxlink = getConfiguration('ioReadMaxLinks');
     foreach ($lines as $line) {
         $i = 1;
         if (substr($line, 0, 21) == 'nebule/liens/version/') {
@@ -3295,7 +3151,7 @@ function l_listonelink(&$object, &$table, $filtreact = '-', $filtreobj = '', $wi
             $okfiltre = false; // Si le lien est invalide, le filtre.
         if ($okfiltre) // Si le lien correspond au filtre, l'enregistre dans la table des resultats.
         {
-            if ($nebuleCheckSignOnList)
+            if ($checkSignOnList)
                 $verify = l_verifylink(trim($line));
             else
                 $verify = -1;
@@ -3315,7 +3171,7 @@ function l_listonelink(&$object, &$table, $filtreact = '-', $filtreobj = '', $wi
                 $table [$n] [11] = 0; // Pour pondération.
                 $n++;
             }
-            if ($n >= $nebuleIOMaxlink) {
+            if ($n >= $IOMaxlink) {
                 break 1; // TODO WARNING --- BEURK ---
             }
         }
@@ -3646,7 +3502,7 @@ function l_checkRS(string &$rs, string &$bh, string &$bl): bool
  */
 function l_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): bool
 {
-    global $nebuleCheckSignOnVerify, $nebuleMetrologyLinkVerify;
+    global $nebuleMetrologyLinkVerify;
 
     if (strlen($sig) > 4096) return false; // TODO à revoir.
 
@@ -3674,9 +3530,9 @@ function l_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): bool
 
     // --- --- --- --- --- --- --- --- ---
     // Check sign.
-    if (!$nebuleCheckSignOnVerify) return true;
+    if (!getConfiguration('permitCheckSignOnVerify')) return true;
     if (io_testobjectpresent($nid)) {
-        $hash = hash(getConfiguration('cryptoHashAlgorithm'), $bh . '_' . $bl); // TODO remplacer getOption('cryptoHashAlgorithm') par une convertion des algo et size.
+        $hash = hash(getConfiguration('cryptoHashAlgorithm'), $bh . '_' . $bl); // TODO remplacer getConfiguration('cryptoHashAlgorithm') par une convertion des algo et size.
 
         // Read signer's public key.
         o_checkcontent($nid);
@@ -3955,9 +3811,8 @@ function io_testlinkpresent(&$nid): bool
  */
 function io_testobjectpresent(&$nid): bool
 {
-    if (file_exists(LOCAL_OBJECTS_FOLDER . '/' . $nid)) {
+    if (file_exists(LOCAL_OBJECTS_FOLDER . '/' . $nid))
         return true;
-    }
     return false;
 }
 
@@ -3970,17 +3825,15 @@ function io_testobjectpresent(&$nid): bool
  */
 function io_linksread(&$o)
 {
-    global $nebuleIOMaxlink;
-
-    if (!file_exists(LOCAL_LINKS_FOLDER . '/' . $o)) {
+    if (!file_exists(LOCAL_LINKS_FOLDER . '/' . $o))
         return false;
-    }
     $n = 0;
     $t = array();
     $l = file(LOCAL_LINKS_FOLDER . '/' . $o);
+    $m = getConfiguration('ioReadMaxLinks');
     foreach ($l as $k) {
         $t [$n] = $k;
-        if ($n > $nebuleIOMaxlink) {
+        if ($n > $m) {
             break 1;
         }
         $n++;
@@ -3998,10 +3851,10 @@ function io_linksread(&$o)
  */
 function io_objectread(&$o, $m = 0)
 {
-    global $nebuleIOMaxdata, $nebuleMetrologyObjectList;
+    global $nebuleMetrologyObjectList;
 
     if ($m == 0) {
-        $m = $nebuleIOMaxdata;
+        $m = getConfiguration('ioReadMaxData');
     }
     if (!file_exists(LOCAL_OBJECTS_FOLDER . '/' . $o)) {
         return false;
@@ -6949,7 +6802,7 @@ function bootstrapDisplayApplication0()
         }
 
         // Liste les applications reconnues par l'entité instance du serveur, si autorité locale et pas en mode de récupération.
-        if ($nebuleInstance->getOption('permitInstanceEntityAsAuthority')
+        if ($nebuleInstance->getConfiguration('permitInstanceEntityAsAuthority')
             && !$nebuleInstance->getModeRescue()
         ) {
             $linksList = $instanceAppsID->readLinksFilterFull($nebuleInstance->getInstanceEntity(), '', 'f', $refAppsID, '', $refAppsID);
@@ -6961,7 +6814,7 @@ function bootstrapDisplayApplication0()
         }
 
         // Liste les applications reconnues par l'entité par défaut, si autorité locale et pas en mode de récupération.
-        if ($nebuleInstance->getOption('permitDefaultEntityAsAuthority')
+        if ($nebuleInstance->getConfiguration('permitDefaultEntityAsAuthority')
             && !$nebuleInstance->getModeRescue()
         ) {
             $linksList = $instanceAppsID->readLinksFilterFull($nebuleInstance->getDefaultEntity(), '', 'f', $refAppsID, '', $refAppsID);
@@ -6993,7 +6846,7 @@ function bootstrapDisplayApplication0()
                     $activated = true;
                 }
             }
-            if ($application == $nebuleInstance->getOption('defaultApplication')) {
+            if ($application == $nebuleInstance->getConfiguration('defaultApplication')) {
                 $activated = true;
             }
             if (!$activated) {
@@ -7074,7 +6927,7 @@ function bootstrapDisplayApplication1()
     // Affiche la documentation.
     echo '<div id="layout_documentation">' . "\n";
     echo ' <div id="title_documentation"><p>Documentation technique de ' . $nebuleInstance->__toString() . '<br />' . "\n";
-    echo '  Version ' . $nebuleInstance->getOption('defaultLinksVersion') . ' - ' . $nebuleLibVersion . ' ' . $nebuleLibLevel . '<br />' . "\n";
+    echo '  Version ' . $nebuleInstance->getConfiguration('defaultLinksVersion') . ' - ' . $nebuleLibVersion . ' ' . $nebuleLibLevel . '<br />' . "\n";
     echo '  (c) ' . $nebuleLicence . ' ' . $nebuleAuthor . ' - <a href="' . $nebuleWebsite . '">' . $nebuleWebsite . "</a></p></div>\n";
     echo ' <div id="content_documentation">' . "\n";
     $instance->display_content();
@@ -7271,7 +7124,7 @@ if (sizeof($bootstrapBreak) == 0) {
         }
     } elseif ($bootstrapServerEntityDisplay) {
         if (file_exists(LOCAL_ENTITY_FILE)) {
-            echo file_get_contents(LOCAL_ENTITY_FILE, false, null, -1, $nebuleIOMaxdata);
+            echo file_get_contents(LOCAL_ENTITY_FILE, false, null, -1, getConfiguration('ioReadMaxData'));
         } else {
             echo '0';
         }
