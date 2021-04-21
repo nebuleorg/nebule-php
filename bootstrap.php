@@ -63,7 +63,6 @@ ob_start();
  */
 
 // Command line args.
-
 define('ARG_BOOTSTRAP_BREAK', 'b');
 define('ARG_FLUSH_SESSION', 'f');
 define('ARG_UPDATE_APPLICATION', 'u');
@@ -75,8 +74,8 @@ define('ARG_NODE_OBJECT', 'o');
 define('ARG_NODE_LINK', 'l');
 define('ARG_SERVER_ENTITY', 'e');
 
-
 // ------------------------------------------------------------------------------------------
+
 // Logs setting and initializing.
 /**
  * Log unique ID for one run.
@@ -107,8 +106,8 @@ function addLog(string $message): void
     syslog(LOG_INFO, 'LogT=' . (microtime(true) - $metrologyStartTime) . ' LogL=B LogM="' . $message . '"');
 }
 
-
 // ------------------------------------------------------------------------------------------
+
 // Objets de référence.
 
 // Constante de référence pour la recherche du bootstrap.
@@ -155,8 +154,8 @@ define('BOOTSTRAP_FIRST_URL_TO_OPTION', '?a=2121510000000000006e6562756c65206170
 // Constante du nom du fichier contenant le bootstrap.
 define('BOOTSTRAP_FILE_NAME', 'index.php');
 
-
 // ------------------------------------------------------------------------------------------
+
 // First synchronization.
 define('BOOTSTRAP_FIRST_LOCALISATIONS', array(
         'http://code.master.nebule.org',
@@ -245,28 +244,29 @@ $nebuleFirstReservedObjects = array(
 );
 
 /*
- * Constante de taille du nom d'une nouvelle entité locale de serveur.
+ * Constante de taille du nom d'une nouvelle entité locale de serveur. FIXME
  */
 define('FIRST_NAME_SIZE', 6);
 
 /*
- * Constante de taille du mot de passe d'une nouvelle entité locale de serveur.
+ * Constante de taille du mot de passe d'une nouvelle entité locale de serveur. FIXME
  */
 define('FIRST_PASSWORD_SIZE', 14);
 
 /*
- * Constante de temps d'attente entre deux pages lors de la première connexion.
+ * Constante de temps d'attente entre deux pages lors de la première connexion. FIXME
  */
 define('FIRST_RELOAD_DELAY', 3000);
 
-
 // ------------------------------------------------------------------------------------------
-// Active la possibilité d'ouvrir du code dans des fichiers externes.
+
+// Active la possibilité d'ouvrir du code dans des fichiers externes. TODO à déplacer
 ini_set('allow_url_fopen', '1');
 ini_set('allow_url_include', '1');
 
-
 // ------------------------------------------------------------------------------------------
+
+// Bootstrap break management.
 /**
  * Variable de raison d'interruption de chargement du bootstrap.
  */
@@ -289,9 +289,8 @@ if (filter_has_var(INPUT_GET, ARG_BOOTSTRAP_BREAK)
 }
 
 // ------------------------------------------------------------------------------------------
-/*
- * Préparation des variables des applications.
- */
+
+// Préparation des variables des applications.
 /**
  * Nom de l'application.
  */
@@ -332,8 +331,9 @@ $applicationAuthor = '';
  */
 $applicationWebsite = '';
 
-
 // ------------------------------------------------------------------------------------------
+
+// TODO à déplacer ou supprimer
 $nebuleLocalAuthorities = array();
 $nebuleSymetricAlgorithm = 'aes-256-ctr';
 $nebuleSymetricKeyLenght = '256';
@@ -357,7 +357,7 @@ $nebuleMaxRecurse = 20; // TODO vérifier l'utilité dans la lib PP.
 
 define('NEBULE_LIBPP_VERSION', '020210316');
 define('NEBULE_LIBPP_MODE_BOOTSTRAP', true);
-define('LINK_VERSION', 'nebule/liens/version/2.0');
+define('LINK_VERSION', '2:0');
 define('NEBULE_DEFAULT_PUPPETMASTER_ID', '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256');
 define('NEBULE_ENVIRONMENT_FILE', 'nebule.env');
 define('LOCAL_ENTITY_FILE', 'e');
