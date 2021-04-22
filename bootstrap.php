@@ -3,6 +3,8 @@ declare(strict_types=1);
 namespace Nebule\Bootstrap;
 //use nebule;
 // ------------------------------------------------------------------------------------------
+use function Sodium\add;
+
 $bootstrapName = 'bootstrap';
 $bootstrapSurname = 'nebule/bootstrap';
 $bootstrapDescription = 'Loader of library and applications.';
@@ -273,7 +275,7 @@ if (filter_has_var(INPUT_GET, ARG_BOOTSTRAP_BREAK)
     || filter_has_var(INPUT_POST, ARG_BOOTSTRAP_BREAK)
 ) {
     addLog($bootstrapName . ' - ask user interrupt');
-    $bootstrapBreak['12'] = 'User interrupt.';
+    setBootstrapBreak('12', 'User interrupt.');
     $bootstrapUserBreak = true;
 }
 
@@ -961,7 +963,7 @@ function nebReadObjText(string &$oid, int $maxsize = 4096): string
 {
     $data = '';
     o_getcontent($oid, $data);
-    $data = filterprinteablestring(filter_var($data, FILTER_SANITIZE_STRING));
+    $data = filterPrinteableString(filter_var($data, FILTER_SANITIZE_STRING));
 
     if (strlen($data) > $maxsize) {
         $data = substr($data, 0, ($maxsize - 3)) . '...';
@@ -2441,7 +2443,7 @@ function o_downloadContent(string $object, string $localisation): void
     unset($table, $hashtype);
 
     // Téléchargement de l'objet.
-    $hexid = getpseudorandom(8); // id pour fichier temporaire.
+    $hexid = getPseudoRandom(8); // id pour fichier temporaire.
     $id = bin2hex($hexid);
     $idname = '_neblibpp_o_dl1_' . $id . '-' . $object;
     $distobj = fopen($localisation . '/o/' . $object, 'r');
@@ -2526,24 +2528,7 @@ function o_getNID(string $data, string $algo = ''): string
     if ($algo == '')
         $algo = getConfiguration('cryptoHashAlgorithm');
 
-    return hash(getOpensslTranslatedAlgo($algo), $data) . '.' . $algo;
-}
-
-function getOpensslTranslatedAlgo(string $algo): string
-{
-    switch ($algo)
-    {
-        case 'sha2.128' :
-            return 'sha128';
-        case 'sha2.256' :
-            return 'sha256';
-        case 'sha2.384' :
-            return 'sha384';
-        case 'sha2.512' :
-            return 'sha512';
-        default :
-            return getConfiguration('cryptoHashAlgorithm');
-    }
+    return getHash($algo, $data) . '.' . $algo;
 }
 
 /**
@@ -3766,7 +3751,7 @@ function io_checklinkfolder(): bool
     if (getConfiguration('permitWrite')
         && getConfiguration('permitWriteLink')
     ) {
-        $data = o_getNID(getpseudorandom(8) . date(DATE_ATOM));
+        $data = o_getNID(getPseudoRandom(8) . date(DATE_ATOM));
         $name = LOCAL_LINKS_FOLDER . '/writest' . $data;
         file_put_contents($name, $data);
         if (!file_exists($name)
@@ -3800,7 +3785,7 @@ function io_checkobjectfolder()
     if (getConfiguration('permitWrite')
         && getConfiguration('permitWriteObject')
     ) {
-        $data = o_getNID(getpseudorandom(8) . date(DATE_ATOM));
+        $data = o_getNID(getPseudoRandom(8) . date(DATE_ATOM));
         $name = LOCAL_OBJECTS_FOLDER . '/writest' . $data;
         file_put_contents($name, $data);
         if (!file_exists($name)
@@ -3979,29 +3964,62 @@ function io_close(): void
  * ------------------------------------------------------------------------------------------
  */
 
-/**
+/** FIXME
  * Filtre les chaines de caractères non imprimables mais conserve les retours chariots.
  *
- * @param string $i
+ * @param string $data
  * @return string
  */
-function filterprinteablestring($i)
+function filterPrinteableString($data)
 {
-    return preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', $i);
+    return preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', $data);
 }
 
 /**
- * Génération d'aléa pseudo aléatoire.
- * Retourne un nombre n d'octets.
+ * Calculate hash of data with algo.
+ * Use OpenSSL library.
  *
- * @param int $n
+ * @param string $algo
+ * @param string $data
  * @return string
  */
-function getpseudorandom($n = 32): string
+function getHash(string $algo, string &$data): string
+{
+    $translatedAlgo = getConfiguration('cryptoHashAlgorithm');
+
+    // Translate algo name into OpenSSL algo name.
+    switch ($algo)
+    {
+        case 'sha2.128' :
+            $translatedAlgo = 'sha128';
+            break;
+        case 'sha2.256' :
+            $translatedAlgo = 'sha256';
+            break;
+        case 'sha2.384' :
+            $translatedAlgo = 'sha384';
+            break;
+        case 'sha2.512' :
+            $translatedAlgo = 'sha512';
+            break;
+    }
+
+    return hash($translatedAlgo, $data);
+}
+
+/** FIXME
+ * Génération d'aléa pseudo aléatoire.
+ * Retourne un nombre n d'octets.
+ * Use OpenSSL library.
+ *
+ * @param int $count
+ * @return string
+ */
+function getPseudoRandom($count = 32): string
 {
     global $nebuleServerEntite;
 
-    if ($n == 0 || !is_int($n))
+    if ($count == 0 || !is_int($count))
         return '';
 
     // Résultat à remplir.
@@ -4014,8 +4032,8 @@ function getpseudorandom($n = 32): string
     $intcount = date(DATE_ATOM) . microtime(false) . NEBULE_LIBPP_VERSION . $nebuleServerEntite;
 
     // Boucle de remplissage.
-    while (strlen($result) < $n) {
-        $diffsize = $n - strlen($result);
+    while (strlen($result) < $count) {
+        $diffsize = $count - strlen($result);
 
         // Fait évoluer le compteur interne.
         $intcount = hash($algo, $intcount);
@@ -4032,9 +4050,6 @@ function getpseudorandom($n = 32): string
         // Ajoute la sortie au résultat final.
         $result .= $outvalue;
     }
-
-    // Nettoyage.
-    unset($intcount, $outvalue, $diffsize);
 
     return $result;
 }
@@ -4063,23 +4078,20 @@ libppInit();
 /*
  * Vérifie que la bibliothèque nebule PHP PP s'est bien chargée.
  */
-if (!libppCheckAll()) {
-    $bootstrapBreak['21'] = 'Library init error';
-}
+if (!libppCheckAll())
+    setBootstrapBreak('21', 'Library init error');
 
 /*
  * Vérifie que le dossier des liens est fonctionnel.
  */
-if (!io_checklinkfolder()) {
-    $bootstrapBreak['22'] = "Library i/o link's folder error";
-}
+if (!io_checklinkfolder())
+    setBootstrapBreak('22', "Library i/o link's folder error");
 
 /*
  * Vérifie que le dossier des objets est fonctionnel.
  */
-if (!io_checkobjectfolder()) {
-    $bootstrapBreak['23'] = "Library i/o object's folder error";
-}
+if (!io_checkobjectfolder())
+    setBootstrapBreak('23', "Library i/o object's folder error");
 
 
 // ------------------------------------------------------------------------------------------
@@ -4308,7 +4320,8 @@ if (libppCheckAll()) {
     session_start();
 
     // Enregistre l'identifiant de session pour le suivi d'un utilisateur.
-    addLog('session hash id ' . hash('sha256', session_id()));
+    $sessionId = session_id();
+    addLog('session hash id ' . getHash('sha2.256', $sessionId));
 
     // Vérifie l'ID de départ de l'application mémorisé.
     if (isset($_SESSION['bootstrapApplicationStartID'])
@@ -4545,7 +4558,7 @@ if (libppCheckAll()) {
             addLog('finding nebule library error');
 
             $bootstrapLibraryID = '';
-            $bootstrapBreak[31] = 'Finding nebule library error.';
+            setBootstrapBreak('31', 'Finding nebule library error.');
         }
     }
 }
@@ -4584,7 +4597,6 @@ function loadLibrary(): void
 {
     global $bootstrapName,
            $loggerSessionID,
-           $bootstrapBreak,
            $nebuleInstance,
            $bootstrapLibraryID,
            $bootstrapLibraryInstanceSleep;
@@ -4610,7 +4622,7 @@ function loadLibrary(): void
         addLog('library nebule error');
 
         // Sinon erreur au chargement de la bibliothèque.
-        $bootstrapBreak['41'] = 'Library nebule error';
+        setBootstrapBreak('41', 'Library nebule error');
     }
 
     return;
@@ -4630,6 +4642,21 @@ function loadLibrary(): void
  ------------------------------------------------------------------------------------------
  */
 
+
+/**
+ * Add a break on the bootstrap.
+ * In the end, this stop the loading of any application code and show the bootstrap break page.
+ *
+ * @param string $errorCode
+ * @param string $errorDesc
+ */
+function setBootstrapBreak(string $errorCode, string $errorDesc): void
+{
+    global $bootstrapBreak;
+
+    $bootstrapBreak[$errorCode] = $errorDesc;
+    addLog('bootstrap break code=' . $errorCode . ' msg="' . $errorDesc . '"');
+}
 
 // ------------------------------------------------------------------------------------------
 /**
@@ -4671,7 +4698,7 @@ if (!$ok) {
     addLog('unknown bootstrap hash - critical');
 
     // Arrêt du bootstrap.
-    $bootstrapBreak['52'] = 'Unknown bootstrap hash';
+    setBootstrapBreak('52', 'Unknown bootstrap hash');
 }
 unset($hash, $hashRef, $links, $link, $autority);
 
@@ -4690,7 +4717,7 @@ if (filter_has_var(INPUT_GET, ARG_SERVER_ENTITY)
 ) {
     // Affichage de l'entité du serveur.
     $bootstrapServerEntityDisplay = true;
-    $bootstrapBreak['52'] = 'Ask server instance';
+    setBootstrapBreak('52', 'Ask server instance');
 }
 
 
@@ -5357,8 +5384,10 @@ function bootstrapDisplayOnBreak(): void
         } ?>
         <?php if (sizeof($bootstrapBreak) != 0 && isset($bootstrapBreak[12])) {
             echo "<a href=\"?a=0\">&gt; Return to application 0</a><br />\n";
-        } ?>
-        <a href="?f">&gt; Flush PHP session</a> (<?php echo substr(hash('sha256', session_id()), 0, 6); ?>)<br/>
+        }
+        $sessionId = session_id();
+        ?>
+        <a href="?f">&gt; Flush PHP session</a> (<?php echo substr(getHash('sha256', $sessionId), 0, 6); ?>)<br/>
     </div>
     <div class="parts">
         <span class="partstitle">#2 <?php echo $bootstrapName; ?> nebule library PP</span><br/>
@@ -5898,7 +5927,7 @@ if (file_exists(LOCAL_ENTITY_FILE)
     addLog($bootstrapName . ' - need first synchronisation');
 
     // Interruption du chargement.
-    $bootstrapBreak['71'] = 'Need first synchronisation.';
+    setBootstrapBreak('71', 'Need first synchronisation.');
 
     // Nécessite une première synchronisation.
     $bootstrapNeedFirstSynchronization = true;
@@ -5910,7 +5939,7 @@ if ($serverEntite == ''
     || !io_testlinkpresent($serverEntite)
     || !io_testobjectpresent($serverEntite)
 ) {
-    $bootstrapBreak['72'] = "Local server entity error";
+    setBootstrapBreak('72', 'Local server entity error');
 
     // Nécessite une première synchronisation.
     $bootstrapNeedFirstSynchronization = true;
