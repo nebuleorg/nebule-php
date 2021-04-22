@@ -69,7 +69,7 @@ define('ARG_UPDATE_APPLICATION', 'u');
 define('ARG_SWITCH_APPLICATION', 'a');
 define('ARG_RESCUE_MODE', 'r');
 define('ARG_INLINE_DISPLAY', 'i');
-define('ARG_STATIC_DISPLAY', 's');
+define('ARG_STATIC_DISPLAY', 's'); // TODO not used yet
 define('ARG_NODE_OBJECT', 'o');
 define('ARG_NODE_LINK', 'l');
 define('ARG_SERVER_ENTITY', 'e');
@@ -108,22 +108,22 @@ function addLog(string $message): void
 
 // ------------------------------------------------------------------------------------------
 
-// Objets de référence.
+// Objects used as reference.
 
 // Constante de référence pour la recherche du bootstrap.
-define('REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP', 'nebule/objet/interface/web/php/bootstrap');
+define('REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP', 'nebule/objet/interface/web/php/bootstrap');
 
 // Constante de référence pour la recherche de la bibliothèque.
-define('REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE', 'nebule/objet/interface/web/php/bibliotheque');
+define('REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE', 'nebule/objet/interface/web/php/bibliotheque');
 
 // Constante de référence pour la recherche des applications.
-define('REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS', 'nebule/objet/interface/web/php/applications');
+define('REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS', 'nebule/objet/interface/web/php/applications');
 
 // Constante de référence pour le non pré-chargement des applications.
-define('REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS_DIRECT', 'nebule/objet/interface/web/php/applications/direct');
+define('REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_DIRECT', 'nebule/objet/interface/web/php/applications/direct');
 
 // Constante de référence pour le non pré-chargement des applications.
-define('REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS_ACTIVE', 'nebule/objet/interface/web/php/applications/active');
+define('REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_ACTIVE', 'nebule/objet/interface/web/php/applications/active');
 
 // Constante image de référence du bootstrap.
 define('REFERENCE_BOOTSTRAP_ICON', "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAARoElEQVR42u2dbbCcZX2Hrz1JMBSUAoEECCiVkLAEEgKkSBAwgFgGwZFb6NBOSVJn0H5peXXqSwVrdQZF6Cd0RiQ4kiH415ZpOlUECpKABBLewkIAayFAAgRCGxBylJx+2KdDwHCS7Ov9PHtdMzt8IGf32f/ev+v+388riIiIiIiIiIiIiIhINalZgvKTUtoTmFy89gUmAXsDewC7F69dgV2AnYGdgLFb/P4jwO+BYeAN4HVgI/AqsAF4BXgRWAc8DzwLrImIV6y+ApDehHx/4LDiVQemAR8G9uzzpr0M/Bp4HGgAjwCPRMQafzUFIK2F/XDgOGB28TrkXf9kJMPfbmvb9BiwvHgtjYiH/XUVgLwz7GOBU4GTgZOKGT7noLcrhkeA24BbgVsi4neOAgUwaKE/ETgTOB04aMDL8RSwBLg5Iu5wdCiAKgb+j4BzgXOKmV7em1uBG4FFEfGG5VAAZQ39B4AFwHnAzAq19L1cMjwA/BC4NiI2WhoFUIbg/zXwOeAoQ99RGdwPfDcirrUsCiC30M8BLgQ+beh7IoOfAFdFxDLLogD6FfoacBFwCc2Tbgx972XwInAF8J2IGLEsCqAXwd8fuByY72yfVVdwHfBVT0BSAN0K/mzgm8Bcq5E1twN/HxHLLYUC6ETw5wJXAYc725eqK3gYuCAibrckCqCV4J8IXEPznHuDX14RPA583pOMFMD2Bn9msZ6cafArJYIHgfkR8aAlUQBbC/5EYCHwCYNf
@@ -680,61 +680,6 @@ $nebuleCacheFindPrivKey = '';
 $nebuleCachelibpp_o_vr = array();
 $nebuleCachelibpp_l_grx = array();
 
-
-/*
- * ------------------------------------------------------------------------------------------
- * Initialisation.
- * ------------------------------------------------------------------------------------------
- */
-libppInit();
-
-// Recherche et mémorise l'entité locale du serveur.
-if (file_exists(LOCAL_ENTITY_FILE)
-    && is_file(LOCAL_ENTITY_FILE)
-) {
-    $nebuleServerEntite = filter_var(strtok(trim(file_get_contents(LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-} else {
-    $nebuleServerEntite = '';
-}
-if ($nebuleServerEntite == ''
-    || strlen($nebuleServerEntite) < ($nebuleSymetricKeyLenght / 4)
-    || !ctype_xdigit($nebuleServerEntite)
-    || !io_testlinkpresent($nebuleServerEntite)
-    || !io_testobjectpresent($nebuleServerEntite)
-) {
-    $nebuleServerEntite = $nebuleCodeMaster;
-}
-
-// Si autorisée, l'entité locale du serveur devient autorité locale.
-if (getConfiguration('permitInstanceEntityAsAuthority') && !getModeRescue())
-    $nebuleLocalAuthorities[3] = $nebuleServerEntite;
-
-// Recherche et mémorise l'entité locale par défaut.
-$nebuleDefaultEntity = getConfiguration('defaultCurrentEntity');
-if ($nebuleDefaultEntity == ''
-    || strlen($nebuleDefaultEntity) < ($nebuleSymetricKeyLenght / 4)
-    || !ctype_xdigit($nebuleDefaultEntity)
-    || !io_testlinkpresent($nebuleDefaultEntity)
-    || !io_testobjectpresent($nebuleDefaultEntity)
-)
-    $nebuleDefaultEntity = $nebuleCodeMaster;
-
-// Si autorisée, l'entité locale par défaut devient autorité locale.
-if (getConfiguration('permitDefaultEntityAsAuthority') && !getModeRescue())
-    $nebuleLocalAuthorities[4] = $nebuleDefaultEntity;
-
-// Recherche et mémorise l'entité courante.
-if (!isset($nebulePublicEntity)
-    || $nebulePublicEntity == ''
-    || strlen($nebulePublicEntity) < ($nebuleSymetricKeyLenght / 4)
-    || !ctype_xdigit($nebulePublicEntity)
-    || !io_testlinkpresent($nebulePublicEntity)
-    || !io_testobjectpresent($nebulePublicEntity)
-) {
-    $nebulePublicEntity = $nebuleDefaultEntity;
-}
-
-
 /*
  * ------------------------------------------------------------------------------------------
  * Fonctions haut niveau.
@@ -752,13 +697,12 @@ function libppInit(): bool
     // Initialize i/o.
     io_open();
 
-    if (!e_check(getConfiguration('puppetmaster'), 'puppetmaster'))
-        return false;
-
     // Pour la suite, seul le puppetmaster est enregirstré.
     // Une fois les autres entités trouvées, ajoute les autres autorités.
     // Cela empêche qu'une entié compromise ne génère un lien qui passerait avant le puppetmaster
     //   dans la recherche par référence nebFindByRef.
+    if (!e_check(getConfiguration('puppetmaster')))
+        return false;
     $nebuleLocalAuthorities[0] = getConfiguration('puppetmaster');
 
     // Recherche et vérifie le maître de la sécurité.
@@ -766,7 +710,7 @@ function libppInit(): bool
         hash(getConfiguration('cryptoHashAlgorithm'), 'nebule/objet/entite/maitre/securite'),
         'nebule/objet/entite/maitre/securite',
         true);
-    if (!e_check($entity, 'security master'))
+    if (!e_check($entity))
         return false;
     $nebuleSecurityMaster = $entity;
 
@@ -775,7 +719,7 @@ function libppInit(): bool
         hash(getConfiguration('cryptoHashAlgorithm'), 'nebule/objet/entite/maitre/code'),
         'nebule/objet/entite/maitre/code',
         true);
-    if (!e_check($entity, 'code master'))
+    if (!e_check($entity))
         return false;
     $nebuleCodeMaster = $entity;
 
@@ -784,7 +728,7 @@ function libppInit(): bool
         hash(getConfiguration('cryptoHashAlgorithm'), 'nebule/objet/entite/maitre/annuaire'),
         'nebule/objet/entite/maitre/annuaire',
         true);
-    if (!e_check($entity, 'directory master'))
+    if (!e_check($entity))
         return false;
     $nebuleDirectoryMaster = $entity;
 
@@ -793,7 +737,7 @@ function libppInit(): bool
         hash(getConfiguration('cryptoHashAlgorithm'), 'nebule/objet/entite/maitre/temps'),
         'nebule/objet/entite/maitre/temps',
         true);
-    if (!e_check($entity, 'time master'))
+    if (!e_check($entity))
         return false;
     $nebuleTimeMaster = $entity;
 
@@ -801,8 +745,61 @@ function libppInit(): bool
     $nebuleLocalAuthorities[1] = $nebuleSecurityMaster;
     $nebuleLocalAuthorities[2] = $nebuleCodeMaster;
 
+    libppSetServerEntity();
+    libppSetDefaultEntity();
+    libppSetPublicEntity();
+
     // Retour normal.
     return true;
+}
+
+/**
+ * Get and check local server entity.
+ * @return bool
+ */
+function libppSetServerEntity(): bool
+{
+    global $nebuleServerEntite, $nebuleCodeMaster, $nebuleLocalAuthorities;
+
+    if (file_exists(LOCAL_ENTITY_FILE)
+        && is_file(LOCAL_ENTITY_FILE)
+    )
+        $nebuleServerEntite = filter_var(strtok(trim(file_get_contents(LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+
+    if (!e_check($nebuleServerEntite)
+    )
+        $nebuleServerEntite = $nebuleCodeMaster;
+
+    if (getConfiguration('permitInstanceEntityAsAuthority') && !getModeRescue())
+        $nebuleLocalAuthorities[] = $nebuleServerEntite;
+}
+
+/**
+ * Get and check default entity.
+ * @return bool
+ */
+function libppSetDefaultEntity(): bool
+{
+    global $nebuleDefaultEntity, $nebuleCodeMaster, $nebuleLocalAuthorities;
+
+    $nebuleDefaultEntity = getConfiguration('defaultCurrentEntity');
+    if (!e_check($nebuleDefaultEntity))
+        $nebuleDefaultEntity = $nebuleCodeMaster;
+
+    if (getConfiguration('permitDefaultEntityAsAuthority') && !getModeRescue())
+        $nebuleLocalAuthorities[4] = $nebuleDefaultEntity;
+}
+
+/**
+ * Get and check public entity.
+ * @return bool
+ */
+function libppSetPublicEntity(): bool
+{
+    global $nebulePublicEntity, $nebuleDefaultEntity;
+
+    if (!e_check($nebulePublicEntity))
+        $nebulePublicEntity = $nebuleDefaultEntity;
 }
 
 /** FIXME
@@ -811,21 +808,30 @@ function libppInit(): bool
  */
 function libppCheckAll(): bool
 {
-    global $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster;
+    global $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster, $nebuleServerEntite, $nebuleDefaultEntity, $nebulePublicEntity;
 
-    if (!e_check(getConfiguration('puppetmaster'), 'puppetmaster'))
+    if (!e_check(getConfiguration('puppetmaster')))
         return false;
 
-    if (!e_check($nebuleSecurityMaster, 'security master'))
+    if (!e_check($nebuleSecurityMaster))
         return false;
 
-    if (!e_check($nebuleCodeMaster, 'code master'))
+    if (!e_check($nebuleCodeMaster))
         return false;
 
-    if (!e_check($nebuleDirectoryMaster, 'directory master'))
+    if (!e_check($nebuleDirectoryMaster))
         return false;
 
-    if (!e_check($nebuleTimeMaster, 'time master'))
+    if (!e_check($nebuleTimeMaster))
+        return false;
+
+    if (!e_check($nebuleServerEntite))
+        return false;
+
+    if (!e_check($nebuleDefaultEntity))
+        return false;
+
+    if (!e_check($nebulePublicEntity))
         return false;
 
     return true;
@@ -942,7 +948,7 @@ function nebReadObjText1line(string &$oid, int $maxsize = 128): string
     if (extension_loaded('mbstring'))
         $data = mb_convert_encoding($data, 'UTF-8');
     else
-        addLog('mbstring extension not installed or activated!');
+        addLog('fct="nebReadObjText1line:1" info="mbstring extension not installed or activated!"');
 
     if (strlen($data) > $maxsize) {
         $data = substr($data, 0, ($maxsize - 3)) . '...';
@@ -2069,15 +2075,18 @@ function e_generate($type, $size, $algohash, &$hashpubkey, &$hashprivkey, $passw
 }
 
 /**
- * Check a entity.
+ * Verify name structure and content of a entity.
  * @param string $nid
  * @param string $name
  * @return bool
  */
-function e_check(string $nid, string $name = ''): bool
+function e_check(string $nid): bool
 {
+    global $nebuleSymetricKeyLenght;
+
     if (!o_checkNID($nid, false)
         || $nid == '0'
+        || strlen($nid) < ($nebuleSymetricKeyLenght / 4) // TODO à revoir, doit être au mini de 128...
         || !io_testobjectpresent($nid)
         || !io_testlinkpresent($nid)
         || !o_checkcontent($nid)
@@ -2367,7 +2376,7 @@ function o_downloadupdatedcontent(string $object): void
                 $lnk = '';
                 o_getupdatedcontent($itemtable [6], $lnk);
                 if ($lnk != '') {
-                    o_downloadcontent($object, $lnk);
+                    o_downloadContent($object, $lnk);
                 }
                 $okobj [$count] = $itemtable [6];
                 $count++;
@@ -2394,7 +2403,7 @@ function o_downloadupdatedcontent(string $object): void
  * @param string $localisation
  * @return void
  */
-function o_downloadcontent(string $object, string $localisation): void
+function o_downloadContent(string $object, string $localisation): void
 {
     global $nebulePublicEntity,
            $nebuleSecurityMaster,
@@ -2427,7 +2436,7 @@ function o_downloadcontent(string $object, string $localisation): void
             && $link [6] == $object
             && $link [7] == '0'
         ) {
-            addLog('_neblibpp_o_dl1(' . $object . ') banned by ' . $nebulePublicEntity);
+            addLog('fct="o_downloadContent:1" warn="' . $object . ') banned by ' . $nebulePublicEntity . '"');
             return;
         }
         if ($link [2] == $nebuleSecurityMaster
@@ -2436,7 +2445,7 @@ function o_downloadcontent(string $object, string $localisation): void
             && $link [6] == $object
             && $link [7] == '0'
         ) {
-            addLog('_neblibpp_o_dl1(' . $object . ') banned by ' . $nebuleSecurityMaster);
+            addLog('fct="o_downloadContent:2" warn="' . $object . ') banned by ' . $nebuleSecurityMaster . '"');
             return;
         }
     }
@@ -2492,7 +2501,7 @@ function o_checkcontent(&$nid)
     // Si c'est l'objet 0, le supprime.
     if ($nid == '0') {
         if (io_testobjectpresent($nid)) {
-            io_objectdelete($nid);
+            io_objectDelete($nid);
         }
         return true;
     }
@@ -2505,7 +2514,7 @@ function o_checkcontent(&$nid)
 
     if ($hash !== $nid) {
         // Si invalide, suppression de l'objet localement.
-        io_objectdelete($nid);
+        io_objectDelete($nid);
     }
 
     if (getConfiguration('permitBufferIO')) {
@@ -2610,7 +2619,7 @@ function o_delete(string &$object): bool
     unset($link);
     if (!$ok)
         return false;
-    return io_objectdelete($object);
+    return io_objectDelete($object);
 }
 
 /** FIXME
@@ -3910,29 +3919,31 @@ function io_objectwrite(&$d)
 }
 
 /** FIXME
- * I/O - Supprime le contenu d'un objet.
- * Retourne true si la suppression a réussi ou false si erreur.
+ * I/O - Suppress object content.
  *
  * @param string $o
  * @return boolean
  */
-function io_objectdelete(&$o)
+function io_objectDelete(&$o)
 {
-    if (!getConfiguration('permitWrite')
-        || !getConfiguration('permitWriteObject')
-    ) {
+    if (!getConfiguration('permitWrite') || !getConfiguration('permitWriteObject'))
         return false;
-    }
-    if (!file_exists(LOCAL_OBJECTS_FOLDER . '/' . $o)) {
+
+    if (!file_exists(LOCAL_OBJECTS_FOLDER . '/' . $o))
+        return true;
+
+    if (unlink(LOCAL_OBJECTS_FOLDER . '/' . $o))
+    {
+        addLog('fct="io_objectDelete:1" error="Unable to delete file"');
         return true;
     }
-    return unlink(LOCAL_OBJECTS_FOLDER . '/' . $o);
+    return false;
 }
 
 /** FIXME
  * I/O - Fin de traitement.
  *
- * @return null
+ * @return void
  */
 function io_close(): void
 {
@@ -4010,6 +4021,13 @@ function getpseudorandom($n = 32): string
     return $result;
 }
 
+/*
+ * ------------------------------------------------------------------------------------------
+ * Initialization of the lib PP.
+ * ------------------------------------------------------------------------------------------
+ */
+libppInit();
+
 
 /*
  *
@@ -4049,8 +4067,6 @@ if (!io_checkobjectfolder()) {
 // ------------------------------------------------------------------------------------------
 /**
  * Activation d'un nettoyage de session général.
- *
- * @var boolean $bootstrapFlush
  */
 $bootstrapFlush = false;
 
@@ -4102,8 +4118,6 @@ session_write_close();
 // ------------------------------------------------------------------------------------------
 /**
  * Activation d'une mise à jour des instances de bibliothèque et d'application.
- *
- * @var boolean $bootstrapUpdate
  */
 $bootstrapUpdate = false;
 
@@ -4137,8 +4151,6 @@ if (filter_has_var(INPUT_GET, ARG_UPDATE_APPLICATION)
 // ------------------------------------------------------------------------------------------
 /**
  * Demande de changement d'application.
- *
- * @var string $bootstrapSwitchApplication
  */
 $bootstrapSwitchApplication = '';
 
@@ -4180,7 +4192,7 @@ if (!$bootstrapFlush) {
             $activated = true;
         }
         if (!$activated) {
-            $refActivated = hash(getConfiguration('cryptoHashAlgorithm'), REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS_ACTIVE);
+            $refActivated = hash(getConfiguration('cryptoHashAlgorithm'), REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_ACTIVE);
             $links = array();
             l_findinclusive($arg, $links, 'f', $arg, $refActivated, $arg);
 
@@ -4309,7 +4321,7 @@ if (libppCheckAll()) {
             // Recherche la dernière application depuis l'objet de référence sur lui-même.
             $bootstrapApplicationID = nebFindByRef(
                 $bootstrapApplicationStartID,
-                REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS,
+                REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS,
                 false);
         } else {
             // Vérifie l'ID de l'application mémorisé.
@@ -4387,7 +4399,7 @@ if (libppCheckAll()) {
         } elseif (ctype_xdigit($bootstrapSwitchApplication)
             && io_testlinkpresent($bootstrapSwitchApplication)
         ) {
-            $refAppsID = hash(getConfiguration('cryptoHashAlgorithm'), REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
+            $refAppsID = hash(getConfiguration('cryptoHashAlgorithm'), REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS);
             $links = array();
             l_findinclusive($refAppsID, $links, 'f', $refAppsID, $bootstrapSwitchApplication, $refAppsID);
 
@@ -4422,7 +4434,7 @@ if (libppCheckAll()) {
                     // Sinon recherche la dernière application depuis l'objet de référence sur lui-même.
                     $bootstrapApplicationID = nebFindByRef(
                         $bootstrapApplicationStartID,
-                        REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS,
+                        REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS,
                         false);
                 }
 
@@ -4453,7 +4465,7 @@ if (libppCheckAll()) {
             // Recherche la dernière application depuis l'objet de référence sur lui-même.
             $bootstrapApplicationID = nebFindByRef(
                 $bootstrapApplicationStartID,
-                REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS,
+                REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS,
                 false);
         } else {
             $bootstrapApplicationStartID = '0';
@@ -4470,7 +4482,7 @@ if (libppCheckAll()) {
         && $bootstrapApplicationInstanceSleep == ''
     ) {
         // Lit les liens de non pré-chargement pour l'application.
-        $refNoPreload = hash(getConfiguration('cryptoHashAlgorithm'), REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS_DIRECT);
+        $refNoPreload = hash(getConfiguration('cryptoHashAlgorithm'), REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_DIRECT);
         $links = array();
         l_findinclusive($bootstrapApplicationStartID, $links, 'f', $bootstrapApplicationStartID, $refNoPreload, $bootstrapApplicationStartID);
 
@@ -4499,8 +4511,8 @@ if (libppCheckAll()) {
     if ($bootstrapLibraryID == '') {
         // Recherche la dernière bibliothèque depuis l'objet de référence sur lui-même.
         $bootstrapLibraryID = nebFindByRef(
-            hash(getConfiguration('cryptoHashAlgorithm'), REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE),
-            REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE,
+            hash(getConfiguration('cryptoHashAlgorithm'), REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE),
+            REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE,
             false);
 
         addLog('find nebule library ' . $bootstrapLibraryID);
@@ -4537,7 +4549,7 @@ if (libppCheckAll()) {
 /**
  * Instance de la bibliothèque nebule en PHP orienté objet.
  *
- * @var null|nebule $nebuleInstance
+ * @var nebule $nebuleInstance
  */
 $nebuleInstance = null;
 
@@ -4623,7 +4635,7 @@ $data = file_get_contents(BOOTSTRAP_FILE_NAME);
 $hash = hash(getConfiguration('cryptoHashAlgorithm'), $data);
 unset($data);
 // Recherche les liens de validation.
-$hashRef = hash(getConfiguration('cryptoHashAlgorithm'), REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP);
+$hashRef = hash(getConfiguration('cryptoHashAlgorithm'), REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP);
 $links = array();
 l_findinclusive($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
 // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
@@ -5353,7 +5365,7 @@ function bootstrapDisplayOnBreak(): void
         // Chargement de la bibliothèque PHP POO.
         loadLibrary();
         echo "Tl=" . sprintf('%01.4fs', microtime(true) - $metrologyStartTime) . "<br />\n";
-        echo 'library RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . hash(getConfiguration('cryptoHashAlgorithm'), REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE) . "<br />\n";
+        echo 'library RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . hash(getConfiguration('cryptoHashAlgorithm'), REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE) . "<br />\n";
 
         if (!is_a($nebuleInstance, 'nebule')) {
             echo "Not loaded.\n";
@@ -5557,7 +5569,7 @@ function bootstrapDisplayOnBreak(): void
             unset($data);
             echo 'bootstrap &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $hash . ' ';
             // Recherche les liens de validation.
-            $hashRef = hash(getConfiguration('cryptoHashAlgorithm'), REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP);
+            $hashRef = hash(getConfiguration('cryptoHashAlgorithm'), REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP);
             $links = array();
             l_findinclusive($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
             // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
@@ -6119,7 +6131,7 @@ function bootstrapFirstSynchronizingEntities()
 
         // Recherche des autres liens.
         foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-            o_downloadcontent(getConfiguration('puppetmaster'), $localisation);
+            o_downloadContent(getConfiguration('puppetmaster'), $localisation);
             l_downloadlinkonlocation(getConfiguration('puppetmaster'), $localisation);
             echo '.';
         }
@@ -6155,7 +6167,7 @@ function bootstrapFirstSynchronizingEntities()
             // Recherche de l'objet et des liens de l'entité.
             $nebuleSecurityMaster = $entity;
             foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-                o_downloadcontent($nebuleSecurityMaster, $localisation);
+                o_downloadContent($nebuleSecurityMaster, $localisation);
                 l_downloadlinkonlocation($nebuleSecurityMaster, $localisation);
                 echo '.';
             }
@@ -6182,7 +6194,7 @@ function bootstrapFirstSynchronizingEntities()
             // Recherche de l'objet et des liens de l'entité.
             $nebuleCodeMaster = $entity;
             foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-                o_downloadcontent($nebuleCodeMaster, $localisation);
+                o_downloadContent($nebuleCodeMaster, $localisation);
                 l_downloadlinkonlocation($nebuleCodeMaster, $localisation);
                 echo '.';
             }
@@ -6209,7 +6221,7 @@ function bootstrapFirstSynchronizingEntities()
             // Recherche de l'objet et des liens de l'entité.
             $nebuleDirectoryMaster = $entity;
             foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-                o_downloadcontent($nebuleDirectoryMaster, $localisation);
+                o_downloadContent($nebuleDirectoryMaster, $localisation);
                 l_downloadlinkonlocation($nebuleDirectoryMaster, $localisation);
                 echo '.';
             }
@@ -6236,7 +6248,7 @@ function bootstrapFirstSynchronizingEntities()
             // Recherche de l'objet et des liens de l'entité.
             $nebuleTimeMaster = $entity;
             foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-                o_downloadcontent($nebuleTimeMaster, $localisation);
+                o_downloadContent($nebuleTimeMaster, $localisation);
                 l_downloadlinkonlocation($nebuleTimeMaster, $localisation);
                 echo '.';
             }
@@ -6300,11 +6312,11 @@ function bootstrapFirstSynchronizingObjects()
 {
     global $nebuleFirstReservedObjects, $bootstrapName, $nebuleLocalAuthorities;
 
-    $refApps = REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS;
+    $refApps = REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS;
     $refAppsID = hash(getConfiguration('cryptoHashAlgorithm'), $refApps);
-    $refLib = REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE;
+    $refLib = REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE;
     $refLibID = hash(getConfiguration('cryptoHashAlgorithm'), $refLib);
-    $refBoot = REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP;
+    $refBoot = REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP;
     $refBootID = hash(getConfiguration('cryptoHashAlgorithm'), $refBoot);
     ?>
 
@@ -6348,10 +6360,10 @@ function bootstrapFirstSynchronizingObjects()
             flush();
         }
 
-        $data = REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS;
+        $data = REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS;
         io_objectwrite($data);
 
-        $data = REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE;
+        $data = REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE;
         io_objectwrite($data);
         ?><br/>
 
@@ -6385,7 +6397,7 @@ function bootstrapFirstSynchronizingObjects()
         echo $lastID . ' ';
         if ($lastID != '0') {
             foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-                o_downloadcontent($lastID, $localisation);
+                o_downloadContent($lastID, $localisation);
                 echo '.';
             }
         } else {
@@ -6447,7 +6459,7 @@ function bootstrapFirstSynchronizingObjects()
             addLog('find app ' . $appID . ' as ' . $lastID);
             if ($lastID != '0') {
                 foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-                    o_downloadcontent($lastID, $localisation);
+                    o_downloadContent($lastID, $localisation);
                     l_downloadlinkonlocation($lastID, $localisation);
                     echo '.';
                 }
@@ -6463,7 +6475,7 @@ function bootstrapFirstSynchronizingObjects()
                 }
                 if ($nameID != '0') {
                     foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-                        o_downloadcontent($nameID, $localisation);
+                        o_downloadContent($nameID, $localisation);
                         l_downloadlinkonlocation($nameID, $localisation);
                         echo '.';
                     }
