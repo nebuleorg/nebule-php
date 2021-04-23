@@ -257,12 +257,6 @@ ini_set('allow_url_include', '1');
 
 // ------------------------------------------------------------------------------------------
 
-// Bootstrap break management.
-/**
- * Variable de raison d'interruption de chargement du bootstrap.
- */
-$bootstrapBreak = array();
-
 /**
  * Variable d'interruption de chargement du bootstrap par l'utilisateur.
  */
@@ -4642,6 +4636,12 @@ function loadLibrary(): void
  ------------------------------------------------------------------------------------------
  */
 
+
+// Bootstrap break management.
+/**
+ * Variable de raison d'interruption de chargement du bootstrap.
+ */
+$bootstrapBreak = array();
 
 /**
  * Add a break on the bootstrap.
