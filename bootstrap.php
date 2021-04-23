@@ -35,14 +35,14 @@ $bootstrapWebsite = 'www.nebule.org';
  ==/ Table /===============================================================================
  PART1 : Initialization of the bootstrap environment.
  PART2 : Procedural PHP library for nebule (Lib PP).
- PART3 : Read PHP session.
+ PART3 : Manage PHP session.
  PART4 : Load object oriented PHP library for nebule (Lib POO).
- PART5 : Display of break web page.
+ PART5 : Manage and display breaking bootstrap on problem or user ask.
  PART6 : Display of pre-load application web page.
- PART7 : Display of first run web page.
+ PART7 : First synchronization of code and environment.
  PART8 : Display of application 0 web page to select application to run.
  PART9 : Display of application 1 web page to display documentation of nebule.
- PART10 : Display of application web page.
+ PART10 : Main display router.
  ------------------------------------------------------------------------------------------
 */
 
@@ -251,30 +251,6 @@ define('FIRST_RELOAD_DELAY', 3000);
 
 // ------------------------------------------------------------------------------------------
 
-// Active la possibilité d'ouvrir du code dans des fichiers externes. TODO à déplacer
-ini_set('allow_url_fopen', '1');
-ini_set('allow_url_include', '1');
-
-// ------------------------------------------------------------------------------------------
-
-/**
- * Variable d'interruption de chargement du bootstrap par l'utilisateur.
- */
-$bootstrapUserBreak = false;
-
-/*
- * Lit si interruption volontaire de l'utilisateur.
- */
-if (filter_has_var(INPUT_GET, ARG_BOOTSTRAP_BREAK)
-    || filter_has_var(INPUT_POST, ARG_BOOTSTRAP_BREAK)
-) {
-    addLog($bootstrapName . ' - ask user interrupt');
-    setBootstrapBreak('12', 'User interrupt.');
-    $bootstrapUserBreak = true;
-}
-
-// ------------------------------------------------------------------------------------------
-
 // Préparation des variables des applications.
 /**
  * Nom de l'application.
@@ -318,13 +294,88 @@ $applicationWebsite = '';
 
 // ------------------------------------------------------------------------------------------
 
-// TODO à déplacer ou supprimer
-$nebuleLocalAuthorities = array();
-$nebuleSymetricAlgorithm = 'aes-256-ctr';
-$nebuleSymetricKeyLenght = '256';
-$nebuleAsymetricAlgorithm = 'rsa';
-$nebuleAsymetricKeyLenght = '2048';
-$nebuleMaxRecurse = 20; // TODO vérifier l'utilité dans la lib PP.
+/**
+ * Instance de la bibliothèque nebule en PHP orienté objet.
+ *
+ * @var nebule $nebuleInstance
+ */
+$nebuleInstance = null;
+
+/**
+ * Variable de raison d'interruption de chargement du bootstrap.
+ */
+$bootstrapBreak = array();
+
+/**
+ * Variable de détection d'affichage inserré en ligne.
+ */
+$bootstrapInlineDisplay = false;
+
+/**
+ * Variable de détection d'affichage de l'ID de l'entité instance du serveur.
+ */
+$bootstrapServerEntityDisplay = false;
+
+/**
+ * Activation d'un nettoyage de session général.
+ */
+$bootstrapFlush = false;
+
+/**
+ * Activation d'une mise à jour des instances de bibliothèque et d'application.
+ */
+$bootstrapUpdate = false;
+
+/**
+ * ID de la bibliothèque mémorisé dans la session PHP.
+ */
+$bootstrapLibraryID = '';
+
+/**
+ * Instance non dé-sérialisée de la bibliothèque mémorisée dans la session PHP.
+ */
+$bootstrapLibraryInstanceSleep = '';
+
+/**
+ * ID de l'application mémorisé dans la session PHP.
+ */
+$bootstrapApplicationID = '';
+
+/**
+ * ID de départ de l'application mémorisé dans la session PHP.
+ */
+$bootstrapApplicationStartID = '';
+
+/**
+ * Instance non dé-sérialisée de l'application mémorisée dans la session PHP.
+ */
+$bootstrapApplicationInstanceSleep = '';
+
+/**
+ * Instance non dé-sérialisée de l'affichage de l'application mémorisée dans la session PHP.
+ */
+$bootstrapApplicationDisplayInstanceSleep = '';
+
+/**
+ * Instance non dé-sérialisée des actions de l'application mémorisée dans la session PHP.
+ */
+$bootstrapApplicationActionInstanceSleep = '';
+
+/**
+ * Instance non dé-sérialisée des traductions de l'application mémorisée dans la session PHP.
+ */
+$bootstrapApplicationTraductionInstanceSleep = '';
+
+/**
+ * Commutateur pour charger directement une application sans passer par le pré-chargement.
+ */
+$bootstrapApplicationNoPreload = false;
+
+/**
+ * Demande de changement d'application.
+ */
+$bootstrapSwitchApplication = '';
+
 
 
 /*
@@ -1623,7 +1674,7 @@ function nebCheckPrivkey()
 function nebListChildrenRecurse($object, &$listchildren, &$node, $level = 1)
 { // Sous-boucle de recheche les objets enfants.
     // Utiliser de préférence la fonction nebListChildren.
-    global $nebuleMaxRecurse;
+    $maxRecurse = getConfiguration('maxFollowedUpdates');
 
     $link = array();
     $links = array();
@@ -1672,7 +1723,7 @@ function nebListChildrenRecurse($object, &$listchildren, &$node, $level = 1)
                 $listchildren [($c + 1)] [10] = $link [10];
                 $listchildren [($c + 1)] [11] = $link [11];
                 $listchildren [($c + 1)] [12] = $level;
-                if ($level < $nebuleMaxRecurse && ($link [7] == $node || $level == 1))
+                if ($level < $maxRecurse && ($link [7] == $node || $level == 1))
                     nebListChildrenRecurse($link [6], $listchildren, $node, ($level + 1));
             }
         } elseif ($link [4] == "f" && $link [6] == $object && $level == 1) {
@@ -1856,15 +1907,14 @@ function nebCreatObjHash(&$object)
 /** FIXME
  * Entity -
  *
- * @param $type
- * @param $size
- * @param $algohash
+ * @param $asymetricAlgo
+ * @param $hashAlgo
  * @param $hashpubkey
  * @param $hashprivkey
  * @param string $password
  * @return bool
  */
-function e_generate($type, $size, $algohash, &$hashpubkey, &$hashprivkey, $password = '')
+function e_generate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $password = '')
 {
     if (!getConfiguration('permitWrite'))
         return false;
@@ -1874,23 +1924,27 @@ function e_generate($type, $size, $algohash, &$hashpubkey, &$hashprivkey, $passw
         return false;
     if (!getConfiguration('permitWriteLink'))
         return false;
-    if (($type != 'rsa') && ($type != 'dsa'))
-        return false;
-    if (($size != 512) && ($size != 1024) && ($size != 2048) && ($size != 4096))
+    if (($asymetricAlgo != 'rsa') && ($asymetricAlgo != 'dsa'))
         return false;
     if ($password == '')
         return false;
-    // Génération de la clé.
-    switch ($type) {
+
+    // TODO à vérifier...
+//getConfiguration('cryptoAsymetricAlgorithm')
+    $size = substr($asymetricAlgo, strpos($asymetricAlgo, '.') + 1);
+    $algoName = substr($asymetricAlgo, 0, strpos($asymetricAlgo, '.') - 1);
+
+    // Génération de la clé
+    switch ($asymetricAlgo) {
         case 'rsa' :
             $config = array(
-                'digest_alg' => $algohash,
+                'digest_alg' => $hashAlgo,
                 'private_key_bits' => (int)$size,
                 'private_key_type' => OPENSSL_KEYTYPE_RSA);
             break;
         case 'dsa' :
             $config = array(
-                'digest_alg' => $algohash,
+                'digest_alg' => $hashAlgo,
                 'private_key_bits' => (int)$size,
                 'private_key_type' => OPENSSL_KEYTYPE_DSA);
             break;
@@ -2067,11 +2121,9 @@ function e_generate($type, $size, $algohash, &$hashpubkey, &$hashprivkey, $passw
  */
 function e_check(string $nid): bool
 {
-    global $nebuleSymetricKeyLenght;
-
     if (!o_checkNID($nid, false)
         || $nid == '0'
-        || strlen($nid) < ($nebuleSymetricKeyLenght / 4) // TODO à revoir, doit être au mini de 128...
+        || strlen($nid) < NID_MIN_HASH_SIZE
         || !io_testobjectpresent($nid)
         || !io_testlinkpresent($nid)
         || !o_checkcontent($nid)
@@ -2094,7 +2146,7 @@ function e_addpasswd($pubkey, $privkey, $password)
     // - $pubkey : la clé public de l'entité, nécessaire pour un des liens.
     // - $privkey : la clé privée de l'entité.
     // - $password : le mot de passe à reconnaître pour la clé privée. Le mot de passe est vérifié sur la clé.
-    global $nebuleSymetricKeyLenght, $nebuleSymetricAlgorithm, $nebuleAsymetricAlgorithm, $nebulePublicEntity;
+    global $nebulePublicEntity;
 
     if (!getConfiguration('permitWrite'))
         return false;
@@ -2115,16 +2167,16 @@ function e_addpasswd($pubkey, $privkey, $password)
         return false;
     unset($privcert);
     // Génère une clé de session.
-    $key = openssl_random_pseudo_bytes($nebuleSymetricKeyLenght / 2, $true);
+    $key = openssl_random_pseudo_bytes(NID_MIN_HASH_SIZE, $true);
     $hashkey = o_getNID($key);
     // Génère un IV à zéro.
     $hiv = '00000000000000000000000000000000';
     $iv = pack("H*", $hiv); // A modifier pour des blocs de tailles différentes.
     // Chiffrement de l'objet.
-    $cryptobj = openssl_encrypt($password, $nebuleSymetricAlgorithm, $key, OPENSSL_RAW_DATA, $iv);
+    $cryptobj = openssl_encrypt($password, getConfiguration('cryptoSymetricAlgorithm'), $key, OPENSSL_RAW_DATA, $iv);
     $hashpwd = o_getNID($password);
     $hashcryptobj = o_getNID($cryptobj);
-    o_generate($cryptobj, "application/x-encrypted/$nebuleSymetricAlgorithm");
+    o_generate($cryptobj, 'application/x-encrypted/' . getConfiguration('cryptoSymetricAlgorithm'));
     // Chiffrement de la clé de session.
     $cryptkey = '';
     o_checkcontent($pubkey);
@@ -2133,7 +2185,8 @@ function e_addpasswd($pubkey, $privkey, $password)
     if (!$ok)
         return false;
     $hashcryptkey = o_getNID($cryptkey);
-    o_generate($cryptkey, "application/x-encrypted/$nebuleAsymetricAlgorithm");
+    $algoName = substr(getConfiguration('cryptoAsymetricAlgorithm'), 0, strpos(getConfiguration('cryptoAsymetricAlgorithm'), '.') - 1);
+    o_generate($cryptkey, 'application/x-encrypted/' . $algoName);
     // Génère le lien de chiffrement entre clé privée et publique avec le mot de passe.
     $newlink = l_generate('-', 'k', $privkey, $pubkey, $hashpwd);
     if ((l_verifylink($newlink)) == 1)
@@ -4048,12 +4101,6 @@ function getPseudoRandom($count = 32): string
     return $result;
 }
 
-/*
- * ------------------------------------------------------------------------------------------
- * Initialization of the lib PP.
- * ------------------------------------------------------------------------------------------
- */
-libppInit();
 
 
 /*
@@ -4063,125 +4110,108 @@ libppInit();
  *
 
  ==/ 3 /===================================================================================
- PART3 : Read PHP session.
+ PART3 : Manage PHP session.
 
  TODO.
  ------------------------------------------------------------------------------------------
  */
 
-/*
- * Vérifie que la bibliothèque nebule PHP PP s'est bien chargée.
+/**
+ * Activate the capability to open PHP code on other file.
  */
-if (!libppCheckAll())
-    setBootstrapBreak('21', 'Library init error');
-
-/*
- * Vérifie que le dossier des liens est fonctionnel.
- */
-if (!io_checklinkfolder())
-    setBootstrapBreak('22', "Library i/o link's folder error");
-
-/*
- * Vérifie que le dossier des objets est fonctionnel.
- */
-if (!io_checkobjectfolder())
-    setBootstrapBreak('23', "Library i/o object's folder error");
-
+function setPermitOpenFileCode()
+{
+    ini_set('allow_url_fopen', '1');
+    ini_set('allow_url_include', '1');
+}
 
 // ------------------------------------------------------------------------------------------
-/**
- * Activation d'un nettoyage de session général.
- */
-$bootstrapFlush = false;
-
 /*
  * Lit si demande de l'utilisateur d'un nettoyage de session général.
  * Dans ce cas, la session PHP est intégralement nettoyée et un nouvel identifiant de session est généré.
  *
  * Si la session est déjà vide, ne prend pas en compte la demande.
  */
-// Ouvre la session utilisateur.
-session_start();
 
-if (filter_has_var(INPUT_GET, ARG_FLUSH_SESSION)
-    || filter_has_var(INPUT_POST, ARG_FLUSH_SESSION)
-) {
-    addLog('ask flush session');
+function getBootstrapFlushSession()
+{
+    session_start();
 
-    // Si la session n'est pas vide ou si interruption de l'utilisateur, la vide.
-    if (isset($_SESSION['OKsession'])
-        || $bootstrapUserBreak
+    if (filter_has_var(INPUT_GET, ARG_FLUSH_SESSION)
+        || filter_has_var(INPUT_POST, ARG_FLUSH_SESSION)
     ) {
-        // Mémorise pour la suite que la session est vidée.
-        $bootstrapFlush = true;
-        addLog('flush session');
+        addLog('ask flush session');
 
-        // Vide la session.
-        session_unset();
-        session_destroy();
-        session_write_close();
-        setcookie(session_name(), '', 0, '/');
-        session_regenerate_id(true);
+        // Si la session n'est pas vide ou si interruption de l'utilisateur, la vide.
+        if (isset($_SESSION['OKsession'])
+            || filter_has_var(INPUT_GET, ARG_BOOTSTRAP_BREAK)
+            || filter_has_var(INPUT_POST, ARG_BOOTSTRAP_BREAK)
+        ) {
+            // Mémorise pour la suite que la session est vidée.
+            $bootstrapFlush = true;
+            addLog('flush session');
 
-        // Reouvre une nouvelle session pour la suite.
-        session_start();
+            // Vide la session.
+            session_unset();
+            session_destroy();
+            session_write_close();
+            setcookie(session_name(), '', 0, '/');
+            session_regenerate_id(true);
+
+            // Reouvre une nouvelle session pour la suite.
+            session_start();
+        } else {
+            // Sinon marque la session.
+            $_SESSION['OKsession'] = true;
+        }
     } else {
         // Sinon marque la session.
         $_SESSION['OKsession'] = true;
-    }
-} else {
-    // Sinon marque la session.
-    $_SESSION['OKsession'] = true;
 
+    }
+
+    session_write_close();
 }
 
-// Ecrit et ferme la session.
-session_write_close();
-
-
-// ------------------------------------------------------------------------------------------
 /**
- * Activation d'une mise à jour des instances de bibliothèque et d'application.
- */
-$bootstrapUpdate = false;
-
-/*
  * Lit si demande de l'utilisateur d'une mise à jour des instances de bibliothèque et d'application.
  *
  * Dans ce cas, la session PHP n'est pas exploitée.
  */
-if (filter_has_var(INPUT_GET, ARG_UPDATE_APPLICATION)
-    || filter_has_var(INPUT_POST, ARG_UPDATE_APPLICATION)
-) {
-    addLog('ask update');
+function getBootstrapUpdate():void
+{
+    global $bootstrapUpdate;
 
-    // Ouvre la session utilisateur.
-    session_start();
+    if (filter_has_var(INPUT_GET, ARG_UPDATE_APPLICATION)
+        || filter_has_var(INPUT_POST, ARG_UPDATE_APPLICATION)
+    ) {
+        addLog('ask update');
 
-    // Si la mise à jour est demandée mais pas déjà faite.
-    if (!isset($_SESSION['askUpdate'])) {
-        $bootstrapUpdate = true;
-        addLog('update');
-        $_SESSION['askUpdate'] = true;
-    } else {
-        unset($_SESSION['askUpdate']);
+        session_start();
+
+        // Si la mise à jour est demandée mais pas déjà faite.
+        if (!isset($_SESSION['askUpdate'])) {
+            $bootstrapUpdate = true;
+            addLog('update');
+            $_SESSION['askUpdate'] = true;
+        } else {
+            unset($_SESSION['askUpdate']);
+        }
+
+        session_write_close();
     }
-
-    // Ecrit et ferme la session.
-    session_write_close();
 }
 
-
-// ------------------------------------------------------------------------------------------
 /**
- * Demande de changement d'application.
- */
-$bootstrapSwitchApplication = '';
-
-/*
  * Lit si demande de l'utilisateur d'un changement d'application.
  */
-if (!$bootstrapFlush) {
+function getBootstrapSwitchApplication(): void
+{
+    global $bootstrapFlush, $bootstrapSwitchApplication, $bootstrapActiveApplicationsWhitelist, $nebuleServerEntite;
+
+    if ($bootstrapFlush)
+        return;
+
     $arg = '';
     if (filter_has_var(INPUT_GET, ARG_SWITCH_APPLICATION)) {
         $arg = trim(filter_input(INPUT_GET, ARG_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
@@ -4240,75 +4270,16 @@ if (!$bootstrapFlush) {
             addLog('ask switch application to ' . $bootstrapSwitchApplication);
         }
     }
-    unset($arg);
 }
 
 
+
 // ------------------------------------------------------------------------------------------
-/**
- * ID de la bibliothèque mémorisé dans la session PHP.
- *
- * @var string $bootstrapLibraryID
- */
-$bootstrapLibraryID = '';
 
-/**
- * Instance non dé-sérialisée de la bibliothèque mémorisée dans la session PHP.
- *
- * @var string $bootstrapLibraryInstanceSleep
+// TODO fonction de recherche de la librairie
+/*
+ *  La recherche de la bibliothèque et de l'application nécessite une bibliothèque nebule PHP PP fonctionnnelle.
  */
-$bootstrapLibraryInstanceSleep = '';
-
-/**
- * ID de l'application mémorisé dans la session PHP.
- *
- * @var string $bootstrapApplicationID
- */
-$bootstrapApplicationID = '';
-
-/**
- * ID de départ de l'application mémorisé dans la session PHP.
- *
- * @var string $bootstrapApplicationStartID
- */
-$bootstrapApplicationStartID = '';
-
-/**
- * Instance non dé-sérialisée de l'application mémorisée dans la session PHP.
- *
- * @var string $bootstrapApplicationInstanceSleep
- */
-$bootstrapApplicationInstanceSleep = '';
-
-/**
- * Instance non dé-sérialisée de l'affichage de l'application mémorisée dans la session PHP.
- *
- * @var string $bootstrapApplicationDisplayInstanceSleep
- */
-$bootstrapApplicationDisplayInstanceSleep = '';
-
-/**
- * Instance non dé-sérialisée des actions de l'application mémorisée dans la session PHP.
- *
- * @var string $bootstrapApplicationActionInstanceSleep
- */
-$bootstrapApplicationActionInstanceSleep = '';
-
-/**
- * Instance non dé-sérialisée des traductions de l'application mémorisée dans la session PHP.
- *
- * @var string $bootstrapApplicationTraductionInstanceSleep
- */
-$bootstrapApplicationTraductionInstanceSleep = '';
-
-/**
- * Commutateur pour charger directement une application sans passer par le pré-chargement.
- *
- * @var boolean $bootstrapApplicationNoPreload
- */
-$bootstrapApplicationNoPreload = false;
-
-// La recherche de la bibliothèque et de l'application nécessite une bibliothèque nebule PHP PP fonctionnnelle.
 if (libppCheckAll()) {
     // Ouverture de la session PHP.
     session_start();
@@ -4571,12 +4542,16 @@ if (libppCheckAll()) {
  ------------------------------------------------------------------------------------------
  */
 
-/**
- * Instance de la bibliothèque nebule en PHP orienté objet.
- *
- * @var nebule $nebuleInstance
- */
-$nebuleInstance = null;
+// Metrology vars.
+$metrologyLibraryPOOLinksRead = 0;
+$metrologyLibraryPOOLinksVerified = 0;
+$metrologyLibraryPOOObjectsRead = 0;
+$metrologyLibraryPOOObjectsVerified = 0;
+$metrologyLibraryPOOLinkCache = 0;
+$metrologyLibraryPOOObjectCache = 0;
+$metrologyLibraryPOOEntityCache = 0;
+$metrologyLibraryPOOGroupCache = 0;
+$metrologyLibraryPOOConvertationCache = 0;
 
 /**
  * loadLibrary()
@@ -4630,18 +4605,12 @@ function loadLibrary(): void
  *
 
  ==/ 5 /===================================================================================
- PART5 : Display of break web page.
+ PART5 : Manage and display breaking bootstrap on problem or user ask.
 
  TODO.
  ------------------------------------------------------------------------------------------
  */
 
-
-// Bootstrap break management.
-/**
- * Variable de raison d'interruption de chargement du bootstrap.
- */
-$bootstrapBreak = array();
 
 /**
  * Add a break on the bootstrap.
@@ -4659,18 +4628,28 @@ function setBootstrapBreak(string $errorCode, string $errorDesc): void
 }
 
 // ------------------------------------------------------------------------------------------
-/**
- * Variable de détection d'affichage inserré en ligne.
- */
-$bootstrapInlineDisplay = false;
-
-// Lit si affichage inserré en ligne.
-if (filter_has_var(INPUT_GET, ARG_INLINE_DISPLAY)
-    || filter_has_var(INPUT_POST, ARG_INLINE_DISPLAY)
-) {
-    // Affichage inserré en ligne.
-    $bootstrapInlineDisplay = true;
+function getBootstrapUserBreak()
+{
+    if (filter_has_var(INPUT_GET, ARG_BOOTSTRAP_BREAK)
+        || filter_has_var(INPUT_POST, ARG_BOOTSTRAP_BREAK)
+    ) {
+        addLog('ask user interrupt');
+        setBootstrapBreak('12', 'User interrupt.');
+    }
 }
+
+
+// ------------------------------------------------------------------------------------------
+function getBootstrapInlineDisplay():void
+{
+    global $bootstrapInlineDisplay;
+
+    if (filter_has_var(INPUT_GET, ARG_INLINE_DISPLAY)
+        || filter_has_var(INPUT_POST, ARG_INLINE_DISPLAY)
+    )
+        $bootstrapInlineDisplay = true;
+}
+
 
 
 // ------------------------------------------------------------------------------------------
@@ -4704,21 +4683,18 @@ unset($hash, $hashRef, $links, $link, $autority);
 
 
 // ------------------------------------------------------------------------------------------
-/**
- * Variable de détection d'affichage de l'ID de l'entité instance du serveur.
- *
- * @var boolean $bootstrapServerEntityDisplay
- */
-$bootstrapServerEntityDisplay = false;
+function getBootstrapServerEntityDisplay()
+{
+    global $bootstrapServerEntityDisplay;
 
-// Lit si affichage de l'entité du serveur.
-if (filter_has_var(INPUT_GET, ARG_SERVER_ENTITY)
-    || filter_has_var(INPUT_POST, ARG_SERVER_ENTITY)
-) {
-    // Affichage de l'entité du serveur.
-    $bootstrapServerEntityDisplay = true;
-    setBootstrapBreak('52', 'Ask server instance');
+    if (filter_has_var(INPUT_GET, ARG_SERVER_ENTITY)
+        || filter_has_var(INPUT_POST, ARG_SERVER_ENTITY)
+    ) {
+        setBootstrapBreak('52', 'Ask server instance');
+        $bootstrapServerEntityDisplay = true;
+    }
 }
+
 
 
 // ------------------------------------------------------------------------------------------
@@ -5352,11 +5328,7 @@ function bootstrapDisplayOnBreak(): void
            $nebuleMetrologyLinkList,
            $nebuleMetrologyLinkVerify,
            $nebuleMetrologyObjectList,
-           $nebuleMetrologyObjectVerify,
-           $metrologyLibraryPOOLinksRead,
-           $metrologyLibraryPOOLinksVerified,
-           $metrologyLibraryPOOObjectsRead,
-           $metrologyLibraryPOOObjectsVerified;
+           $nebuleMetrologyObjectVerify;
 
     echo 'CHK';
     ob_end_clean();
@@ -5639,34 +5611,20 @@ function bootstrapDisplayOnBreak(): void
 
             // Affichage des valeurs de métrologie.
             echo "<br />\n";
-            $metrologyLibraryPOOLinksRead = $nebuleInstance->getMetrologyInstance()->getLinkRead();
-            $metrologyLibraryPOOLinksVerified = $nebuleInstance->getMetrologyInstance()->getLinkVerify();
-            $metrologyLibraryPOOObjectsRead = $nebuleInstance->getMetrologyInstance()->getObjectRead();
-            $metrologyLibraryPOOObjectsVerified = $nebuleInstance->getMetrologyInstance()->getObjectVerify();
-            $metrologyLibraryPOOLinkCache = $nebuleInstance->getCacheLinkSize();
-            $metrologyLibraryPOOObjectCache = $nebuleInstance->getCacheObjectSize();
-            $metrologyLibraryPOOEntityCache = $nebuleInstance->getCacheEntitySize();
-            $metrologyLibraryPOOGroupCache = $nebuleInstance->getCacheGroupSize();
-            $metrologyLibraryPOOConvertationCache = $nebuleInstance->getCacheConversationSize();
-            $metrologyLibraryPOOCurrencyCache = $nebuleInstance->getCacheCurrencySize();
-            $metrologyLibraryPOOTokenPoolCache = $nebuleInstance->getCacheTokenPoolSize();
-            $metrologyLibraryPOOTokenCache = $nebuleInstance->getCacheTokenSize();
-            $metrologyLibraryPOOWalletCache = $nebuleInstance->getCacheWalletSize();
-            $metrologyLibraryPOOTransactionCache = $nebuleInstance->getCacheTransactionSize();
-            echo 'L(r)=' . $nebuleMetrologyLinkList . '+' . $metrologyLibraryPOOLinksRead . ' ';
-            echo 'L(v)=' . $nebuleMetrologyLinkVerify . '+' . $metrologyLibraryPOOLinksVerified . ' ';
-            echo 'O(r)=' . $nebuleMetrologyObjectList . '+' . $metrologyLibraryPOOObjectsRead . ' ';
-            echo 'O(v)=' . $nebuleMetrologyObjectVerify . '+' . $metrologyLibraryPOOObjectsVerified . " (PP+POO)<br />\n";
-            echo 'L(c)=' . $metrologyLibraryPOOLinkCache . ' ';
-            echo 'O(c)=' . $metrologyLibraryPOOObjectCache . ' ';
-            echo 'E(c)=' . $metrologyLibraryPOOEntityCache . ' ';
-            echo 'G(c)=' . $metrologyLibraryPOOGroupCache . ' ';
-            echo 'C(c)=' . $metrologyLibraryPOOConvertationCache . ' ';
-            echo 'CU(c)=' . $metrologyLibraryPOOCurrencyCache . ' ';
-            echo 'CP(c)=' . $metrologyLibraryPOOTokenPoolCache . ' ';
-            echo 'CT(c)=' . $metrologyLibraryPOOTokenCache . ' ';
-            echo 'CW(c)=' . $metrologyLibraryPOOWalletCache . ' ';
-            echo 'CS(c)=' . $metrologyLibraryPOOTransactionCache;
+            echo 'L(r)=' . $nebuleMetrologyLinkList . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead() . ' ';
+            echo 'L(v)=' . $nebuleMetrologyLinkVerify . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify() . ' ';
+            echo 'O(r)=' . $nebuleMetrologyObjectList . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead() . ' ';
+            echo 'O(v)=' . $nebuleMetrologyObjectVerify . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
+            echo 'L(c)=' . $nebuleInstance->getCacheLinkSize() . ' ';
+            echo 'O(c)=' . $nebuleInstance->getCacheObjectSize() . ' ';
+            echo 'E(c)=' . $nebuleInstance->getCacheEntitySize() . ' ';
+            echo 'G(c)=' . $nebuleInstance->getCacheGroupSize() . ' ';
+            echo 'C(c)=' . $nebuleInstance->getCacheConversationSize() . ' ';
+            echo 'CU(c)=' . $nebuleInstance->getCacheCurrencySize() . ' ';
+            echo 'CP(c)=' . $nebuleInstance->getCacheTokenPoolSize() . ' ';
+            echo 'CT(c)=' . $nebuleInstance->getCacheTokenSize() . ' ';
+            echo 'CW(c)=' . $nebuleInstance->getCacheWalletSize() . ' ';
+            echo 'CS(c)=' . $nebuleInstance->getCacheTransactionSize();
         }
         ?>
 
@@ -5904,47 +5862,34 @@ if ($nb == 0) {
  *
 
  ==/ 7 /===================================================================================
- PART7 : Display of first run web page.
+ PART7 : First synchronization of code and environment.
 
  TODO.
  ------------------------------------------------------------------------------------------
  */
 
 /**
- * Variable de détection de premier démarrage de l'instance de serveur.
+ * Check if we need a first synchronization of code and environment.
+ *
+ * @return boolean
  */
-$bootstrapNeedFirstSynchronization = false;
-
-/*
- * Vérifie l'entité instance du serveur.
- */
-$serverEntite = '';
-if (file_exists(LOCAL_ENTITY_FILE)
-    && is_file(LOCAL_ENTITY_FILE)
-) {
-    $serverEntite = filter_var(strtok(trim(file_get_contents(LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-} else {
-    addLog($bootstrapName . ' - need first synchronisation');
-
-    // Interruption du chargement.
-    setBootstrapBreak('71', 'Need first synchronisation.');
-
-    // Nécessite une première synchronisation.
-    $bootstrapNeedFirstSynchronization = true;
+function getBootstrapNeedFirstSynchronization(): bool
+{
+    if (file_exists(LOCAL_ENTITY_FILE)
+        && is_file(LOCAL_ENTITY_FILE)
+    ) {
+        $serverEntite = filter_var(strtok(trim(file_get_contents(LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        if (!e_check($serverEntite)) {
+            setBootstrapBreak('72', 'Local server entity error');
+            return true;
+        }
+    } else {
+        setBootstrapBreak('71', 'No local server entity');
+        return true;
+    }
+    return false;
 }
-if ($serverEntite == ''
-    || $serverEntite == '0'
-    || strlen($serverEntite) < ($nebuleSymetricKeyLenght / 4)
-    || !ctype_xdigit($serverEntite)
-    || !io_testlinkpresent($serverEntite)
-    || !io_testobjectpresent($serverEntite)
-) {
-    setBootstrapBreak('72', 'Local server entity error');
 
-    // Nécessite une première synchronisation.
-    $bootstrapNeedFirstSynchronization = true;
-}
-unset($serverEntite);
 
 
 // ------------------------------------------------------------------------------------------
@@ -6664,7 +6609,7 @@ else {
  */
 function bootstrapFirstCreateLocaleEntity()
 {
-    global $bootstrapName, $nebuleAsymetricAlgorithm, $nebuleAsymetricKeyLenght,
+    global $bootstrapName,
            $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite;
     ?>
 
@@ -6694,7 +6639,7 @@ function bootstrapFirstCreateLocaleEntity()
             $nebulePublicEntity = '0';
             $nebulePrivateEntite = '0';
             // Génère une nouvelle entité.
-            e_generate($nebuleAsymetricAlgorithm, (int)$nebuleAsymetricKeyLenght, getConfiguration('cryptoHashAlgorithm'), $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite);
+            e_generate(getConfiguration('cryptoAsymetricAlgorithm'), getConfiguration('cryptoHashAlgorithm'), $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite);
 
             // Définit l'entité comme entité instance du serveur.
             file_put_contents(LOCAL_ENTITY_FILE, $nebulePublicEntity);
@@ -7005,7 +6950,7 @@ function bootstrapDisplayApplication1()
  *
 
  ==/ 10 /==================================================================================
- PART10 : Display of application web page.
+ PART10 : Main display router.
 
  TODO.
  ------------------------------------------------------------------------------------------
@@ -7014,210 +6959,238 @@ function bootstrapDisplayApplication1()
 // Calcul du temps de chargement du bootstrap.
 $bootstrapLoadingTime = microtime(true) - $metrologyStartTime;
 
-// Métrologie.
-$metrologyLibraryPOOLinksRead = 0;
-$metrologyLibraryPOOLinksVerified = 0;
-$metrologyLibraryPOOObjectsRead = 0;
-$metrologyLibraryPOOObjectsVerified = 0;
-$metrologyLibraryPOOLinkCache = 0;
-$metrologyLibraryPOOObjectCache = 0;
-$metrologyLibraryPOOEntityCache = 0;
-$metrologyLibraryPOOGroupCache = 0;
-$metrologyLibraryPOOConvertationCache = 0;
+function displayRouter(bool $needFirstSynchronization)
+{
+    global $bootstrapBreak, $bootstrapRescueMode, $bootstrapInlineDisplay, $bootstrapName, $loggerSessionID,
+           $bootstrapApplicationID, $applicationName, $bootstrapApplicationNoPreload,
+           $bootstrapApplicationStartID, $nebuleInstance, $bootstrapLibraryID,
+           $bootstrapServerEntityDisplay,
+           $nebuleMetrologyLinkList, $nebuleMetrologyLinkVerify, $nebuleMetrologyObjectList, $nebuleMetrologyObjectVerify;
 
+    if (sizeof($bootstrapBreak) == 0) {
+        unset($bootstrapBreak, $bootstrapRescueMode, $bootstrapInlineDisplay);
 
-if (sizeof($bootstrapBreak) == 0) {
-    unset($bootstrapBreak, $bootstrapRescueMode, $bootstrapInlineDisplay);
+        // Ferme les I/O de la bibliothèque PHP PP.
+        io_close();
 
-    // Ferme les I/O de la bibliothèque PHP PP.
-    io_close();
+        // Fin de la bufferisation de la sortie avec effacement du buffer.
+        // Ecrit dans le buffer pour test, ne devra jamais apparaître.
+        echo 'CHK';
+        // Tout ce qui aurait éventuellement essayé d'être affiché est perdu.
+        ob_end_clean();
 
-    // Fin de la bufferisation de la sortie avec effacement du buffer.
-    // Ecrit dans le buffer pour test, ne devra jamais apparaître.
-    echo 'CHK';
-    // Tout ce qui aurait éventuellement essayé d'être affiché est perdu.
-    ob_end_clean();
+        if ($bootstrapApplicationID == '0') {
+            addLog('load application 0');
 
-    if ($bootstrapApplicationID == '0') {
-        addLog('load application 0');
+            bootstrapDisplayApplication0();
 
-        bootstrapDisplayApplication0();
-
-        // Change les logs au nom du bootstrap.
-        closelog();
-        openlog($bootstrapName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
-    } elseif ($bootstrapApplicationID == '1') {
-        addLog('load application 1');
-
-        bootstrapDisplayApplication1();
-
-        // Change les logs au nom du bootstrap.
-        closelog();
-        openlog($bootstrapName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
-    } else {
-        // Si tout est déjà pré-chargé, on déserialise.
-        if (isset($bootstrapApplicationInstanceSleep)
-            && $bootstrapApplicationInstanceSleep != ''
-            && isset($bootstrapApplicationDisplayInstanceSleep)
-            && $bootstrapApplicationDisplayInstanceSleep != ''
-            && isset($bootstrapApplicationActionInstanceSleep)
-            && $bootstrapApplicationActionInstanceSleep != ''
-            && isset($bootstrapApplicationTraductionInstanceSleep)
-            && $bootstrapApplicationTraductionInstanceSleep != ''
-        ) {
-            // Chargement de la bibliothèque PHP POO.
-            loadLibrary();
-
-            addLog('load application ' . $bootstrapApplicationID);
-
-            // Charge l'objet de l'application. @todo faire via les i/o.
-            include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
-
-            // Change les logs au nom de l'application.
+            // Change les logs au nom du bootstrap.
             closelog();
-            openlog($applicationName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+            openlog($bootstrapName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+        } elseif ($bootstrapApplicationID == '1') {
+            addLog('load application 1');
 
-            // Désérialise les instances.
-            $applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
-            $applicationDisplayInstance = unserialize($bootstrapApplicationDisplayInstanceSleep);
-            $applicationActionInstance = unserialize($bootstrapApplicationActionInstanceSleep);
-            $applicationTraductionInstance = unserialize($bootstrapApplicationTraductionInstanceSleep);
+            bootstrapDisplayApplication1();
 
-            // Initialisation de réveil de l'instance de l'application.
-            $applicationInstance->initialisation2();
+            // Change les logs au nom du bootstrap.
+            closelog();
+            openlog($bootstrapName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+        } else {
+            // Si tout est déjà pré-chargé, on déserialise.
+            if (isset($bootstrapApplicationInstanceSleep)
+                && $bootstrapApplicationInstanceSleep != ''
+                && isset($bootstrapApplicationDisplayInstanceSleep)
+                && $bootstrapApplicationDisplayInstanceSleep != ''
+                && isset($bootstrapApplicationActionInstanceSleep)
+                && $bootstrapApplicationActionInstanceSleep != ''
+                && isset($bootstrapApplicationTraductionInstanceSleep)
+                && $bootstrapApplicationTraductionInstanceSleep != ''
+            ) {
+                // Chargement de la bibliothèque PHP POO.
+                loadLibrary();
 
-            // Si la requête web est un téléchargement d'objet ou de lien, des accélérations pruvent être prévues dans ce cas.
-            if (!$applicationInstance->askDownload()) {
-                // Initialisation de réveil des instances.
-                $applicationTraductionInstance->initialisation2();
-                $applicationDisplayInstance->initialisation2();
-                $applicationActionInstance->initialisation2();
+                addLog('load application ' . $bootstrapApplicationID);
+
+                // Charge l'objet de l'application. @todo faire via les i/o.
+                include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+
+                // Change les logs au nom de l'application.
+                closelog();
+                openlog($applicationName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+
+                // Désérialise les instances.
+                $applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
+                $applicationDisplayInstance = unserialize($bootstrapApplicationDisplayInstanceSleep);
+                $applicationActionInstance = unserialize($bootstrapApplicationActionInstanceSleep);
+                $applicationTraductionInstance = unserialize($bootstrapApplicationTraductionInstanceSleep);
+
+                // Initialisation de réveil de l'instance de l'application.
+                $applicationInstance->initialisation2();
+
+                // Si la requête web est un téléchargement d'objet ou de lien, des accélérations pruvent être prévues dans ce cas.
+                if (!$applicationInstance->askDownload()) {
+                    // Initialisation de réveil des instances.
+                    $applicationTraductionInstance->initialisation2();
+                    $applicationDisplayInstance->initialisation2();
+                    $applicationActionInstance->initialisation2();
+
+                    // Réalise les tests de sécurité.
+                    $applicationInstance->checkSecurity();
+                }
+
+                // Appel de l'application.
+                $applicationInstance->router();
+            } elseif ($bootstrapApplicationNoPreload) {
+                // Si l'application ne doit être pré-chargée,
+                //   réalise maintenant le pré-chargement de façon transparente et lance l'application.
+                // Ainsi, le pré-chargement n'est pas fait sur une page web à part.
+
+                // Chargement de la bibliothèque PHP POO.
+                loadLibrary();
+
+                addLog('load application whitout preload ' . $bootstrapApplicationID);
+
+                // Charge l'objet de l'application. @todo faire via les i/o.
+                include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+
+                // Change les logs au nom de l'application.
+                closelog();
+                openlog($applicationName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+
+                // Instanciation des classes de l'application.
+                $applicationInstance = new Application($nebuleInstance);
+                $applicationTraductionInstance = new Traduction($applicationInstance);
+                $applicationDisplayInstance = new Display($applicationInstance);
+                $applicationActionInstance = new Action($applicationInstance);
+
+                // Initialisation des instances.
+                $applicationInstance->initialisation();
+                $applicationTraductionInstance->initialisation();
+                $applicationDisplayInstance->initialisation();
+                $applicationActionInstance->initialisation();
 
                 // Réalise les tests de sécurité.
                 $applicationInstance->checkSecurity();
+
+                // Appel de l'application.
+                $applicationInstance->router();
+            } else {
+                // Sinon on va faire un pré-chargement.
+                bootstrapDisplayPreloadApplication();
             }
 
-            // Appel de l'application.
-            $applicationInstance->router();
-        } elseif ($bootstrapApplicationNoPreload) {
-            // Si l'application ne doit être pré-chargée,
-            //   réalise maintenant le pré-chargement de façon transparente et lance l'application.
-            // Ainsi, le pré-chargement n'est pas fait sur une page web à part.
-
-            // Chargement de la bibliothèque PHP POO.
-            loadLibrary();
-
-            addLog('load application whitout preload ' . $bootstrapApplicationID);
-
-            // Charge l'objet de l'application. @todo faire via les i/o.
-            include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
-
-            // Change les logs au nom de l'application.
+            // Change les logs au nom du bootstrap.
             closelog();
-            openlog($applicationName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+            openlog($bootstrapName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
 
-            // Instanciation des classes de l'application.
-            $applicationInstance = new Application($nebuleInstance);
-            $applicationTraductionInstance = new Traduction($applicationInstance);
-            $applicationDisplayInstance = new Display($applicationInstance);
-            $applicationActionInstance = new Action($applicationInstance);
+            // Ouverture de la session PHP.
+            session_start();
 
-            // Initialisation des instances.
-            $applicationInstance->initialisation();
-            $applicationTraductionInstance->initialisation();
-            $applicationDisplayInstance->initialisation();
-            $applicationActionInstance->initialisation();
+            // Sauve les ID dans la session PHP.
+            $_SESSION['bootstrapApplicationID'] = $bootstrapApplicationID;
+            $_SESSION['bootstrapApplicationStartID'] = $bootstrapApplicationStartID;
+            $_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID] = $bootstrapApplicationID;
+            $_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID] = $bootstrapLibraryID;
 
-            // Réalise les tests de sécurité.
-            $applicationInstance->checkSecurity();
+            // Sérialise les instances et les sauve dans la session PHP.
+            $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID] = serialize($applicationInstance);
+            $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID] = serialize($applicationDisplayInstance);
+            $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID] = serialize($applicationActionInstance);
+            $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID] = serialize($applicationTraductionInstance);
+            $_SESSION['bootstrapLibrariesInstances'][$bootstrapLibraryID] = serialize($nebuleInstance);
 
-            // Appel de l'application.
-            $applicationInstance->router();
+            // Fermeture de la session avec écriture.
+            session_write_close();
+        }
+    } else {
+        if ($needFirstSynchronization) {
+            addLog('load first');
+
+            // Affichage sur interruption du chargement.
+            if ($bootstrapInlineDisplay) {
+                bootstrapInlineDisplayApplicationfirst();
+            } else {
+                bootstrapDisplayApplicationfirst();
+            }
+        } elseif ($bootstrapServerEntityDisplay) {
+            if (file_exists(LOCAL_ENTITY_FILE)) {
+                echo file_get_contents(LOCAL_ENTITY_FILE, false, null, -1, getConfiguration('ioReadMaxData'));
+            } else {
+                echo '0';
+            }
         } else {
-            // Sinon on va faire un pré-chargement.
-            bootstrapDisplayPreloadApplication();
+            addLog('load break');
+
+            // Affichage sur interruption du chargement.
+            if ($bootstrapInlineDisplay) {
+                bootstrapInlineDisplayOnBreak();
+            } else {
+                bootstrapDisplayOnBreak();
+            }
         }
 
         // Change les logs au nom du bootstrap.
         closelog();
         openlog($bootstrapName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
-
-        // Ouverture de la session PHP.
-        session_start();
-
-        // Sauve les ID dans la session PHP.
-        $_SESSION['bootstrapApplicationID'] = $bootstrapApplicationID;
-        $_SESSION['bootstrapApplicationStartID'] = $bootstrapApplicationStartID;
-        $_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID] = $bootstrapApplicationID;
-        $_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID] = $bootstrapLibraryID;
-
-        // Sérialise les instances et les sauve dans la session PHP.
-        $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID] = serialize($applicationInstance);
-        $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID] = serialize($applicationDisplayInstance);
-        $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID] = serialize($applicationActionInstance);
-        $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID] = serialize($applicationTraductionInstance);
-        $_SESSION['bootstrapLibrariesInstances'][$bootstrapLibraryID] = serialize($nebuleInstance);
-
-        // Fermeture de la session avec écriture.
-        session_write_close();
-
-        // Métrologie.
-        $metrologyLibraryPOOLinksRead = $nebuleInstance->getMetrologyInstance()->getLinkRead();
-        $metrologyLibraryPOOLinksVerified = $nebuleInstance->getMetrologyInstance()->getLinkVerify();
-        $metrologyLibraryPOOObjectsRead = $nebuleInstance->getMetrologyInstance()->getObjectRead();
-        $metrologyLibraryPOOObjectsVerified = $nebuleInstance->getMetrologyInstance()->getObjectVerify();
-        $metrologyLibraryPOOLinkCache = $nebuleInstance->getCacheLinkSize();
-        $metrologyLibraryPOOObjectCache = $nebuleInstance->getCacheObjectSize();
-        $metrologyLibraryPOOEntityCache = $nebuleInstance->getCacheEntitySize();
-        $metrologyLibraryPOOGroupCache = $nebuleInstance->getCacheGroupSize();
-        $metrologyLibraryPOOConvertationCache = $nebuleInstance->getCacheConversationSize();
     }
-} else {
-    if ($bootstrapNeedFirstSynchronization) {
-        addLog('load first');
 
-        // Affichage sur interruption du chargement.
-        if ($bootstrapInlineDisplay) {
-            bootstrapInlineDisplayApplicationfirst();
-        } else {
-            bootstrapDisplayApplicationfirst();
-        }
-    } elseif ($bootstrapServerEntityDisplay) {
-        if (file_exists(LOCAL_ENTITY_FILE)) {
-            echo file_get_contents(LOCAL_ENTITY_FILE, false, null, -1, getConfiguration('ioReadMaxData'));
-        } else {
-            echo '0';
-        }
+    // Metrology on logs.
+    if (is_a($nebuleInstance, 'nebule')) {
+        addLog('Mp=' . memory_get_peak_usage()
+            . ' - Lr=' . $nebuleMetrologyLinkList . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead()
+            . ' Lv=' . $nebuleMetrologyLinkVerify . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify()
+            . ' Or=' . $nebuleMetrologyObjectList . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead()
+            . ' Ov=' . $nebuleMetrologyObjectVerify . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify()
+            . ' (PP+POO) -'
+            . ' LC=' . $nebuleInstance->getCacheLinkSize()
+            . ' OC=' . $nebuleInstance->getCacheObjectSize()
+            . ' EC=' . $nebuleInstance->getCacheEntitySize()
+            . ' GC=' . $nebuleInstance->getCacheGroupSize()
+            . ' CC=' . $nebuleInstance->getCacheConversationSize());
     } else {
-        addLog('load break');
-
-        // Affichage sur interruption du chargement.
-        if ($bootstrapInlineDisplay) {
-            bootstrapInlineDisplayOnBreak();
-        } else {
-            bootstrapDisplayOnBreak();
-        }
+        addLog('Mp=' . memory_get_peak_usage()
+            . ' - Lr=' . $nebuleMetrologyLinkList
+            . ' Lv=' . $nebuleMetrologyLinkVerify
+            . ' Or=' . $nebuleMetrologyObjectList
+            . ' Ov=' . $nebuleMetrologyObjectVerify
+            . ' (PP)');
     }
-
-    // Change les logs au nom du bootstrap.
-    closelog();
-    openlog($bootstrapName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
 }
 
-// Métrologie.
-addLog('Mp=' . memory_get_peak_usage()
-    . ' - Lr=' . $nebuleMetrologyLinkList . '+' . $metrologyLibraryPOOLinksRead
-    . ' Lv=' . $nebuleMetrologyLinkVerify . '+' . $metrologyLibraryPOOLinksVerified
-    . ' Or=' . $nebuleMetrologyObjectList . '+' . $metrologyLibraryPOOObjectsRead
-    . ' Ov=' . $nebuleMetrologyObjectVerify . '+' . $metrologyLibraryPOOObjectsVerified
-    . ' (PP+POO) -'
-    . ' LC=' . $metrologyLibraryPOOLinkCache
-    . ' OC=' . $metrologyLibraryPOOObjectCache
-    . ' EC=' . $metrologyLibraryPOOEntityCache
-    . ' GC=' . $metrologyLibraryPOOGroupCache
-    . ' CC=' . $metrologyLibraryPOOConvertationCache);
+function main()
+{
+    libppInit();
 
-// Fermeture des logs.
-addLog('--- end ' . $bootstrapName);
-//closelog();
+    /*
+     * Vérifie que la bibliothèque nebule PHP PP s'est bien chargée.
+     */
+    if (!libppCheckAll())
+        setBootstrapBreak('21', 'Library init error');
+
+    /*
+     * Vérifie que le dossier des liens est fonctionnel.
+     */
+    if (!io_checklinkfolder())
+        setBootstrapBreak('22', "Library i/o link's folder error");
+
+    /*
+     * Vérifie que le dossier des objets est fonctionnel.
+     */
+    if (!io_checkobjectfolder())
+        setBootstrapBreak('23', "Library i/o object's folder error");
+
+    getBootstrapUserBreak();
+    getBootstrapInlineDisplay();
+    $needFirstSynchronization = getBootstrapNeedFirstSynchronization();
+    getBootstrapServerEntityDisplay();
+    setPermitOpenFileCode();
+    getBootstrapFlushSession();
+    getBootstrapUpdate();
+    getBootstrapSwitchApplication();
+
+
+    displayRouter($needFirstSynchronization);
+}
+main();
+
 ?>
