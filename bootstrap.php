@@ -376,6 +376,26 @@ $bootstrapApplicationNoPreload = false;
  */
 $bootstrapSwitchApplication = '';
 
+/**
+ * Instance de l'application.
+ */
+$applicationInstance = null;
+
+/**
+ * Instance d'affichage de l'application.
+ */
+$applicationDisplayInstance = null;
+
+/**
+ * Instance d'action de l'application.
+ */
+$applicationActionInstance = null;
+
+/**
+ * Instance de traduction de l'application.
+ */
+$applicationTraductionInstance = null;
+
 
 
 /*
@@ -569,6 +589,102 @@ define('LIST_OPTIONS_DEFAULT_VALUE', array(
 $configurationList = array();
 
 /**
+ * ID cerberus maître de la sécurité.
+ */
+$nebuleSecurityMaster = '0';
+
+/**
+ * ID bachue maître du code.
+ */
+$nebuleCodeMaster = '0';
+
+/**
+ * ID asabiyya maître de l'annuaire.
+ */
+$nebuleDirectoryMaster = '0';
+
+/**
+ * ID kronos maître du temps.
+ */
+$nebuleTimeMaster = '0';
+
+/**
+ * ID de l'entité locale du serveur.
+ */
+$nebuleServerEntite = '';
+
+/**
+ * ID de l'entité par défaut.
+ */
+$nebuleDefaultEntity = '';
+
+/**
+ * ID de l'entité en cours.
+ */
+$nebulePublicEntity = '';
+
+/**
+ * Clé privée de l'entité en cours.
+ */
+$nebulePrivateEntite = '';
+
+/**
+ * Mot de passe de l'entité en cours.
+ */
+$nebulePasswordEntite = '';
+
+/**
+ * Liste des entités autorités locale.
+ */
+$nebuleLocalAuthorities = array();
+
+/**
+ * Metrology - Lib PP link read counter.
+ */
+$nebuleMetrologyLinkRead = 0;
+
+/**
+ * Metrology - Lib PP link verify counter.
+ */
+$nebuleMetrologyLinkVerify = 0;
+
+/**
+ * Metrology - Lib PP object read counter.
+ */
+$nebuleMetrologyObjectRead = 0;
+
+/**
+ * Metrology - Lib PP object verify counter.
+ */
+$nebuleMetrologyObjectVerify = 0;
+
+// Usage interne, échange d'informations entre fonctions et métrologie.
+$nebuleErrorMessage = 'pas de message';
+$nebuleResultList = array();
+
+$nebuleCacheReadObjText1line = array();
+$nebuleCacheReadObjName = array();
+$nebuleCacheReadObjSize = array();
+$nebuleCacheReadEntityType = array();
+$nebuleCacheReadEntityLoc = array();
+$nebuleCacheReadEntityFName = array();
+$nebuleCacheReadEntityName = array();
+$nebuleCacheReadEntityPName = array();
+$nebuleCacheReadEntityFullName = array();
+$nebuleCacheFindObjType = array();
+$nebuleCacheReadObjTypeMime = array();
+$nebuleCacheReadObjTypeHash = array();
+$nebuleCacheIsText = array();
+$nebuleCacheIsBanned = array();
+$nebuleCacheIsSuppr = array();
+$nebuleCacheIsPubkey = array();
+$nebuleCacheIsPrivkey = array();
+$nebuleCacheIsEncrypt = array();
+$nebuleCacheFindPrivKey = '';
+$nebuleCachelibpp_o_vr = array();
+$nebuleCachelibpp_l_grx = array();
+
+/**
  * Return option's value. Options presents on environment file are forced.
  * @param string $name
  * @return null|string|boolean|integer
@@ -635,86 +751,6 @@ function getConfiguration(string $name)
     $configurationList[$name] = $result;
     return $result;
 }
-
-/**
- * ID cerberus maître de la sécurité.
- */
-$nebuleSecurityMaster = '0';
-
-/**
- * ID bachue maître du code.
- */
-$nebuleCodeMaster = '0';
-
-/**
- * ID asabiyya maître de l'annuaire.
- */
-$nebuleDirectoryMaster = '0';
-
-/**
- * ID kronos maître du temps.
- */
-$nebuleTimeMaster = '0';
-
-/**
- * ID de l'entité locale du serveur.
- */
-$nebuleServerEntite = '';
-
-/**
- * ID de l'entité par défaut.
- */
-$nebuleDefaultEntity = '';
-
-/**
- * ID de l'entité en cours.
- */
-$nebulePublicEntity = '';
-
-/**
- * Clé privée de l'entité en cours.
- */
-$nebulePrivateEntite = '';
-
-/**
- * Mot de passe de l'entité en cours.
- */
-$nebulePasswordEntite = '';
-
-/**
- * Liste des entités autorités locale.
- */
-$nebuleLocalAuthorities = array();
-
-// Usage interne, échange d'informations entre fonctions et métrologie.
-$nebuleErrorMessage = 'pas de message';
-$nebuleResultList = array();
-$nebuleMetrologyLinkList = 0;
-$nebuleMetrologyLinkVerify = 0;
-$nebuleMetrologyObjectList = 0;
-$nebuleMetrologyObjectVerify = 0;
-
-$nebuleCacheReadObjText1line = array();
-$nebuleCacheReadObjName = array();
-$nebuleCacheReadObjSize = array();
-$nebuleCacheReadEntityType = array();
-$nebuleCacheReadEntityLoc = array();
-$nebuleCacheReadEntityFName = array();
-$nebuleCacheReadEntityName = array();
-$nebuleCacheReadEntityPName = array();
-$nebuleCacheReadEntityFullName = array();
-$nebuleCacheFindObjType = array();
-$nebuleCacheReadObjTypeMime = array();
-$nebuleCacheReadObjTypeHash = array();
-$nebuleCacheIsText = array();
-$nebuleCacheIsBanned = array();
-$nebuleCacheIsSuppr = array();
-$nebuleCacheIsPubkey = array();
-$nebuleCacheIsPrivkey = array();
-$nebuleCacheIsEncrypt = array();
-$nebuleCacheFindPrivKey = '';
-$nebuleCachelibpp_o_vr = array();
-$nebuleCachelibpp_l_grx = array();
 
 /*
  * ------------------------------------------------------------------------------------------
@@ -1904,6 +1940,61 @@ function nebCreatObjHash(&$object)
  * ------------------------------------------------------------------------------------------
  */
 
+/**
+ * Metrology - Incrementing one stat counter.
+ * @param string $type
+ */
+function m_add(string $type): void
+{
+    global $nebuleMetrologyLinkRead, $nebuleMetrologyLinkVerify, $nebuleMetrologyObjectRead, $nebuleMetrologyObjectVerify;
+
+    switch ($type)
+    {
+        case 'lr':
+            $nebuleMetrologyLinkRead++;
+            break;
+        case 'lv':
+            $nebuleMetrologyLinkVerify++;
+            break;
+        case 'or':
+            $nebuleMetrologyObjectRead++;
+            break;
+        case 'ov':
+            $nebuleMetrologyObjectVerify++;
+            break;
+    }
+}
+
+/**
+ * Metrology - Return one stat counter.
+ * @param string $type
+ * @return string
+ */
+function m_get(string $type): string
+{
+    global $nebuleMetrologyLinkRead, $nebuleMetrologyLinkVerify, $nebuleMetrologyObjectRead, $nebuleMetrologyObjectVerify;
+
+    $return = '';
+    switch ($type)
+    {
+        case 'lr':
+            $return = $nebuleMetrologyLinkRead;
+            break;
+        case 'lv':
+            $return = $nebuleMetrologyLinkVerify;
+            break;
+        case 'or':
+            $return = $nebuleMetrologyObjectRead;
+            break;
+        case 'ov':
+            $return = $nebuleMetrologyObjectVerify;
+            break;
+    }
+    return $return;
+}
+
+// ------------------------------------------------------------------------------------------
+
 /** FIXME
  * Entity -
  *
@@ -2526,7 +2617,7 @@ function o_downloadContent(string $object, string $localisation): void
  */
 function o_checkcontent(&$nid)
 {
-    global $nebuleMetrologyObjectVerify, $nebuleCachelibpp_o_vr;
+    global $nebuleCachelibpp_o_vr;
 
     if ($nid == '') {
         return false;
@@ -2547,7 +2638,7 @@ function o_checkcontent(&$nid)
     if (isset($nebuleCachelibpp_o_vr[$nid]))
         return true;
 
-    $nebuleMetrologyObjectVerify++;
+    m_add('ov');
     $hash = hash_file(getConfiguration('cryptoHashAlgorithm'), LOCAL_OBJECTS_FOLDER . "/$nid"); // @todo refaire via les i/o.
 
     if ($hash !== $nid) {
@@ -3164,7 +3255,6 @@ function l_listonelink(&$object, &$table, $filtreact = '-', $filtreobj = '', $wi
     // - $filtreact filtre optionnel sur l'action.
     // - $filtreobj filtre optionnel sur un objet source, destination ou meta.
     // - $withinvalid optionnel pour autoriser la lecture des liens invalides.
-    global $nebuleMetrologyLinkList;
 
     $checkSignOnList = getConfiguration('permitCheckSignOnList');
 
@@ -3187,7 +3277,6 @@ function l_listonelink(&$object, &$table, $filtreact = '-', $filtreobj = '', $wi
             $version = $line;
             continue 1;
         } // Permet la prise en compte de differentes versions de liens - non utilise aujourd'hui.
-        $nebuleMetrologyLinkList++; // Métrologie.
         $okfiltre = false; // Résultat du filtre, sera à true si dans les critères.
         $tline [0] = '';
         $tline [1] = '';
@@ -3564,8 +3653,6 @@ function l_checkRS(string &$rs, string &$bh, string &$bl): bool
  */
 function l_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): bool
 {
-    global $nebuleMetrologyLinkVerify;
-
     if (strlen($sig) > 4096) return false; // TODO à revoir.
 
     // Check hash value.
@@ -3602,7 +3689,7 @@ function l_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): bool
         $pubkeyid = openssl_pkey_get_public($cert);
         if ($pubkeyid === false) return false;
 
-        $nebuleMetrologyLinkVerify++;
+        m_add('lv');
 
         // Encoding sign before check.
         $binsign = pack('H*', $sign);
@@ -3898,6 +3985,7 @@ function io_linksread(&$o)
         if ($n > $m) {
             break 1;
         }
+        m_add('lr');
         $n++;
     }
     return $t;
@@ -3913,8 +4001,6 @@ function io_linksread(&$o)
  */
 function io_objectread(&$o, $m = 0)
 {
-    global $nebuleMetrologyObjectList;
-
     if ($m == 0) {
         $m = getConfiguration('ioReadMaxData');
     }
@@ -3927,7 +4013,7 @@ function io_objectread(&$o, $m = 0)
         $s = $m;
     }
 
-    $nebuleMetrologyObjectList++;
+    m_add('or');
     return file_get_contents(LOCAL_OBJECTS_FOLDER . '/' . $o, false, null, 0, $s);
 }
 
@@ -4003,7 +4089,6 @@ function io_close(): void
     // Rien à fermer sur un fs.
     return;
 }
-
 
 /*
  * ------------------------------------------------------------------------------------------
@@ -4611,7 +4696,6 @@ function loadLibrary(): void
  ------------------------------------------------------------------------------------------
  */
 
-
 /**
  * Add a break on the bootstrap.
  * In the end, this stop the loading of any application code and show the bootstrap break page.
@@ -4628,7 +4712,8 @@ function setBootstrapBreak(string $errorCode, string $errorDesc): void
 }
 
 // ------------------------------------------------------------------------------------------
-function getBootstrapUserBreak()
+
+function getBootstrapUserBreak(): void
 {
     if (filter_has_var(INPUT_GET, ARG_BOOTSTRAP_BREAK)
         || filter_has_var(INPUT_POST, ARG_BOOTSTRAP_BREAK)
@@ -4640,7 +4725,7 @@ function getBootstrapUserBreak()
 
 
 // ------------------------------------------------------------------------------------------
-function getBootstrapInlineDisplay():void
+function getBootstrapInlineDisplay(): void
 {
     global $bootstrapInlineDisplay;
 
@@ -4653,33 +4738,35 @@ function getBootstrapInlineDisplay():void
 
 
 // ------------------------------------------------------------------------------------------
-
-// Vérifie l'empreinte du bootstrap. @todo ajouter vérification de marquage de danger.
-$data = file_get_contents(BOOTSTRAP_FILE_NAME);
-$hash = o_getNID($data);
-unset($data);
-// Recherche les liens de validation.
-$hashRef = o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP);
-$links = array();
-l_findinclusive($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
-// Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
-$ok = false;
-$autority = '';
-foreach ($links as $link) {
-    foreach ($nebuleLocalAuthorities as $autority) {
-        if ($link[2] == $autority) {
-            $ok = true;
-            break 2;
+function getBootstrapCheckFingerprint(): void
+{
+    $data = file_get_contents(BOOTSTRAP_FILE_NAME);
+    $hash = o_getNID($data);
+    unset($data);
+    // Recherche les liens de validation.
+    $hashRef = o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP);
+    $links = array();
+    l_findinclusive($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
+    // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
+    $ok = false;
+    $autority = '';
+    foreach ($links as $link) {
+        foreach ($nebuleLocalAuthorities as $autority) {
+            if ($link[2] == $autority) {
+                $ok = true;
+                break 2;
+            }
         }
     }
-}
-if (!$ok) {
-    addLog('unknown bootstrap hash - critical');
+    if (!$ok) {
+        addLog('unknown bootstrap hash - critical');
 
-    // Arrêt du bootstrap.
-    setBootstrapBreak('52', 'Unknown bootstrap hash');
+        // Arrêt du bootstrap.
+        setBootstrapBreak('52', 'Unknown bootstrap hash');
+    }
 }
-unset($hash, $hashRef, $links, $link, $autority);
+// Vérifie l'empreinte du bootstrap. @todo ajouter vérification de marquage de danger.
+
 
 
 // ------------------------------------------------------------------------------------------
@@ -5324,11 +5411,7 @@ function bootstrapDisplayOnBreak(): void
            $nebuleServerEntite,
            $nebuleDefaultEntite,
            $nebulePublicEntity,
-           $nebuleLibVersion,
-           $nebuleMetrologyLinkList,
-           $nebuleMetrologyLinkVerify,
-           $nebuleMetrologyObjectList,
-           $nebuleMetrologyObjectVerify;
+           $nebuleLibVersion;
 
     echo 'CHK';
     ob_end_clean();
@@ -5611,10 +5694,10 @@ function bootstrapDisplayOnBreak(): void
 
             // Affichage des valeurs de métrologie.
             echo "<br />\n";
-            echo 'L(r)=' . $nebuleMetrologyLinkList . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead() . ' ';
-            echo 'L(v)=' . $nebuleMetrologyLinkVerify . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify() . ' ';
-            echo 'O(r)=' . $nebuleMetrologyObjectList . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead() . ' ';
-            echo 'O(v)=' . $nebuleMetrologyObjectVerify . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
+            echo 'L(r)=' . m_get('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead() . ' ';
+            echo 'L(v)=' . m_get('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify() . ' ';
+            echo 'O(r)=' . m_get('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead() . ' ';
+            echo 'O(v)=' . m_get('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
             echo 'L(c)=' . $nebuleInstance->getCacheLinkSize() . ' ';
             echo 'O(c)=' . $nebuleInstance->getCacheObjectSize() . ' ';
             echo 'E(c)=' . $nebuleInstance->getCacheEntitySize() . ' ';
@@ -5707,26 +5790,6 @@ function bootstrapInlineDisplayOnBreak()
  TODO.
  ------------------------------------------------------------------------------------------
  */
-
-/**
- * Instance de l'application.
- */
-$applicationInstance = null;
-
-/**
- * Instance d'affichage de l'application.
- */
-$applicationDisplayInstance = null;
-
-/**
- * Instance d'action de l'application.
- */
-$applicationActionInstance = null;
-
-/**
- * Instance de traduction de l'application.
- */
-$applicationTraductionInstance = null;
 
 /**
  * bootstrapDisplayPreloadApplication()
@@ -6956,16 +7019,12 @@ function bootstrapDisplayApplication1()
  ------------------------------------------------------------------------------------------
  */
 
-// Calcul du temps de chargement du bootstrap.
-$bootstrapLoadingTime = microtime(true) - $metrologyStartTime;
-
 function displayRouter(bool $needFirstSynchronization)
 {
     global $bootstrapBreak, $bootstrapRescueMode, $bootstrapInlineDisplay, $bootstrapName, $loggerSessionID,
            $bootstrapApplicationID, $applicationName, $bootstrapApplicationNoPreload,
            $bootstrapApplicationStartID, $nebuleInstance, $bootstrapLibraryID,
-           $bootstrapServerEntityDisplay,
-           $nebuleMetrologyLinkList, $nebuleMetrologyLinkVerify, $nebuleMetrologyObjectList, $nebuleMetrologyObjectVerify;
+           $bootstrapServerEntityDisplay;
 
     if (sizeof($bootstrapBreak) == 0) {
         unset($bootstrapBreak, $bootstrapRescueMode, $bootstrapInlineDisplay);
@@ -7137,10 +7196,10 @@ function displayRouter(bool $needFirstSynchronization)
     // Metrology on logs.
     if (is_a($nebuleInstance, 'nebule')) {
         addLog('Mp=' . memory_get_peak_usage()
-            . ' - Lr=' . $nebuleMetrologyLinkList . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead()
-            . ' Lv=' . $nebuleMetrologyLinkVerify . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify()
-            . ' Or=' . $nebuleMetrologyObjectList . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead()
-            . ' Ov=' . $nebuleMetrologyObjectVerify . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify()
+            . ' - Lr=' . m_get('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead()
+            . ' Lv=' . m_get('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify()
+            . ' Or=' . m_get('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead()
+            . ' Ov=' . m_get('ov') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify()
             . ' (PP+POO) -'
             . ' LC=' . $nebuleInstance->getCacheLinkSize()
             . ' OC=' . $nebuleInstance->getCacheObjectSize()
@@ -7149,10 +7208,10 @@ function displayRouter(bool $needFirstSynchronization)
             . ' CC=' . $nebuleInstance->getCacheConversationSize());
     } else {
         addLog('Mp=' . memory_get_peak_usage()
-            . ' - Lr=' . $nebuleMetrologyLinkList
-            . ' Lv=' . $nebuleMetrologyLinkVerify
-            . ' Or=' . $nebuleMetrologyObjectList
-            . ' Ov=' . $nebuleMetrologyObjectVerify
+            . ' - Lr=' . m_get('lr')
+            . ' Lv=' . m_get('lv')
+            . ' Or=' . m_get('or')
+            . ' Ov=' . m_get('ov')
             . ' (PP)');
     }
 }
@@ -7181,6 +7240,7 @@ function main()
 
     getBootstrapUserBreak();
     getBootstrapInlineDisplay();
+    getBootstrapCheckFingerprint();
     $needFirstSynchronization = getBootstrapNeedFirstSynchronization();
     getBootstrapServerEntityDisplay();
     setPermitOpenFileCode();
@@ -7191,6 +7251,10 @@ function main()
 
     displayRouter($needFirstSynchronization);
 }
+
+// Calcul du temps de chargement du bootstrap.
+$bootstrapLoadingTime = microtime(true) - $metrologyStartTime;
+
 main();
 
 ?>
