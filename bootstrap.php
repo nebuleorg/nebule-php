@@ -914,48 +914,30 @@ function getModeRescue(): bool
  *
  * Si pas trouvé, retourne '0'.
  *
- * @param string $object
- * @param string $reference
+ * @param string $nid
+ * @param string $rid
  * @param boolean $strict
  * @return string
  */
-function nebFindByRef($object, $reference, $strict = false)
+function nebFindByRef(string $nid, string $rid, bool $strict = false)
 {
     global $nebuleLocalAuthorities;
 
-    if ($object == '0'
-        || $object == ''
-        || !ctype_xdigit($object)
-    ) {
-        return '0';
-    }
-    if ($reference == '') {
-        return '0';
-    }
-
-    $referenceID = o_getNID($reference);
     $result = '0';
-    $links = array();
-    $link = array();
-    //_neblibpp_l_fndi($object, $links, 'f', $referenceID, '', $referenceID, false);
-    l_findinclusive($object, $links, 'f', $object, '', $referenceID, false);
+    if (!n_checkNID($nid) || !n_checkNID($rid))
+        return $result;
 
-    $signer = '';
-    $authority = '';
+    $links = array();
+    l_findinclusive($nid, $links, 'f', $nid, '', $rid, false);
     foreach ($links as $link) {
         // Au besoin, filtre les liens sur les autorités locales.
-        if ($strict !== false) {
+        if ($strict) {
             $signer = $link[2];
-            $ok = false;
             foreach ($nebuleLocalAuthorities as $authority) {
                 if ($signer == $authority) {
-                    $ok = true;
+                    $result = $link[6];
                     break;
                 }
-            }
-            if ($ok) {
-                // Si le signataire est autorité locale, garde le dernier.
-                $result = $link[6];
             }
         } else {
             // Garde le dernier.
@@ -963,7 +945,6 @@ function nebFindByRef($object, $reference, $strict = false)
         }
     }
 
-    unset($links, $link, $signer, $authority, $referenceID);
     return $result;
 }
 
@@ -2187,7 +2168,7 @@ function e_generate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $pas
  */
 function e_check(string $nid): bool
 {
-    if (!o_checkNID($nid, false)
+    if (!n_checkNID($nid, false)
         || $nid == '0'
         || strlen($nid) < NID_MIN_HASH_SIZE
         || !io_testObjectPresent($nid)
@@ -2333,107 +2314,6 @@ function o_generate(&$data, $typemime = '')
     unset($lnk);
 }
 
-/** FIXME
- * Object -
- *
- * @param $object
- * @return bool
- */
-function o_followupdates(&$object): bool // WARNING non fonctionnel !!!
-{ // Détermine l'objet à utiliser après prise en compte d'éventuelle mise à jour et suppression.
-    // L'objet doit être disponible.
-    // Le fonctionnement de la boucle est pseudo-arborescent pour éviter les appels récursifs de fonctions.
-
-    if ((1 + 1) == 2) // Always quit
-    {
-        return true;
-    }
-    $childrentable = array(); // Liste des enfants des objets.
-    $parentstable = array(); // Liste des parents des objets.
-    $ispresenttable = array(); // Liste des objets existants.
-    $objstatetable = array(); // Liste l'état des objets : vide si non lu ou R si déjà lu.
-    $readcount = 0; // Comptabilise les objets déjà lus.
-    $okobj = ''; // Contiendra l'objet en bout de branche si existant, ou en milieu de branche si existant et si non existant en bout de branche.
-    $checkobj = $object; // On démarre avec l'objet demandé.
-    while ($okobj == '') {
-        if ($objstatetable [$checkobj] == '') // Si l'objet est inconnu.
-        {
-            $links = array(); // Liste temporaire des liens u pour un objet.
-            l_listlinks($checkobj, $links, 'u'); // Lit les liens u prè-traités x.
-            if (sizeof($links) != 0) // Si il y a des objest enfants.
-            {
-                $i = 0;
-                foreach ($links as $link) // Liste les liens.
-                {
-                    $childrentable [$checkobj] [$i] = $link [6]; // Récupère les objets enfants.
-                    $parentstable [$link [5]] = $checkobj; // Définit le parent de l'objet enfant.
-                    $i++; // Ne tient compte que du dernier parent trouvé.
-                }
-            }
-            unset($links); // Vide la liste temporaire des liens.
-            if (io_testObjectPresent($checkobj)) {
-                $ispresenttable [$checkobj] = '1';
-            } else {
-                $ispresenttable [$checkobj] = '0';
-            } // Verifie la présence de l'objet.
-            $objstatetable [$checkobj] = 'R';
-            $readcount++;
-        } // L'objet est maintenant connu.
-        if (sizeof($childrentable [$checkobj]) == 0) // Si pas d'enfants.
-        {
-            if ($ispresenttable [$checkobj] == '1') {
-                $okobj = $checkobj;
-            } // Si l'objet est présent, c'est celui que l'on retient !
-            $checkobj = $parentstable [$checkobj]; // Sinon on continue avec l'objet parent.
-        } else // Sinon on recherche le dernier objet enfant non testé.
-        {
-            $nextchild = '';
-            foreach ($childrentable [$checkobj] as $child) // Liste les objets enfants.
-            {
-                if ($objstatetable [$child] == '') {
-                    $nextchild = $child;
-                } // L'objet enfant est non testé, ne prend que le dernier non testé.
-            }
-            if ($nextchild != '') // Si un objet enfant est à tester.
-            {
-                $checkobj = $nextchild; // On continue la boucle avec l'objet enfant.
-            } else // Sinon on remonte à l'objet parent.
-            {
-                if ($parentstable [$checkobj] == '') {
-                    $okobj = $checkobj;
-                } // Si c'est l'objet d'origine, on arrête là.
-                else {
-                    $checkobj = $parentstable [$checkobj];
-                } // Sinon on continue la boucle avec l'objet parent.
-            }
-        }
-    }
-    $object = $okobj;
-    unset($childrentable);
-    unset($ispresenttable);
-    unset($objstatetable);
-    unset($readcount);
-
-    return true;
-}
-
-/** FIXME
- * Object - Lit de contenu d'un objet après prise en compte d'éventuelle mise à jour et suppression.
- *
- * @param string $object
- * @param string $data
- * @return boolean
- */
-function o_getupdatedcontent($object, &$data)
-{
-    o_followupdates($object);
-
-    if ($object != '') {
-        return o_getcontent($object, $data);
-    }
-    return false;
-}
-
 /**
  * Object - Read object content and push on $data.
  *
@@ -2478,7 +2358,7 @@ function o_downloadupdatedcontent(string $object): void
             }
             if ($t) {
                 $lnk = '';
-                o_getupdatedcontent($itemtable [6], $lnk);
+                o_getcontent($itemtable [6], $lnk);
                 if ($lnk != '') {
                     o_downloadContent($object, $lnk);
                 }
@@ -2641,13 +2521,13 @@ function o_getNID(string $data, string $algo = ''): string
 }
 
 /**
- * Object - Verify name structure of the object : hash.algo.size
+ * Object - Verify name structure of the node : hash.algo.size
  *
  * @param string $nid
  * @param boolean $permitnull
  * @return boolean
  */
-function o_checkNID(string &$nid, bool $permitnull = false): bool
+function n_checkNID(string &$nid, bool $permitnull = false): bool
 {
     // May be null in some case.
     if ($permitnull && $nid == '')
@@ -2761,11 +2641,11 @@ function l_generate(string $CHR, string $REQ, string $NID1, string $NID2 = '', s
         return '';
     if ($REQ == '')
         return '';
-    if (!o_checkNID($NID1))
+    if (!n_checkNID($NID1))
         return '';
-    if (!o_checkNID($NID2, true))
+    if (!n_checkNID($NID2, true))
         return '';
-    if (!o_checkNID($NID3, true))
+    if (!n_checkNID($NID3, true))
         return '';
     if ($CHR == '-')
         $CHR = date(DATE_ATOM);
@@ -2885,7 +2765,7 @@ function l_graphresolvone(&$object, &$visited, $present = true, $synchro = false
         if ($synchro
             && getConfiguration('permitSynchronizeObject')
         ) {
-            o_downloadupdatedcontent($object); // Syncho de l'objet.
+            o_downloadContent($object); // Syncho de l'objet.
         }
         if (!$present
             || io_testObjectPresent($object)
@@ -3336,7 +3216,7 @@ function l_downloadlinkanywhere($object)
             }
             if ($t) {
                 $lnk = '';
-                o_getupdatedcontent($itemtable [6], $lnk);
+                o_getcontent($itemtable [6], $lnk);
                 if ($lnk != '') {
                     l_downloadlinkonlocation($object, $lnk);
                 }
@@ -3539,9 +3419,9 @@ function l_checkRL(string &$rl): bool
     // --- --- --- --- --- --- --- --- ---
     // Check REQ, NID1, NID2 and NID4.
     if (!l_checkREQ($req)) return false;
-    if (!o_checkNID($rl1nid1, false)) return false;
-    if (!o_checkNID($rl1nid2, true)) return false;
-    if (!o_checkNID($rl1nid3, true)) return false;
+    if (!n_checkNID($rl1nid1, false)) return false;
+    if (!n_checkNID($rl1nid2, true)) return false;
+    if (!n_checkNID($rl1nid3, true)) return false;
 
     return true;
 }
@@ -3579,7 +3459,7 @@ function l_checkBS(string &$bh, string &$bl, string &$bs): bool
     if (strtok('/') !== false) return false;
 
     // Check content RS 1 NID 1 : hash.algo.size
-    if (!o_checkNID($rs1nid1, false)) return false;
+    if (!n_checkNID($rs1nid1, false)) return false;
     if (!l_checkRS($rs, $bh, $bl)) return false;
 
     return true;
@@ -3606,7 +3486,7 @@ function l_checkRS(string &$rs, string &$bh, string &$bl): bool
 
     // --- --- --- --- --- --- --- --- ---
     // Check content RS 1 NID 1 : hash.algo.size
-    if (!o_checkNID($nid, false)) return false;
+    if (!n_checkNID($nid, false)) return false;
     if (!l_checkSIG($bh, $bl, $sig, $nid)) return false;
 
     return true;
@@ -4338,7 +4218,7 @@ if (libppCheckAll()) {
             // Recherche la dernière application depuis l'objet de référence sur lui-même.
             $bootstrapApplicationID = nebFindByRef(
                 $bootstrapApplicationStartID,
-                REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS,
+                o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS),
                 false);
         } else {
             // Vérifie l'ID de l'application mémorisé.
@@ -4451,7 +4331,7 @@ if (libppCheckAll()) {
                     // Sinon recherche la dernière application depuis l'objet de référence sur lui-même.
                     $bootstrapApplicationID = nebFindByRef(
                         $bootstrapApplicationStartID,
-                        REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS,
+                        o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS),
                         false);
                 }
 
@@ -4482,7 +4362,7 @@ if (libppCheckAll()) {
             // Recherche la dernière application depuis l'objet de référence sur lui-même.
             $bootstrapApplicationID = nebFindByRef(
                 $bootstrapApplicationStartID,
-                REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS,
+                o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS),
                 false);
         } else {
             $bootstrapApplicationStartID = '0';
@@ -4529,7 +4409,7 @@ if (libppCheckAll()) {
         // Recherche la dernière bibliothèque depuis l'objet de référence sur lui-même.
         $bootstrapLibraryID = nebFindByRef(
             o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE),
-            REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE,
+            o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE),
             false);
 
         addLog('find nebule library ' . $bootstrapLibraryID);
@@ -6138,7 +6018,7 @@ function bootstrapFirstSynchronizingEntities()
         // Recherche via l'objet de référence.
         $entity = nebFindByRef(
             o_getNID('nebule/objet/entite/maitre/securite'),
-            'nebule/objet/entite/maitre/securite',
+            o_getNID('nebule/objet/entite/maitre/securite'),
             false);
         echo ' ' . $entity . ' ';
         if (ctype_xdigit($entity)
@@ -6165,7 +6045,7 @@ function bootstrapFirstSynchronizingEntities()
         // Recherche via l'objet de référence.
         $entity = nebFindByRef(
             o_getNID('nebule/objet/entite/maitre/code'),
-            'nebule/objet/entite/maitre/code',
+            o_getNID('nebule/objet/entite/maitre/code'),
             false);
         echo ' ' . $entity . ' ';
         if (ctype_xdigit($entity)
@@ -6192,7 +6072,7 @@ function bootstrapFirstSynchronizingEntities()
         // Recherche via l'objet de référence.
         $entity = nebFindByRef(
             o_getNID('nebule/objet/entite/maitre/annuaire'),
-            'nebule/objet/entite/maitre/annuaire',
+            o_getNID('nebule/objet/entite/maitre/annuaire'),
             false);
         echo ' ' . $entity . ' ';
         if (ctype_xdigit($entity)
@@ -6219,7 +6099,7 @@ function bootstrapFirstSynchronizingEntities()
         // Recherche via l'objet de référence.
         $entity = nebFindByRef(
             o_getNID('nebule/objet/entite/maitre/temps'),
-            'nebule/objet/entite/maitre/temps',
+            o_getNID('nebule/objet/entite/maitre/temps'),
             false);
         echo ' ' . $entity . ' ';
         if (ctype_xdigit($entity)
@@ -6373,7 +6253,7 @@ function bootstrapFirstSynchronizingObjects()
         // Recherche par référence.
         $lastID = nebFindByRef(
             $refLibID,
-            $refLib,
+            $refLibID,
             false);
         echo $lastID . ' ';
         if ($lastID != '0') {
@@ -6435,7 +6315,7 @@ function bootstrapFirstSynchronizingObjects()
             // Recherche par référence.
             $lastID = nebFindByRef(
                 $appID,
-                $refApps,
+                $refAppsID,
                 false);
             addLog('find app ' . $appID . ' as ' . $lastID);
             if ($lastID != '0') {
