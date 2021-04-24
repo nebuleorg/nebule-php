@@ -396,6 +396,17 @@ $applicationActionInstance = null;
  */
 $applicationTraductionInstance = null;
 
+// Metrology vars.
+$metrologyLibraryPOOLinksRead = 0;
+$metrologyLibraryPOOLinksVerified = 0;
+$metrologyLibraryPOOObjectsRead = 0;
+$metrologyLibraryPOOObjectsVerified = 0;
+$metrologyLibraryPOOLinkCache = 0;
+$metrologyLibraryPOOObjectCache = 0;
+$metrologyLibraryPOOEntityCache = 0;
+$metrologyLibraryPOOGroupCache = 0;
+$metrologyLibraryPOOConvertationCache = 0;
+
 
 
 /*
@@ -411,9 +422,9 @@ $applicationTraductionInstance = null;
  ------------------------------------------------------------------------------------------
  */
 
-define('NEBULE_LIBPP_VERSION', '020210316');
+define('NEBULE_LIBPP_VERSION', '020210424');
 define('NEBULE_LIBPP_MODE_BOOTSTRAP', true);
-define('LINK_VERSION', '2:0');
+define('NEBULE_LIBPP_LINK_VERSION', '2:0');
 define('NEBULE_DEFAULT_PUPPETMASTER_ID', '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256');
 define('NEBULE_ENVIRONMENT_FILE', 'nebule.env');
 define('LOCAL_ENTITY_FILE', 'e');
@@ -584,6 +595,11 @@ define('LIST_OPTIONS_DEFAULT_VALUE', array(
 );
 
 /**
+ * Result of Lib PP initialisation.
+ */
+$libppCheckOK = false;
+
+/**
  * Buffer of option's values.
  */
 $configurationList = array();
@@ -658,10 +674,7 @@ $nebuleMetrologyObjectRead = 0;
  */
 $nebuleMetrologyObjectVerify = 0;
 
-// Usage interne, échange d'informations entre fonctions et métrologie.
-$nebuleErrorMessage = 'pas de message';
-$nebuleResultList = array();
-
+// Cache of many search result and content.
 $nebuleCacheReadObjText1line = array();
 $nebuleCacheReadObjName = array();
 $nebuleCacheReadObjSize = array();
@@ -764,10 +777,12 @@ function getConfiguration(string $name)
  */
 function libppInit(): bool
 {
-    global $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster, $nebuleLocalAuthorities;
+    global $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster, $nebuleLocalAuthorities,
+           $libppCheckOK;
 
     // Initialize i/o.
-    io_open();
+    if (!io_open())
+        return false;
 
     // Pour la suite, seul le puppetmaster est enregirstré.
     // Une fois les autres entités trouvées, ajoute les autres autorités.
@@ -817,29 +832,28 @@ function libppInit(): bool
     $nebuleLocalAuthorities[1] = $nebuleSecurityMaster;
     $nebuleLocalAuthorities[2] = $nebuleCodeMaster;
 
-    libppSetServerEntity();
-    libppSetDefaultEntity();
+    libppSetServerEntity($nebuleCodeMaster, $nebuleLocalAuthorities);
+    libppSetDefaultEntity($nebuleCodeMaster, $nebuleLocalAuthorities);
     libppSetPublicEntity();
 
-    // Retour normal.
+    $libppCheckOK = true;
     return true;
 }
 
 /**
  * Get and check local server entity.
- * @return bool
+ * @param $nebuleCodeMaster
+ * @param $nebuleLocalAuthorities
  */
-function libppSetServerEntity(): bool
+function libppSetServerEntity(string $nebuleCodeMaster, array &$nebuleLocalAuthorities): void
 {
-    global $nebuleServerEntite, $nebuleCodeMaster, $nebuleLocalAuthorities;
-
+    global $nebuleServerEntite;
     if (file_exists(LOCAL_ENTITY_FILE)
         && is_file(LOCAL_ENTITY_FILE)
     )
         $nebuleServerEntite = filter_var(strtok(trim(file_get_contents(LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 
-    if (!e_check($nebuleServerEntite)
-    )
+    if (!e_check($nebuleServerEntite))
         $nebuleServerEntite = $nebuleCodeMaster;
 
     if (getConfiguration('permitInstanceEntityAsAuthority') && !getModeRescue())
@@ -848,12 +862,10 @@ function libppSetServerEntity(): bool
 
 /**
  * Get and check default entity.
- * @return bool
  */
-function libppSetDefaultEntity(): bool
+function libppSetDefaultEntity(string $nebuleCodeMaster, array &$nebuleLocalAuthorities): void
 {
-    global $nebuleDefaultEntity, $nebuleCodeMaster, $nebuleLocalAuthorities;
-
+    global $nebuleDefaultEntity;
     $nebuleDefaultEntity = getConfiguration('defaultCurrentEntity');
     if (!e_check($nebuleDefaultEntity))
         $nebuleDefaultEntity = $nebuleCodeMaster;
@@ -864,49 +876,12 @@ function libppSetDefaultEntity(): bool
 
 /**
  * Get and check public entity.
- * @return bool
  */
-function libppSetPublicEntity(): bool
+function libppSetPublicEntity(): void
 {
     global $nebulePublicEntity, $nebuleDefaultEntity;
-
     if (!e_check($nebulePublicEntity))
         $nebulePublicEntity = $nebuleDefaultEntity;
-}
-
-/** FIXME
- * Check le library.
- * @return boolean
- */
-function libppCheckAll(): bool
-{
-    global $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster, $nebuleServerEntite, $nebuleDefaultEntity, $nebulePublicEntity;
-
-    if (!e_check(getConfiguration('puppetmaster')))
-        return false;
-
-    if (!e_check($nebuleSecurityMaster))
-        return false;
-
-    if (!e_check($nebuleCodeMaster))
-        return false;
-
-    if (!e_check($nebuleDirectoryMaster))
-        return false;
-
-    if (!e_check($nebuleTimeMaster))
-        return false;
-
-    if (!e_check($nebuleServerEntite))
-        return false;
-
-    if (!e_check($nebuleDefaultEntity))
-        return false;
-
-    if (!e_check($nebulePublicEntity))
-        return false;
-
-    return true;
 }
 
 /**
@@ -1087,7 +1062,7 @@ function nebReadObjName(&$object)
     // Recherche du nom.
     $type = nebFindObjType($object, 'nebule/objet/nom');
     $nom = '';
-    if (io_testobjectpresent($type)) {
+    if (io_testObjectPresent($type)) {
         $nom = nebReadObjText1line($type, 128);
     }
     if ($nom == '') {
@@ -1097,7 +1072,7 @@ function nebReadObjName(&$object)
     // Recherche du prénom.
     $type = nebFindObjType($object, 'nebule/objet/prenom');
     $prenom = '';
-    if (io_testobjectpresent($type)) {
+    if (io_testObjectPresent($type)) {
         $prenom = nebReadObjText1line($type, 128);
     }
     if ($prenom != '') {
@@ -1107,7 +1082,7 @@ function nebReadObjName(&$object)
     // Recherche du surnom.
     $type = nebFindObjType($object, 'nebule/objet/surnom');
     $surnom = '';
-    if (io_testobjectpresent($type)) {
+    if (io_testObjectPresent($type)) {
         $surnom = nebReadObjText1line($type, 128);
     }
     if ($surnom != '') {
@@ -1117,7 +1092,7 @@ function nebReadObjName(&$object)
     // Recherche du suffix.
     $type = nebFindObjType($object, 'nebule/objet/suffix');
     $suffix = '';
-    if (io_testobjectpresent($type)) {
+    if (io_testObjectPresent($type)) {
         $suffix = nebReadObjText1line($type, 128);
     }
     if ($suffix != '') {
@@ -1145,7 +1120,7 @@ function nebReadObjSize(&$object)
     nebINECreatObjText('nebule/objet/taille');
     $type = nebFindObjType($object, 'nebule/objet/taille'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
-    if (io_testobjectpresent($type)) {
+    if (io_testObjectPresent($type)) {
         $text = nebReadObjText1line($type, 128);
     }
     if ($text == '') {
@@ -1172,7 +1147,7 @@ function nebReadEntityType(&$object)
     nebINECreatObjText('nebule/objet/entite/type');
     $type = nebFindObjType($object, 'nebule/objet/entite/type'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
-    if (io_testobjectpresent($type)) {
+    if (io_testObjectPresent($type)) {
         $text = nebReadObjText1line($type, 128);
     }
     if ($text == '') {
@@ -1199,7 +1174,7 @@ function nebReadEntityLoc(&$object)
     nebINECreatObjText('nebule/objet/entite/localisation');
     $type = nebFindObjType($object, 'nebule/objet/entite/localisation'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
-    if (io_testobjectpresent($type)) {
+    if (io_testObjectPresent($type)) {
         $text = nebReadObjText1line($type, 128);
     }
     if ($text == '') {
@@ -1226,7 +1201,7 @@ function nebReadEntityFName(&$entite)
     nebINECreatObjText('nebule/objet/prenom');
     $type = nebFindObjType($entite, 'nebule/objet/prenom'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
-    if (io_testobjectpresent($type)) {
+    if (io_testObjectPresent($type)) {
         $text = nebReadObjText1line($type, 128);
     }
     unset($type);
@@ -1250,7 +1225,7 @@ function nebReadEntityName(&$entite)
     nebINECreatObjText('nebule/objet/nom');
     $type = nebFindObjType($entite, 'nebule/objet/nom'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
-    if (io_testobjectpresent($type)) {
+    if (io_testObjectPresent($type)) {
         $text = nebReadObjText1line($type, 128);
     }
     unset($type);
@@ -1274,7 +1249,7 @@ function nebReadEntityPName(&$entite)
     nebINECreatObjText('nebule/objet/postnom');
     $type = nebFindObjType($entite, 'nebule/objet/postnom'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
-    if (io_testobjectpresent($type)) {
+    if (io_testObjectPresent($type)) {
         $text = nebReadObjText1line($type, 128);
     }
     unset($type);
@@ -1383,7 +1358,7 @@ function nebReadObjTypeMime(&$object)
     unset($table);
     unset($hashtype);
     $text = '';
-    if (io_testobjectpresent($type)) {
+    if (io_testObjectPresent($type)) {
         $text = nebReadObjText1line($type, 128);
     }
     if ($text == '') {
@@ -1425,7 +1400,7 @@ function nebReadObjTypeHash(&$object)
     unset($table);
     unset($hashtype);
     $text = '';
-    if (io_testobjectpresent($type)) {
+    if (io_testObjectPresent($type)) {
         $text = nebReadObjText1line($type, 32);
     }
     if ($text == '') {
@@ -1485,7 +1460,7 @@ function nebAddObjTypeMime(&$object, $type)
     $newlink = l_generate('-', 'l', $object, $hashtype, (o_getNID('nebule/objet/type'))); // 5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0
     if ((l_verifylink($newlink)) == 1)
         l_writecontent($newlink);
-    if (!io_testobjectpresent($type) && !io_testlinkpresent($type))
+    if (!io_testObjectPresent($type) && !io_testLinkPresent($type))
         o_generate($type, 'text/plain');
     unset($hashtype);
     unset($newlink);
@@ -1570,7 +1545,7 @@ function nebIsPubkey(&$entite): bool
     if (!is_string($entite)
         || $entite == '0'
         || !ctype_xdigit($entite)
-        || !io_testlinkpresent($entite)
+        || !io_testLinkPresent($entite)
     ) {
         return false;
     }
@@ -1827,7 +1802,7 @@ function nebINECreatObjText($text)
     if (strlen($text) == 0)
         return false;
     $object = o_getNID($text);
-    if (io_testobjectpresent($object))
+    if (io_testObjectPresent($object))
         return true;
     if (nebIsBanned($object))
         return false;
@@ -2068,7 +2043,7 @@ function e_generate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $pas
     $refhashpem = o_getNID('application/x-pem-file');
     $refhashtext = o_getNID('text/plain');
     // Création des objets annexes.
-    if (!io_testobjectpresent($refhashhash)) {
+    if (!io_testObjectPresent($refhashhash)) {
         $newtxt = 'nebule/objet/hash';
         o_writecontent($refhashhash, $newtxt);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashhash . '_' . $refhashalgo . '_' . $refhashhash;
@@ -2084,7 +2059,7 @@ function e_generate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $pas
         $hexsign = bin2hex($binary_signature);
         l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
-    if (!io_testobjectpresent($refhashalgo)) {
+    if (!io_testObjectPresent($refhashalgo)) {
         $cryptoHashAlgorithm = getConfiguration('cryptoHashAlgorithm');
         o_writecontent($refhashalgo, $cryptoHashAlgorithm);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashalgo . '_' . $refhashalgo . '_' . $refhashhash;
@@ -2100,7 +2075,7 @@ function e_generate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $pas
         $hexsign = bin2hex($binary_signature);
         l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
-    if (!io_testobjectpresent($refhashtype)) {
+    if (!io_testObjectPresent($refhashtype)) {
         $newtxt = 'nebule/objet/type';
         o_writecontent($refhashtype, $newtxt);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtype . '_' . $refhashalgo . '_' . $refhashhash;
@@ -2116,7 +2091,7 @@ function e_generate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $pas
         $hexsign = bin2hex($binary_signature);
         l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
-    if (!io_testobjectpresent($refhashpem)) {
+    if (!io_testObjectPresent($refhashpem)) {
         $newtxt = 'application/x-pem-file';
         o_writecontent($refhashpem, $newtxt);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashpem . '_' . $refhashalgo . '_' . $refhashhash;
@@ -2132,7 +2107,7 @@ function e_generate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $pas
         $hexsign = bin2hex($binary_signature);
         l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
-    if (!io_testobjectpresent($refhashtext)) {
+    if (!io_testObjectPresent($refhashtext)) {
         $newtxt = 'text/plain';
         o_writecontent($refhashtext, $newtxt);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtext . '_' . $refhashalgo . '_' . $refhashhash;
@@ -2215,8 +2190,8 @@ function e_check(string $nid): bool
     if (!o_checkNID($nid, false)
         || $nid == '0'
         || strlen($nid) < NID_MIN_HASH_SIZE
-        || !io_testobjectpresent($nid)
-        || !io_testlinkpresent($nid)
+        || !io_testObjectPresent($nid)
+        || !io_testLinkPresent($nid)
         || !o_checkcontent($nid)
         || !nebIsPubkey($nid)
     )
@@ -2247,9 +2222,9 @@ function e_addpasswd($pubkey, $privkey, $password)
         return false;
     if ($password == '')
         return false;
-    if (!io_testobjectpresent($pubkey))
+    if (!io_testObjectPresent($pubkey))
         return false;
-    if (!io_testobjectpresent($privkey))
+    if (!io_testObjectPresent($privkey))
         return false;
     // Vérifie que le mot de passe est valide.
     $privcert = nebReadObjText($privkey, 10000);
@@ -2271,7 +2246,7 @@ function e_addpasswd($pubkey, $privkey, $password)
     // Chiffrement de la clé de session.
     $cryptkey = '';
     o_checkcontent($pubkey);
-    $cert = io_objectread($pubkey);
+    $cert = io_objectRead($pubkey);
     $ok = openssl_public_encrypt($key, $cryptkey, $cert, OPENSSL_PKCS1_PADDING);
     if (!$ok)
         return false;
@@ -2341,7 +2316,7 @@ function o_generate(&$data, $typemime = '')
     $dat = date(DATE_ATOM);
     $hash = o_getNID($data);
     // Ecrit l'objet.
-    if (!io_testobjectpresent($hash))
+    if (!io_testObjectPresent($hash))
         o_writecontent($hash, $data);
     // Ecrit le lien de hash.
     $lnk = l_generate($dat, 'l', $hash, (o_getNID(getConfiguration('cryptoHashAlgorithm'))), (o_getNID('nebule/objet/hash'))); // 8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec
@@ -2396,7 +2371,7 @@ function o_followupdates(&$object): bool // WARNING non fonctionnel !!!
                 }
             }
             unset($links); // Vide la liste temporaire des liens.
-            if (io_testobjectpresent($checkobj)) {
+            if (io_testObjectPresent($checkobj)) {
                 $ispresenttable [$checkobj] = '1';
             } else {
                 $ispresenttable [$checkobj] = '0';
@@ -2469,8 +2444,8 @@ function o_getupdatedcontent($object, &$data)
 function o_getcontent(&$nid, &$data): bool
 {
     // If exist and not corrupted, extract content to $data.
-    if (io_testobjectpresent($nid) && o_checkcontent($nid)) {
-        $data = io_objectread($nid);
+    if (io_testObjectPresent($nid) && o_checkcontent($nid)) {
+        $data = io_objectRead($nid);
         return true;
     }
     return false;
@@ -2485,7 +2460,7 @@ function o_downloadupdatedcontent(string $object): void
 {
     if ($object == '0')
         return;
-    if (io_testobjectpresent($object))
+    if (io_testObjectPresent($object))
         return;
     $table = array();
     $hashtype = o_getNID('nebule/objet/entite/localisation');
@@ -2494,7 +2469,7 @@ function o_downloadupdatedcontent(string $object): void
     $okobj [1] = '';
     l_listlinks($hashtype, $table);
     foreach ($table as $itemtable) {
-        if (($itemtable [7] == $hashtype) && ($itemtable [4] == 'l') && (!io_testobjectpresent($object))) {
+        if (($itemtable [7] == $hashtype) && ($itemtable [4] == 'l') && (!io_testObjectPresent($object))) {
             $t = true;
             for ($j = 1; $j < $count; $j++) {
                 if ($itemtable [6] == $okobj [$j]) {
@@ -2526,8 +2501,6 @@ function o_downloadupdatedcontent(string $object): void
  *  - $object l'objet à télécharger.
  *  - $localisation le site web sur lequel aller télécharger l'objet.
  *
- * $nebuleResultList contient le site sur lequel a étté trouvé l'objet.
- *
  * @param string $object
  * @param string $localisation
  * @return void
@@ -2535,8 +2508,7 @@ function o_downloadupdatedcontent(string $object): void
 function o_downloadContent(string $object, string $localisation): void
 {
     global $nebulePublicEntity,
-           $nebuleSecurityMaster,
-           $nebuleResultList;
+           $nebuleSecurityMaster;
 
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitSynchronizeObject')
@@ -2550,7 +2522,7 @@ function o_downloadContent(string $object, string $localisation): void
     ) {
         return;
     }
-    if (io_testobjectpresent($object)) {
+    if (io_testObjectPresent($object)) {
         return;
     }
 
@@ -2595,7 +2567,6 @@ function o_downloadContent(string $object, string $localisation): void
             $hash = hash_file(getConfiguration('cryptoHashAlgorithm'), LOCAL_OBJECTS_FOLDER . '/' . $idname);
             if ($hash == $object) {
                 rename(LOCAL_OBJECTS_FOLDER . '/' . $idname, LOCAL_OBJECTS_FOLDER . '/' . $object);
-                $nebuleResultList[0] = $localisation;
             } else {
                 unlink(LOCAL_OBJECTS_FOLDER . '/' . $idname);
             }
@@ -2623,13 +2594,13 @@ function o_checkcontent(&$nid)
         return false;
     }
 
-    if (!io_testobjectpresent($nid)) {
+    if (!io_testObjectPresent($nid)) {
         return true;
     }
 
     // Si c'est l'objet 0, le supprime.
     if ($nid == '0') {
-        if (io_testobjectpresent($nid)) {
+        if (io_testObjectPresent($nid)) {
             io_objectDelete($nid);
         }
         return true;
@@ -2724,7 +2695,7 @@ function o_writecontent(string $object, string &$data): bool
         return false;
     }
 
-    if (io_testobjectpresent($object)) {
+    if (io_testObjectPresent($object)) {
         return true;
     }
 
@@ -2786,7 +2757,7 @@ function l_generate(string $CHR, string $REQ, string $NID1, string $NID2 = '', s
         return '';
     if ($nebulePasswordEntite == '')
         return '';
-    if (!io_testobjectpresent($nebulePrivateEntite))
+    if (!io_testObjectPresent($nebulePrivateEntite))
         return '';
     if ($REQ == '')
         return '';
@@ -2875,7 +2846,7 @@ function l_graphresolvone(&$object, &$visited, $present = true, $synchro = false
 
     if (count($oklinks) == 0) {
         if (!$present
-            || io_testobjectpresent($object)
+            || io_testObjectPresent($object)
         ) {
             return $object;
         } else {
@@ -2917,7 +2888,7 @@ function l_graphresolvone(&$object, &$visited, $present = true, $synchro = false
             o_downloadupdatedcontent($object); // Syncho de l'objet.
         }
         if (!$present
-            || io_testobjectpresent($object)
+            || io_testObjectPresent($object)
         ) {
             return $object;
         } else {
@@ -2934,7 +2905,7 @@ function l_graphresolvone(&$object, &$visited, $present = true, $synchro = false
     }
 
     if (!$present
-        || io_testobjectpresent($object)
+        || io_testObjectPresent($object)
     ) {
         return $object;
     } else {
@@ -3260,7 +3231,7 @@ function l_listonelink(&$object, &$table, $filtreact = '-', $filtreobj = '', $wi
 
     if ($object == '0')
         return;
-    if (!io_testlinkpresent($object))
+    if (!io_testLinkPresent($object))
         return;
     if (!getConfiguration('permitListInvalidLinks'))
         $withinvalid = false; // Si pas autorisé, refuse de lire les liens invalides.
@@ -3269,7 +3240,7 @@ function l_listonelink(&$object, &$table, $filtreact = '-', $filtreobj = '', $wi
     $version = ''; // version du lien.
     $n = 0; // indice dans la table des resultats.
     $tline = array(); // table d'un lien en cours de lecture et d'analyse.
-    $lines = io_linksread($object); // liens a lire et analyser.
+    $lines = io_linksRead($object); // liens a lire et analyser.
     $IOMaxlink = getConfiguration('ioReadMaxLinks');
     foreach ($lines as $line) {
         $i = 1;
@@ -3485,9 +3456,8 @@ function l_checkRV(string &$rv): bool
 
     // Check items from RV : VER:SUB
     $ver = strtok($rv, ':');
-    if ($ver != '2') return false;
     $sub = strtok(':');
-    if ($sub != '0') return false;
+    if ("$ver:$sub" != NEBULE_LIBPP_LINK_VERSION) return false;
 
     // Check registry overflow
     if (strtok(':') !== false) return false;
@@ -3680,12 +3650,12 @@ function l_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): bool
     // --- --- --- --- --- --- --- --- ---
     // Check sign.
     if (!getConfiguration('permitCheckSignOnVerify')) return true;
-    if (io_testobjectpresent($nid)) {
+    if (io_testObjectPresent($nid)) {
         $hash = o_getNID($bh . '_' . $bl); // TODO remplacer getConfiguration('cryptoHashAlgorithm') par une convertion des algo et size.
 
         // Read signer's public key.
         o_checkcontent($nid);
-        $cert = io_objectread($nid);
+        $cert = io_objectRead($nid);
         $pubkeyid = openssl_pkey_get_public($cert);
         if ($pubkeyid === false) return false;
 
@@ -3796,8 +3766,8 @@ function l_writecontent($link)
 
     // Recherche la pré-existance du lien.
     $res = false;
-    if (io_testlinkpresent($objsrc)) {
-        $lines = io_linksread($objsrc);
+    if (io_testLinkPresent($objsrc)) {
+        $lines = io_linksRead($objsrc);
         foreach ($lines as $line) {
             if (!(substr($line, 0, 21) == 'nebule/liens/version/')) {
                 $lsign = strtok(trim($line), '_');
@@ -3809,14 +3779,14 @@ function l_writecontent($link)
         }
     }
     if (!$res) {
-        io_linkwrite($objsig, $link); // Ecrit le lien dans l'entité signataire. Nouveauté v1.2 .
+        io_linkWrite($objsig, $link); // Ecrit le lien dans l'entité signataire. Nouveauté v1.2 .
         if ($objtyp != 'c') {
             if ($objsrc != $objsig)
-                io_linkwrite($objsrc, $link); // Ecrit le lien dans l'objet source.
+                io_linkWrite($objsrc, $link); // Ecrit le lien dans l'objet source.
             if ($objdst != $objsig && $objdst != '0')
-                io_linkwrite($objdst, $link); // Ecrit le lien dans l'objet destination.
+                io_linkWrite($objdst, $link); // Ecrit le lien dans l'objet destination.
             if ($objmet != $objsig && $objmet != '0')
-                io_linkwrite($objmet, $link); // Ecrit le lien dans l'objet méta.
+                io_linkWrite($objmet, $link); // Ecrit le lien dans l'objet méta.
         }
     }
     unset($lines);
@@ -3847,25 +3817,9 @@ function io_open(): bool
 {
     if (!file_exists(LOCAL_LINKS_FOLDER))
         mkdir(LOCAL_LINKS_FOLDER);
-    if (!io_checklinkfolder())
-        return false;
-
     if (!file_exists(LOCAL_OBJECTS_FOLDER))
         mkdir(LOCAL_OBJECTS_FOLDER);
-    if (!io_checkobjectfolder())
-        return false;
-
-    return true;
-}
-
-/**
- * I/O - Verify I/O capabilities for links and objects (nodes with content).
- *
- * @return boolean
- */
-function io_check(): bool
-{
-    if (!io_checklinkfolder() || !io_checkobjectfolder())
+    if (!io_checkLinkFolder() || !io_checkObjectFolder())
         return false;
     return true;
 }
@@ -3875,7 +3829,7 @@ function io_check(): bool
  *
  * @return boolean
  */
-function io_checklinkfolder(): bool
+function io_checkLinkFolder(): bool
 {
     if (!file_exists(LOCAL_LINKS_FOLDER)
         || !is_dir(LOCAL_LINKS_FOLDER)
@@ -3909,7 +3863,7 @@ function io_checklinkfolder(): bool
  *
  * @return boolean
  */
-function io_checkobjectfolder()
+function io_checkObjectFolder()
 {
     if (!file_exists(LOCAL_OBJECTS_FOLDER)
         || !is_dir(LOCAL_OBJECTS_FOLDER)
@@ -3944,7 +3898,7 @@ function io_checkobjectfolder()
  * @param string $nid
  * @return boolean
  */
-function io_testlinkpresent(&$nid): bool
+function io_testLinkPresent(&$nid): bool
 {
     if (file_exists(LOCAL_LINKS_FOLDER . '/' . $nid)) {
         return true;
@@ -3958,7 +3912,7 @@ function io_testlinkpresent(&$nid): bool
  * @param string $nid
  * @return boolean
  */
-function io_testobjectpresent(&$nid): bool
+function io_testObjectPresent(&$nid): bool
 {
     if (file_exists(LOCAL_OBJECTS_FOLDER . '/' . $nid))
         return true;
@@ -3966,117 +3920,99 @@ function io_testobjectpresent(&$nid): bool
 }
 
 /** FIXME
- * I/O - Lit les liens de l'objet.
+ * I/O - Read object's links.
  * Retourne un tableau des liens lus, même vide.
  *
- * @param string $o
+ * @param string $nid
  * @return boolean|array:string
  */
-function io_linksread(&$o)
+function io_linksRead(&$nid)
 {
-    if (!file_exists(LOCAL_LINKS_FOLDER . '/' . $o))
-        return false;
-    $n = 0;
-    $t = array();
-    $l = file(LOCAL_LINKS_FOLDER . '/' . $o);
-    $m = getConfiguration('ioReadMaxLinks');
-    foreach ($l as $k) {
-        $t [$n] = $k;
-        if ($n > $m) {
-            break 1;
-        }
+    $result = array();
+    $count = 0;
+    if (!io_testLinkPresent($nid))
+        return $result;
+    $links = file(LOCAL_LINKS_FOLDER . '/' . $nid); // TODO à refaire avec stream_context_create
+    $maxLinks = getConfiguration('ioReadMaxLinks');
+    foreach ($links as $link) {
+        $result [$count] = $link;
         m_add('lr');
-        $n++;
+        $count++;
+        if ($count > $maxLinks)
+            break 1;
     }
-    return $t;
+    return $result;
 }
 
 /** FIXME
- * I/O - Lit le contenu de l'objet.
- * Retourne le contenu lu ou false si erreur.
+ * I/O - Read object content.
+ * The function returns the read data or false on failure.
  *
- * @param string $o
- * @param number $m
+ * @param string $nid
+ * @param number $maxData
  * @return boolean|string
  */
-function io_objectread(&$o, $m = 0)
+function io_objectRead($nid, $maxData = 0)
 {
-    if ($m == 0) {
-        $m = getConfiguration('ioReadMaxData');
-    }
-    if (!file_exists(LOCAL_OBJECTS_FOLDER . '/' . $o)) {
+    if ($maxData == 0)
+        $maxData = getConfiguration('ioReadMaxData');
+    if (!io_testObjectPresent($nid))
         return false;
-    }
-
-    $s = filesize(LOCAL_OBJECTS_FOLDER . '/' . $o);
-    if ($s > $m) {
-        $s = $m;
-    }
-
     m_add('or');
-    return file_get_contents(LOCAL_OBJECTS_FOLDER . '/' . $o, false, null, 0, $s);
+    return file_get_contents(LOCAL_OBJECTS_FOLDER . '/' . $nid, false, null, 0, $maxData);
 }
 
 /** FIXME
  * I/O - Ecrit un lien de l'objet.
  * Retourne le nombre d'octets écrits ou false si erreur.
  *
- * @param string $o
- * @param string $l
+ * @param string $nid
+ * @param string $link
  * @return boolean|number
  */
-function io_linkwrite(&$o, &$l)
+function io_linkWrite(&$nid, &$link)
 {
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteLink')
-    ) {
+    )
         return false;
-    }
-    if (!io_testlinkpresent($o)) {
-        file_put_contents(LOCAL_LINKS_FOLDER . '/' . $o, LINK_VERSION . "\n");
-    }
-
-    return file_put_contents(LOCAL_LINKS_FOLDER . '/' . $o, "$l\n", FILE_APPEND);
+    return file_put_contents(LOCAL_LINKS_FOLDER . '/' . $nid, "$link\n", FILE_APPEND);
 }
 
-/** FIXME
- * I/O - Ecrit des données dans un objet.
- * Retourne le nombre d'octets écrits ou false si erreur.
+/**
+ * I/O - Write object content.
+ * The function returns the number of bytes that were written to the file, or false on failure.
  *
- * @param string $d
+ * @param string $data
  * @return boolean|number
  */
-function io_objectwrite(&$d)
+function io_objectWrite(&$data)
 {
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteObject')
-    ) {
+    )
         return false;
-    }
-    $h = o_getNID($d);
-    return file_put_contents(LOCAL_OBJECTS_FOLDER . '/' . $h, $d);
+    return file_put_contents(LOCAL_OBJECTS_FOLDER . '/' . o_getNID($data), $data);
 }
 
-/** FIXME
+/**
  * I/O - Suppress object content.
  *
- * @param string $o
+ * @param string $nid
  * @return boolean
  */
-function io_objectDelete(&$o)
+function io_objectDelete(&$nid)
 {
     if (!getConfiguration('permitWrite') || !getConfiguration('permitWriteObject'))
         return false;
-
-    if (!file_exists(LOCAL_OBJECTS_FOLDER . '/' . $o))
+    if (!io_testObjectPresent($nid))
         return true;
-
-    if (unlink(LOCAL_OBJECTS_FOLDER . '/' . $o))
+    if (!unlink(LOCAL_OBJECTS_FOLDER . '/' . $nid))
     {
         addLog('fct="io_objectDelete:1" error="Unable to delete file"');
-        return true;
+        return false;
     }
-    return false;
+    return true;
 }
 
 /** FIXME
@@ -4201,15 +4137,6 @@ function getPseudoRandom($count = 32): string
  ------------------------------------------------------------------------------------------
  */
 
-/**
- * Activate the capability to open PHP code on other file.
- */
-function setPermitOpenFileCode()
-{
-    ini_set('allow_url_fopen', '1');
-    ini_set('allow_url_include', '1');
-}
-
 // ------------------------------------------------------------------------------------------
 /*
  * Lit si demande de l'utilisateur d'un nettoyage de session général.
@@ -4308,7 +4235,7 @@ function getBootstrapSwitchApplication(): void
         && ctype_xdigit($arg)
         && ($arg == '0'
             || $arg == '1'
-            || io_testlinkpresent($arg)
+            || io_testLinkPresent($arg)
         )
     ) {
         // Recherche si l'application est activée par l'entité instance de serveur.
@@ -4355,6 +4282,15 @@ function getBootstrapSwitchApplication(): void
             addLog('ask switch application to ' . $bootstrapSwitchApplication);
         }
     }
+}
+
+/**
+ * Activate the capability to open PHP code on other file.
+ */
+function setPermitOpenFileCode()
+{
+    ini_set('allow_url_fopen', '1');
+    ini_set('allow_url_include', '1');
 }
 
 
@@ -4410,8 +4346,8 @@ if (libppCheckAll()) {
                 && $_SESSION['bootstrapApplicationID'] != ''
                 && ctype_xdigit($_SESSION['bootstrapApplicationID'])
                 && $_SESSION['bootstrapApplicationID'] == '0'
-                || (io_testlinkpresent($_SESSION['bootstrapApplicationID'])
-                    && io_testobjectpresent($_SESSION['bootstrapApplicationID'])
+                || (io_testLinkPresent($_SESSION['bootstrapApplicationID'])
+                    && io_testObjectPresent($_SESSION['bootstrapApplicationID'])
                     && o_checkcontent($_SESSION['bootstrapApplicationID'])
                 )
             ) {
@@ -4444,8 +4380,8 @@ if (libppCheckAll()) {
                     && $_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID] != ''
                     && $_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID] != '0'
                     && ctype_xdigit($_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID])
-                    && io_testlinkpresent($_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID])
-                    && io_testobjectpresent($_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID])
+                    && io_testLinkPresent($_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID])
+                    && io_testObjectPresent($_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID])
                     && o_checkcontent($_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID])
                 ) {
                     // Mémorise l'ID de la bibliothèque.
@@ -4478,7 +4414,7 @@ if (libppCheckAll()) {
             $bootstrapApplicationStartID = '1';
             $bootstrapApplicationID = '1';
         } elseif (ctype_xdigit($bootstrapSwitchApplication)
-            && io_testlinkpresent($bootstrapSwitchApplication)
+            && io_testLinkPresent($bootstrapSwitchApplication)
         ) {
             $refAppsID = o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS);
             $links = array();
@@ -4493,8 +4429,8 @@ if (libppCheckAll()) {
                 if (isset($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
                     && $_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID] != ''
                     && ctype_xdigit($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
-                    && io_testlinkpresent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
-                    && io_testobjectpresent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+                    && io_testLinkPresent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+                    && io_testObjectPresent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
                     && o_checkcontent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
                     && isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID])
                     && $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID] != ''
@@ -4601,8 +4537,8 @@ if (libppCheckAll()) {
         if ($bootstrapLibraryID == ''
             || $bootstrapLibraryID == '0'
             || !ctype_xdigit($bootstrapLibraryID)
-            || !io_testlinkpresent($bootstrapLibraryID)
-            || !io_testobjectpresent($bootstrapLibraryID)
+            || !io_testLinkPresent($bootstrapLibraryID)
+            || !io_testObjectPresent($bootstrapLibraryID)
             || !o_checkcontent($bootstrapLibraryID)
         ) {
             addLog('finding nebule library error');
@@ -4626,17 +4562,6 @@ if (libppCheckAll()) {
  TODO.
  ------------------------------------------------------------------------------------------
  */
-
-// Metrology vars.
-$metrologyLibraryPOOLinksRead = 0;
-$metrologyLibraryPOOLinksVerified = 0;
-$metrologyLibraryPOOObjectsRead = 0;
-$metrologyLibraryPOOObjectsVerified = 0;
-$metrologyLibraryPOOLinkCache = 0;
-$metrologyLibraryPOOObjectCache = 0;
-$metrologyLibraryPOOEntityCache = 0;
-$metrologyLibraryPOOGroupCache = 0;
-$metrologyLibraryPOOConvertationCache = 0;
 
 /**
  * loadLibrary()
@@ -4740,6 +4665,7 @@ function getBootstrapInlineDisplay(): void
 // ------------------------------------------------------------------------------------------
 function getBootstrapCheckFingerprint(): void
 {
+    global $nebuleLocalAuthorities;
     $data = file_get_contents(BOOTSTRAP_FILE_NAME);
     $hash = o_getNID($data);
     unset($data);
@@ -4749,7 +4675,6 @@ function getBootstrapCheckFingerprint(): void
     l_findinclusive($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
     // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
     $ok = false;
-    $autority = '';
     foreach ($links as $link) {
         foreach ($nebuleLocalAuthorities as $autority) {
             if ($link[2] == $autority) {
@@ -6009,12 +5934,12 @@ function bootstrapDisplayApplicationfirst(): void
     <div class="parts">
     <span class="partstitle">#2 create folders</span><br/>
     <?php
-    if (!io_check()) {
+    if (!io_checkLinkFolder() || !io_checkObjectFolder()) {
         ?>
 
         <span class="error">ERROR!</span>
         <?php
-        if (!io_checklinkfolder()) {
+        if (!io_checkLinkFolder()) {
             addLog('error links folder');
             ?>
 
@@ -6035,7 +5960,7 @@ chmod 755 <?php echo LOCAL_LINKS_FOLDER; ?>
             <?php
         }
 
-        if (!io_checkobjectfolder()) {
+        if (!io_checkObjectFolder()) {
             addLog('error objects folder');
             ?>
 
@@ -6106,19 +6031,19 @@ function bootstrapFirstCreateObjects()
         <?php
         // Si il manque un des objets, recrée les objets.
         $hash = o_getNID($nebuleFirstReservedObjects[10]);
-        if (!io_testobjectpresent($hash))
+        if (!io_testObjectPresent($hash))
         {
         addLog('need create objects');
 
         // Ecrit les objets de localisation.
         foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $data) {
-            io_objectwrite($data);
+            io_objectWrite($data);
             echo '.';
         }
 
         // Ecrit les objets réservés.
         foreach ($nebuleFirstReservedObjects as $data) {
-            io_objectwrite($data);
+            io_objectWrite($data);
             echo '.';
         }
         ?>
@@ -6174,12 +6099,12 @@ function bootstrapFirstSynchronizingEntities()
 
         // Ecriture de la clé publique par défaut.
         $data = FIRST_PUPPETMASTER_PUBLIC_KEY;
-        io_objectwrite($data);
+        io_objectWrite($data);
         $object = NEBULE_DEFAULT_PUPPETMASTER_ID;
         $link = FIRST_PUPPETMASTER_HASH_LINK;
-        io_linkwrite($object, $link);
+        io_linkWrite($object, $link);
         $link = FIRST_PUPPETMASTER_TYPE_LINK;
-        io_linkwrite($object, $link);
+        io_linkWrite($object, $link);
         unset($data, $object, $link);
 
         // Activation comme autorité locale.
@@ -6218,7 +6143,7 @@ function bootstrapFirstSynchronizingEntities()
         echo ' ' . $entity . ' ';
         if (ctype_xdigit($entity)
             && $entity != '0'
-            && io_testlinkpresent($entity)
+            && io_testLinkPresent($entity)
         ) {
             // Recherche de l'objet et des liens de l'entité.
             $nebuleSecurityMaster = $entity;
@@ -6245,7 +6170,7 @@ function bootstrapFirstSynchronizingEntities()
         echo ' ' . $entity . ' ';
         if (ctype_xdigit($entity)
             && $entity != '0'
-            && io_testlinkpresent($entity)
+            && io_testLinkPresent($entity)
         ) {
             // Recherche de l'objet et des liens de l'entité.
             $nebuleCodeMaster = $entity;
@@ -6272,7 +6197,7 @@ function bootstrapFirstSynchronizingEntities()
         echo ' ' . $entity . ' ';
         if (ctype_xdigit($entity)
             && $entity != '0'
-            && io_testlinkpresent($entity)
+            && io_testLinkPresent($entity)
         ) {
             // Recherche de l'objet et des liens de l'entité.
             $nebuleDirectoryMaster = $entity;
@@ -6299,7 +6224,7 @@ function bootstrapFirstSynchronizingEntities()
         echo ' ' . $entity . ' ';
         if (ctype_xdigit($entity)
             && $entity != '0'
-            && io_testlinkpresent($entity)
+            && io_testLinkPresent($entity)
         ) {
             // Recherche de l'objet et des liens de l'entité.
             $nebuleTimeMaster = $entity;
@@ -6380,9 +6305,9 @@ function bootstrapFirstSynchronizingObjects()
         <span class="partstitle">#5 synchronizing objets</span><br/>
         <?php
         // Si la bibliothèque ne se charge pas correctement, fait une première synchronisation des entités.
-        if (!io_testobjectpresent($refAppsID)
-        && !io_testobjectpresent($refLibID)
-        && !io_testlinkpresent($refBootID)
+        if (!io_testObjectPresent($refAppsID)
+        && !io_testObjectPresent($refLibID)
+        && !io_testLinkPresent($refBootID)
         )
         {
         addLog('need sync objects');
@@ -6417,10 +6342,10 @@ function bootstrapFirstSynchronizingObjects()
         }
 
         $data = REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS;
-        io_objectwrite($data);
+        io_objectWrite($data);
 
         $data = REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE;
-        io_objectwrite($data);
+        io_objectWrite($data);
         ?><br/>
 
         bootstrap start &nbsp;&nbsp;&nbsp;:
@@ -7192,6 +7117,11 @@ function displayRouter(bool $needFirstSynchronization)
         closelog();
         openlog($bootstrapName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
     }
+}
+
+function bootstrapLogMetrology()
+{
+    global $nebuleInstance;
 
     // Metrology on logs.
     if (is_a($nebuleInstance, 'nebule')) {
@@ -7218,24 +7148,22 @@ function displayRouter(bool $needFirstSynchronization)
 
 function main()
 {
-    libppInit();
-
     /*
-     * Vérifie que la bibliothèque nebule PHP PP s'est bien chargée.
+     * Initialization of Lib PP.
      */
-    if (!libppCheckAll())
+    if (!libppInit())
         setBootstrapBreak('21', 'Library init error');
 
     /*
      * Vérifie que le dossier des liens est fonctionnel.
      */
-    if (!io_checklinkfolder())
+    if (!io_checkLinkFolder())
         setBootstrapBreak('22', "Library i/o link's folder error");
 
     /*
      * Vérifie que le dossier des objets est fonctionnel.
      */
-    if (!io_checkobjectfolder())
+    if (!io_checkObjectFolder())
         setBootstrapBreak('23', "Library i/o object's folder error");
 
     getBootstrapUserBreak();
@@ -7250,6 +7178,7 @@ function main()
 
 
     displayRouter($needFirstSynchronization);
+    bootstrapLogMetrology();
 }
 
 // Calcul du temps de chargement du bootstrap.
