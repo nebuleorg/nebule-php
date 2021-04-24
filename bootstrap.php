@@ -9,7 +9,7 @@ $bootstrapName = 'bootstrap';
 $bootstrapSurname = 'nebule/bootstrap';
 $bootstrapDescription = 'Loader of library and applications.';
 $bootstrapAuthor = 'Project nebule';
-$bootstrapVersion = '020210417';
+$bootstrapVersion = '020210424';
 $bootstrapLicence = 'GNU GPL 2010-2021';
 $bootstrapWebsite = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -35,14 +35,15 @@ $bootstrapWebsite = 'www.nebule.org';
  ==/ Table /===============================================================================
  PART1 : Initialization of the bootstrap environment.
  PART2 : Procedural PHP library for nebule (Lib PP).
- PART3 : Manage PHP session.
- PART4 : Load object oriented PHP library for nebule (Lib POO).
- PART5 : Manage and display breaking bootstrap on problem or user ask.
- PART6 : Display of pre-load application web page.
- PART7 : First synchronization of code and environment.
- PART8 : Display of application 0 web page to select application to run.
- PART9 : Display of application 1 web page to display documentation of nebule.
- PART10 : Main display router.
+ PART3 : Manage PHP session and arguments.
+ PART4 : Find and load object oriented PHP library for nebule (Lib POO).
+ PART5 : Find application code.
+ PART6 : Manage and display breaking bootstrap on problem or user ask.
+ PART7 : Display of pre-load application web page.
+ PART8 : First synchronization of code and environment.
+ PART9 : Display of application 0 web page to select application to run.
+ PART10 : Display of application 1 web page to display documentation of nebule.
+ PART11 : Main display router.
  ------------------------------------------------------------------------------------------
 */
 
@@ -291,8 +292,6 @@ $applicationAuthor = '';
  * Site web de référence de l'application.
  */
 $applicationWebsite = '';
-
-// ------------------------------------------------------------------------------------------
 
 /**
  * Instance de la bibliothèque nebule en PHP orienté objet.
@@ -966,7 +965,7 @@ function nebReadObjText1line(string &$oid, int $maxsize = 128): string
         return $nebuleCacheReadObjText1line [$oid];
 
     $data = '';
-    o_getcontent($oid, $data);
+    o_getLocalContent($oid, $data);
     $data = strtok(filter_var($data, FILTER_SANITIZE_STRING), "\n");
     if (!is_string($data))
         return '';
@@ -999,7 +998,7 @@ function nebReadObjText1line(string &$oid, int $maxsize = 128): string
 function nebReadObjText(string &$oid, int $maxsize = 4096): string
 {
     $data = '';
-    o_getcontent($oid, $data);
+    o_getLocalContent($oid, $data);
     $data = filterPrinteableString(filter_var($data, FILTER_SANITIZE_STRING));
 
     if (strlen($data) > $maxsize) {
@@ -1439,7 +1438,7 @@ function nebAddObjTypeMime(&$object, $type)
     nebINECreatObjText('nebule/objet/type');
     nebINECreatObjText('text/plain');
     $newlink = l_generate('-', 'l', $object, $hashtype, (o_getNID('nebule/objet/type'))); // 5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0
-    if ((l_verifylink($newlink)) == 1)
+    if ((l_verify($newlink)) == 1)
         l_writecontent($newlink);
     if (!io_testObjectPresent($type) && !io_testLinkPresent($type))
         o_generate($type, 'text/plain');
@@ -1524,8 +1523,7 @@ function nebIsPubkey(&$entite): bool
         return $nebuleCacheIsPubkey[$entite];
 
     if (!is_string($entite)
-        || $entite == '0'
-        || !ctype_xdigit($entite)
+        || !n_checkNID($entite)
         || !io_testLinkPresent($entite)
     ) {
         return false;
@@ -1814,56 +1812,56 @@ function nebCreatObjDate(&$object)
     $hashfulldate = o_getNID($crfulldate);
     o_generate($crfulldate, 'text/plain');
     $newlink = l_generate($crfulldate, 'l', $object, $hashfulldate, (o_getNID('nebule/objet/date'))); // 31e415a2fb3a47fd1ccd9de4e04d6d71c1386bef639ae38755dd218db9ed92a1
-    if ((l_verifylink($newlink)) == 1)
+    if ((l_verify($newlink)) == 1)
         l_writecontent($newlink);
     // Ajoute l'année.
     $crdate = date('Y');
     $hashdate = o_getNID($crdate);
     o_generate($crdate, 'text/plain');
     $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/annee')));
-    if ((l_verifylink($newlink)) == 1)
+    if ((l_verify($newlink)) == 1)
         l_writecontent($newlink);
     // Ajoute le mois.
     $crdate = date('m');
     $hashdate = o_getNID($crdate);
     o_generate($crdate, 'text/plain');
     $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/mois')));
-    if ((l_verifylink($newlink)) == 1)
+    if ((l_verify($newlink)) == 1)
         l_writecontent($newlink);
     // Ajoute le jour.
     $crdate = date('d');
     $hashdate = o_getNID($crdate);
     o_generate($crdate, 'text/plain');
     $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/jour')));
-    if ((l_verifylink($newlink)) == 1)
+    if ((l_verify($newlink)) == 1)
         l_writecontent($newlink);
     // Ajoute l'heure.
     $crdate = date('H');
     $hashdate = o_getNID($crdate);
     o_generate($crdate, 'text/plain');
     $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/heure')));
-    if ((l_verifylink($newlink)) == 1)
+    if ((l_verify($newlink)) == 1)
         l_writecontent($newlink);
     // Ajoute la minute.
     $crdate = date('i');
     $hashdate = o_getNID($crdate);
     o_generate($crdate, 'text/plain');
     $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/minute')));
-    if ((l_verifylink($newlink)) == 1)
+    if ((l_verify($newlink)) == 1)
         l_writecontent($newlink);
     // Ajoute la seconde.
     $crdate = date('s');
     $hashdate = o_getNID($crdate);
     o_generate($crdate, 'text/plain');
     $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/seconde')));
-    if ((l_verifylink($newlink)) == 1)
+    if ((l_verify($newlink)) == 1)
         l_writecontent($newlink);
     // Ajoute la zone.
     $crdate = date('P');
     $hashdate = o_getNID($crdate);
     o_generate($crdate, 'text/plain');
     $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/zone')));
-    if ((l_verifylink($newlink)) == 1)
+    if ((l_verify($newlink)) == 1)
         l_writecontent($newlink);
     unset($crfulldate);
     unset($crdate);
@@ -1883,7 +1881,7 @@ function nebCreatObjHash(&$object)
     nebINECreatObjText('nebule/objet/hash');
     nebINECreatObjText(getConfiguration('cryptoHashAlgorithm'));
     $newlink = l_generate('-', 'l', $object, getConfiguration('cryptoHashAlgorithm'), (o_getNID('nebule/objet/hash'))); // 8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec
-    if ((l_verifylink($newlink)) == 1)
+    if ((l_verify($newlink)) == 1)
         l_writecontent($newlink);
     unset($newlink);
     return true;
@@ -2173,7 +2171,7 @@ function e_check(string $nid): bool
         || strlen($nid) < NID_MIN_HASH_SIZE
         || !io_testObjectPresent($nid)
         || !io_testLinkPresent($nid)
-        || !o_checkcontent($nid)
+        || !o_checkContent($nid)
         || !nebIsPubkey($nid)
     )
         return false;
@@ -2226,7 +2224,7 @@ function e_addpasswd($pubkey, $privkey, $password)
     o_generate($cryptobj, 'application/x-encrypted/' . getConfiguration('cryptoSymetricAlgorithm'));
     // Chiffrement de la clé de session.
     $cryptkey = '';
-    o_checkcontent($pubkey);
+    o_checkContent($pubkey);
     $cert = io_objectRead($pubkey);
     $ok = openssl_public_encrypt($key, $cryptkey, $cert, OPENSSL_PKCS1_PADDING);
     if (!$ok)
@@ -2236,23 +2234,23 @@ function e_addpasswd($pubkey, $privkey, $password)
     o_generate($cryptkey, 'application/x-encrypted/' . $algoName);
     // Génère le lien de chiffrement entre clé privée et publique avec le mot de passe.
     $newlink = l_generate('-', 'k', $privkey, $pubkey, $hashpwd);
-    if ((l_verifylink($newlink)) == 1)
+    if ((l_verify($newlink)) == 1)
         l_writecontent($newlink);
     // Génère le lien de chiffrement symétrique.
     $newlink = l_generate('-', 'k', $hashpwd, $hashcryptobj, $hashkey);
-    if ((l_verifylink($newlink)) == 1)
+    if ((l_verify($newlink)) == 1)
         l_writecontent($newlink);
     // Génère le lien de chiffrement asymétrique.
     $newlink = l_generate('-', 'k', $hashkey, $hashcryptkey, $nebulePublicEntity);
-    if ((l_verifylink($newlink)) == 1)
+    if ((l_verify($newlink)) == 1)
         l_writecontent($newlink);
     // Suppression de la clé de session.
     $newlink = l_generate('-', 'd', $hashkey, '0', '0');
-    if ((l_verifylink($newlink)) == 1)
+    if ((l_verify($newlink)) == 1)
         l_writecontent($newlink);
     // Suppression de l'objet source.
     $newlink = l_generate('-', 'd', $hashpwd, '0', '0');
-    if ((l_verifylink($newlink)) == 1)
+    if ((l_verify($newlink)) == 1)
         l_writecontent($newlink);
     return true;
 }
@@ -2301,12 +2299,12 @@ function o_generate(&$data, $typemime = '')
         o_writecontent($hash, $data);
     // Ecrit le lien de hash.
     $lnk = l_generate($dat, 'l', $hash, (o_getNID(getConfiguration('cryptoHashAlgorithm'))), (o_getNID('nebule/objet/hash'))); // 8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec
-    if ((l_verifylink($lnk)) == 1)
+    if ((l_verify($lnk)) == 1)
         l_writecontent($lnk);
     // Ecrit le lien de type mime.
     if ($typemime != '') {
         $lnk = l_generate($dat, 'l', $hash, (o_getNID($typemime)), (o_getNID('nebule/objet/type'))); // 5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0
-        if ((l_verifylink($lnk)) == 1)
+        if ((l_verify($lnk)) == 1)
             l_writecontent($lnk);
     }
     unset($dat);
@@ -2321,10 +2319,9 @@ function o_generate(&$data, $typemime = '')
  * @param string $data
  * @return boolean
  */
-function o_getcontent(&$nid, &$data): bool
+function o_getLocalContent(&$nid, &$data): bool
 {
-    // If exist and not corrupted, extract content to $data.
-    if (io_testObjectPresent($nid) && o_checkcontent($nid)) {
+    if (io_testObjectPresent($nid) && o_checkContent($nid)) {
         $data = io_objectRead($nid);
         return true;
     }
@@ -2332,111 +2329,59 @@ function o_getcontent(&$nid, &$data): bool
 }
 
 /** FIXME
- * Object - Télécharge l'objet sur toutes localisations connues.
- *
- * @param string $object
- */
-function o_downloadupdatedcontent(string $object): void
-{
-    if ($object == '0')
-        return;
-    if (io_testObjectPresent($object))
-        return;
-    $table = array();
-    $hashtype = o_getNID('nebule/objet/entite/localisation');
-    $okobj = array();
-    $count = 1;
-    $okobj [1] = '';
-    l_listlinks($hashtype, $table);
-    foreach ($table as $itemtable) {
-        if (($itemtable [7] == $hashtype) && ($itemtable [4] == 'l') && (!io_testObjectPresent($object))) {
-            $t = true;
-            for ($j = 1; $j < $count; $j++) {
-                if ($itemtable [6] == $okobj [$j]) {
-                    $t = false;
-                }
-            }
-            if ($t) {
-                $lnk = '';
-                o_getcontent($itemtable [6], $lnk);
-                if ($lnk != '') {
-                    o_downloadContent($object, $lnk);
-                }
-                $okobj [$count] = $itemtable [6];
-                $count++;
-            }
-        }
-    }
-    unset($count);
-    unset($j);
-    unset($t);
-    unset($lnk);
-    unset($table);
-    unset($okobj);
-    unset($hashtype);
-}
-
-/** FIXME
  * Object - Télécharge l'objet sur une localisation précise (site web).
  *  - $object l'objet à télécharger.
  *  - $localisation le site web sur lequel aller télécharger l'objet.
  *
- * @param string $object
+ * @param string $nid
  * @param string $localisation
  * @return void
  */
-function o_downloadContent(string $object, string $localisation): void
+function o_downloadContent(string $nid, string $localisation): void
 {
-    global $nebulePublicEntity,
-           $nebuleSecurityMaster;
+    global $nebulePublicEntity, $nebuleSecurityMaster;
 
     if (!getConfiguration('permitWrite')
+        || !getConfiguration('permitWriteObject')
         || !getConfiguration('permitSynchronizeObject')
-        || $object == '0'
-        || $object == ''
-        || !is_string($object)
-        || !ctype_xdigit($object)
+        || !n_checkNID($nid)
         || $localisation == '0'
         || $localisation == ''
         || !is_string($localisation)
-    ) {
+        || io_testObjectPresent($nid)
+    )
         return;
-    }
-    if (io_testObjectPresent($object)) {
-        return;
-    }
 
     // Recherche si banni. TODO à sortir !
     $table = array();
     $hashtype = o_getNID('nebule/danger'); // ac2323f77d7ee9f3ae841e8ccd8374397038160ec7cdb2fc86610c0f66eeeedb
-    l_listlinks($object, $table, '-', $hashtype);
+    l_listlinks($nid, $table, '-', $hashtype);
     foreach ($table as $link) {
         if ($link [2] == $nebulePublicEntity
             && $link [4] == 'f'
             && $link [5] == $hashtype
-            && $link [6] == $object
+            && $link [6] == $nid
             && $link [7] == '0'
         ) {
-            addLog('fct="o_downloadContent:1" warn="' . $object . ') banned by ' . $nebulePublicEntity . '"');
+            addLog('fct="o_downloadContent:1" warn="' . $nid . ') banned by ' . $nebulePublicEntity . '"');
             return;
         }
         if ($link [2] == $nebuleSecurityMaster
             && $link [4] == 'f'
             && $link [5] == $hashtype
-            && $link [6] == $object
+            && $link [6] == $nid
             && $link [7] == '0'
         ) {
-            addLog('fct="o_downloadContent:2" warn="' . $object . ') banned by ' . $nebuleSecurityMaster . '"');
+            addLog('fct="o_downloadContent:2" warn="' . $nid . ') banned by ' . $nebuleSecurityMaster . '"');
             return;
         }
     }
-    unset($table, $hashtype);
 
     // Téléchargement de l'objet.
     $hexid = getPseudoRandom(8); // id pour fichier temporaire.
     $id = bin2hex($hexid);
-    $idname = '_neblibpp_o_dl1_' . $id . '-' . $object;
-    $distobj = fopen($localisation . '/o/' . $object, 'r');
+    $idname = '_neblibpp_o_dl1_' . $id . '-' . $nid;
+    $distobj = fopen($localisation . '/o/' . $nid, 'r');
     if ($distobj) {
         $localobj = fopen(LOCAL_OBJECTS_FOLDER . '/' . $idname, 'w'); // @todo refaire via les i/o.
         if ($localobj) {
@@ -2444,18 +2389,16 @@ function o_downloadContent(string $object, string $localisation): void
                 fputs($localobj, $line);
             }
             fclose($localobj);
-            $hash = hash_file(getConfiguration('cryptoHashAlgorithm'), LOCAL_OBJECTS_FOLDER . '/' . $idname);
-            if ($hash == $object) {
-                rename(LOCAL_OBJECTS_FOLDER . '/' . $idname, LOCAL_OBJECTS_FOLDER . '/' . $object);
-            } else {
+            $algo = substr($nid, strpos($nid, '.') + 1);
+            $hash = getFileHash($idname, $algo);
+
+            if ($hash . '.' . $algo == $nid)
+                rename(LOCAL_OBJECTS_FOLDER . '/' . $idname, LOCAL_OBJECTS_FOLDER . '/' . $nid);
+            else
                 unlink(LOCAL_OBJECTS_FOLDER . '/' . $idname);
-            }
         }
         fclose($distobj);
     }
-    unset($hexid, $id, $line, $hash);
-
-    return;
 }
 
 /** FIXME
@@ -2466,17 +2409,15 @@ function o_downloadContent(string $object, string $localisation): void
  * @todo refaire avec i/o
  *
  */
-function o_checkcontent(&$nid)
+function o_checkContent(&$nid)
 {
     global $nebuleCachelibpp_o_vr;
 
-    if ($nid == '') {
+    if (!n_checkNID($nid))
         return false;
-    }
 
-    if (!io_testObjectPresent($nid)) {
+    if (!io_testObjectPresent($nid))
         return true;
-    }
 
     // Si c'est l'objet 0, le supprime.
     if ($nid == '0') {
@@ -2490,9 +2431,11 @@ function o_checkcontent(&$nid)
         return true;
 
     m_add('ov');
-    $hash = hash_file(getConfiguration('cryptoHashAlgorithm'), LOCAL_OBJECTS_FOLDER . "/$nid"); // @todo refaire via les i/o.
 
-    if ($hash !== $nid) {
+    $algo = substr($nid, strpos($nid, '.') + 1);
+    $hash = getFileHash($nid, $algo);
+
+    if ($hash . '.' . $algo !== $nid) {
         // Si invalide, suppression de l'objet localement.
         io_objectDelete($nid);
     }
@@ -2517,7 +2460,7 @@ function o_getNID(string $data, string $algo = ''): string
     if ($algo == '')
         $algo = getConfiguration('cryptoHashAlgorithm');
 
-    return getHash($algo, $data) . '.' . $algo;
+    return getDataHash($data, $algo) . '.' . $algo;
 }
 
 /**
@@ -3154,7 +3097,7 @@ function l_listonelink(&$object, &$table, $filtreact = '-', $filtreobj = '', $wi
         if ($okfiltre) // Si le lien correspond au filtre, l'enregistre dans la table des resultats.
         {
             if ($checkSignOnList)
-                $verify = l_verifylink(trim($line));
+                $verify = l_verify(trim($line));
             else
                 $verify = -1;
             if ($verify == 1 || $verify == -1 || $withinvalid) // Le lien doit être vérifié ou la vérification désactivée.
@@ -3216,7 +3159,7 @@ function l_downloadlinkanywhere($object)
             }
             if ($t) {
                 $lnk = '';
-                o_getcontent($itemtable [6], $lnk);
+                o_getLocalContent($itemtable [6], $lnk);
                 if ($lnk != '') {
                     l_downloadlinkonlocation($object, $lnk);
                 }
@@ -3266,7 +3209,7 @@ function l_downloadlinkonlocation($oid, $localisation)
     if ($distobj) {
         while (!feof($distobj)) {
             $line = trim(fgets($distobj));
-            $verify = l_verifylink($line);
+            $verify = l_verify($line);
             if ($verify == 1
                 || $verify == -1
             ) {
@@ -3534,7 +3477,7 @@ function l_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): bool
         $hash = o_getNID($bh . '_' . $bl); // TODO remplacer getConfiguration('cryptoHashAlgorithm') par une convertion des algo et size.
 
         // Read signer's public key.
-        o_checkcontent($nid);
+        o_checkContent($nid);
         $cert = io_objectRead($nid);
         $pubkeyid = openssl_pkey_get_public($cert);
         if ($pubkeyid === false) return false;
@@ -3586,7 +3529,7 @@ function l_checkhashalgo(string &$algo, string &$size): bool
  * @param string $link
  * @return boolean
  */
-function l_verifylink(string $link): bool
+function l_verify(string $link): bool
 {
     if (strlen($link) > 4096) return false; // TODO à revoir.
     if (strlen($link) == 0) return false;
@@ -3628,20 +3571,20 @@ function l_writecontent($link)
     if ($sign == '' || $sign == '0')
         return false;
     $objsig = strtok('_'); // Lit le signataire.
-    if ($objsig == '' || $objsig == '0' || !ctype_xdigit($objsig))
+    if ($objsig == '' || $objsig == '0' || !n_checkNID($objsig))
         return false;
     $objtyp = strtok('_'); // Lit la date. N'est pas gardé.
     $objtyp = strtok('_'); // Lit le type.
     if ($objtyp != 'c' && $objtyp != 'd' && $objtyp != 'e' && $objtyp != 'f' && $objtyp != 'k' && $objtyp != 'l' && $objtyp != 's' && $objtyp != 'u' && $objtyp != 'x')
         return false;
     $objsrc = strtok('_'); // Lit l'objet source.
-    if ($objsrc == '' || $objsrc == '0' || !ctype_xdigit($objsrc))
+    if ($objsrc == '' || $objsrc == '0' || !n_checkNID($objsrc))
         return false;
     $objdst = strtok('_'); // Lit l'objet destination.
-    if ($objdst == '' || !ctype_xdigit($objdst))
+    if ($objdst == '' || !n_checkNID($objdst))
         return false;
     $objmet = strtok('_'); // Lit l'objet meta.
-    if ($objmet == '' || !ctype_xdigit($objmet))
+    if ($objmet == '' || !n_checkNID($objmet))
         return false;
 
     // Recherche la pré-existance du lien.
@@ -3918,24 +3861,24 @@ function io_close(): void
  * @param string $data
  * @return string
  */
-function filterPrinteableString($data)
+function filterPrinteableString($data): string
 {
     return preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', $data);
 }
 
 /**
- * Calculate hash of data with algo.
- * Use OpenSSL library.
+ * Translate algo name into OpenSSL algo name.
  *
  * @param string $algo
- * @param string $data
+ * @param bool $loop
  * @return string
  */
-function getHash(string $algo, string &$data): string
+function getTranslatedHashAlgo(string $algo, bool $loop = true): string
 {
-    $translatedAlgo = getConfiguration('cryptoHashAlgorithm');
+    if ($algo == '')
+        $algo = getConfiguration('cryptoHashAlgorithm');
 
-    // Translate algo name into OpenSSL algo name.
+    $translatedAlgo = '';
     switch ($algo)
     {
         case 'sha2.128' :
@@ -3952,12 +3895,45 @@ function getHash(string $algo, string &$data): string
             break;
     }
 
-    return hash($translatedAlgo, $data);
+    if ($translatedAlgo == '' && $loop)
+        $translatedAlgo = getTranslatedHashAlgo($algo, false);
+    else {
+        addLog('fct="getTranslatedHashAlgo" warn="cryptoHashAlgorithm configuration have an unknown value"');
+        $translatedAlgo = 'sha512';
+    }
+
+    return $translatedAlgo;
+}
+
+/**
+ * Calculate hash of data with algo.
+ * Use OpenSSL library.
+ *
+ * @param string $algo
+ * @param string $data
+ * @return string
+ */
+function getDataHash(string &$data, string $algo = ''): string
+{
+    return hash(getTranslatedHashAlgo($algo), $data);
+}
+
+/**
+ * Calculate hash of file data with algo.
+ * File must be on objects folder.
+ * Use OpenSSL library.
+ *
+ * @param string $algo
+ * @param string $file
+ * @return string
+ */
+function getFileHash(string $file, string $algo = ''): string
+{
+    return hash_file(getTranslatedHashAlgo($algo), LOCAL_OBJECTS_FOLDER . '/' . $file);
 }
 
 /** FIXME
- * Génération d'aléa pseudo aléatoire.
- * Retourne un nombre n d'octets.
+ * Generate pseudo random number
  * Use OpenSSL library.
  *
  * @param int $count
@@ -3967,14 +3943,10 @@ function getPseudoRandom($count = 32): string
 {
     global $nebuleServerEntite;
 
-    if ($count == 0 || !is_int($count))
-        return '';
-
-    // Résultat à remplir.
     $result = '';
-
-    // Définit l'algorithme de divergence.
     $algo = 'sha256';
+    if ($count == 0 || !is_int($count))
+        return $result;
 
     // Génère une graine avec la date pour le compteur interne.
     $intcount = date(DATE_ATOM) . microtime(false) . NEBULE_LIBPP_VERSION . $nebuleServerEntite;
@@ -3991,9 +3963,8 @@ function getPseudoRandom($count = 32): string
         $outvalue = pack("H*", hash($algo, $intcount . 'liberté égalité fraternité'));
 
         // Tronc au besoin la taille de la sortie.
-        if (strlen($outvalue) > $diffsize) {
+        if (strlen($outvalue) > $diffsize)
             $outvalue = substr($outvalue, 0, $diffsize);
-        }
 
         // Ajoute la sortie au résultat final.
         $result .= $outvalue;
@@ -4011,20 +3982,19 @@ function getPseudoRandom($count = 32): string
  *
 
  ==/ 3 /===================================================================================
- PART3 : Manage PHP session.
+ PART3 : Manage PHP session and arguments.
 
  TODO.
  ------------------------------------------------------------------------------------------
  */
 
 // ------------------------------------------------------------------------------------------
-/*
+/**
  * Lit si demande de l'utilisateur d'un nettoyage de session général.
  * Dans ce cas, la session PHP est intégralement nettoyée et un nouvel identifiant de session est généré.
  *
  * Si la session est déjà vide, ne prend pas en compte la demande.
  */
-
 function getBootstrapFlushSession()
 {
     session_start();
@@ -4111,8 +4081,7 @@ function getBootstrapSwitchApplication(): void
         $arg = trim(filter_input(INPUT_POST, ARG_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
     }
     if (is_string($arg)
-        && $arg != ''
-        && ctype_xdigit($arg)
+        && n_checkNID($arg, true)
         && ($arg == '0'
             || $arg == '1'
             || io_testLinkPresent($arg)
@@ -4174,25 +4143,127 @@ function setPermitOpenFileCode()
 }
 
 
-
-// ------------------------------------------------------------------------------------------
-
-// TODO fonction de recherche de la librairie
 /*
- *  La recherche de la bibliothèque et de l'application nécessite une bibliothèque nebule PHP PP fonctionnnelle.
+ *
+ *
+ *
+ *
+
+ ==/ 4 /===================================================================================
+ PART4 : Load object oriented PHP library for nebule (Lib POO).
+
+ TODO.
+ ------------------------------------------------------------------------------------------
  */
-if (libppCheckAll()) {
-    // Ouverture de la session PHP.
+
+function findLibraryPOO(): void
+{
+    global $libppCheckOK, $bootstrapLibraryID, $bootstrapLibraryInstanceSleep;
+
+    if (!$libppCheckOK)
+        return;
+
+    session_start();
+
+    if (isset($_SESSION['bootstrapLibrariesID'])
+        && n_checkNID($_SESSION['bootstrapLibrariesID'])
+        && io_testLinkPresent($_SESSION['bootstrapLibrariesID'])
+        && io_testObjectPresent($_SESSION['bootstrapLibrariesID'])
+        && o_checkContent($_SESSION['bootstrapLibrariesID'])
+        && isset($_SESSION['bootstrapLibrariesInstances'][$_SESSION['bootstrapLibrariesID']])
+        && $_SESSION['bootstrapLibrariesInstances'][$_SESSION['bootstrapLibrariesID']] != ''
+    ) {
+        $bootstrapLibraryID = $_SESSION['bootstrapLibrariesID'];
+        $bootstrapLibraryInstanceSleep = $_SESSION['bootstrapLibrariesInstances'][$_SESSION['bootstrapLibrariesID']];
+    }
+
+    session_abort();
+
+    if ($bootstrapLibraryID == '') {
+        $bootstrapLibraryID = nebFindByRef(
+            o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE),
+            o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE),
+            false);
+
+        addLog('find nebule library ' . $bootstrapLibraryID);
+
+        if (!n_checkNID($bootstrapLibraryID)
+            || !io_testLinkPresent($bootstrapLibraryID)
+            || !io_testObjectPresent($bootstrapLibraryID)
+            || !o_checkContent($bootstrapLibraryID)
+        ) {
+            $bootstrapLibraryID = '';
+            setBootstrapBreak('31', 'Finding nebule library error.');
+        }
+    }
+}
+
+/**
+ * loadLibrary()
+ * La fonction réalise le chargement et l'initialisation de la bibliothèque .
+ *
+ * Un certain nombre de variables globales sont initialisées au chargement de la bibliothèque,
+ *   elles doivent être présentes ici.
+ *
+ * @return void
+ */
+function loadLibraryPOO(): void
+{
+    global $bootstrapName,
+           $loggerSessionID,
+           $nebuleInstance,
+           $libpooCheckOK,
+           $bootstrapLibraryID,
+           $bootstrapLibraryInstanceSleep;
+
+    if ($bootstrapLibraryID != '') {
+        // Charge l'objet de la bibliothèque. @todo faire via les i/o.
+        include(LOCAL_OBJECTS_FOLDER . '/' . '$bootstrapLibraryID');
+
+        if ($bootstrapLibraryInstanceSleep == '') {
+            // Instancie la bibliothèque.
+            $nebuleInstance = new nebule();
+        } else {
+            // Récupère l'instance de la bibliothèque.
+            $nebuleInstance = unserialize($bootstrapLibraryInstanceSleep);
+        }
+
+        // Ré-ouvre les logs pour le bootstrap.
+        closelog();
+        openlog($bootstrapName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+    } else
+        setBootstrapBreak('41', 'Library nebule error');
+}
+
+
+/*
+ *
+ *
+ *
+ *
+
+ ==/ 5 /===================================================================================
+ PART5 : Find application code.
+
+ TODO.
+ ------------------------------------------------------------------------------------------
+ */
+
+function findApplication():void
+{
+    global $libppCheckOK;
+    if (!$libppCheckOK)
+        return;
+
     session_start();
 
     // Enregistre l'identifiant de session pour le suivi d'un utilisateur.
     $sessionId = session_id();
-    addLog('session hash id ' . getHash('sha2.256', $sessionId));
+    addLog('session hash id ' . getDataHash($sessionId));
 
     // Vérifie l'ID de départ de l'application mémorisé.
     if (isset($_SESSION['bootstrapApplicationStartID'])
-        && $_SESSION['bootstrapApplicationStartID'] != ''
-        && ctype_xdigit($_SESSION['bootstrapApplicationStartID'])
+        && n_checkNID($_SESSION['bootstrapApplicationStartID'])
     ) {
         // Mémorise l'ID de départ de l'application en cours.
         $bootstrapApplicationStartID = $_SESSION['bootstrapApplicationStartID'];
@@ -4224,11 +4295,11 @@ if (libppCheckAll()) {
             // Vérifie l'ID de l'application mémorisé.
             if (isset($_SESSION['bootstrapApplicationID'])
                 && $_SESSION['bootstrapApplicationID'] != ''
-                && ctype_xdigit($_SESSION['bootstrapApplicationID'])
+                && n_checkNID($_SESSION['bootstrapApplicationID'])
                 && $_SESSION['bootstrapApplicationID'] == '0'
                 || (io_testLinkPresent($_SESSION['bootstrapApplicationID'])
                     && io_testObjectPresent($_SESSION['bootstrapApplicationID'])
-                    && o_checkcontent($_SESSION['bootstrapApplicationID'])
+                    && o_checkContent($_SESSION['bootstrapApplicationID'])
                 )
             ) {
                 // Mémorise l'ID de l'application en cours.
@@ -4253,30 +4324,6 @@ if (libppCheckAll()) {
                     // Sinon supprime l'ID de l'application en cours.
                     $bootstrapApplicationID = '';
                 }
-
-                // Vérifie la bibliothèque mémorisée pour l'application.
-                if ($bootstrapApplicationStartID != ''
-                    && isset($_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID])
-                    && $_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID] != ''
-                    && $_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID] != '0'
-                    && ctype_xdigit($_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID])
-                    && io_testLinkPresent($_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID])
-                    && io_testObjectPresent($_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID])
-                    && o_checkcontent($_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID])
-                ) {
-                    // Mémorise l'ID de la bibliothèque.
-                    $bootstrapLibraryID = $_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID];
-
-                    if (isset($_SESSION['bootstrapLibrariesInstances'][$bootstrapLibraryID])
-                        && $_SESSION['bootstrapLibrariesInstances'][$bootstrapLibraryID] != ''
-                    ) {
-                        // Mémorise l'instance non dé-sérialisée de la bibliothèque.
-                        $bootstrapLibraryInstanceSleep = $_SESSION['bootstrapLibrariesInstances'][$bootstrapLibraryID];
-                    } else {
-                        // Sinon supprime l'ID de la bibliothèque.
-                        $bootstrapLibraryID = '';
-                    }
-                }
             }
         }
     } else {
@@ -4293,7 +4340,7 @@ if (libppCheckAll()) {
             // Application 0 de sélection des applications.
             $bootstrapApplicationStartID = '1';
             $bootstrapApplicationID = '1';
-        } elseif (ctype_xdigit($bootstrapSwitchApplication)
+        } elseif (n_checkNID($bootstrapSwitchApplication)
             && io_testLinkPresent($bootstrapSwitchApplication)
         ) {
             $refAppsID = o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS);
@@ -4307,11 +4354,10 @@ if (libppCheckAll()) {
 
                 // Vérifie l'application non dé-sérialisée.
                 if (isset($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
-                    && $_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID] != ''
-                    && ctype_xdigit($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+                    && n_checkNID($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
                     && io_testLinkPresent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
                     && io_testObjectPresent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
-                    && o_checkcontent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+                    && o_checkContent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
                     && isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID])
                     && $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID] != ''
                     && isset($_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID])
@@ -4403,30 +4449,6 @@ if (libppCheckAll()) {
         }
         unset($links, $refNoPreload);
     }
-
-    // Si pas de bibliothèque trouvée, recherche de dernière mise à jour de la bibliothèque.
-    if ($bootstrapLibraryID == '') {
-        // Recherche la dernière bibliothèque depuis l'objet de référence sur lui-même.
-        $bootstrapLibraryID = nebFindByRef(
-            o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE),
-            o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE),
-            false);
-
-        addLog('find nebule library ' . $bootstrapLibraryID);
-
-        if ($bootstrapLibraryID == ''
-            || $bootstrapLibraryID == '0'
-            || !ctype_xdigit($bootstrapLibraryID)
-            || !io_testLinkPresent($bootstrapLibraryID)
-            || !io_testObjectPresent($bootstrapLibraryID)
-            || !o_checkcontent($bootstrapLibraryID)
-        ) {
-            addLog('finding nebule library error');
-
-            $bootstrapLibraryID = '';
-            setBootstrapBreak('31', 'Finding nebule library error.');
-        }
-    }
 }
 
 
@@ -4436,66 +4458,8 @@ if (libppCheckAll()) {
  *
  *
 
- ==/ 4 /===================================================================================
- PART4 : Load object oriented PHP library for nebule (Lib POO).
-
- TODO.
- ------------------------------------------------------------------------------------------
- */
-
-/**
- * loadLibrary()
- * La fonction réalise le chargement et l'initialisation de la bibliothèque .
- *
- * Un certain nombre de variables globales sont initialisées au chargement de la bibliothèque,
- *   elles doivent être présentes ici.
- *
- * @return void
- */
-function loadLibrary(): void
-{
-    global $bootstrapName,
-           $loggerSessionID,
-           $nebuleInstance,
-           $bootstrapLibraryID,
-           $bootstrapLibraryInstanceSleep;
-
-    if ($bootstrapLibraryID != '') {
-        addLog('load library nebule ' . $bootstrapLibraryID);
-
-        // Charge l'objet de la bibliothèque. @todo faire via les i/o.
-        include(LOCAL_OBJECTS_FOLDER . '/' . '$bootstrapLibraryID');
-
-        if ($bootstrapLibraryInstanceSleep == '') {
-            // Instancie la bibliothèque.
-            $nebuleInstance = new nebule();
-        } else {
-            // Récupère l'instance de la bibliothèque.
-            $nebuleInstance = unserialize($bootstrapLibraryInstanceSleep);
-        }
-
-        // Ré-ouvre les logs pour le bootstrap.
-        closelog();
-        openlog($bootstrapName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
-    } else {
-        addLog('library nebule error');
-
-        // Sinon erreur au chargement de la bibliothèque.
-        setBootstrapBreak('41', 'Library nebule error');
-    }
-
-    return;
-}
-
-
-/*
- *
- *
- *
- *
-
- ==/ 5 /===================================================================================
- PART5 : Manage and display breaking bootstrap on problem or user ask.
+ ==/ 6 /===================================================================================
+ PART6 : Manage and display breaking bootstrap on problem or user ask.
 
  TODO.
  ------------------------------------------------------------------------------------------
@@ -5216,7 +5180,8 @@ function bootstrapDisplayOnBreak(): void
            $nebuleServerEntite,
            $nebuleDefaultEntite,
            $nebulePublicEntity,
-           $nebuleLibVersion;
+           $nebuleLibVersion,
+           $libpooCheckOK;
 
     echo 'CHK';
     ob_end_clean();
@@ -5247,7 +5212,7 @@ function bootstrapDisplayOnBreak(): void
         }
         $sessionId = session_id();
         ?>
-        <a href="?f">&gt; Flush PHP session</a> (<?php echo substr(getHash('sha256', $sessionId), 0, 6); ?>)<br/>
+        <a href="?f">&gt; Flush PHP session</a> (<?php echo substr(getDataHash($sessionId), 0, 6); ?>)<br/>
     </div>
     <div class="parts">
         <span class="partstitle">#2 <?php echo $bootstrapName; ?> nebule library PP</span><br/>
@@ -5271,7 +5236,6 @@ function bootstrapDisplayOnBreak(): void
         flush();
 
         // Chargement de la bibliothèque PHP POO.
-        loadLibrary();
         echo "Tl=" . sprintf('%01.4fs', microtime(true) - $metrologyStartTime) . "<br />\n";
         echo 'library RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE) . "<br />\n";
 
@@ -5589,8 +5553,8 @@ function bootstrapInlineDisplayOnBreak()
  *
  *
 
- ==/ 6 /===================================================================================
- PART6 : Display of pre-load application web page.
+ ==/ 7 /===================================================================================
+ PART7 : Display of pre-load application web page.
 
  TODO.
  ------------------------------------------------------------------------------------------
@@ -5642,9 +5606,6 @@ function bootstrapDisplayPreloadApplication()
         ID=<?php echo $bootstrapLibraryID; ?><br/>
         <?php
         flush();
-
-        // Chargement de la bibliothèque PHP POO.
-        loadLibrary();
 
         // Ré-initialisation des logs
         closelog();
@@ -5729,8 +5690,8 @@ if ($nb == 0) {
  *
  *
 
- ==/ 7 /===================================================================================
- PART7 : First synchronization of code and environment.
+ ==/ 8 /===================================================================================
+ PART8 : First synchronization of code and environment.
 
  TODO.
  ------------------------------------------------------------------------------------------
@@ -5960,7 +5921,7 @@ else {
  */
 function bootstrapFirstSynchronizingEntities()
 {
-    global $bootstrapName, $nebuleLocalAuthorities,
+    global $bootstrapName, $nebuleLocalAuthorities, $libppCheckOK,
            $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster;
 
     ?>
@@ -5969,7 +5930,7 @@ function bootstrapFirstSynchronizingEntities()
     <span class="partstitle">#4 synchronizing entities</span><br/>
     <?php
     // Si la bibliothèque ne se charge pas correctement, fait une première synchronisation des entités.
-    if (!libppCheckAll()) {
+    if (!$libppCheckOK) {
         ?>
 
         puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;:
@@ -6021,8 +5982,7 @@ function bootstrapFirstSynchronizingEntities()
             o_getNID('nebule/objet/entite/maitre/securite'),
             false);
         echo ' ' . $entity . ' ';
-        if (ctype_xdigit($entity)
-            && $entity != '0'
+        if (n_checkNID($entity)
             && io_testLinkPresent($entity)
         ) {
             // Recherche de l'objet et des liens de l'entité.
@@ -6048,8 +6008,7 @@ function bootstrapFirstSynchronizingEntities()
             o_getNID('nebule/objet/entite/maitre/code'),
             false);
         echo ' ' . $entity . ' ';
-        if (ctype_xdigit($entity)
-            && $entity != '0'
+        if (n_checkNID($entity)
             && io_testLinkPresent($entity)
         ) {
             // Recherche de l'objet et des liens de l'entité.
@@ -6075,8 +6034,7 @@ function bootstrapFirstSynchronizingEntities()
             o_getNID('nebule/objet/entite/maitre/annuaire'),
             false);
         echo ' ' . $entity . ' ';
-        if (ctype_xdigit($entity)
-            && $entity != '0'
+        if (n_checkNID($entity)
             && io_testLinkPresent($entity)
         ) {
             // Recherche de l'objet et des liens de l'entité.
@@ -6102,8 +6060,7 @@ function bootstrapFirstSynchronizingEntities()
             o_getNID('nebule/objet/entite/maitre/temps'),
             false);
         echo ' ' . $entity . ' ';
-        if (ctype_xdigit($entity)
-            && $entity != '0'
+        if (n_checkNID($entity)
             && io_testLinkPresent($entity)
         ) {
             // Recherche de l'objet et des liens de l'entité.
@@ -6122,7 +6079,7 @@ function bootstrapFirstSynchronizingEntities()
 
         <div id="reload">
             <?php
-            if (libppCheckAll()) {
+            if ($libppCheckOK) {
                 ?>
 
                 &gt; <a
@@ -6561,7 +6518,7 @@ function bootstrapFirstCreateLocaleEntity()
             $refHashName = o_getNID('nebule/objet/nom');
             $hashName = o_getNID($name);
             $newlink = l_generate('-', 'l', $nebulePublicEntity, $hashName, $refHashName);
-            if (l_verifylink($newlink) == 1) {
+            if (l_verify($newlink) == 1) {
                 l_writecontent($newlink);
             }
             unset($newlink);
@@ -6622,8 +6579,8 @@ chmod 644 <?php echo LOCAL_ENTITY_FILE; ?>
  *
  *
 
- ==/ 8 /===================================================================================
- PART8 : Display of application 0 web page to select application to run.
+ ==/ 9 /===================================================================================
+ PART9 : Display of application 0 web page to select application to run.
 
  TODO.
  ------------------------------------------------------------------------------------------
@@ -6646,9 +6603,6 @@ function bootstrapDisplayApplication0()
 
     bootstrapHtmlHeader();
     bootstrapHtmlTop();
-
-    // Chargement de la bibliothèque PHP POO.
-    loadLibrary();
 
     // Ré-initialisation des logs
     closelog();
@@ -6765,8 +6719,8 @@ function bootstrapDisplayApplication0()
  *
  *
 
- ==/ 9 /===================================================================================
- PART9 : Display of application 1 web page to display documentation of nebule.
+ ==/ 10 /==================================================================================
+ PART10 : Display of application 1 web page to display documentation of nebule.
 
  TODO.
  ------------------------------------------------------------------------------------------
@@ -6786,9 +6740,6 @@ function bootstrapDisplayApplication1()
 
     bootstrapHtmlHeader();
     bootstrapHtmlTop();
-
-    // Chargement de la bibliothèque PHP POO.
-    loadLibrary();
 
     // Ré-initialisation des logs
     closelog();
@@ -6817,8 +6768,8 @@ function bootstrapDisplayApplication1()
  *
  *
 
- ==/ 10 /==================================================================================
- PART10 : Main display router.
+ ==/ 11 /==================================================================================
+ PART11 : Main display router.
 
  TODO.
  ------------------------------------------------------------------------------------------
@@ -6870,9 +6821,6 @@ function displayRouter(bool $needFirstSynchronization)
                 && isset($bootstrapApplicationTraductionInstanceSleep)
                 && $bootstrapApplicationTraductionInstanceSleep != ''
             ) {
-                // Chargement de la bibliothèque PHP POO.
-                loadLibrary();
-
                 addLog('load application ' . $bootstrapApplicationID);
 
                 // Charge l'objet de l'application. @todo faire via les i/o.
@@ -6908,9 +6856,6 @@ function displayRouter(bool $needFirstSynchronization)
                 // Si l'application ne doit être pré-chargée,
                 //   réalise maintenant le pré-chargement de façon transparente et lance l'application.
                 // Ainsi, le pré-chargement n'est pas fait sur une page web à part.
-
-                // Chargement de la bibliothèque PHP POO.
-                loadLibrary();
 
                 addLog('load application whitout preload ' . $bootstrapApplicationID);
 
@@ -6954,7 +6899,7 @@ function displayRouter(bool $needFirstSynchronization)
             $_SESSION['bootstrapApplicationID'] = $bootstrapApplicationID;
             $_SESSION['bootstrapApplicationStartID'] = $bootstrapApplicationStartID;
             $_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID] = $bootstrapApplicationID;
-            $_SESSION['bootstrapLibrariesID'][$bootstrapApplicationStartID] = $bootstrapLibraryID;
+            $_SESSION['bootstrapLibrariesID'] = $bootstrapLibraryID;
 
             // Sérialise les instances et les sauve dans la session PHP.
             $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID] = serialize($applicationInstance);
@@ -7051,11 +6996,14 @@ function main()
     getBootstrapCheckFingerprint();
     $needFirstSynchronization = getBootstrapNeedFirstSynchronization();
     getBootstrapServerEntityDisplay();
-    setPermitOpenFileCode();
     getBootstrapFlushSession();
     getBootstrapUpdate();
     getBootstrapSwitchApplication();
 
+    setPermitOpenFileCode();
+    findLibraryPOO();
+    loadLibraryPOO();
+    findApplication();
 
     displayRouter($needFirstSynchronization);
     bootstrapLogMetrology();
