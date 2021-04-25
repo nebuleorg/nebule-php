@@ -1439,7 +1439,7 @@ function nebAddObjTypeMime(&$object, $type)
     nebINECreatObjText('text/plain');
     $newlink = l_generate('-', 'l', $object, $hashtype, (o_getNID('nebule/objet/type'))); // 5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0
     if ((l_verify($newlink)) == 1)
-        l_writecontent($newlink);
+        l_write($newlink);
     if (!io_testObjectPresent($type) && !io_testLinkPresent($type))
         o_generate($type, 'text/plain');
     unset($hashtype);
@@ -1813,56 +1813,56 @@ function nebCreatObjDate(&$object)
     o_generate($crfulldate, 'text/plain');
     $newlink = l_generate($crfulldate, 'l', $object, $hashfulldate, (o_getNID('nebule/objet/date'))); // 31e415a2fb3a47fd1ccd9de4e04d6d71c1386bef639ae38755dd218db9ed92a1
     if ((l_verify($newlink)) == 1)
-        l_writecontent($newlink);
+        l_write($newlink);
     // Ajoute l'année.
     $crdate = date('Y');
     $hashdate = o_getNID($crdate);
     o_generate($crdate, 'text/plain');
     $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/annee')));
     if ((l_verify($newlink)) == 1)
-        l_writecontent($newlink);
+        l_write($newlink);
     // Ajoute le mois.
     $crdate = date('m');
     $hashdate = o_getNID($crdate);
     o_generate($crdate, 'text/plain');
     $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/mois')));
     if ((l_verify($newlink)) == 1)
-        l_writecontent($newlink);
+        l_write($newlink);
     // Ajoute le jour.
     $crdate = date('d');
     $hashdate = o_getNID($crdate);
     o_generate($crdate, 'text/plain');
     $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/jour')));
     if ((l_verify($newlink)) == 1)
-        l_writecontent($newlink);
+        l_write($newlink);
     // Ajoute l'heure.
     $crdate = date('H');
     $hashdate = o_getNID($crdate);
     o_generate($crdate, 'text/plain');
     $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/heure')));
     if ((l_verify($newlink)) == 1)
-        l_writecontent($newlink);
+        l_write($newlink);
     // Ajoute la minute.
     $crdate = date('i');
     $hashdate = o_getNID($crdate);
     o_generate($crdate, 'text/plain');
     $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/minute')));
     if ((l_verify($newlink)) == 1)
-        l_writecontent($newlink);
+        l_write($newlink);
     // Ajoute la seconde.
     $crdate = date('s');
     $hashdate = o_getNID($crdate);
     o_generate($crdate, 'text/plain');
     $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/seconde')));
     if ((l_verify($newlink)) == 1)
-        l_writecontent($newlink);
+        l_write($newlink);
     // Ajoute la zone.
     $crdate = date('P');
     $hashdate = o_getNID($crdate);
     o_generate($crdate, 'text/plain');
     $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/zone')));
     if ((l_verify($newlink)) == 1)
-        l_writecontent($newlink);
+        l_write($newlink);
     unset($crfulldate);
     unset($crdate);
     unset($hashfulldate);
@@ -1882,7 +1882,7 @@ function nebCreatObjHash(&$object)
     nebINECreatObjText(getConfiguration('cryptoHashAlgorithm'));
     $newlink = l_generate('-', 'l', $object, getConfiguration('cryptoHashAlgorithm'), (o_getNID('nebule/objet/hash'))); // 8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec
     if ((l_verify($newlink)) == 1)
-        l_writecontent($newlink);
+        l_write($newlink);
     unset($newlink);
     return true;
 }
@@ -2030,13 +2030,13 @@ function e_generate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $pas
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashhash . '_' . $refhashtext . '_' . $refhashtype;
         $hashdata = o_getNID($data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
     if (!io_testObjectPresent($refhashalgo)) {
         $cryptoHashAlgorithm = getConfiguration('cryptoHashAlgorithm');
@@ -2046,13 +2046,13 @@ function e_generate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $pas
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashalgo . '_' . $refhashtext . '_' . $refhashtype;
         $hashdata = o_getNID($data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
     if (!io_testObjectPresent($refhashtype)) {
         $newtxt = 'nebule/objet/type';
@@ -2062,13 +2062,13 @@ function e_generate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $pas
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtype . '_' . $refhashtext . '_' . $refhashtype;
         $hashdata = o_getNID($data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
     if (!io_testObjectPresent($refhashpem)) {
         $newtxt = 'application/x-pem-file';
@@ -2078,13 +2078,13 @@ function e_generate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $pas
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashpem . '_' . $refhashtext . '_' . $refhashtype;
         $hashdata = o_getNID($data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
     if (!io_testObjectPresent($refhashtext)) {
         $newtxt = 'text/plain';
@@ -2094,13 +2094,13 @@ function e_generate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $pas
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtext . '_' . $refhashtext . '_' . $refhashtype;
         $hashdata = o_getNID($data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
     // Génération du lien de hash de la clé publique.
     $data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashpubkey . '_' . $refhashalgo . '_' . $refhashhash;
@@ -2108,35 +2108,35 @@ function e_generate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $pas
     $binhash = pack("H*", $hashdata);
     $ok1 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
-    l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+    l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     // Génération du lien de hash de la clé privée.
     $data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashprivkey . '_' . $refhashalgo . '_' . $refhashhash;
     $hashdata = o_getNID($data);
     $binhash = pack("H*", $hashdata);
     $ok2 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
-    l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+    l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     // Génération du lien de typemime de la clé publique.
     $data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashpubkey . '_' . $refhashpem . '_' . $refhashtype;
     $hashdata = o_getNID($data);
     $binhash = pack("H*", $hashdata);
     $ok3 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
-    l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+    l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     // Génération du lien de typemime de la clé privée.
     $data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashprivkey . '_' . $refhashpem . '_' . $refhashtype;
     $hashdata = o_getNID($data);
     $binhash = pack("H*", $hashdata);
     $ok4 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
-    l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+    l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     // Génération du lien de jumelage des clés.
     $data = '_' . $hashpubkey . '_' . $date . '_f_' . $hashprivkey . '_' . $hashpubkey . '_0';
     $hashdata = o_getNID($data);
     $binhash = pack("H*", $hashdata);
     $ok5 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
-    l_writecontent("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+    l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     // Nettoyage.
     openssl_free_key($private_key);
     unset($private_key);
@@ -2235,23 +2235,23 @@ function e_addpasswd($pubkey, $privkey, $password)
     // Génère le lien de chiffrement entre clé privée et publique avec le mot de passe.
     $newlink = l_generate('-', 'k', $privkey, $pubkey, $hashpwd);
     if ((l_verify($newlink)) == 1)
-        l_writecontent($newlink);
+        l_write($newlink);
     // Génère le lien de chiffrement symétrique.
     $newlink = l_generate('-', 'k', $hashpwd, $hashcryptobj, $hashkey);
     if ((l_verify($newlink)) == 1)
-        l_writecontent($newlink);
+        l_write($newlink);
     // Génère le lien de chiffrement asymétrique.
     $newlink = l_generate('-', 'k', $hashkey, $hashcryptkey, $nebulePublicEntity);
     if ((l_verify($newlink)) == 1)
-        l_writecontent($newlink);
+        l_write($newlink);
     // Suppression de la clé de session.
     $newlink = l_generate('-', 'd', $hashkey, '0', '0');
     if ((l_verify($newlink)) == 1)
-        l_writecontent($newlink);
+        l_write($newlink);
     // Suppression de l'objet source.
     $newlink = l_generate('-', 'd', $hashpwd, '0', '0');
     if ((l_verify($newlink)) == 1)
-        l_writecontent($newlink);
+        l_write($newlink);
     return true;
 }
 
@@ -2300,12 +2300,12 @@ function o_generate(&$data, $typemime = '')
     // Ecrit le lien de hash.
     $lnk = l_generate($dat, 'l', $hash, (o_getNID(getConfiguration('cryptoHashAlgorithm'))), (o_getNID('nebule/objet/hash'))); // 8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec
     if ((l_verify($lnk)) == 1)
-        l_writecontent($lnk);
+        l_write($lnk);
     // Ecrit le lien de type mime.
     if ($typemime != '') {
         $lnk = l_generate($dat, 'l', $hash, (o_getNID($typemime)), (o_getNID('nebule/objet/type'))); // 5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0
         if ((l_verify($lnk)) == 1)
-            l_writecontent($lnk);
+            l_write($lnk);
     }
     unset($dat);
     unset($hash);
@@ -2570,25 +2570,19 @@ function o_delete(string &$object): bool
  * @param string $NID3
  * @return string
  */
-function l_generate(string $CHR, string $REQ, string $NID1, string $NID2 = '', string $NID3 = '')
+function l_generate(string $CHR, string $REQ, string $NID1, string $NID2 = '', string $NID3 = ''): string
 {
     global $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite;
 
-    if ($nebulePublicEntity == '')
-        return '';
-    if ($nebulePrivateEntite == '')
-        return '';
-    if ($nebulePasswordEntite == '')
-        return '';
-    if (!io_testObjectPresent($nebulePrivateEntite))
-        return '';
-    if ($REQ == '')
-        return '';
-    if (!n_checkNID($NID1))
-        return '';
-    if (!n_checkNID($NID2, true))
-        return '';
-    if (!n_checkNID($NID3, true))
+    if ($nebulePublicEntity == ''
+        || $nebulePrivateEntite == ''
+        || $nebulePasswordEntite == ''
+        || !io_testObjectPresent($nebulePrivateEntite)
+        || $REQ == ''
+        || !n_checkNID($NID1)
+        || !n_checkNID($NID2, true)
+        || !n_checkNID($NID3, true)
+    )
         return '';
     if ($CHR == '-')
         $CHR = date(DATE_ATOM);
@@ -3213,7 +3207,7 @@ function l_downloadlinkonlocation($oid, $localisation)
             if ($verify == 1
                 || $verify == -1
             ) {
-                l_writecontent($line);
+                l_write($line);
                 $count++;
             }
         }
@@ -3550,6 +3544,89 @@ function l_verify(string $link): bool
     return true;
 }
 
+/**
+ * Explode link and it's values into array.
+ * 
+ * @param string $link
+ * @return array
+ */
+function l_parse(string $link): array
+{
+    // Extract blocs from link L : BH_BL_BS
+    $bh = strtok(trim($link), '_');
+    $bl = strtok('_');
+    $bs = strtok('_');
+
+    $bh_rf = strtok($bh, '/');
+    $bh_rv = strtok('/');
+
+    // Check items from RF : APP:TYP
+    $bh_rf_app = strtok($bh_rf, ':');
+    $bh_rf_typ = strtok(':');
+
+    // Check items from RV : VER:SUB
+    $bh_rv_ver = strtok($bh_rv, ':');
+    $bh_rv_sub = strtok(':');
+
+    $bl_rc = strtok($bl, '/');
+    $bl_rl = strtok('/');
+
+    // Check items from RC : MOD>CHR
+    $bl_rc_mod = strtok($bl_rc, '>');
+    $bl_rc_chr = strtok('>');
+
+    // Extract items from RL 1 : REQ>NID>NID>NID
+    $bl_rl_req = strtok($bl_rl, '>');
+    $bl_rl_nid1 = strtok('>');
+    if ($bl_rl_nid1 === false) $bl_rl_nid1 = '';
+    $bl_rl_nid2 = strtok('>');
+    if ($bl_rl_nid2 === false) $bl_rl_nid2 = '';
+    $bl_rl_nid3 = strtok('>');
+    if ($bl_rl_nid3 === false) $bl_rl_nid3 = '';
+
+    $bs_rs = strtok($bs, '/');
+
+    // Extract items from RS : NID>SIG
+    $bs_rs_nid = strtok($bs_rs, '>');
+    $bs_rs_sig = strtok('>');
+
+    // Check hash value.
+    $bs_rs_sig_sign = strtok($bs_rs_sig, '.');
+
+    // Check algo value.
+    $bs_rs_sig_algo = strtok('.');
+
+    // Check size value.
+    $bs_rs_sig_size = strtok('.');
+
+    $return = array(
+        'bh' => $bh,
+        'bh/rf' => $bh_rf,
+        'bh/rf/app' => $bh_rf_app,
+        'bh/rf/typ' => $bh_rf_typ,
+        'bh/rv' => $bh_rv,
+        'bh/rv/ver' => $bh_rv_ver,
+        'bh/rv/sub' => $bh_rv_sub,
+        'bl' => $bl,
+        'bl/rc' => $bl_rc,
+        'bl/rc/mod' => $bl_rc_mod,
+        'bl/rc/chr' => $bl_rc_chr,
+        'bl/rl' => $bl_rl,
+        'bl/rl/req' => $bl_rl_req,
+        'bl/rl/nid1' => $bl_rl_nid1,
+        'bl/rl/nid2' => $bl_rl_nid2,
+        'bl/rl/nid3' => $bl_rl_nid3,
+        'bs' => $bs,
+        'bs/rs' => $bs_rs,
+        'bs/rs/nid' => $bs_rs_nid,
+        'bs/rs/sig' => $bs_rs_sig,
+        'bs/rs/sig/sign' => $bs_rs_sig_sign,
+        'bs/rs/sig/algo' => $bs_rs_sig_algo,
+        'bs/rs/sig/size' => $bs_rs_sig_size,
+    );
+    return $return;
+}
+
 /** FIXME
  * Link -
  *
@@ -3558,14 +3635,12 @@ function l_verify(string $link): bool
  * @param $link
  * @return bool
  */
-function l_writecontent($link)
+function l_write($link)
 { // Ecrit le lien dans les objets concernés.
     // - $link le lien à écrire.
     // Se charge de répartir les liens sur les objets concernés.
     // Le lien de type c est géré un peu à part puisque tous les champs ne sont pas des objets.
-    if (!getConfiguration('permitWrite'))
-        return false;
-    if (!getConfiguration('permitWriteLink'))
+    if (!getConfiguration('permitWrite') || !getConfiguration('permitWriteLink'))
         return false;
     $sign = strtok(trim($link), '_'); // Lit la signature.
     if ($sign == '' || $sign == '0')
@@ -6519,7 +6594,7 @@ function bootstrapFirstCreateLocaleEntity()
             $hashName = o_getNID($name);
             $newlink = l_generate('-', 'l', $nebulePublicEntity, $hashName, $refHashName);
             if (l_verify($newlink) == 1) {
-                l_writecontent($newlink);
+                l_write($newlink);
             }
             unset($newlink);
 
