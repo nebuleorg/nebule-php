@@ -4326,7 +4326,11 @@ function loadLibraryPOO(): void
 
 function findApplication():void
 {
-    global $libppCheckOK;
+    global $libppCheckOK, $bootstrapSwitchApplication, $bootstrapUpdate, $nebuleLocalAuthorities,
+           $bootstrapApplicationInstanceSleep, $bootstrapApplicationDisplayInstanceSleep,
+           $bootstrapApplicationActionInstanceSleep, $bootstrapApplicationTraductionInstanceSleep,
+           $bootstrapApplicationStartID;
+
     if (!$libppCheckOK)
         return;
 
