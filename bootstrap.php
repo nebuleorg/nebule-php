@@ -10,7 +10,7 @@ $bootstrapSurname = 'nebule/bootstrap';
 $bootstrapDescription = 'Loader of library and applications.';
 $bootstrapAuthor = 'Project nebule';
 $bootstrapVersion = '020210424';
-$bootstrapLicence = 'GNU GPL 2010-2021';
+$bootstrapLicence = 'GNU GPL 02021';
 $bootstrapWebsite = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
 
