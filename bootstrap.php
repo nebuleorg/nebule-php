@@ -1468,87 +1468,6 @@ function nebCreatAsText(string $data, bool $skipIfPresent = true)
     return true;
 }
 
-// FIXME
-function nebCreatObjDate(&$object)
-{ // Création d'une date pour un objet.
-    if (!getConfiguration('permitWriteLink'))
-        return false;
-    if ($object == '')
-        return false;
-    // Prépare certaines valeurs si non présentes.
-    nebCreatAsText('text/plain');
-    nebCreatAsText('nebule/objet/date');
-    nebCreatAsText('nebule/objet/date/annee');
-    nebCreatAsText('nebule/objet/date/mois');
-    nebCreatAsText('nebule/objet/date/jour');
-    nebCreatAsText('nebule/objet/date/heure');
-    nebCreatAsText('nebule/objet/date/minute');
-    nebCreatAsText('nebule/objet/date/seconde');
-    nebCreatAsText('nebule/objet/date/zone');
-    // Ajoute la date longue, format ISO8601.
-    $crfulldate = date(DATE_ATOM);
-    $hashfulldate = _objGetNID($crfulldate);
-    _objGenerate($crfulldate, 'text/plain');
-    $newlink = _lnkGenerate($crfulldate, 'l', $object, $hashfulldate, (_objGetNID('nebule/objet/date'))); // 31e415a2fb3a47fd1ccd9de4e04d6d71c1386bef639ae38755dd218db9ed92a1
-    if ((_lnkVerify($newlink)) == 1)
-        _lnkWrite($newlink);
-    // Ajoute l'année.
-    $crdate = date('Y');
-    $hashdate = _objGetNID($crdate);
-    _objGenerate($crdate, 'text/plain');
-    $newlink = _lnkGenerate($crfulldate, 'l', $object, $hashdate, (_objGetNID('nebule/objet/date/annee')));
-    if ((_lnkVerify($newlink)) == 1)
-        _lnkWrite($newlink);
-    // Ajoute le mois.
-    $crdate = date('m');
-    $hashdate = _objGetNID($crdate);
-    _objGenerate($crdate, 'text/plain');
-    $newlink = _lnkGenerate($crfulldate, 'l', $object, $hashdate, (_objGetNID('nebule/objet/date/mois')));
-    if ((_lnkVerify($newlink)) == 1)
-        _lnkWrite($newlink);
-    // Ajoute le jour.
-    $crdate = date('d');
-    $hashdate = _objGetNID($crdate);
-    _objGenerate($crdate, 'text/plain');
-    $newlink = _lnkGenerate($crfulldate, 'l', $object, $hashdate, (_objGetNID('nebule/objet/date/jour')));
-    if ((_lnkVerify($newlink)) == 1)
-        _lnkWrite($newlink);
-    // Ajoute l'heure.
-    $crdate = date('H');
-    $hashdate = _objGetNID($crdate);
-    _objGenerate($crdate, 'text/plain');
-    $newlink = _lnkGenerate($crfulldate, 'l', $object, $hashdate, (_objGetNID('nebule/objet/date/heure')));
-    if ((_lnkVerify($newlink)) == 1)
-        _lnkWrite($newlink);
-    // Ajoute la minute.
-    $crdate = date('i');
-    $hashdate = _objGetNID($crdate);
-    _objGenerate($crdate, 'text/plain');
-    $newlink = _lnkGenerate($crfulldate, 'l', $object, $hashdate, (_objGetNID('nebule/objet/date/minute')));
-    if ((_lnkVerify($newlink)) == 1)
-        _lnkWrite($newlink);
-    // Ajoute la seconde.
-    $crdate = date('s');
-    $hashdate = _objGetNID($crdate);
-    _objGenerate($crdate, 'text/plain');
-    $newlink = _lnkGenerate($crfulldate, 'l', $object, $hashdate, (_objGetNID('nebule/objet/date/seconde')));
-    if ((_lnkVerify($newlink)) == 1)
-        _lnkWrite($newlink);
-    // Ajoute la zone.
-    $crdate = date('P');
-    $hashdate = _objGetNID($crdate);
-    _objGenerate($crdate, 'text/plain');
-    $newlink = _lnkGenerate($crfulldate, 'l', $object, $hashdate, (_objGetNID('nebule/objet/date/zone')));
-    if ((_lnkVerify($newlink)) == 1)
-        _lnkWrite($newlink);
-    unset($crfulldate);
-    unset($crdate);
-    unset($hashfulldate);
-    unset($hashdate);
-    unset($newlink);
-    return true;
-}
-
 
 
 /*
@@ -2224,8 +2143,8 @@ function _objDelete(string &$object): bool
     return io_objectDelete($object);
 }
 
-/** FIXME
- * Link - Generate a new link TODO à refaire !
+/**
+ * Link - Generate a new link
  * Use OpenSSL library.
  *
  * @param string $rc
