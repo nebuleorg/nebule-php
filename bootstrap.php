@@ -787,43 +787,43 @@ function libppInit(): bool
     // Une fois les autres entités trouvées, ajoute les autres autorités.
     // Cela empêche qu'une entié compromise ne génère un lien qui passerait avant le puppetmaster
     //   dans la recherche par référence nebFindByRef.
-    if (!e_check(getConfiguration('puppetmaster')))
+    if (!_entityCheck(getConfiguration('puppetmaster')))
         return false;
     $nebuleLocalAuthorities[0] = getConfiguration('puppetmaster');
 
     // Recherche et vérifie le maître de la sécurité.
     $entity = nebFindByRef(
-        o_getNID('nebule/objet/entite/maitre/securite'),
+        _objGetNID('nebule/objet/entite/maitre/securite'),
         'nebule/objet/entite/maitre/securite',
         true);
-    if (!e_check($entity))
+    if (!_entityCheck($entity))
         return false;
     $nebuleSecurityMaster = $entity;
 
     // Recherche et vérifie le maître du code.
     $entity = nebFindByRef(
-        o_getNID('nebule/objet/entite/maitre/code'),
+        _objGetNID('nebule/objet/entite/maitre/code'),
         'nebule/objet/entite/maitre/code',
         true);
-    if (!e_check($entity))
+    if (!_entityCheck($entity))
         return false;
     $nebuleCodeMaster = $entity;
 
     // Recherche et vérifie le maître de l'annuaire.
     $entity = nebFindByRef(
-        o_getNID('nebule/objet/entite/maitre/annuaire'),
+        _objGetNID('nebule/objet/entite/maitre/annuaire'),
         'nebule/objet/entite/maitre/annuaire',
         true);
-    if (!e_check($entity))
+    if (!_entityCheck($entity))
         return false;
     $nebuleDirectoryMaster = $entity;
 
     // Recherche et vérifie le maître du temps.
     $entity = nebFindByRef(
-        o_getNID('nebule/objet/entite/maitre/temps'),
+        _objGetNID('nebule/objet/entite/maitre/temps'),
         'nebule/objet/entite/maitre/temps',
         true);
-    if (!e_check($entity))
+    if (!_entityCheck($entity))
         return false;
     $nebuleTimeMaster = $entity;
 
@@ -852,7 +852,7 @@ function libppSetServerEntity(string $nebuleCodeMaster, array &$nebuleLocalAutho
     )
         $nebuleServerEntite = filter_var(strtok(trim(file_get_contents(LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 
-    if (!e_check($nebuleServerEntite))
+    if (!_entityCheck($nebuleServerEntite))
         $nebuleServerEntite = $nebuleCodeMaster;
 
     if (getConfiguration('permitInstanceEntityAsAuthority') && !getModeRescue())
@@ -866,7 +866,7 @@ function libppSetDefaultEntity(string $nebuleCodeMaster, array &$nebuleLocalAuth
 {
     global $nebuleDefaultEntity;
     $nebuleDefaultEntity = getConfiguration('defaultCurrentEntity');
-    if (!e_check($nebuleDefaultEntity))
+    if (!_entityCheck($nebuleDefaultEntity))
         $nebuleDefaultEntity = $nebuleCodeMaster;
 
     if (getConfiguration('permitDefaultEntityAsAuthority') && !getModeRescue())
@@ -879,7 +879,7 @@ function libppSetDefaultEntity(string $nebuleCodeMaster, array &$nebuleLocalAuth
 function libppSetPublicEntity(): void
 {
     global $nebulePublicEntity, $nebuleDefaultEntity;
-    if (!e_check($nebulePublicEntity))
+    if (!_entityCheck($nebulePublicEntity))
         $nebulePublicEntity = $nebuleDefaultEntity;
 }
 
@@ -923,11 +923,11 @@ function nebFindByRef(string $nid, string $rid, bool $strict = false)
     global $nebuleLocalAuthorities;
 
     $result = '0';
-    if (!n_checkNID($nid) || !n_checkNID($rid))
+    if (!_nodCheckNID($nid) || !_nodCheckNID($rid))
         return $result;
 
     $links = array();
-    l_findinclusive($nid, $links, 'f', $nid, '', $rid, false);
+    _lnkFindInclusive($nid, $links, 'f', $nid, '', $rid, false);
     foreach ($links as $link) {
         // Au besoin, filtre les liens sur les autorités locales.
         if ($strict) {
@@ -965,7 +965,7 @@ function nebReadObjText1line(string &$oid, int $maxsize = 128): string
         return $nebuleCacheReadObjText1line [$oid];
 
     $data = '';
-    o_getLocalContent($oid, $data);
+    _objGetLocalContent($oid, $data);
     $data = strtok(filter_var($data, FILTER_SANITIZE_STRING), "\n");
     if (!is_string($data))
         return '';
@@ -998,7 +998,7 @@ function nebReadObjText1line(string &$oid, int $maxsize = 128): string
 function nebReadObjText(string &$oid, int $maxsize = 4096): string
 {
     $data = '';
-    o_getLocalContent($oid, $data);
+    _objGetLocalContent($oid, $data);
     $data = filterPrinteableString(filter_var($data, FILTER_SANITIZE_STRING));
 
     if (strlen($data) > $maxsize) {
@@ -1016,7 +1016,7 @@ function nebReadObjText(string &$oid, int $maxsize = 4096): string
  */
 function nebReadObjLinks($object, &$table)
 {
-    l_listlinks($object, $table);
+    _lnkList($object, $table);
 }
 
 /** FIXME
@@ -1288,9 +1288,9 @@ function nebFindObjType(&$object, $type)
         return ''; // WARNING caca - Exception pour problème de performances : 'nebule/objet/entite/suivi'
 
     $table = array();
-    $hashtype = o_getNID($type);
+    $hashtype = _objGetNID($type);
     $objdst = '';
-    l_find($object, $table, 'l', $object, '', $hashtype);
+    _lnkFind($object, $table, 'l', $object, '', $hashtype);
     foreach ($table as $itemtable) {
         if (($itemtable [2] == $nebulePublicEntity) && ($itemtable [7] == $hashtype) && ($itemtable [5] == $object) && ($itemtable [4] == 'l')) {
             $objdst = $itemtable [6];
@@ -1323,9 +1323,9 @@ function nebReadObjTypeMime(&$object)
 
     $table = array();
     nebINECreatObjText('nebule/objet/type');
-    $hashtype = o_getNID('nebule/objet/type'); // 5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0
+    $hashtype = _objGetNID('nebule/objet/type'); // 5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0
     $type = '';
-    l_find($object, $table, 'l', $object, '', $hashtype);
+    _lnkFind($object, $table, 'l', $object, '', $hashtype);
     rsort($table);
     foreach ($table as $itemtable) {
         if (($itemtable [2] == $nebulePublicEntity) && ($itemtable [7] == $hashtype) && ($itemtable [5] == $object) && ($itemtable [4] == 'l')) {
@@ -1366,9 +1366,9 @@ function nebReadObjTypeHash(&$object)
 
     $table = array();
     nebINECreatObjText('nebule/objet/hash');
-    $hashtype = o_getNID('nebule/objet/hash'); // 8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec
+    $hashtype = _objGetNID('nebule/objet/hash'); // 8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec
     $type = '';
-    l_find($object, $table, 'l', $object, '', $hashtype);
+    _lnkFind($object, $table, 'l', $object, '', $hashtype);
     foreach ($table as $itemtable) {
         if (($itemtable [2] == $nebulePublicEntity) && ($itemtable [7] == $hashtype) && ($itemtable [5] == $object) && ($itemtable [4] == 'l')) {
             $type = $itemtable [6];
@@ -1408,9 +1408,9 @@ function nebIsText(&$object)
 
     $ok = false;
     $table = array();
-    $hashtype = o_getNID('text/plain');
-    $hashmeta = o_getNID('nebule/objet/type');
-    l_find($object, $table, 'l', $object, $hashtype, $hashmeta);
+    $hashtype = _objGetNID('text/plain');
+    $hashmeta = _objGetNID('nebule/objet/type');
+    _lnkFind($object, $table, 'l', $object, $hashtype, $hashmeta);
     foreach ($table as $link) {
         if (($link [2] == $nebulePublicEntity) && ($link [4] == 'l') && ($link [5] == $object) && ($link [6] == $hashtype) && ($link [7] == $hashmeta)) {
             $ok = true;
@@ -1434,14 +1434,14 @@ function nebAddObjTypeMime(&$object, $type)
         return false;
     if ($type == '')
         return false;
-    $hashtype = o_getNID($type);
+    $hashtype = _objGetNID($type);
     nebINECreatObjText('nebule/objet/type');
     nebINECreatObjText('text/plain');
-    $newlink = l_generate('-', 'l', $object, $hashtype, (o_getNID('nebule/objet/type'))); // 5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0
-    if ((l_verify($newlink)) == 1)
-        l_write($newlink);
+    $newlink = _lnkGenerate('-', 'l', $object, $hashtype, (_objGetNID('nebule/objet/type'))); // 5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0
+    if ((_lnkVerify($newlink)) == 1)
+        _lnkWrite($newlink);
     if (!io_testObjectPresent($type) && !io_testLinkPresent($type))
-        o_generate($type, 'text/plain');
+        _objGenerate($type, 'text/plain');
     unset($hashtype);
     unset($newlink);
     return true;
@@ -1461,9 +1461,9 @@ function nebIsBanned(&$object)
 
     $ok = false;
     $table = array();
-    $hashtype = o_getNID('nebule/danger'); // ac2323f77d7ee9f3ae841e8ccd8374397038160ec7cdb2fc86610c0f66eeeedb
+    $hashtype = _objGetNID('nebule/danger'); // ac2323f77d7ee9f3ae841e8ccd8374397038160ec7cdb2fc86610c0f66eeeedb
     // _neblibpp_l_lsx($object, $table, 'f', $hashtype);
-    l_find($object, $table, 'f', $hashtype, $object, '0');
+    _lnkFind($object, $table, 'f', $hashtype, $object, '0');
     foreach ($table as $link) {
         if (($link [2] == $nebulePublicEntity) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $object) && ($link [7] == '0'))
             $ok = true;
@@ -1492,7 +1492,7 @@ function nebIsSuppr(&$object)
         return false;
     $ok = false;
     $table = array();
-    l_find($object, $table, 'd', $object, '0', '0');
+    _lnkFind($object, $table, 'd', $object, '0', '0');
     foreach ($table as $link) {
         if (($link [2] == $nebulePublicEntity) && ($link [4] == 'd') && ($link [5] == $object) && ($link [6] == '0') && ($link [7] == '0')) {
             $ok = true;
@@ -1523,7 +1523,7 @@ function nebIsPubkey(&$entite): bool
         return $nebuleCacheIsPubkey[$entite];
 
     if (!is_string($entite)
-        || !n_checkNID($entite)
+        || !_nodCheckNID($entite)
         || !io_testLinkPresent($entite)
     ) {
         return false;
@@ -1586,14 +1586,14 @@ function nebIsEncrypt(&$object)
 
     $table = array();
     $encrypt = false;
-    l_find($object, $table, 'k', $object, '', '');
+    _lnkFind($object, $table, 'k', $object, '', '');
     foreach ($table as $itemtable) {
         if (($itemtable [4] == 'k') && ($itemtable [5] == $object)) {
             $encrypt = true;
             break 1;
         }
     }
-    l_find($object, $table, 'k', '', $object, '');
+    _lnkFind($object, $table, 'k', '', $object, '');
     foreach ($table as $itemtable) {
         if (($itemtable [4] == 'k') && ($itemtable [6] == $object)) {
             $encrypt = true;
@@ -1614,7 +1614,7 @@ function nebFindEncryptFor(&$listdest, &$object)
 
     $table = array();
     $i = 0;
-    l_listlinks($object, $table, 'k');
+    _lnkList($object, $table, 'k');
     foreach ($table as $itemtable) {
         if (($itemtable [4] == 'k') && ($itemtable [5] == $object)) {
             $listdest [$i] = $itemtable [7];
@@ -1635,7 +1635,7 @@ function nebFindPrivKey()
     global $nebulePublicEntity;
 
     $table = array();
-    l_find($nebulePublicEntity, $table, 'f', '', $nebulePublicEntity, '0');
+    _lnkFind($nebulePublicEntity, $table, 'f', '', $nebulePublicEntity, '0');
     foreach ($table as $link) {
         if (($link [2] == $nebulePublicEntity) && ($link [4] == 'f') && ($link [6] == $nebulePublicEntity) && ($link [7] == '0')) // && nebIsPrivkey($link[5]) ) à débugger...
         {
@@ -1668,7 +1668,7 @@ function nebListChildrenRecurse($object, &$listchildren, &$node, $level = 1)
 
     $link = array();
     $links = array();
-    l_listlinks($object, $links, '-', '', true);
+    _lnkList($object, $links, '-', '', true);
     foreach ($links as $link) {
         $c = count($listchildren);
         $exist = false;
@@ -1763,10 +1763,10 @@ function nebCreatObjText(&$text)
         return false;
     if (strlen($text) == 0)
         return false;
-    $object = o_getNID($text);
+    $object = _objGetNID($text);
     if (nebIsBanned($object))
         return false;
-    o_generate($text, 'text/plain');
+    _objGenerate($text, 'text/plain');
     unset($object);
     return true;
 }
@@ -1780,12 +1780,12 @@ function nebINECreatObjText($text)
         return false;
     if (strlen($text) == 0)
         return false;
-    $object = o_getNID($text);
+    $object = _objGetNID($text);
     if (io_testObjectPresent($object))
         return true;
     if (nebIsBanned($object))
         return false;
-    o_generate($text, 'text/plain');
+    _objGenerate($text, 'text/plain');
     unset($object);
     return true;
 }
@@ -1809,60 +1809,60 @@ function nebCreatObjDate(&$object)
     nebINECreatObjText('nebule/objet/date/zone');
     // Ajoute la date longue, format ISO8601.
     $crfulldate = date(DATE_ATOM);
-    $hashfulldate = o_getNID($crfulldate);
-    o_generate($crfulldate, 'text/plain');
-    $newlink = l_generate($crfulldate, 'l', $object, $hashfulldate, (o_getNID('nebule/objet/date'))); // 31e415a2fb3a47fd1ccd9de4e04d6d71c1386bef639ae38755dd218db9ed92a1
-    if ((l_verify($newlink)) == 1)
-        l_write($newlink);
+    $hashfulldate = _objGetNID($crfulldate);
+    _objGenerate($crfulldate, 'text/plain');
+    $newlink = _lnkGenerate($crfulldate, 'l', $object, $hashfulldate, (_objGetNID('nebule/objet/date'))); // 31e415a2fb3a47fd1ccd9de4e04d6d71c1386bef639ae38755dd218db9ed92a1
+    if ((_lnkVerify($newlink)) == 1)
+        _lnkWrite($newlink);
     // Ajoute l'année.
     $crdate = date('Y');
-    $hashdate = o_getNID($crdate);
-    o_generate($crdate, 'text/plain');
-    $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/annee')));
-    if ((l_verify($newlink)) == 1)
-        l_write($newlink);
+    $hashdate = _objGetNID($crdate);
+    _objGenerate($crdate, 'text/plain');
+    $newlink = _lnkGenerate($crfulldate, 'l', $object, $hashdate, (_objGetNID('nebule/objet/date/annee')));
+    if ((_lnkVerify($newlink)) == 1)
+        _lnkWrite($newlink);
     // Ajoute le mois.
     $crdate = date('m');
-    $hashdate = o_getNID($crdate);
-    o_generate($crdate, 'text/plain');
-    $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/mois')));
-    if ((l_verify($newlink)) == 1)
-        l_write($newlink);
+    $hashdate = _objGetNID($crdate);
+    _objGenerate($crdate, 'text/plain');
+    $newlink = _lnkGenerate($crfulldate, 'l', $object, $hashdate, (_objGetNID('nebule/objet/date/mois')));
+    if ((_lnkVerify($newlink)) == 1)
+        _lnkWrite($newlink);
     // Ajoute le jour.
     $crdate = date('d');
-    $hashdate = o_getNID($crdate);
-    o_generate($crdate, 'text/plain');
-    $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/jour')));
-    if ((l_verify($newlink)) == 1)
-        l_write($newlink);
+    $hashdate = _objGetNID($crdate);
+    _objGenerate($crdate, 'text/plain');
+    $newlink = _lnkGenerate($crfulldate, 'l', $object, $hashdate, (_objGetNID('nebule/objet/date/jour')));
+    if ((_lnkVerify($newlink)) == 1)
+        _lnkWrite($newlink);
     // Ajoute l'heure.
     $crdate = date('H');
-    $hashdate = o_getNID($crdate);
-    o_generate($crdate, 'text/plain');
-    $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/heure')));
-    if ((l_verify($newlink)) == 1)
-        l_write($newlink);
+    $hashdate = _objGetNID($crdate);
+    _objGenerate($crdate, 'text/plain');
+    $newlink = _lnkGenerate($crfulldate, 'l', $object, $hashdate, (_objGetNID('nebule/objet/date/heure')));
+    if ((_lnkVerify($newlink)) == 1)
+        _lnkWrite($newlink);
     // Ajoute la minute.
     $crdate = date('i');
-    $hashdate = o_getNID($crdate);
-    o_generate($crdate, 'text/plain');
-    $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/minute')));
-    if ((l_verify($newlink)) == 1)
-        l_write($newlink);
+    $hashdate = _objGetNID($crdate);
+    _objGenerate($crdate, 'text/plain');
+    $newlink = _lnkGenerate($crfulldate, 'l', $object, $hashdate, (_objGetNID('nebule/objet/date/minute')));
+    if ((_lnkVerify($newlink)) == 1)
+        _lnkWrite($newlink);
     // Ajoute la seconde.
     $crdate = date('s');
-    $hashdate = o_getNID($crdate);
-    o_generate($crdate, 'text/plain');
-    $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/seconde')));
-    if ((l_verify($newlink)) == 1)
-        l_write($newlink);
+    $hashdate = _objGetNID($crdate);
+    _objGenerate($crdate, 'text/plain');
+    $newlink = _lnkGenerate($crfulldate, 'l', $object, $hashdate, (_objGetNID('nebule/objet/date/seconde')));
+    if ((_lnkVerify($newlink)) == 1)
+        _lnkWrite($newlink);
     // Ajoute la zone.
     $crdate = date('P');
-    $hashdate = o_getNID($crdate);
-    o_generate($crdate, 'text/plain');
-    $newlink = l_generate($crfulldate, 'l', $object, $hashdate, (o_getNID('nebule/objet/date/zone')));
-    if ((l_verify($newlink)) == 1)
-        l_write($newlink);
+    $hashdate = _objGetNID($crdate);
+    _objGenerate($crdate, 'text/plain');
+    $newlink = _lnkGenerate($crfulldate, 'l', $object, $hashdate, (_objGetNID('nebule/objet/date/zone')));
+    if ((_lnkVerify($newlink)) == 1)
+        _lnkWrite($newlink);
     unset($crfulldate);
     unset($crdate);
     unset($hashfulldate);
@@ -1880,9 +1880,9 @@ function nebCreatObjHash(&$object)
         return false;
     nebINECreatObjText('nebule/objet/hash');
     nebINECreatObjText(getConfiguration('cryptoHashAlgorithm'));
-    $newlink = l_generate('-', 'l', $object, getConfiguration('cryptoHashAlgorithm'), (o_getNID('nebule/objet/hash'))); // 8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec
-    if ((l_verify($newlink)) == 1)
-        l_write($newlink);
+    $newlink = _lnkGenerate('-', 'l', $object, getConfiguration('cryptoHashAlgorithm'), (_objGetNID('nebule/objet/hash'))); // 8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec
+    if ((_lnkVerify($newlink)) == 1)
+        _lnkWrite($newlink);
     unset($newlink);
     return true;
 }
@@ -1898,7 +1898,7 @@ function nebCreatObjHash(&$object)
  * Metrology - Incrementing one stat counter.
  * @param string $type
  */
-function m_add(string $type): void
+function _metrologyAdd(string $type): void
 {
     global $nebuleMetrologyLinkRead, $nebuleMetrologyLinkVerify, $nebuleMetrologyObjectRead, $nebuleMetrologyObjectVerify;
 
@@ -1924,7 +1924,7 @@ function m_add(string $type): void
  * @param string $type
  * @return string
  */
-function m_get(string $type): string
+function _metrologyGet(string $type): string
 {
     global $nebuleMetrologyLinkRead, $nebuleMetrologyLinkVerify, $nebuleMetrologyObjectRead, $nebuleMetrologyObjectVerify;
 
@@ -1959,7 +1959,7 @@ function m_get(string $type): string
  * @param string $password
  * @return bool
  */
-function e_generate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $password = '')
+function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $password = '')
 {
     if (!getConfiguration('permitWrite'))
         return false;
@@ -1999,16 +1999,16 @@ function e_generate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $pas
     // Extraction de la clé publique.
     $pubkey = openssl_pkey_get_details($newpkey);
     $pubkey = $pubkey ['key'];
-    $hashpubkey = o_getNID($pubkey);
-    o_writecontent($hashpubkey, $pubkey);
+    $hashpubkey = _objGetNID($pubkey);
+    _objWriteContent($hashpubkey, $pubkey);
     // Extraction de la clé privée.
     if ($password != '') {
         openssl_pkey_export($newpkey, $privkey, $password);
     } else {
         openssl_pkey_export($newpkey, $privkey);
     }
-    $hashprivkey = o_getNID($privkey);
-    o_writecontent($hashprivkey, $privkey);
+    $hashprivkey = _objGetNID($privkey);
+    _objWriteContent($hashprivkey, $privkey);
     $private_key = openssl_pkey_get_private($privkey, $password);
     if ($private_key === false) {
         return false;
@@ -2016,127 +2016,127 @@ function e_generate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $pas
     // Calcul de hashs communs.
     $date = date(DATE_ATOM);
     $binary_signature = '';
-    $refhashhash = o_getNID('nebule/objet/hash');
-    $refhashalgo = o_getNID(getConfiguration('cryptoHashAlgorithm'));
-    $refhashtype = o_getNID('nebule/objet/type');
-    $refhashpem = o_getNID('application/x-pem-file');
-    $refhashtext = o_getNID('text/plain');
+    $refhashhash = _objGetNID('nebule/objet/hash');
+    $refhashalgo = _objGetNID(getConfiguration('cryptoHashAlgorithm'));
+    $refhashtype = _objGetNID('nebule/objet/type');
+    $refhashpem = _objGetNID('application/x-pem-file');
+    $refhashtext = _objGetNID('text/plain');
     // Création des objets annexes.
     if (!io_testObjectPresent($refhashhash)) {
         $newtxt = 'nebule/objet/hash';
-        o_writecontent($refhashhash, $newtxt);
+        _objWriteContent($refhashhash, $newtxt);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashhash . '_' . $refhashalgo . '_' . $refhashhash;
-        $hashdata = o_getNID($data);
+        $hashdata = _objGetNID($data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashhash . '_' . $refhashtext . '_' . $refhashtype;
-        $hashdata = o_getNID($data);
+        $hashdata = _objGetNID($data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
     if (!io_testObjectPresent($refhashalgo)) {
         $cryptoHashAlgorithm = getConfiguration('cryptoHashAlgorithm');
-        o_writecontent($refhashalgo, $cryptoHashAlgorithm);
+        _objWriteContent($refhashalgo, $cryptoHashAlgorithm);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashalgo . '_' . $refhashalgo . '_' . $refhashhash;
-        $hashdata = o_getNID($data);
+        $hashdata = _objGetNID($data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashalgo . '_' . $refhashtext . '_' . $refhashtype;
-        $hashdata = o_getNID($data);
+        $hashdata = _objGetNID($data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
     if (!io_testObjectPresent($refhashtype)) {
         $newtxt = 'nebule/objet/type';
-        o_writecontent($refhashtype, $newtxt);
+        _objWriteContent($refhashtype, $newtxt);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtype . '_' . $refhashalgo . '_' . $refhashhash;
-        $hashdata = o_getNID($data);
+        $hashdata = _objGetNID($data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtype . '_' . $refhashtext . '_' . $refhashtype;
-        $hashdata = o_getNID($data);
+        $hashdata = _objGetNID($data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
     if (!io_testObjectPresent($refhashpem)) {
         $newtxt = 'application/x-pem-file';
-        o_writecontent($refhashpem, $newtxt);
+        _objWriteContent($refhashpem, $newtxt);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashpem . '_' . $refhashalgo . '_' . $refhashhash;
-        $hashdata = o_getNID($data);
+        $hashdata = _objGetNID($data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashpem . '_' . $refhashtext . '_' . $refhashtype;
-        $hashdata = o_getNID($data);
+        $hashdata = _objGetNID($data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
     if (!io_testObjectPresent($refhashtext)) {
         $newtxt = 'text/plain';
-        o_writecontent($refhashtext, $newtxt);
+        _objWriteContent($refhashtext, $newtxt);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtext . '_' . $refhashalgo . '_' . $refhashhash;
-        $hashdata = o_getNID($data);
+        $hashdata = _objGetNID($data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtext . '_' . $refhashtext . '_' . $refhashtype;
-        $hashdata = o_getNID($data);
+        $hashdata = _objGetNID($data);
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
-        l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
     // Génération du lien de hash de la clé publique.
     $data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashpubkey . '_' . $refhashalgo . '_' . $refhashhash;
-    $hashdata = o_getNID($data);
+    $hashdata = _objGetNID($data);
     $binhash = pack("H*", $hashdata);
     $ok1 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
-    l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+    _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     // Génération du lien de hash de la clé privée.
     $data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashprivkey . '_' . $refhashalgo . '_' . $refhashhash;
-    $hashdata = o_getNID($data);
+    $hashdata = _objGetNID($data);
     $binhash = pack("H*", $hashdata);
     $ok2 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
-    l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+    _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     // Génération du lien de typemime de la clé publique.
     $data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashpubkey . '_' . $refhashpem . '_' . $refhashtype;
-    $hashdata = o_getNID($data);
+    $hashdata = _objGetNID($data);
     $binhash = pack("H*", $hashdata);
     $ok3 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
-    l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+    _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     // Génération du lien de typemime de la clé privée.
     $data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashprivkey . '_' . $refhashpem . '_' . $refhashtype;
-    $hashdata = o_getNID($data);
+    $hashdata = _objGetNID($data);
     $binhash = pack("H*", $hashdata);
     $ok4 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
-    l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+    _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     // Génération du lien de jumelage des clés.
     $data = '_' . $hashpubkey . '_' . $date . '_f_' . $hashprivkey . '_' . $hashpubkey . '_0';
-    $hashdata = o_getNID($data);
+    $hashdata = _objGetNID($data);
     $binhash = pack("H*", $hashdata);
     $ok5 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
-    l_write("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
+    _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     // Nettoyage.
     openssl_free_key($private_key);
     unset($private_key);
@@ -2164,14 +2164,14 @@ function e_generate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $pas
  * @param string $name
  * @return bool
  */
-function e_check(string $nid): bool
+function _entityCheck(string $nid): bool
 {
-    if (!n_checkNID($nid, false)
+    if (!_nodCheckNID($nid, false)
         || $nid == '0'
         || strlen($nid) < NID_MIN_HASH_SIZE
         || !io_testObjectPresent($nid)
         || !io_testLinkPresent($nid)
-        || !o_checkContent($nid)
+        || !_objCheckContent($nid)
         || !nebIsPubkey($nid)
     )
         return false;
@@ -2186,7 +2186,7 @@ function e_check(string $nid): bool
  * @param $password
  * @return bool
  */
-function e_addpasswd($pubkey, $privkey, $password)
+function _entityAddPasswd($pubkey, $privkey, $password)
 { // Ajoute le mot de passe connu pour la clé privée d'une entité. Utilisé pour les entité esclaves d'une autre entité.
     // - $pubkey : la clé public de l'entité, nécessaire pour un des liens.
     // - $privkey : la clé privée de l'entité.
@@ -2213,45 +2213,45 @@ function e_addpasswd($pubkey, $privkey, $password)
     unset($privcert);
     // Génère une clé de session.
     $key = openssl_random_pseudo_bytes(NID_MIN_HASH_SIZE, $true);
-    $hashkey = o_getNID($key);
+    $hashkey = _objGetNID($key);
     // Génère un IV à zéro.
     $hiv = '00000000000000000000000000000000';
     $iv = pack("H*", $hiv); // A modifier pour des blocs de tailles différentes.
     // Chiffrement de l'objet.
     $cryptobj = openssl_encrypt($password, getConfiguration('cryptoSymetricAlgorithm'), $key, OPENSSL_RAW_DATA, $iv);
-    $hashpwd = o_getNID($password);
-    $hashcryptobj = o_getNID($cryptobj);
-    o_generate($cryptobj, 'application/x-encrypted/' . getConfiguration('cryptoSymetricAlgorithm'));
+    $hashpwd = _objGetNID($password);
+    $hashcryptobj = _objGetNID($cryptobj);
+    _objGenerate($cryptobj, 'application/x-encrypted/' . getConfiguration('cryptoSymetricAlgorithm'));
     // Chiffrement de la clé de session.
     $cryptkey = '';
-    o_checkContent($pubkey);
+    _objCheckContent($pubkey);
     $cert = io_objectRead($pubkey);
     $ok = openssl_public_encrypt($key, $cryptkey, $cert, OPENSSL_PKCS1_PADDING);
     if (!$ok)
         return false;
-    $hashcryptkey = o_getNID($cryptkey);
+    $hashcryptkey = _objGetNID($cryptkey);
     $algoName = substr(getConfiguration('cryptoAsymetricAlgorithm'), 0, strpos(getConfiguration('cryptoAsymetricAlgorithm'), '.') - 1);
-    o_generate($cryptkey, 'application/x-encrypted/' . $algoName);
+    _objGenerate($cryptkey, 'application/x-encrypted/' . $algoName);
     // Génère le lien de chiffrement entre clé privée et publique avec le mot de passe.
-    $newlink = l_generate('-', 'k', $privkey, $pubkey, $hashpwd);
-    if ((l_verify($newlink)) == 1)
-        l_write($newlink);
+    $newlink = _lnkGenerate('-', 'k', $privkey, $pubkey, $hashpwd);
+    if ((_lnkVerify($newlink)) == 1)
+        _lnkWrite($newlink);
     // Génère le lien de chiffrement symétrique.
-    $newlink = l_generate('-', 'k', $hashpwd, $hashcryptobj, $hashkey);
-    if ((l_verify($newlink)) == 1)
-        l_write($newlink);
+    $newlink = _lnkGenerate('-', 'k', $hashpwd, $hashcryptobj, $hashkey);
+    if ((_lnkVerify($newlink)) == 1)
+        _lnkWrite($newlink);
     // Génère le lien de chiffrement asymétrique.
-    $newlink = l_generate('-', 'k', $hashkey, $hashcryptkey, $nebulePublicEntity);
-    if ((l_verify($newlink)) == 1)
-        l_write($newlink);
+    $newlink = _lnkGenerate('-', 'k', $hashkey, $hashcryptkey, $nebulePublicEntity);
+    if ((_lnkVerify($newlink)) == 1)
+        _lnkWrite($newlink);
     // Suppression de la clé de session.
-    $newlink = l_generate('-', 'd', $hashkey, '0', '0');
-    if ((l_verify($newlink)) == 1)
-        l_write($newlink);
+    $newlink = _lnkGenerate('-', 'd', $hashkey, '0', '0');
+    if ((_lnkVerify($newlink)) == 1)
+        _lnkWrite($newlink);
     // Suppression de l'objet source.
-    $newlink = l_generate('-', 'd', $hashpwd, '0', '0');
-    if ((l_verify($newlink)) == 1)
-        l_write($newlink);
+    $newlink = _lnkGenerate('-', 'd', $hashpwd, '0', '0');
+    if ((_lnkVerify($newlink)) == 1)
+        _lnkWrite($newlink);
     return true;
 }
 
@@ -2262,7 +2262,7 @@ function e_addpasswd($pubkey, $privkey, $password)
  * @param $password
  * @return bool
  */
-function e_changepasswd($entity, $password): bool
+function _entityChangePasswd($entity, $password): bool
 {
     if (!getConfiguration('permitWrite'))
         return false;
@@ -2284,7 +2284,7 @@ function e_changepasswd($entity, $password): bool
  * @param $data
  * @param string $typemime
  */
-function o_generate(&$data, $typemime = '')
+function _objGenerate(&$data, $typemime = '')
 { // Crée un nouvel objet.
     if (strlen($data) == 0)
         return;
@@ -2293,19 +2293,19 @@ function o_generate(&$data, $typemime = '')
     if (!getConfiguration('permitWriteObject'))
         return;
     $dat = date(DATE_ATOM);
-    $hash = o_getNID($data);
+    $hash = _objGetNID($data);
     // Ecrit l'objet.
     if (!io_testObjectPresent($hash))
-        o_writecontent($hash, $data);
+        _objWriteContent($hash, $data);
     // Ecrit le lien de hash.
-    $lnk = l_generate($dat, 'l', $hash, (o_getNID(getConfiguration('cryptoHashAlgorithm'))), (o_getNID('nebule/objet/hash'))); // 8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec
-    if ((l_verify($lnk)) == 1)
-        l_write($lnk);
+    $lnk = _lnkGenerate($dat, 'l', $hash, (_objGetNID(getConfiguration('cryptoHashAlgorithm'))), (_objGetNID('nebule/objet/hash'))); // 8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec
+    if ((_lnkVerify($lnk)) == 1)
+        _lnkWrite($lnk);
     // Ecrit le lien de type mime.
     if ($typemime != '') {
-        $lnk = l_generate($dat, 'l', $hash, (o_getNID($typemime)), (o_getNID('nebule/objet/type'))); // 5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0
-        if ((l_verify($lnk)) == 1)
-            l_write($lnk);
+        $lnk = _lnkGenerate($dat, 'l', $hash, (_objGetNID($typemime)), (_objGetNID('nebule/objet/type'))); // 5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0
+        if ((_lnkVerify($lnk)) == 1)
+            _lnkWrite($lnk);
     }
     unset($dat);
     unset($hash);
@@ -2319,9 +2319,9 @@ function o_generate(&$data, $typemime = '')
  * @param string $data
  * @return boolean
  */
-function o_getLocalContent(&$nid, &$data): bool
+function _objGetLocalContent(&$nid, &$data): bool
 {
-    if (io_testObjectPresent($nid) && o_checkContent($nid)) {
+    if (io_testObjectPresent($nid) && _objCheckContent($nid)) {
         $data = io_objectRead($nid);
         return true;
     }
@@ -2337,14 +2337,14 @@ function o_getLocalContent(&$nid, &$data): bool
  * @param string $localisation
  * @return void
  */
-function o_downloadContent(string $nid, string $localisation): void
+function _objDownloadContent(string $nid, string $localisation): void
 {
     global $nebulePublicEntity, $nebuleSecurityMaster;
 
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteObject')
         || !getConfiguration('permitSynchronizeObject')
-        || !n_checkNID($nid)
+        || !_nodCheckNID($nid)
         || $localisation == '0'
         || $localisation == ''
         || !is_string($localisation)
@@ -2354,8 +2354,8 @@ function o_downloadContent(string $nid, string $localisation): void
 
     // Recherche si banni. TODO à sortir !
     $table = array();
-    $hashtype = o_getNID('nebule/danger'); // ac2323f77d7ee9f3ae841e8ccd8374397038160ec7cdb2fc86610c0f66eeeedb
-    l_listlinks($nid, $table, '-', $hashtype);
+    $hashtype = _objGetNID('nebule/danger'); // ac2323f77d7ee9f3ae841e8ccd8374397038160ec7cdb2fc86610c0f66eeeedb
+    _lnkList($nid, $table, '-', $hashtype);
     foreach ($table as $link) {
         if ($link [2] == $nebulePublicEntity
             && $link [4] == 'f'
@@ -2409,11 +2409,11 @@ function o_downloadContent(string $nid, string $localisation): void
  * @todo refaire avec i/o
  *
  */
-function o_checkContent(&$nid)
+function _objCheckContent(&$nid)
 {
     global $nebuleCachelibpp_o_vr;
 
-    if (!n_checkNID($nid))
+    if (!_nodCheckNID($nid))
         return false;
 
     if (!io_testObjectPresent($nid))
@@ -2430,7 +2430,7 @@ function o_checkContent(&$nid)
     if (isset($nebuleCachelibpp_o_vr[$nid]))
         return true;
 
-    m_add('ov');
+    _metrologyAdd('ov');
 
     $algo = substr($nid, strpos($nid, '.') + 1);
     $hash = getFileHash($nid, $algo);
@@ -2455,7 +2455,7 @@ function o_checkContent(&$nid)
  * @param string $algo
  * @return string
  */
-function o_getNID(string $data, string $algo = ''): string
+function _objGetNID(string $data, string $algo = ''): string
 {
     if ($algo == '')
         $algo = getConfiguration('cryptoHashAlgorithm');
@@ -2470,7 +2470,7 @@ function o_getNID(string $data, string $algo = ''): string
  * @param boolean $permitnull
  * @return boolean
  */
-function n_checkNID(string &$nid, bool $permitnull = false): bool
+function _nodCheckNID(string &$nid, bool $permitnull = false): bool
 {
     // May be null in some case.
     if ($permitnull && $nid == '')
@@ -2508,7 +2508,7 @@ function n_checkNID(string &$nid, bool $permitnull = false): bool
  * @param string $data
  * @return bool
  */
-function o_writecontent(string $object, string &$data): bool
+function _objWriteContent(string $object, string &$data): bool
 {
     if ($object == '0'
         || strlen($data) == 0
@@ -2536,7 +2536,7 @@ function o_writecontent(string $object, string &$data): bool
  * @param string $object
  * @return bool
  */
-function o_delete(string &$object): bool
+function _objDelete(string &$object): bool
 {
     global $nebulePublicEntity;
 
@@ -2546,7 +2546,7 @@ function o_delete(string &$object): bool
         return false;
     $ok = true;
     $links = array();
-    l_listlinks($object, $links);
+    _lnkList($object, $links);
     foreach ($links as $link) {
         if ($link [2] != $nebulePublicEntity) {
             $ok = false;
@@ -2570,7 +2570,7 @@ function o_delete(string &$object): bool
  * @param string $NID3
  * @return string
  */
-function l_generate(string $CHR, string $REQ, string $NID1, string $NID2 = '', string $NID3 = ''): string
+function _lnkGenerate(string $CHR, string $REQ, string $NID1, string $NID2 = '', string $NID3 = ''): string
 {
     global $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite;
 
@@ -2579,9 +2579,9 @@ function l_generate(string $CHR, string $REQ, string $NID1, string $NID2 = '', s
         || $nebulePasswordEntite == ''
         || !io_testObjectPresent($nebulePrivateEntite)
         || $REQ == ''
-        || !n_checkNID($NID1)
-        || !n_checkNID($NID2, true)
-        || !n_checkNID($NID3, true)
+        || !_nodCheckNID($NID1)
+        || !_nodCheckNID($NID2, true)
+        || !_nodCheckNID($NID3, true)
     )
         return '';
     if ($CHR == '-')
@@ -2594,7 +2594,7 @@ function l_generate(string $CHR, string $REQ, string $NID1, string $NID2 = '', s
     }
     $data = '_' . $nebulePublicEntity . '_' . $CHR . '_' . $REQ . '_' . $NID1 . '_' . $NID2 . '_' . $NID3;
     $binary_signature = '';
-    $hashdata = o_getNID($data);
+    $hashdata = _objGetNID($data);
     $binhash = pack("H*", $hashdata);
     $ok = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     openssl_free_key($private_key);
@@ -2630,7 +2630,7 @@ function l_generate(string $CHR, string $REQ, string $NID1, string $NID2 = '', s
  * @param boolean $restrict
  * @return string
  */
-function l_graphresolvone(&$object, &$visited, $present = true, $synchro = false, $restrict = false)
+function _lnkGraphResolvOne(&$object, &$visited, $present = true, $synchro = false, $restrict = false)
 {
     global $nebuleLocalAuthorities;
 
@@ -2639,7 +2639,7 @@ function l_graphresolvone(&$object, &$visited, $present = true, $synchro = false
         return '0'; // Anti trou noir.
     }
     $links = array();
-    l_find($object, $links, 'u', $object, '', ''); // Liste les liens de mise à jour de l'objet.
+    _lnkFind($object, $links, 'u', $object, '', ''); // Liste les liens de mise à jour de l'objet.
     $links = array_reverse($links); // Inverse le résultat pour avoir les liens les plus récents en premier.
 
     // Recherche de nouveaux liens.
@@ -2649,7 +2649,7 @@ function l_graphresolvone(&$object, &$visited, $present = true, $synchro = false
             || !$present
         )
     ) {
-        l_downloadlinkanywhere($object);
+        _lnkDownloadAnywhere($object);
     }
 
     // Supprime les boucles, càd les objets déjà traités.
@@ -2702,7 +2702,7 @@ function l_graphresolvone(&$object, &$visited, $present = true, $synchro = false
         if ($synchro
             && getConfiguration('permitSynchronizeObject')
         ) {
-            o_downloadContent($object); // Syncho de l'objet.
+            _objDownloadContent($object); // Syncho de l'objet.
         }
         if (!$present
             || io_testObjectPresent($object)
@@ -2715,7 +2715,7 @@ function l_graphresolvone(&$object, &$visited, $present = true, $synchro = false
 
     // Parcours les branches.
     foreach ($valinks as $link) {
-        $res = l_graphresolvone($link [6], $visited, $present);
+        $res = _lnkGraphResolvOne($link [6], $visited, $present);
         if ($res != '0') {
             return $res;
         }
@@ -2749,7 +2749,7 @@ function l_graphresolvone(&$object, &$visited, $present = true, $synchro = false
  * @param boolean $restrict
  * @return string
  */
-function l_graphresolv($object, $present = true, $synchro = false, $restrict = false)
+function _lnkGraphResolv($object, $present = true, $synchro = false, $restrict = false)
 {
     global $nebule_permitautosync, $nebuleCachelibpp_l_grx;
 
@@ -2762,7 +2762,7 @@ function l_graphresolv($object, $present = true, $synchro = false, $restrict = f
         $synchro = true;
 
     $visited = array();
-    $res = l_graphresolvone($object, $visited, $present, $synchro, $restrict);
+    $res = _lnkGraphResolvOne($object, $visited, $present, $synchro, $restrict);
     unset($visited);
     if ($res == '0')
         $res = $object;
@@ -2784,7 +2784,7 @@ function l_graphresolv($object, $present = true, $synchro = false, $restrict = f
  * @param $metobj
  * @param false $withinvalid
  */
-function l_find($object, &$table, $action, $srcobj, $dstobj, $metobj, $withinvalid = false)
+function _lnkFind($object, &$table, $action, $srcobj, $dstobj, $metobj, $withinvalid = false)
 { // Liste et filtre les liens sur des actions et objets dans un ordre déterminé.
     // - $object objet dont les liens sont à lire.
     // - $table table dans laquelle seront retournés les liens.
@@ -2804,7 +2804,7 @@ function l_find($object, &$table, $action, $srcobj, $dstobj, $metobj, $withinval
     $linkdate = array();
     $tmptable = array();
     $i1 = 0;
-    l_listonelink($object, $tmptable, $action, $metobj, $withinvalid);
+    _lnkListOne($object, $tmptable, $action, $metobj, $withinvalid);
     foreach ($tmptable as $n => $t) {
         $linkdate [$n] = $t [3];
     }
@@ -2874,7 +2874,7 @@ function l_find($object, &$table, $action, $srcobj, $dstobj, $metobj, $withinval
  * @param boolean $withinvalid
  * @return null
  */
-function l_findinclusive($object, &$table, $action, $srcobj, $dstobj, $metobj, $withinvalid = false): void
+function _lnkFindInclusive($object, &$table, $action, $srcobj, $dstobj, $metobj, $withinvalid = false): void
 {
     $followXOnSameDate = true; // TODO à supprimer.
 
@@ -2882,7 +2882,7 @@ function l_findinclusive($object, &$table, $action, $srcobj, $dstobj, $metobj, $
     $tmptable = array();
     $i1 = 0;
 
-    l_listonelink($object, $tmptable, $action, $metobj, $withinvalid);
+    _lnkListOne($object, $tmptable, $action, $metobj, $withinvalid);
 
     foreach ($tmptable as $n => $t) {
         $linkdate [$n] = $t [3];
@@ -2969,7 +2969,7 @@ function l_findinclusive($object, &$table, $action, $srcobj, $dstobj, $metobj, $
  * @param string $filtreobj
  * @param false $withinvalid
  */
-function l_listlinks($object, &$table, $filtreact = '-', $filtreobj = '', $withinvalid = false)
+function _lnkList($object, &$table, $filtreact = '-', $filtreobj = '', $withinvalid = false)
 { // Liste et filtre les liens sur des actions et objets dans un ordre indéterminé.
     // - $object objet dont les liens sont à lire.
     // - $table table dans laquelle seront retournés les liens.
@@ -2987,7 +2987,7 @@ function l_listlinks($object, &$table, $filtreact = '-', $filtreobj = '', $withi
     $i1 = 0;
     if ($filtreact == '')
         $filtreact = '-';
-    l_listonelink($object, $tmptable, $filtreact, $filtreobj, $withinvalid);
+    _lnkListOne($object, $tmptable, $filtreact, $filtreobj, $withinvalid);
     foreach ($tmptable as $n => $t) {
         $linkdate [$n] = $t [3];
     }
@@ -3036,7 +3036,7 @@ function l_listlinks($object, &$table, $filtreact = '-', $filtreobj = '', $withi
  * @param string $filtreobj
  * @param false $withinvalid
  */
-function l_listonelink(&$object, &$table, $filtreact = '-', $filtreobj = '', $withinvalid = false)
+function _lnkListOne(&$object, &$table, $filtreact = '-', $filtreobj = '', $withinvalid = false)
 { // Lit tous les liens d'un objet.
     // - $object objet dont les liens sont à lire.
     // - $table table dans laquelle seront retournés les liens.
@@ -3091,7 +3091,7 @@ function l_listonelink(&$object, &$table, $filtreact = '-', $filtreobj = '', $wi
         if ($okfiltre) // Si le lien correspond au filtre, l'enregistre dans la table des resultats.
         {
             if ($checkSignOnList)
-                $verify = l_verify(trim($line));
+                $verify = _lnkVerify(trim($line));
             else
                 $verify = -1;
             if ($verify == 1 || $verify == -1 || $withinvalid) // Le lien doit être vérifié ou la vérification désactivée.
@@ -3130,7 +3130,7 @@ function l_listonelink(&$object, &$table, $filtreact = '-', $filtreobj = '', $wi
  *
  * @param $object
  */
-function l_downloadlinkanywhere($object)
+function _lnkDownloadAnywhere($object)
 { // Télécharge les liens de l'objet sur plusieurs localisations.
     // - $object l'objet dont les liens sont à télécharger.
     if (!getConfiguration('permitSynchronizeLink'))
@@ -3138,11 +3138,11 @@ function l_downloadlinkanywhere($object)
     if ($object == '0')
         return;
     $table = array();
-    $hashtype = o_getNID('nebule/objet/entite/localisation');
+    $hashtype = _objGetNID('nebule/objet/entite/localisation');
     $okobj = array();
     $count = 1;
     $okobj [1] = '';
-    l_listlinks($hashtype, $table);
+    _lnkList($hashtype, $table);
     foreach ($table as $itemtable) {
         if (($itemtable [7] == $hashtype) && ($itemtable [4] == 'l')) {
             $t = true;
@@ -3153,9 +3153,9 @@ function l_downloadlinkanywhere($object)
             }
             if ($t) {
                 $lnk = '';
-                o_getLocalContent($itemtable [6], $lnk);
+                _objGetLocalContent($itemtable [6], $lnk);
                 if ($lnk != '') {
-                    l_downloadlinkonlocation($object, $lnk);
+                    _lnkDownloadOnLocation($object, $lnk);
                 }
                 $okobj [$count] = $itemtable [6];
                 $count++;
@@ -3183,7 +3183,7 @@ function l_downloadlinkanywhere($object)
  * @param string $localisation
  * @return integer
  */
-function l_downloadlinkonlocation($oid, $localisation)
+function _lnkDownloadOnLocation($oid, $localisation)
 {
     if (!getConfiguration('permitWrite')
         || !getConfiguration('nebulePermitSynchronizeLink')
@@ -3203,11 +3203,11 @@ function l_downloadlinkonlocation($oid, $localisation)
     if ($distobj) {
         while (!feof($distobj)) {
             $line = trim(fgets($distobj));
-            $verify = l_verify($line);
+            $verify = _lnkVerify($line);
             if ($verify == 1
                 || $verify == -1
             ) {
-                l_write($line);
+                _lnkWrite($line);
                 $count++;
             }
         }
@@ -3222,7 +3222,7 @@ function l_downloadlinkonlocation($oid, $localisation)
  * @param string $bh
  * @return bool
  */
-function l_checkBH(string &$bh): bool
+function _lnkCheckBH(string &$bh): bool
 {
     if (strlen($bh) > 4096) return false; // TODO à revoir.
 
@@ -3233,8 +3233,8 @@ function l_checkBH(string &$bh): bool
     if (strtok('/') !== false) return false;
 
     // Check RF and RV.
-    if (!l_checkRF($rf)) return false;
-    if (!l_checkRV($rv)) return false;
+    if (!_lnkCheckRF($rf)) return false;
+    if (!_lnkCheckRV($rv)) return false;
 
     return true;
 }
@@ -3245,7 +3245,7 @@ function l_checkBH(string &$bh): bool
  * @param string $rf
  * @return bool
  */
-function l_checkRF(string &$rf): bool
+function _lnkCheckRF(string &$rf): bool
 {
     if (strlen($rf) > 4096) return false; // TODO à revoir.
 
@@ -3267,7 +3267,7 @@ function l_checkRF(string &$rf): bool
  * @param string $rv
  * @return bool
  */
-function l_checkRV(string &$rv): bool
+function _lnkCheckRV(string &$rv): bool
 {
     if (strlen($rv) > 4096) return false; // TODO à revoir.
 
@@ -3288,7 +3288,7 @@ function l_checkRV(string &$rv): bool
  * @param string $bl
  * @return bool
  */
-function l_checkBL(string &$bl): bool
+function _lnkCheckBL(string &$bl): bool
 {
     if (strlen($bl) > 4096) return false; // TODO à revoir.
 
@@ -3299,8 +3299,8 @@ function l_checkBL(string &$bl): bool
     if (strtok('/') !== false) return false;
 
     // Check RC and RL.
-    if (!l_checkRC($rc)) return false;
-    if (!l_checkRL($rl)) return false;
+    if (!_lnkCheckRC($rc)) return false;
+    if (!_lnkCheckRL($rl)) return false;
 
     return true;
 }
@@ -3311,7 +3311,7 @@ function l_checkBL(string &$bl): bool
  * @param string $rc
  * @return bool
  */
-function l_checkRC(string &$rc): bool
+function _lnkCheckRC(string &$rc): bool
 {
     if (strlen($rc) > 4096) return false; // TODO à revoir.
 
@@ -3337,11 +3337,11 @@ function l_checkRC(string &$rc): bool
  * @param string $rl
  * @return bool
  */
-function l_checkRL(string &$rl): bool
+function _lnkCheckRL(string &$rl): bool
 {
     if (strlen($rl) > 4096) return false; // TODO à revoir.
 
-    // Extract items from RL 1 : REQ>NID>NID>NID
+    // Extract items from RL 1 : REQ>NID>NID>NID>NID
     $req = strtok($rl, '>');
     $rl1nid1 = strtok('>');
     if ($rl1nid1 === false) $rl1nid1 = '';
@@ -3349,16 +3349,19 @@ function l_checkRL(string &$rl): bool
     if ($rl1nid2 === false) $rl1nid2 = '';
     $rl1nid3 = strtok('>');
     if ($rl1nid3 === false) $rl1nid3 = '';
+    $rl1nid4 = strtok('>');
+    if ($rl1nid4 === false) $rl1nid4 = '';
 
     // Check registry overflow
     if (strtok('>') !== false) return false;
 
     // --- --- --- --- --- --- --- --- ---
-    // Check REQ, NID1, NID2 and NID4.
-    if (!l_checkREQ($req)) return false;
-    if (!n_checkNID($rl1nid1, false)) return false;
-    if (!n_checkNID($rl1nid2, true)) return false;
-    if (!n_checkNID($rl1nid3, true)) return false;
+    // Check REQ, NID1, NID2, NID3 and NID4.
+    if (!_lnkCheckREQ($req)) return false;
+    if (!_nodCheckNID($rl1nid1, false)) return false;
+    if (!_nodCheckNID($rl1nid2, true)) return false;
+    if (!_nodCheckNID($rl1nid3, true)) return false;
+    if (!_nodCheckNID($rl1nid4, true)) return false;
 
     return true;
 }
@@ -3369,7 +3372,7 @@ function l_checkRL(string &$rl): bool
  * @param string $req
  * @return bool
  */
-function l_checkREQ(string &$req): bool
+function _lnkCheckREQ(string &$req): bool
 {
     if ($req != 'l' && $req != 'f' && $req != 'u' && $req != 'd' && $req != 'e' && $req != 'c' && $req != 'k' && $req != 's' && $req != 'x') return false;
 
@@ -3386,7 +3389,7 @@ function l_checkREQ(string &$req): bool
  * @param string $bs
  * @return bool
  */
-function l_checkBS(string &$bh, string &$bl, string &$bs): bool
+function _lnkCheckBS(string &$bh, string &$bl, string &$bs): bool
 {
     if (strlen($bs) > 4096) return false; // TODO à revoir.
 
@@ -3396,8 +3399,8 @@ function l_checkBS(string &$bh, string &$bl, string &$bs): bool
     if (strtok('/') !== false) return false;
 
     // Check content RS 1 NID 1 : hash.algo.size
-    if (!n_checkNID($rs1nid1, false)) return false;
-    if (!l_checkRS($rs, $bh, $bl)) return false;
+    if (!_nodCheckNID($rs1nid1, false)) return false;
+    if (!_lnkCheckRS($rs, $bh, $bl)) return false;
 
     return true;
 }
@@ -3410,7 +3413,7 @@ function l_checkBS(string &$bh, string &$bl, string &$bs): bool
  * @param string $bl
  * @return bool
  */
-function l_checkRS(string &$rs, string &$bh, string &$bl): bool
+function _lnkCheckRS(string &$rs, string &$bh, string &$bl): bool
 {
     if (strlen($rs) > 4096) return false; // TODO à revoir.
 
@@ -3423,8 +3426,8 @@ function l_checkRS(string &$rs, string &$bh, string &$bl): bool
 
     // --- --- --- --- --- --- --- --- ---
     // Check content RS 1 NID 1 : hash.algo.size
-    if (!n_checkNID($nid, false)) return false;
-    if (!l_checkSIG($bh, $bl, $sig, $nid)) return false;
+    if (!_nodCheckNID($nid, false)) return false;
+    if (!_lnkCheckSIG($bh, $bl, $sig, $nid)) return false;
 
     return true;
 }
@@ -3438,7 +3441,7 @@ function l_checkRS(string &$rs, string &$bh, string &$bl): bool
  * @param string $nid
  * @return bool
  */
-function l_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): bool
+function _lnkCheckSIG(string &$bh, string &$bl, string &$sig, string &$nid): bool
 {
     if (strlen($sig) > 4096) return false; // TODO à revoir.
 
@@ -3468,15 +3471,15 @@ function l_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): bool
     // Check sign.
     if (!getConfiguration('permitCheckSignOnVerify')) return true;
     if (io_testObjectPresent($nid)) {
-        $hash = o_getNID($bh . '_' . $bl); // TODO remplacer getConfiguration('cryptoHashAlgorithm') par une convertion des algo et size.
+        $hash = _objGetNID($bh . '_' . $bl); // TODO remplacer getConfiguration('cryptoHashAlgorithm') par une convertion des algo et size.
 
         // Read signer's public key.
-        o_checkContent($nid);
+        _objCheckContent($nid);
         $cert = io_objectRead($nid);
         $pubkeyid = openssl_pkey_get_public($cert);
         if ($pubkeyid === false) return false;
 
-        m_add('lv');
+        _metrologyAdd('lv');
 
         // Encoding sign before check.
         $binsign = pack('H*', $sign);
@@ -3501,7 +3504,7 @@ function l_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): bool
  * @param string $size
  * @return bool
  */
-function l_checkhashalgo(string &$algo, string &$size): bool
+function _lnkCheckhashalgo(string &$algo, string &$size): bool
 {
     // TODO
     return true;
@@ -3523,7 +3526,7 @@ function l_checkhashalgo(string &$algo, string &$size): bool
  * @param string $link
  * @return boolean
  */
-function l_verify(string $link): bool
+function _lnkVerify(string $link): bool
 {
     if (strlen($link) > 4096) return false; // TODO à revoir.
     if (strlen($link) == 0) return false;
@@ -3537,9 +3540,9 @@ function l_verify(string $link): bool
     if (strtok('_') !== false) return false;
 
     // Check BH, BL and BS.
-    if (!l_checkBH($bh)) return false;
-    if (!l_checkBL($bl)) return false;
-    if (!l_checkBS($bh, $bl, $bs)) return false;
+    if (!_lnkCheckBH($bh)) return false;
+    if (!_lnkCheckBL($bl)) return false;
+    if (!_lnkCheckBS($bh, $bl, $bs)) return false;
 
     return true;
 }
@@ -3550,7 +3553,7 @@ function l_verify(string $link): bool
  * @param string $link
  * @return array
  */
-function l_parse(string $link): array
+function _lnkParse(string $link): array
 {
     // Extract blocs from link L : BH_BL_BS
     $bh = strtok(trim($link), '_');
@@ -3575,14 +3578,15 @@ function l_parse(string $link): array
     $bl_rc_mod = strtok($bl_rc, '>');
     $bl_rc_chr = strtok('>');
 
-    // Extract items from RL 1 : REQ>NID>NID>NID
+    // Extract items from RL 1 : REQ>NID>NID>NID>NID
     $bl_rl_req = strtok($bl_rl, '>');
     $bl_rl_nid1 = strtok('>');
-    if ($bl_rl_nid1 === false) $bl_rl_nid1 = '';
     $bl_rl_nid2 = strtok('>');
     if ($bl_rl_nid2 === false) $bl_rl_nid2 = '';
     $bl_rl_nid3 = strtok('>');
     if ($bl_rl_nid3 === false) $bl_rl_nid3 = '';
+    $bl_rl_nid4 = strtok('>');
+    if ($bl_rl_nid4 === false) $bl_rl_nid4 = '';
 
     $bs_rs = strtok($bs, '/');
 
@@ -3599,7 +3603,7 @@ function l_parse(string $link): array
     // Check size value.
     $bs_rs_sig_size = strtok('.');
 
-    $return = array(
+    return array(
         'bh' => $bh,
         'bh/rf' => $bh_rf,
         'bh/rf/app' => $bh_rf_app,
@@ -3616,6 +3620,7 @@ function l_parse(string $link): array
         'bl/rl/nid1' => $bl_rl_nid1,
         'bl/rl/nid2' => $bl_rl_nid2,
         'bl/rl/nid3' => $bl_rl_nid3,
+        'bl/rl/nid4' => $bl_rl_nid4,
         'bs' => $bs,
         'bs/rs' => $bs_rs,
         'bs/rs/nid' => $bs_rs_nid,
@@ -3624,7 +3629,6 @@ function l_parse(string $link): array
         'bs/rs/sig/algo' => $bs_rs_sig_algo,
         'bs/rs/sig/size' => $bs_rs_sig_size,
     );
-    return $return;
 }
 
 /** FIXME
@@ -3635,7 +3639,7 @@ function l_parse(string $link): array
  * @param $link
  * @return bool
  */
-function l_write($link)
+function _lnkWrite($link)
 { // Ecrit le lien dans les objets concernés.
     // - $link le lien à écrire.
     // Se charge de répartir les liens sur les objets concernés.
@@ -3646,20 +3650,20 @@ function l_write($link)
     if ($sign == '' || $sign == '0')
         return false;
     $objsig = strtok('_'); // Lit le signataire.
-    if ($objsig == '' || $objsig == '0' || !n_checkNID($objsig))
+    if ($objsig == '' || $objsig == '0' || !_nodCheckNID($objsig))
         return false;
     $objtyp = strtok('_'); // Lit la date. N'est pas gardé.
     $objtyp = strtok('_'); // Lit le type.
     if ($objtyp != 'c' && $objtyp != 'd' && $objtyp != 'e' && $objtyp != 'f' && $objtyp != 'k' && $objtyp != 'l' && $objtyp != 's' && $objtyp != 'u' && $objtyp != 'x')
         return false;
     $objsrc = strtok('_'); // Lit l'objet source.
-    if ($objsrc == '' || $objsrc == '0' || !n_checkNID($objsrc))
+    if ($objsrc == '' || $objsrc == '0' || !_nodCheckNID($objsrc))
         return false;
     $objdst = strtok('_'); // Lit l'objet destination.
-    if ($objdst == '' || !n_checkNID($objdst))
+    if ($objdst == '' || !_nodCheckNID($objdst))
         return false;
     $objmet = strtok('_'); // Lit l'objet meta.
-    if ($objmet == '' || !n_checkNID($objmet))
+    if ($objmet == '' || !_nodCheckNID($objmet))
         return false;
 
     // Recherche la pré-existance du lien.
@@ -3737,7 +3741,7 @@ function io_checkLinkFolder(): bool
     if (getConfiguration('permitWrite')
         && getConfiguration('permitWriteLink')
     ) {
-        $data = o_getNID(getPseudoRandom(8) . date(DATE_ATOM));
+        $data = _objGetNID(getPseudoRandom(8) . date(DATE_ATOM));
         $name = LOCAL_LINKS_FOLDER . '/writest' . $data;
         file_put_contents($name, $data);
         if (!file_exists($name)
@@ -3771,7 +3775,7 @@ function io_checkObjectFolder()
     if (getConfiguration('permitWrite')
         && getConfiguration('permitWriteObject')
     ) {
-        $data = o_getNID(getPseudoRandom(8) . date(DATE_ATOM));
+        $data = _objGetNID(getPseudoRandom(8) . date(DATE_ATOM));
         $name = LOCAL_OBJECTS_FOLDER . '/writest' . $data;
         file_put_contents($name, $data);
         if (!file_exists($name)
@@ -3834,7 +3838,7 @@ function io_linksRead(&$nid)
     $maxLinks = getConfiguration('ioReadMaxLinks');
     foreach ($links as $link) {
         $result [$count] = $link;
-        m_add('lr');
+        _metrologyAdd('lr');
         $count++;
         if ($count > $maxLinks)
             break 1;
@@ -3856,7 +3860,7 @@ function io_objectRead($nid, $maxData = 0)
         $maxData = getConfiguration('ioReadMaxData');
     if (!io_testObjectPresent($nid))
         return false;
-    m_add('or');
+    _metrologyAdd('or');
     return file_get_contents(LOCAL_OBJECTS_FOLDER . '/' . $nid, false, null, 0, $maxData);
 }
 
@@ -3890,7 +3894,7 @@ function io_objectWrite(&$data)
         || !getConfiguration('permitWriteObject')
     )
         return false;
-    return file_put_contents(LOCAL_OBJECTS_FOLDER . '/' . o_getNID($data), $data);
+    return file_put_contents(LOCAL_OBJECTS_FOLDER . '/' . _objGetNID($data), $data);
 }
 
 /**
@@ -4156,7 +4160,7 @@ function getBootstrapSwitchApplication(): void
         $arg = trim(filter_input(INPUT_POST, ARG_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
     }
     if (is_string($arg)
-        && n_checkNID($arg, true)
+        && _nodCheckNID($arg, true)
         && ($arg == '0'
             || $arg == '1'
             || io_testLinkPresent($arg)
@@ -4182,9 +4186,9 @@ function getBootstrapSwitchApplication(): void
             $activated = true;
         }
         if (!$activated) {
-            $refActivated = o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_ACTIVE);
+            $refActivated = _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_ACTIVE);
             $links = array();
-            l_findinclusive($arg, $links, 'f', $arg, $refActivated, $arg);
+            _lnkFindInclusive($arg, $links, 'f', $arg, $refActivated, $arg);
 
             if (sizeof($links) != 0) {
                 $signer = '';
@@ -4241,10 +4245,10 @@ function findLibraryPOO(): void
     session_start();
 
     if (isset($_SESSION['bootstrapLibrariesID'])
-        && n_checkNID($_SESSION['bootstrapLibrariesID'])
+        && _nodCheckNID($_SESSION['bootstrapLibrariesID'])
         && io_testLinkPresent($_SESSION['bootstrapLibrariesID'])
         && io_testObjectPresent($_SESSION['bootstrapLibrariesID'])
-        && o_checkContent($_SESSION['bootstrapLibrariesID'])
+        && _objCheckContent($_SESSION['bootstrapLibrariesID'])
         && isset($_SESSION['bootstrapLibrariesInstances'][$_SESSION['bootstrapLibrariesID']])
         && $_SESSION['bootstrapLibrariesInstances'][$_SESSION['bootstrapLibrariesID']] != ''
     ) {
@@ -4256,16 +4260,16 @@ function findLibraryPOO(): void
 
     if ($bootstrapLibraryID == '') {
         $bootstrapLibraryID = nebFindByRef(
-            o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE),
-            o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE),
+            _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE),
+            _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE),
             false);
 
         addLog('find nebule library ' . $bootstrapLibraryID);
 
-        if (!n_checkNID($bootstrapLibraryID)
+        if (!_nodCheckNID($bootstrapLibraryID)
             || !io_testLinkPresent($bootstrapLibraryID)
             || !io_testObjectPresent($bootstrapLibraryID)
-            || !o_checkContent($bootstrapLibraryID)
+            || !_objCheckContent($bootstrapLibraryID)
         ) {
             $bootstrapLibraryID = '';
             setBootstrapBreak('31', 'Finding nebule library error.');
@@ -4342,7 +4346,7 @@ function findApplication():void
 
     // Vérifie l'ID de départ de l'application mémorisé.
     if (isset($_SESSION['bootstrapApplicationStartID'])
-        && n_checkNID($_SESSION['bootstrapApplicationStartID'])
+        && _nodCheckNID($_SESSION['bootstrapApplicationStartID'])
     ) {
         // Mémorise l'ID de départ de l'application en cours.
         $bootstrapApplicationStartID = $_SESSION['bootstrapApplicationStartID'];
@@ -4368,17 +4372,17 @@ function findApplication():void
             // Recherche la dernière application depuis l'objet de référence sur lui-même.
             $bootstrapApplicationID = nebFindByRef(
                 $bootstrapApplicationStartID,
-                o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS),
+                _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS),
                 false);
         } else {
             // Vérifie l'ID de l'application mémorisé.
             if (isset($_SESSION['bootstrapApplicationID'])
                 && $_SESSION['bootstrapApplicationID'] != ''
-                && n_checkNID($_SESSION['bootstrapApplicationID'])
+                && _nodCheckNID($_SESSION['bootstrapApplicationID'])
                 && $_SESSION['bootstrapApplicationID'] == '0'
                 || (io_testLinkPresent($_SESSION['bootstrapApplicationID'])
                     && io_testObjectPresent($_SESSION['bootstrapApplicationID'])
-                    && o_checkContent($_SESSION['bootstrapApplicationID'])
+                    && _objCheckContent($_SESSION['bootstrapApplicationID'])
                 )
             ) {
                 // Mémorise l'ID de l'application en cours.
@@ -4419,12 +4423,12 @@ function findApplication():void
             // Application 0 de sélection des applications.
             $bootstrapApplicationStartID = '1';
             $bootstrapApplicationID = '1';
-        } elseif (n_checkNID($bootstrapSwitchApplication)
+        } elseif (_nodCheckNID($bootstrapSwitchApplication)
             && io_testLinkPresent($bootstrapSwitchApplication)
         ) {
-            $refAppsID = o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS);
+            $refAppsID = _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS);
             $links = array();
-            l_findinclusive($refAppsID, $links, 'f', $refAppsID, $bootstrapSwitchApplication, $refAppsID);
+            _lnkFindInclusive($refAppsID, $links, 'f', $refAppsID, $bootstrapSwitchApplication, $refAppsID);
 
             // Vérifie que l'application est autorisée.
             if (sizeof($links) != 0) {
@@ -4433,10 +4437,10 @@ function findApplication():void
 
                 // Vérifie l'application non dé-sérialisée.
                 if (isset($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
-                    && n_checkNID($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+                    && _nodCheckNID($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
                     && io_testLinkPresent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
                     && io_testObjectPresent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
-                    && o_checkContent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+                    && _objCheckContent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
                     && isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID])
                     && $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID] != ''
                     && isset($_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID])
@@ -4456,7 +4460,7 @@ function findApplication():void
                     // Sinon recherche la dernière application depuis l'objet de référence sur lui-même.
                     $bootstrapApplicationID = nebFindByRef(
                         $bootstrapApplicationStartID,
-                        o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS),
+                        _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS),
                         false);
                 }
 
@@ -4487,7 +4491,7 @@ function findApplication():void
             // Recherche la dernière application depuis l'objet de référence sur lui-même.
             $bootstrapApplicationID = nebFindByRef(
                 $bootstrapApplicationStartID,
-                o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS),
+                _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS),
                 false);
         } else {
             $bootstrapApplicationStartID = '0';
@@ -4504,9 +4508,9 @@ function findApplication():void
         && $bootstrapApplicationInstanceSleep == ''
     ) {
         // Lit les liens de non pré-chargement pour l'application.
-        $refNoPreload = o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_DIRECT);
+        $refNoPreload = _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_DIRECT);
         $links = array();
-        l_findinclusive($bootstrapApplicationStartID, $links, 'f', $bootstrapApplicationStartID, $refNoPreload, $bootstrapApplicationStartID);
+        _lnkFindInclusive($bootstrapApplicationStartID, $links, 'f', $bootstrapApplicationStartID, $refNoPreload, $bootstrapApplicationStartID);
 
         // Filtre sur les autorités locales.
         $bootstrapApplicationNoPreload = false;
@@ -4590,12 +4594,12 @@ function getBootstrapCheckFingerprint(): void
 {
     global $nebuleLocalAuthorities;
     $data = file_get_contents(BOOTSTRAP_FILE_NAME);
-    $hash = o_getNID($data);
+    $hash = _objGetNID($data);
     unset($data);
     // Recherche les liens de validation.
-    $hashRef = o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP);
+    $hashRef = _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP);
     $links = array();
-    l_findinclusive($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
+    _lnkFindInclusive($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
     // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
     $ok = false;
     foreach ($links as $link) {
@@ -5316,7 +5320,7 @@ function bootstrapDisplayOnBreak(): void
 
         // Chargement de la bibliothèque PHP POO.
         echo "Tl=" . sprintf('%01.4fs', microtime(true) - $metrologyStartTime) . "<br />\n";
-        echo 'library RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE) . "<br />\n";
+        echo 'library RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE) . "<br />\n";
 
         if (!is_a($nebuleInstance, 'nebule')) {
             echo "Not loaded.\n";
@@ -5516,13 +5520,13 @@ function bootstrapDisplayOnBreak(): void
 
             // Vérifie le bootstrap. @todo ajouter vérification de marquage de danger.
             $data = file_get_contents(BOOTSTRAP_FILE_NAME);
-            $hash = o_getNID($data);
+            $hash = _objGetNID($data);
             unset($data);
             echo 'bootstrap &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $hash . ' ';
             // Recherche les liens de validation.
-            $hashRef = o_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP);
+            $hashRef = _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP);
             $links = array();
-            l_findinclusive($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
+            _lnkFindInclusive($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
             // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
             $ok = false;
             foreach ($links as $link) {
@@ -5542,10 +5546,10 @@ function bootstrapDisplayOnBreak(): void
 
             // Affichage des valeurs de métrologie.
             echo "<br />\n";
-            echo 'L(r)=' . m_get('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead() . ' ';
-            echo 'L(v)=' . m_get('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify() . ' ';
-            echo 'O(r)=' . m_get('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead() . ' ';
-            echo 'O(v)=' . m_get('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
+            echo 'L(r)=' . _metrologyGet('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead() . ' ';
+            echo 'L(v)=' . _metrologyGet('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify() . ' ';
+            echo 'O(r)=' . _metrologyGet('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead() . ' ';
+            echo 'O(v)=' . _metrologyGet('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
             echo 'L(c)=' . $nebuleInstance->getCacheLinkSize() . ' ';
             echo 'O(c)=' . $nebuleInstance->getCacheObjectSize() . ' ';
             echo 'E(c)=' . $nebuleInstance->getCacheEntitySize() . ' ';
@@ -5787,7 +5791,7 @@ function getBootstrapNeedFirstSynchronization(): bool
         && is_file(LOCAL_ENTITY_FILE)
     ) {
         $serverEntite = filter_var(strtok(trim(file_get_contents(LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-        if (!e_check($serverEntite)) {
+        if (!_entityCheck($serverEntite)) {
             setBootstrapBreak('72', 'Local server entity error');
             return true;
         }
@@ -5950,7 +5954,7 @@ function bootstrapFirstCreateObjects()
         <span class="partstitle">#3 nebule needed library objects</span><br/>
         <?php
         // Si il manque un des objets, recrée les objets.
-        $hash = o_getNID($nebuleFirstReservedObjects[10]);
+        $hash = _objGetNID($nebuleFirstReservedObjects[10]);
         if (!io_testObjectPresent($hash))
         {
         addLog('need create objects');
@@ -6032,20 +6036,20 @@ function bootstrapFirstSynchronizingEntities()
 
         // Recherche des autres liens.
         foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-            o_downloadContent(getConfiguration('puppetmaster'), $localisation);
-            l_downloadlinkonlocation(getConfiguration('puppetmaster'), $localisation);
+            _objDownloadContent(getConfiguration('puppetmaster'), $localisation);
+            _lnkDownloadOnLocation(getConfiguration('puppetmaster'), $localisation);
             echo '.';
         }
         echo ' ';
         flush();
         foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-            l_downloadlinkonlocation(o_getNID('nebule/objet/entite/maitre/securite'), $localisation);
+            _lnkDownloadOnLocation(_objGetNID('nebule/objet/entite/maitre/securite'), $localisation);
             echo '.';
-            l_downloadlinkonlocation(o_getNID('nebule/objet/entite/maitre/code'), $localisation);
+            _lnkDownloadOnLocation(_objGetNID('nebule/objet/entite/maitre/code'), $localisation);
             echo '.';
-            l_downloadlinkonlocation(o_getNID('nebule/objet/entite/maitre/annuaire'), $localisation);
+            _lnkDownloadOnLocation(_objGetNID('nebule/objet/entite/maitre/annuaire'), $localisation);
             echo '.';
-            l_downloadlinkonlocation(o_getNID('nebule/objet/entite/maitre/temps'), $localisation);
+            _lnkDownloadOnLocation(_objGetNID('nebule/objet/entite/maitre/temps'), $localisation);
             echo '.';
         }
         flush();
@@ -6057,18 +6061,18 @@ function bootstrapFirstSynchronizingEntities()
         addLog('need sync security master');
         // Recherche via l'objet de référence.
         $entity = nebFindByRef(
-            o_getNID('nebule/objet/entite/maitre/securite'),
-            o_getNID('nebule/objet/entite/maitre/securite'),
+            _objGetNID('nebule/objet/entite/maitre/securite'),
+            _objGetNID('nebule/objet/entite/maitre/securite'),
             false);
         echo ' ' . $entity . ' ';
-        if (n_checkNID($entity)
+        if (_nodCheckNID($entity)
             && io_testLinkPresent($entity)
         ) {
             // Recherche de l'objet et des liens de l'entité.
             $nebuleSecurityMaster = $entity;
             foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-                o_downloadContent($nebuleSecurityMaster, $localisation);
-                l_downloadlinkonlocation($nebuleSecurityMaster, $localisation);
+                _objDownloadContent($nebuleSecurityMaster, $localisation);
+                _lnkDownloadOnLocation($nebuleSecurityMaster, $localisation);
                 echo '.';
             }
         } else {
@@ -6083,18 +6087,18 @@ function bootstrapFirstSynchronizingEntities()
         addLog('need sync code master');
         // Recherche via l'objet de référence.
         $entity = nebFindByRef(
-            o_getNID('nebule/objet/entite/maitre/code'),
-            o_getNID('nebule/objet/entite/maitre/code'),
+            _objGetNID('nebule/objet/entite/maitre/code'),
+            _objGetNID('nebule/objet/entite/maitre/code'),
             false);
         echo ' ' . $entity . ' ';
-        if (n_checkNID($entity)
+        if (_nodCheckNID($entity)
             && io_testLinkPresent($entity)
         ) {
             // Recherche de l'objet et des liens de l'entité.
             $nebuleCodeMaster = $entity;
             foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-                o_downloadContent($nebuleCodeMaster, $localisation);
-                l_downloadlinkonlocation($nebuleCodeMaster, $localisation);
+                _objDownloadContent($nebuleCodeMaster, $localisation);
+                _lnkDownloadOnLocation($nebuleCodeMaster, $localisation);
                 echo '.';
             }
         } else {
@@ -6109,18 +6113,18 @@ function bootstrapFirstSynchronizingEntities()
         addLog('need sync directory master');
         // Recherche via l'objet de référence.
         $entity = nebFindByRef(
-            o_getNID('nebule/objet/entite/maitre/annuaire'),
-            o_getNID('nebule/objet/entite/maitre/annuaire'),
+            _objGetNID('nebule/objet/entite/maitre/annuaire'),
+            _objGetNID('nebule/objet/entite/maitre/annuaire'),
             false);
         echo ' ' . $entity . ' ';
-        if (n_checkNID($entity)
+        if (_nodCheckNID($entity)
             && io_testLinkPresent($entity)
         ) {
             // Recherche de l'objet et des liens de l'entité.
             $nebuleDirectoryMaster = $entity;
             foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-                o_downloadContent($nebuleDirectoryMaster, $localisation);
-                l_downloadlinkonlocation($nebuleDirectoryMaster, $localisation);
+                _objDownloadContent($nebuleDirectoryMaster, $localisation);
+                _lnkDownloadOnLocation($nebuleDirectoryMaster, $localisation);
                 echo '.';
             }
         } else {
@@ -6135,18 +6139,18 @@ function bootstrapFirstSynchronizingEntities()
         addLog('need sync time master');
         // Recherche via l'objet de référence.
         $entity = nebFindByRef(
-            o_getNID('nebule/objet/entite/maitre/temps'),
-            o_getNID('nebule/objet/entite/maitre/temps'),
+            _objGetNID('nebule/objet/entite/maitre/temps'),
+            _objGetNID('nebule/objet/entite/maitre/temps'),
             false);
         echo ' ' . $entity . ' ';
-        if (n_checkNID($entity)
+        if (_nodCheckNID($entity)
             && io_testLinkPresent($entity)
         ) {
             // Recherche de l'objet et des liens de l'entité.
             $nebuleTimeMaster = $entity;
             foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-                o_downloadContent($nebuleTimeMaster, $localisation);
-                l_downloadlinkonlocation($nebuleTimeMaster, $localisation);
+                _objDownloadContent($nebuleTimeMaster, $localisation);
+                _lnkDownloadOnLocation($nebuleTimeMaster, $localisation);
                 echo '.';
             }
         } else {
@@ -6210,11 +6214,11 @@ function bootstrapFirstSynchronizingObjects()
     global $nebuleFirstReservedObjects, $bootstrapName, $nebuleLocalAuthorities;
 
     $refApps = REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS;
-    $refAppsID = o_getNID($refApps);
+    $refAppsID = _objGetNID($refApps);
     $refLib = REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE;
-    $refLibID = o_getNID($refLib);
+    $refLibID = _objGetNID($refLib);
     $refBoot = REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP;
-    $refBootID = o_getNID($refBoot);
+    $refBootID = _objGetNID($refBoot);
     ?>
 
     <div class="parts">
@@ -6231,9 +6235,9 @@ function bootstrapFirstSynchronizingObjects()
         // Ecrit les objets de localisation.
         echo 'objects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
         foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $data) {
-            $hash = o_getNID($data);;
+            $hash = _objGetNID($data);;
             foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-                $count = l_downloadlinkonlocation($hash, $localisation);
+                $count = _lnkDownloadOnLocation($hash, $localisation);
                 echo '.';
                 if ($count != 0) {
                     break 1;
@@ -6245,9 +6249,9 @@ function bootstrapFirstSynchronizingObjects()
 
         // Ecrit les objets réservés.
         foreach ($nebuleFirstReservedObjects as $data) {
-            $hash = o_getNID($data);;
+            $hash = _objGetNID($data);;
             foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-                $count = l_downloadlinkonlocation($hash, $localisation);
+                $count = _lnkDownloadOnLocation($hash, $localisation);
                 echo '.';
                 if ($count != 0) {
                     break 1;
@@ -6269,7 +6273,7 @@ function bootstrapFirstSynchronizingObjects()
         echo $refBoot . ' ';
         flush();
         foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-            l_downloadlinkonlocation($refBootID, $localisation);
+            _lnkDownloadOnLocation($refBootID, $localisation);
             echo '.';
         }
         ?><br/>
@@ -6279,7 +6283,7 @@ function bootstrapFirstSynchronizingObjects()
         echo $refLib . ' ';
         flush();
         foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-            l_downloadlinkonlocation($refLibID, $localisation);
+            _lnkDownloadOnLocation($refLibID, $localisation);
             echo '.';
         }
         ?><br/>
@@ -6294,7 +6298,7 @@ function bootstrapFirstSynchronizingObjects()
         echo $lastID . ' ';
         if ($lastID != '0') {
             foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-                o_downloadContent($lastID, $localisation);
+                _objDownloadContent($lastID, $localisation);
                 echo '.';
             }
         } else {
@@ -6307,7 +6311,7 @@ function bootstrapFirstSynchronizingObjects()
         echo $refAppsID . ' ';
         flush();
         foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-            l_downloadlinkonlocation($refAppsID, $localisation);
+            _lnkDownloadOnLocation($refAppsID, $localisation);
             echo '.';
         }
         ?><br/>
@@ -6316,7 +6320,7 @@ function bootstrapFirstSynchronizingObjects()
         <?php
         // Pour chaque application, faire une synchronisation.
         $links = array();
-        l_findinclusive($refAppsID, $links, 'f', $refAppsID, '', $refAppsID, false);
+        _lnkFindInclusive($refAppsID, $links, 'f', $refAppsID, '', $refAppsID, false);
 
         // Tri sur autorités locales.
         $signer = '';
@@ -6356,8 +6360,8 @@ function bootstrapFirstSynchronizingObjects()
             addLog('find app ' . $appID . ' as ' . $lastID);
             if ($lastID != '0') {
                 foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-                    o_downloadContent($lastID, $localisation);
-                    l_downloadlinkonlocation($lastID, $localisation);
+                    _objDownloadContent($lastID, $localisation);
+                    _lnkDownloadOnLocation($lastID, $localisation);
                     echo '.';
                 }
                 echo ' ';
@@ -6372,8 +6376,8 @@ function bootstrapFirstSynchronizingObjects()
                 }
                 if ($nameID != '0') {
                     foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
-                        o_downloadContent($nameID, $localisation);
-                        l_downloadlinkonlocation($nameID, $localisation);
+                        _objDownloadContent($nameID, $localisation);
+                        _lnkDownloadOnLocation($nameID, $localisation);
                         echo '.';
                     }
                 }
@@ -6543,7 +6547,7 @@ function bootstrapFirstCreateLocaleEntity()
             $nebulePublicEntity = '0';
             $nebulePrivateEntite = '0';
             // Génère une nouvelle entité.
-            e_generate(getConfiguration('cryptoAsymetricAlgorithm'), getConfiguration('cryptoHashAlgorithm'), $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite);
+            _entityGenerate(getConfiguration('cryptoAsymetricAlgorithm'), getConfiguration('cryptoHashAlgorithm'), $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite);
 
             // Définit l'entité comme entité instance du serveur.
             file_put_contents(LOCAL_ENTITY_FILE, $nebulePublicEntity);
@@ -6594,11 +6598,11 @@ function bootstrapFirstCreateLocaleEntity()
 
             // Enregistrement du nom.
             nebINECreatObjText($name);
-            $refHashName = o_getNID('nebule/objet/nom');
-            $hashName = o_getNID($name);
-            $newlink = l_generate('-', 'l', $nebulePublicEntity, $hashName, $refHashName);
-            if (l_verify($newlink) == 1) {
-                l_write($newlink);
+            $refHashName = _objGetNID('nebule/objet/nom');
+            $hashName = _objGetNID($name);
+            $newlink = _lnkGenerate('-', 'l', $nebulePublicEntity, $hashName, $refHashName);
+            if (_lnkVerify($newlink) == 1) {
+                _lnkWrite($newlink);
             }
             unset($newlink);
 
@@ -7030,10 +7034,10 @@ function bootstrapLogMetrology()
     // Metrology on logs.
     if (is_a($nebuleInstance, 'nebule')) {
         addLog('Mp=' . memory_get_peak_usage()
-            . ' - Lr=' . m_get('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead()
-            . ' Lv=' . m_get('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify()
-            . ' Or=' . m_get('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead()
-            . ' Ov=' . m_get('ov') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify()
+            . ' - Lr=' . _metrologyGet('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead()
+            . ' Lv=' . _metrologyGet('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify()
+            . ' Or=' . _metrologyGet('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead()
+            . ' Ov=' . _metrologyGet('ov') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify()
             . ' (PP+POO) -'
             . ' LC=' . $nebuleInstance->getCacheLinkSize()
             . ' OC=' . $nebuleInstance->getCacheObjectSize()
@@ -7042,10 +7046,10 @@ function bootstrapLogMetrology()
             . ' CC=' . $nebuleInstance->getCacheConversationSize());
     } else {
         addLog('Mp=' . memory_get_peak_usage()
-            . ' - Lr=' . m_get('lr')
-            . ' Lv=' . m_get('lv')
-            . ' Or=' . m_get('or')
-            . ' Ov=' . m_get('ov')
+            . ' - Lr=' . _metrologyGet('lr')
+            . ' Lv=' . _metrologyGet('lv')
+            . ' Or=' . _metrologyGet('or')
+            . ' Ov=' . _metrologyGet('ov')
             . ' (PP)');
     }
 }
