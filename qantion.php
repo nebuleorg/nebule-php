@@ -1360,7 +1360,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
      */
     private function _displayInternalMenuApplications()
     {
-        global $bootstrapName, $applicationName;
+        global $applicationName;
 
         $modules = $this->_applicationInstance->getModulesListInstances();
         $list = array();
@@ -1528,7 +1528,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
         // Ajoute l'application 0.
         $list[$j]['icon'] = parent::DEFAULT_APPLICATION_LOGO;
-        $list[$j]['title'] = $bootstrapName;
+        $list[$j]['title'] = BOOTSTRAP_NAME;
         $list[$j]['htlink'] = '?' . Action::DEFAULT_COMMAND_NEBULE_BOOTSTRAP;
         $list[$j]['desc'] = $this->_applicationInstance->getTraductionInstance()->getTraduction('::appSwitch', $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
         $list[$j]['ref'] = 'nebule';

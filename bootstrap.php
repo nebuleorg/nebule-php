@@ -3,15 +3,13 @@ declare(strict_types=1);
 namespace Nebule\Bootstrap;
 //use nebule;
 // ------------------------------------------------------------------------------------------
-use function Sodium\add;
 
-$bootstrapName = 'bootstrap';
-$bootstrapSurname = 'nebule/bootstrap';
-$bootstrapDescription = 'Loader of library and applications.';
-$bootstrapAuthor = 'Project nebule';
-$bootstrapVersion = '020210424';
-$bootstrapLicence = 'GNU GPL 02021';
-$bootstrapWebsite = 'www.nebule.org';
+define('BOOTSTRAP_NAME', 'bootstrap');
+define('BOOTSTRAP_SURNAME', 'nebule/bootstrap');
+define('BOOTSTRAP_AUTHOR', 'Project nebule');
+define('BOOTSTRAP_VERSION', '020210509');
+define('BOOTSTRAP_LICENCE', 'GNU GPL 02021');
+define('BOOTSTRAP_WEBSITE', 'www.nebule.org');
 // ------------------------------------------------------------------------------------------
 
 
@@ -93,8 +91,8 @@ $loggerSessionID = bin2hex(openssl_random_pseudo_bytes(6, $false));
 $metrologyStartTime = microtime(true);
 
 // Initialize logs.
-openlog($bootstrapName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
-syslog(LOG_INFO, 'LogT=0 LogTabs=' . $metrologyStartTime . ' --- start ' . $bootstrapName);
+openlog(BOOTSTRAP_NAME . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+syslog(LOG_INFO, 'LogT=0 LogTabs=' . $metrologyStartTime . ' --- start ' . BOOTSTRAP_NAME);
 
 /**
  * Add message to logs.
@@ -130,14 +128,9 @@ LYUC6IYI9gG+Bnz2XTOO9G+2B/g+8A+5PoJLAVRTBhcAFwP7KoK+BH8tcEVEXG1JFEA/RXA0cBFwjl1B
 
 define('REFERENCE_APPLICATION_ICON', "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAADkElEQVRo3u2ZT0hUQRzHP9sGgoEh0T8kL8/Ag+tBsUNdCpmKjA7VQdzKwg6pdIoOnkQKPHgUtUOGSrt0qIUORTGIXepgZAc9eJCFMgmUEj0IQotdlJ03b1779u2IK/k7vTfvN/P7zm9+8/v3YI/+d4oEZxUHaaaBCZJyw4cjQgvn+MwLuWIZgKijg9tEgTl6SJggiAhxuqkCMowwKKesARDPiSuvRgiK+C1KyBu2AOj7XWSaKJUcphRYY4nvZIhxxM0mI9sFICAFAbBvp2/BbgAg2sIuHmRmNOcigzwKvb0rztH0mwKMUJSQ4pLhwxTjTDLLAqtAGRVUc4pG6gy8b7kq10MBECW846w2uMYAY3LGZ0YNt+ikVBv+wEV/CP8C8Maz+z565XKOIyuni4e6FmRT3gDEIO2a2u/LTwGN7zT92nEMyY68jFC0aaaXpEl+C2p76XnnGVXElKEG50f6a04NaD4/S09ke4hLOMQ94wdXjIi4It4X44SkjIf0AwlajB/qs5FSdUTmU5qiNbQfaMUckjsMGhAH+WW0iDNBTc/HHD8ahjMc2kpZshpoNorvK0Q8yE/0GU2/2XsEDQbGNXoLjja9rBlGG7wAJpjzsA3kcjsBdLDMgGdwjgkvgCQ9HghjViLumEd8D0mzH7jGS9X+Zb2dmC++KH5xkQdqRunOB1KMK2/j1rIOdaVpd0LrAiA3XDdh0hoAdaWoO5/WM6JK5XnWGoBZHwkGAIeV5wVrABZ8JBgAqMnEqjUAqz4SijErVr1WmTUpZT4SDACWlOcKawAqfCQYAHxXnqutAaj2kaADEBEyyuspawDUlTIi4gNARIi78rhGawDUlWLEVQhRrb4/obAed16lFy1EghpXgnuAWn4702mPBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf7Q4vfT7/xw0i2jaf6gUEjcx2joRUwaizYXZIUpad/OiepNbDHnGO52gw+pdkdn9JsIGd1LNp4qhWnrfJPXsof1cqyu3I4j+o4/dU56qoUYlx2ZtLzgU0vxXmtPH+82xoURdCi2fEmlU+rJj/ybc0EBmC4EcHJx/LzBLDXrN5eChto3lOi/bBY58L2AUho7bvr8pXBUtzFPSSsHYG8QT3DmxnzHDdJGdlS3NxscWQYpj7IH6Mi+G23R3v0FwbfFx3mQ2ZaAAAAAElFTkSuQmCC");
 
-/**
- * Liste des applications autoriées par défaut.
- * Ces applications ne peuvent être retiré de la liste des applications activées.
- *
- * @var array:string $bootstrapActiveApplicationsWhitelist
- */
-$bootstrapActiveApplicationsWhitelist = array(
-    '2121510000000000006e6562756c65206170706c69636174696f6e73000000000000212151',
+// List of application that can't be disabled in app 0.
+define('BOOTSTRAP_FORCED_ACTIVE_APPLICATION', array(
+        '2121510000000000006e6562756c65206170706c69636174696f6e73000000000000212151', )
 );
 
 // Constante de la première URL à utiliser après la création de l'entité instance du serveur.
@@ -2031,8 +2024,8 @@ function _objCheckContent(&$nid)
     return true;
 }
 
-/** FIXME
- * Object - Calculate NID with hash algo.
+/**
+ * Object - Calculate NID for data with hash algo.
  *
  * @param string $data
  * @param string $algo
@@ -2040,9 +2033,6 @@ function _objCheckContent(&$nid)
  */
 function _objGetNID(string $data, string $algo = ''): string
 {
-    if ($algo == '')
-        $algo = getConfiguration('cryptoHashAlgorithm');
-
     return cryptoGetDataHash($data, $algo) . '.' . $algo;
 }
 
@@ -3786,7 +3776,7 @@ function getBootstrapUpdate():void
  */
 function getBootstrapSwitchApplication(): void
 {
-    global $bootstrapFlush, $bootstrapSwitchApplication, $bootstrapActiveApplicationsWhitelist, $nebuleServerEntite;
+    global $bootstrapFlush, $bootstrapSwitchApplication, $nebuleServerEntite;
 
     if ($bootstrapFlush)
         return;
@@ -3809,7 +3799,7 @@ function getBootstrapSwitchApplication(): void
         // Ou si c'est l'application par défaut.
         // Ou si c'est l'application 0.
         $activated = false;
-        foreach ($bootstrapActiveApplicationsWhitelist as $item) {
+        foreach (BOOTSTRAP_FORCED_ACTIVE_APPLICATION as $item) {
             if ($arg == $item) {
                 $activated = true;
             }
@@ -3926,8 +3916,7 @@ function findLibraryPOO(): void
  */
 function loadLibraryPOO(): void
 {
-    global $bootstrapName,
-           $loggerSessionID,
+    global $loggerSessionID,
            $nebuleInstance,
            $libpooCheckOK,
            $bootstrapLibraryID,
@@ -3947,7 +3936,7 @@ function loadLibraryPOO(): void
 
         // Ré-ouvre les logs pour le bootstrap.
         closelog();
-        openlog($bootstrapName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+        openlog(BOOTSTRAP_NAME . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
     } else
         setBootstrapBreak('41', 'Library nebule error');
 }
@@ -4282,20 +4271,19 @@ function getBootstrapServerEntityDisplay()
  */
 function bootstrapHtmlHeader()
 {
-global $bootstrapName, $bootstrapVersion, $bootstrapLicence, $bootstrapAuthor, $bootstrapWebsite,
-       $bootstrapRescueMode;
+global $bootstrapRescueMode;
 
 ?>
     <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <title><?php echo $bootstrapName;
+    <title><?php echo BOOTSTRAP_NAME;
         if ($bootstrapRescueMode) echo ' - RESCUE' ?></title>
     <link rel="icon" type="image/png" href="favicon.png"/>
     <meta name="author"
-          content="<?php echo $bootstrapAuthor . ' - ' . $bootstrapWebsite . ' - ' . $bootstrapVersion; ?>"/>
-    <meta name="licence" content="<?php echo $bootstrapLicence . ' ' . $bootstrapAuthor; ?>"/>
+          content="<?php echo BOOTSTRAP_AUTHOR . ' - ' . BOOTSTRAP_WEBSITE . ' - ' . BOOTSTRAP_VERSION; ?>"/>
+    <meta name="licence" content="<?php echo BOOTSTRAP_LICENCE . ' ' . BOOTSTRAP_AUTHOR; ?>"/>
     <style type="text/css">
         /* CSS reset. http://meyerweb.com/eric/tools/css/reset/ v2.0 20110126. Public domain */
         * {
@@ -4808,8 +4796,7 @@ global $bootstrapName, $bootstrapVersion, $bootstrapLicence, $bootstrapAuthor, $
  */
 function bootstrapHtmlTop()
 {
-global $bootstrapName, $bootstrapVersion, $bootstrapLicence, $bootstrapAuthor, $bootstrapWebsite,
-       $nebuleServerEntite;
+global $nebuleServerEntite;
 
 $name = nebReadEntityFullName($nebuleServerEntite);
 ?>
@@ -4839,11 +4826,11 @@ $name = nebReadEntityFullName($nebuleServerEntite);
 <div class="layout-footer">
     <div class="footer-center">
         <p>
-            <?php echo $bootstrapName; ?><br/>
-            <?php echo $bootstrapVersion; ?><br/>
-            (c) <?php echo $bootstrapLicence . ' ' . $bootstrapAuthor; ?> - <a
-                    href="http://<?php echo $bootstrapWebsite; ?>" target="_blank"
-                    style="text-decoration:none;"><?php echo $bootstrapWebsite; ?></a>
+            <?php echo BOOTSTRAP_NAME; ?><br/>
+            <?php echo BOOTSTRAP_VERSION; ?><br/>
+            (c) <?php echo BOOTSTRAP_LICENCE . ' ' . BOOTSTRAP_AUTHOR; ?> - <a
+                    href="http://<?php echo BOOTSTRAP_WEBSITE; ?>" target="_blank"
+                    style="text-decoration:none;"><?php echo BOOTSTRAP_WEBSITE; ?></a>
         </p>
     </div>
 </div>
@@ -4884,8 +4871,7 @@ function bootstrapHtmlBottom()
  */
 function bootstrapDisplayOnBreak(): void
 {
-    global $bootstrapName,
-           $nebuleInstance,
+    global $nebuleInstance,
            $bootstrapBreak,
            $bootstrapRescueMode,
            $bootstrapFlush,
@@ -4912,7 +4898,7 @@ function bootstrapDisplayOnBreak(): void
     ?>
 
     <div class="parts">
-        <span class="partstitle">#1 <?php echo $bootstrapName; ?> break on</span>
+        <span class="partstitle">#1 <?php echo BOOTSTRAP_NAME; ?> break on</span>
         <?php
         foreach ($bootstrapBreak as $number => $message) {
             if (sizeof($bootstrapBreak) > 1) {
@@ -4936,7 +4922,7 @@ function bootstrapDisplayOnBreak(): void
         <a href="?f">&gt; Flush PHP session</a> (<?php echo substr(cryptoGetDataHash($sessionId), 0, 6); ?>)<br/>
     </div>
     <div class="parts">
-        <span class="partstitle">#2 <?php echo $bootstrapName; ?> nebule library PP</span><br/>
+        <span class="partstitle">#2 <?php echo BOOTSTRAP_NAME; ?> nebule library PP</span><br/>
         library version &nbsp;: <?php echo NEBULE_LIBPP_VERSION ?><br/>
         puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: <?php echo getConfiguration('puppetmaster'); ?> (local authority)<br/>
         security master &nbsp;: <?php echo $nebuleSecurityMaster; ?> (local authority)<br/>
@@ -5210,7 +5196,7 @@ function bootstrapDisplayOnBreak(): void
         application ID &nbsp;&nbsp;: <?php echo $bootstrapApplicationID; ?>
     </div>
 
-    <span class="partstitle">#- end <?php echo $bootstrapName; ?></span><br/>
+    <span class="partstitle">#- end <?php echo BOOTSTRAP_NAME; ?></span><br/>
     Te=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?><br/>
     <?php
 
@@ -5230,9 +5216,7 @@ function bootstrapDisplayOnBreak(): void
  */
 function bootstrapInlineDisplayOnBreak()
 {
-    global $bootstrapName,
-           $bootstrapVersion,
-           $bootstrapBreak,
+    global $bootstrapBreak,
            $bootstrapRescueMode,
            $bootstrapLibraryID,
            $bootstrapApplicationID,
@@ -5243,7 +5227,7 @@ function bootstrapInlineDisplayOnBreak()
     // Affichage.
     echo "<div class=\"bootstrapErrorDiv\"><p>\n";
 
-    echo '&gt; ' . $bootstrapName . ' ' . $bootstrapVersion . "<br />\n";
+    echo '&gt; ' . BOOTSTRAP_NAME . ' ' . BOOTSTRAP_VERSION . "<br />\n";
 
     echo 'Bootstrap break on : ';
     foreach ($bootstrapBreak as $number => $message) {
@@ -5451,7 +5435,7 @@ function getBootstrapNeedFirstSynchronization(): bool
  */
 function bootstrapDisplayApplicationfirst(): void
 {
-    global $loggerSessionID, $bootstrapBreak, $metrologyStartTime, $bootstrapName, $bootstrapRescueMode,
+    global $loggerSessionID, $bootstrapBreak, $metrologyStartTime, $bootstrapRescueMode,
            $configurationList, $nebuleCacheIsPubkey;
 
     // Modifie temporairement la configuration de la bibliothèque PHP PP.
@@ -5477,7 +5461,7 @@ function bootstrapDisplayApplicationfirst(): void
     ?>
 
     <div class="parts">
-        <span class="partstitle">#1 <?php echo $bootstrapName; ?> break on</span>
+        <span class="partstitle">#1 <?php echo BOOTSTRAP_NAME; ?> break on</span>
         <?php
         foreach ($bootstrapBreak as $number => $message) {
             if (sizeof($bootstrapBreak) > 1) {
@@ -5584,7 +5568,7 @@ function bootstrapInlineDisplayApplicationfirst()
  */
 function bootstrapFirstCreateObjects()
 {
-    global $nebuleFirstReservedObjects, $bootstrapName;
+    global $nebuleFirstReservedObjects;
 
     ?>
 
@@ -5611,7 +5595,7 @@ function bootstrapFirstCreateObjects()
         ?>
         OK
     </div>
-    &gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo $bootstrapName; ?></a> ...
+    &gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo BOOTSTRAP_NAME; ?></a> ...
     <script type="text/javascript">
         <!--
         setTimeout(function () {
@@ -5642,7 +5626,7 @@ else {
  */
 function bootstrapFirstSynchronizingEntities()
 {
-    global $bootstrapName, $nebuleLocalAuthorities, $libppCheckOK,
+    global $nebuleLocalAuthorities, $libppCheckOK,
            $nebuleSecurityMaster, $nebuleCodeMaster, $nebuleDirectoryMaster, $nebuleTimeMaster;
 
     ?>
@@ -5804,7 +5788,7 @@ function bootstrapFirstSynchronizingEntities()
                 ?>
 
                 &gt; <a
-                    onclick="javascript:window.location.reload(true);">reloading <?php echo $bootstrapName; ?></a> ...
+                    onclick="javascript:window.location.reload(true);">reloading <?php echo BOOTSTRAP_NAME; ?></a> ...
                 <script type="text/javascript">
                     <!--
                     setTimeout(function () {
@@ -5819,7 +5803,7 @@ function bootstrapFirstSynchronizingEntities()
             ?>
 
                 <button onclick="javascript:window.location.reload(true);">when ready,
-                    reload <?php echo $bootstrapName; ?></button>
+                    reload <?php echo BOOTSTRAP_NAME; ?></button>
                 <?php
             }
             ?>
@@ -5849,7 +5833,7 @@ function bootstrapFirstSynchronizingEntities()
  */
 function bootstrapFirstSynchronizingObjects()
 {
-    global $nebuleFirstReservedObjects, $bootstrapName, $nebuleLocalAuthorities;
+    global $nebuleFirstReservedObjects, $nebuleLocalAuthorities;
 
     $refApps = REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS;
     $refAppsID = _objGetNID($refApps);
@@ -6029,7 +6013,7 @@ function bootstrapFirstSynchronizingObjects()
         ?>
 
     </div>
-    &gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo $bootstrapName; ?></a> ...
+    &gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo BOOTSTRAP_NAME; ?></a> ...
     <script type="text/javascript">
         <!--
         setTimeout(function () {
@@ -6059,8 +6043,6 @@ function bootstrapFirstSynchronizingObjects()
  */
 function bootstrapFirstCreateOptionsFile()
 {
-    global $bootstrapName, $bootstrapSurname, $bootstrapAuthor, $bootstrapVersion, $bootstrapWebsite;
-
     ?>
 
     <div class="parts">
@@ -6070,11 +6052,11 @@ function bootstrapFirstCreateOptionsFile()
         {
         addLog('need create options file');
 
-        $defaultOptions = "# Generated by the " . $bootstrapName . ", part of the " . $bootstrapAuthor . ".\n";
+        $defaultOptions = "# Generated by the " . BOOTSTRAP_NAME . ", part of the " . BOOTSTRAP_AUTHOR . ".\n";
         $defaultOptions .= "# Default options file generated after the first synchronization.\n";
-        $defaultOptions .= "# " . $bootstrapSurname . "\n";
-        $defaultOptions .= "# Version : " . $bootstrapVersion . "\n";
-        $defaultOptions .= "# http://" . $bootstrapWebsite . "\n";
+        $defaultOptions .= "# " . BOOTSTRAP_SURNAME . "\n";
+        $defaultOptions .= "# Version : " . BOOTSTRAP_VERSION . "\n";
+        $defaultOptions .= "# http://" . BOOTSTRAP_WEBSITE . "\n";
         $defaultOptions .= "\n";
         $defaultOptions .= "# nebule bash\n";
         $defaultOptions .= "filesystemBaseDirectory = ~/nebule\n";
@@ -6101,7 +6083,7 @@ function bootstrapFirstCreateOptionsFile()
         ?>
 
     </div>
-    &gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo $bootstrapName; ?></a> ...
+    &gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo BOOTSTRAP_NAME; ?></a> ...
     <script type="text/javascript">
         <!--
         setTimeout(function () {
@@ -6128,7 +6110,7 @@ EOF
 chmod 644 <?php echo NEBULE_ENVIRONMENT_FILE; ?>
                 </pre>
     </div>
-    <button onclick="javascript:window.location.reload(true);">when ready, reload <?php echo $bootstrapName; ?></button>
+    <button onclick="javascript:window.location.reload(true);">when ready, reload <?php echo BOOTSTRAP_NAME; ?></button>
     </div>
     <?php
 }
@@ -6155,8 +6137,7 @@ else {
  */
 function bootstrapFirstCreateLocaleEntity()
 {
-    global $bootstrapName,
-           $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite;
+    global $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite;
     ?>
 
     <div class="parts">
@@ -6284,7 +6265,7 @@ chmod 644 <?php echo LOCAL_ENTITY_FILE; ?>
 </pre>
             </div>
             <button onclick="javascript:window.location.reload(true);">when ready,
-                reload <?php echo $bootstrapName; ?></button>
+                reload <?php echo BOOTSTRAP_NAME; ?></button>
             <?php
         }
         ?>
@@ -6498,7 +6479,7 @@ function bootstrapDisplayApplication1()
 
 function displayRouter(bool $needFirstSynchronization)
 {
-    global $bootstrapBreak, $bootstrapRescueMode, $bootstrapInlineDisplay, $bootstrapName, $loggerSessionID,
+    global $bootstrapBreak, $bootstrapRescueMode, $bootstrapInlineDisplay, $loggerSessionID,
            $bootstrapApplicationID, $applicationName, $bootstrapApplicationNoPreload,
            $bootstrapApplicationStartID, $nebuleInstance, $bootstrapLibraryID,
            $bootstrapServerEntityDisplay;
@@ -6522,7 +6503,7 @@ function displayRouter(bool $needFirstSynchronization)
 
             // Change les logs au nom du bootstrap.
             closelog();
-            openlog($bootstrapName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+            openlog(BOOTSTRAP_NAME . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
         } elseif ($bootstrapApplicationID == '1') {
             addLog('load application 1');
 
@@ -6530,7 +6511,7 @@ function displayRouter(bool $needFirstSynchronization)
 
             // Change les logs au nom du bootstrap.
             closelog();
-            openlog($bootstrapName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+            openlog(BOOTSTRAP_NAME . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
         } else {
             // Si tout est déjà pré-chargé, on déserialise.
             if (isset($bootstrapApplicationInstanceSleep)
@@ -6611,7 +6592,7 @@ function displayRouter(bool $needFirstSynchronization)
 
             // Change les logs au nom du bootstrap.
             closelog();
-            openlog($bootstrapName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+            openlog(BOOTSTRAP_NAME . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
 
             // Ouverture de la session PHP.
             session_start();
@@ -6661,7 +6642,7 @@ function displayRouter(bool $needFirstSynchronization)
 
         // Change les logs au nom du bootstrap.
         closelog();
-        openlog($bootstrapName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+        openlog(BOOTSTRAP_NAME . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
     }
 }
 

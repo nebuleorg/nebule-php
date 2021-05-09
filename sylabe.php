@@ -1515,7 +1515,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
      */
     private function _displayInternalMenuApplications()
     {
-        global $bootstrapName, $applicationName;
+        global $applicationName;
 
         $modules = $this->_applicationInstance->getModulesListInstances();
         $list = array();
@@ -1683,7 +1683,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
         // Ajoute l'application 0.
         $list[$j]['icon'] = parent::DEFAULT_APPLICATION_LOGO;
-        $list[$j]['title'] = $bootstrapName;
+        $list[$j]['title'] = BOOTSTRAP_NAME;
         $list[$j]['htlink'] = '?' . Action::DEFAULT_COMMAND_NEBULE_BOOTSTRAP;
         $list[$j]['desc'] = $this->_applicationInstance->getTraductionInstance()->getTraduction('::appSwitch', $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
         $list[$j]['ref'] = 'nebule';
@@ -3624,9 +3624,7 @@ class ModuleHelp extends Modules
                $applicationVersion,
                $applicationLicence,
                $applicationAuthor,
-               $applicationWebsite,
-               $bootstrapSurname,
-               $bootstrapWebsite;
+               $applicationWebsite;
 
         // Affiche les informations de l'application.
         $param = array(
@@ -3648,11 +3646,11 @@ class ModuleHelp extends Modules
         $list[3]['information'] = $applicationLicence . ' ' . $applicationAuthor;
         $list[3]['param'] = $param;
         $param['informationType'] = 'information';
-        $list[4]['information'] = $bootstrapSurname;
+        $list[4]['information'] = BOOTSTRAP_SURNAME;
         $list[4]['param'] = $param;
         $list[4]['param']['icon'] = REFERENCE_BOOTSTRAP_ICON;
         //$list[4]['object'] = '1';
-        $list[5]['information'] = '<a href="http://' . $bootstrapWebsite . '" target="_blank">' . $bootstrapWebsite . '</a>';
+        $list[5]['information'] = '<a href="http://' . BOOTSTRAP_WEBSITE . '" target="_blank">' . BOOTSTRAP_WEBSITE . '</a>';
         $list[5]['param'] = $param;
         echo $this->_display->getDisplayObjectsList($list, 'Medium', false);
 

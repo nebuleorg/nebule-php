@@ -1576,8 +1576,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
      */
     private function _displayMenuApplications()
     {
-        global $applicationName, $applicationVersion, $applicationLicence, $applicationAuthor, $applicationWebsite, $applicationLevel,
-               $bootstrapName;
+        global $applicationName, $applicationVersion, $applicationLicence, $applicationAuthor, $applicationWebsite, $applicationLevel;
 
         $linkApplicationWebsite = $applicationWebsite;
         if (strpos($applicationWebsite, '://') === false) {
@@ -1679,11 +1678,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                 <div class="menu-applications-one">
                     <div class="menu-applications-icon">
-                        <?php $this->displayHypertextLink('<img src="' . parent::DEFAULT_APPLICATION_LOGO . '" alt="' . $bootstrapName . '" />', '?' . Action::DEFAULT_COMMAND_NEBULE_BOOTSTRAP); ?>
+                        <?php $this->displayHypertextLink('<img src="' . parent::DEFAULT_APPLICATION_LOGO . '" alt="' . BOOTSTRAP_NAME . '" />', '?' . Action::DEFAULT_COMMAND_NEBULE_BOOTSTRAP); ?>
 
                     </div>
                     <div class="menu-applications-title">
-                        <p><?php echo $bootstrapName; ?></p>
+                        <p><?php echo BOOTSTRAP_NAME; ?></p>
                     </div>
                 </div>
             </div>
