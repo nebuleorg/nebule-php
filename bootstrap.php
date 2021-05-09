@@ -3,7 +3,6 @@ declare(strict_types=1);
 namespace Nebule\Bootstrap;
 //use nebule;
 // ------------------------------------------------------------------------------------------
-
 define('BOOTSTRAP_NAME', 'bootstrap');
 define('BOOTSTRAP_SURNAME', 'nebule/bootstrap');
 define('BOOTSTRAP_AUTHOR', 'Project nebule');
@@ -11,6 +10,7 @@ define('BOOTSTRAP_VERSION', '020210509');
 define('BOOTSTRAP_LICENCE', 'GNU GPL 02021');
 define('BOOTSTRAP_WEBSITE', 'www.nebule.org');
 // ------------------------------------------------------------------------------------------
+
 
 
 /*
@@ -181,12 +181,8 @@ define('FIRST_PUPPETMASTER_TYPE_LINK',
     '3c091432e6404b9634783e2b51debd017f07918d7ef88af0e01638955859bdb2ad88df9be624308a3b0cb0904763dd06576510aedf47c94da1ce2fe11d5e324b0947b069be01f1d7626e69d93c4919182ebad607a7b4daf52ad4a68e59a9c514a7021ba4df05fe344544867b890a94007e4867021a417491dcf036a97342f56ff88f0889fe078a3e92349f3f78d74696aaf258175432d9540dff5c889525f693230472b7c5b1c16f31d7f8c3efd444e856f7473e0be7773ed93c3516d074c373433919cfb3773dd272d0236b5db52ef1f3b3eb6c0653eaadb34bbda66e2a10627397a669d35b663a490efbd50d404942ceadf54618a29ada345788ebf0c0258973aac6cefab86e6021eabb67acfad34e6a67b7001351a1179f90d2c98558fd2993be458f3095cb0940fc36c7e40fd04b76a750af48bfa5e5cd26423983580bbd99cfe3daadb928ee0203125fe97940878ad6a1faf385c37fda47769d06153680974d42d145bb9fa5e621d249cac83863a585d2448cd985ae31af7033ce322833d3689bf09033410441e07869ff4c85244d86dea47679ef5daaf726c11650da7858317196bf465e9f930846db9328b20aa0aa7a4280b7515bce8fae32585c3a75dcb88351dabfba013b4970094860904d8f161909cd1164e5506486aac5ad29afccd4740324f889dc936ef7fb85ef16ffd55c8f04be08fd442feb882b23b24b94.sha256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea_2013-03-12T22:28:06+0100_l_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea_970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864_5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0'
 );
 
-/**
- * Les premiers objets à créer pour un bon fonctionnement de la bibliothèque.
- *
- * @var array:string $nebuleFirstReservedObjects
- */
-$nebuleFirstReservedObjects = array(
+// Minimum set of objects to create on first run.
+define('FIRST_RESERVED_OBJECTS', array(
     'application/x-pem-file',
     'application/octet-stream',
     'text/plain',
@@ -225,7 +221,7 @@ $nebuleFirstReservedObjects = array(
     'nebule/option',
     'nebule/danger',
     'nebule/warning',
-    'nebule/reference',
+    'nebule/reference',)
 );
 
 /*
@@ -5568,15 +5564,13 @@ function bootstrapInlineDisplayApplicationfirst()
  */
 function bootstrapFirstCreateObjects()
 {
-    global $nebuleFirstReservedObjects;
-
     ?>
 
     <div class="parts">
         <span class="partstitle">#3 nebule needed library objects</span><br/>
         <?php
         // Si il manque un des objets, recrée les objets.
-        $hash = _objGetNID($nebuleFirstReservedObjects[10]);
+        $hash = _objGetNID(FIRST_RESERVED_OBJECTS[10]);
         if (!io_testObjectPresent($hash))
         {
         addLog('need create objects');
@@ -5588,7 +5582,7 @@ function bootstrapFirstCreateObjects()
         }
 
         // Ecrit les objets réservés.
-        foreach ($nebuleFirstReservedObjects as $data) {
+        foreach (FIRST_RESERVED_OBJECTS as $data) {
             io_objectWrite($data);
             echo '.';
         }
@@ -5833,7 +5827,7 @@ function bootstrapFirstSynchronizingEntities()
  */
 function bootstrapFirstSynchronizingObjects()
 {
-    global $nebuleFirstReservedObjects, $nebuleLocalAuthorities;
+    global $nebuleLocalAuthorities;
 
     $refApps = REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS;
     $refAppsID = _objGetNID($refApps);
@@ -5870,7 +5864,7 @@ function bootstrapFirstSynchronizingObjects()
         }
 
         // Ecrit les objets réservés.
-        foreach ($nebuleFirstReservedObjects as $data) {
+        foreach (FIRST_RESERVED_OBJECTS as $data) {
             $hash = _objGetNID($data);;
             foreach (BOOTSTRAP_FIRST_LOCALISATIONS as $localisation) {
                 $count = _lnkDownloadOnLocation($hash, $localisation);
