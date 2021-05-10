@@ -1,17 +1,6 @@
 <?php
 declare(strict_types=1);
-
 namespace Nebule\Application\Qantion;
-// ------------------------------------------------------------------------------------------
-$applicationName = 'qantion';
-$applicationSurname = 'nebule/qantion';
-$applicationDescription = 'Smallest common quantization element.';
-$applicationVersion = '020210410';
-$applicationLicence = 'GNU GPL 2019-2021';
-$applicationAuthor = 'Projet nebule';
-$applicationWebsite = 'www.qantion.org';
-// ------------------------------------------------------------------------------------------
-
 
 /*
 ------------------------------------------------------------------------------------------
@@ -42,6 +31,13 @@ $applicationWebsite = 'www.qantion.org';
  */
 class Application extends Applications
 {
+    const APPLICATION_NAME = 'qantion';
+    const APPLICATION_SURNAME = 'nebule/qantion';
+    const APPLICATION_AUTHOR = 'Projet nebule';
+    const APPLICATION_VERSION = '020210510';
+    const APPLICATION_LICENCE = 'GNU GPL 2019-2021';
+    const APPLICATION_WEBSITE = 'www.qantion.org';
+
     const APPLICATION_ENVIRONMENT_FILE = 'nebule.env';
     const APPLICATION_DEFAULT_DISPLAY_ONLINE_HELP = true;
     const APPLICATION_DEFAULT_DISPLAY_ONLINE_OPTIONS = false;

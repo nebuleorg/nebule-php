@@ -3,12 +3,12 @@ declare(strict_types=1);
 namespace Nebule\Bootstrap;
 //use nebule;
 // ------------------------------------------------------------------------------------------
-define('BOOTSTRAP_NAME', 'bootstrap');
-define('BOOTSTRAP_SURNAME', 'nebule/bootstrap');
-define('BOOTSTRAP_AUTHOR', 'Project nebule');
-define('BOOTSTRAP_VERSION', '020210509');
-define('BOOTSTRAP_LICENCE', 'GNU GPL 02021');
-define('BOOTSTRAP_WEBSITE', 'www.nebule.org');
+const BOOTSTRAP_NAME = 'bootstrap';
+const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
+const BOOTSTRAP_AUTHOR = 'Project nebule';
+const BOOTSTRAP_VERSION = '020210510';
+const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
+const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
 
 
@@ -29,6 +29,7 @@ define('BOOTSTRAP_WEBSITE', 'www.nebule.org');
 */
 
 
+
 /*
  ==/ Table /===============================================================================
  PART1 : Initialization of the bootstrap environment.
@@ -47,8 +48,10 @@ define('BOOTSTRAP_WEBSITE', 'www.nebule.org');
 */
 
 
+
 // Disable display until routing choice have been made.
 ob_start();
+
 
 
 /*
@@ -64,28 +67,8 @@ ob_start();
  ------------------------------------------------------------------------------------------
  */
 
-// Command line args.
-const ARG_BOOTSTRAP_BREAK = 'b';
-const ARG_FLUSH_SESSION = 'f';
-const ARG_UPDATE_APPLICATION = 'u';
-const ARG_SWITCH_APPLICATION = 'a';
-const ARG_RESCUE_MODE = 'r';
-const ARG_INLINE_DISPLAY = 'i';
-const ARG_STATIC_DISPLAY = 's'; // TODO not used yet
-
-// ------------------------------------------------------------------------------------------
-
 // Logs setting and initializing.
-/**
- * Log unique ID for one run.
- */
 $loggerSessionID = bin2hex(openssl_random_pseudo_bytes(6, $false));
-
-/**
- * Start timer for metrology.
- *
- * @var float $metrologyStartTime
- */
 $metrologyStartTime = microtime(true);
 
 // Initialize logs.
@@ -106,8 +89,14 @@ function addLog(string $message): void
 }
 
 // ------------------------------------------------------------------------------------------
-
-// Objects used as reference.
+// Command line args.
+const ARG_BOOTSTRAP_BREAK = 'b';
+const ARG_FLUSH_SESSION = 'f';
+const ARG_UPDATE_APPLICATION = 'u';
+const ARG_SWITCH_APPLICATION = 'a';
+const ARG_RESCUE_MODE = 'r';
+const ARG_INLINE_DISPLAY = 'i';
+const ARG_STATIC_DISPLAY = 's'; // TODO not used yet
 
 define('REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP', 'nebule/objet/interface/web/php/bootstrap');
 define('REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE', 'nebule/objet/interface/web/php/bibliotheque');
@@ -237,47 +226,6 @@ const FIRST_PASSWORD_SIZE = 14;
 const FIRST_RELOAD_DELAY = 3000;
 
 // ------------------------------------------------------------------------------------------
-
-// Préparation des variables des applications.
-/**
- * Nom de l'application.
- */
-$applicationName = '';
-
-/**
- * Nom complet de l'application.
- */
-$applicationSurname = '';
-
-/**
- * Description somaire de l'utilité de l'application.
- */
-$applicationDescription = '';
-
-/**
- * Version de l'application.
- */
-$applicationVersion = '';
-
-/**
- * Niveau de stabilité et de pérénité de l'application.
- */
-$applicationLevel = 'Deprecated';
-
-/**
- * Licence de l'application.
- */
-$applicationLicence = '';
-
-/**
- * Auteur de l'application.
- */
-$applicationAuthor = '';
-
-/**
- * Site web de référence de l'application.
- */
-$applicationWebsite = '';
 
 /**
  * Instance de la bibliothèque nebule en PHP orienté objet.
@@ -6508,7 +6456,7 @@ function bootstrapDisplayApplication2()
 function displayRouter(bool $needFirstSynchronization)
 {
     global $bootstrapBreak, $bootstrapRescueMode, $bootstrapInlineDisplay, $loggerSessionID,
-           $bootstrapApplicationID, $applicationName, $bootstrapApplicationNoPreload,
+           $bootstrapApplicationID, $bootstrapApplicationNoPreload,
            $bootstrapApplicationStartID, $nebuleInstance, $bootstrapLibraryID,
            $bootstrapServerEntityDisplay;
 
@@ -6555,6 +6503,8 @@ function displayRouter(bool $needFirstSynchronization)
                 // Charge l'objet de l'application. @todo faire via les i/o.
                 include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
 
+                $applicationName = Application::APPLICATION_NAME;
+
                 // Change les logs au nom de l'application.
                 closelog();
                 openlog($applicationName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
@@ -6590,6 +6540,8 @@ function displayRouter(bool $needFirstSynchronization)
 
                 // Charge l'objet de l'application. @todo faire via les i/o.
                 include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+
+                $applicationName = Application::APPLICATION_NAME;
 
                 // Change les logs au nom de l'application.
                 closelog();

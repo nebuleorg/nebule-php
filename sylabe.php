@@ -1,16 +1,6 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Sylabe;
-// ------------------------------------------------------------------------------------------
-$applicationName = 'sylabe';
-$applicationSurname = 'nebule/sylabe';
-$applicationDescription = 'Reference web page for nebule capabilities.';
-$applicationVersion = '020210410';
-$applicationLicence = 'GNU GPL 2013-2021';
-$applicationAuthor = 'Projet nebule';
-$applicationWebsite = 'www.sylabe.org';
-// ------------------------------------------------------------------------------------------
-
 
 /*
 ------------------------------------------------------------------------------------------
@@ -41,6 +31,13 @@ $applicationWebsite = 'www.sylabe.org';
  */
 class Application extends Applications
 {
+    const APPLICATION_NAME = 'sylabe';
+    const APPLICATION_SURNAME = 'nebule/sylabe';
+    const APPLICATION_AUTHOR = 'Projet nebule';
+    const APPLICATION_VERSION = '020210510';
+    const APPLICATION_LICENCE = 'GNU GPL 2013-2021';
+    const APPLICATION_WEBSITE = 'www.sylabe.org';
+
     const APPLICATION_ENVIRONMENT_FILE = 'nebule.env';
     const APPLICATION_DEFAULT_DISPLAY_ONLINE_HELP = true;
     const APPLICATION_DEFAULT_DISPLAY_ONLINE_OPTIONS = false;

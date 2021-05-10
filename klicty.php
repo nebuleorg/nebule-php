@@ -1,16 +1,6 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Klicty;
-// ------------------------------------------------------------------------------------------
-$applicationName = 'klicty';
-$applicationSurname = 'nebule/klicty';
-$applicationDescription = 'Open and protected space to share information with limit in time.';
-$applicationVersion = '020210410';
-$applicationLicence = 'GNU GPL 2015-2021';
-$applicationAuthor = 'Projet nebule';
-$applicationWebsite = 'www.klicty.org';
-// ------------------------------------------------------------------------------------------
-
 
 /*
 ------------------------------------------------------------------------------------------
@@ -41,7 +31,14 @@ $applicationWebsite = 'www.klicty.org';
  */
 class Application extends Applications
 {
-    const APPLICATION_LICENCE_NAME = 'klicty';
+    const APPLICATION_NAME = 'klicty';
+    const APPLICATION_SURNAME = 'nebule/klicty';
+    const APPLICATION_AUTHOR = 'Projet nebule';
+    const APPLICATION_VERSION = '020210510';
+    const APPLICATION_LICENCE = 'GNU GPL 2015-2021';
+    const APPLICATION_WEBSITE = 'www.klicty.org';
+
+    const APPLICATION_LICENCE_NAME = 'klicty'; // FIXME en double
     const APPLICATION_LICENCE_LOGO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAA
 CxMAAAsTAQCanBgAAAAHdElNRQffChcUJhhjX2MDAAABq0lEQVRIx52VPzMDQRiHn7uJGZVxCjTGZBgak0ipQSuNZgspTHyD6CioKJR8AxRG8VLShkZ7SaeRQhMpRIwZhSKKu1zuXzbLW+3uu/vsb3fv
 fq+FJlQWB2hLY/AcK3XhKjtsMB0aanLPuTwaAFSJUyYHbNeiItcagBqnSh591FiTTipA5XDTjxSLLgWpJQAqRw3zWO4hrED8u9HufRWOd5CMP1D1l39xw6h24QqzgEWVQqBAlbgKphzLofbbuGTbb5bk

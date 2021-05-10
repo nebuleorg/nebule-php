@@ -1,16 +1,6 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Option;
-// ------------------------------------------------------------------------------------------
-$applicationName = 'option';
-$applicationSurname = 'nebule/option';
-$applicationDescription = 'Web page to manage options and applications.';
-$applicationVersion = '020210410';
-$applicationLicence = 'GNU GPL 2016-2021';
-$applicationAuthor = 'Projet nebule';
-$applicationWebsite = 'www.nebule.org';
-// ------------------------------------------------------------------------------------------
-
 
 /*
 ------------------------------------------------------------------------------------------
@@ -41,6 +31,13 @@ $applicationWebsite = 'www.nebule.org';
  */
 class Application extends Applications
 {
+    const APPLICATION_NAME = 'option';
+    const APPLICATION_SURNAME = 'nebule/option';
+    const APPLICATION_AUTHOR = 'Projet nebule';
+    const APPLICATION_VERSION = '020210510';
+    const APPLICATION_LICENCE = 'GNU GPL 2016-2021';
+    const APPLICATION_WEBSITE = 'www.nebule.org';
+
     /**
      * Constructeur.
      *

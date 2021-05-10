@@ -41634,6 +41634,13 @@ abstract class Actions
  */
 abstract class Applications
 {
+    const APPLICATION_NAME = 'undef';
+    const APPLICATION_SURNAME = 'undef';
+    const APPLICATION_AUTHOR = 'undef';
+    const APPLICATION_VERSION = 'undef';
+    const APPLICATION_LICENCE = 'undef';
+    const APPLICATION_WEBSITE = 'undef';
+
     /* ---------- ---------- ---------- ---------- ----------
 	 * Variables.
 	 *
