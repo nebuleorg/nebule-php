@@ -41,7 +41,8 @@ define('BOOTSTRAP_WEBSITE', 'www.nebule.org');
  PART8 : First synchronization of code and environment.
  PART9 : Display of application 0 web page to select application to run.
  PART10 : Display of application 1 web page to display documentation of nebule.
- PART11 : Main display router.
+ PART11 : Display of application 2 default application.
+ PART12 : Main display router.
  ------------------------------------------------------------------------------------------
 */
 
@@ -64,16 +65,13 @@ ob_start();
  */
 
 // Command line args.
-define('ARG_BOOTSTRAP_BREAK', 'b');
-define('ARG_FLUSH_SESSION', 'f');
-define('ARG_UPDATE_APPLICATION', 'u');
-define('ARG_SWITCH_APPLICATION', 'a');
-define('ARG_RESCUE_MODE', 'r');
-define('ARG_INLINE_DISPLAY', 'i');
-define('ARG_STATIC_DISPLAY', 's'); // TODO not used yet
-define('ARG_NODE_OBJECT', 'o');
-define('ARG_NODE_LINK', 'l');
-define('ARG_SERVER_ENTITY', 'e');
+const ARG_BOOTSTRAP_BREAK = 'b';
+const ARG_FLUSH_SESSION = 'f';
+const ARG_UPDATE_APPLICATION = 'u';
+const ARG_SWITCH_APPLICATION = 'a';
+const ARG_RESCUE_MODE = 'r';
+const ARG_INLINE_DISPLAY = 'i';
+const ARG_STATIC_DISPLAY = 's'; // TODO not used yet
 
 // ------------------------------------------------------------------------------------------
 
@@ -117,27 +115,30 @@ define('REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS', 'nebule/objet/interface
 define('REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_DIRECT', 'nebule/objet/interface/web/php/applications/direct');
 define('REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_ACTIVE', 'nebule/objet/interface/web/php/applications/active');
 
-define('REFERENCE_BOOTSTRAP_ICON', "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAARoElEQVR42u2dbbCcZX2Hrz1JMBSUAoEECCiVkLAEEgKkSBAwgFgGwZFb6NBOSVJn0H5peXXqSwVrdQZF6Cd0RiQ4kiH415ZpOlUECpKABBLewkIAayFAAgRCGxBylJx+2KdDwHCS7Ov9PHtdMzt8IGf32f/ev+v+388riIiIiIiIiIiIiIhINalZgvKTUtoTmFy89gUmAXsDewC7F69dgV2AnYGdgLFb/P4jwO+BYeAN4HVgI/AqsAF4BXgRWAc8DzwLrImIV6y+ApDehHx/4LDiVQemAR8G9uzzpr0M/Bp4HGgAjwCPRMQafzUFIK2F/XDgOGB28TrkXf9kJMPfbmvb9BiwvHgtjYiH/XUVgLwz7GOBU4GTgZOKGT7noLcrhkeA24BbgVsi4neOAgUwaKE/ETgTOB04aMDL8RSwBLg5Iu5wdCiAKgb+j4BzgXOKmV7em1uBG4FFEfGG5VAAZQ39B4AFwHnAzAq19L1cMjwA/BC4NiI2WhoFUIbg/zXwOeAoQ99RGdwPfDcirrUsCiC30M8BLgQ+beh7IoOfAFdFxDLLogD6FfoacBFwCc2Tbgx972XwInAF8J2IGLEsCqAXwd8fuByY72yfVVdwHfBVT0BSAN0K/mzgm8Bcq5E1twN/HxHLLYUC6ETw5wJXAYc725eqK3gYuCAibrckCqCV4J8IXEPznHuDX14RPA583pOMFMD2Bn9msZ6cafArJYIHgfkR8aAlUQBbC/5EYCHwCYNf
+const REFERENCE_BOOTSTRAP_ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAARoElEQVR42u2dbbCcZX2Hrz1JMBSUAoEECCiVkLAEEgKkSBAwgFgGwZFb6NBOSVJn0H5peXXqSwVrdQZF6Cd0RiQ4kiH415ZpOlUECpKABBLewkIAayFAAgRCGxBylJx+2KdDwHCS7Ov9PHtdMzt8IGf32f/ev+v+388riIiIiIiIiIiIiIhINalZgvKTUtoTmFy89gUmAXsDewC7F69dgV2AnYGdgLFb/P4jwO+BYeAN4HVgI/AqsAF4BXgRWAc8DzwLrImIV6y+ApDehHx/4LDiVQemAR8G9uzzpr0M/Bp4HGgAjwCPRMQafzUFIK2F/XDgOGB28TrkXf9kJMPfbmvb9BiwvHgtjYiH/XUVgLwz7GOBU4GTgZOKGT7noLcrhkeA24BbgVsi4neOAgUwaKE/ETgTOB04aMDL8RSwBLg5Iu5wdCiAKgb+j4BzgXOKmV7em1uBG4FFEfGG5VAAZQ39B4AFwHnAzAq19L1cMjwA/BC4NiI2WhoFUIbg/zXwOeAoQ99RGdwPfDcirrUsCiC30M8BLgQ+beh7IoOfAFdFxDLLogD6FfoacBFwCc2Tbgx972XwInAF8J2IGLEsCqAXwd8fuByY72yfVVdwHfBVT0BSAN0K/mzgm8Bcq5E1twN/HxHLLYUC6ETw5wJXAYc725eqK3gYuCAibrckCqCV4J8IXEPznHuDX14RPA583pOMFMD2Bn9msZ6cafArJYIHgfkR8aAlUQBbC/5EYCHwCYNf
 aRH8DJgXES9YEhiyBJBS+mea17qfqhgrP9mdCqxLKV1tSQZ8oKeU/qJo98c5FAaSYWBBRNygAAYr+PvRvALNdb7LghrNaw4+GRHPuQSofvgvp3lLqxl2QXbAxX9nAs+mlC6zA6hu8A+meSOKyY57GYVngZMi4gk7gOqE/zJgNbCf41u2wX7A6kHpBmoVD/6ewDJgquNaWmA1cGyV7348VOHwnw2sBw52HEuLHAy8XIwlBVCi8N8ALMY9/NJ+hzwCLC7GlEuAzIM/geYhHXf0STdYA8yKiPV2APmF/3jgJdzRJ91jMvBSMdYUQEbh/wJwpy2/9GhJcGdK6VKXAHmE/ybgM45N6QM/joizFUB/gl8DHuKdT9IR6TUPAzPLek/CWknDvxvNY7R72/JLnxkBXgCmRsT/KoDuh38y8AQw3vBLRhJ4E5hStguKhkoW/jrwjOGXDCfS8cCalNIhCqA74T8SeLTMSxepvAQAGimlWQqgs+E/huajoTzMJ7lLYARYkVL6U/cBdC789xh+Kdk+gRpwTETcqwDaa/ud+aXMEjgqIlYogB0Pf71Y8xt+KbsE6hHxmALY/vBPprm3H8MvFZAAwAER8awC2Hb4P0DzxIr3GX6pkAQ2ARNzO1loKLPw12ie4Wf4pUrUijG9uhjjCuA9eACYaPilohKYWIxxBbCV2X8xzVt1G36psgRmpJRuzGWDxmQS/i8Af+v4kAFher1e/22j0bg7ByP1O/zH07yZh8igcXxE3DWwAiju4fcSHuuXweP/x/yEiHh5UPcBrDD8MsD7A0aA
 lf3ciL4JoLjN8gGGXwZcAgeklH7Urw0Y06fwnwNc7u8vAsDh9Xr9sUaj8Wjl9wEUj+tab+sv0v/9Af1YAtxt+EW2uj9gWaWXAMUTV88y/CJblcCEer1Oo9G4s5cf2qvwT6F5M08RGZ0pEfFU1ZYAt/H2pZEi8t77A26v1BKgaP3PyKH1r9VcfViLrOtRA3br1VKg1oPwT6b5VNVsmDBhAuvXr3fEA6eddhrjx48f+DoMDw+zZMmS3DZrcrefMzC2B1/i38hsr/+JJ57I0qVLWbdu3cAP/HHjxjFu3Dj77pHsVqcjRXa6eovxru4DSCmdC8wks73+b731FieccAKTJk2yBZBsVyTAEUWGyikAYCEZ7/hTApJ7Y1JkqHwCSCldDYwj82P+SkAy7wLGpZSuKpUAUkoTKdENPpSAZM7fFZkqTQdwHSU75q8EJPOlwA9KIYCU0gzgzyjh6b5KQDJeCpxWZCv7DqB0s78SkEHtAjoqgOL+fkdQ8ot9lIBk2gXMKjKWbQfwPSpyvr8SkEy7gO9mKYCU0seAaVToUl8lIBl2AYeklE7MsQO4igpe7acEJMMu4OqsBJBSmk2Fn+qjBCSzLmBGkblsOoBvUvFr/ZWAZNYFfCMLAaSU9gfmMgC3+VICklEXcFJxqX3fO4DLBqnySkAy4vK+CqB41vmCQau6EpBMWNBXAQAXDmrllYDkQErpon4K4FIG+EafSkD6zAhwSV8EkFL6CLA3A36PfyUgfaQGTEwpHdOPDuBCvM23EpAcuoAL+yGAhE/4UQKSQxfwmZ4KIKU0
 37orAcmHlNK8XnYAn7P9VwKS1TLg8z0RQEppV2C27b8SkKyWAbNTSrv0ogNYYL2VgGTJgl4IYJ7tvxKQLJcB87oqgJTSeCpwyy8lIBVdBswqMtq1DuBc66wEJGvO7aYA/tz2XwlI1suAs7spgFNs/5WAZL0MOLUrAujkjQiVgBKQ7rEjtw7fkQ7gDEurBKQUnNkNAXzSuioBKQWnd1QAKaWxwEHWVQlIKTg4pTSmkx3AKdZUCUip+HgnBXCy9VQCUirmdlIAJ1lPJSCl4uROCmCG9VQCUipmdkQAKaVDraUSkPKRUjqsEx3AcZZSCUgpmdMJARyD5/8rASkbI0V22xbAUXj+vxKQslEDju6EAKZbSyUgpaTelgBSSvtZQyUg5SWltG87HYCH/5SAlJsZ7QjAQ4BKQMrN9HYEUMcjAEpAysrItvYDbEsA0/AIgBKQslIDprYjgCnWUAlIqZnSjgD2tH5KQErNhJYEkFLa3dopASk/KaU/bqUDOMDSKQGpBB9sRQCTrZsSkEowuRUBeBagEpBqsG8rApho3ZSAVIKJrQhgb+umBKT0jIyW5dEE4CFAJSDlpzZalkcTgIcBlYBUg91bEcBu1k0JSCVo6TyA91s3JSCVYNdWBLCLdVMCUgl2aUUA462bEpBKsHMrAtjJuikBqQQ7tSKAcdZNCUglGNuKAIasW7UlsNdeezE05M88AAwZcvkD5syZw1133WUhNMNW2Wx5qs3IyAjr16/njjvusBjVZnMrAviddRsMXnjhBSVQbX7figCGrZsSkEow3IoA3rRu
 SkAqwRutCOB166YEpBK83ooANlo3JSCV4LVWBPA/1k0JSCV4tRUBbLBuSkAJVIINrQjgZesmSqD0jIyW5dEE8KK1EyVQemqjZXk0AayzdqIEKsG6VgTwvHUTJVAJ1rYigGetmyiBSrCmFQE8Y91ECVSCZ3ZYABHhYUBRAhUgIlo6DwBgveUTJVBqXhrtf25LAE9aP1ECpeapdgSwmuaJBCJKoHyMAI+3I4AGzRMJRJRA+agVGW5ZAKusoSiBUrOqHQE8ZP1ECZSah1oWQER4NqAogRITEWvb6QBcBogSKC+Nbf2D7RHAfXgkQJRA2RgBlndCAL/CIwGiBMpGrchu2wJYZi1FCZSSZW0LICIetY6iBMpHRKxqWwAFD1pOUQKl4oHt+UfbK4BbracogVJxWycFcLv1FCUwuAK4xXqKEigVt3RMABHxFvCENRUlUApWR8TmTnYAAEusqyiBUrDdWd0RAdxsXUUJlIJ/7bgAIuKX1lWUQP5ExNJudAAAP8frAkQJ5MoI8LMd+YMdFcBivC5AlECu1IqMdk0Ai6yxKIGsWdQ1AUTEJmCFywBRAlm2//dHxHA3OwCAhS4DRAlk2f4v3NE/akUAP7DWogSy5LquCyAifgvc6zJAlEBW7f+vimx2vQMAuMZlgCiBrNr/a1r5w5YEEBHXW3NRAvkQET/smQAKfuwyQJRAFu3/Ta3+cTsCuNJlgCiBLNr/K3sugIi4F1hnFyBKoK+z/9qIWN5zARRcYRcgSqCvs/+32nmDtgQQEVc5DEUJ9I92MzjUgW241mEoSqAv
 fL/dN+iEAL7qEBQl0Bcu67sAIuI54Be4M1CUQK8YAW4pstf3DgDgS7gzUJRAr6gBX+zEG3VEABFxH80nkdgFiBLo/uy/MiJWZCOAggvsAkQJ9GT2v6BTb9YxAUTEnUDDLkCUQFdn/0Ynb9A71OENPN8uQJRAV2f/8zv5hh0VQHE74pV2AaIEujL7r9iRW373owMAmG8XIEqgK7P/vE6/accFEBEPA/9uFyBKoKOz/5KIWJW9AAoW2AWIEujo7L+gG2/cFQFExIvAdxxuogQ6wpUR8VJpBFBI4CJgk0sBUQJttf6bIuLibn3AUJe/wDyXAqIE2mr9z+vmB3RVABFxI3C/XYDkLoExY8bkOPvfFxGLu/khY3vwRc4EnsupssPDw45865B7J1ArstP1D+k6KaWvAF/Loqq1GiMjNiTWI/tafCUivl4JARQSeBrY330CItts/Z+JiA/14sOGevjF5hp+ke2alOf26sN6tuej0WhsqNfrm4GP+RuLjNr639xL2/SUlFIDmGY3IPIHrf9jEXFoLz90qA9fdE4Rfvc8ibwd/lqRDSotgIjYACQ7AJF3dOJnRcSrvf7gvpz90Gg0HqvX638CzPC3F+H6iPhmv8zTN1JK/w0cYDcgA9z6Px0RB/ZrA4b6XIAjtyiEyKCFf8sMDJ4AIuJl4KO4U1AGL/w14KMR8Uo/N6TvV0A0Go019Xr9NeBUx4UMCDXg4m5f6FMKARQSuKder08FDnNsyACwqJvX+O+oibIhpbQSOMLxIRXmgYiYlVMrQmYSeA7YB48MSPXW/Wsj
 Yr+cNmoow0JNA97EnYJSrfC/CUzNbcOyE0BEbAQOAjYrAalI+EeAD0fEawpg+yTwPFDHw4NS/vDXgGkRsTbHDRzKtXIR8QQwUwlIycM/MyKezHUjh3KuYEQ8BMxWAlLS8B9djOFsKcWe9pTS0cDyLQorUobw35/7xpYmTCmlmcADSkBKEP4jIuLBMmxwqYKUUpoKNIrtVgKSW/g3A4dGxOqybHTpQpRS2gf4NTBeCUhG4X8DmFIcwSoNQ2WrdHE4ZW9greNOMgn/88DEsoW/lB3Au7oBrx2QfpPVuf2V7wDe1Q3MAhZtYWKRXs36ADeUOfyQyeXA7dBoNH66xf0EPEIgvQh/DbgoIi4p+5epTFhSSscCS6v2vSTLmf+4iLi7Cl+oUkFJKe0BrAA+5FiVLvAb4Mji1vYogHxFsBA4zyWBdLDlXxgR86v25SobjpTSp4GfKAHpQPjPioifVvELVjoYKaXdgWXAIY5laYEGMKcfT+xRAJ0VwZeAr9sNyA7M+l+OiH+q+pcdmDCklA4E/hP4oGNcRuFpYG5E/NcgfNmBmw1TSl8G/tFuQAZ11h9oARQS2Be4GThKERh84D7gU2U8l18BtCeCc4DrgfeZhYFkE/BXEXHToBbAma8pgiuAS+wGBmrW/1ZEXDroxXCwvy2BCcC1wBmKoNLBvxn4bESstyQO8q2JYDqwkOZjmxVBdYK/AjgvIh61JApge0QwB/gecKgiKHXwHwXOj4hllkQBtCKC44GrgFmKoFTBXwlcEBG/tCQKoBMiOBL4BvBxq5E1Pwe+GBEr
-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");
+LYUC6IYI9gG+Bnz2XTOO9G+2B/g+8A+5PoJLAVRTBhcAFwP7KoK+BH8tcEVEXG1JFEA/RXA0cBFwjl1BT2b7xcC3y/DkHQUweDL4S+BvgI8og46G/m7gmoj4kWVRAGUQwc7AAmA+zXMKlMGOh34FcB1wbUS8aWkUQFllsBNwbrFE+IQVGZX/AG4CFkXEsOVQAFUUwnHAp4DTgakDXo7VwBLgXzxZRwEMogyGgFOAucDJNE84okJLhnd/h5XArcDtwC8iYrOjQAHIO6UwneZOxGOB2UB9G6HKMejQvKfecpo78O6JiFX+ugpAWpPCJGAGMJ3m9QlTgGnAhD5v2nrgceBJmufdrwIeioh1/moKQHojh/cDBwL70zwpaRLNJyjvAexevHYFdqF585Odildti9l7uHhtAl4HNgKvAhuAV4AXgXU0n4S7BvhNRGy0+iIiIiIiIiIiIiIiIjnyf9eV8VcbpfPFAAAAAElFTkSuQmCC";
 
-define('REFERENCE_APPLICATION_ICON', "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAADkElEQVRo3u2ZT0hUQRzHP9sGgoEh0T8kL8/Ag+tBsUNdCpmKjA7VQdzKwg6pdIoOnkQKPHgUtUOGSrt0qIUORTGIXepgZAc9eJCFMgmUEj0IQotdlJ03b1779u2IK/k7vTfvN/P7zm9+8/v3YI/+d4oEZxUHaaaBCZJyw4cjQgvn+MwLuWIZgKijg9tEgTl6SJggiAhxuqkCMowwKKesARDPiSuvRgiK+C1KyBu2AOj7XWSaKJUcphRYY4nvZIhxxM0mI9sFICAFAbBvp2/BbgAg2sIuHmRmNOcigzwKvb0rztH0mwKMUJSQ4pLhwxTjTDLLAqtAGRVUc4pG6gy8b7kq10MBECW846w2uMYAY3LGZ0YNt+ikVBv+wEV/CP8C8Maz+z565XKOIyuni4e6FmRT3gDEIO2a2u/LTwGN7zT92nEMyY68jFC0aaaXpEl+C2p76XnnGVXElKEG50f6a04NaD4/S09ke4hLOMQ94wdXjIi4It4X44SkjIf0AwlajB/qs5FSdUTmU5qiNbQfaMUckjsMGhAH+WW0iDNBTc/HHD8ahjMc2kpZshpoNorvK0Q8yE/0GU2/2XsEDQbGNXoLjja9rBlGG7wAJpjzsA3kcjsBdLDMgGdwjgkvgCQ9HghjViLumEd8D0mzH7jGS9X+Zb2dmC++KH5xkQdqRunOB1KMK2/j1rIOdaVpd0LrAiA3XDdh0hoAdaWoO5/WM6JK5XnWGoBZHwkGAIeV5wVrABZ8JBgAqMnEqjUAqz4SijErVr1WmTUpZT4SDACWlOcKawAqfCQYAHxXnqutAaj2kaADEBEyyuspawDUlTIi4gNARIi78rhGawDUlWLEVQhRrb4/obAed16lFy1EghpXgnuAWn4702mPBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf7Q4vfT7/xw0i2jaf6gUEjcx2joRUwaizYXZIUpad/OiepNbDHnGO52gw+pdkdn9JsIGd1LNp4qhWnrfJPXsof1cqyu3I4j+o4/dU56qoUYlx2ZtLzgU0vxXmtPH+82xoURdCi2fEmlU+rJj/ybc0EBmC4EcHJx/LzBLDXrN5eChto3lOi/bBY58L2AUho7bvr8pXBUtzFPSSsHYG8QT3DmxnzHDdJGdlS3NxscWQYpj7IH6Mi+G23R3v0FwbfFx3mQ2ZaAAAAAElFTkSuQmCC");
+const DEFAULT_APPLICATION_LOGO_LIGHT = "data:image/png;base64,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";
 
-// List of application that can't be disabled in app 0.
-define('BOOTSTRAP_FORCED_ACTIVE_APPLICATION', array(
-        '2121510000000000006e6562756c65206170706c69636174696f6e73000000000000212151', )
-);
-
-// Constante de la première URL à utiliser après la création de l'entité instance du serveur.
-define('BOOTSTRAP_FIRST_URL_TO_OPTION', '?a=2121510000000000006e6562756c65206170706c69636174696f6e73000000000000212151&view=applications&ent=');
+// Constante de la première URL à utiliser après la création de l'entité instance du serveur. FIXME
+const BOOTSTRAP_FIRST_URL_TO_OPTION = '?a=2121510000000000006e6562756c65206170706c69636174696f6e73000000000000212151&view=applications&ent=';
 
 // Constante du nom du fichier contenant le bootstrap.
-define('BOOTSTRAP_FILE_NAME', 'index.php');
+const BOOTSTRAP_FILE_NAME = 'index.php';
 
 // ------------------------------------------------------------------------------------------
 
@@ -149,7 +150,7 @@ define('BOOTSTRAP_FIRST_LOCALISATIONS', array(
 );
 
 // Public key of puppetmaster.
-define('FIRST_PUPPETMASTER_PUBLIC_KEY',
+const FIRST_PUPPETMASTER_PUBLIC_KEY =
     '-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAudMrAyvG3uqI9JLZRtqi
 nlgiF6hAp/whKWlujNXE+x0p6ibJEaIAPS+VyR4Lw9819UqObpMI2fa+Ql8/dJPM
@@ -163,23 +164,19 @@ Z2X2dE73Tx3TuyHr3e3A2xXMxcXZ0bs41Ey9wUWPRtBfEU6Yr3yXDQjMmLeCj/Vz
 QMqFriycSa9a4U4SyXomUAqj9jBzn1dmPN+cvC+2ByqoRdGKkJQZAnLcfpN+G+lt
 /GJe8Xgw01QlOFGT8PV9IvZek96PociLNqoyOhye7q5/Ik0fsEEIzYW2jvLGnrkv
 6dEOw+BEVa0QiNx/ju9yzHMCAwEAAQ==
------END PUBLIC KEY-----');
+-----END PUBLIC KEY-----';
 
 /*
  * Constante du lien de hash de la clé publique puppetmaster.
  * TODO lien invalide
  */
-define('FIRST_PUPPETMASTER_HASH_LINK',
-    '77575698703bf581b582457f64e13b2f0f00dd4be95be356c6a24b277161fd5bf331e8990688422d3ff63ebe3ea774b89289765027c9f1bb2082e8ea9ab2ad9b40543eb828018ef1bb70090c67ee7a50dcce95c5a118c47bb76d8702da2335a9d02b47c67f06fec530dddc04f8f486de95d23fc72518cd9d4e7462a8ef731520405e2168283da7ef7207f9960f055270b25786192c60f0157274c2889b8f925b51b40d6a56c3f861c41c1cc6e3996d252bf2c8234bac6142f5582a87fa0bda25d6bbe161c29dfd0a461b69805a3b0306967fec7af6411f68eaf9ff630914ad29b62ddaaa9b3fd8890f656713841dd7a6412117999938c2218625ccf601fd25668fe157d522a64d2d6c4a0c794610af6b2e078284b4514758bf48bb4bdfdca519c8121c3c84045c626ef37a5e9e120954acd42f47cf82a648e989c23746e90bd3a8d6657506a8715a155fe1da124e14ac2db8af17af7e209a159accaf9da183f7b180c1eaf44aee24e6e43767efbf6253ac4ef534752a7389f0be2cd7425e7775ca7d45eb2fcb8d2fcedc0af49893f41936384fb379d4c02aa623dcd24f49798b780294cd60e9388c2bff053a407d1906dcc9cb0a492f0a54d062a1bb10da4f856b4d8af3d2fe4869117fd500a97923e1cb9b505262a48f6f5c72f9c49e82b27e6beefdb8a700740d136c73cacbba955a84ff5aee7bd720da9053bea128b06acf.sha256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea_2013-03-12T20:29:37+0100_l_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea_5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e_8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec'
-);
+const FIRST_PUPPETMASTER_HASH_LINK = '77575698703bf581b582457f64e13b2f0f00dd4be95be356c6a24b277161fd5bf331e8990688422d3ff63ebe3ea774b89289765027c9f1bb2082e8ea9ab2ad9b40543eb828018ef1bb70090c67ee7a50dcce95c5a118c47bb76d8702da2335a9d02b47c67f06fec530dddc04f8f486de95d23fc72518cd9d4e7462a8ef731520405e2168283da7ef7207f9960f055270b25786192c60f0157274c2889b8f925b51b40d6a56c3f861c41c1cc6e3996d252bf2c8234bac6142f5582a87fa0bda25d6bbe161c29dfd0a461b69805a3b0306967fec7af6411f68eaf9ff630914ad29b62ddaaa9b3fd8890f656713841dd7a6412117999938c2218625ccf601fd25668fe157d522a64d2d6c4a0c794610af6b2e078284b4514758bf48bb4bdfdca519c8121c3c84045c626ef37a5e9e120954acd42f47cf82a648e989c23746e90bd3a8d6657506a8715a155fe1da124e14ac2db8af17af7e209a159accaf9da183f7b180c1eaf44aee24e6e43767efbf6253ac4ef534752a7389f0be2cd7425e7775ca7d45eb2fcb8d2fcedc0af49893f41936384fb379d4c02aa623dcd24f49798b780294cd60e9388c2bff053a407d1906dcc9cb0a492f0a54d062a1bb10da4f856b4d8af3d2fe4869117fd500a97923e1cb9b505262a48f6f5c72f9c49e82b27e6beefdb8a700740d136c73cacbba955a84ff5aee7bd720da9053bea128b06acf.sha256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea_2013-03-12T20:29:37+0100_l_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea_5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e_8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec';
 
 /*
  * Constante du lien de type de la clé publique puppetmaster.
  * TODO lien invalide
  */
-define('FIRST_PUPPETMASTER_TYPE_LINK',
-    '3c091432e6404b9634783e2b51debd017f07918d7ef88af0e01638955859bdb2ad88df9be624308a3b0cb0904763dd06576510aedf47c94da1ce2fe11d5e324b0947b069be01f1d7626e69d93c4919182ebad607a7b4daf52ad4a68e59a9c514a7021ba4df05fe344544867b890a94007e4867021a417491dcf036a97342f56ff88f0889fe078a3e92349f3f78d74696aaf258175432d9540dff5c889525f693230472b7c5b1c16f31d7f8c3efd444e856f7473e0be7773ed93c3516d074c373433919cfb3773dd272d0236b5db52ef1f3b3eb6c0653eaadb34bbda66e2a10627397a669d35b663a490efbd50d404942ceadf54618a29ada345788ebf0c0258973aac6cefab86e6021eabb67acfad34e6a67b7001351a1179f90d2c98558fd2993be458f3095cb0940fc36c7e40fd04b76a750af48bfa5e5cd26423983580bbd99cfe3daadb928ee0203125fe97940878ad6a1faf385c37fda47769d06153680974d42d145bb9fa5e621d249cac83863a585d2448cd985ae31af7033ce322833d3689bf09033410441e07869ff4c85244d86dea47679ef5daaf726c11650da7858317196bf465e9f930846db9328b20aa0aa7a4280b7515bce8fae32585c3a75dcb88351dabfba013b4970094860904d8f161909cd1164e5506486aac5ad29afccd4740324f889dc936ef7fb85ef16ffd55c8f04be08fd442feb882b23b24b94.sha256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea_2013-03-12T22:28:06+0100_l_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea_970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864_5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0'
-);
+const FIRST_PUPPETMASTER_TYPE_LINK = '3c091432e6404b9634783e2b51debd017f07918d7ef88af0e01638955859bdb2ad88df9be624308a3b0cb0904763dd06576510aedf47c94da1ce2fe11d5e324b0947b069be01f1d7626e69d93c4919182ebad607a7b4daf52ad4a68e59a9c514a7021ba4df05fe344544867b890a94007e4867021a417491dcf036a97342f56ff88f0889fe078a3e92349f3f78d74696aaf258175432d9540dff5c889525f693230472b7c5b1c16f31d7f8c3efd444e856f7473e0be7773ed93c3516d074c373433919cfb3773dd272d0236b5db52ef1f3b3eb6c0653eaadb34bbda66e2a10627397a669d35b663a490efbd50d404942ceadf54618a29ada345788ebf0c0258973aac6cefab86e6021eabb67acfad34e6a67b7001351a1179f90d2c98558fd2993be458f3095cb0940fc36c7e40fd04b76a750af48bfa5e5cd26423983580bbd99cfe3daadb928ee0203125fe97940878ad6a1faf385c37fda47769d06153680974d42d145bb9fa5e621d249cac83863a585d2448cd985ae31af7033ce322833d3689bf09033410441e07869ff4c85244d86dea47679ef5daaf726c11650da7858317196bf465e9f930846db9328b20aa0aa7a4280b7515bce8fae32585c3a75dcb88351dabfba013b4970094860904d8f161909cd1164e5506486aac5ad29afccd4740324f889dc936ef7fb85ef16ffd55c8f04be08fd442feb882b23b24b94.sha256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea_2013-03-12T22:28:06+0100_l_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea_970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864_5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0';
 
 // Minimum set of objects to create on first run.
 define('FIRST_RESERVED_OBJECTS', array(
@@ -227,17 +224,17 @@ define('FIRST_RESERVED_OBJECTS', array(
 /*
  * Constante de taille du nom d'une nouvelle entité locale de serveur. FIXME
  */
-define('FIRST_NAME_SIZE', 6);
+const FIRST_NAME_SIZE = 6;
 
 /*
  * Constante de taille du mot de passe d'une nouvelle entité locale de serveur. FIXME
  */
-define('FIRST_PASSWORD_SIZE', 14);
+const FIRST_PASSWORD_SIZE = 14;
 
 /*
  * Constante de temps d'attente entre deux pages lors de la première connexion. FIXME
  */
-define('FIRST_RELOAD_DELAY', 3000);
+const FIRST_RELOAD_DELAY = 3000;
 
 // ------------------------------------------------------------------------------------------
 
@@ -410,18 +407,17 @@ $metrologyLibraryPOOConvertationCache = 0;
  ------------------------------------------------------------------------------------------
  */
 
-define('NEBULE_LIBPP_VERSION', '020210424');
-define('NEBULE_LIBPP_MODE_BOOTSTRAP', true);
-define('NEBULE_LIBPP_LINK_VERSION', '2:0');
-define('NEBULE_DEFAULT_PUPPETMASTER_ID', '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256');
-define('NEBULE_ENVIRONMENT_FILE', 'nebule.env');
-define('LOCAL_ENTITY_FILE', 'e');
-define('LOCAL_LINKS_FOLDER', 'l');
-define('LOCAL_OBJECTS_FOLDER', 'o');
-define('NID_MIN_HASH_SIZE', 128);
-define('NID_MAX_HASH_SIZE', 8192);
-define('NID_MIN_ALGO_SIZE', 2);
-define('NID_MAX_ALGO_SIZE', 12);
+const NEBULE_LIBPP_VERSION = '020210424';
+const NEBULE_LIBPP_LINK_VERSION = '2:0';
+const NEBULE_DEFAULT_PUPPETMASTER_ID = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
+const NEBULE_ENVIRONMENT_FILE = 'nebule.env';
+const LOCAL_ENTITY_FILE = 'e';
+const LOCAL_LINKS_FOLDER = 'l';
+const LOCAL_OBJECTS_FOLDER = 'o';
+const NID_MIN_HASH_SIZE = 128;
+const NID_MAX_HASH_SIZE = 8192;
+const NID_MIN_ALGO_SIZE = 2;
+const NID_MAX_ALGO_SIZE = 12;
 
 /**
  * List of options types.
@@ -3790,16 +3786,10 @@ function getBootstrapSwitchApplication(): void
             || io_testLinkPresent($arg)
         )
     ) {
+        $activated = false;
         // Recherche si l'application est activée par l'entité instance de serveur.
-        // Ou si l'application est en liste blanche.
         // Ou si c'est l'application par défaut.
         // Ou si c'est l'application 0.
-        $activated = false;
-        foreach (BOOTSTRAP_FORCED_ACTIVE_APPLICATION as $item) {
-            if ($arg == $item) {
-                $activated = true;
-            }
-        }
         if ($arg == getConfiguration('defaultApplication')) {
             $activated = true;
         }
@@ -3807,6 +3797,9 @@ function getBootstrapSwitchApplication(): void
             $activated = true;
         }
         if ($arg == '1') {
+            $activated = true;
+        }
+        if ($arg == '2') {
             $activated = true;
         }
         if (!$activated) {
@@ -4249,8 +4242,8 @@ function getBootstrapServerEntityDisplay()
 {
     global $bootstrapServerEntityDisplay;
 
-    if (filter_has_var(INPUT_GET, ARG_SERVER_ENTITY)
-        || filter_has_var(INPUT_POST, ARG_SERVER_ENTITY)
+    if (filter_has_var(INPUT_GET, LOCAL_ENTITY_FILE)
+        || filter_has_var(INPUT_POST, LOCAL_ENTITY_FILE)
     ) {
         setBootstrapBreak('52', 'Ask server instance');
         $bootstrapServerEntityDisplay = true;
@@ -5318,7 +5311,7 @@ function bootstrapDisplayPreloadApplication()
 
     <div class="preload">
         <img title="bootstrap" style="background:#<?php echo substr($bootstrapApplicationStartID . '000000', 0, 6); ?>;"
-             alt="[]" src="<?php echo REFERENCE_APPLICATION_ICON; ?>"/>
+             alt="[]" src="<?php echo REFERENCE_BOOTSTRAP_ICON; ?>"/>
         Load application<br/>
         ID=<?php echo $bootstrapApplicationID; ?><br/>
         <?php
@@ -6295,8 +6288,6 @@ function bootstrapDisplayApplication0()
     echo 'CHK';
     ob_end_clean();
 
-    $alogo = 'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAADkElEQVRo3u2ZT0hUQRzHP9sGgoEh0T8kL8/Ag+tBsUNdCpmKjA7VQdzKwg6pdIoOnkQKPHgUtUOGSrt0qIUORTGIXepgZAc9eJCFMgmUEj0IQotdlJ03b1779u2IK/k7vTfvN/P7zm9+8/v3YI/+d4oEZxUHaaaBCZJyw4cjQgvn+MwLuWIZgKijg9tEgTl6SJggiAhxuqkCMowwKKesARDPiSuvRgiK+C1KyBu2AOj7XWSaKJUcphRYY4nvZIhxxM0mI9sFICAFAbBvp2/BbgAg2sIuHmRmNOcigzwKvb0rztH0mwKMUJSQ4pLhwxTjTDLLAqtAGRVUc4pG6gy8b7kq10MBECW846w2uMYAY3LGZ0YNt+ikVBv+wEV/CP8C8Maz+z565XKOIyuni4e6FmRT3gDEIO2a2u/LTwGN7zT92nEMyY68jFC0aaaXpEl+C2p76XnnGVXElKEG50f6a04NaD4/S09ke4hLOMQ94wdXjIi4It4X44SkjIf0AwlajB/qs5FSdUTmU5qiNbQfaMUckjsMGhAH+WW0iDNBTc/HHD8ahjMc2kpZshpoNorvK0Q8yE/0GU2/2XsEDQbGNXoLjja9rBlGG7wAJpjzsA3kcjsBdLDMgGdwjgkvgCQ9HghjViLumEd8D0mzH7jGS9X+Zb2dmC++KH5xkQdqRunOB1KMK2/j1rIOdaVpd0LrAiA3XDdh0hoAdaWoO5/WM6JK5XnWGoBZHwkGAIeV5wVrABZ8JBgAqMnEqjUAqz4SijErVr1WmTUpZT4SDACWlOcKawAqfCQYAHxXnqutAaj2kaADEBEyyuspawDUlTIi4gNARIi78rhGawDUlWLEVQhRrb4/obAed16lFy1EghpXgnuAWn4702mPBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf7Q4vfT7/xw0i2jaf6gUEjcx2joRUwaizYXZIUpad/OiepNbDHnGO52gw+pdkdn9JsIGd1LNp4qhWnrfJPXsof1cqyu3I4j+o4/dU56qoUYlx2ZtLzgU0vxXmtPH+82xoURdCi2fEmlU+rJj/ybc0EBmC4EcHJx/LzBLDXrN5eChto3lOi/bBY58L2AUho7bvr8pXBUtzFPSSsHYG8QT3DmxnzHDdJGdlS3NxscWQYpj7IH6Mi+G23R3v0FwbfFx3mQ2ZaAAAAAElFTkSuQmCC';
-
     bootstrapHtmlHeader();
     bootstrapHtmlTop();
 
@@ -6392,13 +6383,11 @@ function bootstrapDisplayApplication0()
             $shortName = substr($instance->getSurname() . '--', 0, 2);
             $shortName = strtoupper(substr($shortName, 0, 1)) . strtolower(substr($shortName, 1, 1));
             echo '<a href="/?' . ARG_SWITCH_APPLICATION . '=' . $application . '">';
-            //echo '<div class="apps" style="background:'.$color.';" onclick="followHref(\'/?'.ARG_SWITCH_APPLICATION.'='.$application.'\')">';
             echo '<div class="apps" style="background:' . $color . ';">';
-            //echo '<div class="appssigner" style="background:'.$color.';"><img alt="'.$signersList[$application].'" src="data:image/png;base64,'.$alogo.'" /></div>';
             echo '<span class="appstitle">' . $shortName . '</span><br /><span class="appsname">' . $title . '</span>';
             echo "</div></a>\n";
         }
-        unset($alogo, $application, $applicationsList, $instance, $color, $title, $shortName);
+        unset($application, $applicationsList, $instance, $color, $title, $shortName);
         ?>
 
     </div>
@@ -6465,7 +6454,52 @@ function bootstrapDisplayApplication1()
  *
 
  ==/ 11 /==================================================================================
- PART11 : Main display router.
+ PART11 : Display of application 2 default application.
+
+ TODO.
+ ------------------------------------------------------------------------------------------
+ */
+
+function bootstrapDisplayApplication2()
+{
+    global $nebuleInstance, $loggerSessionID, $nebuleLibLevel, $nebuleLibVersion, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
+
+    // Initialisation des logs
+    closelog();
+    openlog('app2/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+    addLog('Loading');
+
+    echo 'CHK';
+    ob_end_clean();
+
+    bootstrapHtmlHeader();
+    bootstrapHtmlTop();
+
+    // Ré-initialisation des logs
+    closelog();
+    openlog('app1/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+
+?>
+    <div class="layout-main">
+        <div class="layout-content">
+            <img alt="nebule" id="logo" src="<?php echo DEFAULT_APPLICATION_LOGO_LIGHT; ?>"/>
+        </div>
+    </div>
+
+<?php
+
+    bootstrapHtmlBottom();
+}
+
+
+/*
+ *
+ *
+ *
+ *
+
+ ==/ 12 /==================================================================================
+ PART12 : Main display router.
 
  TODO.
  ------------------------------------------------------------------------------------------
@@ -6492,18 +6526,17 @@ function displayRouter(bool $needFirstSynchronization)
 
         if ($bootstrapApplicationID == '0') {
             addLog('load application 0');
-
             bootstrapDisplayApplication0();
-
-            // Change les logs au nom du bootstrap.
             closelog();
             openlog(BOOTSTRAP_NAME . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
         } elseif ($bootstrapApplicationID == '1') {
             addLog('load application 1');
-
             bootstrapDisplayApplication1();
-
-            // Change les logs au nom du bootstrap.
+            closelog();
+            openlog(BOOTSTRAP_NAME . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+        } elseif ($bootstrapApplicationID == '2') {
+            addLog('load application 2');
+            bootstrapDisplayApplication2();
             closelog();
             openlog(BOOTSTRAP_NAME . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
         } else {
