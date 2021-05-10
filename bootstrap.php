@@ -76,8 +76,19 @@ openlog(BOOTSTRAP_NAME . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
 syslog(LOG_INFO, 'LogT=0 LogTabs=' . $metrologyStartTime . ' --- start ' . BOOTSTRAP_NAME);
 
 /**
+ * Switch log prefix from one app to another.
+ * @param string $name
+ * @return void
+ */
+function switchLog(string $name): void
+{
+    global $loggerSessionID;
+    closelog();
+    openlog($name . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+}
+
+/**
  * Add message to logs.
- *
  * @param string $message
  * @return void
  */
@@ -3876,6 +3887,12 @@ function setPermitOpenFileCode()
  ------------------------------------------------------------------------------------------
  */
 
+/**
+ * Try to find nebule Lib POO.
+ * @param string $bootstrapLibraryID
+ * @param string $bootstrapLibraryInstanceSleep
+ * @return void
+ */
 function findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstanceSleep): void
 {
     global $libppCheckOK;
@@ -3883,8 +3900,8 @@ function findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstanceSleep): 
     if (!$libppCheckOK)
         return;
 
+    // Try to find on session.
     session_start();
-
     if (isset($_SESSION['bootstrapLibrariesID'])
         && _nodCheckNID($_SESSION['bootstrapLibrariesID'])
         && io_testLinkPresent($_SESSION['bootstrapLibrariesID'])
@@ -3896,9 +3913,9 @@ function findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstanceSleep): 
         $bootstrapLibraryID = $_SESSION['bootstrapLibrariesID'];
         $bootstrapLibraryInstanceSleep = $_SESSION['bootstrapLibrariesInstances'][$_SESSION['bootstrapLibrariesID']];
     }
-
     session_abort();
 
+    // Try to find with links.
     if ($bootstrapLibraryID == '') {
         $bootstrapLibraryID = nebFindByRef(
             _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE),
@@ -3919,38 +3936,26 @@ function findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstanceSleep): 
 }
 
 /**
- * loadLibrary()
- * La fonction réalise le chargement et l'initialisation de la bibliothèque .
- *
- * Un certain nombre de variables globales sont initialisées au chargement de la bibliothèque,
- *   elles doivent être présentes ici.
- *
+ * Load and initialize nebule Lib POO.
+ * @param string $bootstrapLibraryID
+ * @param string $bootstrapLibraryInstanceSleep
  * @return void
  */
-function loadLibraryPOO(): void
+function loadLibraryPOO(string $bootstrapLibraryID, string $bootstrapLibraryInstanceSleep): void
 {
     global $loggerSessionID,
            $nebuleInstance;
 
-    $bootstrapLibraryID = '';
-    $bootstrapLibraryInstanceSleep = '';
-    findLibraryPOO($bootstrapLibraryID, $bootstrapLibraryInstanceSleep);
-
     if ($bootstrapLibraryID != '') {
-        // Charge l'objet de la bibliothèque. @todo faire via les i/o.
+        // Load lib from object. @todo faire via les i/o.
         include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapLibraryID);
 
-        if ($bootstrapLibraryInstanceSleep == '') {
-            // Instancie la bibliothèque.
+        if ($bootstrapLibraryInstanceSleep == '')
             $nebuleInstance = new nebule();
-        } else {
-            // Récupère l'instance de la bibliothèque.
+        else
             $nebuleInstance = unserialize($bootstrapLibraryInstanceSleep);
-        }
 
-        // Ré-ouvre les logs pour le bootstrap.
-        closelog();
-        openlog(BOOTSTRAP_NAME . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+        switchLog(BOOTSTRAP_NAME);
     } else
         setBootstrapBreak('41', 'Library nebule error');
 }
@@ -5303,8 +5308,7 @@ function bootstrapDisplayPreloadApplication()
            $bootstrapApplicationStartID;
 
     // Initialisation des logs
-    closelog();
-    openlog('preload/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+    switchLog('preload');
     addLog('Loading');
 
     echo 'CHK';
@@ -5327,8 +5331,7 @@ function bootstrapDisplayPreloadApplication()
         flush();
 
         // Ré-initialisation des logs
-        closelog();
-        openlog('preload/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+        switchLog('preload');
         ?>
 
         Tl=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?>
@@ -5463,8 +5466,7 @@ function bootstrapDisplayApplicationfirst(): void
     $nebuleCacheIsPubkey = array();
 
     // Initialisation des logs
-    closelog();
-    openlog('first/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+    switchLog('first');
     addLog('Loading');
 
     echo 'CHK';
@@ -6306,8 +6308,7 @@ function bootstrapDisplayApplication0()
            $loggerSessionID;
 
     // Initialisation des logs
-    closelog();
-    openlog('app0/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+    switchLog('app0');
     addLog('Loading');
 
     echo 'CHK';
@@ -6316,9 +6317,8 @@ function bootstrapDisplayApplication0()
     bootstrapHtmlHeader();
     bootstrapHtmlTop();
 
-    // Ré-initialisation des logs
-    closelog();
-    openlog('app0/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+    // Ré-initialisation des logs FIXME ???
+    switchLog('app0');
 
     ?>
 
@@ -6441,8 +6441,7 @@ function bootstrapDisplayApplication1()
     global $nebuleInstance, $loggerSessionID, $nebuleLibLevel, $nebuleLibVersion, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
 
     // Initialisation des logs
-    closelog();
-    openlog('app1/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+    switchLog('app1');
     addLog('Loading');
 
     echo 'CHK';
@@ -6451,9 +6450,8 @@ function bootstrapDisplayApplication1()
     bootstrapHtmlHeader();
     bootstrapHtmlTop();
 
-    // Ré-initialisation des logs
-    closelog();
-    openlog('app1/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+    // Ré-initialisation des logs FIXME ???
+    switchLog('app1');
 
     // Instancie la classe de la documentation.
     $instance = new nebdoctech($nebuleInstance);
@@ -6490,8 +6488,7 @@ function bootstrapDisplayApplication2()
     global $nebuleInstance, $loggerSessionID, $nebuleLibLevel, $nebuleLibVersion, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
 
     // Initialisation des logs
-    closelog();
-    openlog('app2/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+    switchLog('app2');
     addLog('Loading');
 
     echo 'CHK';
@@ -6500,9 +6497,8 @@ function bootstrapDisplayApplication2()
     bootstrapHtmlHeader();
     bootstrapHtmlTop();
 
-    // Ré-initialisation des logs
-    closelog();
-    openlog('app1/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+    // Ré-initialisation des logs FIXME ???
+    switchLog('app1');
 
 ?>
     <div class="layout-main">
@@ -6530,11 +6526,11 @@ function bootstrapDisplayApplication2()
  ------------------------------------------------------------------------------------------
  */
 
-function displayRouter(bool $needFirstSynchronization)
+function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
 {
     global $bootstrapBreak, $bootstrapRescueMode, $bootstrapInlineDisplay, $loggerSessionID,
            $bootstrapApplicationID, $bootstrapApplicationNoPreload,
-           $bootstrapApplicationStartID, $nebuleInstance, $bootstrapLibraryID,
+           $bootstrapApplicationStartID, $nebuleInstance,
            $bootstrapServerEntityDisplay;
 
     if (sizeof($bootstrapBreak) == 0) {
@@ -6552,18 +6548,15 @@ function displayRouter(bool $needFirstSynchronization)
         if ($bootstrapApplicationID == '0') {
             addLog('load application 0');
             bootstrapDisplayApplication0();
-            closelog();
-            openlog(BOOTSTRAP_NAME . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+            switchLog(BOOTSTRAP_NAME);
         } elseif ($bootstrapApplicationID == '1') {
             addLog('load application 1');
             bootstrapDisplayApplication1();
-            closelog();
-            openlog(BOOTSTRAP_NAME . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+            switchLog(BOOTSTRAP_NAME);
         } elseif ($bootstrapApplicationID == '2') {
             addLog('load application 2');
             bootstrapDisplayApplication2();
-            closelog();
-            openlog(BOOTSTRAP_NAME . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+            switchLog(BOOTSTRAP_NAME);
         } else {
             // Si tout est déjà pré-chargé, on déserialise.
             if (isset($bootstrapApplicationInstanceSleep)
@@ -6583,8 +6576,7 @@ function displayRouter(bool $needFirstSynchronization)
                 $applicationName = Application::APPLICATION_NAME;
 
                 // Change les logs au nom de l'application.
-                closelog();
-                openlog($applicationName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+                switchLog($applicationName);
 
                 // Désérialise les instances.
                 $applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
@@ -6621,8 +6613,7 @@ function displayRouter(bool $needFirstSynchronization)
                 $applicationName = Application::APPLICATION_NAME;
 
                 // Change les logs au nom de l'application.
-                closelog();
-                openlog($applicationName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+                switchLog($applicationName);
 
                 // Instanciation des classes de l'application.
                 $applicationInstance = new Application($nebuleInstance);
@@ -6647,8 +6638,7 @@ function displayRouter(bool $needFirstSynchronization)
             }
 
             // Change les logs au nom du bootstrap.
-            closelog();
-            openlog(BOOTSTRAP_NAME . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+            switchLog(BOOTSTRAP_NAME);
 
             // Ouverture de la session PHP.
             session_start();
@@ -6697,8 +6687,7 @@ function displayRouter(bool $needFirstSynchronization)
         }
 
         // Change les logs au nom du bootstrap.
-        closelog();
-        openlog(BOOTSTRAP_NAME . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+        switchLog(BOOTSTRAP_NAME);
     }
 }
 
@@ -6759,10 +6748,14 @@ function main()
     getBootstrapSwitchApplication();
 
     setPermitOpenFileCode();
-    loadLibraryPOO();
+
+    $bootstrapLibraryID = '';
+    $bootstrapLibraryInstanceSleep = '';
+    findLibraryPOO($bootstrapLibraryID, $bootstrapLibraryInstanceSleep);
+    loadLibraryPOO($bootstrapLibraryID, $bootstrapLibraryInstanceSleep);
     findApplication();
 
-    displayRouter($needFirstSynchronization);
+    displayRouter($needFirstSynchronization, $bootstrapLibraryID);
     bootstrapLogMetrology();
 }
 
