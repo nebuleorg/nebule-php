@@ -2848,7 +2848,7 @@ function _lnkDownloadOnLocation($oid, $localisation)
  */
 function _lnkCheckBH(string &$bh): bool
 {
-    if (strlen($bh) > 4096) return false; // TODO à revoir.
+    if (strlen($bh) > 15) return false;
 
     $rf = strtok($bh, '/');
     $rv = strtok('/');
@@ -2871,7 +2871,7 @@ function _lnkCheckBH(string &$bh): bool
  */
 function _lnkCheckRF(string &$rf): bool
 {
-    if (strlen($rf) > 4096) return false; // TODO à revoir.
+    if (strlen($rf) > 11) return false;
 
     // Check items from RF : APP:TYP
     $app = strtok($rf, ':');
@@ -2893,7 +2893,7 @@ function _lnkCheckRF(string &$rf): bool
  */
 function _lnkCheckRV(string &$rv): bool
 {
-    if (strlen($rv) > 4096) return false; // TODO à revoir.
+    if (strlen($rv) > 3) return false;
 
     // Check items from RV : VER:SUB
     $ver = strtok($rv, ':');
@@ -3070,7 +3070,7 @@ function _lnkCheckRS(string &$rs, string &$bh, string &$bl): bool
  * @param string $bl
  * @param string $sig
  * @param string $nid
- * @return bool
+ * @return boolean
  */
 function _lnkCheckSIG(string &$bh, string &$bl, string &$sig, string &$nid): bool
 {
@@ -3098,32 +3098,14 @@ function _lnkCheckSIG(string &$bh, string &$bl, string &$sig, string &$nid): boo
     // Check item overflow
     if (strtok('.') !== false) return false;
 
-    // --- --- --- --- --- --- --- --- ---
-    // Check sign.
     if (!getConfiguration('permitCheckSignOnVerify')) return true;
-    if (io_checkNodeHaveContent($nid)) {
-        $hash = _objGetNID($bh . '_' . $bl); // TODO remplacer getConfiguration('cryptoHashAlgorithm') par une convertion des algo et size.
-
-        // Read signer's public key.
-        _objCheckContent($nid);
-        $cert = io_objectRead($nid);
-        $pubkeyid = openssl_pkey_get_public($cert);
-        if ($pubkeyid === false) return false;
-
-        _metrologyAdd('lv');
-
-        // Encoding sign before check.
-        $binsign = pack('H*', $sign);
-
-        // Decode sign with public key.
-        if (openssl_public_decrypt($binsign, $bindecrypted, $pubkeyid, OPENSSL_PKCS1_PADDING)) {
-            $decrypted = (substr(bin2hex($bindecrypted), -64, 64)); // TODO A faire pour le cas général.
-            if ($decrypted == $hash)
-                return true;
-        }
+    if (io_checkNodeHaveContent($nid) && _objCheckContent($nid)) {
+        $data = $bh . '_' . $bl;
+        $hash = cryptoGetDataHash($data, $algo . '.' . $size);
+        return cryptoAsymetricVerify($sign, $hash, $nid);
     }
 
-    return true;
+    return false;
 }
 
 /**
@@ -3707,7 +3689,7 @@ function cryptoGetPseudoRandom($count = 32): string
  * @param string $data
  * @return string
  */
-function cryptoAsymetricEncrypt(string $data)
+function cryptoAsymetricEncrypt(string $data): string
 {
     global $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite;
 
@@ -3720,10 +3702,12 @@ function cryptoAsymetricEncrypt(string $data)
         return '';
 
     $privcert = (nebGetContentAsText($nebulePrivateEntite, 10000)); // TODO A modifier pour ne pas appeler une fonction de haut niveau...
-    $private_key = openssl_pkey_get_private($privcert, $nebulePasswordEntite);
-    if ($private_key === false) {
+    $privcert = '';
+    if (!_objGetLocalContent($nebulePrivateEntite, $privcert, 10000))
         return '';
-    }
+    $private_key = openssl_pkey_get_private($privcert, $nebulePasswordEntite);
+    if ($private_key === false)
+        return '';
     $binary_signature = '';
     $hashdata = cryptoGetDataHash($data);
     $binhash = pack("H*", $hashdata);
@@ -3734,6 +3718,37 @@ function cryptoAsymetricEncrypt(string $data)
         return '';
 
     return bin2hex($binary_signature);
+}
+
+
+/**
+ * Decrypt and verify asymetric sign.
+ *
+ * @param string $sign
+ * @param string $hash
+ * @param string $nid
+ * @return boolean
+ */
+function cryptoAsymetricVerify(string $sign, string $hash, string $nid): bool
+{
+    // Read signer's public key.
+    $cert = io_objectRead($nid, 10000);
+    $pubkeyid = openssl_pkey_get_public($cert);
+    if ($pubkeyid === false) return false;
+
+    _metrologyAdd('lv');
+
+    // Encoding sign before check.
+    $binsign = pack('H*', $sign);
+
+    // Decode sign with public key.
+    if (openssl_public_decrypt($binsign, $bindecrypted, $pubkeyid, OPENSSL_PKCS1_PADDING)) {
+        $decrypted = (substr(bin2hex($bindecrypted), -64, 64)); // TODO A faire pour le cas général.
+        if ($decrypted == $hash)
+            return true;
+    }
+
+    return false;
 }
 
 
