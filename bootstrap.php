@@ -3341,10 +3341,6 @@ function _lnkWrite($link)
  */
 function io_open(): bool
 {
-    if (!file_exists(LOCAL_LINKS_FOLDER))
-        mkdir(LOCAL_LINKS_FOLDER);
-    if (!file_exists(LOCAL_OBJECTS_FOLDER))
-        mkdir(LOCAL_OBJECTS_FOLDER);
     if (!io_checkLinkFolder() || !io_checkObjectFolder())
         return false;
     return true;
@@ -3394,7 +3390,7 @@ function io_checkLinkFolder(): bool
  *
  * @return boolean
  */
-function io_checkObjectFolder()
+function io_checkObjectFolder(): bool
 {
     // Check if exist.
     if (!file_exists(LOCAL_OBJECTS_FOLDER) || !is_dir(LOCAL_OBJECTS_FOLDER) ) {
@@ -3429,6 +3425,38 @@ function io_checkObjectFolder()
 }
 
 /**
+ * I/O - Try to create folder for links.
+ *
+ * @return boolean
+ */
+function io_createLinkFolder(): bool
+{
+    if (getConfiguration('permitWrite')
+        && getConfiguration('permitWriteLink')
+        && !file_exists(LOCAL_LINKS_FOLDER)
+    )
+        mkdir(LOCAL_LINKS_FOLDER);
+
+    return io_checkLinkFolder();
+}
+
+/**
+ * I/O - Try to create folder for objects.
+ *
+ * @return boolean
+ */
+function io_createObjectFolder(): bool
+{
+    if (getConfiguration('permitWrite')
+        && getConfiguration('permitWriteObject')
+        && !file_exists(LOCAL_OBJECTS_FOLDER)
+    )
+        mkdir(LOCAL_OBJECTS_FOLDER);
+
+    return io_checkObjectFolder();
+}
+
+/**
  * I/O - Check if node link's file is present, which mean node have one or more links.
  *
  * @param string $nid
@@ -3436,9 +3464,8 @@ function io_checkObjectFolder()
  */
 function io_checkNodeHaveLink(&$nid): bool
 {
-    if (file_exists(LOCAL_LINKS_FOLDER . '/' . $nid)) {
+    if (file_exists(LOCAL_LINKS_FOLDER . '/' . $nid))
         return true;
-    }
     return false;
 }
 
@@ -3455,21 +3482,24 @@ function io_checkNodeHaveContent(&$nid): bool
     return false;
 }
 
-/** FIXME
+/**
  * I/O - Read object's links.
- * Retourne un tableau des liens lus, même vide.
+ * Return array of links, maybe empty.
  *
  * @param string $nid
- * @return boolean|array:string
+ * @param integer $maxLinks
+ * @return array:string
  */
-function io_linksRead(&$nid)
+function io_linksRead(&$nid, int $maxLinks = 0)
 {
     $result = array();
     $count = 0;
-    if (!io_checkNodeHaveLink($nid))
+
+    if (!_nodCheckNID($nid) || !io_checkNodeHaveLink($nid))
         return $result;
+    if ($maxLinks == 0)
+        $maxLinks = getConfiguration('ioReadMaxLinks');
     $links = file(LOCAL_LINKS_FOLDER . '/' . $nid); // TODO à refaire avec stream_context_create
-    $maxLinks = getConfiguration('ioReadMaxLinks');
     foreach ($links as $link) {
         $result [$count] = $link;
         _metrologyAdd('lr');
@@ -3480,19 +3510,19 @@ function io_linksRead(&$nid)
     return $result;
 }
 
-/** FIXME
+/**
  * I/O - Read object content.
- * The function returns the read data or false on failure.
+ * Return the read data or false on failure.
  *
  * @param string $nid
- * @param number $maxData
+ * @param integer $maxData
  * @return boolean|string
  */
 function io_objectRead(string $nid, int $maxData = 0)
 {
     if ($maxData == 0)
         $maxData = getConfiguration('ioReadMaxData');
-    if (!io_checkNodeHaveContent($nid))
+    if (!_nodCheckNID($nid) || !io_checkNodeHaveContent($nid))
         return false;
     _metrologyAdd('or');
     return file_get_contents(LOCAL_OBJECTS_FOLDER . '/' . $nid, false, null, 0, $maxData);
@@ -5516,7 +5546,7 @@ function bootstrapDisplayApplicationfirst(): void
     <div class="parts">
     <span class="partstitle">#2 create folders</span><br/>
     <?php
-    if (!io_checkLinkFolder() || !io_checkObjectFolder()) {
+    if (!io_createLinkFolder() || !io_createObjectFolder()) {
         ?>
 
         <span class="error">ERROR!</span>
