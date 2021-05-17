@@ -2937,7 +2937,7 @@ function _lnkCheckBL(string &$bl): bool
  */
 function _lnkCheckRC(string &$rc): bool
 {
-    if (strlen($rc) > 4096) return false; // TODO à revoir.
+    if (strlen($rc) > 17) return false;
 
     // Check items from RC : MOD>CHR
     $mod = strtok($rc, '>');
@@ -2948,9 +2948,6 @@ function _lnkCheckRC(string &$rc): bool
 
     // Check registry overflow
     if (strtok('>') !== false) return false;
-
-    // TODO check MOD
-    // TODO check CHR
 
     return true;
 }
@@ -2998,7 +2995,17 @@ function _lnkCheckRL(string &$rl): bool
  */
 function _lnkCheckREQ(string &$req): bool
 {
-    if ($req != 'l' && $req != 'f' && $req != 'u' && $req != 'd' && $req != 'e' && $req != 'c' && $req != 'k' && $req != 's' && $req != 'x') return false;
+    if ($req != 'l'
+        && $req != 'f'
+        && $req != 'u'
+        && $req != 'd'
+        && $req != 'e'
+        && $req != 'c'
+        && $req != 'k'
+        && $req != 's'
+        && $req != 'x'
+    )
+        return false;
 
     return true;
 }
@@ -3172,7 +3179,7 @@ function _lnkVerify(string $link): bool
 }
 
 /**
- * Explode link and it's values into array.
+ * Link - Explode link and it's values into array.
  * 
  * @param string $link
  * @return array
@@ -3255,75 +3262,35 @@ function _lnkParse(string $link): array
     );
 }
 
-/** FIXME
- * Link -
- *
- * TODO à refaire !
+/**
+ * Link - Write link into parts files.
  *
  * @param $link
- * @return bool
+ * @return boolean
  */
-function _lnkWrite($link)
-{ // Ecrit le lien dans les objets concernés.
-    // - $link le lien à écrire.
-    // Se charge de répartir les liens sur les objets concernés.
-    // Le lien de type c est géré un peu à part puisque tous les champs ne sont pas des objets.
-    if (!getConfiguration('permitWrite') || !getConfiguration('permitWriteLink'))
-        return false;
-    $sign = strtok(trim($link), '_'); // Lit la signature.
-    if ($sign == '' || $sign == '0')
-        return false;
-    $objsig = strtok('_'); // Lit le signataire.
-    if ($objsig == '' || $objsig == '0' || !_nodCheckNID($objsig))
-        return false;
-    $objtyp = strtok('_'); // Lit la date. N'est pas gardé.
-    $objtyp = strtok('_'); // Lit le type.
-    if ($objtyp != 'c' && $objtyp != 'd' && $objtyp != 'e' && $objtyp != 'f' && $objtyp != 'k' && $objtyp != 'l' && $objtyp != 's' && $objtyp != 'u' && $objtyp != 'x')
-        return false;
-    $objsrc = strtok('_'); // Lit l'objet source.
-    if ($objsrc == '' || $objsrc == '0' || !_nodCheckNID($objsrc))
-        return false;
-    $objdst = strtok('_'); // Lit l'objet destination.
-    if ($objdst == '' || !_nodCheckNID($objdst))
-        return false;
-    $objmet = strtok('_'); // Lit l'objet meta.
-    if ($objmet == '' || !_nodCheckNID($objmet))
+function _lnkWrite($link): bool
+{
+    if (!getConfiguration('permitWrite')
+        || !getConfiguration('permitWriteLink')
+        || !_lnkVerify($link)
+    )
         return false;
 
-    // Recherche la pré-existance du lien.
-    $res = false;
-    if (io_checkNodeHaveLink($objsrc)) {
-        $lines = io_linksRead($objsrc);
-        foreach ($lines as $line) {
-            if (!(substr($line, 0, 21) == 'nebule/liens/version/')) {
-                $lsign = strtok(trim($line), '_');
-                if ($lsign == $sign) {
-                    $res = true;
-                    break 1;
-                } // Si le lien est déjà présent, on arrête l'écriture.
-            }
-        }
-    }
-    if (!$res) {
-        io_linkWrite($objsig, $link); // Ecrit le lien dans l'entité signataire. Nouveauté v1.2 .
-        if ($objtyp != 'c') {
-            if ($objsrc != $objsig)
-                io_linkWrite($objsrc, $link); // Ecrit le lien dans l'objet source.
-            if ($objdst != $objsig && $objdst != '0')
-                io_linkWrite($objdst, $link); // Ecrit le lien dans l'objet destination.
-            if ($objmet != $objsig && $objmet != '0')
-                io_linkWrite($objmet, $link); // Ecrit le lien dans l'objet méta.
-        }
-    }
-    unset($lines);
-    unset($res);
-    unset($sign);
-    unset($objsig);
-    unset($objtyp);
-    unset($objsrc);
-    unset($objdst);
-    unset($objmet);
-    return true;
+    // Extract link parts.
+    $parseLink = _lnkParse($link);
+
+    // Write link into parts files.
+    $result = io_linkWrite($parseLink['bl/rl/nid1'], $link);
+    if ($parseLink['bl/rl/nid2'] != '')
+        $result &= io_linkWrite($parseLink['bl/rl/nid2'], $link);
+    if ($parseLink['bl/rl/nid3'] != '')
+        $result &= io_linkWrite($parseLink['bl/rl/nid3'], $link);
+    if ($parseLink['bl/rl/nid4'] != '')
+        $result &= io_linkWrite($parseLink['bl/rl/nid4'], $link);
+    if (getConfiguration(permitAddLinkToSigner))
+        $result &= io_linkWrite($parseLink['bs/rs/nid'], $link);
+
+    return $result;
 }
 
 
@@ -3522,6 +3489,7 @@ function io_linkWrite(&$nid, &$link): bool
 {
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteLink')
+        || $nid == ''
     )
         return false;
 
