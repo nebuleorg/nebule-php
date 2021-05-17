@@ -71,20 +71,26 @@ ob_start();
 $loggerSessionID = bin2hex(openssl_random_pseudo_bytes(6, $false));
 $metrologyStartTime = microtime(true);
 
-// Initialize logs.
-openlog(BOOTSTRAP_NAME . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
-syslog(LOG_INFO, 'LogT=0 LogTabs=' . $metrologyStartTime . ' --- start ' . BOOTSTRAP_NAME);
+/**
+ * Switch log prefix from one app to another.
+ * @param string $name
+ * @return void
+ */
+function initLog(string $name): void
+{
+    global $loggerSessionID;
+    openlog($name . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+}
 
 /**
  * Switch log prefix from one app to another.
  * @param string $name
  * @return void
  */
-function switchLog(string $name): void
+function reopenLog(string $name): void
 {
-    global $loggerSessionID;
     closelog();
-    openlog($name . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+    initLog($name);
 }
 
 /**
@@ -97,6 +103,10 @@ function addLog(string $message): void
     global $metrologyStartTime;
     syslog(LOG_INFO, 'LogT=' . (microtime(true) - $metrologyStartTime) . ' LogL=B LogM="' . $message . '"');
 }
+
+// Initialize logs.
+initLog(BOOTSTRAP_NAME);
+syslog(LOG_INFO, 'LogT=0 LogT0=' . $metrologyStartTime . ' LogL=B LogM="start ' . BOOTSTRAP_NAME .'"');
 
 // ------------------------------------------------------------------------------------------
 // Command line args.
@@ -1044,7 +1054,7 @@ function nebReadEntityFName(&$entite)
     nebCreatAsText('nebule/objet/prenom');
     $type = nebFindObjType($entite, 'nebule/objet/prenom'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
-    if (io_testObjectPresent($type)) {
+    if (io_checkNodeHaveContent($type)) {
         $text = nebReadObjText1line($type, 128);
     }
     unset($type);
@@ -1068,7 +1078,7 @@ function nebReadEntityName(&$entite)
     nebCreatAsText('nebule/objet/nom');
     $type = nebFindObjType($entite, 'nebule/objet/nom'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
-    if (io_testObjectPresent($type)) {
+    if (io_checkNodeHaveContent($type)) {
         $text = nebReadObjText1line($type, 128);
     }
     unset($type);
@@ -1092,7 +1102,7 @@ function nebReadEntityPName(&$entite)
     nebCreatAsText('nebule/objet/postnom');
     $type = nebFindObjType($entite, 'nebule/objet/postnom'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
-    if (io_testObjectPresent($type)) {
+    if (io_checkNodeHaveContent($type)) {
         $text = nebReadObjText1line($type, 128);
     }
     unset($type);
@@ -1215,7 +1225,7 @@ function nebReadObjTypeMime(&$object)
     unset($table);
     unset($hashtype);
     $text = '';
-    if (io_testObjectPresent($type)) {
+    if (io_checkNodeHaveContent($type)) {
         $text = nebReadObjText1line($type, 128);
     }
     if ($text == '') {
@@ -1284,7 +1294,7 @@ function nebIsPubkey(&$entite): bool
 
     if (!is_string($entite)
         || !_nodCheckNID($entite)
-        || !io_testLinkPresent($entite)
+        || !io_checkNodeHaveLink($entite)
     ) {
         return false;
     }
@@ -1480,7 +1490,7 @@ function nebCreatAsText(string $data, bool $skipIfPresent = true)
     if (!getConfiguration('permitWriteObject') || !getConfiguration('permitWriteLink') || strlen($data) == 0)
         return false;
     $oid = _objGetNID($data);
-    if ($skipIfPresent && io_testObjectPresent($oid))
+    if ($skipIfPresent && io_checkNodeHaveContent($oid))
         return true;
     if (nebIsBanned($oid))
         return false;
@@ -1624,7 +1634,7 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
     $refhashpem = _objGetNID('application/x-pem-file');
     $refhashtext = _objGetNID('text/plain');
     // Création des objets annexes.
-    if (!io_testObjectPresent($refhashhash)) {
+    if (!io_checkNodeHaveContent($refhashhash)) {
         $newtxt = 'nebule/objet/hash';
         _objWriteContent($refhashhash, $newtxt);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashhash . '_' . $refhashalgo . '_' . $refhashhash;
@@ -1640,7 +1650,7 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
         $hexsign = bin2hex($binary_signature);
         _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
-    if (!io_testObjectPresent($refhashalgo)) {
+    if (!io_checkNodeHaveContent($refhashalgo)) {
         $cryptoHashAlgorithm = getConfiguration('cryptoHashAlgorithm');
         _objWriteContent($refhashalgo, $cryptoHashAlgorithm);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashalgo . '_' . $refhashalgo . '_' . $refhashhash;
@@ -1656,7 +1666,7 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
         $hexsign = bin2hex($binary_signature);
         _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
-    if (!io_testObjectPresent($refhashtype)) {
+    if (!io_checkNodeHaveContent($refhashtype)) {
         $newtxt = 'nebule/objet/type';
         _objWriteContent($refhashtype, $newtxt);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtype . '_' . $refhashalgo . '_' . $refhashhash;
@@ -1672,7 +1682,7 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
         $hexsign = bin2hex($binary_signature);
         _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
-    if (!io_testObjectPresent($refhashpem)) {
+    if (!io_checkNodeHaveContent($refhashpem)) {
         $newtxt = 'application/x-pem-file';
         _objWriteContent($refhashpem, $newtxt);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashpem . '_' . $refhashalgo . '_' . $refhashhash;
@@ -1688,7 +1698,7 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
         $hexsign = bin2hex($binary_signature);
         _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
-    if (!io_testObjectPresent($refhashtext)) {
+    if (!io_checkNodeHaveContent($refhashtext)) {
         $newtxt = 'text/plain';
         _objWriteContent($refhashtext, $newtxt);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtext . '_' . $refhashalgo . '_' . $refhashhash;
@@ -1771,8 +1781,8 @@ function _entityCheck(string $nid): bool
     if (!_nodCheckNID($nid, false)
         || $nid == '0'
         || strlen($nid) < NID_MIN_HASH_SIZE
-        || !io_testObjectPresent($nid)
-        || !io_testLinkPresent($nid)
+        || !io_checkNodeHaveContent($nid)
+        || !io_checkNodeHaveLink($nid)
         || !_objCheckContent($nid)
         || !nebIsPubkey($nid)
     )
@@ -1803,9 +1813,9 @@ function _entityAddPasswd($pubkey, $privkey, $password)
         return false;
     if ($password == '')
         return false;
-    if (!io_testObjectPresent($pubkey))
+    if (!io_checkNodeHaveContent($pubkey))
         return false;
-    if (!io_testObjectPresent($privkey))
+    if (!io_checkNodeHaveContent($privkey))
         return false;
     // Vérifie que le mot de passe est valide.
     $privcert = nebGetContentAsText($privkey, 10000);
@@ -1897,7 +1907,7 @@ function _objGenerate(&$data, $typemime = '')
     $dat = date(DATE_ATOM);
     $hash = _objGetNID($data);
     // Ecrit l'objet.
-    if (!io_testObjectPresent($hash))
+    if (!io_checkNodeHaveContent($hash))
         _objWriteContent($hash, $data);
     // Ecrit le lien de hash.
     $lnk = _lnkGenerate($dat, 'l', $hash, (_objGetNID(getConfiguration('cryptoHashAlgorithm'))), (_objGetNID('nebule/objet/hash'))); // 8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec
@@ -1924,7 +1934,7 @@ function _objGenerate(&$data, $typemime = '')
  */
 function _objGetLocalContent(string &$nid, string &$data, int $maxData = 0): bool
 {
-    if (io_testObjectPresent($nid) && _objCheckContent($nid)) {
+    if (io_checkNodeHaveContent($nid) && _objCheckContent($nid)) {
         $data = io_objectRead($nid, $maxData);
         return true;
     }
@@ -1951,7 +1961,7 @@ function _objDownloadContent(string $nid, string $localisation): void
         || $localisation == '0'
         || $localisation == ''
         || !is_string($localisation)
-        || io_testObjectPresent($nid)
+        || io_checkNodeHaveContent($nid)
     )
         return;
 
@@ -2019,12 +2029,12 @@ function _objCheckContent(&$nid)
     if (!_nodCheckNID($nid))
         return false;
 
-    if (!io_testObjectPresent($nid))
+    if (!io_checkNodeHaveContent($nid))
         return true;
 
     // Si c'est l'objet 0, le supprime.
     if ($nid == '0') {
-        if (io_testObjectPresent($nid)) {
+        if (io_checkNodeHaveContent($nid)) {
             io_objectDelete($nid);
         }
         return true;
@@ -2118,7 +2128,7 @@ function _objWriteContent(string $object, string &$data): bool
         return false;
     }
 
-    if (io_testObjectPresent($object)) {
+    if (io_checkNodeHaveContent($object)) {
         return true;
     }
 
@@ -2178,7 +2188,7 @@ function _lnkGenerate(string $rc, string $req, string $nid1, string $nid2 = '', 
     if (!_entityCheck($nebulePublicEntity)
         || $nebulePrivateEntite == ''
         || $nebulePasswordEntite == ''
-        || !io_testObjectPresent($nebulePrivateEntite)
+        || !io_checkNodeHaveContent($nebulePrivateEntite)
         || $req == ''
         || !_nodCheckNID($nid1)
         || !_nodCheckNID($nid2, true)
@@ -2273,7 +2283,7 @@ function _lnkGraphResolvOne(&$nid, &$visited, $present = true, $synchro = false,
 
     if (count($oklinks) == 0) {
         if (!$present
-            || io_testObjectPresent($nid)
+            || io_checkNodeHaveContent($nid)
         ) {
             return $nid;
         } else {
@@ -2315,7 +2325,7 @@ function _lnkGraphResolvOne(&$nid, &$visited, $present = true, $synchro = false,
             _objDownloadContent($nid); // Syncho de l'objet.
         }
         if (!$present
-            || io_testObjectPresent($nid)
+            || io_checkNodeHaveContent($nid)
         ) {
             return $nid;
         } else {
@@ -2332,7 +2342,7 @@ function _lnkGraphResolvOne(&$nid, &$visited, $present = true, $synchro = false,
     }
 
     if (!$present
-        || io_testObjectPresent($nid)
+        || io_checkNodeHaveContent($nid)
     ) {
         return $nid;
     } else {
@@ -2661,7 +2671,7 @@ function _lnkListOne(&$nid, &$table, $filtreact = '-', $filtreobj = '', $withinv
 
     if ($nid == '0')
         return;
-    if (!io_testLinkPresent($nid))
+    if (!io_checkNodeHaveLink($nid))
         return;
     if (!getConfiguration('permitListInvalidLinks'))
         $withinvalid = false; // Si pas autorisé, refuse de lire les liens invalides.
@@ -3084,7 +3094,7 @@ function _lnkCheckSIG(string &$bh, string &$bl, string &$sig, string &$nid): boo
     // --- --- --- --- --- --- --- --- ---
     // Check sign.
     if (!getConfiguration('permitCheckSignOnVerify')) return true;
-    if (io_testObjectPresent($nid)) {
+    if (io_checkNodeHaveContent($nid)) {
         $hash = _objGetNID($bh . '_' . $bl); // TODO remplacer getConfiguration('cryptoHashAlgorithm') par une convertion des algo et size.
 
         // Read signer's public key.
@@ -3282,7 +3292,7 @@ function _lnkWrite($link)
 
     // Recherche la pré-existance du lien.
     $res = false;
-    if (io_testLinkPresent($objsrc)) {
+    if (io_checkNodeHaveLink($objsrc)) {
         $lines = io_linksRead($objsrc);
         foreach ($lines as $line) {
             if (!(substr($line, 0, 21) == 'nebule/liens/version/')) {
@@ -3340,81 +3350,91 @@ function io_open(): bool
     return true;
 }
 
-/** FIXME
- * I/O - Vérifie l'état du dossier des liens.
+/**
+ * I/O - Check folder status and writeability for links.
  *
  * @return boolean
  */
 function io_checkLinkFolder(): bool
 {
-    if (!file_exists(LOCAL_LINKS_FOLDER)
-        || !is_dir(LOCAL_LINKS_FOLDER)
-    ) {
+    // Check if exist.
+    if (!file_exists(LOCAL_LINKS_FOLDER) || !is_dir(LOCAL_LINKS_FOLDER)) {
+        addLog('fct="io_checkLinkFolder:1" error="no folder for links.');
         return false;
     }
-    if (getConfiguration('permitWrite')
-        && getConfiguration('permitWriteLink')
-    ) {
-        $data = _objGetNID(cryptoGetPseudoRandom(8) . date(DATE_ATOM));
-        $name = LOCAL_LINKS_FOLDER . '/writest' . $data;
-        file_put_contents($name, $data);
-        if (!file_exists($name)
-            || !is_file($name)
-        ) {
+
+    // Check writeability.
+    if (getConfiguration('permitWrite') && getConfiguration('permitWriteLink')) {
+        $data = cryptoGetPseudoRandom(2048);
+        $name = LOCAL_LINKS_FOLDER . '/writest' . bin2hex(cryptoGetPseudoRandom(8));
+        if (file_put_contents($name, $data) === false) {
+            addLog('fct="io_checkLinkFolder:2" error="I/O error on folder for links.');
             return false;
         }
-        $read = file_get_contents($name, false, null, 0, 1024);
+        if (!file_exists($name) || !is_file($name)) {
+            addLog('fct="io_checkLinkFolder:3" error="I/O error on folder for links.');
+            return false;
+        }
+        $read = file_get_contents($name, false, null, 0, 2400);
         if ($data != $read) {
+            addLog('fct="io_checkLinkFolder:4" error="I/O error on folder for links.');
             return false;
         }
-        unset($data, $read);
-        unlink($name);
-        unset($name);
+        if (unlink($name)) {
+            addLog('fct="io_checkLinkFolder:5" error="I/O error on folder for links.');
+            return false;
+        }
     }
+
     return true;
 }
 
-/** FIXME
- * I/O - Vérifie l'état du dossier des objets.
+/**
+ * I/O - Check folder status and writeability for objects.
  *
  * @return boolean
  */
 function io_checkObjectFolder()
 {
-    if (!file_exists(LOCAL_OBJECTS_FOLDER)
-        || !is_dir(LOCAL_OBJECTS_FOLDER)
-    ) {
+    // Check if exist.
+    if (!file_exists(LOCAL_OBJECTS_FOLDER) || !is_dir(LOCAL_OBJECTS_FOLDER) ) {
+        addLog('fct="io_checkObjectFolder:1" error="No folder for objects.');
         return false;
     }
-    if (getConfiguration('permitWrite')
-        && getConfiguration('permitWriteObject')
-    ) {
-        $data = _objGetNID(cryptoGetPseudoRandom(8) . date(DATE_ATOM));
-        $name = LOCAL_OBJECTS_FOLDER . '/writest' . $data;
-        file_put_contents($name, $data);
-        if (!file_exists($name)
-            || !is_file($name)
-        ) {
+
+    // Check writeability.
+    if (getConfiguration('permitWrite') && getConfiguration('permitWriteObject')) {
+        $data = cryptoGetPseudoRandom(2048);
+        $name = LOCAL_OBJECTS_FOLDER . '/writest' . bin2hex(cryptoGetPseudoRandom(8));
+        if (file_put_contents($name, $data) === false) {
+            addLog('fct="io_checkObjectFolder:2" error="I/O error on folder for objects.');
             return false;
         }
-        $read = file_get_contents($name, false, null, 0, 1024);
+        if (!file_exists($name) || !is_file($name)) {
+            addLog('fct="io_checkObjectFolder:3" error="I/O error on folder for objects.');
+            return false;
+        }
+        $read = file_get_contents($name, false, null, 0, 2400);
         if ($data != $read) {
+            addLog('fct="io_checkObjectFolder:4" error="I/O error on folder for objects.');
             return false;
         }
-        unset($data, $read);
-        unlink($name);
-        unset($name);
+        if (unlink($name)) {
+            addLog('fct="io_checkObjectFolder:5" error="I/O error on folder for objects.');
+            return false;
+        }
     }
+
     return true;
 }
 
-/** FIXME
- * I/O - Indique true si l'objet a des liens, ou false sinon.
+/**
+ * I/O - Check if node link's file is present, which mean node have one or more links.
  *
  * @param string $nid
  * @return boolean
  */
-function io_testLinkPresent(&$nid): bool
+function io_checkNodeHaveLink(&$nid): bool
 {
     if (file_exists(LOCAL_LINKS_FOLDER . '/' . $nid)) {
         return true;
@@ -3422,13 +3442,13 @@ function io_testLinkPresent(&$nid): bool
     return false;
 }
 
-/** FIXME
- * I/O - Indique true si l'objet est présent, ou false sinon.
+/**
+ * I/O - Check if node object's content is present, which mean node is an object with a content.
  *
  * @param string $nid
  * @return boolean
  */
-function io_testObjectPresent(&$nid): bool
+function io_checkNodeHaveContent(&$nid): bool
 {
     if (file_exists(LOCAL_OBJECTS_FOLDER . '/' . $nid))
         return true;
@@ -3446,7 +3466,7 @@ function io_linksRead(&$nid)
 {
     $result = array();
     $count = 0;
-    if (!io_testLinkPresent($nid))
+    if (!io_checkNodeHaveLink($nid))
         return $result;
     $links = file(LOCAL_LINKS_FOLDER . '/' . $nid); // TODO à refaire avec stream_context_create
     $maxLinks = getConfiguration('ioReadMaxLinks');
@@ -3472,7 +3492,7 @@ function io_objectRead(string $nid, int $maxData = 0)
 {
     if ($maxData == 0)
         $maxData = getConfiguration('ioReadMaxData');
-    if (!io_testObjectPresent($nid))
+    if (!io_checkNodeHaveContent($nid))
         return false;
     _metrologyAdd('or');
     return file_get_contents(LOCAL_OBJECTS_FOLDER . '/' . $nid, false, null, 0, $maxData);
@@ -3521,7 +3541,7 @@ function io_objectDelete(&$nid)
 {
     if (!getConfiguration('permitWrite') || !getConfiguration('permitWriteObject'))
         return false;
-    if (!io_testObjectPresent($nid))
+    if (!io_checkNodeHaveContent($nid))
         return true;
     if (!unlink(LOCAL_OBJECTS_FOLDER . '/' . $nid))
     {
@@ -3631,7 +3651,7 @@ function cryptoGetFileHash(string $file, string $algo = ''): string
     return hash_file(cryptoGetTranslatedHashAlgo($algo), LOCAL_OBJECTS_FOLDER . '/' . $file);
 }
 
-/** FIXME
+/**
  * Generate pseudo random number
  * Use OpenSSL library.
  *
@@ -3659,7 +3679,7 @@ function cryptoGetPseudoRandom($count = 32): string
 
         // Fait diverger le compteur interne pour la sortie.
         // La concaténation avec un texte empêche de remonter à la valeur du compteur interne.
-        $outvalue = pack("H*", hash($algo, $intcount . 'liberté égalité fraternité'));
+        $outvalue = hash($algo, $intcount . 'liberté égalité fraternité', true);
 
         // Tronc au besoin la taille de la sortie.
         if (strlen($outvalue) > $diffsize)
@@ -3685,7 +3705,7 @@ function cryptoAsymetricEncrypt(string $data)
     if (!_entityCheck($nebulePublicEntity)
         || $nebulePrivateEntite == ''
         || $nebulePasswordEntite == ''
-        || !io_testObjectPresent($nebulePrivateEntite)
+        || !io_checkNodeHaveContent($nebulePrivateEntite)
         || $data = ''
     )
         return '';
@@ -3818,7 +3838,7 @@ function getBootstrapSwitchApplication(): void
         && _nodCheckNID($arg, true)
         && ($arg == '0'
             || $arg == '1'
-            || io_testLinkPresent($arg)
+            || io_checkNodeHaveLink($arg)
         )
     ) {
         $activated = false;
@@ -3904,8 +3924,8 @@ function findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstanceSleep): 
     session_start();
     if (isset($_SESSION['bootstrapLibrariesID'])
         && _nodCheckNID($_SESSION['bootstrapLibrariesID'])
-        && io_testLinkPresent($_SESSION['bootstrapLibrariesID'])
-        && io_testObjectPresent($_SESSION['bootstrapLibrariesID'])
+        && io_checkNodeHaveLink($_SESSION['bootstrapLibrariesID'])
+        && io_checkNodeHaveContent($_SESSION['bootstrapLibrariesID'])
         && _objCheckContent($_SESSION['bootstrapLibrariesID'])
         && isset($_SESSION['bootstrapLibrariesInstances'][$_SESSION['bootstrapLibrariesID']])
         && $_SESSION['bootstrapLibrariesInstances'][$_SESSION['bootstrapLibrariesID']] != ''
@@ -3925,8 +3945,8 @@ function findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstanceSleep): 
         addLog('find nebule library ' . $bootstrapLibraryID);
 
         if (!_nodCheckNID($bootstrapLibraryID)
-            || !io_testLinkPresent($bootstrapLibraryID)
-            || !io_testObjectPresent($bootstrapLibraryID)
+            || !io_checkNodeHaveLink($bootstrapLibraryID)
+            || !io_checkNodeHaveContent($bootstrapLibraryID)
             || !_objCheckContent($bootstrapLibraryID)
         ) {
             $bootstrapLibraryID = '';
@@ -3955,7 +3975,7 @@ function loadLibraryPOO(string $bootstrapLibraryID, string $bootstrapLibraryInst
         else
             $nebuleInstance = unserialize($bootstrapLibraryInstanceSleep);
 
-        switchLog(BOOTSTRAP_NAME);
+        reopenLog(BOOTSTRAP_NAME);
     } else
         setBootstrapBreak('41', 'Library nebule error');
 }
@@ -4026,8 +4046,8 @@ function findApplication():void
                 && $_SESSION['bootstrapApplicationID'] != ''
                 && _nodCheckNID($_SESSION['bootstrapApplicationID'])
                 && $_SESSION['bootstrapApplicationID'] == '0'
-                || (io_testLinkPresent($_SESSION['bootstrapApplicationID'])
-                    && io_testObjectPresent($_SESSION['bootstrapApplicationID'])
+                || (io_checkNodeHaveLink($_SESSION['bootstrapApplicationID'])
+                    && io_checkNodeHaveContent($_SESSION['bootstrapApplicationID'])
                     && _objCheckContent($_SESSION['bootstrapApplicationID'])
                 )
             ) {
@@ -4070,7 +4090,7 @@ function findApplication():void
             $bootstrapApplicationStartID = '1';
             $bootstrapApplicationID = '1';
         } elseif (_nodCheckNID($bootstrapSwitchApplication)
-            && io_testLinkPresent($bootstrapSwitchApplication)
+            && io_checkNodeHaveLink($bootstrapSwitchApplication)
         ) {
             $refAppsID = _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS);
             $links = array();
@@ -4084,8 +4104,8 @@ function findApplication():void
                 // Vérifie l'application non dé-sérialisée.
                 if (isset($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
                     && _nodCheckNID($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
-                    && io_testLinkPresent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
-                    && io_testObjectPresent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+                    && io_checkNodeHaveLink($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+                    && io_checkNodeHaveContent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
                     && _objCheckContent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
                     && isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID])
                     && $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID] != ''
@@ -5308,7 +5328,7 @@ function bootstrapDisplayPreloadApplication()
            $bootstrapApplicationStartID;
 
     // Initialisation des logs
-    switchLog('preload');
+    reopenLog('preload');
     addLog('Loading');
 
     echo 'CHK';
@@ -5331,7 +5351,7 @@ function bootstrapDisplayPreloadApplication()
         flush();
 
         // Ré-initialisation des logs
-        switchLog('preload');
+        reopenLog('preload');
         ?>
 
         Tl=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?>
@@ -5466,7 +5486,7 @@ function bootstrapDisplayApplicationfirst(): void
     $nebuleCacheIsPubkey = array();
 
     // Initialisation des logs
-    switchLog('first');
+    reopenLog('first');
     addLog('Loading');
 
     echo 'CHK';
@@ -5591,7 +5611,7 @@ function bootstrapFirstCreateObjects()
         <?php
         // Si il manque un des objets, recrée les objets.
         $hash = _objGetNID(FIRST_RESERVED_OBJECTS[10]);
-        if (!io_testObjectPresent($hash))
+        if (!io_checkNodeHaveContent($hash))
         {
         addLog('need create objects');
 
@@ -5702,7 +5722,7 @@ function bootstrapFirstSynchronizingEntities()
             false);
         echo ' ' . $entity . ' ';
         if (_nodCheckNID($entity)
-            && io_testLinkPresent($entity)
+            && io_checkNodeHaveLink($entity)
         ) {
             // Recherche de l'objet et des liens de l'entité.
             $nebuleSecurityMaster = $entity;
@@ -5728,7 +5748,7 @@ function bootstrapFirstSynchronizingEntities()
             false);
         echo ' ' . $entity . ' ';
         if (_nodCheckNID($entity)
-            && io_testLinkPresent($entity)
+            && io_checkNodeHaveLink($entity)
         ) {
             // Recherche de l'objet et des liens de l'entité.
             $nebuleCodeMaster = $entity;
@@ -5754,7 +5774,7 @@ function bootstrapFirstSynchronizingEntities()
             false);
         echo ' ' . $entity . ' ';
         if (_nodCheckNID($entity)
-            && io_testLinkPresent($entity)
+            && io_checkNodeHaveLink($entity)
         ) {
             // Recherche de l'objet et des liens de l'entité.
             $nebuleDirectoryMaster = $entity;
@@ -5780,7 +5800,7 @@ function bootstrapFirstSynchronizingEntities()
             false);
         echo ' ' . $entity . ' ';
         if (_nodCheckNID($entity)
-            && io_testLinkPresent($entity)
+            && io_checkNodeHaveLink($entity)
         ) {
             // Recherche de l'objet et des liens de l'entité.
             $nebuleTimeMaster = $entity;
@@ -5861,9 +5881,9 @@ function bootstrapFirstSynchronizingObjects()
         <span class="partstitle">#5 synchronizing objets</span><br/>
         <?php
         // Si la bibliothèque ne se charge pas correctement, fait une première synchronisation des entités.
-        if (!io_testObjectPresent($refAppsID)
-        && !io_testObjectPresent($refLibID)
-        && !io_testLinkPresent($refBootID)
+        if (!io_checkNodeHaveContent($refAppsID)
+        && !io_checkNodeHaveContent($refLibID)
+        && !io_checkNodeHaveLink($refBootID)
         )
         {
         addLog('need sync objects');
@@ -6308,7 +6328,7 @@ function bootstrapDisplayApplication0()
            $loggerSessionID;
 
     // Initialisation des logs
-    switchLog('app0');
+    reopenLog('app0');
     addLog('Loading');
 
     echo 'CHK';
@@ -6318,7 +6338,7 @@ function bootstrapDisplayApplication0()
     bootstrapHtmlTop();
 
     // Ré-initialisation des logs FIXME ???
-    switchLog('app0');
+    reopenLog('app0');
 
     ?>
 
@@ -6441,7 +6461,7 @@ function bootstrapDisplayApplication1()
     global $nebuleInstance, $loggerSessionID, $nebuleLibLevel, $nebuleLibVersion, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
 
     // Initialisation des logs
-    switchLog('app1');
+    reopenLog('app1');
     addLog('Loading');
 
     echo 'CHK';
@@ -6451,7 +6471,7 @@ function bootstrapDisplayApplication1()
     bootstrapHtmlTop();
 
     // Ré-initialisation des logs FIXME ???
-    switchLog('app1');
+    reopenLog('app1');
 
     // Instancie la classe de la documentation.
     $instance = new nebdoctech($nebuleInstance);
@@ -6488,7 +6508,7 @@ function bootstrapDisplayApplication2()
     global $nebuleInstance, $loggerSessionID, $nebuleLibLevel, $nebuleLibVersion, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
 
     // Initialisation des logs
-    switchLog('app2');
+    reopenLog('app2');
     addLog('Loading');
 
     echo 'CHK';
@@ -6498,7 +6518,7 @@ function bootstrapDisplayApplication2()
     bootstrapHtmlTop();
 
     // Ré-initialisation des logs FIXME ???
-    switchLog('app1');
+    reopenLog('app1');
 
 ?>
     <div class="layout-main">
@@ -6548,15 +6568,15 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
         if ($bootstrapApplicationID == '0') {
             addLog('load application 0');
             bootstrapDisplayApplication0();
-            switchLog(BOOTSTRAP_NAME);
+            reopenLog(BOOTSTRAP_NAME);
         } elseif ($bootstrapApplicationID == '1') {
             addLog('load application 1');
             bootstrapDisplayApplication1();
-            switchLog(BOOTSTRAP_NAME);
+            reopenLog(BOOTSTRAP_NAME);
         } elseif ($bootstrapApplicationID == '2') {
             addLog('load application 2');
             bootstrapDisplayApplication2();
-            switchLog(BOOTSTRAP_NAME);
+            reopenLog(BOOTSTRAP_NAME);
         } else {
             // Si tout est déjà pré-chargé, on déserialise.
             if (isset($bootstrapApplicationInstanceSleep)
@@ -6576,7 +6596,7 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
                 $applicationName = Application::APPLICATION_NAME;
 
                 // Change les logs au nom de l'application.
-                switchLog($applicationName);
+                reopenLog($applicationName);
 
                 // Désérialise les instances.
                 $applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
@@ -6613,7 +6633,7 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
                 $applicationName = Application::APPLICATION_NAME;
 
                 // Change les logs au nom de l'application.
-                switchLog($applicationName);
+                reopenLog($applicationName);
 
                 // Instanciation des classes de l'application.
                 $applicationInstance = new Application($nebuleInstance);
@@ -6638,7 +6658,7 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
             }
 
             // Change les logs au nom du bootstrap.
-            switchLog(BOOTSTRAP_NAME);
+            reopenLog(BOOTSTRAP_NAME);
 
             // Ouverture de la session PHP.
             session_start();
@@ -6687,7 +6707,7 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
         }
 
         // Change les logs au nom du bootstrap.
-        switchLog(BOOTSTRAP_NAME);
+        reopenLog(BOOTSTRAP_NAME);
     }
 }
 
