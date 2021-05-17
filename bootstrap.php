@@ -3335,7 +3335,7 @@ function _lnkWrite($link)
 
 // I/O sont les fonctions liées aux accès disque. Peut être modifié pour permettre un accès en BDD ou autre.
 /**
- * I/O - Preparing folders for links and objects (nodes with content).
+ * I/O - Start I/O subsystem with checks.
  *
  * @return boolean
  */
@@ -3488,9 +3488,9 @@ function io_checkNodeHaveContent(&$nid): bool
  *
  * @param string $nid
  * @param integer $maxLinks
- * @return array:string
+ * @return array
  */
-function io_linksRead(&$nid, int $maxLinks = 0)
+function io_linksRead(&$nid, int $maxLinks = 0): array
 {
     $result = array();
     $count = 0;
@@ -3499,7 +3499,8 @@ function io_linksRead(&$nid, int $maxLinks = 0)
         return $result;
     if ($maxLinks == 0)
         $maxLinks = getConfiguration('ioReadMaxLinks');
-    $links = file(LOCAL_LINKS_FOLDER . '/' . $nid); // TODO à refaire avec stream_context_create
+
+    $links = file(LOCAL_LINKS_FOLDER . '/' . $nid);
     foreach ($links as $link) {
         $result [$count] = $link;
         _metrologyAdd('lr');
@@ -3511,54 +3512,63 @@ function io_linksRead(&$nid, int $maxLinks = 0)
 }
 
 /**
- * I/O - Read object content.
- * Return the read data or false on failure.
- *
- * @param string $nid
- * @param integer $maxData
- * @return boolean|string
- */
-function io_objectRead(string $nid, int $maxData = 0)
-{
-    if ($maxData == 0)
-        $maxData = getConfiguration('ioReadMaxData');
-    if (!_nodCheckNID($nid) || !io_checkNodeHaveContent($nid))
-        return false;
-    _metrologyAdd('or');
-    return file_get_contents(LOCAL_OBJECTS_FOLDER . '/' . $nid, false, null, 0, $maxData);
-}
-
-/** FIXME
- * I/O - Ecrit un lien de l'objet.
- * Retourne le nombre d'octets écrits ou false si erreur.
+ * I/O - Write a link to a node.
  *
  * @param string $nid
  * @param string $link
- * @return boolean|number
+ * @return boolean
  */
-function io_linkWrite(&$nid, &$link)
+function io_linkWrite(&$nid, &$link): bool
 {
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteLink')
     )
         return false;
-    return file_put_contents(LOCAL_LINKS_FOLDER . '/' . $nid, "$link\n", FILE_APPEND);
+
+    if (file_put_contents(LOCAL_LINKS_FOLDER . '/' . $nid, "$link\n", FILE_APPEND) === false)
+        return false;
+    return true;
+}
+
+/**
+ * I/O - Read object content.
+ * Return the read data from object.
+ *
+ * @param string $nid
+ * @param integer $maxData
+ * @return string
+ */
+function io_objectRead(string $nid, int $maxData = 0): string
+{
+    if ($maxData == 0)
+        $maxData = getConfiguration('ioReadMaxData');
+    if (!_nodCheckNID($nid) || !io_checkNodeHaveContent($nid))
+        return '';
+
+    $result = file_get_contents(LOCAL_OBJECTS_FOLDER . '/' . $nid, false, null, 0, $maxData);
+    if ($result === false)
+        $result = '';
+    _metrologyAdd('or');
+
+    return $result;
 }
 
 /**
  * I/O - Write object content.
- * The function returns the number of bytes that were written to the file, or false on failure.
  *
  * @param string $data
- * @return boolean|number
+ * @return boolean
  */
-function io_objectWrite(&$data)
+function io_objectWrite(&$data):bool
 {
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteObject')
     )
         return false;
-    return file_put_contents(LOCAL_OBJECTS_FOLDER . '/' . _objGetNID($data), $data);
+
+    if (file_put_contents(LOCAL_OBJECTS_FOLDER . '/' . _objGetNID($data), $data) === false)
+        return false;
+    return true;
 }
 
 /**
@@ -3573,16 +3583,17 @@ function io_objectDelete(&$nid)
         return false;
     if (!io_checkNodeHaveContent($nid))
         return true;
+
     if (!unlink(LOCAL_OBJECTS_FOLDER . '/' . $nid))
     {
-        addLog('fct="io_objectDelete:1" error="Unable to delete file"');
+        addLog('fct="io_objectDelete:1" error="Unable to delete file."');
         return false;
     }
     return true;
 }
 
-/** FIXME
- * I/O - Fin de traitement.
+/**
+ * I/O - End of work on I/O subsystem.
  *
  * @return void
  */
@@ -3598,8 +3609,8 @@ function io_close(): void
  * ------------------------------------------------------------------------------------------
  */
 
-/** FIXME
- * Filtre les chaines de caractères non imprimables mais conserve les retours chariots.
+/**
+ * Filtrer string with printeable chars and CR.
  *
  * @param string $data
  * @return string
