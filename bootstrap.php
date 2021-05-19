@@ -1239,44 +1239,6 @@ function nebReadObjTypeMime(&$object)
     return $text;
 }
 
-// FIXME
-function nebIsBanned(&$object)
-{ // Vérifie si l'objet est marqué comme banni.
-    // Fonction avec utilisation du cache si possible.
-    global $nebulePublicEntity, $nebuleSecurityMaster, $nebuleCacheIsBanned;
-
-    if (isset($nebuleCacheIsBanned [$object]))
-        return $nebuleCacheIsBanned [$object];
-
-    if ($object == '0')
-        return false;
-
-    $ok = false;
-    $table = array();
-    $hashtype = _objGetNID('nebule/danger'); // ac2323f77d7ee9f3ae841e8ccd8374397038160ec7cdb2fc86610c0f66eeeedb
-    $filter = array(
-        'bl/rl/req' => 'f',
-        'bl/rl/nid1' => $hashtype,
-        'bl/rl/nid2' => $object,
-        'bl/rl/nid3' => '0',
-        'bl/rl/nid4' => '0',
-    );
-    _lnkFind($object, $table, $filter);
-    foreach ($table as $link) {
-        if (($link [2] == $nebulePublicEntity) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $object) && ($link [7] == '0'))
-            $ok = true;
-        if (($link [2] == $nebuleSecurityMaster) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $object) && ($link [7] == '0'))
-            $ok = true;
-    }
-    unset($table);
-    unset($hashtype);
-
-    if (getConfiguration('permitBufferIO'))
-        $nebuleCacheIsBanned [$object] = $ok;
-
-    return $ok;
-}
-
 /** FIXME
  * nebIsPubkey()
  * Vérifie si l'objet est une clé publique.
@@ -1492,7 +1454,7 @@ function nebCreatAsText(string $data, bool $skipIfPresent = true)
     $oid = _objGetNID($data);
     if ($skipIfPresent && io_checkNodeHaveContent($oid))
         return true;
-    if (nebIsBanned($oid))
+    if (_nodCheckBanned($oid))
         return false;
     _objGenerate($data, 'text/plain');
     return true;
@@ -1942,15 +1904,14 @@ function _objGetLocalContent(string &$nid, string &$data, int $maxData = 0): boo
 }
 
 /** FIXME
- * Object - Télécharge l'objet sur une localisation précise (site web).
- *  - $object l'objet à télécharger.
- *  - $localisation le site web sur lequel aller télécharger l'objet.
+ * Object - Download node content (object) on web location.
+ * Only valid content are writed on local filesystem.
  *
  * @param string $nid
- * @param string $localisation
- * @return void
+ * @param string $location
+ * @return boolean
  */
-function _objDownloadContent(string $nid, string $localisation): void
+function _objDownloadOnLocation(string $nid, string $location): bool
 {
     global $nebulePublicEntity, $nebuleSecurityMaster;
 
@@ -1958,16 +1919,18 @@ function _objDownloadContent(string $nid, string $localisation): void
         || !getConfiguration('permitWriteObject')
         || !getConfiguration('permitSynchronizeObject')
         || !_nodCheckNID($nid)
-        || $localisation == '0'
-        || $localisation == ''
-        || !is_string($localisation)
-        || io_checkNodeHaveContent($nid)
+        || $location == ''
+        || !is_string($location) // TODO renforcer la vérification de l'URL.
+        || _nodCheckBanned($nid)
     )
-        return;
+        return false;
+
+    if (io_checkNodeHaveContent($nid))
+        return true;
 
     // Recherche si banni. TODO à sortir !
     $table = array();
-    $hashtype = _objGetNID('nebule/danger'); // ac2323f77d7ee9f3ae841e8ccd8374397038160ec7cdb2fc86610c0f66eeeedb
+    $hashtype = _objGetNID('nebule/danger');
     _lnkList($nid, $table, '-', $hashtype);
     foreach ($table as $link) {
         if ($link [2] == $nebulePublicEntity
@@ -1977,7 +1940,7 @@ function _objDownloadContent(string $nid, string $localisation): void
             && $link [7] == '0'
         ) {
             addLog('fct="o_downloadContent:1" warn="' . $nid . ') banned by ' . $nebulePublicEntity . '"');
-            return;
+            return false;
         }
         if ($link [2] == $nebuleSecurityMaster
             && $link [4] == 'f'
@@ -1986,32 +1949,35 @@ function _objDownloadContent(string $nid, string $localisation): void
             && $link [7] == '0'
         ) {
             addLog('fct="o_downloadContent:2" warn="' . $nid . ') banned by ' . $nebuleSecurityMaster . '"');
-            return;
+            return false;
         }
     }
 
-    // Téléchargement de l'objet.
-    $hexid = cryptoGetPseudoRandom(8); // id pour fichier temporaire.
-    $id = bin2hex($hexid);
-    $idname = '_neblibpp_o_dl1_' . $id . '-' . $nid;
-    $distobj = fopen($localisation . '/o/' . $nid, 'r');
+    // Téléchargement de l'objet via un fichier temporaire.
+    $tmpId = bin2hex(cryptoGetPseudoRandom(8));
+    $tmpIdName = '_neblibpp_o_dl1_' . $tmpId . '-' . $nid;
+    $distobj = fopen($location . '/o/' . $nid, 'r');
     if ($distobj) {
-        $localobj = fopen(LOCAL_OBJECTS_FOLDER . '/' . $idname, 'w'); // @todo refaire via les i/o.
+        $localobj = fopen(LOCAL_OBJECTS_FOLDER . '/' . $tmpIdName, 'w'); // @todo refaire via les i/o.
         if ($localobj) {
             while (($line = fgets($distobj, getConfiguration('ioReadMaxData'))) !== false) {
                 fputs($localobj, $line);
             }
             fclose($localobj);
             $algo = substr($nid, strpos($nid, '.') + 1);
-            $hash = cryptoGetFileHash($idname, $algo);
+            $hash = cryptoGetFileHash($tmpIdName, $algo);
 
             if ($hash . '.' . $algo == $nid)
-                rename(LOCAL_OBJECTS_FOLDER . '/' . $idname, LOCAL_OBJECTS_FOLDER . '/' . $nid);
+                rename(LOCAL_OBJECTS_FOLDER . '/' . $tmpIdName, LOCAL_OBJECTS_FOLDER . '/' . $nid);
             else
-                unlink(LOCAL_OBJECTS_FOLDER . '/' . $idname);
+                unlink(LOCAL_OBJECTS_FOLDER . '/' . $tmpIdName);
         }
         fclose($distobj);
     }
+
+    if (io_checkNodeHaveContent($nid))
+        return true;
+    return false;
 }
 
 /** FIXME
@@ -2109,6 +2075,48 @@ function _nodCheckNID(string &$nid, bool $permitNull = false): bool
     if (strtok('.') !== false) return false;
 
     return true;
+}
+
+/** FIXME
+ * Object - Check with links if a node is marked as banned.
+ *
+ * @param $nid
+ * @return boolean
+ */
+function _nodCheckBanned(&$nid): bool
+{
+    global $nebulePublicEntity, $nebuleSecurityMaster, $nebuleCacheIsBanned;
+
+    if (isset($nebuleCacheIsBanned [$nid]))
+        return $nebuleCacheIsBanned [$nid];
+
+    if ($nid == '0')
+        return false;
+
+    $ok = false;
+    $table = array();
+    $hashtype = _objGetNID('nebule/danger'); // ac2323f77d7ee9f3ae841e8ccd8374397038160ec7cdb2fc86610c0f66eeeedb
+    $filter = array(
+        'bl/rl/req' => 'f',
+        'bl/rl/nid1' => $hashtype,
+        'bl/rl/nid2' => $nid,
+        'bl/rl/nid3' => '0',
+        'bl/rl/nid4' => '0',
+    );
+    _lnkFind($nid, $table, $filter);
+    foreach ($table as $link) {
+        if (($link [2] == $nebulePublicEntity) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $nid) && ($link [7] == '0'))
+            $ok = true;
+        if (($link [2] == $nebuleSecurityMaster) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $nid) && ($link [7] == '0'))
+            $ok = true;
+    }
+    unset($table);
+    unset($hashtype);
+
+    if (getConfiguration('permitBufferIO'))
+        $nebuleCacheIsBanned [$nid] = $ok;
+
+    return $ok;
 }
 
 /** FIXME
@@ -2322,7 +2330,7 @@ function _lnkGraphResolvOne(&$nid, &$visited, $present = true, $synchro = false,
         if ($synchro
             && getConfiguration('permitSynchronizeObject')
         ) {
-            _objDownloadContent($nid); // Syncho de l'objet.
+            _objDownloadOnLocation($nid); // Syncho de l'objet.
         }
         if (!$present
             || io_checkNodeHaveContent($nid)
@@ -2796,34 +2804,27 @@ function _lnkDownloadAnywhere($nid)
 }
 
 /** FIXME
- * Link -
+ * Link - Download links on web location for a node.
+ * Only valid links are writed on local filesystem.
  *
- * Télécharge les liens de l'objet sur une localisation précise (un site web).
- *  - $object l'objet dont les liens sont à télécharger.
- *  - $localisation le site web sur lequel aller télécharger les liens.
- * Les liens valides sont écrits.
- *
- * @param string $oid
- * @param string $localisation
+ * @param string $nid
+ * @param string $location
  * @return integer
  */
-function _lnkDownloadOnLocation($oid, $localisation)
+function _lnkDownloadOnLocation($nid, $location)
 {
     if (!getConfiguration('permitWrite')
         || !getConfiguration('nebulePermitSynchronizeLink')
-        || $oid == '0'
-        || $oid == ''
-        || !is_string($oid)
-        || $localisation == '0'
-        || $localisation == ''
-        || !is_string($localisation)
+        || !_nodCheckNID($nid, false)
+        || $location == ''
+        || !is_string($location) // TODO renforcer la vérification de l'URL.
     )
         return 0;
 
     $count = 0;
 
     // WARNING ajouter vérification du lien type texte
-    $distobj = fopen($localisation . '/l/' . $oid, 'r');
+    $distobj = fopen($location . '/l/' . $nid, 'r');
     if ($distobj) {
         while (!feof($distobj)) {
             $line = trim(fgets($distobj));
@@ -5716,7 +5717,7 @@ function bootstrapFirstSynchronizingEntities()
 
         // Recherche des autres liens.
         foreach (FIRST_LOCALISATIONS as $localisation) {
-            _objDownloadContent(getConfiguration('puppetmaster'), $localisation);
+            _objDownloadOnLocation(getConfiguration('puppetmaster'), $localisation);
             _lnkDownloadOnLocation(getConfiguration('puppetmaster'), $localisation);
             echo '.';
         }
@@ -5751,7 +5752,7 @@ function bootstrapFirstSynchronizingEntities()
             // Recherche de l'objet et des liens de l'entité.
             $nebuleSecurityMaster = $entity;
             foreach (FIRST_LOCALISATIONS as $localisation) {
-                _objDownloadContent($nebuleSecurityMaster, $localisation);
+                _objDownloadOnLocation($nebuleSecurityMaster, $localisation);
                 _lnkDownloadOnLocation($nebuleSecurityMaster, $localisation);
                 echo '.';
             }
@@ -5777,7 +5778,7 @@ function bootstrapFirstSynchronizingEntities()
             // Recherche de l'objet et des liens de l'entité.
             $nebuleCodeMaster = $entity;
             foreach (FIRST_LOCALISATIONS as $localisation) {
-                _objDownloadContent($nebuleCodeMaster, $localisation);
+                _objDownloadOnLocation($nebuleCodeMaster, $localisation);
                 _lnkDownloadOnLocation($nebuleCodeMaster, $localisation);
                 echo '.';
             }
@@ -5803,7 +5804,7 @@ function bootstrapFirstSynchronizingEntities()
             // Recherche de l'objet et des liens de l'entité.
             $nebuleDirectoryMaster = $entity;
             foreach (FIRST_LOCALISATIONS as $localisation) {
-                _objDownloadContent($nebuleDirectoryMaster, $localisation);
+                _objDownloadOnLocation($nebuleDirectoryMaster, $localisation);
                 _lnkDownloadOnLocation($nebuleDirectoryMaster, $localisation);
                 echo '.';
             }
@@ -5829,7 +5830,7 @@ function bootstrapFirstSynchronizingEntities()
             // Recherche de l'objet et des liens de l'entité.
             $nebuleTimeMaster = $entity;
             foreach (FIRST_LOCALISATIONS as $localisation) {
-                _objDownloadContent($nebuleTimeMaster, $localisation);
+                _objDownloadOnLocation($nebuleTimeMaster, $localisation);
                 _lnkDownloadOnLocation($nebuleTimeMaster, $localisation);
                 echo '.';
             }
@@ -5978,7 +5979,7 @@ function bootstrapFirstSynchronizingObjects()
         echo $lastID . ' ';
         if ($lastID != '0') {
             foreach (FIRST_LOCALISATIONS as $localisation) {
-                _objDownloadContent($lastID, $localisation);
+                _objDownloadOnLocation($lastID, $localisation);
                 echo '.';
             }
         } else {
@@ -6040,7 +6041,7 @@ function bootstrapFirstSynchronizingObjects()
             addLog('find app ' . $appID . ' as ' . $lastID);
             if ($lastID != '0') {
                 foreach (FIRST_LOCALISATIONS as $localisation) {
-                    _objDownloadContent($lastID, $localisation);
+                    _objDownloadOnLocation($lastID, $localisation);
                     _lnkDownloadOnLocation($lastID, $localisation);
                     echo '.';
                 }
@@ -6056,7 +6057,7 @@ function bootstrapFirstSynchronizingObjects()
                 }
                 if ($nameID != '0') {
                     foreach (FIRST_LOCALISATIONS as $localisation) {
-                        _objDownloadContent($nameID, $localisation);
+                        _objDownloadOnLocation($nameID, $localisation);
                         _lnkDownloadOnLocation($nameID, $localisation);
                         echo '.';
                     }
