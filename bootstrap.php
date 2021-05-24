@@ -2599,12 +2599,13 @@ function _lnkFindInclusive($nid, &$table, $action, $srcobj, $dstobj, $metobj, $w
  * @param array $filter
  * @return void
  */
-function _lnkList(string $nid, array $result, array $filter): void
+function _lnkList(string &$nid, array &$result, array $filter): void
 {
     if ($nid == '0' || !io_checkNodeHaveLink($nid))
         return;
 
-    $lines = io_linksRead($nid);
+    $lines = array();
+    io_linksRead($nid, $lines);
     foreach ($lines as $line) {
         if (_lnkVerify($line)) {
             $link = _lnkParse($line);
@@ -2616,7 +2617,7 @@ function _lnkList(string $nid, array $result, array $filter): void
 
 /**
  * Link - Test if a link match a filter.
- * Filtering on bl/rl/req, bl/rl/nid1, bl/rl/nid2, bl/rl/nid3, bl/rl/nid4, bl/rl/nid*, bs/rs/nid, or not.
+ * Filtering on have bl/rl/req, bl/rl/nid1, bl/rl/nid2, bl/rl/nid3, bl/rl/nid4, bl/rl/nid*, bs/rs/nid, or not have.
  *
  * @param array $link
  * @param array $filter
@@ -2773,7 +2774,8 @@ function _lnkListOnOneFilter(string &$nid, array &$result, string $filtreact = '
     $version = ''; // version du lien.
     $n = 0; // indice dans la table des resultats.
     $tline = array(); // table d'un lien en cours de lecture et d'analyse.
-    $lines = io_linksRead($nid); // liens a lire et analyser.
+    $lines = array();
+    io_linksRead($nid, $lines); // liens a lire et analyser.
     $IOMaxlink = getConfiguration('ioReadMaxLinks');
     foreach ($lines as $line) {
         $i = 1;
@@ -3510,7 +3512,7 @@ function io_checkNodeHaveLink(&$nid): bool
  * @param string $nid
  * @return boolean
  */
-function io_checkNodeHaveContent(&$nid): bool
+function io_checkNodeHaveContent(string &$nid): bool
 {
     if (file_exists(LOCAL_OBJECTS_FOLDER . '/' . $nid))
         return true;
@@ -3522,28 +3524,28 @@ function io_checkNodeHaveContent(&$nid): bool
  * Return array of links, one string per link, maybe empty.
  *
  * @param string $nid
+ * @param array $lines
  * @param integer $maxLinks
  * @return array
  */
-function io_linksRead(string &$nid, int $maxLinks = 0): array
+function io_linksRead(string &$nid, array &$lines, int $maxLinks = 0): array
 {
-    $result = array();
     $count = 0;
 
     if (!_nodCheckNID($nid) || !io_checkNodeHaveLink($nid))
-        return $result;
+        return $lines;
     if ($maxLinks == 0)
         $maxLinks = getConfiguration('ioReadMaxLinks');
 
     $links = file(LOCAL_LINKS_FOLDER . '/' . $nid);
     foreach ($links as $link) {
-        $result [$count] = $link;
+        $lines [$count] = $link;
         _metrologyAdd('lr');
         $count++;
         if ($count > $maxLinks)
             break 1;
     }
-    return $result;
+    return $lines;
 }
 
 /**
@@ -3553,7 +3555,7 @@ function io_linksRead(string &$nid, int $maxLinks = 0): array
  * @param string $link
  * @return boolean
  */
-function io_linkWrite(&$nid, &$link): bool
+function io_linkWrite(string &$nid, string &$link): bool
 {
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteLink')
