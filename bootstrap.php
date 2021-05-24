@@ -1353,7 +1353,7 @@ function nebListChildrenRecurse($object, &$listchildren, &$node, $level = 1)
 
     $link = array();
     $links = array();
-    _lnkList($object, $links, '-', '', true);
+    _lnkListOnFullFilter($object, $links, '-', '', true);
     foreach ($links as $link) {
         $c = count($listchildren);
         $exist = false;
@@ -1931,7 +1931,7 @@ function _objDownloadOnLocation(string $nid, string $location): bool
     // Recherche si banni. TODO à sortir !
     $table = array();
     $hashtype = _objGetNID('nebule/danger');
-    _lnkList($nid, $table, '-', $hashtype);
+    _lnkListOnFullFilter($nid, $table, '-', $hashtype);
     foreach ($table as $link) {
         if ($link [2] == $nebulePublicEntity
             && $link [4] == 'f'
@@ -2087,6 +2087,9 @@ function _nodCheckBanned(&$nid): bool
 {
     global $nebulePublicEntity, $nebuleSecurityMaster, $nebuleCacheIsBanned;
 
+    // FIXME
+    return false;
+    /*
     if (isset($nebuleCacheIsBanned [$nid]))
         return $nebuleCacheIsBanned [$nid];
 
@@ -2116,7 +2119,7 @@ function _nodCheckBanned(&$nid): bool
     if (getConfiguration('permitBufferIO'))
         $nebuleCacheIsBanned [$nid] = $ok;
 
-    return $ok;
+    return $ok;*/
 }
 
 /** FIXME
@@ -2158,13 +2161,12 @@ function _objDelete(string &$object): bool
 {
     global $nebulePublicEntity;
 
-    if (!getConfiguration('permitWrite'))
+    if (!getConfiguration('permitWrite') || !getConfiguration('permitWriteObject'))
         return false;
-    if (!getConfiguration('permitWriteObject'))
-        return false;
+
     $ok = true;
     $links = array();
-    _lnkList($object, $links);
+    _lnkListOnFullFilter($object, $links);
     foreach ($links as $link) {
         if ($link [2] != $nebulePublicEntity) {
             $ok = false;
@@ -2435,7 +2437,7 @@ function _lnkFind($nid, &$table, $filter, $withinvalid = false)
     $linkdate = array();
     $tmptable = array();
     $i1 = 0;
-    _lnkListOne($nid, $tmptable, $bl_rl_req, $bl_rl_nid3, $withinvalid);
+    _lnkListOnOneFilter($nid, $tmptable, $bl_rl_req, $bl_rl_nid3, $withinvalid);
     foreach ($tmptable as $n => $t) {
         $linkdate [$n] = $t [3];
     }
@@ -2511,7 +2513,7 @@ function _lnkFindInclusive($nid, &$table, $action, $srcobj, $dstobj, $metobj, $w
     $tmptable = array();
     $i1 = 0;
 
-    _lnkListOne($nid, $tmptable, $action, $metobj, $withinvalid);
+    _lnkListOnOneFilter($nid, $tmptable, $action, $metobj, $withinvalid);
 
     foreach ($tmptable as $n => $t) {
         $linkdate [$n] = $t [3];
@@ -2590,16 +2592,99 @@ function _lnkFindInclusive($nid, &$table, $action, $srcobj, $dstobj, $metobj, $w
     return;
 }
 
+/**
+ * Link - Read links without filter and parse each links.
+ * @param string $nid
+ * @param array $result
+ * @param array $filter
+ * @return void
+ */
+function _lnkList(string $nid, array $result, array $filter): void
+{
+    if ($nid == '0' || !io_checkNodeHaveLink($nid))
+        return;
+
+    $lines = io_linksRead($nid);
+    foreach ($lines as $line) {
+        if (_lnkVerify($line)) {
+            $link = _lnkParse($line);
+            if (_lnkFilter($link, $filter))
+                $result [] = $link;
+        }
+    }
+}
+
+/**
+ * Link - Test if a link match a filter.
+ * Filtering on bl/rl/req, bl/rl/nid1, bl/rl/nid2, bl/rl/nid3, bl/rl/nid4, bl/rl/nid*, bs/rs/nid, or not.
+ *
+ * @param array $link
+ * @param array $filter
+ * @return bool
+ */
+function _lnkFilter(array $link, array $filter): bool
+{
+    $ok = false;
+
+    // Positive filtering
+    if (isset($filter['bl/rl/req']) && $link['bl/rl/req'] == $filter['bl/rl/req'])
+        $ok = true;
+    if (isset($filter['bl/rl/nid1']) && $link['bl/rl/nid1'] == $filter['bl/rl/nid1'])
+        $ok = true;
+    if (isset($filter['bl/rl/nid2']) && isset($link['bl/rl/nid2']) && $link['bl/rl/nid2'] == $filter['bl/rl/nid2'])
+        $ok = true;
+    if (isset($filter['bl/rl/nid3']) && isset($link['bl/rl/nid3']) && $link['bl/rl/nid3'] == $filter['bl/rl/nid3'])
+        $ok = true;
+    if (isset($filter['bl/rl/nid4']) && isset($link['bl/rl/nid4']) && $link['bl/rl/nid4'] == $filter['bl/rl/nid4'])
+        $ok = true;
+    if (isset($filter['bl/rl/nid*']) && ( $link['bl/rl/nid1'] == $filter['bl/rl/nid*']
+            || isset($link['bl/rl/nid2']) && $link['bl/rl/nid2'] == $filter['bl/rl/nid*']
+            || isset($link['bl/rl/nid3']) && $link['bl/rl/nid3'] == $filter['bl/rl/nid*']
+            || isset($link['bl/rl/nid4']) && $link['bl/rl/nid4'] == $filter['bl/rl/nid*']
+        )
+    )
+        $ok = true;
+    if (isset($filter['bs/rs/nid']) && $link['bs/rs/nid'] == $filter['bs/rs/nid'])
+        $ok = true;
+
+    if (!$ok)
+        return $ok;
+
+    // Negative filtering
+    if (isset($filter['!bl/rl/req']) && $link['bl/rl/req'] == $filter['!bl/rl/req'])
+        $ok = false;
+    if (isset($filter['!bl/rl/nid1']) && $link['bl/rl/nid1'] == $filter['!bl/rl/nid1'])
+        $ok = false;
+    if (isset($filter['!bl/rl/nid2']) && isset($link['bl/rl/nid2']) && $link['bl/rl/nid2'] == $filter['!bl/rl/nid2'])
+        $ok = false;
+    if (isset($filter['!bl/rl/nid3']) && isset($link['bl/rl/nid3']) && $link['bl/rl/nid3'] == $filter['!bl/rl/nid3'])
+        $ok = false;
+    if (isset($filter['!bl/rl/nid4']) && isset($link['bl/rl/nid4']) && $link['bl/rl/nid4'] == $filter['!bl/rl/nid4'])
+        $ok = false;
+    if (isset($filter['!bl/rl/nid*']) && ( $link['bl/rl/nid1'] == $filter['!bl/rl/nid*']
+            || isset($link['bl/rl/nid2']) && $link['bl/rl/nid2'] == $filter['!bl/rl/nid*']
+            || isset($link['bl/rl/nid3']) && $link['bl/rl/nid3'] == $filter['!bl/rl/nid*']
+            || isset($link['bl/rl/nid4']) && $link['bl/rl/nid4'] == $filter['!bl/rl/nid*']
+        )
+    )
+        $ok = false;
+    if (isset($filter['!bs/rs/nid']) && $link['bs/rs/nid'] == $filter['!bs/rs/nid'])
+        $ok = false;
+
+    return $ok;
+}
+
 /** FIXME
  * Link -
  *
- * @param $nid
- * @param $table
+ * @param string $nid
+ * @param array $result
  * @param string $filtreact
  * @param string $filtreobj
  * @param false $withinvalid
+ * @return void
  */
-function _lnkList($nid, &$table, $filtreact = '-', $filtreobj = '', $withinvalid = false)
+function _lnkListOnFullFilter(string $nid, array &$result, string $filtreact = '-', string $filtreobj = '', bool $withinvalid = false): void
 { // Liste et filtre les liens sur des actions et objets dans un ordre indéterminé.
     // - $object objet dont les liens sont à lire.
     // - $table table dans laquelle seront retournés les liens.
@@ -2617,7 +2702,7 @@ function _lnkList($nid, &$table, $filtreact = '-', $filtreobj = '', $withinvalid
     $i1 = 0;
     if ($filtreact == '')
         $filtreact = '-';
-    _lnkListOne($nid, $tmptable, $filtreact, $filtreobj, $withinvalid);
+    _lnkListOnOneFilter($nid, $tmptable, $filtreact, $filtreobj, $withinvalid);
     foreach ($tmptable as $n => $t) {
         $linkdate [$n] = $t [3];
     }
@@ -2630,25 +2715,25 @@ function _lnkList($nid, &$table, $filtreact = '-', $filtreobj = '', $withinvalid
             if (($vline [4] == 'x') && ($tline [4] != 'x') && ($tline [5] == $vline [5]) && ($tline [6] == $vline [6]) && ($tline [7] == $vline [7]) && (($vline [2] == $tline [2]) || ($vline [2] == $nebulePublicEntity)) && ($vline [9] == 1 || $vline [9] == -1) && ((($followXOnSameDate) && (strtotime($tline [3]) < strtotime($vline [3]))) || (strtotime($tline [3]) <= strtotime($vline [3]))))
                 continue 2;
         }
-        foreach ($table as $vline) // Suppression de l'affichage des liens en double, même à des dates différentes.
+        foreach ($result as $vline) // Suppression de l'affichage des liens en double, même à des dates différentes.
         {
             if (($tline [2] == $vline [2]) && ($tline [4] == $vline [4]) && ($tline [5] == $vline [5]) && ($tline [6] == $vline [6]) && ($tline [7] == $vline [7]))
                 continue 2;
         }
         // Remplissage de la table des résultats.
-        $table [$i1] [0] = $tline [0];
-        $table [$i1] [1] = $tline [1];
-        $table [$i1] [2] = $tline [2];
-        $table [$i1] [3] = $tline [3];
-        $table [$i1] [4] = $tline [4];
-        $table [$i1] [5] = $tline [5];
-        $table [$i1] [6] = $tline [6];
-        $table [$i1] [7] = $tline [7];
-        $table [$i1] [8] = $tline [8];
-        $table [$i1] [9] = $tline [9];
-        $table [$i1] [10] = $tline [10];
-        $table [$i1] [11] = $tline [11];
-        $table [$i1] [12] = $tline [12];
+        $result [$i1] [0] = $tline [0];
+        $result [$i1] [1] = $tline [1];
+        $result [$i1] [2] = $tline [2];
+        $result [$i1] [3] = $tline [3];
+        $result [$i1] [4] = $tline [4];
+        $result [$i1] [5] = $tline [5];
+        $result [$i1] [6] = $tline [6];
+        $result [$i1] [7] = $tline [7];
+        $result [$i1] [8] = $tline [8];
+        $result [$i1] [9] = $tline [9];
+        $result [$i1] [10] = $tline [10];
+        $result [$i1] [11] = $tline [11];
+        $result [$i1] [12] = $tline [12];
         $i1++;
     }
     unset($linkdate);
@@ -2661,13 +2746,14 @@ function _lnkList($nid, &$table, $filtreact = '-', $filtreobj = '', $withinvalid
 /** FIXME
  * Link -
  *
- * @param $nid
- * @param $table
+ * @param string $nid
+ * @param array $result
  * @param string $filtreact
  * @param string $filtreobj
  * @param false $withinvalid
+ * @return void
  */
-function _lnkListOne(&$nid, &$table, $filtreact = '-', $filtreobj = '', $withinvalid = false)
+function _lnkListOnOneFilter(string &$nid, array &$result, string $filtreact = '-', string $filtreobj = '', bool $withinvalid = false): void
 { // Lit tous les liens d'un objet.
     // - $object objet dont les liens sont à lire.
     // - $table table dans laquelle seront retournés les liens.
@@ -2677,10 +2763,9 @@ function _lnkListOne(&$nid, &$table, $filtreact = '-', $filtreobj = '', $withinv
 
     $checkSignOnList = getConfiguration('permitCheckSignOnList');
 
-    if ($nid == '0')
+    if ($nid == '0' || !io_checkNodeHaveLink($nid))
         return;
-    if (!io_checkNodeHaveLink($nid))
-        return;
+
     if (!getConfiguration('permitListInvalidLinks'))
         $withinvalid = false; // Si pas autorisé, refuse de lire les liens invalides.
     if ($filtreact == '')
@@ -2727,19 +2812,19 @@ function _lnkListOne(&$nid, &$table, $filtreact = '-', $filtreobj = '', $withinv
                 $verify = -1;
             if ($verify == 1 || $verify == -1 || $withinvalid) // Le lien doit être vérifié ou la vérification désactivée.
             {
-                $table [$n] [0] = trim($line); // Remplit le tableau à retourner.
-                $table [$n] [1] = $tline [1];
-                $table [$n] [2] = $tline [2];
-                $table [$n] [3] = $tline [3];
-                $table [$n] [4] = $tline [4];
-                $table [$n] [5] = $tline [5];
-                $table [$n] [6] = $tline [6];
-                $table [$n] [7] = $tline [7];
-                $table [$n] [8] = $tline [8];
-                $table [$n] [9] = $version;
-                $table [$n] [10] = $verify;
-                $table [$n] [11] = openssl_error_string();
-                $table [$n] [12] = 0; // Pour pondération.
+                $result [$n] [0] = trim($line); // Remplit le tableau à retourner.
+                $result [$n] [1] = $tline [1];
+                $result [$n] [2] = $tline [2];
+                $result [$n] [3] = $tline [3];
+                $result [$n] [4] = $tline [4];
+                $result [$n] [5] = $tline [5];
+                $result [$n] [6] = $tline [6];
+                $result [$n] [7] = $tline [7];
+                $result [$n] [8] = $tline [8];
+                $result [$n] [9] = $version;
+                $result [$n] [10] = $verify;
+                $result [$n] [11] = openssl_error_string();
+                $result [$n] [12] = 0; // Pour pondération.
                 $n++;
             }
             if ($n >= $IOMaxlink) {
@@ -2761,20 +2846,20 @@ function _lnkListOne(&$nid, &$table, $filtreact = '-', $filtreobj = '', $withinv
  * Link -
  *
  * @param $nid
+ * @return void
  */
-function _lnkDownloadAnywhere($nid)
+function _lnkDownloadAnywhere(string $nid): void
 { // Télécharge les liens de l'objet sur plusieurs localisations.
     // - $object l'objet dont les liens sont à télécharger.
-    if (!getConfiguration('permitSynchronizeLink'))
+    if (!getConfiguration('permitSynchronizeLink') || $nid == '0')
         return;
-    if ($nid == '0')
-        return;
+
     $table = array();
     $hashtype = _objGetNID('nebule/objet/entite/localisation');
     $okobj = array();
     $count = 1;
     $okobj [1] = '';
-    _lnkList($hashtype, $table);
+    _lnkListOnFullFilter($hashtype, $table);
     foreach ($table as $itemtable) {
         if (($itemtable [7] == $hashtype) && ($itemtable [4] == 'l')) {
             $t = true;
@@ -2811,7 +2896,7 @@ function _lnkDownloadAnywhere($nid)
  * @param string $location
  * @return integer
  */
-function _lnkDownloadOnLocation($nid, $location)
+function _lnkDownloadOnLocation(string $nid, string $location): int
 {
     if (!getConfiguration('permitWrite')
         || !getConfiguration('nebulePermitSynchronizeLink')
@@ -3434,13 +3519,13 @@ function io_checkNodeHaveContent(&$nid): bool
 
 /**
  * I/O - Read object's links.
- * Return array of links, maybe empty.
+ * Return array of links, one string per link, maybe empty.
  *
  * @param string $nid
  * @param integer $maxLinks
  * @return array
  */
-function io_linksRead(&$nid, int $maxLinks = 0): array
+function io_linksRead(string &$nid, int $maxLinks = 0): array
 {
     $result = array();
     $count = 0;
