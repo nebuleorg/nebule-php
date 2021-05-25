@@ -2622,10 +2622,13 @@ function _lnkGetList(string &$nid, array &$result, array $filter): void
 function _lnkTestNotSuppressed(array &$link, array &$lines): bool
 {
     foreach ($lines as $line) {
-        // TODO ajouter un pré filtre sommaire des liens type x pour accélérer le traitement.
+        if (strpos($line, '/x>') === false)
+            continue;
         if (_lnkVerify($line)) {
             $linkCompare = _lnkParse($line);
-            if (_lnkCompareDate($link['bl/rc/mod'], $link['bl/rc/chr'], $linkCompare['bl/rc/mod'], $linkCompare['bl/rc/chr']) < 0)
+            if ($linkCompare['bl/rl/req'] == 'x'
+                && _lnkCompareDate($link['bl/rc/mod'], $link['bl/rc/chr'], $linkCompare['bl/rc/mod'], $linkCompare['bl/rc/chr']) < 0
+            )
                 return false;
         }
     }
