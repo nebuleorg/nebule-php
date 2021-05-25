@@ -2588,8 +2588,6 @@ function _lnkFindInclusive($nid, &$table, $action, $srcobj, $dstobj, $metobj, $w
         $i1++;
     }
     unset($linkdate, $i1, $n, $t, $tline);
-
-    return;
 }
 
 /**
@@ -2599,7 +2597,7 @@ function _lnkFindInclusive($nid, &$table, $action, $srcobj, $dstobj, $metobj, $w
  * @param array $filter
  * @return void
  */
-function _lnkList(string &$nid, array &$result, array $filter): void
+function _lnkGetList(string &$nid, array &$result, array $filter): void
 {
     if ($nid == '0' || !io_checkNodeHaveLink($nid))
         return;
@@ -2609,16 +2607,68 @@ function _lnkList(string &$nid, array &$result, array $filter): void
     foreach ($lines as $line) {
         if (_lnkVerify($line)) {
             $link = _lnkParse($line);
-            if (_lnkFilter($link, $filter))
+            if (_lnkTestNotSuppressed($link, $lines) && _lnkFilter($link, $filter))
                 $result [] = $link;
         }
     }
 }
 
 /**
+ * Link - Test if link have been marked as suppressed with a link type x.
+ * @param array $link
+ * @param array $lines
+ * @return bool
+ */
+function _lnkTestNotSuppressed(array &$link, array &$lines): bool
+{
+    foreach ($lines as $line) {
+        // TODO ajouter un pré filtre sommaire des liens type x pour accélérer le traitement.
+        if (_lnkVerify($line)) {
+            $linkCompare = _lnkParse($line);
+            if (_lnkCompareDate($link['bl/rc/mod'], $link['bl/rc/chr'], $linkCompare['bl/rc/mod'], $linkCompare['bl/rc/chr']) < 0)
+                return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Link - Compare if date 1 is lower, greater or equal to date 2.
+ * Return -1 if lower, +1 if greater and 0 if equal.
+ * FIXME Only support date in mode 0!
+ * @param string $mod1
+ * @param string $chr1
+ * @param string $mod2
+ * @param string $chr2
+ * @return int
+ */
+function _lnkCompareDate(string $mod1, string $chr1, string $mod2, string $chr2): int
+{
+    // Convert first date.
+    if ($mod1 == '0')
+        $numChr1 = (double)$chr1;
+    else
+        $numChr1 = (int)$chr1;
+
+    // Convert second date.
+    if ($mod2 == '0')
+        $numChr2 = (double)$chr2;
+    else
+        $numChr2 = (int)$chr2;
+
+    // Comparing
+    if ($numChr1 < $numChr2)
+        return -1;
+    elseif ($numChr1 > $numChr2)
+        return 1;
+    else
+        return 0;
+}
+
+/**
  * Link - Test if a link match a filter.
  * Filtering on have bl/rl/req, bl/rl/nid1, bl/rl/nid2, bl/rl/nid3, bl/rl/nid4, bl/rl/nid*, bs/rs/nid, or not have.
- *
+ * TODO revoir pour les liens de type x...
  * @param array $link
  * @param array $filter
  * @return bool
