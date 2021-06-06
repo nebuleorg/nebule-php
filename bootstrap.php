@@ -4400,10 +4400,8 @@ function getBootstrapUserBreak(): void
 {
     if (filter_has_var(INPUT_GET, ARG_BOOTSTRAP_BREAK)
         || filter_has_var(INPUT_POST, ARG_BOOTSTRAP_BREAK)
-    ) {
-        addLog('ask user interrupt');
-        setBootstrapBreak('12', 'User interrupt.');
-    }
+    )
+        setBootstrapBreak('11', 'User interrupt.');
 }
 
 
@@ -4445,7 +4443,7 @@ function getBootstrapCheckFingerprint(): void
         addLog('unknown bootstrap hash - critical');
 
         // Arrêt du bootstrap.
-        setBootstrapBreak('52', 'Unknown bootstrap hash');
+        setBootstrapBreak('51', 'Unknown bootstrap hash');
     }
 }
 // Vérifie l'empreinte du bootstrap. @todo ajouter vérification de marquage de danger.
@@ -4453,7 +4451,7 @@ function getBootstrapCheckFingerprint(): void
 
 
 // ------------------------------------------------------------------------------------------
-function getBootstrapServerEntityDisplay()
+function getBootstrapDisplayServerEntity()
 {
     global $bootstrapServerEntityDisplay;
 
@@ -4478,7 +4476,7 @@ function bootstrapHtmlHeader()
 global $bootstrapRescueMode;
 
 ?>
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
@@ -5616,11 +5614,11 @@ function getBootstrapNeedFirstSynchronization(): bool
     ) {
         $serverEntite = filter_var(strtok(trim(file_get_contents(LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         if (!_entityCheck($serverEntite)) {
-            setBootstrapBreak('72', 'Local server entity error');
+            setBootstrapBreak('62', 'Local server entity error');
             return true;
         }
     } else {
-        setBootstrapBreak('71', 'No local server entity');
+        setBootstrapBreak('61', 'No local server entity');
         return true;
     }
     return false;
@@ -6905,21 +6903,12 @@ function bootstrapLogMetrology()
 
 function main()
 {
-    /*
-     * Initialization of Lib PP.
-     */
     if (!libppInit())
         setBootstrapBreak('21', 'Library init error');
 
-    /*
-     * Vérifie que le dossier des liens est fonctionnel.
-     */
     if (!io_checkLinkFolder())
         setBootstrapBreak('22', "Library i/o link's folder error");
 
-    /*
-     * Vérifie que le dossier des objets est fonctionnel.
-     */
     if (!io_checkObjectFolder())
         setBootstrapBreak('23', "Library i/o object's folder error");
 
@@ -6927,7 +6916,7 @@ function main()
     getBootstrapInlineDisplay();
     getBootstrapCheckFingerprint();
     $needFirstSynchronization = getBootstrapNeedFirstSynchronization();
-    getBootstrapServerEntityDisplay();
+    getBootstrapDisplayServerEntity();
     getBootstrapFlushSession();
     getBootstrapUpdate();
     getBootstrapSwitchApplication();
@@ -6943,9 +6932,6 @@ function main()
     displayRouter($needFirstSynchronization, $bootstrapLibraryID);
     bootstrapLogMetrology();
 }
-
-// Calcul du temps de chargement du bootstrap.
-$bootstrapLoadingTime = microtime(true) - $metrologyStartTime;
 
 main();
 
