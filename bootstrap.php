@@ -104,7 +104,7 @@ function reopenLog(string $name): void
 function addLog(string $message, string $level='msg', string $function='', string $luid='00000000'): void
 {
     global $metrologyStartTime;
-    syslog(LOG_INFO, 'LogT=' . (microtime(true) - $metrologyStartTime) . ' LogL="' . $level . '" LogU="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"');
+    syslog(LOG_INFO, 'LogT=' . (microtime(true) - $metrologyStartTime) . ' LogL="' . $level . '" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"');
 }
 
 // Initialize logs.
