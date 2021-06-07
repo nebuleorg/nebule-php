@@ -1008,7 +1008,7 @@ function nebReadObjText1line(string &$oid, int $maxsize = 128): string
     if (extension_loaded('mbstring'))
         $data = mb_convert_encoding($data, 'UTF-8');
     else
-        addLog('mbstring extension not installed or activated!', 'warn', 'nebReadObjText1line:1', 'c2becfad');
+        addLog('mbstring extension not installed or activated!', 'warn', __FUNCTION__, 'c2becfad');
 
     if (strlen($data) > $maxsize) {
         $data = substr($data, 0, ($maxsize - 3)) . '...';
@@ -1942,7 +1942,7 @@ function _objDownloadOnLocation(string $nid, string $location): bool
             && $link [6] == $nid
             && $link [7] == '0'
         ) {
-            addLog($nid . ') banned by ' . $nebulePublicEntity, 'warn', 'o_downloadContent:1', 'a9668cd0');
+            addLog($nid . ') banned by ' . $nebulePublicEntity, 'warn', __FUNCTION__, 'a9668cd0');
             return false;
         }
         if ($link [2] == $nebuleSecurityMaster
@@ -1951,7 +1951,7 @@ function _objDownloadOnLocation(string $nid, string $location): bool
             && $link [6] == $nid
             && $link [7] == '0'
         ) {
-            addLog($nid . ') banned by ' . $nebuleSecurityMaster, 'warn', 'o_downloadContent:2', 'd84f8e81');
+            addLog($nid . ') banned by ' . $nebuleSecurityMaster, 'warn', __FUNCTION__, 'd84f8e81');
             return false;
         }
     }
@@ -3457,7 +3457,7 @@ function io_checkLinkFolder(): bool
 {
     // Check if exist.
     if (!file_exists(LOCAL_LINKS_FOLDER) || !is_dir(LOCAL_LINKS_FOLDER)) {
-        addLog('I/O no folder for links.', 'error', 'io_checkLinkFolder:1', '5306de5f');
+        addLog('I/O no folder for links.', 'error', __FUNCTION__, '5306de5f');
         return false;
     }
 
@@ -3466,20 +3466,20 @@ function io_checkLinkFolder(): bool
         $data = cryptoGetPseudoRandom(2048);
         $name = LOCAL_LINKS_FOLDER . '/writest' . bin2hex(cryptoGetPseudoRandom(8));
         if (file_put_contents($name, $data) === false) {
-            addLog('I/O error on folder for links.', 'error', 'io_checkLinkFolder:2', 'f72e3a86');
+            addLog('I/O error on folder for links.', 'error', __FUNCTION__, 'f72e3a86');
             return false;
         }
         if (!file_exists($name) || !is_file($name)) {
-            addLog('I/O error on folder for links.', 'error', 'io_checkLinkFolder:3', '6f012d85');
+            addLog('I/O error on folder for links.', 'error', __FUNCTION__, '6f012d85');
             return false;
         }
         $read = file_get_contents($name, false, null, 0, 2400);
         if ($data != $read) {
-            addLog('I/O error on folder for links.', 'error', 'io_checkLinkFolder:4', 'fd499fcb');
+            addLog('I/O error on folder for links.', 'error', __FUNCTION__, 'fd499fcb');
             return false;
         }
         if (!unlink($name)) {
-            addLog('I/O error on folder for links.', 'error', 'io_checkLinkFolder:5', '8e0caa66');
+            addLog('I/O error on folder for links.', 'error', __FUNCTION__, '8e0caa66');
             return false;
         }
     }
@@ -3496,7 +3496,7 @@ function io_checkObjectFolder(): bool
 {
     // Check if exist.
     if (!file_exists(LOCAL_OBJECTS_FOLDER) || !is_dir(LOCAL_OBJECTS_FOLDER) ) {
-        addLog('I/O no folder for objects.', 'error', 'io_checkObjectFolder:1', 'b0cdeafe');
+        addLog('I/O no folder for objects.', 'error', __FUNCTION__, 'b0cdeafe');
         return false;
     }
 
@@ -3505,20 +3505,20 @@ function io_checkObjectFolder(): bool
         $data = cryptoGetPseudoRandom(2048);
         $name = LOCAL_OBJECTS_FOLDER . '/writest' . bin2hex(cryptoGetPseudoRandom(8));
         if (file_put_contents($name, $data) === false) {
-            addLog('I/O error on folder for objects.', 'error', 'io_checkObjectFolder:2', '1327da69');
+            addLog('I/O error on folder for objects.', 'error', __FUNCTION__, '1327da69');
             return false;
         }
         if (!file_exists($name) || !is_file($name)) {
-            addLog('I/O error on folder for objects.', 'error', 'io_checkObjectFolder:3', '2b451a2a');
+            addLog('I/O error on folder for objects.', 'error', __FUNCTION__, '2b451a2a');
             return false;
         }
         $read = file_get_contents($name, false, null, 0, 2400);
         if ($data != $read) {
-            addLog('I/O error on folder for objects.', 'error', 'io_checkObjectFolder:4', '634072e5');
+            addLog('I/O error on folder for objects.', 'error', __FUNCTION__, '634072e5');
             return false;
         }
         if (!unlink($name)) {
-            addLog('I/O error on folder for objects.', 'error', 'io_checkObjectFolder:5', '2b397869');
+            addLog('I/O error on folder for objects.', 'error', __FUNCTION__, '2b397869');
             return false;
         }
     }
@@ -3689,7 +3689,7 @@ function io_objectDelete(&$nid)
 
     if (!unlink(LOCAL_OBJECTS_FOLDER . '/' . $nid))
     {
-        addLog('Unable to delete file.', 'error', 'io_objectDelete', '991b11a1');
+        addLog('Unable to delete file.', 'error', __FUNCTION__, '991b11a1');
         return false;
     }
     return true;
@@ -3761,7 +3761,7 @@ function cryptoGetTranslatedHashAlgo(string $algo, bool $loop = true): string
     if ($translatedAlgo == '' && $loop)
         $translatedAlgo = cryptoGetTranslatedHashAlgo($algo, false);
     else {
-        addLog('cryptoHashAlgorithm configuration have an unknown value', 'warn', 'getTranslatedHashAlgo', 'b7627066');
+        addLog('cryptoHashAlgorithm configuration have an unknown value', 'warn', __FUNCTION__, 'b7627066');
         $translatedAlgo = 'sha512';
     }
 
@@ -3933,7 +3933,7 @@ function getBootstrapFlushSession()
     if (filter_has_var(INPUT_GET, ARG_FLUSH_SESSION)
         || filter_has_var(INPUT_POST, ARG_FLUSH_SESSION)
     ) {
-        addLog('ask flush session', 'warn', 'getBootstrapFlushSession:1', '4abe475a');
+        addLog('ask flush session', 'warn', __FUNCTION__, '4abe475a');
 
         // Si la session n'est pas vide ou si interruption de l'utilisateur, la vide.
         if (isset($_SESSION['OKsession'])
@@ -3942,7 +3942,7 @@ function getBootstrapFlushSession()
         ) {
             // Mémorise pour la suite que la session est vidée.
             $bootstrapFlush = true;
-            addLog('flush session', 'info', 'getBootstrapFlushSession:2', '5d008c11');
+            addLog('flush session', 'info', __FUNCTION__, '5d008c11');
 
             // Vide la session.
             session_unset();
@@ -3978,14 +3978,14 @@ function getBootstrapUpdate():void
     if (filter_has_var(INPUT_GET, ARG_UPDATE_APPLICATION)
         || filter_has_var(INPUT_POST, ARG_UPDATE_APPLICATION)
     ) {
-        addLog('ask update', 'warn', 'getBootstrapUpdate:1', 'ac8a2330');
+        addLog('ask update', 'warn', __FUNCTION__, 'ac8a2330');
 
         session_start();
 
         // Si la mise à jour est demandée mais pas déjà faite.
         if (!isset($_SESSION['askUpdate'])) {
             $bootstrapUpdate = true;
-            addLog('update', 'info', 'getBootstrapUpdate:2', 'f2ef6dc2');
+            addLog('update', 'info', __FUNCTION__, 'f2ef6dc2');
             $_SESSION['askUpdate'] = true;
         } else {
             unset($_SESSION['askUpdate']);
@@ -4056,7 +4056,7 @@ function getBootstrapSwitchApplication(): void
 
         if ($activated) {
             $bootstrapSwitchApplication = $arg;
-            addLog('ask switch application to ' . $bootstrapSwitchApplication, 'info', 'getBootstrapSwitchApplication', 'd1a3f3f9');
+            addLog('ask switch application to ' . $bootstrapSwitchApplication, 'info', __FUNCTION__, 'd1a3f3f9');
         }
     }
 }
@@ -4119,7 +4119,7 @@ function findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstanceSleep): 
             _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE),
             false);
 
-        addLog('find nebule library ' . $bootstrapLibraryID, 'info', 'findLibraryPOO', '90ee41fc');
+        addLog('find nebule library ' . $bootstrapLibraryID, 'info', __FUNCTION__, '90ee41fc');
 
         if (!_nodCheckNID($bootstrapLibraryID)
             || !io_checkNodeHaveLink($bootstrapLibraryID)
@@ -4185,7 +4185,7 @@ function findApplication():void
 
     // Enregistre l'identifiant de session pour le suivi d'un utilisateur.
     $sessionId = session_id();
-    addLog('session hash id ' . cryptoGetDataHash($sessionId), 'info', 'findApplication:1', '36ebd66b');
+    addLog('session hash id ' . cryptoGetDataHash($sessionId), 'info', __FUNCTION__, '36ebd66b');
 
     // Vérifie l'ID de départ de l'application mémorisé.
     if (isset($_SESSION['bootstrapApplicationStartID'])
@@ -4255,13 +4255,13 @@ function findApplication():void
     } else {
         // Sinon essaie de trouver l'ID de l'application demandée.
         if ($bootstrapSwitchApplication == '0') {
-            addLog('ask switch application 0', 'warn', 'findApplication:2', '35b3a0dc');
+            addLog('ask switch application 0', 'warn', __FUNCTION__, '35b3a0dc');
 
             // Application 0 de sélection des applications.
             $bootstrapApplicationStartID = '0';
             $bootstrapApplicationID = '0';
         } elseif ($bootstrapSwitchApplication == '1') {
-            addLog('ask switch application 1', 'warn', 'findApplication:3', '18b6ab88');
+            addLog('ask switch application 1', 'warn', __FUNCTION__, '18b6ab88');
 
             // Application 0 de sélection des applications.
             $bootstrapApplicationStartID = '1';
@@ -4307,7 +4307,7 @@ function findApplication():void
                         false);
                 }
 
-                addLog('find switched application ' . $bootstrapApplicationID, 'info', 'findApplication:4', '0cbacda8');
+                addLog('find switched application ' . $bootstrapApplicationID, 'info', __FUNCTION__, '0cbacda8');
             }
             unset($refAppsID, $links);
             // Sinon l'application par défaut sera chargée, plus loin.
@@ -4342,7 +4342,7 @@ function findApplication():void
         }
         unset($forceValue);
 
-        addLog('find default application ' . $bootstrapApplicationID, 'info', 'findApplication:5', '423ae49b');
+        addLog('find default application ' . $bootstrapApplicationID, 'info', __FUNCTION__, '423ae49b');
     }
 
     // Recherche si l'application ne doit pas être pré-chargée.
@@ -4366,7 +4366,7 @@ function findApplication():void
                     if ($signer == $authority) {
                         // Si le lien est valide, active le chargement direct de l'application.
                         $bootstrapApplicationNoPreload = true;
-                        addLog('do not preload application', 'info', 'findApplication:6', '0ac7d800');
+                        addLog('do not preload application', 'info', __FUNCTION__, '0ac7d800');
                         break 2;
                     }
                 }
@@ -4403,7 +4403,7 @@ function setBootstrapBreak(string $errorCode, string $errorDesc): void
     global $bootstrapBreak;
 
     $bootstrapBreak[$errorCode] = $errorDesc;
-    addLog('bootstrap break code=' . $errorCode . ' msg=' . $errorDesc, 'info', 'setBootstrapBreak', '1a59f99c');
+    addLog('bootstrap break code=' . $errorCode . ' msg=' . $errorDesc, 'info', __FUNCTION__, '1a59f99c');
 }
 
 // ------------------------------------------------------------------------------------------
@@ -4452,7 +4452,7 @@ function getBootstrapCheckFingerprint(): void
         }
     }
     if (!$ok) {
-        addLog('unknown bootstrap hash - critical', 'error', 'getBootstrapCheckFingerprint', 'e294b7b3');
+        addLog('unknown bootstrap hash - critical', 'error', __FUNCTION__, 'e294b7b3');
 
         // Arrêt du bootstrap.
         setBootstrapBreak('51', 'Unknown bootstrap hash');
@@ -5504,7 +5504,7 @@ function bootstrapDisplayPreloadApplication()
 
     // Initialisation des logs
     reopenLog('preload');
-    addLog('Loading', 'info', 'bootstrapDisplayPreloadApplication', 'ce5879b0');
+    addLog('Loading', 'info', __FUNCTION__, 'ce5879b0');
 
     echo 'CHK';
     ob_end_clean();
@@ -5662,7 +5662,7 @@ function bootstrapDisplayApplicationfirst(): void
 
     // Initialisation des logs
     reopenLog('first');
-    addLog('Loading', 'info', 'bootstrapDisplayApplicationfirst:1', '529d21e0');
+    addLog('Loading', 'info', __FUNCTION__, '529d21e0');
 
     echo 'CHK';
     ob_end_clean();
@@ -5697,7 +5697,7 @@ function bootstrapDisplayApplicationfirst(): void
         <span class="error">ERROR!</span>
         <?php
         if (!io_checkLinkFolder()) {
-            addLog('error links folder', 'error', 'bootstrapDisplayApplicationfirst:2', 'f1d49c43');
+            addLog('error links folder', 'error', __FUNCTION__, 'f1d49c43');
             ?>
 
             <div class="diverror">
@@ -5718,7 +5718,7 @@ chmod 755 <?php echo LOCAL_LINKS_FOLDER; ?>
         }
 
         if (!io_checkObjectFolder()) {
-            addLog('error objects folder', 'error', 'bootstrapDisplayApplicationfirst:3', 'dc0c86a4');
+            addLog('error objects folder', 'error', __FUNCTION__, 'dc0c86a4');
             ?>
 
             <div class="diverror">
@@ -5746,7 +5746,7 @@ chmod 755 <?php echo LOCAL_OBJECTS_FOLDER; ?>
         </div>
         <?php
     } else {
-        addLog('ok folders', 'info', 'bootstrapDisplayApplicationfirst:4', '68c50ba0');
+        addLog('ok folders', 'info', __FUNCTION__, '68c50ba0');
         ?>
 
         ok
@@ -5788,7 +5788,7 @@ function bootstrapFirstCreateObjects()
         $hash = _objGetNID(FIRST_RESERVED_OBJECTS[10]);
         if (!io_checkNodeHaveContent($hash))
         {
-        addLog('need create objects', 'warn', 'bootstrapFirstCreateObjects:1', 'ca195598');
+        addLog('need create objects', 'warn', __FUNCTION__, 'ca195598');
 
         // Ecrit les objets de localisation.
         foreach (FIRST_LOCALISATIONS as $data) {
@@ -5815,7 +5815,7 @@ function bootstrapFirstCreateObjects()
     <?php
     }
     else {
-        addLog('ok create objects', 'info', 'bootstrapFirstCreateObjects:2', '5c7be016');
+        addLog('ok create objects', 'info', __FUNCTION__, '5c7be016');
         ?>
         ok
         <?php
@@ -5849,7 +5849,7 @@ function bootstrapFirstSynchronizingEntities()
 
         puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;:
         <?php
-        addLog('need puppetmaster', 'warn', 'bootstrapFirstSynchronizingEntities:1', '6995b7fd');
+        addLog('need puppetmaster', 'warn', __FUNCTION__, '6995b7fd');
         echo ' ' . getConfiguration('puppetmaster') . ' ';
 
         // Ecriture de la clé publique par défaut.
@@ -5889,7 +5889,7 @@ function bootstrapFirstSynchronizingEntities()
         security master &nbsp;:
         <?php
         // Recherche l'ID de l'entité par référence du maître du tout.
-        addLog('need sync security master', 'warn', 'bootstrapFirstSynchronizingEntities:2', 'a767699e');
+        addLog('need sync security master', 'warn', __FUNCTION__, 'a767699e');
         // Recherche via l'objet de référence.
         $entity = nebFindByRef(
             _objGetNID('nebule/objet/entite/maitre/securite'),
@@ -5915,7 +5915,7 @@ function bootstrapFirstSynchronizingEntities()
         code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
         <?php
         // Recherche l'ID de l'entité par référence du maître du tout.
-        addLog('need sync code master', 'warn', 'bootstrapFirstSynchronizingEntities:3', '8543b436');
+        addLog('need sync code master', 'warn', __FUNCTION__, '8543b436');
         // Recherche via l'objet de référence.
         $entity = nebFindByRef(
             _objGetNID('nebule/objet/entite/maitre/code'),
@@ -5941,7 +5941,7 @@ function bootstrapFirstSynchronizingEntities()
         directory master :
         <?php
         // Recherche l'ID de l'entité par référence du maître du tout.
-        addLog('need sync directory master', 'warn', 'bootstrapFirstSynchronizingEntities:4', 'e47e9e04');
+        addLog('need sync directory master', 'warn', __FUNCTION__, 'e47e9e04');
         // Recherche via l'objet de référence.
         $entity = nebFindByRef(
             _objGetNID('nebule/objet/entite/maitre/annuaire'),
@@ -5967,7 +5967,7 @@ function bootstrapFirstSynchronizingEntities()
         time master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
         <?php
         // Recherche l'ID de l'entité par référence du maître du tout.
-        addLog('need sync time master', 'warn', 'bootstrapFirstSynchronizingEntities:5', '0c6f1ef1');
+        addLog('need sync time master', 'warn', __FUNCTION__, '0c6f1ef1');
         // Recherche via l'objet de référence.
         $entity = nebFindByRef(
             _objGetNID('nebule/objet/entite/maitre/temps'),
@@ -6020,7 +6020,7 @@ function bootstrapFirstSynchronizingEntities()
         </div>
         <?php
     } else {
-        addLog('ok sync entities', 'info', 'bootstrapFirstSynchronizingEntities:6', 'c5b55957');
+        addLog('ok sync entities', 'info', __FUNCTION__, 'c5b55957');
         ?>
 
         ok
@@ -6061,7 +6061,7 @@ function bootstrapFirstSynchronizingObjects()
         && !io_checkNodeHaveLink($refBootID)
         )
         {
-        addLog('need sync objects', 'warn', 'bootstrapFirstSynchronizingObjects:1', '0f21ad26');
+        addLog('need sync objects', 'warn', __FUNCTION__, '0f21ad26');
 
         // Ecrit les objets de localisation.
         echo 'objects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
@@ -6188,7 +6188,7 @@ function bootstrapFirstSynchronizingObjects()
                 $appID,
                 $refAppsID,
                 false);
-            addLog('find app ' . $appID . ' as ' . $lastID, 'info', 'bootstrapFirstSynchronizingObjects:2', '4cc18a65');
+            addLog('find app ' . $appID . ' as ' . $lastID, 'info', __FUNCTION__, '4cc18a65');
             if ($lastID != '0') {
                 foreach (FIRST_LOCALISATIONS as $localisation) {
                     _objDownloadOnLocation($lastID, $localisation);
@@ -6232,7 +6232,7 @@ function bootstrapFirstSynchronizingObjects()
     </script>
     <?php
 } else {
-    addLog('ok sync objects', 'info', 'bootstrapFirstSynchronizingObjects:3', '4473358f');
+    addLog('ok sync objects', 'info', __FUNCTION__, '4473358f');
     ?>
     ok
     <?php
@@ -6259,7 +6259,7 @@ function bootstrapFirstCreateOptionsFile()
         <?php
         if (!file_exists(NEBULE_ENVIRONMENT_FILE))
         {
-        addLog('need create options file', 'warn', 'bootstrapFirstCreateOptionsFile:1', '58d07f71');
+        addLog('need create options file', 'warn', __FUNCTION__, '58d07f71');
 
         $defaultOptions = "# Generated by the " . BOOTSTRAP_NAME . ", part of the " . BOOTSTRAP_AUTHOR . ".\n";
         $defaultOptions .= "# Default options file generated after the first synchronization.\n";
@@ -6326,7 +6326,7 @@ chmod 644 <?php echo NEBULE_ENVIRONMENT_FILE; ?>
     unset($defaultOptions);
 }
 else {
-    addLog('ok create options file', 'info', 'bootstrapFirstCreateOptionsFile:2', '91e9b5bd');
+    addLog('ok create options file', 'info', __FUNCTION__, '91e9b5bd');
     ?>
     ok
     <?php
@@ -6504,7 +6504,7 @@ function bootstrapDisplayApplication0()
 
     // Initialisation des logs
     reopenLog('app0');
-    addLog('Loading', 'info', 'bootstrapDisplayApplication0', '314e6e9b');
+    addLog('Loading', 'info', __FUNCTION__, '314e6e9b');
 
     echo 'CHK';
     ob_end_clean();
@@ -6637,7 +6637,7 @@ function bootstrapDisplayApplication1()
 
     // Initialisation des logs
     reopenLog('app1');
-    addLog('Loading', 'info', 'bootstrapDisplayApplication1', 'a4e4acfe');
+    addLog('Loading', 'info', __FUNCTION__, 'a4e4acfe');
 
     echo 'CHK';
     ob_end_clean();
@@ -6684,7 +6684,7 @@ function bootstrapDisplayApplication2()
 
     // Initialisation des logs
     reopenLog('app2');
-    addLog('Loading', 'info', 'bootstrapDisplayApplication2', '3a5c4178');
+    addLog('Loading', 'info', __FUNCTION__, '3a5c4178');
 
     echo 'CHK';
     ob_end_clean();
@@ -6741,15 +6741,15 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
         ob_end_clean();
 
         if ($bootstrapApplicationID == '0') {
-            addLog('load application 0', 'info', 'displayRouter:1', '1ad59685');
+            addLog('load application 0', 'info', __FUNCTION__, '1ad59685');
             bootstrapDisplayApplication0();
             reopenLog(BOOTSTRAP_NAME);
         } elseif ($bootstrapApplicationID == '1') {
-            addLog('load application 1', 'info', 'displayRouter:2', '2acd5fee');
+            addLog('load application 1', 'info', __FUNCTION__, '2acd5fee');
             bootstrapDisplayApplication1();
             reopenLog(BOOTSTRAP_NAME);
         } elseif ($bootstrapApplicationID == '2') {
-            addLog('load application 2', 'info', 'displayRouter:3', '1d718d83');
+            addLog('load application 2', 'info', __FUNCTION__, '1d718d83');
             bootstrapDisplayApplication2();
             reopenLog(BOOTSTRAP_NAME);
         } else {
@@ -6763,7 +6763,7 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
                 && isset($bootstrapApplicationTraductionInstanceSleep)
                 && $bootstrapApplicationTraductionInstanceSleep != ''
             ) {
-                addLog('load application ' . $bootstrapApplicationID, 'info', 'displayRouter:4', 'aab236ff');
+                addLog('load application ' . $bootstrapApplicationID, 'info', __FUNCTION__, 'aab236ff');
 
                 // Charge l'objet de l'application. @todo faire via les i/o.
                 include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
@@ -6800,7 +6800,7 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
                 //   réalise maintenant le pré-chargement de façon transparente et lance l'application.
                 // Ainsi, le pré-chargement n'est pas fait sur une page web à part.
 
-                addLog('load application whitout preload ' . $bootstrapApplicationID, 'info', 'displayRouter:5', 'e01ea813');
+                addLog('load application whitout preload ' . $bootstrapApplicationID, 'info', __FUNCTION__, 'e01ea813');
 
                 // Charge l'objet de l'application. @todo faire via les i/o.
                 include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
@@ -6856,7 +6856,7 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
         }
     } else {
         if ($needFirstSynchronization) {
-            addLog('load first', 'info', 'displayRouter:6', '63d9bc00');
+            addLog('load first', 'info', __FUNCTION__, '63d9bc00');
 
             // Affichage sur interruption du chargement.
             if ($bootstrapInlineDisplay) {
@@ -6871,7 +6871,7 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
                 echo '0';
             }
         } else {
-            addLog('load break', 'info', 'displayRouter:7', '4abf554b');
+            addLog('load break', 'info', __FUNCTION__, '4abf554b');
 
             // Affichage sur interruption du chargement.
             if ($bootstrapInlineDisplay) {
@@ -6902,14 +6902,14 @@ function bootstrapLogMetrology()
             . ' OC=' . $nebuleInstance->getCacheObjectSize()
             . ' EC=' . $nebuleInstance->getCacheEntitySize()
             . ' GC=' . $nebuleInstance->getCacheGroupSize()
-            . ' CC=' . $nebuleInstance->getCacheConversationSize(), 'info', 'bootstrapLogMetrology:1', '0d99ad8b');
+            . ' CC=' . $nebuleInstance->getCacheConversationSize(), 'info', __FUNCTION__, '0d99ad8b');
     } else {
         addLog('Mp=' . memory_get_peak_usage()
             . ' - Lr=' . _metrologyGet('lr')
             . ' Lv=' . _metrologyGet('lv')
             . ' Or=' . _metrologyGet('or')
             . ' Ov=' . _metrologyGet('ov')
-            . ' (PP)', 'info', 'bootstrapLogMetrology:2', '52d76692');
+            . ' (PP)', 'info', __FUNCTION__, '52d76692');
     }
 }
 
