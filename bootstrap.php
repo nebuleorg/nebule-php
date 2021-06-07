@@ -3770,11 +3770,14 @@ function cryptoGetTranslatedHashAlgo(string $algo, bool $loop = true): string
             break;
     }
 
-    if ($translatedAlgo == '' && $loop)
-        $translatedAlgo = cryptoGetTranslatedHashAlgo($algo, false);
-    else {
-        addLog('cryptoHashAlgorithm configuration have an unknown value', 'warn', __FUNCTION__, 'b7627066');
-        $translatedAlgo = 'sha512';
+    if ($translatedAlgo == '')
+    {
+        if($loop) {
+            addLog('cryptoHashAlgorithm configuration have an unknown value (' . $algo . ')', 'error', __FUNCTION__, 'b7627066');
+            $translatedAlgo = cryptoGetTranslatedHashAlgo(LIST_OPTIONS_DEFAULT_VALUE['cryptoHashAlgorithm'], false);
+        }
+        else
+            $translatedAlgo = 'sha512';
     }
 
     return $translatedAlgo;
