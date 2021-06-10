@@ -6037,7 +6037,10 @@ function _entityGetSecurityMasters(bool $synchronize=false): array
         _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
 
     $lnkList = array();
-    $filter = array();
+    $filter = array(
+        'bl/rl/nid2' => $nid,
+        'bs/rs/nid' => getConfiguration('puppetmaster'),
+    );
     _lnkGetList($nid, $lnkList, $filter);
 
     // TODO
