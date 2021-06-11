@@ -410,15 +410,15 @@ QMqFriycSa9a4U4SyXomUAqj9jBzn1dmPN+cvC+2ByqoRdGKkJQZAnLcfpN+G+lt
 
 /*
  * Constante du lien de hash de la clé publique puppetmaster.
- * TODO lien invalide
+ * TODO signature invalide
  */
-const FIRST_PUPPETMASTER_HASH_LINK = '77575698703bf581b582457f64e13b2f0f00dd4be95be356c6a24b277161fd5bf331e8990688422d3ff63ebe3ea774b89289765027c9f1bb2082e8ea9ab2ad9b40543eb828018ef1bb70090c67ee7a50dcce95c5a118c47bb76d8702da2335a9d02b47c67f06fec530dddc04f8f486de95d23fc72518cd9d4e7462a8ef731520405e2168283da7ef7207f9960f055270b25786192c60f0157274c2889b8f925b51b40d6a56c3f861c41c1cc6e3996d252bf2c8234bac6142f5582a87fa0bda25d6bbe161c29dfd0a461b69805a3b0306967fec7af6411f68eaf9ff630914ad29b62ddaaa9b3fd8890f656713841dd7a6412117999938c2218625ccf601fd25668fe157d522a64d2d6c4a0c794610af6b2e078284b4514758bf48bb4bdfdca519c8121c3c84045c626ef37a5e9e120954acd42f47cf82a648e989c23746e90bd3a8d6657506a8715a155fe1da124e14ac2db8af17af7e209a159accaf9da183f7b180c1eaf44aee24e6e43767efbf6253ac4ef534752a7389f0be2cd7425e7775ca7d45eb2fcb8d2fcedc0af49893f41936384fb379d4c02aa623dcd24f49798b780294cd60e9388c2bff053a407d1906dcc9cb0a492f0a54d062a1bb10da4f856b4d8af3d2fe4869117fd500a97923e1cb9b505262a48f6f5c72f9c49e82b27e6beefdb8a700740d136c73cacbba955a84ff5aee7bd720da9053bea128b06acf.sha256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea_2013-03-12T20:29:37+0100_l_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea_5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e_8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec';
+const FIRST_PUPPETMASTER_HASH_LINK = 'nebule:link/2:0_0:20210611/l>88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>0.rsa.4096';
 
 /*
  * Constante du lien de type de la clé publique puppetmaster.
- * TODO lien invalide
+ * TODO signature invalide
  */
-const FIRST_PUPPETMASTER_TYPE_LINK = '3c091432e6404b9634783e2b51debd017f07918d7ef88af0e01638955859bdb2ad88df9be624308a3b0cb0904763dd06576510aedf47c94da1ce2fe11d5e324b0947b069be01f1d7626e69d93c4919182ebad607a7b4daf52ad4a68e59a9c514a7021ba4df05fe344544867b890a94007e4867021a417491dcf036a97342f56ff88f0889fe078a3e92349f3f78d74696aaf258175432d9540dff5c889525f693230472b7c5b1c16f31d7f8c3efd444e856f7473e0be7773ed93c3516d074c373433919cfb3773dd272d0236b5db52ef1f3b3eb6c0653eaadb34bbda66e2a10627397a669d35b663a490efbd50d404942ceadf54618a29ada345788ebf0c0258973aac6cefab86e6021eabb67acfad34e6a67b7001351a1179f90d2c98558fd2993be458f3095cb0940fc36c7e40fd04b76a750af48bfa5e5cd26423983580bbd99cfe3daadb928ee0203125fe97940878ad6a1faf385c37fda47769d06153680974d42d145bb9fa5e621d249cac83863a585d2448cd985ae31af7033ce322833d3689bf09033410441e07869ff4c85244d86dea47679ef5daaf726c11650da7858317196bf465e9f930846db9328b20aa0aa7a4280b7515bce8fae32585c3a75dcb88351dabfba013b4970094860904d8f161909cd1164e5506486aac5ad29afccd4740324f889dc936ef7fb85ef16ffd55c8f04be08fd442feb882b23b24b94.sha256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea_2013-03-12T22:28:06+0100_l_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea_970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864_5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0';
+const FIRST_PUPPETMASTER_TYPE_LINK = 'nebule:link/2:0_0:20210611/l_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256_970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256_5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>0.rsa.4096';
 
 // Minimum set of objects to create on first run.
 const FIRST_RESERVED_OBJECTS = array(
@@ -5680,7 +5680,7 @@ function bootstrapDisplayApplicationfirst(): void
     bootstrapHtmlHeader();
     bootstrapHtmlTop();
 
-    echo '<div class="parts">'."/n";
+    echo '<div class="parts">'."\n";
     ?>
 
         <span class="partstitle">#1 <?php echo BOOTSTRAP_NAME; ?> break on</span>
@@ -5698,7 +5698,7 @@ function bootstrapDisplayApplicationfirst(): void
             echo "RESCUE<br />\n";
         }
     echo "</div>\n";
-    echo '<div class="parts">'."/n";
+    echo '<div class="parts">'."\n";
     ?>
     <span class="partstitle">#2 create folders</span><br/>
     <?php
@@ -5779,7 +5779,7 @@ chmod 755 <?php echo LOCAL_OBJECTS_FOLDER; ?>
  */
 function bootstrapFirstCreateObjects()
 {
-    echo '<div class="parts">'."/n";
+    echo '<div class="parts">'."\n";
 
     ?>
 
@@ -5838,7 +5838,7 @@ function bootstrapFirstSynchronizingEntities()
 {
     global $nebuleLocalAuthorities, $libppCheckOK;
 
-    echo '<div class="parts">'."/n";
+    echo '<div class="parts">'."\n";
 
     $puppetmaster = _entityGetPuppetmaster();
     $securityMasters = _entityGetSecurityMasters(true);
@@ -6020,11 +6020,20 @@ function bootstrapFirstSynchronizingEntities()
     }
 }
 
+/**
+ * Get puppetmaster ID.
+ * @return string
+ */
 function _entityGetPuppetmaster(): string
 {
     return getConfiguration('puppetmaster');
 }
 
+/**
+ * Get masters of security IDs.
+ * @param bool $synchronize
+ * @return array
+ */
 function _entityGetSecurityMasters(bool $synchronize=false): array
 {
     global $nebuleSecurityMasters;
@@ -6048,6 +6057,11 @@ function _entityGetSecurityMasters(bool $synchronize=false): array
     return $nebuleSecurityMasters;
 }
 
+/**
+ * Get masters of code IDs.
+ * @param bool $synchronize
+ * @return array
+ */
 function _entityGetCodeMasters(bool $synchronize=false): array
 {
     global $nebuleCodeMasters;
@@ -6068,6 +6082,11 @@ function _entityGetCodeMasters(bool $synchronize=false): array
     return array();
 }
 
+/**
+ * Get masters of time IDs.
+ * @param bool $synchronize
+ * @return array
+ */
 function _entityGetTimeMasters(bool $synchronize=false): array
 {
     global $nebuleTimeMasters;
@@ -6088,6 +6107,11 @@ function _entityGetTimeMasters(bool $synchronize=false): array
     return array();
 }
 
+/**
+ * Get masters of directory IDs.
+ * @param bool $synchronize
+ * @return array
+ */
 function _entityGetDirectoryMasters(bool $synchronize=false): array
 {
     global $nebuleDirectoryMasters;
@@ -6108,6 +6132,11 @@ function _entityGetDirectoryMasters(bool $synchronize=false): array
     return array();
 }
 
+/**
+ * Check puppetmaster entity.
+ * @param string $oid
+ * @return bool
+ */
 function _entityCheckPuppetmaster(string $oid): bool
 {
     if (!_entityCheck($oid))
@@ -6115,6 +6144,11 @@ function _entityCheckPuppetmaster(string $oid): bool
     return true;
 }
 
+/**
+ * Check masters of security entities.
+ * @param array $oidList
+ * @return bool
+ */
 function _entityCheckSecurityMasters(array $oidList): bool
 {
     if (sizeof($oidList) == 0)
@@ -6127,6 +6161,11 @@ function _entityCheckSecurityMasters(array $oidList): bool
     return true;
 }
 
+/**
+ * Check masters of code entities.
+ * @param array $oidList
+ * @return bool
+ */
 function _entityCheckCodeMasters(array $oidList): bool
 {
     if (sizeof($oidList) == 0)
@@ -6139,6 +6178,11 @@ function _entityCheckCodeMasters(array $oidList): bool
     return true;
 }
 
+/**
+ * Check masters of time entities.
+ * @param array $oidList
+ * @return bool
+ */
 function _entityCheckTimeMasters(array $oidList): bool
 {
     if (sizeof($oidList) == 0)
@@ -6151,6 +6195,11 @@ function _entityCheckTimeMasters(array $oidList): bool
     return true;
 }
 
+/**
+ * Check masters of directory entities.
+ * @param array $oidList
+ * @return bool
+ */
 function _entityCheckDirectoryMasters(array $oidList): bool
 {
     if (sizeof($oidList) == 0)
@@ -6163,6 +6212,12 @@ function _entityCheckDirectoryMasters(array $oidList): bool
     return true;
 }
 
+/**
+ * Synchronize puppetmaster from central location.
+ * Specifically for puppetmaster, first contents are locally generated.
+ * @param string $oid
+ * @return void
+ */
 function _entitySyncPuppetmaster(string $oid): void
 {
     global $configurationList;
@@ -6187,6 +6242,11 @@ function _entitySyncPuppetmaster(string $oid): void
     // TODO sync lnk
 }
 
+/**
+ * Synchronize masters of security from central location.
+ * @param array $oidList
+ * @return void
+ */
 function _entitySyncSecurityMasters(array $oidList): void
 {
     foreach ($oidList as $nid)
@@ -6194,6 +6254,11 @@ function _entitySyncSecurityMasters(array $oidList): void
     // TODO sync lnk
 }
 
+/**
+ * Synchronize masters of code from central location.
+ * @param array $oidList
+ * @return void
+ */
 function _entitySyncCodeMasters(array $oidList): void
 {
     foreach ($oidList as $nid)
@@ -6201,6 +6266,11 @@ function _entitySyncCodeMasters(array $oidList): void
     // TODO sync lnk
 }
 
+/**
+ * Synchronize masters of time from central location.
+ * @param array $oidList
+ * @return void
+ */
 function _entitySyncTimeMasters(array $oidList): void
 {
     foreach ($oidList as $nid)
@@ -6208,6 +6278,11 @@ function _entitySyncTimeMasters(array $oidList): void
     // TODO sync lnk
 }
 
+/**
+ * Synchronize masters of directory from central location.
+ * @param array $oidList
+ * @return void
+ */
 function _entitySyncDirectoryMasters(array $oidList): void
 {
     foreach ($oidList as $nid)
