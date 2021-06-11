@@ -856,7 +856,6 @@ function libppInit(): bool
 
 /**
  * Get and check local server entity.
- * @param $nebuleLocalAuthorities
  */
 function libppSetServerEntity(): void
 {
