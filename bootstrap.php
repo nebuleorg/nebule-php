@@ -373,8 +373,8 @@ $metrologyLibraryPOOConvertationCache = 0;
  ------------------------------------------------------------------------------------------
  */
 
-const NEBULE_LIBPP_VERSION = '020210607';
-const NEBULE_LIBPP_LINK_VERSION = '2:0';
+const NEBULE_LIBRARY_PP_VERSION = '020210611';
+const NEBULE_LIBRARY_PP_LINK_VERSION = '2:0';
 const NEBULE_DEFAULT_PUPPETMASTER_ID = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
 const NEBULE_ENVIRONMENT_FILE = 'nebule.env';
 const LOCAL_ENTITY_FILE = 'e';
@@ -629,7 +629,7 @@ const LIST_OPTIONS_DEFAULT_VALUE = array(
 /**
  * Result of Lib PP initialisation.
  */
-$libppCheckOK = false;
+$libraryCheckOK = false;
 
 /**
  * Buffer of option's values.
@@ -726,8 +726,8 @@ $nebuleCacheIsPubkey = array();
 $nebuleCacheIsPrivkey = array();
 $nebuleCacheIsEncrypt = array();
 $nebuleCacheFindPrivKey = '';
-$nebuleCachelibpp_o_vr = array();
-$nebuleCachelibpp_l_grx = array();
+$nebuleCachelibrary_o_vr = array();
+$nebuleCachelibrary_l_grx = array();
 
 /**
  * Return option's value. Options presents on environment file are forced.
@@ -807,9 +807,9 @@ function getConfiguration(string $name)
  * Initialisation de la bibliothèque.
  * @return boolean
  */
-function libppInit(): bool
+function libraryInit(): bool
 {
-    global $nebuleLocalAuthorities, $libppCheckOK;
+    global $nebuleLocalAuthorities, $libraryCheckOK;
 
     // Initialize i/o.
     if (!io_open())
@@ -846,18 +846,18 @@ function libppInit(): bool
         $nebuleLocalAuthorities[] = $master;
     }
 
-    libppSetServerEntity();
-    libppSetDefaultEntity();
-    libppSetPublicEntity();
+    librarySetServerEntity();
+    librarySetDefaultEntity();
+    librarySetPublicEntity();
 
-    $libppCheckOK = true;
+    $libraryCheckOK = true;
     return true;
 }
 
 /**
  * Get and check local server entity.
  */
-function libppSetServerEntity(): void
+function librarySetServerEntity(): void
 {
     global $nebuleServerEntite, $nebuleLocalAuthorities;
     if (file_exists(LOCAL_ENTITY_FILE)
@@ -875,7 +875,7 @@ function libppSetServerEntity(): void
 /**
  * Get and check default entity.
  */
-function libppSetDefaultEntity(): void
+function librarySetDefaultEntity(): void
 {
     global $nebuleDefaultEntity, $nebuleLocalAuthorities;
     $nebuleDefaultEntity = getConfiguration('defaultCurrentEntity');
@@ -889,7 +889,7 @@ function libppSetDefaultEntity(): void
 /**
  * Get and check public entity.
  */
-function libppSetPublicEntity(): void
+function librarySetPublicEntity(): void
 {
     global $nebulePublicEntity, $nebuleDefaultEntity;
     if (!_entityCheck($nebulePublicEntity))
@@ -1942,7 +1942,7 @@ function _objDownloadOnLocations(string $nid, array $locations = array()): bool
  */
 function _objCheckContent(&$nid)
 {
-    global $nebuleCachelibpp_o_vr;
+    global $nebuleCachelibrary_o_vr;
 
     if (!_nodCheckNID($nid))
         return false;
@@ -1958,7 +1958,7 @@ function _objCheckContent(&$nid)
         return true;
     }
 
-    if (isset($nebuleCachelibpp_o_vr[$nid]))
+    if (isset($nebuleCachelibrary_o_vr[$nid]))
         return true;
 
     _metrologyAdd('ov');
@@ -1975,7 +1975,7 @@ function _objCheckContent(&$nid)
     }
 
     if (getConfiguration('permitBufferIO')) {
-        $nebuleCachelibpp_o_vr[$nid] = true;
+        $nebuleCachelibrary_o_vr[$nid] = true;
     }
     unset($hash);
 
@@ -2172,7 +2172,7 @@ function _lnkGenerate(string $rc, string $req, string $nid1, string $nid2 = '', 
     )
         return '';
 
-    $bh = 'nebule:link/'.NEBULE_LIBPP_LINK_VERSION;
+    $bh = 'nebule:link/'.NEBULE_LIBRARY_PP_LINK_VERSION;
 
     if ($rc == '' || !_lnkCheckRC($rc))
         $rc = '0:' . date(DATE_ATOM);
@@ -2198,7 +2198,7 @@ function _lnkGenerate(string $rc, string $req, string $nid1, string $nid2 = '', 
 
 /** FIXME
  * Link - Résoud un embranchement de mise à jour d'un objet.
- * Passer de préférence par la fonction _neblibpp_l_grx !
+ * Passer de préférence par la fonction _lnkGraphResolv !
  *
  *  - $object est l'objet dont on veut trouver la mise à jour.
  *  - $visited est une table des liens et objets déjà parcourus.
@@ -2346,11 +2346,11 @@ function _lnkGraphResolvOne(&$nid, &$visited, $present = true, $synchro = false,
  */
 function _lnkGraphResolv($nid, $present = true, $synchro = false, $restrict = false)
 {
-    global $nebule_permitautosync, $nebuleCachelibpp_l_grx;
+    global $nebule_permitautosync, $nebuleCachelibrary_l_grx;
 
     // Lit au besoin le cache.
-    if (!$restrict && isset($nebuleCachelibpp_l_grx[$nid][$present]))
-        return $nebuleCachelibpp_l_grx[$nid][$present];
+    if (!$restrict && isset($nebuleCachelibrary_l_grx[$nid][$present]))
+        return $nebuleCachelibrary_l_grx[$nid][$present];
 
     // Active la synchronisation automatique au besoin.
     if ($nebule_permitautosync)
@@ -2363,7 +2363,7 @@ function _lnkGraphResolv($nid, $present = true, $synchro = false, $restrict = fa
         $res = $nid;
 
     if (getConfiguration('permitBufferIO') && !$restrict)
-        $nebuleCachelibpp_l_grx[$nid][$present] = $res;
+        $nebuleCachelibrary_l_grx[$nid][$present] = $res;
 
     return $res;
 }
@@ -3004,7 +3004,7 @@ function _lnkCheckRV(string &$rv): bool
     // Check items from RV : VER:SUB
     $ver = strtok($rv, ':');
     $sub = strtok(':');
-    if ("$ver:$sub" != NEBULE_LIBPP_LINK_VERSION) return false;
+    if ("$ver:$sub" != NEBULE_LIBRARY_PP_LINK_VERSION) return false;
 
     // Check registry overflow
     if (strtok(':') !== false) return false;
@@ -3657,7 +3657,7 @@ function io_objectSynchronize(string $nid, array $location): bool
 
     // Téléchargement de l'objet via un fichier temporaire.
     $tmpId = bin2hex(cryptoGetPseudoRandom(8));
-    $tmpIdName = '_neblibpp_o_dl1_' . $tmpId . '-' . $nid;
+    $tmpIdName = 'io_objectSynchronize' . $tmpId . '-' . $nid;
     $distobj = fopen($location . '/o/' . $nid, 'r');
     if ($distobj) {
         $localobj = fopen(LOCAL_OBJECTS_FOLDER . '/' . $tmpIdName, 'w');
@@ -3826,7 +3826,7 @@ function cryptoGetPseudoRandom($count = 32): string
         return $result;
 
     // Génère une graine avec la date pour le compteur interne.
-    $intcount = date(DATE_ATOM) . microtime(false) . NEBULE_LIBPP_VERSION . $nebuleServerEntite;
+    $intcount = date(DATE_ATOM) . microtime(false) . NEBULE_LIBRARY_PP_VERSION . $nebuleServerEntite;
 
     // Boucle de remplissage.
     while (strlen($result) < $count) {
@@ -4106,9 +4106,9 @@ function setPermitOpenFileCode()
  */
 function findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstanceSleep): void
 {
-    global $libppCheckOK;
+    global $libraryCheckOK;
 
-    if (!$libppCheckOK)
+    if (!$libraryCheckOK)
         return;
 
     // Try to find on session.
@@ -4187,12 +4187,12 @@ function loadLibraryPOO(string $bootstrapLibraryID, string $bootstrapLibraryInst
 
 function findApplication():void
 {
-    global $libppCheckOK, $bootstrapSwitchApplication, $bootstrapUpdate, $nebuleLocalAuthorities,
+    global $libraryCheckOK, $bootstrapSwitchApplication, $bootstrapUpdate, $nebuleLocalAuthorities,
            $bootstrapApplicationInstanceSleep, $bootstrapApplicationDisplayInstanceSleep,
            $bootstrapApplicationActionInstanceSleep, $bootstrapApplicationTraductionInstanceSleep,
            $bootstrapApplicationStartID;
 
-    if (!$libppCheckOK)
+    if (!$libraryCheckOK)
         return;
 
     session_start();
@@ -5151,7 +5151,7 @@ function bootstrapDisplayOnBreak(): void
     </div>
     <div class="parts">
         <span class="partstitle">#2 <?php echo BOOTSTRAP_NAME; ?> nebule library PP</span><br/>
-        library version &nbsp;: <?php echo NEBULE_LIBPP_VERSION ?><br/>
+        library version &nbsp;: <?php echo NEBULE_LIBRARY_PP_VERSION ?><br/>
         puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: <?php echo getConfiguration('puppetmaster'); ?> (local authority)<br/>
         security master &nbsp;: <?php foreach ($nebuleSecurityMasters as $m) echo $m . ' '; ?> (local authority)<br/>
         code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php foreach ($nebuleCodeMasters as $m) echo $m . ' '; ?> (local authority)<br/>
@@ -5692,7 +5692,7 @@ function bootstrapDisplayApplicationfirst(): void
         }
         ?><br/>
         Tb=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?><br/>
-        nebule library : <?php echo NEBULE_LIBPP_VERSION . ' PHP PP'; ?><br/>
+        nebule library : <?php echo NEBULE_LIBRARY_PP_VERSION . ' PHP PP'; ?><br/>
         <?php if ($bootstrapRescueMode) {
             echo "RESCUE<br />\n";
         }
@@ -5835,7 +5835,7 @@ function bootstrapFirstCreateObjects()
  */
 function bootstrapFirstSynchronizingEntities()
 {
-    global $nebuleLocalAuthorities, $libppCheckOK;
+    global $nebuleLocalAuthorities, $libraryCheckOK;
 
     echo '<div class="parts">'."\n";
 
@@ -5981,7 +5981,7 @@ function bootstrapFirstSynchronizingEntities()
 
         <div id="reload">
             <?php
-            if ($libppCheckOK) {
+            if ($libraryCheckOK) {
                 ?>
 
                 &gt; <a
@@ -6045,13 +6045,22 @@ function _entityGetSecurityMasters(bool $synchronize=false): array
         _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
 
     $lnkList = array();
+    $entList = array();
     $filter = array(
+        'bl/rl/req' => 'f',
         'bl/rl/nid2' => $nid,
+        //'bl/rl/nid3' => getConfiguration('CodeBranch'), TODO
         'bs/rs/nid' => getConfiguration('puppetmaster'),
     );
     _lnkGetList($nid, $lnkList, $filter);
 
-    // TODO
+    // Extract uniques entities
+    foreach ($lnkList as $lnk)
+        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
+
+    // Rearrange entities
+    foreach ($entList as $ent)
+        $nebuleSecurityMasters[] = $ent;
 
     return $nebuleSecurityMasters;
 }
@@ -7172,7 +7181,7 @@ function bootstrapLogMetrology()
 
 function main()
 {
-    if (!libppInit())
+    if (!libraryInit())
         setBootstrapBreak('21', 'Library init error');
 
     if (!io_checkLinkFolder())
