@@ -373,7 +373,7 @@ $metrologyLibraryPOOConvertationCache = 0;
  ------------------------------------------------------------------------------------------
  */
 
-const NEBULE_LIBRARY_PP_VERSION = '020210611';
+const NEBULE_LIBRARY_PP_VERSION = '020210613';
 const NEBULE_LIBRARY_PP_LINK_VERSION = '2:0';
 const NEBULE_DEFAULT_PUPPETMASTER_ID = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
 const NEBULE_ENVIRONMENT_FILE = 'nebule.env';
@@ -822,9 +822,10 @@ function libraryInit(): bool
     // Une fois les autres entités trouvées, ajoute les autres autorités.
     // Cela empêche qu'une entié compromise ne génère un lien qui passerait avant le puppetmaster
     //   dans la recherche par référence nebFindByRef.
-    if (!_entityCheck(getConfiguration('puppetmaster')))
+    $puppetmaster = _entityGetPuppetmaster();
+    if (!_entityCheckPuppetmaster($puppetmaster))
         return false;
-    $nebuleLocalAuthorities = array(getConfiguration('puppetmaster'));
+    $nebuleLocalAuthorities = array($puppetmaster);
 
     // Search and check global masters.
     $nebuleSecurityMasters = _entityGetSecurityMasters(false);
@@ -1836,6 +1837,341 @@ function _entityChangePasswd($entity, $password): bool
         return false;
     // A faire...
     return true;
+}
+
+/**
+ * Get puppetmaster ID.
+ * @return string
+ */
+function _entityGetPuppetmaster(): string
+{
+    return getConfiguration('puppetmaster');
+}
+
+/**
+ * Get masters of security IDs.
+ * @param bool $synchronize
+ * @return array
+ */
+function _entityGetSecurityMasters(bool $synchronize=false): array
+{
+    global $nebuleSecurityMasters;
+
+    if (sizeof($nebuleSecurityMasters) != 0)
+        return $nebuleSecurityMasters;
+
+    $nid = NEBULE_REFERENCE_NID_SECURITYMASTER;
+    if ($synchronize)
+        _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
+
+    $lnkList = array();
+    $entList = array();
+    $filter = array(
+        'bl/rl/req' => 'l',
+        'bl/rl/nid2' => $nid,
+        'bs/rs/nid' => getConfiguration('puppetmaster'),
+    );
+    _lnkGetList($nid, $lnkList, $filter);
+
+    if (getConfiguration('CodeBranch') != '')
+    {
+        $filter['bl/rl/nid3'] = getConfiguration('CodeBranch');
+        _lnkGetList($nid, $lnkList, $filter);
+    }
+
+    // Extract uniques entities
+    foreach ($lnkList as $lnk)
+        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
+
+    // Rearrange entities
+    foreach ($entList as $ent)
+        $nebuleSecurityMasters[] = $ent;
+
+    return $nebuleSecurityMasters;
+}
+
+/**
+ * Get masters of code IDs.
+ * @param bool $synchronize
+ * @return array
+ */
+function _entityGetCodeMasters(bool $synchronize=false): array
+{
+    global $nebuleCodeMasters;
+
+    if (sizeof($nebuleCodeMasters) != 0)
+        return $nebuleCodeMasters;
+
+    $nid = NEBULE_REFERENCE_NID_CODEMASTER;
+    if ($synchronize)
+        _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
+
+    $lnkList = array();
+    $entList = array();
+    $filter = array(
+        'bl/rl/req' => 'l',
+        'bl/rl/nid2' => $nid,
+        'bs/rs/nid' => getConfiguration('puppetmaster'),
+    );
+    _lnkGetList($nid, $lnkList, $filter);
+
+    if (getConfiguration('CodeBranch') != '')
+    {
+        $filter['bl/rl/nid3'] = getConfiguration('CodeBranch');
+        _lnkGetList($nid, $lnkList, $filter);
+    }
+
+    // Extract uniques entities
+    foreach ($lnkList as $lnk)
+        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
+
+    // Rearrange entities
+    foreach ($entList as $ent)
+        $nebuleCodeMasters[] = $ent;
+
+    return $nebuleCodeMasters;
+}
+
+/**
+ * Get masters of time IDs.
+ * @param bool $synchronize
+ * @return array
+ */
+function _entityGetTimeMasters(bool $synchronize=false): array
+{
+    global $nebuleTimeMasters;
+
+    if (sizeof($nebuleTimeMasters) != 0)
+        return $nebuleTimeMasters;
+
+    $nid = NEBULE_REFERENCE_NID_TIMEMASTER;
+    if ($synchronize)
+        _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
+
+    $lnkList = array();
+    $entList = array();
+    $filter = array(
+        'bl/rl/req' => 'l',
+        'bl/rl/nid2' => $nid,
+        'bs/rs/nid' => getConfiguration('puppetmaster'),
+    );
+    _lnkGetList($nid, $lnkList, $filter);
+
+    if (getConfiguration('CodeBranch') != '')
+    {
+        $filter['bl/rl/nid3'] = getConfiguration('CodeBranch');
+        _lnkGetList($nid, $lnkList, $filter);
+    }
+
+    // Extract uniques entities
+    foreach ($lnkList as $lnk)
+        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
+
+    // Rearrange entities
+    foreach ($entList as $ent)
+        $nebuleTimeMasters[] = $ent;
+
+    return $nebuleTimeMasters;
+}
+
+/**
+ * Get masters of directory IDs.
+ * @param bool $synchronize
+ * @return array
+ */
+function _entityGetDirectoryMasters(bool $synchronize=false): array
+{
+    global $nebuleDirectoryMasters;
+
+    if (sizeof($nebuleDirectoryMasters) != 0)
+        return $nebuleDirectoryMasters;
+
+    $nid = NEBULE_REFERENCE_NID_DIRECTORYMASTER;
+    if ($synchronize)
+        _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
+
+    $lnkList = array();
+    $entList = array();
+    $filter = array(
+        'bl/rl/req' => 'l',
+        'bl/rl/nid2' => $nid,
+        'bs/rs/nid' => getConfiguration('puppetmaster'),
+    );
+    _lnkGetList($nid, $lnkList, $filter);
+
+    if (getConfiguration('CodeBranch') != '')
+    {
+        $filter['bl/rl/nid3'] = getConfiguration('CodeBranch');
+        _lnkGetList($nid, $lnkList, $filter);
+    }
+
+    // Extract uniques entities
+    foreach ($lnkList as $lnk)
+        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
+
+    // Rearrange entities
+    foreach ($entList as $ent)
+        $nebuleDirectoryMasters[] = $ent;
+
+    return $nebuleDirectoryMasters;
+}
+
+/**
+ * Check puppetmaster entity.
+ * @param string $oid
+ * @return bool
+ */
+function _entityCheckPuppetmaster(string $oid): bool
+{
+    if (!_entityCheck($oid))
+    {
+        addLog('need sync puppetmaster', 'warn', __FUNCTION__, '6995b7fd');
+        setBootstrapBreak('71', 'Need sync puppetmaster');
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Check masters of security entities.
+ * @param array $oidList
+ * @return bool
+ */
+function _entityCheckSecurityMasters(array $oidList): bool
+{
+    if (sizeof($oidList) == 0)
+    {
+        addLog('need sync masters of security', 'warn', __FUNCTION__, 'a767699e');
+        setBootstrapBreak('72', 'Need sync masters of security');
+        return false;
+    }
+    foreach ($oidList as $nid)
+    {
+        if (!_entityCheck($nid))
+        {
+            addLog('need sync masters of security ' . $nid, 'warn', __FUNCTION__, '5626b8f');
+            setBootstrapBreak('73', 'Need sync masters of security');
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Check masters of code entities.
+ * @param array $oidList
+ * @return bool
+ */
+function _entityCheckCodeMasters(array $oidList): bool
+{
+    if (sizeof($oidList) == 0)
+    {
+        addLog('need sync masters of code', 'warn', __FUNCTION__, '8543b436');
+        setBootstrapBreak('74', 'Need sync masters of code');
+        return false;
+    }
+    foreach ($oidList as $nid)
+    {
+        if (!_entityCheck($nid))
+        {
+            addLog('need sync masters of code ' . $nid, 'warn', __FUNCTION__, '0ff4516d');
+            setBootstrapBreak('75', 'Need sync masters of code');
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Check masters of time entities.
+ * @param array $oidList
+ * @return bool
+ */
+function _entityCheckTimeMasters(array $oidList): bool
+{
+    if (sizeof($oidList) == 0)
+    {
+        addLog('need sync masters of time', 'warn', __FUNCTION__, '0c6f1ef1');
+        setBootstrapBreak('76', 'Need sync masters of time');
+        return false;
+    }
+    foreach ($oidList as $nid)
+    {
+        if (!_entityCheck($nid))
+        {
+            addLog('need sync masters of time ' . $nid, 'warn', __FUNCTION__, '01f5f9b5');
+            setBootstrapBreak('77', 'Need sync masters of time');
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Check masters of directory entities.
+ * @param array $oidList
+ * @return bool
+ */
+function _entityCheckDirectoryMasters(array $oidList): bool
+{
+    if (sizeof($oidList) == 0)
+    {
+        addLog('need sync masters of directory', 'warn', __FUNCTION__, 'e47e9e04');
+        setBootstrapBreak('78', 'Need sync masters of directory');
+        return false;
+    }
+    foreach ($oidList as $nid)
+    {
+        if (!_entityCheck($nid))
+        {
+            addLog('need sync masters of directory ' . $nid, 'warn', __FUNCTION__, '8b12fe09');
+            setBootstrapBreak('79', 'Need sync masters of directory');
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Synchronize puppetmaster from central location.
+ * Specifically for puppetmaster, first contents are locally generated.
+ * @param string $oid
+ * @return void
+ */
+function _entitySyncPuppetmaster(string $oid): void
+{
+    global $configurationList;
+
+    if (!_entityCheck($oid))
+    {
+        $oid = NEBULE_DEFAULT_PUPPETMASTER_ID;
+        $configurationList['puppetmaster'] = NEBULE_DEFAULT_PUPPETMASTER_ID;
+    }
+
+    if ($oid == NEBULE_DEFAULT_PUPPETMASTER_ID)
+    {
+        $data = FIRST_PUPPETMASTER_PUBLIC_KEY;
+        io_objectWrite($data);
+        $link = FIRST_PUPPETMASTER_HASH_LINK;
+        io_linkWrite($oid, $link);
+        $link = FIRST_PUPPETMASTER_TYPE_LINK;
+        io_linkWrite($oid, $link);
+    }
+
+    _entitySyncMasters(array($oid));
+}
+
+/**
+ * Synchronize masters of security from central location.
+ * @param array $oidList
+ * @return void
+ */
+function _entitySyncMasters(array $oidList): void
+{
+    foreach ($oidList as $nid) {
+        _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
+        _lnkDownloadOnLocations($nid, FIRST_LOCALISATIONS);
+    }
 }
 
 /** FIXME
@@ -3427,6 +3763,7 @@ function io_checkLinkFolder(): bool
     // Check if exist.
     if (!file_exists(LOCAL_LINKS_FOLDER) || !is_dir(LOCAL_LINKS_FOLDER)) {
         addLog('I/O no folder for links.', 'error', __FUNCTION__, '5306de5f');
+        setBootstrapBreak('22', "Library i/o link's folder error");
         return false;
     }
 
@@ -3436,19 +3773,23 @@ function io_checkLinkFolder(): bool
         $name = LOCAL_LINKS_FOLDER . '/writest' . bin2hex(cryptoGetPseudoRandom(8));
         if (file_put_contents($name, $data) === false) {
             addLog('I/O error on folder for links.', 'error', __FUNCTION__, 'f72e3a86');
+            setBootstrapBreak('23', "Library i/o link's folder error");
             return false;
         }
         if (!file_exists($name) || !is_file($name)) {
             addLog('I/O error on folder for links.', 'error', __FUNCTION__, '6f012d85');
+            setBootstrapBreak('23', "Library i/o link's folder error");
             return false;
         }
         $read = file_get_contents($name, false, null, 0, 2400);
         if ($data != $read) {
             addLog('I/O error on folder for links.', 'error', __FUNCTION__, 'fd499fcb');
+            setBootstrapBreak('23', "Library i/o link's folder error");
             return false;
         }
         if (!unlink($name)) {
             addLog('I/O error on folder for links.', 'error', __FUNCTION__, '8e0caa66');
+            setBootstrapBreak('23', "Library i/o link's folder error");
             return false;
         }
     }
@@ -3466,6 +3807,7 @@ function io_checkObjectFolder(): bool
     // Check if exist.
     if (!file_exists(LOCAL_OBJECTS_FOLDER) || !is_dir(LOCAL_OBJECTS_FOLDER) ) {
         addLog('I/O no folder for objects.', 'error', __FUNCTION__, 'b0cdeafe');
+        setBootstrapBreak('24', "Library i/o object's folder error");
         return false;
     }
 
@@ -3475,19 +3817,23 @@ function io_checkObjectFolder(): bool
         $name = LOCAL_OBJECTS_FOLDER . '/writest' . bin2hex(cryptoGetPseudoRandom(8));
         if (file_put_contents($name, $data) === false) {
             addLog('I/O error on folder for objects.', 'error', __FUNCTION__, '1327da69');
+            setBootstrapBreak('25', "Library i/o object's folder error");
             return false;
         }
         if (!file_exists($name) || !is_file($name)) {
             addLog('I/O error on folder for objects.', 'error', __FUNCTION__, '2b451a2a');
+            setBootstrapBreak('25', "Library i/o object's folder error");
             return false;
         }
         $read = file_get_contents($name, false, null, 0, 2400);
         if ($data != $read) {
             addLog('I/O error on folder for objects.', 'error', __FUNCTION__, '634072e5');
+            setBootstrapBreak('25', "Library i/o object's folder error");
             return false;
         }
         if (!unlink($name)) {
             addLog('I/O error on folder for objects.', 'error', __FUNCTION__, '2b397869');
+            setBootstrapBreak('25', "Library i/o object's folder error");
             return false;
         }
     }
@@ -5138,33 +5484,24 @@ function bootstrapDisplayOnBreak(): void
 
     bootstrapHtmlHeader();
     bootstrapHtmlTop();
-    ?>
 
-    <div class="parts">
-        <span class="partstitle">#1 <?php echo BOOTSTRAP_NAME; ?> break on</span>
-        <?php
-        foreach ($bootstrapBreak as $number => $message) {
-            if (sizeof($bootstrapBreak) > 1) {
-                echo "<br />\n- ";
-            }
-            echo '[' . $number . '] <span class="error">' . $message . '</span>';
-        }
-        ?><br/>
-        Tb=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?><br/>
-        <?php if ($bootstrapRescueMode) {
-            echo "RESCUE mode<br />\n";
-        } ?>
-        <?php if ($bootstrapFlush) {
-            echo "FLUSH<br />\n";
-        } ?>
-        <?php if (sizeof($bootstrapBreak) != 0 && isset($bootstrapBreak[12])) {
-            echo "<a href=\"?a=0\">&gt; Return to application 0</a><br />\n";
-        }
-        $sessionId = session_id();
-        ?>
-        <a href="?f">&gt; Flush PHP session</a> (<?php echo substr(cryptoGetDataHash($sessionId), 0, 6); ?>)<br/>
-    </div>
-    <div class="parts">
+    echo '<div class="parts">'."\n";
+    echo '<span class="partstitle">#1 ' . BOOTSTRAP_NAME . ' break on</span><br/>'."\n";
+
+    foreach ($bootstrapBreak as $number => $message)
+        echo '- [' . $number . '] <span class="error">' . $message . '</span>'."<br />\n";
+    echo 'Tb=' . sprintf('%01.4fs', microtime(true) - $metrologyStartTime) . "<br />\n";
+    if ($bootstrapRescueMode)
+        echo "RESCUE mode<br />\n";
+    if ($bootstrapFlush)
+        echo "FLUSH<br />\n";
+    if (sizeof($bootstrapBreak) != 0 && isset($bootstrapBreak[12]))
+        echo "<a href=\"?a=0\">&gt; Return to application 0</a><br />\n";
+    $sessionId = session_id();
+    echo '<a href="?f">&gt; Flush PHP session</a> (' . substr(cryptoGetDataHash($sessionId), 0, 6) . ')' . "\n";
+    echo '</div>'."\n";
+    echo '<div class="parts">'."\n";
+    ?>
         <span class="partstitle">#2 <?php echo BOOTSTRAP_NAME; ?> nebule library PP</span><br/>
         library version &nbsp;: <?php echo NEBULE_LIBRARY_PP_VERSION ?><br/>
         puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: <?php echo getConfiguration('puppetmaster'); ?> (local authority)<br/>
@@ -5175,8 +5512,10 @@ function bootstrapDisplayOnBreak(): void
         server entity &nbsp;&nbsp;&nbsp;: <?php echo $nebuleServerEntite; ?><br/>
         default entity &nbsp;&nbsp;: <?php echo $nebuleDefaultEntite; ?><br/>
         current entity &nbsp;&nbsp;: <?php echo $nebulePublicEntity; ?>
-    </div>
-    <div class="parts">
+    <?php
+    echo '</div>'."\n";
+    echo '<div class="parts">'."\n";
+    ?>
         <span class="partstitle">#3 nebule library POO</span><br/>
         <?php
         flush();
@@ -5426,14 +5765,17 @@ function bootstrapDisplayOnBreak(): void
         }
         ?>
 
-    </div>
-
-    <div class="parts">
+    <?php
+    echo '</div>'."\n";
+    echo '<div class="parts">'."\n";
+    ?>
         <span class="partstitle">#4 application</span><br/>
         application RID &nbsp;: <a
                 href="/?<?php echo ARG_SWITCH_APPLICATION . '=' . $bootstrapApplicationStartID; ?>"><?php echo $bootstrapApplicationStartID; ?></a><br/>
         application ID &nbsp;&nbsp;: <?php echo $bootstrapApplicationID; ?>
-    </div>
+    <?php
+    echo '</div>'."\n";
+    ?>
 
     <span class="partstitle">#- end <?php echo BOOTSTRAP_NAME; ?></span><br/>
     Te=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?><br/>
@@ -5671,8 +6013,7 @@ function getBootstrapNeedFirstSynchronization(): bool
  */
 function bootstrapDisplayApplicationfirst(): void
 {
-    global $loggerSessionID, $bootstrapBreak, $metrologyStartTime, $bootstrapRescueMode,
-           $configurationList, $nebuleCacheIsPubkey;
+    global $bootstrapBreak, $metrologyStartTime, $bootstrapRescueMode, $configurationList, $nebuleCacheIsPubkey;
 
     // Modifie temporairement la configuration de la bibliothèque PHP PP.
     $configurationList['nebulePermitWrite'] = true;
@@ -5695,42 +6036,32 @@ function bootstrapDisplayApplicationfirst(): void
     bootstrapHtmlTop();
 
     echo '<div class="parts">'."\n";
-    ?>
+    echo '<span class="partstitle">#1 ' . BOOTSTRAP_NAME . ' break on</span><br/>'."\n";
 
-        <span class="partstitle">#1 <?php echo BOOTSTRAP_NAME; ?> break on</span>
-        <?php
-        foreach ($bootstrapBreak as $number => $message) {
-            if (sizeof($bootstrapBreak) > 1) {
-                echo "<br />\n- ";
-            }
-            echo '[' . $number . '] <span class="error">' . $message . '</span>';
-        }
-        ?><br/>
-        Tb=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?><br/>
-        nebule library : <?php echo NEBULE_LIBRARY_PP_VERSION . ' PHP PP'; ?><br/>
-        <?php if ($bootstrapRescueMode) {
-            echo "RESCUE<br />\n";
-        }
+    foreach ($bootstrapBreak as $number => $message)
+        echo '- [' . $number . '] <span class="error">' . $message . '</span>' . "<br />\n";
+    ?>
+    Tb=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?><br/>
+    nebule library : <?php echo NEBULE_LIBRARY_PP_VERSION . ' PHP PP'; ?><br/>
+    <?php if ($bootstrapRescueMode) {
+        echo "RESCUE<br />\n";
+    }
     echo "</div>\n";
     echo '<div class="parts">'."\n";
-    ?>
-    <span class="partstitle">#2 create folders</span><br/>
-    <?php
-    if (!io_createLinkFolder() || !io_createObjectFolder()) {
-        ?>
+    echo '<span class="partstitle">#2 create folders</span><br/>'."\n";
 
-        <span class="error">ERROR!</span>
-        <?php
+    if (!io_createLinkFolder() || !io_createObjectFolder()) {
+        echo '<span class="error">ERROR!</span>'."\n";
         if (!io_checkLinkFolder()) {
             addLog('error links folder', 'error', __FUNCTION__, 'f1d49c43');
-            ?>
+?>
 
-            <div class="diverror">
-                Unable to create folder <b><?php echo LOCAL_LINKS_FOLDER; ?></b> for links.<br/>
-                On the same path as <b>index.php</b>, please create folder manually,<br/>
-                and give it to web server process.<br/>
-                As <i>root</i>, run :<br/>
-                <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
+<div class="diverror">
+    Unable to create folder <b><?php echo LOCAL_LINKS_FOLDER; ?></b> for links.<br/>
+    On the same path as <b>index.php</b>, please create folder manually,<br/>
+    and give it to web server process.<br/>
+    As <i>root</i>, run :<br/>
+    <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
 
 mkdir <?php echo LOCAL_LINKS_FOLDER; ?>
 
@@ -5738,8 +6069,8 @@ chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . 
 
 chmod 755 <?php echo LOCAL_LINKS_FOLDER; ?>
 </pre>
-            </div>
-            <?php
+</div>
+<?php
         }
 
         if (!io_checkObjectFolder()) {
@@ -5794,11 +6125,8 @@ chmod 755 <?php echo LOCAL_OBJECTS_FOLDER; ?>
 function bootstrapFirstCreateObjects()
 {
     echo '<div class="parts">'."\n";
+    echo '<span class="partstitle">#3 nebule needed library objects</span><br/>'."\n";
 
-    ?>
-
-        <span class="partstitle">#3 nebule needed library objects</span><br/>
-    <?php
     // Si il manque un des objets, recrée les objets.
     $hash = _objGetNID(FIRST_RESERVED_OBJECTS[10], getConfiguration('cryptoHashAlgorithm'));
     if (!io_checkNodeHaveContent($hash))
@@ -5853,16 +6181,14 @@ function bootstrapFirstSynchronizingEntities()
     global $nebuleLocalAuthorities, $libraryCheckOK;
 
     echo '<div class="parts">'."\n";
+    echo '<span class="partstitle">#4 synchronizing entities</span><br/>'."\n";
 
     $puppetmaster = _entityGetPuppetmaster();
     $securityMasters = _entityGetSecurityMasters(true);
     $codeMasters = _entityGetCodeMasters(true);
     $timeMasters = _entityGetTimeMasters(true);
     $directoryMasters = _entityGetDirectoryMasters(true);
-    ?>
 
-    <span class="partstitle">#4 synchronizing entities</span><br/>
-    <?php
     // Si la bibliothèque ne se charge pas correctement, fait une première synchronisation des entités.
     if (!_entityCheckPuppetmaster($puppetmaster)
         || !_entityCheckSecurityMasters($securityMasters)
@@ -5870,11 +6196,10 @@ function bootstrapFirstSynchronizingEntities()
         || !_entityCheckTimeMasters($timeMasters)
         || !_entityCheckDirectoryMasters($directoryMasters)
     ) {
-        echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;:';
+        echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ';
         if (!_entityCheckPuppetmaster($puppetmaster))
         {
             echo 'sync... ';
-            addLog('need sync puppetmaster', 'warn', __FUNCTION__, '6995b7fd');
             _entitySyncPuppetmaster($puppetmaster);
         }
         if (_entityCheckPuppetmaster($puppetmaster))
@@ -5888,8 +6213,9 @@ function bootstrapFirstSynchronizingEntities()
         flush();
 
         // Activation comme autorité locale.
-        $nebuleLocalAuthorities[0] = getConfiguration('puppetmaster');
+        $nebuleLocalAuthorities[0] = $puppetmaster;
 
+        echo 'sync for masters';
         _lnkDownloadOnLocations(NEBULE_REFERENCE_NID_SECURITYMASTER, FIRST_LOCALISATIONS);
         echo '.';
         _lnkDownloadOnLocations(NEBULE_REFERENCE_NID_CODEMASTER, FIRST_LOCALISATIONS);
@@ -5901,14 +6227,13 @@ function bootstrapFirstSynchronizingEntities()
         echo "<br/>\n";
         flush();
 
-        echo 'security master &nbsp;:';
+        echo 'security master &nbsp;: ';
         if (sizeof($securityMasters) != 0)
         {
             if (!_entityCheckSecurityMasters($securityMasters))
             {
                 echo 'sync... ';
-                addLog('need sync masters of security', 'warn', __FUNCTION__, 'a767699e');
-                _entitySyncSecurityMasters($securityMasters);
+                _entitySyncMasters($securityMasters);
             }
             if (_entityCheckSecurityMasters($securityMasters))
             {
@@ -5923,14 +6248,13 @@ function bootstrapFirstSynchronizingEntities()
         echo "<br/>\n";
         flush();
 
-        echo 'code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:';
+        echo 'code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
         if (sizeof($codeMasters) != 0)
         {
             if (!_entityCheckCodeMasters($codeMasters))
             {
                 echo 'sync... ';
-                addLog('need sync masters of code', 'warn', __FUNCTION__, '8543b436');
-                _entitySyncCodeMasters($codeMasters);
+                _entitySyncMasters($codeMasters);
             }
             if (_entityCheckCodeMasters($codeMasters))
             {
@@ -5945,14 +6269,13 @@ function bootstrapFirstSynchronizingEntities()
         echo "<br/>\n";
         flush();
 
-        echo 'time master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:';
+        echo 'time master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
         if (sizeof($timeMasters) != 0)
         {
             if (!_entityCheckTimeMasters($timeMasters))
             {
                 echo 'sync... ';
-                addLog('need sync masters of code', 'warn', __FUNCTION__, '0c6f1ef1');
-                _entitySyncTimeMasters($timeMasters);
+                _entitySyncMasters($timeMasters);
             }
             if (_entityCheckTimeMasters($timeMasters))
             {
@@ -5967,14 +6290,13 @@ function bootstrapFirstSynchronizingEntities()
         echo "<br/>\n";
         flush();
 
-        echo 'directory master :';
+        echo 'directory master : ';
         if (sizeof($directoryMasters) != 0)
         {
             if (!_entityCheckDirectoryMasters($directoryMasters))
             {
                 echo 'sync... ';
-                addLog('need sync masters of directory', 'warn', __FUNCTION__, 'e47e9e04');
-                _entitySyncDirectoryMasters($directoryMasters);
+                _entitySyncMasters($directoryMasters);
             }
             if (_entityCheckDirectoryMasters($directoryMasters))
             {
@@ -5990,36 +6312,8 @@ function bootstrapFirstSynchronizingEntities()
         flush();
 
         echo "</div>\n";
-        ?>
 
-        <div id="reload">
-            <?php
-            if ($libraryCheckOK) {
-                ?>
-
-                &gt; <a
-                    onclick="javascript:window.location.reload(true);">reloading <?php echo BOOTSTRAP_NAME; ?></a> ...
-                <script type="text/javascript">
-                    <!--
-                    setTimeout(function () {
-                        window.location.reload(true)
-                    }, <?php echo FIRST_RELOAD_DELAY; ?>);
-                    //-->
-                </script>
-            <?php
-            }
-            else
-            {
-            ?>
-
-                <button onclick="javascript:window.location.reload(true);">when ready,
-                    reload <?php echo BOOTSTRAP_NAME; ?></button>
-                <?php
-            }
-            ?>
-
-        </div>
-        <?php
+        bootstrapPartDisplayReloadPage($libraryCheckOK);
     } else {
         addLog('ok sync entities', 'info', __FUNCTION__, 'c5b55957');
         ?>
@@ -6033,342 +6327,34 @@ function bootstrapFirstSynchronizingEntities()
 }
 
 /**
- * Get puppetmaster ID.
- * @return string
- */
-function _entityGetPuppetmaster(): string
-{
-    return getConfiguration('puppetmaster');
-}
-
-/**
- * Get masters of security IDs.
- * @param bool $synchronize
- * @return array
- */
-function _entityGetSecurityMasters(bool $synchronize=false): array
-{
-    global $nebuleSecurityMasters;
-
-    if (sizeof($nebuleSecurityMasters) != 0)
-        return $nebuleSecurityMasters;
-
-    $nid = NEBULE_REFERENCE_NID_SECURITYMASTER;
-    if ($synchronize)
-        _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-
-    $lnkList = array();
-    $entList = array();
-    $filter = array(
-        'bl/rl/req' => 'l',
-        'bl/rl/nid2' => $nid,
-        'bs/rs/nid' => getConfiguration('puppetmaster'),
-    );
-    _lnkGetList($nid, $lnkList, $filter);
-
-    if (getConfiguration('CodeBranch') != '')
-    {
-        $filter['bl/rl/nid3'] = getConfiguration('CodeBranch');
-        _lnkGetList($nid, $lnkList, $filter);
-    }
-
-    // Extract uniques entities
-    foreach ($lnkList as $lnk)
-        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
-
-    // Rearrange entities
-    foreach ($entList as $ent)
-        $nebuleSecurityMasters[] = $ent;
-
-    return $nebuleSecurityMasters;
-}
-
-/**
- * Get masters of code IDs.
- * @param bool $synchronize
- * @return array
- */
-function _entityGetCodeMasters(bool $synchronize=false): array
-{
-    global $nebuleCodeMasters;
-
-    if (sizeof($nebuleCodeMasters) != 0)
-        return $nebuleCodeMasters;
-
-    $nid = NEBULE_REFERENCE_NID_CODEMASTER;
-    if ($synchronize)
-        _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-
-    $lnkList = array();
-    $entList = array();
-    $filter = array(
-        'bl/rl/req' => 'l',
-        'bl/rl/nid2' => $nid,
-        'bs/rs/nid' => getConfiguration('puppetmaster'),
-    );
-    _lnkGetList($nid, $lnkList, $filter);
-
-    if (getConfiguration('CodeBranch') != '')
-    {
-        $filter['bl/rl/nid3'] = getConfiguration('CodeBranch');
-        _lnkGetList($nid, $lnkList, $filter);
-    }
-
-    // Extract uniques entities
-    foreach ($lnkList as $lnk)
-        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
-
-    // Rearrange entities
-    foreach ($entList as $ent)
-        $nebuleCodeMasters[] = $ent;
-
-    return $nebuleCodeMasters;
-}
-
-/**
- * Get masters of time IDs.
- * @param bool $synchronize
- * @return array
- */
-function _entityGetTimeMasters(bool $synchronize=false): array
-{
-    global $nebuleTimeMasters;
-
-    if (sizeof($nebuleTimeMasters) != 0)
-        return $nebuleTimeMasters;
-
-    $nid = NEBULE_REFERENCE_NID_TIMEMASTER;
-    if ($synchronize)
-        _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-
-    $lnkList = array();
-    $entList = array();
-    $filter = array(
-        'bl/rl/req' => 'l',
-        'bl/rl/nid2' => $nid,
-        'bs/rs/nid' => getConfiguration('puppetmaster'),
-    );
-    _lnkGetList($nid, $lnkList, $filter);
-
-    if (getConfiguration('CodeBranch') != '')
-    {
-        $filter['bl/rl/nid3'] = getConfiguration('CodeBranch');
-        _lnkGetList($nid, $lnkList, $filter);
-    }
-
-    // Extract uniques entities
-    foreach ($lnkList as $lnk)
-        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
-
-    // Rearrange entities
-    foreach ($entList as $ent)
-        $nebuleTimeMasters[] = $ent;
-
-    return $nebuleTimeMasters;
-}
-
-/**
- * Get masters of directory IDs.
- * @param bool $synchronize
- * @return array
- */
-function _entityGetDirectoryMasters(bool $synchronize=false): array
-{
-    global $nebuleDirectoryMasters;
-
-    if (sizeof($nebuleDirectoryMasters) != 0)
-        return $nebuleDirectoryMasters;
-
-    $nid = NEBULE_REFERENCE_NID_DIRECTORYMASTER;
-    if ($synchronize)
-        _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-
-    $lnkList = array();
-    $entList = array();
-    $filter = array(
-        'bl/rl/req' => 'l',
-        'bl/rl/nid2' => $nid,
-        'bs/rs/nid' => getConfiguration('puppetmaster'),
-    );
-    _lnkGetList($nid, $lnkList, $filter);
-
-    if (getConfiguration('CodeBranch') != '')
-    {
-        $filter['bl/rl/nid3'] = getConfiguration('CodeBranch');
-        _lnkGetList($nid, $lnkList, $filter);
-    }
-
-    // Extract uniques entities
-    foreach ($lnkList as $lnk)
-        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
-
-    // Rearrange entities
-    foreach ($entList as $ent)
-        $nebuleDirectoryMasters[] = $ent;
-
-    return $nebuleDirectoryMasters;
-}
-
-/**
- * Check puppetmaster entity.
- * @param string $oid
- * @return bool
- */
-function _entityCheckPuppetmaster(string $oid): bool
-{
-    if (!_entityCheck($oid))
-        return false;
-    return true;
-}
-
-/**
- * Check masters of security entities.
- * @param array $oidList
- * @return bool
- */
-function _entityCheckSecurityMasters(array $oidList): bool
-{
-    if (sizeof($oidList) == 0)
-        return false;
-    foreach ($oidList as $nid)
-    {
-        if (!_entityCheck($nid))
-            return false;
-    }
-    return true;
-}
-
-/**
- * Check masters of code entities.
- * @param array $oidList
- * @return bool
- */
-function _entityCheckCodeMasters(array $oidList): bool
-{
-    if (sizeof($oidList) == 0)
-        return false;
-    foreach ($oidList as $nid)
-    {
-        if (!_entityCheck($nid))
-            return false;
-    }
-    return true;
-}
-
-/**
- * Check masters of time entities.
- * @param array $oidList
- * @return bool
- */
-function _entityCheckTimeMasters(array $oidList): bool
-{
-    if (sizeof($oidList) == 0)
-        return false;
-    foreach ($oidList as $nid)
-    {
-        if (!_entityCheck($nid))
-            return false;
-    }
-    return true;
-}
-
-/**
- * Check masters of directory entities.
- * @param array $oidList
- * @return bool
- */
-function _entityCheckDirectoryMasters(array $oidList): bool
-{
-    if (sizeof($oidList) == 0)
-        return false;
-    foreach ($oidList as $nid)
-    {
-        if (!_entityCheck($nid))
-            return false;
-    }
-    return true;
-}
-
-/**
- * Synchronize puppetmaster from central location.
- * Specifically for puppetmaster, first contents are locally generated.
- * @param string $oid
+ * Subpart display to reload the HTML page.
+ * @param bool $ok
  * @return void
  */
-function _entitySyncPuppetmaster(string $oid): void
+function bootstrapPartDisplayReloadPage(bool $ok = true): void
 {
-    global $configurationList;
-
-    if (!_entityCheck($oid))
+    echo '<div id="reload">' . "\n";
+    if ($ok)
     {
-        $oid = NEBULE_DEFAULT_PUPPETMASTER_ID;
-        $configurationList['puppetmaster'] = NEBULE_DEFAULT_PUPPETMASTER_ID;
-    }
+?>
 
-    if ($oid == NEBULE_DEFAULT_PUPPETMASTER_ID)
-    {
-        $data = FIRST_PUPPETMASTER_PUBLIC_KEY;
-        io_objectWrite($data);
-        $link = FIRST_PUPPETMASTER_HASH_LINK;
-        io_linkWrite($oid, $link);
-        $link = FIRST_PUPPETMASTER_TYPE_LINK;
-        io_linkWrite($oid, $link);
-    }
+&gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo BOOTSTRAP_NAME; ?></a> ...
+<script type="text/javascript">
+    <!--
+    setTimeout(function () {
+        window.location.reload(true)
+    }, <?php echo FIRST_RELOAD_DELAY; ?>);
+    //-->
+</script>
+<?php
+    } else {
+?>
 
-    _objDownloadOnLocations($oid, FIRST_LOCALISATIONS);
-    _lnkDownloadOnLocations($oid, FIRST_LOCALISATIONS);
-}
-
-/**
- * Synchronize masters of security from central location.
- * @param array $oidList
- * @return void
- */
-function _entitySyncSecurityMasters(array $oidList): void
-{
-    foreach ($oidList as $nid) {
-        _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-        _lnkDownloadOnLocations($nid, FIRST_LOCALISATIONS);
+<button onclick="javascript:window.location.reload(true);">when ready,
+    reload <?php echo BOOTSTRAP_NAME; ?></button>
+<?php
     }
-}
-
-/**
- * Synchronize masters of code from central location.
- * @param array $oidList
- * @return void
- */
-function _entitySyncCodeMasters(array $oidList): void
-{
-    foreach ($oidList as $nid) {
-        _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-        _lnkDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-    }
-}
-
-/**
- * Synchronize masters of time from central location.
- * @param array $oidList
- * @return void
- */
-function _entitySyncTimeMasters(array $oidList): void
-{
-    foreach ($oidList as $nid) {
-        _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-        _lnkDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-    }
-}
-
-/**
- * Synchronize masters of directory from central location.
- * @param array $oidList
- * @return void
- */
-function _entitySyncDirectoryMasters(array $oidList): void
-{
-    foreach ($oidList as $nid) {
-        _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-        _lnkDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-    }
+    echo "</div>\n";
 }
 
 
@@ -6384,6 +6370,7 @@ function bootstrapFirstSynchronizingObjects()
     global $nebuleLocalAuthorities;
 
     echo '<div class="parts">'."\n";
+    echo '<span class="partstitle">#5 synchronizing objets</span><br/>'."\n";
 
     $refApps = REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS;
     $refAppsID = _objGetNID($refApps, getConfiguration('cryptoHashAlgorithm'));
@@ -6391,10 +6378,7 @@ function bootstrapFirstSynchronizingObjects()
     $refLibID = _objGetNID($refLib, getConfiguration('cryptoHashAlgorithm'));
     $refBoot = REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP;
     $refBootID = _objGetNID($refBoot, getConfiguration('cryptoHashAlgorithm'));
-    ?>
 
-        <span class="partstitle">#5 synchronizing objets</span><br/>
-    <?php
     // Si la bibliothèque ne se charge pas correctement, fait une première synchronisation des entités.
     if (!io_checkNodeHaveContent($refAppsID)
         && !io_checkNodeHaveContent($refLibID)
@@ -6527,19 +6511,8 @@ function bootstrapFirstSynchronizingObjects()
         }
         echo "<br />\n";
     }
-
     echo "</div>\n";
-    ?>
-
-    &gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo BOOTSTRAP_NAME; ?></a> ...
-    <script type="text/javascript">
-        <!--
-        setTimeout(function () {
-            window.location.reload(true)
-        }, <?php echo FIRST_RELOAD_DELAY; ?>);
-        //-->
-    </script>
-<?php
+    bootstrapPartDisplayReloadPage(true);
     } else {
         addLog('ok sync objects', 'info', __FUNCTION__, '4473358f');
         ?>
@@ -6561,12 +6534,9 @@ function bootstrapFirstSynchronizingObjects()
 function bootstrapFirstCreateOptionsFile()
 {
     echo '<div class="parts">'."\n";
-    ?>
-
-        <span class="partstitle">#6 options file</span><br/>
-        <?php
-        if (!file_exists(NEBULE_ENVIRONMENT_FILE))
-        {
+    echo '<span class="partstitle">#6 options file</span><br/>'."\n";
+    if (!file_exists(NEBULE_ENVIRONMENT_FILE))
+    {
         addLog('need create options file', 'warn', __FUNCTION__, '58d07f71');
 
         $defaultOptions = "# Generated by the " . BOOTSTRAP_NAME . ", part of the " . BOOTSTRAP_AUTHOR . ".\n";
@@ -6597,9 +6567,9 @@ function bootstrapFirstCreateOptionsFile()
         if (file_exists(NEBULE_ENVIRONMENT_FILE))
         {
         echo "ok created.\n";
+        echo "</div>\n";
         ?>
 
-    </div>
     &gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo BOOTSTRAP_NAME; ?></a> ...
     <script type="text/javascript">
         <!--
@@ -6609,8 +6579,7 @@ function bootstrapFirstCreateOptionsFile()
         //-->
     </script>
     <?php
-}
-else {
+    } else {
     echo " <span class=\"error\">ERROR!</span><br />\n";
     ?>
 
@@ -6625,13 +6594,11 @@ cat &gt; <?php echo NEBULE_ENVIRONMENT_FILE; ?> &lt;&lt; EOF
 
 EOF
 chmod 644 <?php echo NEBULE_ENVIRONMENT_FILE; ?>
-                </pre>
-        <?php
-        echo "</div>\n";
-        ?>
-    <button onclick="javascript:window.location.reload(true);">when ready, reload <?php echo BOOTSTRAP_NAME; ?></button>
+</pre>
     </div>
+    <button onclick="javascript:window.location.reload(true);">when ready, reload <?php echo BOOTSTRAP_NAME; ?></button>
     <?php
+    echo "</div>\n";
 }
     unset($defaultOptions);
 }
@@ -6658,123 +6625,120 @@ function bootstrapFirstCreateLocaleEntity()
     global $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite;
 
     echo '<div class="parts">'."\n";
-    ?>
-
-        <span class="partstitle">#7 local entity for server</span><br/>
-        <?php
-        if ( //file_exists(NEBULE_LOCAL_ENTITY_FILE)
-            //&& is_file(NEBULE_LOCAL_ENTITY_FILE)
-            //&& file_put_contents( NEBULE_LOCAL_ENTITY_FILE, '0') !== false
-            file_put_contents(LOCAL_ENTITY_FILE, '0') !== false
-        ) {
-            // Génère un mot de passe.
-            $nebulePasswordEntite = '';
-            $padding = '';
-            $genpasswd = openssl_random_pseudo_bytes(512);
-            // Filtrage des caractères du mdp dans un espace restreint. Alphadécimal, à revoir...
-            for ($i = 0; $i < strlen($genpasswd); $i++) {
-                $a = ord($genpasswd[$i]);
-                if (!($a < 48 || $a > 102 || ($a > 57 && $a < 97))) {
-                    $nebulePasswordEntite .= $genpasswd[$i];
-                }
-                $padding .= '0';
+    echo '<span class="partstitle">#7 local entity for server</span><br/>'."\n";
+    if ( //file_exists(NEBULE_LOCAL_ENTITY_FILE)
+        //&& is_file(NEBULE_LOCAL_ENTITY_FILE)
+        //&& file_put_contents( NEBULE_LOCAL_ENTITY_FILE, '0') !== false
+        file_put_contents(LOCAL_ENTITY_FILE, '0') !== false
+    ) {
+        // Génère un mot de passe.
+        $nebulePasswordEntite = '';
+        $padding = '';
+        $genpasswd = openssl_random_pseudo_bytes(512);
+        // Filtrage des caractères du mdp dans un espace restreint. Alphadécimal, à revoir...
+        for ($i = 0; $i < strlen($genpasswd); $i++) {
+            $a = ord($genpasswd[$i]);
+            if (!($a < 48 || $a > 102 || ($a > 57 && $a < 97))) {
+                $nebulePasswordEntite .= $genpasswd[$i];
             }
-            $nebulePasswordEntite = substr($nebulePasswordEntite . $padding, 0, FIRST_GENERATED_PASSWORD_SIZE);
-            unset($genpasswd, $padding, $i, $a);
+            $padding .= '0';
+        }
+        $nebulePasswordEntite = substr($nebulePasswordEntite . $padding, 0, FIRST_GENERATED_PASSWORD_SIZE);
+        unset($genpasswd, $padding, $i, $a);
 
-            $nebulePublicEntity = '0';
-            $nebulePrivateEntite = '0';
-            // Génère une nouvelle entité.
-            _entityGenerate(getConfiguration('cryptoAsymetricAlgorithm'), getConfiguration('cryptoHashAlgorithm'), $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite);
+        $nebulePublicEntity = '0';
+        $nebulePrivateEntite = '0';
+        // Génère une nouvelle entité.
+        _entityGenerate(getConfiguration('cryptoAsymetricAlgorithm'), getConfiguration('cryptoHashAlgorithm'), $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite);
 
-            // Définit l'entité comme entité instance du serveur.
-            file_put_contents(LOCAL_ENTITY_FILE, $nebulePublicEntity);
+        // Définit l'entité comme entité instance du serveur.
+        file_put_contents(LOCAL_ENTITY_FILE, $nebulePublicEntity);
 
-            // Calcul le nom.
-            $genname = hex2bin($nebulePublicEntity . $nebulePrivateEntite);
-            $name = '';
-            // Filtrage des caractères du nom dans un espace restreint.
-            for ($i = 0; $i < strlen($genname); $i++) {
-                $a = ord($genname[$i]);
-                if (($a > 96 && $a < 123)) {
-                    $name .= $genname[$i];
-                    // Insertion de voyelles.
-                    if (($i % 3) == 0) {
-                        $car = hexdec(bin2hex(openssl_random_pseudo_bytes(1))) % 14;
-                        switch ($car) {
-                            case 0 :
-                            case 6 :
-                                $name .= 'a';
-                                break;
-                            case 1 :
-                            case 7 :
-                            case 11 :
-                            case 13 :
-                                $name .= 'e';
-                                break;
-                            case 2 :
-                            case 8 :
-                                $name .= 'i';
-                                break;
-                            case 3 :
-                            case 9 :
-                                $name .= 'o';
-                                break;
-                            case 4 :
-                            case 10 :
-                            case 12 :
-                                $name .= 'u';
-                                break;
-                            case 5 :
-                                $name .= 'y';
-                                break;
-                        }
+        // Calcul le nom.
+        $genname = hex2bin($nebulePublicEntity . $nebulePrivateEntite);
+        $name = '';
+        // Filtrage des caractères du nom dans un espace restreint.
+        for ($i = 0; $i < strlen($genname); $i++) {
+            $a = ord($genname[$i]);
+            if (($a > 96 && $a < 123)) {
+                $name .= $genname[$i];
+                // Insertion de voyelles.
+                if (($i % 3) == 0) {
+                    $car = hexdec(bin2hex(openssl_random_pseudo_bytes(1))) % 14;
+                    switch ($car) {
+                        case 0 :
+                        case 6 :
+                            $name .= 'a';
+                            break;
+                        case 1 :
+                        case 7 :
+                        case 11 :
+                        case 13 :
+                            $name .= 'e';
+                            break;
+                        case 2 :
+                        case 8 :
+                            $name .= 'i';
+                            break;
+                        case 3 :
+                        case 9 :
+                            $name .= 'o';
+                            break;
+                        case 4 :
+                        case 10 :
+                        case 12 :
+                            $name .= 'u';
+                            break;
+                        case 5 :
+                            $name .= 'y';
+                            break;
                     }
                 }
             }
-            $name = substr($name . 'robott', 0, FIRST_GENERATED_NAME_SIZE);
+        }
+        $name = substr($name . 'robott', 0, FIRST_GENERATED_NAME_SIZE);
 
-            // Enregistrement du nom.
-            nebCreatAsText($name);
-            $refHashName = _objGetNID('nebule/objet/nom', getConfiguration('cryptoHashAlgorithm'));
-            $hashName = _objGetNID($name, getConfiguration('cryptoHashAlgorithm'));
-            $newlink = _lnkGenerate('-', 'l', $nebulePublicEntity, $hashName, $refHashName);
-            if (_lnkVerify($newlink) == 1) {
-                _lnkWrite($newlink);
-            }
-            unset($newlink);
+        // Enregistrement du nom.
+        nebCreatAsText($name);
+        $refHashName = _objGetNID('nebule/objet/nom', getConfiguration('cryptoHashAlgorithm'));
+        $hashName = _objGetNID($name, getConfiguration('cryptoHashAlgorithm'));
+        $newlink = _lnkGenerate('-', 'l', $nebulePublicEntity, $hashName, $refHashName);
+        if (_lnkVerify($newlink) == 1) {
+            _lnkWrite($newlink);
+        }
+        unset($newlink);
 
-            ?>
-            new server entity<br/>
-            public ID &nbsp;: <?php echo $nebulePublicEntity; ?><br/>
-            private ID : <?php echo $nebulePrivateEntite; ?>
+        ?>
+        new server entity<br/>
+        public ID &nbsp;: <?php echo $nebulePublicEntity; ?><br/>
+        private ID : <?php echo $nebulePrivateEntite; ?>
 
-            <div class="important">
-                name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $name; ?><br/>
-                public ID : <?php echo $nebulePublicEntity; ?><br/>
-                password &nbsp;: <?php echo $nebulePasswordEntite; ?><br/>
-                Please keep and save securely thoses private informations!
-            </div>
-            <form method="post" action="?<?php echo ARG_SWITCH_APPLICATION; ?>=0">
-                <input type="hidden" name="pwd" value="<?php echo $nebulePasswordEntite; ?>">
-                <input type="hidden" name="switch" value="true">
-                <input type="submit" value="when ready, click here to go to options">
-            </form>
-            <br/><br/>
-            <button onclick="javascript:window.location.assign('?<?php echo ARG_SWITCH_APPLICATION; ?>=0');">when
-                ready, click here to go to applications and options
-            </button>
-            <?php
-        } else {
-            file_put_contents(LOCAL_ENTITY_FILE, '0');
-            echo " <span class=\"error\">ERROR!</span><br />\n";
-            ?>
+        <div class="important">
+            name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $name; ?><br/>
+            public ID : <?php echo $nebulePublicEntity; ?><br/>
+            password &nbsp;: <?php echo $nebulePasswordEntite; ?><br/>
+            Please keep and save securely thoses private informations!
+        </div>
+        <form method="post" action="?<?php echo ARG_SWITCH_APPLICATION; ?>=0">
+            <input type="hidden" name="pwd" value="<?php echo $nebulePasswordEntite; ?>">
+            <input type="hidden" name="switch" value="true">
+            <input type="submit" value="when ready, click here to go to options">
+        </form>
+        <br/><br/>
+        <button onclick="javascript:window.location.assign('?<?php echo ARG_SWITCH_APPLICATION; ?>=0');">when
+            ready, click here to go to applications and options
+        </button>
+        <?php
+    } else {
+        file_put_contents(LOCAL_ENTITY_FILE, '0');
+        echo " <span class=\"error\">ERROR!</span><br />\n";
+        ?>
 
-            <div class="diverror">
-                Unable to create local entity file <b><?php echo LOCAL_ENTITY_FILE; ?></b> .<br/>
-                On the same path as <b>index.php</b>, please create file manually.<br/>
-                As <i>root</i>, run :<br/>
-                <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
+        <div class="diverror">
+            Unable to create local entity file <b><?php echo LOCAL_ENTITY_FILE; ?></b> .<br/>
+            On the same path as <b>index.php</b>, please create file manually.<br/>
+            As <i>root</i>, run :<br/>
+            <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
 
 touch <?php echo LOCAL_ENTITY_FILE; ?>
 
@@ -6782,18 +6746,12 @@ chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . 
 
 chmod 644 <?php echo LOCAL_ENTITY_FILE; ?>
 </pre>
-                <?php
-
-                echo "</div>\n";
-                ?>
-            <button onclick="javascript:window.location.reload(true);">when ready,
-                reload <?php echo BOOTSTRAP_NAME; ?></button>
-            <?php
-        }
-        ?>
-
-    </div>
-    <?php
+        </div>
+        <button onclick="javascript:window.location.reload(true);">when ready,
+            reload <?php echo BOOTSTRAP_NAME; ?></button>
+        <?php
+    }
+    echo "</div>\n";
 }
 
 
@@ -7226,12 +7184,6 @@ function main()
 {
     if (!libraryInit())
         setBootstrapBreak('21', 'Library init error');
-
-    if (!io_checkLinkFolder())
-        setBootstrapBreak('22', "Library i/o link's folder error");
-
-    if (!io_checkObjectFolder())
-        setBootstrapBreak('23', "Library i/o object's folder error");
 
     getBootstrapUserBreak();
     getBootstrapInlineDisplay();
