@@ -3,6 +3,8 @@ declare(strict_types=1);
 namespace Nebule\Bootstrap;
 //use nebule;
 // ------------------------------------------------------------------------------------------
+use Nebule\Library\nebule;
+
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
@@ -3717,18 +3719,18 @@ function _lnkWrite($link): bool
         return false;
 
     // Extract link parts.
-    $parseLink = _lnkParse($link);
+    $linkParsed = _lnkParse($link);
 
     // Write link into parts files.
-    $result = io_linkWrite($parseLink['bl/rl/nid1'], $link);
-    if ($parseLink['bl/rl/nid2'] != '')
-        $result &= io_linkWrite($parseLink['bl/rl/nid2'], $link);
-    if ($parseLink['bl/rl/nid3'] != '')
-        $result &= io_linkWrite($parseLink['bl/rl/nid3'], $link);
-    if ($parseLink['bl/rl/nid4'] != '')
-        $result &= io_linkWrite($parseLink['bl/rl/nid4'], $link);
+    $result = io_linkWrite($linkParsed['bl/rl/nid1'], $link);
+    if ($linkParsed['bl/rl/nid2'] != '')
+        $result &= io_linkWrite($linkParsed['bl/rl/nid2'], $link);
+    if ($linkParsed['bl/rl/nid3'] != '')
+        $result &= io_linkWrite($linkParsed['bl/rl/nid3'], $link);
+    if ($linkParsed['bl/rl/nid4'] != '')
+        $result &= io_linkWrite($linkParsed['bl/rl/nid4'], $link);
     if (getConfiguration(permitAddLinkToSigner))
-        $result &= io_linkWrite($parseLink['bs/rs/nid'], $link);
+        $result &= io_linkWrite($linkParsed['bs/rs/nid'], $link);
 
     return $result;
 }
@@ -3942,6 +3944,13 @@ function io_linkWrite(string &$nid, string &$link): bool
         || $nid == ''
     )
         return false;
+
+    $l = file(LOCAL_LINKS_FOLDER . '/' . $nid);
+    foreach ($l as $k) {
+        if (trim($k) == trim($link)) {
+            return true;
+        }
+    }
 
     if (file_put_contents(LOCAL_LINKS_FOLDER . '/' . $nid, "$link\n", FILE_APPEND) === false)
         return false;
@@ -5805,30 +5814,18 @@ function bootstrapInlineDisplayOnBreak()
 
     ob_end_flush();
 
-    // Affichage.
     echo "<div class=\"bootstrapErrorDiv\"><p>\n";
-
     echo '&gt; ' . BOOTSTRAP_NAME . ' ' . BOOTSTRAP_VERSION . "<br />\n";
 
     echo 'Bootstrap break on : ';
-    foreach ($bootstrapBreak as $number => $message) {
-        if (sizeof($bootstrapBreak) > 1) {
-            echo "<br />\n- ";
-        }
-        echo '[' . $number . '] ' . $message;
-    }
-    echo "<br />\n";
-
-    if ($bootstrapRescueMode) {
+    foreach ($bootstrapBreak as $number => $message)
+        echo '- [' . $number . '] ' . $message ."<br />\n";
+    if ($bootstrapRescueMode)
         echo "RESCUE<br />\n";
-    }
 
     echo 'nebule loading library : ' . $bootstrapLibraryID . "<br />\n";
-
     echo 'Application loading : ' . $bootstrapApplicationID . "<br />\n";
-
     echo 'Tb=' . sprintf('%01.4fs', microtime(true) - $metrologyStartTime) . "<br />\n";
-
     echo "</p></div>\n";
 }
 
@@ -5859,7 +5856,6 @@ function bootstrapInlineDisplayOnBreak()
 function bootstrapDisplayPreloadApplication()
 {
     global $nebuleInstance,
-           $loggerSessionID,
            $metrologyStartTime,
            $applicationInstance,
            $applicationDisplayInstance,
@@ -6051,8 +6047,8 @@ function bootstrapDisplayApplicationfirst(): void
 
     if (!io_createLinkFolder() || !io_createObjectFolder()) {
         echo '<span class="error">ERROR!</span>'."\n";
-        if (!io_checkLinkFolder()) {
-            addLog('error links folder', 'error', __FUNCTION__, 'f1d49c43');
+    if (!io_checkLinkFolder()) {
+        addLog('error links folder', 'error', __FUNCTION__, 'f1d49c43');
 ?>
 
 <div class="diverror">
@@ -6074,14 +6070,14 @@ chmod 755 <?php echo LOCAL_LINKS_FOLDER; ?>
 
         if (!io_checkObjectFolder()) {
             addLog('error objects folder', 'error', __FUNCTION__, 'dc0c86a4');
-            ?>
+?>
 
-            <div class="diverror">
-                Unable to create folder <b><?php echo LOCAL_OBJECTS_FOLDER; ?></b> for objects.<br/>
-                On the same path as <b>index.php</b>, please create folder manually,<br/>
-                and give it to web server process.<br/>
-                As <i>root</i>, run :<br/>
-                <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
+<div class="diverror">
+    Unable to create folder <b><?php echo LOCAL_OBJECTS_FOLDER; ?></b> for objects.<br/>
+    On the same path as <b>index.php</b>, please create folder manually,<br/>
+    and give it to web server process.<br/>
+    As <i>root</i>, run :<br/>
+    <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
 
 mkdir <?php echo LOCAL_OBJECTS_FOLDER; ?>
 
@@ -6089,8 +6085,8 @@ chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . 
 
 chmod 755 <?php echo LOCAL_OBJECTS_FOLDER; ?>
 </pre>
-            </div>
-            <?php
+</div>
+<?php
         }
 
         echo "</div>\n";
@@ -6143,27 +6139,11 @@ function bootstrapFirstCreateObjects()
             io_objectWrite($data);
             echo '.';
         }
-        ?>
-        OK
-        <?php
-        echo "</div>\n";
-        ?>
-    &gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo BOOTSTRAP_NAME; ?></a> ...
-    <script type="text/javascript">
-        <!--
-        setTimeout(function () {
-            window.location.reload(true)
-        }, <?php echo FIRST_RELOAD_DELAY; ?>);
-        //-->
-    </script>
-    <?php
+        echo "ok</div>\n";
+        bootstrapPartDisplayReloadPage(true);
     } else {
         addLog('ok create objects', 'info', __FUNCTION__, '5c7be016');
-        ?>
-        ok
-        <?php
-        echo "</div>\n";
-        // Si c'est bon on continue avec la synchronisation des entités.
+        echo "ok</div>\n";
         bootstrapFirstSynchronizingEntities();
     }
 }
@@ -6320,7 +6300,6 @@ function bootstrapFirstSynchronizingEntities()
         ok
         <?php
         echo "</div>\n";
-        // Sinon c'est bon pour la première synchronisation.
         bootstrapFirstSynchronizingObjects();
     }
 }
@@ -6518,7 +6497,6 @@ function bootstrapFirstSynchronizingObjects()
         ok
         <?php
         echo "</div>\n";
-        // Si c'est bon on continue la création du fichier des options par défaut.
         bootstrapFirstCreateOptionsFile();
     }
 }
@@ -6565,28 +6543,17 @@ function bootstrapFirstCreateOptionsFile()
         file_put_contents(NEBULE_ENVIRONMENT_FILE, $defaultOptions);
         if (file_exists(NEBULE_ENVIRONMENT_FILE))
         {
-        echo "ok created.\n";
-        echo "</div>\n";
-        ?>
-
-    &gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo BOOTSTRAP_NAME; ?></a> ...
-    <script type="text/javascript">
-        <!--
-        setTimeout(function () {
-            window.location.reload(true)
-        }, <?php echo FIRST_RELOAD_DELAY; ?>);
-        //-->
-    </script>
-    <?php
+        echo "ok created.</div>\n";
+        bootstrapPartDisplayReloadPage(true);
     } else {
     echo " <span class=\"error\">ERROR!</span><br />\n";
     ?>
 
-    <div class="diverror">
-        Unable to create options file <b><?php echo NEBULE_ENVIRONMENT_FILE; ?></b> .<br/>
-        On the same path as <b>index.php</b>, please create file manually.<br/>
-        As <i>root</i>, run :<br/>
-        <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
+<div class="diverror">
+    Unable to create options file <b><?php echo NEBULE_ENVIRONMENT_FILE; ?></b> .<br/>
+    On the same path as <b>index.php</b>, please create file manually.<br/>
+    As <i>root</i>, run :<br/>
+    <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
 
 cat &gt; <?php echo NEBULE_ENVIRONMENT_FILE; ?> &lt;&lt; EOF
 <?php echo $defaultOptions; ?>
@@ -6594,22 +6561,18 @@ cat &gt; <?php echo NEBULE_ENVIRONMENT_FILE; ?> &lt;&lt; EOF
 EOF
 chmod 644 <?php echo NEBULE_ENVIRONMENT_FILE; ?>
 </pre>
-    </div>
-    <button onclick="javascript:window.location.reload(true);">when ready, reload <?php echo BOOTSTRAP_NAME; ?></button>
-    <?php
-    echo "</div>\n";
-}
-    unset($defaultOptions);
-}
-else {
-    addLog('ok create options file', 'info', __FUNCTION__, '91e9b5bd');
-    ?>
-    ok
-    <?php
-    echo "</div>\n";
-    // Si c'est bon on continue.
-    bootstrapFirstCreateLocaleEntity();
-}
+</div>
+            <?php
+            bootstrapPartDisplayReloadPage(false);
+            echo "</div>\n";
+        }
+        unset($defaultOptions);
+    }
+    else {
+        addLog('ok create options file', 'info', __FUNCTION__, '91e9b5bd');
+        echo "ok</div>\n";
+        bootstrapFirstCreateLocaleEntity();
+    }
 }
 
 
@@ -6625,11 +6588,7 @@ function bootstrapFirstCreateLocaleEntity()
 
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#7 local entity for server</span><br/>'."\n";
-    if ( //file_exists(NEBULE_LOCAL_ENTITY_FILE)
-        //&& is_file(NEBULE_LOCAL_ENTITY_FILE)
-        //&& file_put_contents( NEBULE_LOCAL_ENTITY_FILE, '0') !== false
-        file_put_contents(LOCAL_ENTITY_FILE, '0') !== false
-    ) {
+    if ( file_put_contents(LOCAL_ENTITY_FILE, '0') !== false ) {
         // Génère un mot de passe.
         $nebulePasswordEntite = '';
         $padding = '';
@@ -6648,7 +6607,12 @@ function bootstrapFirstCreateLocaleEntity()
         $nebulePublicEntity = '0';
         $nebulePrivateEntite = '0';
         // Génère une nouvelle entité.
-        _entityGenerate(getConfiguration('cryptoAsymetricAlgorithm'), getConfiguration('cryptoHashAlgorithm'), $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite);
+        _entityGenerate(
+            getConfiguration('cryptoAsymetricAlgorithm'),getConfiguration('cryptoHashAlgorithm'),
+            $nebulePublicEntity,
+            $nebulePrivateEntite,
+            $nebulePasswordEntite
+        );
 
         // Définit l'entité comme entité instance du serveur.
         file_put_contents(LOCAL_ENTITY_FILE, $nebulePublicEntity);
@@ -6746,9 +6710,8 @@ chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . 
 chmod 644 <?php echo LOCAL_ENTITY_FILE; ?>
 </pre>
         </div>
-        <button onclick="javascript:window.location.reload(true);">when ready,
-            reload <?php echo BOOTSTRAP_NAME; ?></button>
         <?php
+        bootstrapPartDisplayReloadPage(false);
     }
     echo "</div>\n";
 }
