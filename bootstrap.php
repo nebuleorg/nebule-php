@@ -521,6 +521,7 @@ const LIST_OPTIONS_TYPE = array(
         'permitOnlineRescue' => 'boolean',
         'permitLogs' => 'boolean',
         'permitJavaScript' => 'boolean',
+        'codeBranch' => 'string',
         'logsLevel' => 'string',
         'modeRescue' => 'boolean',
         'cryptoLibrary' => 'string',
@@ -598,6 +599,7 @@ const LIST_OPTIONS_DEFAULT_VALUE = array(
         'permitOnlineRescue' => false,
         'permitLogs' => false,
         'permitJavaScript' => false,
+        'codeBranch' => 'stable',
         'logsLevel' => 'NORMAL',
         'modeRescue' => false,
         'cryptoLibrary' => 'openssl',
@@ -731,14 +733,13 @@ $nebuleCachelibrary_l_grx = array();
 
 /**
  * Return option's value. Options presents on environment file are forced.
+ * If empty, return the default value. On unknown configuration name, just return the string.
  * @param string $name
  * @return null|string|boolean|integer
  */
 function getConfiguration(string $name)
 {
     global $configurationList;
-
-    $value = '';
 
     if ($name == ''
         || !is_string($name)
@@ -751,6 +752,7 @@ function getConfiguration(string $name)
         return $configurationList[$name];
 
     // Read file and extract asked option.
+    $value = '';
     if (file_exists(NEBULE_ENVIRONMENT_FILE)) {
         $file = file(NEBULE_ENVIRONMENT_FILE, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
         foreach ($file as $line) {
@@ -766,32 +768,33 @@ function getConfiguration(string $name)
         }
     }
 
-    // If not found, read default value.
-    if ($value == '')
+    // If empty, read default value.
+    if ($value == '' && isset(LIST_OPTIONS_DEFAULT_VALUE[$name]))
         $value = LIST_OPTIONS_DEFAULT_VALUE[$name];
 
     // Convert value onto asked type.
-    switch (LIST_OPTIONS_TYPE[$name]) {
-        case 'string' :
-            $result = $value;
-            break;
-        case 'boolean' :
-            if ($value == 'true') {
-                $result = true;
-            } else {
-                $result = false;
-            }
-            break;
-        case 'integer' :
-            if ($value != '') {
-                $result = (int)$value;
-            } else {
-                $result = 0;
-            }
-            break;
-        default :
-            $result = null;
-    }
+    if (isset(LIST_OPTIONS_TYPE[$name])) {
+        switch (LIST_OPTIONS_TYPE[$name]) {
+            case 'string' :
+                $result = $value;
+                break;
+            case 'boolean' :
+                if ($value == 'true')
+                    $result = true;
+                else
+                    $result = false;
+                break;
+            case 'integer' :
+                if ($value != '')
+                    $result = (int)$value;
+                else
+                    $result = 0;
+                break;
+            default :
+                $result = null;
+        }
+    } else
+        $result = $value;
 
     $configurationList[$name] = $result;
     return $result;
@@ -1898,11 +1901,9 @@ function _objGetLocalContent(string &$nid, string &$data, int $maxData = 0): boo
     return false;
 }
 
-/** FIXME
- * Object - Download node content (object) on web location.
- * Only valid content are writed on local filesystem.
- *
- * TODO remplacer location par locations !
+/**
+ * Object - Download node content (object) on web locations.
+ * Only valid content are writen on local filesystem.
  *
  * @param string $nid
  * @param array $locations
@@ -1913,7 +1914,7 @@ function _objDownloadOnLocations(string $nid, array $locations = array()): bool
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteObject')
         || !getConfiguration('permitSynchronizeObject')
-        || !_nodCheckNID($nid)
+        || !_nodCheckNID($nid, false)
         || _nodCheckBanned($nid)
         || sizeof($locations) == 0
     )
@@ -2892,7 +2893,7 @@ function _lnkDownloadAnywhere(string $nid): void
                 $lnk = '';
                 _objGetLocalContent($itemtable [6], $lnk);
                 if ($lnk != '') {
-                    _lnkDownloadOnLocation($nid, $lnk);
+                    _lnkDownloadOnLocations($nid, array($lnk)); // TODO à améliorer
                 }
                 $okobj [$count] = $itemtable [6];
                 $count++;
@@ -2909,27 +2910,41 @@ function _lnkDownloadAnywhere(string $nid): void
 }
 
 /** FIXME
- * Link - Download links on web location for a node.
- * Only valid links are writed on local filesystem.
+ * Link - Download node's links on web locations.
+ * Only valid links are writen on local filesystem.
  *
  * @param string $nid
- * @param string $location
- * @return integer
+ * @param array $locations
+ * @return bool
  */
-function _lnkDownloadOnLocation(string $nid, string $location): int
+function _lnkDownloadOnLocations(string $nid, array $locations=array()): bool
 {
     if (!getConfiguration('permitWrite')
         || !getConfiguration('nebulePermitSynchronizeLink')
         || !_nodCheckNID($nid, false)
-        || $location == ''
-        || !is_string($location) // TODO renforcer la vérification de l'URL.
+        || $locations == ''
+        || _nodCheckBanned($nid)
+        || sizeof($locations) == 0
     )
-        return 0;
+        return false;
 
     $count = 0;
 
+
+
+
+    if (sizeof($locations) == 0)
+        $locations = FIRST_LOCALISATIONS;
+
+    foreach ($locations as $location) {
+        if (io_objectSynchronize($nid, $location))
+            return true;
+    }
+
+
+
     // WARNING ajouter vérification du lien type texte
-    $distobj = fopen($location . '/l/' . $nid, 'r');
+    $distobj = fopen($locations . '/l/' . $nid, 'r');
     if ($distobj) {
         while (!feof($distobj)) {
             $line = trim(fgets($distobj));
@@ -2943,7 +2958,7 @@ function _lnkDownloadOnLocation(string $nid, string $location): int
         }
         fclose($distobj);
     }
-    return $count;
+    return true;
 }
 
 /**
@@ -5875,16 +5890,14 @@ function bootstrapFirstSynchronizingEntities()
         // Activation comme autorité locale.
         $nebuleLocalAuthorities[0] = getConfiguration('puppetmaster');
 
-        foreach (FIRST_LOCALISATIONS as $localisation) {
-            _lnkDownloadOnLocation(_objGetNID('nebule/objet/entite/maitre/securite', getConfiguration('cryptoHashAlgorithm')), $localisation);
-            echo '.';
-            _lnkDownloadOnLocation(_objGetNID('nebule/objet/entite/maitre/code', getConfiguration('cryptoHashAlgorithm')), $localisation);
-            echo '.';
-            _lnkDownloadOnLocation(_objGetNID('nebule/objet/entite/maitre/annuaire', getConfiguration('cryptoHashAlgorithm')), $localisation);
-            echo '.';
-            _lnkDownloadOnLocation(_objGetNID('nebule/objet/entite/maitre/temps', getConfiguration('cryptoHashAlgorithm')), $localisation);
-            echo '.';
-        }
+        _lnkDownloadOnLocations(NEBULE_REFERENCE_NID_SECURITYMASTER, FIRST_LOCALISATIONS);
+        echo '.';
+        _lnkDownloadOnLocations(NEBULE_REFERENCE_NID_CODEMASTER, FIRST_LOCALISATIONS);
+        echo '.';
+        _lnkDownloadOnLocations(NEBULE_REFERENCE_NID_TIMEMASTER, FIRST_LOCALISATIONS);
+        echo '.';
+        _lnkDownloadOnLocations(NEBULE_REFERENCE_NID_DIRECTORYMASTER, FIRST_LOCALISATIONS);
+        echo '.';
         echo "<br/>\n";
         flush();
 
@@ -6047,12 +6060,17 @@ function _entityGetSecurityMasters(bool $synchronize=false): array
     $lnkList = array();
     $entList = array();
     $filter = array(
-        'bl/rl/req' => 'f',
+        'bl/rl/req' => 'l',
         'bl/rl/nid2' => $nid,
-        //'bl/rl/nid3' => getConfiguration('CodeBranch'), TODO
         'bs/rs/nid' => getConfiguration('puppetmaster'),
     );
     _lnkGetList($nid, $lnkList, $filter);
+
+    if (getConfiguration('CodeBranch') != '')
+    {
+        $filter['bl/rl/nid3'] = getConfiguration('CodeBranch');
+        _lnkGetList($nid, $lnkList, $filter);
+    }
 
     // Extract uniques entities
     foreach ($lnkList as $lnk)
@@ -6082,12 +6100,29 @@ function _entityGetCodeMasters(bool $synchronize=false): array
         _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
 
     $lnkList = array();
-    $filter = array();
+    $entList = array();
+    $filter = array(
+        'bl/rl/req' => 'l',
+        'bl/rl/nid2' => $nid,
+        'bs/rs/nid' => getConfiguration('puppetmaster'),
+    );
     _lnkGetList($nid, $lnkList, $filter);
 
-    // TODO
+    if (getConfiguration('CodeBranch') != '')
+    {
+        $filter['bl/rl/nid3'] = getConfiguration('CodeBranch');
+        _lnkGetList($nid, $lnkList, $filter);
+    }
 
-    return array();
+    // Extract uniques entities
+    foreach ($lnkList as $lnk)
+        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
+
+    // Rearrange entities
+    foreach ($entList as $ent)
+        $nebuleCodeMasters[] = $ent;
+
+    return $nebuleCodeMasters;
 }
 
 /**
@@ -6107,12 +6142,29 @@ function _entityGetTimeMasters(bool $synchronize=false): array
         _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
 
     $lnkList = array();
-    $filter = array();
+    $entList = array();
+    $filter = array(
+        'bl/rl/req' => 'l',
+        'bl/rl/nid2' => $nid,
+        'bs/rs/nid' => getConfiguration('puppetmaster'),
+    );
     _lnkGetList($nid, $lnkList, $filter);
 
-    // TODO
+    if (getConfiguration('CodeBranch') != '')
+    {
+        $filter['bl/rl/nid3'] = getConfiguration('CodeBranch');
+        _lnkGetList($nid, $lnkList, $filter);
+    }
 
-    return array();
+    // Extract uniques entities
+    foreach ($lnkList as $lnk)
+        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
+
+    // Rearrange entities
+    foreach ($entList as $ent)
+        $nebuleTimeMasters[] = $ent;
+
+    return $nebuleTimeMasters;
 }
 
 /**
@@ -6132,12 +6184,29 @@ function _entityGetDirectoryMasters(bool $synchronize=false): array
         _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
 
     $lnkList = array();
-    $filter = array();
+    $entList = array();
+    $filter = array(
+        'bl/rl/req' => 'l',
+        'bl/rl/nid2' => $nid,
+        'bs/rs/nid' => getConfiguration('puppetmaster'),
+    );
     _lnkGetList($nid, $lnkList, $filter);
 
-    // TODO
+    if (getConfiguration('CodeBranch') != '')
+    {
+        $filter['bl/rl/nid3'] = getConfiguration('CodeBranch');
+        _lnkGetList($nid, $lnkList, $filter);
+    }
 
-    return array();
+    // Extract uniques entities
+    foreach ($lnkList as $lnk)
+        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
+
+    // Rearrange entities
+    foreach ($entList as $ent)
+        $nebuleDirectoryMasters[] = $ent;
+
+    return $nebuleDirectoryMasters;
 }
 
 /**
@@ -6247,7 +6316,7 @@ function _entitySyncPuppetmaster(string $oid): void
     }
 
     _objDownloadOnLocations($oid, FIRST_LOCALISATIONS);
-    // TODO sync lnk
+    _lnkDownloadOnLocations($oid, FIRST_LOCALISATIONS);
 }
 
 /**
@@ -6257,9 +6326,10 @@ function _entitySyncPuppetmaster(string $oid): void
  */
 function _entitySyncSecurityMasters(array $oidList): void
 {
-    foreach ($oidList as $nid)
+    foreach ($oidList as $nid) {
         _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-    // TODO sync lnk
+        _lnkDownloadOnLocations($nid, FIRST_LOCALISATIONS);
+    }
 }
 
 /**
@@ -6269,9 +6339,10 @@ function _entitySyncSecurityMasters(array $oidList): void
  */
 function _entitySyncCodeMasters(array $oidList): void
 {
-    foreach ($oidList as $nid)
+    foreach ($oidList as $nid) {
         _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-    // TODO sync lnk
+        _lnkDownloadOnLocations($nid, FIRST_LOCALISATIONS);
+    }
 }
 
 /**
@@ -6281,9 +6352,10 @@ function _entitySyncCodeMasters(array $oidList): void
  */
 function _entitySyncTimeMasters(array $oidList): void
 {
-    foreach ($oidList as $nid)
+    foreach ($oidList as $nid) {
         _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-    // TODO sync lnk
+        _lnkDownloadOnLocations($nid, FIRST_LOCALISATIONS);
+    }
 }
 
 /**
@@ -6293,9 +6365,10 @@ function _entitySyncTimeMasters(array $oidList): void
  */
 function _entitySyncDirectoryMasters(array $oidList): void
 {
-    foreach ($oidList as $nid)
+    foreach ($oidList as $nid) {
         _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-    // TODO sync lnk
+        _lnkDownloadOnLocations($nid, FIRST_LOCALISATIONS);
+    }
 }
 
 
@@ -6310,6 +6383,8 @@ function bootstrapFirstSynchronizingObjects()
 {
     global $nebuleLocalAuthorities;
 
+    echo '<div class="parts">'."\n";
+
     $refApps = REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS;
     $refAppsID = _objGetNID($refApps, getConfiguration('cryptoHashAlgorithm'));
     $refLib = REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE;
@@ -6318,176 +6393,143 @@ function bootstrapFirstSynchronizingObjects()
     $refBootID = _objGetNID($refBoot, getConfiguration('cryptoHashAlgorithm'));
     ?>
 
-    <div class="parts">
         <span class="partstitle">#5 synchronizing objets</span><br/>
-        <?php
-        // Si la bibliothèque ne se charge pas correctement, fait une première synchronisation des entités.
-        if (!io_checkNodeHaveContent($refAppsID)
+    <?php
+    // Si la bibliothèque ne se charge pas correctement, fait une première synchronisation des entités.
+    if (!io_checkNodeHaveContent($refAppsID)
         && !io_checkNodeHaveContent($refLibID)
         && !io_checkNodeHaveLink($refBootID)
-        )
-        {
-        addLog('need sync objects', 'warn', __FUNCTION__, '0f21ad26');
+    )
+    {
+    addLog('need sync objects', 'warn', __FUNCTION__, '0f21ad26');
 
-        // Ecrit les objets de localisation.
-        echo 'objects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
-        foreach (FIRST_LOCALISATIONS as $data) {
-            $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));;
-            foreach (FIRST_LOCALISATIONS as $localisation) {
-                $count = _lnkDownloadOnLocation($hash, $localisation);
-                echo '.';
-                if ($count != 0) {
-                    break 1;
-                }
+    // Ecrit les objets de localisation.
+    echo 'objects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+    foreach (FIRST_LOCALISATIONS as $data) {
+        $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+        _lnkDownloadOnLocations($hash, FIRST_LOCALISATIONS);
+        echo '.';
+    }
+    flush();
+
+    // Ecrit les objets réservés.
+    foreach (FIRST_RESERVED_OBJECTS as $data) {
+        $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+        _lnkDownloadOnLocations($hash, FIRST_LOCALISATIONS);
+        echo '.';
+    }
+    flush();
+
+    $data = REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS;
+    io_objectWrite($data);
+
+    $data = REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE;
+    io_objectWrite($data);
+    echo "<br />\n";
+    ?>
+    bootstrap start &nbsp;&nbsp;&nbsp;:
+    <?php
+    echo $refBoot . ' ';
+    flush();
+    _lnkDownloadOnLocations($refBootID, FIRST_LOCALISATIONS);
+    echo "<br />\n";
+    ?>
+    library start &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+    <?php
+    echo $refLib . ' ';
+    flush();
+    _lnkDownloadOnLocations($refLibID, FIRST_LOCALISATIONS);
+    echo "<br />\n";
+    ?>
+    synchronization &nbsp;&nbsp;&nbsp;:
+    <?php
+    // Recherche par référence.
+    $lastID = nebFindByRef(
+        $refLibID,
+        $refLibID,
+        false);
+    echo $lastID . ' ';
+    if ($lastID != '0') {
+        io_objectSynchronize($lastID, FIRST_LOCALISATIONS);
+    } else {
+        echo '<span id="error">ERROR!</span>';
+    }
+    echo "<br />\n";
+    ?>
+    applications list &nbsp;:
+    <?php
+    echo $refAppsID . ' ';
+    flush();
+    _lnkDownloadOnLocations($refAppsID, FIRST_LOCALISATIONS);
+    echo "<br />\n";
+    ?>
+    application list &nbsp;&nbsp;:
+    <?php
+    // Pour chaque application, faire une synchronisation.
+    $links = array();
+    _lnkFindInclusive($refAppsID, $links, 'f', $refAppsID, '', $refAppsID, false);
+
+    // Tri sur autorités locales.
+    $signer = '';
+    $authority = '';
+    foreach ($links as $i => $link) {
+        $signer = $link[2];
+        $ok = false;
+        foreach ($nebuleLocalAuthorities as $authority) {
+            if ($signer == $authority) {
+                $ok = true;
+                break;
             }
-            echo ' ';
-            flush();
         }
-
-        // Ecrit les objets réservés.
-        foreach (FIRST_RESERVED_OBJECTS as $data) {
-            $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));;
-            foreach (FIRST_LOCALISATIONS as $localisation) {
-                $count = _lnkDownloadOnLocation($hash, $localisation);
-                echo '.';
-                if ($count != 0) {
-                    break 1;
-                }
-            }
-            echo ' ';
-            flush();
-        }
-
-        $data = REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS;
-        io_objectWrite($data);
-
-        $data = REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE;
-        io_objectWrite($data);
-        ?><br/>
-
-        bootstrap start &nbsp;&nbsp;&nbsp;:
-        <?php
-        echo $refBoot . ' ';
-        flush();
-        foreach (FIRST_LOCALISATIONS as $localisation) {
-            _lnkDownloadOnLocation($refBootID, $localisation);
+        if ($ok) {
             echo '.';
+        } else {
+            // Si le signataire n'est pas autorité locale, supprime le lien.
+            unset($links[$i]);
         }
-        ?><br/>
+    }
+    echo "<br />\n";
 
-        library start &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
-        <?php
-        echo $refLib . ' ';
-        flush();
-        foreach (FIRST_LOCALISATIONS as $localisation) {
-            _lnkDownloadOnLocation($refLibID, $localisation);
-            echo '.';
-        }
-        ?><br/>
+    // Pour toutes les applications, les télécharge et recherche leurs noms.
+    $refName = 'nebule/objet/nom';
+    foreach ($links as $app) {
+        ?>
 
         synchronization &nbsp;&nbsp;&nbsp;:
         <?php
+        $appID = $app[6];
+        echo $appID . ' ';
         // Recherche par référence.
         $lastID = nebFindByRef(
-            $refLibID,
-            $refLibID,
+            $appID,
+            $refAppsID,
             false);
-        echo $lastID . ' ';
+        addLog('find app ' . $appID . ' as ' . $lastID, 'info', __FUNCTION__, '4cc18a65');
         if ($lastID != '0') {
-            foreach (FIRST_LOCALISATIONS as $localisation) {
-                io_objectSynchronize($lastID, $localisation);
-                echo '.';
+            _objDownloadOnLocations($lastID, FIRST_LOCALISATIONS);
+            _lnkDownloadOnLocations($lastID, FIRST_LOCALISATIONS);
+            echo ' ';
+            // Cherche le nom.
+            $nameID = nebFindObjType(
+                $lastID,
+                $refName);
+            if ($nameID == '0') {
+                $nameID = nebFindObjType(
+                    $appID,
+                    $refName);
+            }
+            if ($nameID != '0') {
+                _objDownloadOnLocations($nameID, FIRST_LOCALISATIONS);
+                _lnkDownloadOnLocations($nameID, FIRST_LOCALISATIONS);
             }
         } else {
             echo '<span id="error">ERROR!</span>';
         }
-        ?><br/>
-
-        applications list &nbsp;:
-        <?php
-        echo $refAppsID . ' ';
-        flush();
-        foreach (FIRST_LOCALISATIONS as $localisation) {
-            _lnkDownloadOnLocation($refAppsID, $localisation);
-            echo '.';
-        }
-        ?><br/>
-
-        application list &nbsp;&nbsp;:
-        <?php
-        // Pour chaque application, faire une synchronisation.
-        $links = array();
-        _lnkFindInclusive($refAppsID, $links, 'f', $refAppsID, '', $refAppsID, false);
-
-        // Tri sur autorités locales.
-        $signer = '';
-        $authority = '';
-        foreach ($links as $i => $link) {
-            $signer = $link[2];
-            $ok = false;
-            foreach ($nebuleLocalAuthorities as $authority) {
-                if ($signer == $authority) {
-                    $ok = true;
-                    break;
-                }
-            }
-            if ($ok) {
-                echo '.';
-            } else {
-                // Si le signataire n'est pas autorité locale, supprime le lien.
-                unset($links[$i]);
-            }
-        }
         echo "<br />\n";
+    }
 
-        // Pour toutes les applications, les télécharge et recherche leurs noms.
-        $refName = 'nebule/objet/nom';
-        foreach ($links as $app) {
-            ?>
-
-            synchronization &nbsp;&nbsp;&nbsp;:
-            <?php
-            $appID = $app[6];
-            echo $appID . ' ';
-            // Recherche par référence.
-            $lastID = nebFindByRef(
-                $appID,
-                $refAppsID,
-                false);
-            addLog('find app ' . $appID . ' as ' . $lastID, 'info', __FUNCTION__, '4cc18a65');
-            if ($lastID != '0') {
-                foreach (FIRST_LOCALISATIONS as $localisation) {
-                    io_objectSynchronize($lastID, $localisation);
-                    _lnkDownloadOnLocation($lastID, $localisation);
-                    echo '.';
-                }
-                echo ' ';
-                // Cherche le nom.
-                $nameID = nebFindObjType(
-                    $lastID,
-                    $refName);
-                if ($nameID == '0') {
-                    $nameID = nebFindObjType(
-                        $appID,
-                        $refName);
-                }
-                if ($nameID != '0') {
-                    foreach (FIRST_LOCALISATIONS as $localisation) {
-                        io_objectSynchronize($nameID, $localisation);
-                        _lnkDownloadOnLocation($nameID, $localisation);
-                        echo '.';
-                    }
-                }
-            } else {
-                echo '<span id="error">ERROR!</span>';
-            }
-            ?><br/>
-
-            <?php
-        }
-
-        echo "</div>\n";
-        ?>
+    echo "</div>\n";
+    ?>
 
     &gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo BOOTSTRAP_NAME; ?></a> ...
     <script type="text/javascript">
@@ -6497,16 +6539,16 @@ function bootstrapFirstSynchronizingObjects()
         }, <?php echo FIRST_RELOAD_DELAY; ?>);
         //-->
     </script>
-    <?php
-} else {
-    addLog('ok sync objects', 'info', __FUNCTION__, '4473358f');
-    ?>
-    ok
-    <?php
-    echo "</div>\n";
-    // Si c'est bon on continue la création du fichier des options par défaut.
-    bootstrapFirstCreateOptionsFile();
-}
+<?php
+    } else {
+        addLog('ok sync objects', 'info', __FUNCTION__, '4473358f');
+        ?>
+        ok
+        <?php
+        echo "</div>\n";
+        // Si c'est bon on continue la création du fichier des options par défaut.
+        bootstrapFirstCreateOptionsFile();
+    }
 }
 
 
@@ -6518,9 +6560,9 @@ function bootstrapFirstSynchronizingObjects()
  */
 function bootstrapFirstCreateOptionsFile()
 {
+    echo '<div class="parts">'."\n";
     ?>
 
-    <div class="parts">
         <span class="partstitle">#6 options file</span><br/>
         <?php
         if (!file_exists(NEBULE_ENVIRONMENT_FILE))
@@ -6614,9 +6656,10 @@ else {
 function bootstrapFirstCreateLocaleEntity()
 {
     global $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite;
+
+    echo '<div class="parts">'."\n";
     ?>
 
-    <div class="parts">
         <span class="partstitle">#7 local entity for server</span><br/>
         <?php
         if ( //file_exists(NEBULE_LOCAL_ENTITY_FILE)
@@ -7211,6 +7254,7 @@ function main()
     bootstrapLogMetrology();
 }
 
+// OK, now play...
 main();
 
 ?>
