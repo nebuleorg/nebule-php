@@ -3947,9 +3947,8 @@ function io_linkWrite(string &$nid, string &$link): bool
 
     $l = file(LOCAL_LINKS_FOLDER . '/' . $nid);
     foreach ($l as $k) {
-        if (trim($k) == trim($link)) {
+        if (trim($k) == trim($link))
             return true;
-        }
     }
 
     if (file_put_contents(LOCAL_LINKS_FOLDER . '/' . $nid, "$link\n", FILE_APPEND) === false)
