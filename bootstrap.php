@@ -6040,12 +6040,11 @@ function bootstrapDisplayApplicationfirst(): void
 
     foreach ($bootstrapBreak as $number => $message)
         echo '- [' . $number . '] <span class="error">' . $message . '</span>' . "<br />\n";
-    ?>
-    Tb=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?><br/>
-    nebule library : <?php echo NEBULE_LIBRARY_PP_VERSION . ' PHP PP'; ?><br/>
-    <?php if ($bootstrapRescueMode) {
+
+    echo 'Tb=' . sprintf('%01.4fs', microtime(true) - $metrologyStartTime) . "<br />\n";
+    echo 'nebule library : ' . NEBULE_LIBRARY_PP_VERSION . ' PHP PP' . "<br />\n";
+    if ($bootstrapRescueMode)
         echo "RESCUE<br />\n";
-    }
     echo "</div>\n";
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#2 create folders</span><br/>'."\n";
