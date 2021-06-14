@@ -710,6 +710,11 @@ $nebuleMetrologyObjectRead = 0;
  */
 $nebuleMetrologyObjectVerify = 0;
 
+/**
+ * Metrology - Lib PP timers.
+ */
+$nebuleMetrologyTimers = array();
+
 // Cache of many search result and content.
 $nebuleCacheReadObjText1line = array();
 $nebuleCacheReadObjName = array();
@@ -1460,8 +1465,9 @@ function nebCreatAsText(string $data, bool $skipIfPresent = true)
 /**
  * Metrology - Incrementing one stat counter.
  * @param string $type
+ * @return void
  */
-function _metrologyAdd(string $type): void
+function _metrologyCountAdd(string $type): void
 {
     global $nebuleMetrologyLinkRead, $nebuleMetrologyLinkVerify, $nebuleMetrologyObjectRead, $nebuleMetrologyObjectVerify;
 
@@ -1487,7 +1493,7 @@ function _metrologyAdd(string $type): void
  * @param string $type
  * @return string
  */
-function _metrologyGet(string $type): string
+function _metrologyCountGet(string $type): string
 {
     global $nebuleMetrologyLinkRead, $nebuleMetrologyLinkVerify, $nebuleMetrologyObjectRead, $nebuleMetrologyObjectVerify;
 
@@ -1508,6 +1514,32 @@ function _metrologyGet(string $type): string
             break;
     }
     return $return;
+}
+
+/**
+ * Metrology - Set one stat timer.
+ * @param string $type
+ * @return void
+ */
+function _metrologyTimerSet(string $type): void
+{
+    global $nebuleMetrologyTimers, $metrologyStartTime;
+
+    $nebuleMetrologyTimers[$type] = sprintf('%01.4fs', microtime(true) - $metrologyStartTime);
+}
+
+/**
+ * Metrology - Get one stat timer.
+ * @param string $type
+ * @return string
+ */
+function _metrologyTimerGet(string $type): string
+{
+    global $nebuleMetrologyTimers;
+
+    if (isset($nebuleMetrologyTimers[$type]))
+        return $nebuleMetrologyTimers[$type];
+    return '';
 }
 
 // ------------------------------------------------------------------------------------------
@@ -2300,7 +2332,7 @@ function _objCheckContent(&$nid)
     if (isset($nebuleCachelibrary_o_vr[$nid]))
         return true;
 
-    _metrologyAdd('ov');
+    _metrologyCountAdd('ov');
 
     $algo = substr($nid, strpos($nid, '.') + 1);
     if ($algo !== false)
@@ -3922,7 +3954,7 @@ function io_linksRead(string &$nid, array &$lines, int $maxLinks = 0): array
     $links = file(LOCAL_LINKS_FOLDER . '/' . $nid);
     foreach ($links as $link) {
         $lines [$count] = $link;
-        _metrologyAdd('lr');
+        _metrologyCountAdd('lr');
         $count++;
         if ($count > $maxLinks)
             break 1;
@@ -3974,7 +4006,7 @@ function io_objectRead(string $nid, int $maxData = 0): string
     $result = file_get_contents(LOCAL_OBJECTS_FOLDER . '/' . $nid, false, null, 0, $maxData);
     if ($result === false)
         $result = '';
-    _metrologyAdd('or');
+    _metrologyCountAdd('or');
 
     return $result;
 }
@@ -4272,7 +4304,7 @@ function cryptoAsymetricVerify(string $sign, string $hash, string $nid): bool
     $pubkeyid = openssl_pkey_get_public($cert);
     if ($pubkeyid === false) return false;
 
-    _metrologyAdd('lv');
+    _metrologyCountAdd('lv');
 
     // Encoding sign before check.
     $binsign = pack('H*', $sign);
@@ -4523,8 +4555,7 @@ function findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstanceSleep): 
  */
 function loadLibraryPOO(string $bootstrapLibraryID, string $bootstrapLibraryInstanceSleep): void
 {
-    global $loggerSessionID,
-           $nebuleInstance;
+    global $nebuleInstance;
 
     if ($bootstrapLibraryID != '') {
         // Load lib from object. @todo faire via les i/o.
@@ -5475,7 +5506,6 @@ function bootstrapDisplayOnBreak(): void
            $bootstrapLibraryID,
            $bootstrapApplicationID,
            $bootstrapApplicationStartID,
-           $metrologyStartTime,
            $nebuleSecurityMasters,
            $nebuleCodeMasters,
            $nebuleDirectoryMasters,
@@ -5498,7 +5528,7 @@ function bootstrapDisplayOnBreak(): void
 
     foreach ($bootstrapBreak as $number => $message)
         echo '- [' . $number . '] <span class="error">' . $message . '</span>'."<br />\n";
-    echo 'Tb=' . sprintf('%01.4fs', microtime(true) - $metrologyStartTime) . "<br />\n";
+    echo 'tB=' . _metrologyTimerGet('tB') . "<br />\n";
     if ($bootstrapRescueMode)
         echo "RESCUE mode<br />\n";
     if ($bootstrapFlush)
@@ -5529,7 +5559,7 @@ function bootstrapDisplayOnBreak(): void
         flush();
 
         // Chargement de la bibliothèque PHP POO.
-        echo "Tl=" . sprintf('%01.4fs', microtime(true) - $metrologyStartTime) . "<br />\n";
+        echo "tL=" . _metrologyTimerGet('tL') . "<br />\n";
         echo 'library RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE, getConfiguration('cryptoHashAlgorithm')) . "<br />\n";
 
         if (!is_a($nebuleInstance, 'nebule')) {
@@ -5756,10 +5786,10 @@ function bootstrapDisplayOnBreak(): void
 
             // Affichage des valeurs de métrologie.
             echo "<br />\n";
-            echo 'L(r)=' . _metrologyGet('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead() . ' ';
-            echo 'L(v)=' . _metrologyGet('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify() . ' ';
-            echo 'O(r)=' . _metrologyGet('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead() . ' ';
-            echo 'O(v)=' . _metrologyGet('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
+            echo 'L(r)=' . _metrologyCountGet('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead() . ' ';
+            echo 'L(v)=' . _metrologyCountGet('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify() . ' ';
+            echo 'O(r)=' . _metrologyCountGet('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead() . ' ';
+            echo 'O(v)=' . _metrologyCountGet('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
             echo 'L(c)=' . $nebuleInstance->getCacheLinkSize() . ' ';
             echo 'O(c)=' . $nebuleInstance->getCacheObjectSize() . ' ';
             echo 'E(c)=' . $nebuleInstance->getCacheEntitySize() . ' ';
@@ -5783,10 +5813,11 @@ function bootstrapDisplayOnBreak(): void
         application ID &nbsp;&nbsp;: <?php echo $bootstrapApplicationID; ?>
     <?php
     echo '</div>'."\n";
+    _metrologyTimerSet('tE');
     ?>
 
     <span class="partstitle">#- end <?php echo BOOTSTRAP_NAME; ?></span><br/>
-    Te=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?><br/>
+    tE=<?php echo _metrologyTimerGet('tE'); ?><br/>
     <?php
 
     bootstrapHtmlBottom();
@@ -5795,8 +5826,7 @@ function bootstrapDisplayOnBreak(): void
 
 // ------------------------------------------------------------------------------------------
 /**
- * bootstrapInlineDisplayOnBreak()
- * La fonction bootstrapInlineDisplayOnBreak affiche l'écran du bootstrap en cas d'interruption.
+ * Cette fonction affiche l'écran du bootstrap en cas d'interruption.
  * L'interruption peut être appelée par l'utilisateur ou provoqué par une erreur lors des
  * vérifications de bon fonctionnement. Les vérifications ont lieu à chaque chargement de
  * page. L'affichage est minimum, il est destiné à apparaître dans une page web déjà ouverte.
@@ -5808,8 +5838,7 @@ function bootstrapInlineDisplayOnBreak()
     global $bootstrapBreak,
            $bootstrapRescueMode,
            $bootstrapLibraryID,
-           $bootstrapApplicationID,
-           $metrologyStartTime;
+           $bootstrapApplicationID;
 
     ob_end_flush();
 
@@ -5824,7 +5853,7 @@ function bootstrapInlineDisplayOnBreak()
 
     echo 'nebule loading library : ' . $bootstrapLibraryID . "<br />\n";
     echo 'Application loading : ' . $bootstrapApplicationID . "<br />\n";
-    echo 'Tb=' . sprintf('%01.4fs', microtime(true) - $metrologyStartTime) . "<br />\n";
+    echo 'tB=' . _metrologyTimerGet('tB') . "<br />\n";
     echo "</p></div>\n";
 }
 
@@ -5843,7 +5872,6 @@ function bootstrapInlineDisplayOnBreak()
  */
 
 /**
- * bootstrapDisplayPreloadApplication()
  * La fonction affiche temporairement l'écran du bootstrap
  *   le temps de charger les instances de la bibliothèque, de l'application et de ses classes annexes.
  *
@@ -5866,99 +5894,87 @@ function bootstrapDisplayPreloadApplication()
 
     // Initialisation des logs
     reopenLog('preload');
-    addLog('Loading', 'info', __FUNCTION__, 'ce5879b0');
+    addLog('Loading library POO', 'info', __FUNCTION__, 'ce5879b0');
 
     echo 'CHK';
     ob_end_clean();
 
     bootstrapHtmlHeader();
     bootstrapHtmlTop();
+
+    echo '<div class="preload">'."\n";
+    echo "Please wait...<br/>\n";
+    echo 'tB=' . _metrologyTimerGet('tB') . "<br />\n";
+    echo '</div>'."\n";
+    flush();
+
+    echo '<div class="preload">'."\n";
+    ?>
+    <img title="bootstrap" style="background:#ababab;" alt="[]" src="<?php echo REFERENCE_BOOTSTRAP_ICON; ?>"/>
+    Load nebule library POO<br/>
+    ID=<?php echo $bootstrapLibraryID; ?><br/>
+    <?php
+    echo 'tL=' . _metrologyTimerGet('tL') . "<br />\n";
+    echo '</div>'."\n";
+    flush();
+
+    echo '<div class="preload">'."\n";
+    ?>
+    <img title="bootstrap" style="background:#<?php echo substr($bootstrapApplicationStartID . '000000', 0, 6); ?>;"
+         alt="[]" src="<?php echo REFERENCE_BOOTSTRAP_ICON; ?>"/>
+    Load application<br/>
+    ID=<?php echo $bootstrapApplicationID; ?><br/>
+    <?php
+    flush();
+
+    reopenLog('preload');
+    addLog('Loading application ' . $bootstrapApplicationID, 'info', __FUNCTION__, '202824cb');
+
+    // Charge l'objet de l'application. TODO faire via les i/o.
+    include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+
+    // Instanciation des classes de l'application.
+    $applicationInstance = new Application($nebuleInstance);
+    $applicationTraductionInstance = new Traduction($applicationInstance);
+    $applicationDisplayInstance = new Display($applicationInstance);
+    $applicationActionInstance = new Action($applicationInstance);
+
+    // Initialisation des instances.
+    $applicationInstance->initialisation();
+    $applicationTraductionInstance->initialisation();
+    $applicationDisplayInstance->initialisation();
+    $applicationActionInstance->initialisation();
     ?>
 
-    <div class="preload">
-        Please wait...<br/>
-        Tb=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?>
-    </div>
-
-    <div class="preload">
-        <img title="bootstrap" style="background:#ababab;" alt="[]" src="<?php echo REFERENCE_BOOTSTRAP_ICON; ?>"/>
-        Load nebule library POO<br/>
-        ID=<?php echo $bootstrapLibraryID; ?><br/>
-        <?php
-        flush();
-
-        // Ré-initialisation des logs
-        reopenLog('preload');
-        ?>
-
-        Tl=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?>
-    </div>
-
-    <div class="preload">
-        <img title="bootstrap" style="background:#<?php echo substr($bootstrapApplicationStartID . '000000', 0, 6); ?>;"
-             alt="[]" src="<?php echo REFERENCE_BOOTSTRAP_ICON; ?>"/>
-        Load application<br/>
-        ID=<?php echo $bootstrapApplicationID; ?><br/>
-        <?php
-        flush();
-
-        syslog(LOG_INFO, 'LogT=0 LogTabs=' . (microtime(true)) . ' load_application=' . $bootstrapApplicationID);
-
-        // Charge l'objet de l'application. @todo faire via les i/o.
-        include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
-
-        // Instanciation des classes de l'application.
-        $applicationInstance = new Application($nebuleInstance);
-        $applicationTraductionInstance = new Traduction($applicationInstance);
-        $applicationDisplayInstance = new Display($applicationInstance);
-        $applicationActionInstance = new Action($applicationInstance);
-
-        // Initialisation des instances.
-        $applicationInstance->initialisation();
-        $applicationTraductionInstance->initialisation();
-        $applicationDisplayInstance->initialisation();
-        $applicationActionInstance->initialisation();
-        ?>
-
-        Name=<?php echo $applicationInstance->getClassName(); ?><br/>
-        sync<span class="preloadsync">
-<?php
-
-// Récupération des éléments annexes nécessaires à l'affichage de l'application.
-$items = $applicationDisplayInstance->getNeededObjectsList();
-$nb = 0;
-foreach ($items as $item) {
-    if (!$nebuleInstance->getIO()->checkObjectPresent($item)) {
-        $instance = $nebuleInstance->newObject($item, false, false);
-        $applicationDisplayInstance->displayInlineObjectColorNolink($instance);
-        echo "\n";
-        $instance->syncObject(false);
-        $nb++;
-    }
-}
-unset($items);
-
-if ($nb == 0) {
-    echo '-';
-}
-?>
-
-	</span><br/>
-        Ta=<?php echo sprintf('%01.4fs', microtime(true) - $metrologyStartTime); ?>
-    </div>
-    <div id="reload">
-        &gt; <a onclick="javascript:window.location.assign('<?php echo $_SERVER['REQUEST_URI']; ?>');">Reloading
-            application</a> ...
-        <script language="javascript" type="text/javascript">
-            <!--
-            setTimeout(function () {
-                window.location.assign('<?php echo $_SERVER['REQUEST_URI']; ?>')
-            }, 500);
-            //-->
-        </script>
-    </div>
+    Name=<?php echo $applicationInstance->getClassName(); ?><br/>
+    sync<span class="preloadsync">
     <?php
+    // Récupération des éléments annexes nécessaires à l'affichage de l'application.
+    $items = $applicationDisplayInstance->getNeededObjectsList();
+    $nb = 0;
+    foreach ($items as $item) {
+        if (!$nebuleInstance->getIO()->checkObjectPresent($item)) {
+            $instance = $nebuleInstance->newObject($item, false, false);
+            $applicationDisplayInstance->displayInlineObjectColorNolink($instance);
+            echo "\n";
+            $instance->syncObject(false);
+            $nb++;
+        }
+    }
+    unset($items);
 
+    if ($nb == 0)
+        echo '-';
+    ?>
+
+    </span><br/>
+    <?php
+    _metrologyTimerSet('tP');
+    echo 'tP=' . _metrologyTimerGet('tP') . "<br />\n";
+    echo '</div>'."\n";
+    flush();
+
+    bootstrapPartDisplayReloadPage(true, 500);
     bootstrapHtmlBottom();
 }
 
@@ -6036,7 +6052,7 @@ function bootstrapDisplayApplicationfirst(): void
     foreach ($bootstrapBreak as $number => $message)
         echo '- [' . $number . '] <span class="error">' . $message . '</span>' . "<br />\n";
 
-    echo 'Tb=' . sprintf('%01.4fs', microtime(true) - $metrologyStartTime) . "<br />\n";
+    echo 'tB=' . _metrologyTimerGet('tB') . "<br />\n";
     echo 'nebule library : ' . NEBULE_LIBRARY_PP_VERSION . ' PHP PP' . "<br />\n";
     if ($bootstrapRescueMode)
         echo "RESCUE<br />\n";
@@ -6308,8 +6324,11 @@ function bootstrapFirstSynchronizingEntities()
  * @param bool $ok
  * @return void
  */
-function bootstrapPartDisplayReloadPage(bool $ok = true): void
+function bootstrapPartDisplayReloadPage(bool $ok = true, int $delay = 0): void
 {
+    if ($delay == 0)
+        $delay = FIRST_RELOAD_DELAY;
+
     echo '<div id="reload">' . "\n";
     if ($ok)
     {
@@ -6320,7 +6339,7 @@ function bootstrapPartDisplayReloadPage(bool $ok = true): void
     <!--
     setTimeout(function () {
         window.location.reload(true)
-    }, <?php echo FIRST_RELOAD_DELAY; ?>);
+    }, <?php echo $delay; ?>);
     //-->
 </script>
 <?php
@@ -7116,28 +7135,40 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
 
 function bootstrapLogMetrology()
 {
-    global $nebuleInstance;
+    global $nebuleInstance, $nebuleMetrologyTimers;
+
+    $timers = '';
+    foreach ($nebuleMetrologyTimers as $i => $v)
+        $timers .= " $i=$v";
 
     // Metrology on logs.
     if (is_a($nebuleInstance, 'nebule')) {
         addLog('Mp=' . memory_get_peak_usage()
-            . ' - Lr=' . _metrologyGet('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead()
-            . ' Lv=' . _metrologyGet('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify()
-            . ' Or=' . _metrologyGet('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead()
-            . ' Ov=' . _metrologyGet('ov') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify()
+            . $timers
+            . ' Lr=' . _metrologyCountGet('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead()
+            . ' Lv=' . _metrologyCountGet('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify()
+            . ' Or=' . _metrologyCountGet('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead()
+            . ' Ov=' . _metrologyCountGet('ov') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify()
             . ' (PP+POO) -'
             . ' LC=' . $nebuleInstance->getCacheLinkSize()
             . ' OC=' . $nebuleInstance->getCacheObjectSize()
             . ' EC=' . $nebuleInstance->getCacheEntitySize()
             . ' GC=' . $nebuleInstance->getCacheGroupSize()
-            . ' CC=' . $nebuleInstance->getCacheConversationSize(), 'info', __FUNCTION__, '0d99ad8b');
+            . ' CC=' . $nebuleInstance->getCacheConversationSize(),
+            'info',
+            __FUNCTION__,
+            '0d99ad8b');
     } else {
         addLog('Mp=' . memory_get_peak_usage()
-            . ' - Lr=' . _metrologyGet('lr')
-            . ' Lv=' . _metrologyGet('lv')
-            . ' Or=' . _metrologyGet('or')
-            . ' Ov=' . _metrologyGet('ov')
-            . ' (PP)', 'info', __FUNCTION__, '52d76692');
+            . $timers
+            . ' Lr=' . _metrologyCountGet('lr')
+            . ' Lv=' . _metrologyCountGet('lv')
+            . ' Or=' . _metrologyCountGet('or')
+            . ' Ov=' . _metrologyCountGet('ov')
+            . ' (PP)',
+            'info',
+            __FUNCTION__,
+            '52d76692');
     }
 }
 
@@ -7156,14 +7187,17 @@ function main()
     getBootstrapSwitchApplication();
 
     setPermitOpenFileCode();
+    _metrologyTimerSet('tB');
 
     $bootstrapLibraryID = '';
     $bootstrapLibraryInstanceSleep = '';
     findLibraryPOO($bootstrapLibraryID, $bootstrapLibraryInstanceSleep);
     loadLibraryPOO($bootstrapLibraryID, $bootstrapLibraryInstanceSleep);
+    _metrologyTimerSet('tL');
     findApplication();
 
     displayRouter($needFirstSynchronization, $bootstrapLibraryID);
+    _metrologyTimerSet('tA');
     bootstrapLogMetrology();
 }
 
