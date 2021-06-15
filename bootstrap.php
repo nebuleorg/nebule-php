@@ -731,8 +731,8 @@ $nebuleCacheReadObjTypeHash = array();
 $nebuleCacheIsText = array();
 $nebuleCacheIsBanned = array();
 $nebuleCacheIsSuppr = array();
-$nebuleCacheIsPubkey = array();
-$nebuleCacheIsPrivkey = array();
+$nebuleCacheIsPublicKey = array();
+$nebuleCacheIsPrivateKey = array();
 $nebuleCacheIsEncrypt = array();
 $nebuleCacheFindPrivKey = '';
 $nebuleCachelibrary_o_vr = array();
@@ -1045,7 +1045,7 @@ function nebReadEntityFName(&$entite)
     if (isset($nebuleCacheReadEntityFName [$entite]))
         return $nebuleCacheReadEntityFName [$entite];
 
-    nebCreatAsText('nebule/objet/prenom');
+    nebCreateAsText('nebule/objet/prenom');
     $type = nebFindObjType($entite, 'nebule/objet/prenom'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
     if (io_checkNodeHaveContent($type)) {
@@ -1069,7 +1069,7 @@ function nebReadEntityName(&$entite)
     if (isset($nebuleCacheReadEntityName [$entite]))
         return $nebuleCacheReadEntityName [$entite];
 
-    nebCreatAsText('nebule/objet/nom');
+    nebCreateAsText('nebule/objet/nom');
     $type = nebFindObjType($entite, 'nebule/objet/nom'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
     if (io_checkNodeHaveContent($type)) {
@@ -1093,7 +1093,7 @@ function nebReadEntityPName(&$entite)
     if (isset($nebuleCacheReadEntityPName [$entite]))
         return $nebuleCacheReadEntityPName [$entite];
 
-    nebCreatAsText('nebule/objet/postnom');
+    nebCreateAsText('nebule/objet/postnom');
     $type = nebFindObjType($entite, 'nebule/objet/postnom'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
     if (io_checkNodeHaveContent($type)) {
@@ -1196,7 +1196,7 @@ function nebReadObjTypeMime(&$object)
         return '-indéfini-'; // L'objet doit etre present.
 
     $table = array();
-    nebCreatAsText('nebule/objet/type');
+    nebCreateAsText('nebule/objet/type');
     $hashtype = _objGetNID('nebule/objet/type', getConfiguration('cryptoHashAlgorithm'));
     $type = '';
     $filter = array(
@@ -1233,19 +1233,18 @@ function nebReadObjTypeMime(&$object)
     return $text;
 }
 
-/** FIXME
- * Vérifie si l'objet est une clé publique.
- * Fonction avec utilisation du cache si possible.
+/**
+ * Verify node is an object and is a valid entity public key.
  *
  * @param string $nid
  * @return boolean
  */
-function nebIsPublicKey(string &$nid): bool
+function nebCheckIsPublicKey(string &$nid): bool
 {
-    global $nebuleCacheIsPubkey;
+    global $nebuleCacheIsPublicKey;
 
-    if (isset($nebuleCacheIsPubkey[$nid]))
-        return $nebuleCacheIsPubkey[$nid];
+    if (isset($nebuleCacheIsPublicKey[$nid]))
+        return $nebuleCacheIsPublicKey[$nid];
 
     if ($nid == '0'
         || strlen($nid) < NID_MIN_HASH_SIZE
@@ -1256,57 +1255,58 @@ function nebIsPublicKey(string &$nid): bool
     )
         return false;
 
-    nebCreatAsText('application/x-pem-file');
+    nebCreateAsText('application/x-pem-file');
+// TODO à réactiver dès que les liens sont valides !
     if (nebReadObjTypeMime($nid) != 'application/x-pem-file')
-        return false;
-    $line = nebGetContentAsText($nid, 10000);
+        addLog('DEBUG Cannot check links by now', 'debug', __FUNCTION__, '51cc1f3a');
+//        return false;
 
-    if (strstr($line, 'BEGIN PUBLIC KEY') !== false) {
-        if (getConfiguration('permitBufferIO'))
-            $nebuleCacheIsPubkey[$nid] = true;
-        return true;
-    } else {
-        if (getConfiguration('permitBufferIO'))
-            $nebuleCacheIsPubkey[$nid] = false;
-        return false;
-    }
+    $line = nebGetContentAsText($nid, 10000);
+    $result = false;
+    if (strstr($line, 'BEGIN PUBLIC KEY') !== false)
+        $result = true;
+    if (getConfiguration('permitBufferIO'))
+        $nebuleCacheIsPublicKey[$nid] = $result;
+    return $result;
 }
 
-/** FIXME
- * Vérifie si l'objet est une clé privée.
- * Fonction avec utilisation du cache si possible.
+/**
+ * Verify node is an object and is a valid entity private key.
  *
  * @param $nid
  * @return bool
  */
-function nebIsPrivateKey(&$nid): bool
+function nebCheckIsPrivateKey(&$nid): bool
 {
-    global $nebuleCacheIsPrivkey;
+    global $nebuleCacheIsPrivateKey;
 
-    if (isset($nebuleCacheIsPrivkey [$nid]))
-        return $nebuleCacheIsPrivkey [$nid];
+    if (isset($nebuleCacheIsPrivateKey [$nid]))
+        return $nebuleCacheIsPrivateKey [$nid];
 
-    if ($nid == '0')
+    if ($nid == '0'
+        || strlen($nid) < NID_MIN_HASH_SIZE
+        || !_nodCheckNID($nid)
+        || !io_checkNodeHaveContent($nid)
+        || !_objCheckContent($nid)
+        || !io_checkNodeHaveLink($nid)
+    )
         return false;
 
-    nebCreatAsText('application/x-pem-file');
+    nebCreateAsText('application/x-pem-file');
     if ((nebReadObjTypeMime($nid)) != 'application/x-pem-file')
         return false;
-    $line = nebGetContentAsText($nid, 10000);
 
-    if (strstr($line, 'BEGIN ENCRYPTED PRIVATE KEY') !== false) {
-        if (getConfiguration('permitBufferIO'))
-            $nebuleCacheIsPrivkey [$nid] = true;
-        return true;
-    } else {
-        if (getConfiguration('permitBufferIO'))
-            $nebuleCacheIsPrivkey [$nid] = false;
-        return false;
-    }
+    $line = nebGetContentAsText($nid, 10000);
+    $result = false;
+    if (strstr($line, 'BEGIN ENCRYPTED PRIVATE KEY') !== false)
+        $result = true;
+    if (getConfiguration('permitBufferIO'))
+        $nebuleCacheIsPrivateKey[$nid] = $result;
+    return $result;
 }
 
 // FIXME
-function nebFindPrivKey()
+function nebFindPrivateKey(): string
 { // Fonction avec utilisation du cache si possible.
     global $nebulePublicEntity;
 
@@ -1329,7 +1329,7 @@ function nebFindPrivKey()
 }
 
 // FIXME
-function nebCheckPrivkey()
+function nebCheckPrivateKeyPassword(): bool
 { // Vérifie si le mot de passe de l'entité en cours est bien valide, c'est à dire qu'il donne accès à la clé privée.
     global $nebulePrivateEntite, $nebulePasswordEntite;
 
@@ -1445,17 +1445,23 @@ function nebListChildren(&$object, &$listchildren)
  * @param bool $skipIfPresent
  * @return bool
  */
-function nebCreatAsText(string $data, bool $skipIfPresent = true)
-{ // Création d'un nouvel objet texte.
-    if (!getConfiguration('permitWriteObject') || !getConfiguration('permitWriteLink') || strlen($data) == 0)
+function nebCreateAsText(string $data, bool $skipIfPresent = true): bool
+{
+    if (!getConfiguration('permitWrite')
+        || !getConfiguration('permitWriteObject')
+        || !getConfiguration('permitWriteLink')
+        || strlen($data) == 0
+    )
         return false;
+
     $oid = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-    if ($skipIfPresent && io_checkNodeHaveContent($oid))
-        return true;
+
     if (_nodCheckBanned($oid))
         return false;
-    _objGenerate($data, 'text/plain');
-    return true;
+    if ($skipIfPresent && io_checkNodeHaveContent($oid))
+        return true;
+
+    return _objGenerate($data, 'text/plain');
 }
 
 
@@ -1764,7 +1770,7 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
  */
 function _entityCheck(string $nid): bool
 {
-    if (!nebIsPublicKey($nid))
+    if (!nebCheckIsPublicKey($nid))
         return false;
     return true;
 }
@@ -2199,7 +2205,7 @@ function _entitySyncPuppetmaster(string $oid): void
  */
 function _entitySyncMasters(array $oidList): void
 {
-    global $nebuleCacheIsPubkey, $nebuleCacheIsPrivkey;
+    global $nebuleCacheIsPublicKey, $nebuleCacheIsPrivateKey;
 
     foreach ($oidList as $nid) {
         addLog('Sync master entity ' . $nid, 'info', __FUNCTION__, '92e0483f');
@@ -2207,24 +2213,24 @@ function _entitySyncMasters(array $oidList): void
         _lnkDownloadOnLocations($nid, FIRST_LOCALISATIONS);
     }
 
-    $nebuleCacheIsPubkey = array();
-    $nebuleCacheIsPrivkey = array();
+    $nebuleCacheIsPublicKey = array();
+    $nebuleCacheIsPrivateKey = array();
 }
 
 /** FIXME
- * Object -
+ * Object - Create new object from data.
  *
- * @param $data
+ * @param string $data
  * @param string $typemime
+ * @return bool
  */
-function _objGenerate(&$data, $typemime = '')
-{ // Crée un nouvel objet.
-    if (strlen($data) == 0)
-        return;
-    if (!getConfiguration('permitWrite'))
-        return;
-    if (!getConfiguration('permitWriteObject'))
-        return;
+function _objGenerate(string &$data, string $typemime = ''): bool
+{
+    if (strlen($data) == 0
+        || !getConfiguration('permitWrite')
+        || !getConfiguration('permitWriteObject')
+    )
+        return false;
     $dat = date(DATE_ATOM);
     $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
     // Ecrit l'objet.
@@ -2252,9 +2258,7 @@ function _objGenerate(&$data, $typemime = '')
         if ((_lnkVerify($lnk)) == 1)
             _lnkWrite($lnk);
     }
-    unset($dat);
-    unset($hash);
-    unset($lnk);
+    return true;
 }
 
 /**
@@ -3986,17 +3990,16 @@ function io_linkSynchronize(string $nid, string $location): bool
     )
         return false;
 
-    try {
-        $resource = fopen($location . '/l/' . $nid, 'r');
-        if ($resource !== false) {
-            while (feof($resource) !== false) {
-                $line = trim(fgets($resource));
-                _lnkWrite($line);
-            }
-            fclose($resource);
-        }
-    } catch (Exception $e) {
+    if (!io_checkExistOverHTTP($location . '/l/' . $nid))
         return false;
+
+    $resource = fopen($location . '/l/' . $nid, 'r');
+    if ($resource !== false) {
+        while (feof($resource) !== false) {
+            $line = trim(fgets($resource));
+            _lnkWrite($line);
+        }
+        fclose($resource);
     }
 
     return true;
@@ -4070,6 +4073,9 @@ function io_objectSynchronize(string $nid, string $location): bool
     if (io_checkNodeHaveContent($nid))
         return true;
 
+    if (!io_checkExistOverHTTP($location . '/o/' . $nid))
+        return false;
+
     // Téléchargement de l'objet via un fichier temporaire.
     $tmpId = bin2hex(cryptoGetPseudoRandom(8));
     $tmpIdName = 'io_objectSynchronize' . $tmpId . '-' . $nid;
@@ -4119,6 +4125,43 @@ function io_objectDelete(string &$nid): bool
         return false;
     }
     return true;
+}
+
+/**
+ * Vérifie la présence d'un fichier ou dossier via HTTP.
+ *
+ * @param string $location
+ * @return boolean
+ */
+function io_checkExistOverHTTP(string $location): bool
+{
+    $url = parse_url($location);
+
+    $handle = fsockopen($url['host'], 80, $errno, $errstr, 1);
+    if ($handle === false) {
+        return false;
+    }
+
+    $out = "HEAD " . $url['path'] . " HTTP/1.1\r\n" . "Host: " . $url['host'] . "\r\n" . "Connection: Close\r\n\r\n";
+    $response = '';
+
+    fwrite($handle, $out);
+    while (!feof($handle)) {
+        $response .= fgets($handle, 20);
+        if (strlen($response) > 0)
+            break;
+    }
+    fclose($handle);
+
+    $pos = strpos($response, ' ');
+    if ($pos === false)
+        return false;
+
+    $code = substr($response, $pos + 1, 3);
+    if ($code == '200')
+        return true;
+
+    return false;
 }
 
 /**
@@ -5540,7 +5583,7 @@ function bootstrapDisplayOnBreak(): void
 
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#1 ' . BOOTSTRAP_NAME . ' break on</span><br/>'."\n";
-
+    ksort($bootstrapBreak);
     foreach ($bootstrapBreak as $number => $message)
         echo '- [' . $number . '] <span class="error">' . $message . '</span>'."<br />\n";
     echo 'tB=' . _metrologyTimerGet('tB') . "<br />\n";
@@ -5553,6 +5596,7 @@ function bootstrapDisplayOnBreak(): void
     $sessionId = session_id();
     echo '<a href="?f">&gt; Flush PHP session</a> (' . substr(cryptoGetDataHash($sessionId), 0, 6) . ')' . "\n";
     echo '</div>'."\n";
+
     echo '<div class="parts">'."\n";
     ?>
         <span class="partstitle">#2 <?php echo BOOTSTRAP_NAME; ?> nebule library PP</span><br/>
@@ -5567,6 +5611,7 @@ function bootstrapDisplayOnBreak(): void
         current entity &nbsp;&nbsp;: <?php echo $nebulePublicEntity; ?>
     <?php
     echo '</div>'."\n";
+
     echo '<div class="parts">'."\n";
     ?>
         <span class="partstitle">#3 nebule library POO</span><br/>
@@ -5860,6 +5905,7 @@ function bootstrapInlineDisplayOnBreak()
     echo "<div class=\"bootstrapErrorDiv\"><p>\n";
     echo '&gt; ' . BOOTSTRAP_NAME . ' ' . BOOTSTRAP_VERSION . "<br />\n";
 
+    ksort($bootstrapBreak);
     echo 'Bootstrap break on : ';
     foreach ($bootstrapBreak as $number => $message)
         echo '- [' . $number . '] ' . $message ."<br />\n";
@@ -6039,7 +6085,7 @@ function getBootstrapNeedFirstSynchronization(): bool
  */
 function bootstrapDisplayApplicationfirst(): void
 {
-    global $bootstrapBreak, $metrologyStartTime, $bootstrapRescueMode, $configurationList, $nebuleCacheIsPubkey;
+    global $bootstrapBreak, $metrologyStartTime, $bootstrapRescueMode, $configurationList, $nebuleCacheIsPublicKey;
 
     // Modifie temporairement la configuration de la bibliothèque PHP PP.
     $configurationList['permitWrite'] = true;
@@ -6049,7 +6095,7 @@ function bootstrapDisplayApplicationfirst(): void
     $configurationList['permitSynchronizeLink'] = true;
     $configurationList['permitWriteEntity'] = true;
     $configurationList['permitBufferIO'] = false;
-    $nebuleCacheIsPubkey = array();
+    $nebuleCacheIsPublicKey = array();
 
     // Initialisation des logs
     reopenLog('first');
@@ -6063,7 +6109,7 @@ function bootstrapDisplayApplicationfirst(): void
 
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#1 ' . BOOTSTRAP_NAME . ' break on</span><br/>'."\n";
-
+    ksort($bootstrapBreak);
     foreach ($bootstrapBreak as $number => $message)
         echo '- [' . $number . '] <span class="error">' . $message . '</span>' . "<br />\n";
 
@@ -6072,14 +6118,16 @@ function bootstrapDisplayApplicationfirst(): void
     if ($bootstrapRescueMode)
         echo "RESCUE<br />\n";
     echo "</div>\n";
+
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#2 create folders</span><br/>'."\n";
 
     if (!io_createLinkFolder() || !io_createObjectFolder()) {
         echo '<span class="error">ERROR!</span>'."\n";
-    if (!io_checkLinkFolder()) {
-        addLog('error links folder', 'error', __FUNCTION__, 'f1d49c43');
-        ?>
+
+        if (!io_checkLinkFolder()) {
+            addLog('error links folder', 'error', __FUNCTION__, 'f1d49c43');
+            ?>
 
 <div class="diverror">
     Unable to create folder <b><?php echo LOCAL_LINKS_FOLDER; ?></b> for links.<br/>
@@ -6096,11 +6144,11 @@ chmod 755 <?php echo LOCAL_LINKS_FOLDER; ?>
 </pre>
 </div>
 <?php
-    }
+        }
 
-    if (!io_checkObjectFolder()) {
-        addLog('error objects folder', 'error', __FUNCTION__, 'dc0c86a4');
-        ?>
+        if (!io_checkObjectFolder()) {
+            addLog('error objects folder', 'error', __FUNCTION__, 'dc0c86a4');
+            ?>
 
 <div class="diverror">
     Unable to create folder <b><?php echo LOCAL_OBJECTS_FOLDER; ?></b> for objects.<br/>
@@ -6695,7 +6743,7 @@ function bootstrapFirstCreateLocaleEntity()
         $name = substr($name . 'robott', 0, FIRST_GENERATED_NAME_SIZE);
 
         // Enregistrement du nom.
-        nebCreatAsText($name);
+        nebCreateAsText($name);
         $refHashName = _objGetNID('nebule/objet/nom', getConfiguration('cryptoHashAlgorithm'));
         $hashName = _objGetNID($name, getConfiguration('cryptoHashAlgorithm'));
         $newlink = _lnkGenerate('-', 'l', $nebulePublicEntity, $hashName, $refHashName);

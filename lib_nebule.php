@@ -24196,7 +24196,7 @@ class ioHTTP implements ioInterface
      * @param string $localisation
      * @return boolean
      */
-    private function _checkExistOverHTTP($localisation)
+    private function _checkExistOverHTTP(string $localisation): bool
     {
         $url = parse_url($localisation);
 
@@ -24213,21 +24213,18 @@ class ioHTTP implements ioInterface
         fwrite($handle, $out);
         while (!feof($handle)) {
             $response .= fgets($handle, 20);
-            if (strlen($response) > 0) {
+            if (strlen($response) > 0)
                 break;
-            }
         }
         fclose($handle);
 
         $pos = strpos($response, ' ');
-        if ($pos === false) {
+        if ($pos === false)
             return false;
-        }
 
         $code = substr($response, $pos + 1, 3);
-        if ($code == '200') {
+        if ($code == '200')
             return true;
-        }
 
         return false;
     }
