@@ -1233,78 +1233,6 @@ function nebReadObjTypeMime(&$object)
     return $text;
 }
 
-/**
- * Verify node is an object and is a valid entity public key.
- *
- * @param string $nid
- * @return boolean
- */
-function nebCheckIsPublicKey(string &$nid): bool
-{
-    global $nebuleCacheIsPublicKey;
-
-    if (isset($nebuleCacheIsPublicKey[$nid]))
-        return $nebuleCacheIsPublicKey[$nid];
-
-    if ($nid == '0'
-        || strlen($nid) < NID_MIN_HASH_SIZE
-        || !_nodCheckNID($nid)
-        || !io_checkNodeHaveContent($nid)
-        || !_objCheckContent($nid)
-        || !io_checkNodeHaveLink($nid)
-    )
-        return false;
-
-    nebCreateAsText('application/x-pem-file');
-// TODO à réactiver dès que les liens sont valides !
-    if (nebReadObjTypeMime($nid) != 'application/x-pem-file')
-        addLog('DEBUG Cannot check links by now', 'debug', __FUNCTION__, '51cc1f3a');
-//        return false;
-
-    $line = nebGetContentAsText($nid, 10000);
-    $result = false;
-    if (strstr($line, 'BEGIN PUBLIC KEY') !== false)
-        $result = true;
-    if (getConfiguration('permitBufferIO'))
-        $nebuleCacheIsPublicKey[$nid] = $result;
-    return $result;
-}
-
-/**
- * Verify node is an object and is a valid entity private key.
- *
- * @param $nid
- * @return bool
- */
-function nebCheckIsPrivateKey(&$nid): bool
-{
-    global $nebuleCacheIsPrivateKey;
-
-    if (isset($nebuleCacheIsPrivateKey [$nid]))
-        return $nebuleCacheIsPrivateKey [$nid];
-
-    if ($nid == '0'
-        || strlen($nid) < NID_MIN_HASH_SIZE
-        || !_nodCheckNID($nid)
-        || !io_checkNodeHaveContent($nid)
-        || !_objCheckContent($nid)
-        || !io_checkNodeHaveLink($nid)
-    )
-        return false;
-
-    nebCreateAsText('application/x-pem-file');
-    if ((nebReadObjTypeMime($nid)) != 'application/x-pem-file')
-        return false;
-
-    $line = nebGetContentAsText($nid, 10000);
-    $result = false;
-    if (strstr($line, 'BEGIN ENCRYPTED PRIVATE KEY') !== false)
-        $result = true;
-    if (getConfiguration('permitBufferIO'))
-        $nebuleCacheIsPrivateKey[$nid] = $result;
-    return $result;
-}
-
 // FIXME
 function nebFindPrivateKey(): string
 { // Fonction avec utilisation du cache si possible.
@@ -1770,7 +1698,7 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
  */
 function _entityCheck(string $nid): bool
 {
-    if (!nebCheckIsPublicKey($nid))
+    if (!objCheckIsPublicKey($nid))
         return false;
     return true;
 }
@@ -2358,6 +2286,78 @@ function _objCheckContent(&$nid)
     unset($hash);
 
     return true;
+}
+
+/**
+ * Verify node is an object and is a valid entity public key.
+ *
+ * @param string $nid
+ * @return boolean
+ */
+function objCheckIsPublicKey(string &$nid): bool
+{
+    global $nebuleCacheIsPublicKey;
+
+    if (isset($nebuleCacheIsPublicKey[$nid]))
+        return $nebuleCacheIsPublicKey[$nid];
+
+    if ($nid == '0'
+        || strlen($nid) < NID_MIN_HASH_SIZE
+        || !_nodCheckNID($nid)
+        || !io_checkNodeHaveContent($nid)
+        || !_objCheckContent($nid)
+        || !io_checkNodeHaveLink($nid)
+    )
+        return false;
+
+    nebCreateAsText('application/x-pem-file');
+// TODO à réactiver dès que les liens sont valides !
+    if (nebReadObjTypeMime($nid) != 'application/x-pem-file')
+        addLog('DEBUG Cannot check links by now', 'debug', __FUNCTION__, '51cc1f3a');
+//        return false;
+
+    $line = nebGetContentAsText($nid, 10000);
+    $result = false;
+    if (strstr($line, 'BEGIN PUBLIC KEY') !== false)
+        $result = true;
+    if (getConfiguration('permitBufferIO'))
+        $nebuleCacheIsPublicKey[$nid] = $result;
+    return $result;
+}
+
+/**
+ * Verify node is an object and is a valid entity private key.
+ *
+ * @param $nid
+ * @return bool
+ */
+function objCheckIsPrivateKey(&$nid): bool
+{
+    global $nebuleCacheIsPrivateKey;
+
+    if (isset($nebuleCacheIsPrivateKey [$nid]))
+        return $nebuleCacheIsPrivateKey [$nid];
+
+    if ($nid == '0'
+        || strlen($nid) < NID_MIN_HASH_SIZE
+        || !_nodCheckNID($nid)
+        || !io_checkNodeHaveContent($nid)
+        || !_objCheckContent($nid)
+        || !io_checkNodeHaveLink($nid)
+    )
+        return false;
+
+    nebCreateAsText('application/x-pem-file');
+    if ((nebReadObjTypeMime($nid)) != 'application/x-pem-file')
+        return false;
+
+    $line = nebGetContentAsText($nid, 10000);
+    $result = false;
+    if (strstr($line, 'BEGIN ENCRYPTED PRIVATE KEY') !== false)
+        $result = true;
+    if (getConfiguration('permitBufferIO'))
+        $nebuleCacheIsPrivateKey[$nid] = $result;
+    return $result;
 }
 
 /**
