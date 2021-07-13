@@ -2504,6 +2504,7 @@ function _objWriteContent(string &$data, string $oid = '0'): bool
  * @param string $nid1
  * @param string $nid2
  * @param string $nid3
+ * @param string $nid4
  * @return string
  */
 function _lnkGenerate(string $rc, string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): string
