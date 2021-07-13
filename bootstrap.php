@@ -2494,35 +2494,6 @@ function _objWriteContent(string $object, string &$data): bool
     return true;
 }
 
-/** FIXME
- * Object - Delete object if not used by other entity.
- *
- * @param string $object
- * @return bool
- */
-function _objDelete(string &$object): bool
-{
-    global $nebulePublicEntity;
-
-    if (!getConfiguration('permitWrite') || !getConfiguration('permitWriteObject'))
-        return false;
-
-    $ok = true;
-    $links = array();
-    _lnkListOnFullFilter($object, $links);
-    foreach ($links as $link) {
-        if ($link [2] != $nebulePublicEntity) {
-            $ok = false;
-            break 1;
-        }
-    } // Vérifie si l'objet est utilisé par une autre entité.
-    unset($links);
-    unset($link);
-    if (!$ok)
-        return false;
-    return io_objectDelete($object);
-}
-
 /**
  * Link - Generate a new link
  * Use OpenSSL library.
