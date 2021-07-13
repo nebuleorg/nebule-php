@@ -2474,7 +2474,19 @@ function _nodCheckBanned(&$nid): bool
  */
 function _objWriteContent(string &$data, string $oid = '0'): bool
 {
-    if (io_objectWrite($data))
+    if (strlen($data) == 0
+        || !getConfiguration('permitWrite')
+        || !getConfiguration('permitWriteObject')
+    )
+        return false;
+
+    $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+    if ($oid == '0')
+        $oid = $hash;
+    elseif ($oid != $hash)
+        return false;
+
+    if (io_objectWrite($data, $oid))
         return true;
     return false;
 }
@@ -4000,11 +4012,8 @@ function io_objectWrite(string &$data, string $oid = '0'): bool
     )
         return false;
 
-    $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
     if ($oid == '0')
-        $oid = $hash;
-    elseif ($oid != $hash)
-        return false;
+        $oid = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
 
     if (io_checkNodeHaveContent($oid))
         return true;
