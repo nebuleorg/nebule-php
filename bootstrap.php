@@ -1533,7 +1533,7 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
     $pubkey = openssl_pkey_get_details($newpkey);
     $pubkey = $pubkey ['key'];
     $hashpubkey = _objGetNID($pubkey, getConfiguration('cryptoHashAlgorithm'));
-    _objWriteContent($hashpubkey, $pubkey);
+    _objWriteContent($pubkey, $hashpubkey);
     // Extraction de la clé privée.
     if ($password != '') {
         openssl_pkey_export($newpkey, $privkey, $password);
@@ -1541,7 +1541,7 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
         openssl_pkey_export($newpkey, $privkey);
     }
     $hashprivkey = _objGetNID($privkey, getConfiguration('cryptoHashAlgorithm'));
-    _objWriteContent($hashprivkey, $privkey);
+    _objWriteContent($privkey, $hashprivkey);
     $private_key = openssl_pkey_get_private($privkey, $password);
     if ($private_key === false) {
         return false;
@@ -1557,7 +1557,7 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
     // Création des objets annexes.
     if (!io_checkNodeHaveContent($refhashhash)) {
         $newtxt = 'nebule/objet/hash';
-        _objWriteContent($refhashhash, $newtxt);
+        _objWriteContent($newtxt, $refhashhash);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashhash . '_' . $refhashalgo . '_' . $refhashhash;
         $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
         $binhash = pack("H*", $hashdata);
@@ -1573,7 +1573,7 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
     }
     if (!io_checkNodeHaveContent($refhashalgo)) {
         $cryptoHashAlgorithm = getConfiguration('cryptoHashAlgorithm');
-        _objWriteContent($refhashalgo, $cryptoHashAlgorithm);
+        _objWriteContent($cryptoHashAlgorithm, $refhashalgo);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashalgo . '_' . $refhashalgo . '_' . $refhashhash;
         $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
         $binhash = pack("H*", $hashdata);
@@ -1589,7 +1589,7 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
     }
     if (!io_checkNodeHaveContent($refhashtype)) {
         $newtxt = 'nebule/objet/type';
-        _objWriteContent($refhashtype, $newtxt);
+        _objWriteContent($newtxt, $refhashtype);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtype . '_' . $refhashalgo . '_' . $refhashhash;
         $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
         $binhash = pack("H*", $hashdata);
@@ -1605,7 +1605,7 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
     }
     if (!io_checkNodeHaveContent($refhashpem)) {
         $newtxt = 'application/x-pem-file';
-        _objWriteContent($refhashpem, $newtxt);
+        _objWriteContent($newtxt, $refhashpem);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashpem . '_' . $refhashalgo . '_' . $refhashhash;
         $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
         $binhash = pack("H*", $hashdata);
@@ -1621,7 +1621,7 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
     }
     if (!io_checkNodeHaveContent($refhashtext)) {
         $newtxt = 'text/plain';
-        _objWriteContent($refhashtext, $newtxt);
+        _objWriteContent($newtxt, $refhashtext);
         $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtext . '_' . $refhashalgo . '_' . $refhashhash;
         $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
         $binhash = pack("H*", $hashdata);
@@ -2163,7 +2163,7 @@ function _objGenerate(string &$data, string $typemime = ''): bool
     $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
     // Ecrit l'objet.
     if (!io_checkNodeHaveContent($hash))
-        _objWriteContent($hash, $data);
+        _objWriteContent($data, $hash);
     // Ecrit le lien de hash.
     $lnk = _lnkGenerate(
             $dat,
@@ -2465,33 +2465,34 @@ function _nodCheckBanned(&$nid): bool
     return $ok;*/
 }
 
-/** FIXME
- * Object - Ecrit le contenu d'un objet.
+/**
+ * Object - Write object content.
  *
- * @param string $object
  * @param string $data
+ * @param string $oid
  * @return bool
  */
-function _objWriteContent(string $object, string &$data): bool
+function _objWriteContent(string &$data, string $oid = '0'): bool
 {
-    if ($object == '0'
+    if ($oid == '0'
         || strlen($data) == 0
         || !getConfiguration('permitWrite')
         || !getConfiguration('permitWriteObject')
-    ) {
+    )
         return false;
-    }
 
-    if (io_checkNodeHaveContent($object)) {
+    $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+    if ($oid == '0')
+        $oid = $hash;
+    elseif ($oid != $hash)
+        return false;
+
+    if (io_checkNodeHaveContent($oid))
         return true;
-    }
 
-    // Ecriture de l'objet.
-    if (file_put_contents(LOCAL_OBJECTS_FOLDER . "/$object", $data) === false) // @todo refaire via les i/o.
-    {
-        return false;
-    }
-    return true;
+    if (io_objectWrite($data))
+        return true;
+    return false;
 }
 
 /**
