@@ -2920,9 +2920,15 @@ function _lnkFilter(array $link, array $filter): bool
         $ok = true;
     if (isset($filter['bl/rl/nid2']) && isset($link['bl/rl/nid2']) && $link['bl/rl/nid2'] == $filter['bl/rl/nid2'])
         $ok = true;
+    if (isset($filter['bl/rl/nid2']) && !isset($link['bl/rl/nid2']) && $filter['bl/rl/nid2'] == '')
+        $ok = true;
     if (isset($filter['bl/rl/nid3']) && isset($link['bl/rl/nid3']) && $link['bl/rl/nid3'] == $filter['bl/rl/nid3'])
         $ok = true;
+    if (isset($filter['bl/rl/nid3']) && !isset($link['bl/rl/nid3']) && $filter['bl/rl/nid3'] == '')
+        $ok = true;
     if (isset($filter['bl/rl/nid4']) && isset($link['bl/rl/nid4']) && $link['bl/rl/nid4'] == $filter['bl/rl/nid4'])
+        $ok = true;
+    if (isset($filter['bl/rl/nid4']) && !isset($link['bl/rl/nid4']) && $filter['bl/rl/nid4'] == '')
         $ok = true;
     if (isset($filter['bl/rl/nid*']) && ( $link['bl/rl/nid1'] == $filter['bl/rl/nid*']
             || isset($link['bl/rl/nid2']) && $link['bl/rl/nid2'] == $filter['bl/rl/nid*']
