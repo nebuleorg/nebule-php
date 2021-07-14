@@ -1814,170 +1814,91 @@ function _entityGetPuppetmaster(): string
 
 /**
  * Get masters of security IDs.
+ * Make a search for global entities and for code branch specific entities
+ * @param string $refNid
+ * @param array $result
+ * @param bool $synchronize
+ * @return array
+ */
+function _entityGetAskedMasters(string $refNid, array &$result, bool $synchronize): array
+{
+    if (sizeof($result) != 0)
+        return $result;
+
+    if ($synchronize)
+        _objDownloadOnLocations($refNid, FIRST_LOCALISATIONS);
+
+    $lnkList = array();
+    $entList = array();
+    $filter = array(
+        'bl/rl/req' => 'l',
+        'bl/rl/nid2' => $refNid,
+        'bl/rl/nid3' => '',
+        'bs/rs/nid' => getConfiguration('puppetmaster'),
+    );
+    _lnkGetList($refNid, $lnkList, $filter);
+
+    if (getConfiguration('CodeBranch') != '')
+    {
+        $filter['bl/rl/nid3'] = getConfiguration('CodeBranch');
+        _lnkGetList($refNid, $lnkList, $filter);
+    }
+
+    // Extract uniques entities
+    foreach ($lnkList as $lnk)
+        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
+    foreach ($entList as $ent)
+        $result[] = $ent;
+
+    return $result;
+}
+
+/**
+ * Get masters of security IDs.
+ * Update global list on the same time.
  * @param bool $synchronize
  * @return array
  */
 function _entityGetSecurityMasters(bool $synchronize=false): array
 {
     global $nebuleSecurityMasters;
-
-    if (sizeof($nebuleSecurityMasters) != 0)
-        return $nebuleSecurityMasters;
-
-    $nid = NEBULE_REFERENCE_NID_SECURITYMASTER;
-    if ($synchronize)
-        _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-
-    $lnkList = array();
-    $entList = array();
-    $filter = array(
-        'bl/rl/req' => 'l',
-        'bl/rl/nid2' => $nid,
-        'bs/rs/nid' => getConfiguration('puppetmaster'),
-    );
-    _lnkGetList($nid, $lnkList, $filter);
-
-    if (getConfiguration('CodeBranch') != '')
-    {
-        $filter['bl/rl/nid3'] = getConfiguration('CodeBranch');
-        _lnkGetList($nid, $lnkList, $filter);
-    }
-
-    // Extract uniques entities
-    foreach ($lnkList as $lnk)
-        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
-
-    // Rearrange entities
-    foreach ($entList as $ent)
-        $nebuleSecurityMasters[] = $ent;
-
-    return $nebuleSecurityMasters;
+    return _entityGetAskedMasters(NEBULE_REFERENCE_NID_SECURITYMASTER, $nebuleSecurityMasters, $synchronize);
 }
 
 /**
  * Get masters of code IDs.
+ * Update global list on the same time.
  * @param bool $synchronize
  * @return array
  */
 function _entityGetCodeMasters(bool $synchronize=false): array
 {
     global $nebuleCodeMasters;
-
-    if (sizeof($nebuleCodeMasters) != 0)
-        return $nebuleCodeMasters;
-
-    $nid = NEBULE_REFERENCE_NID_CODEMASTER;
-    if ($synchronize)
-        _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-
-    $lnkList = array();
-    $entList = array();
-    $filter = array(
-        'bl/rl/req' => 'l',
-        'bl/rl/nid2' => $nid,
-        'bs/rs/nid' => getConfiguration('puppetmaster'),
-    );
-    _lnkGetList($nid, $lnkList, $filter);
-
-    if (getConfiguration('CodeBranch') != '')
-    {
-        $filter['bl/rl/nid3'] = getConfiguration('CodeBranch');
-        _lnkGetList($nid, $lnkList, $filter);
-    }
-
-    // Extract uniques entities
-    foreach ($lnkList as $lnk)
-        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
-
-    // Rearrange entities
-    foreach ($entList as $ent)
-        $nebuleCodeMasters[] = $ent;
-
-    return $nebuleCodeMasters;
+    return _entityGetAskedMasters(NEBULE_REFERENCE_NID_CODEMASTER, $nebuleCodeMasters, $synchronize);
 }
 
 /**
  * Get masters of time IDs.
+ * Update global list on the same time.
  * @param bool $synchronize
  * @return array
  */
 function _entityGetTimeMasters(bool $synchronize=false): array
 {
     global $nebuleTimeMasters;
-
-    if (sizeof($nebuleTimeMasters) != 0)
-        return $nebuleTimeMasters;
-
-    $nid = NEBULE_REFERENCE_NID_TIMEMASTER;
-    if ($synchronize)
-        _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-
-    $lnkList = array();
-    $entList = array();
-    $filter = array(
-        'bl/rl/req' => 'l',
-        'bl/rl/nid2' => $nid,
-        'bs/rs/nid' => getConfiguration('puppetmaster'),
-    );
-    _lnkGetList($nid, $lnkList, $filter);
-
-    if (getConfiguration('CodeBranch') != '')
-    {
-        $filter['bl/rl/nid3'] = getConfiguration('CodeBranch');
-        _lnkGetList($nid, $lnkList, $filter);
-    }
-
-    // Extract uniques entities
-    foreach ($lnkList as $lnk)
-        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
-
-    // Rearrange entities
-    foreach ($entList as $ent)
-        $nebuleTimeMasters[] = $ent;
-
-    return $nebuleTimeMasters;
+    return _entityGetAskedMasters(NEBULE_REFERENCE_NID_TIMEMASTER, $nebuleTimeMasters, $synchronize);
 }
 
 /**
  * Get masters of directory IDs.
+ * Update global list on the same time.
  * @param bool $synchronize
  * @return array
  */
 function _entityGetDirectoryMasters(bool $synchronize=false): array
 {
     global $nebuleDirectoryMasters;
-
-    if (sizeof($nebuleDirectoryMasters) != 0)
-        return $nebuleDirectoryMasters;
-
-    $nid = NEBULE_REFERENCE_NID_DIRECTORYMASTER;
-    if ($synchronize)
-        _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-
-    $lnkList = array();
-    $entList = array();
-    $filter = array(
-        'bl/rl/req' => 'l',
-        'bl/rl/nid2' => $nid,
-        'bs/rs/nid' => getConfiguration('puppetmaster'),
-    );
-    _lnkGetList($nid, $lnkList, $filter);
-
-    if (getConfiguration('CodeBranch') != '')
-    {
-        $filter['bl/rl/nid3'] = getConfiguration('CodeBranch');
-        _lnkGetList($nid, $lnkList, $filter);
-    }
-
-    // Extract uniques entities
-    foreach ($lnkList as $lnk)
-        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
-
-    // Rearrange entities
-    foreach ($entList as $ent)
-        $nebuleDirectoryMasters[] = $ent;
-
-    return $nebuleDirectoryMasters;
+    return _entityGetAskedMasters(NEBULE_REFERENCE_NID_DIRECTORYMASTER, $nebuleDirectoryMasters, $synchronize);
 }
 
 /**
