@@ -375,7 +375,7 @@ $metrologyLibraryPOOConvertationCache = 0;
  ------------------------------------------------------------------------------------------
  */
 
-const NEBULE_LIBRARY_PP_VERSION = '020210613';
+const NEBULE_LIBRARY_PP_VERSION = '020210714';
 const NEBULE_LIBRARY_PP_LINK_VERSION = '2:0';
 const NEBULE_DEFAULT_PUPPETMASTER_ID = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
 const NEBULE_ENVIRONMENT_FILE = 'nebule.env';
