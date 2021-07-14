@@ -5978,9 +5978,29 @@ function getBootstrapNeedFirstSynchronization(): bool
  */
 function bootstrapDisplayApplicationfirst(): void
 {
-    global $bootstrapBreak, $metrologyStartTime, $bootstrapRescueMode, $configurationList, $nebuleCacheIsPublicKey;
+    bootstrapFirstInitEnv();
+    bootstrapHtmlHeader();
+    bootstrapHtmlTop();
+    bootstrapFirstDisplay1Breaks();
+    $ok = bootstrapFirstDisplay2Folders();
+    if ($ok)
+        $ok = bootstrapFirstDisplay3Objects();
+    if ($ok)
+        $ok = bootstrapFirst4SynchronizingObjects();
+    if ($ok)
+        $ok = bootstrapFirst5SynchronizingObjects();
+    if ($ok)
+        $ok = bootstrapFirst6CreateOptionsFile();
+    if ($ok)
+        $ok = bootstrapFirst7CreateLocaleEntity();
 
-    // Modifie temporairement la configuration de la bibliothèque PHP PP.
+    bootstrapHtmlBottom();
+}
+
+function bootstrapFirstInitEnv()
+{
+    global $configurationList, $nebuleCacheIsPublicKey;
+
     $configurationList['permitWrite'] = true;
     $configurationList['permitWriteObject'] = true;
     $configurationList['permitSynchronizeObject'] = true;
@@ -5990,15 +6010,15 @@ function bootstrapDisplayApplicationfirst(): void
     $configurationList['permitBufferIO'] = false;
     $nebuleCacheIsPublicKey = array();
 
-    // Initialisation des logs
     reopenLog('first');
     addLog('Loading', 'info', __FUNCTION__, '529d21e0');
 
-    echo 'CHK';
     ob_end_clean();
+}
 
-    bootstrapHtmlHeader();
-    bootstrapHtmlTop();
+function bootstrapFirstDisplay1Breaks()
+{
+    global $bootstrapBreak, $bootstrapRescueMode;
 
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#1 ' . BOOTSTRAP_NAME . ' break on</span><br/>'."\n";
@@ -6011,16 +6031,20 @@ function bootstrapDisplayApplicationfirst(): void
     if ($bootstrapRescueMode)
         echo "RESCUE<br />\n";
     echo "</div>\n";
+}
+
+function bootstrapFirstDisplay2Folders(): bool
+{
+    $ok = true;
 
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#2 create folders</span><br/>'."\n";
 
-    if (!io_createLinkFolder() || !io_createObjectFolder()) {
+    if (!io_checkLinkFolder()) {
+        addLog('error links folder', 'error', __FUNCTION__, 'f1d49c43');
         echo '<span class="error">ERROR!</span>'."\n";
-
-        if (!io_checkLinkFolder()) {
-            addLog('error links folder', 'error', __FUNCTION__, 'f1d49c43');
-            ?>
+        $ok = false;
+        ?>
 
 <div class="diverror">
     Unable to create folder <b><?php echo LOCAL_LINKS_FOLDER; ?></b> for links.<br/>
@@ -6033,15 +6057,17 @@ mkdir <?php echo LOCAL_LINKS_FOLDER; ?>
 
 chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . ' ' . LOCAL_LINKS_FOLDER; ?>
 
-chmod 755 <?php echo LOCAL_LINKS_FOLDER; ?>
-</pre>
+chmod 755 <?php echo LOCAL_LINKS_FOLDER; ?></pre>
 </div>
-<?php
-        }
+        <?php
+    }
 
-        if (!io_checkObjectFolder()) {
-            addLog('error objects folder', 'error', __FUNCTION__, 'dc0c86a4');
-            ?>
+    if (!io_checkObjectFolder()) {
+        addLog('error objects folder', 'error', __FUNCTION__, 'dc0c86a4');
+        if ($ok)
+            echo '<span class="error">ERROR!</span>'."\n";
+        $ok = false;
+        ?>
 
 <div class="diverror">
     Unable to create folder <b><?php echo LOCAL_OBJECTS_FOLDER; ?></b> for objects.<br/>
@@ -6054,69 +6080,71 @@ mkdir <?php echo LOCAL_OBJECTS_FOLDER; ?>
 
 chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . ' ' . LOCAL_OBJECTS_FOLDER; ?>
 
-chmod 755 <?php echo LOCAL_OBJECTS_FOLDER; ?>
-</pre>
+chmod 755 <?php echo LOCAL_OBJECTS_FOLDER; ?></pre>
 </div>
-<?php
-        }
-
-        echo "</div>\n";
-        ?>
-
-        <div id="reload">
-            <button onclick="javascript:window.location.reload(true);">Reload</button>
-        </div>
         <?php
-    } else {
-        addLog('ok folders', 'info', __FUNCTION__, '68c50ba0');
-        ?>
-
-        ok
-        <?php
-        echo "</div>\n";
-        bootstrapFirstCreateObjects();
     }
 
-    bootstrapHtmlBottom();
-}
+    if ($ok) {
+        addLog('ok folders', 'info', __FUNCTION__, '68c50ba0');
+        echo "ok\n";
+    } else
+        echo '<div id="reload"><a href="">When ready, reload</a></div>'."\n";
 
+    echo "</div>\n";
+
+    return $ok;
+}
 
 
 // ------------------------------------------------------------------------------------------
 /**
  * Création des objets nécessaires au bon fonctionnement de la bibliothèque.
  *
- * @return void
+ * @return bool
  */
-function bootstrapFirstCreateObjects()
+function bootstrapFirstDisplay3Objects(): bool
 {
+    $ok = true;
+
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#3 nebule needed library objects</span><br/>'."\n";
 
-    // Si il manque un des objets, recrée les objets.
-    $hash = _objGetNID(FIRST_RESERVED_OBJECTS[10], getConfiguration('cryptoHashAlgorithm'));
-    if (!io_checkNodeHaveContent($hash))
-    {
-        addLog('need create objects', 'warn', __FUNCTION__, 'ca195598');
-
-        // Ecrit les objets de localisation.
-        foreach (FIRST_LOCALISATIONS as $data) {
-            io_objectWrite($data);
+    foreach (FIRST_LOCALISATIONS as $data) {
+        $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+        if (!io_checkNodeHaveContent($hash)) {
+            addLog('need create objects ' . $hash, 'warn', __FUNCTION__, 'ca195598');
             echo '.';
+            if (!io_objectWrite($data)) {
+                $ok = false;
+                echo 'E';
+            }
         }
-
-        // Ecrit les objets réservés.
-        foreach (FIRST_RESERVED_OBJECTS as $data) {
-            io_objectWrite($data);
-            echo '.';
-        }
-        echo "ok</div>\n";
-        bootstrapPartDisplayReloadPage(true);
-    } else {
-        addLog('ok create objects', 'info', __FUNCTION__, '5c7be016');
-        echo "ok</div>\n";
-        bootstrapFirstSynchronizingEntities();
     }
+    foreach (FIRST_RESERVED_OBJECTS as $data) {
+        $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+        if (!io_checkNodeHaveContent($hash)) {
+            addLog('need create objects ' . $hash, 'warn', __FUNCTION__, 'fc68d2ff');
+            echo '.';
+            if (!io_objectWrite($data)) {
+                $ok = false;
+                echo 'E';
+            }
+        }
+    }
+
+    if ($ok)
+    {
+        addLog('ok objects', 'info', __FUNCTION__, '5c7be016');
+        echo " ok\n";
+    } else {
+        echo ' <span class="error">ERROR!</span>'."\n";
+        echo '<div id="reload"><a href="">When ready, reload</a></div>'."\n";
+    }
+
+    echo "</div>\n";
+
+    return $ok;
 }
 
 
@@ -6124,11 +6152,13 @@ function bootstrapFirstCreateObjects()
 /**
  * Synchronisation du minimum d'entités sur internet pour fonctionner.
  *
- * @return void
+ * @return bool
  */
-function bootstrapFirstSynchronizingEntities()
+function bootstrapFirst4SynchronizingObjects(): bool
 {
     global $nebuleLocalAuthorities, $libraryCheckOK;
+
+    $ok = true;
 
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#4 synchronizing entities</span><br/>'."\n";
@@ -6271,13 +6301,16 @@ function bootstrapFirstSynchronizingEntities()
         ok
         <?php
         echo "</div>\n";
-        bootstrapFirstSynchronizingObjects();
+        bootstrapFirst5SynchronizingObjects();
     }
+
+    return false; // TODO
 }
 
 /**
  * Subpart display to reload the HTML page.
  * @param bool $ok
+ * @param int $delay
  * @return void
  */
 function bootstrapPartDisplayReloadPage(bool $ok = true, int $delay = 0): void
@@ -6315,11 +6348,13 @@ function bootstrapPartDisplayReloadPage(bool $ok = true, int $delay = 0): void
 /**
  * Synchronisation des objets sur internet pour fonctionner.
  *
- * @return void
+ * @return bool
  */
-function bootstrapFirstSynchronizingObjects()
+function bootstrapFirst5SynchronizingObjects(): bool
 {
     global $nebuleLocalAuthorities;
+
+    $ok = true;
 
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#5 synchronizing objets</span><br/>'."\n";
@@ -6471,8 +6506,10 @@ function bootstrapFirstSynchronizingObjects()
         ok
         <?php
         echo "</div>\n";
-        bootstrapFirstCreateOptionsFile();
+        bootstrapFirst6CreateOptionsFile();
     }
+
+    return $ok;
 }
 
 
@@ -6480,10 +6517,12 @@ function bootstrapFirstSynchronizingObjects()
 /**
  * Crée le fichier des options par défaut.
  *
- * @return void
+ * @return bool
  */
-function bootstrapFirstCreateOptionsFile()
+function bootstrapFirst6CreateOptionsFile(): bool
 {
+    $ok = true;
+
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#6 options file</span><br/>'."\n";
     if (!file_exists(NEBULE_ENVIRONMENT_FILE))
@@ -6545,8 +6584,10 @@ chmod 644 <?php echo NEBULE_ENVIRONMENT_FILE; ?>
     else {
         addLog('ok create options file', 'info', __FUNCTION__, '91e9b5bd');
         echo "ok</div>\n";
-        bootstrapFirstCreateLocaleEntity();
+        bootstrapFirst7CreateLocaleEntity();
     }
+
+    return $ok;
 }
 
 
@@ -6554,11 +6595,13 @@ chmod 644 <?php echo NEBULE_ENVIRONMENT_FILE; ?>
 /**
  * Crée le fichier des options par défaut.
  *
- * @return void
+ * @return bool
  */
-function bootstrapFirstCreateLocaleEntity()
+function bootstrapFirst7CreateLocaleEntity(): bool
 {
     global $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite;
+
+    $ok = true;
 
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#7 local entity for server</span><br/>'."\n";
@@ -6688,6 +6731,8 @@ chmod 644 <?php echo LOCAL_ENTITY_FILE; ?>
         bootstrapPartDisplayReloadPage(false);
     }
     echo "</div>\n";
+
+    return $ok;
 }
 
 
