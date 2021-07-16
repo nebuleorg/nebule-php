@@ -5988,11 +5988,11 @@ function bootstrapDisplayApplicationfirst(): void
     if ($ok)
         $ok = bootstrapFirst4SynchronizingObjects();
     if ($ok)
-        $ok = bootstrapFirst5SynchronizingObjects();
+        $ok = bootstrapFirstDisplay5SyncObjects();
     if ($ok)
-        $ok = bootstrapFirst6CreateOptionsFile();
+        $ok = bootstrapFirstDisplay6OptionsFile();
     if ($ok)
-        $ok = bootstrapFirst7CreateLocaleEntity();
+        $ok = bootstrapFirstDisplay7LocaleEntity();
 
     bootstrapHtmlBottom();
 }
@@ -6301,7 +6301,7 @@ function bootstrapFirst4SynchronizingObjects(): bool
         ok
         <?php
         echo "</div>\n";
-        bootstrapFirst5SynchronizingObjects();
+        bootstrapFirstDisplay5SyncObjects();
     }
 
     return false; // TODO
@@ -6350,7 +6350,7 @@ function bootstrapPartDisplayReloadPage(bool $ok = true, int $delay = 0): void
  *
  * @return bool
  */
-function bootstrapFirst5SynchronizingObjects(): bool
+function bootstrapFirstDisplay5SyncObjects(): bool
 {
     global $nebuleLocalAuthorities;
 
@@ -6506,7 +6506,7 @@ function bootstrapFirst5SynchronizingObjects(): bool
         ok
         <?php
         echo "</div>\n";
-        bootstrapFirst6CreateOptionsFile();
+        bootstrapFirstDisplay6OptionsFile();
     }
 
     return $ok;
@@ -6519,7 +6519,7 @@ function bootstrapFirst5SynchronizingObjects(): bool
  *
  * @return bool
  */
-function bootstrapFirst6CreateOptionsFile(): bool
+function bootstrapFirstDisplay6OptionsFile(): bool
 {
     $ok = true;
 
@@ -6584,7 +6584,7 @@ chmod 644 <?php echo NEBULE_ENVIRONMENT_FILE; ?>
     else {
         addLog('ok create options file', 'info', __FUNCTION__, '91e9b5bd');
         echo "ok</div>\n";
-        bootstrapFirst7CreateLocaleEntity();
+        bootstrapFirstDisplay7LocaleEntity();
     }
 
     return $ok;
@@ -6597,7 +6597,7 @@ chmod 644 <?php echo NEBULE_ENVIRONMENT_FILE; ?>
  *
  * @return bool
  */
-function bootstrapFirst7CreateLocaleEntity(): bool
+function bootstrapFirstDisplay7LocaleEntity(): bool
 {
     global $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite;
 
