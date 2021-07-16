@@ -5976,7 +5976,7 @@ function bootstrapDisplayApplicationfirst(): void
     if ($ok)
         $ok = bootstrapFirstDisplay3Objects();
     if ($ok)
-        $ok = bootstrapFirstDisplay4SyncEntities();
+        $ok = bootstrapFirstDisplay4SyncAuthorities();
     if ($ok)
         $ok = bootstrapFirstDisplay5SyncObjects();
     if ($ok)
@@ -5984,12 +5984,12 @@ function bootstrapDisplayApplicationfirst(): void
     if ($ok)
         $ok = bootstrapFirstDisplay7LocaleEntity();
 
+    echo '<div id="parts">';
     if ($ok)
-        echo ' <span class="ok">ok</span>'."\n";
+        echo '&nbsp;&nbsp;OK finished!'."\n";
     else
-        echo ' <span class="error">ERROR!</span>'."\n";
-
-    echo '<div id="reload"><a href="">When ready, reload</a></div>'."\n";
+        echo '&nbsp;&nbsp;<span class="error">ERROR!</span>'."\n";
+    echo '<br />&gt; <span id="reload"><a href="">When ready, reload</a></span></div>'."\n";
 
     bootstrapHtmlBottom();
 }
@@ -6043,7 +6043,7 @@ function bootstrapFirstDisplay2Folders(): bool
     $ok = true;
 
     echo '<div class="parts">'."\n";
-    echo '<span class="partstitle">#2 create folders</span><br/>'."\n";
+    echo '<span class="partstitle">#2 folders</span><br/>'."\n";
 
     if (!io_checkLinkFolder()) {
         addLog('error links folder', 'error', __FUNCTION__, 'f1d49c43');
@@ -6089,6 +6089,7 @@ chmod 755 <?php echo LOCAL_OBJECTS_FOLDER; ?></pre>
 
     if ($ok) {
         addLog('ok folders', 'info', __FUNCTION__, '68c50ba0');
+        echo " ok\n";
     }
 
     echo "</div>\n";
@@ -6105,7 +6106,7 @@ function bootstrapFirstDisplay3Objects(): bool
     $ok = true;
 
     echo '<div class="parts">'."\n";
-    echo '<span class="partstitle">#3 nebule needed library objects</span><br/>'."\n";
+    echo '<span class="partstitle">#3 needed objects</span><br/>'."\n";
 
     foreach (FIRST_LOCALISATIONS as $data) {
         $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
@@ -6134,7 +6135,8 @@ function bootstrapFirstDisplay3Objects(): bool
     {
         addLog('ok objects', 'info', __FUNCTION__, '5c7be016');
         echo " ok\n";
-    }
+    } else
+        echo ' <span class=\"error\">nok</span>'."\n";
 
     echo "</div>\n";
 
@@ -6145,14 +6147,14 @@ function bootstrapFirstDisplay3Objects(): bool
  * Synchronize the entities needed by nebule.
  * @return bool
  */
-function bootstrapFirstDisplay4SyncEntities(): bool
+function bootstrapFirstDisplay4SyncAuthorities(): bool
 {
-    global $nebuleLocalAuthorities, $libraryCheckOK;
+    global $nebuleLocalAuthorities;
 
     $ok = true;
 
     echo '<div class="parts">'."\n";
-    echo '<span class="partstitle">#4 synchronizing entities</span><br/>'."\n";
+    echo '<span class="partstitle">#4 synchronizing authorities</span><br/>'."\n";
 
     $puppetmaster = _entityGetPuppetmaster();
     $securityMasters = _entityGetSecurityMasters(true);
@@ -6160,14 +6162,7 @@ function bootstrapFirstDisplay4SyncEntities(): bool
     $timeMasters = _entityGetTimeMasters(true);
     $directoryMasters = _entityGetDirectoryMasters(true);
 
-    // Si la bibliothèque ne se charge pas correctement, fait une première synchronisation des entités.
-    if (!_entityCheckPuppetmaster($puppetmaster)
-        || !_entityCheckSecurityMasters($securityMasters)
-        || !_entityCheckCodeMasters($codeMasters)
-        || !_entityCheckTimeMasters($timeMasters)
-        || !_entityCheckDirectoryMasters($directoryMasters)
-    ) {
-        echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ';
+    echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ';
         if (!_entityCheckPuppetmaster($puppetmaster))
         {
             echo 'sync... ';
@@ -6211,11 +6206,14 @@ function bootstrapFirstDisplay4SyncEntities(): bool
                 foreach ($securityMasters as $master)
                     echo $master . ' ';
                 echo 'ok';
-            }
-            else
+            } else {
                 echo " <span class=\"error\">invalid!</span>\n";
-        } else
+                $ok = false;
+            }
+        } else {
             echo " <span class=\"error\">empty!</span>\n";
+            $ok = false;
+        }
         echo "<br/>\n";
         flush();
 
@@ -6232,11 +6230,14 @@ function bootstrapFirstDisplay4SyncEntities(): bool
                 foreach ($codeMasters as $master)
                     echo $master . ' ';
                 echo 'ok';
-            }
-            else
+            } else {
                 echo " <span class=\"error\">invalid!</span>\n";
-        } else
+                $ok = false;
+            }
+        } else {
             echo " <span class=\"error\">empty!</span>\n";
+            $ok = false;
+        }
         echo "<br/>\n";
         flush();
 
@@ -6253,11 +6254,14 @@ function bootstrapFirstDisplay4SyncEntities(): bool
                 foreach ($timeMasters as $master)
                     echo $master . ' ';
                 echo 'ok';
-            }
-            else
+            } else {
                 echo " <span class=\"error\">invalid!</span>\n";
-        } else
+                $ok = false;
+            }
+        } else {
             echo " <span class=\"error\">empty!</span>\n";
+            $ok = false;
+        }
         echo "<br/>\n";
         flush();
 
@@ -6274,19 +6278,23 @@ function bootstrapFirstDisplay4SyncEntities(): bool
                 foreach ($directoryMasters as $master)
                     echo $master . ' ';
                 echo 'ok';
-            }
-            else
+            } else {
                 echo " <span class=\"error\">invalid!</span>\n";
-        } else
+                $ok = false;
+            }
+        } else {
             echo " <span class=\"error\">empty!</span>\n";
+            $ok = false;
+        }
         echo "<br/>\n";
         flush();
-    } else
+
+    if ($ok)
         addLog('ok sync entities', 'info', __FUNCTION__, 'c5b55957');
 
     echo "</div>\n";
 
-    return false; // TODO
+    return $ok;
 }
 
 /**
