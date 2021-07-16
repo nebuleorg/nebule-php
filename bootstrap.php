@@ -5986,13 +5986,20 @@ function bootstrapDisplayApplicationfirst(): void
     if ($ok)
         $ok = bootstrapFirstDisplay3Objects();
     if ($ok)
-        $ok = bootstrapFirst4SynchronizingObjects();
+        $ok = bootstrapFirstDisplay4SyncEntities();
     if ($ok)
         $ok = bootstrapFirstDisplay5SyncObjects();
     if ($ok)
         $ok = bootstrapFirstDisplay6OptionsFile();
     if ($ok)
         $ok = bootstrapFirstDisplay7LocaleEntity();
+
+    if ($ok)
+        echo ' <span class="ok">ok</span>'."\n";
+    else
+        echo ' <span class="error">ERROR!</span>'."\n";
+
+    echo '<div id="reload"><a href="">When ready, reload</a></div>'."\n";
 
     bootstrapHtmlBottom();
 }
@@ -6016,7 +6023,11 @@ function bootstrapFirstInitEnv()
     ob_end_clean();
 }
 
-function bootstrapFirstDisplay1Breaks()
+/**
+ * Only display multiples reasons of the break and detection of the first run.
+ * @return void
+ */
+function bootstrapFirstDisplay1Breaks(): void
 {
     global $bootstrapBreak, $bootstrapRescueMode;
 
@@ -6033,6 +6044,10 @@ function bootstrapFirstDisplay1Breaks()
     echo "</div>\n";
 }
 
+/**
+ * Display on first run the check of objects and links folders.
+ * @return bool
+ */
 function bootstrapFirstDisplay2Folders(): bool
 {
     $ok = true;
@@ -6042,7 +6057,6 @@ function bootstrapFirstDisplay2Folders(): bool
 
     if (!io_checkLinkFolder()) {
         addLog('error links folder', 'error', __FUNCTION__, 'f1d49c43');
-        echo '<span class="error">ERROR!</span>'."\n";
         $ok = false;
         ?>
 
@@ -6064,8 +6078,6 @@ chmod 755 <?php echo LOCAL_LINKS_FOLDER; ?></pre>
 
     if (!io_checkObjectFolder()) {
         addLog('error objects folder', 'error', __FUNCTION__, 'dc0c86a4');
-        if ($ok)
-            echo '<span class="error">ERROR!</span>'."\n";
         $ok = false;
         ?>
 
@@ -6087,20 +6099,15 @@ chmod 755 <?php echo LOCAL_OBJECTS_FOLDER; ?></pre>
 
     if ($ok) {
         addLog('ok folders', 'info', __FUNCTION__, '68c50ba0');
-        echo "ok\n";
-    } else
-        echo '<div id="reload"><a href="">When ready, reload</a></div>'."\n";
+    }
 
     echo "</div>\n";
 
     return $ok;
 }
 
-
-// ------------------------------------------------------------------------------------------
 /**
- * Création des objets nécessaires au bon fonctionnement de la bibliothèque.
- *
+ * Create if not present objects needed by nebule.
  * @return bool
  */
 function bootstrapFirstDisplay3Objects(): bool
@@ -6137,9 +6144,6 @@ function bootstrapFirstDisplay3Objects(): bool
     {
         addLog('ok objects', 'info', __FUNCTION__, '5c7be016');
         echo " ok\n";
-    } else {
-        echo ' <span class="error">ERROR!</span>'."\n";
-        echo '<div id="reload"><a href="">When ready, reload</a></div>'."\n";
     }
 
     echo "</div>\n";
@@ -6147,14 +6151,11 @@ function bootstrapFirstDisplay3Objects(): bool
     return $ok;
 }
 
-
-// ------------------------------------------------------------------------------------------
 /**
- * Synchronisation du minimum d'entités sur internet pour fonctionner.
- *
+ * Synchronize the entities needed by nebule.
  * @return bool
  */
-function bootstrapFirst4SynchronizingObjects(): bool
+function bootstrapFirstDisplay4SyncEntities(): bool
 {
     global $nebuleLocalAuthorities, $libraryCheckOK;
 
@@ -6195,7 +6196,7 @@ function bootstrapFirst4SynchronizingObjects(): bool
         // Activation comme autorité locale.
         $nebuleLocalAuthorities[0] = $puppetmaster;
 
-        echo 'sync for masters';
+        echo 'sync for masters references';
         _lnkDownloadOnLocations(NEBULE_REFERENCE_NID_SECURITYMASTER, FIRST_LOCALISATIONS);
         echo '.';
         _lnkDownloadOnLocations(NEBULE_REFERENCE_NID_CODEMASTER, FIRST_LOCALISATIONS);
@@ -6290,19 +6291,10 @@ function bootstrapFirst4SynchronizingObjects(): bool
             echo " <span class=\"error\">empty!</span>\n";
         echo "<br/>\n";
         flush();
-
-        echo "</div>\n";
-
-        bootstrapPartDisplayReloadPage($libraryCheckOK);
-    } else {
+    } else
         addLog('ok sync entities', 'info', __FUNCTION__, 'c5b55957');
-        ?>
 
-        ok
-        <?php
-        echo "</div>\n";
-        bootstrapFirstDisplay5SyncObjects();
-    }
+    echo "</div>\n";
 
     return false; // TODO
 }
@@ -6313,7 +6305,7 @@ function bootstrapFirst4SynchronizingObjects(): bool
  * @param int $delay
  * @return void
  */
-function bootstrapPartDisplayReloadPage(bool $ok = true, int $delay = 0): void
+function bootstrapPartDisplayReloadPage(bool $ok=true, int $delay=0): void
 {
     if ($delay == 0)
         $delay = FIRST_RELOAD_DELAY;
