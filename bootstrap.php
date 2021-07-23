@@ -6386,46 +6386,29 @@ function bootstrapFirstDisplay5SyncObjects(): bool
 
     $data = REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE;
     io_objectWrite($data);
-    echo "<br />\n";
-    ?>
-    bootstrap start &nbsp;&nbsp;&nbsp;:
-    <?php
-    echo $refBoot . ' ';
+    echo "<br />\nbootstrap start &nbsp;&nbsp;&nbsp;:" . $refBoot . ' ';
     flush();
     _lnkDownloadOnLocations($refBootID, FIRST_LOCALISATIONS);
-    echo "<br />\n";
-    ?>
-    library start &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
-    <?php
-    echo $refLib . ' ';
+    echo "<br />\nlibrary start &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:" . $refLib . ' ';
     flush();
-    _lnkDownloadOnLocations($refLibID, FIRST_LOCALISATIONS);
-    echo "<br />\n";
-    ?>
-    synchronization &nbsp;&nbsp;&nbsp;:
-    <?php
+
     // Recherche par référence.
+    _lnkDownloadOnLocations($refLibID, FIRST_LOCALISATIONS);
     $lastID = nebFindByRef(
         $refLibID,
         $refLibID,
         false);
-    echo $lastID . ' ';
+    echo "<br />\nsynchronization &nbsp;&nbsp;&nbsp;:" . $lastID . ' ';
     if ($lastID != '0') {
         _objDownloadOnLocations($lastID, FIRST_LOCALISATIONS);
     } else {
         echo '<span id="error">ERROR!</span>';
     }
-    echo "<br />\n";
-    ?>
-    applications list &nbsp;:
-    <?php
-    echo $refAppsID . ' ';
+    echo "<br />\napplications list &nbsp;:" . $refAppsID . ' ';
     flush();
     _lnkDownloadOnLocations($refAppsID, FIRST_LOCALISATIONS);
-    echo "<br />\n";
-    ?>
-    application list &nbsp;&nbsp;:
-    <?php
+    echo "<br />\napplication list &nbsp;&nbsp;:";
+
     // Pour chaque application, faire une synchronisation.
     $links = array();
     _lnkFindInclusive($refAppsID, $links, 'f', $refAppsID, '', $refAppsID, false);
@@ -6454,10 +6437,7 @@ function bootstrapFirstDisplay5SyncObjects(): bool
     // Pour toutes les applications, les télécharge et recherche leurs noms.
     $refName = 'nebule/objet/nom';
     foreach ($links as $app) {
-        ?>
-
-        synchronization &nbsp;&nbsp;&nbsp;:
-        <?php
+        echo "\nsynchronization &nbsp;&nbsp;&nbsp;:";
         $appID = $app[6];
         echo $appID . ' ';
         // Recherche par référence.
@@ -6492,10 +6472,7 @@ function bootstrapFirstDisplay5SyncObjects(): bool
     bootstrapPartDisplayReloadPage(true);
     } else {
         addLog('ok sync objects', 'info', __FUNCTION__, '4473358f');
-        ?>
-        ok
-        <?php
-        echo "</div>\n";
+        echo "ok</div>\n";
         bootstrapFirstDisplay6OptionsFile();
     }
 
