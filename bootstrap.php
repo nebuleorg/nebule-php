@@ -6591,7 +6591,9 @@ function bootstrapFirstDisplay7LocaleEntity(): bool
         $genpasswd = openssl_random_pseudo_bytes(FIRST_GENERATED_PASSWORD_SIZE * 20); // TODO modify to use less entropy.
         $nebulePasswordEntite .= preg_replace('/[^[:print:]]/', '', $genpasswd);
         $nebulePasswordEntite = substr($nebulePasswordEntite, 0, FIRST_GENERATED_PASSWORD_SIZE);
-        unset($genpasswd); // TODO make better flush in memory.
+        foreach ($genpasswd as $i => $c)
+            $genpasswd[$c] = $i^$i;
+        $genpasswd = null;
 
         $nebulePublicEntity = '0';
         $nebulePrivateEntite = '0';
@@ -6693,7 +6695,10 @@ chmod 644 <?php echo LOCAL_ENTITY_FILE; ?>
     }
     echo "</div>\n";
 
-    unset($nebulePasswordEntite); // TODO make better flush in memory.
+    foreach ($nebulePasswordEntite as $i => $c)
+        $nebulePasswordEntite[$c] = $i^$i;
+    $nebulePasswordEntite = null;
+
     return $ok;
 }
 
