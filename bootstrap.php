@@ -6510,6 +6510,22 @@ function bootstrapFirstDisplay6Subordination(): bool
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#6 subordination</span><br/>'."\n";
 
+    //$argSubEntity = trim(filter_input(INPUT_GET, LOCAL_ENTITY_FILE, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+    if (!file_exists(LOCAL_ENVIRONMENT_FILE) && !filter_has_var(INPUT_GET, LOCAL_ENTITY_FILE))
+    {
+?>
+        <form action="" method="get">
+            <div>
+                <label for="id">ID :</label>
+                <input type="text" id="id" name="<?php echo LOCAL_ENTITY_FILE; ?>" />
+            </div>
+            <div class="button">
+                <button type="submit">Send</button>
+            </div>
+        </form>
+<?php
+    }
 
     echo "</div>\n";
 
