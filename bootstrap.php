@@ -6584,20 +6584,15 @@ function bootstrapFirstDisplay7LocaleEntity(): bool
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#7 local entity for server</span><br/>'."\n";
     if ( file_put_contents(LOCAL_ENTITY_FILE, '0') !== false ) {
+        echo 'new server entity<br/>' . "\n";
+
         // Génère un mot de passe.
         $nebulePasswordEntite = '';
-        $padding = '';
-        $genpasswd = openssl_random_pseudo_bytes(512);
+        $genpasswd = openssl_random_pseudo_bytes(FIRST_GENERATED_PASSWORD_SIZE * 20);
         // Filtrage des caractères du mdp dans un espace restreint. Alphadécimal, à revoir...
-        for ($i = 0; $i < strlen($genpasswd); $i++)
-        {
-            $a = ord($genpasswd[$i]);
-            if (!($a < 48 || $a > 102 || ($a > 57 && $a < 97)))
-                $nebulePasswordEntite .= $genpasswd[$i];
-            $padding .= '0';
-        }
-        $nebulePasswordEntite = substr($nebulePasswordEntite . $padding, 0, FIRST_GENERATED_PASSWORD_SIZE);
-        unset($genpasswd, $padding, $i, $a);
+        $nebulePasswordEntite .= preg_replace('/[^[:print:]]/', '', $genpasswd);
+        $nebulePasswordEntite = substr($nebulePasswordEntite, 0, FIRST_GENERATED_PASSWORD_SIZE);
+        unset($genpasswd);
 
         $nebulePublicEntity = '0';
         $nebulePrivateEntite = '0';
@@ -6666,7 +6661,7 @@ function bootstrapFirstDisplay7LocaleEntity(): bool
         unset($newlink);
 
         ?>
-        new server entity<br/>
+
         public ID &nbsp;: <?php echo $nebulePublicEntity; ?><br/>
         private ID : <?php echo $nebulePrivateEntite; ?>
 
@@ -6679,7 +6674,7 @@ function bootstrapFirstDisplay7LocaleEntity(): bool
         <?php
     } else {
         file_put_contents(LOCAL_ENTITY_FILE, '0');
-        echo " <span class=\"error\">ERROR!</span><br />\n";
+        echo '<span class="error">ERROR!</span><br />' . "\n";
         echo '<div class="diverror">' . "\n";
         ?>
 Unable to create local entity file <b><?php echo LOCAL_ENTITY_FILE; ?></b> .<br/>
