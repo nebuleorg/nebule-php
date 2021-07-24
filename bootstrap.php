@@ -6676,11 +6676,6 @@ function bootstrapFirstDisplay7LocaleEntity(): bool
             password &nbsp;: <?php echo $nebulePasswordEntite; ?><br/>
             Please keep and save securely thoses private informations!
         </div>
-        <form method="post" action="?<?php echo ARG_SWITCH_APPLICATION; ?>=0">
-            <input type="hidden" name="pwd" value="<?php echo $nebulePasswordEntite; ?>">
-            <input type="hidden" name="switch" value="true">
-            <input type="submit" value="when ready, click here to go to options">
-        </form>
         <?php
     } else {
         file_put_contents(LOCAL_ENTITY_FILE, '0');
