@@ -5988,7 +5988,7 @@ function bootstrapDisplayApplicationfirst(): void
     if ($ok)
         echo '&nbsp;&nbsp;OK finished!'."\n";
     else
-        echo '&nbsp;&nbsp;<span class="error">ERROR!</span>'."\n";
+        echo '&gt; <span class="error">ERROR!</span>'."\n";
     echo '<br />&gt; <span id="reload"><a href="">When ready, reload</a></span></div>'."\n";
 
     bootstrapHtmlBottom();
@@ -6362,119 +6362,132 @@ function bootstrapFirstDisplay5SyncObjects(): bool
         && !io_checkNodeHaveLink($refBootID)
     )
     {
-    addLog('need sync objects', 'warn', __FUNCTION__, '0f21ad26');
+        addLog('need sync objects', 'warn', __FUNCTION__, '0f21ad26');
 
-    // Ecrit les objets de localisation.
-    echo 'objects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
-    foreach (FIRST_LOCALISATIONS as $data) {
-        $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-        _lnkDownloadOnLocations($hash, FIRST_LOCALISATIONS);
-        echo '.';
-    }
-    flush();
-
-    // Ecrit les objets réservés.
-    foreach (FIRST_RESERVED_OBJECTS as $data) {
-        $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-        _lnkDownloadOnLocations($hash, FIRST_LOCALISATIONS);
-        echo '.';
-    }
-    flush();
-
-    $data = REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS;
-    io_objectWrite($data);
-
-    $data = REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE;
-    io_objectWrite($data);
-    echo "<br />\nbootstrap start &nbsp;&nbsp;&nbsp;:" . $refBoot . ' ';
-    flush();
-    _lnkDownloadOnLocations($refBootID, FIRST_LOCALISATIONS);
-    echo "<br />\nlibrary start &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:" . $refLib . ' ';
-    flush();
-
-    // Recherche par référence.
-    _lnkDownloadOnLocations($refLibID, FIRST_LOCALISATIONS);
-    $lastID = nebFindByRef(
-        $refLibID,
-        $refLibID,
-        false);
-    echo "<br />\nsynchronization &nbsp;&nbsp;&nbsp;:" . $lastID . ' ';
-    if ($lastID != '0') {
-        _objDownloadOnLocations($lastID, FIRST_LOCALISATIONS);
-    } else {
-        echo '<span id="error">ERROR!</span>';
-    }
-    echo "<br />\napplications list &nbsp;:" . $refAppsID . ' ';
-    flush();
-    _lnkDownloadOnLocations($refAppsID, FIRST_LOCALISATIONS);
-    echo "<br />\napplication list &nbsp;&nbsp;:";
-
-    // Pour chaque application, faire une synchronisation.
-    $links = array();
-    _lnkFindInclusive($refAppsID, $links, 'f', $refAppsID, '', $refAppsID, false);
-
-    // Tri sur autorités locales.
-    $signer = '';
-    $authority = '';
-    foreach ($links as $i => $link) {
-        $signer = $link[2];
-        $ok = false;
-        foreach ($nebuleLocalAuthorities as $authority) {
-            if ($signer == $authority) {
-                $ok = true;
-                break;
-            }
-        }
-        if ($ok) {
+        // Ecrit les objets de localisation.
+        echo 'objects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+        foreach (FIRST_LOCALISATIONS as $data)
+        {
+            $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+            _lnkDownloadOnLocations($hash, FIRST_LOCALISATIONS);
             echo '.';
-        } else {
-            // Si le signataire n'est pas autorité locale, supprime le lien.
-            unset($links[$i]);
         }
-    }
-    echo "<br />\n";
+        flush();
 
-    // Pour toutes les applications, les télécharge et recherche leurs noms.
-    $refName = 'nebule/objet/nom';
-    foreach ($links as $app) {
-        echo "\nsynchronization &nbsp;&nbsp;&nbsp;:";
-        $appID = $app[6];
-        echo $appID . ' ';
+        // Ecrit les objets réservés.
+        foreach (FIRST_RESERVED_OBJECTS as $data)
+        {
+            $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+            _lnkDownloadOnLocations($hash, FIRST_LOCALISATIONS);
+            echo '.';
+        }
+        flush();
+
+        $data = REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS;
+        io_objectWrite($data);
+
+        $data = REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE;
+        io_objectWrite($data);
+        echo "<br />\nbootstrap start &nbsp;&nbsp;&nbsp;:" . $refBoot . ' ';
+        flush();
+
+        _lnkDownloadOnLocations($refBootID, FIRST_LOCALISATIONS);
+        echo "<br />\nlibrary start &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:" . $refLib . ' ';
+        flush();
+
         // Recherche par référence.
+        _lnkDownloadOnLocations($refLibID, FIRST_LOCALISATIONS);
         $lastID = nebFindByRef(
-            $appID,
-            $refAppsID,
+            $refLibID,
+            $refLibID,
             false);
-        addLog('find app ' . $appID . ' as ' . $lastID, 'info', __FUNCTION__, '4cc18a65');
-        if ($lastID != '0') {
+        echo "<br />\nsynchronization &nbsp;&nbsp;&nbsp;:" . $lastID . ' ';
+        if ($lastID != '0')
+        {
             _objDownloadOnLocations($lastID, FIRST_LOCALISATIONS);
-            _lnkDownloadOnLocations($lastID, FIRST_LOCALISATIONS);
-            echo ' ';
-            // Cherche le nom.
-            $nameID = nebFindObjType(
-                $lastID,
-                $refName);
-            if ($nameID == '0') {
-                $nameID = nebFindObjType(
-                    $appID,
-                    $refName);
-            }
-            if ($nameID != '0') {
-                _objDownloadOnLocations($nameID, FIRST_LOCALISATIONS);
-                _lnkDownloadOnLocations($nameID, FIRST_LOCALISATIONS);
-            }
         } else {
             echo '<span id="error">ERROR!</span>';
+            $ok = false;
+        }
+
+        echo "<br />\napplications list &nbsp;:" . $refAppsID . ' ';
+        flush();
+        _lnkDownloadOnLocations($refAppsID, FIRST_LOCALISATIONS);
+        echo "<br />\napplication list &nbsp;&nbsp;:";
+
+        // Pour chaque application, faire une synchronisation.
+        $links = array();
+        _lnkFindInclusive($refAppsID, $links, 'f', $refAppsID, '', $refAppsID, false);
+
+        // Tri sur autorités locales.
+        foreach ($links as $i => $link)
+        {
+            $signer = $link[2];
+            $ok = false;
+            foreach ($nebuleLocalAuthorities as $authority)
+            {
+                if ($signer == $authority)
+                {
+                    $ok = true;
+                    break;
+                }
+            }
+            if ($ok)
+                echo '.';
+            else {
+                // Si le signataire n'est pas autorité locale, supprime le lien.
+                unset($links[$i]);
+            }
         }
         echo "<br />\n";
-    }
-    echo "</div>\n";
-    bootstrapPartDisplayReloadPage(true);
+
+        // Pour toutes les applications, les télécharge et recherche leurs noms.
+        $refName = 'nebule/objet/nom';
+        foreach ($links as $app)
+        {
+            echo "\nsynchronization &nbsp;&nbsp;&nbsp;:";
+            $appID = $app[6];
+            echo $appID . ' ';
+
+            // Recherche par référence.
+            $lastID = nebFindByRef(
+                $appID,
+                $refAppsID,
+                false);
+            addLog('find app ' . $appID . ' as ' . $lastID, 'info', __FUNCTION__, '4cc18a65');
+            if ($lastID != '0')
+            {
+                _objDownloadOnLocations($lastID, FIRST_LOCALISATIONS);
+                _lnkDownloadOnLocations($lastID, FIRST_LOCALISATIONS);
+                echo ' ';
+                // Cherche le nom.
+                $nameID = nebFindObjType(
+                    $lastID,
+                    $refName);
+                if ($nameID == '0')
+                {
+                    $nameID = nebFindObjType(
+                        $appID,
+                        $refName);
+                }
+                if ($nameID != '0')
+                {
+                    _objDownloadOnLocations($nameID, FIRST_LOCALISATIONS);
+                    _lnkDownloadOnLocations($nameID, FIRST_LOCALISATIONS);
+                }
+            } else {
+                echo '<span id="error">ERROR!</span>';
+                $ok = false;
+            }
+            echo "<br />\n";
+            flush();
+        }
     } else {
         addLog('ok sync objects', 'info', __FUNCTION__, '4473358f');
-        echo "ok</div>\n";
-        bootstrapFirstDisplay6OptionsFile();
+        echo "ok\n";
     }
+
+    echo "</div>\n";
 
     return $ok;
 }
