@@ -6661,9 +6661,8 @@ function bootstrapFirstDisplay7LocaleEntity(): bool
         $refHashName = _objGetNID('nebule/objet/nom', getConfiguration('cryptoHashAlgorithm'));
         $hashName = _objGetNID($name, getConfiguration('cryptoHashAlgorithm'));
         $newlink = _lnkGenerate('-', 'l', $nebulePublicEntity, $hashName, $refHashName);
-        if (_lnkVerify($newlink) == 1) {
+        if (_lnkVerify($newlink) == 1)
             _lnkWrite($newlink);
-        }
         unset($newlink);
 
         ?>
@@ -6682,21 +6681,16 @@ function bootstrapFirstDisplay7LocaleEntity(): bool
             <input type="hidden" name="switch" value="true">
             <input type="submit" value="when ready, click here to go to options">
         </form>
-        <br/><br/>
-        <button onclick="javascript:window.location.assign('?<?php echo ARG_SWITCH_APPLICATION; ?>=0');">when
-            ready, click here to go to applications and options
-        </button>
         <?php
     } else {
         file_put_contents(LOCAL_ENTITY_FILE, '0');
         echo " <span class=\"error\">ERROR!</span><br />\n";
+        echo '<div class="diverror">' . "\n";
         ?>
-
-        <div class="diverror">
-            Unable to create local entity file <b><?php echo LOCAL_ENTITY_FILE; ?></b> .<br/>
-            On the same path as <b>index.php</b>, please create file manually.<br/>
-            As <i>root</i>, run :<br/>
-            <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
+Unable to create local entity file <b><?php echo LOCAL_ENTITY_FILE; ?></b> .<br/>
+On the same path as <b>index.php</b>, please create file manually.<br/>
+As <i>root</i>, run :<br/>
+<pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
 
 touch <?php echo LOCAL_ENTITY_FILE; ?>
 
@@ -6704,9 +6698,9 @@ chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . 
 
 chmod 644 <?php echo LOCAL_ENTITY_FILE; ?>
 </pre>
-        </div>
+
         <?php
-        bootstrapPartDisplayReloadPage(false);
+        echo "</div>\n";
     }
     echo "</div>\n";
 
