@@ -6045,46 +6045,48 @@ function bootstrapFirstDisplay2Folders(): bool
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#2 folders</span><br/>'."\n";
 
-    if (!io_checkLinkFolder()) {
+    if (!io_checkLinkFolder())
+    {
         addLog('error links folder', 'error', __FUNCTION__, 'f1d49c43');
         $ok = false;
+        echo '<div class="diverror">' . "\n";
         ?>
-
-<div class="diverror">
-    Unable to create folder <b><?php echo LOCAL_LINKS_FOLDER; ?></b> for links.<br/>
-    On the same path as <b>index.php</b>, please create folder manually,<br/>
-    and give it to web server process.<br/>
-    As <i>root</i>, run :<br/>
-    <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
+Unable to create folder <b><?php echo LOCAL_LINKS_FOLDER; ?></b> for links.<br/>
+On the same path as <b>index.php</b>, please create folder manually,<br/>
+and give it to web server process.<br/>
+As <i>root</i>, run :<br/>
+<pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
 
 mkdir <?php echo LOCAL_LINKS_FOLDER; ?>
 
 chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . ' ' . LOCAL_LINKS_FOLDER; ?>
 
 chmod 755 <?php echo LOCAL_LINKS_FOLDER; ?></pre>
-</div>
+
         <?php
+        echo "</div>\n";
     }
 
-    if (!io_checkObjectFolder()) {
+    if (!io_checkObjectFolder())
+    {
         addLog('error objects folder', 'error', __FUNCTION__, 'dc0c86a4');
         $ok = false;
+        echo '<div class="diverror">' . "\n";
         ?>
-
-<div class="diverror">
-    Unable to create folder <b><?php echo LOCAL_OBJECTS_FOLDER; ?></b> for objects.<br/>
-    On the same path as <b>index.php</b>, please create folder manually,<br/>
-    and give it to web server process.<br/>
-    As <i>root</i>, run :<br/>
-    <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
+Unable to create folder <b><?php echo LOCAL_OBJECTS_FOLDER; ?></b> for objects.<br/>
+On the same path as <b>index.php</b>, please create folder manually,<br/>
+and give it to web server process.<br/>
+As <i>root</i>, run :<br/>
+<pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
 
 mkdir <?php echo LOCAL_OBJECTS_FOLDER; ?>
 
 chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . ' ' . LOCAL_OBJECTS_FOLDER; ?>
 
 chmod 755 <?php echo LOCAL_OBJECTS_FOLDER; ?></pre>
-</div>
+
         <?php
+        echo "</div>\n";
     }
 
     if ($ok) {
