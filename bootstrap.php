@@ -1493,36 +1493,51 @@ function _metrologyTimerGet(string $type): string
  */
 function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $password = '')
 {
-    if (!getConfiguration('permitWrite'))
+    if (!getConfiguration('permitWrite')
+        || !getConfiguration('permitWriteEntity')
+        || !getConfiguration('permitWriteObject')
+        || !getConfiguration('permitWriteLink')
+    //    || (($asymetricAlgo != 'rsa') && ($asymetricAlgo != 'dsa'))
+        || $password == ''
+    )
         return false;
-    if (!getConfiguration('permitWriteEntity'))
-        return false;
-    if (!getConfiguration('permitWriteObject'))
-        return false;
-    if (!getConfiguration('permitWriteLink'))
-        return false;
-    if (($asymetricAlgo != 'rsa') && ($asymetricAlgo != 'dsa'))
-        return false;
-    if ($password == '')
-        return false;
-
-    // TODO à vérifier...
-//getConfiguration('cryptoAsymetricAlgorithm')
-    $size = substr($asymetricAlgo, strpos($asymetricAlgo, '.') + 1);
-    $algoName = substr($asymetricAlgo, 0, strpos($asymetricAlgo, '.') - 1);
 
     // Génération de la clé
     switch ($asymetricAlgo) {
-        case 'rsa' :
+        case 'rsa.1024' :
             $config = array(
-                'digest_alg' => $hashAlgo,
-                'private_key_bits' => (int)$size,
+                'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
+                'private_key_bits' => 1024,
                 'private_key_type' => OPENSSL_KEYTYPE_RSA);
             break;
-        case 'dsa' :
+        case 'rsa.2048' :
             $config = array(
-                'digest_alg' => $hashAlgo,
-                'private_key_bits' => (int)$size,
+                'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
+                'private_key_bits' => 2048,
+                'private_key_type' => OPENSSL_KEYTYPE_RSA);
+            break;
+        case 'rsa.4096' :
+            $config = array(
+                'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
+                'private_key_bits' => 4096,
+                'private_key_type' => OPENSSL_KEYTYPE_RSA);
+            break;
+        case 'dsa.1024' :
+            $config = array(
+                'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
+                'private_key_bits' => 1024,
+                'private_key_type' => OPENSSL_KEYTYPE_DSA);
+            break;
+        case 'dsa.2048' :
+            $config = array(
+                'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
+                'private_key_bits' => 2048,
+                'private_key_type' => OPENSSL_KEYTYPE_DSA);
+            break;
+        case 'dsa.4096' :
+            $config = array(
+                'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
+                'private_key_bits' => 4096,
                 'private_key_type' => OPENSSL_KEYTYPE_DSA);
             break;
     }
@@ -1545,6 +1560,14 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
     if ($private_key === false) {
         return false;
     }
+
+
+
+    return true;
+    // ========================================================================================================================================
+
+
+
     // Calcul de hashs communs.
     $date = date(DATE_ATOM);
     $binary_signature = '';
@@ -6785,7 +6808,8 @@ function bootstrapFirstDisplay9LocaleEntity(): bool
         $nebulePrivateEntite = '0';
         // Génère une nouvelle entité.
         _entityGenerate(
-            getConfiguration('cryptoAsymetricAlgorithm'),getConfiguration('cryptoHashAlgorithm'),
+            getConfiguration('cryptoAsymetricAlgorithm'),
+            getConfiguration('cryptoHashAlgorithm'),
             $nebulePublicEntity,
             $nebulePrivateEntite,
             $nebulePasswordEntite
@@ -6795,7 +6819,8 @@ function bootstrapFirstDisplay9LocaleEntity(): bool
         file_put_contents(LOCAL_ENTITY_FILE, $nebulePublicEntity);
 
         // Calcul le nom.
-        $genname = hex2bin($nebulePublicEntity . $nebulePrivateEntite);
+        $hexvalue = preg_replace('/[[:^xdigit:]]/', '', $nebulePublicEntity);
+        $genname = hex2bin($hexvalue . $hexvalue);
         $name = '';
         // Filtrage des caractères du nom dans un espace restreint.
         for ($i = 0; $i < strlen($genname); $i++) {
@@ -6855,7 +6880,7 @@ function bootstrapFirstDisplay9LocaleEntity(): bool
         <div class="important">
             name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $name; ?><br/>
             public ID : <?php echo $nebulePublicEntity; ?><br/>
-            password &nbsp;: <?php echo $nebulePasswordEntite; ?><br/>
+            password &nbsp;: <?php echo htmlspecialchars($nebulePasswordEntite); ?><br/>
             Please keep and save securely thoses private informations!
         </div>
         <?php
