@@ -629,27 +629,27 @@ $configurationList = array();
 /**
  * ID masters of security.
  */
-$nebuleSecurityMasters = array();
+$nebuleSecurityAuthorities = array();
 
 /**
  * ID masters of code.
  */
-$nebuleCodeMasters = array();
+$nebuleCodeAuthorities = array();
 
 /**
  * ID masters of directory.
  */
-$nebuleDirectoryMasters = array();
+$nebuleDirectoryAuthorities = array();
 
 /**
  * ID masters of time.
  */
-$nebuleTimeMasters = array();
+$nebuleTimeAuthorities = array();
 
 /**
  * ID de l'entité locale du serveur.
  */
-$nebuleServerEntite = '';
+$nebuleServerEntity = '';
 
 /**
  * ID de l'entité par défaut.
@@ -700,6 +700,11 @@ $nebuleMetrologyObjectVerify = 0;
  * Metrology - Lib PP timers.
  */
 $nebuleMetrologyTimers = array();
+
+/**
+ * First run - OID of an alternative puppetmaster.
+ */
+$firstAlternativePuppetmasterOid = '';
 
 /**
  * First run - OID of an optional subordination.
@@ -826,17 +831,17 @@ function libraryInit(): bool
     $nebuleLocalAuthorities = array($puppetmaster);
 
     // Search and check global masters.
-    $nebuleSecurityMasters = _entityGetSecurityMasters(false);
-    if (!_entityCheckSecurityMasters($nebuleSecurityMasters))
+    $nebuleSecurityMasters = _entityGetSecurityAuthorities(false);
+    if (!_entityCheckSecurityAuthorities($nebuleSecurityMasters))
         return false;
-    $nebuleCodeMasters = _entityGetCodeMasters(false);
-    if (!_entityCheckCodeMasters($nebuleCodeMasters))
+    $nebuleCodeMasters = _entityGetCodeAuthorities(false);
+    if (!_entityCheckCodeAuthorities($nebuleCodeMasters))
         return false;
-    $nebuleTimeMasters = _entityGetTimeMasters(false);
-    if (!_entityCheckTimeMasters($nebuleTimeMasters))
+    $nebuleTimeMasters = _entityGetTimeAuthorities(false);
+    if (!_entityCheckTimeAuthorities($nebuleTimeMasters))
         return false;
-    $nebuleDirectoryMasters = _entityGetDirectoryMasters(false);
-    if (!_entityCheckDirectoryMasters($nebuleDirectoryMasters))
+    $nebuleDirectoryMasters = _entityGetDirectoryAuthorities(false);
+    if (!_entityCheckDirectoryAuthorities($nebuleDirectoryMasters))
         return false;
 
     // Add masters of security as local authorities.
@@ -861,17 +866,17 @@ function libraryInit(): bool
  */
 function librarySetServerEntity(): void
 {
-    global $nebuleServerEntite, $nebuleLocalAuthorities;
+    global $nebuleServerEntity, $nebuleLocalAuthorities;
     if (file_exists(LOCAL_ENTITY_FILE)
         && is_file(LOCAL_ENTITY_FILE)
     )
-        $nebuleServerEntite = filter_var(strtok(trim(file_get_contents(LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $nebuleServerEntity = filter_var(strtok(trim(file_get_contents(LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 
-    if (!_entityCheck($nebuleServerEntite))
-        $nebuleServerEntite = getConfiguration('puppetmaster');
+    if (!_entityCheck($nebuleServerEntity))
+        $nebuleServerEntity = getConfiguration('puppetmaster');
 
     if (getConfiguration('permitInstanceEntityAsAuthority') && !getModeRescue())
-        $nebuleLocalAuthorities[] = $nebuleServerEntite;
+        $nebuleLocalAuthorities[] = $nebuleServerEntity;
 }
 
 /**
@@ -1850,10 +1855,10 @@ function _entityGetAskedMasters(string $refNid, array &$result, bool $synchroniz
  * @param bool $synchronize
  * @return array
  */
-function _entityGetSecurityMasters(bool $synchronize=false): array
+function _entityGetSecurityAuthorities(bool $synchronize=false): array
 {
-    global $nebuleSecurityMasters;
-    return _entityGetAskedMasters(NEBULE_NID_SECURITY_AUTHORITY_REFERENCE, $nebuleSecurityMasters, $synchronize);
+    global $nebuleSecurityAuthorities;
+    return _entityGetAskedMasters(NEBULE_NID_SECURITY_AUTHORITY_REFERENCE, $nebuleSecurityAuthorities, $synchronize);
 }
 
 /**
@@ -1862,10 +1867,10 @@ function _entityGetSecurityMasters(bool $synchronize=false): array
  * @param bool $synchronize
  * @return array
  */
-function _entityGetCodeMasters(bool $synchronize=false): array
+function _entityGetCodeAuthorities(bool $synchronize=false): array
 {
-    global $nebuleCodeMasters;
-    return _entityGetAskedMasters(NEBULE_NID_CODE_AUTHORITY_REFERENCE, $nebuleCodeMasters, $synchronize);
+    global $nebuleCodeAuthorities;
+    return _entityGetAskedMasters(NEBULE_NID_CODE_AUTHORITY_REFERENCE, $nebuleCodeAuthorities, $synchronize);
 }
 
 /**
@@ -1874,10 +1879,10 @@ function _entityGetCodeMasters(bool $synchronize=false): array
  * @param bool $synchronize
  * @return array
  */
-function _entityGetTimeMasters(bool $synchronize=false): array
+function _entityGetTimeAuthorities(bool $synchronize=false): array
 {
-    global $nebuleTimeMasters;
-    return _entityGetAskedMasters(NEBULE_NID_TIME_AUTHORITY_REFERENCE, $nebuleTimeMasters, $synchronize);
+    global $nebuleTimeAuthorities;
+    return _entityGetAskedMasters(NEBULE_NID_TIME_AUTHORITY_REFERENCE, $nebuleTimeAuthorities, $synchronize);
 }
 
 /**
@@ -1886,10 +1891,10 @@ function _entityGetTimeMasters(bool $synchronize=false): array
  * @param bool $synchronize
  * @return array
  */
-function _entityGetDirectoryMasters(bool $synchronize=false): array
+function _entityGetDirectoryAuthorities(bool $synchronize=false): array
 {
-    global $nebuleDirectoryMasters;
-    return _entityGetAskedMasters(NEBULE_NID_DIRECTORY_AUTHORITY_REFERENCE, $nebuleDirectoryMasters, $synchronize);
+    global $nebuleDirectoryAuthorities;
+    return _entityGetAskedMasters(NEBULE_NID_DIRECTORY_AUTHORITY_REFERENCE, $nebuleDirectoryAuthorities, $synchronize);
 }
 
 /**
@@ -1913,7 +1918,7 @@ function _entityCheckPuppetmaster(string $oid): bool
  * @param array $oidList
  * @return bool
  */
-function _entityCheckSecurityMasters(array $oidList): bool
+function _entityCheckSecurityAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0)
     {
@@ -1938,7 +1943,7 @@ function _entityCheckSecurityMasters(array $oidList): bool
  * @param array $oidList
  * @return bool
  */
-function _entityCheckCodeMasters(array $oidList): bool
+function _entityCheckCodeAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0)
     {
@@ -1963,7 +1968,7 @@ function _entityCheckCodeMasters(array $oidList): bool
  * @param array $oidList
  * @return bool
  */
-function _entityCheckTimeMasters(array $oidList): bool
+function _entityCheckTimeAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0)
     {
@@ -1988,7 +1993,7 @@ function _entityCheckTimeMasters(array $oidList): bool
  * @param array $oidList
  * @return bool
  */
-function _entityCheckDirectoryMasters(array $oidList): bool
+function _entityCheckDirectoryAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0)
     {
@@ -2033,22 +2038,22 @@ function _entitySyncPuppetmaster(string $oid): void
             io_linkWrite($oid, $data);
     }
 
-    _entitySyncMasters(array($oid));
+    _entitySyncAuthorities(array($oid));
 }
 
 /**
- * Synchronize masters of security from central location.
+ * Synchronize authorities from central locations.
  * @param array $oidList
  * @return void
  */
-function _entitySyncMasters(array $oidList): void
+function _entitySyncAuthorities(array $oidList): void
 {
     global $nebuleCacheIsPublicKey, $nebuleCacheIsPrivateKey;
 
     foreach ($oidList as $nid) {
         addLog('Sync master entity ' . $nid, 'info', __FUNCTION__, '92e0483f');
-        _objDownloadOnLocations($nid, FIRST_LOCALISATIONS);
-        _lnkDownloadOnLocations($nid, FIRST_LOCALISATIONS);
+        _objDownloadOnLocations($nid, array());
+        _lnkDownloadOnLocations($nid, array());
     }
 
     $nebuleCacheIsPublicKey = array();
@@ -2131,7 +2136,6 @@ function _objDownloadOnLocations(string $nid, array $locations = array()): bool
         || !getConfiguration('permitSynchronizeObject')
         || !_nodCheckNID($nid, false)
         || _nodCheckBanned($nid)
-        || sizeof($locations) == 0
     )
         return false;
 
@@ -2331,7 +2335,7 @@ function _nodCheckNID(string &$nid, bool $permitNull = false): bool
  */
 function _nodCheckBanned(&$nid): bool
 {
-    global $nebulePublicEntity, $nebuleSecurityMasters, $nebuleCacheIsBanned;
+    global $nebulePublicEntity, $nebuleSecurityAuthorities, $nebuleCacheIsBanned;
 
     // FIXME
     return false;
@@ -3175,6 +3179,8 @@ function _lnkDownloadAnywhere(string $nid): void
  * Link - Download node's links on web locations.
  * Only valid links are writen on local filesystem.
  *
+ * TODO change to possible other location of puppetmaster
+ *
  * @param string $nid
  * @param array $locations
  * @return bool
@@ -3185,9 +3191,7 @@ function _lnkDownloadOnLocations(string $nid, array $locations=array()): bool
         || !getConfiguration('permitWriteLink')
         || !getConfiguration('permitSynchronizeLink')
         || !_nodCheckNID($nid, false)
-        || $locations == ''
         || _nodCheckBanned($nid)
-        || sizeof($locations) == 0
     )
         return false;
 
@@ -4164,7 +4168,7 @@ function cryptoGetFileHash(string $file, string $algo = ''): string
  */
 function cryptoGetPseudoRandom($count = 32): string
 {
-    global $nebuleServerEntite;
+    global $nebuleServerEntity;
 
     $result = '';
     $algo = 'sha256';
@@ -4172,7 +4176,7 @@ function cryptoGetPseudoRandom($count = 32): string
         return $result;
 
     // Génère une graine avec la date pour le compteur interne.
-    $intcount = date(DATE_ATOM) . microtime(false) . NEBULE_LIBRARY_PP_VERSION . $nebuleServerEntite;
+    $intcount = date(DATE_ATOM) . microtime(false) . NEBULE_LIBRARY_PP_VERSION . $nebuleServerEntity;
 
     // Boucle de remplissage.
     while (strlen($result) < $count) {
@@ -4363,7 +4367,7 @@ function getBootstrapUpdate():void
  */
 function getBootstrapSwitchApplication(): void
 {
-    global $bootstrapFlush, $bootstrapSwitchApplication, $nebuleServerEntite;
+    global $bootstrapFlush, $bootstrapSwitchApplication, $nebuleServerEntity;
 
     if ($bootstrapFlush)
         return;
@@ -4406,7 +4410,7 @@ function getBootstrapSwitchApplication(): void
                 $signer = '';
                 $authority = '';
                 foreach ($links as $link) {
-                    if ($link[2] == $nebuleServerEntite) {
+                    if ($link[2] == $nebuleServerEntity) {
                         // Si le lien est valide, active l'application.
                         $activated = true;
                         break;
@@ -5370,9 +5374,9 @@ global $bootstrapRescueMode;
  */
 function bootstrapHtmlTop()
 {
-global $nebuleServerEntite;
+global $nebuleServerEntity;
 
-$name = nebReadEntityFullName($nebuleServerEntite);
+$name = nebReadEntityFullName($nebuleServerEntity);
 ?>
 <body>
 <div class="layout-header">
@@ -5387,12 +5391,12 @@ $name = nebReadEntityFullName($nebuleServerEntite);
     <div class="header-center">
         <p>
             <?php
-            if ($name != $nebuleServerEntite) {
+            if ($name != $nebuleServerEntity) {
                 echo $name;
             } else {
                 echo '/';
             }
-            echo '<br />' . $nebuleServerEntite;
+            echo '<br />' . $nebuleServerEntity;
             ?>
         </p>
     </div>
@@ -5452,12 +5456,12 @@ function bootstrapDisplayOnBreak(): void
            $bootstrapLibraryID,
            $bootstrapApplicationID,
            $bootstrapApplicationStartID,
-           $nebuleSecurityMasters,
-           $nebuleCodeMasters,
-           $nebuleDirectoryMasters,
-           $nebuleTimeMasters,
+           $nebuleSecurityAuthorities,
+           $nebuleCodeAuthorities,
+           $nebuleDirectoryAuthorities,
+           $nebuleTimeAuthorities,
            $nebuleLocalAuthorities,
-           $nebuleServerEntite,
+           $nebuleServerEntity,
            $nebuleDefaultEntite,
            $nebulePublicEntity,
            $nebuleLibVersion,
@@ -5490,11 +5494,11 @@ function bootstrapDisplayOnBreak(): void
         <span class="partstitle">#2 <?php echo BOOTSTRAP_NAME; ?> nebule library PP</span><br/>
         library version &nbsp;: <?php echo NEBULE_LIBRARY_PP_VERSION ?><br/>
         puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: <?php echo getConfiguration('puppetmaster'); ?> (local authority)<br/>
-        security master &nbsp;: <?php foreach ($nebuleSecurityMasters as $m) echo $m . ' '; ?> (local authority)<br/>
-        code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php foreach ($nebuleCodeMasters as $m) echo $m . ' '; ?> (local authority)<br/>
-        directory master : <?php foreach ($nebuleDirectoryMasters as $m) echo $m . ' '; ?><br/>
-        time master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php foreach ($nebuleTimeMasters as $m) echo $m . ' '; ?><br/>
-        server entity &nbsp;&nbsp;&nbsp;: <?php echo $nebuleServerEntite; ?><br/>
+        security master &nbsp;: <?php foreach ($nebuleSecurityAuthorities as $m) echo $m . ' '; ?> (local authority)<br/>
+        code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php foreach ($nebuleCodeAuthorities as $m) echo $m . ' '; ?> (local authority)<br/>
+        directory master : <?php foreach ($nebuleDirectoryAuthorities as $m) echo $m . ' '; ?><br/>
+        time master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php foreach ($nebuleTimeAuthorities as $m) echo $m . ' '; ?><br/>
+        server entity &nbsp;&nbsp;&nbsp;: <?php echo $nebuleServerEntity; ?><br/>
         default entity &nbsp;&nbsp;: <?php echo $nebuleDefaultEntite; ?><br/>
         current entity &nbsp;&nbsp;: <?php echo $nebulePublicEntity; ?>
     <?php
@@ -6197,12 +6201,72 @@ function bootstrapFirstDisplay3Objects(): bool
  */
 function bootstrapFirstDisplay4Puppetmaster(): bool
 {
-    global $nebuleLocalAuthorities;
+    global $firstAlternativePuppetmasterOid;
 
     $ok = true;
 
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#5 puppetmaster</span><br/>'."\n";
+
+    if (!file_exists(LOCAL_ENVIRONMENT_FILE))
+    {
+        if (!filter_has_var(INPUT_GET, 'bootstrapfirstpuppetmasteroid'))
+        {
+            addLog('ask subordination oid', 'info', __FUNCTION__, '213a735c');
+            ?>
+            <form action="" method="get">
+                <div>
+                    <label for="oid">OID &nbsp;&nbsp;&nbsp;&nbsp; :</label>
+                    <input type="text" id="oid" name="bootstrapfirstpuppetmasteroid" />
+                </div>
+                <div>
+                    <label for="loc">Location :</label>
+                    <input type="text" id="loc" name="bootstrapfirstpuppetmasterlocation" />
+                </div>
+                <div class="button">
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+
+            <?php
+            $ok = false;
+        } else {
+            $argOID = trim(' '.filter_input(INPUT_GET, 'bootstrapfirstpuppetmasteroid', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            if (_entityCheck($argOID)) {
+                $firstAlternativePuppetmasterOid = $argOID;
+            }
+            if (filter_has_var(INPUT_GET, 'bootstrapfirstpuppetmasterlocation'))
+            {
+                echo 'try alternative puppetmaster : ' . $argOID . ' ';
+                if (_nodCheckNID($argOID, false))
+                {
+                    $firstAlternativePuppetmasterOid = $argOID;
+                    $argLoc = trim(' '.filter_input(INPUT_GET, 'bootstrapfirstpuppetmasterlocation', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+                    if (strlen($argLoc) != 0 && filter_var($argLoc, FILTER_VALIDATE_URL) !== false)
+                    {
+                        echo 'sync...';
+                        _objDownloadOnLocations($argOID, array($argLoc));
+                        _lnkDownloadOnLocations($argOID, array($argLoc));
+                    }
+                }
+                if (!_entityCheck($argOID)) {
+                    addLog('unable to find alternative puppetmaster oid', 'error', __FUNCTION__, '102c9011');
+                    echo " <span class=\"error\">invalid!</span>\n";
+                    $argLoc = '';
+                    $firstAlternativePuppetmasterOid = NEBULE_DEFAULT_PUPPETMASTER_ID;
+                }
+                echo "<br />\n";
+                addLog('define alternative puppetmaster oid = ' . $firstAlternativePuppetmasterOid, 'warn', __FUNCTION__, '10a0bd6d');
+                echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ' . $firstAlternativePuppetmasterOid . "<br />\n";
+                addLog('define alternative puppetmaster location = ' . $argLoc, 'info', __FUNCTION__, '6d54e19e');
+                echo 'location on &nbsp;&nbsp;&nbsp;&nbsp; : ' . $argLoc . "\n";
+            } else
+                echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ' . $firstAlternativePuppetmasterOid . "\n";
+        }
+    } else {
+        $firstpuppetmasterOid = getConfiguration('subordinationEntity');
+        echo 'subordination to ' . $firstpuppetmasterOid . "\n";
+    }
 
     echo "</div>\n";
 
@@ -6223,137 +6287,137 @@ function bootstrapFirstDisplay5SyncAuthorities(): bool
     echo '<span class="partstitle">#5 synchronizing authorities</span><br/>'."\n";
 
     $puppetmaster = _entityGetPuppetmaster();
-    $securityMasters = _entityGetSecurityMasters(true);
-    $codeMasters = _entityGetCodeMasters(true);
-    $timeMasters = _entityGetTimeMasters(true);
-    $directoryMasters = _entityGetDirectoryMasters(true);
+    $securityAuthorities = _entityGetSecurityAuthorities(true);
+    $codeAuthorities = _entityGetCodeAuthorities(true);
+    $timeAuthorities = _entityGetTimeAuthorities(true);
+    $directoryAuthorities = _entityGetDirectoryAuthorities(true);
 
     echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ';
-        if (!_entityCheckPuppetmaster($puppetmaster))
+    if (!_entityCheckPuppetmaster($puppetmaster))
+    {
+        echo 'sync... ';
+        _entitySyncPuppetmaster($puppetmaster);
+    }
+    if (_entityCheckPuppetmaster($puppetmaster))
+    {
+        echo $puppetmaster . ' ';
+        echo 'ok';
+    }
+    else
+        echo " <span class=\"error\">invalid!</span>\n";
+    echo "<br/>\n";
+    flush();
+
+    // Activation comme autorité locale.
+    $nebuleLocalAuthorities[0] = $puppetmaster;
+
+    echo 'sync for masters references';
+    _lnkDownloadOnLocations(NEBULE_NID_SECURITY_AUTHORITY_REFERENCE, array());
+    echo '.';
+    _lnkDownloadOnLocations(NEBULE_NID_CODE_AUTHORITY_REFERENCE, array());
+    echo '.';
+    _lnkDownloadOnLocations(NEBULE_NID_TIME_AUTHORITY_REFERENCE, array());
+    echo '.';
+    _lnkDownloadOnLocations(NEBULE_NID_DIRECTORY_AUTHORITY_REFERENCE, array());
+    echo '.';
+    echo "<br/>\n";
+    flush();
+
+    echo 'security master &nbsp;: ';
+    if (sizeof($securityAuthorities) != 0)
+    {
+        if (!_entityCheckSecurityAuthorities($securityAuthorities))
         {
             echo 'sync... ';
-            _entitySyncPuppetmaster($puppetmaster);
+            _entitySyncAuthorities($securityAuthorities);
         }
-        if (_entityCheckPuppetmaster($puppetmaster))
+        if (_entityCheckSecurityAuthorities($securityAuthorities))
         {
-            echo $puppetmaster . ' ';
+            foreach ($securityAuthorities as $authority)
+                echo $authority . ' ';
             echo 'ok';
-        }
-        else
+        } else {
             echo " <span class=\"error\">invalid!</span>\n";
-        echo "<br/>\n";
-        flush();
-
-        // Activation comme autorité locale.
-        $nebuleLocalAuthorities[0] = $puppetmaster;
-
-        echo 'sync for masters references';
-        _lnkDownloadOnLocations(NEBULE_NID_SECURITY_AUTHORITY_REFERENCE, FIRST_LOCALISATIONS);
-        echo '.';
-        _lnkDownloadOnLocations(NEBULE_NID_CODE_AUTHORITY_REFERENCE, FIRST_LOCALISATIONS);
-        echo '.';
-        _lnkDownloadOnLocations(NEBULE_NID_TIME_AUTHORITY_REFERENCE, FIRST_LOCALISATIONS);
-        echo '.';
-        _lnkDownloadOnLocations(NEBULE_NID_DIRECTORY_AUTHORITY_REFERENCE, FIRST_LOCALISATIONS);
-        echo '.';
-        echo "<br/>\n";
-        flush();
-
-        echo 'security master &nbsp;: ';
-        if (sizeof($securityMasters) != 0)
-        {
-            if (!_entityCheckSecurityMasters($securityMasters))
-            {
-                echo 'sync... ';
-                _entitySyncMasters($securityMasters);
-            }
-            if (_entityCheckSecurityMasters($securityMasters))
-            {
-                foreach ($securityMasters as $master)
-                    echo $master . ' ';
-                echo 'ok';
-            } else {
-                echo " <span class=\"error\">invalid!</span>\n";
-                $ok = false;
-            }
-        } else {
-            echo " <span class=\"error\">empty!</span>\n";
-            $ok = true; // TODO false;
+            $ok = false;
         }
-        echo "<br/>\n";
-        flush();
+    } else {
+        echo " <span class=\"error\">empty!</span>\n";
+        $ok = true; // TODO false;
+    }
+    echo "<br/>\n";
+    flush();
 
-        echo 'code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
-        if (sizeof($codeMasters) != 0)
+    echo 'code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+    if (sizeof($codeAuthorities) != 0)
+    {
+        if (!_entityCheckCodeAuthorities($codeAuthorities))
         {
-            if (!_entityCheckCodeMasters($codeMasters))
-            {
-                echo 'sync... ';
-                _entitySyncMasters($codeMasters);
-            }
-            if (_entityCheckCodeMasters($codeMasters))
-            {
-                foreach ($codeMasters as $master)
-                    echo $master . ' ';
-                echo 'ok';
-            } else {
-                echo " <span class=\"error\">invalid!</span>\n";
-                $ok = false;
-            }
-        } else {
-            echo " <span class=\"error\">empty!</span>\n";
-            $ok = true; // TODO false;
+            echo 'sync... ';
+            _entitySyncAuthorities($codeAuthorities);
         }
-        echo "<br/>\n";
-        flush();
+        if (_entityCheckCodeAuthorities($codeAuthorities))
+        {
+            foreach ($codeAuthorities as $authority)
+                echo $authority . ' ';
+            echo 'ok';
+        } else {
+            echo " <span class=\"error\">invalid!</span>\n";
+            $ok = false;
+        }
+    } else {
+        echo " <span class=\"error\">empty!</span>\n";
+        $ok = true; // TODO false;
+    }
+    echo "<br/>\n";
+    flush();
 
-        echo 'time master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
-        if (sizeof($timeMasters) != 0)
+    echo 'time master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+    if (sizeof($timeAuthorities) != 0)
+    {
+        if (!_entityCheckTimeAuthorities($timeAuthorities))
         {
-            if (!_entityCheckTimeMasters($timeMasters))
-            {
-                echo 'sync... ';
-                _entitySyncMasters($timeMasters);
-            }
-            if (_entityCheckTimeMasters($timeMasters))
-            {
-                foreach ($timeMasters as $master)
-                    echo $master . ' ';
-                echo 'ok';
-            } else {
-                echo " <span class=\"error\">invalid!</span>\n";
-                $ok = false;
-            }
-        } else {
-            echo " <span class=\"error\">empty!</span>\n";
-            $ok = true; // TODO false;
+            echo 'sync... ';
+            _entitySyncAuthorities($timeAuthorities);
         }
-        echo "<br/>\n";
-        flush();
+        if (_entityCheckTimeAuthorities($timeAuthorities))
+        {
+            foreach ($timeAuthorities as $authority)
+                echo $authority . ' ';
+            echo 'ok';
+        } else {
+            echo " <span class=\"error\">invalid!</span>\n";
+            $ok = false;
+        }
+    } else {
+        echo " <span class=\"error\">empty!</span>\n";
+        $ok = true; // TODO false;
+    }
+    echo "<br/>\n";
+    flush();
 
-        echo 'directory master : ';
-        if (sizeof($directoryMasters) != 0)
+    echo 'directory master : ';
+    if (sizeof($directoryAuthorities) != 0)
+    {
+        if (!_entityCheckDirectoryAuthorities($directoryAuthorities))
         {
-            if (!_entityCheckDirectoryMasters($directoryMasters))
-            {
-                echo 'sync... ';
-                _entitySyncMasters($directoryMasters);
-            }
-            if (_entityCheckDirectoryMasters($directoryMasters))
-            {
-                foreach ($directoryMasters as $master)
-                    echo $master . ' ';
-                echo 'ok';
-            } else {
-                echo " <span class=\"error\">invalid!</span>\n";
-                $ok = false;
-            }
-        } else {
-            echo " <span class=\"error\">empty!</span>\n";
-            $ok = true; // TODO false;
+            echo 'sync... ';
+            _entitySyncAuthorities($directoryAuthorities);
         }
-        echo "<br/>\n";
-        flush();
+        if (_entityCheckDirectoryAuthorities($directoryAuthorities))
+        {
+            foreach ($directoryAuthorities as $authority)
+                echo $authority . ' ';
+            echo 'ok';
+        } else {
+            echo " <span class=\"error\">invalid!</span>\n";
+            $ok = false;
+        }
+    } else {
+        echo " <span class=\"error\">empty!</span>\n";
+        $ok = true; // TODO false;
+    }
+    echo "<br/>\n";
+    flush();
 
     if ($ok)
         addLog('ok sync entities', 'info', __FUNCTION__, 'c5b55957');
@@ -6529,7 +6593,7 @@ function bootstrapFirstDisplay6SyncObjects(): bool
  */
 function bootstrapFirstDisplay7Subordination(): bool
 {
-    global $firstSubordinationOid;
+    global $firstAlternativePuppetmasterOid, $firstSubordinationOid;
 
     $ok = true;
 
@@ -6544,12 +6608,13 @@ function bootstrapFirstDisplay7Subordination(): bool
 ?>
 <form action="" method="get">
     <div>
-        <label for="oid">OID :</label><br />
+        <label for="oid">OID &nbsp;&nbsp;&nbsp;&nbsp; :</label>
         <input type="text" id="oid" name="bootstrapfirstsubordinationoid" />
     </div>
     <div>
-        <label for="loc">Location :</label><br />
+        <label for="loc">Location :</label>
         <input type="text" id="loc" name="bootstrapfirstsubordinationlocation" />
+        <input type="hidden" id="puppetmaster" name="bootstrapfirstpuppetmasteroid" value="<?php echo $firstAlternativePuppetmasterOid; ?>" />
     </div>
     <div class="button">
         <button type="submit">Submit</button>
@@ -6559,20 +6624,28 @@ function bootstrapFirstDisplay7Subordination(): bool
 <?php
             $ok = false;
         } else {
-            $argOID = trim(filter_input(INPUT_GET, 'bootstrapfirstsubordinationoid', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $argOID = trim(' '.filter_input(INPUT_GET, 'bootstrapfirstsubordinationoid', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
             if (_nodCheckNID($argOID, false))
             {
+                echo 'try alternative puppetmaster : ' . $argOID . ' ';
                 $firstSubordinationOid = $argOID;
-                $argLoc = trim(filter_input(INPUT_GET, 'bootstrapfirstsubordinationlocation', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-                if (strlen($argLoc) != 0) // TODO filter on URL
+                $argLoc = trim(' '.filter_input(INPUT_GET, 'bootstrapfirstsubordinationlocation', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+                if (strlen($argLoc) != 0 && filter_var($argLoc, FILTER_VALIDATE_URL) !== false)
+                {
+                    echo 'sync...';
                     _objDownloadOnLocations($argOID, array($argLoc));
+                    _lnkDownloadOnLocations($argOID, array($argLoc));
+                }
             } else {
+                addLog('unable to find subordination oid', 'error', __FUNCTION__, '5cd18917');
+                echo " <span class=\"error\">invalid!</span>\n";
                 $argLoc = '';
                 $firstSubordinationOid = '';
             }
-            addLog('define subordination oid = ' . $firstSubordinationOid, 'warn', __FUNCTION__, '10a0bd6d');
+            echo "<br />\n";
+            addLog('define subordination oid = ' . $firstSubordinationOid, 'warn', __FUNCTION__, 'a875618e');
             echo 'subordination to : ' . $firstSubordinationOid . "<br />\n";
-            addLog('define subordination location = ' . $firstSubordinationOid, 'info', __FUNCTION__, '6d54e19e');
+            addLog('define subordination location = ' . $argLoc, 'info', __FUNCTION__, 'c1c943a5');
             echo 'location on &nbsp;&nbsp;&nbsp;&nbsp; : ' . $argLoc . "\n";
         }
     } else {
@@ -6594,7 +6667,7 @@ function bootstrapFirstDisplay7Subordination(): bool
  */
 function bootstrapFirstDisplay8OptionsFile(): bool
 {
-    global $firstSubordinationOid;
+    global $firstAlternativePuppetmasterOid, $firstSubordinationOid;
 
     $ok = true;
 
@@ -6612,6 +6685,11 @@ function bootstrapFirstDisplay8OptionsFile(): bool
     foreach (LIST_OPTIONS_DEFAULT_VALUE as $option => $value)
     {
         $prefix = '#';
+        if ($option == 'puppetmaster' && $firstAlternativePuppetmasterOid != '')
+        {
+            $value = $firstAlternativePuppetmasterOid;
+            $prefix = '';
+        }
         if ($option == 'subordinationEntity' && $firstSubordinationOid != '')
         {
             $value = $firstSubordinationOid;
