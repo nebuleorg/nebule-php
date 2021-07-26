@@ -758,15 +758,18 @@ function getConfiguration(string $name)
     $value = '';
     if (file_exists(LOCAL_ENVIRONMENT_FILE)) {
         $file = file(LOCAL_ENVIRONMENT_FILE, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
-        foreach ($file as $line) {
-            $l = trim(filter_var($line, FILTER_SANITIZE_STRING));
+        if ($file !== false)
+        {
+            foreach ($file as $line) {
+                $l = trim(filter_var($line, FILTER_SANITIZE_STRING));
 
-            if ($l == '' || $l[0] == "#" || strpos($l, '=') === false)
-                continue;
+                if ($l == '' || $l[0] == "#" || strpos($l, '=') === false)
+                    continue;
 
-            if (trim(strtok($l, '=')) == $name) {
-                $value = trim(strtok('='));
-                break;
+                if (trim(strtok($l, '=')) == $name) {
+                    $value = trim(strtok('='));
+                    break;
+                }
             }
         }
     }
@@ -3824,13 +3827,17 @@ function io_linksRead(string &$nid, array &$lines, int $maxLinks = 0): array
         $maxLinks = getConfiguration('ioReadMaxLinks');
 
     $links = file(LOCAL_LINKS_FOLDER . '/' . $nid);
-    foreach ($links as $link) {
-        $lines [$count] = $link;
-        _metrologyCountAdd('lr');
-        $count++;
-        if ($count > $maxLinks)
-            break 1;
+    if ($links !== false)
+    {
+        foreach ($links as $link) {
+            $lines [$count] = $link;
+            _metrologyCountAdd('lr');
+            $count++;
+            if ($count > $maxLinks)
+                break 1;
+        }
     }
+
     return $lines;
 }
 
@@ -3850,9 +3857,12 @@ function io_linkWrite(string &$nid, string &$link): bool
         return false;
 
     $l = file(LOCAL_LINKS_FOLDER . '/' . $nid);
-    foreach ($l as $k) {
-        if (trim($k) == trim($link))
-            return true;
+    if ($l !== false)
+    {
+        foreach ($l as $k) {
+            if (trim($k) == trim($link))
+                return true;
+        }
     }
 
     if (file_put_contents(LOCAL_LINKS_FOLDER . '/' . $nid, "$link\n", FILE_APPEND) === false)
@@ -6768,8 +6778,7 @@ function bootstrapFirstDisplay9LocaleEntity(): bool
         $genpasswd = openssl_random_pseudo_bytes(FIRST_GENERATED_PASSWORD_SIZE * 20); // TODO modify to use less entropy.
         $nebulePasswordEntite .= preg_replace('/[^[:print:]]/', '', $genpasswd);
         $nebulePasswordEntite = substr($nebulePasswordEntite, 0, FIRST_GENERATED_PASSWORD_SIZE);
-        foreach ($genpasswd as $i => $c)
-            $genpasswd[$c] = $i^$i;
+        $genpasswd = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
         $genpasswd = null;
 
         $nebulePublicEntity = '0';
@@ -6872,8 +6881,7 @@ chmod 644 <?php echo LOCAL_ENTITY_FILE; ?>
     }
     echo "</div>\n";
 
-    foreach ($nebulePasswordEntite as $i => $c)
-        $nebulePasswordEntite[$c] = $i^$i;
+    $nebulePasswordEntite = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
     $nebulePasswordEntite = null;
 
     return $ok;
