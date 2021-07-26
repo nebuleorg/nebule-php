@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020210607';
+const BOOTSTRAP_VERSION = '020210727';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -375,7 +375,7 @@ $metrologyLibraryPOOConvertationCache = 0;
  ------------------------------------------------------------------------------------------
  */
 
-const NEBULE_LIBRARY_PP_VERSION = '020210714';
+const NEBULE_LIBRARY_PP_VERSION = '020210727';
 const NEBULE_LIBRARY_PP_LINK_VERSION = '2:0';
 const NEBULE_DEFAULT_PUPPETMASTER_ID = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
 const NEBULE_NID_SECURITY_AUTHORITY_REFERENCE = 'a4b210d4fb820a5b715509e501e36873eb9e27dca1dd591a98a5fc264fd2238adf4b489d.none.288';
