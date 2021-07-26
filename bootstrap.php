@@ -5807,6 +5807,7 @@ function bootstrapInlineDisplayOnBreak()
 }
 
 
+
 /*
  *
  *
@@ -5927,6 +5928,42 @@ function bootstrapDisplayPreloadApplication()
     bootstrapHtmlBottom();
 }
 
+/**
+ * Subpart display to reload the HTML page.
+ * @param bool $ok
+ * @param int $delay
+ * @return void
+ */
+function bootstrapPartDisplayReloadPage(bool $ok=true, int $delay=0): void
+{
+    if ($delay == 0)
+        $delay = FIRST_RELOAD_DELAY;
+
+    echo '<div id="reload">' . "\n";
+    if ($ok)
+    {
+        ?>
+
+        &gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo BOOTSTRAP_NAME; ?></a> ...
+        <script type="text/javascript">
+            <!--
+            setTimeout(function () {
+                window.location.reload(true)
+            }, <?php echo $delay; ?>);
+            //-->
+        </script>
+        <?php
+    } else {
+        ?>
+
+        <button onclick="javascript:window.location.reload(true);">when ready,
+            reload <?php echo BOOTSTRAP_NAME; ?></button>
+        <?php
+    }
+    echo "</div>\n";
+}
+
+
 
 /*
  *
@@ -5981,15 +6018,17 @@ function bootstrapDisplayApplicationfirst(): void
     if ($ok)
         $ok = bootstrapFirstDisplay3Objects();
     if ($ok)
-        $ok = bootstrapFirstDisplay4SyncAuthorities();
+        $ok = bootstrapFirstDisplay4Puppetmaster();
     if ($ok)
-        $ok = bootstrapFirstDisplay5SyncObjects();
+        $ok = bootstrapFirstDisplay5SyncAuthorities();
     if ($ok)
-        $ok = bootstrapFirstDisplay6Subordination();
+        $ok = bootstrapFirstDisplay6SyncObjects();
     if ($ok)
-        $ok = bootstrapFirstDisplay7OptionsFile();
+        $ok = bootstrapFirstDisplay7Subordination();
     if ($ok)
-        $ok = bootstrapFirstDisplay8LocaleEntity();
+        $ok = bootstrapFirstDisplay8OptionsFile();
+    if ($ok)
+        $ok = bootstrapFirstDisplay9LocaleEntity();
 
     echo '<div id="parts">';
     if ($ok)
@@ -6153,17 +6192,35 @@ function bootstrapFirstDisplay3Objects(): bool
 }
 
 /**
- * Synchronize the entities needed by nebule.
+ * Ask for subordination of the puppetmaster.
  * @return bool
  */
-function bootstrapFirstDisplay4SyncAuthorities(): bool
+function bootstrapFirstDisplay4Puppetmaster(): bool
 {
     global $nebuleLocalAuthorities;
 
     $ok = true;
 
     echo '<div class="parts">'."\n";
-    echo '<span class="partstitle">#4 synchronizing authorities</span><br/>'."\n";
+    echo '<span class="partstitle">#5 puppetmaster</span><br/>'."\n";
+
+    echo "</div>\n";
+
+    return $ok;
+}
+
+/**
+ * Synchronize the entities needed by nebule.
+ * @return bool
+ */
+function bootstrapFirstDisplay5SyncAuthorities(): bool
+{
+    global $nebuleLocalAuthorities;
+
+    $ok = true;
+
+    echo '<div class="parts">'."\n";
+    echo '<span class="partstitle">#5 synchronizing authorities</span><br/>'."\n";
 
     $puppetmaster = _entityGetPuppetmaster();
     $securityMasters = _entityGetSecurityMasters(true);
@@ -6307,56 +6364,18 @@ function bootstrapFirstDisplay4SyncAuthorities(): bool
 }
 
 /**
- * Subpart display to reload the HTML page.
- * @param bool $ok
- * @param int $delay
- * @return void
- */
-function bootstrapPartDisplayReloadPage(bool $ok=true, int $delay=0): void
-{
-    if ($delay == 0)
-        $delay = FIRST_RELOAD_DELAY;
-
-    echo '<div id="reload">' . "\n";
-    if ($ok)
-    {
-?>
-
-&gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo BOOTSTRAP_NAME; ?></a> ...
-<script type="text/javascript">
-    <!--
-    setTimeout(function () {
-        window.location.reload(true)
-    }, <?php echo $delay; ?>);
-    //-->
-</script>
-<?php
-    } else {
-?>
-
-<button onclick="javascript:window.location.reload(true);">when ready,
-    reload <?php echo BOOTSTRAP_NAME; ?></button>
-<?php
-    }
-    echo "</div>\n";
-}
-
-
-
-// ------------------------------------------------------------------------------------------
-/**
  * Synchronisation des objets sur internet pour fonctionner.
  *
  * @return bool
  */
-function bootstrapFirstDisplay5SyncObjects(): bool
+function bootstrapFirstDisplay6SyncObjects(): bool
 {
     global $nebuleLocalAuthorities;
 
     $ok = true;
 
     echo '<div class="parts">'."\n";
-    echo '<span class="partstitle">#5 synchronizing objets</span><br/>'."\n";
+    echo '<span class="partstitle">#6 synchronizing objets</span><br/>'."\n";
 
     $refApps = REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS;
     $refAppsID = _objGetNID($refApps, getConfiguration('cryptoHashAlgorithm'));
@@ -6508,14 +6527,14 @@ function bootstrapFirstDisplay5SyncObjects(): bool
  *
  * @return bool
  */
-function bootstrapFirstDisplay6Subordination(): bool
+function bootstrapFirstDisplay7Subordination(): bool
 {
     global $firstSubordinationOid;
 
     $ok = true;
 
     echo '<div class="parts">'."\n";
-    echo '<span class="partstitle">#6 subordination</span><br/>'."\n";
+    echo '<span class="partstitle">#7 subordination</span><br/>'."\n";
 
     if (!file_exists(LOCAL_ENVIRONMENT_FILE))
     {
@@ -6573,14 +6592,14 @@ function bootstrapFirstDisplay6Subordination(): bool
  *
  * @return bool
  */
-function bootstrapFirstDisplay7OptionsFile(): bool
+function bootstrapFirstDisplay8OptionsFile(): bool
 {
     global $firstSubordinationOid;
 
     $ok = true;
 
     echo '<div class="parts">'."\n";
-    echo '<span class="partstitle">#7 options file</span><br/>'."\n";
+    echo '<span class="partstitle">#8 options file</span><br/>'."\n";
 
     // Generate local configuration with default options.
     $defaultOptions = "# Generated by the " . BOOTSTRAP_NAME . ", part of the " . BOOTSTRAP_AUTHOR . ".\n";
@@ -6655,14 +6674,14 @@ chmod 644 <?php echo LOCAL_ENVIRONMENT_FILE; ?>
  *
  * @return bool
  */
-function bootstrapFirstDisplay8LocaleEntity(): bool
+function bootstrapFirstDisplay9LocaleEntity(): bool
 {
     global $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite;
 
     $ok = true;
 
     echo '<div class="parts">'."\n";
-    echo '<span class="partstitle">#8 local entity for server</span><br/>'."\n";
+    echo '<span class="partstitle">#9 local entity for server</span><br/>'."\n";
     if ( file_put_contents(LOCAL_ENTITY_FILE, '0') !== false ) {
         echo 'new server entity<br/>' . "\n";
 
