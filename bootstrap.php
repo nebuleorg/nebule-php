@@ -701,6 +701,11 @@ $nebuleMetrologyObjectVerify = 0;
  */
 $nebuleMetrologyTimers = array();
 
+/**
+ * First run - OID of an optional subordination.
+ */
+$firstSubordinationOid = '';
+
 // Cache of many search result and content.
 $nebuleCacheReadObjText1line = array();
 $nebuleCacheReadObjName = array();
@@ -6505,26 +6510,55 @@ function bootstrapFirstDisplay5SyncObjects(): bool
  */
 function bootstrapFirstDisplay6Subordination(): bool
 {
+    global $firstSubordinationOid;
+
     $ok = true;
 
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#6 subordination</span><br/>'."\n";
 
-    //$argSubEntity = trim(filter_input(INPUT_GET, LOCAL_ENTITY_FILE, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-
-    if (!file_exists(LOCAL_ENVIRONMENT_FILE) && !filter_has_var(INPUT_GET, LOCAL_ENTITY_FILE))
+    if (!file_exists(LOCAL_ENVIRONMENT_FILE))
     {
+        if (!filter_has_var(INPUT_GET, 'bootstrapfirstsubordinationoid'))
+        {
+            addLog('ask subordination oid', 'info', __FUNCTION__, '213a735c');
 ?>
-        <form action="" method="get">
-            <div>
-                <label for="id">ID :</label>
-                <input type="text" id="id" name="<?php echo LOCAL_ENTITY_FILE; ?>" />
-            </div>
-            <div class="button">
-                <button type="submit">Send</button>
-            </div>
-        </form>
+<form action="" method="get">
+    <div>
+        <label for="oid">OID :</label><br />
+        <input type="text" id="oid" name="bootstrapfirstsubordinationoid" />
+    </div>
+    <div>
+        <label for="loc">Location :</label><br />
+        <input type="text" id="loc" name="bootstrapfirstsubordinationlocation" />
+    </div>
+    <div class="button">
+        <button type="submit">Submit</button>
+    </div>
+</form>
+
 <?php
+            $ok = false;
+        } else {
+            $argOID = trim(filter_input(INPUT_GET, 'bootstrapfirstsubordinationoid', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            if (_nodCheckNID($argOID, false))
+            {
+                $firstSubordinationOid = $argOID;
+                $argLoc = trim(filter_input(INPUT_GET, 'bootstrapfirstsubordinationlocation', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+                if (strlen($argLoc) != 0) // TODO filter on URL
+                    _objDownloadOnLocations($argOID, array($argLoc));
+            } else {
+                $argLoc = '';
+                $firstSubordinationOid = '';
+            }
+            addLog('define subordination oid = ' . $firstSubordinationOid, 'warn', __FUNCTION__, '10a0bd6d');
+            echo 'subordination to : ' . $firstSubordinationOid . "<br />\n";
+            addLog('define subordination location = ' . $firstSubordinationOid, 'info', __FUNCTION__, '6d54e19e');
+            echo 'location on &nbsp;&nbsp;&nbsp;&nbsp; : ' . $argLoc . "\n";
+        }
+    } else {
+        $firstSubordinationOid = getConfiguration('subordinationEntity');
+        echo 'subordination to ' . $firstSubordinationOid . "\n";
     }
 
     echo "</div>\n";
@@ -6541,6 +6575,8 @@ function bootstrapFirstDisplay6Subordination(): bool
  */
 function bootstrapFirstDisplay7OptionsFile(): bool
 {
+    global $firstSubordinationOid;
+
     $ok = true;
 
     echo '<div class="parts">'."\n";
@@ -6556,7 +6592,13 @@ function bootstrapFirstDisplay7OptionsFile(): bool
     $defaultOptions .= "# Options writen here are write-protected for the library and all applications.\n";
     foreach (LIST_OPTIONS_DEFAULT_VALUE as $option => $value)
     {
-        $defaultOptions .= '#' . $option . ' = ';
+        $prefix = '#';
+        if ($option == 'subordinationEntity' && $firstSubordinationOid != '')
+        {
+            $value = $firstSubordinationOid;
+            $prefix = '';
+        }
+        $defaultOptions .= $prefix . $option . ' = ';
         if (LIST_OPTIONS_TYPE[$option] == 'boolean')
         {
             if ($value === true)
