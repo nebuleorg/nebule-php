@@ -1720,7 +1720,7 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
  */
 function _entityCheck(string $nid): bool
 {
-    if (!objCheckIsPublicKey($nid))
+    if (!_objCheckIsPublicKey($nid))
         return false;
     return true;
 }
@@ -2234,7 +2234,7 @@ function _objCheckContent(&$nid)
  * @param string $nid
  * @return boolean
  */
-function objCheckIsPublicKey(string &$nid): bool
+function _objCheckIsPublicKey(string &$nid): bool
 {
     global $nebuleCacheIsPublicKey;
 
@@ -2271,7 +2271,7 @@ function objCheckIsPublicKey(string &$nid): bool
  * @param $nid
  * @return bool
  */
-function objCheckIsPrivateKey(&$nid): bool
+function _objCheckIsPrivateKey(&$nid): bool
 {
     global $nebuleCacheIsPrivateKey;
 
@@ -4097,7 +4097,6 @@ function io_checkExistOverHTTP(string $location): bool
 function io_close(): void
 {
     // Rien à fermer sur un fs.
-    return;
 }
 
 /*
