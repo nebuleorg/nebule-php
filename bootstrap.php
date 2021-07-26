@@ -1491,7 +1491,7 @@ function _metrologyTimerGet(string $type): string
  * @param string $password
  * @return bool
  */
-function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $password = '')
+function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $password = ''): bool
 {
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteEntity')
@@ -1502,7 +1502,7 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
     )
         return false;
 
-    // Génération de la clé
+    // Generate the bi-key.
     switch ($asymetricAlgo) {
         case 'rsa.1024' :
             $config = array(
@@ -1514,6 +1514,12 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
             $config = array(
                 'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
                 'private_key_bits' => 2048,
+                'private_key_type' => OPENSSL_KEYTYPE_RSA);
+            break;
+        case 'rsa.3192' :
+            $config = array(
+                'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
+                'private_key_bits' => 3192,
                 'private_key_type' => OPENSSL_KEYTYPE_RSA);
             break;
         case 'rsa.4096' :
@@ -1534,32 +1540,47 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
                 'private_key_bits' => 2048,
                 'private_key_type' => OPENSSL_KEYTYPE_DSA);
             break;
+        case 'dsa.3192' :
+            $config = array(
+                'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
+                'private_key_bits' => 3192,
+                'private_key_type' => OPENSSL_KEYTYPE_DSA);
+            break;
         case 'dsa.4096' :
             $config = array(
                 'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
                 'private_key_bits' => 4096,
                 'private_key_type' => OPENSSL_KEYTYPE_DSA);
             break;
+        case 'ec.prime256v1' :
+            $config = array(
+                'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
+                'curve_name' => 'prime256v1',
+                'private_key_type' => OPENSSL_KEYTYPE_EC);
+            break;
+        default:
+            return false;
     }
     $newpkey = openssl_pkey_new($config);
-    unset($config);
-    // Extraction de la clé publique.
+    if ($newpkey === false)
+        return false;
+
+    // Extract public key.
     $pubkey = openssl_pkey_get_details($newpkey);
     $pubkey = $pubkey ['key'];
     $hashpubkey = _objGetNID($pubkey, getConfiguration('cryptoHashAlgorithm'));
     _objWriteContent($pubkey, $hashpubkey);
-    // Extraction de la clé privée.
-    if ($password != '') {
+
+    // Extract private key.
+    if ($password != '')
         openssl_pkey_export($newpkey, $privkey, $password);
-    } else {
+    else
         openssl_pkey_export($newpkey, $privkey);
-    }
     $hashprivkey = _objGetNID($privkey, getConfiguration('cryptoHashAlgorithm'));
     _objWriteContent($privkey, $hashprivkey);
     $private_key = openssl_pkey_get_private($privkey, $password);
-    if ($private_key === false) {
+    if ($private_key === false)
         return false;
-    }
 
 
 
