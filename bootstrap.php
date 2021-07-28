@@ -1025,7 +1025,7 @@ function nebGetContentAsText(string &$oid, int $maxData = 0): string
 
     $data = '';
     _objGetLocalContent($oid, $data, $maxData + 1);
-    $data = filterPrinteableString(filter_var($data, FILTER_SANITIZE_STRING));
+    $data = _filterPrinteableString(filter_var($data, FILTER_SANITIZE_STRING));
 
     if (strlen($data) > $maxData) {
         $data = substr($data, 0, ($maxData - 3)) . '...';
@@ -1505,7 +1505,7 @@ function _entityGenerate(string $asymmetricAlgo, string $hashAlgo, string &$hash
     // Generate the bi-key.
     $publicKey = '';
     $privateKey = '';
-    if (cryptoGetNewPKey($asymmetricAlgo, $hashAlgo, $publicKey, $privateKey, $password))
+    if (_cryptoGetNewPKey($asymmetricAlgo, $hashAlgo, $publicKey, $privateKey, $password))
     {
         $hashPublicKey = _objGetNID($publicKey, getConfiguration('cryptoHashAlgorithm'));
         _objWriteContent($publicKey, $hashPublicKey);
@@ -2164,7 +2164,7 @@ function _objCheckContent(&$nid)
 
     $algo = substr($nid, strpos($nid, '.') + 1);
     if ($algo !== false)
-        $hash = cryptoGetFileHash($nid, $algo);
+        $hash = _cryptoGetFileHash($nid, $algo);
     else
         $hash = 'invalid';
 
@@ -2262,7 +2262,7 @@ function _objCheckIsPrivateKey(&$nid): bool
  */
 function _objGetNID(string $data, string $algo = ''): string
 {
-    return cryptoGetDataHash($data, $algo) . '.' . $algo;
+    return _cryptoGetDataHash($data, $algo) . '.' . $algo;
 }
 
 /**
@@ -2428,7 +2428,7 @@ function _lnkGenerate(string $rc, string $req, string $nid1, string $nid2 = '', 
 
     $bh_bl = $bh . '_' . $bl;
 
-    $sign = cryptoAsymmetricEncrypt($bh_bl);
+    $sign = _cryptoAsymmetricEncrypt($bh_bl);
     if ($sign == '')
         return '';
 
@@ -3443,8 +3443,8 @@ function _lnkCheckSIG(string &$bh, string &$bl, string &$sig, string &$nid): boo
     if (!getConfiguration('permitCheckSignOnVerify')) return true;
     if (io_checkNodeHaveContent($nid) && _objCheckContent($nid)) {
         $data = $bh . '_' . $bl;
-        $hash = cryptoGetDataHash($data, $algo . '.' . $size);
-        return cryptoAsymmetricVerify($sign, $hash, $nid);
+        $hash = _cryptoGetDataHash($data, $algo . '.' . $size);
+        return _cryptoAsymmetricVerify($sign, $hash, $nid);
     }
 
     return false;
@@ -3654,8 +3654,8 @@ function io_checkLinkFolder(): bool
 
     // Check writeability.
     if (getConfiguration('permitWrite') && getConfiguration('permitWriteLink')) {
-        $data = cryptoGetPseudoRandom(2048);
-        $name = LOCAL_LINKS_FOLDER . '/writest' . bin2hex(cryptoGetPseudoRandom(8));
+        $data = _cryptoGetPseudoRandom(2048);
+        $name = LOCAL_LINKS_FOLDER . '/writest' . bin2hex(_cryptoGetPseudoRandom(8));
         if (file_put_contents($name, $data) === false) {
             addLog('I/O error on folder for links.', 'error', __FUNCTION__, 'f72e3a86');
             setBootstrapBreak('23', "Library i/o link's folder error");
@@ -3698,8 +3698,8 @@ function io_checkObjectFolder(): bool
 
     // Check writeability.
     if (getConfiguration('permitWrite') && getConfiguration('permitWriteObject')) {
-        $data = cryptoGetPseudoRandom(2048);
-        $name = LOCAL_OBJECTS_FOLDER . '/writest' . bin2hex(cryptoGetPseudoRandom(8));
+        $data = _cryptoGetPseudoRandom(2048);
+        $name = LOCAL_OBJECTS_FOLDER . '/writest' . bin2hex(_cryptoGetPseudoRandom(8));
         if (file_put_contents($name, $data) === false) {
             addLog('I/O error on folder for objects.', 'error', __FUNCTION__, '1327da69');
             setBootstrapBreak('25', "Library i/o object's folder error");
@@ -3955,7 +3955,7 @@ function io_objectSynchronize(string $nid, string $location): bool
         return false;
 
     // Téléchargement de l'objet via un fichier temporaire.
-    $tmpId = bin2hex(cryptoGetPseudoRandom(8));
+    $tmpId = bin2hex(_cryptoGetPseudoRandom(8));
     $tmpIdName = 'io_objectSynchronize' . $tmpId . '-' . $nid;
     $distobj = fopen($location . '/o/' . $nid, 'r');
     if ($distobj) {
@@ -3967,7 +3967,7 @@ function io_objectSynchronize(string $nid, string $location): bool
             fclose($localobj);
             $algo = substr($nid, strpos($nid, '.') + 1);
             if ($algo !== false)
-                $hash = cryptoGetFileHash($tmpIdName, cryptoGetTranslatedHashAlgo($algo));
+                $hash = _cryptoGetFileHash($tmpIdName, _cryptoGetTranslatedHashAlgo($algo));
             else
                 $hash = 'invalid';
 
@@ -4064,7 +4064,7 @@ function io_close(): void
  * @param string $data
  * @return string
  */
-function filterPrinteableString($data): string
+function _filterPrinteableString($data): string
 {
     return preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', $data);
 }
@@ -4082,7 +4082,7 @@ function filterPrinteableString($data): string
  * @param bool $loop
  * @return string
  */
-function cryptoGetTranslatedHashAlgo(string $algo, bool $loop = true): string
+function _cryptoGetTranslatedHashAlgo(string $algo, bool $loop = true): string
 {
     if ($algo == '')
         $algo = getConfiguration('cryptoHashAlgorithm');
@@ -4108,7 +4108,7 @@ function cryptoGetTranslatedHashAlgo(string $algo, bool $loop = true): string
     {
         if($loop) {
             addLog('cryptoHashAlgorithm configuration have an unknown value (' . $algo . ')', 'error', __FUNCTION__, 'b7627066');
-            $translatedAlgo = cryptoGetTranslatedHashAlgo(LIST_OPTIONS_DEFAULT_VALUE['cryptoHashAlgorithm'], false);
+            $translatedAlgo = _cryptoGetTranslatedHashAlgo(LIST_OPTIONS_DEFAULT_VALUE['cryptoHashAlgorithm'], false);
         }
         else
             $translatedAlgo = 'sha512';
@@ -4125,9 +4125,9 @@ function cryptoGetTranslatedHashAlgo(string $algo, bool $loop = true): string
  * @param string $data
  * @return string
  */
-function cryptoGetDataHash(string &$data, string $algo = ''): string
+function _cryptoGetDataHash(string &$data, string $algo = ''): string
 {
-    return hash(cryptoGetTranslatedHashAlgo($algo), $data);
+    return hash(_cryptoGetTranslatedHashAlgo($algo), $data);
 }
 
 /**
@@ -4139,9 +4139,9 @@ function cryptoGetDataHash(string &$data, string $algo = ''): string
  * @param string $file
  * @return string
  */
-function cryptoGetFileHash(string $file, string $algo = ''): string
+function _cryptoGetFileHash(string $file, string $algo = ''): string
 {
-    return hash_file(cryptoGetTranslatedHashAlgo($algo), LOCAL_OBJECTS_FOLDER . '/' . $file);
+    return hash_file(_cryptoGetTranslatedHashAlgo($algo), LOCAL_OBJECTS_FOLDER . '/' . $file);
 }
 
 /**
@@ -4151,7 +4151,7 @@ function cryptoGetFileHash(string $file, string $algo = ''): string
  * @param int $count
  * @return string
  */
-function cryptoGetPseudoRandom($count = 32): string
+function _cryptoGetPseudoRandom($count = 32): string
 {
     global $nebuleServerEntity;
 
@@ -4196,10 +4196,10 @@ function cryptoGetPseudoRandom($count = 32): string
  * @param string $password
  * @return bool
  */
-function cryptoGetNewPKey(string $asymmetricAlgo, string $hashAlgo, string &$publicKey, string &$privateKey, string $password): bool
+function _cryptoGetNewPKey(string $asymmetricAlgo, string $hashAlgo, string &$publicKey, string &$privateKey, string $password): bool
 {
     // Prepare values.
-    $digestAlgo = cryptoGetTranslatedHashAlgo($hashAlgo, true);
+    $digestAlgo = _cryptoGetTranslatedHashAlgo($hashAlgo, true);
     $config = array( 'digest_alg' => $digestAlgo, );
     switch ($asymmetricAlgo) {
         case 'rsa.1024' :
@@ -4271,7 +4271,7 @@ function cryptoGetNewPKey(string $asymmetricAlgo, string $hashAlgo, string &$pub
  * @param string $data
  * @return string
  */
-function cryptoAsymmetricEncrypt(string $data): string
+function _cryptoAsymmetricEncrypt(string $data): string
 {
     global $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite;
 
@@ -4291,7 +4291,7 @@ function cryptoAsymmetricEncrypt(string $data): string
     if ($private_key === false)
         return '';
     $binary_signature = '';
-    $hashdata = cryptoGetDataHash($data);
+    $hashdata = _cryptoGetDataHash($data);
     $binhash = pack("H*", $hashdata);
     $ok = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     openssl_free_key($private_key);
@@ -4312,7 +4312,7 @@ function cryptoAsymmetricEncrypt(string $data): string
  * @param string $nid
  * @return boolean
  */
-function cryptoAsymmetricVerify(string $sign, string $hash, string $nid): bool
+function _cryptoAsymmetricVerify(string $sign, string $hash, string $nid): bool
 {
     // Read signer's public key.
     $cert = io_objectRead($nid, 10000);
@@ -4617,7 +4617,7 @@ function findApplication():void
 
     // Enregistre l'identifiant de session pour le suivi d'un utilisateur.
     $sessionId = session_id();
-    addLog('session hash id ' . cryptoGetDataHash($sessionId), 'info', __FUNCTION__, '36ebd66b');
+    addLog('session hash id ' . _cryptoGetDataHash($sessionId), 'info', __FUNCTION__, '36ebd66b');
 
     // Vérifie l'ID de départ de l'application mémorisé.
     if (isset($_SESSION['bootstrapApplicationStartID'])
@@ -5552,7 +5552,7 @@ function bootstrapDisplayOnBreak(): void
     if (sizeof($bootstrapBreak) != 0 && isset($bootstrapBreak[12]))
         echo "<a href=\"?a=0\">&gt; Return to application 0</a><br />\n";
     $sessionId = session_id();
-    echo '<a href="?f">&gt; Flush PHP session</a> (' . substr(cryptoGetDataHash($sessionId), 0, 6) . ')' . "\n";
+    echo '<a href="?f">&gt; Flush PHP session</a> (' . substr(_cryptoGetDataHash($sessionId), 0, 6) . ')' . "\n";
     echo '</div>'."\n";
 
     echo '<div class="parts">'."\n";
