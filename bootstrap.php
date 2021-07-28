@@ -1523,57 +1523,58 @@ function _entityGenerate(string $asymmetricAlgo, string $hashAlgo, string &$hash
     $oidText = _objGetNID('text/plain');
 
     $link = _lnkGenerate('', 'l', $oidHash, $oidAlgo, $oidHash);
-    $ok = _lnkWrite($link);
-    if ($ok)
-        $link = _lnkGenerate('', 'l', $oidHash, $oidText, $oidType);
-    $ok = _lnkWrite($link);
-    if ($ok)
-        $link = _lnkGenerate('', 'l', $oidAlgo, $oidAlgo, $oidHash);
-    $ok = _lnkWrite($link);
-    if ($ok)
-        $link = _lnkGenerate('', 'l', $oidAlgo, $oidText, $oidType);
-    $ok = _lnkWrite($link);
-    if ($ok)
-        $link = _lnkGenerate('', 'l', $oidType, $oidAlgo, $oidHash);
-    $ok = _lnkWrite($link);
-    if ($ok)
-        $link = _lnkGenerate('', 'l', $oidType, $oidText, $oidType);
-    $ok = _lnkWrite($link);
-    if ($ok)
-        $link = _lnkGenerate('', 'l', $oidPem, $oidAlgo, $oidHash);
-    $ok = _lnkWrite($link);
-    if ($ok)
-        $link = _lnkGenerate('', 'l', $oidPem, $oidText, $oidType);
-    $ok = _lnkWrite($link);
-    if ($ok)
-        $link = _lnkGenerate('', 'l', $oidPKey, $oidAlgo, $oidHash);
-    $ok = _lnkWrite($link);
-    if ($ok)
-        $link = _lnkGenerate('', 'l', $oidPKey, $oidText, $oidType);
-    $ok = _lnkWrite($link);
-    if ($ok)
-        $link = _lnkGenerate('', 'l', $oidText, $oidAlgo, $oidHash);
-    $ok = _lnkWrite($link);
-    if ($ok)
-        $link = _lnkGenerate('', 'l', $oidText, $oidText, $oidType);
-    $ok = _lnkWrite($link);
-    if ($ok)
-        $link = _lnkGenerate('', 'l', $hashPublicKey, $oidAlgo, $oidHash);
-    $ok = _lnkWrite($link);
-    if ($ok)
-        $link = _lnkGenerate('', 'l', $hashPublicKey, $oidPem, $oidType);
-    $ok = _lnkWrite($link);
-    if ($ok)
-        $link = _lnkGenerate('', 'l', $hashPrivateKey, $oidAlgo, $oidHash);
-    $ok = _lnkWrite($link);
-    if ($ok)
-        $link = _lnkGenerate('', 'l', $hashPrivateKey, $oidPem, $oidType);
-    $ok = _lnkWrite($link);
-    if ($ok)
-        $link = _lnkGenerate('', 'f', $hashPublicKey, $hashPrivateKey, $oidPKey);
-    $ok = _lnkWrite($link);
+    if (!_lnkWrite($link))
+        return false;
+    $link = _lnkGenerate('', 'l', $oidHash, $oidText, $oidType);
+    if (!_lnkWrite($link))
+        return false;
+    $link = _lnkGenerate('', 'l', $oidAlgo, $oidAlgo, $oidHash);
+    if (!_lnkWrite($link))
+        return false;
+    $link = _lnkGenerate('', 'l', $oidAlgo, $oidText, $oidType);
+    if (!_lnkWrite($link))
+        return false;
+    $link = _lnkGenerate('', 'l', $oidType, $oidAlgo, $oidHash);
+    if (!_lnkWrite($link))
+        return false;
+    $link = _lnkGenerate('', 'l', $oidType, $oidText, $oidType);
+    if (!_lnkWrite($link))
+        return false;
+    $link = _lnkGenerate('', 'l', $oidPem, $oidAlgo, $oidHash);
+    if (!_lnkWrite($link))
+        return false;
+    $link = _lnkGenerate('', 'l', $oidPem, $oidText, $oidType);
+    if (!_lnkWrite($link))
+        return false;
+    $link = _lnkGenerate('', 'l', $oidPKey, $oidAlgo, $oidHash);
+    if (!_lnkWrite($link))
+        return false;
+    $link = _lnkGenerate('', 'l', $oidPKey, $oidText, $oidType);
+    if (!_lnkWrite($link))
+        return false;
+    $link = _lnkGenerate('', 'l', $oidText, $oidAlgo, $oidHash);
+    if (!_lnkWrite($link))
+        return false;
+    $link = _lnkGenerate('', 'l', $oidText, $oidText, $oidType);
+    if (!_lnkWrite($link))
+        return false;
+    $link = _lnkGenerate('', 'l', $hashPublicKey, $oidAlgo, $oidHash);
+    if (!_lnkWrite($link))
+        return false;
+    $link = _lnkGenerate('', 'l', $hashPublicKey, $oidPem, $oidType);
+    if (!_lnkWrite($link))
+        return false;
+    $link = _lnkGenerate('', 'l', $hashPrivateKey, $oidAlgo, $oidHash);
+    if (!_lnkWrite($link))
+        return false;
+    $link = _lnkGenerate('', 'l', $hashPrivateKey, $oidPem, $oidType);
+    if (!_lnkWrite($link))
+        return false;
+    $link = _lnkGenerate('', 'f', $hashPublicKey, $hashPrivateKey, $oidPKey);
+    if (!_lnkWrite($link))
+        return false;
 
-    return $ok;
+    return true;
 }
 
 /**
