@@ -664,12 +664,12 @@ $nebulePublicEntity = '';
 /**
  * Clé privée de l'entité en cours.
  */
-$nebulePrivateEntite = '';
+$nebulePrivateEntity = '';
 
 /**
  * Mot de passe de l'entité en cours.
  */
-$nebulePasswordEntite = '';
+$nebulePasswordEntity = '';
 
 /**
  * Liste des entités autorités locale.
@@ -1258,10 +1258,10 @@ function nebFindPrivateKey(): string
 // FIXME
 function nebCheckPrivateKeyPassword(): bool
 { // Vérifie si le mot de passe de l'entité en cours est bien valide, c'est à dire qu'il donne accès à la clé privée.
-    global $nebulePrivateEntite, $nebulePasswordEntite;
+    global $nebulePrivateEntity, $nebulePasswordEntity;
 
-    $privcert = nebGetContentAsText($nebulePrivateEntite, 10000);
-    $r = openssl_pkey_get_private($privcert, $nebulePasswordEntite);
+    $privcert = nebGetContentAsText($nebulePrivateEntity, 10000);
+    $r = openssl_pkey_get_private($privcert, $nebulePasswordEntity);
     unset($privcert);
     if ($r === false) {
         return false;
@@ -2398,12 +2398,12 @@ function _objWriteContent(string &$data, string $oid = '0'): bool
  */
 function _lnkGenerate(string $rc, string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): string
 {
-    global $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite;
+    global $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
 
     if (!_entityCheck($nebulePublicEntity)
-        || $nebulePrivateEntite == ''
-        || $nebulePasswordEntite == ''
-        || !io_checkNodeHaveContent($nebulePrivateEntite)
+        || $nebulePrivateEntity == ''
+        || $nebulePasswordEntity == ''
+        || !io_checkNodeHaveContent($nebulePrivateEntity)
         || $req == ''
         || !_nodCheckNID($nid1)
         || !_nodCheckNID($nid2, true)
@@ -4264,7 +4264,7 @@ function _cryptoGetNewPKey(string $asymmetricAlgo, string $hashAlgo, string &$pu
     return true;
 }
 
-/**
+/** FIXME
  * Crypto - Encrypt data with private asymmetric key.
  * Use OpenSSL library.
  *
@@ -4273,33 +4273,32 @@ function _cryptoGetNewPKey(string $asymmetricAlgo, string $hashAlgo, string &$pu
  */
 function _cryptoAsymmetricEncrypt(string $data): string
 {
-    global $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite;
+    global $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
 
     if (!_entityCheck($nebulePublicEntity)
-        || $nebulePrivateEntite == ''
-        || $nebulePasswordEntite == ''
-        || !io_checkNodeHaveContent($nebulePrivateEntite)
+        || $nebulePrivateEntity == ''
+        || $nebulePasswordEntity == ''
+        || !io_checkNodeHaveContent($nebulePrivateEntity)
         || $data = ''
     )
         return '';
 
-    $privcert = (nebGetContentAsText($nebulePrivateEntite, 10000)); // TODO A modifier pour ne pas appeler une fonction de haut niveau...
-    $privcert = '';
-    if (!_objGetLocalContent($nebulePrivateEntite, $privcert, 10000))
+    $privateCertificat = '';
+    if (!_objGetLocalContent($nebulePrivateEntity, $privateCertificat, 10000))
         return '';
-    $private_key = openssl_pkey_get_private($privcert, $nebulePasswordEntite);
+    $private_key = openssl_pkey_get_private($privateCertificat, $nebulePasswordEntity);
     if ($private_key === false)
         return '';
-    $binary_signature = '';
-    $hashdata = _cryptoGetDataHash($data);
-    $binhash = pack("H*", $hashdata);
-    $ok = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
+    $binarySignature = '';
+    $hashData = _cryptoGetDataHash($data);
+    $binHashData = pack("H*", $hashData);
+    $ok = openssl_private_encrypt($binHashData, $binarySignature, $private_key, OPENSSL_PKCS1_PADDING);
     openssl_free_key($private_key);
     unset($private_key);
     if ($ok === false)
         return '';
 
-    return bin2hex($binary_signature);
+    return bin2hex($binarySignature);
 }
 
 
@@ -6820,7 +6819,7 @@ chmod 644 <?php echo LOCAL_ENVIRONMENT_FILE; ?>
  */
 function bootstrapFirstDisplay9LocaleEntity(): bool
 {
-    global $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite;
+    global $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
 
     $ok = true;
 
@@ -6830,22 +6829,22 @@ function bootstrapFirstDisplay9LocaleEntity(): bool
         echo 'new server entity<br/>' . "\n";
 
         // Generate new password for new local entity.
-        $nebulePasswordEntite = '';
+        $nebulePasswordEntity = '';
         $genpasswd = openssl_random_pseudo_bytes(FIRST_GENERATED_PASSWORD_SIZE * 20); // TODO modify to use less entropy.
-        $nebulePasswordEntite .= preg_replace('/[^[:print:]]/', '', $genpasswd);
-        $nebulePasswordEntite = substr($nebulePasswordEntite, 0, FIRST_GENERATED_PASSWORD_SIZE);
+        $nebulePasswordEntity .= preg_replace('/[^[:print:]]/', '', $genpasswd);
+        $nebulePasswordEntity = substr($nebulePasswordEntity, 0, FIRST_GENERATED_PASSWORD_SIZE);
         $genpasswd = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
         $genpasswd = null;
 
         $nebulePublicEntity = '0';
-        $nebulePrivateEntite = '0';
+        $nebulePrivateEntity = '0';
         // Génère une nouvelle entité.
         _entityGenerate(
             getConfiguration('cryptoAsymmetricAlgorithm'),
             getConfiguration('cryptoHashAlgorithm'),
             $nebulePublicEntity,
-            $nebulePrivateEntite,
-            $nebulePasswordEntite
+            $nebulePrivateEntity,
+            $nebulePasswordEntity
         );
 
         // Définit l'entité comme entité instance du serveur.
@@ -6908,12 +6907,12 @@ function bootstrapFirstDisplay9LocaleEntity(): bool
         ?>
 
         public ID &nbsp;: <?php echo $nebulePublicEntity; ?><br/>
-        private ID : <?php echo $nebulePrivateEntite; ?>
+        private ID : <?php echo $nebulePrivateEntity; ?>
 
         <div class="important">
             name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $name; ?><br/>
             public ID : <?php echo $nebulePublicEntity; ?><br/>
-            password &nbsp;: <?php echo htmlspecialchars($nebulePasswordEntite); ?><br/>
+            password &nbsp;: <?php echo htmlspecialchars($nebulePasswordEntity); ?><br/>
             Please keep and save securely thoses private informations!
         </div>
         <?php
@@ -6939,8 +6938,8 @@ chmod 644 <?php echo LOCAL_ENTITY_FILE; ?>
     }
     echo "</div>\n";
 
-    $nebulePasswordEntite = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
-    $nebulePasswordEntite = null;
+    $nebulePasswordEntity = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
+    $nebulePasswordEntity = null;
 
     return $ok;
 }
