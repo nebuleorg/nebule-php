@@ -1484,14 +1484,14 @@ function _metrologyTimerGet(string $type): string
 /** FIXME
  * Entity -
  *
- * @param $asymetricAlgo
- * @param $hashAlgo
- * @param $hashpubkey
- * @param $hashprivkey
+ * @param string $asymetricAlgo
+ * @param string $hashAlgo
+ * @param string $hashPublicKey
+ * @param string $hashPrivateKey
  * @param string $password
  * @return bool
  */
-function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey, $password = ''): bool
+function _entityGenerate(string $asymetricAlgo, string $hashAlgo, string &$hashPublicKey, string &$hashPrivateKey, string $password = ''): bool
 {
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteEntity')
@@ -1503,83 +1503,15 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
         return false;
 
     // Generate the bi-key.
-    switch ($asymetricAlgo) {
-        case 'rsa.1024' :
-            $config = array(
-                'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
-                'private_key_bits' => 1024,
-                'private_key_type' => OPENSSL_KEYTYPE_RSA);
-            break;
-        case 'rsa.2048' :
-            $config = array(
-                'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
-                'private_key_bits' => 2048,
-                'private_key_type' => OPENSSL_KEYTYPE_RSA);
-            break;
-        case 'rsa.3192' :
-            $config = array(
-                'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
-                'private_key_bits' => 3192,
-                'private_key_type' => OPENSSL_KEYTYPE_RSA);
-            break;
-        case 'rsa.4096' :
-            $config = array(
-                'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
-                'private_key_bits' => 4096,
-                'private_key_type' => OPENSSL_KEYTYPE_RSA);
-            break;
-        case 'dsa.1024' :
-            $config = array(
-                'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
-                'private_key_bits' => 1024,
-                'private_key_type' => OPENSSL_KEYTYPE_DSA);
-            break;
-        case 'dsa.2048' :
-            $config = array(
-                'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
-                'private_key_bits' => 2048,
-                'private_key_type' => OPENSSL_KEYTYPE_DSA);
-            break;
-        case 'dsa.3192' :
-            $config = array(
-                'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
-                'private_key_bits' => 3192,
-                'private_key_type' => OPENSSL_KEYTYPE_DSA);
-            break;
-        case 'dsa.4096' :
-            $config = array(
-                'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
-                'private_key_bits' => 4096,
-                'private_key_type' => OPENSSL_KEYTYPE_DSA);
-            break;
-        case 'ec.prime256v1' :
-            $config = array(
-                'digest_alg' => cryptoGetTranslatedHashAlgo($hashAlgo, true),
-                'curve_name' => 'prime256v1',
-                'private_key_type' => OPENSSL_KEYTYPE_EC);
-            break;
-        default:
-            return false;
-    }
-    $newpkey = openssl_pkey_new($config);
-    if ($newpkey === false)
-        return false;
-
-    // Extract public key.
-    $pubkey = openssl_pkey_get_details($newpkey);
-    $pubkey = $pubkey ['key'];
-    $hashpubkey = _objGetNID($pubkey, getConfiguration('cryptoHashAlgorithm'));
-    _objWriteContent($pubkey, $hashpubkey);
-
-    // Extract private key.
-    if ($password != '')
-        openssl_pkey_export($newpkey, $privkey, $password);
-    else
-        openssl_pkey_export($newpkey, $privkey);
-    $hashprivkey = _objGetNID($privkey, getConfiguration('cryptoHashAlgorithm'));
-    _objWriteContent($privkey, $hashprivkey);
-    $private_key = openssl_pkey_get_private($privkey, $password);
-    if ($private_key === false)
+    $pubkey = '';
+    $privkey = '';
+    if (_cryptoGetNewPKey($asymetricAlgo, $hashAlgo, $pubkey, $privkey, $password))
+    {
+        $hashPublicKey = _objGetNID($pubkey, getConfiguration('cryptoHashAlgorithm'));
+        _objWriteContent($pubkey, $hashPublicKey);
+        $hashPrivateKey = _objGetNID($privkey, getConfiguration('cryptoHashAlgorithm'));
+        _objWriteContent($privkey, $hashPrivateKey);
+    } else
         return false;
 
 
@@ -1601,13 +1533,13 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
     if (!io_checkNodeHaveContent($refhashhash)) {
         $newtxt = 'nebule/objet/hash';
         _objWriteContent($newtxt, $refhashhash);
-        $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashhash . '_' . $refhashalgo . '_' . $refhashhash;
+        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashhash . '_' . $refhashalgo . '_' . $refhashhash;
         $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
         _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-        $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashhash . '_' . $refhashtext . '_' . $refhashtype;
+        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashhash . '_' . $refhashtext . '_' . $refhashtype;
         $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
@@ -1617,13 +1549,13 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
     if (!io_checkNodeHaveContent($refhashalgo)) {
         $cryptoHashAlgorithm = getConfiguration('cryptoHashAlgorithm');
         _objWriteContent($cryptoHashAlgorithm, $refhashalgo);
-        $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashalgo . '_' . $refhashalgo . '_' . $refhashhash;
+        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashalgo . '_' . $refhashalgo . '_' . $refhashhash;
         $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
         _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-        $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashalgo . '_' . $refhashtext . '_' . $refhashtype;
+        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashalgo . '_' . $refhashtext . '_' . $refhashtype;
         $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
@@ -1633,13 +1565,13 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
     if (!io_checkNodeHaveContent($refhashtype)) {
         $newtxt = 'nebule/objet/type';
         _objWriteContent($newtxt, $refhashtype);
-        $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtype . '_' . $refhashalgo . '_' . $refhashhash;
+        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashtype . '_' . $refhashalgo . '_' . $refhashhash;
         $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
         _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-        $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtype . '_' . $refhashtext . '_' . $refhashtype;
+        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashtype . '_' . $refhashtext . '_' . $refhashtype;
         $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
@@ -1649,13 +1581,13 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
     if (!io_checkNodeHaveContent($refhashpem)) {
         $newtxt = 'application/x-pem-file';
         _objWriteContent($newtxt, $refhashpem);
-        $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashpem . '_' . $refhashalgo . '_' . $refhashhash;
+        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashpem . '_' . $refhashalgo . '_' . $refhashhash;
         $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
         _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-        $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashpem . '_' . $refhashtext . '_' . $refhashtype;
+        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashpem . '_' . $refhashtext . '_' . $refhashtype;
         $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
@@ -1665,13 +1597,13 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
     if (!io_checkNodeHaveContent($refhashtext)) {
         $newtxt = 'text/plain';
         _objWriteContent($newtxt, $refhashtext);
-        $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtext . '_' . $refhashalgo . '_' . $refhashhash;
+        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashtext . '_' . $refhashalgo . '_' . $refhashhash;
         $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
         $hexsign = bin2hex($binary_signature);
         _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-        $data = '_' . $hashpubkey . '_' . $date . '_l_' . $refhashtext . '_' . $refhashtext . '_' . $refhashtype;
+        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashtext . '_' . $refhashtext . '_' . $refhashtype;
         $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
         $binhash = pack("H*", $hashdata);
         openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
@@ -1679,35 +1611,35 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
         _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     }
     // Génération du lien de hash de la clé publique.
-    $data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashpubkey . '_' . $refhashalgo . '_' . $refhashhash;
+    $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $hashPublicKey . '_' . $refhashalgo . '_' . $refhashhash;
     $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
     $binhash = pack("H*", $hashdata);
     $ok1 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
     _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     // Génération du lien de hash de la clé privée.
-    $data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashprivkey . '_' . $refhashalgo . '_' . $refhashhash;
+    $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $hashPrivateKey . '_' . $refhashalgo . '_' . $refhashhash;
     $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
     $binhash = pack("H*", $hashdata);
     $ok2 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
     _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     // Génération du lien de typemime de la clé publique.
-    $data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashpubkey . '_' . $refhashpem . '_' . $refhashtype;
+    $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $hashPublicKey . '_' . $refhashpem . '_' . $refhashtype;
     $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
     $binhash = pack("H*", $hashdata);
     $ok3 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
     _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     // Génération du lien de typemime de la clé privée.
-    $data = '_' . $hashpubkey . '_' . $date . '_l_' . $hashprivkey . '_' . $refhashpem . '_' . $refhashtype;
+    $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $hashPrivateKey . '_' . $refhashpem . '_' . $refhashtype;
     $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
     $binhash = pack("H*", $hashdata);
     $ok4 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
     $hexsign = bin2hex($binary_signature);
     _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
     // Génération du lien de jumelage des clés.
-    $data = '_' . $hashpubkey . '_' . $date . '_f_' . $hashprivkey . '_' . $hashpubkey . '_0';
+    $data = '_' . $hashPublicKey . '_' . $date . '_f_' . $hashPrivateKey . '_' . $hashPublicKey . '_0';
     $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
     $binhash = pack("H*", $hashdata);
     $ok5 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
@@ -1716,8 +1648,8 @@ function _entityGenerate($asymetricAlgo, $hashAlgo, &$hashpubkey, &$hashprivkey,
     // Nettoyage.
     openssl_free_key($private_key);
     unset($private_key);
-    unset($hashprivkey);
-    unset($hashpubkey);
+    unset($hashPrivateKey);
+    unset($hashPublicKey);
     unset($data);
     unset($hashdata);
     unset($binhash);
@@ -4251,6 +4183,84 @@ function cryptoGetPseudoRandom($count = 32): string
     }
 
     return $result;
+}
+
+/**
+ * Crypto - Generate new public cryptographic keys.
+ *
+ * @param string $asymetricAlgo
+ * @param string $hashAlgo
+ * @param string $publicKey
+ * @param string $privateKey
+ * @param string $password
+ * @return bool
+ */
+function _cryptoGetNewPKey(string $asymetricAlgo, string $hashAlgo, string &$publicKey, string &$privateKey, string $password): bool
+{
+    // Prepare values.
+    $digestAlgo = cryptoGetTranslatedHashAlgo($hashAlgo, true);
+    $config = array( 'digest_alg' => $digestAlgo, );
+    switch ($asymetricAlgo) {
+        case 'rsa.1024' :
+            $config['private_key_bits'] = 1024;
+            $config['private_key_type'] = OPENSSL_KEYTYPE_RSA;
+            break;
+        case 'rsa.2048' :
+            $config['private_key_bits'] = 2048;
+            $config['private_key_type'] = OPENSSL_KEYTYPE_RSA;
+            break;
+        case 'rsa.3192' :
+            $config['private_key_bits'] = 3192;
+            $config['private_key_type'] = OPENSSL_KEYTYPE_RSA;
+            break;
+        case 'rsa.4096' :
+            $config['private_key_bits'] = 4096;
+            $config['private_key_type'] = OPENSSL_KEYTYPE_RSA;
+            break;
+        case 'dsa.1024' :
+            $config['private_key_bits'] = 1024;
+            $config['private_key_type'] = OPENSSL_KEYTYPE_DSA;
+            break;
+        case 'dsa.2048' :
+            $config['private_key_bits'] = 2048;
+            $config['private_key_type'] = OPENSSL_KEYTYPE_DSA;
+            break;
+        case 'dsa.3192' :
+            $config['private_key_bits'] = 3192;
+            $config['private_key_type'] = OPENSSL_KEYTYPE_DSA;
+            break;
+        case 'dsa.4096' :
+            $config['private_key_bits'] = 4096;
+            $config['private_key_type'] = OPENSSL_KEYTYPE_DSA;
+            break;
+        case 'ec.prime256v1' :
+            $config['curve_name'] = 'prime256v1';
+            $config['private_key_type'] = OPENSSL_KEYTYPE_EC;
+            break;
+        default:
+            return false;
+    }
+
+    // Generate the bi-key.
+    $newPKey = openssl_pkey_new($config);
+    if ($newPKey === false)
+        return false;
+
+    // Extract public key.
+    $publicKey = openssl_pkey_get_details($newPKey);
+    $publicKey = $publicKey ['key'];
+
+    // Extract private key.
+    if ($password != '')
+        openssl_pkey_export($newPKey, $privateKey, $password);
+    else
+        openssl_pkey_export($newPKey, $privateKey);
+    // Verify.
+    $private_key = openssl_pkey_get_private($privateKey, $password);
+    if ($private_key === false)
+        return false;
+
+    return true;
 }
 
 /**
