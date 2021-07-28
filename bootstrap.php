@@ -515,7 +515,7 @@ const LIST_OPTIONS_TYPE = array(
         'cryptoLibrary' => 'string',
         'cryptoHashAlgorithm' => 'string',
         'cryptoSymetricAlgorithm' => 'string',
-        'cryptoAsymetricAlgorithm' => 'string',
+        'cryptoAsymmetricAlgorithm' => 'string',
         'socialLibrary' => 'string',
         'ioLibrary' => 'string',
         'ioReadMaxLinks' => 'integer',
@@ -593,7 +593,7 @@ const LIST_OPTIONS_DEFAULT_VALUE = array(
         'cryptoLibrary' => 'openssl',
         'cryptoHashAlgorithm' => 'sha2.256',
         'cryptoSymetricAlgorithm' => 'aes-256-ctr',
-        'cryptoAsymetricAlgorithm' => 'rsa.2048',
+        'cryptoAsymmetricAlgorithm' => 'rsa.2048',
         'socialLibrary' => 'strict',
         'ioLibrary' => 'ioFileSystem',
         'ioReadMaxLinks' => 2000,
@@ -1484,20 +1484,20 @@ function _metrologyTimerGet(string $type): string
 /** FIXME
  * Entity -
  *
- * @param string $asymetricAlgo
+ * @param string $asymmetricAlgo
  * @param string $hashAlgo
  * @param string $hashPublicKey
  * @param string $hashPrivateKey
  * @param string $password
  * @return bool
  */
-function _entityGenerate(string $asymetricAlgo, string $hashAlgo, string &$hashPublicKey, string &$hashPrivateKey, string $password = ''): bool
+function _entityGenerate(string $asymmetricAlgo, string $hashAlgo, string &$hashPublicKey, string &$hashPrivateKey, string $password = ''): bool
 {
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteEntity')
         || !getConfiguration('permitWriteObject')
         || !getConfiguration('permitWriteLink')
-    //    || (($asymetricAlgo != 'rsa') && ($asymetricAlgo != 'dsa'))
+    //    || (($asymmetricAlgo != 'rsa') && ($asymmetricAlgo != 'dsa'))
         || $password == ''
     )
         return false;
@@ -1505,7 +1505,7 @@ function _entityGenerate(string $asymetricAlgo, string $hashAlgo, string &$hashP
     // Generate the bi-key.
     $pubkey = '';
     $privkey = '';
-    if (_cryptoGetNewPKey($asymetricAlgo, $hashAlgo, $pubkey, $privkey, $password))
+    if (cryptoGetNewPKey($asymmetricAlgo, $hashAlgo, $pubkey, $privkey, $password))
     {
         $hashPublicKey = _objGetNID($pubkey, getConfiguration('cryptoHashAlgorithm'));
         _objWriteContent($pubkey, $hashPublicKey);
@@ -1730,7 +1730,7 @@ function _entityAddPasswd($pubkey, $privkey, $password)
     if (!$ok)
         return false;
     $hashcryptkey = _objGetNID($cryptkey, getConfiguration('cryptoHashAlgorithm'));
-    $algoName = substr(getConfiguration('cryptoAsymetricAlgorithm'), 0, strpos(getConfiguration('cryptoAsymetricAlgorithm'), '.') - 1);
+    $algoName = substr(getConfiguration('cryptoAsymmetricAlgorithm'), 0, strpos(getConfiguration('cryptoAsymmetricAlgorithm'), '.') - 1);
     _objGenerate($cryptkey, 'application/x-encrypted/' . $algoName);
     // Génère le lien de chiffrement entre clé privée et publique avec le mot de passe.
     $newlink = _lnkGenerate('-', 'k', $privkey, $pubkey, $hashpwd);
@@ -2428,7 +2428,7 @@ function _lnkGenerate(string $rc, string $req, string $nid1, string $nid2 = '', 
 
     $bh_bl = $bh . '_' . $bl;
 
-    $sign = cryptoAsymetricEncrypt($bh_bl);
+    $sign = cryptoAsymmetricEncrypt($bh_bl);
     if ($sign == '')
         return '';
 
@@ -3444,7 +3444,7 @@ function _lnkCheckSIG(string &$bh, string &$bl, string &$sig, string &$nid): boo
     if (io_checkNodeHaveContent($nid) && _objCheckContent($nid)) {
         $data = $bh . '_' . $bl;
         $hash = cryptoGetDataHash($data, $algo . '.' . $size);
-        return cryptoAsymetricVerify($sign, $hash, $nid);
+        return cryptoAsymmetricVerify($sign, $hash, $nid);
     }
 
     return false;
@@ -4076,7 +4076,7 @@ function filterPrinteableString($data): string
  */
 
 /**
- * Translate algo name into OpenSSL algo name.
+ * Crypto - Translate algo name into OpenSSL algo name.
  *
  * @param string $algo
  * @param bool $loop
@@ -4118,7 +4118,7 @@ function cryptoGetTranslatedHashAlgo(string $algo, bool $loop = true): string
 }
 
 /**
- * Calculate hash of data with algo.
+ * Crypto - Calculate hash of data with algo.
  * Use OpenSSL library.
  *
  * @param string $algo
@@ -4131,7 +4131,7 @@ function cryptoGetDataHash(string &$data, string $algo = ''): string
 }
 
 /**
- * Calculate hash of file data with algo.
+ * Crypto - Calculate hash of file data with algo.
  * File must be on objects folder.
  * Use OpenSSL library.
  *
@@ -4145,7 +4145,7 @@ function cryptoGetFileHash(string $file, string $algo = ''): string
 }
 
 /**
- * Generate pseudo random number
+ * Crypto - Generate pseudo random number
  * Use OpenSSL library.
  *
  * @param int $count
@@ -4187,20 +4187,21 @@ function cryptoGetPseudoRandom($count = 32): string
 
 /**
  * Crypto - Generate new public cryptographic keys.
+ * Use OpenSSL library.
  *
- * @param string $asymetricAlgo
+ * @param string $asymmetricAlgo
  * @param string $hashAlgo
  * @param string $publicKey
  * @param string $privateKey
  * @param string $password
  * @return bool
  */
-function _cryptoGetNewPKey(string $asymetricAlgo, string $hashAlgo, string &$publicKey, string &$privateKey, string $password): bool
+function cryptoGetNewPKey(string $asymmetricAlgo, string $hashAlgo, string &$publicKey, string &$privateKey, string $password): bool
 {
     // Prepare values.
     $digestAlgo = cryptoGetTranslatedHashAlgo($hashAlgo, true);
     $config = array( 'digest_alg' => $digestAlgo, );
-    switch ($asymetricAlgo) {
+    switch ($asymmetricAlgo) {
         case 'rsa.1024' :
             $config['private_key_bits'] = 1024;
             $config['private_key_type'] = OPENSSL_KEYTYPE_RSA;
@@ -4264,12 +4265,13 @@ function _cryptoGetNewPKey(string $asymetricAlgo, string $hashAlgo, string &$pub
 }
 
 /**
- * Encrypt data with private asymetric key.
+ * Crypto - Encrypt data with private asymmetric key.
+ * Use OpenSSL library.
  *
  * @param string $data
  * @return string
  */
-function cryptoAsymetricEncrypt(string $data): string
+function cryptoAsymmetricEncrypt(string $data): string
 {
     global $nebulePublicEntity, $nebulePrivateEntite, $nebulePasswordEntite;
 
@@ -4302,14 +4304,15 @@ function cryptoAsymetricEncrypt(string $data): string
 
 
 /**
- * Decrypt and verify asymetric sign.
+ * Crypto - Decrypt and verify asymmetric sign.
+ * Use OpenSSL library.
  *
  * @param string $sign
  * @param string $hash
  * @param string $nid
  * @return boolean
  */
-function cryptoAsymetricVerify(string $sign, string $hash, string $nid): bool
+function cryptoAsymmetricVerify(string $sign, string $hash, string $nid): bool
 {
     // Read signer's public key.
     $cert = io_objectRead($nid, 10000);
@@ -5701,8 +5704,8 @@ function bootstrapDisplayOnBreak(): void
                 echo "<br />\n";
 
                 // Vérifie la fonction de cryptographie asymétrique.
-                echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: asymetric ' . $nebuleInstance->getCrypto()->asymetricAlgorithm() . ' ';
-                if ($nebuleInstance->getCrypto()->checkAsymetricFunction()) {
+                echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: asymmetric ' . $nebuleInstance->getCrypto()->asymmetricAlgorithm() . ' ';
+                if ($nebuleInstance->getCrypto()->checkAsymmetricFunction()) {
                     echo 'OK';
                 } else {
                     echo '<span class="error">ERROR!</span>';
@@ -6838,7 +6841,7 @@ function bootstrapFirstDisplay9LocaleEntity(): bool
         $nebulePrivateEntite = '0';
         // Génère une nouvelle entité.
         _entityGenerate(
-            getConfiguration('cryptoAsymetricAlgorithm'),
+            getConfiguration('cryptoAsymmetricAlgorithm'),
             getConfiguration('cryptoHashAlgorithm'),
             $nebulePublicEntity,
             $nebulePrivateEntite,
