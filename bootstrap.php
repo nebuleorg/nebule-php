@@ -1503,14 +1503,14 @@ function _entityGenerate(string $asymmetricAlgo, string $hashAlgo, string &$hash
         return false;
 
     // Generate the bi-key.
-    $pubkey = '';
-    $privkey = '';
-    if (cryptoGetNewPKey($asymmetricAlgo, $hashAlgo, $pubkey, $privkey, $password))
+    $publicKey = '';
+    $privateKey = '';
+    if (cryptoGetNewPKey($asymmetricAlgo, $hashAlgo, $publicKey, $privateKey, $password))
     {
-        $hashPublicKey = _objGetNID($pubkey, getConfiguration('cryptoHashAlgorithm'));
-        _objWriteContent($pubkey, $hashPublicKey);
-        $hashPrivateKey = _objGetNID($privkey, getConfiguration('cryptoHashAlgorithm'));
-        _objWriteContent($privkey, $hashPrivateKey);
+        $hashPublicKey = _objGetNID($publicKey, getConfiguration('cryptoHashAlgorithm'));
+        _objWriteContent($publicKey, $hashPublicKey);
+        $hashPrivateKey = _objGetNID($privateKey, getConfiguration('cryptoHashAlgorithm'));
+        _objWriteContent($privateKey, $hashPrivateKey);
     } else
         return false;
 
