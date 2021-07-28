@@ -1509,9 +1509,13 @@ function _entityGenerate(string $asymmetricAlgo, string $hashAlgo, string &$hash
     if (_cryptoGetNewPKey($asymmetricAlgo, $hashAlgo, $publicKey, $privateKey, $password))
     {
         $hashPublicKey = _objGetNID($publicKey, getConfiguration('cryptoHashAlgorithm'));
-        _objWriteContent($publicKey, $hashPublicKey);
+        addLog('generate new public key ' . $hashPublicKey, 'warn', __FUNCTION__, '9c207dc0');
+        if (!_objWriteContent($publicKey, $hashPublicKey))
+            return false;
         $hashPrivateKey = _objGetNID($privateKey, getConfiguration('cryptoHashAlgorithm'));
-        _objWriteContent($privateKey, $hashPrivateKey);
+        addLog('generate new private key ' . $hashPrivateKey, 'warn', __FUNCTION__, '96059d19');
+        if (!_objWriteContent($privateKey, $hashPrivateKey))
+            return false;
     } else
         return false;
 
@@ -1574,6 +1578,7 @@ function _entityGenerate(string $asymmetricAlgo, string $hashAlgo, string &$hash
     if (!_lnkWrite($link))
         return false;
 
+    addLog('generate new entity ok ', 'warn', __FUNCTION__, 'ad1fe36f');
     return true;
 }
 
@@ -1586,106 +1591,6 @@ function _entityCheck(string $nid): bool
 {
     if (!_objCheckIsPublicKey($nid))
         return false;
-    return true;
-}
-
-/** FIXME
- * Entity -
- *
- * @param $pubkey
- * @param $privkey
- * @param $password
- * @return bool
- */
-function _entityAddPasswd($pubkey, $privkey, $password)
-{ // Ajoute le mot de passe connu pour la clé privée d'une entité. Utilisé pour les entité esclaves d'une autre entité.
-    // - $pubkey : la clé public de l'entité, nécessaire pour un des liens.
-    // - $privkey : la clé privée de l'entité.
-    // - $password : le mot de passe à reconnaître pour la clé privée. Le mot de passe est vérifié sur la clé.
-    global $nebulePublicEntity;
-
-    if (!getConfiguration('permitWrite'))
-        return false;
-    if (!getConfiguration('permitWriteObject'))
-        return false;
-    if (!getConfiguration('permitWriteLink'))
-        return false;
-    if ($password == '')
-        return false;
-    if (!io_checkNodeHaveContent($pubkey))
-        return false;
-    if (!io_checkNodeHaveContent($privkey))
-        return false;
-    // Vérifie que le mot de passe est valide.
-    $privcert = nebGetContentAsText($privkey, 10000);
-    $ok = openssl_pkey_get_private($privcert, $password);
-    if ($ok === false)
-        return false;
-    unset($privcert);
-    // Génère une clé de session.
-    $key = openssl_random_pseudo_bytes(NID_MIN_HASH_SIZE, $true);
-    $hashkey = _objGetNID($key, getConfiguration('cryptoHashAlgorithm'));
-    // Génère un IV à zéro.
-    $hiv = '00000000000000000000000000000000';
-    $iv = pack("H*", $hiv); // A modifier pour des blocs de tailles différentes.
-    // Chiffrement de l'objet.
-    $cryptobj = openssl_encrypt($password, getConfiguration('cryptoSymetricAlgorithm'), $key, OPENSSL_RAW_DATA, $iv);
-    $hashpwd = _objGetNID($password, getConfiguration('cryptoHashAlgorithm'));
-    $hashcryptobj = _objGetNID($cryptobj, getConfiguration('cryptoHashAlgorithm'));
-    _objGenerate($cryptobj, 'application/x-encrypted/' . getConfiguration('cryptoSymetricAlgorithm'));
-    // Chiffrement de la clé de session.
-    $cryptkey = '';
-    _objCheckContent($pubkey);
-    $cert = io_objectRead($pubkey);
-    $ok = openssl_public_encrypt($key, $cryptkey, $cert, OPENSSL_PKCS1_PADDING);
-    if (!$ok)
-        return false;
-    $hashcryptkey = _objGetNID($cryptkey, getConfiguration('cryptoHashAlgorithm'));
-    $algoName = substr(getConfiguration('cryptoAsymmetricAlgorithm'), 0, strpos(getConfiguration('cryptoAsymmetricAlgorithm'), '.') - 1);
-    _objGenerate($cryptkey, 'application/x-encrypted/' . $algoName);
-    // Génère le lien de chiffrement entre clé privée et publique avec le mot de passe.
-    $newlink = _lnkGenerate('-', 'k', $privkey, $pubkey, $hashpwd);
-    if ((_lnkVerify($newlink)) == 1)
-        _lnkWrite($newlink);
-    // Génère le lien de chiffrement symétrique.
-    $newlink = _lnkGenerate('-', 'k', $hashpwd, $hashcryptobj, $hashkey);
-    if ((_lnkVerify($newlink)) == 1)
-        _lnkWrite($newlink);
-    // Génère le lien de chiffrement asymétrique.
-    $newlink = _lnkGenerate('-', 'k', $hashkey, $hashcryptkey, $nebulePublicEntity);
-    if ((_lnkVerify($newlink)) == 1)
-        _lnkWrite($newlink);
-    // Suppression de la clé de session.
-    $newlink = _lnkGenerate('-', 'd', $hashkey, '0', '0');
-    if ((_lnkVerify($newlink)) == 1)
-        _lnkWrite($newlink);
-    // Suppression de l'objet source.
-    $newlink = _lnkGenerate('-', 'd', $hashpwd, '0', '0');
-    if ((_lnkVerify($newlink)) == 1)
-        _lnkWrite($newlink);
-    return true;
-}
-
-/** FIXME
- * Entity -
- *
- * @param $entity
- * @param $password
- * @return bool
- */
-function _entityChangePasswd($entity, $password): bool
-{
-    if (!getConfiguration('permitWrite'))
-        return false;
-    if (!getConfiguration('permitWriteObject'))
-        return false;
-    if (!getConfiguration('permitWriteLink'))
-        return false;
-    if ($entity == '')
-        return false;
-    if ($password == '')
-        return false;
-    // A faire...
     return true;
 }
 
