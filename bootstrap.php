@@ -435,6 +435,7 @@ const FIRST_RESERVED_OBJECTS = array(
     'nebule/objet/lien',
     'nebule/objet/date',
     'nebule/objet/entite',
+    'nebule/objet/entite/prive',
     'nebule/objet/entite/localisation',
     'nebule/objet/entite/maitre',
     'nebule/objet/entite/maitre/securite',
@@ -1514,156 +1515,65 @@ function _entityGenerate(string $asymmetricAlgo, string $hashAlgo, string &$hash
     } else
         return false;
 
+    $oidHash = _objGetNID('nebule/objet/hash');
+    $oidAlgo = _objGetNID(getConfiguration('cryptoHashAlgorithm'));
+    $oidType = _objGetNID('nebule/objet/type');
+    $oidPem = _objGetNID('application/x-pem-file');
+    $oidPKey = _objGetNID('nebule/objet/entite/prive');
+    $oidText = _objGetNID('text/plain');
 
+    $link = _lnkGenerate('', 'l', $oidHash, $oidAlgo, $oidHash);
+    $ok = _lnkWrite($link);
+    if ($ok)
+        $link = _lnkGenerate('', 'l', $oidHash, $oidText, $oidType);
+    $ok = _lnkWrite($link);
+    if ($ok)
+        $link = _lnkGenerate('', 'l', $oidAlgo, $oidAlgo, $oidHash);
+    $ok = _lnkWrite($link);
+    if ($ok)
+        $link = _lnkGenerate('', 'l', $oidAlgo, $oidText, $oidType);
+    $ok = _lnkWrite($link);
+    if ($ok)
+        $link = _lnkGenerate('', 'l', $oidType, $oidAlgo, $oidHash);
+    $ok = _lnkWrite($link);
+    if ($ok)
+        $link = _lnkGenerate('', 'l', $oidType, $oidText, $oidType);
+    $ok = _lnkWrite($link);
+    if ($ok)
+        $link = _lnkGenerate('', 'l', $oidPem, $oidAlgo, $oidHash);
+    $ok = _lnkWrite($link);
+    if ($ok)
+        $link = _lnkGenerate('', 'l', $oidPem, $oidText, $oidType);
+    $ok = _lnkWrite($link);
+    if ($ok)
+        $link = _lnkGenerate('', 'l', $oidPKey, $oidAlgo, $oidHash);
+    $ok = _lnkWrite($link);
+    if ($ok)
+        $link = _lnkGenerate('', 'l', $oidPKey, $oidText, $oidType);
+    $ok = _lnkWrite($link);
+    if ($ok)
+        $link = _lnkGenerate('', 'l', $oidText, $oidAlgo, $oidHash);
+    $ok = _lnkWrite($link);
+    if ($ok)
+        $link = _lnkGenerate('', 'l', $oidText, $oidText, $oidType);
+    $ok = _lnkWrite($link);
+    if ($ok)
+        $link = _lnkGenerate('', 'l', $hashPublicKey, $oidAlgo, $oidHash);
+    $ok = _lnkWrite($link);
+    if ($ok)
+        $link = _lnkGenerate('', 'l', $hashPublicKey, $oidPem, $oidType);
+    $ok = _lnkWrite($link);
+    if ($ok)
+        $link = _lnkGenerate('', 'l', $hashPrivateKey, $oidAlgo, $oidHash);
+    $ok = _lnkWrite($link);
+    if ($ok)
+        $link = _lnkGenerate('', 'l', $hashPrivateKey, $oidPem, $oidType);
+    $ok = _lnkWrite($link);
+    if ($ok)
+        $link = _lnkGenerate('', 'f', $hashPublicKey, $hashPrivateKey, $oidPKey);
+    $ok = _lnkWrite($link);
 
-    return true;
-    // ========================================================================================================================================
-
-
-
-    // Calcul de hashs communs.
-    $date = date(DATE_ATOM);
-    $binary_signature = '';
-    $refhashhash = _objGetNID('nebule/objet/hash', getConfiguration('cryptoHashAlgorithm'));
-    $refhashalgo = _objGetNID(getConfiguration('cryptoHashAlgorithm'), getConfiguration('cryptoHashAlgorithm'));
-    $refhashtype = _objGetNID('nebule/objet/type', getConfiguration('cryptoHashAlgorithm'));
-    $refhashpem = _objGetNID('application/x-pem-file', getConfiguration('cryptoHashAlgorithm'));
-    $refhashtext = _objGetNID('text/plain', getConfiguration('cryptoHashAlgorithm'));
-    // Création des objets annexes.
-    if (!io_checkNodeHaveContent($refhashhash)) {
-        $newtxt = 'nebule/objet/hash';
-        _objWriteContent($newtxt, $refhashhash);
-        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashhash . '_' . $refhashalgo . '_' . $refhashhash;
-        $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-        $binhash = pack("H*", $hashdata);
-        openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
-        $hexsign = bin2hex($binary_signature);
-        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashhash . '_' . $refhashtext . '_' . $refhashtype;
-        $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-        $binhash = pack("H*", $hashdata);
-        openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
-        $hexsign = bin2hex($binary_signature);
-        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-    }
-    if (!io_checkNodeHaveContent($refhashalgo)) {
-        $cryptoHashAlgorithm = getConfiguration('cryptoHashAlgorithm');
-        _objWriteContent($cryptoHashAlgorithm, $refhashalgo);
-        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashalgo . '_' . $refhashalgo . '_' . $refhashhash;
-        $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-        $binhash = pack("H*", $hashdata);
-        openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
-        $hexsign = bin2hex($binary_signature);
-        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashalgo . '_' . $refhashtext . '_' . $refhashtype;
-        $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-        $binhash = pack("H*", $hashdata);
-        openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
-        $hexsign = bin2hex($binary_signature);
-        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-    }
-    if (!io_checkNodeHaveContent($refhashtype)) {
-        $newtxt = 'nebule/objet/type';
-        _objWriteContent($newtxt, $refhashtype);
-        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashtype . '_' . $refhashalgo . '_' . $refhashhash;
-        $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-        $binhash = pack("H*", $hashdata);
-        openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
-        $hexsign = bin2hex($binary_signature);
-        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashtype . '_' . $refhashtext . '_' . $refhashtype;
-        $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-        $binhash = pack("H*", $hashdata);
-        openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
-        $hexsign = bin2hex($binary_signature);
-        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-    }
-    if (!io_checkNodeHaveContent($refhashpem)) {
-        $newtxt = 'application/x-pem-file';
-        _objWriteContent($newtxt, $refhashpem);
-        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashpem . '_' . $refhashalgo . '_' . $refhashhash;
-        $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-        $binhash = pack("H*", $hashdata);
-        openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
-        $hexsign = bin2hex($binary_signature);
-        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashpem . '_' . $refhashtext . '_' . $refhashtype;
-        $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-        $binhash = pack("H*", $hashdata);
-        openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
-        $hexsign = bin2hex($binary_signature);
-        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-    }
-    if (!io_checkNodeHaveContent($refhashtext)) {
-        $newtxt = 'text/plain';
-        _objWriteContent($newtxt, $refhashtext);
-        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashtext . '_' . $refhashalgo . '_' . $refhashhash;
-        $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-        $binhash = pack("H*", $hashdata);
-        openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
-        $hexsign = bin2hex($binary_signature);
-        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-        $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $refhashtext . '_' . $refhashtext . '_' . $refhashtype;
-        $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-        $binhash = pack("H*", $hashdata);
-        openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
-        $hexsign = bin2hex($binary_signature);
-        _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-    }
-    // Génération du lien de hash de la clé publique.
-    $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $hashPublicKey . '_' . $refhashalgo . '_' . $refhashhash;
-    $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-    $binhash = pack("H*", $hashdata);
-    $ok1 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
-    $hexsign = bin2hex($binary_signature);
-    _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-    // Génération du lien de hash de la clé privée.
-    $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $hashPrivateKey . '_' . $refhashalgo . '_' . $refhashhash;
-    $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-    $binhash = pack("H*", $hashdata);
-    $ok2 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
-    $hexsign = bin2hex($binary_signature);
-    _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-    // Génération du lien de typemime de la clé publique.
-    $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $hashPublicKey . '_' . $refhashpem . '_' . $refhashtype;
-    $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-    $binhash = pack("H*", $hashdata);
-    $ok3 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
-    $hexsign = bin2hex($binary_signature);
-    _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-    // Génération du lien de typemime de la clé privée.
-    $data = '_' . $hashPublicKey . '_' . $date . '_l_' . $hashPrivateKey . '_' . $refhashpem . '_' . $refhashtype;
-    $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-    $binhash = pack("H*", $hashdata);
-    $ok4 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
-    $hexsign = bin2hex($binary_signature);
-    _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-    // Génération du lien de jumelage des clés.
-    $data = '_' . $hashPublicKey . '_' . $date . '_f_' . $hashPrivateKey . '_' . $hashPublicKey . '_0';
-    $hashdata = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-    $binhash = pack("H*", $hashdata);
-    $ok5 = openssl_private_encrypt($binhash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
-    $hexsign = bin2hex($binary_signature);
-    _lnkWrite("$hexsign." . getConfiguration('cryptoHashAlgorithm') . "$data");
-    // Nettoyage.
-    openssl_free_key($private_key);
-    unset($private_key);
-    unset($hashPrivateKey);
-    unset($hashPublicKey);
-    unset($data);
-    unset($hashdata);
-    unset($binhash);
-    unset($refhashhash);
-    unset($refhashalgo);
-    unset($refhashtype);
-    unset($refhashpem);
-    unset($refhashtext);
-    unset($date);
-    unset($hexsign);
-    unset($binary_signature);
-    if (!($ok1 && $ok2 && $ok3 && $ok4 && $ok5))
-        return false;
-    return true;
+    return $ok;
 }
 
 /**
