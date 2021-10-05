@@ -1188,17 +1188,21 @@ function nebFindObjType(&$object, $type)
     return $objdst;
 }
 
-// FIXME
-function nebReadObjTypeMime(&$object)
-{ // Cherche le type mime d'un objet.
-    // Fonction avec utilisation du cache si possible.
+/** FIXME
+ * Get type Mime to the node (object) from his links.
+ *
+ * @param $nid
+ * @return string
+ */
+function nebReadObjTypeMime(&$nid): string
+{
     global $nebulePublicEntity, $nebuleCacheReadObjTypeMime;
 
-    if (isset($nebuleCacheReadObjTypeMime [$object]))
-        return $nebuleCacheReadObjTypeMime [$object];
+    if (isset($nebuleCacheReadObjTypeMime [$nid]))
+        return $nebuleCacheReadObjTypeMime [$nid];
 
-    if ($object == '' || $object == '0')
-        return '-indéfini-'; // L'objet doit etre present.
+    if (_nodCheckNID($nid))
+        return '-indéfini-';
 
     $table = array();
     nebCreateAsText('nebule/objet/type');
@@ -1206,19 +1210,19 @@ function nebReadObjTypeMime(&$object)
     $type = '';
     $filter = array(
         'bl/rl/req' => 'l',
-        'bl/rl/nid1' => $object,
+        'bl/rl/nid1' => $nid,
         'bl/rl/nid2' => '',
         'bl/rl/nid3' => $hashtype,
         'bl/rl/nid4' => '0',
     );
-    _lnkFind($object, $table, $filter);
+    _lnkFind($nid, $table, $filter);
     rsort($table);
     foreach ($table as $itemtable) {
-        if (($itemtable [2] == $nebulePublicEntity) && ($itemtable [7] == $hashtype) && ($itemtable [5] == $object) && ($itemtable [4] == 'l')) {
+        if (($itemtable [2] == $nebulePublicEntity) && ($itemtable [7] == $hashtype) && ($itemtable [5] == $nid) && ($itemtable [4] == 'l')) {
             $type = $itemtable [6];
             break 1;
         }
-        if (($itemtable [7] == $hashtype) && ($itemtable [5] == $object) && ($itemtable [4] == 'l'))
+        if (($itemtable [7] == $hashtype) && ($itemtable [5] == $nid) && ($itemtable [4] == 'l'))
             $type = $itemtable [6]; // WARNING peut être un problème de sécurité...
     }
     unset($table);
@@ -1233,7 +1237,7 @@ function nebReadObjTypeMime(&$object)
     unset($type);
 
     if (getConfiguration('permitBufferIO'))
-        $nebuleCacheReadObjTypeMime [$object] = $text;
+        $nebuleCacheReadObjTypeMime [$nid] = $text;
 
     return $text;
 }
@@ -1488,7 +1492,7 @@ function _metrologyTimerGet(string $type): string
 // ------------------------------------------------------------------------------------------
 
 /** FIXME
- * Entity -
+ * Entity - Generate a new entity.
  *
  * @param string $asymmetricAlgo
  * @param string $hashAlgo
@@ -1497,8 +1501,10 @@ function _metrologyTimerGet(string $type): string
  * @param string $password
  * @return bool
  */
-function _entityGenerate(string $asymmetricAlgo, string $hashAlgo, string &$hashPublicKey, string &$hashPrivateKey, string $password = ''): bool
+function _entityGenerate(string $asymmetricAlgo, string $hashAlgo, string &$hashPublicKey, string &$hashPrivateKey, string &$password = ''): bool
 {
+    global $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
+
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteEntity')
         || !getConfiguration('permitWriteObject')
@@ -1527,21 +1533,21 @@ function _entityGenerate(string $asymmetricAlgo, string $hashAlgo, string &$hash
     $oidHash = _objGetNID('nebule/objet/hash');
     $oidAlgo = _objGetNID(getConfiguration('cryptoHashAlgorithm'));
     $oidType = _objGetNID('nebule/objet/type');
-    $oidPem = _objGetNID('application/x-pem-file');
+    $oidPem  = _objGetNID('application/x-pem-file');
     $oidPKey = _objGetNID('nebule/objet/entite/prive');
     $oidText = _objGetNID('text/plain');
 
     $list = array($oidHash, $oidAlgo, $oidType, $oidPem, $oidPKey, $oidText);
     foreach ($list as $item)
     {
-        $link = _lnkGenerate('', 'l', $item, $oidAlgo, $oidHash);
+        $bh_bl = _lnkGenerate('', 'l', $item, $oidAlgo, $oidHash);
+        $sign = _cryptoAsymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
+        $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . getConfiguration('cryptoHashAlgorithm');
         if (!_lnkWrite($link))
-        {
-addLog('generate new entity fail write link ', 'warn', __FUNCTION__, 'ad1fe36f');
-addLog('link='.$link, 'warn', __FUNCTION__, 'ad1fe36f');
             return false;
-        }
-        $link = _lnkGenerate('', 'l', $item, $oidText, $oidType);
+        $bh_bl = _lnkGenerate('', 'l', $item, $oidText, $oidType);
+        $sign = _cryptoAsymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
+        $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . getConfiguration('cryptoHashAlgorithm');
         if (!_lnkWrite($link))
             return false;
     }
@@ -1549,19 +1555,25 @@ addLog('link='.$link, 'warn', __FUNCTION__, 'ad1fe36f');
     $list = array($hashPublicKey, $hashPrivateKey);
     foreach ($list as $item)
     {
-        $link = _lnkGenerate('', 'l', $item, $oidAlgo, $oidHash);
+        $bh_bl = _lnkGenerate('', 'l', $item, $oidAlgo, $oidHash);
+        $sign = _cryptoAsymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
+        $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . getConfiguration('cryptoHashAlgorithm');
         if (!_lnkWrite($link))
             return false;
-        $link = _lnkGenerate('', 'l', $item, $oidPem, $oidType);
+        $bh_bl = _lnkGenerate('', 'l', $item, $oidPem, $oidType);
+        $sign = _cryptoAsymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
+        $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . getConfiguration('cryptoHashAlgorithm');
         if (!_lnkWrite($link))
             return false;
     }
 
-    $link = _lnkGenerate('', 'f', $hashPublicKey, $hashPrivateKey, $oidPKey);
+    $bh_bl = _lnkGenerate('', 'f', $hashPublicKey, $hashPrivateKey, $oidPKey);
+    $sign = _cryptoAsymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
+    $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . getConfiguration('cryptoHashAlgorithm');
     if (!_lnkWrite($link))
         return false;
 
-addLog('generate new entity ok ', 'warn', __FUNCTION__, 'ad1fe36f');
+addLog('generate new entity ok', 'warn', __FUNCTION__, 'ad1fe36f');
     return true;
 }
 
@@ -1572,9 +1584,7 @@ addLog('generate new entity ok ', 'warn', __FUNCTION__, 'ad1fe36f');
  */
 function _entityCheck(string $nid): bool
 {
-    if (!_objCheckIsPublicKey($nid))
-        return false;
-    return true;
+    return _objCheckIsPublicKey($nid);
 }
 
 /**
@@ -1858,7 +1868,7 @@ function _objGenerate(string &$data, string $typemime = ''): bool
     if (!io_checkNodeHaveContent($hash))
         _objWriteContent($data, $hash);
     // Ecrit le lien de hash.
-    $lnk = _lnkGenerate(
+    $lnk = _lnkGenerateSign(
             $dat,
             'l',
             $hash,
@@ -1869,7 +1879,7 @@ function _objGenerate(string &$data, string $typemime = ''): bool
         _lnkWrite($lnk);
     // Ecrit le lien de type mime.
     if ($typemime != '') {
-        $lnk = _lnkGenerate(
+        $lnk = _lnkGenerateSign(
                 $dat,
                 'l',
                 $hash,
@@ -1990,6 +2000,8 @@ function _objCheckIsPublicKey(string &$nid): bool
 {
     global $nebuleCacheIsPublicKey;
 
+    $result = false;
+
     if (isset($nebuleCacheIsPublicKey[$nid]))
         return $nebuleCacheIsPublicKey[$nid];
 
@@ -2000,18 +2012,21 @@ function _objCheckIsPublicKey(string &$nid): bool
         || !_objCheckContent($nid)
         || !io_checkNodeHaveLink($nid)
     )
+    {
+        addLog('not a valid object for a key '.$nid, 'warn', __FUNCTION__, '9c268f6a');
         return false;
+    }
 
     nebCreateAsText('application/x-pem-file');
-// TODO à réactiver dès que les liens sont valides !
     if (nebReadObjTypeMime($nid) != 'application/x-pem-file')
-        addLog('DEBUG Cannot check links by now', 'debug', __FUNCTION__, '51cc1f3a');
-//        return false;
+        return false;
 
     $line = nebGetContentAsText($nid, 10000);
-    $result = false;
     if (strstr($line, 'BEGIN PUBLIC KEY') !== false)
         $result = true;
+    else
+        addLog('NID do not provide a public key', 'warn', __FUNCTION__, '25743bf3');
+
     if (getConfiguration('permitBufferIO'))
         $nebuleCacheIsPublicKey[$nid] = $result;
     return $result;
@@ -2061,6 +2076,8 @@ function _objCheckIsPrivateKey(&$nid): bool
  */
 function _objGetNID(string $data, string $algo = ''): string
 {
+    if ($algo == '')
+        $algo = getConfiguration('cryptoHashAlgorithm');
     return _cryptoGetDataHash($data, $algo) . '.' . $algo;
 }
 
@@ -2074,7 +2091,7 @@ function _objGetNID(string $data, string $algo = ''): string
 function _nodCheckNID(string &$nid, bool $permitNull = false): bool
 {
     // May be null in some case.
-    if (!$permitNull && $nid == '')
+    if ($permitNull && $nid == '')
         return true;
 
     // Check hash value.
@@ -2184,6 +2201,34 @@ function _objWriteContent(string &$data, string $oid = '0'): bool
 }
 
 /**
+ * Link - Generate and sign a new link
+ * Use OpenSSL library.
+ *
+ * @param string $rc
+ * @param string $req
+ * @param string $nid1
+ * @param string $nid2
+ * @param string $nid3
+ * @param string $nid4
+ * @return string
+ */
+function _lnkGenerateSign(string $rc, string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): string
+{
+    global $nebulePublicEntity;
+
+    $bh_bl = _lnkGenerate($rc, $req, $nid1, $nid2, $nid3, $nid4);
+    if ($bh_bl == '')
+        return '';
+
+    $sign = _lnkSign($bh_bl);
+    if ($sign == '')
+        return '';
+
+    $bs = $nebulePublicEntity . '>' . $sign . getConfiguration('cryptoHashAlgorithm');
+    return $bh_bl . '_' . $bs;
+}
+
+/**
  * Link - Generate a new link
  * Use OpenSSL library.
  *
@@ -2197,13 +2242,7 @@ function _objWriteContent(string &$data, string $oid = '0'): bool
  */
 function _lnkGenerate(string $rc, string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): string
 {
-    global $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
-
-    if (!_entityCheck($nebulePublicEntity)
-        || $nebulePrivateEntity == ''
-        || $nebulePasswordEntity == ''
-        || !io_checkNodeHaveContent($nebulePrivateEntity)
-        || $req == ''
+    if ($req == ''
         || !_nodCheckNID($nid1)
         || !_nodCheckNID($nid2, true)
         || !_nodCheckNID($nid3, true)
@@ -2214,7 +2253,7 @@ function _lnkGenerate(string $rc, string $req, string $nid1, string $nid2 = '', 
     $bh = 'nebule:link/'.NEBULE_LIBRARY_PP_LINK_VERSION;
 
     if ($rc == '' || !_lnkCheckRC($rc))
-        $rc = '0:' . date(DATE_ATOM);
+        $rc = '0>' . date(DATE_ATOM);
 
     $rl = $req . '>' . $nid1;
     if ($nid2 != '' && $nid2 != '0')
@@ -2227,11 +2266,37 @@ function _lnkGenerate(string $rc, string $req, string $nid1, string $nid2 = '', 
 
     $bh_bl = $bh . '_' . $bl;
 
-    $sign = _cryptoAsymmetricEncrypt($bh_bl); // FIXME error !!!!
+    return $bh_bl;
+}
+
+function _lnkSign(string $bh_bl): string
+{
+    global $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
+
+    if ($bh_bl == '')
+        return '';
+
+    if (!_objCheckIsPublicKey($nebulePublicEntity))
+    {
+        addLog('invalid current entity (public) '.$nebulePublicEntity, 'error', __FUNCTION__, '70e110d7');
+        return '';
+    }
+    if (!_objCheckIsPrivateKey($nebulePrivateEntity))
+    {
+        addLog('invalid current entity (private) '.$nebulePrivateEntity, 'error', __FUNCTION__, 'ca23fd57');
+        return '';
+    }
+    if ($nebulePasswordEntity == '')
+    {
+        addLog('invalid current entity (password)', 'error', __FUNCTION__, '331e1fab');
+        return '';
+    }
+
+    $sign = _cryptoAsymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, true);
     if ($sign == '')
         return '';
 
-    $bs = $nebulePublicEntity . '>' . $sign . getConfiguration('cryptoHashAlgorithm');
+    $bs = $nebulePublicEntity . '>' . $sign . '.' . getConfiguration('cryptoHashAlgorithm');
     return $bh_bl . '_' . $bs;
 }
 
@@ -3078,14 +3143,14 @@ function _lnkCheckBL(string &$bl): bool
  */
 function _lnkCheckRC(string &$rc): bool
 {
-    if (strlen($rc) > 17) return false;
+    if (strlen($rc) > 27) return false;
 
     // Check items from RC : MOD>CHR
     $mod = strtok($rc, '>');
     if ($mod != '0') return false;
     $chr = strtok('>');
-    if (strlen($chr) != 15) return false;
-    if (!ctype_digit($chr)) return false;
+    if (strlen($chr) != 25) return false;
+    //if (!ctype_digit($chr)) return false; // TODO faire un filtrage plus fin...
 
     // Check registry overflow
     if (strtok('>') !== false) return false;
@@ -3171,7 +3236,6 @@ function _lnkCheckBS(string &$bh, string &$bl, string &$bs): bool
     if (strtok('/') !== false) return false;
 
     // Check content RS 1 NID 1 : hash.algo.size
-    if (!_nodCheckNID($rs1nid1, false)) return false;
     if (!_lnkCheckRS($rs, $bh, $bl)) return false;
 
     return true;
@@ -3191,7 +3255,9 @@ function _lnkCheckRS(string &$rs, string &$bh, string &$bl): bool
 
     // Extract items from RS : NID>SIG
     $nid = strtok($rs, '>');
+    if ($nid === false) return false;
     $sig = strtok('>');
+    if ($sig === false) return false;
 
     // Check registry overflow
     if (strtok('>') !== false) return false;
@@ -3234,7 +3300,7 @@ function _lnkCheckSIG(string &$bh, string &$bl, string &$sig, string &$nid): boo
     if (!ctype_digit($size)) return false; // Check content before!
     if ((int)$size < NID_MIN_HASH_SIZE) return false;
     if ((int)$size > NID_MAX_HASH_SIZE) return false;
-    if (strlen($sign) != (int)$size) return false;
+    //if (strlen($sign) != (int)$size) return false; // TODO can't be checked ?
 
     // Check item overflow
     if (strtok('.') !== false) return false;
@@ -3406,13 +3472,13 @@ function _lnkWrite($link): bool
     // Write link into parts files.
     $result = io_linkWrite($linkParsed['bl/rl/nid1'], $link);
     if ($linkParsed['bl/rl/nid2'] != '')
-        $result &= io_linkWrite($linkParsed['bl/rl/nid2'], $link);
+        $result = $result && io_linkWrite($linkParsed['bl/rl/nid2'], $link);
     if ($linkParsed['bl/rl/nid3'] != '')
-        $result &= io_linkWrite($linkParsed['bl/rl/nid3'], $link);
+        $result = $result && io_linkWrite($linkParsed['bl/rl/nid3'], $link);
     if ($linkParsed['bl/rl/nid4'] != '')
-        $result &= io_linkWrite($linkParsed['bl/rl/nid4'], $link);
-    if (getConfiguration(permitAddLinkToSigner))
-        $result &= io_linkWrite($linkParsed['bs/rs/nid'], $link);
+        $result = $result && io_linkWrite($linkParsed['bl/rl/nid4'], $link);
+    if (getConfiguration('permitAddLinkToSigner'))
+        $result = $result && io_linkWrite($linkParsed['bs/rs/nid'], $link);
 
     return $result;
 }
@@ -3631,12 +3697,15 @@ function io_linkWrite(string &$nid, string &$link): bool
     )
         return false;
 
-    $l = file(LOCAL_LINKS_FOLDER . '/' . $nid);
-    if ($l !== false)
+    if (file_exists(LOCAL_LINKS_FOLDER . '/' . $nid))
     {
-        foreach ($l as $k) {
-            if (trim($k) == trim($link))
-                return true;
+        $l = file(LOCAL_LINKS_FOLDER . '/' . $nid, FILE_SKIP_EMPTY_LINES);
+        if ($l !== false)
+        {
+            foreach ($l as $k) {
+                if (trim($k) == trim($link))
+                    return true;
+            }
         }
     }
 
@@ -4068,24 +4137,24 @@ function _cryptoGetNewPKey(string $asymmetricAlgo, string $hashAlgo, string &$pu
  * Use OpenSSL library.
  *
  * @param string $data
+ * @param string $privateOid
+ * @param string $password
+ * @param bool $entityCheck
  * @return string
  */
-function _cryptoAsymmetricEncrypt(string $data): string
+function _cryptoAsymmetricEncrypt(string $data, string $privateOid = '', string $password = '', bool $entityCheck = true): string
 {
-    global $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
-
-    if (!_entityCheck($nebulePublicEntity)
-        || $nebulePrivateEntity == ''
-        || $nebulePasswordEntity == ''
-        || !io_checkNodeHaveContent($nebulePrivateEntity)
-        || $data = ''
+    if ($privateOid == ''
+        || ($entityCheck && !_objCheckIsPrivateKey($privateOid))
+        || $password == ''
+        || $data == ''
     )
         return '';
 
     $privateCertificat = '';
-    if (!_objGetLocalContent($nebulePrivateEntity, $privateCertificat, 10000))
+    if (!_objGetLocalContent($privateOid, $privateCertificat, 10000))
         return '';
-    $private_key = openssl_pkey_get_private($privateCertificat, $nebulePasswordEntity);
+    $private_key = openssl_pkey_get_private($privateCertificat, $password);
     if ($private_key === false)
         return '';
     $binarySignature = '';
@@ -6632,7 +6701,7 @@ function bootstrapFirstDisplay9LocaleEntity(): bool
         $nebulePasswordEntity = '';
         $genpasswd = openssl_random_pseudo_bytes(FIRST_GENERATED_PASSWORD_SIZE * 20); // TODO modify to use less entropy.
         $nebulePasswordEntity .= preg_replace('/[^[:print:]]/', '', $genpasswd);
-        $nebulePasswordEntity = substr($nebulePasswordEntity, 0, FIRST_GENERATED_PASSWORD_SIZE);
+        $nebulePasswordEntity = (string)substr($nebulePasswordEntity, 0, FIRST_GENERATED_PASSWORD_SIZE);
         $genpasswd = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
         $genpasswd = null;
 
@@ -6646,6 +6715,7 @@ function bootstrapFirstDisplay9LocaleEntity(): bool
             $nebulePrivateEntity,
             $nebulePasswordEntity
         );
+        addLog('switch to new entity ' . $nebulePublicEntity, 'warn', __FUNCTION__, '94c27df0');
 
         // Définit l'entité comme entité instance du serveur.
         file_put_contents(LOCAL_ENTITY_FILE, $nebulePublicEntity);
@@ -6699,10 +6769,8 @@ function bootstrapFirstDisplay9LocaleEntity(): bool
         nebCreateAsText($name);
         $refHashName = _objGetNID('nebule/objet/nom', getConfiguration('cryptoHashAlgorithm'));
         $hashName = _objGetNID($name, getConfiguration('cryptoHashAlgorithm'));
-        $newlink = _lnkGenerate('-', 'l', $nebulePublicEntity, $hashName, $refHashName);
-        if (_lnkVerify($newlink) == 1)
-            _lnkWrite($newlink);
-        unset($newlink);
+        $newlink = _lnkGenerateSign('', 'l', $nebulePublicEntity, $hashName, $refHashName);
+        _lnkWrite($newlink);
 
         ?>
 
