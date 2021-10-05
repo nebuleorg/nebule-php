@@ -1531,7 +1531,11 @@ function _entityGenerate(string $asymmetricAlgo, string $hashAlgo, string &$hash
     {
         $link = _lnkGenerate('', 'l', $item, $oidAlgo, $oidHash);
         if (!_lnkWrite($link))
+        {
+addLog('generate new entity fail write link ', 'warn', __FUNCTION__, 'ad1fe36f');
+addLog('link='.$link, 'warn', __FUNCTION__, 'ad1fe36f');
             return false;
+        }
         $link = _lnkGenerate('', 'l', $item, $oidText, $oidType);
         if (!_lnkWrite($link))
             return false;
@@ -1552,7 +1556,7 @@ function _entityGenerate(string $asymmetricAlgo, string $hashAlgo, string &$hash
     if (!_lnkWrite($link))
         return false;
 
-    addLog('generate new entity ok ', 'warn', __FUNCTION__, 'ad1fe36f');
+addLog('generate new entity ok ', 'warn', __FUNCTION__, 'ad1fe36f');
     return true;
 }
 
@@ -2218,7 +2222,7 @@ function _lnkGenerate(string $rc, string $req, string $nid1, string $nid2 = '', 
 
     $bh_bl = $bh . '_' . $bl;
 
-    $sign = _cryptoAsymmetricEncrypt($bh_bl);
+    $sign = _cryptoAsymmetricEncrypt($bh_bl); // FIXME error !!!!
     if ($sign == '')
         return '';
 
@@ -2248,7 +2252,7 @@ function _lnkGenerate(string $rc, string $req, string $nid1, string $nid2 = '', 
  * @param boolean $restrict
  * @return string
  */
-function _lnkGraphResolvOne(&$nid, &$visited, $present = true, $synchro = false, $restrict = false)
+function _lnkGraphResolvOne(string &$nid, &$visited, bool $present = true, bool $synchro = false, bool $restrict = false): string
 {
     global $nebuleLocalAuthorities;
 
