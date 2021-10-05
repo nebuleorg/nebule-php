@@ -497,7 +497,6 @@ const LIST_OPTIONS_TYPE = array(
         'permitPublicSynchronizeApplication' => 'boolean',
         'permitDeleteObjectOnUnknowHash' => 'boolean',
         'permitCheckSignOnVerify' => 'boolean',
-        'permitCheckSignOnList' => 'boolean',
         'permitCheckObjectHash' => 'boolean',
         'permitListInvalidLinks' => 'boolean',
         'permitHistoryLinksSign' => 'boolean',
@@ -575,7 +574,6 @@ const LIST_OPTIONS_DEFAULT_VALUE = array(
         'permitPublicSynchronizeApplication' => true,
         'permitDeleteObjectOnUnknowHash' => true,
         'permitCheckSignOnVerify' => true,
-        'permitCheckSignOnList' => true,
         'permitCheckObjectHash' => true,
         'permitListInvalidLinks' => false,
         'permitHistoryLinksSign' => false,
@@ -1191,7 +1189,7 @@ function nebFindObjType(&$object, $type)
 /** FIXME
  * Get type Mime to the node (object) from his links.
  *
- * @param $nid
+ * @param string $nid
  * @return string
  */
 function nebReadObjTypeMime(&$nid): string
@@ -2480,7 +2478,7 @@ function _lnkGraphResolv($nid, $present = true, $synchro = false, $restrict = fa
  * @param array $filter
  * @param false $withinvalid
  */
-function _lnkFind($nid, &$table, $filter, $withinvalid = false)
+function _lnkFind(&$nid, &$table, $filter, $withinvalid = false)
 { // Liste et filtre les liens sur des actions et objets dans un ordre déterminé.
     // - $object objet dont les liens sont à lire.
     // - $table table dans laquelle seront retournés les liens.
@@ -2574,7 +2572,7 @@ function _lnkFind($nid, &$table, $filter, $withinvalid = false)
  * @param boolean $withinvalid
  * @return null
  */
-function _lnkFindInclusive($nid, &$table, $action, $srcobj, $dstobj, $metobj, $withinvalid = false): void
+function _lnkFindInclusive(&$nid, &$table, $action, $srcobj, $dstobj, $metobj, $withinvalid = false): void
 {
     $followXOnSameDate = true; // TODO à supprimer.
 
@@ -2813,7 +2811,7 @@ function _lnkFilter(array $link, array $filter): bool
  * @param false $withinvalid
  * @return void
  */
-function _lnkListOnFullFilter(string $nid, array &$result, string $filtreact = '-', string $filtreobj = '', bool $withinvalid = false): void
+function _lnkListOnFullFilter(string &$nid, array &$result, string $filtreact = '-', string $filtreobj = '', bool $withinvalid = false): void
 { // Liste et filtre les liens sur des actions et objets dans un ordre indéterminé.
     // - $object objet dont les liens sont à lire.
     // - $table table dans laquelle seront retournés les liens.
@@ -2872,104 +2870,63 @@ function _lnkListOnFullFilter(string $nid, array &$result, string $filtreact = '
     unset($tline);
 }
 
-/** FIXME
- * Link -
+/**
+ * Link - TODO à vérifier !
  *
  * @param string $nid
  * @param array $result
- * @param string $filtreact
- * @param string $filtreobj
- * @param false $withinvalid
+ * @param string $filterOnReq
+ * @param string $filterOnNid
+ * @param false $withInvalidLinks
  * @return void
  */
-function _lnkListOnOneFilter(string &$nid, array &$result, string $filtreact = '-', string $filtreobj = '', bool $withinvalid = false): void
-{ // Lit tous les liens d'un objet.
-    // - $object objet dont les liens sont à lire.
-    // - $table table dans laquelle seront retournés les liens.
-    // - $filtreact filtre optionnel sur l'action.
-    // - $filtreobj filtre optionnel sur un objet source, destination ou meta.
-    // - $withinvalid optionnel pour autoriser la lecture des liens invalides.
-
-    $checkSignOnList = getConfiguration('permitCheckSignOnList');
-
-    if ($nid == '0' || !io_checkNodeHaveLink($nid))
+function _lnkListOnOneFilter(string &$nid, array &$result, string $filterOnReq = '', string $filterOnNid = '', bool $withInvalidLinks = false): void
+{
+    if (!_nodCheckNID($nid) || !io_checkNodeHaveLink($nid))
         return;
 
+    // If not permitted, do not list invalid links.
     if (!getConfiguration('permitListInvalidLinks'))
-        $withinvalid = false; // Si pas autorisé, refuse de lire les liens invalides.
-    if ($filtreact == '')
-        $filtreact = '-';
-    $version = ''; // version du lien.
-    $n = 0; // indice dans la table des resultats.
-    $tline = array(); // table d'un lien en cours de lecture et d'analyse.
+        $withInvalidLinks = false;
+
     $lines = array();
-    io_linksRead($nid, $lines); // liens a lire et analyser.
-    $IOMaxlink = getConfiguration('ioReadMaxLinks');
-    foreach ($lines as $line) {
-        $i = 1;
-        if (substr($line, 0, 21) == 'nebule/liens/version/') {
-            $version = $line;
-            continue 1;
-        } // Permet la prise en compte de differentes versions de liens - non utilise aujourd'hui.
-        $okfiltre = false; // Résultat du filtre, sera à true si dans les critères.
-        $tline [0] = '';
-        $tline [1] = '';
-        $tline [2] = '';
-        $tline [3] = ''; // Initialisation des champs pour éviter les warn des logs.
-        $tline [4] = '';
-        $tline [5] = '';
-        $tline [6] = '';
-        $tline [7] = '';
-        $loopelem = strtok(trim($line), '_');
-        while ($loopelem !== false) {
-            $tline [$i] = $loopelem;
-            $i++;
-            $loopelem = strtok('_');
-        } // Extrait le lien.
-        if ($filtreobj == '' && ($tline [4] == $filtreact || $filtreact == '-'))
-            $okfiltre = true;
-        if (($tline [5] == $filtreobj || $tline [6] == $filtreobj || $tline [7] == $filtreobj) && ($tline [4] == $filtreact || $filtreact == '-'))
-            $okfiltre = true; // Vérifie le lien par rapport au filtre.
-        if ($tline [4] == 'u' || $tline [4] == 'e' || ($tline [4] == 'x' && $filtreact != 'x'))
-            $okfiltre = true; // Quelque soit le filtre, ajoute les liens de type u e et x.
-        if ($i != 8)
-            $okfiltre = false; // Si le lien est invalide, le filtre.
-        if ($okfiltre) // Si le lien correspond au filtre, l'enregistre dans la table des resultats.
+    io_linksRead($nid, $lines);
+    foreach ($lines as $line)
+    {
+        if (!$withInvalidLinks && !_lnkVerify($line))
+            continue;
+
+        $linkParse = _lnkParse($line);
+
+        if ($filterOnReq != '' && $linkParse['bl/rl/req'] == $filterOnReq)
         {
-            if ($checkSignOnList)
-                $verify = _lnkVerify(trim($line));
-            else
-                $verify = -1;
-            if ($verify == 1 || $verify == -1 || $withinvalid) // Le lien doit être vérifié ou la vérification désactivée.
-            {
-                $result [$n] [0] = trim($line); // Remplit le tableau à retourner.
-                $result [$n] [1] = $tline [1];
-                $result [$n] [2] = $tline [2];
-                $result [$n] [3] = $tline [3];
-                $result [$n] [4] = $tline [4];
-                $result [$n] [5] = $tline [5];
-                $result [$n] [6] = $tline [6];
-                $result [$n] [7] = $tline [7];
-                $result [$n] [8] = $tline [8];
-                $result [$n] [9] = $version;
-                $result [$n] [10] = $verify;
-                $result [$n] [11] = openssl_error_string();
-                $result [$n] [12] = 0; // Pour pondération.
-                $n++;
-            }
-            if ($n >= $IOMaxlink) {
-                break 1; // TODO WARNING --- BEURK ---
-            }
+            $result[] = $linkParse;
+            continue;
         }
+
+        if ($filterOnNid != '' && $linkParse['bl/rl/nid1'] == $filterOnNid)
+        {
+            $result[] = $linkParse;
+            continue;
+        }
+
+        if ($filterOnNid != '' && $linkParse['bl/rl/nid2'] == $filterOnNid)
+        {
+            $result[] = $linkParse;
+            continue;
+        }
+
+        if ($filterOnNid != '' && $linkParse['bl/rl/nid3'] == $filterOnNid)
+        {
+            $result[] = $linkParse;
+            continue;
+        }
+
+        if ($filterOnNid != '' && $linkParse['bl/rl/nid4'] == $filterOnNid)
+            $result[] = $linkParse;
     }
-    unset($count);
-    unset($n);
-    unset($i);
-    unset($version);
-    unset($okfiltre);
-    unset($line);
-    unset($tline);
-    unset($loopelem);
+
+    return;
 }
 
 /** FIXME
