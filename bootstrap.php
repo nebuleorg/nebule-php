@@ -456,6 +456,11 @@ const FIRST_RESERVED_OBJECTS = array(
     'nebule/reference',
 );
 
+const ARG_FIRST_PUPPETMASTER_EID = 'bootstrapfirstpuppetmastereid';
+const ARG_FIRST_PUPPETMASTER_LOC = 'bootstrapfirstpuppetmasterlocation';
+const ARG_FIRST_SUBORD_EID = 'bootstrapfirstsubordinationeid';
+const ARG_FIRST_SUBORD_LOC = 'bootstrapfirstsubordinationlocation';
+
 /**
  * List of options types.
  *
@@ -703,14 +708,14 @@ $nebuleMetrologyObjectVerify = 0;
 $nebuleMetrologyTimers = array();
 
 /**
- * First run - OID of an alternative puppetmaster.
+ * First run - EID of an alternative puppetmaster.
  */
-$firstAlternativePuppetmasterOid = '';
+$firstAlternativePuppetmasterEid = '';
 
 /**
- * First run - OID of an optional subordination.
+ * First run - EID of an optional subordination.
  */
-$firstSubordinationOid = '';
+$firstSubordinationEid = '';
 
 // Cache of many search result and content.
 $nebuleCacheReadObjText1line = array();
@@ -6060,7 +6065,7 @@ function bootstrapFirstDisplay3Objects(): bool
  */
 function bootstrapFirstDisplay4Puppetmaster(): bool
 {
-    global $firstAlternativePuppetmasterOid;
+    global $firstAlternativePuppetmasterEid;
 
     $ok = true;
 
@@ -6069,18 +6074,18 @@ function bootstrapFirstDisplay4Puppetmaster(): bool
 
     if (!file_exists(LOCAL_ENVIRONMENT_FILE))
     {
-        if (!filter_has_var(INPUT_GET, 'bootstrapfirstpuppetmasteroid'))
+        if (!filter_has_var(INPUT_GET, ARG_FIRST_PUPPETMASTER_EID))
         {
             addLog('ask subordination oid', 'info', __FUNCTION__, '213a735c');
             ?>
             <form action="" method="get">
                 <div>
                     <label for="oid">OID &nbsp;&nbsp;&nbsp;&nbsp; :</label>
-                    <input type="text" id="oid" name="bootstrapfirstpuppetmasteroid" />
+                    <input type="text" id="oid" name="<?php echo ARG_FIRST_PUPPETMASTER_EID; ?>" />
                 </div>
                 <div>
                     <label for="loc">Location :</label>
-                    <input type="text" id="loc" name="bootstrapfirstpuppetmasterlocation" />
+                    <input type="text" id="loc" name="<?php echo ARG_FIRST_PUPPETMASTER_LOC; ?>" />
                 </div>
                 <div class="button">
                     <button type="submit">Submit</button>
@@ -6090,17 +6095,17 @@ function bootstrapFirstDisplay4Puppetmaster(): bool
             <?php
             $ok = false;
         } else {
-            $argOID = trim(' '.filter_input(INPUT_GET, 'bootstrapfirstpuppetmasteroid', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $argOID = trim(' '.filter_input(INPUT_GET, ARG_FIRST_PUPPETMASTER_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
             if (_entityCheck($argOID)) {
-                $firstAlternativePuppetmasterOid = $argOID;
+                $firstAlternativePuppetmasterEid = $argOID;
             }
-            if (filter_has_var(INPUT_GET, 'bootstrapfirstpuppetmasterlocation'))
+            if (filter_has_var(INPUT_GET, ARG_FIRST_PUPPETMASTER_LOC))
             {
                 echo 'try alternative puppetmaster : ' . $argOID . ' ';
                 if (_nodCheckNID($argOID, false))
                 {
-                    $firstAlternativePuppetmasterOid = $argOID;
-                    $argLoc = trim(' '.filter_input(INPUT_GET, 'bootstrapfirstpuppetmasterlocation', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+                    $firstAlternativePuppetmasterEid = $argOID;
+                    $argLoc = trim(' '.filter_input(INPUT_GET, ARG_FIRST_PUPPETMASTER_LOC, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
                     if (strlen($argLoc) != 0 && filter_var($argLoc, FILTER_VALIDATE_URL) !== false)
                     {
                         echo 'sync...';
@@ -6112,15 +6117,15 @@ function bootstrapFirstDisplay4Puppetmaster(): bool
                     addLog('unable to find alternative puppetmaster oid', 'error', __FUNCTION__, '102c9011');
                     echo " <span class=\"error\">invalid!</span>\n";
                     $argLoc = '';
-                    $firstAlternativePuppetmasterOid = NEBULE_DEFAULT_PUPPETMASTER_ID;
+                    $firstAlternativePuppetmasterEid = NEBULE_DEFAULT_PUPPETMASTER_ID;
                 }
                 echo "<br />\n";
-                addLog('define alternative puppetmaster oid = ' . $firstAlternativePuppetmasterOid, 'warn', __FUNCTION__, '10a0bd6d');
-                echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ' . $firstAlternativePuppetmasterOid . "<br />\n";
+                addLog('define alternative puppetmaster oid = ' . $firstAlternativePuppetmasterEid, 'warn', __FUNCTION__, '10a0bd6d');
+                echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ' . $firstAlternativePuppetmasterEid . "<br />\n";
                 addLog('define alternative puppetmaster location = ' . $argLoc, 'info', __FUNCTION__, '6d54e19e');
                 echo 'location on &nbsp;&nbsp;&nbsp;&nbsp; : ' . $argLoc . "\n";
             } else
-                echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ' . $firstAlternativePuppetmasterOid . "\n";
+                echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ' . $firstAlternativePuppetmasterEid . "\n";
         }
     } else {
         $firstpuppetmasterOid = getConfiguration('subordinationEntity');
@@ -6444,6 +6449,7 @@ function bootstrapFirstDisplay6SyncObjects(): bool
 }
 
 
+
 // ------------------------------------------------------------------------------------------
 /**
  * Ask for subordination of the local entity.
@@ -6452,7 +6458,7 @@ function bootstrapFirstDisplay6SyncObjects(): bool
  */
 function bootstrapFirstDisplay7Subordination(): bool
 {
-    global $firstAlternativePuppetmasterOid, $firstSubordinationOid;
+    global $firstAlternativePuppetmasterEid, $firstSubordinationEid;
 
     $ok = true;
 
@@ -6461,19 +6467,19 @@ function bootstrapFirstDisplay7Subordination(): bool
 
     if (!file_exists(LOCAL_ENVIRONMENT_FILE))
     {
-        if (!filter_has_var(INPUT_GET, 'bootstrapfirstsubordinationoid'))
+        if (!filter_has_var(INPUT_GET, ARG_FIRST_SUBORD_EID))
         {
             addLog('ask subordination oid', 'info', __FUNCTION__, '213a735c');
 ?>
 <form action="" method="get">
     <div>
         <label for="oid">OID &nbsp;&nbsp;&nbsp;&nbsp; :</label>
-        <input type="text" id="oid" name="bootstrapfirstsubordinationoid" />
+        <input type="text" id="oid" name="<?php echo ARG_FIRST_SUBORD_EID; ?>" />
     </div>
     <div>
         <label for="loc">Location :</label>
-        <input type="text" id="loc" name="bootstrapfirstsubordinationlocation" />
-        <input type="hidden" id="puppetmaster" name="bootstrapfirstpuppetmasteroid" value="<?php echo $firstAlternativePuppetmasterOid; ?>" />
+        <input type="text" id="loc" name="<?php echo ARG_FIRST_SUBORD_LOC; ?>" />
+        <input type="hidden" id="puppetmaster" name="<?php echo ARG_FIRST_PUPPETMASTER_EID; ?>" value="<?php echo $firstAlternativePuppetmasterEid; ?>" />
     </div>
     <div class="button">
         <button type="submit">Submit</button>
@@ -6483,12 +6489,12 @@ function bootstrapFirstDisplay7Subordination(): bool
 <?php
             $ok = false;
         } else {
-            $argOID = trim(' '.filter_input(INPUT_GET, 'bootstrapfirstsubordinationoid', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $argOID = trim(' '.filter_input(INPUT_GET, ARG_FIRST_SUBORD_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
             if (_nodCheckNID($argOID, false))
             {
                 echo 'try alternative puppetmaster : ' . $argOID . ' ';
-                $firstSubordinationOid = $argOID;
-                $argLoc = trim(' '.filter_input(INPUT_GET, 'bootstrapfirstsubordinationlocation', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+                $firstSubordinationEid = $argOID;
+                $argLoc = trim(' '.filter_input(INPUT_GET, ARG_FIRST_SUBORD_LOC, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
                 if (strlen($argLoc) != 0 && filter_var($argLoc, FILTER_VALIDATE_URL) !== false)
                 {
                     echo 'sync...';
@@ -6499,17 +6505,17 @@ function bootstrapFirstDisplay7Subordination(): bool
                 addLog('unable to find subordination oid', 'error', __FUNCTION__, '5cd18917');
                 echo " <span class=\"error\">invalid!</span>\n";
                 $argLoc = '';
-                $firstSubordinationOid = '';
+                $firstSubordinationEid = '';
             }
             echo "<br />\n";
-            addLog('define subordination oid = ' . $firstSubordinationOid, 'warn', __FUNCTION__, 'a875618e');
-            echo 'subordination to : ' . $firstSubordinationOid . "<br />\n";
+            addLog('define subordination oid = ' . $firstSubordinationEid, 'warn', __FUNCTION__, 'a875618e');
+            echo 'subordination to : ' . $firstSubordinationEid . "<br />\n";
             addLog('define subordination location = ' . $argLoc, 'info', __FUNCTION__, 'c1c943a5');
             echo 'location on &nbsp;&nbsp;&nbsp;&nbsp; : ' . $argLoc . "\n";
         }
     } else {
-        $firstSubordinationOid = getConfiguration('subordinationEntity');
-        echo 'subordination to ' . $firstSubordinationOid . "\n";
+        $firstSubordinationEid = getConfiguration('subordinationEntity');
+        echo 'subordination to ' . $firstSubordinationEid . "\n";
     }
 
     echo "</div>\n";
@@ -6526,7 +6532,7 @@ function bootstrapFirstDisplay7Subordination(): bool
  */
 function bootstrapFirstDisplay8OptionsFile(): bool
 {
-    global $firstAlternativePuppetmasterOid, $firstSubordinationOid;
+    global $firstAlternativePuppetmasterEid, $firstSubordinationEid;
 
     $ok = true;
 
@@ -6544,14 +6550,14 @@ function bootstrapFirstDisplay8OptionsFile(): bool
     foreach (LIST_OPTIONS_DEFAULT_VALUE as $option => $value)
     {
         $prefix = '#';
-        if ($option == 'puppetmaster' && $firstAlternativePuppetmasterOid != '')
+        if ($option == 'puppetmaster' && $firstAlternativePuppetmasterEid != '')
         {
-            $value = $firstAlternativePuppetmasterOid;
+            $value = $firstAlternativePuppetmasterEid;
             $prefix = '';
         }
-        if ($option == 'subordinationEntity' && $firstSubordinationOid != '')
+        if ($option == 'subordinationEntity' && $firstSubordinationEid != '')
         {
-            $value = $firstSubordinationOid;
+            $value = $firstSubordinationEid;
             $prefix = '';
         }
         $defaultOptions .= $prefix . $option . ' = ';
