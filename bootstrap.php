@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020210727';
+const BOOTSTRAP_VERSION = '020211006';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -1186,9 +1186,8 @@ function nebFindObjType(&$object, $type)
     return $objdst;
 }
 
-/** FIXME
+/**
  * Get type Mime to the node (object) from his links.
- *
  * @param string $nid
  * @return string
  */
@@ -1200,44 +1199,51 @@ function nebReadObjTypeMime(&$nid): string
         return $nebuleCacheReadObjTypeMime [$nid];
 
     if (_nodCheckNID($nid))
-        return '-indéfini-';
+        return '-none-';
 
-    $table = array();
-    nebCreateAsText('nebule/objet/type');
-    $hashtype = _objGetNID('nebule/objet/type', getConfiguration('cryptoHashAlgorithm'));
-    $type = '';
+    $hashType = _objGetNID('nebule/objet/type', getConfiguration('cryptoHashAlgorithm'));
     $filter = array(
         'bl/rl/req' => 'l',
         'bl/rl/nid1' => $nid,
         'bl/rl/nid2' => '',
-        'bl/rl/nid3' => $hashtype,
+        'bl/rl/nid3' => $hashType,
         'bl/rl/nid4' => '0',
     );
-    _lnkFind($nid, $table, $filter);
-    rsort($table);
-    foreach ($table as $itemtable) {
-        if (($itemtable [2] == $nebulePublicEntity) && ($itemtable [7] == $hashtype) && ($itemtable [5] == $nid) && ($itemtable [4] == 'l')) {
-            $type = $itemtable [6];
-            break 1;
+    $links = array();
+    _lnkGetList($nid,$links, $filter);
+
+    // Search on signer is current entity
+    $linkType = '';
+    foreach ($links as $link)
+    {
+        if ($link ['bs/rs/nid'] == $nebulePublicEntity
+            && _lnkCompareDate($link['bl/rc/mod'], $link['bl/rc/chr'], $linkType ['bl/rc/mod'], $linkType ['bl/rc/chr']) > 0
+        )
+            $linkType = $link;
+    }
+
+    // Search on other signers TODO Filter on social links level - security!
+    if (sizeof($linkType) == 0)
+    {
+        foreach ($links as $link)
+        {
+            if (_lnkCompareDate($link['bl/rc/mod'], $link['bl/rc/chr'], $linkType ['bl/rc/mod'], $linkType ['bl/rc/chr']) > 0)
+                $linkType = $link;
         }
-        if (($itemtable [7] == $hashtype) && ($itemtable [5] == $nid) && ($itemtable [4] == 'l'))
-            $type = $itemtable [6]; // WARNING peut être un problème de sécurité...
     }
-    unset($table);
-    unset($hashtype);
-    $text = '';
-    if (io_checkNodeHaveContent($type)) {
-        $text = nebReadObjText1line($type, 128);
-    }
-    if ($text == '') {
-        $text = '-indéfini-';
-    }
-    unset($type);
+    unset($links);
+
+    if (sizeof($linkType) == 0)
+        return '-undefined-';
+
+    $typeMime = nebReadObjText1line($linkType['bl/rl/nid2'], 128);
+    if ($typeMime == '')
+        return '-unreadable-';
 
     if (getConfiguration('permitBufferIO'))
-        $nebuleCacheReadObjTypeMime [$nid] = $text;
+        $nebuleCacheReadObjTypeMime [$nid] = $typeMime;
 
-    return $text;
+    return $typeMime;
 }
 
 // FIXME
@@ -2504,7 +2510,7 @@ function _lnkFind(&$nid, &$table, $filter, $withinvalid = false)
     $linkdate = array();
     $tmptable = array();
     $i1 = 0;
-    _lnkListOnOneFilter($nid, $tmptable, $bl_rl_req, $bl_rl_nid3, $withinvalid);
+    _lnkGetListFilterNid($nid, $tmptable, $bl_rl_nid3, $bl_rl_req, $withinvalid);
     foreach ($tmptable as $n => $t) {
         $linkdate [$n] = $t [3];
     }
@@ -2580,7 +2586,7 @@ function _lnkFindInclusive(&$nid, &$table, $action, $srcobj, $dstobj, $metobj, $
     $tmptable = array();
     $i1 = 0;
 
-    _lnkListOnOneFilter($nid, $tmptable, $action, $metobj, $withinvalid);
+    _lnkGetListFilterNid($nid, $tmptable, $metobj, $action, $withinvalid);
 
     foreach ($tmptable as $n => $t) {
         $linkdate [$n] = $t [3];
@@ -2662,12 +2668,20 @@ function _lnkFindInclusive(&$nid, &$table, $action, $srcobj, $dstobj, $metobj, $
  * @param string $nid
  * @param array $result
  * @param array $filter
+ * @param bool $withInvalidLinks
  * @return void
  */
-function _lnkGetList(string &$nid, array &$result, array $filter): void
+function _lnkGetList(string &$nid, array &$result, array $filter, bool $withInvalidLinks = false): void
 {
     if ($nid == '0' || !io_checkNodeHaveLink($nid))
         return;
+
+    // TODO as _lnkGetListFilterNid()
+    // If not permitted, do not list invalid links.
+    if (!getConfiguration('permitListInvalidLinks'))
+        $withInvalidLinks = false;
+
+    // TODO add social filter
 
     $lines = array();
     io_linksRead($nid, $lines);
@@ -2829,7 +2843,7 @@ function _lnkListOnFullFilter(string &$nid, array &$result, string $filtreact = 
     $i1 = 0;
     if ($filtreact == '')
         $filtreact = '-';
-    _lnkListOnOneFilter($nid, $tmptable, $filtreact, $filtreobj, $withinvalid);
+    _lnkGetListFilterNid($nid, $tmptable, $filtreobj, $filtreact, $withinvalid);
     foreach ($tmptable as $n => $t) {
         $linkdate [$n] = $t [3];
     }
@@ -2871,16 +2885,18 @@ function _lnkListOnFullFilter(string &$nid, array &$result, string $filtreact = 
 }
 
 /**
- * Link - TODO à vérifier !
+ * Link - Extract links matching one filter or more (NID1, NID2, NID3 and NID4) and sub-filter on REQ.
+ * Return array of parsed links on arg $result (cumulative).
+ * TODO à vérifier !
  *
  * @param string $nid
  * @param array $result
- * @param string $filterOnReq
  * @param string $filterOnNid
+ * @param string $filterOnReq
  * @param false $withInvalidLinks
  * @return void
  */
-function _lnkListOnOneFilter(string &$nid, array &$result, string $filterOnReq = '', string $filterOnNid = '', bool $withInvalidLinks = false): void
+function _lnkGetListFilterNid(string &$nid, array &$result, string $filterOnNid = '', string $filterOnReq = '', bool $withInvalidLinks = false): void
 {
     if (!_nodCheckNID($nid) || !io_checkNodeHaveLink($nid))
         return;
@@ -2893,40 +2909,23 @@ function _lnkListOnOneFilter(string &$nid, array &$result, string $filterOnReq =
     io_linksRead($nid, $lines);
     foreach ($lines as $line)
     {
+        // Verify link.
         if (!$withInvalidLinks && !_lnkVerify($line))
             continue;
 
         $linkParse = _lnkParse($line);
 
-        if ($filterOnReq != '' && $linkParse['bl/rl/req'] == $filterOnReq)
-        {
-            $result[] = $linkParse;
-            continue;
-        }
-
-        if ($filterOnNid != '' && $linkParse['bl/rl/nid1'] == $filterOnNid)
-        {
-            $result[] = $linkParse;
-            continue;
-        }
-
-        if ($filterOnNid != '' && $linkParse['bl/rl/nid2'] == $filterOnNid)
-        {
-            $result[] = $linkParse;
-            continue;
-        }
-
-        if ($filterOnNid != '' && $linkParse['bl/rl/nid3'] == $filterOnNid)
-        {
-            $result[] = $linkParse;
-            continue;
-        }
-
-        if ($filterOnNid != '' && $linkParse['bl/rl/nid4'] == $filterOnNid)
+        // Filter and add link on result.
+        if ( ($filterOnReq == '' || $linkParse['bl/rl/req'] == $filterOnReq)
+            && ($filterOnNid == ''
+                || $linkParse['bl/rl/nid1'] == $filterOnNid
+                || $linkParse['bl/rl/nid2'] == $filterOnNid
+                || $linkParse['bl/rl/nid3'] == $filterOnNid
+                || $linkParse['bl/rl/nid4'] == $filterOnNid
+            )
+        )
             $result[] = $linkParse;
     }
-
-    return;
 }
 
 /** FIXME
