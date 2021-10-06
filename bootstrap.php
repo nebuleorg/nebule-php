@@ -1193,7 +1193,7 @@ function nebReadObjTypeMime(&$nid): string
     if (isset($nebuleCacheReadObjTypeMime [$nid]))
         return $nebuleCacheReadObjTypeMime [$nid];
 
-    if (_nodCheckNID($nid))
+    if (!_nodCheckNID($nid))
         return '-none-';
 
     $hashType = _objGetNID('nebule/objet/type', getConfiguration('cryptoHashAlgorithm'));
@@ -1208,10 +1208,14 @@ function nebReadObjTypeMime(&$nid): string
     _lnkGetList($nid,$links, $filter);
 
     // Search on signer is current entity
-    $linkType = '';
+    $linkType = array();
     foreach ($links as $link)
     {
         if ($link ['bs/rs/nid'] == $nebulePublicEntity
+            && sizeof($linkType) == 0
+        )
+            $linkType = $link;
+        elseif ($link ['bs/rs/nid'] == $nebulePublicEntity
             && _lnkCompareDate($link['bl/rc/mod'], $link['bl/rc/chr'], $linkType ['bl/rc/mod'], $linkType ['bl/rc/chr']) > 0
         )
             $linkType = $link;
@@ -1222,7 +1226,9 @@ function nebReadObjTypeMime(&$nid): string
     {
         foreach ($links as $link)
         {
-            if (_lnkCompareDate($link['bl/rc/mod'], $link['bl/rc/chr'], $linkType ['bl/rc/mod'], $linkType ['bl/rc/chr']) > 0)
+            if (sizeof($linkType) == 0)
+                $linkType = $link;
+            elseif (_lnkCompareDate($link['bl/rc/mod'], $link['bl/rc/chr'], $linkType ['bl/rc/mod'], $linkType ['bl/rc/chr']) > 0)
                 $linkType = $link;
         }
     }
@@ -1231,7 +1237,11 @@ function nebReadObjTypeMime(&$nid): string
     if (sizeof($linkType) == 0)
         return '-undefined-';
 
-    $typeMime = nebReadObjText1line_FIXME($linkType['bl/rl/nid2'], 128);
+    $nidType = $linkType['bl/rl/nid2'];
+    $typeMime = nebReadObjText1line_FIXME($nidType, 128);
+addLog('MARK1 '.$nid, 'error', __FUNCTION__, '00000000');
+addLog('MARK2 '.$nidType, 'error', __FUNCTION__, '00000000');
+addLog('MARK3 '.$typeMime, 'error', __FUNCTION__, '00000000');
     if ($typeMime == '')
         return '-unreadable-';
 
@@ -1525,6 +1535,7 @@ function _entityGenerate(string $asymmetricAlgo, string $hashAlgo, string &$hash
     } else
         return false;
 
+    // Generate links for properties
     $oidHash = _objGetNID('nebule/objet/hash');
     $oidAlgo = _objGetNID(getConfiguration('cryptoHashAlgorithm'));
     $oidType = _objGetNID('nebule/objet/type');
@@ -1994,6 +2005,7 @@ function _objCheckIsPublicKey(string &$nid): bool
 {
     global $nebuleCacheIsPublicKey;
 
+addLog('MARK1 '.$nid, 'error', __FUNCTION__, '00000000');
     $result = false;
 
     if (isset($nebuleCacheIsPublicKey[$nid]))
@@ -2003,7 +2015,7 @@ function _objCheckIsPublicKey(string &$nid): bool
         || strlen($nid) < NID_MIN_HASH_SIZE
         || !_nodCheckNID($nid)
         || !io_checkNodeHaveContent($nid)
-        || !_objCheckContent_FIXME($nid)
+    //    || !_objCheckContent_FIXME($nid)
         || !io_checkNodeHaveLink($nid)
     )
     {
@@ -2011,16 +2023,19 @@ function _objCheckIsPublicKey(string &$nid): bool
         return false;
     }
 
+addLog('MARK2 ' . nebReadObjTypeMime($nid), 'error', __FUNCTION__, '00000000');
     nebCreateAsText('application/x-pem-file');
     if (nebReadObjTypeMime($nid) != 'application/x-pem-file')
         return false;
 
+addLog('MARK3', 'error', __FUNCTION__, '00000000');
     $line = nebGetContentAsText_FIXME($nid, 10000);
     if (strstr($line, 'BEGIN PUBLIC KEY') !== false)
         $result = true;
     else
         addLog('NID do not provide a public key', 'warn', __FUNCTION__, '25743bf3');
 
+addLog('MARK4', 'error', __FUNCTION__, '00000000');
     if (getConfiguration('permitBufferIO'))
         $nebuleCacheIsPublicKey[$nid] = $result;
     return $result;
@@ -2263,6 +2278,11 @@ function _lnkGenerate(string $rc, string $req, string $nid1, string $nid2 = '', 
     return $bh_bl;
 }
 
+/**
+ * Link - Generate a valid sign for a link.
+ * @param string $bh_bl
+ * @return string
+ */
 function _lnkSign(string $bh_bl): string
 {
     global $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
