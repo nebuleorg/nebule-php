@@ -3831,7 +3831,7 @@ function io_objectSynchronize(string $nid, string $location): bool
                 fputs($localobj, $line);
             }
             fclose($localobj);
-            $algo = substr($nid, strpos($nid, '.') + 1);
+            $algo = _nodGetAlgo($nid);
             if ($algo !== false)
                 $hash = _cryptoGetFileHash($tmpIdName, _cryptoGetTranslatedHashAlgo($algo));
             else
