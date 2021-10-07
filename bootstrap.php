@@ -816,7 +816,7 @@ function getConfiguration(string $name)
  * ------------------------------------------------------------------------------------------
  */
 
-/** FIXME
+/**
  * Initialisation de la bibliothèque.
  * @return boolean
  */
