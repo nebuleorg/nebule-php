@@ -845,12 +845,22 @@ function libraryInit(): bool
         if (!_entityCheckSecurityAuthorities($nebuleSecurityMasters))
             return false;
     }
+    // Add masters of security as local authorities.
+    foreach ($nebuleSecurityMasters as $master)
+    {
+        $nebuleLocalAuthorities[] = $master;
+    }
     $nebuleCodeMasters = _entityGetCodeAuthorities(false);
     if (!_entityCheckCodeAuthorities($nebuleCodeMasters))
     {
         $nebuleCodeMasters = _entityGetCodeAuthorities(true);
         if (!_entityCheckCodeAuthorities($nebuleCodeMasters))
             return false;
+    }
+    // Add masters of code as local authorities.
+    foreach ($nebuleCodeMasters as $master)
+    {
+        $nebuleLocalAuthorities[] = $master;
     }
     $nebuleTimeMasters = _entityGetTimeAuthorities(false);
     if (!_entityCheckTimeAuthorities($nebuleTimeMasters))
@@ -865,15 +875,6 @@ function libraryInit(): bool
         $nebuleDirectoryMasters = _entityGetDirectoryAuthorities(true);
         if (!_entityCheckDirectoryAuthorities($nebuleDirectoryMasters))
             return false;
-    }
-
-    // Add masters of security as local authorities.
-    foreach ($nebuleSecurityMasters as $master) {
-        $nebuleLocalAuthorities[] = $master;
-    }
-    // Add masters of code as local authorities.
-    foreach ($nebuleCodeMasters as $master) {
-        $nebuleLocalAuthorities[] = $master;
     }
 
     librarySetServerEntity();
