@@ -2028,10 +2028,12 @@ function _objCheckContent(&$nid): bool
  */
 function _nodGetAlgo(&$nid): string
 {
-    $algo = substr($nid, strpos($nid, '.') + 1);
-    if (!is_string($algo))
-        $algo = '';
-    return $algo;
+    strtok($nid, '.');
+    $a = strtok('.');
+    $s = strtok('.');
+    if ($a == '' || $s == '')
+        return '';
+    return $a.'.'.$s;
 }
 
 /**
