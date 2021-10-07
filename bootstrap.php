@@ -1183,10 +1183,11 @@ function nebFindObjType_FIXME(&$object, $type)
 
 /**
  * Get type Mime to the node (object) from his links.
+ * TODO revoir le traitement social des liens.
  * @param string $nid
  * @return string
  */
-function nebReadObjTypeMime(&$nid): string
+function nebGetObjTypeMime(string &$nid): string
 {
     global $nebulePublicEntity, $nebuleCacheReadObjTypeMime;
 
@@ -1206,6 +1207,10 @@ function nebReadObjTypeMime(&$nid): string
     );
     $links = array();
     _lnkGetList($nid,$links, $filter);
+    // TODO Filter on social links level - security!
+
+    if (sizeof($links) == 0)
+        return '-undefined-';
 
     // Search on signer is current entity
     $linkType = array();
@@ -1221,7 +1226,7 @@ function nebReadObjTypeMime(&$nid): string
             $linkType = $link;
     }
 
-    // Search on other signers TODO Filter on social links level - security!
+    // Search on other signers
     if (sizeof($linkType) == 0)
     {
         foreach ($links as $link)
@@ -1234,14 +1239,8 @@ function nebReadObjTypeMime(&$nid): string
     }
     unset($links);
 
-    if (sizeof($linkType) == 0)
-        return '-undefined-';
-
     $nidType = $linkType['bl/rl/nid2'];
     $typeMime = nebReadObjText1line_FIXME($nidType, 128);
-addLog('MARK1 '.$nid, 'error', __FUNCTION__, '00000000');
-addLog('MARK2 '.$nidType, 'error', __FUNCTION__, '00000000');
-addLog('MARK3 '.$typeMime, 'error', __FUNCTION__, '00000000');
     if ($typeMime == '')
         return '-unreadable-';
 
@@ -1249,6 +1248,48 @@ addLog('MARK3 '.$typeMime, 'error', __FUNCTION__, '00000000');
         $nebuleCacheReadObjTypeMime [$nid] = $typeMime;
 
     return $typeMime;
+}
+
+/**
+ * Get type Mime to the node (object) from his links.
+ * The type mime asked is converted as NID and may not have object.
+ * TODO revoir le traitement social des liens.
+ * @param string $nid
+ * @param string $typeMime
+ * @return bool
+ */
+function nebCheckObjTypeMime(string &$nid, string $typeMime): bool
+{
+    global $nebulePublicEntity, $nebuleCacheReadObjTypeMime;
+
+    if (isset($nebuleCacheReadObjTypeMime [$nid]))
+    {
+        if ($nebuleCacheReadObjTypeMime [$nid] == $typeMime)
+            return true;
+        else
+            return false;
+    }
+
+    if (!_nodCheckNID($nid))
+        return false;
+
+    $hashType = _objGetNID('nebule/objet/type', getConfiguration('cryptoHashAlgorithm'));
+    $hashTypeAsked = _objGetNID($typeMime, getConfiguration('cryptoHashAlgorithm'));
+    $filter = array(
+        'bl/rl/req' => 'l',
+        'bl/rl/nid1' => $nid,
+        'bl/rl/nid2' => $hashTypeAsked,
+        'bl/rl/nid3' => $hashType,
+        'bl/rl/nid4' => '0',
+    );
+    $links = array();
+    _lnkGetList($nid,$links, $filter);
+    // TODO Filter on social links level - security!
+
+    if (sizeof($links) == 0)
+        return false;
+
+    return true;
 }
 
 function nebFindPrivateKey_FIXME(): string
@@ -2005,7 +2046,6 @@ function _objCheckIsPublicKey(string &$nid): bool
 {
     global $nebuleCacheIsPublicKey;
 
-addLog('MARK1 '.$nid, 'error', __FUNCTION__, '00000000');
     $result = false;
 
     if (isset($nebuleCacheIsPublicKey[$nid]))
@@ -2023,19 +2063,15 @@ addLog('MARK1 '.$nid, 'error', __FUNCTION__, '00000000');
         return false;
     }
 
-addLog('MARK2 ' . nebReadObjTypeMime($nid), 'error', __FUNCTION__, '00000000');
-    nebCreateAsText('application/x-pem-file');
-    if (nebReadObjTypeMime($nid) != 'application/x-pem-file')
+    if (!nebCheckObjTypeMime($nid, 'application/x-pem-file'))
         return false;
 
-addLog('MARK3', 'error', __FUNCTION__, '00000000');
     $line = nebGetContentAsText_FIXME($nid, 10000);
     if (strstr($line, 'BEGIN PUBLIC KEY') !== false)
         $result = true;
     else
         addLog('NID do not provide a public key', 'warn', __FUNCTION__, '25743bf3');
 
-addLog('MARK4', 'error', __FUNCTION__, '00000000');
     if (getConfiguration('permitBufferIO'))
         $nebuleCacheIsPublicKey[$nid] = $result;
     return $result;
@@ -2064,7 +2100,7 @@ function _objCheckIsPrivateKey(&$nid): bool
         return false;
 
     nebCreateAsText('application/x-pem-file');
-    if ((nebReadObjTypeMime($nid)) != 'application/x-pem-file')
+    if (!nebCheckObjTypeMime($nid, 'application/x-pem-file'))
         return false;
 
     $line = nebGetContentAsText_FIXME($nid, 10000);
@@ -2247,7 +2283,6 @@ function _lnkGenerate(string $rc, string $req, string $nid1, string $nid2 = '', 
 
     $bh_bl = $bh . '_' . $bl;
 
-addLog('MARK1 '.$bh_bl, 'error', __FUNCTION__, '00000000');
     return $bh_bl;
 }
 
