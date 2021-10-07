@@ -3774,6 +3774,7 @@ function io_objectRead(string $nid, int $maxData = 0): string
 
 /**
  * I/O - Write object content.
+ * This function do not verify data and OID correlation.
  *
  * @param string $data
  * @param string $oid
@@ -3787,7 +3788,7 @@ function io_objectWrite(string &$data, string $oid = '0'): bool
     )
         return false;
 
-    if ($oid == '0')
+    if (strlen($oid) < NID_MIN_HASH_SIZE)
         return false;
 
     if (io_checkNodeHaveContent($oid))
