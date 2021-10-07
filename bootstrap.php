@@ -1867,7 +1867,8 @@ function _entitySyncPuppetmaster(string $oid): void
     {
         addLog('Write default puppetmaster', 'info', __FUNCTION__, '555ec326');
         $data = FIRST_PUPPETMASTER_PUBLIC_KEY;
-        io_objectWrite($data);
+        $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+        io_objectWrite($data, $hash);
         foreach (FIRST_PUPPETMASTER_LINKS as $data)
             io_linkWrite($oid, $data);
     }
@@ -3787,7 +3788,7 @@ function io_objectWrite(string &$data, string $oid = '0'): bool
         return false;
 
     if ($oid == '0')
-        $oid = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+        return false;
 
     if (io_checkNodeHaveContent($oid))
         return true;
@@ -6094,7 +6095,7 @@ function bootstrapFirstDisplay3Objects(): bool
         if (!io_checkNodeHaveContent($hash)) {
             addLog('need create objects ' . $hash, 'warn', __FUNCTION__, 'ca195598');
             echo '.';
-            if (!io_objectWrite($data)) {
+            if (!io_objectWrite($data, $hash)) {
                 $ok = false;
                 echo 'E';
             }
@@ -6105,7 +6106,7 @@ function bootstrapFirstDisplay3Objects(): bool
         if (!io_checkNodeHaveContent($hash)) {
             addLog('need create objects ' . $hash, 'warn', __FUNCTION__, 'fc68d2ff');
             echo '.';
-            if (!io_objectWrite($data)) {
+            if (!io_objectWrite($data, $hash)) {
                 $ok = false;
                 echo 'E';
             }
@@ -6405,10 +6406,12 @@ function bootstrapFirstDisplay6SyncObjects(): bool
         flush();
 
         $data = REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS;
-        io_objectWrite($data);
+        $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+        io_objectWrite($data, $hash);
 
         $data = REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE;
-        io_objectWrite($data);
+        $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+        io_objectWrite($data, $hash);
         echo "<br />\nbootstrap start &nbsp;&nbsp;&nbsp;:" . $refBoot . ' ';
         flush();
 
