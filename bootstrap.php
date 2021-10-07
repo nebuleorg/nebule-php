@@ -2251,6 +2251,34 @@ function _lnkGenerate(string $rc, string $req, string $nid1, string $nid2 = '', 
 }
 
 /**
+ * Link - Generate and sign a new link
+ * Use OpenSSL library.
+ *
+ * @param string $rc
+ * @param string $req
+ * @param string $nid1
+ * @param string $nid2
+ * @param string $nid3
+ * @param string $nid4
+ * @return string
+ */
+function _lnkGenerateSign(string $rc, string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): string
+{
+    global $nebulePublicEntity;
+
+    $bh_bl = _lnkGenerate($rc, $req, $nid1, $nid2, $nid3, $nid4);
+    if ($bh_bl == '')
+        return '';
+
+    $sign = _lnkSign($bh_bl);
+    if ($sign == '')
+        return '';
+
+    $bs = $nebulePublicEntity . '>' . $sign . getConfiguration('cryptoHashAlgorithm');
+    return $bh_bl . '_' . $bs;
+}
+
+/**
  * Link - Generate a valid sign for a link.
  * @param string $bh_bl
  * @return string
@@ -2283,34 +2311,6 @@ function _lnkSign(string $bh_bl): string
         return '';
 
     $bs = $nebulePublicEntity . '>' . $sign . '.' . getConfiguration('cryptoHashAlgorithm');
-    return $bh_bl . '_' . $bs;
-}
-
-/**
- * Link - Generate and sign a new link
- * Use OpenSSL library.
- *
- * @param string $rc
- * @param string $req
- * @param string $nid1
- * @param string $nid2
- * @param string $nid3
- * @param string $nid4
- * @return string
- */
-function _lnkGenerateSign(string $rc, string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): string
-{
-    global $nebulePublicEntity;
-
-    $bh_bl = _lnkGenerate($rc, $req, $nid1, $nid2, $nid3, $nid4);
-    if ($bh_bl == '')
-        return '';
-
-    $sign = _lnkSign($bh_bl);
-    if ($sign == '')
-        return '';
-
-    $bs = $nebulePublicEntity . '>' . $sign . getConfiguration('cryptoHashAlgorithm');
     return $bh_bl . '_' . $bs;
 }
 
