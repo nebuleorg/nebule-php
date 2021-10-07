@@ -414,13 +414,6 @@ const FIRST_PUPPETMASTER_LINKS = array(
     'nebule:link/2:0_0:020210714/l>88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>58ca04cc43fc46c7a5176f2ff8f93754da9cfaabff2f12a3c9e6453d3dd3eeedd0208477f9e62c085a6f32583a127467696d7af980fe18a85a7951a6deea6372ca9f0c965d0a08fa159f241a680d5dba69449acb03043fc8021b93a2e34a1c3fb93385250f5ebf7a457fd38f2c6b1e500614f19b37bd37416342ddd94385ec2f5185fddde6d803fc1f89dabe6aebcd55490688cdbe5c779ae2b81d7a4b65c57fd6b35b6ad0fb20881f12c04e34a1730e254530a9c69fdaa9c1ef76fa6248a6e22417e25758837c7378f97af5c3d2cfe88fe9711ba705e2d017fe7ff4c97cbb44600e0d7b32e1c2f97467d8e79d48fc5d6dbd3d581bb831582be7f1a918609cd4a64e4d621bababaddde6da3621f24220ed7dc2ae585fe9b7f9cd71fe18a1a75778c54bdf1e7ad066e10c36e7fb2a4577f9d1bc7be1f80363d1a3e58e34ee4971ccd0a8a8b45665b1234909104558cb210ea402cb7822e3f4c5e1095c4f6a8a86b432b7c77028c76d38dd171a009dd7b251f74ea112739b91cfd8a6c665546bb984dc2fd1f59212a59f84154556bcdfade82c1b049e91a1befa45f2511f02123aa3f7718b0c64aeca984eb70cb9841e933603221765899384e1d3467cb31071ae3071e741f9689735a7e0c8cf7e202b926260067112fec8b24f991a6b35868fbb3653f2be774574d87e1a0fe9222774f6ede5b38c8393d72ff866faa40c5b706f.sha2.512',
 );
 const FIRST_RESERVED_OBJECTS = array(
-    'application/x-pem-file',
-    'application/octet-stream',
-    'text/plain',
-    'sha224',
-    'sha256',
-    'sha384',
-    'sha512',
     'nebule/objet',
     'nebule/objet/hash',
     'nebule/objet/homomorphe',
@@ -454,6 +447,13 @@ const FIRST_RESERVED_OBJECTS = array(
     'nebule/danger',
     'nebule/warning',
     'nebule/reference',
+    'application/x-pem-file',
+    'application/octet-stream',
+    'text/plain',
+    'sha224',
+    'sha256',
+    'sha384',
+    'sha512',
 );
 
 const ARG_FIRST_PUPPETMASTER_EID = 'bootstrapfirstpuppetmastereid';
@@ -2247,6 +2247,7 @@ function _lnkGenerate(string $rc, string $req, string $nid1, string $nid2 = '', 
 
     $bh_bl = $bh . '_' . $bl;
 
+addLog('MARK1 '.$bh_bl, 'error', __FUNCTION__, '00000000');
     return $bh_bl;
 }
 
