@@ -1948,7 +1948,8 @@ function _objGenerate_FIXME(string &$data, string $typemime = ''): bool
  */
 function _objGetLocalContent(string &$nid, string &$data, int $maxData = 0): bool
 {
-    if (io_checkNodeHaveContent($nid) && _objCheckContent_FIXME($nid)) {
+    if (_objCheckContent($nid))
+    {
         $data = io_objectRead($nid, $maxData);
         return true;
     }
@@ -1988,56 +1989,53 @@ function _objDownloadOnLocations(string $nid, array $locations = array()): bool
 
 /**
  * Object - Vérifie la consistance d'un objet. Si l'objet est corrompu, il est supprimé.
- *
+ * If there's no content, this assumed as false.
+ * TODO refaire avec i/o
  * @param string $nid
  * @return boolean
- * @todo refaire avec i/o
- *
  */
-function _objCheckContent_FIXME(&$nid)
+function _objCheckContent(&$nid): bool
 {
     global $nebuleCachelibrary_o_vr;
 
-    if (!_nodCheckNID($nid))
+    _metrologyCountAdd('ov');
+
+    if (!_nodCheckNID($nid) || !io_checkNodeHaveContent($nid))
         return false;
-
-    if (!io_checkNodeHaveContent($nid))
-        return true;
-
-    // Si c'est l'objet 0, le supprime.
-    if ($nid == '0') {
-        if (io_checkNodeHaveContent($nid)) {
-            io_objectDelete($nid);
-        }
-        return true;
-    }
 
     if (isset($nebuleCachelibrary_o_vr[$nid]))
         return true;
 
-    _metrologyCountAdd('ov');
-
-    $algo = substr($nid, strpos($nid, '.') + 1);
-    if ($algo !== false)
+    $hash = '';
+    $algo = _nodGetAlgo($nid);
+    if ($algo != '')
         $hash = _cryptoGetFileHash($nid, $algo);
-    else
-        $hash = 'invalid';
 
-    if ($hash . '.' . $algo !== $nid) {
-        // Si invalide, suppression de l'objet localement.
+    // If invalid, delete file of the object.
+    if ($hash . '.' . $algo != $nid)
         io_objectDelete($nid);
-    }
 
-    if (getConfiguration('permitBufferIO')) {
+    if (getConfiguration('permitBufferIO'))
         $nebuleCachelibrary_o_vr[$nid] = true;
-    }
-    unset($hash);
 
     return true;
 }
 
 /**
- * Verify node is an object and is a valid entity public key.
+ * Node - Extract algo parts from NID.
+ * @param $nid
+ * @return string
+ */
+function _nodGetAlgo(&$nid): string
+{
+    $algo = substr($nid, strpos($nid, '.') + 1);
+    if (!is_string($algo))
+        $algo = '';
+    return $algo;
+}
+
+/**
+ * Object - Verify node is an object and is a valid entity public key.
  *
  * @param string $nid
  * @return boolean
@@ -2054,8 +2052,7 @@ function _objCheckIsPublicKey(string &$nid): bool
     if ($nid == '0'
         || strlen($nid) < NID_MIN_HASH_SIZE
         || !_nodCheckNID($nid)
-        || !io_checkNodeHaveContent($nid)
-    //    || !_objCheckContent_FIXME($nid)
+        || !_objCheckContent($nid)
         || !io_checkNodeHaveLink($nid)
     )
     {
@@ -2093,8 +2090,7 @@ function _objCheckIsPrivateKey(&$nid): bool
     if ($nid == '0'
         || strlen($nid) < NID_MIN_HASH_SIZE
         || !_nodCheckNID($nid)
-        || !io_checkNodeHaveContent($nid)
-        || !_objCheckContent_FIXME($nid)
+        || !_objCheckContent($nid)
         || !io_checkNodeHaveLink($nid)
     )
         return false;
@@ -3308,7 +3304,7 @@ function _lnkCheckSIG(string &$bh, string &$bl, string &$sig, string &$nid): boo
     if (strtok('.') !== false) return false;
 
     if (!getConfiguration('permitCheckSignOnVerify')) return true;
-    if (io_checkNodeHaveContent($nid) && _objCheckContent_FIXME($nid)) {
+    if (_objCheckContent($nid)) {
         $data = $bh . '_' . $bl;
         $hash = _cryptoGetDataHash($data, $algo . '.' . $size);
         return _cryptoAsymmetricVerify($sign, $hash, $nid);
@@ -4404,8 +4400,7 @@ function findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstanceSleep): 
     if (isset($_SESSION['bootstrapLibrariesID'])
         && _nodCheckNID($_SESSION['bootstrapLibrariesID'])
         && io_checkNodeHaveLink($_SESSION['bootstrapLibrariesID'])
-        && io_checkNodeHaveContent($_SESSION['bootstrapLibrariesID'])
-        && _objCheckContent_FIXME($_SESSION['bootstrapLibrariesID'])
+        && _objCheckContent($_SESSION['bootstrapLibrariesID'])
         && isset($_SESSION['bootstrapLibrariesInstances'][$_SESSION['bootstrapLibrariesID']])
         && $_SESSION['bootstrapLibrariesInstances'][$_SESSION['bootstrapLibrariesID']] != ''
     ) {
@@ -4425,8 +4420,7 @@ function findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstanceSleep): 
 
         if (!_nodCheckNID($bootstrapLibraryID)
             || !io_checkNodeHaveLink($bootstrapLibraryID)
-            || !io_checkNodeHaveContent($bootstrapLibraryID)
-            || !_objCheckContent_FIXME($bootstrapLibraryID)
+            || !_objCheckContent($bootstrapLibraryID)
         ) {
             $bootstrapLibraryID = '';
             setBootstrapBreak('31', 'Finding nebule library error.');
@@ -4525,8 +4519,7 @@ function findApplication():void
                 && _nodCheckNID($_SESSION['bootstrapApplicationID'])
                 && $_SESSION['bootstrapApplicationID'] == '0'
                 || (io_checkNodeHaveLink($_SESSION['bootstrapApplicationID'])
-                    && io_checkNodeHaveContent($_SESSION['bootstrapApplicationID'])
-                    && _objCheckContent_FIXME($_SESSION['bootstrapApplicationID'])
+                    && _objCheckContent($_SESSION['bootstrapApplicationID'])
                 )
             ) {
                 // Mémorise l'ID de l'application en cours.
@@ -4583,8 +4576,7 @@ function findApplication():void
                 if (isset($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
                     && _nodCheckNID($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
                     && io_checkNodeHaveLink($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
-                    && io_checkNodeHaveContent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
-                    && _objCheckContent_FIXME($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+                    && _objCheckContent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
                     && isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID])
                     && $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID] != ''
                     && isset($_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID])
