@@ -840,16 +840,32 @@ function libraryInit(): bool
     // Search and check global masters.
     $nebuleSecurityMasters = _entityGetSecurityAuthorities(false);
     if (!_entityCheckSecurityAuthorities($nebuleSecurityMasters))
-        return false;
+    {
+        $nebuleSecurityMasters = _entityGetSecurityAuthorities(true);
+        if (!_entityCheckSecurityAuthorities($nebuleSecurityMasters))
+            return false;
+    }
     $nebuleCodeMasters = _entityGetCodeAuthorities(false);
     if (!_entityCheckCodeAuthorities($nebuleCodeMasters))
-        return false;
+    {
+        $nebuleCodeMasters = _entityGetCodeAuthorities(true);
+        if (!_entityCheckCodeAuthorities($nebuleCodeMasters))
+            return false;
+    }
     $nebuleTimeMasters = _entityGetTimeAuthorities(false);
     if (!_entityCheckTimeAuthorities($nebuleTimeMasters))
-        return false;
+    {
+        $nebuleTimeMasters = _entityGetTimeAuthorities(true);
+        if (!_entityCheckTimeAuthorities($nebuleTimeMasters))
+            return false;
+    }
     $nebuleDirectoryMasters = _entityGetDirectoryAuthorities(false);
     if (!_entityCheckDirectoryAuthorities($nebuleDirectoryMasters))
-        return false;
+    {
+        $nebuleDirectoryMasters = _entityGetDirectoryAuthorities(true);
+        if (!_entityCheckDirectoryAuthorities($nebuleDirectoryMasters))
+            return false;
+    }
 
     // Add masters of security as local authorities.
     foreach ($nebuleSecurityMasters as $master) {
