@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020211006';
+const BOOTSTRAP_VERSION = '020211008';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -377,7 +377,8 @@ $metrologyLibraryPOOConvertationCache = 0;
 
 const NEBULE_LIBRARY_PP_VERSION = '020210727';
 const NEBULE_LIBRARY_PP_LINK_VERSION = '2:0';
-const NEBULE_DEFAULT_PUPPETMASTER_ID = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
+const NEBULE_DEFAULT_PUPPETMASTER_EID = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
+const NEBULE_DEFAULT_PUPPETMASTER_LOCATION = 'http://puppetmaster.nebule.org';
 const NEBULE_NID_SECURITY_AUTHORITY_REFERENCE = 'a4b210d4fb820a5b715509e501e36873eb9e27dca1dd591a98a5fc264fd2238adf4b489d.none.288';
 const NEBULE_NID_CODE_AUTHORITY_REFERENCE = '2b9dd679451eaca14a50e7a65352f959fc3ad55efc572dcd009c526bc01ab3fe304d8e69.none.288';
 const NEBULE_NID_TIME_AUTHORITY_REFERENCE = 'bab7966fd5b483f9556ac34e4fac9f778d0014149f196236064931378785d81cae5e7a6e.none.288';
@@ -386,6 +387,7 @@ const LOCAL_ENVIRONMENT_FILE = 'c';
 const LOCAL_ENTITY_FILE = 'e';
 const LOCAL_LINKS_FOLDER = 'l';
 const LOCAL_OBJECTS_FOLDER = 'o';
+const LOCAL_HISTORY_FILE = 'h';
 const NID_MIN_HASH_SIZE = 64;
 const NID_MAX_HASH_SIZE = 8192;
 const NID_MIN_ALGO_SIZE = 2;
@@ -547,7 +549,7 @@ const LIST_OPTIONS_TYPE = array(
  * Default options values if not defined in option file.
  */
 const LIST_OPTIONS_DEFAULT_VALUE = array(
-        'puppetmaster' => NEBULE_DEFAULT_PUPPETMASTER_ID,
+        'puppetmaster' => NEBULE_DEFAULT_PUPPETMASTER_EID,
         'hostURL' => 'localhost',
         'permitWrite' => true,
         'permitWriteObject' => true,
@@ -613,7 +615,7 @@ const LIST_OPTIONS_DEFAULT_VALUE = array(
         'permitSessionBuffer' => true,
         'permitBufferIO' => true,
         'sessionBufferSize' => 1000,
-        'defaultCurrentEntity' => NEBULE_DEFAULT_PUPPETMASTER_ID,
+        'defaultCurrentEntity' => NEBULE_DEFAULT_PUPPETMASTER_EID,
         'defaultApplication' => '0',
         'defaultObfuscateLinks' => false,
         'defaultLinksVersion' => '2.0',
@@ -1648,7 +1650,7 @@ function _entityCheck(string $nid): bool
 }
 
 /**
- * Get puppetmaster ID.
+ * Get puppetmaster NID.
  * @return string
  */
 function _entityGetPuppetmaster(): string
@@ -1873,11 +1875,11 @@ function _entitySyncPuppetmaster(string $oid): void
 
     if (!_entityCheck($oid))
     {
-        $oid = NEBULE_DEFAULT_PUPPETMASTER_ID;
-        $configurationList['puppetmaster'] = NEBULE_DEFAULT_PUPPETMASTER_ID;
+        $oid = NEBULE_DEFAULT_PUPPETMASTER_EID;
+        $configurationList['puppetmaster'] = NEBULE_DEFAULT_PUPPETMASTER_EID;
     }
 
-    if ($oid == NEBULE_DEFAULT_PUPPETMASTER_ID)
+    if ($oid == NEBULE_DEFAULT_PUPPETMASTER_EID)
     {
         addLog('Write default puppetmaster', 'info', __FUNCTION__, '555ec326');
         $data = FIRST_PUPPETMASTER_PUBLIC_KEY;
@@ -1902,7 +1904,7 @@ function _entitySyncAuthorities(array $oidList): void
     foreach ($oidList as $nid) {
         addLog('Sync master entity ' . $nid, 'info', __FUNCTION__, '92e0483f');
         _objDownloadOnLocations($nid, array());
-        _lnkDownloadOnLocations_FIXME($nid, array());
+        _lnkDownloadOnLocations($nid, array());
     }
 
     $nebuleCacheIsPublicKey = array();
@@ -2411,7 +2413,7 @@ function _lnkGraphResolvOne_FIXME(string &$nid, &$visited, bool $present = true,
             || !$present
         )
     ) {
-        _lnkDownloadAnywhere_FIXME($nid);
+        _lnkDownloadAnywhere($nid);
     }
 
     // Supprime les boucles, càd les objets déjà traités.
@@ -2988,62 +2990,51 @@ function _lnkGetListFilterNid(string &$nid, array &$result, string $filterOnNid 
 }
 
 /**
- * Link -
+ * Link - Download links on many locations, anywhere.
  *
  * @param $nid
  * @return void
  */
-function _lnkDownloadAnywhere_FIXME(string $nid): void
-{ // Télécharge les liens de l'objet sur plusieurs localisations.
-    // - $object l'objet dont les liens sont à télécharger.
-    if (!getConfiguration('permitSynchronizeLink') || $nid == '0')
+function _lnkDownloadAnywhere(string $nid): void
+{
+    if (!getConfiguration('permitSynchronizeLink')
+        || _nodCheckNID($nid)
+    )
         return;
 
-    $table = array();
-    $hashtype = _objGetNID('nebule/objet/entite/localisation', getConfiguration('cryptoHashAlgorithm'));
-    $okobj = array();
-    $count = 1;
-    $okobj [1] = '';
-    _lnkListOnFullFilter_FIXME($hashtype, $table);
-    foreach ($table as $itemtable) {
-        if (($itemtable [7] == $hashtype) && ($itemtable [4] == 'l')) {
-            $t = true;
-            for ($j = 1; $j < $count; $j++) {
-                if ($itemtable [6] == $okobj [$j]) {
-                    $t = false;
-                }
-            }
-            if ($t) {
-                $lnk = '';
-                _objGetLocalContent($itemtable [6], $lnk);
-                if ($lnk != '') {
-                    _lnkDownloadOnLocations_FIXME($nid, array($lnk)); // TODO à améliorer
-                }
-                $okobj [$count] = $itemtable [6];
-                $count++;
-            }
-        }
+    $links = array();
+    $hashType = _objGetNID('nebule/objet/type', getConfiguration('cryptoHashAlgorithm'));
+    $hashLocation = _objGetNID('nebule/objet/entite/localisation', getConfiguration('cryptoHashAlgorithm'));
+    $filter = array(
+        'bl/rl/req' => 'l',
+        'bl/rl/nid1' => '',
+        'bl/rl/nid2' => $hashLocation,
+        'bl/rl/nid3' => $hashType,
+        'bl/rl/nid4' => '0',
+    );
+    _lnkGetList($hashLocation, $links, $filter);
+
+    $locationList = array();
+    foreach ($links as $link)
+        $locationList [$link ['bl/rl/nid1']] = $link ['bl/rl/nid1'];
+
+    foreach ($locationList as $location)
+    {
+        $url = '';
+        if (_objGetLocalContent($location, $url))
+            io_linkSynchronize($nid, $url);
     }
-    unset($count);
-    unset($j);
-    unset($t);
-    unset($lnk);
-    unset($table);
-    unset($okobj);
-    unset($hashtype);
 }
 
 /**
  * Link - Download node's links on web locations.
  * Only valid links are writen on local filesystem.
  *
- * TODO change to possible other location of puppetmaster
- *
  * @param string $nid
  * @param array $locations
  * @return bool
  */
-function _lnkDownloadOnLocations_FIXME(string $nid, array $locations=array()): bool
+function _lnkDownloadOnLocations(string $nid, array $locations=array()): bool
 {
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteLink')
@@ -3492,8 +3483,15 @@ function _lnkWrite($link): bool
         $result = $result && io_linkWrite($linkParsed['bl/rl/nid3'], $link);
     if ($linkParsed['bl/rl/nid4'] != '')
         $result = $result && io_linkWrite($linkParsed['bl/rl/nid4'], $link);
+
+    // Write link for signer if needed.
     if (getConfiguration('permitAddLinkToSigner'))
         $result = $result && io_linkWrite($linkParsed['bs/rs/nid'], $link);
+
+    // Write link to history if needed.
+    $histFile = LOCAL_HISTORY_FILE;
+    if (getConfiguration('permitHistoryLinksSign'))
+        $result = $result && io_linkWrite($histFile, $link);
 
     return $result;
 }
@@ -3712,6 +3710,7 @@ function io_linkWrite(string &$nid, string &$link): bool
     )
         return false;
 
+    // Check if link not already present on file.
     if (file_exists(LOCAL_LINKS_FOLDER . '/' . $nid))
     {
         $l = file(LOCAL_LINKS_FOLDER . '/' . $nid, FILE_SKIP_EMPTY_LINES);
@@ -3724,6 +3723,7 @@ function io_linkWrite(string &$nid, string &$link): bool
         }
     }
 
+    // Write link on file.
     if (file_put_contents(LOCAL_LINKS_FOLDER . '/' . $nid, "$link\n", FILE_APPEND) === false)
         return false;
     return true;
@@ -6151,7 +6151,7 @@ function bootstrapFirstDisplay4Puppetmaster(): bool
     $ok = true;
 
     echo '<div class="parts">'."\n";
-    echo '<span class="partstitle">#5 puppetmaster</span><br/>'."\n";
+    echo '<span class="partstitle">#4 puppetmaster</span><br/>'."\n";
 
     if (!file_exists(LOCAL_ENVIRONMENT_FILE))
     {
@@ -6162,11 +6162,11 @@ function bootstrapFirstDisplay4Puppetmaster(): bool
             <form action="" method="get">
                 <div>
                     <label for="oid">OID &nbsp;&nbsp;&nbsp;&nbsp; :</label>
-                    <input type="text" id="oid" name="<?php echo ARG_FIRST_PUPPETMASTER_EID; ?>" />
+                    <input type="text" id="oid" name="<?php echo ARG_FIRST_PUPPETMASTER_EID; ?>" value="<?php echo NEBULE_DEFAULT_PUPPETMASTER_EID; ?>" />
                 </div>
                 <div>
                     <label for="loc">Location :</label>
-                    <input type="text" id="loc" name="<?php echo ARG_FIRST_PUPPETMASTER_LOC; ?>" />
+                    <input type="text" id="loc" name="<?php echo ARG_FIRST_PUPPETMASTER_LOC; ?>" value="<?php echo NEBULE_DEFAULT_PUPPETMASTER_LOCATION; ?>" />
                 </div>
                 <div class="button">
                     <button type="submit">Submit</button>
@@ -6191,14 +6191,14 @@ function bootstrapFirstDisplay4Puppetmaster(): bool
                     {
                         echo 'sync...';
                         _objDownloadOnLocations($argOID, array($argLoc));
-                        _lnkDownloadOnLocations_FIXME($argOID, array($argLoc));
+                        _lnkDownloadOnLocations($argOID, array($argLoc));
                     }
                 }
                 if (!_entityCheck($argOID)) {
                     addLog('unable to find alternative puppetmaster oid', 'error', __FUNCTION__, '102c9011');
                     echo " <span class=\"error\">invalid!</span>\n";
                     $argLoc = '';
-                    $firstAlternativePuppetmasterEid = NEBULE_DEFAULT_PUPPETMASTER_ID;
+                    $firstAlternativePuppetmasterEid = NEBULE_DEFAULT_PUPPETMASTER_EID;
                 }
                 echo "<br />\n";
                 addLog('define alternative puppetmaster oid = ' . $firstAlternativePuppetmasterEid, 'warn', __FUNCTION__, '10a0bd6d');
@@ -6257,13 +6257,13 @@ function bootstrapFirstDisplay5SyncAuthorities(): bool
     $nebuleLocalAuthorities[0] = $puppetmaster;
 
     echo 'sync for masters references';
-    _lnkDownloadOnLocations_FIXME(NEBULE_NID_SECURITY_AUTHORITY_REFERENCE, array());
+    _lnkDownloadOnLocations(NEBULE_NID_SECURITY_AUTHORITY_REFERENCE, array());
     echo '.';
-    _lnkDownloadOnLocations_FIXME(NEBULE_NID_CODE_AUTHORITY_REFERENCE, array());
+    _lnkDownloadOnLocations(NEBULE_NID_CODE_AUTHORITY_REFERENCE, array());
     echo '.';
-    _lnkDownloadOnLocations_FIXME(NEBULE_NID_TIME_AUTHORITY_REFERENCE, array());
+    _lnkDownloadOnLocations(NEBULE_NID_TIME_AUTHORITY_REFERENCE, array());
     echo '.';
-    _lnkDownloadOnLocations_FIXME(NEBULE_NID_DIRECTORY_AUTHORITY_REFERENCE, array());
+    _lnkDownloadOnLocations(NEBULE_NID_DIRECTORY_AUTHORITY_REFERENCE, array());
     echo '.';
     echo "<br/>\n";
     flush();
@@ -6406,7 +6406,7 @@ function bootstrapFirstDisplay6SyncObjects(): bool
         foreach (FIRST_LOCALISATIONS as $data)
         {
             $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-            _lnkDownloadOnLocations_FIXME($hash, FIRST_LOCALISATIONS);
+            _lnkDownloadOnLocations($hash, FIRST_LOCALISATIONS);
             echo '.';
         }
         flush();
@@ -6415,7 +6415,7 @@ function bootstrapFirstDisplay6SyncObjects(): bool
         foreach (FIRST_RESERVED_OBJECTS as $data)
         {
             $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-            _lnkDownloadOnLocations_FIXME($hash, FIRST_LOCALISATIONS);
+            _lnkDownloadOnLocations($hash, FIRST_LOCALISATIONS);
             echo '.';
         }
         flush();
@@ -6430,12 +6430,12 @@ function bootstrapFirstDisplay6SyncObjects(): bool
         echo "<br />\nbootstrap start &nbsp;&nbsp;&nbsp;:" . $refBoot . ' ';
         flush();
 
-        _lnkDownloadOnLocations_FIXME($refBootID, FIRST_LOCALISATIONS);
+        _lnkDownloadOnLocations($refBootID, FIRST_LOCALISATIONS);
         echo "<br />\nlibrary start &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:" . $refLib . ' ';
         flush();
 
         // Recherche par référence.
-        _lnkDownloadOnLocations_FIXME($refLibID, FIRST_LOCALISATIONS);
+        _lnkDownloadOnLocations($refLibID, FIRST_LOCALISATIONS);
         $lastID = nebFindByRef_FIXME(
             $refLibID,
             $refLibID,
@@ -6451,7 +6451,7 @@ function bootstrapFirstDisplay6SyncObjects(): bool
 
         echo "<br />\napplications list &nbsp;:" . $refAppsID . ' ';
         flush();
-        _lnkDownloadOnLocations_FIXME($refAppsID, FIRST_LOCALISATIONS);
+        _lnkDownloadOnLocations($refAppsID, FIRST_LOCALISATIONS);
         echo "<br />\napplication list &nbsp;&nbsp;:";
 
         // Pour chaque application, faire une synchronisation.
@@ -6497,7 +6497,7 @@ function bootstrapFirstDisplay6SyncObjects(): bool
             if ($lastID != '0')
             {
                 _objDownloadOnLocations($lastID, FIRST_LOCALISATIONS);
-                _lnkDownloadOnLocations_FIXME($lastID, FIRST_LOCALISATIONS);
+                _lnkDownloadOnLocations($lastID, FIRST_LOCALISATIONS);
                 echo ' ';
                 // Cherche le nom.
                 $nameID = nebFindObjType_FIXME(
@@ -6512,7 +6512,7 @@ function bootstrapFirstDisplay6SyncObjects(): bool
                 if ($nameID != '0')
                 {
                     _objDownloadOnLocations($nameID, FIRST_LOCALISATIONS);
-                    _lnkDownloadOnLocations_FIXME($nameID, FIRST_LOCALISATIONS);
+                    _lnkDownloadOnLocations($nameID, FIRST_LOCALISATIONS);
                 }
             } else {
                 echo '<span id="error">ERROR!</span>';
@@ -6582,7 +6582,7 @@ function bootstrapFirstDisplay7Subordination(): bool
                 {
                     echo 'sync...';
                     _objDownloadOnLocations($argOID, array($argLoc));
-                    _lnkDownloadOnLocations_FIXME($argOID, array($argLoc));
+                    _lnkDownloadOnLocations($argOID, array($argLoc));
                 }
             } else {
                 addLog('unable to find subordination oid', 'error', __FUNCTION__, '5cd18917');
