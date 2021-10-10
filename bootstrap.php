@@ -819,7 +819,7 @@ function getConfiguration(string $name)
  */
 
 /**
- * Initialisation de la bibliothèque.
+ * Initialize nebule procedural library.
  * @return boolean
  */
 function libraryInit(): bool
@@ -828,7 +828,10 @@ function libraryInit(): bool
 
     // Initialize i/o.
     if (!io_open())
+    {
+        addLog('lib init : I/O open error!', 'error', __FUNCTION__, 'fd54d78c');
         return false;
+    }
 
     // Pour la suite, seul le puppetmaster est enregirstré.
     // Une fois les autres entités trouvées, ajoute les autres autorités.
@@ -836,7 +839,10 @@ function libraryInit(): bool
     //   dans la recherche par référence nebFindByRef.
     $puppetmaster = _entityGetPuppetmaster();
     if (!_entityCheckPuppetmaster($puppetmaster))
+    {
+        addLog('lib init : puppetmaster error!', 'error', __FUNCTION__, '8e5a7fe9');
         return false;
+    }
     $nebuleLocalAuthorities = array($puppetmaster);
 
     // Search and check global masters.
@@ -845,7 +851,10 @@ function libraryInit(): bool
     {
         $nebuleSecurityMasters = _entityGetSecurityAuthorities(true);
         if (!_entityCheckSecurityAuthorities($nebuleSecurityMasters))
+        {
+            addLog('lib init : security master error!', 'error', __FUNCTION__, '6001a43e');
             return false;
+        }
     }
     foreach ($nebuleSecurityMasters as $master)
         $nebuleLocalAuthorities[] = $master;
@@ -855,7 +864,10 @@ function libraryInit(): bool
     {
         $nebuleCodeMasters = _entityGetCodeAuthorities(true);
         if (!_entityCheckCodeAuthorities($nebuleCodeMasters))
+        {
+            addLog('lib init : code master error!', 'error', __FUNCTION__, '0a82529e');
             return false;
+        }
     }
     foreach ($nebuleCodeMasters as $master)
         $nebuleLocalAuthorities[] = $master;
@@ -865,7 +877,10 @@ function libraryInit(): bool
     {
         $nebuleTimeMasters = _entityGetTimeAuthorities(true);
         if (!_entityCheckTimeAuthorities($nebuleTimeMasters))
+        {
+            addLog('lib init : time master error!', 'error', __FUNCTION__, '874dfd89');
             return false;
+        }
     }
 
     $nebuleDirectoryMasters = _entityGetDirectoryAuthorities(false);
@@ -873,7 +888,10 @@ function libraryInit(): bool
     {
         $nebuleDirectoryMasters = _entityGetDirectoryAuthorities(true);
         if (!_entityCheckDirectoryAuthorities($nebuleDirectoryMasters))
+        {
+            addLog('lib init : directory master error!', 'error', __FUNCTION__, 'be3a8b9f');
             return false;
+        }
     }
 
     librarySetServerEntity();
