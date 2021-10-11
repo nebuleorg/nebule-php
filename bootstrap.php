@@ -78,7 +78,7 @@ $metrologyStartTime = microtime(true);
  * @param string $name
  * @return void
  */
-function initLog(string $name): void
+function log_init(string $name): void
 {
     global $loggerSessionID;
     openlog($name . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
@@ -89,10 +89,10 @@ function initLog(string $name): void
  * @param string $name
  * @return void
  */
-function reopenLog(string $name): void
+function log_reopen(string $name): void
 {
     closelog();
-    initLog($name);
+    log_init($name);
 }
 
 /**
@@ -103,14 +103,14 @@ function reopenLog(string $name): void
  * @param string $luid
  * @return void
  */
-function addLog(string $message, string $level='msg', string $function='', string $luid='00000000'): void
+function log_add(string $message, string $level='msg', string $function='', string $luid='00000000'): void
 {
     global $metrologyStartTime;
     syslog(LOG_INFO, 'LogT=' . (microtime(true) - $metrologyStartTime) . ' LogL="' . $level . '" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"');
 }
 
 // Initialize logs.
-initLog(BOOTSTRAP_NAME);
+log_init(BOOTSTRAP_NAME);
 syslog(LOG_INFO, 'LogT=0 LogT0=' . $metrologyStartTime . ' LogL=B LogM="start ' . BOOTSTRAP_NAME .'"');
 
 // ------------------------------------------------------------------------------------------
@@ -821,11 +821,85 @@ function getConfiguration(string $name)
     return $result;
 }
 
-/*
- * ------------------------------------------------------------------------------------------
- * Fonctions haut niveau.
- * ------------------------------------------------------------------------------------------
+/**
+ * Metrology - Incrementing one stat counter.
+ * @param string $type
+ * @return void
  */
+function metrology_increment(string $type): void
+{
+    global $nebuleMetrologyLinkRead, $nebuleMetrologyLinkVerify, $nebuleMetrologyObjectRead, $nebuleMetrologyObjectVerify;
+
+    switch ($type)
+    {
+        case 'lr':
+            $nebuleMetrologyLinkRead++;
+            break;
+        case 'lv':
+            $nebuleMetrologyLinkVerify++;
+            break;
+        case 'or':
+            $nebuleMetrologyObjectRead++;
+            break;
+        case 'ov':
+            $nebuleMetrologyObjectVerify++;
+            break;
+    }
+}
+
+/**
+ * Metrology - Return one stat counter.
+ * @param string $type
+ * @return string
+ */
+function metrology_get(string $type): string
+{
+    global $nebuleMetrologyLinkRead, $nebuleMetrologyLinkVerify, $nebuleMetrologyObjectRead, $nebuleMetrologyObjectVerify;
+
+    $return = '';
+    switch ($type)
+    {
+        case 'lr':
+            $return = (string)$nebuleMetrologyLinkRead;
+            break;
+        case 'lv':
+            $return = (string)$nebuleMetrologyLinkVerify;
+            break;
+        case 'or':
+            $return = (string)$nebuleMetrologyObjectRead;
+            break;
+        case 'ov':
+            $return = (string)$nebuleMetrologyObjectVerify;
+            break;
+    }
+    return $return;
+}
+
+/**
+ * Metrology - Set one stat timer.
+ * @param string $type
+ * @return void
+ */
+function metrology_setTimer(string $type): void
+{
+    global $nebuleMetrologyTimers, $metrologyStartTime;
+
+    $nebuleMetrologyTimers[$type] = sprintf('%01.4fs', microtime(true) - $metrologyStartTime);
+}
+
+/**
+ * Metrology - Get one stat timer.
+ * @param string $type
+ * @return string
+ */
+function metrology_getTimer(string $type): string
+{
+    global $nebuleMetrologyTimers;
+
+    if (isset($nebuleMetrologyTimers[$type]))
+        return $nebuleMetrologyTimers[$type];
+    return '';
+}
 
 /**
  * Initialize nebule procedural library.
@@ -838,7 +912,7 @@ function lib_init(): bool
     // Initialize i/o.
     if (!io_open())
     {
-        addLog('lib init : I/O open error!', 'error', __FUNCTION__, 'fd54d78c');
+        log_add('lib init : I/O open error!', 'error', __FUNCTION__, 'fd54d78c');
         return false;
     }
 
@@ -849,7 +923,7 @@ function lib_init(): bool
     $puppetmaster = ent_getPuppetmaster();
     if (!ent_checkPuppetmaster($puppetmaster))
     {
-        addLog('lib init : puppetmaster error!', 'error', __FUNCTION__, '8e5a7fe9');
+        log_add('lib init : puppetmaster error!', 'error', __FUNCTION__, '8e5a7fe9');
         return false;
     }
     $nebuleLocalAuthorities = array($puppetmaster);
@@ -861,7 +935,7 @@ function lib_init(): bool
         $nebuleSecurityMasters = ent_getSecurityAuthorities(true);
         if (!ent_checkSecurityAuthorities($nebuleSecurityMasters))
         {
-            addLog('lib init : security master error!', 'error', __FUNCTION__, '6001a43e');
+            log_add('lib init : security master error!', 'error', __FUNCTION__, '6001a43e');
             return false;
         }
     }
@@ -874,7 +948,7 @@ function lib_init(): bool
         $nebuleCodeMasters = ent_getCodeAuthorities(true);
         if (!ent_checkCodeAuthorities($nebuleCodeMasters))
         {
-            addLog('lib init : code master error!', 'error', __FUNCTION__, '0a82529e');
+            log_add('lib init : code master error!', 'error', __FUNCTION__, '0a82529e');
             return false;
         }
     }
@@ -887,7 +961,7 @@ function lib_init(): bool
         $nebuleTimeMasters = ent_getTimeAuthorities(true);
         if (!ent_checkTimeAuthorities($nebuleTimeMasters))
         {
-            addLog('lib init : time master error!', 'error', __FUNCTION__, '874dfd89');
+            log_add('lib init : time master error!', 'error', __FUNCTION__, '874dfd89');
             return false;
         }
     }
@@ -898,7 +972,7 @@ function lib_init(): bool
         $nebuleDirectoryMasters = ent_getDirectoryAuthorities(true);
         if (!ent_checkDirectoryAuthorities($nebuleDirectoryMasters))
         {
-            addLog('lib init : directory master error!', 'error', __FUNCTION__, 'be3a8b9f');
+            log_add('lib init : directory master error!', 'error', __FUNCTION__, 'be3a8b9f');
             return false;
         }
     }
@@ -1017,71 +1091,7 @@ function nod_findByRef_FIXME(string $nid, string $rid, bool $strict = false)
     return $result;
 }
 
-/**
- * Lit la première ligne d'un objet comme un texte, quel que soit son type mime.
- * Supprime les caractères non imprimables.
- *
- * Fonction avec utilisation du cache si possible.
- *
- * @param string $oid
- * @param integer $maxsize
- * @return string
- */
-function obj_getAsText1line_FIXME(string &$oid, int $maxsize = 128): string
-{
-    global $nebuleCacheReadObjText1line;
-
-    if (isset($nebuleCacheReadObjText1line [$oid]))
-        return $nebuleCacheReadObjText1line [$oid];
-
-    $data = '';
-    obj_getLocalContent($oid, $data);
-    $data = strtok(filter_var($data, FILTER_SANITIZE_STRING), "\n");
-    if (!is_string($data))
-        return '';
-
-    $data = trim($data);
-
-    if (extension_loaded('mbstring'))
-        $data = mb_convert_encoding($data, 'UTF-8');
-    else
-        addLog('mbstring extension not installed or activated!', 'warn', __FUNCTION__, 'c2becfad');
-
-    if (strlen($data) > $maxsize) {
-        $data = substr($data, 0, ($maxsize - 3)) . '...';
-    }
-
-    if (getConfiguration('permitBufferIO'))
-        $nebuleCacheReadObjText1line [$oid] = $data;
-
-    return $data;
-}
-
-/**
- * Lit le contenu d'un objet comme un texte, quel que soit son type mime.
- * Supprime les caractères non imprimables.
- *
- * @param string $oid
- * @param integer $maxData
- * @return string
- */
-function obj_getAsText_FIXME(string &$oid, int $maxData = 0): string
-{
-    if ($maxData == 0)
-        $maxData = getConfiguration('ioReadMaxData');
-
-    $data = '';
-    obj_getLocalContent($oid, $data, $maxData + 1);
-    $data = _filterPrinteableString(filter_var($data, FILTER_SANITIZE_STRING));
-
-    if (strlen($data) > $maxData) {
-        $data = substr($data, 0, ($maxData - 3)) . '...';
-    }
-
-    return $data;
-}
-
-function obj_getFirstName_FIXME(&$entite)
+function nod_getFirstName_FIXME(&$entite)
 {
     // Cherche le prénom d'une entite.
     // Fonction avec utilisation du cache si possible.
@@ -1150,39 +1160,6 @@ function nod_getPostName_FIXME(&$entite)
     return $text;
 }
 
-function ent_getFullName_FIXME(&$entite)
-{
-    // Cherche le nom complet d'une entite, càd avec prénom et surnom.
-    // Fonction avec utilisation du cache si possible.
-    global $nebuleCacheReadEntityFullName;
-
-    if (isset($nebuleCacheReadEntityFullName [$entite]))
-        return $nebuleCacheReadEntityFullName [$entite];
-
-    $fname = obj_getFirstName_FIXME($entite);
-    $name = nod_getName_FIXME($entite);
-    $pname = nod_getPostName_FIXME($entite);
-    if ($name == '') {
-        $fullname = "$entite";
-    } else {
-        $fullname = $name;
-    }
-    if ($fname != '') {
-        $fullname = "$fname $fullname";
-    }
-    if ($pname != '') {
-        $fullname = "$fullname $pname";
-    }
-    unset($fname);
-    unset($name);
-    unset($pname);
-
-    if (getConfiguration('permitBufferIO'))
-        $nebuleCacheReadEntityFullName [$entite] = $fullname;
-
-    return $fullname;
-}
-
 function nod_getType_FIXME(&$object, $type)
 {
     // Cherche l'objet contenant la description de l'objet pour une propriete type.
@@ -1222,6 +1199,177 @@ function nod_getType_FIXME(&$object, $type)
         $nebuleCacheFindObjType [$object] [$type] = $objdst;
 
     return $objdst;
+}
+
+/**
+ * Node - Extract algo parts from NID.
+ * @param $nid
+ * @return string
+ */
+function nod_getAlgo(&$nid): string
+{
+    strtok($nid, '.');
+    $a = strtok('.');
+    $s = strtok('.');
+    if ($a == '' || $s == '')
+        return '';
+    return $a.'.'.$s;
+}
+
+/**
+ * Object - Verify name structure of the node : hash.algo.size
+ *
+ * @param string $nid
+ * @param boolean $permitNull
+ * @return boolean
+ */
+function nod_checkNID(string &$nid, bool $permitNull = false): bool
+{
+    // May be null in some case.
+    if ($permitNull && $nid == '')
+        return true;
+
+    // Check hash value.
+    $hash = strtok($nid, '.');
+    if ($hash === false) return false;
+    if (strlen($hash) < NID_MIN_HASH_SIZE) return false;
+    if (strlen($hash) > NID_MAX_HASH_SIZE) return false;
+    if (!ctype_xdigit($hash)) return false;
+
+    // Check algo value.
+    $algo = strtok('.');
+    if ($algo === false) return false;
+    if (strlen($algo) < NID_MIN_ALGO_SIZE) return false;
+    if (strlen($algo) > NID_MAX_ALGO_SIZE) return false;
+    if (!ctype_alnum($algo)) return false;
+
+    // Check size value.
+    $size = strtok('.');
+    if ($size === false) return false;
+    if (!ctype_digit($size)) return false; // Check content before!
+    if ((int)$size < NID_MIN_HASH_SIZE) return false;
+    if ((int)$size > NID_MAX_HASH_SIZE) return false;
+    if ((strlen($hash) * 4) != (int)$size) return false;
+
+    // Check item overflow
+    if (strtok('.') !== false) return false;
+
+    return true;
+}
+
+/**
+ * Object - Check with links if a node is marked as banned.
+ *
+ * @param $nid
+ * @return boolean
+ */
+function nod_checkBanned_FIXME(&$nid): bool
+{
+    global $nebulePublicEntity, $nebuleSecurityAuthorities, $nebuleCacheIsBanned;
+
+    // FIXME
+    return false;
+    /*
+    if (isset($nebuleCacheIsBanned [$nid]))
+        return $nebuleCacheIsBanned [$nid];
+
+    if ($nid == '0')
+        return false;
+
+    $ok = false;
+    $table = array();
+    $hashtype = _objGetNID('nebule/danger', getConfiguration('cryptoHashAlgorithm'));
+    $filter = array(
+        'bl/rl/req' => 'f',
+        'bl/rl/nid1' => $hashtype,
+        'bl/rl/nid2' => $nid,
+        'bl/rl/nid3' => '0',
+        'bl/rl/nid4' => '0',
+    );
+    _lnkFind($nid, $table, $filter);
+    foreach ($table as $link) {
+        if (($link [2] == $nebulePublicEntity) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $nid) && ($link [7] == '0'))
+            $ok = true;
+        if (($link [2] == $nebuleSecurityMaster) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $nid) && ($link [7] == '0'))
+            $ok = true;
+    }
+    unset($table);
+    unset($hashtype);
+
+    if (getConfiguration('permitBufferIO'))
+        $nebuleCacheIsBanned [$nid] = $ok;
+
+
+
+            addLog($nid . ') banned by ' . $nebulePublicEntity, 'warn', __FUNCTION__, 'a9668cd0');
+            addLog($nid . ') banned by ' . $nebuleSecurityMaster, 'warn', __FUNCTION__, 'd84f8e81');
+
+
+
+    return $ok;*/
+}
+
+/**
+ * Lit la première ligne d'un objet comme un texte, quel que soit son type mime.
+ * Supprime les caractères non imprimables.
+ *
+ * Fonction avec utilisation du cache si possible.
+ *
+ * @param string $oid
+ * @param integer $maxsize
+ * @return string
+ */
+function obj_getAsText1line_FIXME(string &$oid, int $maxsize = 128): string
+{
+    global $nebuleCacheReadObjText1line;
+
+    if (isset($nebuleCacheReadObjText1line [$oid]))
+        return $nebuleCacheReadObjText1line [$oid];
+
+    $data = '';
+    obj_getLocalContent($oid, $data);
+    $data = strtok(filter_var($data, FILTER_SANITIZE_STRING), "\n");
+    if (!is_string($data))
+        return '';
+
+    $data = trim($data);
+
+    if (extension_loaded('mbstring'))
+        $data = mb_convert_encoding($data, 'UTF-8');
+    else
+        log_add('mbstring extension not installed or activated!', 'warn', __FUNCTION__, 'c2becfad');
+
+    if (strlen($data) > $maxsize) {
+        $data = substr($data, 0, ($maxsize - 3)) . '...';
+    }
+
+    if (getConfiguration('permitBufferIO'))
+        $nebuleCacheReadObjText1line [$oid] = $data;
+
+    return $data;
+}
+
+/**
+ * Object - Read object content as printable text.
+ *
+ * @param string $oid
+ * @param integer $maxData
+ * @return string
+ */
+function obj_getAsText(string &$oid, int $maxData = 0): string
+{
+    if ($maxData == 0)
+        $maxData = getConfiguration('ioReadMaxData');
+
+    $data = '';
+    obj_getLocalContent($oid, $data, $maxData + 1);
+    $data = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', filter_var($data, FILTER_SANITIZE_STRING));
+
+    if (strlen($data) > $maxData) {
+        $data = substr($data, 0, ($maxData - 3)) . '...';
+    }
+
+    return $data;
 }
 
 /**
@@ -1293,95 +1441,205 @@ function obj_setContentAsText(string $data, bool $skipIfPresent = true): bool
     return obj_generate_FIXME($data, 'text/plain');
 }
 
-
-
-/*
- * ------------------------------------------------------------------------------------------
- * Fonctions élémentaires.
- * ------------------------------------------------------------------------------------------
- */
-
 /**
- * Metrology - Incrementing one stat counter.
- * @param string $type
- * @return void
+ * Object - Create new object from data.
+ *
+ * @param string $data
+ * @param string $typemime
+ * @return bool
  */
-function metrology_increment(string $type): void
+function obj_generate_FIXME(string &$data, string $typemime = ''): bool
 {
-    global $nebuleMetrologyLinkRead, $nebuleMetrologyLinkVerify, $nebuleMetrologyObjectRead, $nebuleMetrologyObjectVerify;
-
-    switch ($type)
-    {
-        case 'lr':
-            $nebuleMetrologyLinkRead++;
-            break;
-        case 'lv':
-            $nebuleMetrologyLinkVerify++;
-            break;
-        case 'or':
-            $nebuleMetrologyObjectRead++;
-            break;
-        case 'ov':
-            $nebuleMetrologyObjectVerify++;
-            break;
+    if (strlen($data) == 0
+        || !getConfiguration('permitWrite')
+        || !getConfiguration('permitWriteObject')
+    )
+        return false;
+    $dat = date(DATE_ATOM);
+    $hash = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
+    // Ecrit l'objet.
+    if (!io_checkNodeHaveContent($hash))
+        obj_setContent($data, $hash);
+    // Ecrit le lien de hash.
+    $lnk = lnk_generateSign(
+        $dat,
+        'l',
+        $hash,
+        obj_getNID(getConfiguration('cryptoHashAlgorithm'), getConfiguration('cryptoHashAlgorithm')),
+        obj_getNID('nebule/objet/hash', getConfiguration('cryptoHashAlgorithm'))
+    );
+    if ((lnk_verify($lnk)) == 1)
+        lnk_write($lnk);
+    // Ecrit le lien de type mime.
+    if ($typemime != '') {
+        $lnk = lnk_generateSign(
+            $dat,
+            'l',
+            $hash,
+            obj_getNID($typemime, getConfiguration('cryptoHashAlgorithm')),
+            obj_getNID('nebule/objet/type', getConfiguration('cryptoHashAlgorithm'))
+        );
+        if ((lnk_verify($lnk)) == 1)
+            lnk_write($lnk);
     }
+    return true;
 }
 
 /**
- * Metrology - Return one stat counter.
- * @param string $type
+ * Object - Read object content and push on $data.
+ *
+ * @param string $nid
+ * @param string $data
+ * @param numeric $maxData
+ * @return boolean
+ */
+function obj_getLocalContent(string &$nid, string &$data, int $maxData = 0): bool
+{
+    if (obj_checkContent($nid))
+    {
+        $data = io_objectRead($nid, $maxData);
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Object - Download node content (object) on web locations.
+ * Only valid content are writen on local filesystem.
+ *
+ * @param string $nid
+ * @param array $locations
+ * @return boolean
+ */
+function obj_getDistantContent(string $nid, array $locations = array()): bool
+{
+    if (!getConfiguration('permitWrite')
+        || !getConfiguration('permitWriteObject')
+        || !getConfiguration('permitSynchronizeObject')
+        || !nod_checkNID($nid, false)
+        || nod_checkBanned_FIXME($nid)
+    )
+        return false;
+
+    if (io_checkNodeHaveContent($nid))
+        return true;
+
+    if (sizeof($locations) == 0)
+        $locations = FIRST_LOCALISATIONS;
+
+    foreach ($locations as $location) {
+        if (io_objectSynchronize($nid, $location))
+            return true;
+    }
+    return false;
+}
+
+/**
+ * Object - Vérifie la consistance d'un objet. Si l'objet est corrompu, il est supprimé.
+ * If there's no content, this assumed as false.
+ * TODO refaire avec i/o
+ * @param string $nid
+ * @return boolean
+ */
+function obj_checkContent(&$nid): bool
+{
+    global $nebuleCachelibrary_o_vr;
+
+    metrology_increment('ov');
+
+    if (!nod_checkNID($nid) || !io_checkNodeHaveContent($nid))
+        return false;
+
+    if (isset($nebuleCachelibrary_o_vr[$nid]))
+        return true;
+
+    $hash = '';
+    $algo = nod_getAlgo($nid);
+    if ($algo != '')
+        $hash = crypto_getFileHash($nid, $algo);
+
+    // If invalid, delete file of the object.
+    if ($hash . '.' . $algo != $nid)
+        io_objectDelete($nid);
+
+    if (getConfiguration('permitBufferIO'))
+        $nebuleCachelibrary_o_vr[$nid] = true;
+
+    return true;
+}
+
+/**
+ * Object - Calculate NID for data with hash algo.
+ *
+ * @param string $data
+ * @param string $algo
  * @return string
  */
-function metrology_get(string $type): string
+function obj_getNID(string $data, string $algo = ''): string
 {
-    global $nebuleMetrologyLinkRead, $nebuleMetrologyLinkVerify, $nebuleMetrologyObjectRead, $nebuleMetrologyObjectVerify;
+    if ($algo == '')
+        $algo = getConfiguration('cryptoHashAlgorithm');
+    return crypto_getDataHash($data, $algo) . '.' . $algo;
+}
 
-    $return = '';
-    switch ($type)
-    {
-        case 'lr':
-            $return = (string)$nebuleMetrologyLinkRead;
-            break;
-        case 'lv':
-            $return = (string)$nebuleMetrologyLinkVerify;
-            break;
-        case 'or':
-            $return = (string)$nebuleMetrologyObjectRead;
-            break;
-        case 'ov':
-            $return = (string)$nebuleMetrologyObjectVerify;
-            break;
+/**
+ * Object - Write object content.
+ *
+ * @param string $data
+ * @param string $oid
+ * @return bool
+ */
+function obj_setContent(string &$data, string $oid = '0'): bool
+{
+    if (strlen($data) == 0
+        || !getConfiguration('permitWrite')
+        || !getConfiguration('permitWriteObject')
+    )
+        return false;
+
+    $hash = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
+    if ($oid == '0')
+        $oid = $hash;
+    elseif ($oid != $hash)
+        return false;
+
+    if (io_objectWrite($data, $oid))
+        return true;
+    return false;
+}
+
+function ent_getFullName_FIXME(&$entite)
+{
+    // Cherche le nom complet d'une entite, càd avec prénom et surnom.
+    // Fonction avec utilisation du cache si possible.
+    global $nebuleCacheReadEntityFullName;
+
+    if (isset($nebuleCacheReadEntityFullName [$entite]))
+        return $nebuleCacheReadEntityFullName [$entite];
+
+    $fname = nod_getFirstName_FIXME($entite);
+    $name = nod_getName_FIXME($entite);
+    $pname = nod_getPostName_FIXME($entite);
+    if ($name == '') {
+        $fullname = "$entite";
+    } else {
+        $fullname = $name;
     }
-    return $return;
+    if ($fname != '') {
+        $fullname = "$fname $fullname";
+    }
+    if ($pname != '') {
+        $fullname = "$fullname $pname";
+    }
+    unset($fname);
+    unset($name);
+    unset($pname);
+
+    if (getConfiguration('permitBufferIO'))
+        $nebuleCacheReadEntityFullName [$entite] = $fullname;
+
+    return $fullname;
 }
-
-/**
- * Metrology - Set one stat timer.
- * @param string $type
- * @return void
- */
-function metrology_setTimer(string $type): void
-{
-    global $nebuleMetrologyTimers, $metrologyStartTime;
-
-    $nebuleMetrologyTimers[$type] = sprintf('%01.4fs', microtime(true) - $metrologyStartTime);
-}
-
-/**
- * Metrology - Get one stat timer.
- * @param string $type
- * @return string
- */
-function metrology_getTimer(string $type): string
-{
-    global $nebuleMetrologyTimers;
-
-    if (isset($nebuleMetrologyTimers[$type]))
-        return $nebuleMetrologyTimers[$type];
-    return '';
-}
-
-// ------------------------------------------------------------------------------------------
 
 /**
  * Entity - Generate a new entity.
@@ -1412,11 +1670,11 @@ function ent_generate(string $asymmetricAlgo, string $hashAlgo, string &$hashPub
     if (crypto_getNewPKey($asymmetricAlgo, $hashAlgo, $publicKey, $privateKey, $password))
     {
         $hashPublicKey = obj_getNID($publicKey, getConfiguration('cryptoHashAlgorithm'));
-        addLog('generate new public key ' . $hashPublicKey, 'warn', __FUNCTION__, '9c207dc0');
+        log_add('generate new public key ' . $hashPublicKey, 'warn', __FUNCTION__, '9c207dc0');
         if (!obj_setContent($publicKey, $hashPublicKey))
             return false;
         $hashPrivateKey = obj_getNID($privateKey, getConfiguration('cryptoHashAlgorithm'));
-        addLog('generate new private key ' . $hashPrivateKey, 'warn', __FUNCTION__, '96059d19');
+        log_add('generate new private key ' . $hashPrivateKey, 'warn', __FUNCTION__, '96059d19');
         if (!obj_setContent($privateKey, $hashPrivateKey))
             return false;
     } else
@@ -1576,8 +1834,8 @@ function ent_checkPuppetmaster(string $oid): bool
 {
     if (!ent_checkIsPublicKey($oid))
     {
-        addLog('need sync puppetmaster', 'warn', __FUNCTION__, '6995b7fd');
-        setBootstrapBreak('71', 'Need sync puppetmaster');
+        log_add('need sync puppetmaster', 'warn', __FUNCTION__, '6995b7fd');
+        bootstrap_setBreak('71', 'Need sync puppetmaster');
         return false;
     }
     return true;
@@ -1592,16 +1850,16 @@ function ent_checkSecurityAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0)
     {
-        addLog('need sync masters of security', 'warn', __FUNCTION__, 'a767699e');
-        setBootstrapBreak('72', 'Need sync masters of security');
+        log_add('need sync masters of security', 'warn', __FUNCTION__, 'a767699e');
+        bootstrap_setBreak('72', 'Need sync masters of security');
         return false;
     }
     foreach ($oidList as $nid)
     {
         if (!ent_checkIsPublicKey($nid))
         {
-            addLog('need sync masters of security ' . $nid, 'warn', __FUNCTION__, '5626b8f');
-            setBootstrapBreak('73', 'Need sync masters of security');
+            log_add('need sync masters of security ' . $nid, 'warn', __FUNCTION__, '5626b8f');
+            bootstrap_setBreak('73', 'Need sync masters of security');
             return false;
         }
     }
@@ -1617,16 +1875,16 @@ function ent_checkCodeAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0)
     {
-        addLog('need sync masters of code', 'warn', __FUNCTION__, '8543b436');
-        setBootstrapBreak('74', 'Need sync masters of code');
+        log_add('need sync masters of code', 'warn', __FUNCTION__, '8543b436');
+        bootstrap_setBreak('74', 'Need sync masters of code');
         return false;
     }
     foreach ($oidList as $nid)
     {
         if (!ent_checkIsPublicKey($nid))
         {
-            addLog('need sync masters of code ' . $nid, 'warn', __FUNCTION__, '0ff4516d');
-            setBootstrapBreak('75', 'Need sync masters of code');
+            log_add('need sync masters of code ' . $nid, 'warn', __FUNCTION__, '0ff4516d');
+            bootstrap_setBreak('75', 'Need sync masters of code');
             return false;
         }
     }
@@ -1642,16 +1900,16 @@ function ent_checkTimeAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0)
     {
-        addLog('need sync masters of time', 'warn', __FUNCTION__, '0c6f1ef1');
-        setBootstrapBreak('76', 'Need sync masters of time');
+        log_add('need sync masters of time', 'warn', __FUNCTION__, '0c6f1ef1');
+        bootstrap_setBreak('76', 'Need sync masters of time');
         return false;
     }
     foreach ($oidList as $nid)
     {
         if (!ent_checkIsPublicKey($nid))
         {
-            addLog('need sync masters of time ' . $nid, 'warn', __FUNCTION__, '01f5f9b5');
-            setBootstrapBreak('77', 'Need sync masters of time');
+            log_add('need sync masters of time ' . $nid, 'warn', __FUNCTION__, '01f5f9b5');
+            bootstrap_setBreak('77', 'Need sync masters of time');
             return false;
         }
     }
@@ -1667,16 +1925,16 @@ function ent_checkDirectoryAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0)
     {
-        addLog('need sync masters of directory', 'warn', __FUNCTION__, 'e47e9e04');
-        setBootstrapBreak('78', 'Need sync masters of directory');
+        log_add('need sync masters of directory', 'warn', __FUNCTION__, 'e47e9e04');
+        bootstrap_setBreak('78', 'Need sync masters of directory');
         return false;
     }
     foreach ($oidList as $nid)
     {
         if (!ent_checkIsPublicKey($nid))
         {
-            addLog('need sync masters of directory ' . $nid, 'warn', __FUNCTION__, '8b12fe09');
-            setBootstrapBreak('79', 'Need sync masters of directory');
+            log_add('need sync masters of directory ' . $nid, 'warn', __FUNCTION__, '8b12fe09');
+            bootstrap_setBreak('79', 'Need sync masters of directory');
             return false;
         }
     }
@@ -1701,7 +1959,7 @@ function ent_syncPuppetmaster(string $oid): void
 
     if ($oid == NEBULE_DEFAULT_PUPPETMASTER_EID)
     {
-        addLog('Write default puppetmaster', 'info', __FUNCTION__, '555ec326');
+        log_add('Write default puppetmaster', 'info', __FUNCTION__, '555ec326');
         $data = FIRST_PUPPETMASTER_PUBLIC_KEY;
         $hash = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
         io_objectWrite($data, $hash);
@@ -1722,155 +1980,13 @@ function ent_syncAuthorities(array $oidList): void
     global $nebuleCacheIsPublicKey, $nebuleCacheIsPrivateKey;
 
     foreach ($oidList as $nid) {
-        addLog('Sync master entity ' . $nid, 'info', __FUNCTION__, '92e0483f');
+        log_add('Sync master entity ' . $nid, 'info', __FUNCTION__, '92e0483f');
         obj_getDistantContent($nid, array());
         lnk_getDistantOnLocations($nid, array());
     }
 
     $nebuleCacheIsPublicKey = array();
     $nebuleCacheIsPrivateKey = array();
-}
-
-/**
- * Object - Create new object from data.
- *
- * @param string $data
- * @param string $typemime
- * @return bool
- */
-function obj_generate_FIXME(string &$data, string $typemime = ''): bool
-{
-    if (strlen($data) == 0
-        || !getConfiguration('permitWrite')
-        || !getConfiguration('permitWriteObject')
-    )
-        return false;
-    $dat = date(DATE_ATOM);
-    $hash = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
-    // Ecrit l'objet.
-    if (!io_checkNodeHaveContent($hash))
-        obj_setContent($data, $hash);
-    // Ecrit le lien de hash.
-    $lnk = lnk_generateSign(
-            $dat,
-            'l',
-            $hash,
-            obj_getNID(getConfiguration('cryptoHashAlgorithm'), getConfiguration('cryptoHashAlgorithm')),
-            obj_getNID('nebule/objet/hash', getConfiguration('cryptoHashAlgorithm'))
-    );
-    if ((lnk_verify($lnk)) == 1)
-        lnk_write($lnk);
-    // Ecrit le lien de type mime.
-    if ($typemime != '') {
-        $lnk = lnk_generateSign(
-                $dat,
-                'l',
-                $hash,
-                obj_getNID($typemime, getConfiguration('cryptoHashAlgorithm')),
-                obj_getNID('nebule/objet/type', getConfiguration('cryptoHashAlgorithm'))
-        );
-        if ((lnk_verify($lnk)) == 1)
-            lnk_write($lnk);
-    }
-    return true;
-}
-
-/**
- * Object - Read object content and push on $data.
- *
- * @param string $nid
- * @param string $data
- * @param numeric $maxData
- * @return boolean
- */
-function obj_getLocalContent(string &$nid, string &$data, int $maxData = 0): bool
-{
-    if (obj_checkContent($nid))
-    {
-        $data = io_objectRead($nid, $maxData);
-        return true;
-    }
-    return false;
-}
-
-/**
- * Object - Download node content (object) on web locations.
- * Only valid content are writen on local filesystem.
- *
- * @param string $nid
- * @param array $locations
- * @return boolean
- */
-function obj_getDistantContent(string $nid, array $locations = array()): bool
-{
-    if (!getConfiguration('permitWrite')
-        || !getConfiguration('permitWriteObject')
-        || !getConfiguration('permitSynchronizeObject')
-        || !nod_checkNID($nid, false)
-        || nod_checkBanned_FIXME($nid)
-    )
-        return false;
-
-    if (io_checkNodeHaveContent($nid))
-        return true;
-
-    if (sizeof($locations) == 0)
-        $locations = FIRST_LOCALISATIONS;
-
-    foreach ($locations as $location) {
-        if (io_objectSynchronize($nid, $location))
-            return true;
-    }
-    return false;
-}
-
-/**
- * Object - Vérifie la consistance d'un objet. Si l'objet est corrompu, il est supprimé.
- * If there's no content, this assumed as false.
- * TODO refaire avec i/o
- * @param string $nid
- * @return boolean
- */
-function obj_checkContent(&$nid): bool
-{
-    global $nebuleCachelibrary_o_vr;
-
-    metrology_increment('ov');
-
-    if (!nod_checkNID($nid) || !io_checkNodeHaveContent($nid))
-        return false;
-
-    if (isset($nebuleCachelibrary_o_vr[$nid]))
-        return true;
-
-    $hash = '';
-    $algo = nod_getAlgo($nid);
-    if ($algo != '')
-        $hash = crypto_getFileHash($nid, $algo);
-
-    // If invalid, delete file of the object.
-    if ($hash . '.' . $algo != $nid)
-        io_objectDelete($nid);
-
-    if (getConfiguration('permitBufferIO'))
-        $nebuleCachelibrary_o_vr[$nid] = true;
-
-    return true;
-}
-
-/**
- * Node - Extract algo parts from NID.
- * @param $nid
- * @return string
- */
-function nod_getAlgo(&$nid): string
-{
-    strtok($nid, '.');
-    $a = strtok('.');
-    $s = strtok('.');
-    if ($a == '' || $s == '')
-        return '';
-    return $a.'.'.$s;
 }
 
 /**
@@ -1895,18 +2011,18 @@ function ent_checkIsPublicKey(string &$nid): bool
         || !io_checkNodeHaveLink($nid)
     )
     {
-        addLog('not a valid object for a key '.$nid, 'warn', __FUNCTION__, '9c268f6a');
+        log_add('not a valid object for a key '.$nid, 'warn', __FUNCTION__, '9c268f6a');
         return false;
     }
 
     if (!obj_checkTypeMime($nid, 'application/x-pem-file'))
         return false;
 
-    $line = obj_getAsText_FIXME($nid, 10000);
+    $line = obj_getAsText($nid, 10000);
     if (strstr($line, 'BEGIN PUBLIC KEY') !== false)
         $result = true;
     else
-        addLog('NID do not provide a public key', 'warn', __FUNCTION__, '25743bf3');
+        log_add('NID do not provide a public key', 'warn', __FUNCTION__, '25743bf3');
 
     if (getConfiguration('permitBufferIO'))
         $nebuleCacheIsPublicKey[$nid] = $result;
@@ -1938,146 +2054,13 @@ function ent_checkIsPrivateKey(&$nid): bool
     if (!obj_checkTypeMime($nid, 'application/x-pem-file'))
         return false;
 
-    $line = obj_getAsText_FIXME($nid, 10000);
+    $line = obj_getAsText($nid, 10000);
     $result = false;
     if (strstr($line, 'BEGIN ENCRYPTED PRIVATE KEY') !== false)
         $result = true;
     if (getConfiguration('permitBufferIO'))
         $nebuleCacheIsPrivateKey[$nid] = $result;
     return $result;
-}
-
-/**
- * Object - Calculate NID for data with hash algo.
- *
- * @param string $data
- * @param string $algo
- * @return string
- */
-function obj_getNID(string $data, string $algo = ''): string
-{
-    if ($algo == '')
-        $algo = getConfiguration('cryptoHashAlgorithm');
-    return crypto_getDataHash($data, $algo) . '.' . $algo;
-}
-
-/**
- * Object - Verify name structure of the node : hash.algo.size
- *
- * @param string $nid
- * @param boolean $permitNull
- * @return boolean
- */
-function nod_checkNID(string &$nid, bool $permitNull = false): bool
-{
-    // May be null in some case.
-    if ($permitNull && $nid == '')
-        return true;
-
-    // Check hash value.
-    $hash = strtok($nid, '.');
-    if ($hash === false) return false;
-    if (strlen($hash) < NID_MIN_HASH_SIZE) return false;
-    if (strlen($hash) > NID_MAX_HASH_SIZE) return false;
-    if (!ctype_xdigit($hash)) return false;
-
-    // Check algo value.
-    $algo = strtok('.');
-    if ($algo === false) return false;
-    if (strlen($algo) < NID_MIN_ALGO_SIZE) return false;
-    if (strlen($algo) > NID_MAX_ALGO_SIZE) return false;
-    if (!ctype_alnum($algo)) return false;
-
-    // Check size value.
-    $size = strtok('.');
-    if ($size === false) return false;
-    if (!ctype_digit($size)) return false; // Check content before!
-    if ((int)$size < NID_MIN_HASH_SIZE) return false;
-    if ((int)$size > NID_MAX_HASH_SIZE) return false;
-    if ((strlen($hash) * 4) != (int)$size) return false;
-
-    // Check item overflow
-    if (strtok('.') !== false) return false;
-
-    return true;
-}
-
-/**
- * Object - Check with links if a node is marked as banned.
- *
- * @param $nid
- * @return boolean
- */
-function nod_checkBanned_FIXME(&$nid): bool
-{
-    global $nebulePublicEntity, $nebuleSecurityAuthorities, $nebuleCacheIsBanned;
-
-    // FIXME
-    return false;
-    /*
-    if (isset($nebuleCacheIsBanned [$nid]))
-        return $nebuleCacheIsBanned [$nid];
-
-    if ($nid == '0')
-        return false;
-
-    $ok = false;
-    $table = array();
-    $hashtype = _objGetNID('nebule/danger', getConfiguration('cryptoHashAlgorithm'));
-    $filter = array(
-        'bl/rl/req' => 'f',
-        'bl/rl/nid1' => $hashtype,
-        'bl/rl/nid2' => $nid,
-        'bl/rl/nid3' => '0',
-        'bl/rl/nid4' => '0',
-    );
-    _lnkFind($nid, $table, $filter);
-    foreach ($table as $link) {
-        if (($link [2] == $nebulePublicEntity) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $nid) && ($link [7] == '0'))
-            $ok = true;
-        if (($link [2] == $nebuleSecurityMaster) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $nid) && ($link [7] == '0'))
-            $ok = true;
-    }
-    unset($table);
-    unset($hashtype);
-
-    if (getConfiguration('permitBufferIO'))
-        $nebuleCacheIsBanned [$nid] = $ok;
-
-
-
-            addLog($nid . ') banned by ' . $nebulePublicEntity, 'warn', __FUNCTION__, 'a9668cd0');
-            addLog($nid . ') banned by ' . $nebuleSecurityMaster, 'warn', __FUNCTION__, 'd84f8e81');
-
-
-
-    return $ok;*/
-}
-
-/**
- * Object - Write object content.
- *
- * @param string $data
- * @param string $oid
- * @return bool
- */
-function obj_setContent(string &$data, string $oid = '0'): bool
-{
-    if (strlen($data) == 0
-        || !getConfiguration('permitWrite')
-        || !getConfiguration('permitWriteObject')
-    )
-        return false;
-
-    $hash = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
-    if ($oid == '0')
-        $oid = $hash;
-    elseif ($oid != $hash)
-        return false;
-
-    if (io_objectWrite($data, $oid))
-        return true;
-    return false;
 }
 
 /**
@@ -2135,17 +2118,17 @@ function lnk_sign(string $bh_bl): string
 
     if (!ent_checkIsPublicKey($nebulePublicEntity))
     {
-        addLog('invalid current entity (public) '.$nebulePublicEntity, 'error', __FUNCTION__, '70e110d7');
+        log_add('invalid current entity (public) '.$nebulePublicEntity, 'error', __FUNCTION__, '70e110d7');
         return '';
     }
     if (!ent_checkIsPrivateKey($nebulePrivateEntity))
     {
-        addLog('invalid current entity (private) '.$nebulePrivateEntity, 'error', __FUNCTION__, 'ca23fd57');
+        log_add('invalid current entity (private) '.$nebulePrivateEntity, 'error', __FUNCTION__, 'ca23fd57');
         return '';
     }
     if ($nebulePasswordEntity == '')
     {
-        addLog('invalid current entity (password)', 'error', __FUNCTION__, '331e1fab');
+        log_add('invalid current entity (password)', 'error', __FUNCTION__, '331e1fab');
         return '';
     }
 
@@ -3304,8 +3287,8 @@ function io_checkLinkFolder(): bool
     if (!file_exists(LOCAL_LINKS_FOLDER))
         io_createLinkFolder();
     if (!file_exists(LOCAL_LINKS_FOLDER) || !is_dir(LOCAL_LINKS_FOLDER)) {
-        addLog('I/O no folder for links.', 'error', __FUNCTION__, '5306de5f');
-        setBootstrapBreak('22', "Library i/o link's folder error");
+        log_add('I/O no folder for links.', 'error', __FUNCTION__, '5306de5f');
+        bootstrap_setBreak('22', "Library i/o link's folder error");
         return false;
     }
 
@@ -3314,24 +3297,24 @@ function io_checkLinkFolder(): bool
         $data = crypto_getPseudoRandom(2048);
         $name = LOCAL_LINKS_FOLDER . '/writest' . bin2hex(crypto_getPseudoRandom(8));
         if (file_put_contents($name, $data) === false) {
-            addLog('I/O error on folder for links.', 'error', __FUNCTION__, 'f72e3a86');
-            setBootstrapBreak('23', "Library i/o link's folder error");
+            log_add('I/O error on folder for links.', 'error', __FUNCTION__, 'f72e3a86');
+            bootstrap_setBreak('23', "Library i/o link's folder error");
             return false;
         }
         if (!file_exists($name) || !is_file($name)) {
-            addLog('I/O error on folder for links.', 'error', __FUNCTION__, '6f012d85');
-            setBootstrapBreak('23', "Library i/o link's folder error");
+            log_add('I/O error on folder for links.', 'error', __FUNCTION__, '6f012d85');
+            bootstrap_setBreak('23', "Library i/o link's folder error");
             return false;
         }
         $read = file_get_contents($name, false, null, 0, 2400);
         if ($data != $read) {
-            addLog('I/O error on folder for links.', 'error', __FUNCTION__, 'fd499fcb');
-            setBootstrapBreak('23', "Library i/o link's folder error");
+            log_add('I/O error on folder for links.', 'error', __FUNCTION__, 'fd499fcb');
+            bootstrap_setBreak('23', "Library i/o link's folder error");
             return false;
         }
         if (!unlink($name)) {
-            addLog('I/O error on folder for links.', 'error', __FUNCTION__, '8e0caa66');
-            setBootstrapBreak('23', "Library i/o link's folder error");
+            log_add('I/O error on folder for links.', 'error', __FUNCTION__, '8e0caa66');
+            bootstrap_setBreak('23', "Library i/o link's folder error");
             return false;
         }
     }
@@ -3350,8 +3333,8 @@ function io_checkObjectFolder(): bool
     if (!file_exists(LOCAL_OBJECTS_FOLDER))
         io_createObjectFolder();
     if (!file_exists(LOCAL_OBJECTS_FOLDER) || !is_dir(LOCAL_OBJECTS_FOLDER) ) {
-        addLog('I/O no folder for objects.', 'error', __FUNCTION__, 'b0cdeafe');
-        setBootstrapBreak('24', "Library i/o object's folder error");
+        log_add('I/O no folder for objects.', 'error', __FUNCTION__, 'b0cdeafe');
+        bootstrap_setBreak('24', "Library i/o object's folder error");
         return false;
     }
 
@@ -3360,24 +3343,24 @@ function io_checkObjectFolder(): bool
         $data = crypto_getPseudoRandom(2048);
         $name = LOCAL_OBJECTS_FOLDER . '/writest' . bin2hex(crypto_getPseudoRandom(8));
         if (file_put_contents($name, $data) === false) {
-            addLog('I/O error on folder for objects.', 'error', __FUNCTION__, '1327da69');
-            setBootstrapBreak('25', "Library i/o object's folder error");
+            log_add('I/O error on folder for objects.', 'error', __FUNCTION__, '1327da69');
+            bootstrap_setBreak('25', "Library i/o object's folder error");
             return false;
         }
         if (!file_exists($name) || !is_file($name)) {
-            addLog('I/O error on folder for objects.', 'error', __FUNCTION__, '2b451a2a');
-            setBootstrapBreak('25', "Library i/o object's folder error");
+            log_add('I/O error on folder for objects.', 'error', __FUNCTION__, '2b451a2a');
+            bootstrap_setBreak('25', "Library i/o object's folder error");
             return false;
         }
         $read = file_get_contents($name, false, null, 0, 2400);
         if ($data != $read) {
-            addLog('I/O error on folder for objects.', 'error', __FUNCTION__, '634072e5');
-            setBootstrapBreak('25', "Library i/o object's folder error");
+            log_add('I/O error on folder for objects.', 'error', __FUNCTION__, '634072e5');
+            bootstrap_setBreak('25', "Library i/o object's folder error");
             return false;
         }
         if (!unlink($name)) {
-            addLog('I/O error on folder for objects.', 'error', __FUNCTION__, '2b397869');
-            setBootstrapBreak('25', "Library i/o object's folder error");
+            log_add('I/O error on folder for objects.', 'error', __FUNCTION__, '2b397869');
+            bootstrap_setBreak('25', "Library i/o object's folder error");
             return false;
         }
     }
@@ -3664,7 +3647,7 @@ function io_objectDelete(string &$nid): bool
 
     if (!unlink(LOCAL_OBJECTS_FOLDER . '/' . $nid))
     {
-        addLog('Unable to delete file.', 'error', __FUNCTION__, '991b11a1');
+        log_add('Unable to delete file.', 'error', __FUNCTION__, '991b11a1');
         return false;
     }
     return true;
@@ -3717,29 +3700,6 @@ function io_close(): void
     // Rien à fermer sur un fs.
 }
 
-/*
- * ------------------------------------------------------------------------------------------
- * Others functions.
- * ------------------------------------------------------------------------------------------
- */
-
-/**
- * Filtrer string with printeable chars and CR.
- *
- * @param string $data
- * @return string
- */
-function _filterPrinteableString(string $data): string
-{
-    return preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', $data);
-}
-
-/*
- * ------------------------------------------------------------------------------------------
- * Cryptography functions.
- * ------------------------------------------------------------------------------------------
- */
-
 /**
  * Crypto - Translate algo name into OpenSSL algo name.
  *
@@ -3772,7 +3732,7 @@ function crypto_getTranslatedHashAlgo(string $algo, bool $loop = true): string
     if ($translatedAlgo == '')
     {
         if($loop) {
-            addLog('cryptoHashAlgorithm configuration have an unknown value (' . $algo . ')', 'error', __FUNCTION__, 'b7627066');
+            log_add('cryptoHashAlgorithm configuration have an unknown value (' . $algo . ')', 'error', __FUNCTION__, 'b7627066');
             $translatedAlgo = crypto_getTranslatedHashAlgo(LIST_OPTIONS_DEFAULT_VALUE['cryptoHashAlgorithm'], false);
         }
         else
@@ -4022,7 +3982,7 @@ function crypto_asymmetricVerify(string $sign, string $hash, string $nid): bool
  * @param bool $forceFlush
  * @return void
  */
-function getBootstrapFlushSession(bool $forceFlush = false): void
+function bootstrap_getFlushSession(bool $forceFlush = false): void
 {
     session_start();
 
@@ -4030,7 +3990,7 @@ function getBootstrapFlushSession(bool $forceFlush = false): void
         || filter_has_var(INPUT_POST, ARG_FLUSH_SESSION)
         || $forceFlush
     ) {
-        addLog('ask flush session', 'warn', __FUNCTION__, '4abe475a');
+        log_add('ask flush session', 'warn', __FUNCTION__, '4abe475a');
 
         // Si la session n'est pas vide ou si interruption de l'utilisateur, la vide.
         if (isset($_SESSION['OKsession'])
@@ -4039,7 +3999,7 @@ function getBootstrapFlushSession(bool $forceFlush = false): void
         ) {
             // Mémorise pour la suite que la session est vidée.
             $bootstrapFlush = true;
-            addLog('flush session', 'info', __FUNCTION__, '5d008c11');
+            log_add('flush session', 'info', __FUNCTION__, '5d008c11');
 
             // Vide la session.
             session_unset();
@@ -4068,21 +4028,21 @@ function getBootstrapFlushSession(bool $forceFlush = false): void
  *
  * Dans ce cas, la session PHP n'est pas exploitée.
  */
-function getBootstrapUpdate():void
+function bootstrap_getUpdate():void
 {
     global $bootstrapUpdate;
 
     if (filter_has_var(INPUT_GET, ARG_UPDATE_APPLICATION)
         || filter_has_var(INPUT_POST, ARG_UPDATE_APPLICATION)
     ) {
-        addLog('ask update', 'warn', __FUNCTION__, 'ac8a2330');
+        log_add('ask update', 'warn', __FUNCTION__, 'ac8a2330');
 
         session_start();
 
         // Si la mise à jour est demandée mais pas déjà faite.
         if (!isset($_SESSION['askUpdate'])) {
             $bootstrapUpdate = true;
-            addLog('update', 'info', __FUNCTION__, 'f2ef6dc2');
+            log_add('update', 'info', __FUNCTION__, 'f2ef6dc2');
             $_SESSION['askUpdate'] = true;
         } else {
             unset($_SESSION['askUpdate']);
@@ -4095,7 +4055,7 @@ function getBootstrapUpdate():void
 /**
  * Lit si demande de l'utilisateur d'un changement d'application.
  */
-function getBootstrapSwitchApplication(): void
+function bootstrap_getSwitchApplication(): void
 {
     global $bootstrapFlush, $bootstrapSwitchApplication, $nebuleServerEntity;
 
@@ -4153,7 +4113,7 @@ function getBootstrapSwitchApplication(): void
 
         if ($activated) {
             $bootstrapSwitchApplication = $arg;
-            addLog('ask switch application to ' . $bootstrapSwitchApplication, 'info', __FUNCTION__, 'd1a3f3f9');
+            log_add('ask switch application to ' . $bootstrapSwitchApplication, 'info', __FUNCTION__, 'd1a3f3f9');
         }
     }
 }
@@ -4161,7 +4121,7 @@ function getBootstrapSwitchApplication(): void
 /**
  * Activate the capability to open PHP code on other file.
  */
-function setPermitOpenFileCode()
+function bootstrap_setPermitOpenFileCode()
 {
     ini_set('allow_url_fopen', '1');
     ini_set('allow_url_include', '1');
@@ -4187,7 +4147,7 @@ function setPermitOpenFileCode()
  * @param string $bootstrapLibraryInstanceSleep
  * @return void
  */
-function findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstanceSleep): void
+function bootstrap_findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstanceSleep): void
 {
     global $libraryCheckOK;
 
@@ -4215,14 +4175,14 @@ function findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstanceSleep): 
             obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE, getConfiguration('cryptoHashAlgorithm')),
             false);
 
-        addLog('find nebule library ' . $bootstrapLibraryID, 'info', __FUNCTION__, '90ee41fc');
+        log_add('find nebule library ' . $bootstrapLibraryID, 'info', __FUNCTION__, '90ee41fc');
 
         if (!nod_checkNID($bootstrapLibraryID)
             || !io_checkNodeHaveLink($bootstrapLibraryID)
             || !obj_checkContent($bootstrapLibraryID)
         ) {
             $bootstrapLibraryID = '';
-            setBootstrapBreak('31', 'Finding nebule library error.');
+            bootstrap_setBreak('31', 'Finding nebule library error.');
         }
     }
 }
@@ -4233,7 +4193,7 @@ function findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstanceSleep): 
  * @param string $bootstrapLibraryInstanceSleep
  * @return void
  */
-function loadLibraryPOO(string $bootstrapLibraryID, string $bootstrapLibraryInstanceSleep): void
+function bootstrap_loadLibraryPOO(string $bootstrapLibraryID, string $bootstrapLibraryInstanceSleep): void
 {
     global $nebuleInstance;
 
@@ -4246,9 +4206,9 @@ function loadLibraryPOO(string $bootstrapLibraryID, string $bootstrapLibraryInst
         else
             $nebuleInstance = unserialize($bootstrapLibraryInstanceSleep);
 
-        reopenLog(BOOTSTRAP_NAME);
+        log_reopen(BOOTSTRAP_NAME);
     } else
-        setBootstrapBreak('41', 'Library nebule error');
+        bootstrap_setBreak('41', 'Library nebule error');
 }
 
 
@@ -4265,7 +4225,7 @@ function loadLibraryPOO(string $bootstrapLibraryID, string $bootstrapLibraryInst
  ------------------------------------------------------------------------------------------
  */
 
-function findApplication():void
+function bootstrap_findApplication():void
 {
     global $libraryCheckOK, $bootstrapSwitchApplication, $bootstrapUpdate, $nebuleLocalAuthorities,
            $bootstrapApplicationInstanceSleep, $bootstrapApplicationDisplayInstanceSleep,
@@ -4279,7 +4239,7 @@ function findApplication():void
 
     // Enregistre l'identifiant de session pour le suivi d'un utilisateur.
     $sessionId = session_id();
-    addLog('session hash id ' . crypto_getDataHash($sessionId), 'info', __FUNCTION__, '36ebd66b');
+    log_add('session hash id ' . crypto_getDataHash($sessionId), 'info', __FUNCTION__, '36ebd66b');
 
     // Vérifie l'ID de départ de l'application mémorisé.
     if (isset($_SESSION['bootstrapApplicationStartID'])
@@ -4348,13 +4308,13 @@ function findApplication():void
     } else {
         // Sinon essaie de trouver l'ID de l'application demandée.
         if ($bootstrapSwitchApplication == '0') {
-            addLog('ask switch application 0', 'warn', __FUNCTION__, '35b3a0dc');
+            log_add('ask switch application 0', 'warn', __FUNCTION__, '35b3a0dc');
 
             // Application 0 de sélection des applications.
             $bootstrapApplicationStartID = '0';
             $bootstrapApplicationID = '0';
         } elseif ($bootstrapSwitchApplication == '1') {
-            addLog('ask switch application 1', 'warn', __FUNCTION__, '18b6ab88');
+            log_add('ask switch application 1', 'warn', __FUNCTION__, '18b6ab88');
 
             // Application 0 de sélection des applications.
             $bootstrapApplicationStartID = '1';
@@ -4399,7 +4359,7 @@ function findApplication():void
                         false);
                 }
 
-                addLog('find switched application ' . $bootstrapApplicationID, 'info', __FUNCTION__, '0cbacda8');
+                log_add('find switched application ' . $bootstrapApplicationID, 'info', __FUNCTION__, '0cbacda8');
             }
             unset($refAppsID, $links);
             // Sinon l'application par défaut sera chargée, plus loin.
@@ -4434,7 +4394,7 @@ function findApplication():void
         }
         unset($forceValue);
 
-        addLog('find default application ' . $bootstrapApplicationID, 'info', __FUNCTION__, '423ae49b');
+        log_add('find default application ' . $bootstrapApplicationID, 'info', __FUNCTION__, '423ae49b');
     }
 
     // Recherche si l'application ne doit pas être pré-chargée.
@@ -4458,7 +4418,7 @@ function findApplication():void
                     if ($signer == $authority) {
                         // Si le lien est valide, active le chargement direct de l'application.
                         $bootstrapApplicationNoPreload = true;
-                        addLog('do not preload application', 'info', __FUNCTION__, '0ac7d800');
+                        log_add('do not preload application', 'info', __FUNCTION__, '0ac7d800');
                         break 2;
                     }
                 }
@@ -4490,27 +4450,27 @@ function findApplication():void
  * @param string $errorCode
  * @param string $errorDesc
  */
-function setBootstrapBreak(string $errorCode, string $errorDesc): void
+function bootstrap_setBreak(string $errorCode, string $errorDesc): void
 {
     global $bootstrapBreak;
 
     $bootstrapBreak[$errorCode] = $errorDesc;
-    addLog('bootstrap break code=' . $errorCode . ' : ' . $errorDesc, 'info', __FUNCTION__, '1a59f99c');
+    log_add('bootstrap break code=' . $errorCode . ' : ' . $errorDesc, 'info', __FUNCTION__, '1a59f99c');
 }
 
 // ------------------------------------------------------------------------------------------
 
-function getBootstrapUserBreak(): void
+function bootstrap_getUserBreak(): void
 {
     if (filter_has_var(INPUT_GET, ARG_BOOTSTRAP_BREAK)
         || filter_has_var(INPUT_POST, ARG_BOOTSTRAP_BREAK)
     )
-        setBootstrapBreak('11', 'User interrupt.');
+        bootstrap_setBreak('11', 'User interrupt.');
 }
 
 
 // ------------------------------------------------------------------------------------------
-function getBootstrapInlineDisplay(): void
+function bootstrap_getInlineDisplay(): void
 {
     global $bootstrapInlineDisplay;
 
@@ -4523,7 +4483,7 @@ function getBootstrapInlineDisplay(): void
 
 
 // ------------------------------------------------------------------------------------------
-function getBootstrapCheckFingerprint(): void
+function bootstrap_getCheckFingerprint(): void
 {
     global $nebuleLocalAuthorities;
     $data = file_get_contents(BOOTSTRAP_FILE_NAME);
@@ -4544,8 +4504,8 @@ function getBootstrapCheckFingerprint(): void
         }
     }
     if (!$ok) {
-        addLog('unknown bootstrap hash - critical', 'error', __FUNCTION__, 'e294b7b3');
-        setBootstrapBreak('51', 'Unknown bootstrap hash');
+        log_add('unknown bootstrap hash - critical', 'error', __FUNCTION__, 'e294b7b3');
+        bootstrap_setBreak('51', 'Unknown bootstrap hash');
     }
 }
 // Vérifie l'empreinte du bootstrap. @todo ajouter vérification de marquage de danger.
@@ -4553,14 +4513,14 @@ function getBootstrapCheckFingerprint(): void
 
 
 // ------------------------------------------------------------------------------------------
-function getBootstrapDisplayServerEntity()
+function bootstrap_getDisplayServerEntity()
 {
     global $bootstrapServerEntityDisplay;
 
     if (filter_has_var(INPUT_GET, LOCAL_ENTITY_FILE)
         || filter_has_var(INPUT_POST, LOCAL_ENTITY_FILE)
     ) {
-        setBootstrapBreak('52', 'Ask server instance');
+        bootstrap_setBreak('52', 'Ask server instance');
         $bootstrapServerEntityDisplay = true;
     }
 }
@@ -4573,7 +4533,7 @@ function getBootstrapDisplayServerEntity()
  *
  * @return void
  */
-function bootstrapHtmlHeader()
+function bootstrap_htmlHeader()
 {
 global $bootstrapRescueMode;
 
@@ -5098,7 +5058,7 @@ global $bootstrapRescueMode;
  *
  * @return void
  */
-function bootstrapHtmlTop()
+function bootstrap_htmlTop()
 {
 global $nebuleServerEntity;
 
@@ -5150,7 +5110,7 @@ $name = ent_getFullName_FIXME($nebuleServerEntity);
  *
  * @return void
  */
-function bootstrapHtmlBottom()
+function bootstrap_htmlBottom()
 {
 ?>
 
@@ -5173,7 +5133,7 @@ function bootstrapHtmlBottom()
  *
  * @return void
  */
-function bootstrapDisplayOnBreak(): void
+function bootstrap_displayOnBreak(): void
 {
     global $nebuleInstance,
            $bootstrapBreak,
@@ -5196,8 +5156,8 @@ function bootstrapDisplayOnBreak(): void
     echo 'CHK';
     ob_end_clean();
 
-    bootstrapHtmlHeader();
-    bootstrapHtmlTop();
+    bootstrap_htmlHeader();
+    bootstrap_htmlTop();
 
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#1 ' . BOOTSTRAP_NAME . ' break on</span><br/>'."\n";
@@ -5498,7 +5458,7 @@ function bootstrapDisplayOnBreak(): void
     tE=<?php echo metrology_getTimer('tE'); ?><br/>
     <?php
 
-    bootstrapHtmlBottom();
+    bootstrap_htmlBottom();
 }
 
 
@@ -5511,7 +5471,7 @@ function bootstrapDisplayOnBreak(): void
  *
  * @return void
  */
-function bootstrapInlineDisplayOnBreak()
+function bootstrap_inlineDisplayOnBreak()
 {
     global $bootstrapBreak,
            $bootstrapRescueMode,
@@ -5560,7 +5520,7 @@ function bootstrapInlineDisplayOnBreak()
  *
  * @return void
  */
-function bootstrapDisplayPreloadApplication()
+function bootstrap_displayPreloadApplication()
 {
     global $nebuleInstance,
            $metrologyStartTime,
@@ -5573,14 +5533,14 @@ function bootstrapDisplayPreloadApplication()
            $bootstrapApplicationStartID;
 
     // Initialisation des logs
-    reopenLog('preload');
-    addLog('Loading library POO', 'info', __FUNCTION__, 'ce5879b0');
+    log_reopen('preload');
+    log_add('Loading library POO', 'info', __FUNCTION__, 'ce5879b0');
 
     echo 'CHK';
     ob_end_clean();
 
-    bootstrapHtmlHeader();
-    bootstrapHtmlTop();
+    bootstrap_htmlHeader();
+    bootstrap_htmlTop();
 
     echo '<div class="preload">'."\n";
     echo "Please wait...<br/>\n";
@@ -5607,8 +5567,8 @@ function bootstrapDisplayPreloadApplication()
     <?php
     flush();
 
-    reopenLog('preload');
-    addLog('Loading application ' . $bootstrapApplicationID, 'info', __FUNCTION__, '202824cb');
+    log_reopen('preload');
+    log_add('Loading application ' . $bootstrapApplicationID, 'info', __FUNCTION__, '202824cb');
 
     // Charge l'objet de l'application. TODO faire via les i/o.
     include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
@@ -5654,8 +5614,8 @@ function bootstrapDisplayPreloadApplication()
     echo '</div>'."\n";
     flush();
 
-    bootstrapPartDisplayReloadPage(true, 500);
-    bootstrapHtmlBottom();
+    bootstrap_partDisplayReloadPage(true, 500);
+    bootstrap_htmlBottom();
 }
 
 /**
@@ -5664,7 +5624,7 @@ function bootstrapDisplayPreloadApplication()
  * @param int $delay
  * @return void
  */
-function bootstrapPartDisplayReloadPage(bool $ok=true, int $delay=0): void
+function bootstrap_partDisplayReloadPage(bool $ok=true, int $delay=0): void
 {
     if ($delay == 0)
         $delay = FIRST_RELOAD_DELAY;
@@ -5713,18 +5673,18 @@ function bootstrapPartDisplayReloadPage(bool $ok=true, int $delay=0): void
  *
  * @return boolean
  */
-function getBootstrapNeedFirstSynchronization(): bool
+function bootstrap_getNeedFirstSynchronization(): bool
 {
     if (file_exists(LOCAL_ENTITY_FILE)
         && is_file(LOCAL_ENTITY_FILE)
     ) {
         $serverEntite = filter_var(strtok(trim(file_get_contents(LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         if (!ent_checkIsPublicKey($serverEntite)) {
-            setBootstrapBreak('62', 'Local server entity error');
+            bootstrap_setBreak('62', 'Local server entity error');
             return true;
         }
     } else {
-        setBootstrapBreak('61', 'No local server entity');
+        bootstrap_setBreak('61', 'No local server entity');
         return true;
     }
     return false;
@@ -5738,27 +5698,27 @@ function getBootstrapNeedFirstSynchronization(): bool
  *
  * @return void
  */
-function bootstrapDisplayApplicationfirst(): void
+function bootstrap_displayApplicationfirst(): void
 {
-    bootstrapFirstInitEnv();
-    bootstrapHtmlHeader();
-    bootstrapHtmlTop();
-    bootstrapFirstDisplay1Breaks();
-    $ok = bootstrapFirstDisplay2Folders();
+    bootstrap_firstInitEnv();
+    bootstrap_htmlHeader();
+    bootstrap_htmlTop();
+    bootstrap_firstDisplay1Breaks();
+    $ok = bootstrap_firstDisplay2Folders();
     if ($ok)
-        $ok = bootstrapFirstDisplay3Objects();
+        $ok = bootstrap_firstDisplay3Objects();
     if ($ok)
-        $ok = bootstrapFirstDisplay4Puppetmaster();
+        $ok = bootstrap_firstDisplay4Puppetmaster();
     if ($ok)
-        $ok = bootstrapFirstDisplay5SyncAuthorities();
+        $ok = bootstrap_firstDisplay5SyncAuthorities();
     if ($ok)
-        $ok = bootstrapFirstDisplay6SyncObjects();
+        $ok = bootstrap_firstDisplay6SyncObjects();
     if ($ok)
-        $ok = bootstrapFirstDisplay7Subordination();
+        $ok = bootstrap_firstDisplay7Subordination();
     if ($ok)
-        $ok = bootstrapFirstDisplay8OptionsFile();
+        $ok = bootstrap_firstDisplay8OptionsFile();
     if ($ok)
-        $ok = bootstrapFirstDisplay9LocaleEntity();
+        $ok = bootstrap_firstDisplay9LocaleEntity();
 
     echo '<div id="parts">';
     if ($ok)
@@ -5767,10 +5727,10 @@ function bootstrapDisplayApplicationfirst(): void
         echo '&gt; <span class="error">ERROR!</span>'."\n";
     echo '<br />&gt; <span id="reload"><a href="">When ready, reload</a></span></div>'."\n";
 
-    bootstrapHtmlBottom();
+    bootstrap_htmlBottom();
 }
 
-function bootstrapFirstInitEnv()
+function bootstrap_firstInitEnv()
 {
     global $configurationList, $nebuleCacheIsPublicKey;
 
@@ -5783,8 +5743,8 @@ function bootstrapFirstInitEnv()
     $configurationList['permitBufferIO'] = false;
     $nebuleCacheIsPublicKey = array();
 
-    reopenLog('first');
-    addLog('Loading', 'info', __FUNCTION__, '529d21e0');
+    log_reopen('first');
+    log_add('Loading', 'info', __FUNCTION__, '529d21e0');
 
     ob_end_clean();
 }
@@ -5793,7 +5753,7 @@ function bootstrapFirstInitEnv()
  * Only display multiples reasons of the break and detection of the first run.
  * @return void
  */
-function bootstrapFirstDisplay1Breaks(): void
+function bootstrap_firstDisplay1Breaks(): void
 {
     global $bootstrapBreak, $bootstrapRescueMode;
 
@@ -5814,7 +5774,7 @@ function bootstrapFirstDisplay1Breaks(): void
  * Display on first run the check of objects and links folders.
  * @return bool
  */
-function bootstrapFirstDisplay2Folders(): bool
+function bootstrap_firstDisplay2Folders(): bool
 {
     $ok = true;
 
@@ -5823,7 +5783,7 @@ function bootstrapFirstDisplay2Folders(): bool
 
     if (!io_checkLinkFolder())
     {
-        addLog('error links folder', 'error', __FUNCTION__, 'f1d49c43');
+        log_add('error links folder', 'error', __FUNCTION__, 'f1d49c43');
         $ok = false;
         echo '<div class="diverror">' . "\n";
         ?>
@@ -5845,7 +5805,7 @@ chmod 755 <?php echo LOCAL_LINKS_FOLDER; ?></pre>
 
     if (!io_checkObjectFolder())
     {
-        addLog('error objects folder', 'error', __FUNCTION__, 'dc0c86a4');
+        log_add('error objects folder', 'error', __FUNCTION__, 'dc0c86a4');
         $ok = false;
         echo '<div class="diverror">' . "\n";
         ?>
@@ -5866,7 +5826,7 @@ chmod 755 <?php echo LOCAL_OBJECTS_FOLDER; ?></pre>
     }
 
     if ($ok) {
-        addLog('ok folders', 'info', __FUNCTION__, '68c50ba0');
+        log_add('ok folders', 'info', __FUNCTION__, '68c50ba0');
         echo " ok\n";
     }
 
@@ -5879,7 +5839,7 @@ chmod 755 <?php echo LOCAL_OBJECTS_FOLDER; ?></pre>
  * Create if not present objects needed by nebule.
  * @return bool
  */
-function bootstrapFirstDisplay3Objects(): bool
+function bootstrap_firstDisplay3Objects(): bool
 {
     $ok = true;
 
@@ -5889,7 +5849,7 @@ function bootstrapFirstDisplay3Objects(): bool
     foreach (FIRST_LOCALISATIONS as $data) {
         $hash = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
         if (!io_checkNodeHaveContent($hash)) {
-            addLog('need create objects ' . $hash, 'warn', __FUNCTION__, 'ca195598');
+            log_add('need create objects ' . $hash, 'warn', __FUNCTION__, 'ca195598');
             echo '.';
             if (!io_objectWrite($data, $hash)) {
                 $ok = false;
@@ -5900,7 +5860,7 @@ function bootstrapFirstDisplay3Objects(): bool
     foreach (FIRST_RESERVED_OBJECTS as $data) {
         $hash = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
         if (!io_checkNodeHaveContent($hash)) {
-            addLog('need create objects ' . $hash, 'warn', __FUNCTION__, 'fc68d2ff');
+            log_add('need create objects ' . $hash, 'warn', __FUNCTION__, 'fc68d2ff');
             echo '.';
             if (!io_objectWrite($data, $hash)) {
                 $ok = false;
@@ -5911,7 +5871,7 @@ function bootstrapFirstDisplay3Objects(): bool
 
     if ($ok)
     {
-        addLog('ok objects', 'info', __FUNCTION__, '5c7be016');
+        log_add('ok objects', 'info', __FUNCTION__, '5c7be016');
         echo " ok\n";
     } else
         echo ' <span class=\"error\">nok</span>'."\n";
@@ -5925,7 +5885,7 @@ function bootstrapFirstDisplay3Objects(): bool
  * Ask for subordination of the puppetmaster.
  * @return bool
  */
-function bootstrapFirstDisplay4Puppetmaster(): bool
+function bootstrap_firstDisplay4Puppetmaster(): bool
 {
     global $firstAlternativePuppetmasterEid;
 
@@ -5938,7 +5898,7 @@ function bootstrapFirstDisplay4Puppetmaster(): bool
     {
         if (!filter_has_var(INPUT_GET, ARG_FIRST_PUPPETMASTER_EID))
         {
-            addLog('ask subordination oid', 'info', __FUNCTION__, '213a735c');
+            log_add('ask subordination oid', 'info', __FUNCTION__, '213a735c');
             ?>
             <form action="" method="get">
                 <div>
@@ -5976,15 +5936,15 @@ function bootstrapFirstDisplay4Puppetmaster(): bool
                     }
                 }
                 if (!ent_checkIsPublicKey($argOID)) {
-                    addLog('unable to find alternative puppetmaster oid', 'error', __FUNCTION__, '102c9011');
+                    log_add('unable to find alternative puppetmaster oid', 'error', __FUNCTION__, '102c9011');
                     echo " <span class=\"error\">invalid!</span>\n";
                     $argLoc = '';
                     $firstAlternativePuppetmasterEid = NEBULE_DEFAULT_PUPPETMASTER_EID;
                 }
                 echo "<br />\n";
-                addLog('define alternative puppetmaster oid = ' . $firstAlternativePuppetmasterEid, 'warn', __FUNCTION__, '10a0bd6d');
+                log_add('define alternative puppetmaster oid = ' . $firstAlternativePuppetmasterEid, 'warn', __FUNCTION__, '10a0bd6d');
                 echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ' . $firstAlternativePuppetmasterEid . "<br />\n";
-                addLog('define alternative puppetmaster location = ' . $argLoc, 'info', __FUNCTION__, '6d54e19e');
+                log_add('define alternative puppetmaster location = ' . $argLoc, 'info', __FUNCTION__, '6d54e19e');
                 echo 'location on &nbsp;&nbsp;&nbsp;&nbsp; : ' . $argLoc . "\n";
             } else
                 echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ' . $firstAlternativePuppetmasterEid . "\n";
@@ -6003,7 +5963,7 @@ function bootstrapFirstDisplay4Puppetmaster(): bool
  * Synchronize the entities needed by nebule.
  * @return bool
  */
-function bootstrapFirstDisplay5SyncAuthorities(): bool
+function bootstrap_firstDisplay5SyncAuthorities(): bool
 {
     global $nebuleLocalAuthorities;
 
@@ -6146,7 +6106,7 @@ function bootstrapFirstDisplay5SyncAuthorities(): bool
     flush();
 
     if ($ok)
-        addLog('ok sync entities', 'info', __FUNCTION__, 'c5b55957');
+        log_add('ok sync entities', 'info', __FUNCTION__, 'c5b55957');
 
     echo "</div>\n";
 
@@ -6158,7 +6118,7 @@ function bootstrapFirstDisplay5SyncAuthorities(): bool
  *
  * @return bool
  */
-function bootstrapFirstDisplay6SyncObjects(): bool
+function bootstrap_firstDisplay6SyncObjects(): bool
 {
     global $nebuleLocalAuthorities;
 
@@ -6180,7 +6140,7 @@ function bootstrapFirstDisplay6SyncObjects(): bool
         && !io_checkNodeHaveLink($refBootID)
     )
     {
-        addLog('need sync objects', 'warn', __FUNCTION__, '0f21ad26');
+        log_add('need sync objects', 'warn', __FUNCTION__, '0f21ad26');
 
         // Ecrit les objets de localisation.
         echo 'objects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
@@ -6274,7 +6234,7 @@ function bootstrapFirstDisplay6SyncObjects(): bool
                 $appID,
                 $refAppsID,
                 false);
-            addLog('find app ' . $appID . ' as ' . $lastID, 'info', __FUNCTION__, '4cc18a65');
+            log_add('find app ' . $appID . ' as ' . $lastID, 'info', __FUNCTION__, '4cc18a65');
             if ($lastID != '0')
             {
                 obj_getDistantContent($lastID, FIRST_LOCALISATIONS);
@@ -6303,7 +6263,7 @@ function bootstrapFirstDisplay6SyncObjects(): bool
             flush();
         }
     } else {
-        addLog('ok sync objects', 'info', __FUNCTION__, '4473358f');
+        log_add('ok sync objects', 'info', __FUNCTION__, '4473358f');
         echo "ok\n";
     }
 
@@ -6320,7 +6280,7 @@ function bootstrapFirstDisplay6SyncObjects(): bool
  *
  * @return bool
  */
-function bootstrapFirstDisplay7Subordination(): bool
+function bootstrap_firstDisplay7Subordination(): bool
 {
     global $firstAlternativePuppetmasterEid, $firstSubordinationEid;
 
@@ -6333,7 +6293,7 @@ function bootstrapFirstDisplay7Subordination(): bool
     {
         if (!filter_has_var(INPUT_GET, ARG_FIRST_SUBORD_EID))
         {
-            addLog('ask subordination oid', 'info', __FUNCTION__, '213a735c');
+            log_add('ask subordination oid', 'info', __FUNCTION__, '213a735c');
 ?>
 <form action="" method="get">
     <div>
@@ -6366,15 +6326,15 @@ function bootstrapFirstDisplay7Subordination(): bool
                     lnk_getDistantOnLocations($argOID, array($argLoc));
                 }
             } else {
-                addLog('unable to find subordination oid', 'error', __FUNCTION__, '5cd18917');
+                log_add('unable to find subordination oid', 'error', __FUNCTION__, '5cd18917');
                 echo " <span class=\"error\">invalid!</span>\n";
                 $argLoc = '';
                 $firstSubordinationEid = '';
             }
             echo "<br />\n";
-            addLog('define subordination oid = ' . $firstSubordinationEid, 'warn', __FUNCTION__, 'a875618e');
+            log_add('define subordination oid = ' . $firstSubordinationEid, 'warn', __FUNCTION__, 'a875618e');
             echo 'subordination to : ' . $firstSubordinationEid . "<br />\n";
-            addLog('define subordination location = ' . $argLoc, 'info', __FUNCTION__, 'c1c943a5');
+            log_add('define subordination location = ' . $argLoc, 'info', __FUNCTION__, 'c1c943a5');
             echo 'location on &nbsp;&nbsp;&nbsp;&nbsp; : ' . $argLoc . "\n";
         }
     } else {
@@ -6394,7 +6354,7 @@ function bootstrapFirstDisplay7Subordination(): bool
  *
  * @return bool
  */
-function bootstrapFirstDisplay8OptionsFile(): bool
+function bootstrap_firstDisplay8OptionsFile(): bool
 {
     global $firstAlternativePuppetmasterEid, $firstSubordinationEid;
 
@@ -6439,7 +6399,7 @@ function bootstrapFirstDisplay8OptionsFile(): bool
 
     if (!file_exists(LOCAL_ENVIRONMENT_FILE))
     {
-        addLog('need create options file', 'warn', __FUNCTION__, '58d07f71');
+        log_add('need create options file', 'warn', __FUNCTION__, '58d07f71');
         echo "creating<br />\n";
         file_put_contents(LOCAL_ENVIRONMENT_FILE, $defaultOptions);
     }
@@ -6465,7 +6425,7 @@ chmod 644 <?php echo LOCAL_ENVIRONMENT_FILE; ?>
         echo "</div>\n";
         $ok = false;
     } else {
-        addLog('ok have options file', 'info', __FUNCTION__, '91e9b5bd');
+        log_add('ok have options file', 'info', __FUNCTION__, '91e9b5bd');
         echo "ok\n";
     }
 
@@ -6481,7 +6441,7 @@ chmod 644 <?php echo LOCAL_ENVIRONMENT_FILE; ?>
  *
  * @return bool
  */
-function bootstrapFirstDisplay9LocaleEntity(): bool
+function bootstrap_firstDisplay9LocaleEntity(): bool
 {
     global $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
 
@@ -6510,7 +6470,7 @@ function bootstrapFirstDisplay9LocaleEntity(): bool
             $nebulePrivateEntity,
             $nebulePasswordEntity
         );
-        addLog('switch to new entity ' . $nebulePublicEntity, 'warn', __FUNCTION__, '94c27df0');
+        log_add('switch to new entity ' . $nebulePublicEntity, 'warn', __FUNCTION__, '94c27df0');
 
         // Définit l'entité comme entité instance du serveur.
         file_put_contents(LOCAL_ENTITY_FILE, $nebulePublicEntity);
@@ -6621,23 +6581,23 @@ chmod 644 <?php echo LOCAL_ENTITY_FILE; ?>
  ------------------------------------------------------------------------------------------
  */
 
-function bootstrapDisplayApplication0()
+function bootstrap_displayApplication0()
 {
     global $nebuleInstance,
            $loggerSessionID;
 
     // Initialisation des logs
-    reopenLog('app0');
-    addLog('Loading', 'info', __FUNCTION__, '314e6e9b');
+    log_reopen('app0');
+    log_add('Loading', 'info', __FUNCTION__, '314e6e9b');
 
     echo 'CHK';
     ob_end_clean();
 
-    bootstrapHtmlHeader();
-    bootstrapHtmlTop();
+    bootstrap_htmlHeader();
+    bootstrap_htmlTop();
 
     // Ré-initialisation des logs FIXME ???
-    reopenLog('app0');
+    log_reopen('app0');
 
     ?>
 
@@ -6738,7 +6698,7 @@ function bootstrapDisplayApplication0()
     <div id="sync">
     </div>
     <?php
-    bootstrapHtmlBottom();
+    bootstrap_htmlBottom();
 }
 
 
@@ -6755,22 +6715,22 @@ function bootstrapDisplayApplication0()
  ------------------------------------------------------------------------------------------
  */
 
-function bootstrapDisplayApplication1()
+function bootstrap_displayApplication1()
 {
     global $nebuleInstance, $loggerSessionID, $nebuleLibLevel, $nebuleLibVersion, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
 
     // Initialisation des logs
-    reopenLog('app1');
-    addLog('Loading', 'info', __FUNCTION__, 'a4e4acfe');
+    log_reopen('app1');
+    log_add('Loading', 'info', __FUNCTION__, 'a4e4acfe');
 
     echo 'CHK';
     ob_end_clean();
 
-    bootstrapHtmlHeader();
-    bootstrapHtmlTop();
+    bootstrap_htmlHeader();
+    bootstrap_htmlTop();
 
     // Ré-initialisation des logs FIXME ???
-    reopenLog('app1');
+    log_reopen('app1');
 
     // Instancie la classe de la documentation.
     $instance = new nebdoctech($nebuleInstance);
@@ -6785,7 +6745,7 @@ function bootstrapDisplayApplication1()
     echo " </div>\n";
     echo "</div>\n";
 
-    bootstrapHtmlBottom();
+    bootstrap_htmlBottom();
 }
 
 
@@ -6802,22 +6762,22 @@ function bootstrapDisplayApplication1()
  ------------------------------------------------------------------------------------------
  */
 
-function bootstrapDisplayApplication2()
+function bootstrap_displayApplication2()
 {
     global $nebuleInstance, $loggerSessionID, $nebuleLibLevel, $nebuleLibVersion, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
 
     // Initialisation des logs
-    reopenLog('app2');
-    addLog('Loading', 'info', __FUNCTION__, '3a5c4178');
+    log_reopen('app2');
+    log_add('Loading', 'info', __FUNCTION__, '3a5c4178');
 
     echo 'CHK';
     ob_end_clean();
 
-    bootstrapHtmlHeader();
-    bootstrapHtmlTop();
+    bootstrap_htmlHeader();
+    bootstrap_htmlTop();
 
     // Ré-initialisation des logs FIXME ???
-    reopenLog('app1');
+    log_reopen('app1');
 
 ?>
     <div class="layout-main">
@@ -6828,7 +6788,7 @@ function bootstrapDisplayApplication2()
 
 <?php
 
-    bootstrapHtmlBottom();
+    bootstrap_htmlBottom();
 }
 
 
@@ -6845,7 +6805,7 @@ function bootstrapDisplayApplication2()
  ------------------------------------------------------------------------------------------
  */
 
-function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
+function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
 {
     global $bootstrapBreak, $bootstrapRescueMode, $bootstrapInlineDisplay, $loggerSessionID,
            $bootstrapApplicationID, $bootstrapApplicationNoPreload,
@@ -6865,17 +6825,17 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
         ob_end_clean();
 
         if ($bootstrapApplicationID == '0') {
-            addLog('load application 0', 'info', __FUNCTION__, '1ad59685');
-            bootstrapDisplayApplication0();
-            reopenLog(BOOTSTRAP_NAME);
+            log_add('load application 0', 'info', __FUNCTION__, '1ad59685');
+            bootstrap_displayApplication0();
+            log_reopen(BOOTSTRAP_NAME);
         } elseif ($bootstrapApplicationID == '1') {
-            addLog('load application 1', 'info', __FUNCTION__, '2acd5fee');
-            bootstrapDisplayApplication1();
-            reopenLog(BOOTSTRAP_NAME);
+            log_add('load application 1', 'info', __FUNCTION__, '2acd5fee');
+            bootstrap_displayApplication1();
+            log_reopen(BOOTSTRAP_NAME);
         } elseif ($bootstrapApplicationID == '2') {
-            addLog('load application 2', 'info', __FUNCTION__, '1d718d83');
-            bootstrapDisplayApplication2();
-            reopenLog(BOOTSTRAP_NAME);
+            log_add('load application 2', 'info', __FUNCTION__, '1d718d83');
+            bootstrap_displayApplication2();
+            log_reopen(BOOTSTRAP_NAME);
         } else {
             // Si tout est déjà pré-chargé, on déserialise.
             if (isset($bootstrapApplicationInstanceSleep)
@@ -6887,7 +6847,7 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
                 && isset($bootstrapApplicationTraductionInstanceSleep)
                 && $bootstrapApplicationTraductionInstanceSleep != ''
             ) {
-                addLog('load application ' . $bootstrapApplicationID, 'info', __FUNCTION__, 'aab236ff');
+                log_add('load application ' . $bootstrapApplicationID, 'info', __FUNCTION__, 'aab236ff');
 
                 // Charge l'objet de l'application. @todo faire via les i/o.
                 include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
@@ -6895,7 +6855,7 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
                 $applicationName = Application::APPLICATION_NAME;
 
                 // Change les logs au nom de l'application.
-                reopenLog($applicationName);
+                log_reopen($applicationName);
 
                 // Désérialise les instances.
                 $applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
@@ -6924,7 +6884,7 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
                 //   réalise maintenant le pré-chargement de façon transparente et lance l'application.
                 // Ainsi, le pré-chargement n'est pas fait sur une page web à part.
 
-                addLog('load application whitout preload ' . $bootstrapApplicationID, 'info', __FUNCTION__, 'e01ea813');
+                log_add('load application whitout preload ' . $bootstrapApplicationID, 'info', __FUNCTION__, 'e01ea813');
 
                 // Charge l'objet de l'application. @todo faire via les i/o.
                 include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
@@ -6932,7 +6892,7 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
                 $applicationName = Application::APPLICATION_NAME;
 
                 // Change les logs au nom de l'application.
-                reopenLog($applicationName);
+                log_reopen($applicationName);
 
                 // Instanciation des classes de l'application.
                 $applicationInstance = new Application($nebuleInstance);
@@ -6953,11 +6913,11 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
                 $applicationInstance->router();
             } else {
                 // Sinon on va faire un pré-chargement.
-                bootstrapDisplayPreloadApplication();
+                bootstrap_displayPreloadApplication();
             }
 
             // Change les logs au nom du bootstrap.
-            reopenLog(BOOTSTRAP_NAME);
+            log_reopen(BOOTSTRAP_NAME);
 
             // Ouverture de la session PHP.
             session_start();
@@ -6980,10 +6940,10 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
         }
     } else {
         if ($needFirstSynchronization) {
-            addLog('load first', 'info', __FUNCTION__, '63d9bc00');
+            log_add('load first', 'info', __FUNCTION__, '63d9bc00');
 
             // Affichage sur interruption du chargement.
-            bootstrapDisplayApplicationfirst();
+            bootstrap_displayApplicationfirst();
         } elseif ($bootstrapServerEntityDisplay) {
             if (file_exists(LOCAL_ENTITY_FILE)) {
                 echo file_get_contents(LOCAL_ENTITY_FILE, false, null, -1, getConfiguration('ioReadMaxData'));
@@ -6991,22 +6951,22 @@ function displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
                 echo '0';
             }
         } else {
-            addLog('load break', 'info', __FUNCTION__, '4abf554b');
+            log_add('load break', 'info', __FUNCTION__, '4abf554b');
 
             // Affichage sur interruption du chargement.
             if ($bootstrapInlineDisplay) {
-                bootstrapInlineDisplayOnBreak();
+                bootstrap_inlineDisplayOnBreak();
             } else {
-                bootstrapDisplayOnBreak();
+                bootstrap_displayOnBreak();
             }
         }
 
         // Change les logs au nom du bootstrap.
-        reopenLog(BOOTSTRAP_NAME);
+        log_reopen(BOOTSTRAP_NAME);
     }
 }
 
-function bootstrapLogMetrology()
+function bootstrap_logMetrology()
 {
     global $nebuleInstance, $nebuleMetrologyTimers;
 
@@ -7018,7 +6978,7 @@ function bootstrapLogMetrology()
 
     // Metrology on logs.
     if (is_a($nebuleInstance, 'nebule')) {
-        addLog('Mp=' . $memory . 'Mb'
+        log_add('Mp=' . $memory . 'Mb'
             . $timers
             . ' Lr=' . metrology_get('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead()
             . ' Lv=' . metrology_get('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify()
@@ -7034,7 +6994,7 @@ function bootstrapLogMetrology()
             __FUNCTION__,
             '0d99ad8b');
     } else {
-        addLog('Mp=' . $memory . 'Mb'
+        log_add('Mp=' . $memory . 'Mb'
             . $timers
             . ' Lr=' . metrology_get('lr')
             . ' Lv=' . metrology_get('lv')
@@ -7050,30 +7010,30 @@ function bootstrapLogMetrology()
 function main()
 {
     if (!lib_init())
-        setBootstrapBreak('21', 'Library init error');
+        bootstrap_setBreak('21', 'Library init error');
 
-    getBootstrapUserBreak();
-    getBootstrapInlineDisplay();
-    getBootstrapCheckFingerprint();
-    $needFirstSynchronization = getBootstrapNeedFirstSynchronization();
-    getBootstrapDisplayServerEntity();
-    getBootstrapFlushSession();
-    getBootstrapUpdate();
-    getBootstrapSwitchApplication();
+    bootstrap_getUserBreak();
+    bootstrap_getInlineDisplay();
+    bootstrap_getCheckFingerprint();
+    $needFirstSynchronization = bootstrap_getNeedFirstSynchronization();
+    bootstrap_getDisplayServerEntity();
+    bootstrap_getFlushSession();
+    bootstrap_getUpdate();
+    bootstrap_getSwitchApplication();
 
-    setPermitOpenFileCode();
+    bootstrap_setPermitOpenFileCode();
     metrology_setTimer('tB');
 
     $bootstrapLibraryID = '';
     $bootstrapLibraryInstanceSleep = '';
-    findLibraryPOO($bootstrapLibraryID, $bootstrapLibraryInstanceSleep);
-    loadLibraryPOO($bootstrapLibraryID, $bootstrapLibraryInstanceSleep);
+    bootstrap_findLibraryPOO($bootstrapLibraryID, $bootstrapLibraryInstanceSleep);
+    bootstrap_loadLibraryPOO($bootstrapLibraryID, $bootstrapLibraryInstanceSleep);
     metrology_setTimer('tL');
-    findApplication();
+    bootstrap_findApplication();
 
-    displayRouter($needFirstSynchronization, $bootstrapLibraryID);
+    bootstrap_displayRouter($needFirstSynchronization, $bootstrapLibraryID);
     metrology_setTimer('tA');
-    bootstrapLogMetrology();
+    bootstrap_logMetrology();
 }
 
 // OK, now play...
