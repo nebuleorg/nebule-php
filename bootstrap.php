@@ -1226,75 +1226,6 @@ function nebFindObjType_FIXME(&$object, $type)
 
 /**
  * Get type Mime to the node (object) from his links.
- * TODO revoir le traitement social des liens.
- * @param string $nid
- * @return string
- */
-function nebGetObjTypeMime(string &$nid): string
-{
-    global $nebulePublicEntity, $nebuleCacheReadObjTypeMime;
-
-    if (isset($nebuleCacheReadObjTypeMime [$nid]))
-        return $nebuleCacheReadObjTypeMime [$nid];
-
-    if (!_nodCheckNID($nid))
-        return '-none-';
-
-    $hashType = _objGetNID('nebule/objet/type', getConfiguration('cryptoHashAlgorithm'));
-    $filter = array(
-        'bl/rl/req' => 'l',
-        'bl/rl/nid1' => $nid,
-        'bl/rl/nid2' => '',
-        'bl/rl/nid3' => $hashType,
-        'bl/rl/nid4' => '0',
-    );
-    $links = array();
-    _lnkGetList($nid,$links, $filter);
-    // TODO Filter on social links level - security!
-
-    if (sizeof($links) == 0)
-        return '-undefined-';
-
-    // Search on signer is current entity
-    $linkType = array();
-    foreach ($links as $link)
-    {
-        if ($link ['bs/rs/nid'] == $nebulePublicEntity
-            && sizeof($linkType) == 0
-        )
-            $linkType = $link;
-        elseif ($link ['bs/rs/nid'] == $nebulePublicEntity
-            && _lnkCompareDate($link['bl/rc/mod'], $link['bl/rc/chr'], $linkType ['bl/rc/mod'], $linkType ['bl/rc/chr']) > 0
-        )
-            $linkType = $link;
-    }
-
-    // Search on other signers
-    if (sizeof($linkType) == 0)
-    {
-        foreach ($links as $link)
-        {
-            if (sizeof($linkType) == 0)
-                $linkType = $link;
-            elseif (_lnkCompareDate($link['bl/rc/mod'], $link['bl/rc/chr'], $linkType ['bl/rc/mod'], $linkType ['bl/rc/chr']) > 0)
-                $linkType = $link;
-        }
-    }
-    unset($links);
-
-    $nidType = $linkType['bl/rl/nid2'];
-    $typeMime = nebReadObjText1line_FIXME($nidType, 128);
-    if ($typeMime == '')
-        return '-unreadable-';
-
-    if (getConfiguration('permitBufferIO'))
-        $nebuleCacheReadObjTypeMime [$nid] = $typeMime;
-
-    return $typeMime;
-}
-
-/**
- * Get type Mime to the node (object) from his links.
  * The type mime asked is converted as NID and may not have object.
  * TODO revoir le traitement social des liens.
  * @param string $nid
@@ -1333,42 +1264,6 @@ function nebCheckObjTypeMime(string &$nid, string $typeMime): bool
         return false;
 
     return true;
-}
-
-function nebFindPrivateKey_FIXME(): string
-{ // Fonction avec utilisation du cache si possible.
-    global $nebulePublicEntity;
-
-    $table = array();
-    $filter = array(
-        'bl/rl/req' => 'f',
-        'bl/rl/nid1' => '',
-        'bl/rl/nid2' => $nebulePublicEntity,
-        'bl/rl/nid3' => '0',
-        'bl/rl/nid4' => '0',
-    );
-    _lnkFind_FIXME($nebulePublicEntity, $table, $filter);
-    foreach ($table as $link) {
-        if (($link [2] == $nebulePublicEntity) && ($link [4] == 'f') && ($link [6] == $nebulePublicEntity) && ($link [7] == '0')) // && nebIsPrivkey($link[5]) ) à débugger...
-        {
-            return $link [5];
-        }
-    }
-    return '';
-}
-
-function nebCheckPrivateKeyPassword_FIXME(): bool
-{ // Vérifie si le mot de passe de l'entité en cours est bien valide, c'est à dire qu'il donne accès à la clé privée.
-    global $nebulePrivateEntity, $nebulePasswordEntity;
-
-    $privcert = nebGetContentAsText_FIXME($nebulePrivateEntity, 10000);
-    $r = openssl_pkey_get_private($privcert, $nebulePasswordEntity);
-    unset($privcert);
-    if ($r === false) {
-        return false;
-    } else {
-        return true;
-    }
 }
 
 function nebListChildrenRecurse_FIXME($object, &$listchildren, &$node, $level = 1)
@@ -1453,14 +1348,6 @@ function nebListChildrenRecurse_FIXME($object, &$listchildren, &$node, $level = 
     unset($links);
     unset($c);
     unset($exist);
-}
-
-function nebListChildren_FIXME(&$object, &$listchildren)
-{ // Recheche les objets enfants, c'est à dire dérivés.
-
-    if ($object == '0')
-        return;
-    nebListChildrenRecurse_FIXME($object, $listchildren, $object, 1);
 }
 
 /**
@@ -2522,49 +2409,6 @@ function _lnkGraphResolvOne_FIXME(string &$nid, &$visited, bool $present = true,
 }
 
 /**
- * Link - Résoud le graphe des mises à jours d'un objet.
- *
- *  - $object est l'objet dont on veut trouver la mise à jour.
- *  - $present permet de controler si l'on veut que l'objet final soit bien présent localement.
- *  - $synchro permet ou non la synchronisation des liens et objets auprès d'entités tièrces,
- *      en clair on télécharge ce qui manque au besoin lors du parcours du graphe.
- *  - $restrict permet de ne parcourir les branche que sur des liens signés des entités marquées comme autorités.
- *
- * Fonction avec utilisation du cache si possible.
- * Ne tient pas compte de $synchro pour le cache.
- * Pas de cache si la recherche est restrainte aux autorités.
- *
- * @param string $nid
- * @param boolean $present
- * @param boolean $synchro
- * @param boolean $restrict
- * @return string
- */
-function _lnkGraphResolv_FIXME($nid, $present = true, $synchro = false, $restrict = false)
-{
-    global $nebule_permitautosync, $nebuleCachelibrary_l_grx;
-
-    // Lit au besoin le cache.
-    if (!$restrict && isset($nebuleCachelibrary_l_grx[$nid][$present]))
-        return $nebuleCachelibrary_l_grx[$nid][$present];
-
-    // Active la synchronisation automatique au besoin.
-    if ($nebule_permitautosync)
-        $synchro = true;
-
-    $visited = array();
-    $res = _lnkGraphResolvOne_FIXME($nid, $visited, $present, $synchro, $restrict);
-    unset($visited);
-    if ($res == '0')
-        $res = $nid;
-
-    if (getConfiguration('permitBufferIO') && !$restrict)
-        $nebuleCachelibrary_l_grx[$nid][$present] = $res;
-
-    return $res;
-}
-
-/**
  * Link -
  *
  * @param $nid
@@ -3551,6 +3395,8 @@ function io_open(): bool
 function io_checkLinkFolder(): bool
 {
     // Check if exist.
+    if (!file_exists(LOCAL_LINKS_FOLDER))
+        io_createLinkFolder();
     if (!file_exists(LOCAL_LINKS_FOLDER) || !is_dir(LOCAL_LINKS_FOLDER)) {
         addLog('I/O no folder for links.', 'error', __FUNCTION__, '5306de5f');
         setBootstrapBreak('22', "Library i/o link's folder error");
@@ -3595,6 +3441,8 @@ function io_checkLinkFolder(): bool
 function io_checkObjectFolder(): bool
 {
     // Check if exist.
+    if (!file_exists(LOCAL_OBJECTS_FOLDER))
+        io_createObjectFolder();
     if (!file_exists(LOCAL_OBJECTS_FOLDER) || !is_dir(LOCAL_OBJECTS_FOLDER) ) {
         addLog('I/O no folder for objects.', 'error', __FUNCTION__, 'b0cdeafe');
         setBootstrapBreak('24', "Library i/o object's folder error");
@@ -3642,9 +3490,9 @@ function io_createLinkFolder(): bool
         && getConfiguration('permitWriteLink')
         && !file_exists(LOCAL_LINKS_FOLDER)
     )
-        mkdir(LOCAL_LINKS_FOLDER);
+        return mkdir(LOCAL_LINKS_FOLDER);
 
-    return io_checkLinkFolder();
+    return false;
 }
 
 /**
@@ -3658,9 +3506,9 @@ function io_createObjectFolder(): bool
         && getConfiguration('permitWriteObject')
         && !file_exists(LOCAL_OBJECTS_FOLDER)
     )
-        mkdir(LOCAL_OBJECTS_FOLDER);
+        return mkdir(LOCAL_OBJECTS_FOLDER);
 
-    return io_checkObjectFolder();
+    return false;
 }
 
 /**
