@@ -1104,7 +1104,7 @@ function nod_getFirstName_FIXME(&$entite)
     $type = nod_getType_FIXME($entite, 'nebule/objet/prenom'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
     if (io_checkNodeHaveContent($type)) {
-        $text = obj_getAsText1line_FIXME($type, 128);
+        $text = obj_getAsText1line($type, 128);
     }
     unset($type);
 
@@ -1127,7 +1127,7 @@ function nod_getName_FIXME(&$entite)
     $type = nod_getType_FIXME($entite, 'nebule/objet/nom'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
     if (io_checkNodeHaveContent($type)) {
-        $text = obj_getAsText1line_FIXME($type, 128);
+        $text = obj_getAsText1line($type, 128);
     }
     unset($type);
 
@@ -1150,7 +1150,7 @@ function nod_getPostName_FIXME(&$entite)
     $type = nod_getType_FIXME($entite, 'nebule/objet/postnom'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
     if (io_checkNodeHaveContent($type)) {
-        $text = obj_getAsText1line_FIXME($type, 128);
+        $text = obj_getAsText1line($type, 128);
     }
     unset($type);
 
@@ -1310,38 +1310,38 @@ function nod_checkBanned_FIXME(&$nid): bool
 }
 
 /**
- * Lit la première ligne d'un objet comme un texte, quel que soit son type mime.
- * Supprime les caractères non imprimables.
- *
- * Fonction avec utilisation du cache si possible.
+ * Object - Read one line of object content as printable text.
  *
  * @param string $oid
- * @param integer $maxsize
+ * @param integer $maxData
  * @return string
  */
-function obj_getAsText1line_FIXME(string &$oid, int $maxsize = 128): string
+function obj_getAsText1line(string &$oid, int $maxData = 128): string
 {
     global $nebuleCacheReadObjText1line;
 
     if (isset($nebuleCacheReadObjText1line [$oid]))
         return $nebuleCacheReadObjText1line [$oid];
 
+    if ($maxData == 0)
+        $maxData = getConfiguration('ioReadMaxData');
+
     $data = '';
-    obj_getLocalContent($oid, $data);
+    obj_getLocalContent($oid, $data, $maxData + 1);
     $data = strtok(filter_var($data, FILTER_SANITIZE_STRING), "\n");
     if (!is_string($data))
         return '';
 
     $data = trim($data);
+    $data = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', filter_var($data, FILTER_SANITIZE_STRING));
 
     if (extension_loaded('mbstring'))
         $data = mb_convert_encoding($data, 'UTF-8');
     else
         log_add('mbstring extension not installed or activated!', 'warn', __FUNCTION__, 'c2becfad');
 
-    if (strlen($data) > $maxsize) {
-        $data = substr($data, 0, ($maxsize - 3)) . '...';
-    }
+    if (strlen($data) > $maxData)
+        $data = substr($data, 0, ($maxData - 3)) . '...';
 
     if (getConfiguration('permitBufferIO'))
         $nebuleCacheReadObjText1line [$oid] = $data;
@@ -1365,9 +1365,8 @@ function obj_getAsText(string &$oid, int $maxData = 0): string
     obj_getLocalContent($oid, $data, $maxData + 1);
     $data = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', filter_var($data, FILTER_SANITIZE_STRING));
 
-    if (strlen($data) > $maxData) {
+    if (strlen($data) > $maxData)
         $data = substr($data, 0, ($maxData - 3)) . '...';
-    }
 
     return $data;
 }
@@ -1382,7 +1381,7 @@ function obj_getAsText(string &$oid, int $maxData = 0): string
  */
 function obj_checkTypeMime(string &$nid, string $typeMime): bool
 {
-    global $nebulePublicEntity, $nebuleCacheReadObjTypeMime;
+    global $nebuleCacheReadObjTypeMime;
 
     if (isset($nebuleCacheReadObjTypeMime [$nid]))
     {
