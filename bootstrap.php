@@ -831,7 +831,7 @@ function getConfiguration(string $name)
  * Initialize nebule procedural library.
  * @return boolean
  */
-function libraryInit(): bool
+function lib_init(): bool
 {
     global $nebuleLocalAuthorities, $libraryCheckOK;
 
@@ -846,8 +846,8 @@ function libraryInit(): bool
     // Une fois les autres entités trouvées, ajoute les autres autorités.
     // Cela empêche qu'une entié compromise ne génère un lien qui passerait avant le puppetmaster
     //   dans la recherche par référence nebFindByRef.
-    $puppetmaster = _entityGetPuppetmaster();
-    if (!_entityCheckPuppetmaster($puppetmaster))
+    $puppetmaster = ent_getPuppetmaster();
+    if (!ent_checkPuppetmaster($puppetmaster))
     {
         addLog('lib init : puppetmaster error!', 'error', __FUNCTION__, '8e5a7fe9');
         return false;
@@ -855,11 +855,11 @@ function libraryInit(): bool
     $nebuleLocalAuthorities = array($puppetmaster);
 
     // Search and check global masters.
-    $nebuleSecurityMasters = _entityGetSecurityAuthorities(false);
-    if (!_entityCheckSecurityAuthorities($nebuleSecurityMasters))
+    $nebuleSecurityMasters = ent_getSecurityAuthorities(false);
+    if (!ent_checkSecurityAuthorities($nebuleSecurityMasters))
     {
-        $nebuleSecurityMasters = _entityGetSecurityAuthorities(true);
-        if (!_entityCheckSecurityAuthorities($nebuleSecurityMasters))
+        $nebuleSecurityMasters = ent_getSecurityAuthorities(true);
+        if (!ent_checkSecurityAuthorities($nebuleSecurityMasters))
         {
             addLog('lib init : security master error!', 'error', __FUNCTION__, '6001a43e');
             return false;
@@ -867,12 +867,12 @@ function libraryInit(): bool
     }
     foreach ($nebuleSecurityMasters as $master)
         $nebuleLocalAuthorities[] = $master;
-    $nebuleCodeMasters = _entityGetCodeAuthorities(false);
+    $nebuleCodeMasters = ent_getCodeAuthorities(false);
 
-    if (!_entityCheckCodeAuthorities($nebuleCodeMasters))
+    if (!ent_checkCodeAuthorities($nebuleCodeMasters))
     {
-        $nebuleCodeMasters = _entityGetCodeAuthorities(true);
-        if (!_entityCheckCodeAuthorities($nebuleCodeMasters))
+        $nebuleCodeMasters = ent_getCodeAuthorities(true);
+        if (!ent_checkCodeAuthorities($nebuleCodeMasters))
         {
             addLog('lib init : code master error!', 'error', __FUNCTION__, '0a82529e');
             return false;
@@ -881,31 +881,31 @@ function libraryInit(): bool
     foreach ($nebuleCodeMasters as $master)
         $nebuleLocalAuthorities[] = $master;
 
-    $nebuleTimeMasters = _entityGetTimeAuthorities(false);
-    if (!_entityCheckTimeAuthorities($nebuleTimeMasters))
+    $nebuleTimeMasters = ent_getTimeAuthorities(false);
+    if (!ent_checkTimeAuthorities($nebuleTimeMasters))
     {
-        $nebuleTimeMasters = _entityGetTimeAuthorities(true);
-        if (!_entityCheckTimeAuthorities($nebuleTimeMasters))
+        $nebuleTimeMasters = ent_getTimeAuthorities(true);
+        if (!ent_checkTimeAuthorities($nebuleTimeMasters))
         {
             addLog('lib init : time master error!', 'error', __FUNCTION__, '874dfd89');
             return false;
         }
     }
 
-    $nebuleDirectoryMasters = _entityGetDirectoryAuthorities(false);
-    if (!_entityCheckDirectoryAuthorities($nebuleDirectoryMasters))
+    $nebuleDirectoryMasters = ent_getDirectoryAuthorities(false);
+    if (!ent_checkDirectoryAuthorities($nebuleDirectoryMasters))
     {
-        $nebuleDirectoryMasters = _entityGetDirectoryAuthorities(true);
-        if (!_entityCheckDirectoryAuthorities($nebuleDirectoryMasters))
+        $nebuleDirectoryMasters = ent_getDirectoryAuthorities(true);
+        if (!ent_checkDirectoryAuthorities($nebuleDirectoryMasters))
         {
             addLog('lib init : directory master error!', 'error', __FUNCTION__, 'be3a8b9f');
             return false;
         }
     }
 
-    librarySetServerEntity();
-    librarySetDefaultEntity();
-    librarySetPublicEntity();
+    lib_setServerEntity();
+    lib_setDefaultEntity();
+    lib_setPublicEntity();
 
     $libraryCheckOK = true;
     return true;
@@ -914,7 +914,7 @@ function libraryInit(): bool
 /**
  * Get and check local server entity.
  */
-function librarySetServerEntity(): void
+function lib_setServerEntity(): void
 {
     global $nebuleServerEntity, $nebuleLocalAuthorities;
     if (file_exists(LOCAL_ENTITY_FILE)
@@ -922,34 +922,34 @@ function librarySetServerEntity(): void
     )
         $nebuleServerEntity = filter_var(strtok(trim(file_get_contents(LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 
-    if (!_entityCheck($nebuleServerEntity))
+    if (!ent_checkIsPublicKey($nebuleServerEntity))
         $nebuleServerEntity = getConfiguration('puppetmaster');
 
-    if (getConfiguration('permitInstanceEntityAsAuthority') && !getModeRescue())
+    if (getConfiguration('permitInstanceEntityAsAuthority') && !lib_getModeRescue())
         $nebuleLocalAuthorities[] = $nebuleServerEntity;
 }
 
 /**
  * Get and check default entity.
  */
-function librarySetDefaultEntity(): void
+function lib_setDefaultEntity(): void
 {
     global $nebuleDefaultEntity, $nebuleLocalAuthorities;
     $nebuleDefaultEntity = getConfiguration('defaultCurrentEntity');
-    if (!_entityCheck($nebuleDefaultEntity))
+    if (!ent_checkIsPublicKey($nebuleDefaultEntity))
         $nebuleDefaultEntity = getConfiguration('puppetmaster');
 
-    if (getConfiguration('permitDefaultEntityAsAuthority') && !getModeRescue())
+    if (getConfiguration('permitDefaultEntityAsAuthority') && !lib_getModeRescue())
         $nebuleLocalAuthorities[] = $nebuleDefaultEntity;
 }
 
 /**
  * Get and check public entity.
  */
-function librarySetPublicEntity(): void
+function lib_setPublicEntity(): void
 {
     global $nebulePublicEntity, $nebuleDefaultEntity;
-    if (!_entityCheck($nebulePublicEntity))
+    if (!ent_checkIsPublicKey($nebulePublicEntity))
         $nebulePublicEntity = $nebuleDefaultEntity;
 }
 
@@ -961,7 +961,7 @@ function librarySetPublicEntity(): void
  * By default, rescue mode is not activated.
  * @return bool
  */
-function getModeRescue(): bool
+function lib_getModeRescue(): bool
 {
     if (getConfiguration('modeRescue') === true
         || (getConfiguration('permitOnlineRescue') === true
@@ -988,16 +988,16 @@ function getModeRescue(): bool
  * @param boolean $strict
  * @return string
  */
-function nebFindByRef_FIXME(string $nid, string $rid, bool $strict = false)
+function nod_findByRef_FIXME(string $nid, string $rid, bool $strict = false)
 {
     global $nebuleLocalAuthorities;
 
     $result = '0';
-    if (!_nodCheckNID($nid) || !_nodCheckNID($rid))
+    if (!nod_checkNID($nid) || !nod_checkNID($rid))
         return $result;
 
     $links = array();
-    _lnkFindInclusive_FIXME($nid, $links, 'f', $nid, '', $rid, false);
+    lnk_findInclusive_FIXME($nid, $links, 'f', $nid, '', $rid, false);
     foreach ($links as $link) {
         // Au besoin, filtre les liens sur les autorités locales.
         if ($strict) {
@@ -1027,7 +1027,7 @@ function nebFindByRef_FIXME(string $nid, string $rid, bool $strict = false)
  * @param integer $maxsize
  * @return string
  */
-function nebReadObjText1line_FIXME(string &$oid, int $maxsize = 128): string
+function obj_getAsText1line_FIXME(string &$oid, int $maxsize = 128): string
 {
     global $nebuleCacheReadObjText1line;
 
@@ -1035,7 +1035,7 @@ function nebReadObjText1line_FIXME(string &$oid, int $maxsize = 128): string
         return $nebuleCacheReadObjText1line [$oid];
 
     $data = '';
-    _objGetLocalContent($oid, $data);
+    obj_getLocalContent($oid, $data);
     $data = strtok(filter_var($data, FILTER_SANITIZE_STRING), "\n");
     if (!is_string($data))
         return '';
@@ -1065,13 +1065,13 @@ function nebReadObjText1line_FIXME(string &$oid, int $maxsize = 128): string
  * @param integer $maxData
  * @return string
  */
-function nebGetContentAsText_FIXME(string &$oid, int $maxData = 0): string
+function obj_getAsText_FIXME(string &$oid, int $maxData = 0): string
 {
     if ($maxData == 0)
         $maxData = getConfiguration('ioReadMaxData');
 
     $data = '';
-    _objGetLocalContent($oid, $data, $maxData + 1);
+    obj_getLocalContent($oid, $data, $maxData + 1);
     $data = _filterPrinteableString(filter_var($data, FILTER_SANITIZE_STRING));
 
     if (strlen($data) > $maxData) {
@@ -1081,7 +1081,7 @@ function nebGetContentAsText_FIXME(string &$oid, int $maxData = 0): string
     return $data;
 }
 
-function nebReadEntityFName_FIXME(&$entite)
+function obj_getFirstName_FIXME(&$entite)
 {
     // Cherche le prénom d'une entite.
     // Fonction avec utilisation du cache si possible.
@@ -1090,11 +1090,11 @@ function nebReadEntityFName_FIXME(&$entite)
     if (isset($nebuleCacheReadEntityFName [$entite]))
         return $nebuleCacheReadEntityFName [$entite];
 
-    nebCreateAsText('nebule/objet/prenom');
-    $type = nebFindObjType_FIXME($entite, 'nebule/objet/prenom'); // L'objet doit etre present et doit etre de type text/plain.
+    obj_setContentAsText('nebule/objet/prenom');
+    $type = nod_getType_FIXME($entite, 'nebule/objet/prenom'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
     if (io_checkNodeHaveContent($type)) {
-        $text = nebReadObjText1line_FIXME($type, 128);
+        $text = obj_getAsText1line_FIXME($type, 128);
     }
     unset($type);
 
@@ -1104,7 +1104,7 @@ function nebReadEntityFName_FIXME(&$entite)
     return $text;
 }
 
-function nebReadEntityName_FIXME(&$entite)
+function nod_getName_FIXME(&$entite)
 {
     // Cherche le nom d'une entite.
     // Fonction avec utilisation du cache si possible.
@@ -1113,11 +1113,11 @@ function nebReadEntityName_FIXME(&$entite)
     if (isset($nebuleCacheReadEntityName [$entite]))
         return $nebuleCacheReadEntityName [$entite];
 
-    nebCreateAsText('nebule/objet/nom');
-    $type = nebFindObjType_FIXME($entite, 'nebule/objet/nom'); // L'objet doit etre present et doit etre de type text/plain.
+    obj_setContentAsText('nebule/objet/nom');
+    $type = nod_getType_FIXME($entite, 'nebule/objet/nom'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
     if (io_checkNodeHaveContent($type)) {
-        $text = nebReadObjText1line_FIXME($type, 128);
+        $text = obj_getAsText1line_FIXME($type, 128);
     }
     unset($type);
 
@@ -1127,7 +1127,7 @@ function nebReadEntityName_FIXME(&$entite)
     return $text;
 }
 
-function nebReadEntityPName_FIXME(&$entite)
+function nod_getPostName_FIXME(&$entite)
 {
     // Cherche le postnom d'une entite.
     // Fonction avec utilisation du cache si possible.
@@ -1136,11 +1136,11 @@ function nebReadEntityPName_FIXME(&$entite)
     if (isset($nebuleCacheReadEntityPName [$entite]))
         return $nebuleCacheReadEntityPName [$entite];
 
-    nebCreateAsText('nebule/objet/postnom');
-    $type = nebFindObjType_FIXME($entite, 'nebule/objet/postnom'); // L'objet doit etre present et doit etre de type text/plain.
+    obj_setContentAsText('nebule/objet/postnom');
+    $type = nod_getType_FIXME($entite, 'nebule/objet/postnom'); // L'objet doit etre present et doit etre de type text/plain.
     $text = '';
     if (io_checkNodeHaveContent($type)) {
-        $text = nebReadObjText1line_FIXME($type, 128);
+        $text = obj_getAsText1line_FIXME($type, 128);
     }
     unset($type);
 
@@ -1150,7 +1150,7 @@ function nebReadEntityPName_FIXME(&$entite)
     return $text;
 }
 
-function nebReadEntityFullName_FIXME(&$entite)
+function ent_getFullName_FIXME(&$entite)
 {
     // Cherche le nom complet d'une entite, càd avec prénom et surnom.
     // Fonction avec utilisation du cache si possible.
@@ -1159,9 +1159,9 @@ function nebReadEntityFullName_FIXME(&$entite)
     if (isset($nebuleCacheReadEntityFullName [$entite]))
         return $nebuleCacheReadEntityFullName [$entite];
 
-    $fname = nebReadEntityFName_FIXME($entite);
-    $name = nebReadEntityName_FIXME($entite);
-    $pname = nebReadEntityPName_FIXME($entite);
+    $fname = obj_getFirstName_FIXME($entite);
+    $name = nod_getName_FIXME($entite);
+    $pname = nod_getPostName_FIXME($entite);
     if ($name == '') {
         $fullname = "$entite";
     } else {
@@ -1183,7 +1183,7 @@ function nebReadEntityFullName_FIXME(&$entite)
     return $fullname;
 }
 
-function nebFindObjType_FIXME(&$object, $type)
+function nod_getType_FIXME(&$object, $type)
 {
     // Cherche l'objet contenant la description de l'objet pour une propriete type.
     // Fonction avec utilisation du cache si possible.
@@ -1196,7 +1196,7 @@ function nebFindObjType_FIXME(&$object, $type)
         return ''; // WARNING caca - Exception pour problème de performances : 'nebule/objet/entite/suivi'
 
     $table = array();
-    $hashtype = _objGetNID($type, getConfiguration('cryptoHashAlgorithm'));
+    $hashtype = obj_getNID($type, getConfiguration('cryptoHashAlgorithm'));
     $objdst = '';
     $filter = array(
         'bl/rl/req' => 'l',
@@ -1205,7 +1205,7 @@ function nebFindObjType_FIXME(&$object, $type)
         'bl/rl/nid3' => $hashtype,
         'bl/rl/nid4' => '0',
     );
-    _lnkFind_FIXME($object, $table, $filter);
+    lnk_find_FIXME($object, $table, $filter);
     foreach ($table as $itemtable) {
         if (($itemtable [2] == $nebulePublicEntity) && ($itemtable [7] == $hashtype) && ($itemtable [5] == $object) && ($itemtable [4] == 'l')) {
             $objdst = $itemtable [6];
@@ -1232,7 +1232,7 @@ function nebFindObjType_FIXME(&$object, $type)
  * @param string $typeMime
  * @return bool
  */
-function nebCheckObjTypeMime(string &$nid, string $typeMime): bool
+function obj_checkTypeMime(string &$nid, string $typeMime): bool
 {
     global $nebulePublicEntity, $nebuleCacheReadObjTypeMime;
 
@@ -1244,11 +1244,11 @@ function nebCheckObjTypeMime(string &$nid, string $typeMime): bool
             return false;
     }
 
-    if (!_nodCheckNID($nid))
+    if (!nod_checkNID($nid))
         return false;
 
-    $hashType = _objGetNID('nebule/objet/type', getConfiguration('cryptoHashAlgorithm'));
-    $hashTypeAsked = _objGetNID($typeMime, getConfiguration('cryptoHashAlgorithm'));
+    $hashType = obj_getNID('nebule/objet/type', getConfiguration('cryptoHashAlgorithm'));
+    $hashTypeAsked = obj_getNID($typeMime, getConfiguration('cryptoHashAlgorithm'));
     $filter = array(
         'bl/rl/req' => 'l',
         'bl/rl/nid1' => $nid,
@@ -1257,97 +1257,13 @@ function nebCheckObjTypeMime(string &$nid, string $typeMime): bool
         'bl/rl/nid4' => '0',
     );
     $links = array();
-    _lnkGetList($nid,$links, $filter);
+    lnk_getList($nid,$links, $filter);
     // TODO Filter on social links level - security!
 
     if (sizeof($links) == 0)
         return false;
 
     return true;
-}
-
-function nebListChildrenRecurse_FIXME($object, &$listchildren, &$node, $level = 1)
-{ // Sous-boucle de recheche les objets enfants.
-    // Utiliser de préférence la fonction nebListChildren.
-    $maxRecurse = getConfiguration('maxFollowedUpdates');
-
-    $link = array();
-    $links = array();
-    _lnkListOnFullFilter_FIXME($object, $links, '-', '', true);
-    foreach ($links as $link) {
-        $c = count($listchildren);
-        $exist = false;
-        if ((($link [4] == "l") || ($link [4] == "u") || ($link [4] == "e") || ($link [4] == "k")) && ($link [5] == $object || $link [6] == $object) && $level == 1) {
-            foreach ($listchildren as $item) {
-                if ($item [0] == $link [6])
-                    $exist = true;
-                break;
-            }
-            if (!$exist) {
-                $listchildren [($c + 1)] [0] = $link [0];
-                $listchildren [($c + 1)] [1] = $link [1];
-                $listchildren [($c + 1)] [2] = $link [2];
-                $listchildren [($c + 1)] [3] = $link [3];
-                $listchildren [($c + 1)] [4] = $link [4];
-                $listchildren [($c + 1)] [5] = $link [5];
-                $listchildren [($c + 1)] [6] = $link [6];
-                $listchildren [($c + 1)] [7] = $link [7];
-                $listchildren [($c + 1)] [8] = $link [8];
-                $listchildren [($c + 1)] [9] = $link [9];
-                $listchildren [($c + 1)] [10] = $link [10];
-                $listchildren [($c + 1)] [11] = $link [11];
-                $listchildren [($c + 1)] [12] = $level;
-            }
-        } elseif ($link [4] == "f" && $link [5] == $object) {
-            foreach ($listchildren as $item) {
-                if ($item [0] == $link [6])
-                    $exist = true;
-                break;
-            }
-            if (!$exist) {
-                $listchildren [($c + 1)] [0] = $link [0];
-                $listchildren [($c + 1)] [1] = $link [1];
-                $listchildren [($c + 1)] [2] = $link [2];
-                $listchildren [($c + 1)] [3] = $link [3];
-                $listchildren [($c + 1)] [4] = $link [4];
-                $listchildren [($c + 1)] [5] = $link [5];
-                $listchildren [($c + 1)] [6] = $link [6];
-                $listchildren [($c + 1)] [7] = $link [7];
-                $listchildren [($c + 1)] [8] = $link [8];
-                $listchildren [($c + 1)] [9] = $link [9];
-                $listchildren [($c + 1)] [10] = $link [10];
-                $listchildren [($c + 1)] [11] = $link [11];
-                $listchildren [($c + 1)] [12] = $level;
-                if ($level < $maxRecurse && ($link [7] == $node || $level == 1))
-                    nebListChildrenRecurse_FIXME($link [6], $listchildren, $node, ($level + 1));
-            }
-        } elseif ($link [4] == "f" && $link [6] == $object && $level == 1) {
-            foreach ($listchildren as $item) {
-                if ($item [0] == $link [5])
-                    $exist = true;
-                break;
-            }
-            if (!$exist) {
-                $listchildren [($c + 1)] [0] = $link [0];
-                $listchildren [($c + 1)] [1] = $link [1];
-                $listchildren [($c + 1)] [2] = $link [2];
-                $listchildren [($c + 1)] [3] = $link [3];
-                $listchildren [($c + 1)] [4] = $link [4];
-                $listchildren [($c + 1)] [5] = $link [5];
-                $listchildren [($c + 1)] [6] = $link [6];
-                $listchildren [($c + 1)] [7] = $link [7];
-                $listchildren [($c + 1)] [8] = $link [8];
-                $listchildren [($c + 1)] [9] = $link [9];
-                $listchildren [($c + 1)] [10] = $link [10];
-                $listchildren [($c + 1)] [11] = $link [11];
-                $listchildren [($c + 1)] [12] = $level;
-            }
-        }
-    }
-    unset($link);
-    unset($links);
-    unset($c);
-    unset($exist);
 }
 
 /**
@@ -1358,7 +1274,7 @@ function nebListChildrenRecurse_FIXME($object, &$listchildren, &$node, $level = 
  * @param bool $skipIfPresent
  * @return bool
  */
-function nebCreateAsText(string $data, bool $skipIfPresent = true): bool
+function obj_setContentAsText(string $data, bool $skipIfPresent = true): bool
 {
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteObject')
@@ -1367,14 +1283,14 @@ function nebCreateAsText(string $data, bool $skipIfPresent = true): bool
     )
         return false;
 
-    $oid = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+    $oid = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
 
-    if (_nodCheckBanned_FIXME($oid))
+    if (nod_checkBanned_FIXME($oid))
         return false;
     if ($skipIfPresent && io_checkNodeHaveContent($oid))
         return true;
 
-    return _objGenerate_FIXME($data, 'text/plain');
+    return obj_generate_FIXME($data, 'text/plain');
 }
 
 
@@ -1390,7 +1306,7 @@ function nebCreateAsText(string $data, bool $skipIfPresent = true): bool
  * @param string $type
  * @return void
  */
-function _metrologyCountAdd(string $type): void
+function metrology_increment(string $type): void
 {
     global $nebuleMetrologyLinkRead, $nebuleMetrologyLinkVerify, $nebuleMetrologyObjectRead, $nebuleMetrologyObjectVerify;
 
@@ -1416,7 +1332,7 @@ function _metrologyCountAdd(string $type): void
  * @param string $type
  * @return string
  */
-function _metrologyCountGet(string $type): string
+function metrology_get(string $type): string
 {
     global $nebuleMetrologyLinkRead, $nebuleMetrologyLinkVerify, $nebuleMetrologyObjectRead, $nebuleMetrologyObjectVerify;
 
@@ -1444,7 +1360,7 @@ function _metrologyCountGet(string $type): string
  * @param string $type
  * @return void
  */
-function _metrologyTimerSet(string $type): void
+function metrology_setTimer(string $type): void
 {
     global $nebuleMetrologyTimers, $metrologyStartTime;
 
@@ -1456,7 +1372,7 @@ function _metrologyTimerSet(string $type): void
  * @param string $type
  * @return string
  */
-function _metrologyTimerGet(string $type): string
+function metrology_getTimer(string $type): string
 {
     global $nebuleMetrologyTimers;
 
@@ -1477,7 +1393,7 @@ function _metrologyTimerGet(string $type): string
  * @param string $password
  * @return bool
  */
-function _entityGenerate(string $asymmetricAlgo, string $hashAlgo, string &$hashPublicKey, string &$hashPrivateKey, string &$password = ''): bool
+function ent_generate(string $asymmetricAlgo, string $hashAlgo, string &$hashPublicKey, string &$hashPrivateKey, string &$password = ''): bool
 {
     global $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
 
@@ -1493,81 +1409,71 @@ function _entityGenerate(string $asymmetricAlgo, string $hashAlgo, string &$hash
     // Generate the bi-key.
     $publicKey = '';
     $privateKey = '';
-    if (_cryptoGetNewPKey($asymmetricAlgo, $hashAlgo, $publicKey, $privateKey, $password))
+    if (crypto_getNewPKey($asymmetricAlgo, $hashAlgo, $publicKey, $privateKey, $password))
     {
-        $hashPublicKey = _objGetNID($publicKey, getConfiguration('cryptoHashAlgorithm'));
+        $hashPublicKey = obj_getNID($publicKey, getConfiguration('cryptoHashAlgorithm'));
         addLog('generate new public key ' . $hashPublicKey, 'warn', __FUNCTION__, '9c207dc0');
-        if (!_objWriteContent($publicKey, $hashPublicKey))
+        if (!obj_setContent($publicKey, $hashPublicKey))
             return false;
-        $hashPrivateKey = _objGetNID($privateKey, getConfiguration('cryptoHashAlgorithm'));
+        $hashPrivateKey = obj_getNID($privateKey, getConfiguration('cryptoHashAlgorithm'));
         addLog('generate new private key ' . $hashPrivateKey, 'warn', __FUNCTION__, '96059d19');
-        if (!_objWriteContent($privateKey, $hashPrivateKey))
+        if (!obj_setContent($privateKey, $hashPrivateKey))
             return false;
     } else
         return false;
 
     // Generate links for properties
-    $oidHash = _objGetNID('nebule/objet/hash');
-    $oidAlgo = _objGetNID(getConfiguration('cryptoHashAlgorithm'));
-    $oidType = _objGetNID('nebule/objet/type');
-    $oidPem  = _objGetNID('application/x-pem-file');
-    $oidPKey = _objGetNID('nebule/objet/entite/prive');
-    $oidText = _objGetNID('text/plain');
+    $oidHash = obj_getNID('nebule/objet/hash');
+    $oidAlgo = obj_getNID(getConfiguration('cryptoHashAlgorithm'));
+    $oidType = obj_getNID('nebule/objet/type');
+    $oidPem  = obj_getNID('application/x-pem-file');
+    $oidPKey = obj_getNID('nebule/objet/entite/prive');
+    $oidText = obj_getNID('text/plain');
 
     $list = array($oidHash, $oidAlgo, $oidType, $oidPem, $oidPKey, $oidText);
     foreach ($list as $item)
     {
-        $bh_bl = _lnkGenerate('', 'l', $item, $oidAlgo, $oidHash);
-        $sign = _cryptoAsymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
+        $bh_bl = lnk_generate('', 'l', $item, $oidAlgo, $oidHash);
+        $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
         $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . getConfiguration('cryptoHashAlgorithm');
-        if (!_lnkWrite($link))
+        if (!lnk_write($link))
             return false;
-        $bh_bl = _lnkGenerate('', 'l', $item, $oidText, $oidType);
-        $sign = _cryptoAsymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
+        $bh_bl = lnk_generate('', 'l', $item, $oidText, $oidType);
+        $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
         $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . getConfiguration('cryptoHashAlgorithm');
-        if (!_lnkWrite($link))
+        if (!lnk_write($link))
             return false;
     }
 
     $list = array($hashPublicKey, $hashPrivateKey);
     foreach ($list as $item)
     {
-        $bh_bl = _lnkGenerate('', 'l', $item, $oidAlgo, $oidHash);
-        $sign = _cryptoAsymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
+        $bh_bl = lnk_generate('', 'l', $item, $oidAlgo, $oidHash);
+        $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
         $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . getConfiguration('cryptoHashAlgorithm');
-        if (!_lnkWrite($link))
+        if (!lnk_write($link))
             return false;
-        $bh_bl = _lnkGenerate('', 'l', $item, $oidPem, $oidType);
-        $sign = _cryptoAsymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
+        $bh_bl = lnk_generate('', 'l', $item, $oidPem, $oidType);
+        $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
         $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . getConfiguration('cryptoHashAlgorithm');
-        if (!_lnkWrite($link))
+        if (!lnk_write($link))
             return false;
     }
 
-    $bh_bl = _lnkGenerate('', 'f', $hashPublicKey, $hashPrivateKey, $oidPKey);
-    $sign = _cryptoAsymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
+    $bh_bl = lnk_generate('', 'f', $hashPublicKey, $hashPrivateKey, $oidPKey);
+    $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
     $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . getConfiguration('cryptoHashAlgorithm');
-    if (!_lnkWrite($link))
+    if (!lnk_write($link))
         return false;
 
     return true;
 }
 
 /**
- * Entity - Verify name structure and content of a entity.
- * @param string $nid
- * @return bool
- */
-function _entityCheck(string $nid): bool
-{
-    return _objCheckIsPublicKey($nid);
-}
-
-/**
  * Get puppetmaster NID.
  * @return string
  */
-function _entityGetPuppetmaster(): string
+function ent_getPuppetmaster(): string
 {
     return getConfiguration('puppetmaster');
 }
@@ -1580,13 +1486,13 @@ function _entityGetPuppetmaster(): string
  * @param bool $synchronize
  * @return array
  */
-function _entityGetAskedMasters(string $refNid, array &$result, bool $synchronize): array
+function ent_getAskedMasters(string $refNid, array &$result, bool $synchronize): array
 {
     if (sizeof($result) != 0)
         return $result;
 
     if ($synchronize)
-        _objDownloadOnLocations($refNid, FIRST_LOCALISATIONS);
+        obj_getDistantContent($refNid, FIRST_LOCALISATIONS);
 
     $lnkList = array();
     $entList = array();
@@ -1596,12 +1502,12 @@ function _entityGetAskedMasters(string $refNid, array &$result, bool $synchroniz
         'bl/rl/nid3' => '',
         'bs/rs/nid' => getConfiguration('puppetmaster'),
     );
-    _lnkGetList($refNid, $lnkList, $filter);
+    lnk_getList($refNid, $lnkList, $filter);
 
     if (getConfiguration('CodeBranch') != '')
     {
         $filter['bl/rl/nid3'] = getConfiguration('CodeBranch');
-        _lnkGetList($refNid, $lnkList, $filter);
+        lnk_getList($refNid, $lnkList, $filter);
     }
 
     // Extract uniques entities
@@ -1619,10 +1525,10 @@ function _entityGetAskedMasters(string $refNid, array &$result, bool $synchroniz
  * @param bool $synchronize
  * @return array
  */
-function _entityGetSecurityAuthorities(bool $synchronize=false): array
+function ent_getSecurityAuthorities(bool $synchronize=false): array
 {
     global $nebuleSecurityAuthorities;
-    return _entityGetAskedMasters(NEBULE_NID_SECURITY_AUTHORITY_REFERENCE, $nebuleSecurityAuthorities, $synchronize);
+    return ent_getAskedMasters(NEBULE_NID_SECURITY_AUTHORITY_REFERENCE, $nebuleSecurityAuthorities, $synchronize);
 }
 
 /**
@@ -1631,10 +1537,10 @@ function _entityGetSecurityAuthorities(bool $synchronize=false): array
  * @param bool $synchronize
  * @return array
  */
-function _entityGetCodeAuthorities(bool $synchronize=false): array
+function ent_getCodeAuthorities(bool $synchronize=false): array
 {
     global $nebuleCodeAuthorities;
-    return _entityGetAskedMasters(NEBULE_NID_CODE_AUTHORITY_REFERENCE, $nebuleCodeAuthorities, $synchronize);
+    return ent_getAskedMasters(NEBULE_NID_CODE_AUTHORITY_REFERENCE, $nebuleCodeAuthorities, $synchronize);
 }
 
 /**
@@ -1643,10 +1549,10 @@ function _entityGetCodeAuthorities(bool $synchronize=false): array
  * @param bool $synchronize
  * @return array
  */
-function _entityGetTimeAuthorities(bool $synchronize=false): array
+function ent_getTimeAuthorities(bool $synchronize=false): array
 {
     global $nebuleTimeAuthorities;
-    return _entityGetAskedMasters(NEBULE_NID_TIME_AUTHORITY_REFERENCE, $nebuleTimeAuthorities, $synchronize);
+    return ent_getAskedMasters(NEBULE_NID_TIME_AUTHORITY_REFERENCE, $nebuleTimeAuthorities, $synchronize);
 }
 
 /**
@@ -1655,10 +1561,10 @@ function _entityGetTimeAuthorities(bool $synchronize=false): array
  * @param bool $synchronize
  * @return array
  */
-function _entityGetDirectoryAuthorities(bool $synchronize=false): array
+function ent_getDirectoryAuthorities(bool $synchronize=false): array
 {
     global $nebuleDirectoryAuthorities;
-    return _entityGetAskedMasters(NEBULE_NID_DIRECTORY_AUTHORITY_REFERENCE, $nebuleDirectoryAuthorities, $synchronize);
+    return ent_getAskedMasters(NEBULE_NID_DIRECTORY_AUTHORITY_REFERENCE, $nebuleDirectoryAuthorities, $synchronize);
 }
 
 /**
@@ -1666,9 +1572,9 @@ function _entityGetDirectoryAuthorities(bool $synchronize=false): array
  * @param string $oid
  * @return bool
  */
-function _entityCheckPuppetmaster(string $oid): bool
+function ent_checkPuppetmaster(string $oid): bool
 {
-    if (!_entityCheck($oid))
+    if (!ent_checkIsPublicKey($oid))
     {
         addLog('need sync puppetmaster', 'warn', __FUNCTION__, '6995b7fd');
         setBootstrapBreak('71', 'Need sync puppetmaster');
@@ -1682,7 +1588,7 @@ function _entityCheckPuppetmaster(string $oid): bool
  * @param array $oidList
  * @return bool
  */
-function _entityCheckSecurityAuthorities(array $oidList): bool
+function ent_checkSecurityAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0)
     {
@@ -1692,7 +1598,7 @@ function _entityCheckSecurityAuthorities(array $oidList): bool
     }
     foreach ($oidList as $nid)
     {
-        if (!_entityCheck($nid))
+        if (!ent_checkIsPublicKey($nid))
         {
             addLog('need sync masters of security ' . $nid, 'warn', __FUNCTION__, '5626b8f');
             setBootstrapBreak('73', 'Need sync masters of security');
@@ -1707,7 +1613,7 @@ function _entityCheckSecurityAuthorities(array $oidList): bool
  * @param array $oidList
  * @return bool
  */
-function _entityCheckCodeAuthorities(array $oidList): bool
+function ent_checkCodeAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0)
     {
@@ -1717,7 +1623,7 @@ function _entityCheckCodeAuthorities(array $oidList): bool
     }
     foreach ($oidList as $nid)
     {
-        if (!_entityCheck($nid))
+        if (!ent_checkIsPublicKey($nid))
         {
             addLog('need sync masters of code ' . $nid, 'warn', __FUNCTION__, '0ff4516d');
             setBootstrapBreak('75', 'Need sync masters of code');
@@ -1732,7 +1638,7 @@ function _entityCheckCodeAuthorities(array $oidList): bool
  * @param array $oidList
  * @return bool
  */
-function _entityCheckTimeAuthorities(array $oidList): bool
+function ent_checkTimeAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0)
     {
@@ -1742,7 +1648,7 @@ function _entityCheckTimeAuthorities(array $oidList): bool
     }
     foreach ($oidList as $nid)
     {
-        if (!_entityCheck($nid))
+        if (!ent_checkIsPublicKey($nid))
         {
             addLog('need sync masters of time ' . $nid, 'warn', __FUNCTION__, '01f5f9b5');
             setBootstrapBreak('77', 'Need sync masters of time');
@@ -1757,7 +1663,7 @@ function _entityCheckTimeAuthorities(array $oidList): bool
  * @param array $oidList
  * @return bool
  */
-function _entityCheckDirectoryAuthorities(array $oidList): bool
+function ent_checkDirectoryAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0)
     {
@@ -1767,7 +1673,7 @@ function _entityCheckDirectoryAuthorities(array $oidList): bool
     }
     foreach ($oidList as $nid)
     {
-        if (!_entityCheck($nid))
+        if (!ent_checkIsPublicKey($nid))
         {
             addLog('need sync masters of directory ' . $nid, 'warn', __FUNCTION__, '8b12fe09');
             setBootstrapBreak('79', 'Need sync masters of directory');
@@ -1783,11 +1689,11 @@ function _entityCheckDirectoryAuthorities(array $oidList): bool
  * @param string $oid
  * @return void
  */
-function _entitySyncPuppetmaster(string $oid): void
+function ent_syncPuppetmaster(string $oid): void
 {
     global $configurationList;
 
-    if (!_entityCheck($oid))
+    if (!ent_checkIsPublicKey($oid))
     {
         $oid = NEBULE_DEFAULT_PUPPETMASTER_EID;
         $configurationList['puppetmaster'] = NEBULE_DEFAULT_PUPPETMASTER_EID;
@@ -1797,13 +1703,13 @@ function _entitySyncPuppetmaster(string $oid): void
     {
         addLog('Write default puppetmaster', 'info', __FUNCTION__, '555ec326');
         $data = FIRST_PUPPETMASTER_PUBLIC_KEY;
-        $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+        $hash = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
         io_objectWrite($data, $hash);
         foreach (FIRST_PUPPETMASTER_LINKS as $data)
             io_linkWrite($oid, $data);
     }
 
-    _entitySyncAuthorities(array($oid));
+    ent_syncAuthorities(array($oid));
 }
 
 /**
@@ -1811,14 +1717,14 @@ function _entitySyncPuppetmaster(string $oid): void
  * @param array $oidList
  * @return void
  */
-function _entitySyncAuthorities(array $oidList): void
+function ent_syncAuthorities(array $oidList): void
 {
     global $nebuleCacheIsPublicKey, $nebuleCacheIsPrivateKey;
 
     foreach ($oidList as $nid) {
         addLog('Sync master entity ' . $nid, 'info', __FUNCTION__, '92e0483f');
-        _objDownloadOnLocations($nid, array());
-        _lnkDownloadOnLocations($nid, array());
+        obj_getDistantContent($nid, array());
+        lnk_getDistantOnLocations($nid, array());
     }
 
     $nebuleCacheIsPublicKey = array();
@@ -1832,7 +1738,7 @@ function _entitySyncAuthorities(array $oidList): void
  * @param string $typemime
  * @return bool
  */
-function _objGenerate_FIXME(string &$data, string $typemime = ''): bool
+function obj_generate_FIXME(string &$data, string $typemime = ''): bool
 {
     if (strlen($data) == 0
         || !getConfiguration('permitWrite')
@@ -1840,31 +1746,31 @@ function _objGenerate_FIXME(string &$data, string $typemime = ''): bool
     )
         return false;
     $dat = date(DATE_ATOM);
-    $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+    $hash = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
     // Ecrit l'objet.
     if (!io_checkNodeHaveContent($hash))
-        _objWriteContent($data, $hash);
+        obj_setContent($data, $hash);
     // Ecrit le lien de hash.
-    $lnk = _lnkGenerateSign(
+    $lnk = lnk_generateSign(
             $dat,
             'l',
             $hash,
-            _objGetNID(getConfiguration('cryptoHashAlgorithm'), getConfiguration('cryptoHashAlgorithm')),
-            _objGetNID('nebule/objet/hash', getConfiguration('cryptoHashAlgorithm'))
+            obj_getNID(getConfiguration('cryptoHashAlgorithm'), getConfiguration('cryptoHashAlgorithm')),
+            obj_getNID('nebule/objet/hash', getConfiguration('cryptoHashAlgorithm'))
     );
-    if ((_lnkVerify($lnk)) == 1)
-        _lnkWrite($lnk);
+    if ((lnk_verify($lnk)) == 1)
+        lnk_write($lnk);
     // Ecrit le lien de type mime.
     if ($typemime != '') {
-        $lnk = _lnkGenerateSign(
+        $lnk = lnk_generateSign(
                 $dat,
                 'l',
                 $hash,
-                _objGetNID($typemime, getConfiguration('cryptoHashAlgorithm')),
-                _objGetNID('nebule/objet/type', getConfiguration('cryptoHashAlgorithm'))
+                obj_getNID($typemime, getConfiguration('cryptoHashAlgorithm')),
+                obj_getNID('nebule/objet/type', getConfiguration('cryptoHashAlgorithm'))
         );
-        if ((_lnkVerify($lnk)) == 1)
-            _lnkWrite($lnk);
+        if ((lnk_verify($lnk)) == 1)
+            lnk_write($lnk);
     }
     return true;
 }
@@ -1877,9 +1783,9 @@ function _objGenerate_FIXME(string &$data, string $typemime = ''): bool
  * @param numeric $maxData
  * @return boolean
  */
-function _objGetLocalContent(string &$nid, string &$data, int $maxData = 0): bool
+function obj_getLocalContent(string &$nid, string &$data, int $maxData = 0): bool
 {
-    if (_objCheckContent($nid))
+    if (obj_checkContent($nid))
     {
         $data = io_objectRead($nid, $maxData);
         return true;
@@ -1895,13 +1801,13 @@ function _objGetLocalContent(string &$nid, string &$data, int $maxData = 0): boo
  * @param array $locations
  * @return boolean
  */
-function _objDownloadOnLocations(string $nid, array $locations = array()): bool
+function obj_getDistantContent(string $nid, array $locations = array()): bool
 {
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteObject')
         || !getConfiguration('permitSynchronizeObject')
-        || !_nodCheckNID($nid, false)
-        || _nodCheckBanned_FIXME($nid)
+        || !nod_checkNID($nid, false)
+        || nod_checkBanned_FIXME($nid)
     )
         return false;
 
@@ -1925,22 +1831,22 @@ function _objDownloadOnLocations(string $nid, array $locations = array()): bool
  * @param string $nid
  * @return boolean
  */
-function _objCheckContent(&$nid): bool
+function obj_checkContent(&$nid): bool
 {
     global $nebuleCachelibrary_o_vr;
 
-    _metrologyCountAdd('ov');
+    metrology_increment('ov');
 
-    if (!_nodCheckNID($nid) || !io_checkNodeHaveContent($nid))
+    if (!nod_checkNID($nid) || !io_checkNodeHaveContent($nid))
         return false;
 
     if (isset($nebuleCachelibrary_o_vr[$nid]))
         return true;
 
     $hash = '';
-    $algo = _nodGetAlgo($nid);
+    $algo = nod_getAlgo($nid);
     if ($algo != '')
-        $hash = _cryptoGetFileHash($nid, $algo);
+        $hash = crypto_getFileHash($nid, $algo);
 
     // If invalid, delete file of the object.
     if ($hash . '.' . $algo != $nid)
@@ -1957,7 +1863,7 @@ function _objCheckContent(&$nid): bool
  * @param $nid
  * @return string
  */
-function _nodGetAlgo(&$nid): string
+function nod_getAlgo(&$nid): string
 {
     strtok($nid, '.');
     $a = strtok('.');
@@ -1973,7 +1879,7 @@ function _nodGetAlgo(&$nid): string
  * @param string $nid
  * @return boolean
  */
-function _objCheckIsPublicKey(string &$nid): bool
+function ent_checkIsPublicKey(string &$nid): bool
 {
     global $nebuleCacheIsPublicKey;
 
@@ -1984,8 +1890,8 @@ function _objCheckIsPublicKey(string &$nid): bool
 
     if ($nid == '0'
         || strlen($nid) < NID_MIN_HASH_SIZE
-        || !_nodCheckNID($nid)
-        || !_objCheckContent($nid)
+        || !nod_checkNID($nid)
+        || !obj_checkContent($nid)
         || !io_checkNodeHaveLink($nid)
     )
     {
@@ -1993,10 +1899,10 @@ function _objCheckIsPublicKey(string &$nid): bool
         return false;
     }
 
-    if (!nebCheckObjTypeMime($nid, 'application/x-pem-file'))
+    if (!obj_checkTypeMime($nid, 'application/x-pem-file'))
         return false;
 
-    $line = nebGetContentAsText_FIXME($nid, 10000);
+    $line = obj_getAsText_FIXME($nid, 10000);
     if (strstr($line, 'BEGIN PUBLIC KEY') !== false)
         $result = true;
     else
@@ -2013,7 +1919,7 @@ function _objCheckIsPublicKey(string &$nid): bool
  * @param $nid
  * @return bool
  */
-function _objCheckIsPrivateKey(&$nid): bool
+function ent_checkIsPrivateKey(&$nid): bool
 {
     global $nebuleCacheIsPrivateKey;
 
@@ -2022,17 +1928,17 @@ function _objCheckIsPrivateKey(&$nid): bool
 
     if ($nid == '0'
         || strlen($nid) < NID_MIN_HASH_SIZE
-        || !_nodCheckNID($nid)
-        || !_objCheckContent($nid)
+        || !nod_checkNID($nid)
+        || !obj_checkContent($nid)
         || !io_checkNodeHaveLink($nid)
     )
         return false;
 
-    nebCreateAsText('application/x-pem-file');
-    if (!nebCheckObjTypeMime($nid, 'application/x-pem-file'))
+    obj_setContentAsText('application/x-pem-file');
+    if (!obj_checkTypeMime($nid, 'application/x-pem-file'))
         return false;
 
-    $line = nebGetContentAsText_FIXME($nid, 10000);
+    $line = obj_getAsText_FIXME($nid, 10000);
     $result = false;
     if (strstr($line, 'BEGIN ENCRYPTED PRIVATE KEY') !== false)
         $result = true;
@@ -2048,11 +1954,11 @@ function _objCheckIsPrivateKey(&$nid): bool
  * @param string $algo
  * @return string
  */
-function _objGetNID(string $data, string $algo = ''): string
+function obj_getNID(string $data, string $algo = ''): string
 {
     if ($algo == '')
         $algo = getConfiguration('cryptoHashAlgorithm');
-    return _cryptoGetDataHash($data, $algo) . '.' . $algo;
+    return crypto_getDataHash($data, $algo) . '.' . $algo;
 }
 
 /**
@@ -2062,7 +1968,7 @@ function _objGetNID(string $data, string $algo = ''): string
  * @param boolean $permitNull
  * @return boolean
  */
-function _nodCheckNID(string &$nid, bool $permitNull = false): bool
+function nod_checkNID(string &$nid, bool $permitNull = false): bool
 {
     // May be null in some case.
     if ($permitNull && $nid == '')
@@ -2102,7 +2008,7 @@ function _nodCheckNID(string &$nid, bool $permitNull = false): bool
  * @param $nid
  * @return boolean
  */
-function _nodCheckBanned_FIXME(&$nid): bool
+function nod_checkBanned_FIXME(&$nid): bool
 {
     global $nebulePublicEntity, $nebuleSecurityAuthorities, $nebuleCacheIsBanned;
 
@@ -2155,7 +2061,7 @@ function _nodCheckBanned_FIXME(&$nid): bool
  * @param string $oid
  * @return bool
  */
-function _objWriteContent(string &$data, string $oid = '0'): bool
+function obj_setContent(string &$data, string $oid = '0'): bool
 {
     if (strlen($data) == 0
         || !getConfiguration('permitWrite')
@@ -2163,7 +2069,7 @@ function _objWriteContent(string &$data, string $oid = '0'): bool
     )
         return false;
 
-    $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+    $hash = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
     if ($oid == '0')
         $oid = $hash;
     elseif ($oid != $hash)
@@ -2186,19 +2092,19 @@ function _objWriteContent(string &$data, string $oid = '0'): bool
  * @param string $nid4
  * @return string
  */
-function _lnkGenerate(string $rc, string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): string
+function lnk_generate(string $rc, string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): string
 {
     if ($req == ''
-        || !_nodCheckNID($nid1)
-        || !_nodCheckNID($nid2, true)
-        || !_nodCheckNID($nid3, true)
-        || !_nodCheckNID($nid4, true)
+        || !nod_checkNID($nid1)
+        || !nod_checkNID($nid2, true)
+        || !nod_checkNID($nid3, true)
+        || !nod_checkNID($nid4, true)
     )
         return '';
 
     $bh = 'nebule:link/'.NEBULE_LIBRARY_PP_LINK_VERSION;
 
-    if ($rc == '' || !_lnkCheckRC($rc))
+    if ($rc == '' || !lnk_checkRC($rc))
         $rc = '0>' . date(DATE_ATOM);
 
     $rl = $req . '>' . $nid1;
@@ -2220,19 +2126,19 @@ function _lnkGenerate(string $rc, string $req, string $nid1, string $nid2 = '', 
  * @param string $bh_bl
  * @return string
  */
-function _lnkSign(string $bh_bl): string
+function lnk_sign(string $bh_bl): string
 {
     global $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
 
     if ($bh_bl == '')
         return '';
 
-    if (!_objCheckIsPublicKey($nebulePublicEntity))
+    if (!ent_checkIsPublicKey($nebulePublicEntity))
     {
         addLog('invalid current entity (public) '.$nebulePublicEntity, 'error', __FUNCTION__, '70e110d7');
         return '';
     }
-    if (!_objCheckIsPrivateKey($nebulePrivateEntity))
+    if (!ent_checkIsPrivateKey($nebulePrivateEntity))
     {
         addLog('invalid current entity (private) '.$nebulePrivateEntity, 'error', __FUNCTION__, 'ca23fd57');
         return '';
@@ -2243,7 +2149,7 @@ function _lnkSign(string $bh_bl): string
         return '';
     }
 
-    $sign = _cryptoAsymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, true);
+    $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, true);
     if ($sign == '')
         return '';
 
@@ -2263,15 +2169,15 @@ function _lnkSign(string $bh_bl): string
  * @param string $nid4
  * @return string
  */
-function _lnkGenerateSign(string $rc, string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): string
+function lnk_generateSign(string $rc, string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): string
 {
     global $nebulePublicEntity;
 
-    $bh_bl = _lnkGenerate($rc, $req, $nid1, $nid2, $nid3, $nid4);
+    $bh_bl = lnk_generate($rc, $req, $nid1, $nid2, $nid3, $nid4);
     if ($bh_bl == '')
         return '';
 
-    $sign = _lnkSign($bh_bl);
+    $sign = lnk_sign($bh_bl);
     if ($sign == '')
         return '';
 
@@ -2301,7 +2207,7 @@ function _lnkGenerateSign(string $rc, string $req, string $nid1, string $nid2 = 
  * @param boolean $restrict
  * @return string
  */
-function _lnkGraphResolvOne_FIXME(string &$nid, &$visited, bool $present = true, bool $synchro = false, bool $restrict = false): string
+function lnk_getGraphResolvOne_FIXME(string &$nid, &$visited, bool $present = true, bool $synchro = false, bool $restrict = false): string
 {
     global $nebuleLocalAuthorities;
 
@@ -2317,7 +2223,7 @@ function _lnkGraphResolvOne_FIXME(string &$nid, &$visited, bool $present = true,
         'bl/rl/nid3' => '0',
         'bl/rl/nid4' => '0',
     );
-    _lnkFind_FIXME($nid, $links, $filter); // Liste les liens de mise à jour de l'objet.
+    lnk_find_FIXME($nid, $links, $filter); // Liste les liens de mise à jour de l'objet.
     $links = array_reverse($links); // Inverse le résultat pour avoir les liens les plus récents en premier.
 
     // Recherche de nouveaux liens.
@@ -2327,7 +2233,7 @@ function _lnkGraphResolvOne_FIXME(string &$nid, &$visited, bool $present = true,
             || !$present
         )
     ) {
-        _lnkDownloadAnywhere($nid);
+        lnk_getDistantAnywhere($nid);
     }
 
     // Supprime les boucles, càd les objets déjà traités.
@@ -2393,7 +2299,7 @@ function _lnkGraphResolvOne_FIXME(string &$nid, &$visited, bool $present = true,
 
     // Parcours les branches.
     foreach ($valinks as $link) {
-        $res = _lnkGraphResolvOne_FIXME($link [6], $visited, $present);
+        $res = lnk_getGraphResolvOne_FIXME($link [6], $visited, $present);
         if ($res != '0') {
             return $res;
         }
@@ -2416,7 +2322,7 @@ function _lnkGraphResolvOne_FIXME(string &$nid, &$visited, bool $present = true,
  * @param array $filter
  * @param false $withinvalid
  */
-function _lnkFind_FIXME(&$nid, &$table, $filter, $withinvalid = false)
+function lnk_find_FIXME(&$nid, &$table, $filter, $withinvalid = false)
 { // Liste et filtre les liens sur des actions et objets dans un ordre déterminé.
     // - $object objet dont les liens sont à lire.
     // - $table table dans laquelle seront retournés les liens.
@@ -2442,7 +2348,7 @@ function _lnkFind_FIXME(&$nid, &$table, $filter, $withinvalid = false)
     $linkdate = array();
     $tmptable = array();
     $i1 = 0;
-    _lnkGetListFilterNid($nid, $tmptable, $bl_rl_nid3, $bl_rl_req, $withinvalid);
+    lnk_getListFilterNid($nid, $tmptable, $bl_rl_nid3, $bl_rl_req, $withinvalid);
     foreach ($tmptable as $n => $t) {
         $linkdate [$n] = $t [3];
     }
@@ -2510,7 +2416,7 @@ function _lnkFind_FIXME(&$nid, &$table, $filter, $withinvalid = false)
  * @param boolean $withinvalid
  * @return null
  */
-function _lnkFindInclusive_FIXME(&$nid, &$table, $action, $srcobj, $dstobj, $metobj, $withinvalid = false): void
+function lnk_findInclusive_FIXME(&$nid, &$table, $action, $srcobj, $dstobj, $metobj, $withinvalid = false): void
 {
     $followXOnSameDate = true; // TODO à supprimer.
 
@@ -2518,7 +2424,7 @@ function _lnkFindInclusive_FIXME(&$nid, &$table, $action, $srcobj, $dstobj, $met
     $tmptable = array();
     $i1 = 0;
 
-    _lnkGetListFilterNid($nid, $tmptable, $metobj, $action, $withinvalid);
+    lnk_getListFilterNid($nid, $tmptable, $metobj, $action, $withinvalid);
 
     foreach ($tmptable as $n => $t) {
         $linkdate [$n] = $t [3];
@@ -2603,7 +2509,7 @@ function _lnkFindInclusive_FIXME(&$nid, &$table, $action, $srcobj, $dstobj, $met
  * @param bool $withInvalidLinks
  * @return void
  */
-function _lnkGetList(string &$nid, array &$result, array $filter, bool $withInvalidLinks = false): void
+function lnk_getList(string &$nid, array &$result, array $filter, bool $withInvalidLinks = false): void
 {
     if ($nid == '0' || !io_checkNodeHaveLink($nid))
         return;
@@ -2618,9 +2524,9 @@ function _lnkGetList(string &$nid, array &$result, array $filter, bool $withInva
     $lines = array();
     io_linksRead($nid, $lines);
     foreach ($lines as $line) {
-        if (_lnkVerify($line)) {
-            $link = _lnkParse($line);
-            if (_lnkTestNotSuppressed($link, $lines) && _lnkFilter($link, $filter))
+        if (lnk_verify($line)) {
+            $link = lnk_parse($line);
+            if (lnk_checkNotSuppressed($link, $lines) && lnk_filterStructure($link, $filter))
                 $result [] = $link;
         }
     }
@@ -2632,15 +2538,15 @@ function _lnkGetList(string &$nid, array &$result, array $filter, bool $withInva
  * @param array $lines
  * @return bool
  */
-function _lnkTestNotSuppressed(array &$link, array &$lines): bool
+function lnk_checkNotSuppressed(array &$link, array &$lines): bool
 {
     foreach ($lines as $line) {
         if (strpos($line, '/x>') === false)
             continue;
-        if (_lnkVerify($line)) {
-            $linkCompare = _lnkParse($line);
+        if (lnk_verify($line)) {
+            $linkCompare = lnk_parse($line);
             if ($linkCompare['bl/rl/req'] == 'x'
-                && _lnkCompareDate($link['bl/rc/mod'], $link['bl/rc/chr'], $linkCompare['bl/rc/mod'], $linkCompare['bl/rc/chr']) < 0
+                && lnk_dateCompare($link['bl/rc/mod'], $link['bl/rc/chr'], $linkCompare['bl/rc/mod'], $linkCompare['bl/rc/chr']) < 0
             )
                 return false;
         }
@@ -2658,7 +2564,7 @@ function _lnkTestNotSuppressed(array &$link, array &$lines): bool
  * @param string $chr2
  * @return int
  */
-function _lnkCompareDate(string $mod1, string $chr1, string $mod2, string $chr2): int
+function lnk_dateCompare(string $mod1, string $chr1, string $mod2, string $chr2): int
 {
     // Convert first date.
     if ($mod1 == '0')
@@ -2689,7 +2595,7 @@ function _lnkCompareDate(string $mod1, string $chr1, string $mod2, string $chr2)
  * @param array $filter
  * @return bool
  */
-function _lnkFilter(array $link, array $filter): bool
+function lnk_filterStructure(array $link, array $filter): bool
 {
     $ok = false;
 
@@ -2757,7 +2663,7 @@ function _lnkFilter(array $link, array $filter): bool
  * @param false $withinvalid
  * @return void
  */
-function _lnkListOnFullFilter_FIXME(string &$nid, array &$result, string $filtreact = '-', string $filtreobj = '', bool $withinvalid = false): void
+function lnk_listOnFullFilter_FIXME(string &$nid, array &$result, string $filtreact = '-', string $filtreobj = '', bool $withinvalid = false): void
 { // Liste et filtre les liens sur des actions et objets dans un ordre indéterminé.
     // - $object objet dont les liens sont à lire.
     // - $table table dans laquelle seront retournés les liens.
@@ -2775,7 +2681,7 @@ function _lnkListOnFullFilter_FIXME(string &$nid, array &$result, string $filtre
     $i1 = 0;
     if ($filtreact == '')
         $filtreact = '-';
-    _lnkGetListFilterNid($nid, $tmptable, $filtreobj, $filtreact, $withinvalid);
+    lnk_getListFilterNid($nid, $tmptable, $filtreobj, $filtreact, $withinvalid);
     foreach ($tmptable as $n => $t) {
         $linkdate [$n] = $t [3];
     }
@@ -2828,9 +2734,9 @@ function _lnkListOnFullFilter_FIXME(string &$nid, array &$result, string $filtre
  * @param false $withInvalidLinks
  * @return void
  */
-function _lnkGetListFilterNid(string &$nid, array &$result, string $filterOnNid = '', string $filterOnReq = '', bool $withInvalidLinks = false): void
+function lnk_getListFilterNid(string &$nid, array &$result, string $filterOnNid = '', string $filterOnReq = '', bool $withInvalidLinks = false): void
 {
-    if (!_nodCheckNID($nid) || !io_checkNodeHaveLink($nid))
+    if (!nod_checkNID($nid) || !io_checkNodeHaveLink($nid))
         return;
 
     // If not permitted, do not list invalid links.
@@ -2842,10 +2748,10 @@ function _lnkGetListFilterNid(string &$nid, array &$result, string $filterOnNid 
     foreach ($lines as $line)
     {
         // Verify link.
-        if (!$withInvalidLinks && !_lnkVerify($line))
+        if (!$withInvalidLinks && !lnk_verify($line))
             continue;
 
-        $linkParse = _lnkParse($line);
+        $linkParse = lnk_parse($line);
 
         // Filter and add link on result.
         if ( ($filterOnReq == '' || $linkParse['bl/rl/req'] == $filterOnReq)
@@ -2866,16 +2772,16 @@ function _lnkGetListFilterNid(string &$nid, array &$result, string $filterOnNid 
  * @param $nid
  * @return void
  */
-function _lnkDownloadAnywhere(string $nid): void
+function lnk_getDistantAnywhere(string $nid): void
 {
     if (!getConfiguration('permitSynchronizeLink')
-        || _nodCheckNID($nid)
+        || nod_checkNID($nid)
     )
         return;
 
     $links = array();
-    $hashType = _objGetNID('nebule/objet/type', getConfiguration('cryptoHashAlgorithm'));
-    $hashLocation = _objGetNID('nebule/objet/entite/localisation', getConfiguration('cryptoHashAlgorithm'));
+    $hashType = obj_getNID('nebule/objet/type', getConfiguration('cryptoHashAlgorithm'));
+    $hashLocation = obj_getNID('nebule/objet/entite/localisation', getConfiguration('cryptoHashAlgorithm'));
     $filter = array(
         'bl/rl/req' => 'l',
         'bl/rl/nid1' => '',
@@ -2883,7 +2789,7 @@ function _lnkDownloadAnywhere(string $nid): void
         'bl/rl/nid3' => $hashType,
         'bl/rl/nid4' => '0',
     );
-    _lnkGetList($hashLocation, $links, $filter);
+    lnk_getList($hashLocation, $links, $filter);
 
     $locationList = array();
     foreach ($links as $link)
@@ -2892,7 +2798,7 @@ function _lnkDownloadAnywhere(string $nid): void
     foreach ($locationList as $location)
     {
         $url = '';
-        if (_objGetLocalContent($location, $url))
+        if (obj_getLocalContent($location, $url))
             io_linkSynchronize($nid, $url);
     }
 }
@@ -2905,13 +2811,13 @@ function _lnkDownloadAnywhere(string $nid): void
  * @param array $locations
  * @return bool
  */
-function _lnkDownloadOnLocations(string $nid, array $locations=array()): bool
+function lnk_getDistantOnLocations(string $nid, array $locations=array()): bool
 {
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteLink')
         || !getConfiguration('permitSynchronizeLink')
-        || !_nodCheckNID($nid, false)
-        || _nodCheckBanned_FIXME($nid)
+        || !nod_checkNID($nid, false)
+        || nod_checkBanned_FIXME($nid)
     )
         return false;
 
@@ -2929,7 +2835,7 @@ function _lnkDownloadOnLocations(string $nid, array $locations=array()): bool
  * @param string $bh
  * @return bool
  */
-function _lnkCheckBH(string &$bh): bool
+function lnk_checkBH(string &$bh): bool
 {
     if (strlen($bh) > 15) return false;
 
@@ -2940,8 +2846,8 @@ function _lnkCheckBH(string &$bh): bool
     if (strtok('/') !== false) return false;
 
     // Check RF and RV.
-    if (!_lnkCheckRF($rf)) return false;
-    if (!_lnkCheckRV($rv)) return false;
+    if (!lnk_checkRF($rf)) return false;
+    if (!lnk_checkRV($rv)) return false;
 
     return true;
 }
@@ -2952,7 +2858,7 @@ function _lnkCheckBH(string &$bh): bool
  * @param string $rf
  * @return bool
  */
-function _lnkCheckRF(string &$rf): bool
+function lnk_checkRF(string &$rf): bool
 {
     if (strlen($rf) > 11) return false;
 
@@ -2974,7 +2880,7 @@ function _lnkCheckRF(string &$rf): bool
  * @param string $rv
  * @return bool
  */
-function _lnkCheckRV(string &$rv): bool
+function lnk_checkRV(string &$rv): bool
 {
     if (strlen($rv) > 3) return false;
 
@@ -2995,7 +2901,7 @@ function _lnkCheckRV(string &$rv): bool
  * @param string $bl
  * @return bool
  */
-function _lnkCheckBL(string &$bl): bool
+function lnk_checkBL(string &$bl): bool
 {
     if (strlen($bl) > 4096) return false; // TODO à revoir.
 
@@ -3006,8 +2912,8 @@ function _lnkCheckBL(string &$bl): bool
     if (strtok('/') !== false) return false;
 
     // Check RC and RL.
-    if (!_lnkCheckRC($rc)) return false;
-    if (!_lnkCheckRL($rl)) return false;
+    if (!lnk_checkRC($rc)) return false;
+    if (!lnk_checkRL($rl)) return false;
 
     return true;
 }
@@ -3018,7 +2924,7 @@ function _lnkCheckBL(string &$bl): bool
  * @param string $rc
  * @return bool
  */
-function _lnkCheckRC(string &$rc): bool
+function lnk_checkRC(string &$rc): bool
 {
     if (strlen($rc) > 27) return false;
 
@@ -3041,7 +2947,7 @@ function _lnkCheckRC(string &$rc): bool
  * @param string $rl
  * @return bool
  */
-function _lnkCheckRL(string &$rl): bool
+function lnk_checkRL(string &$rl): bool
 {
     if (strlen($rl) > 4096) return false; // TODO à revoir.
 
@@ -3061,11 +2967,11 @@ function _lnkCheckRL(string &$rl): bool
 
     // --- --- --- --- --- --- --- --- ---
     // Check REQ, NID1, NID2, NID3 and NID4.
-    if (!_lnkCheckREQ($req)) return false;
-    if (!_nodCheckNID($rl1nid1, false)) return false;
-    if (!_nodCheckNID($rl1nid2, true)) return false;
-    if (!_nodCheckNID($rl1nid3, true)) return false;
-    if (!_nodCheckNID($rl1nid4, true)) return false;
+    if (!lnk_checkREQ($req)) return false;
+    if (!nod_checkNID($rl1nid1, false)) return false;
+    if (!nod_checkNID($rl1nid2, true)) return false;
+    if (!nod_checkNID($rl1nid3, true)) return false;
+    if (!nod_checkNID($rl1nid4, true)) return false;
 
     return true;
 }
@@ -3076,7 +2982,7 @@ function _lnkCheckRL(string &$rl): bool
  * @param string $req
  * @return bool
  */
-function _lnkCheckREQ(string &$req): bool
+function lnk_checkREQ(string &$req): bool
 {
     if ($req != 'l'
         && $req != 'f'
@@ -3103,7 +3009,7 @@ function _lnkCheckREQ(string &$req): bool
  * @param string $bs
  * @return bool
  */
-function _lnkCheckBS(string &$bh, string &$bl, string &$bs): bool
+function lnk_checkBS(string &$bh, string &$bl, string &$bs): bool
 {
     if (strlen($bs) > 4096) return false; // TODO à revoir.
 
@@ -3113,7 +3019,7 @@ function _lnkCheckBS(string &$bh, string &$bl, string &$bs): bool
     if (strtok('/') !== false) return false;
 
     // Check content RS 1 NID 1 : hash.algo.size
-    if (!_lnkCheckRS($rs, $bh, $bl)) return false;
+    if (!lnk_checkRS($rs, $bh, $bl)) return false;
 
     return true;
 }
@@ -3126,7 +3032,7 @@ function _lnkCheckBS(string &$bh, string &$bl, string &$bs): bool
  * @param string $bl
  * @return bool
  */
-function _lnkCheckRS(string &$rs, string &$bh, string &$bl): bool
+function lnk_checkRS(string &$rs, string &$bh, string &$bl): bool
 {
     if (strlen($rs) > 4096) return false; // TODO à revoir.
 
@@ -3141,8 +3047,8 @@ function _lnkCheckRS(string &$rs, string &$bh, string &$bl): bool
 
     // --- --- --- --- --- --- --- --- ---
     // Check content RS 1 NID 1 : hash.algo.size
-    if (!_nodCheckNID($nid, false)) return false;
-    if (!_lnkCheckSIG($bh, $bl, $sig, $nid)) return false;
+    if (!nod_checkNID($nid, false)) return false;
+    if (!lnk_checkSIG($bh, $bl, $sig, $nid)) return false;
 
     return true;
 }
@@ -3156,7 +3062,7 @@ function _lnkCheckRS(string &$rs, string &$bh, string &$bl): bool
  * @param string $nid
  * @return boolean
  */
-function _lnkCheckSIG(string &$bh, string &$bl, string &$sig, string &$nid): bool
+function lnk_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): bool
 {
     if (strlen($sig) > 4096) return false; // TODO à revoir.
 
@@ -3183,10 +3089,10 @@ function _lnkCheckSIG(string &$bh, string &$bl, string &$sig, string &$nid): boo
     if (strtok('.') !== false) return false;
 
     if (!getConfiguration('permitCheckSignOnVerify')) return true;
-    if (_objCheckContent($nid)) {
+    if (obj_checkContent($nid)) {
         $data = $bh . '_' . $bl;
-        $hash = _cryptoGetDataHash($data, $algo . '.' . $size);
-        return _cryptoAsymmetricVerify($sign, $hash, $nid);
+        $hash = crypto_getDataHash($data, $algo . '.' . $size);
+        return crypto_asymmetricVerify($sign, $hash, $nid);
     }
 
     return false;
@@ -3201,7 +3107,7 @@ function _lnkCheckSIG(string &$bh, string &$bl, string &$sig, string &$nid): boo
  * @param string $size
  * @return bool
  */
-function _lnkCheckhashalgo(string &$algo, string &$size): bool
+function lnk_checkhashalgo(string &$algo, string &$size): bool
 {
     // TODO
     return true;
@@ -3223,7 +3129,7 @@ function _lnkCheckhashalgo(string &$algo, string &$size): bool
  * @param string $link
  * @return boolean
  */
-function _lnkVerify(string $link): bool
+function lnk_verify(string $link): bool
 {
     if (strlen($link) > 4096) return false; // TODO à revoir.
     if (strlen($link) == 0) return false;
@@ -3237,9 +3143,9 @@ function _lnkVerify(string $link): bool
     if (strtok('_') !== false) return false;
 
     // Check BH, BL and BS.
-    if (!_lnkCheckBH($bh)) return false;
-    if (!_lnkCheckBL($bl)) return false;
-    if (!_lnkCheckBS($bh, $bl, $bs)) return false;
+    if (!lnk_checkBH($bh)) return false;
+    if (!lnk_checkBL($bl)) return false;
+    if (!lnk_checkBS($bh, $bl, $bs)) return false;
 
     return true;
 }
@@ -3250,7 +3156,7 @@ function _lnkVerify(string $link): bool
  * @param string $link
  * @return array
  */
-function _lnkParse(string $link): array
+function lnk_parse(string $link): array
 {
     // Extract blocs from link L : BH_BL_BS
     $bh = strtok(trim($link), '_');
@@ -3335,16 +3241,16 @@ function _lnkParse(string $link): array
  * @param $link
  * @return boolean
  */
-function _lnkWrite($link): bool
+function lnk_write($link): bool
 {
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteLink')
-        || !_lnkVerify($link)
+        || !lnk_verify($link)
     )
         return false;
 
     // Extract link parts.
-    $linkParsed = _lnkParse($link);
+    $linkParsed = lnk_parse($link);
 
     // Write link into parts files.
     $result = io_linkWrite($linkParsed['bl/rl/nid1'], $link);
@@ -3405,8 +3311,8 @@ function io_checkLinkFolder(): bool
 
     // Check writeability.
     if (getConfiguration('permitWrite') && getConfiguration('permitWriteLink')) {
-        $data = _cryptoGetPseudoRandom(2048);
-        $name = LOCAL_LINKS_FOLDER . '/writest' . bin2hex(_cryptoGetPseudoRandom(8));
+        $data = crypto_getPseudoRandom(2048);
+        $name = LOCAL_LINKS_FOLDER . '/writest' . bin2hex(crypto_getPseudoRandom(8));
         if (file_put_contents($name, $data) === false) {
             addLog('I/O error on folder for links.', 'error', __FUNCTION__, 'f72e3a86');
             setBootstrapBreak('23', "Library i/o link's folder error");
@@ -3451,8 +3357,8 @@ function io_checkObjectFolder(): bool
 
     // Check writeability.
     if (getConfiguration('permitWrite') && getConfiguration('permitWriteObject')) {
-        $data = _cryptoGetPseudoRandom(2048);
-        $name = LOCAL_OBJECTS_FOLDER . '/writest' . bin2hex(_cryptoGetPseudoRandom(8));
+        $data = crypto_getPseudoRandom(2048);
+        $name = LOCAL_OBJECTS_FOLDER . '/writest' . bin2hex(crypto_getPseudoRandom(8));
         if (file_put_contents($name, $data) === false) {
             addLog('I/O error on folder for objects.', 'error', __FUNCTION__, '1327da69');
             setBootstrapBreak('25', "Library i/o object's folder error");
@@ -3550,7 +3456,7 @@ function io_linksRead(string &$nid, array &$lines, int $maxLinks = 0): array
 {
     $count = 0;
 
-    if (!_nodCheckNID($nid) || !io_checkNodeHaveLink($nid))
+    if (!nod_checkNID($nid) || !io_checkNodeHaveLink($nid))
         return $lines;
     if ($maxLinks == 0)
         $maxLinks = getConfiguration('ioReadMaxLinks');
@@ -3560,7 +3466,7 @@ function io_linksRead(string &$nid, array &$lines, int $maxLinks = 0): array
     {
         foreach ($links as $link) {
             $lines [$count] = $link;
-            _metrologyCountAdd('lr');
+            metrology_increment('lr');
             $count++;
             if ($count > $maxLinks)
                 break 1;
@@ -3616,10 +3522,10 @@ function io_linkSynchronize(string $nid, string $location): bool
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteLink')
         || !getConfiguration('permitSynchronizeLink')
-        || !_nodCheckNID($nid)
+        || !nod_checkNID($nid)
         || $location == ''
         || !is_string($location) // TODO renforcer la vérification de l'URL.
-        || _nodCheckBanned_FIXME($nid)
+        || nod_checkBanned_FIXME($nid)
     )
         return false;
 
@@ -3630,7 +3536,7 @@ function io_linkSynchronize(string $nid, string $location): bool
     if ($resource !== false) {
         while (feof($resource) !== false) {
             $line = trim(fgets($resource));
-            _lnkWrite($line);
+            lnk_write($line);
         }
         fclose($resource);
     }
@@ -3650,13 +3556,13 @@ function io_objectRead(string $nid, int $maxData = 0): string
 {
     if ($maxData == 0)
         $maxData = getConfiguration('ioReadMaxData');
-    if (!_nodCheckNID($nid) || !io_checkNodeHaveContent($nid))
+    if (!nod_checkNID($nid) || !io_checkNodeHaveContent($nid))
         return '';
 
     $result = file_get_contents(LOCAL_OBJECTS_FOLDER . '/' . $nid, false, null, 0, $maxData);
     if ($result === false)
         $result = '';
-    _metrologyCountAdd('or');
+    metrology_increment('or');
 
     return $result;
 }
@@ -3700,10 +3606,10 @@ function io_objectSynchronize(string $nid, string $location): bool
     if (!getConfiguration('permitWrite')
         || !getConfiguration('permitWriteObject')
         || !getConfiguration('permitSynchronizeObject')
-        || !_nodCheckNID($nid)
+        || !nod_checkNID($nid)
         || $location == ''
         || !is_string($location) // TODO renforcer la vérification de l'URL.
-        || _nodCheckBanned_FIXME($nid)
+        || nod_checkBanned_FIXME($nid)
     )
         return false;
 
@@ -3714,7 +3620,7 @@ function io_objectSynchronize(string $nid, string $location): bool
         return false;
 
     // Téléchargement de l'objet via un fichier temporaire.
-    $tmpId = bin2hex(_cryptoGetPseudoRandom(8));
+    $tmpId = bin2hex(crypto_getPseudoRandom(8));
     $tmpIdName = 'io_objectSynchronize' . $tmpId . '-' . $nid;
     $distobj = fopen($location . '/o/' . $nid, 'r');
     if ($distobj) {
@@ -3724,9 +3630,9 @@ function io_objectSynchronize(string $nid, string $location): bool
                 fputs($localobj, $line);
             }
             fclose($localobj);
-            $algo = _nodGetAlgo($nid);
+            $algo = nod_getAlgo($nid);
             if ($algo !== false)
-                $hash = _cryptoGetFileHash($tmpIdName, _cryptoGetTranslatedHashAlgo($algo));
+                $hash = crypto_getFileHash($tmpIdName, crypto_getTranslatedHashAlgo($algo));
             else
                 $hash = 'invalid';
 
@@ -3823,7 +3729,7 @@ function io_close(): void
  * @param string $data
  * @return string
  */
-function _filterPrinteableString($data): string
+function _filterPrinteableString(string $data): string
 {
     return preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', $data);
 }
@@ -3841,7 +3747,7 @@ function _filterPrinteableString($data): string
  * @param bool $loop
  * @return string
  */
-function _cryptoGetTranslatedHashAlgo(string $algo, bool $loop = true): string
+function crypto_getTranslatedHashAlgo(string $algo, bool $loop = true): string
 {
     if ($algo == '')
         $algo = getConfiguration('cryptoHashAlgorithm');
@@ -3867,7 +3773,7 @@ function _cryptoGetTranslatedHashAlgo(string $algo, bool $loop = true): string
     {
         if($loop) {
             addLog('cryptoHashAlgorithm configuration have an unknown value (' . $algo . ')', 'error', __FUNCTION__, 'b7627066');
-            $translatedAlgo = _cryptoGetTranslatedHashAlgo(LIST_OPTIONS_DEFAULT_VALUE['cryptoHashAlgorithm'], false);
+            $translatedAlgo = crypto_getTranslatedHashAlgo(LIST_OPTIONS_DEFAULT_VALUE['cryptoHashAlgorithm'], false);
         }
         else
             $translatedAlgo = 'sha512';
@@ -3884,9 +3790,9 @@ function _cryptoGetTranslatedHashAlgo(string $algo, bool $loop = true): string
  * @param string $data
  * @return string
  */
-function _cryptoGetDataHash(string &$data, string $algo = ''): string
+function crypto_getDataHash(string &$data, string $algo = ''): string
 {
-    return hash(_cryptoGetTranslatedHashAlgo($algo), $data);
+    return hash(crypto_getTranslatedHashAlgo($algo), $data);
 }
 
 /**
@@ -3898,9 +3804,9 @@ function _cryptoGetDataHash(string &$data, string $algo = ''): string
  * @param string $file
  * @return string
  */
-function _cryptoGetFileHash(string $file, string $algo = ''): string
+function crypto_getFileHash(string $file, string $algo = ''): string
 {
-    return hash_file(_cryptoGetTranslatedHashAlgo($algo), LOCAL_OBJECTS_FOLDER . '/' . $file);
+    return hash_file(crypto_getTranslatedHashAlgo($algo), LOCAL_OBJECTS_FOLDER . '/' . $file);
 }
 
 /**
@@ -3910,7 +3816,7 @@ function _cryptoGetFileHash(string $file, string $algo = ''): string
  * @param int $count
  * @return string
  */
-function _cryptoGetPseudoRandom($count = 32): string
+function crypto_getPseudoRandom(int $count = 32): string
 {
     global $nebuleServerEntity;
 
@@ -3955,10 +3861,10 @@ function _cryptoGetPseudoRandom($count = 32): string
  * @param string $password
  * @return bool
  */
-function _cryptoGetNewPKey(string $asymmetricAlgo, string $hashAlgo, string &$publicKey, string &$privateKey, string $password): bool
+function crypto_getNewPKey(string $asymmetricAlgo, string $hashAlgo, string &$publicKey, string &$privateKey, string $password): bool
 {
     // Prepare values.
-    $digestAlgo = _cryptoGetTranslatedHashAlgo($hashAlgo, true);
+    $digestAlgo = crypto_getTranslatedHashAlgo($hashAlgo, true);
     $config = array( 'digest_alg' => $digestAlgo, );
     switch ($asymmetricAlgo) {
         case 'rsa.1024' :
@@ -4033,23 +3939,23 @@ function _cryptoGetNewPKey(string $asymmetricAlgo, string $hashAlgo, string &$pu
  * @param bool $entityCheck
  * @return string
  */
-function _cryptoAsymmetricEncrypt(string $data, string $privateOid = '', string $password = '', bool $entityCheck = true): string
+function crypto_asymmetricEncrypt(string $data, string $privateOid = '', string $password = '', bool $entityCheck = true): string
 {
     if ($privateOid == ''
-        || ($entityCheck && !_objCheckIsPrivateKey($privateOid))
+        || ($entityCheck && !ent_checkIsPrivateKey($privateOid))
         || $password == ''
         || $data == ''
     )
         return '';
 
     $privateCertificat = '';
-    if (!_objGetLocalContent($privateOid, $privateCertificat, 10000))
+    if (!obj_getLocalContent($privateOid, $privateCertificat, 10000))
         return '';
     $private_key = openssl_pkey_get_private($privateCertificat, $password);
     if ($private_key === false)
         return '';
     $binarySignature = '';
-    $hashData = _cryptoGetDataHash($data);
+    $hashData = crypto_getDataHash($data);
     $binHashData = pack("H*", $hashData);
     $ok = openssl_private_encrypt($binHashData, $binarySignature, $private_key, OPENSSL_PKCS1_PADDING);
     openssl_free_key($private_key);
@@ -4070,14 +3976,14 @@ function _cryptoAsymmetricEncrypt(string $data, string $privateOid = '', string 
  * @param string $nid
  * @return boolean
  */
-function _cryptoAsymmetricVerify(string $sign, string $hash, string $nid): bool
+function crypto_asymmetricVerify(string $sign, string $hash, string $nid): bool
 {
     // Read signer's public key.
     $cert = io_objectRead($nid, 10000);
     $pubkeyid = openssl_pkey_get_public($cert);
     if ($pubkeyid === false) return false;
 
-    _metrologyCountAdd('lv');
+    metrology_increment('lv');
 
     // Encoding sign before check.
     $binsign = pack('H*', $sign);
@@ -4203,7 +4109,7 @@ function getBootstrapSwitchApplication(): void
         $arg = trim(filter_input(INPUT_POST, ARG_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
     }
     if (is_string($arg)
-        && _nodCheckNID($arg, true)
+        && nod_checkNID($arg, true)
         && ($arg == '0'
             || $arg == '1'
             || io_checkNodeHaveLink($arg)
@@ -4226,9 +4132,9 @@ function getBootstrapSwitchApplication(): void
             $activated = true;
         }
         if (!$activated) {
-            $refActivated = _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_ACTIVE, getConfiguration('cryptoHashAlgorithm'));
+            $refActivated = obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_ACTIVE, getConfiguration('cryptoHashAlgorithm'));
             $links = array();
-            _lnkFindInclusive_FIXME($arg, $links, 'f', $arg, $refActivated, $arg);
+            lnk_findInclusive_FIXME($arg, $links, 'f', $arg, $refActivated, $arg);
 
             if (sizeof($links) != 0) {
                 $signer = '';
@@ -4291,9 +4197,9 @@ function findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstanceSleep): 
     // Try to find on session.
     session_start();
     if (isset($_SESSION['bootstrapLibrariesID'])
-        && _nodCheckNID($_SESSION['bootstrapLibrariesID'])
+        && nod_checkNID($_SESSION['bootstrapLibrariesID'])
         && io_checkNodeHaveLink($_SESSION['bootstrapLibrariesID'])
-        && _objCheckContent($_SESSION['bootstrapLibrariesID'])
+        && obj_checkContent($_SESSION['bootstrapLibrariesID'])
         && isset($_SESSION['bootstrapLibrariesInstances'][$_SESSION['bootstrapLibrariesID']])
         && $_SESSION['bootstrapLibrariesInstances'][$_SESSION['bootstrapLibrariesID']] != ''
     ) {
@@ -4304,16 +4210,16 @@ function findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstanceSleep): 
 
     // Try to find with links.
     if ($bootstrapLibraryID == '') {
-        $bootstrapLibraryID = nebFindByRef_FIXME(
-            _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE, getConfiguration('cryptoHashAlgorithm')),
-            _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE, getConfiguration('cryptoHashAlgorithm')),
+        $bootstrapLibraryID = nod_findByRef_FIXME(
+            obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE, getConfiguration('cryptoHashAlgorithm')),
+            obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE, getConfiguration('cryptoHashAlgorithm')),
             false);
 
         addLog('find nebule library ' . $bootstrapLibraryID, 'info', __FUNCTION__, '90ee41fc');
 
-        if (!_nodCheckNID($bootstrapLibraryID)
+        if (!nod_checkNID($bootstrapLibraryID)
             || !io_checkNodeHaveLink($bootstrapLibraryID)
-            || !_objCheckContent($bootstrapLibraryID)
+            || !obj_checkContent($bootstrapLibraryID)
         ) {
             $bootstrapLibraryID = '';
             setBootstrapBreak('31', 'Finding nebule library error.');
@@ -4373,11 +4279,11 @@ function findApplication():void
 
     // Enregistre l'identifiant de session pour le suivi d'un utilisateur.
     $sessionId = session_id();
-    addLog('session hash id ' . _cryptoGetDataHash($sessionId), 'info', __FUNCTION__, '36ebd66b');
+    addLog('session hash id ' . crypto_getDataHash($sessionId), 'info', __FUNCTION__, '36ebd66b');
 
     // Vérifie l'ID de départ de l'application mémorisé.
     if (isset($_SESSION['bootstrapApplicationStartID'])
-        && _nodCheckNID($_SESSION['bootstrapApplicationStartID'])
+        && nod_checkNID($_SESSION['bootstrapApplicationStartID'])
     ) {
         // Mémorise l'ID de départ de l'application en cours.
         $bootstrapApplicationStartID = $_SESSION['bootstrapApplicationStartID'];
@@ -4401,18 +4307,18 @@ function findApplication():void
         // Si demande de mise à jour de l'application en cours d'usage.
         if ($bootstrapUpdate) {
             // Recherche la dernière application depuis l'objet de référence sur lui-même.
-            $bootstrapApplicationID = nebFindByRef_FIXME(
+            $bootstrapApplicationID = nod_findByRef_FIXME(
                 $bootstrapApplicationStartID,
-                _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS, getConfiguration('cryptoHashAlgorithm')),
+                obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS, getConfiguration('cryptoHashAlgorithm')),
                 false);
         } else {
             // Vérifie l'ID de l'application mémorisé.
             if (isset($_SESSION['bootstrapApplicationID'])
                 && $_SESSION['bootstrapApplicationID'] != ''
-                && _nodCheckNID($_SESSION['bootstrapApplicationID'])
+                && nod_checkNID($_SESSION['bootstrapApplicationID'])
                 && $_SESSION['bootstrapApplicationID'] == '0'
                 || (io_checkNodeHaveLink($_SESSION['bootstrapApplicationID'])
-                    && _objCheckContent($_SESSION['bootstrapApplicationID'])
+                    && obj_checkContent($_SESSION['bootstrapApplicationID'])
                 )
             ) {
                 // Mémorise l'ID de l'application en cours.
@@ -4453,12 +4359,12 @@ function findApplication():void
             // Application 0 de sélection des applications.
             $bootstrapApplicationStartID = '1';
             $bootstrapApplicationID = '1';
-        } elseif (_nodCheckNID($bootstrapSwitchApplication)
+        } elseif (nod_checkNID($bootstrapSwitchApplication)
             && io_checkNodeHaveLink($bootstrapSwitchApplication)
         ) {
-            $refAppsID = _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS, getConfiguration('cryptoHashAlgorithm'));
+            $refAppsID = obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS, getConfiguration('cryptoHashAlgorithm'));
             $links = array();
-            _lnkFindInclusive_FIXME($refAppsID, $links, 'f', $refAppsID, $bootstrapSwitchApplication, $refAppsID);
+            lnk_findInclusive_FIXME($refAppsID, $links, 'f', $refAppsID, $bootstrapSwitchApplication, $refAppsID);
 
             // Vérifie que l'application est autorisée.
             if (sizeof($links) != 0) {
@@ -4467,9 +4373,9 @@ function findApplication():void
 
                 // Vérifie l'application non dé-sérialisée.
                 if (isset($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
-                    && _nodCheckNID($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+                    && nod_checkNID($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
                     && io_checkNodeHaveLink($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
-                    && _objCheckContent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+                    && obj_checkContent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
                     && isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID])
                     && $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID] != ''
                     && isset($_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID])
@@ -4487,9 +4393,9 @@ function findApplication():void
                     $bootstrapApplicationTraductionInstanceSleep = $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID];
                 } else {
                     // Sinon recherche la dernière application depuis l'objet de référence sur lui-même.
-                    $bootstrapApplicationID = nebFindByRef_FIXME(
+                    $bootstrapApplicationID = nod_findByRef_FIXME(
                         $bootstrapApplicationStartID,
-                        _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS, getConfiguration('cryptoHashAlgorithm')),
+                        obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS, getConfiguration('cryptoHashAlgorithm')),
                         false);
                 }
 
@@ -4518,9 +4424,9 @@ function findApplication():void
             $bootstrapApplicationStartID = $forceValue;
 
             // Recherche la dernière application depuis l'objet de référence sur lui-même.
-            $bootstrapApplicationID = nebFindByRef_FIXME(
+            $bootstrapApplicationID = nod_findByRef_FIXME(
                 $bootstrapApplicationStartID,
-                _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS, getConfiguration('cryptoHashAlgorithm')),
+                obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS, getConfiguration('cryptoHashAlgorithm')),
                 false);
         } else {
             $bootstrapApplicationStartID = '0';
@@ -4537,9 +4443,9 @@ function findApplication():void
         && $bootstrapApplicationInstanceSleep == ''
     ) {
         // Lit les liens de non pré-chargement pour l'application.
-        $refNoPreload = _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_DIRECT, getConfiguration('cryptoHashAlgorithm'));
+        $refNoPreload = obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_DIRECT, getConfiguration('cryptoHashAlgorithm'));
         $links = array();
-        _lnkFindInclusive_FIXME($bootstrapApplicationStartID, $links, 'f', $bootstrapApplicationStartID, $refNoPreload, $bootstrapApplicationStartID);
+        lnk_findInclusive_FIXME($bootstrapApplicationStartID, $links, 'f', $bootstrapApplicationStartID, $refNoPreload, $bootstrapApplicationStartID);
 
         // Filtre sur les autorités locales.
         $bootstrapApplicationNoPreload = false;
@@ -4621,12 +4527,12 @@ function getBootstrapCheckFingerprint(): void
 {
     global $nebuleLocalAuthorities;
     $data = file_get_contents(BOOTSTRAP_FILE_NAME);
-    $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+    $hash = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
     unset($data);
     // Recherche les liens de validation.
-    $hashRef = _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP, getConfiguration('cryptoHashAlgorithm'));
+    $hashRef = obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP, getConfiguration('cryptoHashAlgorithm'));
     $links = array();
-    _lnkFindInclusive_FIXME($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
+    lnk_findInclusive_FIXME($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
     // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
     $ok = false;
     foreach ($links as $link) {
@@ -5196,7 +5102,7 @@ function bootstrapHtmlTop()
 {
 global $nebuleServerEntity;
 
-$name = nebReadEntityFullName_FIXME($nebuleServerEntity);
+$name = ent_getFullName_FIXME($nebuleServerEntity);
 ?>
 <body>
 <div class="layout-header">
@@ -5298,7 +5204,7 @@ function bootstrapDisplayOnBreak(): void
     ksort($bootstrapBreak);
     foreach ($bootstrapBreak as $number => $message)
         echo '- [' . $number . '] <span class="error">' . $message . '</span>'."<br />\n";
-    echo 'tB=' . _metrologyTimerGet('tB') . "<br />\n";
+    echo 'tB=' . metrology_getTimer('tB') . "<br />\n";
     if ($bootstrapRescueMode)
         echo "RESCUE mode<br />\n";
     if ($bootstrapFlush)
@@ -5306,7 +5212,7 @@ function bootstrapDisplayOnBreak(): void
     if (sizeof($bootstrapBreak) != 0 && isset($bootstrapBreak[12]))
         echo "<a href=\"?a=0\">&gt; Return to application 0</a><br />\n";
     $sessionId = session_id();
-    echo '<a href="?f">&gt; Flush PHP session</a> (' . substr(_cryptoGetDataHash($sessionId), 0, 6) . ')' . "\n";
+    echo '<a href="?f">&gt; Flush PHP session</a> (' . substr(crypto_getDataHash($sessionId), 0, 6) . ')' . "\n";
     echo '</div>'."\n";
 
     echo '<div class="parts">'."\n";
@@ -5331,8 +5237,8 @@ function bootstrapDisplayOnBreak(): void
         flush();
 
         // Chargement de la bibliothèque PHP POO.
-        echo "tL=" . _metrologyTimerGet('tL') . "<br />\n";
-        echo 'library RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE, getConfiguration('cryptoHashAlgorithm')) . "<br />\n";
+        echo "tL=" . metrology_getTimer('tL') . "<br />\n";
+        echo 'library RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE, getConfiguration('cryptoHashAlgorithm')) . "<br />\n";
 
         if (!is_a($nebuleInstance, 'nebule')) {
             echo "Not loaded.\n";
@@ -5532,13 +5438,13 @@ function bootstrapDisplayOnBreak(): void
 
             // Vérifie le bootstrap. @todo ajouter vérification de marquage de danger.
             $data = file_get_contents(BOOTSTRAP_FILE_NAME);
-            $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+            $hash = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
             unset($data);
             echo 'bootstrap &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $hash . ' ';
             // Recherche les liens de validation.
-            $hashRef = _objGetNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP, getConfiguration('cryptoHashAlgorithm'));
+            $hashRef = obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP, getConfiguration('cryptoHashAlgorithm'));
             $links = array();
-            _lnkFindInclusive_FIXME($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
+            lnk_findInclusive_FIXME($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
             // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
             $ok = false;
             foreach ($links as $link) {
@@ -5558,10 +5464,10 @@ function bootstrapDisplayOnBreak(): void
 
             // Affichage des valeurs de métrologie.
             echo "<br />\n";
-            echo 'L(r)=' . _metrologyCountGet('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead() . ' ';
-            echo 'L(v)=' . _metrologyCountGet('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify() . ' ';
-            echo 'O(r)=' . _metrologyCountGet('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead() . ' ';
-            echo 'O(v)=' . _metrologyCountGet('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
+            echo 'L(r)=' . metrology_get('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead() . ' ';
+            echo 'L(v)=' . metrology_get('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify() . ' ';
+            echo 'O(r)=' . metrology_get('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead() . ' ';
+            echo 'O(v)=' . metrology_get('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
             echo 'L(c)=' . $nebuleInstance->getCacheLinkSize() . ' ';
             echo 'O(c)=' . $nebuleInstance->getCacheObjectSize() . ' ';
             echo 'E(c)=' . $nebuleInstance->getCacheEntitySize() . ' ';
@@ -5585,11 +5491,11 @@ function bootstrapDisplayOnBreak(): void
         application ID &nbsp;&nbsp;: <?php echo $bootstrapApplicationID; ?>
     <?php
     echo '</div>'."\n";
-    _metrologyTimerSet('tE');
+    metrology_setTimer('tE');
     ?>
 
     <span class="partstitle">#- end <?php echo BOOTSTRAP_NAME; ?></span><br/>
-    tE=<?php echo _metrologyTimerGet('tE'); ?><br/>
+    tE=<?php echo metrology_getTimer('tE'); ?><br/>
     <?php
 
     bootstrapHtmlBottom();
@@ -5626,7 +5532,7 @@ function bootstrapInlineDisplayOnBreak()
 
     echo 'nebule loading library : ' . $bootstrapLibraryID . "<br />\n";
     echo 'Application loading : ' . $bootstrapApplicationID . "<br />\n";
-    echo 'tB=' . _metrologyTimerGet('tB') . "<br />\n";
+    echo 'tB=' . metrology_getTimer('tB') . "<br />\n";
     echo "</p></div>\n";
 }
 
@@ -5678,7 +5584,7 @@ function bootstrapDisplayPreloadApplication()
 
     echo '<div class="preload">'."\n";
     echo "Please wait...<br/>\n";
-    echo 'tB=' . _metrologyTimerGet('tB') . "<br />\n";
+    echo 'tB=' . metrology_getTimer('tB') . "<br />\n";
     echo '</div>'."\n";
     flush();
 
@@ -5688,7 +5594,7 @@ function bootstrapDisplayPreloadApplication()
     Load nebule library POO<br/>
     ID=<?php echo $bootstrapLibraryID; ?><br/>
     <?php
-    echo 'tL=' . _metrologyTimerGet('tL') . "<br />\n";
+    echo 'tL=' . metrology_getTimer('tL') . "<br />\n";
     echo '</div>'."\n";
     flush();
 
@@ -5743,8 +5649,8 @@ function bootstrapDisplayPreloadApplication()
 
     </span><br/>
     <?php
-    _metrologyTimerSet('tP');
-    echo 'tP=' . _metrologyTimerGet('tP') . "<br />\n";
+    metrology_setTimer('tP');
+    echo 'tP=' . metrology_getTimer('tP') . "<br />\n";
     echo '</div>'."\n";
     flush();
 
@@ -5813,7 +5719,7 @@ function getBootstrapNeedFirstSynchronization(): bool
         && is_file(LOCAL_ENTITY_FILE)
     ) {
         $serverEntite = filter_var(strtok(trim(file_get_contents(LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-        if (!_entityCheck($serverEntite)) {
+        if (!ent_checkIsPublicKey($serverEntite)) {
             setBootstrapBreak('62', 'Local server entity error');
             return true;
         }
@@ -5897,7 +5803,7 @@ function bootstrapFirstDisplay1Breaks(): void
     foreach ($bootstrapBreak as $number => $message)
         echo '- [' . $number . '] <span class="error">' . $message . '</span>' . "<br />\n";
 
-    echo 'tB=' . _metrologyTimerGet('tB') . "<br />\n";
+    echo 'tB=' . metrology_getTimer('tB') . "<br />\n";
     echo 'nebule library : ' . NEBULE_LIBRARY_PP_VERSION . ' PHP PP' . "<br />\n";
     if ($bootstrapRescueMode)
         echo "RESCUE<br />\n";
@@ -5981,7 +5887,7 @@ function bootstrapFirstDisplay3Objects(): bool
     echo '<span class="partstitle">#3 needed objects</span><br/>'."\n";
 
     foreach (FIRST_LOCALISATIONS as $data) {
-        $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+        $hash = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
         if (!io_checkNodeHaveContent($hash)) {
             addLog('need create objects ' . $hash, 'warn', __FUNCTION__, 'ca195598');
             echo '.';
@@ -5992,7 +5898,7 @@ function bootstrapFirstDisplay3Objects(): bool
         }
     }
     foreach (FIRST_RESERVED_OBJECTS as $data) {
-        $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+        $hash = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
         if (!io_checkNodeHaveContent($hash)) {
             addLog('need create objects ' . $hash, 'warn', __FUNCTION__, 'fc68d2ff');
             echo '.';
@@ -6052,24 +5958,24 @@ function bootstrapFirstDisplay4Puppetmaster(): bool
             $ok = false;
         } else {
             $argOID = trim(' '.filter_input(INPUT_GET, ARG_FIRST_PUPPETMASTER_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            if (_entityCheck($argOID)) {
+            if (ent_checkIsPublicKey($argOID)) {
                 $firstAlternativePuppetmasterEid = $argOID;
             }
             if (filter_has_var(INPUT_GET, ARG_FIRST_PUPPETMASTER_LOC))
             {
                 echo 'try alternative puppetmaster : ' . $argOID . ' ';
-                if (_nodCheckNID($argOID, false))
+                if (nod_checkNID($argOID, false))
                 {
                     $firstAlternativePuppetmasterEid = $argOID;
                     $argLoc = trim(' '.filter_input(INPUT_GET, ARG_FIRST_PUPPETMASTER_LOC, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
                     if (strlen($argLoc) != 0 && filter_var($argLoc, FILTER_VALIDATE_URL) !== false)
                     {
                         echo 'sync...';
-                        _objDownloadOnLocations($argOID, array($argLoc));
-                        _lnkDownloadOnLocations($argOID, array($argLoc));
+                        obj_getDistantContent($argOID, array($argLoc));
+                        lnk_getDistantOnLocations($argOID, array($argLoc));
                     }
                 }
-                if (!_entityCheck($argOID)) {
+                if (!ent_checkIsPublicKey($argOID)) {
                     addLog('unable to find alternative puppetmaster oid', 'error', __FUNCTION__, '102c9011');
                     echo " <span class=\"error\">invalid!</span>\n";
                     $argLoc = '';
@@ -6106,19 +6012,19 @@ function bootstrapFirstDisplay5SyncAuthorities(): bool
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#5 synchronizing authorities</span><br/>'."\n";
 
-    $puppetmaster = _entityGetPuppetmaster();
-    $securityAuthorities = _entityGetSecurityAuthorities(true);
-    $codeAuthorities = _entityGetCodeAuthorities(true);
-    $timeAuthorities = _entityGetTimeAuthorities(true);
-    $directoryAuthorities = _entityGetDirectoryAuthorities(true);
+    $puppetmaster = ent_getPuppetmaster();
+    $securityAuthorities = ent_getSecurityAuthorities(true);
+    $codeAuthorities = ent_getCodeAuthorities(true);
+    $timeAuthorities = ent_getTimeAuthorities(true);
+    $directoryAuthorities = ent_getDirectoryAuthorities(true);
 
     echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ';
-    if (!_entityCheckPuppetmaster($puppetmaster))
+    if (!ent_checkPuppetmaster($puppetmaster))
     {
         echo 'sync... ';
-        _entitySyncPuppetmaster($puppetmaster);
+        ent_syncPuppetmaster($puppetmaster);
     }
-    if (_entityCheckPuppetmaster($puppetmaster))
+    if (ent_checkPuppetmaster($puppetmaster))
     {
         echo $puppetmaster . ' ';
         echo 'ok';
@@ -6132,13 +6038,13 @@ function bootstrapFirstDisplay5SyncAuthorities(): bool
     $nebuleLocalAuthorities[0] = $puppetmaster;
 
     echo 'sync for masters references';
-    _lnkDownloadOnLocations(NEBULE_NID_SECURITY_AUTHORITY_REFERENCE, array());
+    lnk_getDistantOnLocations(NEBULE_NID_SECURITY_AUTHORITY_REFERENCE, array());
     echo '.';
-    _lnkDownloadOnLocations(NEBULE_NID_CODE_AUTHORITY_REFERENCE, array());
+    lnk_getDistantOnLocations(NEBULE_NID_CODE_AUTHORITY_REFERENCE, array());
     echo '.';
-    _lnkDownloadOnLocations(NEBULE_NID_TIME_AUTHORITY_REFERENCE, array());
+    lnk_getDistantOnLocations(NEBULE_NID_TIME_AUTHORITY_REFERENCE, array());
     echo '.';
-    _lnkDownloadOnLocations(NEBULE_NID_DIRECTORY_AUTHORITY_REFERENCE, array());
+    lnk_getDistantOnLocations(NEBULE_NID_DIRECTORY_AUTHORITY_REFERENCE, array());
     echo '.';
     echo "<br/>\n";
     flush();
@@ -6146,12 +6052,12 @@ function bootstrapFirstDisplay5SyncAuthorities(): bool
     echo 'security master &nbsp;: ';
     if (sizeof($securityAuthorities) != 0)
     {
-        if (!_entityCheckSecurityAuthorities($securityAuthorities))
+        if (!ent_checkSecurityAuthorities($securityAuthorities))
         {
             echo 'sync... ';
-            _entitySyncAuthorities($securityAuthorities);
+            ent_syncAuthorities($securityAuthorities);
         }
-        if (_entityCheckSecurityAuthorities($securityAuthorities))
+        if (ent_checkSecurityAuthorities($securityAuthorities))
         {
             foreach ($securityAuthorities as $authority)
                 echo $authority . ' ';
@@ -6170,12 +6076,12 @@ function bootstrapFirstDisplay5SyncAuthorities(): bool
     echo 'code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
     if (sizeof($codeAuthorities) != 0)
     {
-        if (!_entityCheckCodeAuthorities($codeAuthorities))
+        if (!ent_checkCodeAuthorities($codeAuthorities))
         {
             echo 'sync... ';
-            _entitySyncAuthorities($codeAuthorities);
+            ent_syncAuthorities($codeAuthorities);
         }
-        if (_entityCheckCodeAuthorities($codeAuthorities))
+        if (ent_checkCodeAuthorities($codeAuthorities))
         {
             foreach ($codeAuthorities as $authority)
                 echo $authority . ' ';
@@ -6194,12 +6100,12 @@ function bootstrapFirstDisplay5SyncAuthorities(): bool
     echo 'time master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
     if (sizeof($timeAuthorities) != 0)
     {
-        if (!_entityCheckTimeAuthorities($timeAuthorities))
+        if (!ent_checkTimeAuthorities($timeAuthorities))
         {
             echo 'sync... ';
-            _entitySyncAuthorities($timeAuthorities);
+            ent_syncAuthorities($timeAuthorities);
         }
-        if (_entityCheckTimeAuthorities($timeAuthorities))
+        if (ent_checkTimeAuthorities($timeAuthorities))
         {
             foreach ($timeAuthorities as $authority)
                 echo $authority . ' ';
@@ -6218,12 +6124,12 @@ function bootstrapFirstDisplay5SyncAuthorities(): bool
     echo 'directory master : ';
     if (sizeof($directoryAuthorities) != 0)
     {
-        if (!_entityCheckDirectoryAuthorities($directoryAuthorities))
+        if (!ent_checkDirectoryAuthorities($directoryAuthorities))
         {
             echo 'sync... ';
-            _entitySyncAuthorities($directoryAuthorities);
+            ent_syncAuthorities($directoryAuthorities);
         }
-        if (_entityCheckDirectoryAuthorities($directoryAuthorities))
+        if (ent_checkDirectoryAuthorities($directoryAuthorities))
         {
             foreach ($directoryAuthorities as $authority)
                 echo $authority . ' ';
@@ -6262,11 +6168,11 @@ function bootstrapFirstDisplay6SyncObjects(): bool
     echo '<span class="partstitle">#6 synchronizing objets</span><br/>'."\n";
 
     $refApps = REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS;
-    $refAppsID = _objGetNID($refApps, getConfiguration('cryptoHashAlgorithm'));
+    $refAppsID = obj_getNID($refApps, getConfiguration('cryptoHashAlgorithm'));
     $refLib = REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE;
-    $refLibID = _objGetNID($refLib, getConfiguration('cryptoHashAlgorithm'));
+    $refLibID = obj_getNID($refLib, getConfiguration('cryptoHashAlgorithm'));
     $refBoot = REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP;
-    $refBootID = _objGetNID($refBoot, getConfiguration('cryptoHashAlgorithm'));
+    $refBootID = obj_getNID($refBoot, getConfiguration('cryptoHashAlgorithm'));
 
     // Si la bibliothèque ne se charge pas correctement, fait une première synchronisation des entités.
     if (!io_checkNodeHaveContent($refAppsID)
@@ -6280,8 +6186,8 @@ function bootstrapFirstDisplay6SyncObjects(): bool
         echo 'objects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
         foreach (FIRST_LOCALISATIONS as $data)
         {
-            $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-            _lnkDownloadOnLocations($hash, FIRST_LOCALISATIONS);
+            $hash = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
+            lnk_getDistantOnLocations($hash, FIRST_LOCALISATIONS);
             echo '.';
         }
         flush();
@@ -6289,36 +6195,36 @@ function bootstrapFirstDisplay6SyncObjects(): bool
         // Ecrit les objets réservés.
         foreach (FIRST_RESERVED_OBJECTS as $data)
         {
-            $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
-            _lnkDownloadOnLocations($hash, FIRST_LOCALISATIONS);
+            $hash = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
+            lnk_getDistantOnLocations($hash, FIRST_LOCALISATIONS);
             echo '.';
         }
         flush();
 
         $data = REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS;
-        $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+        $hash = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
         io_objectWrite($data, $hash);
 
         $data = REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE;
-        $hash = _objGetNID($data, getConfiguration('cryptoHashAlgorithm'));
+        $hash = obj_getNID($data, getConfiguration('cryptoHashAlgorithm'));
         io_objectWrite($data, $hash);
         echo "<br />\nbootstrap start &nbsp;&nbsp;&nbsp;:" . $refBoot . ' ';
         flush();
 
-        _lnkDownloadOnLocations($refBootID, FIRST_LOCALISATIONS);
+        lnk_getDistantOnLocations($refBootID, FIRST_LOCALISATIONS);
         echo "<br />\nlibrary start &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:" . $refLib . ' ';
         flush();
 
         // Recherche par référence.
-        _lnkDownloadOnLocations($refLibID, FIRST_LOCALISATIONS);
-        $lastID = nebFindByRef_FIXME(
+        lnk_getDistantOnLocations($refLibID, FIRST_LOCALISATIONS);
+        $lastID = nod_findByRef_FIXME(
             $refLibID,
             $refLibID,
             false);
         echo "<br />\nsynchronization &nbsp;&nbsp;&nbsp;:" . $lastID . ' ';
         if ($lastID != '0')
         {
-            _objDownloadOnLocations($lastID, FIRST_LOCALISATIONS);
+            obj_getDistantContent($lastID, FIRST_LOCALISATIONS);
         } else {
             echo '<span id="error">ERROR!</span>';
             $ok = false;
@@ -6326,12 +6232,12 @@ function bootstrapFirstDisplay6SyncObjects(): bool
 
         echo "<br />\napplications list &nbsp;:" . $refAppsID . ' ';
         flush();
-        _lnkDownloadOnLocations($refAppsID, FIRST_LOCALISATIONS);
+        lnk_getDistantOnLocations($refAppsID, FIRST_LOCALISATIONS);
         echo "<br />\napplication list &nbsp;&nbsp;:";
 
         // Pour chaque application, faire une synchronisation.
         $links = array();
-        _lnkFindInclusive_FIXME($refAppsID, $links, 'f', $refAppsID, '', $refAppsID, false);
+        lnk_findInclusive_FIXME($refAppsID, $links, 'f', $refAppsID, '', $refAppsID, false);
 
         // Tri sur autorités locales.
         foreach ($links as $i => $link)
@@ -6364,30 +6270,30 @@ function bootstrapFirstDisplay6SyncObjects(): bool
             echo $appID . ' ';
 
             // Recherche par référence.
-            $lastID = nebFindByRef_FIXME(
+            $lastID = nod_findByRef_FIXME(
                 $appID,
                 $refAppsID,
                 false);
             addLog('find app ' . $appID . ' as ' . $lastID, 'info', __FUNCTION__, '4cc18a65');
             if ($lastID != '0')
             {
-                _objDownloadOnLocations($lastID, FIRST_LOCALISATIONS);
-                _lnkDownloadOnLocations($lastID, FIRST_LOCALISATIONS);
+                obj_getDistantContent($lastID, FIRST_LOCALISATIONS);
+                lnk_getDistantOnLocations($lastID, FIRST_LOCALISATIONS);
                 echo ' ';
                 // Cherche le nom.
-                $nameID = nebFindObjType_FIXME(
+                $nameID = nod_getType_FIXME(
                     $lastID,
                     $refName);
                 if ($nameID == '0')
                 {
-                    $nameID = nebFindObjType_FIXME(
+                    $nameID = nod_getType_FIXME(
                         $appID,
                         $refName);
                 }
                 if ($nameID != '0')
                 {
-                    _objDownloadOnLocations($nameID, FIRST_LOCALISATIONS);
-                    _lnkDownloadOnLocations($nameID, FIRST_LOCALISATIONS);
+                    obj_getDistantContent($nameID, FIRST_LOCALISATIONS);
+                    lnk_getDistantOnLocations($nameID, FIRST_LOCALISATIONS);
                 }
             } else {
                 echo '<span id="error">ERROR!</span>';
@@ -6448,7 +6354,7 @@ function bootstrapFirstDisplay7Subordination(): bool
             $ok = false;
         } else {
             $argOID = trim(' '.filter_input(INPUT_GET, ARG_FIRST_SUBORD_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            if (_nodCheckNID($argOID, false))
+            if (nod_checkNID($argOID, false))
             {
                 echo 'try alternative puppetmaster : ' . $argOID . ' ';
                 $firstSubordinationEid = $argOID;
@@ -6456,8 +6362,8 @@ function bootstrapFirstDisplay7Subordination(): bool
                 if (strlen($argLoc) != 0 && filter_var($argLoc, FILTER_VALIDATE_URL) !== false)
                 {
                     echo 'sync...';
-                    _objDownloadOnLocations($argOID, array($argLoc));
-                    _lnkDownloadOnLocations($argOID, array($argLoc));
+                    obj_getDistantContent($argOID, array($argLoc));
+                    lnk_getDistantOnLocations($argOID, array($argLoc));
                 }
             } else {
                 addLog('unable to find subordination oid', 'error', __FUNCTION__, '5cd18917');
@@ -6597,7 +6503,7 @@ function bootstrapFirstDisplay9LocaleEntity(): bool
         $nebulePublicEntity = '0';
         $nebulePrivateEntity = '0';
         // Génère une nouvelle entité.
-        _entityGenerate(
+        ent_generate(
             getConfiguration('cryptoAsymmetricAlgorithm'),
             getConfiguration('cryptoHashAlgorithm'),
             $nebulePublicEntity,
@@ -6655,11 +6561,11 @@ function bootstrapFirstDisplay9LocaleEntity(): bool
         $name = substr($name . 'robott', 0, FIRST_GENERATED_NAME_SIZE);
 
         // Enregistrement du nom.
-        nebCreateAsText($name);
-        $refHashName = _objGetNID('nebule/objet/nom', getConfiguration('cryptoHashAlgorithm'));
-        $hashName = _objGetNID($name, getConfiguration('cryptoHashAlgorithm'));
-        $newlink = _lnkGenerateSign('', 'l', $nebulePublicEntity, $hashName, $refHashName);
-        _lnkWrite($newlink);
+        obj_setContentAsText($name);
+        $refHashName = obj_getNID('nebule/objet/nom', getConfiguration('cryptoHashAlgorithm'));
+        $hashName = obj_getNID($name, getConfiguration('cryptoHashAlgorithm'));
+        $newlink = lnk_generateSign('', 'l', $nebulePublicEntity, $hashName, $refHashName);
+        lnk_write($newlink);
 
         ?>
 
@@ -7114,10 +7020,10 @@ function bootstrapLogMetrology()
     if (is_a($nebuleInstance, 'nebule')) {
         addLog('Mp=' . $memory . 'Mb'
             . $timers
-            . ' Lr=' . _metrologyCountGet('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead()
-            . ' Lv=' . _metrologyCountGet('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify()
-            . ' Or=' . _metrologyCountGet('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead()
-            . ' Ov=' . _metrologyCountGet('ov') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify()
+            . ' Lr=' . metrology_get('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead()
+            . ' Lv=' . metrology_get('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify()
+            . ' Or=' . metrology_get('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead()
+            . ' Ov=' . metrology_get('ov') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify()
             . ' (PP+POO) -'
             . ' LC=' . $nebuleInstance->getCacheLinkSize()
             . ' OC=' . $nebuleInstance->getCacheObjectSize()
@@ -7130,10 +7036,10 @@ function bootstrapLogMetrology()
     } else {
         addLog('Mp=' . $memory . 'Mb'
             . $timers
-            . ' Lr=' . _metrologyCountGet('lr')
-            . ' Lv=' . _metrologyCountGet('lv')
-            . ' Or=' . _metrologyCountGet('or')
-            . ' Ov=' . _metrologyCountGet('ov')
+            . ' Lr=' . metrology_get('lr')
+            . ' Lv=' . metrology_get('lv')
+            . ' Or=' . metrology_get('or')
+            . ' Ov=' . metrology_get('ov')
             . ' (PP)',
             'info',
             __FUNCTION__,
@@ -7143,7 +7049,7 @@ function bootstrapLogMetrology()
 
 function main()
 {
-    if (!libraryInit())
+    if (!lib_init())
         setBootstrapBreak('21', 'Library init error');
 
     getBootstrapUserBreak();
@@ -7156,17 +7062,17 @@ function main()
     getBootstrapSwitchApplication();
 
     setPermitOpenFileCode();
-    _metrologyTimerSet('tB');
+    metrology_setTimer('tB');
 
     $bootstrapLibraryID = '';
     $bootstrapLibraryInstanceSleep = '';
     findLibraryPOO($bootstrapLibraryID, $bootstrapLibraryInstanceSleep);
     loadLibraryPOO($bootstrapLibraryID, $bootstrapLibraryInstanceSleep);
-    _metrologyTimerSet('tL');
+    metrology_setTimer('tL');
     findApplication();
 
     displayRouter($needFirstSynchronization, $bootstrapLibraryID);
-    _metrologyTimerSet('tA');
+    metrology_setTimer('tA');
     bootstrapLogMetrology();
 }
 
