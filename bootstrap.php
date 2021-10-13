@@ -1182,7 +1182,7 @@ function nod_getType_FIXME(&$object, $type)
         'bl/rl/nid3' => $hashtype,
         'bl/rl/nid4' => '0',
     );
-    lnk_find_FIXME($object, $table, $filter);
+    lnk_getList($object, $table, $filter);
     foreach ($table as $itemtable) {
         if (($itemtable [2] == $nebulePublicEntity) && ($itemtable [7] == $hashtype) && ($itemtable [5] == $object) && ($itemtable [4] == 'l')) {
             $objdst = $itemtable [6];
@@ -2205,7 +2205,7 @@ function lnk_getGraphResolvOne_FIXME(string &$nid, &$visited, bool $present = tr
         'bl/rl/nid3' => '0',
         'bl/rl/nid4' => '0',
     );
-    lnk_find_FIXME($nid, $links, $filter); // Liste les liens de mise à jour de l'objet.
+    lnk_getList($nid, $links, $filter); // Liste les liens de mise à jour de l'objet.
     $links = array_reverse($links); // Inverse le résultat pour avoir les liens les plus récents en premier.
 
     // Recherche de nouveaux liens.
@@ -2293,85 +2293,6 @@ function lnk_getGraphResolvOne_FIXME(string &$nid, &$visited, bool $present = tr
         return $nid;
     } else {
         return '0'; // Bout de branche parce que sans branche avec objet présent.
-    }
-}
-
-/**
- * Link -
- *
- * @param $nid
- * @param array $table
- * @param array $filter
- * @param false $withinvalid
- */
-function lnk_find_FIXME(&$nid, &$table, $filter, $withinvalid = false)
-{ // Liste et filtre les liens sur des actions et objets dans un ordre déterminé.
-    // - $object objet dont les liens sont à lire.
-    // - $table table dans laquelle seront retournés les liens.
-    // - $action filtre sur l'action.
-    // - $srcobj filtre sur un objet source.
-    // - $dstobj filtre sur un objet destination.
-    // - $metobj filtre sur un objet meta.
-    // - $withinvalid optionnel pour autoriser la lecture des liens invalides.
-    //
-    // Les liens sont triés par ordre chronologique et les liens marqués comme supprimés sont retirés de la liste.
-    //
-    // Version non inclusive, càd liens x de l'entité courante valable pour tous les liens ciblés.
-    global $nebulePublicEntity;
-
-    $followXOnSameDate = true; // TODO à supprimer.
-
-    $bl_rl_req = $filter['bl/rl/req'];
-    $bl_rl_nid1 = $filter['bl/rl/nid1'];
-    $bl_rl_nid2 = $filter['bl/rl/nid2'];
-    $bl_rl_nid3 = $filter['bl/rl/nid3'];
-    $bl_rl_nid4 = $filter['bl/rl/nid4'];
-
-    $linkdate = array();
-    $tmptable = array();
-    $i1 = 0;
-    lnk_getListFilterNid($nid, $tmptable, $bl_rl_nid3, $bl_rl_req, $withinvalid);
-    foreach ($tmptable as $n => $t) {
-        $linkdate [$n] = $t [3];
-    }
-    array_multisort($linkdate, SORT_STRING, SORT_ASC, $tmptable); // Tri par date.
-    foreach ($tmptable as $tline) {
-        if ($tline [4] == 'x')
-            continue 1; // Suppression de l'affichage des liens x.
-        if ($bl_rl_req != '' && $tline [4] != $bl_rl_req)
-            continue 1;
-        if ($bl_rl_nid1 != '' && $tline [5] != $bl_rl_nid1)
-            continue 1;
-        if ($bl_rl_nid2 != '' && $tline [6] != $bl_rl_nid2)
-            continue 1;
-        if ($bl_rl_nid3 != '' && $tline [7] != $bl_rl_nid3)
-            continue 1;
-        if ($bl_rl_nid4 != '' && $tline [8] != $bl_rl_nid4) // TODO à vérifier
-            continue 1;
-        foreach ($tmptable as $vline) {
-            if (($vline [4] == 'x') && ($tline [4] != 'x') && ($tline [5] == $vline [5]) && ($tline [6] == $vline [6]) && ($tline [7] == $vline [7]) && (($vline [2] == $tline [2]) || ($vline [2] == $nebulePublicEntity)) && ((($followXOnSameDate) && (strtotime($tline [3]) < strtotime($vline [3]))) || (strtotime($tline [3]) <= strtotime($vline [3]))))
-                continue 2;
-        }
-        foreach ($table as $vline) // Suppression de l'affichage des liens en double, même à des dates différentes.
-        {
-            if (($tline [2] == $vline [2]) && ($tline [4] == $vline [4]) && ($tline [5] == $vline [5]) && ($vline [9] == 1 || $vline [9] == -1) && ($tline [6] == $vline [6]) && ($tline [7] == $vline [7]))
-                continue 2;
-        }
-        // Remplissage de la table des résultats.
-        $table [$i1] [0] = $tline [0];
-        $table [$i1] [1] = $tline [1];
-        $table [$i1] [2] = $tline [2];
-        $table [$i1] [3] = $tline [3];
-        $table [$i1] [4] = $tline [4];
-        $table [$i1] [5] = $tline [5];
-        $table [$i1] [6] = $tline [6];
-        $table [$i1] [7] = $tline [7];
-        $table [$i1] [8] = $tline [8];
-        $table [$i1] [9] = $tline [9];
-        $table [$i1] [10] = $tline [10];
-        $table [$i1] [11] = $tline [11];
-        $table [$i1] [12] = $tline [12];
-        $i1++;
     }
 }
 
@@ -4052,7 +3973,70 @@ function bootstrap_getUpdate():void
 }
 
 /**
- * Lit si demande de l'utilisateur d'un changement d'application.
+ * Application - Check OID for an application.
+ * @param string $oid
+ * @return bool
+ */
+function app_checkOid(string $oid): bool
+{
+    if (!is_string($oid)
+        || (!nod_checkNID($oid, false)
+            && $oid != '0'
+            && $oid != '1'
+            && $oid != '2'
+        )
+        || !io_checkNodeHaveLink($oid)
+        || !io_checkNodeHaveContent($oid)
+    )
+        return false;
+
+    // TODO add content check...
+
+    return true;
+}
+
+/**
+ * Application - Get if an application is activated.
+ * @param string $oid
+ * @return bool
+ */
+function app_getActivated(string $oid): bool
+{
+    global $nebuleLocalAuthorities;
+
+    // Check for defaults app.
+    if ($oid == '0'
+        || $oid == '1'
+        || $oid == '2'
+        || $oid == getConfiguration('defaultApplication')
+    )
+        return true;
+
+    // Check with links.
+    $refActivated = obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_ACTIVE, getConfiguration('cryptoHashAlgorithm'));
+    $links = array();
+    $filter = array(
+        'bl/rl/req' => 'f',
+        'bl/rl/nid1' => $oid,
+        'bl/rl/nid2' => $refActivated,
+        'bl/rl/nid3' => '0',
+        'bl/rl/nid4' => '0',
+    );
+    lnk_getList($oid, $links,$filter);
+    foreach ($links as $link)
+    {
+        foreach ($nebuleLocalAuthorities as $authority)
+        {
+            if ($link['bs/rs/nid'] == $authority)
+                return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Read arg to switch application.
  */
 function bootstrap_getSwitchApplication(): void
 {
@@ -4067,53 +4051,13 @@ function bootstrap_getSwitchApplication(): void
     } elseif (filter_has_var(INPUT_POST, ARG_SWITCH_APPLICATION)) {
         $arg = trim(filter_input(INPUT_POST, ARG_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
     }
-    if (is_string($arg)
-        && nod_checkNID($arg, true)
-        && ($arg == '0'
-            || $arg == '1'
-            || io_checkNodeHaveLink($arg)
-        )
-    ) {
-        $activated = false;
-        // Recherche si l'application est activée par l'entité instance de serveur.
-        // Ou si c'est l'application par défaut.
-        // Ou si c'est l'application 0.
-        if ($arg == getConfiguration('defaultApplication')) {
-            $activated = true;
-        }
-        if ($arg == '0') {
-            $activated = true;
-        }
-        if ($arg == '1') {
-            $activated = true;
-        }
-        if ($arg == '2') {
-            $activated = true;
-        }
-        if (!$activated) {
-            $refActivated = obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_ACTIVE, getConfiguration('cryptoHashAlgorithm'));
-            $links = array();
-            lnk_findInclusive_FIXME($arg, $links, 'f', $arg, $refActivated, $arg);
 
-            if (sizeof($links) != 0) {
-                $signer = '';
-                $authority = '';
-                foreach ($links as $link) {
-                    if ($link[2] == $nebuleServerEntity) {
-                        // Si le lien est valide, active l'application.
-                        $activated = true;
-                        break;
-                    }
-                }
-                unset($signer, $authority);
-            }
-            unset($links, $refActivated);
-        }
+    if (!app_checkOid($arg))
+        return;
 
-        if ($activated) {
-            $bootstrapSwitchApplication = $arg;
-            log_add('ask switch application to ' . $bootstrapSwitchApplication, 'info', __FUNCTION__, 'd1a3f3f9');
-        }
+    if (app_getActivated($arg)) {
+        $bootstrapSwitchApplication = $arg;
+        log_add('ask switch application to ' . $bootstrapSwitchApplication, 'info', __FUNCTION__, 'd1a3f3f9');
     }
 }
 
@@ -4495,8 +4439,8 @@ function bootstrap_getCheckFingerprint(): void
     // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
     $ok = false;
     foreach ($links as $link) {
-        foreach ($nebuleLocalAuthorities as $autority) {
-            if ($link[2] == $autority) {
+        foreach ($nebuleLocalAuthorities as $authority) {
+            if ($link[2] == $authority) {
                 $ok = true;
                 break 2;
             }
@@ -5407,8 +5351,8 @@ function bootstrap_displayOnBreak(): void
             // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
             $ok = false;
             foreach ($links as $link) {
-                foreach ($nebuleLocalAuthorities as $autority) {
-                    if ($link[2] == $autority) {
+                foreach ($nebuleLocalAuthorities as $authority) {
+                    if ($link[2] == $authority) {
                         $ok = true;
                         break 2;
                     }
