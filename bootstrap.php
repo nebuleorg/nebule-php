@@ -375,28 +375,28 @@ $metrologyLibraryPOOConvertationCache = 0;
  ------------------------------------------------------------------------------------------
  */
 
-const NEBULE_LIBRARY_PP_VERSION = '020211018';
-const NEBULE_LIBRARY_PP_LINK_VERSION = '2:0';
-const NEBULE_DEFAULT_PUPPETMASTER_EID = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
-const NEBULE_DEFAULT_PUPPETMASTER_LOCATION = 'http://puppetmaster.nebule.org';
-const NEBULE_NID_SECURITY_AUTHORITY_REFERENCE = 'a4b210d4fb820a5b715509e501e36873eb9e27dca1dd591a98a5fc264fd2238adf4b489d.none.288';
-const NEBULE_NID_CODE_AUTHORITY_REFERENCE = '2b9dd679451eaca14a50e7a65352f959fc3ad55efc572dcd009c526bc01ab3fe304d8e69.none.288';
-const NEBULE_NID_TIME_AUTHORITY_REFERENCE = 'bab7966fd5b483f9556ac34e4fac9f778d0014149f196236064931378785d81cae5e7a6e.none.288';
-const NEBULE_NID_DIRECTORY_AUTHORITY_REFERENCE = '0a4c1e7930a65672379616a2637b84542049b416053ac0d9345300189791f7f8e05f3ed4.none.288';
-const LOCAL_ENVIRONMENT_FILE = 'c';
-const LOCAL_ENTITY_FILE = 'e';
-const LOCAL_LINKS_FOLDER = 'l';
-const LOCAL_OBJECTS_FOLDER = 'o';
-const LOCAL_HISTORY_FILE = 'h';
-const NID_MIN_HASH_SIZE = 64;
-const NID_MAX_HASH_SIZE = 8192;
-const NID_MIN_ALGO_SIZE = 2;
-const NID_MAX_ALGO_SIZE = 12;
-const FIRST_GENERATED_NAME_SIZE = 6;
-const FIRST_GENERATED_PASSWORD_SIZE = 14;
-const FIRST_RELOAD_DELAY = 3000;
-const FIRST_LOCALISATIONS = array('http://code.master.nebule.org', 'http://puppetmaster.nebule.org', 'http://security.master.nebule.org',);
-const FIRST_PUPPETMASTER_PUBLIC_KEY =
+const LIB_NEBULE_LIBRARY_PP_VERSION = '020211018';
+const LIB_LINK_VERSION = '2:0';
+const LIB_DEFAULT_PUPPETMASTER_EID = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
+const LIB_DEFAULT_PUPPETMASTER_LOCATION = 'http://puppetmaster.nebule.org';
+const LIB_NID_SECURITY_AUTHORITY_REFERENCE = 'a4b210d4fb820a5b715509e501e36873eb9e27dca1dd591a98a5fc264fd2238adf4b489d.none.288';
+const LIB_NID_CODE_AUTHORITY_REFERENCE = '2b9dd679451eaca14a50e7a65352f959fc3ad55efc572dcd009c526bc01ab3fe304d8e69.none.288';
+const LIB_NID_TIME_AUTHORITY_REFERENCE = 'bab7966fd5b483f9556ac34e4fac9f778d0014149f196236064931378785d81cae5e7a6e.none.288';
+const LIB_NID_DIRECTORY_AUTHORITY_REFERENCE = '0a4c1e7930a65672379616a2637b84542049b416053ac0d9345300189791f7f8e05f3ed4.none.288';
+const LIB_LOCAL_ENVIRONMENT_FILE = 'c';
+const LIB_LOCAL_ENTITY_FILE = 'e';
+const LIB_LOCAL_LINKS_FOLDER = 'l';
+const LIB_LOCAL_OBJECTS_FOLDER = 'o';
+const LIB_LOCAL_HISTORY_FILE = 'h';
+const LIB_NID_MIN_HASH_SIZE = 64;
+const LIB_NID_MAX_HASH_SIZE = 8192;
+const LIB_NID_MIN_ALGO_SIZE = 2;
+const LIB_NID_MAX_ALGO_SIZE = 12;
+const LIB_FIRST_GENERATED_NAME_SIZE = 6;
+const LIB_FIRST_GENERATED_PASSWORD_SIZE = 14;
+const LIB_FIRST_RELOAD_DELAY = 3000;
+const LIB_FIRST_LOCALISATIONS = array('http://code.master.nebule.org', 'http://puppetmaster.nebule.org', 'http://security.master.nebule.org',);
+const LIB_FIRST_PUPPETMASTER_PUBLIC_KEY =
 '-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAudMrAyvG3uqI9JLZRtqi
 nlgiF6hAp/whKWlujNXE+x0p6ibJEaIAPS+VyR4Lw9819UqObpMI2fa+Ql8/dJPM
@@ -411,7 +411,7 @@ QMqFriycSa9a4U4SyXomUAqj9jBzn1dmPN+cvC+2ByqoRdGKkJQZAnLcfpN+G+lt
 /GJe8Xgw01QlOFGT8PV9IvZek96PociLNqoyOhye7q5/Ik0fsEEIzYW2jvLGnrkv
 6dEOw+BEVa0QiNx/ju9yzHMCAwEAAQ==
 -----END PUBLIC KEY-----'."\n";
-const FIRST_PUPPETMASTER_LINKS = array(
+const LIB_FIRST_PUPPETMASTER_LINKS = array(
     'nebule:link/2:0_0>020210714/l>88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>4fcc946ef03dff882c0b6a1717c99c0ce57639e99d1f52509e846874c98dad5abd28685c9d065b4ef0e9fefbbee217e91fc4a72ecac81712e1e2c14bd06612e71e9afdb09ef1c10e68117fe8edc4f93510318719d0a6d7436a1802cd38f814cba8503ef24d50aeca961825bc39b169acbe52240fa8528a44f387ee5dff0e096a2ab49a0b181fa688678540dfc409000104a6ab77c44a4495ac98d48f35658238c99f5b1f83d04c3309412ebf26b7b23c18bdde43b964ebb6b28b60393b4c343f567137461743153091039c07e35432fa7d0b46b729f65c11960cbda5cb78f3d8da52aaf662724e771125cce2fb99ef1409fbb23840872c6557fe63f2b25c8fc49b6b5663a44cdf2e829ffa9698cc121648136fd102333a556a97ac5b208a6b6fa584e239a35237fe9c38fd09fbe4c0580ca538d92c4e29d5e22ce4846df2563dc4cb39a599b92f22018b4973b768cf59cb8f517f3adae3ee21b7c43a812ec6c245fe548e6187a0e07ce6a0af38c40ccd24383216cbd312322e1583d5d358ccdc9911b67fdbf7d13b9f57a0a17a42f736be9dbd383fd9e7c0ce2589fbd6550a8e07ab90618302956a1bf69e76aaf3da829e1af4f7c7ceff169ce5e698ebe1987fa1b694c6b25130c0be5bbfdfe4a8594e54067abe235bf796cf455a84906d02ebc79e3feaa069db7c4adac872c104bfcbc08b2dfbcc3c9fd6aa465fb9d86c7f26.sha2.512',
     'nebule:link/2:0_0>020210714/l>88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>72ce2d1c9075a26bb8264564055426cec289d350cbc1e8d5e7472ee28db17606d06777a5831d3346f82a78a1e0b1a7ce2b66d61f59e0c15e8deb53c45f3245746c4afeece6a240cf50f285597b51050c49156b2b07860c4a78ec07d8bd1ec5bb1450b41b914e96642ae0260b819821727ded678288a10c21a02809a22333fad392c5f2d67636e1174c03d936457371a8f2dae5e1369f93adff03903426a6c69cddada88b6ec687573a2ec5cb78cb8f9401631739c78adcf000b92acece6cc34626528be94173754eda077ea26bbc45b7a4067b1dfdccb54ce8efb7634d2ab19ec0b30441d38d77e412e3bca1fc77fb6552fed7e14b4dfae157db5d1abc0bd768f0fd548a4124908985b7c9cc47e8058516008e99850cf0d7811981c8fd0621ebf8ca0a16b2ea3d6f2bf1a0e6b881344638d314f76af6c97dbf5618d04d881ee3b555284fcf461c23d3729aceb4be35118d28e7bccd2001324cdacb0b8000b21cf23c6d09cbf6d8d0ab4b64dd9e6872ed90ee349164c62a08506f5148cd6beb0b18449f798e6517419db44f14e623de912a6161b1f45eb3a40f8215b61cc5735c1362f7a45463dcc4c8b9a08954afc49f4c9eba13508aa9a5d5ed1bea9f8136ca2acb5c5601dca31b033f802b7fc0491f8b9062574500ad17674e1bfdcd78b183f1e4eeb7395822e95161c3fa5f3a1b59f8c18c9d4ba716a7cb7756d3d971d881.sha2.512',
     'nebule:link/2:0_0>020210714/l>88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>f976f916d794ad6384c9084cef7f2515305c464b2ab541142d952126ca9367e3.sha2.256>940c75a60c14a24e5f8bda796f72bef57ab1f64713a6fefd9a4097be95a9e96a.sha2.256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>56a9487ee5ea86fa35649b3b5e9fe6c20387139d41b3aa822dacacaa4c1284f31f60aec293df1406fcd6dfc89248457d4f97f35c1ebe0a30c0a0424eb28b9c5b2299b3faecf5b691857f73eaedd98e56b8c17c4f183bb300f6e0c01f156be592e1669fa26db14fc864ebc913df77e53ebeb6e8fdefd49ac71fd00a42f99a790c098a33755078cb73b37c618a379c12578d66be94256689d0cc65427cee7c51e07f37553931e66d0b0090779d3e869fb45888a4c0b1e61bc1ce63f8a12ea4ff6cb039f62c24c1b5cbbee78329e21042278514d4b9cdd3f028c2b12e6ad4a00526e1fc2093a65c8d33402cae2f38a40fa1ec6b37a52725ad1010e78b9b6262d50055e6214a2b4b96fdc7354220b5a0117979441ffd24f976e42943defdf36ef9910fb452d920890251c4e5297e56a16d2a4ab97c00882cff19b42f3f6a1edca9cf6f0a7e157a8dfbeb5595ebb576e5d512f5f046071455a55d1098e19e3725dae564e9fc138d4faec180e5fd71a6db36c6cbece824e52cac913004ad406247b2eb51a91a2c0a2552961a265157c59e8455a4a7c8ad7e0be90014bc8fcac3e103fc4469380961d7d1f59a77678f2ff97f7db78cb243a0bb71ab6b63f4a10e786a06b8d4aff2f5b5a133a1019524af59923c813fcc0bc4588b64e6cb6e81c77fdaec73b069d20e435d69f40fe0a2e5656c9fa7aed13fda2d071bd9c850a7415ffdcd.sha2.512',
@@ -423,7 +423,7 @@ const FIRST_PUPPETMASTER_LINKS = array(
     'nebule:link/2:0_0>020210714/l>4e72933c991c2bb27415cfeff02e179b9a3002934e472142c4f612e3893e46e1.sha2.256>83db082578142c900e36765ebc210893d79ed0ab1127d687f3307c0c061802e6.sha2.256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>2a6d15ec23edb07da6e1271026a252c5a3b96bf7931cc25dcbe85ba8d488ff5128e243720202f3a792d3700845b387b8f7b8f0da70770c34fc3172ae9fb17bc8b2e2235a92dd133136cc5b63ebd06ccedeb2c4291b11ff3dd89c73caf65ec14279e08ae2ce02672da9f6de5f40b249857c128d2c2c7932de5fc8223fffd0db899abefeaf725dac4526711594ab06f16a1702b34afef83c17b30b4cde0fe080031a36fb3a676e79199b2601cd1dcf7dc52d43b990634cad8df3dafb645c6fe446aaf25a276103c5989f9536ca4fe7e35d079ea7b61c5d68132bc5c2ac4fdb1cb0762a566fc9da85075ee454a6e2f14af2facd084bda59ce98131f066dff3af7935d107e518310bd84fe54c60be549e48b00937a998969db572bd33757c637b556f12203e999f2a9d5e4f62e2c632a08fdc0c877ef0a75603e5e44f6a5f3b3ac5dbfa4ffec1cb3431a992143d5534f9ded09b0a183c135b5759ddedef9426da41e82f6d522f94c1c4c422fc8983d68685966de408e029d2324e0e9baf00c8bb18454f3f32285b73b4b68abca210afaa8cfe089f7d3b32b1289a57119e8115b85cdc1b2d5756675fce351ef4501f4d7226075d8092e1e428551c8133764751b58311ae0c54e2a57065517020f0286fb51e96a01226db1143e479a94d6ff2c922ec27c5f64af5bc8e8794fb5391400bac6666bd5e21f61d23aefc94db0f3a525a59c.sha2.512',
     'nebule:link/2:0_0>020210714/l>abdbaa31e404463ecc644f1eecdeb9b5f94428eb140fa5c66a7687ee96ed47aa.sha2.256>663eb81c89c27739f0f875617bcd45b3a18d4b8eb859b8c6e5dccbf9085a2ef9.sha2.256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>7a76055a8e051f927027018b7d82ff2b5e388513f6e901ad61a07a02b6b23ea6f58e1d498eea7aebf597c9975f4422babed00b3dc9c4b1ba09967cd245246412d3827d010f99da45b7408d5d0e6b47a3df8e719675dc907108013ccbd698731d6b74912d1723e58d70cb96ceaac979cfdf2b332d9d010402ef581b4d509ead6d0e03b3587d265e5e460b7f78261315aeb1057ca02e2b4d24590bbc5986d8882d97e1afe080708b8f5d6768b1a423e2fe981916aef2ce663be384c8cff0cffae3f72316fc0bf068b031a068b9f6090cf2cac0be1360acebcb1ad22d67dacb7b46eb51f69e7898d25a9511ae9c4100c42eb0c7a6317d5a90ca1ac40f37d95f83ff9de81843c3206c11c4a26d2b0093b49e48c436f9b1b07ad5828ea711493e69bb08ed6c2940004d56af796c3daf68ad6dbadaecff717f6d7373d1cf182d6be14a5e8c37d4abfdc9f0c843d59de875e4501f202d87b6a14940e0725eb5e5d2a94bea3f2764fa9918093340d7948aab7846fd820dfe1c73345389d8f1a2ea1c4aa943bdeaf73c234812a46f997ebc058caa0a912ce02fe2414ef84bd957c47e78582601ee5aee78f973ff3fe318ac091e2a8021435203d0a7a4b459ab4714bf5d1395324cd4a098777fbaa70716c21d8f2c82632a0f7abb9e366ae3138fd7eb5e024823f80275d486fc7763d3ac5147992807c779ad1fedcf60446de306e453dade.sha2.512',
 );
-const FIRST_RESERVED_OBJECTS = array(
+const LIB_FIRST_RESERVED_OBJECTS = array(
     'nebule/objet',
     'nebule/objet/hash',
     'nebule/objet/homomorphe',
@@ -467,10 +467,10 @@ const FIRST_RESERVED_OBJECTS = array(
     'sha512',
 );
 
-const ARG_FIRST_PUPPETMASTER_EID = 'bootstrapfirstpuppetmastereid';
-const ARG_FIRST_PUPPETMASTER_LOC = 'bootstrapfirstpuppetmasterlocation';
-const ARG_FIRST_SUBORD_EID = 'bootstrapfirstsubordinationeid';
-const ARG_FIRST_SUBORD_LOC = 'bootstrapfirstsubordinationlocation';
+const LIB_ARG_FIRST_PUPPETMASTER_EID = 'bootstrapfirstpuppetmastereid';
+const LIB_ARG_FIRST_PUPPETMASTER_LOC = 'bootstrapfirstpuppetmasterlocation';
+const LIB_ARG_FIRST_SUBORD_EID = 'bootstrapfirstsubordinationeid';
+const LIB_ARG_FIRST_SUBORD_LOC = 'bootstrapfirstsubordinationlocation';
 
 /**
  * List of options types.
@@ -558,7 +558,7 @@ const LIB_CONFIGURATIONS_TYPE = array(
  * Default options values if not defined in option file.
  */
 const LIB_CONFIGURATIONS_DEFAULT = array(
-        'puppetmaster' => NEBULE_DEFAULT_PUPPETMASTER_EID,
+        'puppetmaster' => LIB_DEFAULT_PUPPETMASTER_EID,
         'hostURL' => 'localhost',
         'permitWrite' => true,
         'permitWriteObject' => true,
@@ -624,7 +624,7 @@ const LIB_CONFIGURATIONS_DEFAULT = array(
         'permitSessionBuffer' => true,
         'permitBufferIO' => true,
         'sessionBufferSize' => 1000,
-        'defaultCurrentEntity' => NEBULE_DEFAULT_PUPPETMASTER_EID,
+        'defaultCurrentEntity' => LIB_DEFAULT_PUPPETMASTER_EID,
         'defaultApplication' => '0',
         'defaultObfuscateLinks' => false,
         'defaultLinksVersion' => '2.0',
@@ -771,8 +771,8 @@ function lib_getConfiguration(string $name)
 
     // Read file and extract asked option.
     $value = '';
-    if (file_exists(LOCAL_ENVIRONMENT_FILE)) {
-        $file = file(LOCAL_ENVIRONMENT_FILE, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
+    if (file_exists(LIB_LOCAL_ENVIRONMENT_FILE)) {
+        $file = file(LIB_LOCAL_ENVIRONMENT_FILE, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
         if ($file !== false)
         {
             foreach ($file as $line) {
@@ -991,10 +991,10 @@ function lib_init(): bool
 function lib_setServerEntity(): void
 {
     global $nebuleServerEntity, $nebuleLocalAuthorities;
-    if (file_exists(LOCAL_ENTITY_FILE)
-        && is_file(LOCAL_ENTITY_FILE)
+    if (file_exists(LIB_LOCAL_ENTITY_FILE)
+        && is_file(LIB_LOCAL_ENTITY_FILE)
     )
-        $nebuleServerEntity = filter_var(strtok(trim(file_get_contents(LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $nebuleServerEntity = filter_var(strtok(trim(file_get_contents(LIB_LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 
     if (!ent_checkIsPublicKey($nebuleServerEntity))
         $nebuleServerEntity = lib_getConfiguration('puppetmaster');
@@ -1232,23 +1232,23 @@ function nod_checkNID(string &$nid, bool $permitNull = false): bool
     // Check hash value.
     $hash = strtok($nid, '.');
     if ($hash === false) return false;
-    if (strlen($hash) < NID_MIN_HASH_SIZE) return false;
-    if (strlen($hash) > NID_MAX_HASH_SIZE) return false;
+    if (strlen($hash) < LIB_NID_MIN_HASH_SIZE) return false;
+    if (strlen($hash) > LIB_NID_MAX_HASH_SIZE) return false;
     if (!ctype_xdigit($hash)) return false;
 
     // Check algo value.
     $algo = strtok('.');
     if ($algo === false) return false;
-    if (strlen($algo) < NID_MIN_ALGO_SIZE) return false;
-    if (strlen($algo) > NID_MAX_ALGO_SIZE) return false;
+    if (strlen($algo) < LIB_NID_MIN_ALGO_SIZE) return false;
+    if (strlen($algo) > LIB_NID_MAX_ALGO_SIZE) return false;
     if (!ctype_alnum($algo)) return false;
 
     // Check size value.
     $size = strtok('.');
     if ($size === false) return false;
     if (!ctype_digit($size)) return false; // Check content before!
-    if ((int)$size < NID_MIN_HASH_SIZE) return false;
-    if ((int)$size > NID_MAX_HASH_SIZE) return false;
+    if ((int)$size < LIB_NID_MIN_HASH_SIZE) return false;
+    if ((int)$size > LIB_NID_MAX_HASH_SIZE) return false;
     if ((strlen($hash) * 4) != (int)$size) return false;
 
     // Check item overflow
@@ -1524,7 +1524,7 @@ function obj_getDistantContent(string $nid, array $locations = array()): bool
         return true;
 
     if (sizeof($locations) == 0)
-        $locations = FIRST_LOCALISATIONS;
+        $locations = LIB_FIRST_LOCALISATIONS;
 
     foreach ($locations as $location) {
         if (io_objectSynchronize($nid, $location))
@@ -1749,7 +1749,7 @@ function ent_getAskedMasters(string $refNid, array &$result, bool $synchronize):
         return $result;
 
     if ($synchronize)
-        obj_getDistantContent($refNid, FIRST_LOCALISATIONS);
+        obj_getDistantContent($refNid, LIB_FIRST_LOCALISATIONS);
 
     $lnkList = array();
     $entList = array();
@@ -1785,7 +1785,7 @@ function ent_getAskedMasters(string $refNid, array &$result, bool $synchronize):
 function ent_getSecurityAuthorities(bool $synchronize=false): array
 {
     global $nebuleSecurityAuthorities;
-    return ent_getAskedMasters(NEBULE_NID_SECURITY_AUTHORITY_REFERENCE, $nebuleSecurityAuthorities, $synchronize);
+    return ent_getAskedMasters(LIB_NID_SECURITY_AUTHORITY_REFERENCE, $nebuleSecurityAuthorities, $synchronize);
 }
 
 /**
@@ -1797,7 +1797,7 @@ function ent_getSecurityAuthorities(bool $synchronize=false): array
 function ent_getCodeAuthorities(bool $synchronize=false): array
 {
     global $nebuleCodeAuthorities;
-    return ent_getAskedMasters(NEBULE_NID_CODE_AUTHORITY_REFERENCE, $nebuleCodeAuthorities, $synchronize);
+    return ent_getAskedMasters(LIB_NID_CODE_AUTHORITY_REFERENCE, $nebuleCodeAuthorities, $synchronize);
 }
 
 /**
@@ -1809,7 +1809,7 @@ function ent_getCodeAuthorities(bool $synchronize=false): array
 function ent_getTimeAuthorities(bool $synchronize=false): array
 {
     global $nebuleTimeAuthorities;
-    return ent_getAskedMasters(NEBULE_NID_TIME_AUTHORITY_REFERENCE, $nebuleTimeAuthorities, $synchronize);
+    return ent_getAskedMasters(LIB_NID_TIME_AUTHORITY_REFERENCE, $nebuleTimeAuthorities, $synchronize);
 }
 
 /**
@@ -1821,7 +1821,7 @@ function ent_getTimeAuthorities(bool $synchronize=false): array
 function ent_getDirectoryAuthorities(bool $synchronize=false): array
 {
     global $nebuleDirectoryAuthorities;
-    return ent_getAskedMasters(NEBULE_NID_DIRECTORY_AUTHORITY_REFERENCE, $nebuleDirectoryAuthorities, $synchronize);
+    return ent_getAskedMasters(LIB_NID_DIRECTORY_AUTHORITY_REFERENCE, $nebuleDirectoryAuthorities, $synchronize);
 }
 
 /**
@@ -1952,17 +1952,17 @@ function ent_syncPuppetmaster(string $oid): void
 
     if (!ent_checkIsPublicKey($oid))
     {
-        $oid = NEBULE_DEFAULT_PUPPETMASTER_EID;
-        $configurationList['puppetmaster'] = NEBULE_DEFAULT_PUPPETMASTER_EID;
+        $oid = LIB_DEFAULT_PUPPETMASTER_EID;
+        $configurationList['puppetmaster'] = LIB_DEFAULT_PUPPETMASTER_EID;
     }
 
-    if ($oid == NEBULE_DEFAULT_PUPPETMASTER_EID)
+    if ($oid == LIB_DEFAULT_PUPPETMASTER_EID)
     {
         log_add('Write default puppetmaster', 'info', __FUNCTION__, '555ec326');
-        $data = FIRST_PUPPETMASTER_PUBLIC_KEY;
+        $data = LIB_FIRST_PUPPETMASTER_PUBLIC_KEY;
         $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
         io_objectWrite($data, $hash);
-        foreach (FIRST_PUPPETMASTER_LINKS as $data)
+        foreach (LIB_FIRST_PUPPETMASTER_LINKS as $data)
             io_linkWrite($oid, $data);
     }
 
@@ -2004,7 +2004,7 @@ function ent_checkIsPublicKey(string &$nid): bool
         return $nebuleCacheIsPublicKey[$nid];
 
     if ($nid == '0'
-        || strlen($nid) < NID_MIN_HASH_SIZE
+        || strlen($nid) < LIB_NID_MIN_HASH_SIZE
         || !nod_checkNID($nid)
         || !obj_checkContent($nid)
         || !io_checkNodeHaveLink($nid)
@@ -2042,7 +2042,7 @@ function ent_checkIsPrivateKey(&$nid): bool
         return $nebuleCacheIsPrivateKey [$nid];
 
     if ($nid == '0'
-        || strlen($nid) < NID_MIN_HASH_SIZE
+        || strlen($nid) < LIB_NID_MIN_HASH_SIZE
         || !nod_checkNID($nid)
         || !obj_checkContent($nid)
         || !io_checkNodeHaveLink($nid)
@@ -2147,7 +2147,7 @@ function lnk_generate(string $rc, string $req, string $nid1, string $nid2 = '', 
     )
         return '';
 
-    $bh = 'nebule:link/'.NEBULE_LIBRARY_PP_LINK_VERSION;
+    $bh = 'nebule:link/'.LIB_LINK_VERSION;
 
     if ($rc == '' || !lnk_checkRC($rc))
         $rc = '0>' . date(DATE_ATOM);
@@ -2788,7 +2788,7 @@ function lnk_getDistantOnLocations(string $nid, array $locations=array()): bool
         return false;
 
     if (sizeof($locations) == 0)
-        $locations = FIRST_LOCALISATIONS;
+        $locations = LIB_FIRST_LOCALISATIONS;
 
     foreach ($locations as $location)
         io_linkSynchronize($nid, $location);
@@ -2853,7 +2853,7 @@ function lnk_checkRV(string &$rv): bool
     // Check items from RV : VER:SUB
     $ver = strtok($rv, ':');
     $sub = strtok(':');
-    if ("$ver:$sub" != NEBULE_LIBRARY_PP_LINK_VERSION) return false;
+    if ("$ver:$sub" != LIB_LINK_VERSION) return false;
 
     // Check registry overflow
     if (strtok(':') !== false) return false;
@@ -3034,21 +3034,21 @@ function lnk_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): boo
 
     // Check hash value.
     $sign = strtok($sig, '.');
-    if (strlen($sign) < NID_MIN_HASH_SIZE) return false;
-    if (strlen($sign) > NID_MAX_HASH_SIZE) return false;
+    if (strlen($sign) < LIB_NID_MIN_HASH_SIZE) return false;
+    if (strlen($sign) > LIB_NID_MAX_HASH_SIZE) return false;
     if (!ctype_xdigit($sign)) return false;
 
     // Check algo value.
     $algo = strtok('.');
-    if (strlen($algo) < NID_MIN_ALGO_SIZE) return false;
-    if (strlen($algo) > NID_MAX_ALGO_SIZE) return false;
+    if (strlen($algo) < LIB_NID_MIN_ALGO_SIZE) return false;
+    if (strlen($algo) > LIB_NID_MAX_ALGO_SIZE) return false;
     if (!ctype_alnum($algo)) return false;
 
     // Check size value.
     $size = strtok('.');
     if (!ctype_digit($size)) return false; // Check content before!
-    if ((int)$size < NID_MIN_HASH_SIZE) return false;
-    if ((int)$size > NID_MAX_HASH_SIZE) return false;
+    if ((int)$size < LIB_NID_MIN_HASH_SIZE) return false;
+    if ((int)$size > LIB_NID_MAX_HASH_SIZE) return false;
     //if (strlen($sign) != (int)$size) return false; // TODO can't be checked ?
 
     // Check item overflow
@@ -3232,7 +3232,7 @@ function lnk_write($link): bool
         $result = $result && io_linkWrite($linkParsed['bs/rs/nid'], $link);
 
     // Write link to history if needed.
-    $histFile = LOCAL_HISTORY_FILE;
+    $histFile = LIB_LOCAL_HISTORY_FILE;
     if (lib_getConfiguration('permitHistoryLinksSign'))
         $result = $result && io_linkWrite($histFile, $link);
 
@@ -3267,9 +3267,9 @@ function io_open(): bool
 function io_checkLinkFolder(): bool
 {
     // Check if exist.
-    if (!file_exists(LOCAL_LINKS_FOLDER))
+    if (!file_exists(LIB_LOCAL_LINKS_FOLDER))
         io_createLinkFolder();
-    if (!file_exists(LOCAL_LINKS_FOLDER) || !is_dir(LOCAL_LINKS_FOLDER)) {
+    if (!file_exists(LIB_LOCAL_LINKS_FOLDER) || !is_dir(LIB_LOCAL_LINKS_FOLDER)) {
         log_add('I/O no folder for links.', 'error', __FUNCTION__, '5306de5f');
         bootstrap_setBreak('22', "Library i/o link's folder error");
         return false;
@@ -3278,7 +3278,7 @@ function io_checkLinkFolder(): bool
     // Check writeability.
     if (lib_getConfiguration('permitWrite') && lib_getConfiguration('permitWriteLink')) {
         $data = crypto_getPseudoRandom(2048);
-        $name = LOCAL_LINKS_FOLDER . '/writest' . bin2hex(crypto_getPseudoRandom(8));
+        $name = LIB_LOCAL_LINKS_FOLDER . '/writest' . bin2hex(crypto_getPseudoRandom(8));
         if (file_put_contents($name, $data) === false) {
             log_add('I/O error on folder for links.', 'error', __FUNCTION__, 'f72e3a86');
             bootstrap_setBreak('23', "Library i/o link's folder error");
@@ -3313,9 +3313,9 @@ function io_checkLinkFolder(): bool
 function io_checkObjectFolder(): bool
 {
     // Check if exist.
-    if (!file_exists(LOCAL_OBJECTS_FOLDER))
+    if (!file_exists(LIB_LOCAL_OBJECTS_FOLDER))
         io_createObjectFolder();
-    if (!file_exists(LOCAL_OBJECTS_FOLDER) || !is_dir(LOCAL_OBJECTS_FOLDER) ) {
+    if (!file_exists(LIB_LOCAL_OBJECTS_FOLDER) || !is_dir(LIB_LOCAL_OBJECTS_FOLDER) ) {
         log_add('I/O no folder for objects.', 'error', __FUNCTION__, 'b0cdeafe');
         bootstrap_setBreak('24', "Library i/o object's folder error");
         return false;
@@ -3324,7 +3324,7 @@ function io_checkObjectFolder(): bool
     // Check writeability.
     if (lib_getConfiguration('permitWrite') && lib_getConfiguration('permitWriteObject')) {
         $data = crypto_getPseudoRandom(2048);
-        $name = LOCAL_OBJECTS_FOLDER . '/writest' . bin2hex(crypto_getPseudoRandom(8));
+        $name = LIB_LOCAL_OBJECTS_FOLDER . '/writest' . bin2hex(crypto_getPseudoRandom(8));
         if (file_put_contents($name, $data) === false) {
             log_add('I/O error on folder for objects.', 'error', __FUNCTION__, '1327da69');
             bootstrap_setBreak('25', "Library i/o object's folder error");
@@ -3360,9 +3360,9 @@ function io_createLinkFolder(): bool
 {
     if (lib_getConfiguration('permitWrite')
         && lib_getConfiguration('permitWriteLink')
-        && !file_exists(LOCAL_LINKS_FOLDER)
+        && !file_exists(LIB_LOCAL_LINKS_FOLDER)
     )
-        return mkdir(LOCAL_LINKS_FOLDER);
+        return mkdir(LIB_LOCAL_LINKS_FOLDER);
 
     return false;
 }
@@ -3376,9 +3376,9 @@ function io_createObjectFolder(): bool
 {
     if (lib_getConfiguration('permitWrite')
         && lib_getConfiguration('permitWriteObject')
-        && !file_exists(LOCAL_OBJECTS_FOLDER)
+        && !file_exists(LIB_LOCAL_OBJECTS_FOLDER)
     )
-        return mkdir(LOCAL_OBJECTS_FOLDER);
+        return mkdir(LIB_LOCAL_OBJECTS_FOLDER);
 
     return false;
 }
@@ -3391,7 +3391,7 @@ function io_createObjectFolder(): bool
  */
 function io_checkNodeHaveLink(string &$nid): bool
 {
-    if (file_exists(LOCAL_LINKS_FOLDER . '/' . $nid))
+    if (file_exists(LIB_LOCAL_LINKS_FOLDER . '/' . $nid))
         return true;
     return false;
 }
@@ -3404,7 +3404,7 @@ function io_checkNodeHaveLink(string &$nid): bool
  */
 function io_checkNodeHaveContent(string &$nid): bool
 {
-    if (file_exists(LOCAL_OBJECTS_FOLDER . '/' . $nid))
+    if (file_exists(LIB_LOCAL_OBJECTS_FOLDER . '/' . $nid))
         return true;
     return false;
 }
@@ -3427,7 +3427,7 @@ function io_linksRead(string &$nid, array &$lines, int $maxLinks = 0): array
     if ($maxLinks == 0)
         $maxLinks = lib_getConfiguration('ioReadMaxLinks');
 
-    $links = file(LOCAL_LINKS_FOLDER . '/' . $nid);
+    $links = file(LIB_LOCAL_LINKS_FOLDER . '/' . $nid);
     if ($links !== false)
     {
         foreach ($links as $link) {
@@ -3458,9 +3458,9 @@ function io_linkWrite(string &$nid, string &$link): bool
         return false;
 
     // Check if link not already present on file.
-    if (file_exists(LOCAL_LINKS_FOLDER . '/' . $nid))
+    if (file_exists(LIB_LOCAL_LINKS_FOLDER . '/' . $nid))
     {
-        $l = file(LOCAL_LINKS_FOLDER . '/' . $nid, FILE_SKIP_EMPTY_LINES);
+        $l = file(LIB_LOCAL_LINKS_FOLDER . '/' . $nid, FILE_SKIP_EMPTY_LINES);
         if ($l !== false)
         {
             foreach ($l as $k) {
@@ -3471,7 +3471,7 @@ function io_linkWrite(string &$nid, string &$link): bool
     }
 
     // Write link on file.
-    if (file_put_contents(LOCAL_LINKS_FOLDER . '/' . $nid, "$link\n", FILE_APPEND) === false)
+    if (file_put_contents(LIB_LOCAL_LINKS_FOLDER . '/' . $nid, "$link\n", FILE_APPEND) === false)
         return false;
     return true;
 }
@@ -3525,7 +3525,7 @@ function io_objectRead(string $nid, int $maxData = 0): string
     if (!nod_checkNID($nid) || !io_checkNodeHaveContent($nid))
         return '';
 
-    $result = file_get_contents(LOCAL_OBJECTS_FOLDER . '/' . $nid, false, null, 0, $maxData);
+    $result = file_get_contents(LIB_LOCAL_OBJECTS_FOLDER . '/' . $nid, false, null, 0, $maxData);
     if ($result === false)
         $result = '';
     lib_incrementMetrology('or');
@@ -3549,13 +3549,13 @@ function io_objectWrite(string &$data, string $oid = '0'): bool
     )
         return false;
 
-    if (strlen($oid) < NID_MIN_HASH_SIZE)
+    if (strlen($oid) < LIB_NID_MIN_HASH_SIZE)
         return false;
 
     if (io_checkNodeHaveContent($oid))
         return true;
 
-    if (file_put_contents(LOCAL_OBJECTS_FOLDER . '/' . $oid, $data) === false)
+    if (file_put_contents(LIB_LOCAL_OBJECTS_FOLDER . '/' . $oid, $data) === false)
         return false;
     return true;
 }
@@ -3590,7 +3590,7 @@ function io_objectSynchronize(string $nid, string $location): bool
     $tmpIdName = 'io_objectSynchronize' . $tmpId . '-' . $nid;
     $distobj = fopen($location . '/o/' . $nid, 'r');
     if ($distobj) {
-        $localobj = fopen(LOCAL_OBJECTS_FOLDER . '/' . $tmpIdName, 'w');
+        $localobj = fopen(LIB_LOCAL_OBJECTS_FOLDER . '/' . $tmpIdName, 'w');
         if ($localobj) {
             while (($line = fgets($distobj, lib_getConfiguration('ioReadMaxData'))) !== false) {
                 fputs($localobj, $line);
@@ -3603,9 +3603,9 @@ function io_objectSynchronize(string $nid, string $location): bool
                 $hash = 'invalid';
 
             if ($hash . '.' . $algo == $nid)
-                rename(LOCAL_OBJECTS_FOLDER . '/' . $tmpIdName, LOCAL_OBJECTS_FOLDER . '/' . $nid);
+                rename(LIB_LOCAL_OBJECTS_FOLDER . '/' . $tmpIdName, LIB_LOCAL_OBJECTS_FOLDER . '/' . $nid);
             else
-                unlink(LOCAL_OBJECTS_FOLDER . '/' . $tmpIdName);
+                unlink(LIB_LOCAL_OBJECTS_FOLDER . '/' . $tmpIdName);
         }
         fclose($distobj);
     }
@@ -3628,7 +3628,7 @@ function io_objectDelete(string &$nid): bool
     if (!io_checkNodeHaveContent($nid))
         return true;
 
-    if (!unlink(LOCAL_OBJECTS_FOLDER . '/' . $nid))
+    if (!unlink(LIB_LOCAL_OBJECTS_FOLDER . '/' . $nid))
     {
         log_add('Unable to delete file.', 'error', __FUNCTION__, '991b11a1');
         return false;
@@ -3749,7 +3749,7 @@ function crypto_getDataHash(string &$data, string $algo = ''): string
  */
 function crypto_getFileHash(string $file, string $algo = ''): string
 {
-    return hash_file(crypto_getTranslatedHashAlgo($algo), LOCAL_OBJECTS_FOLDER . '/' . $file);
+    return hash_file(crypto_getTranslatedHashAlgo($algo), LIB_LOCAL_OBJECTS_FOLDER . '/' . $file);
 }
 
 /**
@@ -3769,7 +3769,7 @@ function crypto_getPseudoRandom(int $count = 32): string
         return $result;
 
     // Génère une graine avec la date pour le compteur interne.
-    $intcount = date(DATE_ATOM) . microtime(false) . NEBULE_LIBRARY_PP_VERSION . $nebuleServerEntity;
+    $intcount = date(DATE_ATOM) . microtime(false) . LIB_NEBULE_LIBRARY_PP_VERSION . $nebuleServerEntity;
 
     // Boucle de remplissage.
     while (strlen($result) < $count) {
@@ -4142,7 +4142,7 @@ function bootstrap_loadLibraryPOO(string $bootstrapLibraryID, string $bootstrapL
 
     if ($bootstrapLibraryID != '') {
         // Load lib from object. @todo faire via les i/o.
-        include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapLibraryID);
+        include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapLibraryID);
 
         if ($bootstrapLibraryInstanceSleep == '')
             $nebuleInstance = new nebule();
@@ -4460,8 +4460,8 @@ function bootstrap_getDisplayServerEntity()
 {
     global $bootstrapServerEntityDisplay;
 
-    if (filter_has_var(INPUT_GET, LOCAL_ENTITY_FILE)
-        || filter_has_var(INPUT_POST, LOCAL_ENTITY_FILE)
+    if (filter_has_var(INPUT_GET, LIB_LOCAL_ENTITY_FILE)
+        || filter_has_var(INPUT_POST, LIB_LOCAL_ENTITY_FILE)
     ) {
         bootstrap_setBreak('52', 'Ask server instance');
         $bootstrapServerEntityDisplay = true;
@@ -5121,7 +5121,7 @@ function bootstrap_displayOnBreak(): void
     echo '<div class="parts">'."\n";
     ?>
         <span class="partstitle">#2 <?php echo BOOTSTRAP_NAME; ?> nebule library PP</span><br/>
-        library version &nbsp;: <?php echo NEBULE_LIBRARY_PP_VERSION ?><br/>
+        library version &nbsp;: <?php echo LIB_NEBULE_LIBRARY_PP_VERSION ?><br/>
         puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: <?php echo lib_getConfiguration('puppetmaster'); ?> (local authority)<br/>
         security master &nbsp;: <?php foreach ($nebuleSecurityAuthorities as $m) echo $m . ' '; ?> (local authority)<br/>
         code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php foreach ($nebuleCodeAuthorities as $m) echo $m . ' '; ?> (local authority)<br/>
@@ -5514,7 +5514,7 @@ function bootstrap_displayPreloadApplication()
     log_add('Loading application ' . $bootstrapApplicationID, 'info', __FUNCTION__, '202824cb');
 
     // Charge l'objet de l'application. TODO faire via les i/o.
-    include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+    include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
 
     // Instanciation des classes de l'application.
     $applicationInstance = new Application($nebuleInstance);
@@ -5570,7 +5570,7 @@ function bootstrap_displayPreloadApplication()
 function bootstrap_partDisplayReloadPage(bool $ok=true, int $delay=0): void
 {
     if ($delay == 0)
-        $delay = FIRST_RELOAD_DELAY;
+        $delay = LIB_FIRST_RELOAD_DELAY;
 
     echo '<div id="reload">' . "\n";
     if ($ok)
@@ -5618,10 +5618,10 @@ function bootstrap_partDisplayReloadPage(bool $ok=true, int $delay=0): void
  */
 function bootstrap_getNeedFirstSynchronization(): bool
 {
-    if (file_exists(LOCAL_ENTITY_FILE)
-        && is_file(LOCAL_ENTITY_FILE)
+    if (file_exists(LIB_LOCAL_ENTITY_FILE)
+        && is_file(LIB_LOCAL_ENTITY_FILE)
     ) {
-        $serverEntite = filter_var(strtok(trim(file_get_contents(LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $serverEntite = filter_var(strtok(trim(file_get_contents(LIB_LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         if (!ent_checkIsPublicKey($serverEntite)) {
             bootstrap_setBreak('62', 'Local server entity error');
             return true;
@@ -5707,7 +5707,7 @@ function bootstrap_firstDisplay1Breaks(): void
         echo '- [' . $number . '] <span class="error">' . $message . '</span>' . "<br />\n";
 
     echo 'tB=' . lib_getMetrologyTimer('tB') . "<br />\n";
-    echo 'nebule library : ' . NEBULE_LIBRARY_PP_VERSION . ' PHP PP' . "<br />\n";
+    echo 'nebule library : ' . LIB_NEBULE_LIBRARY_PP_VERSION . ' PHP PP' . "<br />\n";
     if ($bootstrapRescueMode)
         echo "RESCUE<br />\n";
     echo "</div>\n";
@@ -5730,17 +5730,17 @@ function bootstrap_firstDisplay2Folders(): bool
         $ok = false;
         echo '<div class="diverror">' . "\n";
         ?>
-Unable to create folder <b><?php echo LOCAL_LINKS_FOLDER; ?></b> for links.<br/>
+Unable to create folder <b><?php echo LIB_LOCAL_LINKS_FOLDER; ?></b> for links.<br/>
 On the same path as <b>index.php</b>, please create folder manually,<br/>
 and give it to web server process.<br/>
 As <i>root</i>, run :<br/>
 <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
 
-mkdir <?php echo LOCAL_LINKS_FOLDER; ?>
+mkdir <?php echo LIB_LOCAL_LINKS_FOLDER; ?>
 
-chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . ' ' . LOCAL_LINKS_FOLDER; ?>
+chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . ' ' . LIB_LOCAL_LINKS_FOLDER; ?>
 
-chmod 755 <?php echo LOCAL_LINKS_FOLDER; ?></pre>
+chmod 755 <?php echo LIB_LOCAL_LINKS_FOLDER; ?></pre>
 
         <?php
         echo "</div>\n";
@@ -5752,17 +5752,17 @@ chmod 755 <?php echo LOCAL_LINKS_FOLDER; ?></pre>
         $ok = false;
         echo '<div class="diverror">' . "\n";
         ?>
-Unable to create folder <b><?php echo LOCAL_OBJECTS_FOLDER; ?></b> for objects.<br/>
+Unable to create folder <b><?php echo LIB_LOCAL_OBJECTS_FOLDER; ?></b> for objects.<br/>
 On the same path as <b>index.php</b>, please create folder manually,<br/>
 and give it to web server process.<br/>
 As <i>root</i>, run :<br/>
 <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
 
-mkdir <?php echo LOCAL_OBJECTS_FOLDER; ?>
+mkdir <?php echo LIB_LOCAL_OBJECTS_FOLDER; ?>
 
-chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . ' ' . LOCAL_OBJECTS_FOLDER; ?>
+chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . ' ' . LIB_LOCAL_OBJECTS_FOLDER; ?>
 
-chmod 755 <?php echo LOCAL_OBJECTS_FOLDER; ?></pre>
+chmod 755 <?php echo LIB_LOCAL_OBJECTS_FOLDER; ?></pre>
 
         <?php
         echo "</div>\n";
@@ -5789,7 +5789,7 @@ function bootstrap_firstDisplay3Objects(): bool
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#3 needed objects</span><br/>'."\n";
 
-    foreach (FIRST_LOCALISATIONS as $data) {
+    foreach (LIB_FIRST_LOCALISATIONS as $data) {
         $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
         if (!io_checkNodeHaveContent($hash)) {
             log_add('need create objects ' . $hash, 'warn', __FUNCTION__, 'ca195598');
@@ -5800,7 +5800,7 @@ function bootstrap_firstDisplay3Objects(): bool
             }
         }
     }
-    foreach (FIRST_RESERVED_OBJECTS as $data) {
+    foreach (LIB_FIRST_RESERVED_OBJECTS as $data) {
         $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
         if (!io_checkNodeHaveContent($hash)) {
             log_add('need create objects ' . $hash, 'warn', __FUNCTION__, 'fc68d2ff');
@@ -5837,20 +5837,20 @@ function bootstrap_firstDisplay4Puppetmaster(): bool
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#4 puppetmaster</span><br/>'."\n";
 
-    if (!file_exists(LOCAL_ENVIRONMENT_FILE))
+    if (!file_exists(LIB_LOCAL_ENVIRONMENT_FILE))
     {
-        if (!filter_has_var(INPUT_GET, ARG_FIRST_PUPPETMASTER_EID))
+        if (!filter_has_var(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_EID))
         {
             log_add('ask subordination oid', 'info', __FUNCTION__, '213a735c');
             ?>
             <form action="" method="get">
                 <div>
                     <label for="oid">OID &nbsp;&nbsp;&nbsp;&nbsp; :</label>
-                    <input type="text" id="oid" name="<?php echo ARG_FIRST_PUPPETMASTER_EID; ?>" value="<?php echo NEBULE_DEFAULT_PUPPETMASTER_EID; ?>" />
+                    <input type="text" id="oid" name="<?php echo LIB_ARG_FIRST_PUPPETMASTER_EID; ?>" value="<?php echo LIB_DEFAULT_PUPPETMASTER_EID; ?>" />
                 </div>
                 <div>
                     <label for="loc">Location :</label>
-                    <input type="text" id="loc" name="<?php echo ARG_FIRST_PUPPETMASTER_LOC; ?>" value="<?php echo NEBULE_DEFAULT_PUPPETMASTER_LOCATION; ?>" />
+                    <input type="text" id="loc" name="<?php echo LIB_ARG_FIRST_PUPPETMASTER_LOC; ?>" value="<?php echo LIB_DEFAULT_PUPPETMASTER_LOCATION; ?>" />
                 </div>
                 <div class="button">
                     <button type="submit">Submit</button>
@@ -5860,17 +5860,17 @@ function bootstrap_firstDisplay4Puppetmaster(): bool
             <?php
             $ok = false;
         } else {
-            $argOID = trim(' '.filter_input(INPUT_GET, ARG_FIRST_PUPPETMASTER_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $argOID = trim(' '.filter_input(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
             if (ent_checkIsPublicKey($argOID)) {
                 $firstAlternativePuppetmasterEid = $argOID;
             }
-            if (filter_has_var(INPUT_GET, ARG_FIRST_PUPPETMASTER_LOC))
+            if (filter_has_var(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_LOC))
             {
                 echo 'try alternative puppetmaster : ' . $argOID . ' ';
                 if (nod_checkNID($argOID, false))
                 {
                     $firstAlternativePuppetmasterEid = $argOID;
-                    $argLoc = trim(' '.filter_input(INPUT_GET, ARG_FIRST_PUPPETMASTER_LOC, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+                    $argLoc = trim(' '.filter_input(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_LOC, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
                     if (strlen($argLoc) != 0 && filter_var($argLoc, FILTER_VALIDATE_URL) !== false)
                     {
                         echo 'sync...';
@@ -5882,7 +5882,7 @@ function bootstrap_firstDisplay4Puppetmaster(): bool
                     log_add('unable to find alternative puppetmaster oid', 'error', __FUNCTION__, '102c9011');
                     echo " <span class=\"error\">invalid!</span>\n";
                     $argLoc = '';
-                    $firstAlternativePuppetmasterEid = NEBULE_DEFAULT_PUPPETMASTER_EID;
+                    $firstAlternativePuppetmasterEid = LIB_DEFAULT_PUPPETMASTER_EID;
                 }
                 echo "<br />\n";
                 log_add('define alternative puppetmaster oid = ' . $firstAlternativePuppetmasterEid, 'warn', __FUNCTION__, '10a0bd6d');
@@ -5941,13 +5941,13 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
     $nebuleLocalAuthorities[0] = $puppetmaster;
 
     echo 'sync for masters references';
-    lnk_getDistantOnLocations(NEBULE_NID_SECURITY_AUTHORITY_REFERENCE, array());
+    lnk_getDistantOnLocations(LIB_NID_SECURITY_AUTHORITY_REFERENCE, array());
     echo '.';
-    lnk_getDistantOnLocations(NEBULE_NID_CODE_AUTHORITY_REFERENCE, array());
+    lnk_getDistantOnLocations(LIB_NID_CODE_AUTHORITY_REFERENCE, array());
     echo '.';
-    lnk_getDistantOnLocations(NEBULE_NID_TIME_AUTHORITY_REFERENCE, array());
+    lnk_getDistantOnLocations(LIB_NID_TIME_AUTHORITY_REFERENCE, array());
     echo '.';
-    lnk_getDistantOnLocations(NEBULE_NID_DIRECTORY_AUTHORITY_REFERENCE, array());
+    lnk_getDistantOnLocations(LIB_NID_DIRECTORY_AUTHORITY_REFERENCE, array());
     echo '.';
     echo "<br/>\n";
     flush();
@@ -6087,19 +6087,19 @@ function bootstrap_firstDisplay6SyncObjects(): bool
 
         // Ecrit les objets de localisation.
         echo 'objects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
-        foreach (FIRST_LOCALISATIONS as $data)
+        foreach (LIB_FIRST_LOCALISATIONS as $data)
         {
             $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
-            lnk_getDistantOnLocations($hash, FIRST_LOCALISATIONS);
+            lnk_getDistantOnLocations($hash, LIB_FIRST_LOCALISATIONS);
             echo '.';
         }
         flush();
 
         // Ecrit les objets réservés.
-        foreach (FIRST_RESERVED_OBJECTS as $data)
+        foreach (LIB_FIRST_RESERVED_OBJECTS as $data)
         {
             $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
-            lnk_getDistantOnLocations($hash, FIRST_LOCALISATIONS);
+            lnk_getDistantOnLocations($hash, LIB_FIRST_LOCALISATIONS);
             echo '.';
         }
         flush();
@@ -6114,12 +6114,12 @@ function bootstrap_firstDisplay6SyncObjects(): bool
         echo "<br />\nbootstrap start &nbsp;&nbsp;&nbsp;:" . $refBoot . ' ';
         flush();
 
-        lnk_getDistantOnLocations($refBootID, FIRST_LOCALISATIONS);
+        lnk_getDistantOnLocations($refBootID, LIB_FIRST_LOCALISATIONS);
         echo "<br />\nlibrary start &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:" . $refLib . ' ';
         flush();
 
         // Recherche par référence.
-        lnk_getDistantOnLocations($refLibID, FIRST_LOCALISATIONS);
+        lnk_getDistantOnLocations($refLibID, LIB_FIRST_LOCALISATIONS);
         $lastID = nod_findByRef_FIXME(
             $refLibID,
             $refLibID,
@@ -6127,7 +6127,7 @@ function bootstrap_firstDisplay6SyncObjects(): bool
         echo "<br />\nsynchronization &nbsp;&nbsp;&nbsp;:" . $lastID . ' ';
         if ($lastID != '0')
         {
-            obj_getDistantContent($lastID, FIRST_LOCALISATIONS);
+            obj_getDistantContent($lastID, LIB_FIRST_LOCALISATIONS);
         } else {
             echo '<span id="error">ERROR!</span>';
             $ok = false;
@@ -6135,7 +6135,7 @@ function bootstrap_firstDisplay6SyncObjects(): bool
 
         echo "<br />\napplications list &nbsp;:" . $refAppsID . ' ';
         flush();
-        lnk_getDistantOnLocations($refAppsID, FIRST_LOCALISATIONS);
+        lnk_getDistantOnLocations($refAppsID, LIB_FIRST_LOCALISATIONS);
         echo "<br />\napplication list &nbsp;&nbsp;:";
 
         // Pour chaque application, faire une synchronisation.
@@ -6180,8 +6180,8 @@ function bootstrap_firstDisplay6SyncObjects(): bool
             log_add('find app ' . $appID . ' as ' . $lastID, 'info', __FUNCTION__, '4cc18a65');
             if ($lastID != '0')
             {
-                obj_getDistantContent($lastID, FIRST_LOCALISATIONS);
-                lnk_getDistantOnLocations($lastID, FIRST_LOCALISATIONS);
+                obj_getDistantContent($lastID, LIB_FIRST_LOCALISATIONS);
+                lnk_getDistantOnLocations($lastID, LIB_FIRST_LOCALISATIONS);
                 echo ' ';
                 // Cherche le nom.
                 $nameID = nod_getType_FIXME(
@@ -6195,8 +6195,8 @@ function bootstrap_firstDisplay6SyncObjects(): bool
                 }
                 if ($nameID != '0')
                 {
-                    obj_getDistantContent($nameID, FIRST_LOCALISATIONS);
-                    lnk_getDistantOnLocations($nameID, FIRST_LOCALISATIONS);
+                    obj_getDistantContent($nameID, LIB_FIRST_LOCALISATIONS);
+                    lnk_getDistantOnLocations($nameID, LIB_FIRST_LOCALISATIONS);
                 }
             } else {
                 echo '<span id="error">ERROR!</span>';
@@ -6232,21 +6232,21 @@ function bootstrap_firstDisplay7Subordination(): bool
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#7 subordination</span><br/>'."\n";
 
-    if (!file_exists(LOCAL_ENVIRONMENT_FILE))
+    if (!file_exists(LIB_LOCAL_ENVIRONMENT_FILE))
     {
-        if (!filter_has_var(INPUT_GET, ARG_FIRST_SUBORD_EID))
+        if (!filter_has_var(INPUT_GET, LIB_ARG_FIRST_SUBORD_EID))
         {
             log_add('ask subordination oid', 'info', __FUNCTION__, '213a735c');
 ?>
 <form action="" method="get">
     <div>
         <label for="oid">OID &nbsp;&nbsp;&nbsp;&nbsp; :</label>
-        <input type="text" id="oid" name="<?php echo ARG_FIRST_SUBORD_EID; ?>" />
+        <input type="text" id="oid" name="<?php echo LIB_ARG_FIRST_SUBORD_EID; ?>" />
     </div>
     <div>
         <label for="loc">Location :</label>
-        <input type="text" id="loc" name="<?php echo ARG_FIRST_SUBORD_LOC; ?>" />
-        <input type="hidden" id="puppetmaster" name="<?php echo ARG_FIRST_PUPPETMASTER_EID; ?>" value="<?php echo $firstAlternativePuppetmasterEid; ?>" />
+        <input type="text" id="loc" name="<?php echo LIB_ARG_FIRST_SUBORD_LOC; ?>" />
+        <input type="hidden" id="puppetmaster" name="<?php echo LIB_ARG_FIRST_PUPPETMASTER_EID; ?>" value="<?php echo $firstAlternativePuppetmasterEid; ?>" />
     </div>
     <div class="button">
         <button type="submit">Submit</button>
@@ -6256,12 +6256,12 @@ function bootstrap_firstDisplay7Subordination(): bool
 <?php
             $ok = false;
         } else {
-            $argOID = trim(' '.filter_input(INPUT_GET, ARG_FIRST_SUBORD_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $argOID = trim(' '.filter_input(INPUT_GET, LIB_ARG_FIRST_SUBORD_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
             if (nod_checkNID($argOID, false))
             {
                 echo 'try alternative puppetmaster : ' . $argOID . ' ';
                 $firstSubordinationEid = $argOID;
-                $argLoc = trim(' '.filter_input(INPUT_GET, ARG_FIRST_SUBORD_LOC, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+                $argLoc = trim(' '.filter_input(INPUT_GET, LIB_ARG_FIRST_SUBORD_LOC, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
                 if (strlen($argLoc) != 0 && filter_var($argLoc, FILTER_VALIDATE_URL) !== false)
                 {
                     echo 'sync...';
@@ -6340,28 +6340,28 @@ function bootstrap_firstDisplay8OptionsFile(): bool
         $defaultOptions .= "\n";
     }
 
-    if (!file_exists(LOCAL_ENVIRONMENT_FILE))
+    if (!file_exists(LIB_LOCAL_ENVIRONMENT_FILE))
     {
         log_add('need create options file', 'warn', __FUNCTION__, '58d07f71');
         echo "creating<br />\n";
-        file_put_contents(LOCAL_ENVIRONMENT_FILE, $defaultOptions);
+        file_put_contents(LIB_LOCAL_ENVIRONMENT_FILE, $defaultOptions);
     }
 
-    if (!file_exists(LOCAL_ENVIRONMENT_FILE))
+    if (!file_exists(LIB_LOCAL_ENVIRONMENT_FILE))
     {
         echo ' <span class="error">ERROR!</span><br />' . "\n";
         echo '<div class="diverror">' . "\n";
         ?>
-Unable to create options file <b><?php echo LOCAL_ENVIRONMENT_FILE; ?></b> .<br/>
+Unable to create options file <b><?php echo LIB_LOCAL_ENVIRONMENT_FILE; ?></b> .<br/>
 On the same path as <b>index.php</b>, please create file manually.<br/>
 As <i>root</i>, run :<br/>
 <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
 
-cat &gt; <?php echo LOCAL_ENVIRONMENT_FILE; ?> &lt;&lt; EOF
+cat &gt; <?php echo LIB_LOCAL_ENVIRONMENT_FILE; ?> &lt;&lt; EOF
 <?php echo $defaultOptions; ?>
 EOF
 
-chmod 644 <?php echo LOCAL_ENVIRONMENT_FILE; ?>
+chmod 644 <?php echo LIB_LOCAL_ENVIRONMENT_FILE; ?>
 </pre>
 
         <?php
@@ -6392,14 +6392,14 @@ function bootstrap_firstDisplay9LocaleEntity(): bool
 
     echo '<div class="parts">'."\n";
     echo '<span class="partstitle">#9 local entity for server</span><br/>'."\n";
-    if ( file_put_contents(LOCAL_ENTITY_FILE, '0') !== false ) {
+    if ( file_put_contents(LIB_LOCAL_ENTITY_FILE, '0') !== false ) {
         echo 'new server entity<br/>' . "\n";
 
         // Generate new password for new local entity.
         $nebulePasswordEntity = '';
-        $genpasswd = openssl_random_pseudo_bytes(FIRST_GENERATED_PASSWORD_SIZE * 20); // TODO modify to use less entropy.
+        $genpasswd = openssl_random_pseudo_bytes(LIB_FIRST_GENERATED_PASSWORD_SIZE * 20); // TODO modify to use less entropy.
         $nebulePasswordEntity .= preg_replace('/[^[:print:]]/', '', $genpasswd);
-        $nebulePasswordEntity = (string)substr($nebulePasswordEntity, 0, FIRST_GENERATED_PASSWORD_SIZE);
+        $nebulePasswordEntity = (string)substr($nebulePasswordEntity, 0, LIB_FIRST_GENERATED_PASSWORD_SIZE);
         $genpasswd = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
         $genpasswd = null;
 
@@ -6416,7 +6416,7 @@ function bootstrap_firstDisplay9LocaleEntity(): bool
         log_add('switch to new entity ' . $nebulePublicEntity, 'warn', __FUNCTION__, '94c27df0');
 
         // Définit l'entité comme entité instance du serveur.
-        file_put_contents(LOCAL_ENTITY_FILE, $nebulePublicEntity);
+        file_put_contents(LIB_LOCAL_ENTITY_FILE, $nebulePublicEntity);
 
         // Calcul le nom.
         $hexvalue = preg_replace('/[[:^xdigit:]]/', '', $nebulePublicEntity);
@@ -6461,7 +6461,7 @@ function bootstrap_firstDisplay9LocaleEntity(): bool
                 }
             }
         }
-        $name = substr($name . 'robott', 0, FIRST_GENERATED_NAME_SIZE);
+        $name = substr($name . 'robott', 0, LIB_FIRST_GENERATED_NAME_SIZE);
 
         // Enregistrement du nom.
         obj_setContentAsText($name);
@@ -6483,20 +6483,20 @@ function bootstrap_firstDisplay9LocaleEntity(): bool
         </div>
         <?php
     } else {
-        file_put_contents(LOCAL_ENTITY_FILE, '0');
+        file_put_contents(LIB_LOCAL_ENTITY_FILE, '0');
         echo '<span class="error">ERROR!</span><br />' . "\n";
         echo '<div class="diverror">' . "\n";
         ?>
-Unable to create local entity file <b><?php echo LOCAL_ENTITY_FILE; ?></b> .<br/>
+Unable to create local entity file <b><?php echo LIB_LOCAL_ENTITY_FILE; ?></b> .<br/>
 On the same path as <b>index.php</b>, please create file manually.<br/>
 As <i>root</i>, run :<br/>
 <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
 
-touch <?php echo LOCAL_ENTITY_FILE; ?>
+touch <?php echo LIB_LOCAL_ENTITY_FILE; ?>
 
-chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . ' ' . LOCAL_ENTITY_FILE; ?>
+chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . ' ' . LIB_LOCAL_ENTITY_FILE; ?>
 
-chmod 644 <?php echo LOCAL_ENTITY_FILE; ?>
+chmod 644 <?php echo LIB_LOCAL_ENTITY_FILE; ?>
 </pre>
 
         <?php
@@ -6793,7 +6793,7 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
                 log_add('load application ' . $bootstrapApplicationID, 'info', __FUNCTION__, 'aab236ff');
 
                 // Charge l'objet de l'application. @todo faire via les i/o.
-                include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+                include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
 
                 $applicationName = Application::APPLICATION_NAME;
 
@@ -6830,7 +6830,7 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
                 log_add('load application whitout preload ' . $bootstrapApplicationID, 'info', __FUNCTION__, 'e01ea813');
 
                 // Charge l'objet de l'application. @todo faire via les i/o.
-                include(LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+                include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
 
                 $applicationName = Application::APPLICATION_NAME;
 
@@ -6888,8 +6888,8 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
             // Affichage sur interruption du chargement.
             bootstrap_displayApplicationfirst();
         } elseif ($bootstrapServerEntityDisplay) {
-            if (file_exists(LOCAL_ENTITY_FILE)) {
-                echo file_get_contents(LOCAL_ENTITY_FILE, false, null, -1, lib_getConfiguration('ioReadMaxData'));
+            if (file_exists(LIB_LOCAL_ENTITY_FILE)) {
+                echo file_get_contents(LIB_LOCAL_ENTITY_FILE, false, null, -1, lib_getConfiguration('ioReadMaxData'));
             } else {
                 echo '0';
             }
