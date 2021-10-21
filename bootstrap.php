@@ -392,8 +392,12 @@ const LIB_NID_MAX_ALGO_SIZE = 12;
 const LIB_FIRST_GENERATED_NAME_SIZE = 6;
 const LIB_FIRST_GENERATED_PASSWORD_SIZE = 14;
 const LIB_FIRST_RELOAD_DELAY = 3000;
-const LIB_FIRST_LOCALISATIONS = array('http://code.master.nebule.org', 'http://puppetmaster.nebule.org', 'http://security.master.nebule.org',);
-const LIB_FIRST_PUPPETMASTER_PUBLIC_KEY =
+const LIB_FIRST_LOCALISATIONS = array(
+    'http://code.master.nebule.org',
+    'http://puppetmaster.nebule.org',
+    'http://security.master.nebule.org',
+);
+const LIB_FIRST_AUTORITIES_PUBLIC_KEY = array(
     '-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAudMrAyvG3uqI9JLZRtqi
 nlgiF6hAp/whKWlujNXE+x0p6ibJEaIAPS+VyR4Lw9819UqObpMI2fa+Ql8/dJPM
@@ -407,8 +411,42 @@ Z2X2dE73Tx3TuyHr3e3A2xXMxcXZ0bs41Ey9wUWPRtBfEU6Yr3yXDQjMmLeCj/Vz
 QMqFriycSa9a4U4SyXomUAqj9jBzn1dmPN+cvC+2ByqoRdGKkJQZAnLcfpN+G+lt
 /GJe8Xgw01QlOFGT8PV9IvZek96PociLNqoyOhye7q5/Ik0fsEEIzYW2jvLGnrkv
 6dEOw+BEVa0QiNx/ju9yzHMCAwEAAQ==
------END PUBLIC KEY-----' . "\n";
-const LIB_FIRST_PUPPETMASTER_LINKS = array(
+-----END PUBLIC KEY-----' . "\n",
+    '-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAza1LNLyY3EMTeCOATF0A
+VvK8MtfpBTV/VEihy5dVedjNERbSsowCaWFDBUmUhRqAVDH/0I3qbP15gNTVa5As
+yF0GX3w3268XF7ZEqgfjyDEzVpsUq2iThecHMekKPkiE7UAySfLLNkfnA0yEPcnN
+JXo+fGEdnxhXimGO8aEmNNb4St5CUGNFjXlInvQH8vv5s3JV+ZPgAbpnB77ykYSx
++ernGQulv5E6j4sjHLh0M7eoHvt21HuKHHp0dyl5ZVSJJDak1rBRbpmumFqFzSf5
+dVCtMiX1Dd2bqqw844JptVciFO/8tVXfaIt3aSbC61bjF+gCGFIe3meOVTVbJ5lN
+BQIDAQAB
+-----END PUBLIC KEY-----' . "\n",
+    '-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA9fNcqhAIUjQnXJTl7kRR
+OWaxG/4luD/V22MqyIGBkopRNS0N2KS+DcTGa8znBbOhZrObtmEG3sRvqMrR5bSL
+1TJXvmYf7IP3UygVw2q4khp/Xxpu4dYFow0+Y0Hj6TMf6H0BNa0OZiwpOArCtScz
+qgbkLcYViD4pEccCoC/IttBSeXGZ9p9Yaqal8W11EBe8LlajJ0XGRPEy/KZogXzE
+OtkCmN47ZsfeKtn75ordrzOL+2W4KgA26QPCfBdPzanrV1NSeGyzmxV6lb2PAVUP
+A1tjFJTZ9FBwf4YzWKzOuj4V+0oftsHRI+hKfBphHqWaVrg8QBjONLUePQPNRvZM
+GQIDAQAB
+-----END PUBLIC KEY-----' . "\n",
+    '-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDG3s5ky2Ku85OCgVSGqNIpTLUY
+ozhnkLO2WScjhREDVTmbA+oiEQ28myOP/30LI6vI3dMHK3dPIcyYK8ApaoGn0H3x
+qxRlLiWpdAm47WMgbhuzktHxQ2D7pWWERPb/ybRrXZxymKb2Zv4RXd2WN+qulk1J
+vQKPJnvvk30EMrSyhQIDAQAB
+-----END PUBLIC KEY-----' . "\n",
+    '-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq9dMDhbJB0FK7voozRcd
+hLtTJHkrVxPt1XmhFJTnLLsqkbS5hoRqw8POMb5YKpJRinuE19auF12vUwVNNRV1
+WEKqNw23yQFj5DAeJhQ0rn12BRr9EGO0fpVcT45c1XUBJ+O3RCjGbLvAuPllVv6o
+kPqbWxrpBgjFUbvUgxC543t+Nu7Uih7c5oABp+9H6nLEdWpF+MhbTsOpNp1G+C5o
+u6cSeGbs98x91v71AQB/5Y1poVDSCeaO8KT0I1BF6h8ookYJaFtZ4gO/qm4doQDg
+YQzYHG+jbU1QJriY5uCQqbgrbGj8b8VfUGNtSoRPVfDbhU0mxKJrrAtpLjsWModS
+fQIDAQAB
+-----END PUBLIC KEY-----' . "\n",
+);
+const LIB_FIRST_LINKS = array(
     'nebule:link/2:0_0>020210714/l>88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>4fcc946ef03dff882c0b6a1717c99c0ce57639e99d1f52509e846874c98dad5abd28685c9d065b4ef0e9fefbbee217e91fc4a72ecac81712e1e2c14bd06612e71e9afdb09ef1c10e68117fe8edc4f93510318719d0a6d7436a1802cd38f814cba8503ef24d50aeca961825bc39b169acbe52240fa8528a44f387ee5dff0e096a2ab49a0b181fa688678540dfc409000104a6ab77c44a4495ac98d48f35658238c99f5b1f83d04c3309412ebf26b7b23c18bdde43b964ebb6b28b60393b4c343f567137461743153091039c07e35432fa7d0b46b729f65c11960cbda5cb78f3d8da52aaf662724e771125cce2fb99ef1409fbb23840872c6557fe63f2b25c8fc49b6b5663a44cdf2e829ffa9698cc121648136fd102333a556a97ac5b208a6b6fa584e239a35237fe9c38fd09fbe4c0580ca538d92c4e29d5e22ce4846df2563dc4cb39a599b92f22018b4973b768cf59cb8f517f3adae3ee21b7c43a812ec6c245fe548e6187a0e07ce6a0af38c40ccd24383216cbd312322e1583d5d358ccdc9911b67fdbf7d13b9f57a0a17a42f736be9dbd383fd9e7c0ce2589fbd6550a8e07ab90618302956a1bf69e76aaf3da829e1af4f7c7ceff169ce5e698ebe1987fa1b694c6b25130c0be5bbfdfe4a8594e54067abe235bf796cf455a84906d02ebc79e3feaa069db7c4adac872c104bfcbc08b2dfbcc3c9fd6aa465fb9d86c7f26.sha2.512',
     'nebule:link/2:0_0>020210714/l>88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>72ce2d1c9075a26bb8264564055426cec289d350cbc1e8d5e7472ee28db17606d06777a5831d3346f82a78a1e0b1a7ce2b66d61f59e0c15e8deb53c45f3245746c4afeece6a240cf50f285597b51050c49156b2b07860c4a78ec07d8bd1ec5bb1450b41b914e96642ae0260b819821727ded678288a10c21a02809a22333fad392c5f2d67636e1174c03d936457371a8f2dae5e1369f93adff03903426a6c69cddada88b6ec687573a2ec5cb78cb8f9401631739c78adcf000b92acece6cc34626528be94173754eda077ea26bbc45b7a4067b1dfdccb54ce8efb7634d2ab19ec0b30441d38d77e412e3bca1fc77fb6552fed7e14b4dfae157db5d1abc0bd768f0fd548a4124908985b7c9cc47e8058516008e99850cf0d7811981c8fd0621ebf8ca0a16b2ea3d6f2bf1a0e6b881344638d314f76af6c97dbf5618d04d881ee3b555284fcf461c23d3729aceb4be35118d28e7bccd2001324cdacb0b8000b21cf23c6d09cbf6d8d0ab4b64dd9e6872ed90ee349164c62a08506f5148cd6beb0b18449f798e6517419db44f14e623de912a6161b1f45eb3a40f8215b61cc5735c1362f7a45463dcc4c8b9a08954afc49f4c9eba13508aa9a5d5ed1bea9f8136ca2acb5c5601dca31b033f802b7fc0491f8b9062574500ad17674e1bfdcd78b183f1e4eeb7395822e95161c3fa5f3a1b59f8c18c9d4ba716a7cb7756d3d971d881.sha2.512',
     'nebule:link/2:0_0>020210714/l>88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>f976f916d794ad6384c9084cef7f2515305c464b2ab541142d952126ca9367e3.sha2.256>940c75a60c14a24e5f8bda796f72bef57ab1f64713a6fefd9a4097be95a9e96a.sha2.256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>56a9487ee5ea86fa35649b3b5e9fe6c20387139d41b3aa822dacacaa4c1284f31f60aec293df1406fcd6dfc89248457d4f97f35c1ebe0a30c0a0424eb28b9c5b2299b3faecf5b691857f73eaedd98e56b8c17c4f183bb300f6e0c01f156be592e1669fa26db14fc864ebc913df77e53ebeb6e8fdefd49ac71fd00a42f99a790c098a33755078cb73b37c618a379c12578d66be94256689d0cc65427cee7c51e07f37553931e66d0b0090779d3e869fb45888a4c0b1e61bc1ce63f8a12ea4ff6cb039f62c24c1b5cbbee78329e21042278514d4b9cdd3f028c2b12e6ad4a00526e1fc2093a65c8d33402cae2f38a40fa1ec6b37a52725ad1010e78b9b6262d50055e6214a2b4b96fdc7354220b5a0117979441ffd24f976e42943defdf36ef9910fb452d920890251c4e5297e56a16d2a4ab97c00882cff19b42f3f6a1edca9cf6f0a7e157a8dfbeb5595ebb576e5d512f5f046071455a55d1098e19e3725dae564e9fc138d4faec180e5fd71a6db36c6cbece824e52cac913004ad406247b2eb51a91a2c0a2552961a265157c59e8455a4a7c8ad7e0be90014bc8fcac3e103fc4469380961d7d1f59a77678f2ff97f7db78cb243a0bb71ab6b63f4a10e786a06b8d4aff2f5b5a133a1019524af59923c813fcc0bc4588b64e6cb6e81c77fdaec73b069d20e435d69f40fe0a2e5656c9fa7aed13fda2d071bd9c850a7415ffdcd.sha2.512',
@@ -940,8 +978,8 @@ function lib_init(): bool
     }
     foreach ($nebuleSecurityMasters as $master)
         $nebuleLocalAuthorities[] = $master;
-    $nebuleCodeMasters = ent_getCodeAuthorities(false);
 
+    $nebuleCodeMasters = ent_getCodeAuthorities(false);
     if (!ent_checkCodeAuthorities($nebuleCodeMasters)) {
         $nebuleCodeMasters = ent_getCodeAuthorities(true);
         if (!ent_checkCodeAuthorities($nebuleCodeMasters)) {
@@ -1170,9 +1208,8 @@ function nod_getType_FIXME(&$object, $type)
     $filter = array(
         'bl/rl/req' => 'l',
         'bl/rl/nid1' => $object,
-        'bl/rl/nid2' => '',
         'bl/rl/nid3' => $hashtype,
-        'bl/rl/nid4' => '0',
+        'bl/rl/nid4' => '',
     );
     lnk_getList($object, $table, $filter);
     foreach ($table as $itemtable) {
@@ -1276,8 +1313,8 @@ function nod_checkBanned_FIXME(&$nid): bool
         'bl/rl/req' => 'f',
         'bl/rl/nid1' => $hashtype,
         'bl/rl/nid2' => $nid,
-        'bl/rl/nid3' => '0',
-        'bl/rl/nid4' => '0',
+        'bl/rl/nid3' => '',
+        'bl/rl/nid4' => '',
     );
     _lnkFind($nid, $table, $filter);
     foreach ($table as $link) {
@@ -1394,7 +1431,7 @@ function obj_checkTypeMime(string &$nid, string $typeMime): bool
         'bl/rl/nid1' => $nid,
         'bl/rl/nid2' => $hashTypeAsked,
         'bl/rl/nid3' => $hashType,
-        'bl/rl/nid4' => '0',
+        'bl/rl/nid4' => '',
     );
     $links = array();
     lnk_getList($nid, $links, $filter);
@@ -1741,16 +1778,15 @@ function ent_getAskedMasters(string $refNid, array &$result, bool $synchronize):
         return $result;
 
     if ($synchronize)
-        obj_getDistantContent($refNid, LIB_FIRST_LOCALISATIONS);
+        obj_getDistantContent($refNid, array());
 
     $lnkList = array();
     $entList = array();
     $filter = array(
         'bl/rl/req' => 'l',
-        'bl/rl/nid1' => '',
         'bl/rl/nid2' => $refNid,
         'bl/rl/nid3' => '',
-        'bl/rl/nid4' => '0',
+        'bl/rl/nid4' => '',
         'bs/rs/nid' => lib_getConfiguration('puppetmaster'),
     );
     lnk_getList($refNid, $lnkList, $filter);
@@ -1947,11 +1983,13 @@ function ent_syncPuppetmaster(string $oid): void
 
     if ($oid == LIB_DEFAULT_PUPPETMASTER_EID) {
         log_add('Write default puppetmaster', 'info', __FUNCTION__, '555ec326');
-        $data = LIB_FIRST_PUPPETMASTER_PUBLIC_KEY;
-        $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
-        io_objectWrite($data, $hash);
-        foreach (LIB_FIRST_PUPPETMASTER_LINKS as $data)
-            io_linkWrite($oid, $data);
+        foreach (LIB_FIRST_AUTORITIES_PUBLIC_KEY as $data)
+        {
+            $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
+            io_objectWrite($data, $hash);
+        }
+        foreach (LIB_FIRST_LINKS as $link)
+            lnk_write($link);
     }
 
     ent_syncAuthorities(array($oid));
@@ -1991,9 +2029,8 @@ function ent_checkIsPublicKey(string &$nid): bool
     if (isset($nebuleCacheIsPublicKey[$nid]))
         return $nebuleCacheIsPublicKey[$nid];
 
-    if ($nid == '0'
-        || strlen($nid) < LIB_NID_MIN_HASH_SIZE
-        || !nod_checkNID($nid)
+    if (strlen($nid) < LIB_NID_MIN_HASH_SIZE
+        || !nod_checkNID($nid, false)
         || !obj_checkContent($nid)
         || !io_checkNodeHaveLink($nid)
     ) {
@@ -2098,8 +2135,8 @@ function app_getActivated(string $oid): bool
         'bl/rl/req' => 'f',
         'bl/rl/nid1' => $oid,
         'bl/rl/nid2' => $refActivated,
-        'bl/rl/nid3' => '0',
-        'bl/rl/nid4' => '0',
+        'bl/rl/nid3' => '',
+        'bl/rl/nid4' => '',
     );
     lnk_getList($oid, $links, $filter);
     foreach ($links as $link) {
@@ -2247,9 +2284,9 @@ function lnk_getGraphResolvOne_FIXME(string &$nid, &$visited, bool $present = tr
     $filter = array(
         'bl/rl/req' => 'u',
         'bl/rl/nid1' => $nid,
-        'bl/rl/nid2' => '0',
-        'bl/rl/nid3' => '0',
-        'bl/rl/nid4' => '0',
+        'bl/rl/nid2' => '',
+        'bl/rl/nid3' => '',
+        'bl/rl/nid4' => '',
     );
     lnk_getList($nid, $links, $filter); // Liste les liens de mise à jour de l'objet.
     $links = array_reverse($links); // Inverse le résultat pour avoir les liens les plus récents en premier.
@@ -2734,10 +2771,9 @@ function lnk_getDistantAnywhere(string $nid): void
     $hashLocation = obj_getNID('nebule/objet/entite/localisation', lib_getConfiguration('cryptoHashAlgorithm'));
     $filter = array(
         'bl/rl/req' => 'l',
-        'bl/rl/nid1' => '',
         'bl/rl/nid2' => $hashLocation,
         'bl/rl/nid3' => $hashType,
-        'bl/rl/nid4' => '0',
+        'bl/rl/nid4' => '',
     );
     lnk_getList($hashLocation, $links, $filter);
 
@@ -3216,20 +3252,20 @@ function lnk_write($link): bool
     // Write link into parts files.
     $result = io_linkWrite($linkParsed['bl/rl/nid1'], $link);
     if ($linkParsed['bl/rl/nid2'] != '')
-        $result = $result && io_linkWrite($linkParsed['bl/rl/nid2'], $link);
+        $result = io_linkWrite($linkParsed['bl/rl/nid2'], $link) && $result;
     if ($linkParsed['bl/rl/nid3'] != '')
-        $result = $result && io_linkWrite($linkParsed['bl/rl/nid3'], $link);
+        $result = io_linkWrite($linkParsed['bl/rl/nid3'], $link) && $result;
     if ($linkParsed['bl/rl/nid4'] != '')
-        $result = $result && io_linkWrite($linkParsed['bl/rl/nid4'], $link);
+        $result = io_linkWrite($linkParsed['bl/rl/nid4'], $link) && $result;
 
     // Write link for signer if needed.
     if (lib_getConfiguration('permitAddLinkToSigner'))
-        $result = $result && io_linkWrite($linkParsed['bs/rs/nid'], $link);
+        $result = io_linkWrite($linkParsed['bs/rs/nid'], $link) && $result;
 
     // Write link to history if needed.
     $histFile = LIB_LOCAL_HISTORY_FILE;
     if (lib_getConfiguration('permitHistoryLinksSign'))
-        $result = $result && io_linkWrite($histFile, $link);
+        $result = io_linkWrite($histFile, $link) && $result;
 
     return $result;
 }
@@ -5902,10 +5938,6 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
     echo '<span class="partstitle">#5 synchronizing authorities</span><br/>' . "\n";
 
     $puppetmaster = ent_getPuppetmaster();
-    $securityAuthorities = ent_getSecurityAuthorities(true);
-    $codeAuthorities = ent_getCodeAuthorities(true);
-    $timeAuthorities = ent_getTimeAuthorities(true);
-    $directoryAuthorities = ent_getDirectoryAuthorities(true);
 
     echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ';
     if (!ent_checkPuppetmaster($puppetmaster)) {
@@ -5934,6 +5966,12 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
     echo '.';
     echo "<br/>\n";
     flush();
+
+    // Try to find others autorities.
+    $securityAuthorities = ent_getSecurityAuthorities(true);
+    $codeAuthorities = ent_getCodeAuthorities(true);
+    $timeAuthorities = ent_getTimeAuthorities(true);
+    $directoryAuthorities = ent_getDirectoryAuthorities(true);
 
     echo 'security master &nbsp;: ';
     if (sizeof($securityAuthorities) != 0) {
