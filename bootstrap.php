@@ -1081,44 +1081,38 @@ function lib_getModeRescue(): bool
 }
 
 /**
- * Recherche un objet par référence, c'est à dire référencé par un autre objet dédié.
- * La recherche se fait dans les liens de $object.
- * Si $strict est à true, les liens sont pré-filtrés sur les entités autorités locales.
- * Si la liste des entités autorités locales est vide, tous les liens seront supprimés.
- * Si pas trouvé, retourne '0'.
+ * Find NID by reference RID from initial NID.
+ * Links must be signed by a local authority.
  *
  * @param string  $nid
  * @param string  $rid
- * @param boolean $strict
  * @return string
  */
-function nod_findByRef_FIXME(string $nid, string $rid, bool $strict = false)
+function nod_findByReference(string $nid, string $rid): string
 {
     global $nebuleLocalAuthorities;
 
-    $result = '0';
-    if (!nod_checkNID($nid) || !nod_checkNID($rid))
-        return $result;
+    if (!nod_checkNID($nid)
+        || !nod_checkNID($rid)
+    )
+        return '';
 
     $links = array();
-    lnk_findInclusive_FIXME($nid, $links, 'f', $nid, '', $rid, false);
+    $filter = array(
+        'bl/rl/req' => 'l',
+        'bl/rl/nid1' => $nid,
+        'bl/rl/nid3' => $rid,
+        'bl/rl/nid4' => '',
+    );
+    lnk_getList($nid, $links, $filter, false);
+
     foreach ($links as $link) {
-        // Au besoin, filtre les liens sur les autorités locales.
-        if ($strict) {
-            $signer = $link[2];
-            foreach ($nebuleLocalAuthorities as $authority) {
-                if ($signer == $authority) {
-                    $result = $link[6];
-                    break;
-                }
-            }
-        } else {
-            // Garde le dernier.
-            $result = $link[6];
+        foreach ($nebuleLocalAuthorities as $authority) {
+            if ($link['bs/rs/nid'] == $authority)
+                return $link['bl/rl/nid2'];
         }
     }
-
-    return $result;
+    return '';
 }
 
 function nod_getFirstName_FIXME(&$entite)
@@ -2129,7 +2123,7 @@ function app_getActivated(string $oid): bool
         return true;
 
     // Check with links.
-    $refActivated = obj_getNID(NEBULE_RID_INTERFACE_APPLICATIONS_ACTIVE, lib_getConfiguration('cryptoHashAlgorithm'));
+    $refActivated = NEBULE_RID_INTERFACE_APPLICATIONS_ACTIVE;
     $links = array();
     $filter = array(
         'bl/rl/req' => 'f',
@@ -2489,12 +2483,12 @@ function lnk_findInclusive_FIXME(&$nid, &$table, $action, $srcobj, $dstobj, $met
  * Link - Read links, parse and filter each links.
  *
  * @param string $nid
- * @param array  $result
+ * @param array  $links
  * @param array  $filter
  * @param bool   $withInvalidLinks
  * @return void
  */
-function lnk_getList(string &$nid, array &$result, array $filter, bool $withInvalidLinks = false): void
+function lnk_getList(string &$nid, array &$links, array $filter, bool $withInvalidLinks = false): void
 {
     if ($nid == '0' || !io_checkNodeHaveLink($nid))
         return;
@@ -2512,7 +2506,7 @@ function lnk_getList(string &$nid, array &$result, array $filter, bool $withInva
         if (lnk_verify($line)) {
             $link = lnk_parse($line);
             if (lnk_checkNotSuppressed($link, $lines) && lnk_filterStructure($link, $filter))
-                $result [] = $link;
+                $links [] = $link;
         }
     }
 }
@@ -4139,14 +4133,13 @@ function bootstrap_findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstan
 
     // Try to find with links.
     if ($bootstrapLibraryID == '') {
-        $bootstrapLibraryID = nod_findByRef_FIXME(
+        $bootstrapLibraryID = nod_findByReference(
             NEBULE_RID_INTERFACE_LIBRARY,
-            NEBULE_RID_INTERFACE_LIBRARY,
-            false);
+            NEBULE_RID_INTERFACE_LIBRARY);
 
         log_add('find nebule library ' . $bootstrapLibraryID, 'info', __FUNCTION__, '90ee41fc');
 
-        if (!nod_checkNID($bootstrapLibraryID)
+        if (!nod_checkNID($bootstrapLibraryID, false)
             || !io_checkNodeHaveLink($bootstrapLibraryID)
             || !obj_checkContent($bootstrapLibraryID)
         ) {
@@ -4238,10 +4231,9 @@ function bootstrap_findApplication(): void
         // Si demande de mise à jour de l'application en cours d'usage.
         if ($bootstrapUpdate) {
             // Recherche la dernière application depuis l'objet de référence sur lui-même.
-            $bootstrapApplicationID = nod_findByRef_FIXME(
+            $bootstrapApplicationID = nod_findByReference(
                 $bootstrapApplicationStartID,
-                obj_getNID(NEBULE_RID_INTERFACE_APPLICATIONS, lib_getConfiguration('cryptoHashAlgorithm')),
-                false);
+                NEBULE_RID_INTERFACE_APPLICATIONS);
         } else {
             // Vérifie l'ID de l'application mémorisé.
             if (isset($_SESSION['bootstrapApplicationID'])
@@ -4292,7 +4284,7 @@ function bootstrap_findApplication(): void
         } elseif (nod_checkNID($bootstrapSwitchApplication)
             && io_checkNodeHaveLink($bootstrapSwitchApplication)
         ) {
-            $refAppsID = obj_getNID(NEBULE_RID_INTERFACE_APPLICATIONS, lib_getConfiguration('cryptoHashAlgorithm'));
+            $refAppsID = NEBULE_RID_INTERFACE_APPLICATIONS;
             $links = array();
             lnk_findInclusive_FIXME($refAppsID, $links, 'f', $refAppsID, $bootstrapSwitchApplication, $refAppsID);
 
@@ -4323,10 +4315,9 @@ function bootstrap_findApplication(): void
                     $bootstrapApplicationTraductionInstanceSleep = $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID];
                 } else {
                     // Sinon recherche la dernière application depuis l'objet de référence sur lui-même.
-                    $bootstrapApplicationID = nod_findByRef_FIXME(
+                    $bootstrapApplicationID = nod_findByReference(
                         $bootstrapApplicationStartID,
-                        obj_getNID(NEBULE_RID_INTERFACE_APPLICATIONS, lib_getConfiguration('cryptoHashAlgorithm')),
-                        false);
+                        NEBULE_RID_INTERFACE_APPLICATIONS);
                 }
 
                 log_add('find switched application ' . $bootstrapApplicationID, 'info', __FUNCTION__, '0cbacda8');
@@ -4354,10 +4345,9 @@ function bootstrap_findApplication(): void
             $bootstrapApplicationStartID = $forceValue;
 
             // Recherche la dernière application depuis l'objet de référence sur lui-même.
-            $bootstrapApplicationID = nod_findByRef_FIXME(
+            $bootstrapApplicationID = nod_findByReference(
                 $bootstrapApplicationStartID,
-                obj_getNID(NEBULE_RID_INTERFACE_APPLICATIONS, lib_getConfiguration('cryptoHashAlgorithm')),
-                false);
+                NEBULE_RID_INTERFACE_APPLICATIONS);
         } else {
             $bootstrapApplicationStartID = '0';
             $bootstrapApplicationID = '0';
@@ -4373,7 +4363,7 @@ function bootstrap_findApplication(): void
         && $bootstrapApplicationInstanceSleep == ''
     ) {
         // Lit les liens de non pré-chargement pour l'application.
-        $refNoPreload = obj_getNID(NEBULE_RID_INTERFACE_APPLICATIONS_DIRECT, lib_getConfiguration('cryptoHashAlgorithm'));
+        $refNoPreload = NEBULE_RID_INTERFACE_APPLICATIONS_DIRECT;
         $links = array();
         lnk_findInclusive_FIXME($bootstrapApplicationStartID, $links, 'f', $bootstrapApplicationStartID, $refNoPreload, $bootstrapApplicationStartID);
 
@@ -4459,7 +4449,7 @@ function bootstrap_getCheckFingerprint(): void
     $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
     unset($data);
     // Recherche les liens de validation.
-    $hashRef = obj_getNID(NEBULE_RID_INTERFACE_BOOTSTRAP, lib_getConfiguration('cryptoHashAlgorithm'));
+    $hashRef = NEBULE_RID_INTERFACE_BOOTSTRAP;
     $links = array();
     lnk_findInclusive_FIXME($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
     // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
@@ -5371,7 +5361,7 @@ function bootstrap_displayOnBreak(): void
         unset($data);
         echo 'bootstrap &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $hash . ' ';
         // Recherche les liens de validation.
-        $hashRef = obj_getNID(NEBULE_RID_INTERFACE_BOOTSTRAP, lib_getConfiguration('cryptoHashAlgorithm'));
+        $hashRef = NEBULE_RID_INTERFACE_BOOTSTRAP;
         $links = array();
         lnk_findInclusive_FIXME($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
         // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
@@ -6107,13 +6097,6 @@ function bootstrap_firstDisplay6SyncObjects(): bool
         }
         flush();
 
-        $data = NEBULE_RID_INTERFACE_APPLICATIONS;
-        $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
-        io_objectWrite($data, $hash);
-
-        $data = NEBULE_RID_INTERFACE_LIBRARY;
-        $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
-        io_objectWrite($data, $hash);
         echo "<br />\nbootstrap start &nbsp;&nbsp;&nbsp;:" . $refBootID . ' ';
         flush();
 
@@ -6123,12 +6106,11 @@ function bootstrap_firstDisplay6SyncObjects(): bool
 
         // Recherche par référence.
         lnk_getDistantOnLocations($refLibID, LIB_FIRST_LOCALISATIONS);
-        $lastID = nod_findByRef_FIXME(
+        $lastID = nod_findByReference(
             $refLibID,
-            $refLibID,
-            false);
+            $refLibID);
         echo "<br />\nsynchronization &nbsp;&nbsp;&nbsp;:" . $lastID . ' ';
-        if ($lastID != '0') {
+        if ($lastID != '') {
             obj_getDistantContent($lastID, LIB_FIRST_LOCALISATIONS);
         } else {
             echo '<span id="error">ERROR!</span>';
@@ -6171,12 +6153,12 @@ function bootstrap_firstDisplay6SyncObjects(): bool
             echo $appID . ' ';
 
             // Recherche par référence.
-            $lastID = nod_findByRef_FIXME(
+            $lastID = nod_findByReference(
                 $appID,
                 $refAppsID,
                 false);
             log_add('find app ' . $appID . ' as ' . $lastID, 'info', __FUNCTION__, '4cc18a65');
-            if ($lastID != '0') {
+            if ($lastID != '') {
                 obj_getDistantContent($lastID, LIB_FIRST_LOCALISATIONS);
                 lnk_getDistantOnLocations($lastID, LIB_FIRST_LOCALISATIONS);
                 echo ' ';
