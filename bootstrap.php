@@ -1629,20 +1629,24 @@ function obj_setContent(string &$data, string $oid = '0'): bool
     return false;
 }
 
-function ent_getFullName_FIXME(&$entite)
+/**
+ * Find full name to the NID.
+ *
+ * @param string $nid
+ * @return string
+ */
+function ent_getFullName(&$nid): string
 {
-    // Cherche le nom complet d'une entite, càd avec prénom et surnom.
-    // Fonction avec utilisation du cache si possible.
     global $nebuleCacheReadEntityFullName;
 
-    if (isset($nebuleCacheReadEntityFullName [$entite]))
-        return $nebuleCacheReadEntityFullName [$entite];
+    if (isset($nebuleCacheReadEntityFullName [$nid]))
+        return $nebuleCacheReadEntityFullName [$nid];
 
-    $fname = nod_getFirstName($entite);
-    $name = nod_getName($entite);
-    $pname = nod_getPostName($entite);
+    $fname = nod_getFirstName($nid);
+    $name = nod_getName($nid);
+    $pname = nod_getPostName($nid);
     if ($name == '') {
-        $fullname = "$entite";
+        $fullname = "$nid";
     } else {
         $fullname = $name;
     }
@@ -1652,13 +1656,9 @@ function ent_getFullName_FIXME(&$entite)
     if ($pname != '') {
         $fullname = "$fullname $pname";
     }
-    unset($fname);
-    unset($name);
-    unset($pname);
 
     if (lib_getConfiguration('permitBufferIO'))
-        $nebuleCacheReadEntityFullName [$entite] = $fullname;
-
+        $nebuleCacheReadEntityFullName [$nid] = $fullname;
     return $fullname;
 }
 
@@ -5018,7 +5018,7 @@ function bootstrap_htmlTop()
 {
 global $nebuleServerEntity;
 
-$name = ent_getFullName_FIXME($nebuleServerEntity);
+$name = ent_getFullName($nebuleServerEntity);
 ?>
 <body>
 <div class="layout-header">
