@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020211018';
+const BOOTSTRAP_VERSION = '020211025';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -122,11 +122,11 @@ const ARG_RESCUE_MODE = 'r';
 const ARG_INLINE_DISPLAY = 'i';
 const ARG_STATIC_DISPLAY = 's'; // TODO not used yet
 
-const REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP = 'nebule/objet/interface/web/php/bootstrap';
-const REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE = 'nebule/objet/interface/web/php/bibliotheque';
-const REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS = 'nebule/objet/interface/web/php/applications';
-const REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_DIRECT = 'nebule/objet/interface/web/php/applications/direct';
-const REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_ACTIVE = 'nebule/objet/interface/web/php/applications/active';
+const NEBULE_RID_INTERFACE_BOOTSTRAP = 'fc9bb365082ea3a3c8e8e9692815553ad9a70632fe12e9b6d54c8ae5e20959ce94fbb64f.none.288';
+const NEBULE_RID_INTERFACE_LIBRARY = '780c5e2767e15ad2a92d663cf4fb0841f31fd302ea0fa97a53bfd1038a0f1c130010e15c.none.288';
+const NEBULE_RID_INTERFACE_APPLICATIONS = '4046edc20127dfa1d99f645a7a4ca3db42e94feffa151319c406269bd6ede981c32b96e2.none.288';
+const NEBULE_RID_INTERFACE_APPLICATIONS_DIRECT = 'f202ca455549a1ddd553251f9c1df49ec6541c3412e52ed5f2ce2adfd772d07d0bfc2d28.none.288';
+const NEBULE_RID_INTERFACE_APPLICATIONS_ACTIVE = 'ae2b0dd506026c59b27ae93ef2d1ead7a2c893d2662d360c3937b699428010538b5c0af9.none.288';
 
 const REFERENCE_BOOTSTRAP_ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAARoElEQVR42u2dbbCc
 ZX2Hrz1JMBSUAoEECCiVkLAEEgKkSBAwgFgGwZFb6NBOSVJn0H5peXXqSwVrdQZF6Cd0RiQ4kiH415ZpOlUECpKABBLewkIAayFAAgRCGxBylJx+2KdDwHCS
@@ -372,7 +372,7 @@ $metrologyLibraryPOOConvertationCache = 0;
  ------------------------------------------------------------------------------------------
  */
 
-const LIB_NEBULE_LIBRARY_PP_VERSION = '020211018';
+const LIB_NEBULE_LIBRARY_PP_VERSION = '020211025';
 const LIB_LINK_VERSION = '2:0';
 const LIB_DEFAULT_PUPPETMASTER_EID = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
 const LIB_DEFAULT_PUPPETMASTER_LOCATION = 'http://puppetmaster.nebule.org';
@@ -2129,7 +2129,7 @@ function app_getActivated(string $oid): bool
         return true;
 
     // Check with links.
-    $refActivated = obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_ACTIVE, lib_getConfiguration('cryptoHashAlgorithm'));
+    $refActivated = obj_getNID(NEBULE_RID_INTERFACE_APPLICATIONS_ACTIVE, lib_getConfiguration('cryptoHashAlgorithm'));
     $links = array();
     $filter = array(
         'bl/rl/req' => 'f',
@@ -4140,8 +4140,8 @@ function bootstrap_findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstan
     // Try to find with links.
     if ($bootstrapLibraryID == '') {
         $bootstrapLibraryID = nod_findByRef_FIXME(
-            obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE, lib_getConfiguration('cryptoHashAlgorithm')),
-            obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE, lib_getConfiguration('cryptoHashAlgorithm')),
+            NEBULE_RID_INTERFACE_LIBRARY,
+            NEBULE_RID_INTERFACE_LIBRARY,
             false);
 
         log_add('find nebule library ' . $bootstrapLibraryID, 'info', __FUNCTION__, '90ee41fc');
@@ -4240,7 +4240,7 @@ function bootstrap_findApplication(): void
             // Recherche la dernière application depuis l'objet de référence sur lui-même.
             $bootstrapApplicationID = nod_findByRef_FIXME(
                 $bootstrapApplicationStartID,
-                obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS, lib_getConfiguration('cryptoHashAlgorithm')),
+                obj_getNID(NEBULE_RID_INTERFACE_APPLICATIONS, lib_getConfiguration('cryptoHashAlgorithm')),
                 false);
         } else {
             // Vérifie l'ID de l'application mémorisé.
@@ -4292,7 +4292,7 @@ function bootstrap_findApplication(): void
         } elseif (nod_checkNID($bootstrapSwitchApplication)
             && io_checkNodeHaveLink($bootstrapSwitchApplication)
         ) {
-            $refAppsID = obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS, lib_getConfiguration('cryptoHashAlgorithm'));
+            $refAppsID = obj_getNID(NEBULE_RID_INTERFACE_APPLICATIONS, lib_getConfiguration('cryptoHashAlgorithm'));
             $links = array();
             lnk_findInclusive_FIXME($refAppsID, $links, 'f', $refAppsID, $bootstrapSwitchApplication, $refAppsID);
 
@@ -4325,7 +4325,7 @@ function bootstrap_findApplication(): void
                     // Sinon recherche la dernière application depuis l'objet de référence sur lui-même.
                     $bootstrapApplicationID = nod_findByRef_FIXME(
                         $bootstrapApplicationStartID,
-                        obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS, lib_getConfiguration('cryptoHashAlgorithm')),
+                        obj_getNID(NEBULE_RID_INTERFACE_APPLICATIONS, lib_getConfiguration('cryptoHashAlgorithm')),
                         false);
                 }
 
@@ -4356,7 +4356,7 @@ function bootstrap_findApplication(): void
             // Recherche la dernière application depuis l'objet de référence sur lui-même.
             $bootstrapApplicationID = nod_findByRef_FIXME(
                 $bootstrapApplicationStartID,
-                obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS, lib_getConfiguration('cryptoHashAlgorithm')),
+                obj_getNID(NEBULE_RID_INTERFACE_APPLICATIONS, lib_getConfiguration('cryptoHashAlgorithm')),
                 false);
         } else {
             $bootstrapApplicationStartID = '0';
@@ -4373,7 +4373,7 @@ function bootstrap_findApplication(): void
         && $bootstrapApplicationInstanceSleep == ''
     ) {
         // Lit les liens de non pré-chargement pour l'application.
-        $refNoPreload = obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS_DIRECT, lib_getConfiguration('cryptoHashAlgorithm'));
+        $refNoPreload = obj_getNID(NEBULE_RID_INTERFACE_APPLICATIONS_DIRECT, lib_getConfiguration('cryptoHashAlgorithm'));
         $links = array();
         lnk_findInclusive_FIXME($bootstrapApplicationStartID, $links, 'f', $bootstrapApplicationStartID, $refNoPreload, $bootstrapApplicationStartID);
 
@@ -4459,7 +4459,7 @@ function bootstrap_getCheckFingerprint(): void
     $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
     unset($data);
     // Recherche les liens de validation.
-    $hashRef = obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP, lib_getConfiguration('cryptoHashAlgorithm'));
+    $hashRef = obj_getNID(NEBULE_RID_INTERFACE_BOOTSTRAP, lib_getConfiguration('cryptoHashAlgorithm'));
     $links = array();
     lnk_findInclusive_FIXME($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
     // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
@@ -5167,7 +5167,7 @@ function bootstrap_displayOnBreak(): void
 
     // Chargement de la bibliothèque PHP POO.
     echo "tL=" . lib_getMetrologyTimer('tL') . "<br />\n";
-    echo 'library RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE, lib_getConfiguration('cryptoHashAlgorithm')) . "<br />\n";
+    echo 'library RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . NEBULE_RID_INTERFACE_LIBRARY . "<br />\n";
 
     if (!is_a($nebuleInstance, 'nebule')) {
         echo "Not loaded.\n";
@@ -5371,7 +5371,7 @@ function bootstrap_displayOnBreak(): void
         unset($data);
         echo 'bootstrap &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $hash . ' ';
         // Recherche les liens de validation.
-        $hashRef = obj_getNID(REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP, lib_getConfiguration('cryptoHashAlgorithm'));
+        $hashRef = obj_getNID(NEBULE_RID_INTERFACE_BOOTSTRAP, lib_getConfiguration('cryptoHashAlgorithm'));
         $links = array();
         lnk_findInclusive_FIXME($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
         // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
@@ -6079,12 +6079,9 @@ function bootstrap_firstDisplay6SyncObjects(): bool
     echo '<div class="parts">' . "\n";
     echo '<span class="partstitle">#6 synchronizing objets</span><br/>' . "\n";
 
-    $refApps = REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS;
-    $refAppsID = obj_getNID($refApps, lib_getConfiguration('cryptoHashAlgorithm'));
-    $refLib = REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE;
-    $refLibID = obj_getNID($refLib, lib_getConfiguration('cryptoHashAlgorithm'));
-    $refBoot = REFERENCE_NEBULE_OBJECT_INTERFACE_BOOTSTRAP;
-    $refBootID = obj_getNID($refBoot, lib_getConfiguration('cryptoHashAlgorithm'));
+    $refAppsID = NEBULE_RID_INTERFACE_APPLICATIONS;
+    $refLibID = NEBULE_RID_INTERFACE_LIBRARY;
+    $refBootID = NEBULE_RID_INTERFACE_BOOTSTRAP;
 
     // Si la bibliothèque ne se charge pas correctement, fait une première synchronisation des entités.
     if (!io_checkNodeHaveContent($refAppsID)
@@ -6110,18 +6107,18 @@ function bootstrap_firstDisplay6SyncObjects(): bool
         }
         flush();
 
-        $data = REFERENCE_NEBULE_OBJECT_INTERFACE_APPLICATIONS;
+        $data = NEBULE_RID_INTERFACE_APPLICATIONS;
         $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
         io_objectWrite($data, $hash);
 
-        $data = REFERENCE_NEBULE_OBJECT_INTERFACE_BIBLIOTHEQUE;
+        $data = NEBULE_RID_INTERFACE_LIBRARY;
         $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
         io_objectWrite($data, $hash);
-        echo "<br />\nbootstrap start &nbsp;&nbsp;&nbsp;:" . $refBoot . ' ';
+        echo "<br />\nbootstrap start &nbsp;&nbsp;&nbsp;:" . $refBootID . ' ';
         flush();
 
         lnk_getDistantOnLocations($refBootID, LIB_FIRST_LOCALISATIONS);
-        echo "<br />\nlibrary start &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:" . $refLib . ' ';
+        echo "<br />\nlibrary start &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:" . $refLibID . ' ';
         flush();
 
         // Recherche par référence.
