@@ -1127,113 +1127,99 @@ function nod_findByReference(string $nid, string $rid): string
     return '';
 }
 
-function nod_getFirstName_FIXME(&$entite)
+/**
+ * Find firstname to the NID.
+ *
+ * @param string $nid
+ * @return string
+ */
+function nod_getFirstName(string &$nid): string
 {
-    // Cherche le prénom d'une entite.
-    // Fonction avec utilisation du cache si possible.
     global $nebuleCacheReadEntityFName;
 
-    if (isset($nebuleCacheReadEntityFName [$entite]))
-        return $nebuleCacheReadEntityFName [$entite];
+    if (isset($nebuleCacheReadEntityFName [$nid]))
+        return $nebuleCacheReadEntityFName [$nid];
 
-    obj_setContentAsText('nebule/objet/prenom');
-    $type = nod_getType_FIXME($entite, 'nebule/objet/prenom'); // L'objet doit etre present et doit etre de type text/plain.
-    $text = '';
-    if (io_checkNodeHaveContent($type)) {
-        $text = obj_getAsText1line($type, 128);
-    }
-    unset($type);
+    $type = nod_getByType($nid, 'nebule/objet/prenom');
+    $text = obj_getAsText1line($type, 128);
 
     if (lib_getConfiguration('permitBufferIO'))
-        $nebuleCacheReadEntityFName [$entite] = $text;
-
+        $nebuleCacheReadEntityFName [$nid] = $text;
     return $text;
 }
 
-function nod_getName_FIXME(&$entite)
+/**
+ * Find name to the NID.
+ *
+ * @param string $nid
+ * @return string
+ */
+function nod_getName(string &$nid): string
 {
-    // Cherche le nom d'une entite.
-    // Fonction avec utilisation du cache si possible.
     global $nebuleCacheReadEntityName;
 
-    if (isset($nebuleCacheReadEntityName [$entite]))
-        return $nebuleCacheReadEntityName [$entite];
+    if (isset($nebuleCacheReadEntityName [$nid]))
+        return $nebuleCacheReadEntityName [$nid];
 
-    obj_setContentAsText('nebule/objet/nom');
-    $type = nod_getType_FIXME($entite, 'nebule/objet/nom'); // L'objet doit etre present et doit etre de type text/plain.
-    $text = '';
-    if (io_checkNodeHaveContent($type)) {
-        $text = obj_getAsText1line($type, 128);
-    }
-    unset($type);
+    $type = nod_getByType($nid, 'nebule/objet/nom');
+    $text = obj_getAsText1line($type, 128);
 
     if (lib_getConfiguration('permitBufferIO'))
-        $nebuleCacheReadEntityName [$entite] = $text;
-
+        $nebuleCacheReadEntityName [$nid] = $text;
     return $text;
 }
 
-function nod_getPostName_FIXME(&$entite)
+/**
+ * Find postname to the NID.
+ *
+ * @param string $nid
+ * @return string
+ */
+function nod_getPostName(string &$nid): string
 {
-    // Cherche le postnom d'une entite.
-    // Fonction avec utilisation du cache si possible.
     global $nebuleCacheReadEntityPName;
 
-    if (isset($nebuleCacheReadEntityPName [$entite]))
-        return $nebuleCacheReadEntityPName [$entite];
+    if (isset($nebuleCacheReadEntityPName [$nid]))
+        return $nebuleCacheReadEntityPName [$nid];
 
-    obj_setContentAsText('nebule/objet/postnom');
-    $type = nod_getType_FIXME($entite, 'nebule/objet/postnom'); // L'objet doit etre present et doit etre de type text/plain.
-    $text = '';
-    if (io_checkNodeHaveContent($type)) {
-        $text = obj_getAsText1line($type, 128);
-    }
-    unset($type);
+    $type = nod_getByType($nid, 'nebule/objet/postnom');
+    $text = obj_getAsText1line($type, 128);
 
     if (lib_getConfiguration('permitBufferIO'))
-        $nebuleCacheReadEntityPName [$entite] = $text;
-
+        $nebuleCacheReadEntityPName [$nid] = $text;
     return $text;
 }
 
-function nod_getType_FIXME(&$object, $type)
+/**
+ * Find OID with content for the type of the NID.
+ *
+ * @param string $nid
+ * @param string $type
+ * @return string
+ */
+function nod_getByType(string &$nid, string $type): string
 {
-    // Cherche l'objet contenant la description de l'objet pour une propriete type.
-    // Fonction avec utilisation du cache si possible.
-    global $nebulePublicEntity, $nebuleCacheFindObjType;
+    global $nebuleCacheFindObjType;
 
-    if (isset($nebuleCacheFindObjType [$object] [$type]))
-        return $nebuleCacheFindObjType [$object] [$type];
+    if (isset($nebuleCacheFindObjType [$nid] [$type]))
+        return $nebuleCacheFindObjType [$nid] [$type];
 
-    if ($object == '811ba947111090b4708da62494a84e5cfc13ea60e16dac94a678f395aa42da07')
-        return ''; // WARNING caca - Exception pour problème de performances : 'nebule/objet/entite/suivi'
-
-    $table = array();
-    $hashtype = obj_getNID($type, lib_getConfiguration('cryptoHashAlgorithm'));
-    $objdst = '';
+    $links = array();
+    $rid = obj_getNID($type, lib_getConfiguration('cryptoHashAlgorithm'));
     $filter = array(
         'bl/rl/req' => 'l',
-        'bl/rl/nid1' => $object,
-        'bl/rl/nid3' => $hashtype,
+        'bl/rl/nid1' => $nid,
+        'bl/rl/nid3' => $rid,
         'bl/rl/nid4' => '',
     );
-    lnk_getList($object, $table, $filter);
-    foreach ($table as $itemtable) {
-        if (($itemtable [2] == $nebulePublicEntity) && ($itemtable [7] == $hashtype) && ($itemtable [5] == $object) && ($itemtable [4] == 'l')) {
-            $objdst = $itemtable [6];
-            break 1;
-        }
-        if (($itemtable [7] == $hashtype) && ($itemtable [5] == $object) && ($itemtable [4] == 'l')) {
-            $objdst = $itemtable [6];
-        } // WARNING peut-être un problème de sécurité...
+    lnk_getList($nid, $links, $filter, false);
+
+    foreach ($links as $link) {
+        if (lib_getConfiguration('permitBufferIO'))
+            $nebuleCacheFindObjType [$nid] [$type] = $link['bl/rl/nid2'];
+        return $link['bl/rl/nid2'];
     }
-    unset($table);
-    unset($hashtype);
-
-    if (lib_getConfiguration('permitBufferIO'))
-        $nebuleCacheFindObjType [$object] [$type] = $objdst;
-
-    return $objdst;
+    return '';
 }
 
 /**
@@ -1652,9 +1638,9 @@ function ent_getFullName_FIXME(&$entite)
     if (isset($nebuleCacheReadEntityFullName [$entite]))
         return $nebuleCacheReadEntityFullName [$entite];
 
-    $fname = nod_getFirstName_FIXME($entite);
-    $name = nod_getName_FIXME($entite);
-    $pname = nod_getPostName_FIXME($entite);
+    $fname = nod_getFirstName($entite);
+    $name = nod_getName($entite);
+    $pname = nod_getPostName($entite);
     if ($name == '') {
         $fullname = "$entite";
     } else {
@@ -6175,11 +6161,11 @@ function bootstrap_firstDisplay6SyncObjects(): bool
                 lnk_getDistantOnLocations($lastID, LIB_FIRST_LOCALISATIONS);
                 echo ' ';
                 // Cherche le nom.
-                $nameID = nod_getType_FIXME(
+                $nameID = nod_getByType(
                     $lastID,
                     $refName);
                 if ($nameID == '0') {
-                    $nameID = nod_getType_FIXME(
+                    $nameID = nod_getByType(
                         $appID,
                         $refName);
                 }
