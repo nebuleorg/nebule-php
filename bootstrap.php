@@ -1008,8 +1008,12 @@ function lib_init(): bool
         }
     }
 
-    lib_setServerEntity();
-    lib_setDefaultEntity();
+    $rescueMode = lib_getModeRescue();
+    if ($rescueMode)
+        log_add('lib init : rescue mode activated', 'warn', __FUNCTION__, 'ad7056e9');
+
+    lib_setServerEntity($rescueMode);
+    lib_setDefaultEntity($rescueMode);
     lib_setPublicEntity();
 
     $libraryCheckOK = true;
@@ -1018,8 +1022,11 @@ function lib_init(): bool
 
 /**
  * Get and check local server entity.
+ *
+ * @param bool $rescueMode
+ * @return void
  */
-function lib_setServerEntity(): void
+function lib_setServerEntity(bool $rescueMode): void
 {
     global $nebuleServerEntity, $nebuleLocalAuthorities;
     if (file_exists(LIB_LOCAL_ENTITY_FILE)
@@ -1030,26 +1037,31 @@ function lib_setServerEntity(): void
     if (!ent_checkIsPublicKey($nebuleServerEntity))
         $nebuleServerEntity = lib_getConfiguration('puppetmaster');
 
-    if (lib_getConfiguration('permitInstanceEntityAsAuthority') && !lib_getModeRescue())
+    if (lib_getConfiguration('permitInstanceEntityAsAuthority') && !$rescueMode)
         $nebuleLocalAuthorities[] = $nebuleServerEntity;
 }
 
 /**
  * Get and check default entity.
+ *
+ * @param bool $rescueMode
+ * @return void
  */
-function lib_setDefaultEntity(): void
+function lib_setDefaultEntity(bool $rescueMode): void
 {
     global $nebuleDefaultEntity, $nebuleLocalAuthorities;
     $nebuleDefaultEntity = lib_getConfiguration('defaultCurrentEntity');
     if (!ent_checkIsPublicKey($nebuleDefaultEntity))
         $nebuleDefaultEntity = lib_getConfiguration('puppetmaster');
 
-    if (lib_getConfiguration('permitDefaultEntityAsAuthority') && !lib_getModeRescue())
+    if (lib_getConfiguration('permitDefaultEntityAsAuthority') && !$rescueMode)
         $nebuleLocalAuthorities[] = $nebuleDefaultEntity;
 }
 
 /**
  * Get and check public entity.
+ *
+ * @return void
  */
 function lib_setPublicEntity(): void
 {
