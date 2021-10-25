@@ -4108,7 +4108,7 @@ function bootstrap_setPermitOpenFileCode()
  * @param string $bootstrapLibraryInstanceSleep
  * @return void
  */
-function bootstrap_findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstanceSleep): void
+function bootstrap_findLibraryPOO(string &$bootstrapLibraryID, string &$bootstrapLibraryInstanceSleep): void
 {
     global $libraryCheckOK;
 
@@ -4142,6 +4142,7 @@ function bootstrap_findLibraryPOO(&$bootstrapLibraryID, &$bootstrapLibraryInstan
             || !obj_checkContent($bootstrapLibraryID)
         ) {
             $bootstrapLibraryID = '';
+            $bootstrapLibraryInstanceSleep = '';
             bootstrap_setBreak('31', 'Finding nebule library error.');
         }
     }
