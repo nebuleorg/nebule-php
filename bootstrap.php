@@ -4103,6 +4103,7 @@ function bootstrap_setPermitOpenFileCode()
 
 /**
  * Try to find nebule Lib POO.
+ * BL : l>RID>libID>RID
  *
  * @param string $bootstrapLibraryID
  * @param string $bootstrapLibraryInstanceSleep
