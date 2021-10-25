@@ -4230,6 +4230,7 @@ function bootstrap_findApplication(): void
      *
      * Une dé-sérialisation peut échouer si la classe contenu dans l'objet a été modifiée dans sa structure.
      */
+    $bootstrapApplicationID = '';
     // Si pas de demande de changement d'application.
     if ($bootstrapSwitchApplication == ''
         || $bootstrapSwitchApplication == $bootstrapApplicationStartID
@@ -4245,15 +4246,14 @@ function bootstrap_findApplication(): void
             // Vérifie l'ID de l'application mémorisé.
             if (isset($_SESSION['bootstrapApplicationID'])
                 && $_SESSION['bootstrapApplicationID'] != ''
-                && nod_checkNID($_SESSION['bootstrapApplicationID'])
-                && $_SESSION['bootstrapApplicationID'] == '0'
-                || (io_checkNodeHaveLink($_SESSION['bootstrapApplicationID'])
-                    && obj_checkContent($_SESSION['bootstrapApplicationID'])
+            )
+                $bootstrapApplicationID = $_SESSION['bootstrapApplicationID'];
+            if (nod_checkNID($bootstrapApplicationID, false)
+                && $bootstrapApplicationID == '0'
+                || (io_checkNodeHaveLink($bootstrapApplicationID)
+                    && obj_checkContent($bootstrapApplicationID)
                 )
             ) {
-                // Mémorise l'ID de l'application en cours.
-                $bootstrapApplicationID = $_SESSION['bootstrapApplicationID'];
-
                 // Vérifie l'application non dé-sérialisée.
                 if (isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID])
                     && $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID] != ''
