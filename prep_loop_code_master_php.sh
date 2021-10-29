@@ -7,12 +7,17 @@
 # www.nebule.org
 # Version 020211026
 
-
-
 export PUBSPACE=~/pub
+export WORKSPACE=~/workspace/nebule-php
 export password_entity=''
 
-# Prepare all authorities specifically for develop and tests.
+echo ' > start'
+cd $PUBSPACE || return 1
+cd $PUBSPACE || exit 1
+
+export LIB_RID_CODE_BRANCH='50e1d0348892e7b8a555301983bccdb8a07871843ed8f392d539d3d90f37ea8c2a54d72a.none.288'
+
+# Prepare all links specifically for develop and tests.
 # Same password.
 # Just for TESTS !!!
 export puppetmaster_develop_key='-----BEGIN RSA PRIVATE KEY-----
@@ -69,20 +74,6 @@ l0BIMekiqn/Z1yKzaAQmg9zV68nz1jKGmyjz4u+QY/FKXHk4O1AwucoXx8Al7BdI
 BQV88hVkdzwv7vMRrJh9O0ug87wYI/SQ240yfcf6LDa9xI4S2E+HRNeDQ94lc3oz
 F7Tc9Bd1pvf3IH7ibQ6/6M2Pv+zhZshS+l3wcuNibQRCNlJjLAm2PsEr65kzY/g1
 -----END RSA PRIVATE KEY-----'
-export puppetmaster_develop_pem='-----BEGIN PUBLIC KEY-----
-MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAyIi5v4CKFQ7hEAfFXVP+
-SH1jnKkGQlQa6Z9VJaVeGzQIkU2jVmRHT5dsSoCMGZHxeJxKapeFnYpJt+M59npP
-63lWBFmJFza6ru1u3te70SBOO/j2Pore/uJsEGga4uBqRQ62kwIwn0W8ldZF9FBN
-5zRYe5le0A8MOPAxkCp4nfAfZ8iGwN5ySZc1iWG40IV2E8wnU8btF0DOcZePMNIj
-eieP0ABYizAXD7vZrUvB92RiTVLx4FNPPaGfEUeJChrtmfh7o1mNTUcmkzePBU6z
-vi83tU7et26qWqce7yRfJYB93h24v81rJNOzkJqrgRpSyvcwJWfZEap8Y2ymAvw/
-42q5OXFvpeIUk1Hk6skEwuU7vb+QUeX9EdtjEgFqpBPdINL+pRQ/GgKZOH8lX4xe
-G59nIA22OYFYgW+NTZZztTaI2IW+Sy1UveFYscc80YKOuIM7s/pYvhCNS84rNa6n
-7gIhJGgDUp3oJMT+7WJmuMSU6HMUhk7HprNMTSEAqCratVpEcfxCaKmhVf5Dfv1P
-3HT9AvlrXpyKtcw44wOACSQX+hqkX/Oi6Dqe0Gb4cstWQMh7AFPZGoujQKzc2bmg
-ocaALB43jTsGfZsKriTnskiSL4e4vteEHYFGEEYinrdNqAMyQRRAdvBPyUNCDgC0
-Hrbkdn/x7v2AZL6fqf66wQUCAwEAAQ==
------END PUBLIC KEY-----'
 export security_master_develop_key='-----BEGIN RSA PRIVATE KEY-----
 Proc-Type: 4,ENCRYPTED
 DEK-Info: AES-256-CBC,EBC8E5442ECF8451FD9B258BADC245B2
@@ -101,12 +92,6 @@ qmn5lh6xK0aMCOhio7ByUoV1kxBBwooaA/ouxB1Gr9xEHqYMU3l2toLEELvjzZlt
 2onfKoSdolQh+UWDXKF2mMC6qgCcYdUBelQGerV+tfeuBkaxe4d0dRAJn9eaYEb1
 tr5Ag4w3EtnkD6d88KWUn5HWxkpXAWTw5QqTZXRfhpA=
 -----END RSA PRIVATE KEY-----'
-export security_master_develop_pem='-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDArTQCyllhNiODPqQ5FKzLKmMR
-PttI9GMbvORHj7vgBfqxluTC/S/jG7luR4Fwz4KVmWtvUyY00QAqgtgoPLJe63jj
-xZUO6oYUWRACyTGyAVW2+iRY4J8SofiZMXsbB3vP3J2Imic9bg9L1iJpVYaikFyv
-HOtG4zH2Xlaq4uNRwQIDAQAB
------END PUBLIC KEY-----'
 export code_master_develop_key='-----BEGIN RSA PRIVATE KEY-----
 Proc-Type: 4,ENCRYPTED
 DEK-Info: AES-256-CBC,779550856512A3576B281A421793BF74
@@ -125,12 +110,6 @@ Zt7cC34xj3inBVuwaDmLKTdRdbob5kcv6nqCUfXQ7VRGwaUaiHIoJeqJ3G2i7Tnk
 CSREUN8YfpWkomOiCNPlxwq2fjHIBtMew9Hm0UPfW7db/LmLaKK6/FzcWfEWHqWN
 YtH4aJOujfNqT3mWOU5jewiyZ710D3Fi13S4XXotBfM=
 -----END RSA PRIVATE KEY-----'
-export code_master_develop_pem='-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJerlN2gQ3zFcnv06g8ud15Yrf
-cPLuXfru3DwfAcZ/pJPWbi9MZg7kuDNWJssC8iQJFREFRhVhRx7+uRmgYvS2Ll8t
-thhAtmPEfezilcBi15xAJwoHrLIcVm2UmMIvZdnqpYLVTNaNGpellXxCfkLkSWeq
-mS0r8oLbhGmXIqHuIwIDAQAB
------END PUBLIC KEY-----'
 export time_master_develop_key='-----BEGIN RSA PRIVATE KEY-----
 Proc-Type: 4,ENCRYPTED
 DEK-Info: AES-256-CBC,38028DFEF558CE4E8BABAEBD2FCE0EE3
@@ -149,12 +128,6 @@ jQ4qs+HQbMzXB+afmT/wovsPtp8G42sixDE7kU9oqyTqi0vrWFR+YEyjLrf0aBXQ
 gZphmKn97ASjR270lYdtCKhACN0AqggCTx20QbJ7zbbhxQ34gu6GALaU5dtXV5k2
 qjZyhoqrvMo4uTBscsvz/M3qZUpFx4fhaokU2gv4NBJ1/2I2+FLQlOPXqCA3GWoz
 -----END RSA PRIVATE KEY-----'
-export time_master_develop_pem='-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCr6KhXXkZnyDFgq1RrcmuMu2sw
-O9eXaB819Tmlol0Uxwfu0jJGd/t5aZQ2zBt7/rPU2O7vwbigx/EF+FGOH/c53wt0
-XXEpMXVi9HcbPtzbwHKipRlHbP1YQcJ2nVJ8Aw0f3uu2wcRGYu2Xr2N1m32R0SX1
-OEDcx6xnc0EHMH4XkQIDAQAB
------END PUBLIC KEY-----'
 export directory_master_develop_key='-----BEGIN RSA PRIVATE KEY-----
 Proc-Type: 4,ENCRYPTED
 DEK-Info: AES-256-CBC,4AD18E9C81FA13F38339D32792F57317
@@ -173,12 +146,151 @@ wVOhNgBLg1OaQCS35qj7cVtcnfWHLrW/xUIS4Deyb7qCja7kLNbfj0NnRBpieeCl
 LaFSte6xc8Wc9GcajaAVhvwGBHxkgpFpyfVTnBZJipClINqmliFldwlr9Q8UMqKi
 4az53E8XuQluQztRYdNUdHr63/3zW64d+yKDhsJHnwJUcDi2QWiXWlacBA/7NBI1
 -----END RSA PRIVATE KEY-----'
-export directory_master_develop_pem='-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDRanuMJw2bvc0lmurFYzNWUIWH
-7hLPggRzut0NxVOAOLWcXdYr6Iorx/FWQxA1AME8LzhDSTOBmnqvXg5hMRSQXU5B
-niWcotjKn6ih6I5RNhFwr77hzbEOaCfDXkT2L6+nvr0OlMsExBSekJ9C3Tsbb8GX
-PeVQ7zUFwnivdQ+SUwIDAQAB
------END PUBLIC KEY-----'
+
+function loop_mode_f()
+{
+  echo ' > loop mode : reinit full'
+
+  echo ' > prep'
+  sudo rm -rf l o
+  sudo mkdir -p l o
+  [ -f e ] && sudo rm -f e
+  [ -f c ] && sudo rm -f c
+
+  sudo chown 1000.33 l o
+  sudo chmod 775 l o
+
+  cat "${WORKSPACE}/nebule.env" \
+    | sed 's/^puppetmaster = .*/puppetmaster = '"${puppetmaster_develop_key_hash}"'/' \
+    | sed 's/^codeBranch = .*/codeBranch = develop/' \
+    > c
+
+  echo ' > obj'
+  echo -n "${puppetmaster_develop_key}" > "o/${puppetmaster_develop_key_hash}"
+  echo -n "${security_master_develop_key}" > "o/${security_master_develop_key_hash}"
+  echo -n "${code_master_develop_key}" > "o/${code_master_develop_key_hash}"
+  echo -n "${time_master_develop_key}" > "o/${time_master_develop_key_hash}"
+  echo -n "${directory_master_develop_key}" > "o/${directory_master_develop_key_hash}"
+  echo -n "${puppetmaster_develop_pem}" > "o/${puppetmaster_develop_pem_hash}"
+  echo -n "${security_master_develop_pem}" > "o/${security_master_develop_pem_hash}"
+  echo -n "${code_master_develop_pem}" > "o/${code_master_develop_pem_hash}"
+  echo -n "${time_master_develop_pem}" > "o/${time_master_develop_pem_hash}"
+  echo -n "${directory_master_develop_pem}" > "o/${directory_master_develop_pem_hash}"
+
+  echo ' > links puppetmaster'
+  links=(
+    'nebule:link/2:0_0>020210714/l>'"${puppetmaster_develop_pem_hash}"'>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256'
+    'nebule:link/2:0_0>020210714/l>'"${puppetmaster_develop_pem_hash}"'>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256'
+    'nebule:link/2:0_0>020210714/l>'"${puppetmaster_develop_pem_hash}"'>f976f916d794ad6384c9084cef7f2515305c464b2ab541142d952126ca9367e3.sha2.256>940c75a60c14a24e5f8bda796f72bef57ab1f64713a6fefd9a4097be95a9e96a.sha2.256'
+    'nebule:link/2:0_0>020210714/l>'"${puppetmaster_develop_pem_hash}"'>90f1075d96b6d74e3b69bc96448993f9f3a02f593ad0795d5b02e992bacf5b39.sha2.256>0f183d69e06108ac3791eb4fe5bf38beec824db0a2d9966caffcfef5bc563355.sha2.256'
+    'nebule:link/2:0_0>020210714/l>'"${puppetmaster_develop_pem_hash}"'>5dda00620755703a67896a2fc2f07ac7464d871af0809015018b0935c468f9d7.sha2.256'
+    #'nebule:link/2:0_0>020210714/l>'"${security_master_develop_pem_hash}"'>daea63066cd8f5d4a9c8c80f3cc51f3c20b7fc74ac170ab2ce1950999b422f17.sha2.256'
+    'nebule:link/2:0_0>020210714/l>'"${security_master_develop_pem_hash}"'>9e854553b868627af36369b5d9e1e9d5ae31a398e2bacb0816e98e5fb6e806ef.sha2.256'
+    #'nebule:link/2:0_0>020210714/l>'"${code_master_develop_pem_hash}"'>b6fef678931e0761314983d9a08c19b095b088cf6500891206ca1f8b78c2d008.sha2.256'
+    #'nebule:link/2:0_0>020210714/l>'"${directory_master_develop_pem_hash}"'>83db082578142c900e36765ebc210893d79ed0ab1127d687f3307c0c061802e6.sha2.256'
+    #'nebule:link/2:0_0>020210714/l>'"${time_master_develop_pem_hash}"'>663eb81c89c27739f0f875617bcd45b3a18d4b8eb859b8c6e5dccbf9085a2ef9.sha2.256'
+    'nebule:link/2:0_0>020210714/l>'"${security_master_develop_pem_hash}"'>a4b210d4fb820a5b715509e501e36873eb9e27dca1dd591a98a5fc264fd2238adf4b489d.none.288'
+    'nebule:link/2:0_0>020210714/l>'"${code_master_develop_pem_hash}"'>2b9dd679451eaca14a50e7a65352f959fc3ad55efc572dcd009c526bc01ab3fe304d8e69.none.288'
+    'nebule:link/2:0_0>020210714/l>'"${directory_master_develop_pem_hash}"'>0a4c1e7930a65672379616a2637b84542049b416053ac0d9345300189791f7f8e05f3ed4.none.288'
+    'nebule:link/2:0_0>020210714/l>'"${time_master_develop_pem_hash}"'>bab7966fd5b483f9556ac34e4fac9f778d0014149f196236064931378785d81cae5e7a6e.none.288'
+  )
+  for link in "${links[@]}"
+  do
+    add_sign_link "${link}" "${puppetmaster_develop_key_hash}" 512
+  done
+
+  echo ' > links security master'
+  links=(
+    'nebule:link/2:0_0>020210714/l>'"${security_master_develop_pem_hash}"'>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256'
+    'nebule:link/2:0_0>020210714/l>'"${security_master_develop_pem_hash}"'>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256'
+  )
+  for link in "${links[@]}"
+  do
+    add_sign_link "${link}" "${security_master_develop_key_hash}" 256
+  done
+
+  echo ' > links code master'
+  links=(
+    'nebule:link/2:0_0>020210714/l>'"${code_master_develop_pem_hash}"'>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256'
+    'nebule:link/2:0_0>020210714/l>'"${code_master_develop_pem_hash}"'>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256'
+  )
+  for link in "${links[@]}"
+  do
+    add_sign_link "${link}" "${code_master_develop_key_hash}" 256
+  done
+
+  echo ' > links time master'
+  links=(
+    'nebule:link/2:0_0>020210714/l>'"${time_master_develop_pem_hash}"'>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256'
+    'nebule:link/2:0_0>020210714/l>'"${time_master_develop_pem_hash}"'>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256'
+  )
+  for link in "${links[@]}"
+  do
+    add_sign_link "${link}" "${time_master_develop_key_hash}" 256
+  done
+
+  echo ' > links directory master'
+  links=(
+    'nebule:link/2:0_0>020210714/l>'"${directory_master_develop_pem_hash}"'>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256'
+    'nebule:link/2:0_0>020210714/l>'"${directory_master_develop_pem_hash}"'>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256'
+  )
+  for link in "${links[@]}"
+  do
+    add_sign_link "${link}" "${directory_master_develop_key_hash}" 256
+  done
+}
+
+function loop_mode_e()
+{
+  echo ' > loop mode : export codes'
+}
+
+function loop_mode_r()
+{
+  echo ' > loop mode : refresh codes'
+  current_date=$(date "+0%Y%m%d%H%M%S")
+  echo "   - date : ${current_date}"
+
+  bootstrap_hash=$(cat "${WORKSPACE}/bootstrap.php" | sha256sum | cut -d' ' -f1)'.sha.256'
+  cp "${WORKSPACE}/bootstrap.php" "l/${bootstrap_hash}"
+
+  link="nebule:link/2:0_0>${current_date}/l>${bootstrap_hash}>f2ed63619e36e9df248282fe1ab7f2918061b724da9115e59b6cd3c54257db29.sha2.256"
+  add_sign_link "${link}" "${code_master_develop_key_hash}" 256
+}
+
+function add_sign_link()
+{
+  link="${1}"
+  eid="${2}"
+  size="${3}"
+
+  logger "add_sign_link ${link} with ${eid}"
+  slink=$(echo -n "${link}" | openssl dgst -hex -"sha${size}" -sign "o/${eid}" -passin "pass:${password_entity}" | cut -d ' ' -f2)
+  nid1=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f2)
+  nid2=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f3)
+  nid3=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f4)
+  nid4=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f5)
+  [ " ${nid1}" != ' ' ] && echo "${link}_${nid1}>${slink}.sha2.${size}" >> "l/${nid1}"
+  [ " ${nid2}" != ' ' ] && echo "${link}_${nid1}>${slink}.sha2.${size}" >> "l/${nid2}"
+  [ " ${nid3}" != ' ' ] && echo "${link}_${nid1}>${slink}.sha2.${size}" >> "l/${nid3}"
+  [ " ${nid4}" != ' ' ] && echo "${link}_${nid1}>${slink}.sha2.${size}" >> "l/${nid4}"
+}
+
+# Recherche ou demande le mot de passe de l'entité.
+if [ -f ~/priv/default.password ]
+then
+  password_entity=$(cat ~/priv/default.password)
+else
+  read -r -s -p ' ? password : ' password_entity
+fi
+echo ''
+
+# Extrait les clés publiques.
+export puppetmaster_develop_pem=$(echo -n "${puppetmaster_develop_key}" | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
+export security_master_develop_pem=$(echo -n "${security_master_develop_key}" | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
+export code_master_develop_pem=$(echo -n "${code_master_develop_key}" | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
+export time_master_develop_pem=$(echo -n "${time_master_develop_key}" | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
+export directory_master_develop_pem=$(echo -n "${directory_master_develop_key}" | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
 
 export puppetmaster_develop_key_hash=$(echo -n "$puppetmaster_develop_key" | sha256sum | cut -d' ' -f1)'.sha.256'
 export puppetmaster_develop_pem_hash=$(echo -n "$puppetmaster_develop_pem" | sha256sum | cut -d' ' -f1)'.sha.256'
@@ -191,38 +303,29 @@ export time_master_develop_pem_hash=$(echo -n "$time_master_develop_pem" | sha25
 export directory_master_develop_key_hash=$(echo -n "$directory_master_develop_key" | sha256sum | cut -d' ' -f1)'.sha.256'
 export directory_master_develop_pem_hash=$(echo -n "$directory_master_develop_pem" | sha256sum | cut -d' ' -f1)'.sha.256'
 
-# Recherche ou demande le mot de passe de l'entité.
-if [ -f ~/priv/default.passwd ]
-then
-  password_entity=$(cat ~/priv/default.passwd)
-else
-  read -r -s -p 'Password : ' password_entity
-fi
-echo ''
-
-
-export loop_type='r'
+function main
+{
+loop_type='r'
 while true
 do
 
-echo '...'
+echo ' = wait'
+read -r -n 1 -p '[r] refresh codes / [e] export codes / [f] reinit full / [q] quit : ' loop_type
+echo -e "\n > read ${loop_type}"
+
+cd $PUBSPACE || return 1
 cd $PUBSPACE || exit 1
+echo -e " > read (${loop_type})"
 
-if [ "$loop_type" == 'f' ]
-then
-  echo ' > Loop mode : reinit full'
-  # TODO
-elif [ "$loop_type" == 'e' ]
-  echo ' > Loop mode : export codes'
-  # TODO
-else
-  echo ' > Loop mode : refresh codes'
-  # TODO
-fi
+case "${loop_type}" in
+  f) loop_mode_f;;
+  e) loop_mode_e;;
+  q) echo ' > quit'; break;;
+  *) loop_mode_r;;
+esac
 
-
-
-
-echo ' --- Attente ---'
-read -r -n -p '[r] refresh codes / [e] export codes / [f] reinit full : ' loop_type
 done
+
+}
+
+main
