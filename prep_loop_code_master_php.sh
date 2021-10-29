@@ -24,6 +24,7 @@ export LIB_RID_CODE_BRANCH='50e1d0348892e7b8a555301983bccdb8a07871843ed8f392d539
 # Prepare all links specifically for develop and tests.
 # Same password.
 # Just for TESTS !!!
+# openssl genrsa -aes256 -out puppetmaster.develop.key.pem 4096
 export puppetmaster_develop_key='-----BEGIN RSA PRIVATE KEY-----
 Proc-Type: 4,ENCRYPTED
 DEK-Info: AES-256-CBC,7CF540C67BD76B080B14E12B344F1FCB
@@ -78,6 +79,7 @@ l0BIMekiqn/Z1yKzaAQmg9zV68nz1jKGmyjz4u+QY/FKXHk4O1AwucoXx8Al7BdI
 BQV88hVkdzwv7vMRrJh9O0ug87wYI/SQ240yfcf6LDa9xI4S2E+HRNeDQ94lc3oz
 F7Tc9Bd1pvf3IH7ibQ6/6M2Pv+zhZshS+l3wcuNibQRCNlJjLAm2PsEr65kzY/g1
 -----END RSA PRIVATE KEY-----'
+# openssl genrsa -aes256 -out security.master.develop.key.pem 1024
 export security_master_develop_key='-----BEGIN RSA PRIVATE KEY-----
 Proc-Type: 4,ENCRYPTED
 DEK-Info: AES-256-CBC,EBC8E5442ECF8451FD9B258BADC245B2
@@ -200,7 +202,7 @@ function loop_mode_f()
   )
   for link in "${links[@]}"
   do
-    add_sign_link "${link}" "${puppetmaster_develop_key_hash}" 512
+    sign_write_link "${link}" "${puppetmaster_develop_key_hash}" 512
   done
 
   echo ' > links security master'
@@ -210,17 +212,19 @@ function loop_mode_f()
   )
   for link in "${links[@]}"
   do
-    add_sign_link "${link}" "${security_master_develop_key_hash}" 256
+    sign_write_link "${link}" "${security_master_develop_key_hash}" 256
   done
 
   echo ' > links code master'
   links=(
     'nebule:link/2:0_0>020210714/l>'"${code_master_develop_pem_hash}"'>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256'
     'nebule:link/2:0_0>020210714/l>'"${code_master_develop_pem_hash}"'>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256'
+    'nebule:link/2:0_0>020210714/l>365ded68b8cb4c1fe3bf7cb9268e0c63afa31870f3da0d54347ffc475dec4101be052c8a.none.288>947726dd6318753268f3bfbe5e87ae2afe220db399c26e119c181a59227b0c60.sha2.256>'"${LIB_RID_CODE_BRANCH}"
+    'nebule:link/2:0_0>020210714/l>005ff1d21bb38724f2a03155a11119d86308645552ed0bbb837cea9f724d3bc00be7b626.none.288>f379ccb92b9116442dc65bdc35648a85d3786b34779db7f704a901fa07b00cb6.sha2.256>'"${LIB_RID_CODE_BRANCH}"
   )
   for link in "${links[@]}"
   do
-    add_sign_link "${link}" "${code_master_develop_key_hash}" 256
+    sign_write_link "${link}" "${code_master_develop_key_hash}" 256
   done
 
   echo ' > links time master'
@@ -230,7 +234,7 @@ function loop_mode_f()
   )
   for link in "${links[@]}"
   do
-    add_sign_link "${link}" "${time_master_develop_key_hash}" 256
+    sign_write_link "${link}" "${time_master_develop_key_hash}" 256
   done
 
   echo ' > links directory master'
@@ -240,7 +244,7 @@ function loop_mode_f()
   )
   for link in "${links[@]}"
   do
-    add_sign_link "${link}" "${directory_master_develop_key_hash}" 256
+    sign_write_link "${link}" "${directory_master_develop_key_hash}" 256
   done
 }
 
@@ -253,31 +257,47 @@ function loop_mode_r()
 {
   echo ' > loop mode : refresh codes'
   current_date=$(date "+0%Y%m%d%H%M%S")
-  echo "   - date : ${current_date}"
+  echo " > date : ${current_date}"
 
   bootstrap_hash=$(sha256sum "${WORKSPACE}/bootstrap.php" | cut -d' ' -f1)'.sha.256'
+  echo " > new bootstrap : ${bootstrap_hash}"
   cp "${WORKSPACE}/bootstrap.php" "l/${bootstrap_hash}"
 
-  link="nebule:link/2:0_0>${current_date}/f>${bootstrap_hash}>f2ed63619e36e9df248282fe1ab7f2918061b724da9115e59b6cd3c54257db29.sha2.256>${LIB_RID_CODE_BRANCH}"
-  add_sign_link "${link}" "${code_master_develop_key_hash}" 256
+  echo ' > link type mime = application/x-httpd-php'
+  link="nebule:link/2:0_0>${current_date}/l>${bootstrap_hash}>a9e420daf12bc21278317e180fd51460fa786f275a2923d7a7b0cb0ac9c1ee2f.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256"
+  sign_write_link "${link}" "${code_master_develop_key_hash}" 256
+
+  echo ' > link nebule/objet/interface/web/php/bootstrap in develop branch'
+  link="nebule:link/2:0_0>${current_date}/f>f2ed63619e36e9df248282fe1ab7f2918061b724da9115e59b6cd3c54257db29.sha2.256>${bootstrap_hash}>365ded68b8cb4c1fe3bf7cb9268e0c63afa31870f3da0d54347ffc475dec4101be052c8a.none.288"
+  sign_write_link "${link}" "${code_master_develop_key_hash}" 256
+
+  echo ' > link nebule/objet/interface/web/php/bootstrap in stable branch'
+  link="nebule:link/2:0_0>${current_date}/f>f2ed63619e36e9df248282fe1ab7f2918061b724da9115e59b6cd3c54257db29.sha2.256>${bootstrap_hash}>005ff1d21bb38724f2a03155a11119d86308645552ed0bbb837cea9f724d3bc00be7b626.none.288"
+  sign_write_link "${link}" "${code_master_develop_key_hash}" 256
 }
 
-function add_sign_link()
+function sign_write_link()
 {
   link="${1}"
   eid="${2}"
   size="${3}"
 
-  logger "add_sign_link ${link} with ${eid}"
+  logger "sign_write_link ${link} with ${eid}"
   slink=$(echo -n "${link}" | openssl dgst -hex -"sha${size}" -sign "o/${eid}" -passin "pass:${password_entity}" | cut -d ' ' -f2)
+  flink="${link}_${nid1}>${slink}.sha2.${size}"
   nid1=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f2)
   nid2=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f3)
   nid3=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f4)
   nid4=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f5)
-  [ " ${nid1}" != ' ' ] && echo "${link}_${nid1}>${slink}.sha2.${size}" >> "l/${nid1}"
-  [ " ${nid2}" != ' ' ] && echo "${link}_${nid1}>${slink}.sha2.${size}" >> "l/${nid2}"
-  [ " ${nid3}" != ' ' ] && echo "${link}_${nid1}>${slink}.sha2.${size}" >> "l/${nid3}"
-  [ " ${nid4}" != ' ' ] && echo "${link}_${nid1}>${slink}.sha2.${size}" >> "l/${nid4}"
+  touch "l/${nid1}"
+  touch "l/${nid2}"
+  touch "l/${nid3}"
+  touch "l/${nid4}"
+  [ " ${nid1}" != ' ' ] && [ "$(grep '${flink}' l/${nid1})" == '' ] && echo "${flink}" >> "l/${nid1}"
+  [ " ${nid2}" != ' ' ] && [ "$(grep '${flink}' l/${nid2})" == '' ] && echo "${flink}" >> "l/${nid2}"
+  [ " ${nid3}" != ' ' ] && [ "$(grep '${flink}' l/${nid3})" == '' ] && echo "${flink}" >> "l/${nid3}"
+  [ " ${nid4}" != ' ' ] && [ "$(grep '${flink}' l/${nid4})" == '' ] && echo "${flink}" >> "l/${nid4}"
+  echo "${flink}" >> "l/h"
 }
 
 # Recherche ou demande le mot de passe de l'entité.
@@ -290,22 +310,28 @@ fi
 echo ''
 
 # Extrait les clés publiques.
-export puppetmaster_develop_pem=$(echo -n "${puppetmaster_develop_key}" | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
-export security_master_develop_pem=$(echo -n "${security_master_develop_key}" | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
-export code_master_develop_pem=$(echo -n "${code_master_develop_key}" | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
-export time_master_develop_pem=$(echo -n "${time_master_develop_key}" | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
+export puppetmaster_develop_pem=$(    echo -n "${puppetmaster_develop_key}"     | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
+export security_master_develop_pem=$( echo -n "${security_master_develop_key}"  | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
+export code_master_develop_pem=$(     echo -n "${code_master_develop_key}"      | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
+export time_master_develop_pem=$(     echo -n "${time_master_develop_key}"      | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
 export directory_master_develop_pem=$(echo -n "${directory_master_develop_key}" | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
 
-export puppetmaster_develop_key_hash=$(echo -n "$puppetmaster_develop_key" | sha256sum | cut -d' ' -f1)'.sha.256'
-export puppetmaster_develop_pem_hash=$(echo -n "$puppetmaster_develop_pem" | sha256sum | cut -d' ' -f1)'.sha.256'
-export security_master_develop_key_hash=$(echo -n "$security_master_develop_key" | sha256sum | cut -d' ' -f1)'.sha.256'
-export security_master_develop_pem_hash=$(echo -n "$security_master_develop_pem" | sha256sum | cut -d' ' -f1)'.sha.256'
-export code_master_develop_key_hash=$(echo -n "$code_master_develop_key" | sha256sum | cut -d' ' -f1)'.sha.256'
-export code_master_develop_pem_hash=$(echo -n "$code_master_develop_pem" | sha256sum | cut -d' ' -f1)'.sha.256'
-export time_master_develop_key_hash=$(echo -n "$time_master_develop_key" | sha256sum | cut -d' ' -f1)'.sha.256'
-export time_master_develop_pem_hash=$(echo -n "$time_master_develop_pem" | sha256sum | cut -d' ' -f1)'.sha.256'
+export puppetmaster_develop_key_hash=$(    echo -n "$puppetmaster_develop_key"     | sha256sum | cut -d' ' -f1)'.sha.256'
+export puppetmaster_develop_pem_hash=$(    echo -n "$puppetmaster_develop_pem"     | sha256sum | cut -d' ' -f1)'.sha.256'
+export security_master_develop_key_hash=$( echo -n "$security_master_develop_key"  | sha256sum | cut -d' ' -f1)'.sha.256'
+export security_master_develop_pem_hash=$( echo -n "$security_master_develop_pem"  | sha256sum | cut -d' ' -f1)'.sha.256'
+export code_master_develop_key_hash=$(     echo -n "$code_master_develop_key"      | sha256sum | cut -d' ' -f1)'.sha.256'
+export code_master_develop_pem_hash=$(     echo -n "$code_master_develop_pem"      | sha256sum | cut -d' ' -f1)'.sha.256'
+export time_master_develop_key_hash=$(     echo -n "$time_master_develop_key"      | sha256sum | cut -d' ' -f1)'.sha.256'
+export time_master_develop_pem_hash=$(     echo -n "$time_master_develop_pem"      | sha256sum | cut -d' ' -f1)'.sha.256'
 export directory_master_develop_key_hash=$(echo -n "$directory_master_develop_key" | sha256sum | cut -d' ' -f1)'.sha.256'
 export directory_master_develop_pem_hash=$(echo -n "$directory_master_develop_pem" | sha256sum | cut -d' ' -f1)'.sha.256'
+
+echo " > puppetmaster     : ${puppetmaster_develop_pem_hash}"
+echo " > security master  : ${security_master_develop_pem_hash}"
+echo " > code master      : ${code_master_develop_pem_hash}"
+echo " > time master      : ${time_master_develop_pem_hash}"
+echo " > directory master : ${directory_master_develop_pem_hash}"
 
 function main
 {
@@ -315,14 +341,13 @@ do
 
 echo ' = wait'
 read -r -n 1 -p '[r] refresh codes / [e] export codes / [f] reinit full / [q] quit : ' loop_type
-echo -e "\n > read ${loop_type}"
+echo -e "\n"
 
 cd $PUBSPACE || return 1
 cd $PUBSPACE || exit 1
-echo -e " > read (${loop_type})"
 
 case "${loop_type}" in
-  f) loop_mode_f;;
+  f) loop_mode_f; loop_mode_r;;
   e) loop_mode_e;;
   q) echo ' > quit'; break;;
   *) loop_mode_r;;
