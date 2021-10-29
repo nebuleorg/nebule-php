@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020211026
+# Version 020211029
 
 export PUBSPACE=~/pub
 export WORKSPACE=~/workspace/nebule-php
@@ -15,6 +15,10 @@ echo ' > start'
 cd $PUBSPACE || return 1
 cd $PUBSPACE || exit 1
 
+export LIB_RID_SECURITY_AUTHORITY='a4b210d4fb820a5b715509e501e36873eb9e27dca1dd591a98a5fc264fd2238adf4b489d.none.288'
+export LIB_RID_CODE_AUTHORITY='2b9dd679451eaca14a50e7a65352f959fc3ad55efc572dcd009c526bc01ab3fe304d8e69.none.288'
+export LIB_RID_TIME_AUTHORITY='bab7966fd5b483f9556ac34e4fac9f778d0014149f196236064931378785d81cae5e7a6e.none.288'
+export LIB_RID_DIRECTORY_AUTHORITY='0a4c1e7930a65672379616a2637b84542049b416053ac0d9345300189791f7f8e05f3ed4.none.288'
 export LIB_RID_CODE_BRANCH='50e1d0348892e7b8a555301983bccdb8a07871843ed8f392d539d3d90f37ea8c2a54d72a.none.288'
 
 # Prepare all links specifically for develop and tests.
@@ -189,10 +193,10 @@ function loop_mode_f()
     #'nebule:link/2:0_0>020210714/l>'"${code_master_develop_pem_hash}"'>b6fef678931e0761314983d9a08c19b095b088cf6500891206ca1f8b78c2d008.sha2.256'
     #'nebule:link/2:0_0>020210714/l>'"${directory_master_develop_pem_hash}"'>83db082578142c900e36765ebc210893d79ed0ab1127d687f3307c0c061802e6.sha2.256'
     #'nebule:link/2:0_0>020210714/l>'"${time_master_develop_pem_hash}"'>663eb81c89c27739f0f875617bcd45b3a18d4b8eb859b8c6e5dccbf9085a2ef9.sha2.256'
-    'nebule:link/2:0_0>020210714/l>'"${security_master_develop_pem_hash}"'>a4b210d4fb820a5b715509e501e36873eb9e27dca1dd591a98a5fc264fd2238adf4b489d.none.288'
-    'nebule:link/2:0_0>020210714/l>'"${code_master_develop_pem_hash}"'>2b9dd679451eaca14a50e7a65352f959fc3ad55efc572dcd009c526bc01ab3fe304d8e69.none.288'
-    'nebule:link/2:0_0>020210714/l>'"${directory_master_develop_pem_hash}"'>0a4c1e7930a65672379616a2637b84542049b416053ac0d9345300189791f7f8e05f3ed4.none.288'
-    'nebule:link/2:0_0>020210714/l>'"${time_master_develop_pem_hash}"'>bab7966fd5b483f9556ac34e4fac9f778d0014149f196236064931378785d81cae5e7a6e.none.288'
+    'nebule:link/2:0_0>020210714/l>'"${security_master_develop_pem_hash}>${LIB_RID_SECURITY_AUTHORITY}"
+    'nebule:link/2:0_0>020210714/l>'"${code_master_develop_pem_hash}>${LIB_RID_CODE_AUTHORITY}"
+    'nebule:link/2:0_0>020210714/l>'"${directory_master_develop_pem_hash}>${LIB_RID_DIRECTORY_AUTHORITY}"
+    'nebule:link/2:0_0>020210714/l>'"${time_master_develop_pem_hash}>${LIB_RID_TIME_AUTHORITY}"
   )
   for link in "${links[@]}"
   do
@@ -251,10 +255,10 @@ function loop_mode_r()
   current_date=$(date "+0%Y%m%d%H%M%S")
   echo "   - date : ${current_date}"
 
-  bootstrap_hash=$(cat "${WORKSPACE}/bootstrap.php" | sha256sum | cut -d' ' -f1)'.sha.256'
+  bootstrap_hash=$(sha256sum "${WORKSPACE}/bootstrap.php" | cut -d' ' -f1)'.sha.256'
   cp "${WORKSPACE}/bootstrap.php" "l/${bootstrap_hash}"
 
-  link="nebule:link/2:0_0>${current_date}/l>${bootstrap_hash}>f2ed63619e36e9df248282fe1ab7f2918061b724da9115e59b6cd3c54257db29.sha2.256"
+  link="nebule:link/2:0_0>${current_date}/f>${bootstrap_hash}>f2ed63619e36e9df248282fe1ab7f2918061b724da9115e59b6cd3c54257db29.sha2.256>${LIB_RID_CODE_BRANCH}"
   add_sign_link "${link}" "${code_master_develop_key_hash}" 256
 }
 
