@@ -500,6 +500,7 @@ const LIB_FIRST_RESERVED_OBJECTS = array(
     'puppetmaster',
     'application/x-pem-file',
     'application/octet-stream',
+    'application/x-httpd-php',
     'text/plain',
     'sha224',
     'sha256',
