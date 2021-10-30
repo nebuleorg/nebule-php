@@ -330,14 +330,14 @@ fi
 echo ''
 
 # Extrait les clés publiques.
-export puppetmaster_develop_pem=$(    echo -n "${puppetmaster_develop_key}"     | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
+export puppetmaster_develop_pem=$(      echo -n "${puppetmaster_develop_key}"       | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
 export security_autority_develop_pem=$( echo -n "${security_autority_develop_key}"  | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
 export code_autority_develop_pem=$(     echo -n "${code_autority_develop_key}"      | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
 export time_autority_develop_pem=$(     echo -n "${time_autority_develop_key}"      | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
 export directory_autority_develop_pem=$(echo -n "${directory_autority_develop_key}" | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
 
-export puppetmaster_develop_key_hash=$(    echo -n "$puppetmaster_develop_key"     | sha256sum | cut -d' ' -f1)'.sha.256'
-export puppetmaster_develop_pem_hash=$(    echo -n "$puppetmaster_develop_pem"     | sha256sum | cut -d' ' -f1)'.sha.256'
+export puppetmaster_develop_key_hash=$(      echo -n "$puppetmaster_develop_key"       | sha256sum | cut -d' ' -f1)'.sha.256'
+export puppetmaster_develop_pem_hash=$(      echo -n "$puppetmaster_develop_pem"       | sha256sum | cut -d' ' -f1)'.sha.256'
 export security_autority_develop_key_hash=$( echo -n "$security_autority_develop_key"  | sha256sum | cut -d' ' -f1)'.sha.256'
 export security_autority_develop_pem_hash=$( echo -n "$security_autority_develop_pem"  | sha256sum | cut -d' ' -f1)'.sha.256'
 export code_autority_develop_key_hash=$(     echo -n "$code_autority_develop_key"      | sha256sum | cut -d' ' -f1)'.sha.256'
