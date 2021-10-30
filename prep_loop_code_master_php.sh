@@ -185,7 +185,7 @@ function loop_mode_f()
 
   echo ' > links puppetmaster'
   links=(
-    'nebule:link/2:0_0>020210714/l>'"${puppetmaster_develop_pem_hash}"'>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256'
+    #'nebule:link/2:0_0>020210714/l>'"${puppetmaster_develop_pem_hash}"'>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256'
     'nebule:link/2:0_0>020210714/l>'"${puppetmaster_develop_pem_hash}"'>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256'
     'nebule:link/2:0_0>020210714/l>'"${puppetmaster_develop_pem_hash}"'>f976f916d794ad6384c9084cef7f2515305c464b2ab541142d952126ca9367e3.sha2.256>940c75a60c14a24e5f8bda796f72bef57ab1f64713a6fefd9a4097be95a9e96a.sha2.256'
     'nebule:link/2:0_0>020210714/l>'"${puppetmaster_develop_pem_hash}"'>90f1075d96b6d74e3b69bc96448993f9f3a02f593ad0795d5b02e992bacf5b39.sha2.256>0f183d69e06108ac3791eb4fe5bf38beec824db0a2d9966caffcfef5bc563355.sha2.256'
@@ -207,7 +207,7 @@ function loop_mode_f()
 
   echo ' > links security master'
   links=(
-    'nebule:link/2:0_0>020210714/l>'"${security_master_develop_pem_hash}"'>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256'
+    #'nebule:link/2:0_0>020210714/l>'"${security_master_develop_pem_hash}"'>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256'
     'nebule:link/2:0_0>020210714/l>'"${security_master_develop_pem_hash}"'>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256'
   )
   for link in "${links[@]}"
@@ -217,7 +217,7 @@ function loop_mode_f()
 
   echo ' > links code master'
   links=(
-    'nebule:link/2:0_0>020210714/l>'"${code_master_develop_pem_hash}"'>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256'
+    #'nebule:link/2:0_0>020210714/l>'"${code_master_develop_pem_hash}"'>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256'
     'nebule:link/2:0_0>020210714/l>'"${code_master_develop_pem_hash}"'>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256'
     'nebule:link/2:0_0>020210714/l>365ded68b8cb4c1fe3bf7cb9268e0c63afa31870f3da0d54347ffc475dec4101be052c8a.none.288>947726dd6318753268f3bfbe5e87ae2afe220db399c26e119c181a59227b0c60.sha2.256>'"${LIB_RID_CODE_BRANCH}"
     'nebule:link/2:0_0>020210714/l>005ff1d21bb38724f2a03155a11119d86308645552ed0bbb837cea9f724d3bc00be7b626.none.288>f379ccb92b9116442dc65bdc35648a85d3786b34779db7f704a901fa07b00cb6.sha2.256>'"${LIB_RID_CODE_BRANCH}"
@@ -229,7 +229,7 @@ function loop_mode_f()
 
   echo ' > links time master'
   links=(
-    'nebule:link/2:0_0>020210714/l>'"${time_master_develop_pem_hash}"'>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256'
+    #'nebule:link/2:0_0>020210714/l>'"${time_master_develop_pem_hash}"'>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256'
     'nebule:link/2:0_0>020210714/l>'"${time_master_develop_pem_hash}"'>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256'
   )
   for link in "${links[@]}"
@@ -239,7 +239,7 @@ function loop_mode_f()
 
   echo ' > links directory master'
   links=(
-    'nebule:link/2:0_0>020210714/l>'"${directory_master_develop_pem_hash}"'>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256'
+    #'nebule:link/2:0_0>020210714/l>'"${directory_master_develop_pem_hash}"'>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256'
     'nebule:link/2:0_0>020210714/l>'"${directory_master_develop_pem_hash}"'>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256'
   )
   for link in "${links[@]}"
