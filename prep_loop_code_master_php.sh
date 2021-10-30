@@ -315,10 +315,10 @@ function sign_write_link()
   touch "l/${nid2}"
   touch "l/${nid3}"
   touch "l/${nid4}"
-  [ " ${nid1}" != ' ' ] && [ "$(grep '${flink}' l/${nid1})" == '' ] && echo "${flink}" >> "l/${nid1}"
-  [ " ${nid2}" != ' ' ] && [ "$(grep '${flink}' l/${nid2})" == '' ] && echo "${flink}" >> "l/${nid2}"
-  [ " ${nid3}" != ' ' ] && [ "$(grep '${flink}' l/${nid3})" == '' ] && echo "${flink}" >> "l/${nid3}"
-  [ " ${nid4}" != ' ' ] && [ "$(grep '${flink}' l/${nid4})" == '' ] && echo "${flink}" >> "l/${nid4}"
+  [ "${nid1}" != '' ] && [ "$(grep '${flink}' l/${nid1})" == '' ] && echo "${flink}" >> "l/${nid1}"
+  [ "${nid2}" != '' ] && [ "$(grep '${flink}' l/${nid2})" == '' ] && echo "${flink}" >> "l/${nid2}"
+  [ "${nid3}" != '' ] && [ "$(grep '${flink}' l/${nid3})" == '' ] && echo "${flink}" >> "l/${nid3}"
+  [ "${nid4}" != '' ] && [ "$(grep '${flink}' l/${nid4})" == '' ] && echo "${flink}" >> "l/${nid4}"
   echo "${flink}" >> "l/h"
 }
 
