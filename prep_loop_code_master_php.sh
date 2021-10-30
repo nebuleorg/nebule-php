@@ -306,7 +306,7 @@ function sign_write_link()
 
   logger "sign_write_link ${link} with ${eid}"
   slink=$(echo -n "${link}" | openssl dgst -hex -"sha${size}" -sign "o/${eid}" -passin "pass:${password_entity}" | cut -d ' ' -f2)
-  flink="${link}_${nid1}>${slink}.sha2.${size}"
+  flink="${link}_${eid}>${slink}.sha2.${size}"
   nid1=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f2)
   nid2=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f3)
   nid3=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f4)
