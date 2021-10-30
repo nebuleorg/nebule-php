@@ -255,6 +255,7 @@ function loop_mode_f()
 function loop_mode_e()
 {
   echo ' > loop mode : export codes'
+  echo ' ! do nothing by now!'
 }
 
 function loop_mode_r()
@@ -263,20 +264,36 @@ function loop_mode_r()
   current_date=$(date "+0%Y%m%d%H%M%S")
   echo " > date : ${current_date}"
 
+  rid_bootstrap=$(echo -n 'nebule/objet/interface/web/php/bootstrap' | sha256sum | cut -d' ' -f1)'.sha.256'
+  rid_library=$(echo -n 'nebule/objet/interface/web/php/bootstrap' | sha256sum | cut -d' ' -f1)'.sha.256'
+  rid_sylabe=$(echo -n 'nebule/objet/interface/web/php/bootstrap' | sha256sum | cut -d' ' -f1)'.sha.256'
+  nid_type_php=$(echo -n 'application/x-httpd-php' | sha256sum | cut -d' ' -f1)'.sha.256'
+
   bootstrap_hash=$(sha256sum "${WORKSPACE}/bootstrap.php" | cut -d' ' -f1)'.sha.256'
+  library_hash=$(sha256sum "${WORKSPACE}/li_nebule.php" | cut -d' ' -f1)'.sha.256'
+  sylabe_hash=$(sha256sum "${WORKSPACE}/sylabe.php" | cut -d' ' -f1)'.sha.256'
   echo " > new bootstrap : ${bootstrap_hash}"
+  echo " > new library : ${bootstrap_hash}"
+  echo " > new sylabe : ${bootstrap_hash}"
   cp "${WORKSPACE}/bootstrap.php" "l/${bootstrap_hash}"
 
-  echo ' > link type mime = application/x-httpd-php'
-  link="nebule:link/2:0_0>${current_date}/l>${bootstrap_hash}>a9e420daf12bc21278317e180fd51460fa786f275a2923d7a7b0cb0ac9c1ee2f.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256"
+  echo ' > links'
+  echo '   - type mime = application/x-httpd-php'
+  link="nebule:link/2:0_0>${current_date}/l>${bootstrap_hash}>${nid_type_php}>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256"
+  link="nebule:link/2:0_0>${current_date}/l>${library_hash}>${nid_type_php}>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256"
+  link="nebule:link/2:0_0>${current_date}/l>${sylabe_hash}>${nid_type_php}>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256"
   sign_write_link "${link}" "${code_master_develop_key_hash}" 256
 
-  echo ' > link nebule/objet/interface/web/php/bootstrap in develop branch'
-  link="nebule:link/2:0_0>${current_date}/f>f2ed63619e36e9df248282fe1ab7f2918061b724da9115e59b6cd3c54257db29.sha2.256>${bootstrap_hash}>365ded68b8cb4c1fe3bf7cb9268e0c63afa31870f3da0d54347ffc475dec4101be052c8a.none.288"
+  echo '   - nebule/objet/interface/web/php/bootstrap in develop branch'
+  link="nebule:link/2:0_0>${current_date}/f>${rid_bootstrap}>${bootstrap_hash}>365ded68b8cb4c1fe3bf7cb9268e0c63afa31870f3da0d54347ffc475dec4101be052c8a.none.288"
+  link="nebule:link/2:0_0>${current_date}/f>${rid_library}>${library_hash}>365ded68b8cb4c1fe3bf7cb9268e0c63afa31870f3da0d54347ffc475dec4101be052c8a.none.288"
+  link="nebule:link/2:0_0>${current_date}/f>${rid_sylabe}>${sylabe_hash}>365ded68b8cb4c1fe3bf7cb9268e0c63afa31870f3da0d54347ffc475dec4101be052c8a.none.288"
   sign_write_link "${link}" "${code_master_develop_key_hash}" 256
 
-  echo ' > link nebule/objet/interface/web/php/bootstrap in stable branch'
-  link="nebule:link/2:0_0>${current_date}/f>f2ed63619e36e9df248282fe1ab7f2918061b724da9115e59b6cd3c54257db29.sha2.256>${bootstrap_hash}>005ff1d21bb38724f2a03155a11119d86308645552ed0bbb837cea9f724d3bc00be7b626.none.288"
+  echo '   - nebule/objet/interface/web/php/bootstrap in stable branch'
+  link="nebule:link/2:0_0>${current_date}/f>${rid_bootstrap}>${bootstrap_hash}>005ff1d21bb38724f2a03155a11119d86308645552ed0bbb837cea9f724d3bc00be7b626.none.288"
+  link="nebule:link/2:0_0>${current_date}/f>${rid_library}>${library_hash}>005ff1d21bb38724f2a03155a11119d86308645552ed0bbb837cea9f724d3bc00be7b626.none.288"
+  link="nebule:link/2:0_0>${current_date}/f>${rid_sylabe}>${sylabe_hash}>005ff1d21bb38724f2a03155a11119d86308645552ed0bbb837cea9f724d3bc00be7b626.none.288"
   sign_write_link "${link}" "${code_master_develop_key_hash}" 256
 }
 
