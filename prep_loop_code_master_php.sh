@@ -269,12 +269,14 @@ function work_refresh()
   nid_type_php=$(echo -n 'application/x-httpd-php' | sha256sum | cut -d' ' -f1)'.sha.256'
 
   bootstrap_hash=$(sha256sum "${WORKSPACE}/bootstrap.php" | cut -d' ' -f1)'.sha.256'
-  library_hash=$(sha256sum "${WORKSPACE}/li_nebule.php" | cut -d' ' -f1)'.sha.256'
+  library_hash=$(sha256sum "${WORKSPACE}/lib_nebule.php" | cut -d' ' -f1)'.sha.256'
   sylabe_hash=$(sha256sum "${WORKSPACE}/sylabe.php" | cut -d' ' -f1)'.sha.256'
   echo " > new bootstrap : ${bootstrap_hash}"
   echo " > new library : ${bootstrap_hash}"
   echo " > new sylabe : ${bootstrap_hash}"
   cp "${WORKSPACE}/bootstrap.php" "l/${bootstrap_hash}"
+  cp "${WORKSPACE}/lib_nebule.php" "l/${library_hash}"
+  cp "${WORKSPACE}/sylabe.php" "l/${sylabe_hash}"
 
   echo ' > links'
   echo '   - type mime = application/x-httpd-php'
