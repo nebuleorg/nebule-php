@@ -4105,7 +4105,6 @@ function bootstrap_setPermitOpenFileCode()
 
 /**
  * Try to find nebule Lib POO.
- * BL : l>RID>libID>RID
  *
  * @param string $bootstrapLibraryID
  * @param string $bootstrapLibraryInstanceSleep
@@ -4117,20 +4116,6 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryID, string &$bootstra
 
     if (!$libraryCheckOK)
         return;
-
-    // Get current code branch
-    $currentCodeBranchNameID = obj_getNID(lib_getConfiguration('codeBranch'), 'sha2.256');
-    $rid = LIB_RID_CODE_BRANCH;
-    $links = array();
-    $filter = array(
-        'bl/rl/req' => 'f',
-        'bl/rl/nid1' => $rid,
-        'bl/rl/nid3' => $currentCodeBranchNameID,
-        'bl/rl/nid4' => '',
-    );
-    lnk_getList($rid, $links, $filter, false);
-
-
 
     // Try to find on session.
     session_start();
@@ -4148,9 +4133,37 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryID, string &$bootstra
 
     // Try to find with links.
     if ($bootstrapLibraryID == '') {
-        $bootstrapLibraryID = nod_findByReference(
+        $currentCodeBranchName = lib_getConfiguration('codeBranch');
+        if (nod_checkNID($currentCodeBranchName, false)) {
+            // TODO
+        } else {
+            // Get all RID of code branches FIXME
+            $rid = LIB_RID_CODE_BRANCH;
+            $links = array();
+            $filter = array(
+                'bl/rl/req' => 'l',
+                'bl/rl/nid1' => $rid,
+                'bl/rl/nid3' => $rid,
+                'bl/rl/nid4' => '',
+            );
+            lnk_getList($rid, $links, $filter, false);
+
+            // Get current code branch
+            $currentCodeBranchNameID = obj_getNID($currentCodeBranchName, 'sha2.256');
+            $links = array();
+            $filter = array(
+                'bl/rl/req' => 'f',
+                'bl/rl/nid1' => $rid,
+                'bl/rl/nid3' => $currentCodeBranchNameID,
+                'bl/rl/nid4' => '',
+            );
+            lnk_getList($rid, $links, $filter, false);
+        }
+
+
+       /* $bootstrapLibraryID = nod_findByReference(
             NEBULE_RID_INTERFACE_LIBRARY,
-            NEBULE_RID_INTERFACE_LIBRARY);
+            NEBULE_RID_INTERFACE_LIBRARY);*/
 
         log_add('find nebule library ' . $bootstrapLibraryID, 'info', __FUNCTION__, '90ee41fc');
 
