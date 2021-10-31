@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020211029';
+const BOOTSTRAP_VERSION = '020211031';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -4117,6 +4117,20 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryID, string &$bootstra
 
     if (!$libraryCheckOK)
         return;
+
+    // Get current code branch
+    $currentCodeBranchNameID = obj_getNID(lib_getConfiguration('codeBranch'), 'sha2.256');
+    $rid = LIB_RID_CODE_BRANCH;
+    $links = array();
+    $filter = array(
+        'bl/rl/req' => 'f',
+        'bl/rl/nid1' => $rid,
+        'bl/rl/nid3' => $currentCodeBranchNameID,
+        'bl/rl/nid4' => '',
+    );
+    lnk_getList($rid, $links, $filter, false);
+
+
 
     // Try to find on session.
     session_start();
