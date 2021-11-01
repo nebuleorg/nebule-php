@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020211031';
+const BOOTSTRAP_VERSION = '020211101';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -372,7 +372,7 @@ $metrologyLibraryPOOConvertationCache = 0;
  ------------------------------------------------------------------------------------------
  */
 
-const LIB_NEBULE_LIBRARY_PP_VERSION = '020211029';
+const LIB_NEBULE_LIBRARY_PP_VERSION = '020211101';
 const LIB_LINK_VERSION = '2:0';
 const LIB_DEFAULT_PUPPETMASTER_EID = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
 const LIB_DEFAULT_PUPPETMASTER_LOCATION = 'http://puppetmaster.nebule.org';
@@ -3760,10 +3760,14 @@ function app_getByRef($rid): string
 {
     $currentCodeBranchName = lib_getConfiguration('codeBranch');
     $currentCodeBranchID = '';
+
+    if ($currentCodeBranchName == '')
+        $currentCodeBranchName = LIB_CONFIGURATIONS_DEFAULT['codeBranch'];
+
     if (nod_checkNID($currentCodeBranchName, false)
         && io_checkNodeHaveContent($currentCodeBranchName)
     ) {
-        // TODO
+        $currentCodeBranchID = $currentCodeBranchName;
     } else {
         // Get all RID of code branches FIXME
         $rid = LIB_RID_CODE_BRANCH;
