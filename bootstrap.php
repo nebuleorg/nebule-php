@@ -3780,6 +3780,8 @@ function app_getActivated(string $oid): bool
  */
 function app_getByRef($rid): string
 {
+    global $lnk_filterBySigners;
+
     $currentCodeBranchName = lib_getConfiguration('codeBranch');
     $currentCodeBranchID = '';
 
@@ -3801,6 +3803,7 @@ function app_getByRef($rid): string
             'bl/rl/nid4' => '',
         );
         lnk_getList($rid, $links, $filter, false);
+        lnk_filterBySigners($links, $lnk_filterBySigners);
 
         $currentCodeBranchNameID = obj_getNID($currentCodeBranchName, 'sha2.256');
     }
