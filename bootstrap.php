@@ -1094,451 +1094,333 @@ function lib_getModeRescue(): bool
     return false;
 }
 
+
+
 /**
- * Find NID by reference RID from initial NID.
- * Links must be signed by a local authority.
+ * I/O - Start I/O subsystem with checks.
  *
- * @param string  $nid
- * @param string  $rid
- * @return string
+ * @return boolean
  */
-function nod_findByReference(string $nid, string $rid): string
+function io_open(): bool
 {
-    global $nebuleLocalAuthorities;
+    if (!io_checkLinkFolder() || !io_checkObjectFolder())
+        return false;
+    return true;
+}
 
-    if (!nod_checkNID($nid)
-        || !nod_checkNID($rid)
-    )
-        return '';
+/**
+ * I/O - Check folder status and writeability for links.
+ *
+ * @return boolean
+ */
+function io_checkLinkFolder(): bool
+{
+    // Check if exist.
+    if (!file_exists(LIB_LOCAL_LINKS_FOLDER))
+        io_createLinkFolder();
+    if (!file_exists(LIB_LOCAL_LINKS_FOLDER) || !is_dir(LIB_LOCAL_LINKS_FOLDER)) {
+        log_add('I/O no folder for links.', 'error', __FUNCTION__, '5306de5f');
+        bootstrap_setBreak('22', "Library i/o link's folder error");
+        return false;
+    }
 
-    $links = array();
-    $filter = array(
-        'bl/rl/req' => 'l',
-        'bl/rl/nid1' => $nid,
-        'bl/rl/nid3' => $rid,
-        'bl/rl/nid4' => '',
-    );
-    lnk_getList($nid, $links, $filter, false);
-
-    foreach ($links as $link) {
-        foreach ($nebuleLocalAuthorities as $authority) {
-            if ($link['bs/rs/nid'] == $authority)
-                return $link['bl/rl/nid2'];
+    // Check writeability.
+    if (lib_getConfiguration('permitWrite') && lib_getConfiguration('permitWriteLink')) {
+        $data = crypto_getPseudoRandom(2048);
+        $name = LIB_LOCAL_LINKS_FOLDER . '/writest' . bin2hex(crypto_getPseudoRandom(8));
+        if (file_put_contents($name, $data) === false) {
+            log_add('I/O error on folder for links.', 'error', __FUNCTION__, 'f72e3a86');
+            bootstrap_setBreak('23', "Library i/o link's folder error");
+            return false;
+        }
+        if (!file_exists($name) || !is_file($name)) {
+            log_add('I/O error on folder for links.', 'error', __FUNCTION__, '6f012d85');
+            bootstrap_setBreak('23', "Library i/o link's folder error");
+            return false;
+        }
+        $read = file_get_contents($name, false, null, 0, 2400);
+        if ($data != $read) {
+            log_add('I/O error on folder for links.', 'error', __FUNCTION__, 'fd499fcb');
+            bootstrap_setBreak('23', "Library i/o link's folder error");
+            return false;
+        }
+        if (!unlink($name)) {
+            log_add('I/O error on folder for links.', 'error', __FUNCTION__, '8e0caa66');
+            bootstrap_setBreak('23', "Library i/o link's folder error");
+            return false;
         }
     }
-    return '';
+
+    return true;
 }
 
 /**
- * Find firstname to the NID.
+ * I/O - Check folder status and writeability for objects.
  *
- * @param string $nid
- * @return string
+ * @return boolean
  */
-function nod_getFirstName(string &$nid): string
+function io_checkObjectFolder(): bool
 {
-    global $nebuleCacheReadEntityFName;
-
-    if (isset($nebuleCacheReadEntityFName [$nid]))
-        return $nebuleCacheReadEntityFName [$nid];
-
-    $type = nod_getByType($nid, 'nebule/objet/prenom');
-    $text = obj_getAsText1line($type, 128);
-
-    if (lib_getConfiguration('permitBufferIO'))
-        $nebuleCacheReadEntityFName [$nid] = $text;
-    return $text;
-}
-
-/**
- * Find name to the NID.
- *
- * @param string $nid
- * @return string
- */
-function nod_getName(string &$nid): string
-{
-    global $nebuleCacheReadEntityName;
-
-    if (isset($nebuleCacheReadEntityName [$nid]))
-        return $nebuleCacheReadEntityName [$nid];
-
-    $type = nod_getByType($nid, 'nebule/objet/nom');
-    $text = obj_getAsText1line($type, 128);
-
-    if (lib_getConfiguration('permitBufferIO'))
-        $nebuleCacheReadEntityName [$nid] = $text;
-    return $text;
-}
-
-/**
- * Find postname to the NID.
- *
- * @param string $nid
- * @return string
- */
-function nod_getPostName(string &$nid): string
-{
-    global $nebuleCacheReadEntityPName;
-
-    if (isset($nebuleCacheReadEntityPName [$nid]))
-        return $nebuleCacheReadEntityPName [$nid];
-
-    $type = nod_getByType($nid, 'nebule/objet/postnom');
-    $text = obj_getAsText1line($type, 128);
-
-    if (lib_getConfiguration('permitBufferIO'))
-        $nebuleCacheReadEntityPName [$nid] = $text;
-    return $text;
-}
-
-/**
- * Find OID with content for the type of the NID.
- *
- * @param string $nid
- * @param string $type
- * @return string
- */
-function nod_getByType(string &$nid, string $type): string
-{
-    global $nebuleCacheFindObjType;
-
-    if (isset($nebuleCacheFindObjType [$nid] [$type]))
-        return $nebuleCacheFindObjType [$nid] [$type];
-
-    $links = array();
-    $rid = obj_getNID($type, lib_getConfiguration('cryptoHashAlgorithm'));
-    $filter = array(
-        'bl/rl/req' => 'l',
-        'bl/rl/nid1' => $nid,
-        'bl/rl/nid3' => $rid,
-        'bl/rl/nid4' => '',
-    );
-    lnk_getList($nid, $links, $filter, false);
-
-    foreach ($links as $link) {
-        if (lib_getConfiguration('permitBufferIO'))
-            $nebuleCacheFindObjType [$nid] [$type] = $link['bl/rl/nid2'];
-        return $link['bl/rl/nid2'];
+    // Check if exist.
+    if (!file_exists(LIB_LOCAL_OBJECTS_FOLDER))
+        io_createObjectFolder();
+    if (!file_exists(LIB_LOCAL_OBJECTS_FOLDER) || !is_dir(LIB_LOCAL_OBJECTS_FOLDER)) {
+        log_add('I/O no folder for objects.', 'error', __FUNCTION__, 'b0cdeafe');
+        bootstrap_setBreak('24', "Library i/o object's folder error");
+        return false;
     }
-    return '';
+
+    // Check writeability.
+    if (lib_getConfiguration('permitWrite') && lib_getConfiguration('permitWriteObject')) {
+        $data = crypto_getPseudoRandom(2048);
+        $name = LIB_LOCAL_OBJECTS_FOLDER . '/writest' . bin2hex(crypto_getPseudoRandom(8));
+        if (file_put_contents($name, $data) === false) {
+            log_add('I/O error on folder for objects.', 'error', __FUNCTION__, '1327da69');
+            bootstrap_setBreak('25', "Library i/o object's folder error");
+            return false;
+        }
+        if (!file_exists($name) || !is_file($name)) {
+            log_add('I/O error on folder for objects.', 'error', __FUNCTION__, '2b451a2a');
+            bootstrap_setBreak('25', "Library i/o object's folder error");
+            return false;
+        }
+        $read = file_get_contents($name, false, null, 0, 2400);
+        if ($data != $read) {
+            log_add('I/O error on folder for objects.', 'error', __FUNCTION__, '634072e5');
+            bootstrap_setBreak('25', "Library i/o object's folder error");
+            return false;
+        }
+        if (!unlink($name)) {
+            log_add('I/O error on folder for objects.', 'error', __FUNCTION__, '2b397869');
+            bootstrap_setBreak('25', "Library i/o object's folder error");
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /**
- * Node - Extract algo parts from NID.
+ * I/O - Try to create folder for links.
  *
- * @param $nid
- * @return string
+ * @return boolean
  */
-function nod_getAlgo(&$nid): string
+function io_createLinkFolder(): bool
 {
-    strtok($nid, '.');
-    $a = strtok('.');
-    $s = strtok('.');
-    if ($a == '' || $s == '')
-        return '';
-    return $a . '.' . $s;
+    if (lib_getConfiguration('permitWrite')
+        && lib_getConfiguration('permitWriteLink')
+        && !file_exists(LIB_LOCAL_LINKS_FOLDER)
+    )
+        return mkdir(LIB_LOCAL_LINKS_FOLDER);
+
+    return false;
 }
 
 /**
- * Object - Verify name structure of the node : hash.algo.size
+ * I/O - Try to create folder for objects.
+ *
+ * @return boolean
+ */
+function io_createObjectFolder(): bool
+{
+    if (lib_getConfiguration('permitWrite')
+        && lib_getConfiguration('permitWriteObject')
+        && !file_exists(LIB_LOCAL_OBJECTS_FOLDER)
+    )
+        return mkdir(LIB_LOCAL_OBJECTS_FOLDER);
+
+    return false;
+}
+
+/**
+ * I/O - Check if node link's file is present, which mean node have one or more links.
+ *
+ * @param string $nid
+ * @return boolean
+ */
+function io_checkNodeHaveLink(string &$nid): bool
+{
+    if (file_exists(LIB_LOCAL_LINKS_FOLDER . '/' . $nid))
+        return true;
+    return false;
+}
+
+/**
+ * I/O - Check if node object's content is present, which mean node is an object with a content.
+ *
+ * @param string $nid
+ * @return boolean
+ */
+function io_checkNodeHaveContent(string &$nid): bool
+{
+    if (file_exists(LIB_LOCAL_OBJECTS_FOLDER . '/' . $nid))
+        return true;
+    return false;
+}
+
+/**
+ * I/O - Read object's links.
+ * Return array of links, one string per link, maybe empty.
  *
  * @param string  $nid
- * @param boolean $permitNull
- * @return boolean
+ * @param array   $lines
+ * @param integer $maxLinks
+ * @return array
  */
-function nod_checkNID(string &$nid, bool $permitNull = false): bool
+function io_linksRead(string &$nid, array &$lines, int $maxLinks = 0): array
 {
-    // May be null in some case.
-    if ($permitNull && $nid == '')
-        return true;
+    $count = 0;
 
-    // Check hash value.
-    $hash = strtok($nid, '.');
-    if ($hash === false) return false;
-    if (strlen($hash) < LIB_NID_MIN_HASH_SIZE) return false;
-    if (strlen($hash) > LIB_NID_MAX_HASH_SIZE) return false;
-    if (!ctype_xdigit($hash)) return false;
+    if (!nod_checkNID($nid) || !io_checkNodeHaveLink($nid))
+        return $lines;
+    if ($maxLinks == 0)
+        $maxLinks = lib_getConfiguration('ioReadMaxLinks');
 
-    // Check algo value.
-    $algo = strtok('.');
-    if ($algo === false) return false;
-    if (strlen($algo) < LIB_NID_MIN_ALGO_SIZE) return false;
-    if (strlen($algo) > LIB_NID_MAX_ALGO_SIZE) return false;
-    if (!ctype_alnum($algo)) return false;
-
-    // Check size value.
-    $size = strtok('.');
-    if ($size === false) return false;
-    if (!ctype_digit($size)) return false; // Check content before!
-    if ((int)$size < LIB_NID_MIN_HASH_SIZE) return false;
-    if ((int)$size > LIB_NID_MAX_HASH_SIZE) return false;
-    if ((strlen($hash) * 4) != (int)$size) return false;
-
-    // Check item overflow
-    if (strtok('.') !== false) return false;
-
-    return true;
-}
-
-/**
- * Object - Check with links if a node is marked as banned.
- *
- * @param $nid
- * @return boolean
- */
-function nod_checkBanned_FIXME(&$nid): bool
-{
-    global $nebulePublicEntity, $nebuleSecurityAuthorities, $nebuleCacheIsBanned;
-
-    // FIXME
-    return false;
-    /*
-    if (isset($nebuleCacheIsBanned [$nid]))
-        return $nebuleCacheIsBanned [$nid];
-
-    if ($nid == '0')
-        return false;
-
-    $ok = false;
-    $table = array();
-    $hashtype = _objGetNID('nebule/danger', getConfiguration('cryptoHashAlgorithm'));
-    $filter = array(
-        'bl/rl/req' => 'f',
-        'bl/rl/nid1' => $hashtype,
-        'bl/rl/nid2' => $nid,
-        'bl/rl/nid3' => '',
-        'bl/rl/nid4' => '',
-    );
-    _lnkFind($nid, $table, $filter);
-    foreach ($table as $link) {
-        if (($link [2] == $nebulePublicEntity) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $nid) && ($link [7] == '0'))
-            $ok = true;
-        if (($link [2] == $nebuleSecurityMaster) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $nid) && ($link [7] == '0'))
-            $ok = true;
+    $links = file(LIB_LOCAL_LINKS_FOLDER . '/' . $nid);
+    if ($links !== false) {
+        foreach ($links as $link) {
+            $lines [$count] = $link;
+            lib_incrementMetrology('lr');
+            $count++;
+            if ($count > $maxLinks)
+                break 1;
+        }
     }
-    unset($table);
-    unset($hashtype);
 
-    if (getConfiguration('permitBufferIO'))
-        $nebuleCacheIsBanned [$nid] = $ok;
-
-
-
-            addLog($nid . ') banned by ' . $nebulePublicEntity, 'warn', __FUNCTION__, 'a9668cd0');
-            addLog($nid . ') banned by ' . $nebuleSecurityMaster, 'warn', __FUNCTION__, 'd84f8e81');
-
-
-
-    return $ok;*/
+    return $lines;
 }
 
 /**
- * Object - Read one line of object content as printable text.
- *
- * @param string  $oid
- * @param integer $maxData
- * @return string
- */
-function obj_getAsText1line(string &$oid, int $maxData = 128): string
-{
-    global $nebuleCacheReadObjText1line;
-
-    if (isset($nebuleCacheReadObjText1line [$oid]))
-        return $nebuleCacheReadObjText1line [$oid];
-
-    if ($maxData == 0)
-        $maxData = lib_getConfiguration('ioReadMaxData');
-
-    $data = '';
-    obj_getLocalContent($oid, $data, $maxData + 1);
-    $data = strtok(filter_var($data, FILTER_SANITIZE_STRING), "\n");
-    if (!is_string($data))
-        return '';
-
-    $data = trim($data);
-    $data = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', filter_var($data, FILTER_SANITIZE_STRING));
-
-    if (extension_loaded('mbstring'))
-        $data = mb_convert_encoding($data, 'UTF-8');
-    else
-        log_add('mbstring extension not installed or activated!', 'warn', __FUNCTION__, 'c2becfad');
-
-    if (strlen($data) > $maxData)
-        $data = substr($data, 0, ($maxData - 3)) . '...';
-
-    if (lib_getConfiguration('permitBufferIO'))
-        $nebuleCacheReadObjText1line [$oid] = $data;
-
-    return $data;
-}
-
-/**
- * Object - Read object content as printable text.
- *
- * @param string  $oid
- * @param integer $maxData
- * @return string
- */
-function obj_getAsText(string &$oid, int $maxData = 0): string
-{
-    if ($maxData == 0)
-        $maxData = lib_getConfiguration('ioReadMaxData');
-
-    $data = '';
-    obj_getLocalContent($oid, $data, $maxData + 1);
-    $data = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', filter_var($data, FILTER_SANITIZE_STRING));
-
-    if (strlen($data) > $maxData)
-        $data = substr($data, 0, ($maxData - 3)) . '...';
-
-    return $data;
-}
-
-/**
- * Get type Mime to the node (object) from his links.
- * The type mime asked is converted as NID and may not have object.
- * TODO revoir le traitement social des liens.
+ * I/O - Write a link to a node.
  *
  * @param string $nid
- * @param string $typeMime
- * @return bool
+ * @param string $link
+ * @return boolean
  */
-function obj_checkTypeMime(string &$nid, string $typeMime): bool
-{
-    global $nebuleCacheReadObjTypeMime;
-
-    if (isset($nebuleCacheReadObjTypeMime [$nid])) {
-        if ($nebuleCacheReadObjTypeMime [$nid] == $typeMime)
-            return true;
-        else
-            return false;
-    }
-
-    if (!nod_checkNID($nid))
-        return false;
-
-    $hashType = obj_getNID('nebule/objet/type', lib_getConfiguration('cryptoHashAlgorithm'));
-    $hashTypeAsked = obj_getNID($typeMime, lib_getConfiguration('cryptoHashAlgorithm'));
-    $filter = array(
-        'bl/rl/req' => 'l',
-        'bl/rl/nid1' => $nid,
-        'bl/rl/nid2' => $hashTypeAsked,
-        'bl/rl/nid3' => $hashType,
-        'bl/rl/nid4' => '',
-    );
-    $links = array();
-    lnk_getList($nid, $links, $filter);
-    // TODO Filter on social links level - security!
-
-    if (sizeof($links) == 0)
-        return false;
-
-    return true;
-}
-
-/**
- * Write text in object content.
- * By default, if object present, do not create links for the object ($skipIfPresent).
- *
- * @param string $data
- * @param bool   $skipIfPresent
- * @return bool
- */
-function obj_setContentAsText(string $data, bool $skipIfPresent = true): bool
+function io_linkWrite(string &$nid, string &$link): bool
 {
     if (!lib_getConfiguration('permitWrite')
-        || !lib_getConfiguration('permitWriteObject')
         || !lib_getConfiguration('permitWriteLink')
-        || strlen($data) == 0
+        || $nid == ''
     )
         return false;
 
-    $oid = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
+    // Check if link not already present on file.
+    if (file_exists(LIB_LOCAL_LINKS_FOLDER . '/' . $nid)) {
+        $l = file(LIB_LOCAL_LINKS_FOLDER . '/' . $nid, FILE_SKIP_EMPTY_LINES);
+        if ($l !== false) {
+            foreach ($l as $k) {
+                if (trim($k) == trim($link))
+                    return true;
+            }
+        }
+    }
 
-    if (nod_checkBanned_FIXME($oid))
+    // Write link on file.
+    if (file_put_contents(LIB_LOCAL_LINKS_FOLDER . '/' . $nid, "$link\n", FILE_APPEND) === false)
         return false;
-    if ($skipIfPresent && io_checkNodeHaveContent($oid))
-        return true;
-
-    return obj_generate_FIXME($data, 'text/plain');
+    return true;
 }
 
 /**
- * Object - Create new object from data.
+ * I/O - Synchronize links from other location.
  *
- * @param string $data
- * @param string $typemime
+ * @param string $nid
+ * @param string $location
  * @return bool
  */
-function obj_generate_FIXME(string &$data, string $typemime = ''): bool
+function io_linkSynchronize(string $nid, string $location): bool
+{
+    if (!lib_getConfiguration('permitWrite')
+        || !lib_getConfiguration('permitWriteLink')
+        || !lib_getConfiguration('permitSynchronizeLink')
+        || !nod_checkNID($nid)
+        || $location == ''
+        || !is_string($location) // TODO renforcer la vérification de l'URL.
+        || nod_checkBanned_FIXME($nid)
+    )
+        return false;
+
+    if (!io_checkExistOverHTTP($location . '/l/' . $nid))
+        return false;
+
+    $resource = fopen($location . '/l/' . $nid, 'r');
+    if ($resource !== false) {
+        while (feof($resource) !== false) {
+            $line = trim(fgets($resource));
+            lnk_write($line);
+        }
+        fclose($resource);
+    }
+
+    return true;
+}
+
+/**
+ * I/O - Read object content.
+ * Return the read data from object.
+ *
+ * @param string  $nid
+ * @param integer $maxData
+ * @return string
+ */
+function io_objectRead(string $nid, int $maxData = 0): string
+{
+    if ($maxData == 0)
+        $maxData = lib_getConfiguration('ioReadMaxData');
+    if (!nod_checkNID($nid) || !io_checkNodeHaveContent($nid))
+        return '';
+
+    $result = file_get_contents(LIB_LOCAL_OBJECTS_FOLDER . '/' . $nid, false, null, 0, $maxData);
+    if ($result === false)
+        $result = '';
+    lib_incrementMetrology('or');
+
+    return $result;
+}
+
+/**
+ * I/O - Write object content.
+ * This function do not verify data and OID correlation.
+ *
+ * @param string $data
+ * @param string $oid
+ * @return boolean
+ */
+function io_objectWrite(string &$data, string $oid = '0'): bool
 {
     if (strlen($data) == 0
         || !lib_getConfiguration('permitWrite')
         || !lib_getConfiguration('permitWriteObject')
     )
         return false;
-    $dat = '0' . date('YmdHis');
-    $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
-    // Ecrit l'objet.
-    if (!io_checkNodeHaveContent($hash))
-        obj_setContent($data, $hash);
-    // Ecrit le lien de hash.
-    $lnk = lnk_generateSign(
-        $dat,
-        'l',
-        $hash,
-        obj_getNID(lib_getConfiguration('cryptoHashAlgorithm'), lib_getConfiguration('cryptoHashAlgorithm')),
-        obj_getNID('nebule/objet/hash', lib_getConfiguration('cryptoHashAlgorithm'))
-    );
-    if ((lnk_verify($lnk)) == 1)
-        lnk_write($lnk);
-    // Ecrit le lien de type mime.
-    if ($typemime != '') {
-        $lnk = lnk_generateSign(
-            $dat,
-            'l',
-            $hash,
-            obj_getNID($typemime, lib_getConfiguration('cryptoHashAlgorithm')),
-            obj_getNID('nebule/objet/type', lib_getConfiguration('cryptoHashAlgorithm'))
-        );
-        if ((lnk_verify($lnk)) == 1)
-            lnk_write($lnk);
-    }
+
+    if (strlen($oid) < LIB_NID_MIN_HASH_SIZE)
+        return false;
+
+    if (io_checkNodeHaveContent($oid))
+        return true;
+
+    if (file_put_contents(LIB_LOCAL_OBJECTS_FOLDER . '/' . $oid, $data) === false)
+        return false;
     return true;
 }
 
 /**
- * Object - Read object content and push on $data.
- *
- * @param string  $nid
- * @param string  $data
- * @param numeric $maxData
- * @return boolean
- */
-function obj_getLocalContent(string &$nid, string &$data, int $maxData = 0): bool
-{
-    if (obj_checkContent($nid)) {
-        $data = io_objectRead($nid, $maxData);
-        return true;
-    }
-    return false;
-}
-
-/**
- * Object - Download node content (object) on web locations.
- * Only valid content are writen on local filesystem.
+ * I/O - Synchronize object content from other location.
  *
  * @param string $nid
- * @param array  $locations
- * @return boolean
+ * @param string $location
+ * @return bool
  */
-function obj_getDistantContent(string $nid, array $locations = array()): bool
+function io_objectSynchronize(string $nid, string $location): bool
 {
     if (!lib_getConfiguration('permitWrite')
         || !lib_getConfiguration('permitWriteObject')
         || !lib_getConfiguration('permitSynchronizeObject')
-        || !nod_checkNID($nid, false)
+        || !nod_checkNID($nid)
+        || $location == ''
+        || !is_string($location) // TODO renforcer la vérification de l'URL.
         || nod_checkBanned_FIXME($nid)
     )
         return false;
@@ -1546,602 +1428,365 @@ function obj_getDistantContent(string $nid, array $locations = array()): bool
     if (io_checkNodeHaveContent($nid))
         return true;
 
-    if (sizeof($locations) == 0)
-        $locations = LIB_FIRST_LOCALISATIONS;
+    if (!io_checkExistOverHTTP($location . '/o/' . $nid))
+        return false;
 
-    foreach ($locations as $location) {
-        if (io_objectSynchronize($nid, $location))
-            return true;
+    // Téléchargement de l'objet via un fichier temporaire.
+    $tmpId = bin2hex(crypto_getPseudoRandom(8));
+    $tmpIdName = 'io_objectSynchronize' . $tmpId . '-' . $nid;
+    $distobj = fopen($location . '/o/' . $nid, 'r');
+    if ($distobj) {
+        $localobj = fopen(LIB_LOCAL_OBJECTS_FOLDER . '/' . $tmpIdName, 'w');
+        if ($localobj) {
+            while (($line = fgets($distobj, lib_getConfiguration('ioReadMaxData'))) !== false) {
+                fputs($localobj, $line);
+            }
+            fclose($localobj);
+            $algo = nod_getAlgo($nid);
+            if ($algo !== false)
+                $hash = crypto_getFileHash($tmpIdName, crypto_getTranslatedHashAlgo($algo));
+            else
+                $hash = 'invalid';
+
+            if ($hash . '.' . $algo == $nid)
+                rename(LIB_LOCAL_OBJECTS_FOLDER . '/' . $tmpIdName, LIB_LOCAL_OBJECTS_FOLDER . '/' . $nid);
+            else
+                unlink(LIB_LOCAL_OBJECTS_FOLDER . '/' . $tmpIdName);
+        }
+        fclose($distobj);
     }
+
+    if (io_checkNodeHaveContent($nid))
+        return true;
     return false;
 }
 
 /**
- * Object - Vérifie la consistance d'un objet. Si l'objet est corrompu, il est supprimé.
- * If there's no content, this assumed as false.
- * TODO refaire avec i/o
+ * I/O - Suppress object content.
  *
  * @param string $nid
  * @return boolean
  */
-function obj_checkContent(&$nid): bool
+function io_objectDelete(string &$nid): bool
 {
-    global $nebuleCachelibrary_o_vr;
-
-    lib_incrementMetrology('ov');
-
-    if (!nod_checkNID($nid) || !io_checkNodeHaveContent($nid))
+    if (!lib_getConfiguration('permitWrite') || !lib_getConfiguration('permitWriteObject') || $nid == '')
         return false;
-
-    if (isset($nebuleCachelibrary_o_vr[$nid]))
+    if (!io_checkNodeHaveContent($nid))
         return true;
 
-    $hash = '';
-    $algo = nod_getAlgo($nid);
-    if ($algo != '')
-        $hash = crypto_getFileHash($nid, $algo);
-
-    // If invalid, delete file of the object.
-    if ($hash . '.' . $algo != $nid)
-        io_objectDelete($nid);
-
-    if (lib_getConfiguration('permitBufferIO'))
-        $nebuleCachelibrary_o_vr[$nid] = true;
-
+    if (!unlink(LIB_LOCAL_OBJECTS_FOLDER . '/' . $nid)) {
+        log_add('Unable to delete file.', 'error', __FUNCTION__, '991b11a1');
+        return false;
+    }
     return true;
 }
 
 /**
- * Object - Calculate NID for data with hash algo.
+ * Vérifie la présence d'un fichier ou dossier via HTTP.
  *
- * @param string $data
+ * @param string $location
+ * @return boolean
+ */
+function io_checkExistOverHTTP(string $location): bool
+{
+    $url = parse_url($location);
+
+    $handle = fsockopen($url['host'], 80, $errno, $errstr, 1);
+    if ($handle === false) {
+        return false;
+    }
+
+    $out = "HEAD " . $url['path'] . " HTTP/1.1\r\n" . "Host: " . $url['host'] . "\r\n" . "Connection: Close\r\n\r\n";
+    $response = '';
+
+    fwrite($handle, $out);
+    while (!feof($handle)) {
+        $response .= fgets($handle, 20);
+        if (strlen($response) > 0)
+            break;
+    }
+    fclose($handle);
+
+    $pos = strpos($response, ' ');
+    if ($pos === false)
+        return false;
+
+    $code = substr($response, $pos + 1, 3);
+    if ($code == '200')
+        return true;
+
+    return false;
+}
+
+/**
+ * I/O - End of work on I/O subsystem.
+ *
+ * @return void
+ */
+function io_close(): void
+{
+    // Rien à fermer sur un fs.
+}
+
+/**
+ * Crypto - Translate algo name into OpenSSL algo name.
+ *
  * @param string $algo
+ * @param bool   $loop
  * @return string
  */
-function obj_getNID(string $data, string $algo = ''): string
+function crypto_getTranslatedHashAlgo(string $algo, bool $loop = true): string
 {
     if ($algo == '')
         $algo = lib_getConfiguration('cryptoHashAlgorithm');
-    return crypto_getDataHash($data, $algo) . '.' . $algo;
+
+    $translatedAlgo = '';
+    switch ($algo) {
+        case 'sha2.128' :
+            $translatedAlgo = 'sha128';
+            break;
+        case 'sha2.256' :
+            $translatedAlgo = 'sha256';
+            break;
+        case 'sha2.384' :
+            $translatedAlgo = 'sha384';
+            break;
+        case 'sha2.512' :
+            $translatedAlgo = 'sha512';
+            break;
+    }
+
+    if ($translatedAlgo == '') {
+        if ($loop) {
+            log_add('cryptoHashAlgorithm configuration have an unknown value (' . $algo . ')', 'error', __FUNCTION__, 'b7627066');
+            $translatedAlgo = crypto_getTranslatedHashAlgo(LIB_CONFIGURATIONS_DEFAULT['cryptoHashAlgorithm'], false);
+        } else
+            $translatedAlgo = 'sha512';
+    }
+
+    return $translatedAlgo;
 }
 
 /**
- * Object - Write object content.
+ * Crypto - Calculate hash of data with algo.
+ * Use OpenSSL library.
  *
+ * @param string $algo
  * @param string $data
- * @param string $oid
- * @return bool
- */
-function obj_setContent(string &$data, string $oid = '0'): bool
-{
-    if (strlen($data) == 0
-        || !lib_getConfiguration('permitWrite')
-        || !lib_getConfiguration('permitWriteObject')
-    )
-        return false;
-
-    $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
-    if ($oid == '0')
-        $oid = $hash;
-    elseif ($oid != $hash)
-        return false;
-
-    if (io_objectWrite($data, $oid))
-        return true;
-    return false;
-}
-
-/**
- * Find full name to the NID.
- *
- * @param string $nid
  * @return string
  */
-function ent_getFullName(&$nid): string
+function crypto_getDataHash(string &$data, string $algo = ''): string
 {
-    global $nebuleCacheReadEntityFullName;
-
-    if (isset($nebuleCacheReadEntityFullName [$nid]))
-        return $nebuleCacheReadEntityFullName [$nid];
-
-    $fname = nod_getFirstName($nid);
-    $name = nod_getName($nid);
-    $pname = nod_getPostName($nid);
-    if ($name == '') {
-        $fullname = "$nid";
-    } else {
-        $fullname = $name;
-    }
-    if ($fname != '') {
-        $fullname = "$fname $fullname";
-    }
-    if ($pname != '') {
-        $fullname = "$fullname $pname";
-    }
-
-    if (lib_getConfiguration('permitBufferIO'))
-        $nebuleCacheReadEntityFullName [$nid] = $fullname;
-    return $fullname;
+    return hash(crypto_getTranslatedHashAlgo($algo), $data);
 }
 
 /**
- * Entity - Generate a new entity.
+ * Crypto - Calculate hash of file data with algo.
+ * File must be on objects folder.
+ * Use OpenSSL library.
+ *
+ * @param string $algo
+ * @param string $file
+ * @return string
+ */
+function crypto_getFileHash(string $file, string $algo = ''): string
+{
+    return hash_file(crypto_getTranslatedHashAlgo($algo), LIB_LOCAL_OBJECTS_FOLDER . '/' . $file);
+}
+
+/**
+ * Crypto - Generate pseudo random number
+ * Use OpenSSL library.
+ *
+ * @param int $count
+ * @return string
+ */
+function crypto_getPseudoRandom(int $count = 32): string
+{
+    global $nebuleServerEntity;
+
+    $result = '';
+    $algo = 'sha256';
+    if ($count == 0 || !is_int($count))
+        return $result;
+
+    // Génère une graine avec la date pour le compteur interne.
+    $intcount = date(DATE_ATOM) . microtime(false) . LIB_NEBULE_LIBRARY_PP_VERSION . $nebuleServerEntity;
+
+    // Boucle de remplissage.
+    while (strlen($result) < $count) {
+        $diffsize = $count - strlen($result);
+
+        // Fait évoluer le compteur interne.
+        $intcount = hash($algo, $intcount);
+
+        // Fait diverger le compteur interne pour la sortie.
+        // La concaténation avec un texte empêche de remonter à la valeur du compteur interne.
+        $outvalue = hash($algo, $intcount . 'liberté égalité fraternité', true);
+
+        // Tronc au besoin la taille de la sortie.
+        if (strlen($outvalue) > $diffsize)
+            $outvalue = substr($outvalue, 0, $diffsize);
+
+        // Ajoute la sortie au résultat final.
+        $result .= $outvalue;
+    }
+
+    return $result;
+}
+
+/**
+ * Crypto - Generate new public cryptographic keys.
+ * Use OpenSSL library.
  *
  * @param string $asymmetricAlgo
  * @param string $hashAlgo
- * @param string $hashPublicKey
- * @param string $hashPrivateKey
+ * @param string $publicKey
+ * @param string $privateKey
  * @param string $password
  * @return bool
  */
-function ent_generate(string $asymmetricAlgo, string $hashAlgo, string &$hashPublicKey, string &$hashPrivateKey, string &$password = ''): bool
+function crypto_getNewPKey(string $asymmetricAlgo, string $hashAlgo, string &$publicKey, string &$privateKey, string $password): bool
 {
-    global $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
-
-    if (!lib_getConfiguration('permitWrite')
-        || !lib_getConfiguration('permitWriteEntity')
-        || !lib_getConfiguration('permitWriteObject')
-        || !lib_getConfiguration('permitWriteLink')
-        //    || (($asymmetricAlgo != 'rsa') && ($asymmetricAlgo != 'dsa'))
-        || $password == ''
-    )
-        return false;
+    // Prepare values.
+    $digestAlgo = crypto_getTranslatedHashAlgo($hashAlgo, true);
+    $config = array('digest_alg' => $digestAlgo,);
+    switch ($asymmetricAlgo) {
+        case 'rsa.1024' :
+            $config['private_key_bits'] = 1024;
+            $config['private_key_type'] = OPENSSL_KEYTYPE_RSA;
+            break;
+        case 'rsa.2048' :
+            $config['private_key_bits'] = 2048;
+            $config['private_key_type'] = OPENSSL_KEYTYPE_RSA;
+            break;
+        case 'rsa.3192' :
+            $config['private_key_bits'] = 3192;
+            $config['private_key_type'] = OPENSSL_KEYTYPE_RSA;
+            break;
+        case 'rsa.4096' :
+            $config['private_key_bits'] = 4096;
+            $config['private_key_type'] = OPENSSL_KEYTYPE_RSA;
+            break;
+        case 'dsa.1024' :
+            $config['private_key_bits'] = 1024;
+            $config['private_key_type'] = OPENSSL_KEYTYPE_DSA;
+            break;
+        case 'dsa.2048' :
+            $config['private_key_bits'] = 2048;
+            $config['private_key_type'] = OPENSSL_KEYTYPE_DSA;
+            break;
+        case 'dsa.3192' :
+            $config['private_key_bits'] = 3192;
+            $config['private_key_type'] = OPENSSL_KEYTYPE_DSA;
+            break;
+        case 'dsa.4096' :
+            $config['private_key_bits'] = 4096;
+            $config['private_key_type'] = OPENSSL_KEYTYPE_DSA;
+            break;
+        case 'ec.prime256v1' :
+            $config['curve_name'] = 'prime256v1';
+            $config['private_key_type'] = OPENSSL_KEYTYPE_EC;
+            break;
+        default:
+            return false;
+    }
 
     // Generate the bi-key.
-    $publicKey = '';
-    $privateKey = '';
-    if (crypto_getNewPKey($asymmetricAlgo, $hashAlgo, $publicKey, $privateKey, $password)) {
-        $hashPublicKey = obj_getNID($publicKey, lib_getConfiguration('cryptoHashAlgorithm'));
-        log_add('generate new public key ' . $hashPublicKey, 'warn', __FUNCTION__, '9c207dc0');
-        if (!obj_setContent($publicKey, $hashPublicKey))
-            return false;
-        $hashPrivateKey = obj_getNID($privateKey, lib_getConfiguration('cryptoHashAlgorithm'));
-        log_add('generate new private key ' . $hashPrivateKey, 'warn', __FUNCTION__, '96059d19');
-        if (!obj_setContent($privateKey, $hashPrivateKey))
-            return false;
-    } else
+    $newPKey = openssl_pkey_new($config);
+    if ($newPKey === false)
         return false;
 
-    // Generate links for properties
-    $oidHash = obj_getNID('nebule/objet/hash');
-    $oidAlgo = obj_getNID(lib_getConfiguration('cryptoHashAlgorithm'));
-    $oidType = obj_getNID('nebule/objet/type');
-    $oidPem = obj_getNID('application/x-pem-file');
-    $oidPKey = obj_getNID('nebule/objet/entite/prive');
-    $oidText = obj_getNID('text/plain');
+    // Extract public key.
+    $publicKey = openssl_pkey_get_details($newPKey);
+    $publicKey = $publicKey ['key'];
 
-    $list = array($oidHash, $oidAlgo, $oidType, $oidPem, $oidPKey, $oidText);
-    foreach ($list as $item) {
-        $bh_bl = lnk_generate('', 'l', $item, $oidAlgo, $oidHash);
-        $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
-        $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getConfiguration('cryptoHashAlgorithm');
-        if (!lnk_write($link))
-            return false;
-        $bh_bl = lnk_generate('', 'l', $item, $oidText, $oidType);
-        $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
-        $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getConfiguration('cryptoHashAlgorithm');
-        if (!lnk_write($link))
-            return false;
-    }
-
-    $list = array($hashPublicKey, $hashPrivateKey);
-    foreach ($list as $item) {
-        $bh_bl = lnk_generate('', 'l', $item, $oidAlgo, $oidHash);
-        $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
-        $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getConfiguration('cryptoHashAlgorithm');
-        if (!lnk_write($link))
-            return false;
-        $bh_bl = lnk_generate('', 'l', $item, $oidPem, $oidType);
-        $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
-        $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getConfiguration('cryptoHashAlgorithm');
-        if (!lnk_write($link))
-            return false;
-    }
-
-    $bh_bl = lnk_generate('', 'f', $hashPublicKey, $hashPrivateKey, $oidPKey);
-    $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
-    $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getConfiguration('cryptoHashAlgorithm');
-    if (!lnk_write($link))
+    // Extract private key.
+    if ($password != '')
+        openssl_pkey_export($newPKey, $privateKey, $password);
+    else
+        openssl_pkey_export($newPKey, $privateKey);
+    // Verify.
+    $private_key = openssl_pkey_get_private($privateKey, $password);
+    if ($private_key === false)
         return false;
 
     return true;
 }
 
 /**
- * Get puppetmaster NID.
+ * Crypto - Encrypt data with private asymmetric key.
+ * Use OpenSSL library.
  *
+ * @param string $data
+ * @param string $privateOid
+ * @param string $password
+ * @param bool   $entityCheck
  * @return string
  */
-function ent_getPuppetmaster(): string
+function crypto_asymmetricEncrypt(string $data, string $privateOid = '', string $password = '', bool $entityCheck = true): string
 {
-    return lib_getConfiguration('puppetmaster');
+    if ($privateOid == ''
+        || ($entityCheck && !ent_checkIsPrivateKey($privateOid))
+        || $password == ''
+        || $data == ''
+    )
+        return '';
+
+    $privateCertificat = '';
+    if (!obj_getLocalContent($privateOid, $privateCertificat, 10000))
+        return '';
+    $private_key = openssl_pkey_get_private($privateCertificat, $password);
+    if ($private_key === false)
+        return '';
+    $binarySignature = '';
+    $hashData = crypto_getDataHash($data);
+    $binHashData = pack("H*", $hashData);
+    $ok = openssl_private_encrypt($binHashData, $binarySignature, $private_key, OPENSSL_PKCS1_PADDING);
+    openssl_free_key($private_key);
+    unset($private_key);
+    if ($ok === false)
+        return '';
+
+    return bin2hex($binarySignature);
 }
 
-/**
- * Get masters of security IDs.
- * Make a search for global entities and for code branch specific entities
- *
- * @param string $refNid
- * @param array  $result
- * @param bool   $synchronize
- * @return array
- */
-function ent_getAskedMasters(string $refNid, array &$result, bool $synchronize): array
-{
-    if (sizeof($result) != 0)
-        return $result;
-
-    if ($synchronize)
-        obj_getDistantContent($refNid, array());
-
-    $lnkList = array();
-    $entList = array();
-    $filter = array(
-        'bl/rl/req' => 'l',
-        'bl/rl/nid2' => $refNid,
-        'bl/rl/nid3' => '',
-        'bl/rl/nid4' => '',
-        'bs/rs/nid' => lib_getConfiguration('puppetmaster'),
-    );
-    lnk_getList($refNid, $lnkList, $filter);
-
-    if (lib_getConfiguration('CodeBranch') != '') {
-        $filter['bl/rl/nid3'] = obj_getNID(lib_getConfiguration('CodeBranch'));
-        lnk_getList($refNid, $lnkList, $filter);
-    }
-
-    // Extract uniques entities
-    foreach ($lnkList as $lnk)
-        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
-    foreach ($entList as $ent)
-        $result[] = $ent;
-
-    return $result;
-}
 
 /**
- * Get masters of security IDs.
- * Update global list on the same time.
+ * Crypto - Decrypt and verify asymmetric sign.
+ * Use OpenSSL library.
  *
- * @param bool $synchronize
- * @return array
- */
-function ent_getSecurityAuthorities(bool $synchronize = false): array
-{
-    global $nebuleSecurityAuthorities;
-    return ent_getAskedMasters(LIB_RID_SECURITY_AUTHORITY, $nebuleSecurityAuthorities, $synchronize);
-}
-
-/**
- * Get masters of code IDs.
- * Update global list on the same time.
- *
- * @param bool $synchronize
- * @return array
- */
-function ent_getCodeAuthorities(bool $synchronize = false): array
-{
-    global $nebuleCodeAuthorities;
-    return ent_getAskedMasters(LIB_RID_CODE_AUTHORITY, $nebuleCodeAuthorities, $synchronize);
-}
-
-/**
- * Get masters of time IDs.
- * Update global list on the same time.
- *
- * @param bool $synchronize
- * @return array
- */
-function ent_getTimeAuthorities(bool $synchronize = false): array
-{
-    global $nebuleTimeAuthorities;
-    return ent_getAskedMasters(LIB_RID_TIME_AUTHORITY, $nebuleTimeAuthorities, $synchronize);
-}
-
-/**
- * Get masters of directory IDs.
- * Update global list on the same time.
- *
- * @param bool $synchronize
- * @return array
- */
-function ent_getDirectoryAuthorities(bool $synchronize = false): array
-{
-    global $nebuleDirectoryAuthorities;
-    return ent_getAskedMasters(LIB_RID_DIRECTORY_AUTHORITY, $nebuleDirectoryAuthorities, $synchronize);
-}
-
-/**
- * Check puppetmaster entity.
- *
- * @param string $oid
- * @return bool
- */
-function ent_checkPuppetmaster(string $oid): bool
-{
-    if (!ent_checkIsPublicKey($oid)) {
-        log_add('need sync puppetmaster', 'warn', __FUNCTION__, '6995b7fd');
-        bootstrap_setBreak('71', 'Need sync puppetmaster');
-        return false;
-    }
-    return true;
-}
-
-/**
- * Check masters of security entities.
- *
- * @param array $oidList
- * @return bool
- */
-function ent_checkSecurityAuthorities(array $oidList): bool
-{
-    if (sizeof($oidList) == 0) {
-        log_add('need sync masters of security', 'warn', __FUNCTION__, 'a767699e');
-        bootstrap_setBreak('72', 'Need sync masters of security');
-        return false;
-    }
-    foreach ($oidList as $nid) {
-        if (!ent_checkIsPublicKey($nid)) {
-            log_add('need sync masters of security ' . $nid, 'warn', __FUNCTION__, '5626b8f');
-            bootstrap_setBreak('73', 'Need sync masters of security');
-            return false;
-        }
-    }
-    return true;
-}
-
-/**
- * Check masters of code entities.
- *
- * @param array $oidList
- * @return bool
- */
-function ent_checkCodeAuthorities(array $oidList): bool
-{
-    if (sizeof($oidList) == 0) {
-        log_add('need sync masters of code', 'warn', __FUNCTION__, '8543b436');
-        bootstrap_setBreak('74', 'Need sync masters of code');
-        return false;
-    }
-    foreach ($oidList as $nid) {
-        if (!ent_checkIsPublicKey($nid)) {
-            log_add('need sync masters of code ' . $nid, 'warn', __FUNCTION__, '0ff4516d');
-            bootstrap_setBreak('75', 'Need sync masters of code');
-            return false;
-        }
-    }
-    return true;
-}
-
-/**
- * Check masters of time entities.
- *
- * @param array $oidList
- * @return bool
- */
-function ent_checkTimeAuthorities(array $oidList): bool
-{
-    if (sizeof($oidList) == 0) {
-        log_add('need sync masters of time', 'warn', __FUNCTION__, '0c6f1ef1');
-        bootstrap_setBreak('76', 'Need sync masters of time');
-        return false;
-    }
-    foreach ($oidList as $nid) {
-        if (!ent_checkIsPublicKey($nid)) {
-            log_add('need sync masters of time ' . $nid, 'warn', __FUNCTION__, '01f5f9b5');
-            bootstrap_setBreak('77', 'Need sync masters of time');
-            return false;
-        }
-    }
-    return true;
-}
-
-/**
- * Check masters of directory entities.
- *
- * @param array $oidList
- * @return bool
- */
-function ent_checkDirectoryAuthorities(array $oidList): bool
-{
-    if (sizeof($oidList) == 0) {
-        log_add('need sync masters of directory', 'warn', __FUNCTION__, 'e47e9e04');
-        bootstrap_setBreak('78', 'Need sync masters of directory');
-        return false;
-    }
-    foreach ($oidList as $nid) {
-        if (!ent_checkIsPublicKey($nid)) {
-            log_add('need sync masters of directory ' . $nid, 'warn', __FUNCTION__, '8b12fe09');
-            bootstrap_setBreak('79', 'Need sync masters of directory');
-            return false;
-        }
-    }
-    return true;
-}
-
-/**
- * Synchronize puppetmaster from central location.
- * Specifically for puppetmaster, first contents are locally generated.
- *
- * @param string $oid
- * @return void
- */
-function ent_syncPuppetmaster(string $oid): void
-{
-    global $configurationList;
-
-    if (!ent_checkIsPublicKey($oid)) {
-        $oid = LIB_DEFAULT_PUPPETMASTER_EID;
-        $configurationList['puppetmaster'] = LIB_DEFAULT_PUPPETMASTER_EID;
-    }
-
-    if ($oid == LIB_DEFAULT_PUPPETMASTER_EID) {
-        log_add('Write default puppetmaster', 'info', __FUNCTION__, '555ec326');
-        foreach (LIB_FIRST_AUTORITIES_PUBLIC_KEY as $data)
-        {
-            $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
-            io_objectWrite($data, $hash);
-        }
-        foreach (LIB_FIRST_LINKS as $link)
-            lnk_write($link);
-    }
-
-    ent_syncAuthorities(array($oid));
-}
-
-/**
- * Synchronize authorities from central locations.
- *
- * @param array $oidList
- * @return void
- */
-function ent_syncAuthorities(array $oidList): void
-{
-    global $nebuleCacheIsPublicKey, $nebuleCacheIsPrivateKey;
-
-    foreach ($oidList as $nid) {
-        log_add('Sync master entity ' . $nid, 'info', __FUNCTION__, '92e0483f');
-        obj_getDistantContent($nid, array());
-        lnk_getDistantOnLocations($nid, array());
-    }
-
-    $nebuleCacheIsPublicKey = array();
-    $nebuleCacheIsPrivateKey = array();
-}
-
-/**
- * Object - Verify node is an object and is a valid entity public key.
- *
+ * @param string $sign
+ * @param string $hash
  * @param string $nid
  * @return boolean
  */
-function ent_checkIsPublicKey(string &$nid): bool
+function crypto_asymmetricVerify(string $sign, string $hash, string $nid): bool
 {
-    global $nebuleCacheIsPublicKey;
+    // Read signer's public key.
+    $cert = io_objectRead($nid, 10000);
+    $hashsize = strlen($hash);
 
-    $result = false;
-    if (isset($nebuleCacheIsPublicKey[$nid]))
-        return $nebuleCacheIsPublicKey[$nid];
+    $pubkeyid = openssl_pkey_get_public($cert);
+    if ($pubkeyid === false) return false;
 
-    if (strlen($nid) < LIB_NID_MIN_HASH_SIZE
-        || !nod_checkNID($nid, false)
-        || !obj_checkContent($nid)
-        || !io_checkNodeHaveLink($nid)
-    ) {
-        log_add('not a valid object for a key ' . $nid, 'warn', __FUNCTION__, '9c268f6a');
-        return false;
-    }
+    lib_incrementMetrology('lv');
 
-    if (!obj_checkTypeMime($nid, 'application/x-pem-file'))
-        return false;
+    // Encoding sign before check.
+    $binsign = pack('H*', $sign);
 
-    $line = obj_getAsText($nid, 10000);
-    if (strstr($line, 'BEGIN PUBLIC KEY') !== false)
-        $result = true;
-    else
-        log_add('NID do not provide a public key', 'warn', __FUNCTION__, '25743bf3');
-
-    if (lib_getConfiguration('permitBufferIO'))
-        $nebuleCacheIsPublicKey[$nid] = $result;
-    return $result;
-}
-
-/**
- * Verify node is an object and is a valid entity private key.
- *
- * @param $nid
- * @return bool
- */
-function ent_checkIsPrivateKey(&$nid): bool
-{
-    global $nebuleCacheIsPrivateKey;
-
-    if (isset($nebuleCacheIsPrivateKey [$nid]))
-        return $nebuleCacheIsPrivateKey [$nid];
-
-    if ($nid == '0'
-        || strlen($nid) < LIB_NID_MIN_HASH_SIZE
-        || !nod_checkNID($nid)
-        || !obj_checkContent($nid)
-        || !io_checkNodeHaveLink($nid)
-    )
-        return false;
-
-    obj_setContentAsText('application/x-pem-file');
-    if (!obj_checkTypeMime($nid, 'application/x-pem-file'))
-        return false;
-
-    $line = obj_getAsText($nid, 10000);
-    $result = false;
-    if (strstr($line, 'BEGIN ENCRYPTED PRIVATE KEY') !== false)
-        $result = true;
-    if (lib_getConfiguration('permitBufferIO'))
-        $nebuleCacheIsPrivateKey[$nid] = $result;
-    return $result;
-}
-
-/**
- * Application - Check OID for an application.
- *
- * @param string $oid
- * @return bool
- */
-function app_checkOid(string $oid): bool
-{
-    if (!is_string($oid)
-        || (!nod_checkNID($oid, false)
-            && $oid != '0'
-            && $oid != '1'
-            && $oid != '2'
-        )
-        || !io_checkNodeHaveLink($oid)
-        || !io_checkNodeHaveContent($oid)
-    )
-        return false;
-
-    // TODO add content check...
-
-    return true;
-}
-
-/**
- * Application - Get if an application is activated.
- *
- * @param string $oid
- * @return bool
- */
-function app_getActivated(string $oid): bool
-{
-    global $nebuleLocalAuthorities;
-
-    // Check for defaults app.
-    if ($oid == '0'
-        || $oid == '1'
-        || $oid == '2'
-        || $oid == lib_getConfiguration('defaultApplication')
-    )
-        return true;
-
-    // Check with links.
-    $refActivated = NEBULE_RID_INTERFACE_APPLICATIONS_ACTIVE;
-    $links = array();
-    $filter = array(
-        'bl/rl/req' => 'f',
-        'bl/rl/nid1' => $oid,
-        'bl/rl/nid2' => $refActivated,
-        'bl/rl/nid3' => '',
-        'bl/rl/nid4' => '',
-    );
-    lnk_getList($oid, $links, $filter);
-    foreach ($links as $link) {
-        foreach ($nebuleLocalAuthorities as $authority) {
-            if ($link['bs/rs/nid'] == $authority)
-                return true;
-        }
+    // Decode sign with public key.
+    if (openssl_public_decrypt($binsign, $bindecrypted, $pubkeyid, OPENSSL_PKCS1_PADDING)) {
+        $decrypted = (substr(bin2hex($bindecrypted), -$hashsize, $hashsize));
+        //log_add('decrypt RSA ' . $decrypted . '/' . $hash, 'error', __FUNCTION__, 'd4c712ea');
+        if ($decrypted == $hash)
+            return true;
     }
 
     return false;
 }
+
+
 
 /**
  * Link - Generate a new link
@@ -3265,305 +2910,526 @@ function lnk_write($link): bool
 }
 
 
-/*
- * ------------------------------------------------------------------------------------------
- * Fonctions bas niveau.
- * ------------------------------------------------------------------------------------------
- */
-
-// I/O sont les fonctions liées aux accès disque. Peut être modifié pour permettre un accès en BDD ou autre.
-/**
- * I/O - Start I/O subsystem with checks.
- *
- * @return boolean
- */
-function io_open(): bool
-{
-    if (!io_checkLinkFolder() || !io_checkObjectFolder())
-        return false;
-    return true;
-}
 
 /**
- * I/O - Check folder status and writeability for links.
- *
- * @return boolean
- */
-function io_checkLinkFolder(): bool
-{
-    // Check if exist.
-    if (!file_exists(LIB_LOCAL_LINKS_FOLDER))
-        io_createLinkFolder();
-    if (!file_exists(LIB_LOCAL_LINKS_FOLDER) || !is_dir(LIB_LOCAL_LINKS_FOLDER)) {
-        log_add('I/O no folder for links.', 'error', __FUNCTION__, '5306de5f');
-        bootstrap_setBreak('22', "Library i/o link's folder error");
-        return false;
-    }
-
-    // Check writeability.
-    if (lib_getConfiguration('permitWrite') && lib_getConfiguration('permitWriteLink')) {
-        $data = crypto_getPseudoRandom(2048);
-        $name = LIB_LOCAL_LINKS_FOLDER . '/writest' . bin2hex(crypto_getPseudoRandom(8));
-        if (file_put_contents($name, $data) === false) {
-            log_add('I/O error on folder for links.', 'error', __FUNCTION__, 'f72e3a86');
-            bootstrap_setBreak('23', "Library i/o link's folder error");
-            return false;
-        }
-        if (!file_exists($name) || !is_file($name)) {
-            log_add('I/O error on folder for links.', 'error', __FUNCTION__, '6f012d85');
-            bootstrap_setBreak('23', "Library i/o link's folder error");
-            return false;
-        }
-        $read = file_get_contents($name, false, null, 0, 2400);
-        if ($data != $read) {
-            log_add('I/O error on folder for links.', 'error', __FUNCTION__, 'fd499fcb');
-            bootstrap_setBreak('23', "Library i/o link's folder error");
-            return false;
-        }
-        if (!unlink($name)) {
-            log_add('I/O error on folder for links.', 'error', __FUNCTION__, '8e0caa66');
-            bootstrap_setBreak('23', "Library i/o link's folder error");
-            return false;
-        }
-    }
-
-    return true;
-}
-
-/**
- * I/O - Check folder status and writeability for objects.
- *
- * @return boolean
- */
-function io_checkObjectFolder(): bool
-{
-    // Check if exist.
-    if (!file_exists(LIB_LOCAL_OBJECTS_FOLDER))
-        io_createObjectFolder();
-    if (!file_exists(LIB_LOCAL_OBJECTS_FOLDER) || !is_dir(LIB_LOCAL_OBJECTS_FOLDER)) {
-        log_add('I/O no folder for objects.', 'error', __FUNCTION__, 'b0cdeafe');
-        bootstrap_setBreak('24', "Library i/o object's folder error");
-        return false;
-    }
-
-    // Check writeability.
-    if (lib_getConfiguration('permitWrite') && lib_getConfiguration('permitWriteObject')) {
-        $data = crypto_getPseudoRandom(2048);
-        $name = LIB_LOCAL_OBJECTS_FOLDER . '/writest' . bin2hex(crypto_getPseudoRandom(8));
-        if (file_put_contents($name, $data) === false) {
-            log_add('I/O error on folder for objects.', 'error', __FUNCTION__, '1327da69');
-            bootstrap_setBreak('25', "Library i/o object's folder error");
-            return false;
-        }
-        if (!file_exists($name) || !is_file($name)) {
-            log_add('I/O error on folder for objects.', 'error', __FUNCTION__, '2b451a2a');
-            bootstrap_setBreak('25', "Library i/o object's folder error");
-            return false;
-        }
-        $read = file_get_contents($name, false, null, 0, 2400);
-        if ($data != $read) {
-            log_add('I/O error on folder for objects.', 'error', __FUNCTION__, '634072e5');
-            bootstrap_setBreak('25', "Library i/o object's folder error");
-            return false;
-        }
-        if (!unlink($name)) {
-            log_add('I/O error on folder for objects.', 'error', __FUNCTION__, '2b397869');
-            bootstrap_setBreak('25', "Library i/o object's folder error");
-            return false;
-        }
-    }
-
-    return true;
-}
-
-/**
- * I/O - Try to create folder for links.
- *
- * @return boolean
- */
-function io_createLinkFolder(): bool
-{
-    if (lib_getConfiguration('permitWrite')
-        && lib_getConfiguration('permitWriteLink')
-        && !file_exists(LIB_LOCAL_LINKS_FOLDER)
-    )
-        return mkdir(LIB_LOCAL_LINKS_FOLDER);
-
-    return false;
-}
-
-/**
- * I/O - Try to create folder for objects.
- *
- * @return boolean
- */
-function io_createObjectFolder(): bool
-{
-    if (lib_getConfiguration('permitWrite')
-        && lib_getConfiguration('permitWriteObject')
-        && !file_exists(LIB_LOCAL_OBJECTS_FOLDER)
-    )
-        return mkdir(LIB_LOCAL_OBJECTS_FOLDER);
-
-    return false;
-}
-
-/**
- * I/O - Check if node link's file is present, which mean node have one or more links.
- *
- * @param string $nid
- * @return boolean
- */
-function io_checkNodeHaveLink(string &$nid): bool
-{
-    if (file_exists(LIB_LOCAL_LINKS_FOLDER . '/' . $nid))
-        return true;
-    return false;
-}
-
-/**
- * I/O - Check if node object's content is present, which mean node is an object with a content.
- *
- * @param string $nid
- * @return boolean
- */
-function io_checkNodeHaveContent(string &$nid): bool
-{
-    if (file_exists(LIB_LOCAL_OBJECTS_FOLDER . '/' . $nid))
-        return true;
-    return false;
-}
-
-/**
- * I/O - Read object's links.
- * Return array of links, one string per link, maybe empty.
+ * Find NID by reference RID from initial NID.
+ * Links must be signed by a local authority.
  *
  * @param string  $nid
- * @param array   $lines
- * @param integer $maxLinks
- * @return array
+ * @param string  $rid
+ * @return string
  */
-function io_linksRead(string &$nid, array &$lines, int $maxLinks = 0): array
+function nod_findByReference(string $nid, string $rid): string
 {
-    $count = 0;
+    global $nebuleLocalAuthorities;
 
-    if (!nod_checkNID($nid) || !io_checkNodeHaveLink($nid))
-        return $lines;
-    if ($maxLinks == 0)
-        $maxLinks = lib_getConfiguration('ioReadMaxLinks');
+    if (!nod_checkNID($nid)
+        || !nod_checkNID($rid)
+    )
+        return '';
 
-    $links = file(LIB_LOCAL_LINKS_FOLDER . '/' . $nid);
-    if ($links !== false) {
-        foreach ($links as $link) {
-            $lines [$count] = $link;
-            lib_incrementMetrology('lr');
-            $count++;
-            if ($count > $maxLinks)
-                break 1;
+    $links = array();
+    $filter = array(
+        'bl/rl/req' => 'l',
+        'bl/rl/nid1' => $nid,
+        'bl/rl/nid3' => $rid,
+        'bl/rl/nid4' => '',
+    );
+    lnk_getList($nid, $links, $filter, false);
+
+    foreach ($links as $link) {
+        foreach ($nebuleLocalAuthorities as $authority) {
+            if ($link['bs/rs/nid'] == $authority)
+                return $link['bl/rl/nid2'];
         }
     }
-
-    return $lines;
+    return '';
 }
 
 /**
- * I/O - Write a link to a node.
+ * Find firstname to the NID.
  *
  * @param string $nid
- * @param string $link
+ * @return string
+ */
+function nod_getFirstName(string &$nid): string
+{
+    global $nebuleCacheReadEntityFName;
+
+    if (isset($nebuleCacheReadEntityFName [$nid]))
+        return $nebuleCacheReadEntityFName [$nid];
+
+    $type = nod_getByType($nid, 'nebule/objet/prenom');
+    $text = obj_getAsText1line($type, 128);
+
+    if (lib_getConfiguration('permitBufferIO'))
+        $nebuleCacheReadEntityFName [$nid] = $text;
+    return $text;
+}
+
+/**
+ * Find name to the NID.
+ *
+ * @param string $nid
+ * @return string
+ */
+function nod_getName(string &$nid): string
+{
+    global $nebuleCacheReadEntityName;
+
+    if (isset($nebuleCacheReadEntityName [$nid]))
+        return $nebuleCacheReadEntityName [$nid];
+
+    $type = nod_getByType($nid, 'nebule/objet/nom');
+    $text = obj_getAsText1line($type, 128);
+
+    if (lib_getConfiguration('permitBufferIO'))
+        $nebuleCacheReadEntityName [$nid] = $text;
+    return $text;
+}
+
+/**
+ * Find postname to the NID.
+ *
+ * @param string $nid
+ * @return string
+ */
+function nod_getPostName(string &$nid): string
+{
+    global $nebuleCacheReadEntityPName;
+
+    if (isset($nebuleCacheReadEntityPName [$nid]))
+        return $nebuleCacheReadEntityPName [$nid];
+
+    $type = nod_getByType($nid, 'nebule/objet/postnom');
+    $text = obj_getAsText1line($type, 128);
+
+    if (lib_getConfiguration('permitBufferIO'))
+        $nebuleCacheReadEntityPName [$nid] = $text;
+    return $text;
+}
+
+/**
+ * Find OID with content for the type of the NID.
+ *
+ * @param string $nid
+ * @param string $type
+ * @return string
+ */
+function nod_getByType(string &$nid, string $type): string
+{
+    global $nebuleCacheFindObjType;
+
+    if (isset($nebuleCacheFindObjType [$nid] [$type]))
+        return $nebuleCacheFindObjType [$nid] [$type];
+
+    $links = array();
+    $rid = obj_getNID($type, lib_getConfiguration('cryptoHashAlgorithm'));
+    $filter = array(
+        'bl/rl/req' => 'l',
+        'bl/rl/nid1' => $nid,
+        'bl/rl/nid3' => $rid,
+        'bl/rl/nid4' => '',
+    );
+    lnk_getList($nid, $links, $filter, false);
+
+    foreach ($links as $link) {
+        if (lib_getConfiguration('permitBufferIO'))
+            $nebuleCacheFindObjType [$nid] [$type] = $link['bl/rl/nid2'];
+        return $link['bl/rl/nid2'];
+    }
+    return '';
+}
+
+/**
+ * Node - Extract algo parts from NID.
+ *
+ * @param $nid
+ * @return string
+ */
+function nod_getAlgo(&$nid): string
+{
+    strtok($nid, '.');
+    $a = strtok('.');
+    $s = strtok('.');
+    if ($a == '' || $s == '')
+        return '';
+    return $a . '.' . $s;
+}
+
+/**
+ * Object - Verify name structure of the node : hash.algo.size
+ *
+ * @param string  $nid
+ * @param boolean $permitNull
  * @return boolean
  */
-function io_linkWrite(string &$nid, string &$link): bool
+function nod_checkNID(string &$nid, bool $permitNull = false): bool
 {
-    if (!lib_getConfiguration('permitWrite')
-        || !lib_getConfiguration('permitWriteLink')
-        || $nid == ''
-    )
-        return false;
+    // May be null in some case.
+    if ($permitNull && $nid == '')
+        return true;
 
-    // Check if link not already present on file.
-    if (file_exists(LIB_LOCAL_LINKS_FOLDER . '/' . $nid)) {
-        $l = file(LIB_LOCAL_LINKS_FOLDER . '/' . $nid, FILE_SKIP_EMPTY_LINES);
-        if ($l !== false) {
-            foreach ($l as $k) {
-                if (trim($k) == trim($link))
-                    return true;
-            }
-        }
-    }
+    // Check hash value.
+    $hash = strtok($nid, '.');
+    if ($hash === false) return false;
+    if (strlen($hash) < LIB_NID_MIN_HASH_SIZE) return false;
+    if (strlen($hash) > LIB_NID_MAX_HASH_SIZE) return false;
+    if (!ctype_xdigit($hash)) return false;
 
-    // Write link on file.
-    if (file_put_contents(LIB_LOCAL_LINKS_FOLDER . '/' . $nid, "$link\n", FILE_APPEND) === false)
-        return false;
+    // Check algo value.
+    $algo = strtok('.');
+    if ($algo === false) return false;
+    if (strlen($algo) < LIB_NID_MIN_ALGO_SIZE) return false;
+    if (strlen($algo) > LIB_NID_MAX_ALGO_SIZE) return false;
+    if (!ctype_alnum($algo)) return false;
+
+    // Check size value.
+    $size = strtok('.');
+    if ($size === false) return false;
+    if (!ctype_digit($size)) return false; // Check content before!
+    if ((int)$size < LIB_NID_MIN_HASH_SIZE) return false;
+    if ((int)$size > LIB_NID_MAX_HASH_SIZE) return false;
+    if ((strlen($hash) * 4) != (int)$size) return false;
+
+    // Check item overflow
+    if (strtok('.') !== false) return false;
+
     return true;
 }
 
 /**
- * I/O - Synchronize links from other location.
+ * Object - Check with links if a node is marked as banned.
+ *
+ * @param $nid
+ * @return boolean
+ */
+function nod_checkBanned_FIXME(&$nid): bool
+{
+    global $nebulePublicEntity, $nebuleSecurityAuthorities, $nebuleCacheIsBanned;
+
+    // FIXME
+    return false;
+    /*
+    if (isset($nebuleCacheIsBanned [$nid]))
+        return $nebuleCacheIsBanned [$nid];
+
+    if ($nid == '0')
+        return false;
+
+    $ok = false;
+    $table = array();
+    $hashtype = _objGetNID('nebule/danger', getConfiguration('cryptoHashAlgorithm'));
+    $filter = array(
+        'bl/rl/req' => 'f',
+        'bl/rl/nid1' => $hashtype,
+        'bl/rl/nid2' => $nid,
+        'bl/rl/nid3' => '',
+        'bl/rl/nid4' => '',
+    );
+    _lnkFind($nid, $table, $filter);
+    foreach ($table as $link) {
+        if (($link [2] == $nebulePublicEntity) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $nid) && ($link [7] == '0'))
+            $ok = true;
+        if (($link [2] == $nebuleSecurityMaster) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $nid) && ($link [7] == '0'))
+            $ok = true;
+    }
+    unset($table);
+    unset($hashtype);
+
+    if (getConfiguration('permitBufferIO'))
+        $nebuleCacheIsBanned [$nid] = $ok;
+
+
+
+            addLog($nid . ') banned by ' . $nebulePublicEntity, 'warn', __FUNCTION__, 'a9668cd0');
+            addLog($nid . ') banned by ' . $nebuleSecurityMaster, 'warn', __FUNCTION__, 'd84f8e81');
+
+
+
+    return $ok;*/
+}
+
+/**
+ * Object - Read one line of object content as printable text.
+ *
+ * @param string  $oid
+ * @param integer $maxData
+ * @return string
+ */
+function obj_getAsText1line(string &$oid, int $maxData = 128): string
+{
+    global $nebuleCacheReadObjText1line;
+
+    if (isset($nebuleCacheReadObjText1line [$oid]))
+        return $nebuleCacheReadObjText1line [$oid];
+
+    if ($maxData == 0)
+        $maxData = lib_getConfiguration('ioReadMaxData');
+
+    $data = '';
+    obj_getLocalContent($oid, $data, $maxData + 1);
+    $data = strtok(filter_var($data, FILTER_SANITIZE_STRING), "\n");
+    if (!is_string($data))
+        return '';
+
+    $data = trim($data);
+    $data = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', filter_var($data, FILTER_SANITIZE_STRING));
+
+    if (extension_loaded('mbstring'))
+        $data = mb_convert_encoding($data, 'UTF-8');
+    else
+        log_add('mbstring extension not installed or activated!', 'warn', __FUNCTION__, 'c2becfad');
+
+    if (strlen($data) > $maxData)
+        $data = substr($data, 0, ($maxData - 3)) . '...';
+
+    if (lib_getConfiguration('permitBufferIO'))
+        $nebuleCacheReadObjText1line [$oid] = $data;
+
+    return $data;
+}
+
+/**
+ * Object - Read object content as printable text.
+ *
+ * @param string  $oid
+ * @param integer $maxData
+ * @return string
+ */
+function obj_getAsText(string &$oid, int $maxData = 0): string
+{
+    if ($maxData == 0)
+        $maxData = lib_getConfiguration('ioReadMaxData');
+
+    $data = '';
+    obj_getLocalContent($oid, $data, $maxData + 1);
+    $data = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', filter_var($data, FILTER_SANITIZE_STRING));
+
+    if (strlen($data) > $maxData)
+        $data = substr($data, 0, ($maxData - 3)) . '...';
+
+    return $data;
+}
+
+/**
+ * Get type Mime to the node (object) from his links.
+ * The type mime asked is converted as NID and may not have object.
+ * TODO revoir le traitement social des liens.
  *
  * @param string $nid
- * @param string $location
+ * @param string $typeMime
  * @return bool
  */
-function io_linkSynchronize(string $nid, string $location): bool
+function obj_checkTypeMime(string &$nid, string $typeMime): bool
+{
+    global $nebuleCacheReadObjTypeMime;
+
+    if (isset($nebuleCacheReadObjTypeMime [$nid])) {
+        if ($nebuleCacheReadObjTypeMime [$nid] == $typeMime)
+            return true;
+        else
+            return false;
+    }
+
+    if (!nod_checkNID($nid))
+        return false;
+
+    $hashType = obj_getNID('nebule/objet/type', lib_getConfiguration('cryptoHashAlgorithm'));
+    $hashTypeAsked = obj_getNID($typeMime, lib_getConfiguration('cryptoHashAlgorithm'));
+    $filter = array(
+        'bl/rl/req' => 'l',
+        'bl/rl/nid1' => $nid,
+        'bl/rl/nid2' => $hashTypeAsked,
+        'bl/rl/nid3' => $hashType,
+        'bl/rl/nid4' => '',
+    );
+    $links = array();
+    lnk_getList($nid, $links, $filter);
+    // TODO Filter on social links level - security!
+
+    if (sizeof($links) == 0)
+        return false;
+
+    return true;
+}
+
+/**
+ * Write text in object content.
+ * By default, if object present, do not create links for the object ($skipIfPresent).
+ *
+ * @param string $data
+ * @param bool   $skipIfPresent
+ * @return bool
+ */
+function obj_setContentAsText(string $data, bool $skipIfPresent = true): bool
 {
     if (!lib_getConfiguration('permitWrite')
+        || !lib_getConfiguration('permitWriteObject')
         || !lib_getConfiguration('permitWriteLink')
-        || !lib_getConfiguration('permitSynchronizeLink')
-        || !nod_checkNID($nid)
-        || $location == ''
-        || !is_string($location) // TODO renforcer la vérification de l'URL.
+        || strlen($data) == 0
+    )
+        return false;
+
+    $oid = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
+
+    if (nod_checkBanned_FIXME($oid))
+        return false;
+    if ($skipIfPresent && io_checkNodeHaveContent($oid))
+        return true;
+
+    return obj_generate_FIXME($data, 'text/plain');
+}
+
+/**
+ * Object - Create new object from data.
+ *
+ * @param string $data
+ * @param string $typemime
+ * @return bool
+ */
+function obj_generate_FIXME(string &$data, string $typemime = ''): bool
+{
+    if (strlen($data) == 0
+        || !lib_getConfiguration('permitWrite')
+        || !lib_getConfiguration('permitWriteObject')
+    )
+        return false;
+    $dat = '0' . date('YmdHis');
+    $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
+    // Ecrit l'objet.
+    if (!io_checkNodeHaveContent($hash))
+        obj_setContent($data, $hash);
+    // Ecrit le lien de hash.
+    $lnk = lnk_generateSign(
+        $dat,
+        'l',
+        $hash,
+        obj_getNID(lib_getConfiguration('cryptoHashAlgorithm'), lib_getConfiguration('cryptoHashAlgorithm')),
+        obj_getNID('nebule/objet/hash', lib_getConfiguration('cryptoHashAlgorithm'))
+    );
+    if ((lnk_verify($lnk)) == 1)
+        lnk_write($lnk);
+    // Ecrit le lien de type mime.
+    if ($typemime != '') {
+        $lnk = lnk_generateSign(
+            $dat,
+            'l',
+            $hash,
+            obj_getNID($typemime, lib_getConfiguration('cryptoHashAlgorithm')),
+            obj_getNID('nebule/objet/type', lib_getConfiguration('cryptoHashAlgorithm'))
+        );
+        if ((lnk_verify($lnk)) == 1)
+            lnk_write($lnk);
+    }
+    return true;
+}
+
+/**
+ * Object - Read object content and push on $data.
+ *
+ * @param string  $nid
+ * @param string  $data
+ * @param numeric $maxData
+ * @return boolean
+ */
+function obj_getLocalContent(string &$nid, string &$data, int $maxData = 0): bool
+{
+    if (obj_checkContent($nid)) {
+        $data = io_objectRead($nid, $maxData);
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Object - Download node content (object) on web locations.
+ * Only valid content are writen on local filesystem.
+ *
+ * @param string $nid
+ * @param array  $locations
+ * @return boolean
+ */
+function obj_getDistantContent(string $nid, array $locations = array()): bool
+{
+    if (!lib_getConfiguration('permitWrite')
+        || !lib_getConfiguration('permitWriteObject')
+        || !lib_getConfiguration('permitSynchronizeObject')
+        || !nod_checkNID($nid, false)
         || nod_checkBanned_FIXME($nid)
     )
         return false;
 
-    if (!io_checkExistOverHTTP($location . '/l/' . $nid))
+    if (io_checkNodeHaveContent($nid))
+        return true;
+
+    if (sizeof($locations) == 0)
+        $locations = LIB_FIRST_LOCALISATIONS;
+
+    foreach ($locations as $location) {
+        if (io_objectSynchronize($nid, $location))
+            return true;
+    }
+    return false;
+}
+
+/**
+ * Object - Vérifie la consistance d'un objet. Si l'objet est corrompu, il est supprimé.
+ * If there's no content, this assumed as false.
+ * TODO refaire avec i/o
+ *
+ * @param string $nid
+ * @return boolean
+ */
+function obj_checkContent(&$nid): bool
+{
+    global $nebuleCachelibrary_o_vr;
+
+    lib_incrementMetrology('ov');
+
+    if (!nod_checkNID($nid) || !io_checkNodeHaveContent($nid))
         return false;
 
-    $resource = fopen($location . '/l/' . $nid, 'r');
-    if ($resource !== false) {
-        while (feof($resource) !== false) {
-            $line = trim(fgets($resource));
-            lnk_write($line);
-        }
-        fclose($resource);
-    }
+    if (isset($nebuleCachelibrary_o_vr[$nid]))
+        return true;
+
+    $hash = '';
+    $algo = nod_getAlgo($nid);
+    if ($algo != '')
+        $hash = crypto_getFileHash($nid, $algo);
+
+    // If invalid, delete file of the object.
+    if ($hash . '.' . $algo != $nid)
+        io_objectDelete($nid);
+
+    if (lib_getConfiguration('permitBufferIO'))
+        $nebuleCachelibrary_o_vr[$nid] = true;
 
     return true;
 }
 
 /**
- * I/O - Read object content.
- * Return the read data from object.
+ * Object - Calculate NID for data with hash algo.
  *
- * @param string  $nid
- * @param integer $maxData
+ * @param string $data
+ * @param string $algo
  * @return string
  */
-function io_objectRead(string $nid, int $maxData = 0): string
+function obj_getNID(string $data, string $algo = ''): string
 {
-    if ($maxData == 0)
-        $maxData = lib_getConfiguration('ioReadMaxData');
-    if (!nod_checkNID($nid) || !io_checkNodeHaveContent($nid))
-        return '';
-
-    $result = file_get_contents(LIB_LOCAL_OBJECTS_FOLDER . '/' . $nid, false, null, 0, $maxData);
-    if ($result === false)
-        $result = '';
-    lib_incrementMetrology('or');
-
-    return $result;
+    if ($algo == '')
+        $algo = lib_getConfiguration('cryptoHashAlgorithm');
+    return crypto_getDataHash($data, $algo) . '.' . $algo;
 }
 
 /**
- * I/O - Write object content.
- * This function do not verify data and OID correlation.
+ * Object - Write object content.
  *
  * @param string $data
  * @param string $oid
- * @return boolean
+ * @return bool
  */
-function io_objectWrite(string &$data, string $oid = '0'): bool
+function obj_setContent(string &$data, string $oid = '0'): bool
 {
     if (strlen($data) == 0
         || !lib_getConfiguration('permitWrite')
@@ -3571,396 +3437,529 @@ function io_objectWrite(string &$data, string $oid = '0'): bool
     )
         return false;
 
-    if (strlen($oid) < LIB_NID_MIN_HASH_SIZE)
+    $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
+    if ($oid == '0')
+        $oid = $hash;
+    elseif ($oid != $hash)
         return false;
 
-    if (io_checkNodeHaveContent($oid))
+    if (io_objectWrite($data, $oid))
         return true;
-
-    if (file_put_contents(LIB_LOCAL_OBJECTS_FOLDER . '/' . $oid, $data) === false)
-        return false;
-    return true;
+    return false;
 }
 
 /**
- * I/O - Synchronize object content from other location.
+ * Find full name to the NID.
  *
  * @param string $nid
- * @param string $location
+ * @return string
+ */
+function ent_getFullName(&$nid): string
+{
+    global $nebuleCacheReadEntityFullName;
+
+    if (isset($nebuleCacheReadEntityFullName [$nid]))
+        return $nebuleCacheReadEntityFullName [$nid];
+
+    $fname = nod_getFirstName($nid);
+    $name = nod_getName($nid);
+    $pname = nod_getPostName($nid);
+    if ($name == '') {
+        $fullname = "$nid";
+    } else {
+        $fullname = $name;
+    }
+    if ($fname != '') {
+        $fullname = "$fname $fullname";
+    }
+    if ($pname != '') {
+        $fullname = "$fullname $pname";
+    }
+
+    if (lib_getConfiguration('permitBufferIO'))
+        $nebuleCacheReadEntityFullName [$nid] = $fullname;
+    return $fullname;
+}
+
+/**
+ * Entity - Generate a new entity.
+ *
+ * @param string $asymmetricAlgo
+ * @param string $hashAlgo
+ * @param string $hashPublicKey
+ * @param string $hashPrivateKey
+ * @param string $password
  * @return bool
  */
-function io_objectSynchronize(string $nid, string $location): bool
+function ent_generate(string $asymmetricAlgo, string $hashAlgo, string &$hashPublicKey, string &$hashPrivateKey, string &$password = ''): bool
 {
+    global $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
+
     if (!lib_getConfiguration('permitWrite')
+        || !lib_getConfiguration('permitWriteEntity')
         || !lib_getConfiguration('permitWriteObject')
-        || !lib_getConfiguration('permitSynchronizeObject')
-        || !nod_checkNID($nid)
-        || $location == ''
-        || !is_string($location) // TODO renforcer la vérification de l'URL.
-        || nod_checkBanned_FIXME($nid)
+        || !lib_getConfiguration('permitWriteLink')
+        //    || (($asymmetricAlgo != 'rsa') && ($asymmetricAlgo != 'dsa'))
+        || $password == ''
     )
         return false;
 
-    if (io_checkNodeHaveContent($nid))
-        return true;
-
-    if (!io_checkExistOverHTTP($location . '/o/' . $nid))
+    // Generate the bi-key.
+    $publicKey = '';
+    $privateKey = '';
+    if (crypto_getNewPKey($asymmetricAlgo, $hashAlgo, $publicKey, $privateKey, $password)) {
+        $hashPublicKey = obj_getNID($publicKey, lib_getConfiguration('cryptoHashAlgorithm'));
+        log_add('generate new public key ' . $hashPublicKey, 'warn', __FUNCTION__, '9c207dc0');
+        if (!obj_setContent($publicKey, $hashPublicKey))
+            return false;
+        $hashPrivateKey = obj_getNID($privateKey, lib_getConfiguration('cryptoHashAlgorithm'));
+        log_add('generate new private key ' . $hashPrivateKey, 'warn', __FUNCTION__, '96059d19');
+        if (!obj_setContent($privateKey, $hashPrivateKey))
+            return false;
+    } else
         return false;
 
-    // Téléchargement de l'objet via un fichier temporaire.
-    $tmpId = bin2hex(crypto_getPseudoRandom(8));
-    $tmpIdName = 'io_objectSynchronize' . $tmpId . '-' . $nid;
-    $distobj = fopen($location . '/o/' . $nid, 'r');
-    if ($distobj) {
-        $localobj = fopen(LIB_LOCAL_OBJECTS_FOLDER . '/' . $tmpIdName, 'w');
-        if ($localobj) {
-            while (($line = fgets($distobj, lib_getConfiguration('ioReadMaxData'))) !== false) {
-                fputs($localobj, $line);
-            }
-            fclose($localobj);
-            $algo = nod_getAlgo($nid);
-            if ($algo !== false)
-                $hash = crypto_getFileHash($tmpIdName, crypto_getTranslatedHashAlgo($algo));
-            else
-                $hash = 'invalid';
+    // Generate links for properties
+    $oidHash = obj_getNID('nebule/objet/hash');
+    $oidAlgo = obj_getNID(lib_getConfiguration('cryptoHashAlgorithm'));
+    $oidType = obj_getNID('nebule/objet/type');
+    $oidPem = obj_getNID('application/x-pem-file');
+    $oidPKey = obj_getNID('nebule/objet/entite/prive');
+    $oidText = obj_getNID('text/plain');
 
-            if ($hash . '.' . $algo == $nid)
-                rename(LIB_LOCAL_OBJECTS_FOLDER . '/' . $tmpIdName, LIB_LOCAL_OBJECTS_FOLDER . '/' . $nid);
-            else
-                unlink(LIB_LOCAL_OBJECTS_FOLDER . '/' . $tmpIdName);
-        }
-        fclose($distobj);
+    $list = array($oidHash, $oidAlgo, $oidType, $oidPem, $oidPKey, $oidText);
+    foreach ($list as $item) {
+        $bh_bl = lnk_generate('', 'l', $item, $oidAlgo, $oidHash);
+        $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
+        $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getConfiguration('cryptoHashAlgorithm');
+        if (!lnk_write($link))
+            return false;
+        $bh_bl = lnk_generate('', 'l', $item, $oidText, $oidType);
+        $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
+        $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getConfiguration('cryptoHashAlgorithm');
+        if (!lnk_write($link))
+            return false;
     }
 
-    if (io_checkNodeHaveContent($nid))
-        return true;
-    return false;
-}
-
-/**
- * I/O - Suppress object content.
- *
- * @param string $nid
- * @return boolean
- */
-function io_objectDelete(string &$nid): bool
-{
-    if (!lib_getConfiguration('permitWrite') || !lib_getConfiguration('permitWriteObject') || $nid == '')
-        return false;
-    if (!io_checkNodeHaveContent($nid))
-        return true;
-
-    if (!unlink(LIB_LOCAL_OBJECTS_FOLDER . '/' . $nid)) {
-        log_add('Unable to delete file.', 'error', __FUNCTION__, '991b11a1');
-        return false;
+    $list = array($hashPublicKey, $hashPrivateKey);
+    foreach ($list as $item) {
+        $bh_bl = lnk_generate('', 'l', $item, $oidAlgo, $oidHash);
+        $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
+        $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getConfiguration('cryptoHashAlgorithm');
+        if (!lnk_write($link))
+            return false;
+        $bh_bl = lnk_generate('', 'l', $item, $oidPem, $oidType);
+        $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
+        $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getConfiguration('cryptoHashAlgorithm');
+        if (!lnk_write($link))
+            return false;
     }
+
+    $bh_bl = lnk_generate('', 'f', $hashPublicKey, $hashPrivateKey, $oidPKey);
+    $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
+    $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getConfiguration('cryptoHashAlgorithm');
+    if (!lnk_write($link))
+        return false;
+
     return true;
 }
 
 /**
- * Vérifie la présence d'un fichier ou dossier via HTTP.
+ * Get puppetmaster NID.
  *
- * @param string $location
- * @return boolean
- */
-function io_checkExistOverHTTP(string $location): bool
-{
-    $url = parse_url($location);
-
-    $handle = fsockopen($url['host'], 80, $errno, $errstr, 1);
-    if ($handle === false) {
-        return false;
-    }
-
-    $out = "HEAD " . $url['path'] . " HTTP/1.1\r\n" . "Host: " . $url['host'] . "\r\n" . "Connection: Close\r\n\r\n";
-    $response = '';
-
-    fwrite($handle, $out);
-    while (!feof($handle)) {
-        $response .= fgets($handle, 20);
-        if (strlen($response) > 0)
-            break;
-    }
-    fclose($handle);
-
-    $pos = strpos($response, ' ');
-    if ($pos === false)
-        return false;
-
-    $code = substr($response, $pos + 1, 3);
-    if ($code == '200')
-        return true;
-
-    return false;
-}
-
-/**
- * I/O - End of work on I/O subsystem.
- *
- * @return void
- */
-function io_close(): void
-{
-    // Rien à fermer sur un fs.
-}
-
-/**
- * Crypto - Translate algo name into OpenSSL algo name.
- *
- * @param string $algo
- * @param bool   $loop
  * @return string
  */
-function crypto_getTranslatedHashAlgo(string $algo, bool $loop = true): string
+function ent_getPuppetmaster(): string
 {
-    if ($algo == '')
-        $algo = lib_getConfiguration('cryptoHashAlgorithm');
-
-    $translatedAlgo = '';
-    switch ($algo) {
-        case 'sha2.128' :
-            $translatedAlgo = 'sha128';
-            break;
-        case 'sha2.256' :
-            $translatedAlgo = 'sha256';
-            break;
-        case 'sha2.384' :
-            $translatedAlgo = 'sha384';
-            break;
-        case 'sha2.512' :
-            $translatedAlgo = 'sha512';
-            break;
-    }
-
-    if ($translatedAlgo == '') {
-        if ($loop) {
-            log_add('cryptoHashAlgorithm configuration have an unknown value (' . $algo . ')', 'error', __FUNCTION__, 'b7627066');
-            $translatedAlgo = crypto_getTranslatedHashAlgo(LIB_CONFIGURATIONS_DEFAULT['cryptoHashAlgorithm'], false);
-        } else
-            $translatedAlgo = 'sha512';
-    }
-
-    return $translatedAlgo;
+    return lib_getConfiguration('puppetmaster');
 }
 
 /**
- * Crypto - Calculate hash of data with algo.
- * Use OpenSSL library.
+ * Get masters of security IDs.
+ * Make a search for global entities and for code branch specific entities
  *
- * @param string $algo
- * @param string $data
- * @return string
+ * @param string $refNid
+ * @param array  $result
+ * @param bool   $synchronize
+ * @return array
  */
-function crypto_getDataHash(string &$data, string $algo = ''): string
+function ent_getAskedMasters(string $refNid, array &$result, bool $synchronize): array
 {
-    return hash(crypto_getTranslatedHashAlgo($algo), $data);
-}
-
-/**
- * Crypto - Calculate hash of file data with algo.
- * File must be on objects folder.
- * Use OpenSSL library.
- *
- * @param string $algo
- * @param string $file
- * @return string
- */
-function crypto_getFileHash(string $file, string $algo = ''): string
-{
-    return hash_file(crypto_getTranslatedHashAlgo($algo), LIB_LOCAL_OBJECTS_FOLDER . '/' . $file);
-}
-
-/**
- * Crypto - Generate pseudo random number
- * Use OpenSSL library.
- *
- * @param int $count
- * @return string
- */
-function crypto_getPseudoRandom(int $count = 32): string
-{
-    global $nebuleServerEntity;
-
-    $result = '';
-    $algo = 'sha256';
-    if ($count == 0 || !is_int($count))
+    if (sizeof($result) != 0)
         return $result;
 
-    // Génère une graine avec la date pour le compteur interne.
-    $intcount = date(DATE_ATOM) . microtime(false) . LIB_NEBULE_LIBRARY_PP_VERSION . $nebuleServerEntity;
+    if ($synchronize)
+        obj_getDistantContent($refNid, array());
 
-    // Boucle de remplissage.
-    while (strlen($result) < $count) {
-        $diffsize = $count - strlen($result);
+    $lnkList = array();
+    $entList = array();
+    $filter = array(
+        'bl/rl/req' => 'l',
+        'bl/rl/nid2' => $refNid,
+        'bl/rl/nid3' => '',
+        'bl/rl/nid4' => '',
+        'bs/rs/nid' => lib_getConfiguration('puppetmaster'),
+    );
+    lnk_getList($refNid, $lnkList, $filter);
 
-        // Fait évoluer le compteur interne.
-        $intcount = hash($algo, $intcount);
-
-        // Fait diverger le compteur interne pour la sortie.
-        // La concaténation avec un texte empêche de remonter à la valeur du compteur interne.
-        $outvalue = hash($algo, $intcount . 'liberté égalité fraternité', true);
-
-        // Tronc au besoin la taille de la sortie.
-        if (strlen($outvalue) > $diffsize)
-            $outvalue = substr($outvalue, 0, $diffsize);
-
-        // Ajoute la sortie au résultat final.
-        $result .= $outvalue;
+    if (lib_getConfiguration('CodeBranch') != '') {
+        $filter['bl/rl/nid3'] = obj_getNID(lib_getConfiguration('CodeBranch'));
+        lnk_getList($refNid, $lnkList, $filter);
     }
+
+    // Extract uniques entities
+    foreach ($lnkList as $lnk)
+        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
+    foreach ($entList as $ent)
+        $result[] = $ent;
 
     return $result;
 }
 
 /**
- * Crypto - Generate new public cryptographic keys.
- * Use OpenSSL library.
+ * Get masters of security IDs.
+ * Update global list on the same time.
  *
- * @param string $asymmetricAlgo
- * @param string $hashAlgo
- * @param string $publicKey
- * @param string $privateKey
- * @param string $password
+ * @param bool $synchronize
+ * @return array
+ */
+function ent_getSecurityAuthorities(bool $synchronize = false): array
+{
+    global $nebuleSecurityAuthorities;
+    return ent_getAskedMasters(LIB_RID_SECURITY_AUTHORITY, $nebuleSecurityAuthorities, $synchronize);
+}
+
+/**
+ * Get masters of code IDs.
+ * Update global list on the same time.
+ *
+ * @param bool $synchronize
+ * @return array
+ */
+function ent_getCodeAuthorities(bool $synchronize = false): array
+{
+    global $nebuleCodeAuthorities;
+    return ent_getAskedMasters(LIB_RID_CODE_AUTHORITY, $nebuleCodeAuthorities, $synchronize);
+}
+
+/**
+ * Get masters of time IDs.
+ * Update global list on the same time.
+ *
+ * @param bool $synchronize
+ * @return array
+ */
+function ent_getTimeAuthorities(bool $synchronize = false): array
+{
+    global $nebuleTimeAuthorities;
+    return ent_getAskedMasters(LIB_RID_TIME_AUTHORITY, $nebuleTimeAuthorities, $synchronize);
+}
+
+/**
+ * Get masters of directory IDs.
+ * Update global list on the same time.
+ *
+ * @param bool $synchronize
+ * @return array
+ */
+function ent_getDirectoryAuthorities(bool $synchronize = false): array
+{
+    global $nebuleDirectoryAuthorities;
+    return ent_getAskedMasters(LIB_RID_DIRECTORY_AUTHORITY, $nebuleDirectoryAuthorities, $synchronize);
+}
+
+/**
+ * Check puppetmaster entity.
+ *
+ * @param string $oid
  * @return bool
  */
-function crypto_getNewPKey(string $asymmetricAlgo, string $hashAlgo, string &$publicKey, string &$privateKey, string $password): bool
+function ent_checkPuppetmaster(string $oid): bool
 {
-    // Prepare values.
-    $digestAlgo = crypto_getTranslatedHashAlgo($hashAlgo, true);
-    $config = array('digest_alg' => $digestAlgo,);
-    switch ($asymmetricAlgo) {
-        case 'rsa.1024' :
-            $config['private_key_bits'] = 1024;
-            $config['private_key_type'] = OPENSSL_KEYTYPE_RSA;
-            break;
-        case 'rsa.2048' :
-            $config['private_key_bits'] = 2048;
-            $config['private_key_type'] = OPENSSL_KEYTYPE_RSA;
-            break;
-        case 'rsa.3192' :
-            $config['private_key_bits'] = 3192;
-            $config['private_key_type'] = OPENSSL_KEYTYPE_RSA;
-            break;
-        case 'rsa.4096' :
-            $config['private_key_bits'] = 4096;
-            $config['private_key_type'] = OPENSSL_KEYTYPE_RSA;
-            break;
-        case 'dsa.1024' :
-            $config['private_key_bits'] = 1024;
-            $config['private_key_type'] = OPENSSL_KEYTYPE_DSA;
-            break;
-        case 'dsa.2048' :
-            $config['private_key_bits'] = 2048;
-            $config['private_key_type'] = OPENSSL_KEYTYPE_DSA;
-            break;
-        case 'dsa.3192' :
-            $config['private_key_bits'] = 3192;
-            $config['private_key_type'] = OPENSSL_KEYTYPE_DSA;
-            break;
-        case 'dsa.4096' :
-            $config['private_key_bits'] = 4096;
-            $config['private_key_type'] = OPENSSL_KEYTYPE_DSA;
-            break;
-        case 'ec.prime256v1' :
-            $config['curve_name'] = 'prime256v1';
-            $config['private_key_type'] = OPENSSL_KEYTYPE_EC;
-            break;
-        default:
+    if (!ent_checkIsPublicKey($oid)) {
+        log_add('need sync puppetmaster', 'warn', __FUNCTION__, '6995b7fd');
+        bootstrap_setBreak('71', 'Need sync puppetmaster');
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Check masters of security entities.
+ *
+ * @param array $oidList
+ * @return bool
+ */
+function ent_checkSecurityAuthorities(array $oidList): bool
+{
+    if (sizeof($oidList) == 0) {
+        log_add('need sync masters of security', 'warn', __FUNCTION__, 'a767699e');
+        bootstrap_setBreak('72', 'Need sync masters of security');
+        return false;
+    }
+    foreach ($oidList as $nid) {
+        if (!ent_checkIsPublicKey($nid)) {
+            log_add('need sync masters of security ' . $nid, 'warn', __FUNCTION__, '5626b8f');
+            bootstrap_setBreak('73', 'Need sync masters of security');
             return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Check masters of code entities.
+ *
+ * @param array $oidList
+ * @return bool
+ */
+function ent_checkCodeAuthorities(array $oidList): bool
+{
+    if (sizeof($oidList) == 0) {
+        log_add('need sync masters of code', 'warn', __FUNCTION__, '8543b436');
+        bootstrap_setBreak('74', 'Need sync masters of code');
+        return false;
+    }
+    foreach ($oidList as $nid) {
+        if (!ent_checkIsPublicKey($nid)) {
+            log_add('need sync masters of code ' . $nid, 'warn', __FUNCTION__, '0ff4516d');
+            bootstrap_setBreak('75', 'Need sync masters of code');
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Check masters of time entities.
+ *
+ * @param array $oidList
+ * @return bool
+ */
+function ent_checkTimeAuthorities(array $oidList): bool
+{
+    if (sizeof($oidList) == 0) {
+        log_add('need sync masters of time', 'warn', __FUNCTION__, '0c6f1ef1');
+        bootstrap_setBreak('76', 'Need sync masters of time');
+        return false;
+    }
+    foreach ($oidList as $nid) {
+        if (!ent_checkIsPublicKey($nid)) {
+            log_add('need sync masters of time ' . $nid, 'warn', __FUNCTION__, '01f5f9b5');
+            bootstrap_setBreak('77', 'Need sync masters of time');
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Check masters of directory entities.
+ *
+ * @param array $oidList
+ * @return bool
+ */
+function ent_checkDirectoryAuthorities(array $oidList): bool
+{
+    if (sizeof($oidList) == 0) {
+        log_add('need sync masters of directory', 'warn', __FUNCTION__, 'e47e9e04');
+        bootstrap_setBreak('78', 'Need sync masters of directory');
+        return false;
+    }
+    foreach ($oidList as $nid) {
+        if (!ent_checkIsPublicKey($nid)) {
+            log_add('need sync masters of directory ' . $nid, 'warn', __FUNCTION__, '8b12fe09');
+            bootstrap_setBreak('79', 'Need sync masters of directory');
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Synchronize puppetmaster from central location.
+ * Specifically for puppetmaster, first contents are locally generated.
+ *
+ * @param string $oid
+ * @return void
+ */
+function ent_syncPuppetmaster(string $oid): void
+{
+    global $configurationList;
+
+    if (!ent_checkIsPublicKey($oid)) {
+        $oid = LIB_DEFAULT_PUPPETMASTER_EID;
+        $configurationList['puppetmaster'] = LIB_DEFAULT_PUPPETMASTER_EID;
     }
 
-    // Generate the bi-key.
-    $newPKey = openssl_pkey_new($config);
-    if ($newPKey === false)
+    if ($oid == LIB_DEFAULT_PUPPETMASTER_EID) {
+        log_add('Write default puppetmaster', 'info', __FUNCTION__, '555ec326');
+        foreach (LIB_FIRST_AUTORITIES_PUBLIC_KEY as $data)
+        {
+            $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
+            io_objectWrite($data, $hash);
+        }
+        foreach (LIB_FIRST_LINKS as $link)
+            lnk_write($link);
+    }
+
+    ent_syncAuthorities(array($oid));
+}
+
+/**
+ * Synchronize authorities from central locations.
+ *
+ * @param array $oidList
+ * @return void
+ */
+function ent_syncAuthorities(array $oidList): void
+{
+    global $nebuleCacheIsPublicKey, $nebuleCacheIsPrivateKey;
+
+    foreach ($oidList as $nid) {
+        log_add('Sync master entity ' . $nid, 'info', __FUNCTION__, '92e0483f');
+        obj_getDistantContent($nid, array());
+        lnk_getDistantOnLocations($nid, array());
+    }
+
+    $nebuleCacheIsPublicKey = array();
+    $nebuleCacheIsPrivateKey = array();
+}
+
+/**
+ * Object - Verify node is an object and is a valid entity public key.
+ *
+ * @param string $nid
+ * @return boolean
+ */
+function ent_checkIsPublicKey(string &$nid): bool
+{
+    global $nebuleCacheIsPublicKey;
+
+    $result = false;
+    if (isset($nebuleCacheIsPublicKey[$nid]))
+        return $nebuleCacheIsPublicKey[$nid];
+
+    if (strlen($nid) < LIB_NID_MIN_HASH_SIZE
+        || !nod_checkNID($nid, false)
+        || !obj_checkContent($nid)
+        || !io_checkNodeHaveLink($nid)
+    ) {
+        log_add('not a valid object for a key ' . $nid, 'warn', __FUNCTION__, '9c268f6a');
+        return false;
+    }
+
+    if (!obj_checkTypeMime($nid, 'application/x-pem-file'))
         return false;
 
-    // Extract public key.
-    $publicKey = openssl_pkey_get_details($newPKey);
-    $publicKey = $publicKey ['key'];
-
-    // Extract private key.
-    if ($password != '')
-        openssl_pkey_export($newPKey, $privateKey, $password);
+    $line = obj_getAsText($nid, 10000);
+    if (strstr($line, 'BEGIN PUBLIC KEY') !== false)
+        $result = true;
     else
-        openssl_pkey_export($newPKey, $privateKey);
-    // Verify.
-    $private_key = openssl_pkey_get_private($privateKey, $password);
-    if ($private_key === false)
+        log_add('NID do not provide a public key', 'warn', __FUNCTION__, '25743bf3');
+
+    if (lib_getConfiguration('permitBufferIO'))
+        $nebuleCacheIsPublicKey[$nid] = $result;
+    return $result;
+}
+
+/**
+ * Verify node is an object and is a valid entity private key.
+ *
+ * @param $nid
+ * @return bool
+ */
+function ent_checkIsPrivateKey(&$nid): bool
+{
+    global $nebuleCacheIsPrivateKey;
+
+    if (isset($nebuleCacheIsPrivateKey [$nid]))
+        return $nebuleCacheIsPrivateKey [$nid];
+
+    if ($nid == '0'
+        || strlen($nid) < LIB_NID_MIN_HASH_SIZE
+        || !nod_checkNID($nid)
+        || !obj_checkContent($nid)
+        || !io_checkNodeHaveLink($nid)
+    )
         return false;
+
+    obj_setContentAsText('application/x-pem-file');
+    if (!obj_checkTypeMime($nid, 'application/x-pem-file'))
+        return false;
+
+    $line = obj_getAsText($nid, 10000);
+    $result = false;
+    if (strstr($line, 'BEGIN ENCRYPTED PRIVATE KEY') !== false)
+        $result = true;
+    if (lib_getConfiguration('permitBufferIO'))
+        $nebuleCacheIsPrivateKey[$nid] = $result;
+    return $result;
+}
+
+/**
+ * Application - Check OID for an application.
+ *
+ * @param string $oid
+ * @return bool
+ */
+function app_checkOid(string $oid): bool
+{
+    if (!is_string($oid)
+        || (!nod_checkNID($oid, false)
+            && $oid != '0'
+            && $oid != '1'
+            && $oid != '2'
+        )
+        || !io_checkNodeHaveLink($oid)
+        || !io_checkNodeHaveContent($oid)
+    )
+        return false;
+
+    // TODO add content check...
 
     return true;
 }
 
 /**
- * Crypto - Encrypt data with private asymmetric key.
- * Use OpenSSL library.
+ * Application - Get if an application is activated.
  *
- * @param string $data
- * @param string $privateOid
- * @param string $password
- * @param bool   $entityCheck
- * @return string
+ * @param string $oid
+ * @return bool
  */
-function crypto_asymmetricEncrypt(string $data, string $privateOid = '', string $password = '', bool $entityCheck = true): string
+function app_getActivated(string $oid): bool
 {
-    if ($privateOid == ''
-        || ($entityCheck && !ent_checkIsPrivateKey($privateOid))
-        || $password == ''
-        || $data == ''
+    global $nebuleLocalAuthorities;
+
+    // Check for defaults app.
+    if ($oid == '0'
+        || $oid == '1'
+        || $oid == '2'
+        || $oid == lib_getConfiguration('defaultApplication')
     )
-        return '';
+        return true;
 
-    $privateCertificat = '';
-    if (!obj_getLocalContent($privateOid, $privateCertificat, 10000))
-        return '';
-    $private_key = openssl_pkey_get_private($privateCertificat, $password);
-    if ($private_key === false)
-        return '';
-    $binarySignature = '';
-    $hashData = crypto_getDataHash($data);
-    $binHashData = pack("H*", $hashData);
-    $ok = openssl_private_encrypt($binHashData, $binarySignature, $private_key, OPENSSL_PKCS1_PADDING);
-    openssl_free_key($private_key);
-    unset($private_key);
-    if ($ok === false)
-        return '';
-
-    return bin2hex($binarySignature);
-}
-
-
-/**
- * Crypto - Decrypt and verify asymmetric sign.
- * Use OpenSSL library.
- *
- * @param string $sign
- * @param string $hash
- * @param string $nid
- * @return boolean
- */
-function crypto_asymmetricVerify(string $sign, string $hash, string $nid): bool
-{
-    // Read signer's public key.
-    $cert = io_objectRead($nid, 10000);
-    $hashsize = strlen($hash);
-
-    $pubkeyid = openssl_pkey_get_public($cert);
-    if ($pubkeyid === false) return false;
-
-    lib_incrementMetrology('lv');
-
-    // Encoding sign before check.
-    $binsign = pack('H*', $sign);
-
-    // Decode sign with public key.
-    if (openssl_public_decrypt($binsign, $bindecrypted, $pubkeyid, OPENSSL_PKCS1_PADDING)) {
-        $decrypted = (substr(bin2hex($bindecrypted), -$hashsize, $hashsize));
-        //log_add('decrypt RSA ' . $decrypted . '/' . $hash, 'error', __FUNCTION__, 'd4c712ea');
-        if ($decrypted == $hash)
-            return true;
+    // Check with links.
+    $refActivated = NEBULE_RID_INTERFACE_APPLICATIONS_ACTIVE;
+    $links = array();
+    $filter = array(
+        'bl/rl/req' => 'f',
+        'bl/rl/nid1' => $oid,
+        'bl/rl/nid2' => $refActivated,
+        'bl/rl/nid3' => '',
+        'bl/rl/nid4' => '',
+    );
+    lnk_getList($oid, $links, $filter);
+    foreach ($links as $link) {
+        foreach ($nebuleLocalAuthorities as $authority) {
+            if ($link['bs/rs/nid'] == $authority)
+                return true;
+        }
     }
 
     return false;
 }
+
 
 
 /*
