@@ -3750,6 +3750,48 @@ function app_getActivated(string $oid): bool
     return false;
 }
 
+/**
+ * Find a valid application OID for current code branch.
+ *
+ * @param $rid
+ * @return string
+ */
+function app_getByRef($rid): string
+{
+    $currentCodeBranchName = lib_getConfiguration('codeBranch');
+    $currentCodeBranchID = '';
+    if (nod_checkNID($currentCodeBranchName, false)
+        && io_checkNodeHaveContent($currentCodeBranchName)
+    ) {
+        // TODO
+    } else {
+        // Get all RID of code branches FIXME
+        $rid = LIB_RID_CODE_BRANCH;
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid1' => $rid,
+            'bl/rl/nid3' => $rid,
+            'bl/rl/nid4' => '',
+        );
+        lnk_getList($rid, $links, $filter, false);
+
+        $currentCodeBranchNameID = obj_getNID($currentCodeBranchName, 'sha2.256');
+    }
+
+    // Get current code branch
+    $links = array();
+    $filter = array(
+        'bl/rl/req' => 'f',
+        'bl/rl/nid1' => $rid,
+        'bl/rl/nid3' => $currentCodeBranchID,
+        'bl/rl/nid4' => '',
+    );
+    lnk_getList($rid, $links, $filter, false);
+
+    return '';
+}
+
 
 
 /*
@@ -3922,38 +3964,9 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryID, string &$bootstra
 
     // Try to find with links.
     if ($bootstrapLibraryID == '') {
-        $currentCodeBranchName = lib_getConfiguration('codeBranch');
-        $currentCodeBranchID = '';
-        if (nod_checkNID($currentCodeBranchName, false)
-            && io_checkNodeHaveContent($currentCodeBranchName)
-        ) {
-            // TODO
-        } else {
-            // Get all RID of code branches FIXME
-            $rid = LIB_RID_CODE_BRANCH;
-            $links = array();
-            $filter = array(
-                'bl/rl/req' => 'l',
-                'bl/rl/nid1' => $rid,
-                'bl/rl/nid3' => $rid,
-                'bl/rl/nid4' => '',
-            );
-            lnk_getList($rid, $links, $filter, false);
+        $bootstrapLibraryID = app_getByRef(LIB_RID_CODE_BRANCH);
 
-            $currentCodeBranchNameID = obj_getNID($currentCodeBranchName, 'sha2.256');
-        }
-
-        // Get current code branch
-        $links = array();
-        $filter = array(
-            'bl/rl/req' => 'f',
-            'bl/rl/nid1' => $rid,
-            'bl/rl/nid3' => $currentCodeBranchID,
-            'bl/rl/nid4' => '',
-        );
-        lnk_getList($rid, $links, $filter, false);
-
-
+        // FIXME
         /*$bootstrapLibraryID = nod_findByReference(
             NEBULE_RID_INTERFACE_LIBRARY,
             NEBULE_RID_INTERFACE_LIBRARY);*/
@@ -4290,7 +4303,6 @@ function bootstrap_getCheckFingerprint(): void
     }
 }
 
-// Vérifie l'empreinte du bootstrap. @todo ajouter vérification de marquage de danger.
 
 
 // ------------------------------------------------------------------------------------------
