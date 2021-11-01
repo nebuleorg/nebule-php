@@ -3764,13 +3764,13 @@ function app_getByRef($rid): string
     if ($currentCodeBranchName == '')
         $currentCodeBranchName = LIB_CONFIGURATIONS_DEFAULT['codeBranch'];
 
+    // Check if it's a name or an OID.
     if (nod_checkNID($currentCodeBranchName, false)
         && io_checkNodeHaveContent($currentCodeBranchName)
     ) {
         $currentCodeBranchID = $currentCodeBranchName;
     } else {
         // Get all RID of code branches FIXME
-        $rid = LIB_RID_CODE_BRANCH;
         $links = array();
         $filter = array(
             'bl/rl/req' => 'l',
