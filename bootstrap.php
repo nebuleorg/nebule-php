@@ -4134,7 +4134,10 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryID, string &$bootstra
     // Try to find with links.
     if ($bootstrapLibraryID == '') {
         $currentCodeBranchName = lib_getConfiguration('codeBranch');
-        if (nod_checkNID($currentCodeBranchName, false)) {
+        $currentCodeBranchID = '';
+        if (nod_checkNID($currentCodeBranchName, false)
+            && io_checkNodeHaveContent($currentCodeBranchName)
+        ) {
             // TODO
         } else {
             // Get all RID of code branches FIXME
@@ -4148,20 +4151,21 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryID, string &$bootstra
             );
             lnk_getList($rid, $links, $filter, false);
 
-            // Get current code branch
             $currentCodeBranchNameID = obj_getNID($currentCodeBranchName, 'sha2.256');
-            $links = array();
-            $filter = array(
-                'bl/rl/req' => 'f',
-                'bl/rl/nid1' => $rid,
-                'bl/rl/nid3' => $currentCodeBranchNameID,
-                'bl/rl/nid4' => '',
-            );
-            lnk_getList($rid, $links, $filter, false);
         }
 
+        // Get current code branch
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid1' => $rid,
+            'bl/rl/nid3' => $currentCodeBranchID,
+            'bl/rl/nid4' => '',
+        );
+        lnk_getList($rid, $links, $filter, false);
 
-       /* $bootstrapLibraryID = nod_findByReference(
+
+        /*$bootstrapLibraryID = nod_findByReference(
             NEBULE_RID_INTERFACE_LIBRARY,
             NEBULE_RID_INTERFACE_LIBRARY);*/
 
