@@ -2088,7 +2088,7 @@ function lnk_dateCompare(string $mod1, string $chr1, string $mod2, string $chr2)
 
 /**
  * Link - Test if a link match a filter.
- * Filtering on have bl/rl/req, bl/rl/nid1, bl/rl/nid2, bl/rl/nid3, bl/rl/nid4, bl/rl/nid*, bs/rs/nid, or not have.
+ * Filtering on have bl/rl/req, bl/rl/nid1, bl/rl/nid2, bl/rl/nid3, bl/rl/nid4, bl/rl/nid*, bs/rs/eid, or not have.
  * TODO revoir pour les liens de type x...
  *
  * @param array $link
@@ -2123,7 +2123,7 @@ function lnk_filterStructure(array $link, array $filter): bool
         )
     )
         $ok = true;
-    if (isset($filter['bs/rs/nid']) && $link['bs/rs/nid'] == $filter['bs/rs/nid'])
+    if (isset($filter['bs/rs/eid']) && $link['bs/rs/eid'] == $filter['bs/rs/eid'])
         $ok = true;
 
     if (!$ok)
@@ -2147,10 +2147,32 @@ function lnk_filterStructure(array $link, array $filter): bool
         )
     )
         $ok = false;
-    if (isset($filter['!bs/rs/nid']) && $link['bs/rs/nid'] == $filter['!bs/rs/nid'])
+    if (isset($filter['!bs/rs/eid']) && $link['bs/rs/eid'] == $filter['!bs/rs/eid'])
         $ok = false;
 
     return $ok;
+}
+
+/**
+ * Filter links by signers (BS/RS/EID) of the links.
+ *
+ * @param array $links
+ * @param array $signers
+ */
+function lnk_filterBySigners(array &$links, array $signers): void
+{
+    if (sizeof($links) == 0 || sizeof($signers) == 0)
+        return;
+
+    foreach ($links as $i => $link) {
+        $ok = false;
+        foreach ($signers as $authority) {
+            if ($link['bs/rs/eid'] == $authority)
+                $ok = true;
+        }
+        if (!$ok)
+            unset($links[$i]);
+    }
 }
 
 /**
@@ -2483,7 +2505,7 @@ function lnk_checkRS(string &$rs, string &$bh, string &$bl): bool
 
     // --- --- --- --- --- --- --- --- ---
     // Check content RS 1 NID 1 : hash.algo.size
-    //if (!nod_checkNID($nid, false)) log_add('check link BS/RS/NID failed '.$rs, 'error', __FUNCTION__, '6e1150f9');
+    //if (!nod_checkNID($nid, false)) log_add('check link bs/rs/eid failed '.$rs, 'error', __FUNCTION__, '6e1150f9');
     if (!nod_checkNID($nid, false)) return false;
     //if (!lnk_checkSIG($bh, $bl, $sig, $nid)) log_add('check link BS/RS/SIG failed '.$rs, 'error', __FUNCTION__, 'e99ec81f');
     if (!lnk_checkSIG($bh, $bl, $sig, $nid)) return false;
@@ -2653,7 +2675,7 @@ function lnk_parse(string $link): array
         'bl/rl/nid4' => $bl_rl_nid4,
         'bs' => $bs,
         'bs/rs' => $bs_rs,
-        'bs/rs/nid' => $bs_rs_nid,
+        'bs/rs/eid' => $bs_rs_nid,
         'bs/rs/sig' => $bs_rs_sig,
         'bs/rs/sig/sign' => $bs_rs_sig_sign,
         'bs/rs/sig/algo' => $bs_rs_sig_algo,
@@ -2689,7 +2711,7 @@ function lnk_write($link): bool
 
     // Write link for signer if needed.
     if (lib_getConfiguration('permitAddLinkToSigner'))
-        $result = io_linkWrite($linkParsed['bs/rs/nid'], $link) && $result;
+        $result = io_linkWrite($linkParsed['bs/rs/eid'], $link) && $result;
 
     // Write link to history if needed.
     $histFile = LIB_LOCAL_HISTORY_FILE;
@@ -2729,7 +2751,7 @@ function nod_findByReference(string $nid, string $rid): string
 
     foreach ($links as $link) {
         foreach ($nebuleLocalAuthorities as $authority) {
-            if ($link['bs/rs/nid'] == $authority)
+            if ($link['bs/rs/eid'] == $authority)
                 return $link['bl/rl/nid2'];
         }
     }
@@ -3388,7 +3410,7 @@ function ent_getAskedMasters(string $refNid, array &$result, bool $synchronize):
         'bl/rl/nid2' => $refNid,
         'bl/rl/nid3' => '',
         'bl/rl/nid4' => '',
-        'bs/rs/nid' => lib_getConfiguration('puppetmaster'),
+        'bs/rs/eid' => lib_getConfiguration('puppetmaster'),
     );
     lnk_getList($refNid, $lnkList, $filter);
 
@@ -3742,7 +3764,7 @@ function app_getActivated(string $oid): bool
     lnk_getList($oid, $links, $filter);
     foreach ($links as $link) {
         foreach ($nebuleLocalAuthorities as $authority) {
-            if ($link['bs/rs/nid'] == $authority)
+            if ($link['bs/rs/eid'] == $authority)
                 return true;
         }
     }
