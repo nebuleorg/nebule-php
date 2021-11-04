@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020211101';
+const BOOTSTRAP_VERSION = '020211104';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -372,7 +372,7 @@ $metrologyLibraryPOOConvertationCache = 0;
  ------------------------------------------------------------------------------------------
  */
 
-const LIB_NEBULE_LIBRARY_PP_VERSION = '020211101';
+const LIB_NEBULE_LIBRARY_PP_VERSION = '020211104';
 const LIB_LINK_VERSION = '2:0';
 const LIB_DEFAULT_PUPPETMASTER_EID = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
 const LIB_DEFAULT_PUPPETMASTER_LOCATION = 'http://puppetmaster.nebule.org';
@@ -3780,7 +3780,7 @@ function app_getActivated(string $oid): bool
  */
 function app_getByRef($rid): string
 {
-    global $lnk_filterBySigners;
+    global $nebuleLocalAuthorities;
 
     $currentCodeBranchName = lib_getConfiguration('codeBranch');
     $currentCodeBranchID = '';
@@ -3794,7 +3794,7 @@ function app_getByRef($rid): string
     ) {
         $currentCodeBranchID = $currentCodeBranchName;
     } else {
-        // Get all RID of code branches FIXME
+        // Get all RID of code branches
         $links = array();
         $filter = array(
             'bl/rl/req' => 'l',
@@ -3803,9 +3803,19 @@ function app_getByRef($rid): string
             'bl/rl/nid4' => '',
         );
         lnk_getList($rid, $links, $filter, false);
-        lnk_filterBySigners($links, $lnk_filterBySigners);
+        lnk_filterBySigners($links, $nebuleLocalAuthorities);
 
+        // Search first with the name of the code branch
         $currentCodeBranchNameID = obj_getNID($currentCodeBranchName, 'sha2.256');
+        foreach ($links as $link)
+        {
+            $oid = nod_getByType($nid, 'nebule/objet/nom');
+            if ($oid == $currentCodeBranchNameID)
+            {
+                $currentCodeBranchID = $oid;
+                break;
+            }
+        }
     }
 
     // Get current code branch
@@ -3818,7 +3828,17 @@ function app_getByRef($rid): string
     );
     lnk_getList($rid, $links, $filter, false);
 
-    return '';
+    if (sizeof($links) == 0)
+        return '';
+
+    // Get newest link
+    $rlink=$links[0];
+    foreach ($links as $link)
+    {
+        if (lnk_dateCompare($link['bl/rc/mod'],$link['bl/rc/chr'],$rlink['bl/rc/mod'],$rlink['bl/rc/chr']) > 0)
+            $rlink = $link;
+    }
+    return $rlink['bl/rl/nid2'];
 }
 
 
