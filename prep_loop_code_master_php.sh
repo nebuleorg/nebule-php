@@ -5,9 +5,9 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020211029
+# Version 020211105
 
-export PUBSPACE=~/pub
+export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
 export password_entity=''
 
