@@ -249,6 +249,11 @@ function work_full_reinit()
   do
     sign_write_link "${link}" "${directory_authority_develop_key_hash}" 256
   done
+
+  sudo chown 1000.33 l/*
+  sudo chmod 644 l/*
+  sudo chown 1000.33 o/*
+  sudo chmod 644 o/*
 }
 
 function work_export()
@@ -296,6 +301,11 @@ function work_refresh()
   link="nebule:link/2:0_0>${current_date}/f>${rid_library}>${library_hash}>005ff1d21bb38724f2a03155a11119d86308645552ed0bbb837cea9f724d3bc00be7b626.none.288"
   link="nebule:link/2:0_0>${current_date}/f>${rid_sylabe}>${sylabe_hash}>005ff1d21bb38724f2a03155a11119d86308645552ed0bbb837cea9f724d3bc00be7b626.none.288"
   sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
+
+  sudo chown 1000.33 l/*
+  sudo chmod 644 l/*
+  sudo chown 1000.33 o/*
+  sudo chmod 644 o/*
 }
 
 function sign_write_link()
