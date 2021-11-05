@@ -303,9 +303,9 @@ function work_refresh()
   sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
 
   sudo chown 1000.33 l/*
-  sudo chmod 644 l/*
+  sudo chmod 664 l/*
   sudo chown 1000.33 o/*
-  sudo chmod 644 o/*
+  sudo chmod 664 o/*
 }
 
 function sign_write_link()
