@@ -4014,13 +4014,7 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryID, string &$bootstra
     // Try to find with links.
     if ($bootstrapLibraryID == '') {
         $bootstrapLibraryID = app_getByRef(LIB_RID_CODE_BRANCH);
-
-        // FIXME
-        /*$bootstrapLibraryID = nod_findByReference(
-            NEBULE_RID_INTERFACE_LIBRARY,
-            NEBULE_RID_INTERFACE_LIBRARY);*/
-
-        log_add('find nebule library ' . $bootstrapLibraryID, 'info', __FUNCTION__, '90ee41fc');
+        log_add('find nebule library (' . $bootstrapLibraryID . ')', 'info', __FUNCTION__, '90ee41fc');
 
         if (!nod_checkNID($bootstrapLibraryID, false)
             || !io_checkNodeHaveLink($bootstrapLibraryID)
