@@ -5942,47 +5942,42 @@ function bootstrap_firstDisplay6SyncObjects(): bool
     global $nebuleLocalAuthorities;
 
     $ok = true;
-
-    echo '<div class="parts">' . "\n";
-    echo '<span class="partstitle">#6 synchronizing objets</span><br/>' . "\n";
-
     $refAppsID = NEBULE_RID_INTERFACE_APPLICATIONS;
     $refLibID = NEBULE_RID_INTERFACE_LIBRARY;
     $refBootID = NEBULE_RID_INTERFACE_BOOTSTRAP;
 
+    echo '<div class="parts">' . "\n";
+    echo '<span class="partstitle">#6 synchronizing objets</span><br/>' . "\n";
+
+    // Write locations objects content
+    echo 'objects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+    foreach (LIB_FIRST_LOCALISATIONS as $data) {
+        obj_setContent($data);
+        echo '.';
+    }
+
+    // Write reserved objects content
+    foreach (LIB_FIRST_RESERVED_OBJECTS as $data) {
+        obj_setContent($data);
+        echo '.';
+    }
+    flush();
+
     // Si la bibliothèque ne se charge pas correctement, fait une première synchronisation des entités.
-    if (!io_checkNodeHaveContent($refAppsID)
-        && !io_checkNodeHaveContent($refLibID)
-        && !io_checkNodeHaveLink($refBootID)
+    if (!io_checkNodeHaveLink($refAppsID)
+        || !io_checkNodeHaveLink($refLibID)
+        || !io_checkNodeHaveLink($refBootID)
     ) {
         log_add('need sync objects', 'warn', __FUNCTION__, '0f21ad26');
 
-        // Ecrit les objets de localisation.
-        echo 'objects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
-        foreach (LIB_FIRST_LOCALISATIONS as $data) {
-            $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
-            lnk_getDistantOnLocations($hash, LIB_FIRST_LOCALISATIONS);
-            echo '.';
-        }
-        flush();
-
-        // Ecrit les objets réservés.
-        foreach (LIB_FIRST_RESERVED_OBJECTS as $data) {
-            $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
-            lnk_getDistantOnLocations($hash, LIB_FIRST_LOCALISATIONS);
-            echo '.';
-        }
-        flush();
-
-        echo "<br />\nbootstrap start &nbsp;&nbsp;&nbsp;:" . $refBootID . ' ';
-        flush();
-
+        echo "<br />\nbootstrap RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:" . $refBootID . ' ';
         lnk_getDistantOnLocations($refBootID, LIB_FIRST_LOCALISATIONS);
-        echo "<br />\nlibrary start &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:" . $refLibID . ' ';
+
+        echo "<br />\nlibrary RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:" . $refLibID . ' ';
+        lnk_getDistantOnLocations($refLibID, LIB_FIRST_LOCALISATIONS);
         flush();
 
         // Recherche par référence.
-        lnk_getDistantOnLocations($refLibID, LIB_FIRST_LOCALISATIONS);
         $lastID = nod_findByReference(
             $refLibID,
             $refLibID);
@@ -5997,7 +5992,7 @@ function bootstrap_firstDisplay6SyncObjects(): bool
         echo "<br />\napplications list &nbsp;:" . $refAppsID . ' ';
         flush();
         lnk_getDistantOnLocations($refAppsID, LIB_FIRST_LOCALISATIONS);
-        echo "<br />\napplication list &nbsp;&nbsp;:";
+        echo "<br />\napplications &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:";
 
         // Pour chaque application, faire une synchronisation.
         $links = array();
@@ -6059,7 +6054,12 @@ function bootstrap_firstDisplay6SyncObjects(): bool
             echo "<br />\n";
             flush();
         }
-    } else {
+    }
+
+    if (io_checkNodeHaveLink($refAppsID)
+        && io_checkNodeHaveLink($refLibID)
+        && io_checkNodeHaveLink($refBootID)
+    ) {
         log_add('ok sync objects', 'info', __FUNCTION__, '4473358f');
         echo "ok\n";
     }
