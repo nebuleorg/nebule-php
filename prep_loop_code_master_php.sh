@@ -259,6 +259,13 @@ function work_full_reinit()
 function work_export()
 {
   echo ' > work export codes'
+  echo ' > copy code on test environment'
+  cp "${WORKSPACE}/bootstrap.php" "${PUBSPACE}/"
+}
+
+function work_dev_deploy()
+{
+  echo ' > work dev deploy codes'
   echo ' ! do nothing by now!'
 }
 
@@ -367,7 +374,7 @@ function mode_loop
   do
   
   echo ' = wait'
-  read -r -n 1 -p '[r] refresh codes / [e] export codes / [f] reinit full / [q] quit : ' loop_type
+  read -r -n 1 -p '[r] refresh codes / [d] dev deploy codes  / [e] export codes / [f] reinit full / [q] quit : ' loop_type
   echo -e "\n"
   
   cd $PUBSPACE || return 1
@@ -375,9 +382,10 @@ function mode_loop
   
   case "${loop_type}" in
     f) work_full_reinit; work_refresh;;
+    d) work_dev_deploy; work_refresh;;
     e) work_export;;
     q) echo ' > quit'; break;;
-    *) work_refresh;;
+    *) work_dev_deploy;;
   esac
   
   done
@@ -389,6 +397,7 @@ function mode_once
   echo ' > mode once'
   case "${1}" in
     f) work_full_reinit; work_refresh;;
+    d) work_dev_deploy; work_refresh;;
     e) work_export;;
     r) work_refresh;;
   esac
