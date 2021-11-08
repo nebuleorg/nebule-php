@@ -259,14 +259,14 @@ function work_full_reinit()
 function work_export()
 {
   echo ' > work export codes'
-  echo ' > copy code on test environment'
-  cp "${WORKSPACE}/bootstrap.php" "${PUBSPACE}/"
+  echo ' ! do nothing by now!'
 }
 
 function work_dev_deploy()
 {
   echo ' > work dev deploy codes'
-  echo ' ! do nothing by now!'
+  echo ' > copy code on test environment'
+  cp "${WORKSPACE}/bootstrap.php" "${PUBSPACE}/"
 }
 
 function work_refresh()
