@@ -266,7 +266,7 @@ function work_dev_deploy()
 {
   echo ' > work dev deploy codes'
   echo ' > copy code on test environment'
-  cp "${WORKSPACE}/bootstrap.php" "${PUBSPACE}/"
+  cp "${WORKSPACE}/bootstrap.php" "${PUBSPACE}/index.php"
 }
 
 function work_refresh()
