@@ -113,137 +113,8 @@ log_init(BOOTSTRAP_NAME);
 syslog(LOG_INFO, 'LogT=0 LogT0=' . $metrologyStartTime . ' LogL=B LogM="start ' . BOOTSTRAP_NAME . '"');
 
 // ------------------------------------------------------------------------------------------
-// Command line args.
-const ARG_BOOTSTRAP_BREAK = 'b';
-const ARG_FLUSH_SESSION = 'f';
-const ARG_UPDATE_APPLICATION = 'u';
-const ARG_SWITCH_APPLICATION = 'a';
-const ARG_RESCUE_MODE = 'r';
-const ARG_INLINE_DISPLAY = 'i';
-const ARG_STATIC_DISPLAY = 's'; // TODO not used yet
-
-const NEBULE_RID_INTERFACE_BOOTSTRAP = 'fc9bb365082ea3a3c8e8e9692815553ad9a70632fe12e9b6d54c8ae5e20959ce94fbb64f.none.288';
-const NEBULE_RID_INTERFACE_LIBRARY = '780c5e2767e15ad2a92d663cf4fb0841f31fd302ea0fa97a53bfd1038a0f1c130010e15c.none.288';
-const NEBULE_RID_INTERFACE_APPLICATIONS = '4046edc20127dfa1d99f645a7a4ca3db42e94feffa151319c406269bd6ede981c32b96e2.none.288';
-const NEBULE_RID_INTERFACE_APPLICATIONS_DIRECT = 'f202ca455549a1ddd553251f9c1df49ec6541c3412e52ed5f2ce2adfd772d07d0bfc2d28.none.288';
-const NEBULE_RID_INTERFACE_APPLICATIONS_ACTIVE = 'ae2b0dd506026c59b27ae93ef2d1ead7a2c893d2662d360c3937b699428010538b5c0af9.none.288';
-
-const REFERENCE_BOOTSTRAP_ICON = "data:image/png;base64,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
-f9eV8VcbpfPFAAAAAElFTkSuQmCC";
-
-const DEFAULT_APPLICATION_LOGO_LIGHT = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAAAXNSR0IArs
-4c6QAAEz5JREFUeNrtnX2wVdV5h59zqgaDJkVQLFyMNvIhYkFESoAxiBrTjqk29hWLyYj0j6QznTZ+ZqaNE9PptDMag/kr6Uz8nMCIb01jYyetSqxWVFRAFF
-GMNZXvKIItWhVTbv/Y6+Lpjdx7zj77nLPW3r9n5o4yguz97vU+633XXntvEEIIIYQQQgghhBBCCCFEOakpBOnj7qOBvvAzDjgeOA44BhgVfo4CRgJHAkcAhz
-Vc/37gV8B+4F3gHWAf8BawF9gDvA7sAnYA24CtZrZH0ZcARGeSGjNr/PUE4LTwMxWYAnwaGN3jQ30T+A/gJWAT8DzwvJltPdS5CAlADJ3svwPMB2aHn1MG/Z
-H+CK/dRx3Ti8BT4ecxM3tOUpAAlPANg9/dDwPOB84FzgkzfMyJ3q4YngdWAQ8BD5jZBxKCBFC1pF8AXAhcAJxc8dC8AtwP3Gdm/yYZSABlTP6PA4uBRWGmF4
-fmIeBuYIWZvatwSACpJv0ngKXA5cCMEpX03WwZ1gN3Abea2T6FRgKIurx3d4A/Ab4KzFLSFyqDZ4Dvm9mtahMkgNgEMA+4Cviikr4rMrgXWGZmqxUWCaBXs3
-0NuBq4lmzTjZK++zJ4HbgR+I6Z9asqaJ26QtB84gcmuPttwAHgJuBYybRnE9exwLeBA+GaTBh0rYQEUFjiz3b3VcAW4ApVUdFVsFcAW8I1mi0RSABFJf5Cd9
-8ArAHOVmSi52xgTbhmCyUCCSBv4i9w9xfJdq2dptk+uargNGBVuIYLJAIJoNnEn+Hu64GHgclK/ORFMBl4OFzTGRKBBHCoxB/r7j8l23wyXYlfOhFMB9aHaz
-xWItAAb5TAd4E/R7fyqsDANf6umX1NAqjorB/u5V8G3A4crryoJPuBpWa2vKp7CKoqgPFkT6DN0KyvaiC0fV8ws+1aAyh5r+/u3yJ7pZX6fDFw7WcA29z9hq
-qtDdQqJIBJZLf0+jTuxRBsA84xs5dVAZRn1r8B2AyM1/gWwzAe2FyVaqBWcgGMBlbz4f18IVphMzC3zG8/rpcw6Qf+eQmwG5ikcSxyMgl4M4ylUlYD9bIlf7
-i9txxYiVb4RfsVcj+w0t2XN7z0RS1ApAIYQ3ZLRwt9ohNsBWaa2W5VAPEl/1nAG2ihT3SOPuCNMNYkgIj6/a8Dj6jkF11qCR5x9+vKsC5QSzn5Q092D6D3QI
-meDEMzuyTlbcS1VJM/HPsG/v+XdIToNs8RtpSnKIFaosn/SbJ7tMep5Bc9ph/4Jdlek/9OTQK1BJO/D3gZGKHkFxFJ4D1gIrA9JQmktgg4leylnEp+EdtEOo
-LsNuEpKR14MgJw9zOAF1JtXUQlJACwyd1nSgDFJv8csk9D6TafiF0C/cBad/9drQEUl/xPKPlFYmsCNWCOma2RANor+zXzi5QlMMvM1koArSU+ZAt+Lyj5RQ
-kkMBV4Mca7A7VIk7+PbLUfJb8ogQQATgC2xSaBWoTJ/wmyjRUfU/KLEkngfbLvEUS1WageWfLXyHb4KflFmaiFMb0ZqMX0AFE9luQPVlwfLKnkF2WUwFhgfU
-wvFokm0dx9JXCJxomoACvN7FJVAB8m/9eV/KJCLHL3a1UBcPBNPo9oTIgKcpaZ/XslBRB6oDFkr/HSvX5RNQbG/BjgzV7dGaj3KvnDCa9V8ouKMvDcwLpeLg
-r2sgJYDizWOBCC5Wb2pcoIwN0XAXfrugtxkEVmdk+pBRDKnNFkX+xR6S9Ej9cDuroGEE7scSW/EB+5HrC624uBXRVA+OLqJCW/EB8pgcnu/s3StQCh9J9I9j
-JPIcTQTARe6UY10LWZ2N23kD3mq9lfiKHXA7aZ2QmlaQFC6T8hkuTv1xhTLCKORw2Y0K1WoNbhxCfM+lsju9CPA3M13gGYAuxSGDgGeDWyY+qjw98Z6PiM7O
-7rgemRlf4jgR8D52ncM87MdlY9CO4+cHs6pmrkWTPr6CvG6x0O6mKy76bF1vcfaWafAx5U/otIqQGnhxxKSwAN+5rviLXPDM8jSAIi9jWJOwblVPwCCA833A
-IcTqSr/gMPYEgCIvIq4HB3X9apdYDCBeDuuPtY4C9ij64kIBLha+4+thNVQL0TSQXcTiK3mCQBkUgrcFsnqoBCBRBm/+nA75HQhh9JQCTQCvy+u08vugqoF5
-1IKc3+koCoehVQmADC7H8WcDqJbveVBETkVcBMdz+ryCqgXmTyAH9P4ttLJQEReRXw/SKrgEIEEGb/s8m2lSb/sI8kICKuAk5x9wVFVQH1ohIGWEaJHi6RBE
-TEVcAtRVUBbQsgzP6ziW+/vyQgyloFTHf32UVUAfUikgT4O0r6aKkkICKtAv62iCqgLQGE2X8CsJASv+hDEhARVgHnuHtfu1VAvd3EAG6oQsQlAREh32q3Cm
-i3AqgBS6sSbUlARMbSnlYAwFVVi7gkICLj6l4K4Doq+F45SUBEQj9wbdcFEBb/PgMcR0Xf8isJiAioAWPdfU7eVqCed/CH8r/Sb5WVBEQkVcBVeRcD22kB/g
-i9418SEDFUAblvBbQsgFD+X6G4SwIiHtx9SZ42oJ5nsANfRR+VkARETG3An+ZpA/JUAEcBs1X+SwIiqjZgtruP7MYawFLFWxIQUbK0GwJYovJfEhBRtgFLOi
-oAdx9Bwq/8kgREyduAmSFHixdAWGFcrDhLAiJqFrdyN6DeymAGLlX5LwmIqNuAS1q5G9DqGsB5Kv8lARF1G3B+4S1A2PyzQPGVBET8tPLq8Hqzgxf4A4VWEh
-BJcGGzbUArLcAXFFdJQCTBBUW3AIcBJyuukoBIgknu/huFCCD0EucpppKASIrPNbMOUG9moALnKp6SgEiKhc2sAzS7BnCO4ikJiKRoatJuVgDTFU9JQCTFjK
-LWAE5VLCUBkR7uflpbAgiLCPMVSklAJMm84RYC68MNSGAO2v8vCYjU6AfmDLcQ2MwawCy0/18SEKlRA85sew0AmKZYSgIiSaa2uwYwXjGUBES6uPu4dioA3f
-6TBETaTG9HALoFKAmItJnWjgCmojsAkoBIlf7h1gGGE8AUdAdAEhCpUgMmtyOAiYqhJCCSZmI7Ahit+EkCImnG5BKAu49S7CQBkT7u/pt5KoATFDpJQJSCT+
-URQJ/iJgmIUtCXRwDaBSgJiHIwLo8AxipukoAoBWPzCOA4xU0SEMnTP1QuDyUA3QKUBET61IbK5aEEoNuAkoAoB6PyCOCTipskIEpBrn0ARytukoAoBUflEc
-BIxU0SEKVgZB4BjFDcJAFRCo7MI4AjFDdJQJSCI/II4HDFTRIQpeCwPAKoK26ll8Bq4INmviIrkqauJBe/JgHgD4GfNPxayAwHOaDwlFsCoTSc4+6rJIFScy
-CPAD5Q3CrDQkmg1PwqjwD2K26SgCgF+/MI4D3FTRIQpeDdPAJ4R3GTBEQpeCePAPYpbpKAJFAK3s4jgP9S3CQBSaAUvJVHAHsVN0lAEigFe/MI4E3FTUgCyd
-M/VC4PJYDXFTshCSRPbahcHkoAuxQ7IQmUgl15BLBDcROSQCnYmUcA2xQ3IQmUgq15BLBFcROSQCnY0rIAzEy3AYUkUALMLNc+AIDdCp+QBJLmjaH+43AC+L
-niJySBpHmlHQFsJttIIIQkkB79wEvtCGAT2UYCISSB9KiFHM4tgI2KoZAEkmZjOwLYoPgJSSBpNuQWgJlpN6CQBBLGzHa2UwGoDRCSQLpsGu43NCOAp9GdAC
-EJpEY/8FRbAggX7Ul0J0BIAqlRA54cLubDrQFA9vkoISSB9Fgdcjh/C2BmLyiOQhJIDzMbdv2u2W8DPqtwCkkgKdY385uaFcBDiqeQBJJiVSECCBfpZ4qnkA
-TSEkAzsW1mDQDgAcVTSAJJ8cBwC4BNtwBm9r/Ay4qpkASSYLOZHShyDQDgfsVVSAJJ0HSuNiWAcGHuU1yFJJAEP242js22AJjZo4qrkATix8wea6b/b7UFAP
-hX9FyAkARipR/4l1b+QNMCCBdkJXouQEgCsVIDVrYSt6YFEEqKFYqxkASiZkWz5X/LLYCZvQ+sVRsgJIEoy/9nzGx/R1qABu5QGyAkgSjL/zta/UN5BHCbYi
-0kgSi5veMCMLP/AdaoDRCSQFTl/5MhNzsrgHABvqc2QEgCUZX/38sTlzwVAGZ2p2IuJIF4MLO7Wln9b2cN4GAxoDZASAJRlP/35P3DuQQQAn+z2gAhCURR/t
-+cNw65BBDagDXALlUBQhLo6ey/08yeylP+t9sCANyoKkBIAj2d/W9q53/QrgCWaQwKSaCnLOuZAELZcavGoJAEesIP8pb+hQggBPubGn9CEugJN7R7rm1XAG
-a2HXgQLQYKSaBb9JO99HN7TyuAhirgr9BioJAEukUN+Msizq9tAYQq4GmyL5GoChCSQOdn/3Vmtrbd2b8QATRUAVeqChCSQFdm/yuLOqdCBBCqgEeATaoChC
-TQ0dl/k5k9WsTsX5gAGqqAr6gKEJJAR2f/rxR5HoUJIFQBjwHrVAUISaAjs//aVl753VUBNFQBV6gKEJJAR2b/JUUfe6ECCFXAc8A/qwoQkkChs//9ZraxyN
-m/cAE0VAFLVQUISaDQ2X9pJ463cAGEKuB14Dsaa0ISKISbzeyNomf/jghgoAows6uB99UKCEmgrdL/fTO7plPH2BEBNJhqiVoBkYIEIi79Lx+UU/ELoEEEdw
-PPqAoQsUsAeC/C2f9pM1vZacN0jFC2jAO2RxbcScBejX3GAhsVBgCeBOZEdkzjyF75laYAGkRwPfDXEZlVbYniEXssrjezv+lGj0GXJPAaMEGDTYhhJbTFzE
-7sxl9W71LyAyxU8gvR1KS8sFt3JrqakJG1AkLESFdK/54IIEhgEzBF1YAQv1b6v2hmp3a73Ohm8gOMAvagxSchGpO/FnLjrW7uS+hJArr7xcA/6LoLcZCLze
-xH3f5L6704UzO7F7hL11wIAO7sRfL3TADhWYHLgdfQLkFR7dL/P81sSa+eR+hZDx5OeDTwRq+PRYgeJT/AGGBPr55H6HnSufs84DG0KCiqlfw1YL6Zre7lgd
-R7HYkQgGuU/KJC1IBrep38UZXd7r4C+GONDVEBVpjZZTEcSD2S5MfMFpN9XUiIMrPezC6L5SUkMVUAA/+6HfgttQSihH3/TmB8aH0lgENI4Gjgl8AISUCUKP
-nfA44D3o7pDUT1mKIUArMPOBk4gPYIiHIkfz/w6diSPzoBNEhgBzA1VACSgEg5+WtkD7/tjPHdg1GX2O4+HXgW7REQ6Sb/DDPbEOtB1mOOYAjcbFUCItHkPz
-Pm5I++AmioBM4EnlIlIBJL/mdiP9hkksndZ5DtE5AEROzJf7qZPZvCASeVSO4+GdgUjlsSELEl/wHgVDPbnMpB1xML8magj+yeqtYEREzJ/y5wQhijSAAdIN
-xG2Um2oWKnxp2IJPl3kH1kZUfEnxkrRQUwIIG3zWw8enZA9J5nzayPCDf5lFIAAxIIDxDNBFY0mFiIbs36AMvNbGYYi0meSD3VK9Aggcv48H0CkoDoRvLXgK
-vN7EspJz+UaCXd3eeSvVmoVOclopz555vZ42U4oVIlirsfA6wFTtRYFR3gF8AZZlaaL0vXS3aB9pjZScCdWhcQBc/6d5jZb1Oyz8qXrlQe6Mnc/YvAvWjnoG
-i/37/YzH6Uer9fCQEMksEoYDVwisayyMEmYJ6ZvVXWE6yX/ALuNbOpwDfUEogWS/5vhA91vlXmk61MaezuJwEPA5/SGBdD8Bqw0MxercLJ1it0YX9hZicC16
-saEEPM+icCr1blxCu5OObu44D7gFlokbDqiV8DngYuMrMdVQtAvaIXfoeZnQlcCuxXHlSW/cAiM5tN9kBP5dDMl1UENwLXqhqo1Kx/k5ldV/Vg1JX8ThgIxw
-I/0fpA6fv8fwKONbPrYvk6jwTQQxo2duw2swuB04B1EkHpEn8dMM3MLgJ2D7r2EoBEcHAwbDSzWcB8so0gEkHaib+J7OGdWcALSnwJoFkRrDazacBn+fDFIx
-JBOom/HvhsuIarlfgSQF4RPGpmZ5DdMnxQkYmeB8ie2DsDeFSJLwEUJYK1ZnY+MA74wUfMOKJ3sz3hmowzs8+Hfl+J3wS65dUijU+EufuVZG8jGoduIXY78W
-tkL4a90cxuGXxthATQTSmcCVwNLBo0QEXxSQ+wEvh2Cl/eUQtQDZ42s0vNrAZ8GXhSLULhJf4TwJfNrGZmlwJKfgkgunUCgB+a2Vzg48Cf8eGeAsmg9aRfF2
-J4pJnNA354iJgLtQBRtwhHAItDi/B5RWRIfgrcA6wwMz2nIQGURgKNi4fzgYuAC4DJFQ/NZuB+4B/NbPXgWAkJoOwyqAPnAQuBc4GZg8rh1K/R4HNYBzwE/A
-x40MwOKOklAAmhYfC7+zTgM8BcYDYwdZikijHRIduG+xTwOPCEmW081DkLCUAMLYXjgenANOBUYCIwBRjT40PdDbwE/Jxsr/1GYIOZ7VKySwCiO7I4GjgJmE
-C2Kel4si8oHwOMCj9HASOBjwFHhJ9aw+y9P/y8D7wD7CN7IeZeYA/wOrCL7MUZW8lesbZP0RdCCCGEEEIIIYQQQgghhIiR/wMLunxvKj8tigAAAABJRU5Erk
-Jggg==";
-
 // Name of bootstrap file used by web server.
 const BOOTSTRAP_FILE_NAME = 'index.php';
-
-
-// ------------------------------------------------------------------------------------------
 
 /**
  * Instance de la bibliothèque nebule en PHP orienté objet.
@@ -359,6 +230,7 @@ $metrologyLibraryPOOGroupCache = 0;
 $metrologyLibraryPOOConvertationCache = 0;
 
 
+
 /*
  *
  *
@@ -381,6 +253,11 @@ const LIB_RID_CODE_AUTHORITY = '2b9dd679451eaca14a50e7a65352f959fc3ad55efc572dcd
 const LIB_RID_TIME_AUTHORITY = 'bab7966fd5b483f9556ac34e4fac9f778d0014149f196236064931378785d81cae5e7a6e.none.288';
 const LIB_RID_DIRECTORY_AUTHORITY = '0a4c1e7930a65672379616a2637b84542049b416053ac0d9345300189791f7f8e05f3ed4.none.288';
 const LIB_RID_CODE_BRANCH = '50e1d0348892e7b8a555301983bccdb8a07871843ed8f392d539d3d90f37ea8c2a54d72a.none.288';
+const LIB_RID_INTERFACE_BOOTSTRAP = 'fc9bb365082ea3a3c8e8e9692815553ad9a70632fe12e9b6d54c8ae5e20959ce94fbb64f.none.288';
+const LIB_RID_INTERFACE_LIBRARY = '780c5e2767e15ad2a92d663cf4fb0841f31fd302ea0fa97a53bfd1038a0f1c130010e15c.none.288';
+const LIB_RID_INTERFACE_APPLICATIONS = '4046edc20127dfa1d99f645a7a4ca3db42e94feffa151319c406269bd6ede981c32b96e2.none.288';
+const LIB_RID_INTERFACE_APPLICATIONS_DIRECT = 'f202ca455549a1ddd553251f9c1df49ec6541c3412e52ed5f2ce2adfd772d07d0bfc2d28.none.288';
+const LIB_RID_INTERFACE_APPLICATIONS_ACTIVE = 'ae2b0dd506026c59b27ae93ef2d1ead7a2c893d2662d360c3937b699428010538b5c0af9.none.288';
 const LIB_LOCAL_ENVIRONMENT_FILE = 'c';
 const LIB_LOCAL_ENTITY_FILE = 'e';
 const LIB_LOCAL_LINKS_FOLDER = 'l';
@@ -508,6 +385,14 @@ const LIB_FIRST_RESERVED_OBJECTS = array(
     'sha512',
 );
 
+// Command line args.
+const LIB_ARG_BOOTSTRAP_BREAK = 'b';
+const LIB_ARG_FLUSH_SESSION = 'f';
+const LIB_ARG_UPDATE_APPLICATION = 'u';
+const LIB_ARG_SWITCH_APPLICATION = 'a';
+const LIB_ARG_RESCUE_MODE = 'r';
+const LIB_ARG_INLINE_DISPLAY = 'i';
+const LIB_ARG_STATIC_DISPLAY = 's'; // TODO not used yet
 const LIB_ARG_FIRST_PUPPETMASTER_EID = 'bootstrapfirstpuppetmastereid';
 const LIB_ARG_FIRST_PUPPETMASTER_LOC = 'bootstrapfirstpuppetmasterlocation';
 const LIB_ARG_FIRST_SUBORD_EID = 'bootstrapfirstsubordinationeid';
@@ -670,6 +555,117 @@ const LIB_CONFIGURATIONS_DEFAULT = array(
     'defaultLinksVersion' => '2.0',
     'subordinationEntity' => '',
 );
+
+const LIB_BOOTSTRAP_ICON = "data:image/png;base64,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
+f9eV8VcbpfPFAAAAAElFTkSuQmCC";
+
+const LIB_APPLICATION_LOGO_LIGHT = "data:image/png;base64,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
+Jggg==";
 
 /**
  * Result of Lib PP initialisation.
@@ -1085,8 +1081,8 @@ function lib_getModeRescue(): bool
 {
     if (lib_getConfiguration('modeRescue') === true
         || (lib_getConfiguration('permitOnlineRescue') === true
-            && (filter_has_var(INPUT_GET, ARG_RESCUE_MODE)
-                || filter_has_var(INPUT_POST, ARG_RESCUE_MODE)
+            && (filter_has_var(INPUT_GET, LIB_ARG_RESCUE_MODE)
+                || filter_has_var(INPUT_POST, LIB_ARG_RESCUE_MODE)
             )
         )
     )
@@ -3752,7 +3748,7 @@ function app_getActivated(string $oid): bool
         return true;
 
     // Check with links.
-    $refActivated = NEBULE_RID_INTERFACE_APPLICATIONS_ACTIVE;
+    $refActivated = LIB_RID_INTERFACE_APPLICATIONS_ACTIVE;
     $links = array();
     $filter = array(
         'bl/rl/req' => 'f',
@@ -3869,16 +3865,16 @@ function bootstrap_getFlushSession(bool $forceFlush = false): void
 {
     session_start();
 
-    if (filter_has_var(INPUT_GET, ARG_FLUSH_SESSION)
-        || filter_has_var(INPUT_POST, ARG_FLUSH_SESSION)
+    if (filter_has_var(INPUT_GET, LIB_ARG_FLUSH_SESSION)
+        || filter_has_var(INPUT_POST, LIB_ARG_FLUSH_SESSION)
         || $forceFlush
     ) {
         log_add('ask flush session', 'warn', __FUNCTION__, '4abe475a');
 
         // Si la session n'est pas vide ou si interruption de l'utilisateur, la vide.
         if (isset($_SESSION['OKsession'])
-            || filter_has_var(INPUT_GET, ARG_BOOTSTRAP_BREAK)
-            || filter_has_var(INPUT_POST, ARG_BOOTSTRAP_BREAK)
+            || filter_has_var(INPUT_GET, LIB_ARG_BOOTSTRAP_BREAK)
+            || filter_has_var(INPUT_POST, LIB_ARG_BOOTSTRAP_BREAK)
         ) {
             // Mémorise pour la suite que la session est vidée.
             $bootstrapFlush = true;
@@ -3914,8 +3910,8 @@ function bootstrap_getUpdate(): void
 {
     global $bootstrapUpdate;
 
-    if (filter_has_var(INPUT_GET, ARG_UPDATE_APPLICATION)
-        || filter_has_var(INPUT_POST, ARG_UPDATE_APPLICATION)
+    if (filter_has_var(INPUT_GET, LIB_ARG_UPDATE_APPLICATION)
+        || filter_has_var(INPUT_POST, LIB_ARG_UPDATE_APPLICATION)
     ) {
         log_add('ask update', 'warn', __FUNCTION__, 'ac8a2330');
 
@@ -3945,10 +3941,10 @@ function bootstrap_getSwitchApplication(): void
         return;
 
     $arg = '';
-    if (filter_has_var(INPUT_GET, ARG_SWITCH_APPLICATION)) {
-        $arg = trim(filter_input(INPUT_GET, ARG_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-    } elseif (filter_has_var(INPUT_POST, ARG_SWITCH_APPLICATION)) {
-        $arg = trim(filter_input(INPUT_POST, ARG_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+    if (filter_has_var(INPUT_GET, LIB_ARG_SWITCH_APPLICATION)) {
+        $arg = trim(filter_input(INPUT_GET, LIB_ARG_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+    } elseif (filter_has_var(INPUT_POST, LIB_ARG_SWITCH_APPLICATION)) {
+        $arg = trim(filter_input(INPUT_POST, LIB_ARG_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
     }
 
     if (!app_checkOid($arg))
@@ -4111,7 +4107,7 @@ function bootstrap_findApplication(): void
             // Recherche la dernière application depuis l'objet de référence sur lui-même.
             $bootstrapApplicationID = nod_findByReference(
                 $bootstrapApplicationStartID,
-                NEBULE_RID_INTERFACE_APPLICATIONS);
+                LIB_RID_INTERFACE_APPLICATIONS);
         } else {
             // Vérifie l'ID de l'application mémorisé.
             if (isset($_SESSION['bootstrapApplicationID'])
@@ -4162,7 +4158,7 @@ function bootstrap_findApplication(): void
         } elseif (nod_checkNID($bootstrapSwitchApplication)
             && io_checkNodeHaveLink($bootstrapSwitchApplication)
         ) {
-            $refAppsID = NEBULE_RID_INTERFACE_APPLICATIONS;
+            $refAppsID = LIB_RID_INTERFACE_APPLICATIONS;
             $links = array();
             lnk_findInclusive_FIXME($refAppsID, $links, 'f', $refAppsID, $bootstrapSwitchApplication, $refAppsID);
 
@@ -4195,7 +4191,7 @@ function bootstrap_findApplication(): void
                     // Sinon recherche la dernière application depuis l'objet de référence sur lui-même.
                     $bootstrapApplicationID = nod_findByReference(
                         $bootstrapApplicationStartID,
-                        NEBULE_RID_INTERFACE_APPLICATIONS);
+                        LIB_RID_INTERFACE_APPLICATIONS);
                 }
 
                 log_add('find switched application ' . $bootstrapApplicationID, 'info', __FUNCTION__, '0cbacda8');
@@ -4225,7 +4221,7 @@ function bootstrap_findApplication(): void
             // Recherche la dernière application depuis l'objet de référence sur lui-même.
             $bootstrapApplicationID = nod_findByReference(
                 $bootstrapApplicationStartID,
-                NEBULE_RID_INTERFACE_APPLICATIONS);
+                LIB_RID_INTERFACE_APPLICATIONS);
         } else {
             $bootstrapApplicationStartID = '0';
             $bootstrapApplicationID = '0';
@@ -4241,7 +4237,7 @@ function bootstrap_findApplication(): void
         && $bootstrapApplicationInstanceSleep == ''
     ) {
         // Lit les liens de non pré-chargement pour l'application.
-        $refNoPreload = NEBULE_RID_INTERFACE_APPLICATIONS_DIRECT;
+        $refNoPreload = LIB_RID_INTERFACE_APPLICATIONS_DIRECT;
         $links = array();
         lnk_findInclusive_FIXME($bootstrapApplicationStartID, $links, 'f', $bootstrapApplicationStartID, $refNoPreload, $bootstrapApplicationStartID);
 
@@ -4300,8 +4296,8 @@ function bootstrap_setBreak(string $errorCode, string $errorDesc): void
 
 function bootstrap_getUserBreak(): void
 {
-    if (filter_has_var(INPUT_GET, ARG_BOOTSTRAP_BREAK)
-        || filter_has_var(INPUT_POST, ARG_BOOTSTRAP_BREAK)
+    if (filter_has_var(INPUT_GET, LIB_ARG_BOOTSTRAP_BREAK)
+        || filter_has_var(INPUT_POST, LIB_ARG_BOOTSTRAP_BREAK)
     )
         bootstrap_setBreak('11', 'User interrupt.');
 }
@@ -4312,8 +4308,8 @@ function bootstrap_getInlineDisplay(): void
 {
     global $bootstrapInlineDisplay;
 
-    if (filter_has_var(INPUT_GET, ARG_INLINE_DISPLAY)
-        || filter_has_var(INPUT_POST, ARG_INLINE_DISPLAY)
+    if (filter_has_var(INPUT_GET, LIB_ARG_INLINE_DISPLAY)
+        || filter_has_var(INPUT_POST, LIB_ARG_INLINE_DISPLAY)
     )
         $bootstrapInlineDisplay = true;
 }
@@ -4327,7 +4323,7 @@ function bootstrap_getCheckFingerprint(): void
     $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
     unset($data);
     // Recherche les liens de validation.
-    $hashRef = NEBULE_RID_INTERFACE_BOOTSTRAP;
+    $hashRef = LIB_RID_INTERFACE_BOOTSTRAP;
     $links = array();
     lnk_findInclusive_FIXME($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
     // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
@@ -4902,8 +4898,8 @@ $name = ent_getFullName($nebuleServerEntity);
 <body>
 <div class="layout-header">
     <div class="header-left">
-        <a href="/?<?php echo ARG_SWITCH_APPLICATION; ?>=0">
-            <img title="App switch" alt="[]" src="<?php echo REFERENCE_BOOTSTRAP_ICON; ?>"/>
+        <a href="/?<?php echo LIB_ARG_SWITCH_APPLICATION; ?>=0">
+            <img title="App switch" alt="[]" src="<?php echo LIB_BOOTSTRAP_ICON; ?>"/>
         </a>
     </div>
     <div class="header-right">
@@ -5034,7 +5030,7 @@ function bootstrap_displayOnBreak(): void
 
     // Chargement de la bibliothèque PHP POO.
     echo "tL=" . lib_getMetrologyTimer('tL') . "<br />\n";
-    echo 'library RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . NEBULE_RID_INTERFACE_LIBRARY . "<br />\n";
+    echo 'library RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . LIB_RID_INTERFACE_LIBRARY . "<br />\n";
 
     if (!is_a($nebuleInstance, 'nebule')) {
         echo "Not loaded.\n";
@@ -5238,7 +5234,7 @@ function bootstrap_displayOnBreak(): void
         unset($data);
         echo 'bootstrap &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $hash . ' ';
         // Recherche les liens de validation.
-        $hashRef = NEBULE_RID_INTERFACE_BOOTSTRAP;
+        $hashRef = LIB_RID_INTERFACE_BOOTSTRAP;
         $links = array();
         lnk_findInclusive_FIXME($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
         // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
@@ -5283,7 +5279,7 @@ function bootstrap_displayOnBreak(): void
     ?>
     <span class="partstitle">#4 application</span><br/>
     application RID &nbsp;: <a
-        href="/?<?php echo ARG_SWITCH_APPLICATION . '=' . $bootstrapApplicationStartID; ?>"><?php echo $bootstrapApplicationStartID; ?></a>
+        href="/?<?php echo LIB_ARG_SWITCH_APPLICATION . '=' . $bootstrapApplicationStartID; ?>"><?php echo $bootstrapApplicationStartID; ?></a>
     <br/>
     application ID &nbsp;&nbsp;: <?php echo $bootstrapApplicationID; ?>
     <?php
@@ -5385,7 +5381,7 @@ function bootstrap_displayPreloadApplication()
 
     echo '<div class="preload">' . "\n";
     ?>
-    <img title="bootstrap" style="background:#ababab;" alt="[]" src="<?php echo REFERENCE_BOOTSTRAP_ICON; ?>"/>
+    <img title="bootstrap" style="background:#ababab;" alt="[]" src="<?php echo LIB_BOOTSTRAP_ICON; ?>"/>
     Load nebule library POO<br/>
     ID=<?php echo $bootstrapLibraryID; ?><br/>
     <?php
@@ -5396,7 +5392,7 @@ function bootstrap_displayPreloadApplication()
     echo '<div class="preload">' . "\n";
     ?>
     <img title="bootstrap" style="background:#<?php echo substr($bootstrapApplicationStartID . '000000', 0, 6); ?>;"
-         alt="[]" src="<?php echo REFERENCE_BOOTSTRAP_ICON; ?>"/>
+         alt="[]" src="<?php echo LIB_BOOTSTRAP_ICON; ?>"/>
     Load application<br/>
     ID=<?php echo $bootstrapApplicationID; ?><br/>
     <?php
@@ -5942,9 +5938,9 @@ function bootstrap_firstDisplay6SyncObjects(): bool
     global $nebuleLocalAuthorities;
 
     $ok = true;
-    $refAppsID = NEBULE_RID_INTERFACE_APPLICATIONS;
-    $refLibID = NEBULE_RID_INTERFACE_LIBRARY;
-    $refBootID = NEBULE_RID_INTERFACE_BOOTSTRAP;
+    $refAppsID = LIB_RID_INTERFACE_APPLICATIONS;
+    $refLibID = LIB_RID_INTERFACE_LIBRARY;
+    $refBootID = LIB_RID_INTERFACE_BOOTSTRAP;
 
     echo '<div class="parts">' . "\n";
     echo '<span class="partstitle">#6 synchronizing objets</span><br/>' . "\n";
@@ -5970,10 +5966,10 @@ function bootstrap_firstDisplay6SyncObjects(): bool
     ) {
         log_add('need sync objects', 'warn', __FUNCTION__, '0f21ad26');
 
-        echo "<br />\nbootstrap RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:" . $refBootID . ' ';
+        echo "<br />\nbootstrap RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: " . $refBootID . ' ';
         lnk_getDistantOnLocations($refBootID, LIB_FIRST_LOCALISATIONS);
 
-        echo "<br />\nlibrary RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:" . $refLibID . ' ';
+        echo "<br />\nlibrary RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: " . $refLibID . ' ';
         lnk_getDistantOnLocations($refLibID, LIB_FIRST_LOCALISATIONS);
         flush();
 
@@ -5981,7 +5977,7 @@ function bootstrap_firstDisplay6SyncObjects(): bool
         $lastID = nod_findByReference(
             $refLibID,
             $refLibID);
-        echo "<br />\nsynchronization &nbsp;&nbsp;&nbsp;:" . $lastID . ' ';
+        echo "<br />\nsynchronization &nbsp;&nbsp;&nbsp;: " . $lastID . ' ';
         if ($lastID != '') {
             obj_getDistantContent($lastID, LIB_FIRST_LOCALISATIONS);
         } else {
@@ -5992,7 +5988,7 @@ function bootstrap_firstDisplay6SyncObjects(): bool
         echo "<br />\napplications list &nbsp;:" . $refAppsID . ' ';
         flush();
         lnk_getDistantOnLocations($refAppsID, LIB_FIRST_LOCALISATIONS);
-        echo "<br />\napplications &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:";
+        echo "<br />\napplications &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ";
 
         // Pour chaque application, faire une synchronisation.
         $links = array();
@@ -6472,7 +6468,7 @@ function bootstrap_displayApplication0()
             $title = $instance->getName();
             $shortName = substr($instance->getSurname() . '--', 0, 2);
             $shortName = strtoupper(substr($shortName, 0, 1)) . strtolower(substr($shortName, 1, 1));
-            echo '<a href="/?' . ARG_SWITCH_APPLICATION . '=' . $application . '">';
+            echo '<a href="/?' . LIB_ARG_SWITCH_APPLICATION . '=' . $application . '">';
             echo '<div class="apps" style="background:' . $color . ';">';
             echo '<span class="appstitle">' . $shortName . '</span><br /><span class="appsname">' . $title . '</span>';
             echo "</div></a>\n";
@@ -6568,7 +6564,7 @@ function bootstrap_displayApplication2()
     ?>
     <div class="layout-main">
         <div class="layout-content">
-            <img alt="nebule" id="logo" src="<?php echo DEFAULT_APPLICATION_LOGO_LIGHT; ?>"/>
+            <img alt="nebule" id="logo" src="<?php echo LIB_APPLICATION_LOGO_LIGHT; ?>"/>
         </div>
     </div>
 
