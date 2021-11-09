@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020211104';
+const BOOTSTRAP_VERSION = '020211109';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -244,7 +244,7 @@ $metrologyLibraryPOOConvertationCache = 0;
  ------------------------------------------------------------------------------------------
  */
 
-const LIB_NEBULE_LIBRARY_PP_VERSION = '020211104';
+const LIB_NEBULE_LIBRARY_PP_VERSION = '020211109';
 const LIB_LINK_VERSION = '2:0';
 const LIB_DEFAULT_PUPPETMASTER_EID = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
 const LIB_DEFAULT_PUPPETMASTER_LOCATION = 'http://puppetmaster.nebule.org';
@@ -455,7 +455,7 @@ const LIB_CONFIGURATIONS_TYPE = array(
     'modeRescue' => 'boolean',
     'cryptoLibrary' => 'string',
     'cryptoHashAlgorithm' => 'string',
-    'cryptoSymetricAlgorithm' => 'string',
+    'cryptoSymmetricAlgorithm' => 'string',
     'cryptoAsymmetricAlgorithm' => 'string',
     'socialLibrary' => 'string',
     'ioLibrary' => 'string',
@@ -532,7 +532,7 @@ const LIB_CONFIGURATIONS_DEFAULT = array(
     'modeRescue' => false,
     'cryptoLibrary' => 'openssl',
     'cryptoHashAlgorithm' => 'sha2.256',
-    'cryptoSymetricAlgorithm' => 'aes-256-ctr',
+    'cryptoSymmetricAlgorithm' => 'aes-256-ctr',
     'cryptoAsymmetricAlgorithm' => 'rsa.2048',
     'socialLibrary' => 'strict',
     'ioLibrary' => 'ioFileSystem',
@@ -5147,8 +5147,8 @@ function bootstrap_displayOnBreak(): void
             echo "<br />\n";
 
             // Vérifie la fonction de cryptographie symétrique.
-            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: symetric ' . $nebuleInstance->getCrypto()->symetricAlgorithm() . ' ';
-            if ($nebuleInstance->getCrypto()->checkSymetricFunction()) {
+            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: Symmetric ' . $nebuleInstance->getCrypto()->SymmetricAlgorithm() . ' ';
+            if ($nebuleInstance->getCrypto()->checkSymmetricFunction()) {
                 echo 'OK';
             } else {
                 echo '<span class="error">ERROR!</span>';
