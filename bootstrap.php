@@ -258,6 +258,7 @@ const LIB_RID_INTERFACE_LIBRARY = '780c5e2767e15ad2a92d663cf4fb0841f31fd302ea0fa
 const LIB_RID_INTERFACE_APPLICATIONS = '4046edc20127dfa1d99f645a7a4ca3db42e94feffa151319c406269bd6ede981c32b96e2.none.288';
 const LIB_RID_INTERFACE_APPLICATIONS_DIRECT = 'f202ca455549a1ddd553251f9c1df49ec6541c3412e52ed5f2ce2adfd772d07d0bfc2d28.none.288';
 const LIB_RID_INTERFACE_APPLICATIONS_ACTIVE = 'ae2b0dd506026c59b27ae93ef2d1ead7a2c893d2662d360c3937b699428010538b5c0af9.none.288';
+const LIB_REF_CODE_ALGO = 'sha2.256';
 const LIB_LOCAL_ENVIRONMENT_FILE = 'c';
 const LIB_LOCAL_ENTITY_FILE = 'e';
 const LIB_LOCAL_LINKS_FOLDER = 'l';
@@ -3769,7 +3770,7 @@ function app_getActivated(string $oid): bool
 }
 
 /**
- * Find a valid application OID for current code branch.
+ * Find a valid application OID from an RID for current code branch.
  *
  * @param $rid
  * @return string
@@ -3778,37 +3779,51 @@ function app_getByRef($rid): string
 {
     global $nebuleLocalAuthorities;
 
+    // Get code branch on config
     $currentCodeBranchName = lib_getConfiguration('codeBranch');
-    $currentCodeBranchID = '';
-
     if ($currentCodeBranchName == '')
         $currentCodeBranchName = LIB_CONFIGURATIONS_DEFAULT['codeBranch'];
+    $currentCodeBranchNID = '';
 
     // Check if it's a name or an OID.
     if (nod_checkNID($currentCodeBranchName, false)
         && io_checkNodeHaveContent($currentCodeBranchName)
     ) {
-        $currentCodeBranchID = $currentCodeBranchName;
+        $currentCodeBranchNID = $currentCodeBranchName;
     } else {
         // Get all RID of code branches
-        $links = array();
+        $CodeBranchRID = LIB_RID_CODE_BRANCH;
+        $bLinks = array();
         $filter = array(
             'bl/rl/req' => 'l',
-            'bl/rl/nid1' => $rid,
-            'bl/rl/nid3' => $rid,
+            'bl/rl/nid1' => $CodeBranchRID,
+            'bl/rl/nid3' => $CodeBranchRID,
             'bl/rl/nid4' => '',
         );
-        lnk_getList($rid, $links, $filter, false);
-        lnk_filterBySigners($links, $nebuleLocalAuthorities);
+        lnk_getList($CodeBranchRID, $bLinks, $filter, false);
+        lnk_filterBySigners($bLinks, $nebuleLocalAuthorities);
+
+        // Get all NID with the name of wanted code branch.
+        $nLinks = array();
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid2' => obj_getNID($currentCodeBranchName, LIB_REF_CODE_ALGO),
+            'bl/rl/nid3' => obj_getNID('nebule/objet/nom', LIB_REF_CODE_ALGO),
+            'bl/rl/nid4' => '',
+        );
+        lnk_getList($CodeBranchRID, $nLinks, $filter, false);
+        lnk_filterBySigners($nLinks, $nebuleLocalAuthorities);
+
+        // Collision of code branchs with the name
 
         // Search first with the name of the code branch
-        $currentCodeBranchNameID = obj_getNID($currentCodeBranchName, 'sha2.256');
-        foreach ($links as $link)
+        $currentCodeBranchNameOID = obj_getNID($currentCodeBranchName, LIB_REF_CODE_ALGO);
+        foreach ($bLinks as $link)
         {
-            $oid = nod_getByType($nid, 'nebule/objet/nom');
-            if ($oid == $currentCodeBranchNameID)
+            $oid = nod_getByType($link['bl/rl/nid2'], 'nebule/objet/nom');
+            if ($oid == $currentCodeBranchNameOID)
             {
-                $currentCodeBranchID = $oid;
+                $currentCodeBranchNID = $oid;
                 break;
             }
         }
@@ -3819,7 +3834,7 @@ function app_getByRef($rid): string
     $filter = array(
         'bl/rl/req' => 'f',
         'bl/rl/nid1' => $rid,
-        'bl/rl/nid3' => $currentCodeBranchID,
+        'bl/rl/nid3' => $currentCodeBranchNID,
         'bl/rl/nid4' => '',
     );
     lnk_getList($rid, $links, $filter, false);
@@ -4009,8 +4024,7 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryID, string &$bootstra
 
     // Try to find with links.
     if ($bootstrapLibraryID == '') {
-        $bootstrapLibraryID = app_getByRef(LIB_RID_CODE_BRANCH);
-        log_add('find nebule library (' . $bootstrapLibraryID . ')', 'info', __FUNCTION__, '90ee41fc');
+        $bootstrapLibraryID = app_getByRef(LIB_RID_INTERFACE_LIBRARY);
 
         if (!nod_checkNID($bootstrapLibraryID, false)
             || !io_checkNodeHaveLink($bootstrapLibraryID)
@@ -4020,6 +4034,8 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryID, string &$bootstra
             $bootstrapLibraryInstanceSleep = '';
             bootstrap_setBreak('31', 'Finding nebule library error.');
         }
+        else
+            log_add('find nebule library (' . $bootstrapLibraryID . ')', 'info', __FUNCTION__, '90ee41fc');
     }
 }
 
