@@ -2085,7 +2085,7 @@ function lnk_dateCompare(string $mod1, string $chr1, string $mod2, string $chr2)
 
 /**
  * Link - Test if a link match a filter.
- * Filtering on have bl/rl/req, bl/rl/nid1, bl/rl/nid2, bl/rl/nid3, bl/rl/nid4, bl/rl/nid*, bs/rs/eid, or not have.
+ * Filtering on have bl/rl/req, bl/rl/nid1, bl/rl/nid2, bl/rl/nid3, bl/rl/nid4, bl/rl/nid*, bs/rs/eid1, or not have.
  * TODO revoir pour les liens de type x...
  *
  * @param array $link
@@ -2120,7 +2120,7 @@ function lnk_filterStructure(array $link, array $filter): bool
         )
     )
         $ok = true;
-    if (isset($filter['bs/rs/eid']) && $link['bs/rs/eid'] == $filter['bs/rs/eid'])
+    if (isset($filter['bs/rs/eid1']) && $link['bs/rs/eid1'] == $filter['bs/rs/eid1'])
         $ok = true;
 
     if (!$ok)
@@ -2144,14 +2144,14 @@ function lnk_filterStructure(array $link, array $filter): bool
         )
     )
         $ok = false;
-    if (isset($filter['!bs/rs/eid']) && $link['bs/rs/eid'] == $filter['!bs/rs/eid'])
+    if (isset($filter['!bs/rs/eid1']) && $link['bs/rs/eid1'] == $filter['!bs/rs/eid1'])
         $ok = false;
 
     return $ok;
 }
 
 /**
- * Filter links by signers (BS/RS/EID) of the links.
+ * Filter links by signers (BS/RS/EID1) of the links.
  *
  * @param array $links
  * @param array $signers
@@ -2164,7 +2164,7 @@ function lnk_filterBySigners(array &$links, array $signers): void
     foreach ($links as $i => $link) {
         $ok = false;
         foreach ($signers as $authority) {
-            if ($link['bs/rs/eid'] == $authority)
+            if ($link['bs/rs/eid1'] == $authority)
                 $ok = true;
         }
         if (!$ok)
@@ -2502,9 +2502,9 @@ function lnk_checkRS(string &$rs, string &$bh, string &$bl): bool
 
     // --- --- --- --- --- --- --- --- ---
     // Check content RS 1 NID 1 : hash.algo.size
-    //if (!nod_checkNID($nid, false)) log_add('check link bs/rs/eid failed '.$rs, 'error', __FUNCTION__, '6e1150f9');
+    //if (!nod_checkNID($nid, false)) log_add('check link bs/rs/eid1 failed '.$rs, 'error', __FUNCTION__, '6e1150f9');
     if (!nod_checkNID($nid, false)) return false;
-    //if (!lnk_checkSIG($bh, $bl, $sig, $nid)) log_add('check link BS/RS/SIG failed '.$rs, 'error', __FUNCTION__, 'e99ec81f');
+    //if (!lnk_checkSIG($bh, $bl, $sig, $nid)) log_add('check link BS/RS/SIG1 failed '.$rs, 'error', __FUNCTION__, 'e99ec81f');
     if (!lnk_checkSIG($bh, $bl, $sig, $nid)) return false;
 
     return true;
@@ -2639,17 +2639,17 @@ function lnk_parse(string $link): array
     $bs_rs = strtok($bs, '/');
 
     // Extract items from RS : NID>SIG
-    $bs_rs_nid = strtok($bs_rs, '>');
-    $bs_rs_sig = strtok('>');
+    $bs_rs_nid1 = strtok($bs_rs, '>');
+    $bs_rs_sig1 = strtok('>');
 
     // Check hash value.
-    $bs_rs_sig_sign = strtok($bs_rs_sig, '.');
+    $bs_rs_sig1_sign = strtok($bs_rs_sig1, '.');
 
     // Check algo value.
-    $bs_rs_sig_algo = strtok('.');
+    $bs_rs_sig1_algo = strtok('.');
 
     // Check size value.
-    $bs_rs_sig_size = strtok('.');
+    $bs_rs_sig1_size = strtok('.');
 
     return array(
         'link' => $link, // original link
@@ -2672,11 +2672,11 @@ function lnk_parse(string $link): array
         'bl/rl/nid4' => $bl_rl_nid4,
         'bs' => $bs,
         'bs/rs' => $bs_rs,
-        'bs/rs/eid' => $bs_rs_nid,
-        'bs/rs/sig' => $bs_rs_sig,
-        'bs/rs/sig/sign' => $bs_rs_sig_sign,
-        'bs/rs/sig/algo' => $bs_rs_sig_algo,
-        'bs/rs/sig/size' => $bs_rs_sig_size,
+        'bs/rs/eid1' => $bs_rs_nid1,
+        'bs/rs/sig1' => $bs_rs_sig1,
+        'bs/rs/sig1/sign' => $bs_rs_sig1_sign,
+        'bs/rs/sig1/algo' => $bs_rs_sig1_algo,
+        'bs/rs/sig1/size' => $bs_rs_sig1_size,
     );
 }
 
@@ -2708,7 +2708,7 @@ function lnk_write($link): bool
 
     // Write link for signer if needed.
     if (lib_getConfiguration('permitAddLinkToSigner'))
-        $result = io_linkWrite($linkParsed['bs/rs/eid'], $link) && $result;
+        $result = io_linkWrite($linkParsed['bs/rs/eid1'], $link) && $result;
 
     // Write link to history if needed.
     $histFile = LIB_LOCAL_HISTORY_FILE;
@@ -2748,7 +2748,7 @@ function nod_findByReference(string $nid, string $rid): string
 
     foreach ($links as $link) {
         foreach ($nebuleLocalAuthorities as $authority) {
-            if ($link['bs/rs/eid'] == $authority)
+            if ($link['bs/rs/eid1'] == $authority)
                 return $link['bl/rl/nid2'];
         }
     }
@@ -3407,7 +3407,7 @@ function ent_getAskedMasters(string $refNid, array &$result, bool $synchronize):
         'bl/rl/nid2' => $refNid,
         'bl/rl/nid3' => '',
         'bl/rl/nid4' => '',
-        'bs/rs/eid' => lib_getConfiguration('puppetmaster'),
+        'bs/rs/eid1' => lib_getConfiguration('puppetmaster'),
     );
     lnk_getList($refNid, $lnkList, $filter);
 
@@ -3761,7 +3761,7 @@ function app_getActivated(string $oid): bool
     lnk_getList($oid, $links, $filter);
     foreach ($links as $link) {
         foreach ($nebuleLocalAuthorities as $authority) {
-            if ($link['bs/rs/eid'] == $authority)
+            if ($link['bs/rs/eid1'] == $authority)
                 return true;
         }
     }
