@@ -3883,6 +3883,8 @@ function app_getByRef($rid): string
  */
 function bootstrap_getFlushSession(bool $forceFlush = false): void
 {
+    global $bootstrapFlush;
+
     session_start();
 
     if (filter_has_var(INPUT_GET, LIB_ARG_FLUSH_SESSION)
