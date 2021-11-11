@@ -5968,7 +5968,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
  */
 function bootstrap_firstDisplay6SyncObjects(): bool
 {
-    global $nebuleLocalAuthorities;
+    global $nebuleLocalAuthorities, $codeBranchNID;
 
     $ok = true;
     $refAppsID = LIB_RID_INTERFACE_APPLICATIONS;
@@ -6001,6 +6001,9 @@ function bootstrap_firstDisplay6SyncObjects(): bool
 
         echo "<br />\nbootstrap RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: " . $refBootID . ' ';
         lnk_getDistantOnLocations($refBootID, LIB_FIRST_LOCALISATIONS);
+
+        echo "<br />\ncode branch RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: " . $codeBranchNID . ' ';
+        lnk_getDistantOnLocations($codeBranchNID, LIB_FIRST_LOCALISATIONS);
 
         echo "<br />\nlibrary RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: " . $refLibID . ' ';
         lnk_getDistantOnLocations($refLibID, LIB_FIRST_LOCALISATIONS);
