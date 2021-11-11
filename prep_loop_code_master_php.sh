@@ -22,6 +22,7 @@ export LIB_RID_CODE_BRANCH='50e1d0348892e7b8a555301983bccdb8a07871843ed8f392d539
 export LIB_RID_INTERFACE_BOOTSTRAP='fc9bb365082ea3a3c8e8e9692815553ad9a70632fe12e9b6d54c8ae5e20959ce94fbb64f.none.288'
 export LIB_RID_INTERFACE_LIBRARY='780c5e2767e15ad2a92d663cf4fb0841f31fd302ea0fa97a53bfd1038a0f1c130010e15c.none.288'
 export LIB_RID_INTERFACE_APPLICATIONS='4046edc20127dfa1d99f645a7a4ca3db42e94feffa151319c406269bd6ede981c32b96e2.none.288'
+export NID_CODE_BRANCH='81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288'
 
 # Prepare all links specifically for develop and tests.
 # Same password.
@@ -270,6 +271,18 @@ function work_dev_deploy()
   echo ' > work dev deploy codes'
   echo ' > copy code on test environment'
   cp "${WORKSPACE}/bootstrap.php" "${PUBSPACE}/index.php"
+
+  echo " > RID code branch : ${LIB_RID_CODE_BRANCH}"
+  echo " > NID code branch : ${NID_CODE_BRANCH}"
+
+  nameOID=$(echo -n 'develop' | sha256sum | cut -d' ' -f1)'.sha.256'
+  nameRID=$(echo -n 'nebule/objet/nom' | sha256sum | cut -d' ' -f1)'.sha.256'
+
+  echo ' > links'
+  echo '   - code branch'
+  link="nebule:link/2:0_0>${current_date}/l>${LIB_RID_CODE_BRANCH}>${NID_CODE_BRANCH}>${LIB_RID_CODE_BRANCH}"
+  echo '   - name'
+  link="nebule:link/2:0_0>${current_date}/l>${NID_CODE_BRANCH}>${nameOID}>${nameRID}"
 }
 
 function work_refresh()
@@ -278,10 +291,8 @@ function work_refresh()
   current_date=$(date "+0%Y%m%d%H%M%S")
   echo " > date : ${current_date}"
 
-  rid_bootstrap=$(echo -n 'nebule/objet/interface/web/php/bootstrap' | sha256sum | cut -d' ' -f1)'.sha.256'
-  rid_library=$(echo -n 'nebule/objet/interface/web/php/bootstrap' | sha256sum | cut -d' ' -f1)'.sha.256'
-  rid_sylabe=$(echo -n 'nebule/objet/interface/web/php/bootstrap' | sha256sum | cut -d' ' -f1)'.sha.256'
-  nid_type_php=$(echo -n 'application/x-httpd-php' | sha256sum | cut -d' ' -f1)'.sha.256'
+  phpOID=$(echo -n 'application/x-httpd-php' | sha256sum | cut -d' ' -f1)'.sha.256'
+  typeRID=$(echo -n 'nebule/objet/type' | sha256sum | cut -d' ' -f1)'.sha.256'
 
   bootstrap_hash=$(sha256sum "${WORKSPACE}/bootstrap.php" | cut -d' ' -f1)'.sha.256'
   library_hash=$(sha256sum "${WORKSPACE}/lib_nebule.php" | cut -d' ' -f1)'.sha.256'
@@ -295,21 +306,19 @@ function work_refresh()
 
   echo ' > links'
   echo '   - type mime = application/x-httpd-php'
-  link="nebule:link/2:0_0>${current_date}/l>${bootstrap_hash}>${nid_type_php}>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256"
-  link="nebule:link/2:0_0>${current_date}/l>${library_hash}>${nid_type_php}>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256"
-  link="nebule:link/2:0_0>${current_date}/l>${sylabe_hash}>${nid_type_php}>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256"
+  link="nebule:link/2:0_0>${current_date}/l>${bootstrap_hash}>${phpOID}>${typeRID}"
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
+  link="nebule:link/2:0_0>${current_date}/l>${library_hash}>${phpOID}>${typeRID}"
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
+  link="nebule:link/2:0_0>${current_date}/l>${sylabe_hash}>${phpOID}>${typeRID}"
   sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
 
   echo '   - nebule/objet/interface/web/php/bootstrap in develop branch'
-  link="nebule:link/2:0_0>${current_date}/f>${rid_bootstrap}>${bootstrap_hash}>365ded68b8cb4c1fe3bf7cb9268e0c63afa31870f3da0d54347ffc475dec4101be052c8a.none.288"
-  link="nebule:link/2:0_0>${current_date}/f>${rid_library}>${library_hash}>365ded68b8cb4c1fe3bf7cb9268e0c63afa31870f3da0d54347ffc475dec4101be052c8a.none.288"
-  link="nebule:link/2:0_0>${current_date}/f>${rid_sylabe}>${sylabe_hash}>365ded68b8cb4c1fe3bf7cb9268e0c63afa31870f3da0d54347ffc475dec4101be052c8a.none.288"
+  link="nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_BOOTSTRAP}>${bootstrap_hash}>${NID_CODE_BRANCH}"
   sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
-
-  echo '   - nebule/objet/interface/web/php/bootstrap in stable branch'
-  link="nebule:link/2:0_0>${current_date}/f>${rid_bootstrap}>${bootstrap_hash}>005ff1d21bb38724f2a03155a11119d86308645552ed0bbb837cea9f724d3bc00be7b626.none.288"
-  link="nebule:link/2:0_0>${current_date}/f>${rid_library}>${library_hash}>005ff1d21bb38724f2a03155a11119d86308645552ed0bbb837cea9f724d3bc00be7b626.none.288"
-  link="nebule:link/2:0_0>${current_date}/f>${rid_sylabe}>${sylabe_hash}>005ff1d21bb38724f2a03155a11119d86308645552ed0bbb837cea9f724d3bc00be7b626.none.288"
+  link="nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_LIBRARY}>${library_hash}>${NID_CODE_BRANCH}"
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
+  link="nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${sylabe_hash}>${NID_CODE_BRANCH}"
   sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
 
   sudo chown 1000.33 l/*
