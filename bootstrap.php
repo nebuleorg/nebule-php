@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020211109';
+const BOOTSTRAP_VERSION = '020211111';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -244,7 +244,6 @@ $metrologyLibraryPOOConvertationCache = 0;
  ------------------------------------------------------------------------------------------
  */
 
-const LIB_NEBULE_LIBRARY_PP_VERSION = '020211109';
 const LIB_LINK_VERSION = '2:0';
 const LIB_DEFAULT_PUPPETMASTER_EID = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
 const LIB_DEFAULT_PUPPETMASTER_LOCATION = 'http://puppetmaster.nebule.org';
@@ -1608,7 +1607,7 @@ function crypto_getPseudoRandom(int $count = 32): string
         return $result;
 
     // Génère une graine avec la date pour le compteur interne.
-    $intcount = date(DATE_ATOM) . microtime(false) . LIB_NEBULE_LIBRARY_PP_VERSION . $nebuleServerEntity;
+    $intcount = date(DATE_ATOM) . microtime(false) . BOOTSTRAP_VERSION . $nebuleServerEntity;
 
     // Boucle de remplissage.
     while (strlen($result) < $count) {
@@ -5024,7 +5023,7 @@ function bootstrap_displayOnBreak(): void
     echo '<div class="parts">' . "\n";
     ?>
     <span class="partstitle">#2 <?php echo BOOTSTRAP_NAME; ?> nebule library PP</span><br/>
-    library version &nbsp;: <?php echo LIB_NEBULE_LIBRARY_PP_VERSION ?><br/>
+    library version &nbsp;: <?php echo BOOTSTRAP_VERSION ?><br/>
     puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: <?php echo lib_getConfiguration('puppetmaster'); ?> (local authority)<br/>
     security master &nbsp;: <?php foreach ($nebuleSecurityAuthorities as $m) echo $m . ' '; ?> (local authority)<br/>
     code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php foreach ($nebuleCodeAuthorities as $m) echo $m . ' '; ?> (local authority)
@@ -5609,7 +5608,7 @@ function bootstrap_firstDisplay1Breaks(): void
         echo '- [' . $number . '] <span class="error">' . $message . '</span>' . "<br />\n";
 
     echo 'tB=' . lib_getMetrologyTimer('tB') . "<br />\n";
-    echo 'nebule library : ' . LIB_NEBULE_LIBRARY_PP_VERSION . ' PHP PP' . "<br />\n";
+    echo 'nebule library : ' . BOOTSTRAP_VERSION . ' PHP PP' . "<br />\n";
     if ($bootstrapRescueMode)
         echo "RESCUE<br />\n";
     echo "</div>\n";
