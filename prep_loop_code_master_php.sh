@@ -275,8 +275,8 @@ function work_dev_deploy()
   echo " > RID code branch : ${LIB_RID_CODE_BRANCH}"
   echo " > NID code branch : ${NID_CODE_BRANCH}"
 
-  nameOID=$(echo -n 'develop' | sha256sum | cut -d' ' -f1)'.sha.256'
-  nameRID=$(echo -n 'nebule/objet/nom' | sha256sum | cut -d' ' -f1)'.sha.256'
+  nameOID=$(echo -n 'develop' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  nameRID=$(echo -n 'nebule/objet/nom' | sha256sum | cut -d' ' -f1)'.sha2.256'
 
   echo ' > links'
   echo '   - code branch'
@@ -293,12 +293,12 @@ function work_refresh()
   current_date=$(date "+0%Y%m%d%H%M%S")
   echo " > date : ${current_date}"
 
-  phpOID=$(echo -n 'application/x-httpd-php' | sha256sum | cut -d' ' -f1)'.sha.256'
-  typeRID=$(echo -n 'nebule/objet/type' | sha256sum | cut -d' ' -f1)'.sha.256'
+  phpOID=$(echo -n 'application/x-httpd-php' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  typeRID=$(echo -n 'nebule/objet/type' | sha256sum | cut -d' ' -f1)'.sha2.256'
 
-  bootstrap_hash=$(sha256sum "${WORKSPACE}/bootstrap.php" | cut -d' ' -f1)'.sha.256'
-  library_hash=$(sha256sum "${WORKSPACE}/lib_nebule.php" | cut -d' ' -f1)'.sha.256'
-  sylabe_hash=$(sha256sum "${WORKSPACE}/sylabe.php" | cut -d' ' -f1)'.sha.256'
+  bootstrap_hash=$(sha256sum "${WORKSPACE}/bootstrap.php" | cut -d' ' -f1)'.sha2.256'
+  library_hash=$(sha256sum "${WORKSPACE}/lib_nebule.php" | cut -d' ' -f1)'.sha2.256'
+  sylabe_hash=$(sha256sum "${WORKSPACE}/sylabe.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new bootstrap : ${bootstrap_hash}"
   echo " > new library : ${bootstrap_hash}"
   echo " > new sylabe : ${bootstrap_hash}"
@@ -369,16 +369,16 @@ export code_authority_develop_pem=$(     echo -n "${code_authority_develop_key}"
 export time_authority_develop_pem=$(     echo -n "${time_authority_develop_key}"      | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
 export directory_authority_develop_pem=$(echo -n "${directory_authority_develop_key}" | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
 
-export puppetmaster_develop_key_hash=$(       echo -n "$puppetmaster_develop_key"        | sha256sum | cut -d' ' -f1)'.sha.256'
-export puppetmaster_develop_pem_hash=$(       echo -n "$puppetmaster_develop_pem"        | sha256sum | cut -d' ' -f1)'.sha.256'
-export security_authority_develop_key_hash=$( echo -n "$security_authority_develop_key"  | sha256sum | cut -d' ' -f1)'.sha.256'
-export security_authority_develop_pem_hash=$( echo -n "$security_authority_develop_pem"  | sha256sum | cut -d' ' -f1)'.sha.256'
-export code_authority_develop_key_hash=$(     echo -n "$code_authority_develop_key"      | sha256sum | cut -d' ' -f1)'.sha.256'
-export code_authority_develop_pem_hash=$(     echo -n "$code_authority_develop_pem"      | sha256sum | cut -d' ' -f1)'.sha.256'
-export time_authority_develop_key_hash=$(     echo -n "$time_authority_develop_key"      | sha256sum | cut -d' ' -f1)'.sha.256'
-export time_authority_develop_pem_hash=$(     echo -n "$time_authority_develop_pem"      | sha256sum | cut -d' ' -f1)'.sha.256'
-export directory_authority_develop_key_hash=$(echo -n "$directory_authority_develop_key" | sha256sum | cut -d' ' -f1)'.sha.256'
-export directory_authority_develop_pem_hash=$(echo -n "$directory_authority_develop_pem" | sha256sum | cut -d' ' -f1)'.sha.256'
+export puppetmaster_develop_key_hash=$(       echo -n "$puppetmaster_develop_key"        | sha256sum | cut -d' ' -f1)'.sha2.256'
+export puppetmaster_develop_pem_hash=$(       echo -n "$puppetmaster_develop_pem"        | sha256sum | cut -d' ' -f1)'.sha2.256'
+export security_authority_develop_key_hash=$( echo -n "$security_authority_develop_key"  | sha256sum | cut -d' ' -f1)'.sha2.256'
+export security_authority_develop_pem_hash=$( echo -n "$security_authority_develop_pem"  | sha256sum | cut -d' ' -f1)'.sha2.256'
+export code_authority_develop_key_hash=$(     echo -n "$code_authority_develop_key"      | sha256sum | cut -d' ' -f1)'.sha2.256'
+export code_authority_develop_pem_hash=$(     echo -n "$code_authority_develop_pem"      | sha256sum | cut -d' ' -f1)'.sha2.256'
+export time_authority_develop_key_hash=$(     echo -n "$time_authority_develop_key"      | sha256sum | cut -d' ' -f1)'.sha2.256'
+export time_authority_develop_pem_hash=$(     echo -n "$time_authority_develop_pem"      | sha256sum | cut -d' ' -f1)'.sha2.256'
+export directory_authority_develop_key_hash=$(echo -n "$directory_authority_develop_key" | sha256sum | cut -d' ' -f1)'.sha2.256'
+export directory_authority_develop_pem_hash=$(echo -n "$directory_authority_develop_pem" | sha256sum | cut -d' ' -f1)'.sha2.256'
 
 function mode_loop
 {
