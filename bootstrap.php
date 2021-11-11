@@ -33,7 +33,7 @@ const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 /*
  ==/ Table /===============================================================================
  PART1 : Initialization of the bootstrap environment.
- PART2 : Procedural PHP library for nebule (Lib PP).
+ PART2 : Procedural PHP library for nebule (Lib PP) restricted for bootstrap usage.
  PART3 : Manage PHP session and arguments.
  PART4 : Find and load object oriented PHP library for nebule (Lib POO).
  PART5 : Find application code.
