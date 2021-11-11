@@ -3874,9 +3874,8 @@ function app_getByRef($rid): string
 
 // ------------------------------------------------------------------------------------------
 /**
- * Lit si demande de l'utilisateur d'un nettoyage de session général.
- * Dans ce cas, la session PHP est intégralement nettoyée et un nouvel identifiant de session est généré.
- * Si la session est déjà vide, ne prend pas en compte la demande.
+ * Get on args if user want to flush session and restart a new one.
+ * If session already empty, do not flush.
  *
  * @param bool $forceFlush
  * @return void
@@ -3893,33 +3892,24 @@ function bootstrap_getFlushSession(bool $forceFlush = false): void
     ) {
         log_add('ask flush session', 'warn', __FUNCTION__, '4abe475a');
 
-        // Si la session n'est pas vide ou si interruption de l'utilisateur, la vide.
         if (isset($_SESSION['OKsession'])
             || filter_has_var(INPUT_GET, LIB_ARG_BOOTSTRAP_BREAK)
             || filter_has_var(INPUT_POST, LIB_ARG_BOOTSTRAP_BREAK)
         ) {
-            // Mémorise pour la suite que la session est vidée.
             $bootstrapFlush = true;
             log_add('flush session', 'info', __FUNCTION__, '5d008c11');
 
-            // Vide la session.
+            // flush and reopen session.
             session_unset();
             session_destroy();
             session_write_close();
             setcookie(session_name(), '', 0, '/');
             session_regenerate_id(true);
-
-            // Reouvre une nouvelle session pour la suite.
             session_start();
-        } else {
-            // Sinon marque la session.
+        } else
             $_SESSION['OKsession'] = true;
-        }
-    } else {
-        // Sinon marque la session.
+    } else
         $_SESSION['OKsession'] = true;
-
-    }
 
     session_write_close();
 }
@@ -3927,6 +3917,8 @@ function bootstrap_getFlushSession(bool $forceFlush = false): void
 /**
  * Lit si demande de l'utilisateur d'une mise à jour des instances de bibliothèque et d'application.
  * Dans ce cas, la session PHP n'est pas exploitée.
+ *
+ * @return void
  */
 function bootstrap_getUpdate(): void
 {
