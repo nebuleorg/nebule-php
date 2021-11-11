@@ -5979,7 +5979,7 @@ function bootstrap_firstDisplay6SyncObjects(): bool
     echo '<span class="partstitle">#6 synchronizing objets</span><br/>' . "\n";
 
     // Write locations objects content
-    echo 'objects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+    echo 'objects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
     foreach (LIB_FIRST_LOCALISATIONS as $data) {
         obj_setContent($data);
         echo '.';
