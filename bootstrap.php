@@ -728,6 +728,11 @@ $nebulePasswordEntity = '';
 $nebuleLocalAuthorities = array();
 
 /**
+ * Current code branch NID used to find different apps codes.
+ */
+$codeBranchNID = '';
+
+/**
  * Metrology - Lib PP link read counter.
  */
 $nebuleMetrologyLinkRead = 0;
@@ -760,7 +765,7 @@ $firstAlternativePuppetmasterEid = '';
 /**
  * First run - EID of an optional subordination.
  */
-$firstSubordinationEid = '';
+$firstSubordinationEID = '';
 
 // Cache of many search result and content.
 $nebuleCacheReadObjText1line = array();
@@ -3769,26 +3774,28 @@ function app_getActivated(string $oid): bool
 }
 
 /**
- * Find a valid application OID from an RID for current code branch.
+ * Find code branch to find apps codes.
  *
- * @param $rid
- * @return string
+ * @return void
  */
-function app_getByRef($rid): string
+function app_getCodeBranch(): void
 {
-    global $nebuleLocalAuthorities;
+    global $nebuleLocalAuthorities, $codeBranchNID;
+
+    if ($codeBranchNID != '')
+        return;
 
     // Get code branch on config
-    $currentCodeBranchName = lib_getConfiguration('codeBranch');
-    if ($currentCodeBranchName == '')
-        $currentCodeBranchName = LIB_CONFIGURATIONS_DEFAULT['codeBranch'];
-    $currentCodeBranchNID = '';
+    $codeBranchName = lib_getConfiguration('codeBranch');
+    if ($codeBranchName == '')
+        $codeBranchName = LIB_CONFIGURATIONS_DEFAULT['codeBranch'];
+    $codeBranchNID = '';
 
     // Check if it's a name or an OID.
-    if (nod_checkNID($currentCodeBranchName, false)
-        && io_checkNodeHaveContent($currentCodeBranchName)
+    if (nod_checkNID($codeBranchName, false)
+        && io_checkNodeHaveContent($codeBranchName)
     ) {
-        $currentCodeBranchNID = $currentCodeBranchName;
+        $codeBranchNID = $codeBranchName;
     } else {
         // Get all RID of code branches
         $CodeBranchRID = LIB_RID_CODE_BRANCH;
@@ -3806,7 +3813,7 @@ function app_getByRef($rid): string
         $nLinks = array();
         $filter = array(
             'bl/rl/req' => 'l',
-            'bl/rl/nid2' => obj_getNID($currentCodeBranchName, LIB_REF_CODE_ALGO),
+            'bl/rl/nid2' => obj_getNID($codeBranchName, LIB_REF_CODE_ALGO),
             'bl/rl/nid3' => obj_getNID('nebule/objet/nom', LIB_REF_CODE_ALGO),
             'bl/rl/nid4' => '',
         );
@@ -3823,25 +3830,37 @@ function app_getByRef($rid): string
                 ) {
                     $bl_rc_mod = $bLink['bl/rc/mod'];
                     $bl_rc_chr = $bLink['bl/rc/chr'];
-                    $currentCodeBranchNID = $bLink['bl/rl/nid2'];
+                    $codeBranchNID = $bLink['bl/rl/nid2'];
                 }
             }
         }
         unset($bLinks, $nLinks);
     }
+}
 
-    if ($currentCodeBranchNID == '')
-        return '';
+/**
+ * Find a valid application OID from an RID for current code branch.
+ *
+ * @param $rid
+ * @return string
+ */
+function app_getByRef($rid): string
+{
+    global $nebuleLocalAuthorities, $codeBranchNID;
+
+    if ($codeBranchNID == '')
+        app_getCodeBranch();
 
     // Get current version of code
     $links = array();
     $filter = array(
         'bl/rl/req' => 'f',
         'bl/rl/nid1' => $rid,
-        'bl/rl/nid3' => $currentCodeBranchNID,
+        'bl/rl/nid3' => $codeBranchNID,
         'bl/rl/nid4' => '',
     );
     lnk_getList($rid, $links, $filter, false);
+    lnk_filterBySigners($links, $nebuleLocalAuthorities);
 
     if (sizeof($links) == 0)
         return '';
@@ -6088,7 +6107,7 @@ function bootstrap_firstDisplay6SyncObjects(): bool
  */
 function bootstrap_firstDisplay7Subordination(): bool
 {
-    global $firstAlternativePuppetmasterEid, $firstSubordinationEid;
+    global $firstAlternativePuppetmasterEid, $firstSubordinationEID;
 
     $ok = true;
 
@@ -6121,7 +6140,7 @@ function bootstrap_firstDisplay7Subordination(): bool
             $argOID = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_SUBORD_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
             if (nod_checkNID($argOID, false)) {
                 echo 'try alternative puppetmaster : ' . $argOID . ' ';
-                $firstSubordinationEid = $argOID;
+                $firstSubordinationEID = $argOID;
                 $argLoc = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_SUBORD_LOC, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
                 if (strlen($argLoc) != 0 && filter_var($argLoc, FILTER_VALIDATE_URL) !== false) {
                     echo 'sync...';
@@ -6132,17 +6151,17 @@ function bootstrap_firstDisplay7Subordination(): bool
                 log_add('unable to find subordination oid', 'error', __FUNCTION__, '5cd18917');
                 echo " <span class=\"error\">invalid!</span>\n";
                 $argLoc = '';
-                $firstSubordinationEid = '';
+                $firstSubordinationEID = '';
             }
             echo "<br />\n";
-            log_add('define subordination oid = ' . $firstSubordinationEid, 'warn', __FUNCTION__, 'a875618e');
-            echo 'subordination to : ' . $firstSubordinationEid . "<br />\n";
+            log_add('define subordination oid = ' . $firstSubordinationEID, 'warn', __FUNCTION__, 'a875618e');
+            echo 'subordination to : ' . $firstSubordinationEID . "<br />\n";
             log_add('define subordination location = ' . $argLoc, 'info', __FUNCTION__, 'c1c943a5');
             echo 'location on &nbsp;&nbsp;&nbsp;&nbsp; : ' . $argLoc . "\n";
         }
     } else {
-        $firstSubordinationEid = lib_getConfiguration('subordinationEntity');
-        echo 'subordination to ' . $firstSubordinationEid . "\n";
+        $firstSubordinationEID = lib_getConfiguration('subordinationEntity');
+        echo 'subordination to ' . $firstSubordinationEID . "\n";
     }
 
     echo "</div>\n";
@@ -6159,7 +6178,7 @@ function bootstrap_firstDisplay7Subordination(): bool
  */
 function bootstrap_firstDisplay8OptionsFile(): bool
 {
-    global $firstAlternativePuppetmasterEid, $firstSubordinationEid;
+    global $firstAlternativePuppetmasterEid, $firstSubordinationEID;
 
     $ok = true;
 
@@ -6180,8 +6199,8 @@ function bootstrap_firstDisplay8OptionsFile(): bool
             $value = $firstAlternativePuppetmasterEid;
             $prefix = '';
         }
-        if ($option == 'subordinationEntity' && $firstSubordinationEid != '') {
-            $value = $firstSubordinationEid;
+        if ($option == 'subordinationEntity' && $firstSubordinationEID != '') {
+            $value = $firstSubordinationEID;
             $prefix = '';
         }
         $defaultOptions .= $prefix . $option . ' = ';
