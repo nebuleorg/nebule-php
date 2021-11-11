@@ -281,8 +281,10 @@ function work_dev_deploy()
   echo ' > links'
   echo '   - code branch'
   link="nebule:link/2:0_0>${current_date}/l>${LIB_RID_CODE_BRANCH}>${NID_CODE_BRANCH}>${LIB_RID_CODE_BRANCH}"
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
   echo '   - name'
   link="nebule:link/2:0_0>${current_date}/l>${NID_CODE_BRANCH}>${nameOID}>${nameRID}"
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
 }
 
 function work_refresh()
