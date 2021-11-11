@@ -3814,22 +3814,27 @@ function app_getByRef($rid): string
         lnk_getList($CodeBranchRID, $nLinks, $filter, false);
         lnk_filterBySigners($nLinks, $nebuleLocalAuthorities);
 
-        // Collision of code branchs with the name
-
-        // Search first with the name of the code branch
-        $currentCodeBranchNameOID = obj_getNID($currentCodeBranchName, LIB_REF_CODE_ALGO);
-        foreach ($bLinks as $link)
-        {
-            $oid = nod_getByType($link['bl/rl/nid2'], 'nebule/objet/nom');
-            if ($oid == $currentCodeBranchNameOID)
-            {
-                $currentCodeBranchNID = $oid;
-                break;
+        // Latest collision of code branches with the name
+        $bl_rc_mod = '0';
+        $bl_rc_chr = '0';
+        foreach ($bLinks as $bLink) {
+            foreach ($nLinks as $nLink) {
+                if ($bLink['bl/rl/nid2'] == $nLink['bl/rl/nid1']
+                    && lnk_dateCompare($bl_rc_mod, $bl_rc_chr, $bLink['bl/rc/mod'], $bLink['bl/rc/chr']) < 0
+                ) {
+                    $bl_rc_mod = $bLink['bl/rc/mod'];
+                    $bl_rc_chr = $bLink['bl/rc/chr'];
+                    $currentCodeBranchNID = $bLink['bl/rl/nid2'];
+                }
             }
         }
+        unset($bLinks, $nLinks);
     }
 
-    // Get current code branch
+    if ($currentCodeBranchNID == '')
+        return '';
+
+    // Get current version of code
     $links = array();
     $filter = array(
         'bl/rl/req' => 'f',
