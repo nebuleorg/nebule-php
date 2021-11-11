@@ -6009,83 +6009,9 @@ function bootstrap_firstDisplay6SyncObjects(): bool
         lnk_getDistantOnLocations($refLibID, LIB_FIRST_LOCALISATIONS);
         flush();
 
-        // Recherche par référence.
-        $lastID = nod_findByReference(
-            $refLibID,
-            $refLibID);
-        echo "<br />\nsynchronization &nbsp;&nbsp;: " . $lastID . ' ';
-        if ($lastID != '') {
-            obj_getDistantContent($lastID, LIB_FIRST_LOCALISATIONS);
-        } else {
-            echo '<span id="error">ERROR!</span>';
-            $ok = false;
-        }
-
-        echo "<br />\napplications list :" . $refAppsID . ' ';
-        flush();
+        echo "<br />\napplications &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: " . $refAppsID;
         lnk_getDistantOnLocations($refAppsID, LIB_FIRST_LOCALISATIONS);
-        echo "<br />\napplications &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ";
-
-        // Pour chaque application, faire une synchronisation.
-        $links = array();
-        lnk_findInclusive_FIXME($refAppsID, $links, 'f', $refAppsID, '', $refAppsID, false);
-
-        // Tri sur autorités locales.
-        foreach ($links as $i => $link) {
-            $signer = $link[2];
-            $ok = false;
-            foreach ($nebuleLocalAuthorities as $authority) {
-                if ($signer == $authority) {
-                    $ok = true;
-                    break;
-                }
-            }
-            if ($ok)
-                echo '.';
-            else {
-                // Si le signataire n'est pas autorité locale, supprime le lien.
-                unset($links[$i]);
-            }
-        }
-        echo "<br />\n";
-
-        // Pour toutes les applications, les télécharge et recherche leurs noms.
-        $refName = 'nebule/objet/nom';
-        foreach ($links as $app) {
-            echo "\nsynchronization &nbsp;&nbsp;&nbsp;:";
-            $appID = $app[6];
-            echo $appID . ' ';
-
-            // Recherche par référence.
-            $lastID = nod_findByReference(
-                $appID,
-                $refAppsID,
-                false);
-            log_add('find app ' . $appID . ' as ' . $lastID, 'info', __FUNCTION__, '4cc18a65');
-            if ($lastID != '') {
-                obj_getDistantContent($lastID, LIB_FIRST_LOCALISATIONS);
-                lnk_getDistantOnLocations($lastID, LIB_FIRST_LOCALISATIONS);
-                echo ' ';
-                // Cherche le nom.
-                $nameID = nod_getByType(
-                    $lastID,
-                    $refName);
-                if ($nameID == '0') {
-                    $nameID = nod_getByType(
-                        $appID,
-                        $refName);
-                }
-                if ($nameID != '0') {
-                    obj_getDistantContent($nameID, LIB_FIRST_LOCALISATIONS);
-                    lnk_getDistantOnLocations($nameID, LIB_FIRST_LOCALISATIONS);
-                }
-            } else {
-                echo '<span id="error">ERROR!</span>';
-                $ok = false;
-            }
-            echo "<br />\n";
-            flush();
-        }
+        flush();
     }
 
     if (io_checkNodeHaveLink($refAppsID)
@@ -6094,7 +6020,8 @@ function bootstrap_firstDisplay6SyncObjects(): bool
     ) {
         log_add('ok sync objects', 'info', __FUNCTION__, '4473358f');
         echo "ok\n";
-    }
+    } else
+        $ok = false;
 
     echo "</div>\n";
 
