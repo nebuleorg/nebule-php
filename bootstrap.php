@@ -2009,8 +2009,10 @@ function lnk_findInclusive_FIXME(&$nid, &$table, $action, $srcobj, $dstobj, $met
  */
 function lnk_getList(string &$nid, array &$links, array $filter, bool $withInvalidLinks = false): void
 {
+log_add('MARK10 get lnk nid=' . $nid, 'warn', __FUNCTION__, '00000000');
     if ($nid == '0' || !io_checkNodeHaveLink($nid))
         return;
+log_add('MARK11 get lnk nid=' . $nid, 'warn', __FUNCTION__, '00000000');
 
     // TODO as _lnkGetListFilterNid()
     // If not permitted, do not list invalid links.
@@ -2022,10 +2024,15 @@ function lnk_getList(string &$nid, array &$links, array $filter, bool $withInval
     $lines = array();
     io_linksRead($nid, $lines);
     foreach ($lines as $line) {
+log_add('MARK12 pre verify lnk=' . $line, 'warn', __FUNCTION__, '00000000');
         if (lnk_verify($line)) {
+log_add('MARK13 lnk=' . $line, 'warn', __FUNCTION__, '00000000');
             $link = lnk_parse($line);
             if (lnk_checkNotSuppressed($link, $lines) && lnk_filterStructure($link, $filter))
+            {
                 $links [] = $link;
+log_add('MARK14 lnk ok', 'warn', __FUNCTION__, '00000000');
+            }
         }
     }
 }
@@ -2589,11 +2596,11 @@ function lnk_verify(string $link): bool
     if (strtok('_') !== false) return false;
 
     // Check BH, BL and BS.
-    //if (!lnk_checkBH($bh)) log_add('check link BH failed '.$link, 'error', __FUNCTION__, '80cbba4b');
+    if (!lnk_checkBH($bh)) log_add('check link BH failed '.$link, 'error', __FUNCTION__, '80cbba4b');
     if (!lnk_checkBH($bh)) return false;
-    //if (!lnk_checkBL($bl)) log_add('check link BL failed '.$link, 'error', __FUNCTION__, 'c5d22fda');
+    if (!lnk_checkBL($bl)) log_add('check link BL failed '.$link, 'error', __FUNCTION__, 'c5d22fda');
     if (!lnk_checkBL($bl)) return false;
-    //if (!lnk_checkBS($bh, $bl, $bs)) log_add('check link BS failed '.$link, 'error', __FUNCTION__, '2828e6ae');
+    if (!lnk_checkBS($bh, $bl, $bs)) log_add('check link BS failed '.$link, 'error', __FUNCTION__, '2828e6ae');
     if (!lnk_checkBS($bh, $bl, $bs)) return false;
 
     return true;
@@ -3028,7 +3035,6 @@ function obj_getAsText(string &$oid, int $maxData = 0): string
 /**
  * Get type Mime to the node (object) from his links.
  * The type mime asked is converted as NID and may not have object.
- * TODO revoir le traitement social des liens.
  *
  * @param string $nid
  * @param string $typeMime
@@ -3036,7 +3042,9 @@ function obj_getAsText(string &$oid, int $maxData = 0): string
  */
 function obj_checkTypeMime(string &$nid, string $typeMime): bool
 {
-    global $nebuleCacheReadObjTypeMime;
+    global $nebuleLocalAuthorities, $nebuleCacheReadObjTypeMime;
+
+log_add('MARK1 check ' . $nid . ' is ' . $typeMime, 'warn', __FUNCTION__, '00000000');
 
     if (isset($nebuleCacheReadObjTypeMime [$nid])) {
         if ($nebuleCacheReadObjTypeMime [$nid] == $typeMime)
@@ -3045,21 +3053,25 @@ function obj_checkTypeMime(string &$nid, string $typeMime): bool
             return false;
     }
 
+log_add('MARK2', 'warn', __FUNCTION__, '00000000');
+
     if (!nod_checkNID($nid))
         return false;
 
-    $hashType = obj_getNID('nebule/objet/type', lib_getConfiguration('cryptoHashAlgorithm'));
+    $typeRID = obj_getNID('nebule/objet/type', lib_getConfiguration('cryptoHashAlgorithm'));
     $hashTypeAsked = obj_getNID($typeMime, lib_getConfiguration('cryptoHashAlgorithm'));
     $filter = array(
         'bl/rl/req' => 'l',
         'bl/rl/nid1' => $nid,
         'bl/rl/nid2' => $hashTypeAsked,
-        'bl/rl/nid3' => $hashType,
+        'bl/rl/nid3' => $typeRID,
         'bl/rl/nid4' => '',
     );
     $links = array();
     lnk_getList($nid, $links, $filter);
-    // TODO Filter on social links level - security!
+    lnk_filterBySigners($links, $nebuleLocalAuthorities);
+
+log_add('MARK3 size=' . sizeof($links), 'warn', __FUNCTION__, '00000000');
 
     if (sizeof($links) == 0)
         return false;
@@ -3662,8 +3674,10 @@ function ent_checkIsPublicKey(string &$nid): bool
         return false;
     }
 
-    if (!obj_checkTypeMime($nid, 'application/x-pem-file'))
+    if (!obj_checkTypeMime($nid, 'application/x-pem-file')) {
+        log_add('not marked as key ' . $nid, 'warn', __FUNCTION__, 'e040a140');
         return false;
+    }
 
     $line = obj_getAsText($nid, 10000);
     if (strstr($line, 'BEGIN PUBLIC KEY') !== false)
@@ -3697,7 +3711,6 @@ function ent_checkIsPrivateKey(&$nid): bool
     )
         return false;
 
-    obj_setContentAsText('application/x-pem-file');
     if (!obj_checkTypeMime($nid, 'application/x-pem-file'))
         return false;
 

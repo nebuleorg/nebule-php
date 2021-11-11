@@ -170,7 +170,7 @@ function work_full_reinit()
   sudo chmod 775 l o
 
   cat "${WORKSPACE}/nebule.env" \
-    | sed 's/^puppetmaster = .*/puppetmaster = '"${puppetmaster_develop_key_hash}"'/' \
+    | sed 's/^puppetmaster = .*/puppetmaster = '"${puppetmaster_develop_pem_hash}"'/' \
     | sed 's/^codeBranch = .*/codeBranch = develop/' \
     > c
 
@@ -186,22 +186,23 @@ function work_full_reinit()
   echo -n "${time_authority_develop_pem}" > "o/${time_authority_develop_pem_hash}"
   echo -n "${directory_authority_develop_pem}" > "o/${directory_authority_develop_pem_hash}"
 
+  pemOID=$(echo -n 'application/x-pem-file' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  typeRID=$(echo -n 'nebule/objet/type' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  nameRID=$(echo -n 'nebule/objet/nom' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  localRID=$(echo -n 'nebule/objet/entite/localisation' | sha256sum | cut -d' ' -f1)'.sha2.256'
+
   echo ' > links puppetmaster'
   links=(
-    #'nebule:link/2:0_0>020210714/l>'"${puppetmaster_develop_pem_hash}"'>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256'
-    'nebule:link/2:0_0>020210714/l>'"${puppetmaster_develop_pem_hash}"'>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256'
-    'nebule:link/2:0_0>020210714/l>'"${puppetmaster_develop_pem_hash}"'>f976f916d794ad6384c9084cef7f2515305c464b2ab541142d952126ca9367e3.sha2.256>940c75a60c14a24e5f8bda796f72bef57ab1f64713a6fefd9a4097be95a9e96a.sha2.256'
-    'nebule:link/2:0_0>020210714/l>'"${puppetmaster_develop_pem_hash}"'>90f1075d96b6d74e3b69bc96448993f9f3a02f593ad0795d5b02e992bacf5b39.sha2.256>0f183d69e06108ac3791eb4fe5bf38beec824db0a2d9966caffcfef5bc563355.sha2.256'
-    'nebule:link/2:0_0>020210714/l>'"${puppetmaster_develop_pem_hash}"'>5dda00620755703a67896a2fc2f07ac7464d871af0809015018b0935c468f9d7.sha2.256'
-    #'nebule:link/2:0_0>020210714/l>'"${security_authority_develop_pem_hash}"'>daea63066cd8f5d4a9c8c80f3cc51f3c20b7fc74ac170ab2ce1950999b422f17.sha2.256'
-    'nebule:link/2:0_0>020210714/l>'"${security_authority_develop_pem_hash}"'>9e854553b868627af36369b5d9e1e9d5ae31a398e2bacb0816e98e5fb6e806ef.sha2.256'
-    #'nebule:link/2:0_0>020210714/l>'"${code_authority_develop_pem_hash}"'>b6fef678931e0761314983d9a08c19b095b088cf6500891206ca1f8b78c2d008.sha2.256'
-    #'nebule:link/2:0_0>020210714/l>'"${directory_authority_develop_pem_hash}"'>83db082578142c900e36765ebc210893d79ed0ab1127d687f3307c0c061802e6.sha2.256'
-    #'nebule:link/2:0_0>020210714/l>'"${time_authority_develop_pem_hash}"'>663eb81c89c27739f0f875617bcd45b3a18d4b8eb859b8c6e5dccbf9085a2ef9.sha2.256'
-    'nebule:link/2:0_0>020210714/l>'"${security_authority_develop_pem_hash}>${LIB_RID_SECURITY_AUTHORITY}"
-    'nebule:link/2:0_0>020210714/l>'"${code_authority_develop_pem_hash}>${LIB_RID_CODE_AUTHORITY}"
-    'nebule:link/2:0_0>020210714/l>'"${directory_authority_develop_pem_hash}>${LIB_RID_DIRECTORY_AUTHORITY}"
-    'nebule:link/2:0_0>020210714/l>'"${time_authority_develop_pem_hash}>${LIB_RID_TIME_AUTHORITY}"
+    "nebule:link/2:0_0>020210714/l>${puppetmaster_develop_pem_hash}>${pemOID}>${typeRID}"
+    #"nebule:link/2:0_0>020210714/l>${puppetmaster_develop_key_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>020210714/l>${puppetmaster_develop_pem_hash}>f976f916d794ad6384c9084cef7f2515305c464b2ab541142d952126ca9367e3.sha2.256>${nameRID}"
+    "nebule:link/2:0_0>020210714/l>${puppetmaster_develop_pem_hash}>90f1075d96b6d74e3b69bc96448993f9f3a02f593ad0795d5b02e992bacf5b39.sha2.256>${localRID}"
+    "nebule:link/2:0_0>020210714/l>${puppetmaster_develop_pem_hash}>5dda00620755703a67896a2fc2f07ac7464d871af0809015018b0935c468f9d7.sha2.256"
+    "nebule:link/2:0_0>020210714/l>${security_authority_develop_pem_hash}>9e854553b868627af36369b5d9e1e9d5ae31a398e2bacb0816e98e5fb6e806ef.sha2.256"
+    "nebule:link/2:0_0>020210714/l>${security_authority_develop_pem_hash}>${LIB_RID_SECURITY_AUTHORITY}"
+    "nebule:link/2:0_0>020210714/l>${code_authority_develop_pem_hash}>${LIB_RID_CODE_AUTHORITY}"
+    "nebule:link/2:0_0>020210714/l>${directory_authority_develop_pem_hash}>${LIB_RID_DIRECTORY_AUTHORITY}"
+    "nebule:link/2:0_0>020210714/l>${time_authority_develop_pem_hash}>${LIB_RID_TIME_AUTHORITY}"
   )
   for link in "${links[@]}"
   do
@@ -210,9 +211,10 @@ function work_full_reinit()
 
   echo ' > links security authority'
   links=(
-    'nebule:link/2:0_0>020210714/l>'"${security_authority_develop_pem_hash}"'>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256'
-    'nebule:link/2:0_0>020210714/l>'"${security_authority_develop_pem_hash}"'>b1f8e41d467deb5a22301b320e60366806d87c0b707c46447b754251a86409d6.sha2.256>940c75a60c14a24e5f8bda796f72bef57ab1f64713a6fefd9a4097be95a9e96a.sha2.256'
-    'nebule:link/2:0_0>020210714/l>'"${security_authority_develop_pem_hash}"'>04de1f5ec5ee0c5a0dbe46c3767f8790e3bf5a4434f425ac28207883f7e0dce2.sha2.256>0f183d69e06108ac3791eb4fe5bf38beec824db0a2d9966caffcfef5bc563355.sha2.256'
+    "nebule:link/2:0_0>020210714/l>${security_authority_develop_pem_hash}>${pemOID}>${typeRID}"
+    #"nebule:link/2:0_0>020210714/l>${security_authority_develop_key_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>020210714/l>${security_authority_develop_pem_hash}>b1f8e41d467deb5a22301b320e60366806d87c0b707c46447b754251a86409d6.sha2.256>${nameRID}"
+    "nebule:link/2:0_0>020210714/l>${security_authority_develop_pem_hash}>04de1f5ec5ee0c5a0dbe46c3767f8790e3bf5a4434f425ac28207883f7e0dce2.sha2.256>${localRID}"
   )
   for link in "${links[@]}"
   do
@@ -221,11 +223,10 @@ function work_full_reinit()
 
   echo ' > links code authority'
   links=(
-    'nebule:link/2:0_0>020210714/l>'"${code_authority_develop_pem_hash}"'>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256'
-    'nebule:link/2:0_0>020210714/l>'"${code_authority_develop_pem_hash}"'>f981a156e714e4e8ef2610aaba68b7b60f1a63093ccb167e458e107e70dbf20b.sha2.256>940c75a60c14a24e5f8bda796f72bef57ab1f64713a6fefd9a4097be95a9e96a.sha2.256'
-    'nebule:link/2:0_0>020210714/l>'"${code_authority_develop_pem_hash}"'>c62b6ffd2e60d3f47667f290e0ecdd8d13f78efbe2cb3a74d58e7c0f36019c3e.sha2.256>0f183d69e06108ac3791eb4fe5bf38beec824db0a2d9966caffcfef5bc563355.sha2.256'
-    'nebule:link/2:0_0>020210714/l>365ded68b8cb4c1fe3bf7cb9268e0c63afa31870f3da0d54347ffc475dec4101be052c8a.none.288>947726dd6318753268f3bfbe5e87ae2afe220db399c26e119c181a59227b0c60.sha2.256>'"${LIB_RID_CODE_BRANCH}"
-    'nebule:link/2:0_0>020210714/l>005ff1d21bb38724f2a03155a11119d86308645552ed0bbb837cea9f724d3bc00be7b626.none.288>f379ccb92b9116442dc65bdc35648a85d3786b34779db7f704a901fa07b00cb6.sha2.256>'"${LIB_RID_CODE_BRANCH}"
+    "nebule:link/2:0_0>020210714/l>${code_authority_develop_pem_hash}>${pemOID}>${typeRID}"
+    #"nebule:link/2:0_0>020210714/l>${code_authority_develop_key_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>020210714/l>${code_authority_develop_pem_hash}>f981a156e714e4e8ef2610aaba68b7b60f1a63093ccb167e458e107e70dbf20b.sha2.256>${nameRID}"
+    "nebule:link/2:0_0>020210714/l>${code_authority_develop_pem_hash}>c62b6ffd2e60d3f47667f290e0ecdd8d13f78efbe2cb3a74d58e7c0f36019c3e.sha2.256>${localRID}"
   )
   for link in "${links[@]}"
   do
@@ -234,9 +235,10 @@ function work_full_reinit()
 
   echo ' > links time authority'
   links=(
-    'nebule:link/2:0_0>020210714/l>'"${time_authority_develop_pem_hash}"'>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256'
-    'nebule:link/2:0_0>020210714/l>'"${time_authority_develop_pem_hash}"'>05a498efd197c47e0cfbd12c6454277f346f9c8a95bc14088f3b7c2042fc3e74.sha2.256>940c75a60c14a24e5f8bda796f72bef57ab1f64713a6fefd9a4097be95a9e96a.sha2.256'
-    'nebule:link/2:0_0>020210714/l>'"${time_authority_develop_pem_hash}"'>2cc0028c3147977f4b1b6b8a266e6a985ec00d85e7b4f09742537796bf807a5c.sha2.256>0f183d69e06108ac3791eb4fe5bf38beec824db0a2d9966caffcfef5bc563355.sha2.256'
+    "nebule:link/2:0_0>020210714/l>${time_authority_develop_pem_hash}>${pemOID}>${typeRID}"
+    #"nebule:link/2:0_0>020210714/l>${time_authority_develop_key_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>020210714/l>${time_authority_develop_pem_hash}>05a498efd197c47e0cfbd12c6454277f346f9c8a95bc14088f3b7c2042fc3e74.sha2.256>${nameRID}"
+    "nebule:link/2:0_0>020210714/l>${time_authority_develop_pem_hash}>2cc0028c3147977f4b1b6b8a266e6a985ec00d85e7b4f09742537796bf807a5c.sha2.256>${localRID}"
   )
   for link in "${links[@]}"
   do
@@ -245,9 +247,10 @@ function work_full_reinit()
 
   echo ' > links directory authority'
   links=(
-    'nebule:link/2:0_0>020210714/l>'"${directory_authority_develop_pem_hash}"'>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256'
-    'nebule:link/2:0_0>020210714/l>'"${directory_authority_develop_pem_hash}"'>d9a5c716428ab8035693c6cc524462041465f2be3a964b35d0049f1c0789fbc6.sha2.256>940c75a60c14a24e5f8bda796f72bef57ab1f64713a6fefd9a4097be95a9e96a.sha2.256'
-    'nebule:link/2:0_0>020210714/l>'"${directory_authority_develop_pem_hash}"'>2be08e47682b65beb11480e9883b7bf5d091d6074dfdd2ffccef9e0659d15542.sha2.256>0f183d69e06108ac3791eb4fe5bf38beec824db0a2d9966caffcfef5bc563355.sha2.256'
+    "nebule:link/2:0_0>020210714/l>${directory_authority_develop_pem_hash}>${pemOID}>${typeRID}"
+    #"nebule:link/2:0_0>020210714/l>${directory_authority_develop_key_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>020210714/l>${directory_authority_develop_pem_hash}>d9a5c716428ab8035693c6cc524462041465f2be3a964b35d0049f1c0789fbc6.sha2.256>${nameRID}"
+    "nebule:link/2:0_0>020210714/l>${directory_authority_develop_pem_hash}>2be08e47682b65beb11480e9883b7bf5d091d6074dfdd2ffccef9e0659d15542.sha2.256>${localRID}"
   )
   for link in "${links[@]}"
   do
