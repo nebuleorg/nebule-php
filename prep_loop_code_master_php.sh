@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020211105
+# Version 020211111
 
 export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
@@ -384,7 +384,7 @@ function mode_loop
   cd $PUBSPACE || exit 1
   
   case "${loop_type}" in
-    f) work_full_reinit; work_refresh;;
+    f) work_full_reinit; work_dev_deploy; work_refresh;;
     d) work_dev_deploy; work_refresh;;
     e) work_export;;
     q) echo ' > quit'; break;;
@@ -399,7 +399,7 @@ function mode_once
 {
   echo ' > mode once'
   case "${1}" in
-    f) work_full_reinit; work_refresh;;
+    f) work_full_reinit; work_dev_deploy; work_refresh;;
     d) work_dev_deploy; work_refresh;;
     e) work_export;;
     r) work_refresh;;
