@@ -5999,13 +5999,13 @@ function bootstrap_firstDisplay6SyncObjects(): bool
     ) {
         log_add('need sync objects', 'warn', __FUNCTION__, '0f21ad26');
 
-        echo "<br />\nbootstrap RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: " . $refBootID . ' ';
+        echo "<br />\nbootstrap RID &nbsp;&nbsp;&nbsp;&nbsp;: " . $refBootID . ' ';
         lnk_getDistantOnLocations($refBootID, LIB_FIRST_LOCALISATIONS);
 
-        echo "<br />\ncode branch RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: " . $codeBranchNID . ' ';
+        echo "<br />\ncode branch RID &nbsp;&nbsp;: " . $codeBranchNID . ' ';
         lnk_getDistantOnLocations($codeBranchNID, LIB_FIRST_LOCALISATIONS);
 
-        echo "<br />\nlibrary RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: " . $refLibID . ' ';
+        echo "<br />\nlibrary RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: " . $refLibID . ' ';
         lnk_getDistantOnLocations($refLibID, LIB_FIRST_LOCALISATIONS);
         flush();
 
@@ -6013,7 +6013,7 @@ function bootstrap_firstDisplay6SyncObjects(): bool
         $lastID = nod_findByReference(
             $refLibID,
             $refLibID);
-        echo "<br />\nsynchronization &nbsp;&nbsp;&nbsp;: " . $lastID . ' ';
+        echo "<br />\nsynchronization &nbsp;&nbsp;: " . $lastID . ' ';
         if ($lastID != '') {
             obj_getDistantContent($lastID, LIB_FIRST_LOCALISATIONS);
         } else {
@@ -6021,10 +6021,10 @@ function bootstrap_firstDisplay6SyncObjects(): bool
             $ok = false;
         }
 
-        echo "<br />\napplications list &nbsp;:" . $refAppsID . ' ';
+        echo "<br />\napplications list :" . $refAppsID . ' ';
         flush();
         lnk_getDistantOnLocations($refAppsID, LIB_FIRST_LOCALISATIONS);
-        echo "<br />\napplications &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ";
+        echo "<br />\napplications &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ";
 
         // Pour chaque application, faire une synchronisation.
         $links = array();
