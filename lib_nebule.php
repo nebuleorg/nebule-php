@@ -7067,7 +7067,7 @@ class Node
         }
 
         // Extrait l'ID de l'objet de propriété.
-        $property = $link->getHashTarget();
+        $property = $link->getHashTarget_disabled();
         unset($link);
 
         // Mémorise le résultat dans le cache.
@@ -7157,7 +7157,7 @@ class Node
         }
 
         // Extrait le contenu de l'objet de propriété.
-        $property = $this->_readOneLineOtherObject($link->getHashTarget());
+        $property = $this->_readOneLineOtherObject($link->getHashTarget_disabled());
         unset($link);
 
         // Mémorise le résultat dans le cache.
@@ -9734,7 +9734,7 @@ class Node
         // Tri les liens par date.
         if (sizeof($linksResult) != 0) {
             foreach ($linksResult as $n => $t) {
-                $linkdate[$n] = $t->getDate();
+                $linkdate[$n] = $t->getDate_disabled();
             }
             array_multisort($linkdate, SORT_STRING, SORT_ASC, $linksResult);
             unset($n, $t);
@@ -9862,7 +9862,7 @@ class Node
         // Tri les liens par date.
         if (sizeof($linksResult) != 0) {
             foreach ($linksResult as $n => $t) {
-                $linkdate[$n] = $t->getDate();
+                $linkdate[$n] = $t->getDate_disabled();
             }
             array_multisort($linkdate, SORT_STRING, SORT_ASC, $linksResult);
             unset($linkdate, $n, $t);
@@ -9873,14 +9873,14 @@ class Node
             // Liste tous les liens.
             // Ils sont triés par date.
             foreach ($linksResult as $n1 => $t1) {
-                if ($t1->getAction() != 'x') {
+                if ($t1->getAction_disabled() != 'x') {
                     // Si ce n'est pas un lien x.
                     foreach ($linksResult as $t2) {
-                        if ($t2->getAction() == 'x'
-                            && $t1->getHashSource() == $t2->getHashSource()
-                            && $t1->getHashTarget() == $t2->getHashTarget()
-                            && $t1->getHashMeta() == $t2->getHashMeta()
-                            && $this->_nebuleInstance->dateCompare($t1->getDate(), $t2->getDate()) <= 0
+                        if ($t2->getAction_disabled() == 'x'
+                            && $t1->getHashSource_disabled() == $t2->getHashSource_disabled()
+                            && $t1->getHashTarget_disabled() == $t2->getHashTarget_disabled()
+                            && $t1->getHashMeta_disabled() == $t2->getHashMeta_disabled()
+                            && $this->_nebuleInstance->dateCompare($t1->getDate_disabled(), $t2->getDate_disabled()) <= 0
                         ) {
                             unset($linksResult[$n1]);
                         }
@@ -9894,7 +9894,7 @@ class Node
         if (sizeof($linksResult) != 0) {
             // Liste tous les liens.
             foreach ($linksResult as $n => $t) {
-                if ($t->getAction() == 'x') {
+                if ($t->getAction_disabled() == 'x') {
                     // Si lien x, le supprime.
                     unset($linksResult[$n]);
                 }
@@ -10056,7 +10056,7 @@ class Node
         if (sizeof($linksResult) != 0) {
             $linkdate = array();
             foreach ($linksResult as $n => $t) {
-                $linkdate[$n] = $t->getDate();
+                $linkdate[$n] = $t->getDate_disabled();
             }
             array_multisort($linkdate, SORT_STRING, SORT_ASC, $linksResult);
             unset($linkdate, $n, $t);
@@ -10067,14 +10067,14 @@ class Node
             // Liste tous les liens.
             // Ils sont triés par date.
             foreach ($linksResult as $n1 => $t1) {
-                if ($t1->getAction() != 'x') {
+                if ($t1->getAction_disabled() != 'x') {
                     // Si ce n'est pas un lien x.
                     foreach ($linksResult as $t2) {
-                        if ($t2->getAction() == 'x'
-                            && $t1->getHashSource() == $t2->getHashSource()
-                            && $t1->getHashTarget() == $t2->getHashTarget()
-                            && $t1->getHashMeta() == $t2->getHashMeta()
-                            && $this->_nebuleInstance->dateCompare($t1->getDate(), $t2->getDate()) <= 0
+                        if ($t2->getAction_disabled() == 'x'
+                            && $t1->getHashSource_disabled() == $t2->getHashSource_disabled()
+                            && $t1->getHashTarget_disabled() == $t2->getHashTarget_disabled()
+                            && $t1->getHashMeta_disabled() == $t2->getHashMeta_disabled()
+                            && $this->_nebuleInstance->dateCompare($t1->getDate_disabled(), $t2->getDate_disabled()) <= 0
                         ) {
                             unset($linksResult[$n1]);
                         }
@@ -10088,7 +10088,7 @@ class Node
         if (sizeof($linksResult) != 0) {
             // Liste tous les liens.
             foreach ($linksResult as $n => $t) {
-                if ($t->getAction() == 'x') {
+                if ($t->getAction_disabled() == 'x') {
                     // Si lien x, le supprime.
                     unset($linksResult[$n]);
                 }
@@ -10277,20 +10277,20 @@ class Node
         $s = sizeof($r); // Nombre de liens.
         $links = array(); // Tableau des liens non marqués supprimés.
         foreach ($r as $l) {
-            if ($l->getAction() == 'x') {
+            if ($l->getAction_disabled() == 'x') {
                 continue;
             }
             $ok = true;
             for ($j = 0; $j < $s; $j++) {
                 // Teste si le lien en cours (i) est supprimé par un lien plus récent (j).
-                if ($r[$j]->getAction() == 'x'
-                    && $l->getHashSource() == $r[$j]->getHashSource()
-                    && $l->getHashTarget() == $r[$j]->getHashTarget()
-                    && $this->_nebuleInstance->dateCompare($l->getDate(), $r[$j]->getDate()) <= 0)
+                if ($r[$j]->getAction_disabled() == 'x'
+                    && $l->getHashSource_disabled() == $r[$j]->getHashSource_disabled()
+                    && $l->getHashTarget_disabled() == $r[$j]->getHashTarget_disabled()
+                    && $this->_nebuleInstance->dateCompare($l->getDate_disabled(), $r[$j]->getDate_disabled()) <= 0)
                     $ok = false;
             }
             if ($ok) {
-                $links[$l->getHashTarget()] = $l;
+                $links[$l->getHashTarget_disabled()] = $l;
                 // Ecrase les liens même source même destination à une date antérieure.
             }
         }
@@ -10304,16 +10304,16 @@ class Node
         if ($present) // Si besoin, teste la présence des objets avant de les ajouter.
         {
             foreach ($links as $l) {
-                if ($this->_io->checkObjectPresent($l->getHashTarget())) {
-                    $o[$i] = $l->getHashTarget();
+                if ($this->_io->checkObjectPresent($l->getHashTarget_disabled())) {
+                    $o[$i] = $l->getHashTarget_disabled();
                     $i++;
                 } else {
                     // Tentative de synchronisation.
                     $t = $this->_nebuleInstance->newObject($id);
                     $t->syncLinks();
                     $t->syncObject();
-                    if ($this->_io->checkObjectPresent($l->getHashTarget())) {
-                        $o[$i] = $l->getHashTarget();
+                    if ($this->_io->checkObjectPresent($l->getHashTarget_disabled())) {
+                        $o[$i] = $l->getHashTarget_disabled();
                         $i++;
                     }
                 }
@@ -10321,7 +10321,7 @@ class Node
         } else // Sinon ajoute tous les objets.
         {
             foreach ($links as $l) {
-                $o[$i] = $l->getHashTarget();
+                $o[$i] = $l->getHashTarget_disabled();
                 $i++;
             }
         }
@@ -20884,7 +20884,6 @@ class Link
     /**
      * Mise en sommeil de l'instance.
      *
-     * @desc 020200315
      * @return string[]
      */
     public function __sleep()
@@ -20893,9 +20892,8 @@ class Link
     }
 
     /**
-     * Foncion de réveil de l'instance et de ré-initialisation de certaines variables non sauvegardées.
+     * Fonction de réveil de l'instance et de ré-initialisation de certaines variables non sauvegardées.
      *
-     * @desc 020200322
      * @return null
      */
     public function __wakeup()
@@ -20912,10 +20910,9 @@ class Link
     /**
      * Initialisation post-constructeur.
      *
-     * @desc 020200315
      * @return void
      */
-    protected function _initialisation()
+    protected function _initialisation(): void
     {
         // Rien à faire ici.
     }
@@ -20925,7 +20922,7 @@ class Link
      *
      * @return string
      */
-    public function getFullLink()
+    public function getFullLink(): string
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -20933,11 +20930,23 @@ class Link
     }
 
     /**
+     * Retourne le lien pré-décomposé.
+     *
+     * @return array
+     */
+    public function getParsedLink(): array
+    {
+        $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
+
+        return $this->_parsedLink;
+    }
+
+    /**
      * Retourne la valeur de la signature.
      *
      * @return string
      */
-    public function getSigneValueAlgo()
+    public function getSigneValueAlgo_disabled()
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -20949,7 +20958,7 @@ class Link
      *
      * @return string
      */
-    public function getSigneValue()
+    public function getSigneValue_disabled()
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -20961,7 +20970,7 @@ class Link
      *
      * @return string
      */
-    public function getSigneAlgo()
+    public function getSigneAlgo_disabled()
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -20973,7 +20982,7 @@ class Link
      *
      * @return string
      */
-    public function getHashSigner()
+    public function getHashSigner_disabled()
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -20985,7 +20994,7 @@ class Link
      *
      * @return string
      */
-    public function getAction()
+    public function getAction_disabled()
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -20997,7 +21006,7 @@ class Link
      *
      * @return string
      */
-    public function getDate()
+    public function getDate_disabled()
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -21009,7 +21018,7 @@ class Link
      *
      * @return string
      */
-    public function getHashSource()
+    public function getHashSource_disabled()
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -21021,7 +21030,7 @@ class Link
      *
      * @return string
      */
-    public function getHashTarget()
+    public function getHashTarget_disabled()
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -21033,7 +21042,7 @@ class Link
      *
      * @return string
      */
-    public function getHashMeta()
+    public function getHashMeta_disabled()
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -21045,7 +21054,7 @@ class Link
      *
      * @return boolean
      */
-    public function getValid()
+    public function getValid(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -21057,7 +21066,7 @@ class Link
      *
      * @return boolean
      */
-    public function getValidStructure()
+    public function getValidStructure(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -21069,7 +21078,7 @@ class Link
      *
      * @return boolean
      */
-    public function getVerified()
+    public function getVerified(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -21181,6 +21190,85 @@ class Link
     }
 
 
+    private function _parse(string $link): array
+    {
+        // Extract blocs from link L : BH_BL_BS
+        $bh = strtok(trim($link), '_');
+        $bl = strtok('_');
+        $bs = strtok('_');
+
+        $bh_rf = strtok($bh, '/');
+        $bh_rv = strtok('/');
+
+        // Check items from RF : APP:TYP
+        $bh_rf_app = strtok($bh_rf, ':');
+        $bh_rf_typ = strtok(':');
+
+        // Check items from RV : VER:SUB
+        $bh_rv_ver = strtok($bh_rv, ':');
+        $bh_rv_sub = strtok(':');
+
+        $bl_rc = strtok($bl, '/');
+        $bl_rl = strtok('/');
+
+        // Check items from RC : MOD>CHR
+        $bl_rc_mod = strtok($bl_rc, '>');
+        $bl_rc_chr = strtok('>');
+
+        // Extract items from RL 1 : REQ>NID>NID>NID>NID
+        $bl_rl_req = strtok($bl_rl, '>');
+        $bl_rl_nid1 = strtok('>');
+        $bl_rl_nid2 = strtok('>');
+        if ($bl_rl_nid2 === false) $bl_rl_nid2 = '';
+        $bl_rl_nid3 = strtok('>');
+        if ($bl_rl_nid3 === false) $bl_rl_nid3 = '';
+        $bl_rl_nid4 = strtok('>');
+        if ($bl_rl_nid4 === false) $bl_rl_nid4 = '';
+
+        $bs_rs1 = strtok($bs, '/');
+
+        // Extract items from RS : NID>SIG
+        $bs_rs1_nid = strtok($bs_rs1, '>');
+        $bs_rs1_sig = strtok('>');
+
+        // Check hash value.
+        $bs_rs1_sig_sign = strtok($bs_rs1_sig, '.');
+
+        // Check algo value.
+        $bs_rs1_sig_algo = strtok('.');
+
+        // Check size value.
+        $bs_rs1_sig_size = strtok('.');
+
+        return array(
+            'link' => $link, // original link
+            'bh' => $bh,
+            'bh/rf' => $bh_rf,
+            'bh/rf/app' => $bh_rf_app,
+            'bh/rf/typ' => $bh_rf_typ,
+            'bh/rv' => $bh_rv,
+            'bh/rv/ver' => $bh_rv_ver,
+            'bh/rv/sub' => $bh_rv_sub,
+            'bl' => $bl,
+            'bl/rc' => $bl_rc,
+            'bl/rc/mod' => $bl_rc_mod,
+            'bl/rc/chr' => $bl_rc_chr,
+            'bl/rl' => $bl_rl,
+            'bl/rl/req' => $bl_rl_req,
+            'bl/rl/nid1' => $bl_rl_nid1,
+            'bl/rl/nid2' => $bl_rl_nid2,
+            'bl/rl/nid3' => $bl_rl_nid3,
+            'bl/rl/nid4' => $bl_rl_nid4,
+            'bs' => $bs,
+            'bs/rs' => $bs_rs1,
+            'bs/rs1/eid' => $bs_rs1_nid,
+            'bs/rs1/sig' => $bs_rs1_sig,
+            'bs/rs1/sig/sign' => $bs_rs1_sig_sign,
+            'bs/rs1/sig/algo' => $bs_rs1_sig_algo,
+            'bs/rs1/sig/size' => $bs_rs1_sig_size,
+        );
+    }
+
     /**
      * Extraction du lien.
      * Extrait les champs d'un lien après avoir vérifié la cohérence de sa forme.
@@ -21205,22 +21293,13 @@ class Link
         $this->_valid = false;
         $this->_verified = false;
 
-        /**
-         * Indice du champs lu, de 1 à 7.
-         * @var integer $j
-         */
+        // Indice du champs lu, de 1 à 7.
         $j = 1;
 
-        /**
-         * Tableau temporaire des champs du lien.
-         * @var array $a
-         */
+        // Tableau temporaire des champs du lien.
         $a = array();
 
-        /**
-         * Vérifie le nombre de champs, doit avoir 7 champs.
-         * @var string $ok
-         */
+        // Vérifie le nombre de champs, doit avoir 7 champs.
         $ok = false;
 
         // Première lecture des champs, premier champs.
@@ -26133,16 +26212,16 @@ class SocialMySelf implements SocialInterface
      */
     public function linkSocialScore(Link &$link, $socialClass = '')
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=myself score for ' . $link->getSigneValue(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=myself score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
 
         // Si l'entité signataire du lien est une des entités courante, retourne la valeur sociale 1.
-        if ($link->getHashSigner() == $this->_nebuleInstance->getCurrentEntity()) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=myself score 1 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+        if ($link->getHashSigner_disabled() == $this->_nebuleInstance->getCurrentEntity()) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=myself score 1 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
             return 1;
         }
 
         // Sinon par défaut retourne la valeur sociale 0.
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=myself score 0 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=myself score 0 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
         return 0;
     }
 
@@ -26230,16 +26309,16 @@ class SocialNotMyself implements SocialInterface
      */
     public function linkSocialScore(Link &$link, $socialClass = '')
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=notmyself score for ' . $link->getSigneValue(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=notmyself score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
 
         // Si l'entité signataire du lien est une des entités courante, retourne la valeur sociale 1.
-        if ($link->getHashSigner() != $this->_nebuleInstance->getCurrentEntity()) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=notmyself score 1 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+        if ($link->getHashSigner_disabled() != $this->_nebuleInstance->getCurrentEntity()) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=notmyself score 1 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
             return 1;
         }
 
         // Sinon par défaut retourne la valeur sociale 0.
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=notmyself score 0 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=notmyself score 0 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
         return 0;
     }
 
@@ -26337,16 +26416,16 @@ class SocialSelf implements SocialInterface
             $this->_applicationInstance = $this->_nebuleInstance;
         }
 
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=self score for ' . $link->getSigneValue(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=self score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
 
         // Si l'entité signataire du lien est une des entités courante, retourne la valeur sociale 1.
-        if ($link->getHashSigner() == $this->_applicationInstance->getCurrentEntity()) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=self score 1 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+        if ($link->getHashSigner_disabled() == $this->_applicationInstance->getCurrentEntity()) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=self score 1 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
             return 1;
         }
 
         // Sinon par défaut retourne la valeur sociale 0.
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=self score 0 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=self score 0 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
         return 0;
     }
 
@@ -26444,16 +26523,16 @@ class SocialNotself implements SocialInterface
             $this->_applicationInstance = $this->_nebuleInstance;
         }
 
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=notself score for ' . $link->getSigneValue(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=notself score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
 
         // Si l'entité signataire du lien est une des entités courante, retourne la valeur sociale 1.
-        if ($link->getHashSigner() != $this->_applicationInstance->getCurrentEntity()) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=notself score 1 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+        if ($link->getHashSigner_disabled() != $this->_applicationInstance->getCurrentEntity()) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=notself score 1 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
             return 1;
         }
 
         // Sinon par défaut retourne la valeur sociale 0.
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=notself score 0 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=notself score 0 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
         return 0;
     }
 
@@ -26541,18 +26620,18 @@ class SocialStrict implements SocialInterface
      */
     public function linkSocialScore(Link &$link, $socialClass = '')
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=strict score for ' . $link->getSigneValue(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=strict score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
 
         // Si l'entité signataire du lien est une des entités autorités, retourne la valeur sociale 1.
         foreach ($this->_nebuleInstance->getLocalAuthorities() as $autority) {
-            if ($link->getHashSigner() == $autority) {
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=strict score 1 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+            if ($link->getHashSigner_disabled() == $autority) {
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=strict score 1 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
                 return 1;
             }
         }
 
         // Sinon par défaut retourne la valeur sociale 0.
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=strict score 0 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=strict score 0 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
         return 0;
     }
 
@@ -26639,8 +26718,8 @@ class SocialAll implements SocialInterface
      */
     public function linkSocialScore(Link &$link, $socialClass = '')
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=all score for ' . $link->getSigneValue(), Metrology::LOG_LEVEL_DEBUG);
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=all score 1 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=all score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=all score 1 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
 
         return 1;
     }
@@ -26724,8 +26803,8 @@ class SocialNone implements SocialInterface
      */
     public function linkSocialScore(Link &$link, $socialClass = '')
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=none score for ' . $link->getSigneValue(), Metrology::LOG_LEVEL_DEBUG);
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=none score 0 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=none score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=none score 0 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
 
         return 0;
     }
@@ -26817,7 +26896,7 @@ class SocialOnList implements SocialInterface
      */
     public function linkSocialScore(Link &$link, $socialClass = '')
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=onlist score for ' . $link->getSigneValue(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=onlist score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
 
         if (sizeof($this->_list) == 0) {
             return 0;
@@ -26825,14 +26904,14 @@ class SocialOnList implements SocialInterface
 
         // Si l'entité signataire du lien est une des entités autorités, retourne la valeur sociale 1.
         foreach ($this->_list as $id) {
-            if ($link->getHashSigner() == $id) {
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=onlist score 1 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+            if ($link->getHashSigner_disabled() == $id) {
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=onlist score 1 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
                 return 1;
             }
         }
 
         // Sinon par défaut retourne la valeur sociale 0.
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=onlist score 0 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=onlist score 0 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
         return 0;
     }
 
@@ -26946,7 +27025,7 @@ class SocialOffList implements SocialInterface
      */
     public function linkSocialScore(Link &$link, $socialClass = '')
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=offlist score for ' . $link->getSigneValue(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=offlist score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
 
         if (sizeof($this->_list) == 0) {
             return 0;
@@ -26954,14 +27033,14 @@ class SocialOffList implements SocialInterface
 
         // Si l'entité signataire du lien est une des entités autorités, retourne la valeur sociale 0.
         foreach ($this->_list as $id) {
-            if ($link->getHashSigner() == $id) {
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=offlist score 0 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+            if ($link->getHashSigner_disabled() == $id) {
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=offlist score 0 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
                 return 0;
             }
         }
 
         // Sinon par défaut retourne la valeur sociale 1.
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=offlist score 1 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=offlist score 1 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
         return 1;
     }
 
@@ -27073,7 +27152,7 @@ class SocialReputation implements SocialInterface
      */
     public function linkSocialScore(Link &$link, $socialClass = '')
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=reputation score for ' . $link->getSigneValue(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=reputation score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
 
         // Si l'entité signataire du lien est une des entités autorités, retourne la valeur sociale 1.
         foreach ($this->_list as $id) {
@@ -27084,7 +27163,7 @@ class SocialReputation implements SocialInterface
         }
 
         // Sinon par défaut retourne la valeur sociale 0.
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=reputation score 0 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=reputation score 0 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
         return 0;
     }
 
@@ -27173,18 +27252,18 @@ class SocialUnreputation implements SocialInterface
      */
     public function linkSocialScore(Link &$link, $socialClass = '')
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=unreputation score for ' . $link->getSigneValue(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=unreputation score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
 
         // Si l'entité signataire du lien est une des entités autorités, retourne la valeur sociale 1.
         foreach ($this->_list as $id) {
             if (true) {
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=unreputation score 1 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=unreputation score 1 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
                 return 1;
             }
         }
 
         // Sinon par défaut retourne la valeur sociale 0.
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=unreputation score 0 for ' . $link->getHashSigner(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=unreputation score 0 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
         return 0;
     }
 
@@ -33463,8 +33542,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $result = '';
 
         // Prépare l'objet.
-        $messageInstance = $this->_nebuleInstance->convertIdToTypedObjectInstance($link->getHashTarget());
-        $signerInstance = $this->_nebuleInstance->convertIdToTypedObjectInstance($link->getHashSigner());
+        $messageInstance = $this->_nebuleInstance->convertIdToTypedObjectInstance($link->getHashTarget_disabled());
+        $signerInstance = $this->_nebuleInstance->convertIdToTypedObjectInstance($link->getHashSigner_disabled());
 
         // Prépare les paramètres d'activation de contenus.
         if (!isset($param['enableDisplayColor'])
@@ -33703,7 +33782,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $headerFlagsContent .= $this->_getDisplayMessageFlags($messageInstance, $link, $param, 'Footer');
 
             // Prépare la date.
-            $headerDateContent = $this->convertDate($link->getDate());
+            $headerDateContent = $this->convertDate($link->getDate_disabled());
 
             // Ajoute le bandeau bas du message.
             $footerEmotsContent .= $this->_getDisplayObjectFlagEmotions($messageInstance, false);
@@ -35652,7 +35731,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $contantDisplayValid .= '/>';
             }
 
-            $object = $this->_nebuleInstance->newObject($instance->getHashSigner());
+            $object = $this->_nebuleInstance->newObject($instance->getHashSigner_disabled());
             $contantDisplaySigner .= '<img title="' . $object->getFullName();
             $contantDisplaySigner .= '" style="background:#' . $object->getPrimaryColor();
             $contantDisplaySigner .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
@@ -35660,7 +35739,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $contantDisplayDate = '';
 
             $icon = self::REFERENCE_ICON_LINK_LL;
-            switch ($instance->getAction()) {
+            switch ($instance->getAction_disabled()) {
                 case 'f':
                     $icon = self::REFERENCE_ICON_LINK_LF;
                     break;
@@ -35686,21 +35765,21 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     $icon = self::REFERENCE_ICON_LINK_LX;
                     break;
             }
-            $contantDisplayAction .= '<img title="Action ' . $instance->getAction() . '" ';
-            $contantDisplayAction .= 'alt="[' . $instance->getAction() . ']" ';
+            $contantDisplayAction .= '<img title="Action ' . $instance->getAction_disabled() . '" ';
+            $contantDisplayAction .= 'alt="[' . $instance->getAction_disabled() . ']" ';
             $contantDisplayAction .= 'src="o/' . $this->_getImageByReference($icon) . '" />';
 
-            $object = $this->_nebuleInstance->newObject($instance->getHashSource());
+            $object = $this->_nebuleInstance->newObject($instance->getHashSource_disabled());
             $contantDisplaySource .= '<img title="' . $object->getFullName();
             $contantDisplaySource .= '" style="background:#' . $object->getPrimaryColor();
             $contantDisplaySource .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
 
-            $object = $this->_nebuleInstance->newObject($instance->getHashTarget());
+            $object = $this->_nebuleInstance->newObject($instance->getHashTarget_disabled());
             $contantDisplayTarget .= '<img title="' . $object->getFullName();
             $contantDisplayTarget .= '" style="background:#' . $object->getPrimaryColor();
             $contantDisplayTarget .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
 
-            $object = $this->_nebuleInstance->newObject($instance->getHashMeta());
+            $object = $this->_nebuleInstance->newObject($instance->getHashMeta_disabled());
             $contantDisplayMeta .= '<img title="' . $object->getFullName();
             $contantDisplayMeta .= '" style="background:#' . $object->getPrimaryColor();
             $contantDisplayMeta .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
@@ -36042,7 +36121,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             return '';
         }
 
-        switch ($link->getAction()) {
+        switch ($link->getAction_disabled()) {
             case 'f':
                 $icon = $this->convertUpdateImage(self::DEFAULT_ICON_LF, 'f', 'iconInlineDisplay');
                 break;
@@ -36072,15 +36151,15 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 break;
         }
 
-        $colorDate = $this->convertUpdateImage(self::DEFAULT_ICON_IMLOG, $link->getDate(), 'iconInlineDisplay');
+        $colorDate = $this->convertUpdateImage(self::DEFAULT_ICON_IMLOG, $link->getDate_disabled(), 'iconInlineDisplay');
 
         // Prépare le contenu à afficher.
-        $return = $this->convertInlineObjectColor($link->getHashSigner());
+        $return = $this->convertInlineObjectColor($link->getHashSigner_disabled());
         $return .= $colorDate;
         $return .= $icon;
-        $return .= $this->convertInlineObjectColor($link->getHashSource());
-        $return .= $this->convertInlineObjectColor($link->getHashTarget());
-        $return .= $this->convertInlineObjectColor($link->getHashMeta());
+        $return .= $this->convertInlineObjectColor($link->getHashSource_disabled());
+        $return .= $this->convertInlineObjectColor($link->getHashTarget_disabled());
+        $return .= $this->convertInlineObjectColor($link->getHashMeta_disabled());
 
         return $return;
     }
@@ -37424,7 +37503,7 @@ abstract class Actions
                 if ($instance->getVerified()
                     && $instance->getValid()
                     && $instance->getSigned()
-                    && ($instance->getHashSigner() == $this->_nebuleInstance->getCodeMaster()
+                    && ($instance->getHashSigner_disabled() == $this->_nebuleInstance->getCodeMaster()
                         || $permitNotCodeMaster
                     )
                 ) {
@@ -40046,7 +40125,7 @@ abstract class Actions
             $this->_metrology->addLog('Action upload link', Metrology::LOG_LEVEL_DEBUG); // Log
 
             if ($link->getSigned()
-                && (($link->getHashSigner() == $this->_nebuleInstance->getCodeMaster()
+                && (($link->getHashSigner_disabled() == $this->_nebuleInstance->getCodeMaster()
                         && $this->_nebuleInstance->getOption('permitPublicUploadCodeMasterLink')
                     )
                     || $this->_nebuleInstance->getOption('permitPublicUploadLink')
@@ -40059,11 +40138,11 @@ abstract class Actions
                 $link = $this->_nebuleInstance->newLink(
                     '0_'
                     . $this->_nebuleInstance->getCurrentEntity() . '_'
-                    . $link->getDate() . '_'
-                    . $link->getAction() . '_'
-                    . $link->getHashSource() . '_'
-                    . $link->getHashTarget() . '_'
-                    . $link->getHashMeta()
+                    . $link->getDate_disabled() . '_'
+                    . $link->getAction_disabled() . '_'
+                    . $link->getHashSource_disabled() . '_'
+                    . $link->getHashTarget_disabled() . '_'
+                    . $link->getHashMeta_disabled()
                 );
                 $link->signWrite();
                 $this->_metrology->addLog('Action upload link - unsigned link ' . $link->getFullLink(), Metrology::LOG_LEVEL_NORMAL); // Log
@@ -40712,7 +40791,7 @@ abstract class Actions
                         && $instance->getValid()
                     ) {
                         if ($instance->getSigned()
-                            && (($instance->getHashSigner() == $this->_nebuleInstance->getCodeMaster()
+                            && (($instance->getHashSigner_disabled() == $this->_nebuleInstance->getCodeMaster()
                                     && $this->_nebuleInstance->getOption('permitPublicUploadCodeMasterLink')
                                 )
                                 || $this->_nebuleInstance->getOption('permitPublicUploadLink')
@@ -40726,11 +40805,11 @@ abstract class Actions
                             $instance = $this->_nebuleInstance->newLink(
                                 '0_'
                                 . $this->_nebuleInstance->getCurrentEntity() . '_'
-                                . $instance->getDate() . '_'
-                                . $instance->getAction() . '_'
-                                . $instance->getHashSource() . '_'
-                                . $instance->getHashTarget() . '_'
-                                . $instance->getHashMeta()
+                                . $instance->getDate_disabled() . '_'
+                                . $instance->getAction_disabled() . '_'
+                                . $instance->getHashSource_disabled() . '_'
+                                . $instance->getHashTarget_disabled() . '_'
+                                . $instance->getHashMeta_disabled()
                             );
                             $instance->signWrite();
                             $nbLinks++;
