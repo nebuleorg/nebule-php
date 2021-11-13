@@ -20593,6 +20593,13 @@ class Link
     private string $_fullLink = '';
 
     /**
+     * Parsed link contents.
+     *
+     * @var array $_parsedLink
+     */
+    private array $_parsedLink = array();
+
+    /**
      * Texte signature avec algorithme.
      *
      * @var string
@@ -20754,29 +20761,25 @@ class Link
         $this->_metrology->addLinkRead(); // Metrologie.
 
         // Extrait le lien et vérifie sa structure.
-        if (!$this->_extract($link)) {
+        if (!$this->_extract($link))
             return false;
-        }
 
         // Vérifie la validité du lien.
-        if (!$this->_verify()) {
+        if (!$this->_verify())
             return false;
-        }
 
         // Détecte si c'est un lien dissimulé.
         $this->_obfuscated = false;
         if ($this->_action == 'c') {
             // Extrait la partie dissimulée du lien si la clé de déchiffrement est accessible à l'entité.
-            if (!$this->_extractObfuscated()) {
+            if (!$this->_extractObfuscated())
                 return false;
-            }
 
             // Vérifie la validité de la partie dissimulée du lien.
             if ($this->_obfuscated
                 && !$this->_verifyObfuscated()
-            ) {
+            )
                 return false;
-            }
         }
 
         // Actions supplémentaires pour les dérivés de liens.
