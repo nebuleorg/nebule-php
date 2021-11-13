@@ -75,7 +75,7 @@ class nebule
     const CODE_MASTER_URL = 'http://code.master.nebule.org';
 
     // Les valeurs par défaut des options.
-    const PUPPETMASTER = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea';
+    const DEFAULT_PUPPETMASTER = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
     const DEFAULT_HOST_URL = 'localhost';
     const DEFAULT_PERMIT_WRITE = true;
     const DEFAULT_PERMIT_WRITE_OBJECT = true;
@@ -123,9 +123,9 @@ class nebule
     const DEFAULT_LOGS_LEVEL = 'NORMAL';
     const DEFAULT_MODE_RESCUE = false;
     const DEFAULT_CRYPTO_LIBRARY = 'openssl';
-    const DEFAULT_CRYPTO_HASH_ALGORITHM = 'sha256';
+    const DEFAULT_CRYPTO_HASH_ALGORITHM = 'sha2.256';
     const DEFAULT_CRYPTO_SYMETRIC_ALGORITHM = 'aes-256-ctr';
-    const DEFAULT_CRYPTO_ASYMETRIC_ALGORITHM = 'rsa2048';
+    const DEFAULT_CRYPTO_ASYMETRIC_ALGORITHM = 'rsa.2048';
     const DEFAULT_SOCIAL_LIBRARY = 'strict';
     const DEFAULT_IO = 'ioFileSystem';
     const DEFAULT_IO_READ_MAX_LINKS = 2000;
@@ -143,7 +143,7 @@ class nebule
     const DEFAULT_SESSION_BUFFER_SIZE = 1000;
     const DEFAULT_APPLICATION = '0';
     const DEFAULT_OBFUSCATE_LINKS = false;
-    const DEFAULT_LINKS_VERSION = '1.3';
+    const DEFAULT_LINKS_VERSION = '2.0';
     const DEFAULT_SUBORDINATION_TO_ENTITY = '';
 
     // Les commandes.
@@ -181,9 +181,9 @@ class nebule
     const REFERENCE_OBJECT_CRYPT_RSA = 'application/x-encrypted/rsa';
     const REFERENCE_OBJECT_ENTITY = 'application/x-pem-file';
     const REFERENCE_ENTITY_HEADER = '-----BEGIN PUBLIC KEY-----';
-    const REFERENCE_CRYPTO_HASH_ALGORITHM = 'sha256';
+    const REFERENCE_CRYPTO_HASH_ALGORITHM = 'sha2.256';
 
-    // Les objets réservés de nebule.
+    // Les objets références de nebule.
     const REFERENCE_NEBULE_OBJET = 'nebule/objet';
     const REFERENCE_NEBULE_OBJET_HASH = 'nebule/objet/hash';
     const REFERENCE_NEBULE_OBJET_HOMOMORPHE = 'nebule/objet/homomorphe';
@@ -262,7 +262,7 @@ class nebule
     const REFERENCE_NEBULE_REFERENCE = 'nebule/reference';
 
     const ACTIVE_APPLICATIONS_WHITELIST = array(
-        '2121510000000000006e6562756c65206170706c69636174696f6e73000000000000212151',
+        '2121510000000000006e6562756c65206170706c69636174696f6e73000000000000212151.non.296',
     );
 
     /**
@@ -1106,7 +1106,7 @@ class nebule
      * @var array:string|boolean|integer
      */
     private static $_listOptionsDefaultValue = array(
-        'puppetmaster' => nebule::PUPPETMASTER,
+        'puppetmaster' => nebule::DEFAULT_PUPPETMASTER,
         'hostURL' => nebule::DEFAULT_HOST_URL,
         'permitWrite' => nebule::DEFAULT_PERMIT_WRITE,
         'permitWriteObject' => nebule::DEFAULT_PERMIT_WRITE_OBJECT,
@@ -1172,7 +1172,7 @@ class nebule
         'permitSessionBuffer' => nebule::DEFAULT_PERMIT_SESSION_BUFFER,
         'permitBufferIO' => nebule::DEFAULT_PERMIT_BUFFER_IO,
         'sessionBufferSize' => nebule::DEFAULT_SESSION_BUFFER_SIZE,
-        'defaultCurrentEntity' => nebule::PUPPETMASTER,
+        'defaultCurrentEntity' => nebule::DEFAULT_PUPPETMASTER,
         'defaultApplication' => nebule::DEFAULT_APPLICATION,
         'defaultObfuscateLinks' => nebule::DEFAULT_OBFUSCATE_LINKS,
         'defaultLinksVersion' => nebule::DEFAULT_LINKS_VERSION,
@@ -20239,32 +20239,29 @@ class Transaction extends Link
      *
      * @var boolean
      */
-    private $_isTransaction = false;
+    private bool $_isTransaction = false;
 
     /**
      * ID de l'objet contenant les transactions.
      * Reste à null en mode LNS.
      *
-     * @desc 020200329
      * @var string
      */
-    private $_transactionsObjectID = null;
+    private string $_transactionsObjectID = '';
 
     /**
      * Mode de transaction, si valide dans la monnaie.
      *
-     * @desc 020200404
      * @var string
      */
-    private $_transactionsMode = null;
+    private string $_transactionsMode = '';
 
     /**
      * Date des transactions.
      *
-     * @desc 020200329
-     * @var DateTime
+     * @var DateTime|null
      */
-    private $_transactionsTimestamp = null;
+    private DateTime|null $_transactionsTimestamp = null;
 
     /**
      * Table des transactions unitaires.
@@ -20279,15 +20276,13 @@ class Transaction extends Link
      * - R : ratio du jeton utilisé, de 0 à 1, 1 = tout
      * - TRS : mode de transaction
      *
-     * @desc 020200329
      * @var array
      */
-    private $_transactionsArray = array();
+    private array $_transactionsArray = array();
 
     /**
      * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
      *
-     * @desc 020200322
      * @var array:string
      */
     const SESSION_SAVED_VARS = array(
@@ -20302,7 +20297,6 @@ class Transaction extends Link
         '_hashSource',
         '_hashTarget',
         '_hashMeta',
-        '_version',
         '_obfuscated',
         '_verified',
         '_valid',
@@ -20318,7 +20312,7 @@ class Transaction extends Link
      * @desc 020200404
      * @return void
      */
-    private function _initialisation()
+    protected function _initialisation()
     {
         // Vérifications de base.
         if ($this->_action != 'f'
@@ -20563,174 +20557,163 @@ class Transaction extends Link
  */
 class Link
 {
-    /** Unused. */
-    private static $_mustVerifyLink;
-
     /**
      * Instance nebule en cours.
      *
      * @var nebule
      */
-    private $_nebuleInstance;
+    private nebule $_nebuleInstance;
 
     /**
      * Instance io en cours.
      *
      * @var io
      */
-    private $_io;
+    private ioInterface $_io;
 
     /**
      * Instance crypto en cours.
      *
      * @var CryptoInterface
      */
-    private $_crypto;
+    private CryptoInterface $_crypto;
 
     /**
      * Instance métrologie en cours.
      *
      * @var Metrology
      */
-    private $_metrology;
+    private Metrology $_metrology;
 
     /**
      * Texte lien complet "s.a_s_d_a_s_t_m" .
      *
      * @var string
      */
-    private $_fullLink = '';
+    private string $_fullLink = '';
 
     /**
      * Texte signature avec algorithme.
      *
      * @var string
      */
-    private $_signe = '0';
+    private string $_signe = '0';
 
     /**
      * Texte valeur hexa de la signature.
      *
      * @var string
      */
-    private $_signeValue = '';
+    private string $_signeValue = '';
 
     /**
      * Texte algorithme de signature.
      *
      * @var string
      */
-    private $_signeAlgo = '';
+    private string $_signeAlgo = '';
 
     /**
      * Texte hexa entité signataire.
      *
      * @var string
      */
-    private $_hashSigner = '0';
+    private string $_hashSigner = '0';
 
     /**
      * Texte date du lien.
      *
      * @var string
      */
-    private $_date = '';
+    private string $_date = '';
 
     /**
      * Texte action du lien, sur un octet.
      *
      * @var string
      */
-    private $_action = '';
+    private string $_action = '';
 
     /**
      * Texte hexa objet source.
      *
      * @var string
      */
-    private $_hashSource = '0';
+    private string $_hashSource = '0';
 
     /**
      * Texte hexa objet destination.
      *
      * @var string
      */
-    private $_hashTarget = '0';
+    private string $_hashTarget = '0';
 
     /**
      * Texte hexa objet méta.
      *
      * @var string
      */
-    private $_hashMeta = '0';
-
-    /**
-     * Texte verion du lien.
-     *
-     * @var string
-     */
-    private $_version = '';
+    private string $_hashMeta = '0';
 
     /**
      * Booléen si le lien est dissimulé.
      *
      * @var boolean
      */
-    private $_obfuscated = false;
+    private bool $_obfuscated = false;
 
     /**
      * Booléen si le lien a été vérifié.
      *
      * @var boolean
      */
-    private $_verified = false;
+    private bool $_verified = false;
 
     /**
      * Booléen si le lien est vérifié et valide.
      *
      * @var boolean
      */
-    private $_valid = false;
+    private bool $_valid = false;
 
     /**
      * Booléen si le lien a une structure valide.
      *
      * @var boolean
      */
-    private $_validStructure = false;
+    private bool $_validStructure = false;
 
     /**
      * Booléen si le lien est signé.
      *
      * @var boolean
      */
-    private $_signed = false;
+    private bool $_signed = false;
 
     /**
      * Nombre représentant un code d'erreur de vérification.
      *
      * @var integer
      */
-    private $_verifyNumError = 0;
+    private int $_verifyNumError = 0;
 
     /**
      * Texte de la description de l'erreur de vérification.
      *
      * @var string
      */
-    private $_verifyTextError = 'Initialisation';
+    private string $_verifyTextError = 'Initialisation';
 
     /**
      * Booléen si la dissimulation de lien est autorisée.
      *
      * @var boolean
      */
-    private $_permitObfuscated = false;
+    private bool $_permitObfuscated = false;
 
     /**
      * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
      *
-     * @desc 020200315
      * @var array:string
      */
     const SESSION_SAVED_VARS = array(
@@ -20745,7 +20728,6 @@ class Link
         '_hashSource',
         '_hashTarget',
         '_hashMeta',
-        '_version',
         '_obfuscated',
         '_verified',
         '_valid',
@@ -20758,30 +20740,18 @@ class Link
     /**
      * Constructeur.
      *
-     * @desc 020200315
      * @param nebule $nebuleInstance
      * @param string $link
-     * @param string $version
      * @return boolean
      */
-    public function __construct(nebule $nebuleInstance, $link, $version = 'UNKNOWN')
+    public function __construct(nebule $nebuleInstance, string $link)
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_io = $nebuleInstance->getIO();
         $this->_crypto = $nebuleInstance->getCrypto();
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_permitObfuscated = $nebuleInstance->getOption('permitObfuscatedLink');
+        $this->_permitObfuscated = (bool)$nebuleInstance->getOption('permitObfuscatedLink');
         $this->_metrology->addLinkRead(); // Metrologie.
-
-        // Extrait la version du lien.
-        if (is_string($version)
-            && $version != 'UNKNOWN'
-            && $version != ''
-        ) {
-            $this->_version = $version;
-        } else {
-            $this->_version = $this->_nebuleInstance->getOption('defaultLinksVersion');
-        }
 
         // Extrait le lien et vérifie sa structure.
         if (!$this->_extract($link)) {
@@ -20932,7 +20902,7 @@ class Link
         $this->_io = $nebuleInstance->getIO();
         $this->_crypto = $nebuleInstance->getCrypto();
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_permitObfuscated = $nebuleInstance->getOption('permitObfuscatedLink');
+        $this->_permitObfuscated = (bool)$nebuleInstance->getOption('permitObfuscatedLink');
     }
 
 
@@ -21197,14 +21167,14 @@ class Link
 
     /**
      * Retourne la version avec laquelle est exploité le lien.
-     *
+     * TODO à supprimer !
      * @return string
      */
-    public function getVersion()
+    public function getVersion_disabled()
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
-        return $this->_version;
+        return '';
     }
 
 
@@ -21916,9 +21886,8 @@ class Link
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie si autorisé à dissimuler des liens.
-        if (!$this->_permitObfuscated) {
+        if (!$this->_permitObfuscated)
             return false;
-        }
 
         $this->obfuscate();
         return $this->write();
@@ -23189,7 +23158,7 @@ class ioUnixFileSystem implements ioInterface
             return false;
         }
 
-        $file = nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . nebule::PUPPETMASTER;
+        $file = nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . nebule::DEFAULT_PUPPETMASTER;
         $result = false;
 
         $data = file_get_contents($file, null, null, 0, 16);
@@ -23244,7 +23213,7 @@ class ioUnixFileSystem implements ioInterface
             return false;
         }
 
-        $file = nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . nebule::PUPPETMASTER;
+        $file = nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . nebule::DEFAULT_PUPPETMASTER;
         $result = false;
 
         $data = file_get_contents($file, null, null, 0, 16);
@@ -23978,7 +23947,7 @@ class ioHTTP implements ioInterface
         if ($localisation == '') {
             $localisation = $this->_defaultLocalisation;
         }
-        $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . nebule::PUPPETMASTER;
+        $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . nebule::DEFAULT_PUPPETMASTER;
         return $this->_checkExistOverHTTP($localisation);
     }
 
@@ -24000,7 +23969,7 @@ class ioHTTP implements ioInterface
         if ($localisation == '') {
             $localisation = $this->_defaultLocalisation;
         }
-        $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . nebule::PUPPETMASTER;
+        $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . nebule::DEFAULT_PUPPETMASTER;
         return $this->_checkExistOverHTTP($localisation);
     }
 
