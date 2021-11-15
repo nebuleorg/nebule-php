@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020211111
+# Version 020211115
 
 export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
@@ -438,10 +438,15 @@ function main
   echo ' > start'
 
   echo "   - puppetmaster        : ${puppetmaster_develop_pem_hash}"
+  echo "     - key               : ${puppetmaster_develop_key_hash}"
   echo "   - security authority  : ${security_authority_develop_pem_hash}"
+  echo "     - key               : ${security_authority_develop_key_hash}"
   echo "   - code authority      : ${code_authority_develop_pem_hash}"
+  echo "     - key               : ${code_authority_develop_key_hash}"
   echo "   - time authority      : ${time_authority_develop_pem_hash}"
+  echo "     - key               : ${time_authority_develop_key_hash}"
   echo "   - directory authority : ${directory_authority_develop_pem_hash}"
+  echo "     - key               : ${directory_authority_develop_key_hash}"
 
   if [ "${1}" == '' ]
   then
