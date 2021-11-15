@@ -208,7 +208,7 @@ function work_full_reinit()
   )
   for link in "${links[@]}"
   do
-    sign_write_link "${link}" "${puppetmaster_develop_key_hash}" 512
+    sign_write_link "${link}" "${puppetmaster_develop_key_hash}" "${puppetmaster_develop_pem_hash}" 512
   done
 
   echo ' > links security authority'
@@ -222,7 +222,7 @@ function work_full_reinit()
   )
   for link in "${links[@]}"
   do
-    sign_write_link "${link}" "${security_authority_develop_key_hash}" 256
+    sign_write_link "${link}" "${security_authority_develop_key_hash}" "${security_authority_develop_pem_hash}" 256
   done
 
   echo ' > links code authority'
@@ -236,7 +236,7 @@ function work_full_reinit()
   )
   for link in "${links[@]}"
   do
-    sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
+    sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
   done
 
   echo ' > links time authority'
@@ -250,7 +250,7 @@ function work_full_reinit()
   )
   for link in "${links[@]}"
   do
-    sign_write_link "${link}" "${time_authority_develop_key_hash}" 256
+    sign_write_link "${link}" "${time_authority_develop_key_hash}" "${time_authority_develop_pem_hash}" 256
   done
 
   echo ' > links directory authority'
@@ -264,7 +264,7 @@ function work_full_reinit()
   )
   for link in "${links[@]}"
   do
-    sign_write_link "${link}" "${directory_authority_develop_key_hash}" 256
+    sign_write_link "${link}" "${directory_authority_develop_key_hash}" "${directory_authority_develop_pem_hash}" 256
   done
 
   sudo chown 1000.33 l/*
@@ -294,10 +294,10 @@ function work_dev_deploy()
   echo ' > links'
   echo '   - code branch'
   link="nebule:link/2:0_0>${current_date}/l>${LIB_RID_CODE_BRANCH}>${NID_CODE_BRANCH}>${LIB_RID_CODE_BRANCH}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
   echo '   - name'
   link="nebule:link/2:0_0>${current_date}/l>${NID_CODE_BRANCH}>${nameOID}>${nameRID}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
 }
 
 function work_refresh()
@@ -324,19 +324,19 @@ function work_refresh()
   echo ' > links'
   echo '   - type mime = application/x-httpd-php'
   link="nebule:link/2:0_0>${current_date}/l>${bootstrap_hash}>${phpOID}>${typeRID}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
   link="nebule:link/2:0_0>${current_date}/l>${library_hash}>${phpOID}>${typeRID}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
   link="nebule:link/2:0_0>${current_date}/l>${sylabe_hash}>${phpOID}>${typeRID}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
 
   echo '   - nebule/objet/interface/web/php/bootstrap in develop branch'
   link="nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_BOOTSTRAP}>${bootstrap_hash}>${NID_CODE_BRANCH}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
   link="nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_LIBRARY}>${library_hash}>${NID_CODE_BRANCH}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
   link="nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${sylabe_hash}>${NID_CODE_BRANCH}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" 256
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
 
   sudo chown 1000.33 l/*
   sudo chmod 664 l/*
@@ -347,11 +347,12 @@ function work_refresh()
 function sign_write_link()
 {
   link="${1}"
-  eid="${2}"
-  size="${3}"
+  key="${2}"
+  eid="${3}"
+  size="${4}"
 
   logger "sign_write_link ${link} with ${eid}"
-  slink=$(echo -n "${link}" | openssl dgst -hex -"sha${size}" -sign "o/${eid}" -passin "pass:${password_entity}" | cut -d ' ' -f2)
+  slink=$(echo -n "${link}" | openssl dgst -hex -"sha${size}" -sign "o/${key}" -passin "pass:${password_entity}" | cut -d ' ' -f2)
   flink="${link}_${eid}>${slink}.sha2.${size}"
   nid1=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f2)
   nid2=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f3)

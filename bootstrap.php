@@ -966,7 +966,7 @@ function lib_init(): bool
     // Une fois les autres entités trouvées, ajoute les autres autorités.
     // Cela empêche qu'une entié compromise ne génère un lien qui passerait avant le puppetmaster
     //   dans la recherche par référence nebFindByRef.
-    $puppetmaster = ent_getPuppetmaster();
+    $puppetmaster = lib_getConfiguration('puppetmaster');
     if (!ent_checkPuppetmaster($puppetmaster)) {
         log_add('lib init : puppetmaster error!', 'error', __FUNCTION__, '8e5a7fe9');
         return false;
@@ -1747,7 +1747,7 @@ function crypto_asymmetricEncrypt(string $data, string $privateOid = '', string 
     $hashData = crypto_getDataHash($data);
     $binHashData = pack("H*", $hashData);
     $ok = openssl_private_encrypt($binHashData, $binarySignature, $private_key, OPENSSL_PKCS1_PADDING);
-    openssl_free_key($private_key);
+    //openssl_free_key($private_key);
     unset($private_key);
     if ($ok === false)
         return '';
@@ -1772,7 +1772,8 @@ function crypto_asymmetricVerify(string $sign, string $hash, string $nid): bool
     $hashsize = strlen($hash);
 
     $pubkeyid = openssl_pkey_get_public($cert);
-    if ($pubkeyid === false) return false;
+    if ($pubkeyid === false)
+        return false;
 
     lib_incrementMetrology('lv');
 
@@ -2012,10 +2013,8 @@ function lnk_findInclusive_FIXME(&$nid, &$table, $action, $srcobj, $dstobj, $met
  */
 function lnk_getList(string &$nid, array &$links, array $filter, bool $withInvalidLinks = false): void
 {
-log_add('MARK10 get lnk nid=' . $nid, 'warn', __FUNCTION__, '00000000');
     if ($nid == '0' || !io_checkNodeHaveLink($nid))
         return;
-log_add('MARK11 get lnk nid=' . $nid, 'warn', __FUNCTION__, '00000000');
 
     // TODO as _lnkGetListFilterNid()
     // If not permitted, do not list invalid links.
@@ -2027,15 +2026,10 @@ log_add('MARK11 get lnk nid=' . $nid, 'warn', __FUNCTION__, '00000000');
     $lines = array();
     io_linksRead($nid, $lines);
     foreach ($lines as $line) {
-log_add('MARK12 pre verify lnk=' . $line, 'warn', __FUNCTION__, '00000000');
         if (lnk_verify($line)) {
-log_add('MARK13 lnk=' . $line, 'warn', __FUNCTION__, '00000000');
             $link = lnk_parse($line);
             if (lnk_checkNotSuppressed($link, $lines) && lnk_filterStructure($link, $filter))
-            {
                 $links [] = $link;
-log_add('MARK14 lnk ok', 'warn', __FUNCTION__, '00000000');
-            }
         }
     }
 }
@@ -2301,7 +2295,9 @@ function lnk_checkBH(string &$bh): bool
     if (strlen($bh) > 15) return false;
 
     $rf = strtok($bh, '/');
+    if (is_bool($rf)) return false;
     $rv = strtok('/');
+    if (is_bool($rv)) return false;
 
     // Check bloc overflow
     if (strtok('/') !== false) return false;
@@ -2327,8 +2323,10 @@ function lnk_checkRF(string &$rf): bool
 
     // Check items from RF : APP:TYP
     $app = strtok($rf, ':');
+    if (is_bool($app)) return false;
     if ($app != 'nebule') return false;
     $typ = strtok(':');
+    if (is_bool($typ)) return false;
     if ($typ != 'link') return false;
 
     // Check registry overflow
@@ -2349,7 +2347,9 @@ function lnk_checkRV(string &$rv): bool
 
     // Check items from RV : VER:SUB
     $ver = strtok($rv, ':');
+    if (is_bool($ver)) return false;
     $sub = strtok(':');
+    if (is_bool($sub)) return false;
     if ("$ver:$sub" != LIB_LINK_VERSION) return false;
 
     // Check registry overflow
@@ -2369,7 +2369,9 @@ function lnk_checkBL(string &$bl): bool
     if (strlen($bl) > 4096) return false; // TODO à revoir.
 
     $rc = strtok($bl, '/');
+    if (is_bool($rc)) return false;
     $rl = strtok('/');
+    if (is_bool($rl)) return false;
 
     // Check bloc overflow
     if (strtok('/') !== false) return false;
@@ -2399,6 +2401,7 @@ function lnk_checkRC(string &$rc): bool
     $mod = strtok($rc, '>');
     if ($mod != '0') return false;
     $chr = strtok('>');
+    if (is_bool($chr)) return false;
     if (strlen($chr) > 15) return false;
     if (!ctype_digit($chr)) return false;
     if ($chr[0] != '0') return false;
@@ -2482,6 +2485,7 @@ function lnk_checkBS(string &$bh, string &$bl, string &$bs): bool
     if (strlen($bs) > 4096) return false; // TODO à revoir.
 
     $rs = strtok($bs, '/');
+    if (is_bool($rs)) return false;
 
     // Check bloc overflow
     if (strtok('/') !== false) return false;
@@ -2507,9 +2511,9 @@ function lnk_checkRS(string &$rs, string &$bh, string &$bl): bool
 
     // Extract items from RS : NID>SIG
     $nid = strtok($rs, '>');
-    if ($nid === false) return false;
+    if (is_bool($nid)) return false;
     $sig = strtok('>');
-    if ($sig === false) return false;
+    if (is_bool($sig)) return false;
 
     // Check registry overflow
     if (strtok('>') !== false) return false;
@@ -2539,18 +2543,21 @@ function lnk_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): boo
 
     // Check hash value.
     $sign = strtok($sig, '.');
+    if (is_bool($sign)) return false;
     if (strlen($sign) < LIB_NID_MIN_HASH_SIZE) return false;
     if (strlen($sign) > LIB_NID_MAX_HASH_SIZE) return false;
     if (!ctype_xdigit($sign)) return false;
 
     // Check algo value.
     $algo = strtok('.');
+    if (is_bool($algo)) return false;
     if (strlen($algo) < LIB_NID_MIN_ALGO_SIZE) return false;
     if (strlen($algo) > LIB_NID_MAX_ALGO_SIZE) return false;
     if (!ctype_alnum($algo)) return false;
 
     // Check size value.
     $size = strtok('.');
+    if (is_bool($size)) return false;
     if (!ctype_digit($size)) return false; // Check content before!
     if ((int)$size < LIB_NID_MIN_HASH_SIZE) return false;
     if ((int)$size > LIB_NID_MAX_HASH_SIZE) return false;
@@ -2592,18 +2599,21 @@ function lnk_verify(string $link): bool
 
     // Extract blocs from link L : BH_BL_BS
     $bh = strtok(trim($link), '_');
+    if (is_bool($bh)) return false;
     $bl = strtok('_');
+    if (is_bool($bl)) return false;
     $bs = strtok('_');
+    if (is_bool($bs)) return false;
 
     // Check link overflow
     if (strtok('_') !== false) return false;
 
     // Check BH, BL and BS.
-    if (!lnk_checkBH($bh)) log_add('check link BH failed '.$link, 'error', __FUNCTION__, '80cbba4b');
+    //if (!lnk_checkBH($bh)) log_add('check link BH failed '.$link, 'error', __FUNCTION__, '80cbba4b');
     if (!lnk_checkBH($bh)) return false;
-    if (!lnk_checkBL($bl)) log_add('check link BL failed '.$link, 'error', __FUNCTION__, 'c5d22fda');
+    //if (!lnk_checkBL($bl)) log_add('check link BL failed '.$link, 'error', __FUNCTION__, 'c5d22fda');
     if (!lnk_checkBL($bl)) return false;
-    if (!lnk_checkBS($bh, $bl, $bs)) log_add('check link BS failed '.$link, 'error', __FUNCTION__, '2828e6ae');
+    //if (!lnk_checkBS($bh, $bl, $bs)) log_add('check link BS failed '.$link, 'error', __FUNCTION__, '2828e6ae');
     if (!lnk_checkBS($bh, $bl, $bs)) return false;
 
     return true;
@@ -3047,16 +3057,12 @@ function obj_checkTypeMime(string &$nid, string $typeMime): bool
 {
     global $nebuleLocalAuthorities, $nebuleCacheReadObjTypeMime;
 
-log_add('MARK1 check ' . $nid . ' is ' . $typeMime, 'warn', __FUNCTION__, '00000000');
-
     if (isset($nebuleCacheReadObjTypeMime [$nid])) {
         if ($nebuleCacheReadObjTypeMime [$nid] == $typeMime)
             return true;
         else
             return false;
     }
-
-log_add('MARK2', 'warn', __FUNCTION__, '00000000');
 
     if (!nod_checkNID($nid))
         return false;
@@ -3073,8 +3079,6 @@ log_add('MARK2', 'warn', __FUNCTION__, '00000000');
     $links = array();
     lnk_getList($nid, $links, $filter);
     lnk_filterBySigners($links, $nebuleLocalAuthorities);
-
-log_add('MARK3 size=' . sizeof($links), 'warn', __FUNCTION__, '00000000');
 
     if (sizeof($links) == 0)
         return false;
@@ -3390,16 +3394,6 @@ function ent_generate(string $asymmetricAlgo, string $hashAlgo, string &$hashPub
         return false;
 
     return true;
-}
-
-/**
- * Get puppetmaster NID.
- *
- * @return string
- */
-function ent_getPuppetmaster(): string
-{
-    return lib_getConfiguration('puppetmaster');
 }
 
 /**
@@ -5826,8 +5820,8 @@ function bootstrap_firstDisplay4Puppetmaster(): bool
                 echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ' . $firstAlternativePuppetmasterEid . "\n";
         }
     } else {
-        $firstpuppetmasterOid = lib_getConfiguration('subordinationEntity');
-        echo 'subordination to ' . $firstpuppetmasterOid . "\n";
+        $firstpuppetmasterOid = lib_getConfiguration('puppetmaster');
+        echo 'forced to        ' . $firstpuppetmasterOid . "\n";
     }
 
     echo "</div>\n";
@@ -5849,7 +5843,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
     echo '<div class="parts">' . "\n";
     echo '<span class="partstitle">#5 synchronizing authorities</span><br/>' . "\n";
 
-    $puppetmaster = ent_getPuppetmaster();
+    $puppetmaster = lib_getConfiguration('puppetmaster');
 
     echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ';
     if (!ent_checkPuppetmaster($puppetmaster)) {
@@ -6782,7 +6776,6 @@ function main()
     bootstrap_getFlushSession();
     bootstrap_getUpdate();
     bootstrap_getSwitchApplication();
-
     bootstrap_setPermitOpenFileCode();
     lib_setMetrologyTimer('tB');
 
@@ -6791,8 +6784,8 @@ function main()
     bootstrap_findLibraryPOO($bootstrapLibraryID, $bootstrapLibraryInstanceSleep);
     bootstrap_loadLibraryPOO($bootstrapLibraryID, $bootstrapLibraryInstanceSleep);
     lib_setMetrologyTimer('tL');
-    bootstrap_findApplication();
 
+    bootstrap_findApplication();
     bootstrap_displayRouter($needFirstSynchronization, $bootstrapLibraryID);
     lib_setMetrologyTimer('tA');
     bootstrap_logMetrology();
