@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020211111';
+const BOOTSTRAP_VERSION = '020211115';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -375,6 +375,10 @@ const LIB_FIRST_RESERVED_OBJECTS = array(
     'nebule/warning',
     'nebule/reference',
     'puppetmaster',
+    'cerberus',
+    'bachue',
+    'kronos',
+    'asabiyya',
     'application/x-pem-file',
     'application/octet-stream',
     'application/x-httpd-php',
