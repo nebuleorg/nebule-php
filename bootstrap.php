@@ -5821,7 +5821,7 @@ function bootstrap_firstDisplay4Puppetmaster(): bool
         }
     } else {
         $firstpuppetmasterOid = lib_getConfiguration('puppetmaster');
-        echo 'forced to        ' . $firstpuppetmasterOid . "\n";
+        echo 'forced to ' . $firstpuppetmasterOid . "\n";
     }
 
     echo "</div>\n";
