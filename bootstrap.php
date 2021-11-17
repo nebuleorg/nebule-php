@@ -6007,7 +6007,7 @@ function bootstrap_firstDisplay6SyncObjects(): bool
         || !io_checkNodeHaveLink($refLibID)
         || !io_checkNodeHaveLink($refBootID)
     ) {
-        log_add('need sync objects', 'warn', __FUNCTION__, '0f21ad26');
+        log_add('need sync reference objects', 'warn', __FUNCTION__, '0f21ad26');
 
         echo "<br />\nbootstrap RID &nbsp;&nbsp;&nbsp;&nbsp;: " . $refBootID . ' ';
         lnk_getDistantOnLocations($refBootID, LIB_FIRST_LOCALISATIONS);
