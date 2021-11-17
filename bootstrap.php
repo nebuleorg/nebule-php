@@ -5808,7 +5808,7 @@ function bootstrap_firstDisplay4Puppetmaster(): bool
                 if (!ent_checkIsPublicKey($argOID)) {
                     log_add('unable to find alternative puppetmaster oid', 'error', __FUNCTION__, '102c9011');
                     echo " <span class=\"error\">invalid!</span>\n";
-                    $argLoc = '';
+                    $argLoc = LIB_DEFAULT_PUPPETMASTER_LOCATION; // TODO not really used ...
                     $firstAlternativePuppetmasterEid = LIB_DEFAULT_PUPPETMASTER_EID;
                 }
                 echo "<br />\n";
