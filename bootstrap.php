@@ -3361,20 +3361,13 @@ function ent_generate(string $asymmetricAlgo, string $hashAlgo, string &$hashPub
         return false;
 
     // Generate links for properties
-    $oidHash = obj_getNID('nebule/objet/hash');
-    $oidAlgo = obj_getNID(lib_getConfiguration('cryptoHashAlgorithm'));
     $oidType = obj_getNID('nebule/objet/type');
     $oidPem = obj_getNID('application/x-pem-file');
     $oidPKey = obj_getNID('nebule/objet/entite/prive');
     $oidText = obj_getNID('text/plain');
 
-    $list = array($oidHash, $oidAlgo, $oidType, $oidPem, $oidPKey, $oidText);
+    $list = array($oidType, $oidPem, $oidPKey, $oidText);
     foreach ($list as $item) {
-        $bh_bl = lnk_generate('', 'l', $item, $oidAlgo, $oidHash);
-        $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
-        $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getConfiguration('cryptoHashAlgorithm');
-        if (!lnk_write($link))
-            return false;
         $bh_bl = lnk_generate('', 'l', $item, $oidText, $oidType);
         $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
         $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getConfiguration('cryptoHashAlgorithm');
@@ -3384,11 +3377,6 @@ function ent_generate(string $asymmetricAlgo, string $hashAlgo, string &$hashPub
 
     $list = array($hashPublicKey, $hashPrivateKey);
     foreach ($list as $item) {
-        $bh_bl = lnk_generate('', 'l', $item, $oidAlgo, $oidHash);
-        $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
-        $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getConfiguration('cryptoHashAlgorithm');
-        if (!lnk_write($link))
-            return false;
         $bh_bl = lnk_generate('', 'l', $item, $oidPem, $oidType);
         $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
         $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getConfiguration('cryptoHashAlgorithm');
@@ -6189,7 +6177,7 @@ function bootstrap_firstDisplay9LocaleEntity(): bool
 
         // Generate new password for new local entity.
         $nebulePasswordEntity = '';
-        $genpasswd = openssl_random_pseudo_bytes(LIB_FIRST_GENERATED_PASSWORD_SIZE * 20); // TODO modify to use less entropy.
+        $genpasswd = openssl_random_pseudo_bytes(LIB_FIRST_GENERATED_PASSWORD_SIZE * 20);
         $nebulePasswordEntity .= preg_replace('/[^[:print:]]/', '', $genpasswd);
         $nebulePasswordEntity = (string)substr($nebulePasswordEntity, 0, LIB_FIRST_GENERATED_PASSWORD_SIZE);
         $genpasswd = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
