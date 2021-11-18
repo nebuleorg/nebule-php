@@ -795,17 +795,17 @@ $nebuleCacheIsPublicKey = array();
 $nebuleCacheIsPrivateKey = array();
 $nebuleCacheIsEncrypt = array();
 $nebuleCacheFindPrivKey = '';
-$nebuleCachelibrary_o_vr = array();
-$nebuleCachelibrary_l_grx = array();
+$nebuleCacheLibrary_o_vr = array();
+$nebuleCacheLibrary_l_grx = array();
 
 /**
- * Return option's value. Options presents on environment file are forced.
+ * Return option's value. Options which are present on environment file are forced.
  * If empty, return the default value. On unknown configuration name, just return the string.
  *
  * @param string $name
  * @return null|string|boolean|integer
  */
-function lib_getConfiguration(string $name)
+function lib_getConfiguration(string $name): bool|int|string|null
 {
     global $configurationList;
 
@@ -825,12 +825,12 @@ function lib_getConfiguration(string $name)
         $file = file(LIB_LOCAL_ENVIRONMENT_FILE, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
         if ($file !== false) {
             foreach ($file as $line) {
-                $l = trim(filter_var($line, FILTER_SANITIZE_STRING));
+                $line = trim(filter_var($line, FILTER_SANITIZE_STRING));
 
-                if ($l == '' || $l[0] == "#" || strpos($l, '=') === false)
+                if ($line == '' || $line[0] == "#" || !str_contains($line, '='))
                     continue;
 
-                if (trim(strtok($l, '=')) == $name) {
+                if (trim(strtok($line, '=')) == $name) {
                     $value = trim(strtok('='));
                     break;
                 }
@@ -3220,14 +3220,14 @@ function obj_getDistantContent(string $nid, array $locations = array()): bool
  */
 function obj_checkContent(&$nid): bool
 {
-    global $nebuleCachelibrary_o_vr;
+    global $nebuleCacheLibrary_o_vr;
 
     lib_incrementMetrology('ov');
 
     if (!nod_checkNID($nid) || !io_checkNodeHaveContent($nid))
         return false;
 
-    if (isset($nebuleCachelibrary_o_vr[$nid]))
+    if (isset($nebuleCacheLibrary_o_vr[$nid]))
         return true;
 
     $hash = '';
@@ -3240,7 +3240,7 @@ function obj_checkContent(&$nid): bool
         io_objectDelete($nid);
 
     if (lib_getConfiguration('permitBufferIO'))
-        $nebuleCachelibrary_o_vr[$nid] = true;
+        $nebuleCacheLibrary_o_vr[$nid] = true;
 
     return true;
 }
