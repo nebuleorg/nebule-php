@@ -4934,10 +4934,13 @@ global $bootstrapRescueMode;
  */
 function bootstrap_htmlTop()
 {
-global $nebuleServerEntity;
+    global $nebuleServerEntity;
 
-$name = ent_getFullName($nebuleServerEntity);
-?>
+    $name = ent_getFullName($nebuleServerEntity);
+    if ($name == $nebuleServerEntity)
+        $name = '/';
+
+    ?>
 <body>
 <div class="layout-header">
     <div class="header-left">
@@ -4950,14 +4953,7 @@ $name = ent_getFullName($nebuleServerEntity);
     </div>
     <div class="header-center">
         <p>
-            <?php
-            if ($name != $nebuleServerEntity) {
-                echo $name;
-            } else {
-                echo '/';
-            }
-            echo '<br />' . $nebuleServerEntity;
-            ?>
+            <?php echo $name . '<br />' . $nebuleServerEntity; ?>
         </p>
     </div>
 </div>
@@ -4973,9 +4969,9 @@ $name = ent_getFullName($nebuleServerEntity);
     </div>
 </div>
 
-<?php
-echo '<div class="layout-main">'; // TODO à revoir...
-echo '    <div class="layout-content">';
+    <?php
+    echo '<div class="layout-main">' . "\n"; // TODO à revoir...
+    echo '    <div class="layout-content">';
 }
 
 // ------------------------------------------------------------------------------------------
@@ -4986,13 +4982,13 @@ echo '    <div class="layout-content">';
  */
 function bootstrap_htmlBottom()
 {
-?>
+    echo '    </div>' . "\n";
+    echo '</div>';
+    ?>
 
-</div>
-</div>
 </body>
 </html>
-<?php
+    <?php
 }
 
 
@@ -6533,7 +6529,7 @@ function bootstrap_displayApplication2()
     bootstrap_htmlTop();
 
     // Ré-initialisation des logs FIXME ???
-    log_reopen('app1');
+    log_reopen('app2');
 
     ?>
     <div class="layout-main">
