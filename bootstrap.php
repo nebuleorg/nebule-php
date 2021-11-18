@@ -805,7 +805,7 @@ $nebuleCacheLibrary_l_grx = array();
  * @param string $name
  * @return null|string|boolean|integer
  */
-function lib_getConfiguration(string $name): bool|int|string|null
+function lib_getConfiguration(string $name): mixed
 {
     global $configurationList;
 
@@ -827,7 +827,7 @@ function lib_getConfiguration(string $name): bool|int|string|null
             foreach ($file as $line) {
                 $line = trim(filter_var($line, FILTER_SANITIZE_STRING));
 
-                if ($line == '' || $line[0] == "#" || !str_contains($line, '='))
+                if ($line == '' || $line[0] == "#" || strpos($line, '=') === false)
                     continue;
 
                 if (trim(strtok($line, '=')) == $name) {
