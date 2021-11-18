@@ -783,7 +783,7 @@ class nebule
         'permitObfuscatedTransaction',
         'permitSynchronizeApplication',
         'permitPublicSynchronizeApplication',
-        'permitDeleteObjectOnUnknowHash',
+        'permitDeleteObjectOnUnknownHash',
         'permitCheckSignOnVerify',
         'permitCheckSignOnList',
         'permitCheckObjectHash',
@@ -888,7 +888,7 @@ class nebule
         'permitObfuscatedTransaction' => 'Currencies',
         'permitSynchronizeApplication' => 'Applications',
         'permitPublicSynchronizeApplication' => 'Applications',
-        'permitDeleteObjectOnUnknowHash' => 'Objects',
+        'permitDeleteObjectOnUnknownHash' => 'Objects',
         'permitCheckSignOnVerify' => 'Links',
         'permitCheckSignOnList' => 'Links',
         'permitCheckObjectHash' => 'Objects',
@@ -972,7 +972,7 @@ class nebule
         'permitObfuscatedTransaction' => 'boolean',
         'permitSynchronizeApplication' => 'boolean',
         'permitPublicSynchronizeApplication' => 'boolean',
-        'permitDeleteObjectOnUnknowHash' => 'boolean',
+        'permitDeleteObjectOnUnknownHash' => 'boolean',
         'permitCheckSignOnVerify' => 'boolean',
         'permitCheckSignOnList' => 'boolean',
         'permitCheckObjectHash' => 'boolean',
@@ -1052,7 +1052,7 @@ class nebule
         'permitObfuscatedTransaction' => true,
         'permitSynchronizeApplication' => true,
         'permitPublicSynchronizeApplication' => true,
-        'permitDeleteObjectOnUnknowHash' => false,
+        'permitDeleteObjectOnUnknownHash' => false,
         'permitCheckSignOnVerify' => false,
         'permitCheckSignOnList' => true,
         'permitCheckObjectHash' => false,
@@ -1131,7 +1131,7 @@ class nebule
         'permitObfuscatedTransaction' => nebule::DEFAULT_PERMIT_OBFUSCATED_TRANSACTION,
         'permitSynchronizeApplication' => nebule::DEFAULT_PERMIT_SYNCHRONIZE_APPLICATIONS,
         'permitPublicSynchronizeApplication' => nebule::DEFAULT_PERMIT_PUBLIC_SYNCHRONIZE_APPLICATIONS,
-        'permitDeleteObjectOnUnknowHash' => nebule::DEFAULT_PERMIT_DELETE_OBJECT_ON_UNKNOW_HASH,
+        'permitDeleteObjectOnUnknownHash' => nebule::DEFAULT_PERMIT_DELETE_OBJECT_ON_UNKNOW_HASH,
         'permitCheckSignOnVerify' => nebule::DEFAULT_PERMIT_CHECK_SIGN_ON_VERIFY,
         'permitCheckSignOnList' => nebule::DEFAULT_PERMIT_CHECK_SIGN_ON_LIST,
         'permitCheckObjectHash' => nebule::DEFAULT_PERMIT_CHECK_OBJECT_HASH,
@@ -1210,7 +1210,7 @@ class nebule
         'permitObfuscatedTransaction' => 'careful',
         'permitSynchronizeApplication' => 'careful',
         'permitPublicSynchronizeApplication' => 'careful',
-        'permitDeleteObjectOnUnknowHash' => 'critical',
+        'permitDeleteObjectOnUnknownHash' => 'critical',
         'permitCheckSignOnVerify' => 'critical',
         'permitCheckSignOnList' => 'critical',
         'permitCheckObjectHash' => 'critical',
@@ -1290,7 +1290,7 @@ class nebule
         'permitObfuscatedTransaction' => 'The switch to permit transactions on obfuscated links.',
         'permitSynchronizeApplication' => 'The switch to permit to synchronize (update) applications from other localisations.',
         'permitPublicSynchronizeApplication' => 'The switch to permit to synchronize (update) applications by anyone from other localisations.',
-        'permitDeleteObjectOnUnknowHash' => 'Permit erasing object if not valid hash type can be found.',
+        'permitDeleteObjectOnUnknownHash' => 'Permit erasing object if not valid hash type can be found.',
         'permitCheckSignOnVerify' => 'Todo description...',
         'permitCheckSignOnList' => 'Todo description...',
         'permitCheckObjectHash' => 'Todo description...',
@@ -9309,7 +9309,7 @@ class Node
      * Retourne false si l'objet n'est pas valide, il est supprimé.
      * Retourne true  si l'empreinte de l'objet est valide.
      *
-     * En cas de type de hash inconnu ou invalide, et si l'option permitDeleteObjectOnUnknowHash est à true,
+     * En cas de type de hash inconnu ou invalide, et si l'option permitDeleteObjectOnUnknownHash est à true,
      *   choisi l'algorithme de hash par défaut comme dernière chance.
      *   Si l'empreinte ne correspond pas, l'objet sera supprimé.
      *
@@ -9345,7 +9345,7 @@ class Node
         }
         $hashAlgo = $this->getHashAlgo();
         if (!$this->_crypto->checkHashAlgorithm($hashAlgo)) {
-            if ($this->_nebuleInstance->getOption('permitDeleteObjectOnUnknowHash')) {
+            if ($this->_nebuleInstance->getOption('permitDeleteObjectOnUnknownHash')) {
                 // Si pas trouvé d'algorithme valide, utilise celui par défaut.
                 $hashAlgo = $this->_crypto->hashAlgorithmName();
             } else {
@@ -9466,7 +9466,7 @@ class Node
         }
         $hashAlgo = $this->getHashAlgo();
         if (!$this->_crypto->checkHashAlgorithm($hashAlgo)) {
-            if ($this->_nebuleInstance->getOption('permitDeleteObjectOnUnknowHash')) {
+            if ($this->_nebuleInstance->getOption('permitDeleteObjectOnUnknownHash')) {
                 // Si pas trouvé d'algorithme valide, utilise celui par défaut.
                 $hashAlgo = $this->_crypto->hashAlgorithmName();
             } else {
