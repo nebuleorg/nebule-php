@@ -6335,8 +6335,7 @@ chmod 644 <?php echo LIB_LOCAL_ENTITY_FILE; ?>
 
 function bootstrap_displayApplication0()
 {
-    global $nebuleInstance,
-           $loggerSessionID;
+    global $nebuleInstance;
 
     // Initialisation des logs
     log_reopen('app0');
@@ -6347,9 +6346,6 @@ function bootstrap_displayApplication0()
 
     bootstrap_htmlHeader();
     bootstrap_htmlTop();
-
-    // Ré-initialisation des logs FIXME ???
-    log_reopen('app0');
 
     ?>
 
@@ -6469,7 +6465,7 @@ function bootstrap_displayApplication0()
 
 function bootstrap_displayApplication1()
 {
-    global $nebuleInstance, $loggerSessionID, $nebuleLibLevel, $nebuleLibVersion, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
+    global $nebuleInstance, $nebuleLibLevel, $nebuleLibVersion, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
 
     // Initialisation des logs
     log_reopen('app1');
@@ -6480,9 +6476,6 @@ function bootstrap_displayApplication1()
 
     bootstrap_htmlHeader();
     bootstrap_htmlTop();
-
-    // Ré-initialisation des logs FIXME ???
-    log_reopen('app1');
 
     // Instancie la classe de la documentation.
     $instance = new nebdoctech($nebuleInstance);
@@ -6516,8 +6509,6 @@ function bootstrap_displayApplication1()
 
 function bootstrap_displayApplication2()
 {
-    global $nebuleInstance, $loggerSessionID, $nebuleLibLevel, $nebuleLibVersion, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
-
     // Initialisation des logs
     log_reopen('app2');
     log_add('Loading', 'info', __FUNCTION__, '3a5c4178');
@@ -6527,9 +6518,6 @@ function bootstrap_displayApplication2()
 
     bootstrap_htmlHeader();
     bootstrap_htmlTop();
-
-    // Ré-initialisation des logs FIXME ???
-    log_reopen('app2');
 
     ?>
     <div class="layout-main">
