@@ -770,7 +770,7 @@ class nebule
         'permitSynchronizeLink',
         'permitUploadLink',
         'permitPublicUploadLink',
-        'permitPublicUploadCodeAutoritiesLink',
+        'permitPublicUploadCodeAuthoritiesLink',
         'permitObfuscatedLink',
         'permitWriteEntity',
         'permitPublicCreateEntity',
@@ -875,7 +875,7 @@ class nebule
         'permitSynchronizeLink' => 'Links',
         'permitUploadLink' => 'Links',
         'permitPublicUploadLink' => 'Links',
-        'permitPublicUploadCodeAutoritiesLink' => 'Links',
+        'permitPublicUploadCodeAuthoritiesLink' => 'Links',
         'permitObfuscatedLink' => 'Links',
         'permitWriteEntity' => 'Entities',
         'permitPublicCreateEntity' => 'Entities',
@@ -959,7 +959,7 @@ class nebule
         'permitSynchronizeLink' => 'boolean',
         'permitUploadLink' => 'boolean',
         'permitPublicUploadLink' => 'boolean',
-        'permitPublicUploadCodeAutoritiesLink' => 'boolean',
+        'permitPublicUploadCodeAuthoritiesLink' => 'boolean',
         'permitObfuscatedLink' => 'boolean',
         'permitWriteEntity' => 'boolean',
         'permitPublicCreateEntity' => 'boolean',
@@ -1039,7 +1039,7 @@ class nebule
         'permitSynchronizeLink' => true,
         'permitUploadLink' => true,
         'permitPublicUploadLink' => true,
-        'permitPublicUploadCodeAutoritiesLink' => true,
+        'permitPublicUploadCodeAuthoritiesLink' => true,
         'permitObfuscatedLink' => true,
         'permitWriteEntity' => true,
         'permitPublicCreateEntity' => true,
@@ -1118,7 +1118,7 @@ class nebule
         'permitSynchronizeLink' => nebule::DEFAULT_PERMIT_SYNCHRONIZE_LINK,
         'permitUploadLink' => nebule::DEFAULT_PERMIT_UPLOAD_LINK,
         'permitPublicUploadLink' => nebule::DEFAULT_PERMIT_PUBLIC_UPLOAD_LINK,
-        'permitPublicUploadCodeAutoritiesLink' => nebule::DEFAULT_PERMIT_PUBLIC_UPLOAD_CODE_MASTER_LINK,
+        'permitPublicUploadCodeAuthoritiesLink' => nebule::DEFAULT_PERMIT_PUBLIC_UPLOAD_CODE_MASTER_LINK,
         'permitObfuscatedLink' => nebule::DEFAULT_PERMIT_OBFUSCATED_LINK,
         'permitWriteEntity' => nebule::DEFAULT_PERMIT_WRITE_ENTITY,
         'permitPublicCreateEntity' => nebule::DEFAULT_PERMIT_PUBLIC_CREATE_ENTITY,
@@ -1197,7 +1197,7 @@ class nebule
         'permitSynchronizeLink' => 'useful',
         'permitUploadLink' => 'careful',
         'permitPublicUploadLink' => 'careful',
-        'permitPublicUploadCodeAutoritiesLink' => 'useful',
+        'permitPublicUploadCodeAuthoritiesLink' => 'useful',
         'permitObfuscatedLink' => 'useful',
         'permitWriteEntity' => 'useful',
         'permitPublicCreateEntity' => 'critical',
@@ -1277,7 +1277,7 @@ class nebule
         'permitSynchronizeLink' => 'The switch to permit to synchronize links of objects from other localisations.',
         'permitUploadLink' => 'The switch to permit ask creation and sign of new links uploaded within an URL.',
         'permitPublicUploadLink' => 'The switch to permit ask upload signed links (from known entities) within an URL.',
-        'permitPublicUploadCodeAutoritiesLink' => 'The switch to permit ask upload signed links by the code master within an URL.',
+        'permitPublicUploadCodeAuthoritiesLink' => 'The switch to permit ask upload signed links by the code master within an URL.',
         'permitObfuscatedLink' => 'The switch to permit read/write obfuscated links. On false, generation of obfuscated liens c is disabled and all existing/downloaded obfuscated links are assumed as invalid and dropped.',
         'permitWriteEntity' => 'The switch to permit entities writing.',
         'permitPublicCreateEntity' => 'The switch to permit create new entity by anyone.',
@@ -37269,7 +37269,7 @@ abstract class Actions
         if ($this->_nebuleInstance->getOption('permitWrite')
             && $this->_nebuleInstance->getOption('permitWriteLink')
             && $this->_nebuleInstance->getOption('permitUploadLink')
-            && ($this->_nebuleInstance->getOption('permitPublicUploadCodeAutoritiesLink')
+            && ($this->_nebuleInstance->getOption('permitPublicUploadCodeAuthoritiesLink')
                 || $this->_nebuleInstance->getOption('permitPublicUploadLink')
                 || $this->_unlocked
             )
@@ -37468,7 +37468,7 @@ abstract class Actions
             && $this->_nebuleInstance->getOption('permitWriteLink')
             && $this->_nebuleInstance->getOption('permitUploadLink')
             && ($this->_nebuleInstance->getOption('permitPublicUploadLink')
-                || $this->_nebuleInstance->getOption('permitPublicUploadCodeAutoritiesLink')
+                || $this->_nebuleInstance->getOption('permitPublicUploadCodeAuthoritiesLink')
                 || $this->_unlocked
             )
         ) {
@@ -38237,7 +38237,7 @@ abstract class Actions
             && $this->_nebuleInstance->getOption('permitWriteLink')
             && $this->_nebuleInstance->getOption('permitUploadLink')
             && ($this->_nebuleInstance->getOption('permitPublicUploadLink')
-                || $this->_nebuleInstance->getOption('permitPublicUploadCodeAutoritiesLink')
+                || $this->_nebuleInstance->getOption('permitPublicUploadCodeAuthoritiesLink')
                 || $this->_unlocked
             )
         ) {
@@ -40057,7 +40057,7 @@ abstract class Actions
 
                 // Signature du lien.
                 $link->signWrite();
-            } elseif ($this->_nebuleInstance->getOption('permitPublicUploadCodeAutoritiesLink')
+            } elseif ($this->_nebuleInstance->getOption('permitPublicUploadCodeAuthoritiesLink')
                 || $this->_nebuleInstance->getOption('permitPublicUploadLink')
             ) {
                 $this->_metrology->addLog('Action sign link', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -40089,7 +40089,7 @@ abstract class Actions
      *   - permitUploadLink
      * L'activation de la fonction est ensuite conditionnée par une conbinaison d'autres droits ou facteurs.
      *
-     * Si le droit permitPublicUploadCodeAutoritiesLink est activé :
+     * Si le droit permitPublicUploadCodeAuthoritiesLink est activé :
      *   les liens signés du maître du code sont acceptés ;
      *   les liens des autres entités sont ignorés avec seulement ce droit.
      *
@@ -40114,7 +40114,7 @@ abstract class Actions
         if ($this->_nebuleInstance->getOption('permitWrite')
             && $this->_nebuleInstance->getOption('permitWriteLink')
             && $this->_nebuleInstance->getOption('permitUploadLink')
-            && ($this->_nebuleInstance->getOption('permitPublicUploadCodeAutoritiesLink')
+            && ($this->_nebuleInstance->getOption('permitPublicUploadCodeAuthoritiesLink')
                 || $this->_nebuleInstance->getOption('permitPublicUploadLink')
                 || $this->_unlocked
             )
@@ -40126,7 +40126,7 @@ abstract class Actions
 
             if ($link->getSigned()
                 && (($link->getHashSigner_disabled() == $this->_nebuleInstance->getCodeAuthority()
-                        && $this->_nebuleInstance->getOption('permitPublicUploadCodeAutoritiesLink')
+                        && $this->_nebuleInstance->getOption('permitPublicUploadCodeAuthoritiesLink')
                     )
                     || $this->_nebuleInstance->getOption('permitPublicUploadLink')
                     || $this->_unlocked
@@ -40165,7 +40165,7 @@ abstract class Actions
         if ($this->_nebuleInstance->getOption('permitWrite')
             && $this->_nebuleInstance->getOption('permitWriteLink')
             && ($this->_nebuleInstance->getOption('permitPublicUploadLink')
-                || $this->_nebuleInstance->getOption('permitPublicUploadCodeAutoritiesLink')
+                || $this->_nebuleInstance->getOption('permitPublicUploadCodeAuthoritiesLink')
                 || ($this->_nebuleInstance->getOption('permitUploadLink')
                     && $this->_unlocked
                 )
@@ -40748,7 +40748,7 @@ abstract class Actions
      *   - permitUploadLink
      * L'activation de la fonction est ensuite conditionnée par une conbinaison d'autres droits ou facteurs.
      *
-     * Si le droit permitPublicUploadCodeAutoritiesLink est activé :
+     * Si le droit permitPublicUploadCodeAuthoritiesLink est activé :
      *   les liens signés du maître du code sont acceptés ;
      *   les liens des autres entités sont ignorés avec seulement ce droit.
      *
@@ -40772,7 +40772,7 @@ abstract class Actions
         if ($this->_nebuleInstance->getOption('permitWrite')
             && $this->_nebuleInstance->getOption('permitWriteLink')
             && $this->_nebuleInstance->getOption('permitUploadLink')
-            && ($this->_nebuleInstance->getOption('permitPublicUploadCodeAutoritiesLink')
+            && ($this->_nebuleInstance->getOption('permitPublicUploadCodeAuthoritiesLink')
                 || $this->_nebuleInstance->getOption('permitPublicUploadLink')
                 || $this->_unlocked
             )
@@ -40792,7 +40792,7 @@ abstract class Actions
                     ) {
                         if ($instance->getSigned()
                             && (($instance->getHashSigner_disabled() == $this->_nebuleInstance->getCodeAuthority()
-                                    && $this->_nebuleInstance->getOption('permitPublicUploadCodeAutoritiesLink')
+                                    && $this->_nebuleInstance->getOption('permitPublicUploadCodeAuthoritiesLink')
                                 )
                                 || $this->_nebuleInstance->getOption('permitPublicUploadLink')
                                 || $this->_unlocked
