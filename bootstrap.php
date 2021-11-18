@@ -271,9 +271,9 @@ const LIB_FIRST_GENERATED_NAME_SIZE = 6;
 const LIB_FIRST_GENERATED_PASSWORD_SIZE = 14;
 const LIB_FIRST_RELOAD_DELAY = 3000;
 const LIB_FIRST_LOCALISATIONS = array(
-    'http://code.master.nebule.org',
+    'http://cerberus.nebule.org',
     'http://puppetmaster.nebule.org',
-    'http://security.master.nebule.org',
+    'http://bachue.nebule.org',
 );
 const LIB_FIRST_AUTORITIES_PUBLIC_KEY = array(
     '-----BEGIN PUBLIC KEY-----
@@ -421,7 +421,7 @@ const LIB_CONFIGURATIONS_TYPE = array(
     'permitSynchronizeLink' => 'boolean',
     'permitUploadLink' => 'boolean',
     'permitPublicUploadLink' => 'boolean',
-    'permitPublicUploadCodeMasterLink' => 'boolean',
+    'permitPublicUploadCodeAutoritiesLink' => 'boolean',
     'permitObfuscatedLink' => 'boolean',
     'permitWriteEntity' => 'boolean',
     'permitPublicCreateEntity' => 'boolean',
@@ -498,7 +498,7 @@ const LIB_CONFIGURATIONS_DEFAULT = array(
     'permitSynchronizeLink' => true,
     'permitUploadLink' => false,
     'permitPublicUploadLink' => false,
-    'permitPublicUploadCodeMasterLink' => false,
+    'permitPublicUploadCodeAutoritiesLink' => false,
     'permitObfuscatedLink' => false,
     'permitWriteEntity' => true,
     'permitPublicCreateEntity' => true,
@@ -686,22 +686,22 @@ $libraryRescueMode = false;
 $configurationList = array();
 
 /**
- * ID masters of security.
+ * ID authorities of security.
  */
 $nebuleSecurityAuthorities = array();
 
 /**
- * ID masters of code.
+ * ID authorities of code.
  */
 $nebuleCodeAuthorities = array();
 
 /**
- * ID masters of directory.
+ * ID authorities of directory.
  */
 $nebuleDirectoryAuthorities = array();
 
 /**
- * ID masters of time.
+ * ID authorities of time.
  */
 $nebuleTimeAuthorities = array();
 
@@ -978,43 +978,43 @@ function lib_init(): bool
     }
     $nebuleLocalAuthorities = array($puppetmaster);
 
-    // Search and check global masters.
-    $nebuleSecurityMasters = ent_getSecurityAuthorities(false);
-    if (!ent_checkSecurityAuthorities($nebuleSecurityMasters)) {
-        $nebuleSecurityMasters = ent_getSecurityAuthorities(true);
-        if (!ent_checkSecurityAuthorities($nebuleSecurityMasters)) {
-            log_add('lib init : security master error!', 'error', __FUNCTION__, '6001a43e');
+    // Search and check global authorities.
+    $nebuleSecurityAuthorities = ent_getSecurityAuthorities(false);
+    if (!ent_checkSecurityAuthorities($nebuleSecurityAuthorities)) {
+        $nebuleSecurityAuthorities = ent_getSecurityAuthorities(true);
+        if (!ent_checkSecurityAuthorities($nebuleSecurityAuthorities)) {
+            log_add('lib init : security authority error!', 'error', __FUNCTION__, '6001a43e');
             return false;
         }
     }
-    foreach ($nebuleSecurityMasters as $master)
-        $nebuleLocalAuthorities[] = $master;
+    foreach ($nebuleSecurityAuthorities as $authority)
+        $nebuleLocalAuthorities[] = $authority;
 
-    $nebuleCodeMasters = ent_getCodeAuthorities(false);
-    if (!ent_checkCodeAuthorities($nebuleCodeMasters)) {
-        $nebuleCodeMasters = ent_getCodeAuthorities(true);
-        if (!ent_checkCodeAuthorities($nebuleCodeMasters)) {
-            log_add('lib init : code master error!', 'error', __FUNCTION__, '0a82529e');
+    $nebuleCodeAuthorities = ent_getCodeAuthorities(false);
+    if (!ent_checkCodeAuthorities($nebuleCodeAuthorities)) {
+        $nebuleCodeAuthorities = ent_getCodeAuthorities(true);
+        if (!ent_checkCodeAuthorities($nebuleCodeAuthorities)) {
+            log_add('lib init : code authority error!', 'error', __FUNCTION__, '0a82529e');
             return false;
         }
     }
-    foreach ($nebuleCodeMasters as $master)
-        $nebuleLocalAuthorities[] = $master;
+    foreach ($nebuleCodeAuthorities as $authority)
+        $nebuleLocalAuthorities[] = $authority;
 
-    $nebuleTimeMasters = ent_getTimeAuthorities(false);
-    if (!ent_checkTimeAuthorities($nebuleTimeMasters)) {
-        $nebuleTimeMasters = ent_getTimeAuthorities(true);
-        if (!ent_checkTimeAuthorities($nebuleTimeMasters)) {
-            log_add('lib init : time master error!', 'error', __FUNCTION__, '874dfd89');
+    $nebuleTimeAuthorities = ent_getTimeAuthorities(false);
+    if (!ent_checkTimeAuthorities($nebuleTimeAuthorities)) {
+        $nebuleTimeAuthorities = ent_getTimeAuthorities(true);
+        if (!ent_checkTimeAuthorities($nebuleTimeAuthorities)) {
+            log_add('lib init : time authority error!', 'error', __FUNCTION__, '874dfd89');
             return false;
         }
     }
 
-    $nebuleDirectoryMasters = ent_getDirectoryAuthorities(false);
-    if (!ent_checkDirectoryAuthorities($nebuleDirectoryMasters)) {
-        $nebuleDirectoryMasters = ent_getDirectoryAuthorities(true);
-        if (!ent_checkDirectoryAuthorities($nebuleDirectoryMasters)) {
-            log_add('lib init : directory master error!', 'error', __FUNCTION__, 'be3a8b9f');
+    $nebuleDirectoryAuthorities = ent_getDirectoryAuthorities(false);
+    if (!ent_checkDirectoryAuthorities($nebuleDirectoryAuthorities)) {
+        $nebuleDirectoryAuthorities = ent_getDirectoryAuthorities(true);
+        if (!ent_checkDirectoryAuthorities($nebuleDirectoryAuthorities)) {
+            log_add('lib init : directory authority error!', 'error', __FUNCTION__, 'be3a8b9f');
             return false;
         }
     }
@@ -2969,7 +2969,7 @@ function nod_checkBanned_FIXME(&$nid): bool
     foreach ($table as $link) {
         if (($link [2] == $nebulePublicEntity) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $nid) && ($link [7] == '0'))
             $ok = true;
-        if (($link [2] == $nebuleSecurityMaster) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $nid) && ($link [7] == '0'))
+        if (($link [2] == $nebuleSecurityAuthority) && ($link [4] == 'f') && ($link [5] == $hashtype) && ($link [6] == $nid) && ($link [7] == '0'))
             $ok = true;
     }
     unset($table);
@@ -2981,7 +2981,7 @@ function nod_checkBanned_FIXME(&$nid): bool
 
 
             addLog($nid . ') banned by ' . $nebulePublicEntity, 'warn', __FUNCTION__, 'a9668cd0');
-            addLog($nid . ') banned by ' . $nebuleSecurityMaster, 'warn', __FUNCTION__, 'd84f8e81');
+            addLog($nid . ') banned by ' . $nebuleSecurityAuthority, 'warn', __FUNCTION__, 'd84f8e81');
 
 
 
@@ -3402,15 +3402,15 @@ function ent_generate(string $asymmetricAlgo, string $hashAlgo, string &$hashPub
 }
 
 /**
- * Get masters of security IDs.
- * Make a search for global entities and for code branch specific entities
+ * Get asked authorities list.
+ * Make a search for global entities and for code branch specific entities.
  *
  * @param string $refNid
  * @param array  $result
  * @param bool   $synchronize
  * @return array
  */
-function ent_getAskedMasters(string $refNid, array &$result, bool $synchronize): array
+function ent_getAskedAuthorities(string $refNid, array &$result, bool $synchronize): array
 {
     if (sizeof($result) != 0)
         return $result;
@@ -3444,7 +3444,7 @@ function ent_getAskedMasters(string $refNid, array &$result, bool $synchronize):
 }
 
 /**
- * Get masters of security IDs.
+ * Get authorities of security IDs.
  * Update global list on the same time.
  *
  * @param bool $synchronize
@@ -3453,11 +3453,11 @@ function ent_getAskedMasters(string $refNid, array &$result, bool $synchronize):
 function ent_getSecurityAuthorities(bool $synchronize = false): array
 {
     global $nebuleSecurityAuthorities;
-    return ent_getAskedMasters(LIB_RID_SECURITY_AUTHORITY, $nebuleSecurityAuthorities, $synchronize);
+    return ent_getAskedAuthorities(LIB_RID_SECURITY_AUTHORITY, $nebuleSecurityAuthorities, $synchronize);
 }
 
 /**
- * Get masters of code IDs.
+ * Get authorities of code IDs.
  * Update global list on the same time.
  *
  * @param bool $synchronize
@@ -3466,11 +3466,11 @@ function ent_getSecurityAuthorities(bool $synchronize = false): array
 function ent_getCodeAuthorities(bool $synchronize = false): array
 {
     global $nebuleCodeAuthorities;
-    return ent_getAskedMasters(LIB_RID_CODE_AUTHORITY, $nebuleCodeAuthorities, $synchronize);
+    return ent_getAskedAuthorities(LIB_RID_CODE_AUTHORITY, $nebuleCodeAuthorities, $synchronize);
 }
 
 /**
- * Get masters of time IDs.
+ * Get authorities of time IDs.
  * Update global list on the same time.
  *
  * @param bool $synchronize
@@ -3479,11 +3479,11 @@ function ent_getCodeAuthorities(bool $synchronize = false): array
 function ent_getTimeAuthorities(bool $synchronize = false): array
 {
     global $nebuleTimeAuthorities;
-    return ent_getAskedMasters(LIB_RID_TIME_AUTHORITY, $nebuleTimeAuthorities, $synchronize);
+    return ent_getAskedAuthorities(LIB_RID_TIME_AUTHORITY, $nebuleTimeAuthorities, $synchronize);
 }
 
 /**
- * Get masters of directory IDs.
+ * Get authorities of directory IDs.
  * Update global list on the same time.
  *
  * @param bool $synchronize
@@ -3492,7 +3492,7 @@ function ent_getTimeAuthorities(bool $synchronize = false): array
 function ent_getDirectoryAuthorities(bool $synchronize = false): array
 {
     global $nebuleDirectoryAuthorities;
-    return ent_getAskedMasters(LIB_RID_DIRECTORY_AUTHORITY, $nebuleDirectoryAuthorities, $synchronize);
+    return ent_getAskedAuthorities(LIB_RID_DIRECTORY_AUTHORITY, $nebuleDirectoryAuthorities, $synchronize);
 }
 
 /**
@@ -3512,7 +3512,7 @@ function ent_checkPuppetmaster(string $oid): bool
 }
 
 /**
- * Check masters of security entities.
+ * Check authorities of security entities.
  *
  * @param array $oidList
  * @return bool
@@ -3520,14 +3520,14 @@ function ent_checkPuppetmaster(string $oid): bool
 function ent_checkSecurityAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0) {
-        log_add('need sync masters of security', 'warn', __FUNCTION__, 'a767699e');
-        bootstrap_setBreak('72', 'Need sync masters of security');
+        log_add('need sync authorities of security', 'warn', __FUNCTION__, 'a767699e');
+        bootstrap_setBreak('72', 'Need sync authorities of security');
         return false;
     }
     foreach ($oidList as $nid) {
         if (!ent_checkIsPublicKey($nid)) {
-            log_add('need sync masters of security ' . $nid, 'warn', __FUNCTION__, '5626b8f');
-            bootstrap_setBreak('73', 'Need sync masters of security');
+            log_add('need sync authorities of security ' . $nid, 'warn', __FUNCTION__, '5626b8f');
+            bootstrap_setBreak('73', 'Need sync authorities of security');
             return false;
         }
     }
@@ -3535,7 +3535,7 @@ function ent_checkSecurityAuthorities(array $oidList): bool
 }
 
 /**
- * Check masters of code entities.
+ * Check authorities of code entities.
  *
  * @param array $oidList
  * @return bool
@@ -3543,14 +3543,14 @@ function ent_checkSecurityAuthorities(array $oidList): bool
 function ent_checkCodeAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0) {
-        log_add('need sync masters of code', 'warn', __FUNCTION__, '8543b436');
-        bootstrap_setBreak('74', 'Need sync masters of code');
+        log_add('need sync authorities of code', 'warn', __FUNCTION__, '8543b436');
+        bootstrap_setBreak('74', 'Need sync authorities of code');
         return false;
     }
     foreach ($oidList as $nid) {
         if (!ent_checkIsPublicKey($nid)) {
-            log_add('need sync masters of code ' . $nid, 'warn', __FUNCTION__, '0ff4516d');
-            bootstrap_setBreak('75', 'Need sync masters of code');
+            log_add('need sync authorities of code ' . $nid, 'warn', __FUNCTION__, '0ff4516d');
+            bootstrap_setBreak('75', 'Need sync authorities of code');
             return false;
         }
     }
@@ -3558,7 +3558,7 @@ function ent_checkCodeAuthorities(array $oidList): bool
 }
 
 /**
- * Check masters of time entities.
+ * Check authorities of time entities.
  *
  * @param array $oidList
  * @return bool
@@ -3566,14 +3566,14 @@ function ent_checkCodeAuthorities(array $oidList): bool
 function ent_checkTimeAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0) {
-        log_add('need sync masters of time', 'warn', __FUNCTION__, '0c6f1ef1');
-        bootstrap_setBreak('76', 'Need sync masters of time');
+        log_add('need sync authorities of time', 'warn', __FUNCTION__, '0c6f1ef1');
+        bootstrap_setBreak('76', 'Need sync authorities of time');
         return false;
     }
     foreach ($oidList as $nid) {
         if (!ent_checkIsPublicKey($nid)) {
-            log_add('need sync masters of time ' . $nid, 'warn', __FUNCTION__, '01f5f9b5');
-            bootstrap_setBreak('77', 'Need sync masters of time');
+            log_add('need sync authorities of time ' . $nid, 'warn', __FUNCTION__, '01f5f9b5');
+            bootstrap_setBreak('77', 'Need sync authorities of time');
             return false;
         }
     }
@@ -3581,7 +3581,7 @@ function ent_checkTimeAuthorities(array $oidList): bool
 }
 
 /**
- * Check masters of directory entities.
+ * Check authorities of directory entities.
  *
  * @param array $oidList
  * @return bool
@@ -3589,14 +3589,14 @@ function ent_checkTimeAuthorities(array $oidList): bool
 function ent_checkDirectoryAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0) {
-        log_add('need sync masters of directory', 'warn', __FUNCTION__, 'e47e9e04');
-        bootstrap_setBreak('78', 'Need sync masters of directory');
+        log_add('need sync authorities of directory', 'warn', __FUNCTION__, 'e47e9e04');
+        bootstrap_setBreak('78', 'Need sync authorities of directory');
         return false;
     }
     foreach ($oidList as $nid) {
         if (!ent_checkIsPublicKey($nid)) {
-            log_add('need sync masters of directory ' . $nid, 'warn', __FUNCTION__, '8b12fe09');
-            bootstrap_setBreak('79', 'Need sync masters of directory');
+            log_add('need sync authorities of directory ' . $nid, 'warn', __FUNCTION__, '8b12fe09');
+            bootstrap_setBreak('79', 'Need sync authorities of directory');
             return false;
         }
     }
@@ -3644,7 +3644,7 @@ function ent_syncAuthorities(array $oidList): void
     global $nebuleCacheIsPublicKey, $nebuleCacheIsPrivateKey;
 
     foreach ($oidList as $nid) {
-        log_add('Sync master entity ' . $nid, 'info', __FUNCTION__, '92e0483f');
+        log_add('Sync authority entity ' . $nid, 'info', __FUNCTION__, '92e0483f');
         obj_getDistantContent($nid, array());
         lnk_getDistantOnLocations($nid, array());
     }
@@ -5055,11 +5055,11 @@ function bootstrap_displayOnBreak(): void
     <span class="partstitle">#2 <?php echo BOOTSTRAP_NAME; ?> nebule library PP</span><br/>
     library version &nbsp;: <?php echo BOOTSTRAP_VERSION ?><br/>
     puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: <?php echo lib_getConfiguration('puppetmaster'); ?> (local authority)<br/>
-    security master &nbsp;: <?php foreach ($nebuleSecurityAuthorities as $m) echo $m . ' '; ?> (local authority)<br/>
-    code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php foreach ($nebuleCodeAuthorities as $m) echo $m . ' '; ?> (local authority)
+    security authority &nbsp;: <?php foreach ($nebuleSecurityAuthorities as $m) echo $m . ' '; ?> (local authority)<br/>
+    code authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php foreach ($nebuleCodeAuthorities as $m) echo $m . ' '; ?> (local authority)
     <br/>
-    directory master : <?php foreach ($nebuleDirectoryAuthorities as $m) echo $m . ' '; ?><br/>
-    time master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php foreach ($nebuleTimeAuthorities as $m) echo $m . ' '; ?><br/>
+    directory authority : <?php foreach ($nebuleDirectoryAuthorities as $m) echo $m . ' '; ?><br/>
+    time authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php foreach ($nebuleTimeAuthorities as $m) echo $m . ' '; ?><br/>
     server entity &nbsp;&nbsp;&nbsp;: <?php echo $nebuleServerEntity; ?><br/>
     default entity &nbsp;&nbsp;: <?php echo $nebuleDefaultEntite; ?><br/>
     current entity &nbsp;&nbsp;: <?php echo $nebulePublicEntity; ?>
@@ -5092,38 +5092,38 @@ function bootstrap_displayOnBreak(): void
         } else {
             echo "OK (local authority)<br />\n";
 
-            // Test le security master.
-            echo 'security master &nbsp;: ';
+            // Test le security authority.
+            echo 'security authority &nbsp;: ';
             if ($checkInstance == 1) {
                 echo "<span id=\"error\">ERROR!</span><br />\n";
             } else {
-                echo '<a href="o/' . $nebuleInstance->getSecurityMaster() . '">'
-                    . $nebuleInstance->getSecurityMasterInstance()->getName() . "</a> OK (local authority)<br />\n";
+                echo '<a href="o/' . $nebuleInstance->getSecurityAuthority() . '">'
+                    . $nebuleInstance->getSecurityAuthorityInstance()->getName() . "</a> OK (local authority)<br />\n";
 
-                // Test le code master.
-                echo 'code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+                // Test le code authority.
+                echo 'code authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
                 if ($checkInstance == 2) {
                     echo "<span id=\"error\">ERROR!</span><br />\n";
                 } else {
-                    echo '<a href="o/' . $nebuleInstance->getCodeMaster() . '">'
-                        . $nebuleInstance->getCodeMasterInstance()->getName() . "</a> OK (local authority)<br />\n";
+                    echo '<a href="o/' . $nebuleInstance->getCodeAuthority() . '">'
+                        . $nebuleInstance->getCodeAuthorityInstance()->getName() . "</a> OK (local authority)<br />\n";
 
-                    // Test le directory master.
-                    echo 'directory master : ';
+                    // Test le directory authority.
+                    echo 'directory authority : ';
                     if ($checkInstance == 3) {
                         echo "<span id=\"error\">ERROR!</span><br />\n";
                     } else {
-                        echo '<a href="o/' . $nebuleInstance->getDirectoryMaster() . '">'
-                            . $nebuleInstance->getDirectoryMasterInstance()->getName() . "</a> OK<br />\n";
+                        echo '<a href="o/' . $nebuleInstance->getDirectoryAuthority() . '">'
+                            . $nebuleInstance->getDirectoryAuthorityInstance()->getName() . "</a> OK<br />\n";
                     }
 
-                    // Test le time master.
-                    echo 'time master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+                    // Test le time authority.
+                    echo 'time authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
                     if ($checkInstance == 4) {
                         echo "<span id=\"error\">ERROR!</span><br />\n";
                     } else {
-                        echo '<a href="o/' . $nebuleInstance->getTimeMaster() . '">'
-                            . $nebuleInstance->getTimeMasterInstance()->getName() . "</a> OK<br />\n";
+                        echo '<a href="o/' . $nebuleInstance->getTimeAuthority() . '">'
+                            . $nebuleInstance->getTimeAuthorityInstance()->getName() . "</a> OK<br />\n";
                     }
 
                     // Test l'entité de l'instance du serveur.
@@ -5862,7 +5862,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
     // Activation comme autorité locale.
     $nebuleLocalAuthorities[0] = $puppetmaster;
 
-    echo 'sync for masters references';
+    echo 'sync for authorities references';
     lnk_getDistantOnLocations(LIB_RID_SECURITY_AUTHORITY, array());
     echo '.';
     lnk_getDistantOnLocations(LIB_RID_CODE_AUTHORITY, array());
@@ -5880,7 +5880,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
     $timeAuthorities = ent_getTimeAuthorities(true);
     $directoryAuthorities = ent_getDirectoryAuthorities(true);
 
-    echo 'security master &nbsp;: ';
+    echo 'security authority &nbsp;: ';
     if (sizeof($securityAuthorities) != 0) {
         if (!ent_checkSecurityAuthorities($securityAuthorities)) {
             echo 'sync... ';
@@ -5901,7 +5901,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
     echo "<br/>\n";
     flush();
 
-    echo 'code master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+    echo 'code authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
     if (sizeof($codeAuthorities) != 0) {
         if (!ent_checkCodeAuthorities($codeAuthorities)) {
             echo 'sync... ';
@@ -5922,7 +5922,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
     echo "<br/>\n";
     flush();
 
-    echo 'time master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+    echo 'time authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
     if (sizeof($timeAuthorities) != 0) {
         if (!ent_checkTimeAuthorities($timeAuthorities)) {
             echo 'sync... ';
@@ -5943,7 +5943,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
     echo "<br/>\n";
     flush();
 
-    echo 'directory master : ';
+    echo 'directory authority : ';
     if (sizeof($directoryAuthorities) != 0) {
         if (!ent_checkDirectoryAuthorities($directoryAuthorities)) {
             echo 'sync... ';
@@ -6364,7 +6364,7 @@ function bootstrap_displayApplication0()
         $hashTarget = '';
 
         // Liste les applications reconnues par le maître du code.
-        $linksList = $instanceAppsID->readLinksFilterFull($nebuleInstance->getCodeMaster(), '', 'f', $refAppsID, '', $refAppsID);
+        $linksList = $instanceAppsID->readLinksFilterFull($nebuleInstance->getCodeAuthority(), '', 'f', $refAppsID, '', $refAppsID);
         $link = null;
         foreach ($linksList as $link) {
             $hashTarget = $link->getHashTarget();
