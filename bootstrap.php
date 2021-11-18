@@ -5073,9 +5073,9 @@ function bootstrap_displayOnBreak(): void
     echo "tL=" . lib_getMetrologyTimer('tL') . "<br />\n";
     echo 'library RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . LIB_RID_INTERFACE_LIBRARY . "<br />\n";
 
-    if (!is_a($nebuleInstance, 'nebule')) {
+    if (!is_a($nebuleInstance, 'nebule'))
         echo "Not loaded.\n";
-    } else {
+    else {
         // Version.
         echo 'library ID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $bootstrapLibraryID . "<br />\n";
         echo 'library version &nbsp;: ' . $nebuleLibVersion . "<br />\n";
@@ -5084,55 +5084,52 @@ function bootstrap_displayOnBreak(): void
 
         // Test le puppetmaster.
         echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ';
-        if ($checkInstance == 0) {
+        if ($checkInstance == 0)
             echo "<span id=\"error\">ERROR!</span><br />\n";
-        } else {
+        else {
             echo "OK (local authority)<br />\n";
 
             // Test le security authority.
             echo 'security authority &nbsp;: ';
-            if ($checkInstance == 1) {
+            if ($checkInstance == 1)
                 echo "<span id=\"error\">ERROR!</span><br />\n";
-            } else {
+            else {
                 echo '<a href="o/' . $nebuleInstance->getSecurityAuthority() . '">'
                     . $nebuleInstance->getSecurityAuthorityInstance()->getName() . "</a> OK (local authority)<br />\n";
 
                 // Test le code authority.
                 echo 'code authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
-                if ($checkInstance == 2) {
+                if ($checkInstance == 2)
                     echo "<span id=\"error\">ERROR!</span><br />\n";
-                } else {
+                else {
                     echo '<a href="o/' . $nebuleInstance->getCodeAuthority() . '">'
                         . $nebuleInstance->getCodeAuthorityInstance()->getName() . "</a> OK (local authority)<br />\n";
 
                     // Test le directory authority.
                     echo 'directory authority : ';
-                    if ($checkInstance == 3) {
+                    if ($checkInstance == 3)
                         echo "<span id=\"error\">ERROR!</span><br />\n";
-                    } else {
+                    else
                         echo '<a href="o/' . $nebuleInstance->getDirectoryAuthority() . '">'
                             . $nebuleInstance->getDirectoryAuthorityInstance()->getName() . "</a> OK<br />\n";
-                    }
 
                     // Test le time authority.
                     echo 'time authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
-                    if ($checkInstance == 4) {
+                    if ($checkInstance == 4)
                         echo "<span id=\"error\">ERROR!</span><br />\n";
-                    } else {
+                    else
                         echo '<a href="o/' . $nebuleInstance->getTimeAuthority() . '">'
                             . $nebuleInstance->getTimeAuthorityInstance()->getName() . "</a> OK<br />\n";
-                    }
 
                     // Test l'entité de l'instance du serveur.
                     echo 'server entity &nbsp;&nbsp;&nbsp;: ';
-                    if ($checkInstance <= 32) {
+                    if ($checkInstance <= 32)
                         echo "<span id=\"error\">ERROR!</span><br />\n";
-                    } else {
+                    else {
                         echo '<a href="o/' . $nebuleInstance->getInstanceEntity() . '">'
                             . $nebuleInstance->getInstanceEntityInstance()->getName() . '</a> OK';
-                        if ($nebuleInstance->getIsLocalAuthority($nebuleInstance->getInstanceEntity())) {
+                        if ($nebuleInstance->getIsLocalAuthority($nebuleInstance->getInstanceEntity()))
                             echo ' (local authority)';
-                        }
                         echo "<br />\n";
                     }
                 }
@@ -5141,17 +5138,15 @@ function bootstrap_displayOnBreak(): void
         // Affichage de l'entité par défaut.
         echo 'default entity &nbsp;&nbsp;: <a href="o/' . $nebuleInstance->getDefaultEntity() . '">'
             . $nebuleInstance->getDefaultEntityInstance()->getName() . '</a>';
-        if ($nebuleInstance->getIsLocalAuthority($nebuleInstance->getDefaultEntity())) {
+        if ($nebuleInstance->getIsLocalAuthority($nebuleInstance->getDefaultEntity()))
             echo ' (local authority)';
-        }
         echo "<br />\n";
 
         // Affichage de l'entité courante.
         echo 'current entity &nbsp;&nbsp;: <a href="o/' . $nebuleInstance->getCurrentEntity() . '">'
             . $nebuleInstance->getCurrentEntityInstance()->getName() . '</a>';
-        if ($nebuleInstance->getIsLocalAuthority($nebuleInstance->getCurrentEntity())) {
+        if ($nebuleInstance->getIsLocalAuthority($nebuleInstance->getCurrentEntity()))
             echo ' (local authority)';
-        }
         echo "<br />\n";
 
         // Affichage de la subordination de l'instance.
@@ -5161,99 +5156,87 @@ function bootstrap_displayOnBreak(): void
             $instance = new Entity($nebuleInstance, $entity);
             echo '<a href="o/' . $entity . '">' . $instance->getName() . '</a>';
             unset($instance);
-        } else {
+        } else
             echo '/';
-        }
-        if ($nebuleInstance->getIsLocalAuthority($entity)) {
+        if ($nebuleInstance->getIsLocalAuthority($entity))
             echo ' (local authority)';
-        }
         unset($entity);
         echo "<br />\n";
 
         // Vérifie la cryptographie.
         echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: ';
-        if (!is_object($nebuleInstance->getCrypto())) {
+        if (!is_object($nebuleInstance->getCrypto()))
             echo '<span class="error">ERROR!</span>';
-        } else {
+        else {
             echo get_class($nebuleInstance->getCrypto());
             echo "<br />\n";
 
             // Vérifie la fonction de hash.
             echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: hash ' . $nebuleInstance->getCrypto()->hashAlgorithm() . ' ';
-            if ($nebuleInstance->getCrypto()->checkHashFunction()) {
+            if ($nebuleInstance->getCrypto()->checkHashFunction())
                 echo 'OK';
-            } else {
+            else
                 echo '<span class="error">ERROR!</span>';
-            }
             echo "<br />\n";
 
             // Vérifie la fonction de cryptographie symétrique.
             echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: Symmetric ' . $nebuleInstance->getCrypto()->SymmetricAlgorithm() . ' ';
-            if ($nebuleInstance->getCrypto()->checkSymmetricFunction()) {
+            if ($nebuleInstance->getCrypto()->checkSymmetricFunction())
                 echo 'OK';
-            } else {
+            else
                 echo '<span class="error">ERROR!</span>';
-            }
             echo "<br />\n";
 
             // Vérifie la fonction de cryptographie asymétrique.
             echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: asymmetric ' . $nebuleInstance->getCrypto()->asymmetricAlgorithm() . ' ';
-            if ($nebuleInstance->getCrypto()->checkAsymmetricFunction()) {
+            if ($nebuleInstance->getCrypto()->checkAsymmetricFunction())
                 echo 'OK';
-            } else {
+            else
                 echo '<span class="error">ERROR!</span>';
-            }
             echo "<br />\n";
 
             // Vérifie la fonction de génération pseudo-aléatoire.
             $random = $nebuleInstance->getCrypto()->getPseudoRandom(2048);
             $entropy = $nebuleInstance->getCrypto()->getEntropy($random);
             echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: pseudo-random ' . substr(bin2hex($random), 0, 32) . '(' . $entropy . ') ';
-            if ($entropy > 7.85) {
+            if ($entropy > 7.85)
                 echo 'OK';
-            } else {
+            else
                 echo '<span class="error">ERROR!</span>';
-            }
         }
         echo "<br />\n";
 
         // Vérifie des entrées/sorties (I/O).
-        if (!is_object($nebuleInstance->getIO())) {
+        if (!is_object($nebuleInstance->getIO()))
             echo 'i/o <span class="error">ERROR!</span>' . "<br />\n";
-        } else {
+        else {
             $list = $nebuleInstance->getIO()->getModulesList();
             foreach ($list as $class) {
                 $module = $nebuleInstance->getIO()->getModule($class);
                 echo 'i/o &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $class . ' (' . $module->getMode() . ') ' . $module->getDefaultLocalisation() . ', links ';
-                if (!$module->checkLinksDirectory()) {
+                if (!$module->checkLinksDirectory())
                     echo 'directory <span class="error">ERROR!</span>';
-                } else {
-                    if (!$module->checkLinksRead()) {
+                else {
+                    if (!$module->checkLinksRead())
                         echo 'read <span class="error">ERROR!</span>';
-                    } else {
-                        if (!$module->checkLinksWrite()
-                            && $module->getMode() == 'RW'
-                        ) {
+                    else {
+                        if (!$module->checkLinksWrite() && $module->getMode() == 'RW' )
                             echo 'OK no write.';
-                        } else {
+                        else
                             echo 'OK';
-                        }
                     }
                 }
                 echo ', objects ';
-                if (!$module->checkObjectsDirectory()) {
+                if (!$module->checkObjectsDirectory())
                     echo 'directory <span class="error">ERROR!</span>';
-                } else {
-                    if (!$module->checkObjectsRead()) {
+                else {
+                    if (!$module->checkObjectsRead())
                         echo 'read <span class="error">ERROR!</span>';
-                    } else {
-                        if (!$module->checkObjectsWrite()
-                            && $module->getMode() == 'RW'
-                        ) {
+                    else {
+                        if (!$module->checkObjectsWrite() && $module->getMode() == 'RW' )
                             echo 'OK no write.';
-                        } else {
+                        else
                             echo 'OK';
-                        }
                     }
                 }
                 echo "<br />\n";
@@ -5261,12 +5244,11 @@ function bootstrap_displayOnBreak(): void
         }
 
         // Vérifie de la gestion des relations sociales.
-        if (!is_object($nebuleInstance->getSocial())) {
+        if (!is_object($nebuleInstance->getSocial()))
             echo '<span class="error">ERROR!</span>' . "<br />\n";
-        } else {
-            foreach ($nebuleInstance->getSocial()->getList() as $moduleName) {
+        else {
+            foreach ($nebuleInstance->getSocial()->getList() as $moduleName)
                 echo 'social &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $moduleName . " OK<br />\n";
-            }
         }
 
         // Vérifie le bootstrap. @todo ajouter vérification de marquage de danger.
@@ -5288,11 +5270,10 @@ function bootstrap_displayOnBreak(): void
                 }
             }
         }
-        if ($ok) {
+        if ($ok)
             echo 'OK';
-        } else {
+        else
             echo '<span class="error">ERROR!</span>';
-        }
         echo "<br />\n";
 
         // Affichage des valeurs de métrologie.
