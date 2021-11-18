@@ -14,6 +14,7 @@ const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
 
 
+
 /*
  ------------------------------------------------------------------------------------------
   /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
@@ -28,6 +29,7 @@ const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 
  ------------------------------------------------------------------------------------------
 */
+
 
 
 /*
@@ -48,8 +50,10 @@ const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 */
 
 
+
 // Disable display until routing choice have been made.
 ob_start();
+
 
 
 /*
@@ -5023,13 +5027,9 @@ function bootstrap_displayOnBreak(): void
            $nebuleTimeAuthorities,
            $nebuleLocalAuthorities,
            $nebuleServerEntity,
-           $nebuleDefaultEntite,
+           $nebuleDefaultEntity,
            $nebulePublicEntity,
-           $nebuleLibVersion,
-           $libpooCheckOK;
-
-    echo 'CHK';
-    ob_end_clean();
+           $nebuleLibVersion;
 
     bootstrap_htmlHeader();
     bootstrap_htmlTop();
@@ -5053,23 +5053,20 @@ function bootstrap_displayOnBreak(): void
     echo '<div class="parts">' . "\n";
     ?>
     <span class="partstitle">#2 <?php echo BOOTSTRAP_NAME; ?> nebule library PP</span><br/>
-    library version &nbsp;: <?php echo BOOTSTRAP_VERSION ?><br/>
-    puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: <?php echo lib_getConfiguration('puppetmaster'); ?> (local authority)<br/>
-    security authority &nbsp;: <?php foreach ($nebuleSecurityAuthorities as $m) echo $m . ' '; ?> (local authority)<br/>
-    code authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php foreach ($nebuleCodeAuthorities as $m) echo $m . ' '; ?> (local authority)
+    library version &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo BOOTSTRAP_VERSION ?><br/>
+    puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo lib_getConfiguration('puppetmaster'); ?> (local authority)<br/>
+    security authorities &nbsp;: <?php foreach ($nebuleSecurityAuthorities as $m) echo $m . ' '; ?> (local authority)<br/>
+    code authorities &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php foreach ($nebuleCodeAuthorities as $m) echo $m . ' '; ?> (local authority)
     <br/>
-    directory authority : <?php foreach ($nebuleDirectoryAuthorities as $m) echo $m . ' '; ?><br/>
-    time authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php foreach ($nebuleTimeAuthorities as $m) echo $m . ' '; ?><br/>
-    server entity &nbsp;&nbsp;&nbsp;: <?php echo $nebuleServerEntity; ?><br/>
-    default entity &nbsp;&nbsp;: <?php echo $nebuleDefaultEntite; ?><br/>
-    current entity &nbsp;&nbsp;: <?php echo $nebulePublicEntity; ?>
+    directory authorities : <?php foreach ($nebuleDirectoryAuthorities as $m) echo $m . ' '; ?><br/>
+    time authorities &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php foreach ($nebuleTimeAuthorities as $m) echo $m . ' '; ?><br/>
+    server entity &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $nebuleServerEntity; ?><br/>
+    default entity &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $nebuleDefaultEntity; ?><br/>
+    current entity &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $nebulePublicEntity; ?>
     <?php
     echo '</div>' . "\n";
 
-    echo '<div class="parts">' . "\n";
-    ?>
-    <span class="partstitle">#3 nebule library POO</span><br/>
-    <?php
+    echo '<div class="parts">' . "\n" . '<span class="partstitle">#3 nebule library POO</span><br/>';
     flush();
 
     // Chargement de la bibliothèque PHP POO.
@@ -6557,17 +6554,17 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
            $bootstrapApplicationStartID, $nebuleInstance,
            $bootstrapServerEntityDisplay;
 
+    // Fin de la bufferisation de la sortie avec effacement du buffer.
+    // Ecrit dans le buffer pour test, ne devra jamais apparaître.
+    echo 'CHK';
+    // Tout ce qui aurait éventuellement essayé d'être affiché est perdu.
+    ob_end_clean();
+
     if (sizeof($bootstrapBreak) == 0) {
         unset($bootstrapBreak, $libraryRescueMode, $bootstrapInlineDisplay);
 
         // Ferme les I/O de la bibliothèque PHP PP.
         io_close();
-
-        // Fin de la bufferisation de la sortie avec effacement du buffer.
-        // Ecrit dans le buffer pour test, ne devra jamais apparaître.
-        echo 'CHK';
-        // Tout ce qui aurait éventuellement essayé d'être affiché est perdu.
-        ob_end_clean();
 
         log_add('load application ' . $bootstrapApplicationID, 'info', __FUNCTION__, 'aab236ff');
 
