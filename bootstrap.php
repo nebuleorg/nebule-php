@@ -803,9 +803,9 @@ $nebuleCacheLibrary_l_grx = array();
  * If empty, return the default value. On unknown configuration name, just return the string.
  *
  * @param string $name
- * @return null|string|boolean|integer
+ * @return mixed
  */
-function lib_getConfiguration(string $name): mixed
+function lib_getConfiguration(string $name)
 {
     global $configurationList;
 
@@ -5846,7 +5846,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
 
     $puppetmaster = lib_getConfiguration('puppetmaster');
 
-    echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ';
+    echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
     if (!ent_checkPuppetmaster($puppetmaster)) {
         echo 'sync... ';
         ent_syncPuppetmaster($puppetmaster);
@@ -5880,7 +5880,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
     $timeAuthorities = ent_getTimeAuthorities(true);
     $directoryAuthorities = ent_getDirectoryAuthorities(true);
 
-    echo 'security authority &nbsp;: ';
+    echo 'security authorities &nbsp;: ';
     if (sizeof($securityAuthorities) != 0) {
         if (!ent_checkSecurityAuthorities($securityAuthorities)) {
             echo 'sync... ';
@@ -5901,7 +5901,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
     echo "<br/>\n";
     flush();
 
-    echo 'code authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+    echo 'code authorities &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
     if (sizeof($codeAuthorities) != 0) {
         if (!ent_checkCodeAuthorities($codeAuthorities)) {
             echo 'sync... ';
@@ -5922,7 +5922,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
     echo "<br/>\n";
     flush();
 
-    echo 'time authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+    echo 'time authorities &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
     if (sizeof($timeAuthorities) != 0) {
         if (!ent_checkTimeAuthorities($timeAuthorities)) {
             echo 'sync... ';
@@ -5943,7 +5943,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
     echo "<br/>\n";
     flush();
 
-    echo 'directory authority : ';
+    echo 'directory authorities : ';
     if (sizeof($directoryAuthorities) != 0) {
         if (!ent_checkDirectoryAuthorities($directoryAuthorities)) {
             echo 'sync... ';
@@ -5965,7 +5965,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
     flush();
 
     if ($ok)
-        log_add('ok sync entities', 'info', __FUNCTION__, 'c5b55957');
+        log_add('ok sync authorities', 'info', __FUNCTION__, 'c5b55957');
 
     echo "</div>\n";
 
