@@ -676,6 +676,11 @@ Jggg==";
 $libraryCheckOK = false;
 
 /**
+ * Activate rescue mode to recovery code problems.
+ */
+$libraryRescueMode = false;
+
+/**
  * Buffer of option's values.
  */
 $configurationList = array();
@@ -954,7 +959,7 @@ function lib_getMetrologyTimer(string $type): string
  */
 function lib_init(): bool
 {
-    global $nebuleLocalAuthorities, $libraryCheckOK;
+    global $nebuleLocalAuthorities, $libraryCheckOK, $libraryRescueMode;
 
     // Initialize i/o.
     if (!io_open()) {
@@ -1014,12 +1019,12 @@ function lib_init(): bool
         }
     }
 
-    $rescueMode = lib_getModeRescue();
-    if ($rescueMode)
+    $libraryRescueMode = lib_getModeRescue();
+    if ($libraryRescueMode)
         log_add('lib init : rescue mode activated', 'warn', __FUNCTION__, 'ad7056e9');
 
-    lib_setServerEntity($rescueMode);
-    lib_setDefaultEntity($rescueMode);
+    lib_setServerEntity($libraryRescueMode);
+    lib_setDefaultEntity($libraryRescueMode);
     lib_setPublicEntity();
 
     $libraryCheckOK = true;
@@ -4409,7 +4414,7 @@ function bootstrap_getDisplayServerEntity()
  */
 function bootstrap_htmlHeader()
 {
-global $bootstrapRescueMode;
+global $libraryRescueMode;
 
 ?>
     <!DOCTYPE html>
@@ -4417,7 +4422,7 @@ global $bootstrapRescueMode;
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <title><?php echo BOOTSTRAP_NAME;
-        if ($bootstrapRescueMode) echo ' - RESCUE' ?></title>
+        if ($libraryRescueMode) echo ' - RESCUE' ?></title>
     <link rel="icon" type="image/png" href="favicon.png"/>
     <meta name="author"
           content="<?php echo BOOTSTRAP_AUTHOR . ' - ' . BOOTSTRAP_WEBSITE . ' - ' . BOOTSTRAP_VERSION; ?>"/>
@@ -5007,7 +5012,7 @@ function bootstrap_displayOnBreak(): void
 {
     global $nebuleInstance,
            $bootstrapBreak,
-           $bootstrapRescueMode,
+           $libraryRescueMode,
            $bootstrapFlush,
            $bootstrapLibraryID,
            $bootstrapApplicationID,
@@ -5035,7 +5040,7 @@ function bootstrap_displayOnBreak(): void
     foreach ($bootstrapBreak as $number => $message)
         echo '- [' . $number . '] <span class="error">' . $message . '</span>' . "<br />\n";
     echo 'tB=' . lib_getMetrologyTimer('tB') . "<br />\n";
-    if ($bootstrapRescueMode)
+    if ($libraryRescueMode)
         echo "RESCUE mode<br />\n";
     if ($bootstrapFlush)
         echo "FLUSH<br />\n";
@@ -5346,7 +5351,7 @@ function bootstrap_displayOnBreak(): void
 function bootstrap_inlineDisplayOnBreak()
 {
     global $bootstrapBreak,
-           $bootstrapRescueMode,
+           $libraryRescueMode,
            $bootstrapLibraryID,
            $bootstrapApplicationID;
 
@@ -5359,7 +5364,7 @@ function bootstrap_inlineDisplayOnBreak()
     echo 'Bootstrap break on : ';
     foreach ($bootstrapBreak as $number => $message)
         echo '- [' . $number . '] ' . $message . "<br />\n";
-    if ($bootstrapRescueMode)
+    if ($libraryRescueMode)
         echo "RESCUE<br />\n";
 
     echo 'nebule loading library : ' . $bootstrapLibraryID . "<br />\n";
@@ -5624,7 +5629,7 @@ function bootstrap_firstInitEnv()
  */
 function bootstrap_firstDisplay1Breaks(): void
 {
-    global $bootstrapBreak, $bootstrapRescueMode;
+    global $bootstrapBreak, $libraryRescueMode;
 
     echo '<div class="parts">' . "\n";
     echo '<span class="partstitle">#1 ' . BOOTSTRAP_NAME . ' break on</span><br/>' . "\n";
@@ -5634,7 +5639,7 @@ function bootstrap_firstDisplay1Breaks(): void
 
     echo 'tB=' . lib_getMetrologyTimer('tB') . "<br />\n";
     echo 'nebule library : ' . BOOTSTRAP_VERSION . ' PHP PP' . "<br />\n";
-    if ($bootstrapRescueMode)
+    if ($libraryRescueMode)
         echo "RESCUE<br />\n";
     echo "</div>\n";
 }
@@ -6547,13 +6552,13 @@ function bootstrap_displayApplication2()
 
 function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
 {
-    global $bootstrapBreak, $bootstrapRescueMode, $bootstrapInlineDisplay, $loggerSessionID,
+    global $bootstrapBreak, $libraryRescueMode, $bootstrapInlineDisplay,
            $bootstrapApplicationID, $bootstrapApplicationNoPreload,
            $bootstrapApplicationStartID, $nebuleInstance,
            $bootstrapServerEntityDisplay;
 
     if (sizeof($bootstrapBreak) == 0) {
-        unset($bootstrapBreak, $bootstrapRescueMode, $bootstrapInlineDisplay);
+        unset($bootstrapBreak, $libraryRescueMode, $bootstrapInlineDisplay);
 
         // Ferme les I/O de la bibliothèque PHP PP.
         io_close();
@@ -6564,19 +6569,15 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
         // Tout ce qui aurait éventuellement essayé d'être affiché est perdu.
         ob_end_clean();
 
-        if ($bootstrapApplicationID == '0') {
-            log_add('load application 0', 'info', __FUNCTION__, '1ad59685');
+        log_add('load application ' . $bootstrapApplicationID, 'info', __FUNCTION__, 'aab236ff');
+
+        if ($bootstrapApplicationID == '0')
             bootstrap_displayApplication0();
-            log_reopen(BOOTSTRAP_NAME);
-        } elseif ($bootstrapApplicationID == '1') {
-            log_add('load application 1', 'info', __FUNCTION__, '2acd5fee');
+        elseif ($bootstrapApplicationID == '1')
             bootstrap_displayApplication1();
-            log_reopen(BOOTSTRAP_NAME);
-        } elseif ($bootstrapApplicationID == '2') {
-            log_add('load application 2', 'info', __FUNCTION__, '1d718d83');
+        elseif ($bootstrapApplicationID == '2')
             bootstrap_displayApplication2();
-            log_reopen(BOOTSTRAP_NAME);
-        } else {
+        else {
             // Si tout est déjà pré-chargé, on déserialise.
             if (isset($bootstrapApplicationInstanceSleep)
                 && $bootstrapApplicationInstanceSleep != ''
@@ -6587,7 +6588,6 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
                 && isset($bootstrapApplicationTraductionInstanceSleep)
                 && $bootstrapApplicationTraductionInstanceSleep != ''
             ) {
-                log_add('load application ' . $bootstrapApplicationID, 'info', __FUNCTION__, 'aab236ff');
 
                 // Charge l'objet de l'application. @todo faire via les i/o.
                 include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
@@ -6651,13 +6651,8 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
 
                 // Appel de l'application.
                 $applicationInstance->router();
-            } else {
-                // Sinon on va faire un pré-chargement.
+            } else
                 bootstrap_displayPreloadApplication();
-            }
-
-            // Change les logs au nom du bootstrap.
-            log_reopen(BOOTSTRAP_NAME);
 
             // Ouverture de la session PHP.
             session_start();
@@ -6685,25 +6680,22 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
             // Affichage sur interruption du chargement.
             bootstrap_displayApplicationfirst();
         } elseif ($bootstrapServerEntityDisplay) {
-            if (file_exists(LIB_LOCAL_ENTITY_FILE)) {
+            if (file_exists(LIB_LOCAL_ENTITY_FILE))
                 echo file_get_contents(LIB_LOCAL_ENTITY_FILE, false, null, -1, lib_getConfiguration('ioReadMaxData'));
-            } else {
+            else
                 echo '0';
-            }
         } else {
             log_add('load break', 'info', __FUNCTION__, '4abf554b');
 
             // Affichage sur interruption du chargement.
-            if ($bootstrapInlineDisplay) {
+            if ($bootstrapInlineDisplay)
                 bootstrap_inlineDisplayOnBreak();
-            } else {
+            else
                 bootstrap_displayOnBreak();
-            }
         }
-
-        // Change les logs au nom du bootstrap.
-        log_reopen(BOOTSTRAP_NAME);
     }
+
+    log_reopen(BOOTSTRAP_NAME);
 }
 
 function bootstrap_logMetrology()
