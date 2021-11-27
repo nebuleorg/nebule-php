@@ -571,60 +571,6 @@ class nebule
     }
 
     /**
-     * Fonction de lecture de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __get(string $name)
-    {
-        if (isset($this->$name)) {
-            return $this->$name;
-        }
-        return false;
-    }
-
-    /**
-     * Fonction d'écriture de variables internes à l'instance.
-     *
-     * Désactivé.
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return boolean
-     */
-    public function __set($name, $value)
-    {
-        global $metrologyStartTime;
-        syslog(LOG_WARNING, 'LogT=' . (microtime(true) - $metrologyStartTime) . ' warning library nebule - nebule - ask set ' . $name);
-        return false;
-    }
-
-    /**
-     * Fonction de test de présence de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __isset($name)
-    {
-        return isset($this->$name);
-    }
-
-    /**
-     * Fonction de suppression de variables internes à l'instance.
-     *
-     * Désactivé.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __unset($name)
-    {
-        return false;
-    }
-
-    /**
      * Fonction d'appel de méthodes.
      *
      * Désactivé.
@@ -6628,53 +6574,6 @@ class Node
     }
 
     /**
-     * Fonction de lecture de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __get(string $name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction d'écriture de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return void
-     */
-    public function __set(string $name, $value)
-    {
-        return;
-    }
-
-    /**
-     * Fonction de test de présence de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __isset($name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction de suppression de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @return void
-     */
-    public function __unset($name)
-    {
-        return;
-    }
-
-    /**
      * Fonction d'appel de méthodes.
      * Désactivé.
      *
@@ -11391,53 +11290,6 @@ class Group extends Node
     }
 
     /**
-     * Fonction de lecture de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __get(string $name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction d'écriture de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return void
-     */
-    public function __set(string $name, $value)
-    {
-        return;
-    }
-
-    /**
-     * Fonction de test de présence de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __isset($name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction de suppression de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @return void
-     */
-    public function __unset($name)
-    {
-        return;
-    }
-
-    /**
      * Fonction d'appel de méthodes.
      * Désactivé.
      *
@@ -13478,53 +13330,6 @@ class Entity extends Node
     }
 
     /**
-     * Fonction de lecture de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __get(string $name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction d'écriture de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return void
-     */
-    public function __set(string $name, $value)
-    {
-        return;
-    }
-
-    /**
-     * Fonction de test de présence de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __isset($name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction de suppression de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @return void
-     */
-    public function __unset($name)
-    {
-        return;
-    }
-
-    /**
      * Fonction d'appel de méthodes.
      * Désactivé.
      *
@@ -15116,53 +14921,6 @@ class Conversation extends Group
     }
 
     /**
-     * Fonction de lecture de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __get(string $name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction d'écriture de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return void
-     */
-    public function __set(string $name, $value)
-    {
-        return;
-    }
-
-    /**
-     * Fonction de test de présence de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __isset($name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction de suppression de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @return void
-     */
-    public function __unset($name)
-    {
-        return;
-    }
-
-    /**
      * Fonction d'appel de méthodes.
      * Désactivé.
      *
@@ -16477,53 +16235,6 @@ class Currency extends Node
     public function __destruct()
     {
         return true;
-    }
-
-    /**
-     * Fonction de lecture de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __get(string $name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction d'écriture de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return void
-     */
-    public function __set(string $name, $value)
-    {
-        return;
-    }
-
-    /**
-     * Fonction de test de présence de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __isset($name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction de suppression de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @return void
-     */
-    public function __unset($name)
-    {
-        return;
     }
 
     /**
@@ -19017,53 +18728,6 @@ class TokenPool extends Currency
     }
 
     /**
-     * Fonction de lecture de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __get(string $name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction d'écriture de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return void
-     */
-    public function __set(string $name, $value)
-    {
-        return;
-    }
-
-    /**
-     * Fonction de test de présence de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __isset($name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction de suppression de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @return void
-     */
-    public function __unset($name)
-    {
-        return;
-    }
-
-    /**
      * Fonction d'appel de méthodes.
      * Désactivé.
      *
@@ -19541,53 +19205,6 @@ class Token extends TokenPool
     }
 
     /**
-     * Fonction de lecture de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __get(string $name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction d'écriture de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return void
-     */
-    public function __set(string $name, $value)
-    {
-        return;
-    }
-
-    /**
-     * Fonction de test de présence de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __isset($name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction de suppression de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @return void
-     */
-    public function __unset($name)
-    {
-        return;
-    }
-
-    /**
      * Fonction d'appel de méthodes.
      * Désactivé.
      *
@@ -20060,53 +19677,6 @@ class Wallet extends Entity
     }
 
     /**
-     * Fonction de lecture de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __get(string $name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction d'écriture de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return void
-     */
-    public function __set(string $name, $value)
-    {
-        return;
-    }
-
-    /**
-     * Fonction de test de présence de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __isset($name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction de suppression de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @return void
-     */
-    public function __unset($name)
-    {
-        return;
-    }
-
-    /**
      * Fonction d'appel de méthodes.
      * Désactivé.
      *
@@ -20405,53 +19975,6 @@ class Transaction extends Link
     public function __destruct()
     {
         return true;
-    }
-
-    /**
-     * Fonction de lecture de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __get(string $name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction d'écriture de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return void
-     */
-    public function __set(string $name, $value)
-    {
-        return;
-    }
-
-    /**
-     * Fonction de test de présence de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __isset($name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction de suppression de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @return void
-     */
-    public function __unset($name)
-    {
-        return;
     }
 
     /**
@@ -20796,53 +20319,6 @@ class Link
     public function __destruct()
     {
         return true;
-    }
-
-    /**
-     * Fonction de lecture de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __get(string $name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction d'écriture de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return void
-     */
-    public function __set(string $name, $value)
-    {
-        return;
-    }
-
-    /**
-     * Fonction de test de présence de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __isset($name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction de suppression de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @return void
-     */
-    public function __unset($name)
-    {
-        return;
     }
 
     /**
@@ -24418,53 +23894,6 @@ class Metrology
     }
 
     /**
-     * Fonction de lecture de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __get(string $name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction d'écriture de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return void
-     */
-    public function __set(string $name, $value)
-    {
-        return;
-    }
-
-    /**
-     * Fonction de test de présence de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __isset($name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction de suppression de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @return void
-     */
-    public function __unset($name)
-    {
-        return;
-    }
-
-    /**
      * Fonction d'appel de méthodes.
      * Désactivé.
      *
@@ -27943,53 +27372,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function __destruct()
     {
         return true;
-    }
-
-    /**
-     * Fonction de lecture de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __get(string $name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction d'écriture de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return void
-     */
-    public function __set($name, $value)
-    {
-        return;
-    }
-
-    /**
-     * Fonction de test de présence de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __isset($name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction de suppression de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @return void
-     */
-    public function __unset($name)
-    {
-        return;
     }
 
     /**
@@ -36900,56 +36282,6 @@ abstract class Actions
     }
 
     /**
-     * Fonction de lecture de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __get(string $name)
-    {
-        if (isset($this->$name)) {
-            return $this->$name;
-        }
-        return false;
-    }
-
-    /**
-     * Fonction d'écriture de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return void
-     */
-    public function __set($name, $value)
-    {
-        return;
-    }
-
-    /**
-     * Fonction de test de présence de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __isset($name)
-    {
-        return isset($this->$name);
-    }
-
-    /**
-     * Fonction de suppression de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @return void
-     */
-    public function __unset($name)
-    {
-        return;
-    }
-
-    /**
      * Fonction d'appel de méthodes.
      * Désactivé.
      *
@@ -41834,56 +41166,6 @@ abstract class Applications
     }
 
     /**
-     * Fonction de lecture de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __get(string $name)
-    {
-        if (isset($this->$name)) {
-            return $this->$name;
-        }
-        return false;
-    }
-
-    /**
-     * Fonction d'écriture de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return void
-     */
-    public function __set($name, $value)
-    {
-        return;
-    }
-
-    /**
-     * Fonction de test de présence de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __isset($name)
-    {
-        return isset($this->$name);
-    }
-
-    /**
-     * Fonction de suppression de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @return void
-     */
-    public function __unset($name)
-    {
-        return;
-    }
-
-    /**
      * Fonction d'appel de méthodes.
      * Désactivé.
      *
@@ -44141,56 +43423,6 @@ abstract class Traductions
     }
 
     /**
-     * Fonction de lecture de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __get(string $name)
-    {
-        if (isset($this->$name)) {
-            return $this->$name;
-        }
-        return false;
-    }
-
-    /**
-     * Fonction d'écriture de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return void
-     */
-    public function __set($name, $value)
-    {
-        return;
-    }
-
-    /**
-     * Fonction de test de présence de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __isset($name)
-    {
-        return isset($this->$name);
-    }
-
-    /**
-     * Fonction de suppression de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @return void
-     */
-    public function __unset($name)
-    {
-        return;
-    }
-
-    /**
      * Fonction d'appel de méthodes.
      * Désactivé.
      *
@@ -44772,53 +44004,6 @@ abstract class Modules
     public function __destruct()
     {
         return true;
-    }
-
-    /**
-     * Fonction de lecture de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __get(string $name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction d'écriture de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return void
-     */
-    public function __set(string $name, $value)
-    {
-        return;
-    }
-
-    /**
-     * Fonction de test de présence de variables internes à l'instance.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __isset($name)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction de suppression de variables internes à l'instance.
-     * Désactivé.
-     *
-     * @param string $name
-     * @return void
-     */
-    public function __unset($name)
-    {
-        return;
     }
 
     /**
