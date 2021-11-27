@@ -571,34 +571,6 @@ class nebule
     }
 
     /**
-     * Fonction d'appel de méthodes.
-     *
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return boolean
-     */
-    public function __call($name, $args)
-    {
-        return false;
-    }
-
-    /**
-     * Fonction d'appel de méthodes statiques.
-     *
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return boolean
-     */
-    public static function __callstatic($name, $args)
-    {
-        return false;
-    }
-
-    /**
      * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
      *
      * @return string
@@ -6574,32 +6546,6 @@ class Node
     }
 
     /**
-     * Fonction d'appel de méthodes.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public function __call($name, $args)
-    {
-        return;
-    }
-
-    /**
-     * Fonction d'appel de méthodes statiques.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public static function __callstatic($name, $args)
-    {
-        return;
-    }
-
-    /**
      * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
      *
      * @return string
@@ -11290,32 +11236,6 @@ class Group extends Node
     }
 
     /**
-     * Fonction d'appel de méthodes.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public function __call($name, $args)
-    {
-        return;
-    }
-
-    /**
-     * Fonction d'appel de méthodes statiques.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public static function __callstatic($name, $args)
-    {
-        return;
-    }
-
-    /**
      * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
      *
      * @return string
@@ -13330,32 +13250,6 @@ class Entity extends Node
     }
 
     /**
-     * Fonction d'appel de méthodes.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public function __call($name, $args)
-    {
-        return;
-    }
-
-    /**
-     * Fonction d'appel de méthodes statiques.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public static function __callstatic($name, $args)
-    {
-        return;
-    }
-
-    /**
      * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
      *
      * @return string
@@ -14921,32 +14815,6 @@ class Conversation extends Group
     }
 
     /**
-     * Fonction d'appel de méthodes.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public function __call($name, $args)
-    {
-        return;
-    }
-
-    /**
-     * Fonction d'appel de méthodes statiques.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public static function __callstatic($name, $args)
-    {
-        return;
-    }
-
-    /**
      * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
      *
      * @return string
@@ -16235,32 +16103,6 @@ class Currency extends Node
     public function __destruct()
     {
         return true;
-    }
-
-    /**
-     * Fonction d'appel de méthodes.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public function __call($name, $args)
-    {
-        return;
-    }
-
-    /**
-     * Fonction d'appel de méthodes statiques.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public static function __callstatic($name, $args)
-    {
-        return;
     }
 
     /**
@@ -18728,32 +18570,6 @@ class TokenPool extends Currency
     }
 
     /**
-     * Fonction d'appel de méthodes.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public function __call($name, $args)
-    {
-        return;
-    }
-
-    /**
-     * Fonction d'appel de méthodes statiques.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public static function __callstatic($name, $args)
-    {
-        return;
-    }
-
-    /**
      *  Chargement d'un sac de jetons existant.
      *
      * @param string $id
@@ -19205,32 +19021,6 @@ class Token extends TokenPool
     }
 
     /**
-     * Fonction d'appel de méthodes.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public function __call($name, $args)
-    {
-        return;
-    }
-
-    /**
-     * Fonction d'appel de méthodes statiques.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public static function __callstatic($name, $args)
-    {
-        return;
-    }
-
-    /**
      *  Chargement d'un jeton existant.
      *
      * @param string $id
@@ -19677,32 +19467,6 @@ class Wallet extends Entity
     }
 
     /**
-     * Fonction d'appel de méthodes.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public function __call($name, $args)
-    {
-        return;
-    }
-
-    /**
-     * Fonction d'appel de méthodes statiques.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public static function __callstatic($name, $args)
-    {
-        return;
-    }
-
-    /**
      *  Chargement d'un portefeuille existant.
      *
      * @param string $id
@@ -19976,33 +19740,6 @@ class Transaction extends Link
     {
         return true;
     }
-
-    /**
-     * Fonction d'appel de méthodes.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public function __call($name, $args)
-    {
-        return;
-    }
-
-    /**
-     * Fonction d'appel de méthodes statiques.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public static function __callstatic($name, $args)
-    {
-        return;
-    }
-
 
     /**
      * Retourne si le lien est bien une transaction.
@@ -20319,32 +20056,6 @@ class Link
     public function __destruct()
     {
         return true;
-    }
-
-    /**
-     * Fonction d'appel de méthodes.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public function __call($name, $args)
-    {
-        return;
-    }
-
-    /**
-     * Fonction d'appel de méthodes statiques.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public static function __callstatic($name, $args)
-    {
-        return;
     }
 
     /**
@@ -23894,32 +23605,6 @@ class Metrology
     }
 
     /**
-     * Fonction d'appel de méthodes.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public function __call($name, $args)
-    {
-        return;
-    }
-
-    /**
-     * Fonction d'appel de méthodes statiques.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public static function __callstatic($name, $args)
-    {
-        return;
-    }
-
-    /**
      * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
      *
      * @return string
@@ -27372,32 +27057,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function __destruct()
     {
         return true;
-    }
-
-    /**
-     * Fonction d'appel de méthodes.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public function __call($name, $args)
-    {
-        return;
-    }
-
-    /**
-     * Fonction d'appel de méthodes statiques.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public static function __callstatic($name, $args)
-    {
-        return;
     }
 
     /**
@@ -36282,32 +35941,6 @@ abstract class Actions
     }
 
     /**
-     * Fonction d'appel de méthodes.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public function __call($name, $args)
-    {
-        return;
-    }
-
-    /**
-     * Fonction d'appel de méthodes statiques.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public static function __callstatic($name, $args)
-    {
-        return;
-    }
-
-    /**
      * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
      *
      * @return string
@@ -41166,32 +40799,6 @@ abstract class Applications
     }
 
     /**
-     * Fonction d'appel de méthodes.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public function __call($name, $args)
-    {
-        return;
-    }
-
-    /**
-     * Fonction d'appel de méthodes statiques.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public static function __callstatic($name, $args)
-    {
-        return;
-    }
-
-    /**
      * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
      *
      * @return string
@@ -43423,32 +43030,6 @@ abstract class Traductions
     }
 
     /**
-     * Fonction d'appel de méthodes.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public function __call($name, $args)
-    {
-        return;
-    }
-
-    /**
-     * Fonction d'appel de méthodes statiques.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public static function __callstatic($name, $args)
-    {
-        return;
-    }
-
-    /**
      * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
      *
      * @return string
@@ -44004,32 +43585,6 @@ abstract class Modules
     public function __destruct()
     {
         return true;
-    }
-
-    /**
-     * Fonction d'appel de méthodes.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public function __call($name, $args)
-    {
-        return;
-    }
-
-    /**
-     * Fonction d'appel de méthodes statiques.
-     * Désactivé.
-     *
-     * @param string $name
-     * @param string $args
-     * @return void
-     */
-    public static function __callstatic($name, $args)
-    {
-        return;
     }
 
     /**
