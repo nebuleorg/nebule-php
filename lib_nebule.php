@@ -19790,6 +19790,31 @@ class Transaction extends Link
 class Link
 {
     /**
+     * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
+     *
+     * @var array:string
+     */
+    const SESSION_SAVED_VARS = array(
+        '_fullLink',
+        '_signe',
+        '_signeValue',
+        '_signeAlgo',
+        '_signed',
+        '_hashSigner',
+        '_date',
+        '_action',
+        '_hashSource',
+        '_hashTarget',
+        '_hashMeta',
+        '_obfuscated',
+        '_verified',
+        '_valid',
+        '_validStructure',
+        '_verifyNumError',
+        '_verifyTextError',
+    );
+
+    /**
      * Instance nebule en cours.
      *
      * @var nebule
@@ -19801,7 +19826,7 @@ class Link
      *
      * @var io
      */
-    private ioInterface $_io;
+    protected ioInterface $_io;
 
     /**
      * Instance crypto en cours.
@@ -19815,42 +19840,42 @@ class Link
      *
      * @var Metrology
      */
-    private Metrology $_metrology;
+    protected Metrology $_metrology;
 
     /**
      * Texte lien complet "s.a_s_d_a_s_t_m" .
      *
      * @var string
      */
-    private string $_fullLink = '';
+    protected string $_fullLink = '';
 
     /**
      * Parsed link contents.
      *
      * @var array $_parsedLink
      */
-    private array $_parsedLink = array();
+    protected array $_parsedLink = array();
 
     /**
      * Texte signature avec algorithme.
      *
      * @var string
      */
-    private string $_signe = '0';
+    protected string $_signe = '0';
 
     /**
      * Texte valeur hexa de la signature.
      *
      * @var string
      */
-    private string $_signeValue = '';
+    protected string $_signeValue = '';
 
     /**
      * Texte algorithme de signature.
      *
      * @var string
      */
-    private string $_signeAlgo = '';
+    protected string $_signeAlgo = '';
 
     /**
      * Texte hexa entité signataire.
@@ -19899,81 +19924,56 @@ class Link
      *
      * @var boolean
      */
-    private bool $_obfuscated = false;
+    protected bool $_obfuscated = false;
 
     /**
      * Booléen si le lien a été vérifié.
      *
      * @var boolean
      */
-    private bool $_verified = false;
+    protected bool $_verified = false;
 
     /**
      * Booléen si le lien est vérifié et valide.
      *
      * @var boolean
      */
-    private bool $_valid = false;
+    protected bool $_valid = false;
 
     /**
      * Booléen si le lien a une structure valide.
      *
      * @var boolean
      */
-    private bool $_validStructure = false;
+    protected bool $_validStructure = false;
 
     /**
      * Booléen si le lien est signé.
      *
      * @var boolean
      */
-    private bool $_signed = false;
+    protected bool $_signed = false;
 
     /**
      * Nombre représentant un code d'erreur de vérification.
      *
      * @var integer
      */
-    private int $_verifyNumError = 0;
+    protected int $_verifyNumError = 0;
 
     /**
      * Texte de la description de l'erreur de vérification.
      *
      * @var string
      */
-    private string $_verifyTextError = 'Initialisation';
+    protected string $_verifyTextError = 'Initialisation';
 
     /**
      * Booléen si la dissimulation de lien est autorisée.
      *
      * @var boolean
      */
-    private bool $_permitObfuscated = false;
-
-    /**
-     * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
-     *
-     * @var array:string
-     */
-    const SESSION_SAVED_VARS = array(
-        '_fullLink',
-        '_signe',
-        '_signeValue',
-        '_signeAlgo',
-        '_signed',
-        '_hashSigner',
-        '_date',
-        '_action',
-        '_hashSource',
-        '_hashTarget',
-        '_hashMeta',
-        '_obfuscated',
-        '_verified',
-        '_valid',
-        '_validStructure',
-        '_verifyNumError',
-        '_verifyTextError',
-    );
+    protected bool $_permitObfuscated = false;
 
 
     /**
@@ -20349,7 +20349,7 @@ class Link
     }
 
 
-    private function _parse(string $link): array
+    protected function _parse(string $link): array
     {
         // Extract blocs from link L : BH_BL_BS
         $bh = strtok(trim($link), '_');
@@ -20439,7 +20439,7 @@ class Link
      * @param string $link
      * @return boolean
      */
-    private function _extract($link)
+    protected function _extract($link)
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr(trim($link), 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -20563,7 +20563,7 @@ class Link
      *
      * @return boolean
      */
-    private function _verify()
+    protected function _verify()
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -20628,7 +20628,7 @@ class Link
      *
      * @return boolean
      */
-    private function _verifyHashSigner()
+    protected function _verifyHashSigner()
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -20654,7 +20654,7 @@ class Link
      *
      * @return boolean
      */
-    private function _verifyDate()
+    protected function _verifyDate()
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -20702,7 +20702,7 @@ class Link
      *
      * @return boolean
      */
-    private function _verifyAction()
+    protected function _verifyAction()
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -20748,7 +20748,7 @@ class Link
      *
      * @return boolean
      */
-    private function _verifyHashSource()
+    protected function _verifyHashSource()
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -20776,7 +20776,7 @@ class Link
      *
      * @return boolean
      */
-    private function _verifyHashTarget()
+    protected function _verifyHashTarget()
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -20811,7 +20811,7 @@ class Link
      *
      * @return boolean
      */
-    private function _verifyHashMeta()
+    protected function _verifyHashMeta()
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -20844,7 +20844,7 @@ class Link
      *
      * @return boolean
      */
-    private function _verifySign()
+    protected function _verifySign()
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -20920,7 +20920,7 @@ class Link
      *
      * @return boolean
      */
-    private function _extractObfuscated()
+    protected function _extractObfuscated()
     {
         // @todo
     }
@@ -20932,7 +20932,7 @@ class Link
      *
      * @return boolean
      */
-    private function _verifyObfuscated()
+    protected function _verifyObfuscated()
     {
         // @todo
     }
