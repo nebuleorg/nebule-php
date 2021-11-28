@@ -19822,7 +19822,7 @@ class Link
      *
      * @var nebule
      */
-    private nebule $_nebuleInstance;
+    protected nebule $_nebuleInstance;
 
     /**
      * Instance io en cours.
@@ -19836,7 +19836,7 @@ class Link
      *
      * @var CryptoInterface
      */
-    private CryptoInterface $_crypto;
+    protected CryptoInterface $_crypto;
 
     /**
      * Instance métrologie en cours.
@@ -19885,42 +19885,42 @@ class Link
      *
      * @var string
      */
-    private string $_hashSigner = '0';
+    protected string $_hashSigner = '0';
 
     /**
      * Texte date du lien.
      *
      * @var string
      */
-    private string $_date = '';
+    protected string $_date = '';
 
     /**
      * Texte action du lien, sur un octet.
      *
      * @var string
      */
-    private string $_action = '';
+    protected string $_action = '';
 
     /**
      * Texte hexa objet source.
      *
      * @var string
      */
-    private string $_hashSource = '0';
+    protected string $_hashSource = '0';
 
     /**
      * Texte hexa objet destination.
      *
      * @var string
      */
-    private string $_hashTarget = '0';
+    protected string $_hashTarget = '0';
 
     /**
      * Texte hexa objet méta.
      *
      * @var string
      */
-    private string $_hashMeta = '0';
+    protected string $_hashMeta = '0';
 
     /**
      * Booléen si le lien est dissimulé.
