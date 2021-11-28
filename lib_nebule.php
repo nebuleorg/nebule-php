@@ -6,7 +6,7 @@ $nebuleName = 'library';
 $nebuleSurname = 'nebule/library';
 $nebuleDescription = 'Library of functions for nebule in php object-oriented.';
 $nebuleAuthor = 'Projet nebule';
-$nebuleLibVersion = '020210410';
+$nebuleLibVersion = '02021128';
 $nebuleLicence = 'GNU GPL 2010-2021';
 $nebuleWebsite = 'www.nebule.org';
 // ----------------------------------------------------------------------------------------
@@ -2981,7 +2981,6 @@ class nebule
      * Nouvelle instance d'une transaction.
      * Attention, c'est un lien !
      *
-     * @desc 020200315
      * @param string $link
      * @param string $version
      * @return Transaction
@@ -3019,7 +3018,6 @@ class nebule
     /**
      * Supprime le cache d'une transaction.
      *
-     * @desc 020200315
      * @param string $link
      * @return boolean
      */
@@ -3154,7 +3152,6 @@ class nebule
      * Retire le cache d'une monnaie.
      * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture de la monnaie.
      *
-     * @desc 020200322
      * @param $id string
      * @return boolean
      */
@@ -3182,7 +3179,6 @@ class nebule
      * Retire le cache d'un sac de jetons.
      * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture du sac de jetons.
      *
-     * @desc 020200322
      * @param $id string
      * @return boolean
      */
@@ -3210,7 +3206,6 @@ class nebule
      * Retire le cache d'un jeton.
      * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture du jeton.
      *
-     * @desc 020200322
      * @param $id string
      * @return boolean
      */
@@ -3238,7 +3233,6 @@ class nebule
      * Retire le cache d'un poretfeuille.
      * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture du poretfeuille.
      *
-     * @desc 020200322
      * @param $id string
      * @return boolean
      */
@@ -3266,7 +3260,6 @@ class nebule
      * Retire le cache d'une transaction.
      * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture de la transaction.
      *
-     * @desc 020200322
      * @param $link string
      * @return boolean
      */
@@ -6141,7 +6134,6 @@ class nebule
      * Détermine si c'est un objet.
      * Retourne une instance appropriée en fonction du type d'objet.
      *
-     * @desc 020200322
      * @param string|Node|Conversation|Group|Entity|Currency|TokenPool|Token|Wallet $id
      * @return Node|Conversation|Group|Entity|Currency|TokenPool|Token|Wallet
      */
@@ -6258,7 +6250,6 @@ class Node
     /**
      * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
      *
-     * @desc 020200322
      * @var array:string
      */
     const SESSION_SAVED_VARS = array(
@@ -15953,7 +15944,6 @@ class Currency extends Node
      * - select : réduit le nombre de réponses possibles via un menu déroulant de taille fixe. Une seule réponse peut être sélectionnée.
      * - checkbox : permet une sélection multiple sur une liste. La valeur manipulée est une chaîne séparée par des espaces.
      *
-     * @desc 020200315
      * @var array
      */
     protected $_propertiesList = array(
@@ -16049,7 +16039,6 @@ class Currency extends Node
     /**
      * Tableau des capacités reconnues de la monnaie.
      *
-     * @desc 020200315
      * @var array:string
      */
     protected $_CAParray = array();
@@ -16149,7 +16138,6 @@ class Currency extends Node
     /**
      *  Chargement d'une monnaie existant.
      *
-     * @desc 020200315
      * @param string $id
      */
     private function _loadCurrency($id)
@@ -16332,7 +16320,6 @@ class Currency extends Node
      * ...,
      * )
      *
-     * @desc 020200308
      */
     protected function _normalizeInputParam(&$param)
     {
@@ -16524,7 +16511,6 @@ class Currency extends Node
      * ...,
      * )
      *
-     * @desc 020200315
      * @param array $param
      * @param boolean $protected
      * @param boolean $obfuscated
@@ -16984,7 +16970,6 @@ class Currency extends Node
     /**
      * Lit une clé dans le contenu de l'objet et retourne un texte avec la valeur.
      *
-     * @desc 020200315
      * @param string $key
      * @param integer $maxsize
      * @return string|null
@@ -17457,7 +17442,6 @@ class Currency extends Node
      * Extrait les capacités de la monnaie dans le champs CAP dans un tableau.
      * Ce tableau doit faciliter la vérification des champs à utiliser.
      *
-     * @desc 020200315
      * @return void
      */
     private function _extractCAParray()
@@ -17516,7 +17500,6 @@ class Currency extends Node
     /**
      * Affiche la partie menu de la documentation.
      *
-     * @desc 020200315
      * @return void
      */
     public function echoDocumentationTitles()
@@ -17678,7 +17661,6 @@ class Currency extends Node
     /**
      * Affiche la partie texte de la documentation.
      *
-     * @desc 020200315
      * @return void
      */
     public function echoDocumentationCore()
@@ -18475,7 +18457,6 @@ class TokenPool extends Currency
     /**
      * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
      *
-     * @desc 020200322
      * @var array:string
      */
     const SESSION_SAVED_VARS = array(
@@ -18926,7 +18907,6 @@ class Token extends TokenPool
     /**
      * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
      *
-     * @desc 020200322
      * @var array:string
      */
     const SESSION_SAVED_VARS = array(
@@ -19384,7 +19364,6 @@ class Wallet extends Entity
     /**
      * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
      *
-     * @desc 020200322
      * @var array:string
      */
     const SESSION_SAVED_VARS = array(
@@ -19643,7 +19622,6 @@ class Transaction extends Link
     /**
      * Initialisation post-constructeur.
      *
-     * @desc 020200404
      * @return void
      */
     protected function _initialisation()
@@ -19663,7 +19641,6 @@ class Transaction extends Link
     /**
      * Tri par mode de transaction détecté.
      *
-     * @desc 020200404
      * @return void
      */
     private function _extractByMode()
@@ -19691,7 +19668,6 @@ class Transaction extends Link
      * Il faut vérifier que la source est un jeton et en extraire la monnaie affairante.
      * Il faut vérifier que la destination est une entité ou un dérivé.
      *
-     * @desc 020200329
      * @return void
      */
     private function _extractModeLNS()
@@ -19744,7 +19720,6 @@ class Transaction extends Link
     /**
      * Retourne si le lien est bien une transaction.
      *
-     * @desc 020200322
      * @return boolean
      */
     public function getIsTransaction()
@@ -19756,7 +19731,6 @@ class Transaction extends Link
      * Retourne l'ID de l'objet des transactions.
      * Retourne null en mode LNS
      *
-     * @desc 020200329
      * @return string
      */
     public function getTransactionsObjetID()
@@ -19768,7 +19742,6 @@ class Transaction extends Link
      * Retourne la marque de temps des transactions.
      * Retourne null en mode LNS
      *
-     * @desc 020200329
      * @return string
      */
     public function getTransactionsTimestamp()
@@ -19780,7 +19753,6 @@ class Transaction extends Link
      * Retourne la liste des transactions unitaires.
      * Retourne null en mode LNS
      *
-     * @desc 020200329
      * @return string
      */
     public function getTransactionsArray()
@@ -29620,7 +29592,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Convertit un texte et un lien web en un lien préformaté HTML.
      *
-     * @desc 020200308
      * @param string $text
      * @param string $htlink
      * @param string $color
@@ -34881,7 +34852,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche l'image du carré de couleur de l'objet ou de l'entité, mais pas de lien vers l'objet.
      *
-     * @desc 020200314
      * @param string $object
      * @return null
      */
@@ -34893,7 +34863,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare l'image du carré de couleur de l'objet ou de l'entité, mais pas de lien vers l'objet.
      *
-     * @desc 020200314
      * @param string $object
      * @return null
      */
@@ -35116,7 +35085,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche en version inserré au texte l'icône couleur, l'image et un texte ou le nom de l'objet ou de l'entité, mais pas de lien vers l'objet.
      *
-     * @desc 020200308
      * @param string $object
      * @return null
      */
@@ -35128,7 +35096,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare en version inserré au texte l'icône couleur, l'image et un texte ou le nom de l'objet ou de l'entité, mais pas de lien vers l'objet.
      *
-     * @desc 020200308
      * @param string $object
      * @return null
      */
@@ -37307,7 +37274,6 @@ abstract class Actions
     /**
      * Extrait pour action si un fichier est téléchargé vers le serveur.
      *
-     * @desc 020200308
      * @return void
      */
     protected function _extractActionUploadFile()
@@ -38641,7 +38607,6 @@ abstract class Actions
      * ...,
      * )
      *
-     * @desc 020200308
      * @return void
      */
     protected function _extractActionCreateCurrency()
