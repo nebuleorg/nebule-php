@@ -4948,22 +4948,6 @@ class nebule
         $this->_localAuthoritiesSigners[$this->_codeMaster] = $this->_puppetmaster;
         $this->_specialEntities[$this->_directoryMaster] = $this->_directoryMaster;
         $this->_specialEntities[$this->_timeMaster] = $this->_timeMaster;
-
-        // Si l'entité de développement est autorisée comme autorité locale.
-        if (!REFERENCES_FOLLOW_ONLY_AUTORITY
-            && REFERENCE_DEV_ID != ''
-            && REFERENCE_DEV_ID != '0'
-            && !$this->_modeRescue
-        ) {
-            $target = REFERENCE_DEV_ID;
-            $instance = $this->newEntity($target);
-            $this->_localAuthorities[$target] = $target;
-            $this->_localAuthoritiesInstances[$target] = $instance;
-            $this->_localAuthoritiesSigners[$target] = $this->_codeMaster;
-            $this->_authorities[$target] = $target;
-            $this->_authoritiesInstances[$target] = $instance;
-            $this->_specialEntities[$target] = $target;
-        }
     }
 
     /**
