@@ -4959,11 +4959,10 @@ class nebule
     private function _addInstanceEntityAsAuthorities()
     {
         // Ajoute si nécessaire l'entité du serveur.
-        if (!$this->_modeRescue) {
+        if (!$this->_modeRescue)
             $this->_permitInstanceEntityAsAuthority = $this->getOption('permitInstanceEntityAsAuthority');
-        } else {
+        else
             $this->_permitInstanceEntityAsAuthority = false;
-        }
 
         if ($this->_permitInstanceEntityAsAuthority) {
             $this->_authorities[$this->_instanceEntity] = $this->_instanceEntity;
@@ -4988,11 +4987,10 @@ class nebule
     private function _addDefaultEntityAsAuthorities()
     {
         // Ajoute si nécessaire l'entité par défaut.
-        if (!$this->_modeRescue) {
+        if (!$this->_modeRescue)
             $this->_permitDefaultEntityAsAuthority = $this->getOption('permitDefaultEntityAsAuthority');
-        } else {
+        else
             $this->_permitDefaultEntityAsAuthority = false;
-        }
 
         if ($this->_permitDefaultEntityAsAuthority) {
             $this->_authorities[$this->_defaultEntity] = $this->_defaultEntity;
@@ -5016,9 +5014,8 @@ class nebule
     private function _addLocalAuthorities()
     {
         // Vérifie si les entités autorités locales sont autorisées.
-        if (!$this->getOption('permitLocalSecondaryAuthorities')) {
+        if (!$this->getOption('permitLocalSecondaryAuthorities'))
             return;
-        }
 
         $refAuthority = $this->_crypto->hash(self::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
 
@@ -5160,17 +5157,14 @@ class nebule
      */
     public function getIsLocalAuthority($entity)
     {
-        if (is_a($entity, 'Node')) {
+        if (is_a($entity, 'Node'))
             $entity = $entity->getID();
-        }
-        if ($entity == '0') {
+        if ($entity == '0')
             return false;
-        }
 
         foreach ($this->_localAuthorities as $authority) {
-            if ($entity == $authority) {
+            if ($entity == $authority)
                 return true;
-            }
         }
         return false;
     }
@@ -5214,9 +5208,8 @@ class nebule
     private function _addInstanceEntityAsRecovery()
     {
         // Vérifie si les entités de recouvrement sont autorisées.
-        if (!$this->getOption('permitRecoveryEntities')) {
+        if (!$this->getOption('permitRecoveryEntities'))
             return;
-        }
 
         $this->_permitInstanceEntityAsRecovery = $this->getOption('permitInstanceEntityAsRecovery');
 
@@ -5237,9 +5230,8 @@ class nebule
     private function _addDefaultEntityAsRecovery()
     {
         // Vérifie si les entités de recouvrement sont autorisées.
-        if (!$this->getOption('permitRecoveryEntities')) {
+        if (!$this->getOption('permitRecoveryEntities'))
             return;
-        }
 
         $this->_permitDefaultEntityAsRecovery = $this->getOption('permitDefaultEntityAsRecovery');
 
@@ -5263,9 +5255,8 @@ class nebule
         $this->_recoveryEntitiesInstances = array();
 
         // Vérifie si les entités de recouvrement sont autorisées.
-        if (!$this->getOption('permitRecoveryEntities')) {
+        if (!$this->getOption('permitRecoveryEntities'))
             return;
-        }
 
         $refRecovery = $this->_crypto->hash(self::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
 
@@ -5351,17 +5342,14 @@ class nebule
      */
     public function getIsRecoveryEntity($entity)
     {
-        if (is_a($entity, 'Node')) {
+        if (is_a($entity, 'Node'))
             $entity = $entity->getID();
-        }
-        if ($entity == '0') {
+        if ($entity == '0')
             return false;
-        }
 
         foreach ($this->_recoveryEntities as $recovery) {
-            if ($entity == $recovery) {
+            if ($entity == $recovery)
                 return true;
-            }
         }
         return false;
     }
@@ -5430,9 +5418,8 @@ class nebule
         foreach ($links as $link) {
             $id = $link->getHashSource();
             $instance = $this->newEntity($id);
-            if ($instance->getIsPublicKey()) {
+            if ($instance->getIsPublicKey())
                 $result[$id] = $instance;
-            }
         }
 
         unset($links, $link, $id, $instance);
@@ -5481,9 +5468,8 @@ class nebule
                     || filter_has_var(INPUT_POST, nebule::COMMAND_RESCUE)
                 )
             )
-        ) {
+        )
             $this->_modeRescue = true;
-        }
     }
 
     /**
@@ -5695,10 +5681,10 @@ class nebule
 
     /**
      * Crée et écrit un objet avec du texte.
-     * @param text $text
+     * @param string $text
      * @param boolean $protect
      */
-    public function createTextAsObject(&$text, $protect = false, $obfuscate = false)
+    public function createTextAsObject(string &$text, bool $protect = false, bool $obfuscate = false)
     {
         // Vérifie que l'écriture est autorisée.
         if ($this->getOption('permitWrite')
@@ -5736,9 +5722,8 @@ class nebule
             $newLink->sign();
 
             // Si besoin, obfuscation du lien.
-            if ($obfuscate) {
+            if ($obfuscate)
                 $link->obfuscate();
-            }
             // Ecrit le lien.
             $newLink->write();
 
@@ -5815,20 +5800,18 @@ class nebule
             $hashType = $type->getID();
         } else {
             // Si le type est un ID (héxadécimal), l'utilise directement. Sinon calcul l'empreinte du type.
-            if (ctype_xdigit($type)) {
+            if (ctype_xdigit($type))
                 $hashType = $type;
-            } else {
+            else
                 $hashType = $this->_crypto->hash($type, self::REFERENCE_CRYPTO_HASH_ALGORITHM);
-            }
             // $type doit être une instance d'objet au final.
             $type = $this->newObject($hashType);
         }
         // Si l'ID de l'instance du type est null ou vide, quitte en renvoyant un résultat vide.
         if ($hashType == '0'
             || $hashType == ''
-        ) {
+        )
             return $result;
-        }
 
         // Si l'entité est une instance, récupère l'ID de l'instance de l'entité.
         if (is_a($entity, 'Node')) {
@@ -5838,11 +5821,10 @@ class nebule
             if (ctype_xdigit($entity)
                 && $this->getIO()->checkLinkPresent($entity)
                 && $this->getIO()->checkObjectPresent($entity)
-            ) {
+            )
                 $hashEntity = $entity;
-            } else {
+            else
                 $hashEntity = '';
-            }
         }
 
         // Lit les liens de l'objet de référence.
@@ -5881,9 +5863,8 @@ class nebule
         $result = $this->getListLinksByType($type, $entity, $socialClass);
 
         // Extrait les ID.
-        foreach ($result as $i => $l) {
+        foreach ($result as $i => $l)
             $result[$i] = $l->getHashSource();
-        }
 
         // retourne le résultat.
         return $result;
