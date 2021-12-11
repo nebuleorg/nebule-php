@@ -28,10 +28,14 @@ $nebuleWebsite = 'www.nebule.org';
 */
 
 
+
 // Initialisation des logs de la librairie.
 closelog();
+if (isset($loggerSessionID) === false)
+    $loggerSessionID = '000000';
 openlog($nebuleName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
 syslog(LOG_INFO, 'LogT=0 LogTabs=' . (microtime(true)) . ' Loading nebule library');
+
 
 
 // Paramètres de l'application par défaut.
@@ -42,6 +46,7 @@ $applicationVersion = $nebuleLibVersion;
 $applicationLicence = $nebuleLicence;
 $applicationAuthor = $nebuleAuthor;
 $applicationWebsite = $nebuleWebsite;
+
 
 
 /**
@@ -568,6 +573,7 @@ class nebule
     {
         $this->_saveCurrentsObjectsOnSessionBuffer();
         $this->_saveCacheOnSessionBuffer();
+        retunr true;
     }
 
     /**
@@ -1793,6 +1799,7 @@ class nebule
 
         // Ecrit l'option.
         $this->_optionCache[$name] = $value;
+        retunr true;
     }
 
     /**
@@ -2055,7 +2062,7 @@ class nebule
     /**
      * Extrait les instances du buffer de session vers le cache.
      *
-     * @return null
+     * @return void
      */
     private function _readCacheOnSessionBuffer()
     {
@@ -2130,7 +2137,7 @@ class nebule
      * Re-sauvegarde les instances des certains objets avant la sauvegarde du cache vers le buffer de session.
      * Ces objets sont potentiellement modifiés depuis leur première instanciation.
      *
-     * @return null
+     * @return void
      */
     private function _saveCurrentsObjectsOnSessionBuffer()
     {
@@ -2141,8 +2148,7 @@ class nebule
     /**
      * Sauvegarde les instances du cache vers le buffer de session.
      *
-     * @020200315
-     * @return null
+     * @return void
      */
     private function _saveCacheOnSessionBuffer()
     {
@@ -3346,7 +3352,7 @@ class nebule
     /**
      * Recherche l'objet en cours d'utilisation.
      *
-     * @return null
+     * @return void
      */
     private function _findCurrentObjet()
     {
@@ -3434,7 +3440,7 @@ class nebule
     /**
      * Recherche l'entité hôte sur le serveur.
      *
-     * @return null
+     * @return void
      */
     private function _findInstanceEntity()
     {
@@ -3518,21 +3524,21 @@ class nebule
     /**
      * Clé publique de l'entité par défaut.
      *
-     * @var string
+     * @var string $_defaultEntity
      */
-    private $_defaultEntity = '';
+    private string $_defaultEntity = '';
 
     /**
      * Instance de l'entité par défaut.
      *
-     * @var Entity|null
+     * @var Entity|null $_defaultEntityInstance
      */
-    private $_defaultEntityInstance = null;
+    private Entity|null $_defaultEntityInstance = null;
 
     /**
      * Recherche l'entité par défaut.
      *
-     * @return null
+     * @return void
      */
     private function _findDefaultEntity()
     {
@@ -9131,7 +9137,8 @@ class Node
         if ($this->_id == '0') {
             $this->_data = null;
             $this->_metrology->addLog('Delete object 0', Metrology::LOG_LEVEL_NORMAL); // Log
-            $this->_io->objectDelete('0');
+            $nid = '0';
+            $this->_io->objectDelete($nid);
             return false;
         }
 
@@ -9252,7 +9259,8 @@ class Node
         if ($this->_id == '0') {
             $this->_data = null;
             $this->_metrology->addLog('Delete object 0', Metrology::LOG_LEVEL_NORMAL); // Log
-            $this->_io->objectDelete('0');
+            $nid = '0';
+            $this->_io->objectDelete($nid);
             return null;
         }
 
@@ -10633,11 +10641,11 @@ class Node
 
         if ($deleteObject) {
             // Supprime l'objet.
-            $r1 = $this->_io->objectDelete($id);
+            $r1 = $this->_io->objectDelete($id); // FIXME declare vars r1 r2
             $r2 = true;
 
             // Métrologie.
-            $this->_metrology->addAction('delobj', $id, $r);
+            $this->_metrology->addAction('delobj', $id, $r1);
         }
 
         // Si protégé.
@@ -17414,15 +17422,13 @@ class Currency extends Node
 
         if (!isset($this->_propertiesForced['CAP'])
             || sizeof($this->_propertiesForced['CAP']) == 0
-        ) {
+        )
             return;
-        }
 
-        $this->_propertiesForced['CAP'];
+        $value = $this->_propertiesForced['CAP'];
         $subitems = explode(' ', $value);
-        foreach ($subitems as $subitem) {
-
-        }
+        foreach ($subitems as $subitem)
+            $this->_CAParray[$subitem] = $subitem;
     }
 
     /**
@@ -22316,7 +22322,7 @@ class ioUnixFileSystem implements ioInterface
     public function getInstanceEntityID($localisation = '')
     {
         $filesize = filesize(nebule::NEBULE_LOCAL_ENTITY_FILE);
-        $data = file_get_contents(nebule::NEBULE_LOCAL_ENTITY_FILE, null, null, 0, $filesize);
+        $data = file_get_contents(nebule::NEBULE_LOCAL_ENTITY_FILE, false, null, 0, $filesize);
 
         return $data;
     }
@@ -22366,7 +22372,7 @@ class ioUnixFileSystem implements ioInterface
         $file = nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . nebule::DEFAULT_PUPPETMASTER;
         $result = false;
 
-        $data = file_get_contents($file, null, null, 0, 16);
+        $data = file_get_contents($file, false, null, 0, 16);
         if ($data === false) {
             return false;
         }
@@ -22421,7 +22427,7 @@ class ioUnixFileSystem implements ioInterface
         $file = nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . nebule::DEFAULT_PUPPETMASTER;
         $result = false;
 
-        $data = file_get_contents($file, null, null, 0, 16);
+        $data = file_get_contents($file, false, null, 0, 16);
         if ($data === false) {
             return false;
         }
@@ -22672,7 +22678,7 @@ class ioUnixFileSystem implements ioInterface
             $filesize = $maxsize;
         }
 
-        $data = file_get_contents(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object, null, null, 0, $filesize);
+        $data = file_get_contents(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object, false, null, 0, $filesize);
 
         return $data;
     }
@@ -23034,8 +23040,8 @@ class ioHTTP implements ioInterface
         // Détermination de l'URL par défaut.
         $this->_defaultLocalisation = self::DEFAULT_LOCALISATION;
         // Environnement PHP.
-        ini_set('allow_url_fopen', true);
-        ini_set('allow_url_include', true);
+        ini_set('allow_url_fopen', 'true');
+        ini_set('allow_url_include', 'true');
         ini_set('user_agent', 'nebule/ioHTTP/' . $nebuleLibVersion);
         ini_set('default_socket_timeout', $nebuleInstance->getOption('ioTimeout'));
     }
@@ -30153,7 +30159,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 overflow: hidden;
                 font-size: 12px;
                 text-align: left;
-                font-weight: none;
+                font-weight: normal;
                 margin: 3px;
                 color: #ffffff;
             }
@@ -33186,7 +33192,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function getDisplayHookAction(array $dispHook, bool $enableDisplayJS, $size)
     {
         if (!is_array($dispHook)) {
-            return $result;
+            return '';
         }
 
         return $this->_getDisplayHookAction($dispHook, $enableDisplayJS, $size);
@@ -34865,7 +34871,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         } else {
             $icon = $this->_prepareObjectFace($object, 'iconNormalDisplay');
         }
-        return $this->convertHypertextLink($color . $icon, $htlink);
+        return $this->convertHypertextLink($icon, $htlink);
     }
 
     /**
