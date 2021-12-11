@@ -9125,13 +9125,11 @@ class Node
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
-        if ($this->_haveData) {
+        if ($this->_haveData)
             return true;
-        }
 
-        if (!$this->_io->checkObjectPresent($this->_id)) {
+        if (!$this->_io->checkObjectPresent($this->_id))
             return false;
-        }
 
         // Si c'est l'objet 0, le supprime.
         if ($this->_id == '0') {
@@ -9146,18 +9144,14 @@ class Node
         $hashAlgo = $this->getHashAlgo();
         if (!$this->_crypto->checkHashAlgorithm($hashAlgo)
             && $this->_nebuleInstance->getOption('permitSynchronizeLink')
-        ) {
-            // Essaie une synchronisation rapide des liens.
+        )
             $this->syncLinks(false);
-        }
         $hashAlgo = $this->getHashAlgo();
         if (!$this->_crypto->checkHashAlgorithm($hashAlgo)) {
-            if ($this->_nebuleInstance->getOption('permitDeleteObjectOnUnknownHash')) {
-                // Si pas trouvé d'algorithme valide, utilise celui par défaut.
+            if ($this->_nebuleInstance->getOption('permitDeleteObjectOnUnknownHash'))
                 $hashAlgo = $this->_crypto->hashAlgorithmName();
-            } else {
+            else
                 return false;
-            }
         }
 
         // Extrait le contenu de l'objet, si possible.
@@ -9168,12 +9162,11 @@ class Node
             $this->_data = null;
             return false;
         }
-        $this->_metrology->addLog('Object size ' . $this->_id . ' ' . strlen($this->_data) . '/' . $maxLimit, Metrology::LOG_LEVEL_DEBUG); // Log
+        $limit = $this->_nebuleInstance->getOption('DEFAULT_IO_READ_MAX_DATA');
+        $this->_metrology->addLog('Object size ' . $this->_id . ' ' . strlen($this->_data) . '/' . $limit, Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Vérifie la taille.
-        if (strlen($this->_data) >= $limit
-            && $limit < $maxLimit
-        ) {
+        if (strlen($this->_data) > $limit) {
             $this->_data = null;
             return false;
         }
