@@ -19824,119 +19824,119 @@ class Link
     /**
      * Texte signature avec algorithme.
      *
-     * @var string
+     * @var string $_signe
      */
     protected string $_signe = '0';
 
     /**
      * Texte valeur hexa de la signature.
      *
-     * @var string
+     * @var string $_signeValue
      */
     protected string $_signeValue = '';
 
     /**
      * Texte algorithme de signature.
      *
-     * @var string
+     * @var string $_signeAlgo
      */
     protected string $_signeAlgo = '';
 
     /**
      * Texte hexa entité signataire.
      *
-     * @var string
+     * @var string $_hashSigner
      */
     protected string $_hashSigner = '0';
 
     /**
      * Texte date du lien.
      *
-     * @var string
+     * @var string $_date
      */
     protected string $_date = '';
 
     /**
      * Texte action du lien, sur un octet.
      *
-     * @var string
+     * @var string $_action
      */
     protected string $_action = '';
 
     /**
      * Texte hexa objet source.
      *
-     * @var string
+     * @var string $_hashSource
      */
     protected string $_hashSource = '0';
 
     /**
      * Texte hexa objet destination.
      *
-     * @var string
+     * @var string $_hashTarget
      */
     protected string $_hashTarget = '0';
 
     /**
      * Texte hexa objet méta.
      *
-     * @var string
+     * @var string $_hashMeta
      */
     protected string $_hashMeta = '0';
 
     /**
      * Booléen si le lien est dissimulé.
      *
-     * @var boolean
+     * @var boolean $_obfuscated
      */
     protected bool $_obfuscated = false;
 
     /**
      * Booléen si le lien a été vérifié.
      *
-     * @var boolean
+     * @var boolean $_verified
      */
     protected bool $_verified = false;
 
     /**
      * Booléen si le lien est vérifié et valide.
      *
-     * @var boolean
+     * @var boolean $_valid
      */
     protected bool $_valid = false;
 
     /**
      * Booléen si le lien a une structure valide.
      *
-     * @var boolean
+     * @var boolean $_validStructure
      */
     protected bool $_validStructure = false;
 
     /**
      * Booléen si le lien est signé.
      *
-     * @var boolean
+     * @var boolean $_signed
      */
     protected bool $_signed = false;
 
     /**
      * Nombre représentant un code d'erreur de vérification.
      *
-     * @var integer
+     * @var integer $_verifyNumError
      */
     protected int $_verifyNumError = 0;
 
     /**
      * Texte de la description de l'erreur de vérification.
      *
-     * @var string
+     * @var string $_verifyTextError
      */
     protected string $_verifyTextError = 'Initialisation';
 
     /**
      * Booléen si la dissimulation de lien est autorisée.
      *
-     * @var boolean
+     * @var boolean $_permitObfuscated
      */
     protected bool $_permitObfuscated = false;
 
