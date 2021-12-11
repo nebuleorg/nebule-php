@@ -6248,164 +6248,164 @@ class Node
     /**
      * Instance de la bilbiothèque nebule en PHP POO.
      *
-     * @var nebule
+     * @var nebule $_nebuleInstance
      */
-    protected $_nebuleInstance;
+    protected nebule $_nebuleInstance;
 
     /**
      * Instance des I/O (entrées/sorties).
      *
-     * @var io
+     * @var ioInterface $_io
      */
-    protected $_io;
+    protected ioInterface $_io;
 
     /**
      * Instance de la cryptographie.
      *
-     * @var CryptoInterface
+     * @var CryptoInterface $_crypto
      */
-    protected $_crypto;
+    protected CryptoInterface $_crypto;
 
     /**
      * Instance sociale.
      *
-     * @var SocialInterface
+     * @var SocialInterface $_social
      */
-    protected $_social;
+    protected SocialInterface $_social;
 
     /**
      * Instance de la métrologie.
      *
-     * @var Metrology
+     * @var Metrology $_metrology
      */
-    protected $_metrology;
+    protected Metrology $_metrology;
 
     /**
      * Identifiant de l'objet.
      * Si à 0, l'objet est invalide.
      *
-     * @var string
+     * @var string $_id
      */
-    protected $_id;
+    protected string $_id;
 
     /**
      * Le nom complet.
      * Forme : prénom préfix/nom.suffix surnom
      *
-     * @var string
+     * @var string $_fullname
      */
-    protected $_fullname;
+    protected string $_fullname;
 
     /**
      * Cache.
      *
-     * @var array
+     * @var array $_cachePropertyLink
      */
-    protected $_cachePropertyLink = array();
+    protected array $_cachePropertyLink = array();
 
     /**
      * Cache.
      *
-     * @var array
+     * @var array $_cachePropertiesLinks
      */
-    protected $_cachePropertiesLinks = array();
+    protected array $_cachePropertiesLinks = array();
 
     /**
      * Cache.
      *
-     * @var array
+     * @var array $_cachePropertyID
      */
-    protected $_cachePropertyID = array();
+    protected array $_cachePropertyID = array();
 
     /**
      * Cache.
      *
-     * @var array
+     * @var array $_cachePropertiesID
      */
-    protected $_cachePropertiesID = array();
+    protected array $_cachePropertiesID = array();
 
     /**
      * Cache.
      *
-     * @var array
+     * @var array $_cacheProperty
      */
-    protected $_cacheProperty = array();
+    protected array $_cacheProperty = array();
 
     /**
      * Cache.
      *
-     * @var array
+     * @var array $_cacheProperties
      */
-    protected $_cacheProperties = array();
+    protected array $_cacheProperties = array();
 
     /**
      * Cache.
      *
-     * @var string
+     * @var string $_cacheUpdate
      */
-    protected $_cacheUpdate = '';
+    protected string $_cacheUpdate = '';
 
     /**
      * Cache.
      *
-     * @var boolean
+     * @var boolean $_cacheMarkDanger
      */
-    protected $_cacheMarkDanger = false;
+    protected bool $_cacheMarkDanger = false;
 
     /**
      * Cache.
      *
-     * @var boolean
+     * @var boolean $_cacheMarkWarning
      */
-    protected $_cacheMarkWarning = false;
+    protected bool $_cacheMarkWarning = false;
 
     /**
      * Cache.
      *
-     * @var boolean
+     * @var boolean $_cacheMarkProtected
      */
-    protected $_cacheMarkProtected = false;
+    protected bool $_cacheMarkProtected = false;
 
     /**
      * Identifiant de l'objet ayant le contenu protégé (chiffré).
      *
-     * @var string
+     * @var string $_idProtected
      */
-    protected $_idProtected = '0';
+    protected string $_idProtected = '0';
 
     /**
      * Identifiant de l'objet ayant le contenu non protégé (en clair).
      *
-     * @var string
+     * @var string $_idUnprotected
      */
-    protected $_idUnprotected = '0';
+    protected string $_idUnprotected = '0';
 
     /**
      * Identifiant de l'objet ayant le contenu de la clé protégée de déchiffrement de l'objet.
      *
-     * @var string
+     * @var string $_idProtectedKey
      */
-    protected $_idProtectedKey = '0';
+    protected string $_idProtectedKey = '0';
 
     /**
      * Identifiant de l'objet ayant le contenu de la clé non protégée de déchiffrement de l'objet.
      *
-     * @var string
+     * @var string $_idUnprotectedKey
      */
-    protected $_idUnprotectedKey = '0';
+    protected string $_idUnprotectedKey = '0';
 
     /**
      * Marqueur de détection de la protection de l'objet.
      *
-     * @var boolean
+     * @var boolean $_markProtectedChecked
      */
-    protected $_markProtectedChecked = false;
+    protected bool $_markProtectedChecked = false;
 
     /**
      *
-     * @var unknown
+     * @var bool $_cacheCurrentEntityUnlocked
      */
-    protected $_cacheCurrentEntityUnlocked = null;
+    protected bool|null $_cacheCurrentEntityUnlocked = null;
 
     /**
      * Copie des données non encodées.
@@ -6447,18 +6447,17 @@ class Node
 
     /**
      * Constructeur.
-     *
      * Toujours transmettre l'instance de la librairie nebule.
      * Si l'objet existe, juste préciser l'ID de celui-ci.
      * Si c'est un nouvel objet à créer, mettre l'ID à 0 et transmettre les données du nouvel objet dans data.
      * Si c'est un nouvel objet, préciser si il doit être protégé tout de suite avec protect à true.
      *
-     * @param nebule $nebuleInstance
-     * @param string $id
-     * @param string $data
+     * @param nebule  $nebuleInstance
+     * @param string  $id
+     * @param string  $data
      * @param boolean $protect
      */
-    public function __construct(nebule $nebuleInstance, $id, $data = '', $protect = false, $obfuscated = false)
+    public function __construct(nebule $nebuleInstance, string $id, string $data = '', bool $protect, bool $obfuscated = false)
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_io = $nebuleInstance->getIO();
@@ -19796,7 +19795,7 @@ class Link
     /**
      * Instance crypto en cours.
      *
-     * @var CryptoInterface
+     * @var CryptoInterface $_crypto
      */
     protected CryptoInterface $_crypto;
 
