@@ -19484,6 +19484,246 @@ class Wallet extends Entity
 }
 
 
+/**
+ * ------------------------------------------------------------------------------------------
+ * La classe Transaction.
+ *
+ * @author Projet nebule
+ * @license GNU GPLv3
+ * @copyright Projet nebule
+ * @link www.nebule.org
+ *
+ * Attend à la création :
+ * - l'instance nebule utilisé ;
+ * - un texte contenant le lien ;
+ * - un texte contenant la version du lien.
+ *
+ * Le nombre de champs du lien doit être de 7 exactement.
+ * Le champs signature peut être vide ou à 0 si c'est pour un nouveau lien à signer.
+ * La signature doit être explicitement demandée par l'appelle de sign() après la création du lien.
+ *
+ * Un lien peut être valide si sa structure est correcte, et peut être signé si la signature est valide.
+ *
+ * Une transaction est un lien entre une monnaie, un jeton et un objet contenant la description de la transaction.
+ * La description de la transaction peut en fait contenir plusieurs transactions élémentaires.
+ * ------------------------------------------------------------------------------------------
+ */
+class Transaction extends Link
+{
+    /**
+     * Booléen si le lien est une transaction ET qu'elle est valide.
+     *
+     * @var boolean
+     */
+    private bool $_isTransaction = false;
+
+    /**
+     * ID de l'objet contenant les transactions.
+     * Reste à null en mode LNS.
+     *
+     * @var string
+     */
+    private string $_transactionsObjectID = '';
+
+    /**
+     * Mode de transaction, si valide dans la monnaie.
+     *
+     * @var string
+     */
+    private string $_transactionsMode = '';
+
+    /**
+     * Date des transactions.
+     *
+     * @var DateTime|null
+     */
+    private DateTime|null $_transactionsTimestamp = null;
+
+    /**
+     * Table des transactions unitaires.
+     *
+     * Les transactions unitaires sont incrémentées à partir de 0.
+     * Chaque transaction unitaire est un sous-tableau :
+     * - CID
+     * - D : horodatage
+     * - S : ID détenteur
+     * - D : ID destinataire
+     * - TID
+     * - R : ratio du jeton utilisé, de 0 à 1, 1 = tout
+     * - TRS : mode de transaction
+     *
+     * @var array
+     */
+    private array $_transactionsArray = array();
+
+    /**
+     * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
+     *
+     * @var array:string
+     */
+    const SESSION_SAVED_VARS = array(
+        '_fullLink',
+        '_signe',
+        '_signeValue',
+        '_signeAlgo',
+        '_signed',
+        '_hashSigner',
+        '_date',
+        '_action',
+        '_hashSource',
+        '_hashTarget',
+        '_hashMeta',
+        '_obfuscated',
+        '_verified',
+        '_valid',
+        '_validStructure',
+        '_verifyNumError',
+        '_verifyTextError',
+        '_isTransaction',
+    );
+
+    /**
+     * Initialisation post-constructeur.
+     *
+     * @return void
+     */
+    protected function _initialisation()
+    {
+        // Vérifications de base.
+        if ($this->_action != 'f'
+            || $this->_hashSource == '0'
+            || $this->_hashTarget == '0'
+            || $this->_hashMeta == '0'
+        ) {
+            return;
+        }
+
+        $this->_extractByMode();
+    }
+
+    /**
+     * Tri par mode de transaction détecté.
+     *
+     * @return void
+     */
+    private function _extractByMode()
+    {
+        // Si transaction en mode mode LNS.
+        $hashLNS = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_TRANSACTION);
+        if ($this->_hashMeta == $hashLNS) {
+            $this->_extractModeLNS();
+        } else {
+            $this->_isTransaction = false;
+        }
+    }
+
+    /**
+     * Extrait une transaction en mode LNS.
+     *
+     * Une transaction en mode LNS est marquée par un lien :
+     * - hashsign : signataire et entité source disposant du jeton.
+     * - date : date de la prise en compte de la transaction.
+     * - action : type f.
+     * - hashsource : ID du jeton.
+     * - hashtarget : ID du destinataire.
+     * - hashmeta : hash de 'nebule/objet/monnaie/transaction', marque que c'est une transaction.
+     * Elle est repérée par rapport au champs méta.
+     * Il faut vérifier que la source est un jeton et en extraire la monnaie affairante.
+     * Il faut vérifier que la destination est une entité ou un dérivé.
+     *
+     * @return void
+     */
+    private function _extractModeLNS()
+    {
+        $this->_transactionsMode = 'LNS';
+
+        // Vérifie si l'objet source est un jeton.
+        $instanceSource = $this->_nebuleInstance->newToken($this->_hashSource);
+        $instanceTarget = $this->_nebuleInstance->newWallet($this->_hashTarget);
+        if ($instanceSource->getID() != '0'
+            && $instanceSource->getIsToken('all') // @todo modifier le filtre social.
+            && $instanceSource->getID() != '0'
+            && $instanceSource->getIsWallet('all') // @todo modifier le filtre social.
+        ) {
+            // Extrait la monnaie.
+            $CID = $instanceSource->getParam('CID');
+            $instanceCID = $this->_nebuleInstance->newCurrency($CID);
+            $modesCID = ' ' . $instanceCID->getParam('TRS') . ' ';
+
+            // Vérifie que le mode LNS est présent dans les modes supportés par la monnaie
+            if ($modesCID != '  '
+                && strpos($modesCID, ' LNS ') !== false
+            ) {
+                $this->_transactionsArray[0]['CID'] = $CID;
+                $this->_transactionsArray[0]['D'] = $this->_date;
+                $this->_transactionsArray[0]['S'] = $this->_hashSigner;
+                $this->_transactionsArray[0]['T'] = $this->_hashTarget;
+                $this->_transactionsArray[0]['TID'] = $this->_hashSource;
+                $this->_transactionsArray[0]['R'] = '1';
+                $this->_transactionsArray[0]['TRS'] = 'LNS';
+                $this->_isTransaction = true;
+            } else {
+                $this->_isTransaction = false;
+            }
+        } else {
+            $this->_isTransaction = false;
+        }
+    }
+
+    /**
+     * Fonction de suppression de l'instance.
+     *
+     * @return boolean
+     */
+    public function __destruct()
+    {
+        return true;
+    }
+
+    /**
+     * Retourne si le lien est bien une transaction.
+     *
+     * @return boolean
+     */
+    public function getIsTransaction()
+    {
+        return $this->_isTransaction;
+    }
+
+    /**
+     * Retourne l'ID de l'objet des transactions.
+     * Retourne null en mode LNS
+     *
+     * @return string
+     */
+    public function getTransactionsObjetID()
+    {
+        return $this->_transactionsObjectID;
+    }
+
+    /**
+     * Retourne la marque de temps des transactions.
+     * Retourne null en mode LNS
+     *
+     * @return string
+     */
+    public function getTransactionsTimestamp()
+    {
+        return $this->_transactionsTimestamp;
+    }
+
+    /**
+     * Retourne la liste des transactions unitaires.
+     * Retourne null en mode LNS
+     *
+     * @return string
+     */
+    public function getTransactionsArray()
+    {
+        return $this->_transactionsArray;
+    }
+}
+
 
 /**
  * La classe Link.
@@ -23580,589 +23820,6 @@ class Traduction extends Traductions
     }
 }
 
-
-/**
- * Classe Traductions
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
-abstract class Traductions
-{
-    /* ---------- ---------- ---------- ---------- ----------
-	 * Constantes.
-	 *
-	 * Leur modification change profondément le comportement de l'application.
-	 *
-	 * Si déclarées 'const' ou 'static' elles ne sont pas remplacée dans les classes enfants
-	 *   lorsque l'on appelle des fonctions de la classe parente non écrite dans la classe enfant...
-	 */
-    /**
-     * langue par défaut.
-     *
-     * @var string
-     */
-    protected $DEFAULT_LANGUAGE = 'en-en';
-
-    /**
-     * Commande de sélection de la langue.
-     * @var string
-     */
-    const DEFAULT_COMMAND_LANGUAGE = 'lang';
-
-    /**
-     * Liste des languages supportés.
-     *
-     * @var array
-     */
-    protected $LANGUAGE_LIST = array('en-en');
-
-    /**
-     * Liste des icônes des languages supportés.
-     *
-     * @var array
-     */
-    protected $LANGUAGE_ICON_LIST = array('en-en' => '7796077f1b865951946dd40ab852f6f4d21e702e7c4f47bd5fa6cb9ce94a4c5f');
-
-
-    /* ---------- ---------- ---------- ---------- ----------
-	 * Variables.
-	 *
-	 * Les valeurs par défaut sont indicatives. Ne pas les replacer.
-	 * Les variables sont systématiquement recalculées.
-	 */
-    /**
-     * Paramètre d'activation de la gestion des modules.
-     *
-     * @var boolean
-     */
-    protected $_useModules = false;
-
-    /**
-     * L'instance de la librairie nebule.
-     *
-     * @var nebule
-     */
-    protected $_nebuleInstance;
-
-    /**
-     * L'instance de l'application.
-     *
-     * @var Applications
-     */
-    protected $_applicationInstance;
-
-    /**
-     * L'instance de la métrologie.
-     *
-     * @var Metrology
-     */
-    protected $_metrologyInstance;
-
-    /**
-     * Langue sélectionnée.
-     *
-     * @var string
-     */
-    protected $_currentLanguage;
-
-    /**
-     * Icône de la langue sélectionnée.
-     *
-     * @var string
-     */
-    protected $_currentLanguageIcon;
-
-    /**
-     * Langue par défaut.
-     *
-     * @var string
-     */
-    protected $_defaultLanguage;
-
-    /**
-     * Liste des langues disponibles.
-     *
-     * @var array of string
-     */
-    protected $_languageList = array();
-
-    /**
-     * Liste des icônes des langues disponibles.
-     *
-     * @var array of string
-     */
-    protected $_languageIconList = array();
-
-    protected $_languageInstanceList = array();
-    protected $_currentLanguageInstance;
-    protected $_defaultLanguageInstance;
-
-
-    /**
-     * Constructeur.
-     *
-     * @param Application $applicationInstance
-     * @return void
-     */
-    public function __construct(Application $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
-
-    /**
-     * Initialisation des variables et instances interdépendantes.
-     *
-     * @return void
-     */
-    public function initialisation()
-    {
-        $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load translates', Metrology::LOG_LEVEL_DEBUG); // Log
-        // Détecte si les modules sont activés.
-        if ($this->_applicationInstance->getUseModules()) {
-            $this->_useModules = true;
-        }
-
-        // Recherche les languages.
-        $this->_findDefaultLanguage();
-        $this->_findLanguages();
-        $this->_findCurrentLanguage();
-        $this->_findIcons();
-        $this->_findCurrentIcon();
-        $this->_initTable();
-
-        // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.
-        // Les instances interdépendantes doivent être synchronisées.
-    }
-
-    /**
-     * Fonction de suppression de l'instance.
-     *
-     * @return boolean
-     */
-    public function __destruct()
-    {
-        return true;
-    }
-
-    /**
-     * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return 'Traduction';
-    }
-
-    /**
-     * Fonction de mise en sommeil.
-     *
-     * @return array:string
-     */
-    public function __sleep()
-    {
-        return array();
-    }
-
-    /**
-     * Fonction de réveil.
-     *
-     * Récupère l'instance de la librairie nebule et de l'application.
-     *
-     * @return null
-     */
-    public function __wakeup()
-    {
-        global $applicationInstance;
-
-        $this->_applicationInstance = $applicationInstance;
-    }
-
-    /**
-     * Initialisation des variables et instances interdépendantes.
-     * @return void
-     * @todo à optimiser avec __wakeup et __sleep.
-     *
-     */
-    public function initialisation2()
-    {
-        $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load translates', Metrology::LOG_LEVEL_DEBUG); // Log
-        // Détecte si les modules sont activés.
-        if ($this->_applicationInstance->getUseModules()) {
-            $this->_useModules = true;
-        }
-
-        // Recherche les languages.
-        $this->_findDefaultLanguage();
-        $this->_findLanguages();
-        $this->_findCurrentLanguage();
-        $this->_findIcons();
-        $this->_findCurrentIcon();
-        $this->_initTable();
-
-        // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.
-        // Les instances interdépendantes doivent être synchronisées.
-    }
-
-
-    /**
-     * Cherche la langue par défaut.
-     *
-     * @return void
-     */
-    protected function _findDefaultLanguage()
-    {
-        $this->_defaultLanguage = $this->DEFAULT_LANGUAGE;
-
-        if ($this->_useModules) {
-            foreach ($this->_languageInstanceList as $module) {
-                if ($module->getCommandName() == $this->_defaultLanguage) {
-                    $this->_defaultLanguageInstance = $module;
-                }
-            }
-        }
-
-        $this->_metrologyInstance->addLog('Find default language : ' . $this->_defaultLanguage, Metrology::LOG_LEVEL_DEBUG); // Log
-    }
-
-
-    /**
-     * Cherche les langues disponibles.
-     *
-     * @return void
-     */
-    protected function _findLanguages()
-    {
-        if ($this->_useModules) {
-            foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-                if ($module->getType() == 'traduction') {
-                    $this->_languageList[$module->getCommandName()] = $module->getCommandName();
-                    $this->_languageInstanceList[$module->getCommandName()] = $module;
-
-                    $this->_metrologyInstance->addLog('Find new language : ' . $module->getCommandName(), Metrology::LOG_LEVEL_DEBUG); // Log
-                }
-            }
-        } else {
-            $this->_languageList = $this->LANGUAGE_LIST;
-        }
-    }
-
-
-    /**
-     * La langue d'affichage de l'interface.
-     *
-     * La recherche de la langue se fait en lisant la langue demandée dans l'URL,
-     *   puis en la comparant aux modules de traductions présents.
-     *
-     * @return void
-     */
-    protected function _findCurrentLanguage()
-    {
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-		 *  ------------------------------------------------------------------------------------------
-		 */
-        // Lit et nettoye le contenu de la variable GET.
-        $arg_lang = filter_input(INPUT_GET, self::DEFAULT_COMMAND_LANGUAGE, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-
-        // Test la forme.
-        if ($arg_lang != ''
-            && strlen($arg_lang) != 5
-            && substr($arg_lang, 2, 1) != '-'
-        ) {
-            $arg_lang = '';
-        }
-
-        // Recherche un langage connu.
-        $ok_lang = false;
-        $lang_instance = '';
-        foreach ($this->_languageList as $lang) {
-            if ($arg_lang == $lang) {
-                $ok_lang = true;
-                if ($this->_useModules) {
-                    $lang_instance = $this->_languageInstanceList[$lang];
-                }
-                break;
-            }
-        }
-
-        // Si le langage est connu.
-        if ($ok_lang) {
-            $this->_currentLanguage = $arg_lang; // Ecrit le langage dans la variable.
-            $this->_currentLanguageInstance = $lang_instance;
-            // Ecrit le langage dans la session.
-            $this->_nebuleInstance->setSessionStore($this->_applicationInstance->getClassName() . 'DisplayLanguage', $arg_lang);
-        } else {
-            $cache = $this->_nebuleInstance->getSessionStore($this->_applicationInstance->getClassName() . 'DisplayLanguage');
-            // Si il existe une variable de session pour le mode d'affichage, la lit.
-            if ($cache !== false
-                && $cache != ''
-            ) {
-                $this->_currentLanguage = $cache;
-                $this->_currentLanguageInstance = $this->_languageInstanceList[$cache];
-            } else // Sinon active le langage par defaut.
-            {
-                $this->_currentLanguage = $this->_defaultLanguage;
-                $this->_currentLanguageInstance = $this->_languageInstanceList[$this->_defaultLanguage];
-                $this->_nebuleInstance->setSessionStore($this->_applicationInstance->getClassName() . 'DisplayLanguage', $this->_defaultLanguage);
-            }
-            unset($cache);
-        }
-
-        $this->_metrologyInstance->addLog('Find current language : ' . $this->_currentLanguage, Metrology::LOG_LEVEL_DEBUG); // Log
-    }
-
-
-    /**
-     * Retourne la liste des langues.
-     *
-     * @return array of string
-     */
-    public function getLanguageList()
-    {
-        return $this->_languageList;
-    }
-
-    public function getDefaultLanguage()
-    {
-        return $this->_defaultLanguage;
-    }
-
-    public function getCurrentLanguage()
-    {
-        return $this->_currentLanguage;
-    }
-
-    public function getCurrentLanguageIcon()
-    {
-        return $this->_currentLanguageIcon;
-    }
-
-    public function getLanguageIcon($lang)
-    {
-        $result = $this->_languageIconList[$this->_currentLanguage];
-        if (isset($this->_languageIconList[$lang])) {
-            $result = $this->_languageIconList[$lang];
-        }
-        return $result;
-    }
-
-    public function getLanguageInstanceList()
-    {
-        return $this->_languageInstanceList;
-    }
-
-    public function getCurrentLanguageInstance()
-    {
-        return $this->_currentLanguageInstance;
-    }
-
-    public function getDefaultLanguageInstance()
-    {
-        return $this->_defaultLanguageInstance;
-    }
-
-
-    /**
-     * La traduction de textes recherche une traduction pour le langage en cours.
-     *
-     * Sans module :
-     * 1) Recherche le texte traduit dans le langage courant.
-     * 2) Si aucune traduction n'est trouvée, retourne le texte traduit dans le langage par défaut.
-     * 3) Si aucune traduction n'est trouvée, retourne le texte non traduit.
-     *
-     * Avec modules :
-     * 1) Recherche le texte traduit le module de traduction pour le langage courant.
-     * 2) Si pas trouvé, recherche dans le module utilisé à l'affichage pour le langage courant.
-     * 3) Si pas trouvé, recherche dans le module de traduction pour le langage par défaut.
-     * 4) Si pas trouvé, recherche dans le module utilisé à l'affichage pour le langage par défaut.
-     * 5) Si pas trouvé, recherche dans tous les modules disponibles pour le langage courant.
-     * 6) Si pas trouvé, recherche dans tous les modules disponibles pour le langage par défaut.
-     * 7) Si pas trouvé, retourne le texte d'origine.
-     *
-     * Un module, s'il n'est pas dédié à la traduction, ne doit prendre en charge que la translation des textes
-     *   qui le concerne. Mais il peut traduire ces textes dans plusieurs langues.
-     *
-     * Un texte qui commence par '<' est considéré comme une balise et n'est pas traduit.
-     *
-     * @param string $text
-     * @return string
-     */
-    public function getTraduction($text, $lang = '')
-    {
-        $result = $text;
-
-        // Sélectionne le language de traduction.
-        if ($lang == '') {
-            $lang = $this->_currentLanguage;
-        }
-
-        $this->_metrologyInstance->addLog('Get traduction ' . $lang . ' : "' . substr($text, 0, 250) . '"', Metrology::LOG_LEVEL_DEBUG); // Log
-
-        // Si le texte est une balise, comme par '<', ne fait pas la traduction.
-        if (substr($text, 0, 1) == '<') {
-            return $result;
-        }
-
-        if (!$this->_useModules) // Si pas de modules.
-        {
-            if (isset($this->_table[$lang][$text])) {
-                $result = $this->_table[$lang][$text];
-            } elseif (isset($this->_table[$this->_defaultLanguage][$text])) {
-                $result = $this->_table[$this->_defaultLanguage][$text];
-            }
-        } else // Si modules.
-        {
-            // 1) Appel le module de traduction avec la langue en cours.
-            foreach ($this->_languageInstanceList as $module) {
-                if ($module->getCommandName() == $lang) {
-                    $result = $module->getTraduction($text, $lang);
-                    $this->_metrologyInstance->addLog('Module 1 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG); // Log
-                }
-            }
-
-            // 2) Si rien trouvé, appel le module d'affichage en cours avec la langue en cours.
-            if ($result == ''
-                || $result == $text
-            ) {
-                $result = $this->_applicationInstance->getCurrentModuleInstance()->getTraduction($text, $lang);
-                $this->_metrologyInstance->addLog('Module 2 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG); // Log
-            }
-
-            // 3) Si rien trouvé, appel le module de traduction avec la langue par défaut.
-            if (($result == ''
-                    || $result == $text
-                )
-                && $lang != $this->_defaultLanguage
-            ) {
-                foreach ($this->_languageInstanceList as $module) {
-                    if ($module->getCommandName() == $this->_defaultLanguage) {
-                        $result = $module->getTraduction($text, $this->_defaultLanguage);
-                        $this->_metrologyInstance->addLog('Module 3 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG); // Log
-                    }
-                }
-            }
-
-            // 4) Si rien trouvé, appel le module d'affichage en cours avec la langue par défaut.
-            if ($result == ''
-                || $result == $text
-            ) {
-                $result = $this->_applicationInstance->getCurrentModuleInstance()->getTraduction($text, $this->_defaultLanguage);
-                $this->_metrologyInstance->addLog('Module 4 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG); // Log
-            }
-
-            // 5) Si rien trouvé, appel tous les modules avec la langue en cours.
-            if ($result == ''
-                || $result == $text
-            ) {
-                foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-                    $result = $module->getTraduction($text, $lang);
-                    $this->_metrologyInstance->addLog('Module 5 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG); // Log
-                    if ($result != $text) {
-                        break;
-                    }
-                }
-            }
-
-            // 6) Si rien trouvé, appel tous les modules avec la langue par défaut.
-            if (($result == ''
-                    || $result == $text
-                )
-                && $lang != $this->_defaultLanguage
-            ) {
-                foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-                    $result = $module->getTraduction($text, $this->_defaultLanguage);
-                    $this->_metrologyInstance->addLog('Module 6 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG); // Log
-                    if ($result != $text) {
-                        break;
-                    }
-                }
-            }
-
-            // 7) Par défaut si rien trouvé renvoie le texte originel.
-            if ($result == '') {
-                $result = $text;
-            }
-        }
-
-        // Retourne le résultat.
-        $this->_metrologyInstance->addLog('End find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG); // Log
-        return $result;
-    }
-
-    /**
-     * Affiche un texte préalablement traduit.
-     * Le texte peut se voir forcé sa couleur.
-     * Certaines séquences peuvent être remplacées par des valeurs, les arguments.
-     *
-     * @param string $text
-     * @param string $color
-     * @param string $arg1
-     * @param string $arg2
-     * @param string $arg3
-     * @param string $arg4
-     * @param string $arg5
-     * @param string $arg6
-     * @param string $arg7
-     * @param string $arg8
-     * @param string $arg9
-     * @return void
-     */
-    public function echoTraduction($text, $color = '', $arg1 = null, $arg2 = null, $arg3 = null, $arg4 = null, $arg5 = null, $arg6 = null, $arg7 = null, $arg8 = null, $arg9 = null)
-    {
-        if ($color != '') {
-            echo "<font color=\"$color\">";
-        }
-        echo sprintf($this->getTraduction($text), $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9);
-        if ($color != '') {
-            echo '</font>';
-        }
-    }
-
-    protected function _findIcons()
-    {
-        if ($this->_useModules) {
-            foreach ($this->_languageInstanceList as $module) {
-                $this->_languageIconList[$module->getCommandName()] = $module->getLogo();
-            }
-        } else {
-            $this->_languageIconList = $this->LANGUAGE_ICON_LIST;
-        }
-    }
-
-    protected function _findCurrentIcon()
-    {
-        $this->_currentLanguageIcon = $this->_languageIconList[$this->_currentLanguage];
-    }
-
-
-    /**
-     * Table des traductions.
-     *
-     * @var array
-     */
-    protected $_table = array();
-
-    /**
-     * Initialisation de la table de traduction.
-     *
-     * @return void
-     */
-    protected function _initTable()
-    {
-        $this->_table['fr-fr']['::Welcome'] = 'Bienvenue';
-        $this->_table['en-en']['::Welcome'] = 'Welcome';
-        $this->_table['es-co']['::Welcome'] = 'Bienvenido';
-    }
-}
 
 
 /**
