@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
+
 // ----------------------------------------------------------------------------------------
 $nebuleName = 'library';
 $nebuleSurname = 'nebule/library';
@@ -10,6 +11,7 @@ $nebuleLibVersion = '02021128';
 $nebuleLicence = 'GNU GPL 2010-2021';
 $nebuleWebsite = 'www.nebule.org';
 // ----------------------------------------------------------------------------------------
+
 
 
 /*

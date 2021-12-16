@@ -320,6 +320,12 @@ namespace Nebule\Library;
 EOF
   for F in "${WORKSPACE}/lib_nebule"/*
   do
+    library_hash=$(sha256sum "${F}" | cut -d' ' -f1)'.sha2.256'
+    echo -e "\n\n" >> "${WORKSPACE}/lib_nebule.php"
+    echo '// ========================================================================================' >> "${WORKSPACE}/lib_nebule.php"
+    echo '//   '$(basename "${F}") >> "${WORKSPACE}/lib_nebule.php"
+    echo '//   0'$(stat -c '%y' "${F}" | cut -d' ' -f1-2 | cut -d. -f1 | tr -dc "[0-9]") >> "${WORKSPACE}/lib_nebule.php"
+    echo "//   ${library_hash}" >> "${WORKSPACE}/lib_nebule.php"
     tail +4 "${F}" >> "${WORKSPACE}/lib_nebule.php"
   done
   library_hash=$(sha256sum "${WORKSPACE}/lib_nebule.php" | cut -d' ' -f1)'.sha2.256'
