@@ -3,16 +3,12 @@ declare(strict_types=1);
 namespace Nebule\Library;
 
 /**
- * ------------------------------------------------------------------------------------------
- * La classe Metrology.
+ * Metrology class for the nebule library.
  *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
- *
- * Gestion de la métrologie et des logs vers le système.
- * ------------------------------------------------------------------------------------------
  */
 class Metrology
 {

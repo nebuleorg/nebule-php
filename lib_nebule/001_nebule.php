@@ -3,17 +3,12 @@ declare(strict_types=1);
 namespace Nebule\Library;
 
 /**
- * ------------------------------------------------------------------------------------------
- * La classe nebule.
- * ------------------------------------------------------------------------------------------
- *
- * Le coeur de la librairie nebule.
+ * The nebule core library.
  *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
- *
  */
 class nebule
 {
@@ -526,7 +521,7 @@ class nebule
     {
         $this->_saveCurrentsObjectsOnSessionBuffer();
         $this->_saveCacheOnSessionBuffer();
-        retunr true;
+        return true;
     }
 
     /**
@@ -1752,7 +1747,7 @@ class nebule
 
         // Ecrit l'option.
         $this->_optionCache[$name] = $value;
-        retunr true;
+        return true;
     }
 
     /**
