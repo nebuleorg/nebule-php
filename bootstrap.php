@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Bootstrap;
+
 //use nebule;
 // ------------------------------------------------------------------------------------------
 use Nebule\Library\nebule;
