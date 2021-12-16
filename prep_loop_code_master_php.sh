@@ -311,24 +311,24 @@ function work_refresh()
 
   bootstrap_hash=$(sha256sum "${WORKSPACE}/bootstrap.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new bootstrap : ${bootstrap_hash}"
-  cp "${WORKSPACE}/bootstrap.php" "l/${bootstrap_hash}"
+  cp "${WORKSPACE}/bootstrap.php" "o/${bootstrap_hash}"
 
   cat > "${WORKSPACE}/lib_nebule.php" << EOF
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
 EOF
-  for F in lib_nebule/*
+  for F in "${WORKSPACE}/lib_nebule"/*
   do
     tail +4 "${F}" >> "${WORKSPACE}/lib_nebule.php"
   done
   library_hash=$(sha256sum "${WORKSPACE}/lib_nebule.php" | cut -d' ' -f1)'.sha2.256'
-  echo " > new library : ${bootstrap_hash}"
-  mv "${WORKSPACE}/lib_nebule.php" "l/${library_hash}"
+  echo " > new library : ${library_hash}"
+  mv "${WORKSPACE}/lib_nebule.php" "o/${library_hash}"
 
   sylabe_hash=$(sha256sum "${WORKSPACE}/sylabe.php" | cut -d' ' -f1)'.sha2.256'
-  echo " > new sylabe : ${bootstrap_hash}"
-  cp "${WORKSPACE}/sylabe.php" "l/${sylabe_hash}"
+  echo " > new sylabe : ${sylabe_hash}"
+  cp "${WORKSPACE}/sylabe.php" "o/${sylabe_hash}"
 
   echo ' > links'
   echo '   - type mime = application/x-httpd-php'
