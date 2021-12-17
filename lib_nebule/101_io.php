@@ -26,6 +26,20 @@ class io implements ioInterface
     private $_listInstances = array();
 
     /**
+     * Instance de la bibliothèque nebule.
+     *
+     * @var nebule
+     */
+    protected $_nebuleInstance;
+
+    /**
+     * Instance de gestion de la configuration et des options.
+     *
+     * @var Configuration
+     */
+    protected $_configuration;
+
+    /**
      * Constructeur.
      *
      * @param nebule $nebuleInstance

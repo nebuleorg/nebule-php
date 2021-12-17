@@ -237,7 +237,7 @@ class Link
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_io = $nebuleInstance->getIO();
         $this->_crypto = $nebuleInstance->getCrypto();
-        $this->_permitObfuscated = (bool)$nebuleInstance->getOption('permitObfuscatedLink');
+        $this->_permitObfuscated = (bool)$this->_configuration->getOption('permitObfuscatedLink');
         $this->_metrology->addLinkRead(); // Metrologie.
 
         // Extrait le lien et vérifie sa structure.
@@ -311,7 +311,7 @@ class Link
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_io = $nebuleInstance->getIO();
         $this->_crypto = $nebuleInstance->getCrypto();
-        $this->_permitObfuscated = (bool)$nebuleInstance->getOption('permitObfuscatedLink');
+        $this->_permitObfuscated = (bool)$this->_configuration->getOption('permitObfuscatedLink');
     }
 
 

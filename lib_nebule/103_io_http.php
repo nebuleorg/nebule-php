@@ -10,7 +10,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ioHTTP implements ioInterface
+class ioHTTP extends io implements ioInterface
 {
     /**
      * Localisation par défaut de ce module I/O.
@@ -41,20 +41,6 @@ class ioHTTP implements ioInterface
     private $_defaultLocalisation;
 
     /**
-     * Instance de la bibliothèque nebule.
-     *
-     * @var nebule
-     */
-    private $_nebuleInstance;
-
-    /**
-     * Instance de gestion de la configuration et des options.
-     *
-     * @var Configuration
-     */
-    private $_configuration;
-
-    /**
      * Valeur de la clé de transcodage des noms des fichiers de liens dissimulés.
      *
      * @var number
@@ -63,23 +49,24 @@ class ioHTTP implements ioInterface
 
     /**
      * Constructeur.
-     * Prépare les dossiers.
+     *
+     * @param nebule $nebuleInstance
      */
-    public function __construct(nebule $_nebuleInstance)
+    public function __construct(nebule $nebuleInstance)
     {
-        global $nebuleLibVersion, $nebuleInstance;
+        global $nebuleLibVersion;
 
         $this->_nebuleInstance = $nebuleInstance;
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_maxLink = $nebuleInstance->getOption('ioReadMaxLinks');
-        $this->_maxData = $nebuleInstance->getOption('ioReadMaxData');
+        $this->_maxLink = $this->_configuration->getOption('ioReadMaxLinks');
+        $this->_maxData = $this->_configuration->getOption('ioReadMaxData');
         // Détermination de l'URL par défaut.
         $this->_defaultLocalisation = self::DEFAULT_LOCALISATION;
         // Environnement PHP.
         ini_set('allow_url_fopen', 'true');
         ini_set('allow_url_include', 'true');
         ini_set('user_agent', 'nebule/ioHTTP/' . $nebuleLibVersion);
-        ini_set('default_socket_timeout', $nebuleInstance->getOption('ioTimeout'));
+        ini_set('default_socket_timeout', $this->_configuration->getOption('ioTimeout'));
     }
 
     public function __sleep()

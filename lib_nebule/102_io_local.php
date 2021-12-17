@@ -10,7 +10,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ioLocal implements ioInterface
+class ioLocal extends io implements ioInterface
 {
     /**
      * Localisation par défaut de ce module I/O.
@@ -34,20 +34,6 @@ class ioLocal implements ioInterface
     private $_maxData;
 
     /**
-     * Instance de la bibliothèque nebule.
-     *
-     * @var nebule
-     */
-    private $_nebuleInstance;
-
-    /**
-     * Instance de gestion de la configuration et des options.
-     *
-     * @var Configuration
-     */
-    private $_configuration;
-
-    /**
      * Le mode d'accès reconnu.
      * Doit être RO ou RW, ou vide au début.
      *
@@ -63,13 +49,12 @@ class ioLocal implements ioInterface
     private $_filesTrancodeKey = '';
 
     /**
-     * Construteur.
-     * Prépare les dossiers.
+     * Constructeur.
+     *
+     * @param nebule $nebuleInstance
      */
-    public function __construct(nebule $_nebuleInstance)
+    public function __construct(nebule $nebuleInstance)
     {
-        global $nebuleInstance;
-
         if (!file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER)) {
             mkdir(nebule::NEBULE_LOCAL_LINKS_FOLDER);
         }
@@ -79,8 +64,8 @@ class ioLocal implements ioInterface
 
         $this->_nebuleInstance = $nebuleInstance;
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_maxLink = $nebuleInstance->getOption('ioReadMaxLinks');
-        $this->_maxData = $nebuleInstance->getOption('ioReadMaxData');
+        $this->_maxLink = $this->_configuration->getOption('ioReadMaxLinks');
+        $this->_maxData = $this->_configuration->getOption('ioReadMaxData');
     }
 
     public function __sleep()
