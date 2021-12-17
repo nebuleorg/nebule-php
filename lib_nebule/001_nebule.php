@@ -471,7 +471,7 @@ class nebule
 
         // Activation des options par liens. Vide le cache.
         $this->_permitOptionsByLinks = true;
-        $this->_optionCache = array();
+        $this->_configuration->flushCache();
 
         // Détermine si la session utilisateur doit être effacée.
         $this->_findFlushCache();
@@ -580,7 +580,7 @@ class nebule
 
         // Activation des options par liens. Vide le cache.
         $this->_permitOptionsByLinks = true;
-        $this->_optionCache = array();
+        $this->_configuration->flushCache();
 
         // Détermine si la session utilisateur doit être effacée.
         $this->_findFlushCache();
@@ -1334,9 +1334,9 @@ class nebule
      * Entité de subordination des options de l'entité en cours.
      * Par défaut vide.
      *
-     * @var string
+     * @var node|null
      */
-    private $_subordinationEntity = '';
+    private $_subordinationEntity = null;
 
     /**
      * Extrait l'entité de subordination des options si présente.
@@ -1347,7 +1347,8 @@ class nebule
      */
     private function _getsubordinationEntity()
     {
-        $this->_subordinationEntity = (string)$this->_configuration->getOptionFromEnvironment('subordinationEntity');
+        $nid = (string)$this->_configuration->getOptionFromEnvironment('subordinationEntity');
+        $this->_subordinationEntity = new Entity($this->_nebuleInstance, $nid);
 
         if ($this->_metrology !== null)
             $this->_metrology->addLog('Get subordination entity = ' . $this->_subordinationEntity, Metrology::LOG_LEVEL_NORMAL); // Log
@@ -1357,7 +1358,7 @@ class nebule
      * Retourne l'entité de subordination si défini.
      * Rtourne une chaine vide sinon.
      *
-     * @return string
+     * @return node
      */
     public function getSubordinationEntity()
     {
@@ -1374,21 +1375,21 @@ class nebule
      */
     private function _checkWriteableIO()
     {
-        // Extrait la capacité d'IO.
         if ($this->_io->getMode() == 'RW') {
-            $this->_optionCache['permitWriteObject'] = $this->_io->checkObjectsWrite();
-            $this->_optionCache['permitWriteLink'] = $this->_io->checkLinksWrite();
-            $this->_optionCache['permitWrite'] = $this->_optionCache['permitWriteObject'] || $this->_optionCache['permitWriteLink'];
+            if (!$this->_io->checkObjectsWrite())
+                $this->_configuration->lockWriteObject();;
+            if (!$this->_io->checkLinksWrite())
+                $this->_configuration->lockWriteLink();;
         } else {
-            $this->_optionCache['permitWriteObject'] = false;
-            $this->_optionCache['permitWriteLink'] = false;
-            $this->_optionCache['permitWrite'] = false;
+            $this->_configuration->lockWrite();
+            $this->_configuration->lockWriteObject();
+            $this->_configuration->lockWriteLink();
         }
 
-        if (!$this->_optionCache['permitWriteObject']) {
+        if (!$this->_configuration->getOption('permitWriteObject')) {
             $this->_metrology->addLog('objects ro not rw', Metrology::LOG_LEVEL_NORMAL); // Log
         }
-        if (!$this->_optionCache['permitWriteLink']) {
+        if (!$this->_configuration->getOption('permitWriteLink')) {
             $this->_metrology->addLog('links ro not rw', Metrology::LOG_LEVEL_NORMAL); // Log
         }
     }

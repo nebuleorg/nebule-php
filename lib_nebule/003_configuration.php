@@ -1112,6 +1112,42 @@ class Configuration
     }
 
     /**
+     * Lock write capabilities on demande.
+     * Can be reloaded by flushCache().
+     */
+    public function lockWrite()
+    {
+        $this->_optionCache['permitWrite'] = false;
+    }
+
+    /**
+     * Lock object's write capabilities on demande.
+     * Can be reloaded by flushCache().
+     */
+    public function lockWriteObject()
+    {
+        $this->_optionCache['permitWriteObject'] = false;
+    }
+
+    /**
+     * Lock link's write capabilities on demande.
+     * Can be reloaded by flushCache().
+     */
+    public function lockWriteLink()
+    {
+        $this->_optionCache['permitWriteLink'] = false;
+    }
+
+    /**
+     * Reinitialize the values of options on cache.
+     * Each option will be reloaded on demand.
+     */
+    public function flushCache()
+    {
+        $this->_optionCache = array();
+    }
+
+    /**
      * @param string          $name
      * @param string|bool|int $value
      * @return bool|int|string|null
