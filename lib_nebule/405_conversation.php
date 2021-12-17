@@ -71,10 +71,11 @@ class Conversation extends Group
     public function __construct(nebule $nebuleInstance, $id, $closed = false, $protected = false, $obfuscated = false)
     {
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_metrology = $nebuleInstance->getMetrologyInstance();
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_io = $nebuleInstance->getIO();
         $this->_crypto = $nebuleInstance->getCrypto();
         $this->_social = $nebuleInstance->getSocial();
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
 
         $id = trim(strtolower($id));
         $this->_metrology->addLog('New instance conversation ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
@@ -141,10 +142,11 @@ class Conversation extends Group
     {
         global $nebuleInstance;
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_metrology = $nebuleInstance->getMetrologyInstance();
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_io = $nebuleInstance->getIO();
         $this->_crypto = $nebuleInstance->getCrypto();
         $this->_social = $nebuleInstance->getSocial();
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_cacheMarkDanger = false;
         $this->_cacheMarkWarning = false;
         $this->_cacheUpdate = '';
@@ -184,10 +186,10 @@ class Conversation extends Group
         $this->_metrology->addLog('Ask create conversation', Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Vérifie que l'on puisse créer une conversation.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteConversation')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteConversation')
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // Génère un contenu aléatoire.
@@ -456,10 +458,10 @@ class Conversation extends Group
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
-            || !$this->_nebuleInstance->getOption('permitCreateLink')
-            || !$this->_nebuleInstance->getOption('permitWriteConversation')
+        if (!$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
+            || !$this->_configuration->getOption('permitCreateLink')
+            || !$this->_configuration->getOption('permitWriteConversation')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -513,10 +515,10 @@ class Conversation extends Group
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
-            || !$this->_nebuleInstance->getOption('permitCreateLink')
-            || !$this->_nebuleInstance->getOption('permitWriteConversation')
+        if (!$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
+            || !$this->_configuration->getOption('permitCreateLink')
+            || !$this->_configuration->getOption('permitWriteConversation')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;

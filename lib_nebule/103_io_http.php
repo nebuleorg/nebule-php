@@ -48,6 +48,13 @@ class ioHTTP implements ioInterface
     private $_nebuleInstance;
 
     /**
+     * Instance de gestion de la configuration et des options.
+     *
+     * @var Configuration
+     */
+    private $_configuration;
+
+    /**
      * Valeur de la clé de transcodage des noms des fichiers de liens dissimulés.
      *
      * @var number
@@ -58,11 +65,12 @@ class ioHTTP implements ioInterface
      * Constructeur.
      * Prépare les dossiers.
      */
-    public function __construct()
+    public function __construct(nebule $_nebuleInstance)
     {
         global $nebuleLibVersion, $nebuleInstance;
 
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_maxLink = $nebuleInstance->getOption('ioReadMaxLinks');
         $this->_maxData = $nebuleInstance->getOption('ioReadMaxData');
         // Détermination de l'URL par défaut.
@@ -277,7 +285,7 @@ class ioHTTP implements ioInterface
         ) {
             return false;
         }
-        if (!$this->_nebuleInstance->getOption('permitSynchronizeLink')) {
+        if (!$this->_configuration->getOption('permitSynchronizeLink')) {
             return false;
         }
         $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object;
@@ -329,7 +337,7 @@ class ioHTTP implements ioInterface
         ) {
             return false;
         }
-        if (!$this->_nebuleInstance->getOption('permitSynchronizeObject')) {
+        if (!$this->_configuration->getOption('permitSynchronizeObject')) {
             return false;
         }
         $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object;

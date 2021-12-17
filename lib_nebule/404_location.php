@@ -26,10 +26,11 @@ class Localisation extends Node
     public function __construct(nebule $nebuleInstance, $id, $localisation = '')
     {
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_metrology = $nebuleInstance->getMetrologyInstance();
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_io = $nebuleInstance->getIO();
         $this->_crypto = $nebuleInstance->getCrypto();
         $this->_social = $nebuleInstance->getSocial();
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_ioDefaultPrefix = $this->_io->getDefaultLocalisation();
         $id = trim(strtolower($id));
         $this->_metrology->addLog('New instance localisation ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
@@ -106,7 +107,7 @@ class Localisation extends Node
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
-        if ($this->_nebuleInstance->getOption('permitLocalisationStats')) {
+        if ($this->_configuration->getOption('permitLocalisationStats')) {
             return false;
         }
 

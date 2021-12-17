@@ -116,10 +116,23 @@ class Metrology
      */
     private $_nebuleInstance;
 
+    /**
+     * Instance de gestion de la configuration et des options.
+     *
+     * @var Configuration
+     */
+    private $_configuration;
+
+    /**
+     * Constructeur.
+     *
+     * @param nebule $nebuleInstance
+     */
     public function __construct(nebule $nebuleInstance)
     {
         $this->_timeStart(); // Démarre le compteur de temps.
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_readLogsLevel();
     }
 
@@ -293,8 +306,8 @@ class Metrology
      */
     private function _readLogsLevel()
     {
-        $this->_permitLogs = $this->_nebuleInstance->getOption('permitLogs');
-        $level = $this->_nebuleInstance->getOption('logsLevel');
+        $this->_permitLogs = $this->_configuration->getOption('permitLogs');
+        $level = $this->_configuration->getOption('logsLevel');
         $this->_logsLevel = self::LOG_LEVEL_NORMAL;
 
         switch ($level) {
@@ -370,7 +383,7 @@ class Metrology
             return;
         }
 
-        $level = $this->_nebuleInstance->getOption('logsLevel');
+        $level = $this->_configuration->getOption('logsLevel');
 
         switch ($level) {
             case 'NORMAL':

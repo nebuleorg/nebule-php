@@ -14,8 +14,19 @@ namespace Nebule\Library;
  */
 class Social implements SocialInterface
 {
-    /** Instance nebule en cours. */
+    /**
+     * Instance de la bibliothèque nebule.
+     * @var nebule
+     */
     private $_nebuleInstance;
+
+    /**
+     * Instance de gestion de la configuration et des options.
+     *
+     * @var Configuration
+     */
+    private $_configuration;
+
     private $_instanceSocialMySelf;
     private $_instanceSocialNotMySelf;
     private $_instanceSocialSelf;
@@ -31,11 +42,14 @@ class Social implements SocialInterface
 
     /**
      * Constructeur.
+     *
+     * @param nebule $nebuleInstance
      */
-    public function __construct()
+    public function __construct(nebule $nebuleInstance)
     {
         global $nebuleInstance;
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_instanceSocialMySelf = new SocialMySelf();
         $this->_instanceSocialNotMySelf = new SocialNotMySelf();
         $this->_instanceSocialSelf = new SocialSelf();
@@ -49,7 +63,7 @@ class Social implements SocialInterface
         $this->_instanceSocialUnreputation = new SocialUnreputation();
 
         // Détermine le traitement social par défaut.
-        switch ($this->_nebuleInstance->getOption('socialLibrary')) {
+        switch ($this->_configuration->getOption('socialLibrary')) {
             case 'myself':
                 $this->_instanceSocialDefault = $this->_instanceSocialMySelf;
                 break;
@@ -98,6 +112,7 @@ class Social implements SocialInterface
     {
         global $nebuleInstance;
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_instanceSocialMySelf = new SocialMySelf();
         $this->_instanceSocialNotMySelf = new SocialNotMySelf();
         $this->_instanceSocialSelf = new SocialSelf();
@@ -111,7 +126,7 @@ class Social implements SocialInterface
         $this->_instanceSocialUnreputation = new SocialUnreputation();
 
         // Détermine le traitement social par défaut.
-        switch ($this->_nebuleInstance->getOption('socialLibrary')) {
+        switch ($this->_configuration->getOption('socialLibrary')) {
             case 'myself':
                 $this->_instanceSocialDefault = $this->_instanceSocialMySelf;
                 break;

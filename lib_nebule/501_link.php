@@ -62,6 +62,13 @@ class Link
     protected nebule $_nebuleInstance;
 
     /**
+     * Instance de gestion de la configuration et des options.
+     *
+     * @var Configuration
+     */
+    protected $_configuration;
+
+    /**
      * Instance io en cours.
      *
      * @var io
@@ -226,9 +233,10 @@ class Link
     public function __construct(nebule $nebuleInstance, string $link)
     {
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
+        $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_io = $nebuleInstance->getIO();
         $this->_crypto = $nebuleInstance->getCrypto();
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_permitObfuscated = (bool)$nebuleInstance->getOption('permitObfuscatedLink');
         $this->_metrology->addLinkRead(); // Metrologie.
 
@@ -299,9 +307,10 @@ class Link
     {
         global $nebuleInstance;
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_metrology = $nebuleInstance->getMetrologyInstance();
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_io = $nebuleInstance->getIO();
         $this->_crypto = $nebuleInstance->getCrypto();
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_permitObfuscated = (bool)$nebuleInstance->getOption('permitObfuscatedLink');
     }
 
@@ -841,7 +850,7 @@ class Link
         //  / ! \
         //   ---   Is verify permitted ?
         //         DANGER !!! If not permitted, it's very dangerous !!!
-        if (!$this->_nebuleInstance->getOption('permitCheckSignOnVerify')) {
+        if (!$this->_configuration->getOption('permitCheckSignOnVerify')) {
             $this->_signed = false;
             $this->_verifyNumError = -1;
             $this->_verifyTextError = 'Option ask to not permit check sign on verify - DANGER !!!';
@@ -964,7 +973,7 @@ class Link
 
         // Vérifie que l'action de dissimulation de lien est autorisée.
         if ($this->_action == 'k'
-            && !$this->_nebuleInstance->getOption('permitProtectedObject')
+            && !$this->_configuration->getOption('permitProtectedObject')
         ) {
             $this->_verifyNumError = 42;
             $this->_verifyTextError = 'Action k is not autorized.';
@@ -973,7 +982,7 @@ class Link
 
         // Vérifie que l'action de dissimulation de lien est autorisée.
         if ($this->_action == 'c'
-            && !$this->_nebuleInstance->getOption('permitObfuscatedLink')
+            && !$this->_configuration->getOption('permitObfuscatedLink')
         ) {
             $this->_verifyNumError = 43;
             $this->_verifyTextError = 'Action c is not autorized.';
@@ -1189,7 +1198,7 @@ class Link
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Si autorisé à signer.
-        if (!$this->_nebuleInstance->getOption('permitCreateLink')) {
+        if (!$this->_configuration->getOption('permitCreateLink')) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Can not sign link', Metrology::LOG_LEVEL_DEBUG); // Log
             return false;
         }
@@ -1258,8 +1267,8 @@ class Link
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Si autorisé à écrire.
-        if (!$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
+        if (!$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
         ) {
             return false;
         }
@@ -1278,13 +1287,13 @@ class Link
         }
 
         // Ecrit l'historique.
-        if ($this->_nebuleInstance->getOption('permitHistoryLinksSign')) {
+        if ($this->_configuration->getOption('permitHistoryLinksSign')) {
             $history = nebule::NEBULE_LOCAL_HISTORY_FILE;
             $this->_io->linkWrite($history, $this->_fullLink);
         }
 
         // Ecrit le lien pour l'objet de l'entité signataire.
-        if ($this->_nebuleInstance->getOption('permitAddLinkToSigner')) {
+        if ($this->_configuration->getOption('permitAddLinkToSigner')) {
             $this->_io->linkWrite($this->_hashSigner, $this->_fullLink);
         }
 
@@ -1306,7 +1315,7 @@ class Link
             ) {
                 $this->_io->linkWrite($this->_hashMeta, $this->_fullLink);
             }
-        } elseif ($this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+        } elseif ($this->_configuration->getOption('permitObfuscatedLink')) {
             // Ecrit le lien dissimulé.
             $this->_io->linkWrite($this->_hashSigner . '-' . $this->_hashSource, $this->_fullLink); // @todo
         } else {

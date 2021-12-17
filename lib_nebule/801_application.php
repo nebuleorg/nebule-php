@@ -40,6 +40,13 @@ abstract class Applications
     protected $_nebuleInstance;
 
     /**
+     * Instance de gestion de la configuration et des options.
+     *
+     * @var Configuration
+     */
+    protected $_configuration;
+
+    /**
      * Instance de la métrologie.
      *
      * @var Metrology
@@ -86,6 +93,7 @@ abstract class Applications
     public function __construct(nebule $nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
     }
 
     /**
@@ -198,6 +206,7 @@ abstract class Applications
         global $nebuleInstance;
 
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
     }
 
 
@@ -356,7 +365,7 @@ abstract class Applications
             $this->_urlProtocol = 'http';
         }
         //$this->_urlHost	= $_SERVER['HTTP_HOST'];
-        $this->_urlHost = $this->_nebuleInstance->getOption('hostURL');
+        $this->_urlHost = $this->_configuration->getOption('hostURL');
         $explodeBaseName = explode('/', $_SERVER['REQUEST_URI']);
         $this->_urlBasename = end($explodeBaseName);
         $this->_urlPath = substr($_SERVER['REQUEST_URI'], 0, strlen($_SERVER['REQUEST_URI']) - strlen($this->_urlBasename) - 1);
@@ -1566,7 +1575,7 @@ abstract class Applications
     protected function _checkSecuritySign()
     {
         $this->_checkSecuritySign = 'WARN';
-        if (!$this->_nebuleInstance->getOption('permitCheckSignOnVerify')) {
+        if (!$this->_configuration->getOption('permitCheckSignOnVerify')) {
             $this->_checkSecuritySign = 'WARN';
             $this->_checkSecuritySignMessage = ':::act_chk_warnSigns';
         } else {
@@ -1634,7 +1643,7 @@ abstract class Applications
     {
         $this->_checkSecurityURL = 'OK';
         if ($this->_urlProtocol == 'http'
-            && $this->_nebuleInstance->getOption('displayUnsecureURL')
+            && $this->_configuration->getOption('displayUnsecureURL')
         ) {
             $this->_checkSecurityURL = 'WARN';
             $this->_checkSecurityURLMessage = $this->_traductionInstance->getTraduction('Connexion non sécurisée')

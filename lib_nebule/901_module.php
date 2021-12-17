@@ -80,6 +80,13 @@ abstract class Modules
     protected $_nebuleInstance;
 
     /**
+     * Instance de gestion de la configuration et des options.
+     *
+     * @var Configuration
+     */
+    private $_configuration;
+
+    /**
      * Instance de la classe d'affichage.
      *
      * @var Displays
@@ -117,6 +124,7 @@ abstract class Modules
     public function __construct(Applications $applicationInstance)
     {
         $this->_applicationInstance = $applicationInstance;
+        $this->_configuration = $applicationInstance->nebuleInstance()->getConfigurationInstance();
     }
 
     /**

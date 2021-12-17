@@ -87,6 +87,7 @@ class Application extends Applications
     public function __construct(nebule $nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
     }
 
 
@@ -233,17 +234,6 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         self::DEFAULT_ICON_IDOWNLOAD,
         self::DEFAULT_ICON_HELP,
         self::DEFAULT_ICON_WORLD);
-
-    /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
 
     /**
      * Initialisation des variables et instances interdépendantes.
@@ -1191,7 +1181,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         } ?>">
             <div class="header-left">
                 <?php
-                if ($this->_nebuleInstance->getOption('permitJavaScript')) {
+                if ($this->_configuration->getOption('permitJavaScript')) {
                     ?>
                     <img src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>" alt="[M]"
                          title="<?php echo $this->_traductionInstance->getTraduction('::menu'); ?>"
@@ -1572,7 +1562,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         if ($this->_applicationInstance->getCheckSecurityURL() == 'WARN') {
             $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityURLMessage());
         }
-        if (!$this->_nebuleInstance->getOption('permitWrite')) {
+        if (!$this->_configuration->getOption('permitWrite')) {
             $this->displayMessageWarning(':::warn_ServNotPermitWrite');
         }
         if ($this->_nebuleInstance->getFlushCache()) {
@@ -1611,7 +1601,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
      */
     private function _displayMetrology()
     {
-        if ($this->_applicationInstance->getOption('messaeDisplayMetrology')) {
+        if ($this->_configuration->getOption('messaeDisplayMetrology')) {
             ?>
 
             <?php $this->displayDivTextTitle(self::DEFAULT_ICON_IMLOG, 'Métrologie', 'Mesures quantitatives et temporelles.') ?>
@@ -1765,7 +1755,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'tooBig':
-                        if ($this->_applicationInstance->getOption('messaeDisplayUnverifyLargeContent')) {
+                        if ($this->_configuration->getOption('messaeDisplayUnverifyLargeContent')) {
                             $msg = $this->_traductionInstance->getTraduction(':::display:content:warningTooBig');
                             $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         } else {
@@ -1814,7 +1804,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     private function _displayDivOnlineHelp($help)
     {
         // Si authorisé à afficher l'aide.
-        if ($this->_applicationInstance->getOption('messaeDisplayOnlineHelp')) {
+        if ($this->_configuration->getOption('messaeDisplayOnlineHelp')) {
             // Prépare le texte à afficher dans la bulle.
             $txt = $this->_applicationInstance->getTraductionInstance()->getTraduction($help);
             $txt = str_replace('&', '&amp;', $txt);
@@ -1946,17 +1936,6 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
  */
 class Action extends Actions
 {
-    /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
-
     // Tout par défaut.
 }
 
@@ -1988,6 +1967,7 @@ class Traduction extends Traductions
     public function __construct(Application $applicationInstance)
     {
         $this->_applicationInstance = $applicationInstance;
+        $this->_configuration = $applicationInstance->nebuleInstance()->getConfigurationInstance();
     }
 
     // Tout par défaut.
@@ -2030,15 +2010,6 @@ class ModuleHelp extends Modules
     protected $MODULE_APP_DESC_LIST = array('::messae:module:help:AppDesc1');
     protected $MODULE_APP_VIEW_LIST = array('hlp');
 
-
-    /**
-     * Constructeur.
-     * @param Applications $applicationInstance
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
 
     /**
      * Configuration spécifique au module.
@@ -2302,7 +2273,7 @@ class ModuleHelp extends Modules
             </p>
         </div>
         <?php
-        if ($this->_unlocked && $this->_applicationInstance->getOption('messaeDisplayOnlineOptions')) {
+        if ($this->_unlocked && $this->_configuration->getOption('messaeDisplayOnlineOptions')) {
             ?>
             <div class="text">
                 <p>
@@ -2317,7 +2288,7 @@ class ModuleHelp extends Modules
                     );
                     foreach ($options as $option) {
                         echo $option . ' : ';
-                        var_dump($this->_applicationInstance->getOption($option));
+                        var_dump($this->_configuration->getOption($option));
                         echo "<br />\n";
                     }
                     ?>
@@ -2530,15 +2501,6 @@ class ModuleAdmin extends Modules
 
 
     /**
-     * Constructeur.
-     * @param Applications $applicationInstance
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
-
-    /**
      * Configuration spécifique au module.
      */
     public function initialisation()
@@ -2744,14 +2706,14 @@ class ModuleAdmin extends Modules
                         <?php
                         echo $option . ' = ';
                         if ($this->_listOptionsType[$option] == 'b') {
-                            if ($this->_applicationInstance->getOption($option))
+                            if ($this->_configuration->getOption($option))
                                 echo 'true';
                             else
                                 echo 'false';
                         } elseif ($this->_listOptionsType[$option] == 'i') {
-                            echo $this->_applicationInstance->getOption($option);
+                            echo $this->_configuration->getOption($option);
                         } elseif ($this->_listOptionsType[$option] == 't') {
-                            echo $this->_applicationInstance->getOption($option);
+                            echo $this->_configuration->getOption($option);
                         }
                         ?>
 
@@ -3119,17 +3081,6 @@ class ModuleEntities extends Modules
 
 
     /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
-
-    /**
      * Configuration spécifique au module.
      *
      * @return void
@@ -3217,11 +3168,11 @@ class ModuleEntities extends Modules
                     . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
 
                 // Vérifie que la création soit authorisée.
-                if ($this->_nebuleInstance->getOption('permitWrite')
-                    && $this->_nebuleInstance->getOption('permitWriteObject')
-                    && $this->_nebuleInstance->getOption('permitWriteLink')
-                    && $this->_nebuleInstance->getOption('permitWriteEntity')
-                    && ($this->_unlocked || $this->_nebuleInstance->getOption('permitPublicCreateEntity'))
+                if ($this->_configuration->getOption('permitWrite')
+                    && $this->_configuration->getOption('permitWriteObject')
+                    && $this->_configuration->getOption('permitWriteLink')
+                    && $this->_configuration->getOption('permitWriteEntity')
+                    && ($this->_unlocked || $this->_configuration->getOption('permitPublicCreateEntity'))
                 ) {
                     // Créer une nouvelle entité.
                     $hookArray[6]['name'] = '::sylabe:module:entities:CreateEntity';
@@ -3233,11 +3184,11 @@ class ModuleEntities extends Modules
                 }
 
                 // Vérifie que la synchronisation soit authorisée.
-                if ($this->_nebuleInstance->getOption('permitWrite')
-                    && $this->_nebuleInstance->getOption('permitWriteObject')
-                    && $this->_nebuleInstance->getOption('permitWriteLink')
-                    && $this->_nebuleInstance->getOption('permitSynchronizeObject')
-                    && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+                if ($this->_configuration->getOption('permitWrite')
+                    && $this->_configuration->getOption('permitWriteObject')
+                    && $this->_configuration->getOption('permitWriteLink')
+                    && $this->_configuration->getOption('permitSynchronizeObject')
+                    && $this->_configuration->getOption('permitSynchronizeLink')
                     && $this->_unlocked
                 ) {
                     // Rechercher une entité.
@@ -3706,11 +3657,11 @@ class ModuleEntities extends Modules
 
         // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
         if ($arg !== false
-            && $this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
-            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+            && $this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitSynchronizeObject')
+            && $this->_configuration->getOption('permitSynchronizeLink')
             && $this->_unlocked
         ) {
             $this->_synchronizeEntity = true;
@@ -3726,11 +3677,11 @@ class ModuleEntities extends Modules
      */
     private function _actionSynchronizeEntity()
     {
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
-            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitSynchronizeObject')
+            && $this->_configuration->getOption('permitSynchronizeLink')
             && $this->_unlocked
             && $this->_synchronizeEntity
         ) {
@@ -3798,11 +3749,11 @@ class ModuleEntities extends Modules
 
     private function _actionSearchEntity()
     {
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
-            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitSynchronizeObject')
+            && $this->_configuration->getOption('permitSynchronizeLink')
             && $this->_unlocked
             && ($this->_searchEntityID != ''
                 || $this->_searchEntityURL != ''
@@ -4840,12 +4791,12 @@ class ModuleEntities extends Modules
         echo $this->_display->getDisplayTitle('::sylabe:module:entities:CreateEntity', $this->MODULE_REGISTERED_ICONS[5], false);
 
         // Vérifie que la création soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteEntity')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteEntity')
             && ($this->_unlocked
-                || $this->_nebuleInstance->getOption('permitPublicCreateEntity')
+                || $this->_configuration->getOption('permitPublicCreateEntity')
             )
         ) {
             ?>
@@ -5033,11 +4984,11 @@ class ModuleEntities extends Modules
             '::sylabe:module:entities:SearchEntityHelp');
 
         // Vérifie que la création soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
-            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitSynchronizeObject')
+            && $this->_configuration->getOption('permitSynchronizeLink')
             && $this->_unlocked
         ) {
             ?>
@@ -5682,17 +5633,6 @@ class ModuleGroups extends Modules
 
 
     /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
-
-    /**
      * Configuration spécifique au module.
      *
      * @return void
@@ -6312,10 +6252,10 @@ class ModuleGroups extends Modules
         echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:createGroup', $this->MODULE_REGISTERED_ICONS[1]);
 
         // Si autorisé à créer un groupe.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteGroup')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteGroup')
             && $this->_unlocked
         ) {
             ?>
@@ -6449,9 +6389,9 @@ class ModuleGroups extends Modules
 
                         // Supprimer le groupe.
                         if ($this->_unlocked
-                            && $this->_nebuleInstance->getOption('permitWrite')
-                            && $this->_nebuleInstance->getOption('permitWriteLink')
-                            && $this->_nebuleInstance->getOption('permitWriteGroup')
+                            && $this->_configuration->getOption('permitWrite')
+                            && $this->_configuration->getOption('permitWriteLink')
+                            && $this->_configuration->getOption('permitWriteGroup')
                         ) {
                             $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                             $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
@@ -6502,9 +6442,9 @@ class ModuleGroups extends Modules
 
                             // Supprimer le groupe.
                             if ($this->_unlocked
-                                && $this->_nebuleInstance->getOption('permitWrite')
-                                && $this->_nebuleInstance->getOption('permitWriteLink')
-                                && $this->_nebuleInstance->getOption('permitWriteGroup')
+                                && $this->_configuration->getOption('permitWrite')
+                                && $this->_configuration->getOption('permitWriteLink')
+                                && $this->_configuration->getOption('permitWriteGroup')
                             ) {
                                 $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                                 $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
@@ -6566,9 +6506,9 @@ class ModuleGroups extends Modules
 
                         // Supprimer le groupe.
                         if ($this->_unlocked
-                            && $this->_nebuleInstance->getOption('permitWrite')
-                            && $this->_nebuleInstance->getOption('permitWriteLink')
-                            && $this->_nebuleInstance->getOption('permitWriteGroup')
+                            && $this->_configuration->getOption('permitWrite')
+                            && $this->_configuration->getOption('permitWriteLink')
+                            && $this->_configuration->getOption('permitWriteGroup')
                         ) {
                             $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                             $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
@@ -6752,17 +6692,6 @@ class ModuleObjects extends Modules
 
 
     /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
-
-    /**
      * Configuration spécifique au module.
      *
      * @return void
@@ -6876,9 +6805,9 @@ class ModuleObjects extends Modules
 
                     // Si l'entité est déverrouillée.
                     if ($this->_unlocked
-                        && $this->_nebuleInstance->getOption('permitWrite')
-                        && $this->_nebuleInstance->getOption('permitWriteLink')
-                        && $this->_nebuleInstance->getOption('permitWriteObject')
+                        && $this->_configuration->getOption('permitWrite')
+                        && $this->_configuration->getOption('permitWriteLink')
+                        && $this->_configuration->getOption('permitWriteObject')
                     ) {
                         // Supprimer l'objet.
                         $hookArray[5]['name'] = '::sylabe:module:objects:ObjectDelete';
@@ -7078,9 +7007,9 @@ class ModuleObjects extends Modules
             case '::sylabe:module:objet:ProtectionButtons' :
                 // Si l'entité est déverrouillée.
                 if ($this->_unlocked
-                    && $this->_nebuleInstance->getOption('permitWrite')
-                    && $this->_nebuleInstance->getOption('permitWriteLink')
-                    && $this->_nebuleInstance->getOption('permitWriteObject')
+                    && $this->_configuration->getOption('permitWrite')
+                    && $this->_configuration->getOption('permitWriteLink')
+                    && $this->_configuration->getOption('permitWriteObject')
                     && $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected()
                 ) {
                     $hookArray[0]['name'] = '::sylabe:module:objects:ShareProtection';
@@ -7606,9 +7535,9 @@ class ModuleObjects extends Modules
 
             // N'affiche un message que si la modification est possible.
             if ($this->_unlocked
-                && $this->_nebuleInstance->getOption('permitWrite')
-                && $this->_nebuleInstance->getOption('permitWriteLink')
-                && $this->_nebuleInstance->getOption('permitWriteObject')
+                && $this->_configuration->getOption('permitWrite')
+                && $this->_configuration->getOption('permitWriteLink')
+                && $this->_configuration->getOption('permitWriteObject')
             ) {
                 // Vérifie la présence de l'objet.
                 if ($object->checkPresent()
@@ -7670,9 +7599,9 @@ class ModuleObjects extends Modules
             // Ajoute l'action de protection.
             if ($object->checkPresent()
                 && $this->_unlocked
-                && $this->_nebuleInstance->getOption('permitWrite')
-                && $this->_nebuleInstance->getOption('permitWriteLink')
-                && $this->_nebuleInstance->getOption('permitWriteObject')
+                && $this->_configuration->getOption('permitWrite')
+                && $this->_configuration->getOption('permitWriteLink')
+                && $this->_configuration->getOption('permitWriteObject')
                 && $this->_applicationInstance->getCurrentObject() != $this->_nebuleInstance->getCurrentEntity()
             ) {
                 $list[2]['param']['selfHookList'][0]['name'] = '::ProtectObject';
@@ -7805,9 +7734,9 @@ class ModuleObjects extends Modules
 
                     // Ajout l'action de déprotection ou de suppression de partage de protection.
                     if ($this->_unlocked
-                        && $this->_nebuleInstance->getOption('permitWrite')
-                        && $this->_nebuleInstance->getOption('permitWriteLink')
-                        && $this->_nebuleInstance->getOption('permitWriteObject')
+                        && $this->_configuration->getOption('permitWrite')
+                        && $this->_configuration->getOption('permitWriteLink')
+                        && $this->_configuration->getOption('permitWriteObject')
                     ) {
                         if ($entity == $this->_nebuleInstance->getCurrentEntity()) {
                             // Déprotéger l'objet.
@@ -7819,7 +7748,7 @@ class ModuleObjects extends Modules
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                                 . $this->_nebuleInstance->getActionTicket();
                         } elseif (!$this->_nebuleInstance->getIsRecoveryEntity($entity)
-                            || $this->_nebuleInstance->getOption('permitRecoveryRemoveEntity')
+                            || $this->_configuration->getOption('permitRecoveryRemoveEntity')
                         ) {
                             // Annuler le partage de protection. Non fiable...
                             $list[$i]['param']['selfHookList'][0]['name'] = '::RemoveShareProtect';
@@ -7886,9 +7815,9 @@ class ModuleObjects extends Modules
             echo $this->_display->getDisplayHookMenuList('::sylabe:module:objet:ProtectionShareButtons', 'medium');
 
             if ($this->_unlocked
-                && $this->_nebuleInstance->getOption('permitWrite')
-                && $this->_nebuleInstance->getOption('permitWriteLink')
-                && $this->_nebuleInstance->getOption('permitWriteObject')
+                && $this->_configuration->getOption('permitWrite')
+                && $this->_configuration->getOption('permitWriteLink')
+                && $this->_configuration->getOption('permitWriteObject')
             ) {
                 // Affiche le titre.
                 echo $this->_display->getDisplayTitle('::sylabe:module:objects:ShareObjectProtection', $this->MODULE_REGISTERED_ICONS[3], false);
@@ -7912,9 +7841,9 @@ class ModuleObjects extends Modules
         // Si l'objet est présent et protégé et si l'entité est déverrouillée
         if ($object->getMarkProtected()
             && $this->_unlocked
-            && $this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteObject')
         ) {
             $listOkEntities = array();
             $listOkGroups = array();
@@ -8311,17 +8240,6 @@ class ModuleMessenger extends Modules
 
 
     /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
-
-    /**
      * Configuration spécifique au module.
      *
      * @return void
@@ -8613,7 +8531,7 @@ class ModuleMessenger extends Modules
                             }
 
                             // Si authorisé à dissimuler les liens.
-                            if ($this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+                            if ($this->_configuration->getOption('permitObfuscatedLink')) {
                                 // Si la conversation est marquée dissimulée.
                                 if ($objectInstance->getMarkObfuscated()) {
                                     // Rendre la conversation non dissimulée.
@@ -9033,7 +8951,7 @@ class ModuleMessenger extends Modules
                 }
 
                 // Détection de l'état de dissimulation.
-                if ($this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+                if ($this->_configuration->getOption('permitObfuscatedLink')) {
                     $markObfuscated = $this->_conversationInstance->getMarkObfuscated($this->_nebuleInstance->getCurrentEntity());
                     $markObfuscatedDesc = '::sylabe:module:messenger:conversation:defaultUnobfuscated';
                     $markObfuscatedLink = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -9060,8 +8978,8 @@ class ModuleMessenger extends Modules
                 }
 
                 // Si pas de droits, pas d'actions possibles.
-                if (!$this->_nebuleInstance->getOption('permitWrite')
-                    || !$this->_nebuleInstance->getOption('permitWriteLink')
+                if (!$this->_configuration->getOption('permitWrite')
+                    || !$this->_configuration->getOption('permitWriteLink')
                     || !$this->_unlocked
                 ) {
                     $markClosedLink = '';
@@ -9106,7 +9024,7 @@ class ModuleMessenger extends Modules
                     'flagUnlockedIcon' => Displays::DEFAULT_ICON_LF,
                     'flagUnlockedLink' => $markClosedLink,
                 );
-                if ($this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+                if ($this->_configuration->getOption('permitObfuscatedLink')) {
                     $list[0]['param']['enableDisplayFlagObfuscate'] = true;
                     $list[0]['param']['flagObfuscate'] = $markObfuscated;
                     $list[0]['param']['flagObfuscateText'] = $markObfuscatedDesc;
@@ -9187,7 +9105,7 @@ class ModuleMessenger extends Modules
                 }
 
                 // Détection de l'état de dissimulation.
-                if ($this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+                if ($this->_configuration->getOption('permitObfuscatedLink')) {
                     $markObfuscated = $objectInstance->getMarkObfuscated($this->_nebuleInstance->getCurrentEntity());
                     $markObfuscatedDesc = '::sylabe:module:messenger:conversation:defaultUnobfuscated';
                     if ($markObfuscated) {
@@ -9232,7 +9150,7 @@ class ModuleMessenger extends Modules
                     'flagUnlockedText' => $markClosedDesc,
                     'flagUnlockedIcon' => Displays::DEFAULT_ICON_LF,
                 );
-                if ($this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+                if ($this->_configuration->getOption('permitObfuscatedLink')) {
                     $list[$i]['param']['enableDisplayFlagObfuscate'] = true;
                     $list[$i]['param']['flagObfuscate'] = $markObfuscated;
                     $list[$i]['param']['flagObfuscateText'] = $markObfuscatedDesc;
@@ -9260,10 +9178,10 @@ class ModuleMessenger extends Modules
         echo $this->_display->getDisplayTitle('::sylabe:module:messenger:conversationsAddTitle', $this->MODULE_REGISTERED_ICONS[1]);
 
         // Si autorisé à créer une conversation.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteConversation')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteConversation')
             && $this->_unlocked
         ) {
             ?>
@@ -9283,17 +9201,17 @@ class ModuleMessenger extends Modules
                     <br/>
                     <input type="checkbox"
                            name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION_CLOSED; ?>"
-                           value="y"<?php if ($this->_nebuleInstance->getOption('defaultObfuscateLinks')) echo ' checked'; ?> />
+                           value="y"<?php if ($this->_configuration->getOption('defaultObfuscateLinks')) echo ' checked'; ?> />
                     <?php $this->_echoTraduction('::sylabe:module:messenger:create:closedConversation'); ?><br/>
                     <input type="checkbox"
                            name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION_PROTECTED; ?>"
-                           value="y"<?php if ($this->_nebuleInstance->getOption('defaultObfuscateLinks')) echo ' checked'; ?> />
+                           value="y"<?php if ($this->_configuration->getOption('defaultObfuscateLinks')) echo ' checked'; ?> />
                     <?php $this->_echoTraduction('::sylabe:module:messenger:create:defaultProtectedConversation'); ?>
                     <br/>
-                    <?php if ($this->_nebuleInstance->getOption('permitObfuscatedLink')) { ?>
+                    <?php if ($this->_configuration->getOption('permitObfuscatedLink')) { ?>
                         <input type="checkbox"
                                name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION_OBFUSCATE_LINKS; ?>"
-                               value="y"<?php if ($this->_nebuleInstance->getOption('defaultObfuscateLinks')) echo ' checked'; ?> />
+                               value="y"<?php if ($this->_configuration->getOption('defaultObfuscateLinks')) echo ' checked'; ?> />
                         <?php $this->_echoTraduction('::sylabe:module:messenger:create:defaultProtectedConversationLinks'); ?>
                         <br/>
                     <?php } ?>
@@ -9373,7 +9291,7 @@ class ModuleMessenger extends Modules
         }
 
         // Détection de l'état de dissimulation.
-        if ($this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+        if ($this->_configuration->getOption('permitObfuscatedLink')) {
             $markObfuscated = $this->_conversationInstance->getMarkObfuscated($this->_nebuleInstance->getCurrentEntity());
             $markObfuscatedDesc = '::sylabe:module:messenger:conversation:defaultUnobfuscated';
             $markObfuscatedLink = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -9400,8 +9318,8 @@ class ModuleMessenger extends Modules
         }
 
         // Si pas de droits, pas d'actions possibles.
-        if (!$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
+        if (!$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
             || !$this->_unlocked
         ) {
             $markClosedLink = '';
@@ -9446,7 +9364,7 @@ class ModuleMessenger extends Modules
             'flagUnlockedIcon' => Displays::DEFAULT_ICON_LF,
             'flagUnlockedLink' => $markClosedLink,
         );
-        if ($this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+        if ($this->_configuration->getOption('permitObfuscatedLink')) {
             $list[0]['param']['enableDisplayFlagObfuscate'] = true;
             $list[0]['param']['flagObfuscate'] = $markObfuscated;
             $list[0]['param']['flagObfuscateText'] = $markObfuscatedDesc;
@@ -9457,10 +9375,10 @@ class ModuleMessenger extends Modules
         echo $this->_display->getDisplayObjectsList($list, 'medium');
 
         // Affiche la création d'un message.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteConversation')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteConversation')
             && $this->_unlocked
         ) {
             $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('dispconversationhead');
@@ -9540,10 +9458,10 @@ class ModuleMessenger extends Modules
     private function _display_InlineCreateMessage()
     {
         // Si autorisé à créer un message.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteConversation')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteConversation')
             && $this->_unlocked
         ) {
             ?>
@@ -9567,15 +9485,15 @@ class ModuleMessenger extends Modules
                     <textarea
                             name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT; ?>"
                             rows="2" cols="80" wrap="soft"
-                            maxlength="<?php echo $this->_applicationInstance->getOption('sylabeIOReadMaxDataPHP'); ?>"></textarea><br/>
-                    <?php if ($this->_nebuleInstance->getOption('permitProtectedObject')) { ?>
+                            maxlength="<?php echo $this->_configuration->getOption('sylabeIOReadMaxDataPHP'); ?>"></textarea><br/>
+                    <?php if ($this->_configuration->getOption('permitProtectedObject')) { ?>
                         <input
                                 type="checkbox"
                                 name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_PROTECT; ?>"
                                 value="y"<?php if ($this->_conversationInstance->getMarkProtected()) echo ' checked'; ?> />
                         <?php $this->_echoTraduction('::sylabe:module:messenger:create:createProtectedMessageShort'); ?>&nbsp;
                     <?php }
-                    if ($this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+                    if ($this->_configuration->getOption('permitObfuscatedLink')) {
                         ?>
 
                         <input
@@ -9917,7 +9835,7 @@ class ModuleMessenger extends Modules
                                 </p>
                                 <?php
                             }
-                            if ($this->_applicationInstance->getOption('sylabeModuleMessageriePermitSubReply') && $this->_unlocked) {
+                            if ($this->_configuration->getOption('sylabeModuleMessageriePermitSubReply') && $this->_unlocked) {
                                 ?>
 
                                 <p class="sylabeModuleMessagerieAction">
@@ -10135,10 +10053,10 @@ class ModuleMessenger extends Modules
             '');
 
         // Si autorisé à créer un message.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_applicationInstance->getOption('sylabePermitUploadObject')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('sylabePermitUploadObject')
             && $this->_unlocked
         ) {
             ?>
@@ -10160,14 +10078,14 @@ class ModuleMessenger extends Modules
                     <textarea
                             name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT; ?>"
                             rows="12" cols="80" wrap="soft"
-                            maxlength="<?php echo $this->_applicationInstance->getOption('sylabeIOReadMaxDataPHP'); ?>"></textarea><br/>
-                    <?php if ($this->_nebuleInstance->getOption('permitProtectedObject')) { ?>
+                            maxlength="<?php echo $this->_configuration->getOption('sylabeIOReadMaxDataPHP'); ?>"></textarea><br/>
+                    <?php if ($this->_configuration->getOption('permitProtectedObject')) { ?>
                         <input type="checkbox"
                                name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_PROTECT; ?>"
                                value="y"<?php if ($this->_conversationInstance->getMarkProtected()) echo ' checked'; ?> />
                         <?php $this->_echoTraduction('::sylabe:module:messenger:create:createProtectedMessage'); ?><br/>
                     <?php }
-                    if ($this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+                    if ($this->_configuration->getOption('permitObfuscatedLink')) {
                         ?>
 
                         <input type="checkbox"
@@ -10181,14 +10099,14 @@ class ModuleMessenger extends Modules
                 </form>
             </div>
             <?php
-            //$this->_applicationInstance->getDisplayInstance()->displayMessageInformation($this->_traduction('::sylabe:module:messenger:MaxTextSize').' '.$this->_applicationInstance->getOption('sylabeIOReadMaxDataPHP').'o');
+            //$this->_applicationInstance->getDisplayInstance()->displayMessageInformation($this->_traduction('::sylabe:module:messenger:MaxTextSize').' '.$this->_configuration->getOption('sylabeIOReadMaxDataPHP').'o');
             $param = array(
                 'enableDisplayIcon' => true,
                 'displaySize' => 'medium',
                 'displayRatio' => 'long',
                 'informationType' => 'information',
             );
-            echo $this->_display->getDisplayInformation('::sylabe:module:messenger:MaxTextSize', $param, $this->_applicationInstance->getOption('sylabeIOReadMaxDataPHP'));
+            echo $this->_display->getDisplayInformation('::sylabe:module:messenger:MaxTextSize', $param, $this->_configuration->getOption('sylabeIOReadMaxDataPHP'));
         } else {
             $param = array(
                 'enableDisplayIcon' => true,
@@ -10264,7 +10182,7 @@ class ModuleMessenger extends Modules
         }
 
         // Détection de l'état de dissimulation.
-        if ($this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+        if ($this->_configuration->getOption('permitObfuscatedLink')) {
             $markObfuscated = $this->_conversationInstance->getMarkObfuscated($this->_nebuleInstance->getCurrentEntity());
             $markObfuscatedDesc = '::sylabe:module:messenger:conversation:defaultUnobfuscated';
             $markObfuscatedLink = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -10291,8 +10209,8 @@ class ModuleMessenger extends Modules
         }
 
         // Si pas de droits, pas d'actions possibles.
-        if (!$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
+        if (!$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
             || !$this->_unlocked
         ) {
             $markClosedLink = '';
@@ -10335,7 +10253,7 @@ class ModuleMessenger extends Modules
             'flagUnlockedIcon' => Displays::DEFAULT_ICON_LF,
             'flagUnlockedLink' => $markClosedLink,
         );
-        if ($this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+        if ($this->_configuration->getOption('permitObfuscatedLink')) {
             $list[0]['param']['enableDisplayFlagObfuscate'] = true;
             $list[0]['param']['flagObfuscate'] = $markObfuscated;
             $list[0]['param']['flagObfuscateText'] = $markObfuscatedDesc;
@@ -10470,8 +10388,8 @@ class ModuleMessenger extends Modules
                     'selfHookName' => '::module:messagerie:dest:followers:remove',
                     'objectRefs' => $addedBy,
                 );
-                if ($this->_nebuleInstance->getOption('permitWrite')
-                    && $this->_nebuleInstance->getOption('permitWriteLink')
+                if ($this->_configuration->getOption('permitWrite')
+                    && $this->_configuration->getOption('permitWriteLink')
                     && $this->_unlocked
                 ) {
                     $list[$i]['param']['enableDisplaySelfHook'] = true;
@@ -10489,7 +10407,7 @@ class ModuleMessenger extends Modules
                                 . '_' . $this->_hashConversationFollow
                                 . $this->_nebuleInstance->getActionTicket(),
                         );
-                        if ($this->_nebuleInstance->getOption('permitObfuscatedLink')) // @todo à vérifier si le lien dissimulé est bien pris en compte...
+                        if ($this->_configuration->getOption('permitObfuscatedLink')) // @todo à vérifier si le lien dissimulé est bien pris en compte...
                         {
                             $list[$i]['param']['selfHookList'][1] = array(
                                 'name' => '::sylabe:module:messenger:hideAsFollower',
@@ -10523,7 +10441,7 @@ class ModuleMessenger extends Modules
                                 . '_' . $this->_hashConversationFollow
                                 . $this->_nebuleInstance->getActionTicket(),
                         );
-                        if ($this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+                        if ($this->_configuration->getOption('permitObfuscatedLink')) {
                             $list[$i]['param']['selfHookList'][1] = array(
                                 'name' => '::sylabe:module:messenger:addAsHiddenFollower',
                                 'icon' => Displays::DEFAULT_ICON_LC,
@@ -10562,8 +10480,8 @@ class ModuleMessenger extends Modules
     private function _display_InlineAddFollowers()
     {
         // Vérifie que une entité est connectée.
-        if (!$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
+        if (!$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
             || !$this->_unlocked) {
             return;
         }
@@ -10611,8 +10529,8 @@ class ModuleMessenger extends Modules
                     'displaySize' => 'medium',
                     'displayRatio' => 'short',
                 );
-                if ($this->_nebuleInstance->getOption('permitWrite')
-                    && $this->_nebuleInstance->getOption('permitWriteLink')
+                if ($this->_configuration->getOption('permitWrite')
+                    && $this->_configuration->getOption('permitWriteLink')
                     && $this->_unlocked
                 ) {
                     $list[$i]['param']['selfHookList'][0] = array(
@@ -10628,7 +10546,7 @@ class ModuleMessenger extends Modules
                             . '_' . $this->_hashConversationFollow
                             . $this->_nebuleInstance->getActionTicket(),
                     );
-                    if ($this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+                    if ($this->_configuration->getOption('permitObfuscatedLink')) {
                         $list[$i]['param']['selfHookList'][1] = array(
                             'name' => '::sylabe:module:messenger:addAsHiddenFollower',
                             'icon' => Displays::DEFAULT_ICON_LC,
@@ -10718,8 +10636,8 @@ class ModuleMessenger extends Modules
                     'enableDisplayJS' => false,
                     'selfHookName' => '::module:messagerie:dest:followers:add',
                 );
-                if ($this->_nebuleInstance->getOption('permitWrite')
-                    && $this->_nebuleInstance->getOption('permitWriteLink')
+                if ($this->_configuration->getOption('permitWrite')
+                    && $this->_configuration->getOption('permitWriteLink')
                     && $this->_unlocked
                 ) {
                     $list[$i]['param']['selfHookList'][0] = array(
@@ -10735,7 +10653,7 @@ class ModuleMessenger extends Modules
                             . '_' . $this->_hashConversationFollow
                             . $this->_nebuleInstance->getActionTicket(),
                     );
-                    if ($this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+                    if ($this->_configuration->getOption('permitObfuscatedLink')) {
                         $list[$i]['param']['selfHookList'][1] = array(
                             'name' => '::sylabe:module:messenger:addAsHiddenFollower',
                             'icon' => Displays::DEFAULT_ICON_LC,
@@ -10800,7 +10718,7 @@ class ModuleMessenger extends Modules
             'displaySize' => 'medium',
             'displayRatio' => 'short',
         );
-        if ($this->_nebuleInstance->getOption('permitProtectedObject')) {
+        if ($this->_configuration->getOption('permitProtectedObject')) {
             $list[0]['param']['informationType'] = 'ok';
             $list[0]['information'] = '::sylabe:module:messenger:protectingEnabled';
         } else {
@@ -10814,7 +10732,7 @@ class ModuleMessenger extends Modules
             'displaySize' => 'medium',
             'displayRatio' => 'short',
         );
-        if ($this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+        if ($this->_configuration->getOption('permitObfuscatedLink')) {
             $list[1]['param']['informationType'] = 'ok';
             $list[1]['information'] = '::sylabe:module:messenger:obfuscatingEnabled';
         } else {
@@ -10918,7 +10836,7 @@ class ModuleMessenger extends Modules
                     'flagUnlockedText' => $markClosedDesc,
                     'flagUnlockedIcon' => Displays::DEFAULT_ICON_LF,
                 );
-                if ($this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+                if ($this->_configuration->getOption('permitObfuscatedLink')) {
                     $list[$i]['param']['enableDisplayFlagObfuscate'] = true;
                     $list[$i]['param']['flagObfuscate'] = $markObfuscated;
                     $list[$i]['param']['flagObfuscateText'] = $markObfuscatedDesc;
@@ -11316,17 +11234,6 @@ class ModuleTranslateFRFR extends Modules
     protected $MODULE_APP_DESC_LIST = array();
     protected $MODULE_APP_VIEW_LIST = array();
 
-
-    /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
 
     /**
      * Configuration spécifique au module.
@@ -12066,17 +11973,6 @@ class ModuleTranslateENEN extends Modules
     protected $MODULE_APP_DESC_LIST = array();
     protected $MODULE_APP_VIEW_LIST = array();
 
-
-    /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
 
     /**
      * Configuration spécifique au module.

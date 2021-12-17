@@ -75,10 +75,11 @@ class Entity extends Node
     public function __construct(nebule $nebuleInstance, $id)
     {
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_metrology = $nebuleInstance->getMetrologyInstance();
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_io = $nebuleInstance->getIO();
         $this->_crypto = $nebuleInstance->getCrypto();
         $this->_social = $nebuleInstance->getSocial();
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
 
         $id = trim(strtolower($id));
         $this->_metrology->addLog('New instance entity ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
@@ -133,10 +134,11 @@ class Entity extends Node
     {
         global $nebuleInstance;
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_metrology = $nebuleInstance->getMetrologyInstance();
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_io = $nebuleInstance->getIO();
         $this->_crypto = $nebuleInstance->getCrypto();
         $this->_social = $nebuleInstance->getSocial();
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_cacheMarkDanger = false;
         $this->_cacheMarkWarning = false;
         $this->_cacheUpdate = '';
@@ -180,12 +182,12 @@ class Entity extends Node
         $this->_metrology->addLog(__METHOD__, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que l'on puisse créer une entité.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteEntity')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteEntity')
             && ($this->_nebuleInstance->getCurrentEntityUnlocked()
-                || $this->_nebuleInstance->getOption('permitPublicCreateEntity')
+                || $this->_configuration->getOption('permitPublicCreateEntity')
             )
         ) {
             $this->_metrology->addLog('Create entity ' . $this->_crypto->asymetricAlgorithmName(), Metrology::LOG_LEVEL_NORMAL); // Log
@@ -257,7 +259,7 @@ class Entity extends Node
         $signedLink = $signe . '.' . $this->_crypto->hashAlgorithmName() . $link;
 
         // Ecrit le lien pour l'objet de l'entité signataire.
-        if ($this->_nebuleInstance->getOption('NEBULE_DEFAULT_PERMIT_ADD_LINK_TO_SIGNER')) {
+        if ($this->_configuration->getOption('NEBULE_DEFAULT_PERMIT_ADD_LINK_TO_SIGNER')) {
             $this->_io->linkWrite($this->_id, $signedLink);
         }
 

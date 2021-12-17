@@ -72,10 +72,11 @@ class Wallet extends Entity
     public function __construct(nebule $nebuleInstance, $id, $param = array(), $protected = false, $obfuscated = false)
     {
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_metrology = $nebuleInstance->getMetrologyInstance();
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_io = $nebuleInstance->getIO();
         $this->_crypto = $nebuleInstance->getCrypto();
         $this->_social = $nebuleInstance->getSocial();
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
 
         $id = trim(strtolower($id));
         $this->_metrology->addLog('New instance wallet ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
@@ -119,7 +120,7 @@ class Wallet extends Entity
             || $id == ''
             || !ctype_xdigit($id)
             || !$this->_io->checkLinkPresent($id)
-            || !$this->_nebuleInstance->getOption('permitCurrency')
+            || !$this->_configuration->getOption('permitCurrency')
         ) {
             $id = '0';
         }
@@ -139,11 +140,11 @@ class Wallet extends Entity
         $this->_metrology->addLog('Ask create wallet', Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Vérifie que l'on puisse créer un sac de jetons.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitCurrency')
-            && $this->_nebuleInstance->getOption('permitWriteCurrency')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitCurrency')
+            && $this->_configuration->getOption('permitWriteCurrency')
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // Génère la nouveau sac de jetons.

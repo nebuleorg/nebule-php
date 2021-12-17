@@ -78,10 +78,11 @@ class Token extends TokenPool
     public function __construct(nebule $nebuleInstance, $id, $param = array(), $protected = false, $obfuscated = false)
     {
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_metrology = $nebuleInstance->getMetrologyInstance();
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_io = $nebuleInstance->getIO();
         $this->_crypto = $nebuleInstance->getCrypto();
         $this->_social = $nebuleInstance->getSocial();
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
 
         // Complément des paramètres.
         //$this->_propertiesList['currency']['CurrencyForgeID']['force'] = $this->_nebuleInstance->getCurrentEntity();
@@ -131,7 +132,7 @@ class Token extends TokenPool
             || $id == ''
             || !ctype_xdigit($id)
             || !$this->_io->checkLinkPresent($id)
-            || !$this->_nebuleInstance->getOption('permitCurrency')
+            || !$this->_configuration->getOption('permitCurrency')
         ) {
             $id = '0';
         }
@@ -178,12 +179,12 @@ class Token extends TokenPool
         $this->_metrology->addLog('Ask create token', Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Vérifie que l'on puisse créer un jeton.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitCurrency')
-            && $this->_nebuleInstance->getOption('permitWriteCurrency')
-            && $this->_nebuleInstance->getOption('permitCreateCurrency')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitCurrency')
+            && $this->_configuration->getOption('permitWriteCurrency')
+            && $this->_configuration->getOption('permitCreateCurrency')
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // Génère la nouveau jeton.

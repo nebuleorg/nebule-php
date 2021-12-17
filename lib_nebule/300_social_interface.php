@@ -12,6 +12,13 @@ namespace Nebule\Library;
  */
 interface SocialInterface
 {
+    /**
+     * Constructeur.
+     *
+     * @param nebule $nebuleInstance
+     */
+    public function __construct(nebule $nebuleInstance);
+
     public function arraySocialFilter(array &$links, $socialClass = '');
 
     public function linkSocialScore(Link &$link, $socialClass = '');

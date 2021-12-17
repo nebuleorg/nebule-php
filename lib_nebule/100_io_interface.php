@@ -24,6 +24,13 @@ namespace Nebule\Library;
  */
 interface ioInterface
 {
+    /**
+     * Constructeur.
+     *
+     * @param nebule $nebuleInstance
+     */
+    public function __construct(nebule $nebuleInstance);
+
     // Fonctions de gestion des modules.
     /**
      * Retourne le type de système de fichiers.

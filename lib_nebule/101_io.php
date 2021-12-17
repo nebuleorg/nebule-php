@@ -25,7 +25,12 @@ class io implements ioInterface
     private $_listMode = array();
     private $_listInstances = array();
 
-    public function __construct()
+    /**
+     * Constructeur.
+     *
+     * @param nebule $nebuleInstance
+     */
+    public function __construct(nebule $nebuleInstance)
     {
         // Liste toutes les classes io* et les charges une à une.
         $list = get_declared_classes();

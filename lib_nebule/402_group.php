@@ -72,10 +72,11 @@ class Group extends Node
     public function __construct(nebule $nebuleInstance, $id, $closed = false, $obfuscated = false)
     {
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_metrology = $nebuleInstance->getMetrologyInstance();
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_io = $nebuleInstance->getIO();
         $this->_crypto = $nebuleInstance->getCrypto();
         $this->_social = $nebuleInstance->getSocial();
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
 
         $id = trim(strtolower($id));
         $this->_metrology->addLog('New instance group ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
@@ -137,10 +138,11 @@ class Group extends Node
     {
         global $nebuleInstance;
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_metrology = $nebuleInstance->getMetrologyInstance();
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_io = $nebuleInstance->getIO();
         $this->_crypto = $nebuleInstance->getCrypto();
         $this->_social = $nebuleInstance->getSocial();
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_cacheMarkDanger = false;
         $this->_cacheMarkWarning = false;
         $this->_cacheUpdate = '';
@@ -181,12 +183,12 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que l'on puisse créer un groupe et tous ses attributs.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitCreateObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitCreateLink')
-            && $this->_nebuleInstance->getOption('permitWriteGroup')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitCreateObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitCreateLink')
+            && $this->_configuration->getOption('permitWriteGroup')
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // calcul l'ID.
@@ -457,10 +459,10 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
-            || !$this->_nebuleInstance->getOption('permitCreateLink')
-            || !$this->_nebuleInstance->getOption('permitWriteGroup')
+        if (!$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
+            || !$this->_configuration->getOption('permitCreateLink')
+            || !$this->_configuration->getOption('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -553,10 +555,10 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
-            || !$this->_nebuleInstance->getOption('permitCreateLink')
-            || !$this->_nebuleInstance->getOption('permitWriteGroup')
+        if (!$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
+            || !$this->_configuration->getOption('permitCreateLink')
+            || !$this->_configuration->getOption('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -617,10 +619,10 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
-            || !$this->_nebuleInstance->getOption('permitCreateLink')
-            || !$this->_nebuleInstance->getOption('permitWriteGroup')
+        if (!$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
+            || !$this->_configuration->getOption('permitCreateLink')
+            || !$this->_configuration->getOption('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -724,10 +726,10 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
-            || !$this->_nebuleInstance->getOption('permitCreateLink')
-            || !$this->_nebuleInstance->getOption('permitWriteGroup')
+        if (!$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
+            || !$this->_configuration->getOption('permitCreateLink')
+            || !$this->_configuration->getOption('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -788,10 +790,10 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
-            || !$this->_nebuleInstance->getOption('permitCreateLink')
-            || !$this->_nebuleInstance->getOption('permitWriteGroup')
+        if (!$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
+            || !$this->_configuration->getOption('permitCreateLink')
+            || !$this->_configuration->getOption('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -847,7 +849,7 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Désactivée si option à false.
-        if (!$this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+        if (!$this->_configuration->getOption('permitObfuscatedLink')) {
             return false;
         }
 
@@ -900,15 +902,15 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Désactivée si option à false.
-        if (!$this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+        if (!$this->_configuration->getOption('permitObfuscatedLink')) {
             return false;
         }
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
-            || !$this->_nebuleInstance->getOption('permitCreateLink')
-            || !$this->_nebuleInstance->getOption('permitWriteGroup')
+        if (!$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
+            || !$this->_configuration->getOption('permitCreateLink')
+            || !$this->_configuration->getOption('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -969,15 +971,15 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Désactivée si option à false.
-        if (!$this->_nebuleInstance->getOption('permitObfuscatedLink')) {
+        if (!$this->_configuration->getOption('permitObfuscatedLink')) {
             return false;
         }
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
-            || !$this->_nebuleInstance->getOption('permitCreateLink')
-            || !$this->_nebuleInstance->getOption('permitWriteGroup')
+        if (!$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
+            || !$this->_configuration->getOption('permitCreateLink')
+            || !$this->_configuration->getOption('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -1065,10 +1067,10 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
-            || !$this->_nebuleInstance->getOption('permitCreateLink')
-            || !$this->_nebuleInstance->getOption('permitWriteGroup')
+        if (!$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
+            || !$this->_configuration->getOption('permitCreateLink')
+            || !$this->_configuration->getOption('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -1122,10 +1124,10 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
-            || !$this->_nebuleInstance->getOption('permitCreateLink')
-            || !$this->_nebuleInstance->getOption('permitWriteGroup')
+        if (!$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
+            || !$this->_configuration->getOption('permitCreateLink')
+            || !$this->_configuration->getOption('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -1288,10 +1290,10 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
-            || !$this->_nebuleInstance->getOption('permitCreateLink')
-            || !$this->_nebuleInstance->getOption('permitWriteGroup')
+        if (!$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
+            || !$this->_configuration->getOption('permitCreateLink')
+            || !$this->_configuration->getOption('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -1345,10 +1347,10 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
-            || !$this->_nebuleInstance->getOption('permitCreateLink')
-            || !$this->_nebuleInstance->getOption('permitWriteGroup')
+        if (!$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
+            || !$this->_configuration->getOption('permitCreateLink')
+            || !$this->_configuration->getOption('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;

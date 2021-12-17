@@ -601,10 +601,11 @@ class Configuration
 
     /**
      * Constructeur.
+     *
+     * @param nebule $nebuleInstance
      */
-    public function __construct()
+    public function __construct(nebule $nebuleInstance)
     {
-        global $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
     }
 
@@ -707,7 +708,7 @@ class Configuration
      * C'est la façon de forcer une option.
      *
      * @param string $name
-     * @return string/boolean/integer
+     * @return string/bool/int
      */
     public function getOption(string $name): string|bool|int
     {
@@ -715,33 +716,28 @@ class Configuration
         if ($name == ''
             || !is_string($name)
             || !isset(self::OPTIONS_TYPE[$name])
-        ) {
+        )
             return false;
-        }
 
-        if ($this->_metrology !== null) {
+        if ($this->_metrology !== null)
             $this->_metrology->addLog('Get option ' . $name, Metrology::LOG_LEVEL_DEBUG); // Log
-        }
 
         // La réponse.
         $result = null;
 
         // Lit le cache.
-        if (isset($this->_optionCache[$name])) {
+        if (isset($this->_optionCache[$name]))
             $result = $this->_optionCache[$name];
-        }
 
         // Cherche l'option dans l'environnement.
-        if ($result === null) {
+        if ($result === null)
             $result = $this->getOptionFromEnvironment($name);
-        }
 
         // Si non trouvé et si non protégée, cherche l'option dans les liens.
         if (self::OPTIONS_WRITABLE[$name]
             && $result === null
-        ) {
+        )
             $result = $this->getOptionFromLinks($name);
-        }
 
         // Si non trouvé, cherche la valeur par défaut de l'option.
         if ($result === null) {
@@ -754,19 +750,16 @@ class Configuration
         // Si non trouvé, retourne la valeur par défaut.
         if ($result === null) {
             $result = false;
-            if ($this->_metrology !== null) {
+            if ($this->_metrology !== null)
                 $this->_metrology->addLog('Get unknown option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
-            }
         }
 
-        if ($this->_metrology !== null) {
+        if ($this->_metrology !== null)
             $this->_metrology->addLog('Return option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
-        }
 
         // Ecrit le cache.
-        if ($result !== null) {
+        if ($result !== null)
             $this->_optionCache[$name] = $result;
-        }
 
         return $result;
     }

@@ -308,6 +308,20 @@ class nebule
     private $_nebuleInstance;
 
     /**
+     * Instance de gestion de la métrologie, des journaux et des statistiques internes.
+     *
+     * @var Metrology
+     */
+    private $_metrology;
+
+    /**
+     * Instance de gestion de la configuration et des options.
+     *
+     * @var Configuration
+     */
+    private $_configuration;
+
+    /**
      * Instance des entrées/sorties.
      *
      * @var ioInterface
@@ -327,13 +341,6 @@ class nebule
      * @var SocialInterface
      */
     private $_social;
-
-    /**
-     * Instance de gestion de la métrologie, des journaux et des statistiques internes.
-     *
-     * @var Metrology
-     */
-    private $_metrology;
 
     private $_ioDefaultPrefix = '';
 
@@ -453,10 +460,11 @@ class nebule
         }
 
         // Initialise les IO et la crypto.
-        $this->_io = new io();
-        $this->_crypto = new CryptoOpenssl($this->_nebuleInstance);
-        $this->_social = new Social();
         $this->_metrology = new Metrology($this->_nebuleInstance);
+        $this->_configuration = new Configuration($this->_nebuleInstance);
+        $this->_io = new io($this->_nebuleInstance);
+        $this->_crypto = new CryptoOpenssl($this->_nebuleInstance);
+        $this->_social = new Social($this->_nebuleInstance);
         $this->_ioDefaultPrefix = $this->_io->getDefaultLocalisation();
 
         $this->_metrology->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -469,7 +477,7 @@ class nebule
         $this->_findFlushCache();
 
         // Restaure les instances depuis le cache de session.
-        $this->_sessionBufferLimit = $this->getOption('sessionBufferSize');
+        $this->_sessionBufferLimit = $this->_configuration->getOption('sessionBufferSize');
         $this->_readCacheOnSessionBuffer();
 
         // Vérifie le ticket. Doit être après après la détection du flush cache.
@@ -564,10 +572,11 @@ class nebule
         }
 
         // Initialise les IO et la crypto.
-        $this->_io = new io();
-        $this->_crypto = new CryptoOpenssl($this->_nebuleInstance);
-        $this->_social = new Social();
         $this->_metrology = new Metrology($this->_nebuleInstance);
+        $this->_configuration = new Configuration($this->_nebuleInstance);
+        $this->_io = new io($this->_nebuleInstance);
+        $this->_crypto = new CryptoOpenssl($this->_nebuleInstance);
+        $this->_social = new Social($this->_nebuleInstance);
         $this->_ioDefaultPrefix = $this->_io->getDefaultLocalisation();
 
         $this->_metrology->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -580,7 +589,7 @@ class nebule
         $this->_findFlushCache();
 
         // Restaure les instances depuis le cache de session.
-        $this->_sessionBufferLimit = $this->getOption('sessionBufferSize');
+        $this->_sessionBufferLimit = $this->_configuration->getOption('sessionBufferSize');
         $this->_readCacheOnSessionBuffer();
 
         // Vérifie le ticket. Doit être après la détection du flush cache.
@@ -1309,7 +1318,7 @@ class nebule
 
         foreach (self::$_listOptions as $option) {
             if (self::$_listOptionsCriticality[$option] == 'critical') {
-                $value = $this->getOption($option);
+                $value = $this->_configuration->getOption($option);
                 if ($value != self::$_listOptionsDefaultValue[$option]) {
                     if (is_bool($value)) {
                         if ($value) {
@@ -1399,7 +1408,7 @@ class nebule
      */
     private function _changeIoUploadMaxFilesize()
     {
-        //$UploadMaxFilesize = $this->getOption('ioReadMaxUpload');
+        //$UploadMaxFilesize = $this->_configuration->getOption('ioReadMaxUpload');
 
         // Connu pour ne plus fonctionner.
         //ini_set('upload_max_filesize', $UploadMaxFilesize);
@@ -1869,7 +1878,7 @@ class nebule
 
         if ($name == ''
             || $this->_flushCache
-            || !$this->getOption('permitSessionOptions')
+            || !$this->_configuration->getOption('permitSessionOptions')
             || !isset($_SESSION['Option'][$name])
         ) {
             session_write_close();
@@ -1893,7 +1902,7 @@ class nebule
     {
         if ($name == ''
             || $this->_flushCache
-            || !$this->getOption('permitSessionOptions')
+            || !$this->_configuration->getOption('permitSessionOptions')
         ) {
             return false;
         }
@@ -1938,7 +1947,7 @@ class nebule
 
         if ($name == ''
             || $this->_flushCache
-            || !$this->getOption('permitSessionBuffer')
+            || !$this->_configuration->getOption('permitSessionBuffer')
             || !isset($_SESSION['Buffer'][$name])
         ) {
             session_write_close();
@@ -1964,7 +1973,7 @@ class nebule
     {
         if ($name == ''
             || $this->_flushCache
-            || !$this->getOption('permitSessionBuffer')
+            || !$this->_configuration->getOption('permitSessionBuffer')
         ) {
             return false;
         }
@@ -1991,7 +2000,7 @@ class nebule
         return false; // Fonction désactivée !
         if ($name == ''
             || $this->_flushCache
-            || !$this->getOption('permitSessionBuffer')
+            || !$this->_configuration->getOption('permitSessionBuffer')
         ) {
             return false;
         }
@@ -2015,7 +2024,7 @@ class nebule
     private function _readCacheOnSessionBuffer()
     {
         if ($this->_flushCache
-            || !$this->getOption('permitSessionBuffer')
+            || !$this->_configuration->getOption('permitSessionBuffer')
         ) {
             return;
         }
@@ -2101,7 +2110,7 @@ class nebule
     private function _saveCacheOnSessionBuffer()
     {
         if ($this->_flushCache
-            || !$this->getOption('permitSessionBuffer')
+            || !$this->_configuration->getOption('permitSessionBuffer')
         ) {
             return;
         }
@@ -2203,7 +2212,7 @@ class nebule
     private function _cleanCacheOverflow($c = 0)
     {
         // Quitte tout de suite si le cache n'est pas acctivé.
-        if (!$this->getOption('permitSessionBuffer')) {
+        if (!$this->_configuration->getOption('permitSessionBuffer')) {
             return;
         }
 
@@ -2315,7 +2324,7 @@ class nebule
     private function _getCacheNeedOnePlace()
     {
         // Quitte tout de suite si le cache n'est pas acctivé.
-        if (!$this->getOption('permitSessionBuffer')) {
+        if (!$this->_configuration->getOption('permitSessionBuffer')) {
             return;
         }
 
@@ -2336,7 +2345,7 @@ class nebule
     private function _getCacheNeedCleaning()
     {
         // Quitte tout de suite si le cache n'est pas acctivé.
-        if (!$this->getOption('permitSessionBuffer')) {
+        if (!$this->_configuration->getOption('permitSessionBuffer')) {
             return;
         }
 
@@ -2378,7 +2387,7 @@ class nebule
             $instance = new Node($this, $id, '', $protect, $obfuscated);
 
             // Si le cache est activé.
-            if ($this->getOption('permitSessionBuffer')) {
+            if ($this->_configuration->getOption('permitSessionBuffer')) {
                 // Ajoute l'instance au cache.
                 $this->_cacheObjects[$id] = $instance;
                 $this->_cacheDateInsertion[$id] = microtime(true);
@@ -2440,7 +2449,7 @@ class nebule
             $instance = new Link($this, $link, $version);
 
             // Si le cache est activé.
-            if ($this->getOption('permitSessionBuffer')) {
+            if ($this->_configuration->getOption('permitSessionBuffer')) {
                 // Ajoute l'instance au cache.
                 $this->_cacheLinks[$link] = $instance;
                 $this->_cacheDateInsertion[$link] = microtime(true);
@@ -2503,7 +2512,7 @@ class nebule
             $instance = new Entity($this, $id);
 
             // Si le cache est activé.
-            if ($this->getOption('permitSessionBuffer')) {
+            if ($this->_configuration->getOption('permitSessionBuffer')) {
                 // Ajoute l'instance au cache.
                 $this->_cacheEntities[$id] = $instance;
                 $this->_cacheDateInsertion[$id] = microtime(true);
@@ -2566,7 +2575,7 @@ class nebule
             $instance = new Group($this, $id);
 
             // Si le cache est activé.
-            if ($this->getOption('permitSessionBuffer')) {
+            if ($this->_configuration->getOption('permitSessionBuffer')) {
                 // Ajoute l'instance au cache.
                 $this->_cacheGroups[$id] = $instance;
                 $this->_cacheDateInsertion[$id] = microtime(true);
@@ -2632,7 +2641,7 @@ class nebule
             $instance = new Conversation($this, $id, $closed, $protected, $obfuscated);
 
             // Si le cache est activé.
-            if ($this->getOption('permitSessionBuffer')) {
+            if ($this->_configuration->getOption('permitSessionBuffer')) {
                 // Ajoute l'instance au cache.
                 $this->_cacheConversations[$id] = $instance;
                 $this->_cacheDateInsertion[$id] = microtime(true);
@@ -2698,7 +2707,7 @@ class nebule
             $instance = new Currency($this, $id, $param, $protected, $obfuscated);
 
             // Si le cache est activé.
-            if ($this->getOption('permitSessionBuffer')) {
+            if ($this->_configuration->getOption('permitSessionBuffer')) {
                 // Ajoute l'instance au cache.
                 $this->_cacheCurrencies[$id] = $instance;
                 $this->_cacheDateInsertion[$id] = microtime(true);
@@ -2764,7 +2773,7 @@ class nebule
             $instance = new Token($this, $id, $param, $protected, $obfuscated);
 
             // Si le cache est activé.
-            if ($this->getOption('permitSessionBuffer')) {
+            if ($this->_configuration->getOption('permitSessionBuffer')) {
                 // Ajoute l'instance au cache.
                 $this->_cacheTokens[$id] = $instance;
                 $this->_cacheDateInsertion[$id] = microtime(true);
@@ -2830,7 +2839,7 @@ class nebule
             $instance = new TokenPool($this, $id, $param, $protected, $obfuscated);
 
             // Si le cache est activé.
-            if ($this->getOption('permitSessionBuffer')) {
+            if ($this->_configuration->getOption('permitSessionBuffer')) {
                 // Ajoute l'instance au cache.
                 $this->_cacheTokenPools[$id] = $instance;
                 $this->_cacheDateInsertion[$id] = microtime(true);
@@ -2896,7 +2905,7 @@ class nebule
             $instance = new Wallet($this, $id, $param, $protected, $obfuscated);
 
             // Si le cache est activé.
-            if ($this->getOption('permitSessionBuffer')) {
+            if ($this->_configuration->getOption('permitSessionBuffer')) {
                 // Ajoute l'instance au cache.
                 $this->_cacheWallets[$id] = $instance;
                 $this->_cacheDateInsertion[$id] = microtime(true);
@@ -2959,7 +2968,7 @@ class nebule
             $instance = new Transaction($this, $link, $version);
 
             // Si le cache est activé.
-            if ($this->getOption('permitSessionBuffer')) {
+            if ($this->_configuration->getOption('permitSessionBuffer')) {
                 // Ajoute l'instance au cache.
                 $this->_cacheTransactions[$link] = $instance;
                 $this->_cacheDateInsertion[$link] = microtime(true);
@@ -3512,7 +3521,7 @@ class nebule
         } else {
             // Sinon recherche une entité par défaut.
             // C'est définit comme une option.
-            $id = $this->getOption('defaultCurrentEntity');
+            $id = $this->_configuration->getOption('defaultCurrentEntity');
 
             if ($id != ''
                 && strlen($id) >= self::NEBULE_MINIMUM_ID_SIZE
@@ -3658,7 +3667,7 @@ class nebule
             } else // Sinon essaie de la trouver ailleurs.
             {
                 $itc_ent = '';
-                $ext_ent = $this->getOption('defaultCurrentEntity');
+                $ext_ent = $this->_configuration->getOption('defaultCurrentEntity');
                 if ($ext_ent != ''
                     && strlen($ext_ent) >= self::NEBULE_MINIMUM_ID_SIZE
                     && ctype_xdigit($ext_ent)
@@ -4243,7 +4252,7 @@ class nebule
     private function _findCurrentCurrency()
     {
         // Si pas autorisé, retourne ID=0.
-        if (!$this->getOption('permitCurrency')) {
+        if (!$this->_configuration->getOption('permitCurrency')) {
             $this->_currentCurrency = '0';
             $this->_currentCurrencyInstance = $this->newCurrency('0');
             // Ecrit la monnaie dans la session.
@@ -4354,7 +4363,7 @@ class nebule
     private function _findCurrentTokenPool()
     {
         // Si pas autorisé, retourne ID=0.
-        if (!$this->getOption('permitCurrency')) {
+        if (!$this->_configuration->getOption('permitCurrency')) {
             $this->_currentTokenPool = '0';
             $this->_currentTokenPoolInstance = $this->newTokenPool('0');
             // Ecrit le sac de jetons dans la session.
@@ -4465,7 +4474,7 @@ class nebule
     private function _findCurrentToken()
     {
         // Si pas autorisé, retourne ID=0.
-        if (!$this->getOption('permitCurrency')) {
+        if (!$this->_configuration->getOption('permitCurrency')) {
             $this->_currentToken = '0';
             $this->_currentTokenInstance = $this->newToken('0');
             // Ecrit le jeton dans la session.
@@ -4563,7 +4572,7 @@ class nebule
     {
         // Vérifie que le maître est une entité et est bien celui définit par la constante.
         if (!$this->_puppetmasterInstance instanceof Entity) return 0;
-        if ($this->_puppetmasterInstance->getID() != $this->getOption('puppetmaster')) return 0;
+        if ($this->_puppetmasterInstance->getID() != $this->_configuration->getOption('puppetmaster')) return 0;
         // Vérifie que le maître de la sécurité est une entité et a été trouvé.
         if (!$this->_securityMasterInstance instanceof Entity) return 1;
         if ($this->_securityMasterInstance->getID() == '0') return 1;
@@ -4613,7 +4622,7 @@ class nebule
      */
     private function _findPuppetmaster()
     {
-        $this->_puppetmaster = $this->getOption('puppetmaster');
+        $this->_puppetmaster = $this->_configuration->getOption('puppetmaster');
         $this->_puppetmasterInstance = $this->newEntity($this->_puppetmaster);
         $this->_metrology->addLog('Find puppetmaster ' . $this->_puppetmaster, Metrology::LOG_LEVEL_DEBUG); // Log
     }
@@ -4914,7 +4923,7 @@ class nebule
     {
         // Ajoute si nécessaire l'entité du serveur.
         if (!$this->_modeRescue)
-            $this->_permitInstanceEntityAsAuthority = $this->getOption('permitInstanceEntityAsAuthority');
+            $this->_permitInstanceEntityAsAuthority = $this->_configuration->getOption('permitInstanceEntityAsAuthority');
         else
             $this->_permitInstanceEntityAsAuthority = false;
 
@@ -4942,7 +4951,7 @@ class nebule
     {
         // Ajoute si nécessaire l'entité par défaut.
         if (!$this->_modeRescue)
-            $this->_permitDefaultEntityAsAuthority = $this->getOption('permitDefaultEntityAsAuthority');
+            $this->_permitDefaultEntityAsAuthority = $this->_configuration->getOption('permitDefaultEntityAsAuthority');
         else
             $this->_permitDefaultEntityAsAuthority = false;
 
@@ -4968,7 +4977,7 @@ class nebule
     private function _addLocalAuthorities()
     {
         // Vérifie si les entités autorités locales sont autorisées.
-        if (!$this->getOption('permitLocalSecondaryAuthorities'))
+        if (!$this->_configuration->getOption('permitLocalSecondaryAuthorities'))
             return;
 
         $refAuthority = $this->_crypto->hash(self::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
@@ -5162,10 +5171,10 @@ class nebule
     private function _addInstanceEntityAsRecovery()
     {
         // Vérifie si les entités de recouvrement sont autorisées.
-        if (!$this->getOption('permitRecoveryEntities'))
+        if (!$this->_configuration->getOption('permitRecoveryEntities'))
             return;
 
-        $this->_permitInstanceEntityAsRecovery = $this->getOption('permitInstanceEntityAsRecovery');
+        $this->_permitInstanceEntityAsRecovery = $this->_configuration->getOption('permitInstanceEntityAsRecovery');
 
         if ($this->_permitInstanceEntityAsRecovery) {
             $this->_recoveryEntities[$this->_instanceEntity] = $this->_instanceEntity;
@@ -5184,10 +5193,10 @@ class nebule
     private function _addDefaultEntityAsRecovery()
     {
         // Vérifie si les entités de recouvrement sont autorisées.
-        if (!$this->getOption('permitRecoveryEntities'))
+        if (!$this->_configuration->getOption('permitRecoveryEntities'))
             return;
 
-        $this->_permitDefaultEntityAsRecovery = $this->getOption('permitDefaultEntityAsRecovery');
+        $this->_permitDefaultEntityAsRecovery = $this->_configuration->getOption('permitDefaultEntityAsRecovery');
 
         if ($this->_permitDefaultEntityAsRecovery) {
             $this->_recoveryEntities[$this->_defaultEntity] = $this->_defaultEntity;
@@ -5209,7 +5218,7 @@ class nebule
         $this->_recoveryEntitiesInstances = array();
 
         // Vérifie si les entités de recouvrement sont autorisées.
-        if (!$this->getOption('permitRecoveryEntities'))
+        if (!$this->_configuration->getOption('permitRecoveryEntities'))
             return;
 
         $refRecovery = $this->_crypto->hash(self::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
@@ -5309,8 +5318,19 @@ class nebule
     }
 
 
+
     /**
-     * Export l'objets des entrées/sorties.
+     * Export l'objet de la configuration.
+     *
+     * @return Configuration
+     */
+    public function getConfigurationInstance()
+    {
+        return $this->_configuration;
+    }
+
+    /**
+     * Export l'objet des entrées/sorties.
      *
      * @return io
      */
@@ -5320,7 +5340,7 @@ class nebule
     }
 
     /**
-     * Export l'objets de la crypto.
+     * Export l'objet de la crypto.
      *
      * @return Crypto
      */
@@ -5330,7 +5350,7 @@ class nebule
     }
 
     /**
-     * Export l'objets du calcul social.
+     * Export l'objet du calcul social.
      *
      * @return Social
      */
@@ -5340,7 +5360,7 @@ class nebule
     }
 
     /**
-     * Export l'objets de la métrologie.
+     * Export l'objet de la métrologie.
      *
      * @return Metrology
      */
@@ -5348,6 +5368,7 @@ class nebule
     {
         return $this->_metrology;
     }
+
 
 
     /**
@@ -5416,8 +5437,8 @@ class nebule
      */
     private function _findModeRescue()
     {
-        if ($this->getOption('modeRescue')
-            || ($this->getOption('permitOnlineRescue')
+        if ($this->_configuration->getOption('modeRescue')
+            || ($this->_configuration->getOption('permitOnlineRescue')
                 && (filter_has_var(INPUT_GET, nebule::COMMAND_RESCUE)
                     || filter_has_var(INPUT_POST, nebule::COMMAND_RESCUE)
                 )
@@ -5641,9 +5662,9 @@ class nebule
     public function createTextAsObject(string &$text, bool $protect = false, bool $obfuscate = false)
     {
         // Vérifie que l'écriture est autorisée.
-        if ($this->getOption('permitWrite')
-            && $this->getOption('permitWriteObject')
-            && $this->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_currentEntityUnlocked
             && strlen($text) != 0
         ) {
@@ -6123,7 +6144,7 @@ class nebule
         }
 
         if ($size == 0) {
-            $size = $this->getOption('ioReadMaxData');
+            $size = $this->_configuration->getOption('ioReadMaxData');
         }
 
         $value = false;

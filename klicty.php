@@ -81,6 +81,7 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
     public function __construct(nebule $nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
     }
 
     /**
@@ -656,17 +657,6 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         self::DEFAULT_ICON_IDOWNLOAD,
         self::DEFAULT_ICON_HELP,
         self::DEFAULT_ICON_WORLD);
-
-    /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
 
     /**
      * Initialisation des variables et instances interdépendantes.
@@ -1438,7 +1428,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             </div>
             <?php
             // Si l'entité n'est en cours n'est pas l'entité par défaut.
-            if ($this->_nebuleInstance->getCurrentEntity() != $this->_nebuleInstance->getOption('defaultCurrentEntity')) {
+            if ($this->_nebuleInstance->getCurrentEntity() != $this->_configuration->getOption('defaultCurrentEntity')) {
                 // Affiche l'entité et son image.
                 $param = array(
                     'enableDisplayColor' => true,
@@ -1729,7 +1719,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         if ($this->_applicationInstance->getCheckSecurityURL() == 'WARN') {
             $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityURLMessage());
         }
-        if (!$this->_nebuleInstance->getOption('permitWrite')) {
+        if (!$this->_configuration->getOption('permitWrite')) {
             $this->displayMessageWarning(':::warn_ServNotPermitWrite');
         }
         if ($this->_nebuleInstance->getFlushCache()) {
@@ -1858,7 +1848,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $instance = $this->_nebuleInstance->newObject($meta);
 
         // Si c'est l'entité du serveur, affiche tous les objets.
-        if ($id == $this->_nebuleInstance->getOption('defaultCurrentEntity')) {
+        if ($id == $this->_configuration->getOption('defaultCurrentEntity')) {
             $list = $instance->readLinksFilterFull('', '', 'l', '', '', $meta);
         } // Sinon affiche les objets de l'entité.
         else {
@@ -1920,7 +1910,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Refait une recherche et un affichage pour les objets protégés partagés.
         $list = array();
         $id = $this->_applicationInstance->getCurrentEntity();
-        if ($id != $this->_nebuleInstance->getOption('defaultCurrentEntity')) {
+        if ($id != $this->_configuration->getOption('defaultCurrentEntity')) {
             $listK = $this->_applicationInstance->getCurrentEntityInstance()->readLinksFilterFull(
                 '',
                 '',
@@ -2161,9 +2151,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                 // Supprimer ce groupes.
                 if ($this->_unlocked
-                    && $this->_nebuleInstance->getOption('permitWrite')
-                    && $this->_nebuleInstance->getOption('permitWriteLink')
-                    && $this->_nebuleInstance->getOption('permitWriteGroup')
+                    && $this->_configuration->getOption('permitWrite')
+                    && $this->_configuration->getOption('permitWriteLink')
+                    && $this->_configuration->getOption('permitWriteGroup')
                 ) {
                     $param['selfHookList'][0]['name'] = '::DeleteGroup';
                     $param['selfHookList'][0]['icon'] = self::DEFAULT_ICON_LX;
@@ -2248,10 +2238,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             echo $this->getDisplayTitle('::EntitiesGroupAdd', self::DEFAULT_ICON_GRPENTADD);
 
             // Si autorisé à créer un groupe.
-            if ($this->_nebuleInstance->getOption('permitWrite')
-                && $this->_nebuleInstance->getOption('permitWriteObject')
-                && $this->_nebuleInstance->getOption('permitWriteLink')
-                && $this->_nebuleInstance->getOption('permitWriteGroup')
+            if ($this->_configuration->getOption('permitWrite')
+                && $this->_configuration->getOption('permitWriteObject')
+                && $this->_configuration->getOption('permitWriteLink')
+                && $this->_configuration->getOption('permitWriteGroup')
                 && $this->_unlocked
             ) {
                 ?>
@@ -2365,9 +2355,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Affiche le menu des actions.
         if ($isGroup) {
             if ($this->_unlocked
-                && $this->_nebuleInstance->getOption('permitWrite')
-                && $this->_nebuleInstance->getOption('permitWriteLink')
-                && $this->_nebuleInstance->getOption('permitWriteGroup')
+                && $this->_configuration->getOption('permitWrite')
+                && $this->_configuration->getOption('permitWriteLink')
+                && $this->_configuration->getOption('permitWriteGroup')
             ) {
                 // Supprimer le groupe.
                 $actionList[0]['name'] = '::DeleteGroup';
@@ -2393,7 +2383,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id;
             }
 
-            if ($this->_nebuleInstance->getOption('permitSynchronizeLink') && $this->_nebuleInstance->getOption('permitSynchronizeObject')) {
+            if ($this->_configuration->getOption('permitSynchronizeLink') && $this->_configuration->getOption('permitSynchronizeObject')) {
                 // Synchroniser l'entité.
                 $actionList[2]['name'] = '::SynchronizeEntity';
                 $actionList[2]['icon'] = self::DEFAULT_ICON_SYNENT;
@@ -2553,9 +2543,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                             // Retirer l'objet du groupe.
                             if ($this->_unlocked
-                                && $this->_nebuleInstance->getOption('permitWrite')
-                                && $this->_nebuleInstance->getOption('permitWriteLink')
-                                && $this->_nebuleInstance->getOption('permitWriteGroup')
+                                && $this->_configuration->getOption('permitWrite')
+                                && $this->_configuration->getOption('permitWriteLink')
+                                && $this->_configuration->getOption('permitWriteGroup')
                             ) {
                                 $list[$i]['actions'][0]['name'] = '::RemoveFromGroup';
                                 $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
@@ -2608,9 +2598,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                         // Supprimer le groupe.
                         if ($this->_unlocked
-                            && $this->_nebuleInstance->getOption('permitWrite')
-                            && $this->_nebuleInstance->getOption('permitWriteLink')
-                            && $this->_nebuleInstance->getOption('permitWriteGroup')
+                            && $this->_configuration->getOption('permitWrite')
+                            && $this->_configuration->getOption('permitWriteLink')
+                            && $this->_configuration->getOption('permitWriteGroup')
                         ) {
                             $list[$i]['actions'][0]['name'] = '::RemoveFromGroup';
                             $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
@@ -2715,10 +2705,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     private function _displayContentObjectAdd()
     {
         // Si autorisé à transferer des fichier.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_applicationInstance->getOption('klictyPermitUploadObject')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('klictyPermitUploadObject')
             && $this->_unlocked
         ) {
             // Si il y a eu le téléchargement d'un fichier.
@@ -2783,7 +2773,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                           . $this->_nebuleInstance->getActionTicket(); ?>">
                     <input type="hidden"
                            name="MAX_FILE_SIZE"
-                           value="<?php echo $this->_applicationInstance->getOption('klictyIOReadMaxDataPHP'); ?>"/>
+                           value="<?php echo $this->_configuration->getOption('klictyIOReadMaxDataPHP'); ?>"/>
                     <input type="file"
                            name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_FILE; ?>"/><br/>
                     <div class="floatRight textAlignRight">
@@ -2852,7 +2842,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 </form>
             </div>
             <?php
-            $this->displayMessageInformation($this->_applicationInstance->getTraductionInstance()->getTraduction('::UploadMaxFileSize') . ' : ' . $this->_applicationInstance->getOption('klictyIOReadMaxDataPHP') . 'o');
+            $this->displayMessageInformation($this->_applicationInstance->getTraductionInstance()->getTraduction('::UploadMaxFileSize') . ' : ' . $this->_configuration->getOption('klictyIOReadMaxDataPHP') . 'o');
         } else {
             $this->displayMessageError(':::err_NotPermit');
         }
@@ -2925,12 +2915,12 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             echo $this->getDisplayTitle('::CreateEntity', self::DEFAULT_ICON_ADDENT);
 
             // Si autorisé à créer une entité.
-            if ($this->_nebuleInstance->getOption('permitWrite')
-                && $this->_nebuleInstance->getOption('permitWriteObject')
-                && $this->_nebuleInstance->getOption('permitWriteLink')
-                && $this->_nebuleInstance->getOption('permitWriteEntity')
+            if ($this->_configuration->getOption('permitWrite')
+                && $this->_configuration->getOption('permitWriteObject')
+                && $this->_configuration->getOption('permitWriteLink')
+                && $this->_configuration->getOption('permitWriteEntity')
                 && !$this->_unlocked
-                && $this->_nebuleInstance->getOption('permitPublicCreateEntity')
+                && $this->_configuration->getOption('permitPublicCreateEntity')
             ) {
                 ?>
 
@@ -3014,11 +3004,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         echo $this->getDisplayTitle('::EntitySync', self::DEFAULT_ICON_SYNENT);
 
         // Si autorisé à synchroniser une entité.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
-            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitSynchronizeObject')
+            && $this->_configuration->getOption('permitSynchronizeLink')
             && !$this->_unlocked
         ) {
             ?>
@@ -3166,9 +3156,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['actions'] = array();
 
                         if ($this->_unlocked
-                            && $this->_nebuleInstance->getOption('permitWrite')
-                            && $this->_nebuleInstance->getOption('permitWriteLink')
-                            && $this->_nebuleInstance->getOption('permitWriteObject')
+                            && $this->_configuration->getOption('permitWrite')
+                            && $this->_configuration->getOption('permitWriteLink')
+                            && $this->_configuration->getOption('permitWriteObject')
                         ) {
                             if ($entity == $this->_nebuleInstance->getCurrentEntity()) {
                                 // Déprotéger l'objet.
@@ -3179,7 +3169,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
                                     . $this->_nebuleInstance->getActionTicket();
                             } elseif (!$this->_nebuleInstance->getIsRecoveryEntity($entity)
-                                || $this->_nebuleInstance->getOption('permitRecoveryRemoveEntity')
+                                || $this->_configuration->getOption('permitRecoveryRemoveEntity')
                             ) {
                                 // Annuler le partage de protection. Non fiable...
                                 $list[$i]['actions'][0]['name'] = '::RemoveShareProtect';
@@ -3211,9 +3201,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
             // Si l'entité est déverrouillée.
             if ($this->_unlocked
-                && $this->_nebuleInstance->getOption('permitWrite')
-                && $this->_nebuleInstance->getOption('permitWriteLink')
-                && $this->_nebuleInstance->getOption('permitWriteObject')
+                && $this->_configuration->getOption('permitWrite')
+                && $this->_configuration->getOption('permitWriteLink')
+                && $this->_configuration->getOption('permitWriteObject')
             ) {
                 // Protéger l'objet.
                 $actionList[0]['name'] = '::ProtectObject';
@@ -3243,9 +3233,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         if ($object->checkPresent()
             && $protect
             && $this->_unlocked
-            && $this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteObject')
         ) {
             // Liste tous les groupes.
             $listGroups = $this->_nebuleInstance->getListGroupsID($this->_nebuleInstance->getCurrentEntity(), '');
@@ -3702,7 +3692,7 @@ echo $this->getDisplayInformation('::HelpRecoveryEntity', $param);
      */
     private function _displayMetrology()
     {
-        if ($this->_applicationInstance->getOption('klictyDisplayMetrology')) {
+        if ($this->_configuration->getOption('klictyDisplayMetrology')) {
             ?>
 
             <?php $this->displayDivTextTitle(self::DEFAULT_ICON_IMLOG, 'Métrologie', 'Mesures quantitatives et temporelles.') ?>
@@ -3842,7 +3832,7 @@ echo $this->getDisplayInformation('::HelpRecoveryEntity', $param);
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'tooBig':
-                        if ($this->_applicationInstance->getOption('klictyDisplayUnverifyLargeContent')) {
+                        if ($this->_configuration->getOption('klictyDisplayUnverifyLargeContent')) {
                             $msg = $this->_traductionInstance->getTraduction(':::display:content:warningTooBig');
                             $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         } else {
@@ -3891,7 +3881,7 @@ echo $this->getDisplayInformation('::HelpRecoveryEntity', $param);
     private function _displayDivOnlineHelp($help)
     {
         // Si authorisé à afficher l'aide.
-        if ($this->_applicationInstance->getOption('klictyDisplayOnlineHelp')) {
+        if ($this->_configuration->getOption('klictyDisplayOnlineHelp')) {
             // Prépare le texte à afficher dans la bulle.
             $txt = $this->_applicationInstance->getTraductionInstance()->getTraduction($help);
             $txt = str_replace('&', '&amp;', $txt);
@@ -4232,9 +4222,9 @@ echo $this->getDisplayInformation('::HelpRecoveryEntity', $param);
     private function _truncateName($name, $maxsize)
     {
         if ($maxsize == 0
-            || $maxsize > $this->_nebuleInstance->getOption('displayNameSize')
+            || $maxsize > $this->_configuration->getOption('displayNameSize')
         ) {
-            $maxsize = $this->_nebuleInstance->getOption('displayNameSize');
+            $maxsize = $this->_configuration->getOption('displayNameSize');
         }
         if ($maxsize < 4) {
             $maxsize = 4;
@@ -4693,17 +4683,6 @@ class Action extends Actions
         $_actionUploadFileShowTime = 0;
 
 
-    /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
-
 
     /**
      * Extrait pour action si un fichier est téléchargé vers le serveur.
@@ -4711,9 +4690,9 @@ class Action extends Actions
     protected function _extractActionUploadFile()
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action upload file', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -4739,7 +4718,7 @@ class Action extends Actions
                 // Si le fichier est bien téléchargé.
                 if (file_exists($uppath)) {
                     // Si le fichier n'est pas trop gros.
-                    if ($upsize <= $this->_applicationInstance->getOption('klictyIOReadMaxDataPHP')) {
+                    if ($upsize <= $this->_configuration->getOption('klictyIOReadMaxDataPHP')) {
                         // Lit le type mime.
                         $finfo = finfo_open(FILEINFO_MIME_TYPE);
                         $uptype = finfo_file($finfo, $uppath);
@@ -4799,9 +4778,9 @@ class Action extends Actions
     protected function _actionUploadFile()
     {
         // Vérifie que la création d'objet soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action upload file', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -4933,13 +4912,13 @@ abstract class DisabledAction // extends Actions
         $this->_actionFlushExpiredObjects();
 
         // Vérifie que l'action de création d'entité soit permise entité verrouillée.
-        if ($this->_unlocked || $this->_nebuleInstance->getOption('permitPublicCreateEntity')) {
+        if ($this->_unlocked || $this->_configuration->getOption('permitPublicCreateEntity')) {
             $this->_extractActionCreateEntity();
             if ($this->_actionCreateEntity) $this->_actionCreateEntity();
         }
 
         // Vérifie que l'action de chargement de lien soit permise entité verrouillée.
-        if ($this->_unlocked || $this->_applicationInstance->getOption('klictyPermitPublicUploadLinks')) {
+        if ($this->_unlocked || $this->_configuration->getOption('klictyPermitPublicUploadLinks')) {
             $this->_extractActionSignLink1();
             $this->_extractActionSignLink2();
             $this->_extractActionSignLink3();
@@ -5027,8 +5006,8 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action sign link 1', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -5062,8 +5041,8 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action sign link 2', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -5097,8 +5076,8 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action sign link 3', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -5132,8 +5111,8 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action obfuscate link', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -5183,9 +5162,9 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action delete object', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -5232,9 +5211,9 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action protect object', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -5265,9 +5244,9 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action unprotect object', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -5298,9 +5277,9 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action share protect object to entity', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -5331,9 +5310,9 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action share protect object to opened group', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -5364,9 +5343,9 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action share protect object to closed group', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -5397,9 +5376,9 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action cancel share protect object to entity', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -5440,9 +5419,9 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que l'écriture d'objets soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitSynchronizeObject')
         ) {
             $this->_metrology->addLog('Extract action synchronize object', Metrology::LOG_LEVEL_NORMAL); // Log
 
@@ -5481,10 +5460,10 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que l'écriture d'objets soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
-            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitSynchronizeObject')
+            && $this->_configuration->getOption('permitSynchronizeLink')
         ) {
             $this->_metrology->addLog('Extract action synchronize entity', Metrology::LOG_LEVEL_NORMAL); // Log
 
@@ -5523,9 +5502,9 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitSynchronizeLink')
         ) {
             $this->_metrology->addLog('Extract action synchronize object links', Metrology::LOG_LEVEL_NORMAL); // Log
 
@@ -5564,10 +5543,10 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que l'écriture d'objets soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
-            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitSynchronizeObject')
+            && $this->_configuration->getOption('permitSynchronizeLink')
         ) {
             $this->_metrology->addLog('Extract action synchronize new entity', Metrology::LOG_LEVEL_NORMAL); // Log
 
@@ -5753,9 +5732,9 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action upload file', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -5776,7 +5755,7 @@ abstract class DisabledAction // extends Actions
                 // Si le fichier est bien téléchargé.
                 if (file_exists($uppath)) {
                     // Si le fichier n'est pas trop gros.
-                    if ($upsize <= $this->_applicationInstance->getOption('klictyIOReadMaxDataPHP')) {
+                    if ($upsize <= $this->_configuration->getOption('klictyIOReadMaxDataPHP')) {
                         // Lit le type mime.
                         $finfo = finfo_open(FILEINFO_MIME_TYPE);
                         $uptype = finfo_file($finfo, $uppath);
@@ -5906,9 +5885,9 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action upload text', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -6001,11 +5980,11 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteEntity')
-            && ($this->_unlocked || $this->_nebuleInstance->getOption('permitPublicCreateEntity'))
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteEntity')
+            && ($this->_unlocked || $this->_configuration->getOption('permitPublicCreateEntity'))
         ) {
             $this->_metrology->addLog('Extract action create entity', Metrology::LOG_LEVEL_NORMAL); // Log
 
@@ -6126,10 +6105,10 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteGroup')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action create group', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -6217,9 +6196,9 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la suppression de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteGroup')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action delete group', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -6267,9 +6246,9 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteGroup')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action add to group', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -6310,9 +6289,9 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteGroup')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action remove from group', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -6353,9 +6332,9 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteGroup')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action add item to group', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -6396,9 +6375,9 @@ abstract class DisabledAction // extends Actions
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteGroup')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action remove item from group', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -6502,22 +6481,22 @@ abstract class DisabledAction // extends Actions
     private function _actionSignLink(Link $link, $obfuscate = 'default')
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_applicationInstance->getOption('klictyPermitUploadLinks')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('klictyPermitUploadLinks')
         ) {
             if ($this->_unlocked) {
                 $this->_metrology->addLog('Action sign link', Metrology::LOG_LEVEL_NORMAL); // Log
 
                 // On cache le lien ?
                 if ($obfuscate !== false && $obfuscate !== true) {
-                    $obfuscate = $this->_nebuleInstance->getOption('defaultObfuscateLinks');
+                    $obfuscate = $this->_configuration->getOption('defaultObfuscateLinks');
                 }
                 //...
 
                 // Signature du lien.
                 $link->signWrite();
-            } elseif ($this->_applicationInstance->getOption('klictyPermitPublicUploadLinks')) {
+            } elseif ($this->_configuration->getOption('klictyPermitPublicUploadLinks')) {
                 $this->_metrology->addLog('Action sign link', Metrology::LOG_LEVEL_NORMAL); // Log
 
                 // Affichage du lien.
@@ -6539,9 +6518,9 @@ abstract class DisabledAction // extends Actions
     private function _actionObfuscateLink()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_applicationInstance->getOption('klictyPermitUploadLinks')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('klictyPermitUploadLinks')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action obfuscate link', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -6561,9 +6540,9 @@ abstract class DisabledAction // extends Actions
     private function _actionDeleteObject()
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisés.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action delete object', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -6586,9 +6565,9 @@ abstract class DisabledAction // extends Actions
     private function _actionProtectObject()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action protect object', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -6607,9 +6586,9 @@ abstract class DisabledAction // extends Actions
     private function _actionUnprotectObject()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action unprotect object', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -6628,9 +6607,9 @@ abstract class DisabledAction // extends Actions
     private function _actionShareProtectObjectToEntity()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action share protect object to entity ' . $this->_actionShareProtectObjectToEntity, Metrology::LOG_LEVEL_NORMAL); // Log
@@ -6649,9 +6628,9 @@ abstract class DisabledAction // extends Actions
     private function _actionShareProtectObjectToGroupOpened()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action share protect object to opened group', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -6674,9 +6653,9 @@ abstract class DisabledAction // extends Actions
     private function _actionShareProtectObjectToGroupClosed()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action share protect object to closed group', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -6699,9 +6678,9 @@ abstract class DisabledAction // extends Actions
     private function _actionCancelShareProtectObjectToEntity()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action cancel share protect object to entity', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -6721,9 +6700,9 @@ abstract class DisabledAction // extends Actions
     private function _actionSynchronizeObject()
     {
         // Vérifie que la création d'objet soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitSynchronizeObject')
         ) {
             $this->_metrology->addLog('Action synchronize object', Metrology::LOG_LEVEL_NORMAL); // Log
 
@@ -6744,11 +6723,11 @@ abstract class DisabledAction // extends Actions
     private function _actionSynchronizeEntity()
     {
         // Vérifie que la création d'objet soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
-            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitSynchronizeObject')
+            && $this->_configuration->getOption('permitSynchronizeLink')
         ) {
             $this->_metrology->addLog('Action synchronize entity', Metrology::LOG_LEVEL_NORMAL); // Log
 
@@ -6793,9 +6772,9 @@ abstract class DisabledAction // extends Actions
     private function _actionSynchronizeObjectLinks()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitSynchronizeLink')
         ) {
             $this->_metrology->addLog('Action synchronize object links', Metrology::LOG_LEVEL_NORMAL); // Log
 
@@ -6816,11 +6795,11 @@ abstract class DisabledAction // extends Actions
     private function _actionSynchronizeNewEntity()
     {
         // Vérifie que la création d'objet soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
-            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitSynchronizeObject')
+            && $this->_configuration->getOption('permitSynchronizeLink')
         ) {
             $this->_metrology->addLog('Action synchronize new entity', Metrology::LOG_LEVEL_NORMAL); // Log
 
@@ -6934,9 +6913,9 @@ abstract class DisabledAction // extends Actions
     private function _actionUploadFile()
     {
         // Vérifie que la création d'objet soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action upload file', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -7060,9 +7039,9 @@ abstract class DisabledAction // extends Actions
     private function _actionUploadText()
     {
         // Vérifie que la création d'objet soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action upload text', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -7140,11 +7119,11 @@ abstract class DisabledAction // extends Actions
     private function _actionCreateEntity()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteEntity')
-            && ($this->_unlocked || $this->_nebuleInstance->getOption('permitPublicCreateEntity'))
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteEntity')
+            && ($this->_unlocked || $this->_configuration->getOption('permitPublicCreateEntity'))
             && $this->_actionCreateEntity
             && !$this->_actionCreateEntityError
         ) {
@@ -7400,10 +7379,10 @@ if (($sel_action == 'mkent') && ($ok_connexion || $klicty_permitpubcreatentity) 
     private function _actionCreateGroup()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteGroup')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteGroup')
             && $this->_unlocked
             && !$this->_actionCreateGroupError
         ) {
@@ -7443,9 +7422,9 @@ if (($sel_action == 'mkent') && ($ok_connexion || $klicty_permitpubcreatentity) 
     private function _actionDeleteGroup()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteGroup')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteGroup')
             && $this->_unlocked
             && !$this->_actionDeleteGroupError
         ) {
@@ -7501,9 +7480,9 @@ if (($sel_action == 'mkent') && ($ok_connexion || $klicty_permitpubcreatentity) 
     private function _actionAddToGroup()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteGroup')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action add to group ' . $this->_actionAddToGroup, Metrology::LOG_LEVEL_DEBUG); // Log
@@ -7525,9 +7504,9 @@ if (($sel_action == 'mkent') && ($ok_connexion || $klicty_permitpubcreatentity) 
     private function _actionRemoveFromGroup()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteGroup')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action remove from group ' . $this->_actionRemoveFromGroup, Metrology::LOG_LEVEL_DEBUG); // Log
@@ -7547,9 +7526,9 @@ if (($sel_action == 'mkent') && ($ok_connexion || $klicty_permitpubcreatentity) 
     private function _actionAddItemToGroup()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteGroup')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action add item to group ' . $this->_actionAddItemToGroup, Metrology::LOG_LEVEL_NORMAL); // Log
@@ -7567,9 +7546,9 @@ if (($sel_action == 'mkent') && ($ok_connexion || $klicty_permitpubcreatentity) 
     private function _actionRemoveItemFromGroup()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteGroup')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action remove item from group ' . $this->_actionRemoveItemFromGroup, Metrology::LOG_LEVEL_NORMAL); // Log
@@ -7607,7 +7586,7 @@ if (($sel_action == 'mkent') && ($ok_connexion || $klicty_permitpubcreatentity) 
         $meta = $this->_nebuleInstance->getCrypto()->hash(Application::APPLICATION_EXPIRATION_DATE);
         $instance = $this->_nebuleInstance->newObject($meta);
         // Si c'est l'entité du serveur, affiche tous les objets.
-        if ($id == $this->_nebuleInstance->getOption('defaultCurrentEntity')) {
+        if ($id == $this->_configuration->getOption('defaultCurrentEntity')) {
             $list = $instance->readLinksFilterFull('', '', 'l', '', '', $meta);
         } // Sinon affiche les objets de l'entité.
         else {

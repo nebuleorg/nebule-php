@@ -15,11 +15,24 @@ namespace Nebule\Library;
 
 class CryptoOpenssl implements CryptoInterface
 {
+    /**
+     * Instance de la bibliothèque nebule.
+     *
+     * @var nebule
+     */
     private $_nebuleInstance;
+
+    /**
+     * Instance de gestion de la configuration et des options.
+     *
+     * @var Configuration
+     */
+    private $_configuration;
 
     public function __construct(nebule $nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_genHashAlgorithmList();
         $this->_genSymetricAlgorithmList();
         $this->_genAsymetricAlgorithmList();
@@ -283,7 +296,7 @@ class CryptoOpenssl implements CryptoInterface
     {
         //$this->_hashAlgorithmList = array('sha128', 'sha256', 'sha512'); // Génère la liste des algorithmes disponibles. @todo A revoir...
         $this->_hashAlgorithmList = openssl_get_md_methods(true); // Génère la liste des algorithmes disponibles.
-        $this->_hashAlgorithmName = $this->_nebuleInstance->getOption('cryptoHashAlgorithm');
+        $this->_hashAlgorithmName = $this->_configuration->getOption('cryptoHashAlgorithm');
         $this->_genHashAlgorithmProperties();
     }
 
@@ -405,7 +418,7 @@ class CryptoOpenssl implements CryptoInterface
     {
         //$this->_symetricAlgorithmList = array('aes-256-cbc', 'aes-256-ctr'); // Génère la liste des algorithmes disponibles. A revoir...
         $this->_symetricAlgorithmList = openssl_get_cipher_methods(true); // Génère la liste des algorithmes disponibles.
-        $this->_symetricAlgorithmName = $this->_nebuleInstance->getOption('cryptoSymetricAlgorithm');
+        $this->_symetricAlgorithmName = $this->_configuration->getOption('cryptoSymetricAlgorithm');
         $this->_genSymetricAlgorithmProperties();
     }
 
@@ -628,7 +641,7 @@ EOD;
     {
         // Génère la liste des algorithmes disponibles. A revoir...
         $this->_asymetricAlgorithmList = array('rsa1024', 'rsa2048', 'rsa4096', 'ecdsa');        // A revoir...
-        $this->_asymetricAlgorithmName = $this->_nebuleInstance->getOption('cryptoAsymetricAlgorithm');
+        $this->_asymetricAlgorithmName = $this->_configuration->getOption('cryptoAsymetricAlgorithm');
         $this->_genAsymetricAlgorithmProperties();
         /*
 OPENSSL_KEYTYPE_RSA (entier)

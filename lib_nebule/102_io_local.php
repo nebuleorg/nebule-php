@@ -41,6 +41,13 @@ class ioLocal implements ioInterface
     private $_nebuleInstance;
 
     /**
+     * Instance de gestion de la configuration et des options.
+     *
+     * @var Configuration
+     */
+    private $_configuration;
+
+    /**
      * Le mode d'accès reconnu.
      * Doit être RO ou RW, ou vide au début.
      *
@@ -59,7 +66,7 @@ class ioLocal implements ioInterface
      * Construteur.
      * Prépare les dossiers.
      */
-    public function __construct()
+    public function __construct(nebule $_nebuleInstance)
     {
         global $nebuleInstance;
 
@@ -71,6 +78,7 @@ class ioLocal implements ioInterface
         }
 
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_maxLink = $nebuleInstance->getOption('ioReadMaxLinks');
         $this->_maxData = $nebuleInstance->getOption('ioReadMaxData');
     }
@@ -525,8 +533,8 @@ class ioLocal implements ioInterface
             || $object == ''
             || $link == ''
             || !$this->_checkFileLink($object, $link)
-            || !$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
+            || !$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
             || $this->getMode() != 'RW'
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object)
         ) {
@@ -547,7 +555,7 @@ class ioLocal implements ioInterface
             // Si le fichier de lien n'est pas présent, le crée.
             file_put_contents(
                 nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object,
-                'nebule/liens/version/' . $this->_nebuleInstance->getOption('defaultLinksVersion') . "\n");
+                'nebule/liens/version/' . $this->_configuration->getOption('defaultLinksVersion') . "\n");
         }
 
         if (file_put_contents(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object, $link . "\n", FILE_APPEND) !== false) {
@@ -565,8 +573,8 @@ class ioLocal implements ioInterface
     public function objectWrite(&$data, $localisation = '')
     {
         if ($localisation != ''
-            || !$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteObject')
+            || !$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteObject')
             || $this->getMode() != 'RW'
         ) {
             return false;
@@ -597,8 +605,8 @@ class ioLocal implements ioInterface
             || $object == '0'
             || $object == ''
             || !ctype_xdigit($object)
-            || !$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteObject')
+            || !$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteObject')
             || $this->getMode() != 'RW'
             || is_dir(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object)
         ) {
@@ -632,8 +640,8 @@ class ioLocal implements ioInterface
             || $object == ''
             || !$this->_checkFileLink($object, $link)
             || $link == ''
-            || !$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
+            || !$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
             || $this->getMode() != 'RW'
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object)
         ) {
@@ -661,8 +669,8 @@ class ioLocal implements ioInterface
             || $object == '0'
             || $object == ''
             || !ctype_xdigit($object)
-            || !$this->_nebuleInstance->getOption('permitWrite')
-            || !$this->_nebuleInstance->getOption('permitWriteLink')
+            || !$this->_configuration->getOption('permitWrite')
+            || !$this->_configuration->getOption('permitWriteLink')
             || $this->getMode() != 'RW'
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object)
         ) {

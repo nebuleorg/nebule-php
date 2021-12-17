@@ -138,6 +138,7 @@ class Application extends Applications
     public function __construct(nebule $nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
     }
 
 
@@ -372,17 +373,6 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         self::DEFAULT_ICON_IDOWNLOAD,
         self::DEFAULT_ICON_HELP,
         self::DEFAULT_ICON_WORLD);
-
-    /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
 
     /**
      * Initialisation des variables et instances interdépendantes.
@@ -1330,7 +1320,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         } ?>">
             <div class="header-left">
                 <?php
-                if ($this->_nebuleInstance->getOption('permitJavaScript')) {
+                if ($this->_configuration->getOption('permitJavaScript')) {
                     ?>
                     <img src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>" alt="[M]"
                          title="<?php echo $this->_traductionInstance->getTraduction('::menu'); ?>"
@@ -1731,7 +1721,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         if ($this->_applicationInstance->getCheckSecurityURL() == 'WARN') {
             $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityURLMessage());
         }
-        if (!$this->_nebuleInstance->getOption('permitWrite')) {
+        if (!$this->_configuration->getOption('permitWrite')) {
             $this->displayMessageWarning(':::warn_ServNotPermitWrite');
         }
         if ($this->_nebuleInstance->getFlushCache()) {
@@ -1770,7 +1760,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
      */
     private function _displayMetrology()
     {
-        if ($this->_applicationInstance->getOption('sylabeDisplayMetrology')) {
+        if ($this->_configuration->getOption('sylabeDisplayMetrology')) {
             ?>
 
             <?php $this->displayDivTextTitle(self::DEFAULT_ICON_IMLOG, 'Métrologie', 'Mesures quantitatives et temporelles.') ?>
@@ -1924,7 +1914,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'tooBig':
-                        if ($this->_applicationInstance->getOption('sylabeDisplayUnverifyLargeContent')) {
+                        if ($this->_configuration->getOption('sylabeDisplayUnverifyLargeContent')) {
                             $msg = $this->_traductionInstance->getTraduction(':::display:content:warningTooBig');
                             $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         } else {
@@ -1973,7 +1963,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     private function _displayDivOnlineHelp($help)
     {
         // Si authorisé à afficher l'aide.
-        if ($this->_applicationInstance->getOption('sylabeDisplayOnlineHelp')) {
+        if ($this->_configuration->getOption('sylabeDisplayOnlineHelp')) {
             // Prépare le texte à afficher dans la bulle.
             $txt = $this->_applicationInstance->getTraductionInstance()->getTraduction($help);
             $txt = str_replace('&', '&amp;', $txt);
@@ -2105,16 +2095,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
  */
 class Action extends Actions
 {
-    /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
+    // Tout par défaut.
 }
 
 
@@ -2203,17 +2184,6 @@ class ModuleManage extends Modules
 
 
     /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
-
-    /**
      * Configuration spécifique au module.
      *
      * @return void
@@ -2261,13 +2231,13 @@ class ModuleManage extends Modules
 
                 // Synchronisation des applications.
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[0]
-                    && $this->_nebuleInstance->getOption('permitWrite')
-                    && $this->_nebuleInstance->getOption('permitWriteObject')
-                    && $this->_nebuleInstance->getOption('permitWriteLink')
-                    && $this->_nebuleInstance->getOption('permitSynchronizeObject')
-                    && $this->_nebuleInstance->getOption('permitSynchronizeLink')
-                    && $this->_nebuleInstance->getOption('permitSynchronizeApplication')
-                    && ($this->_nebuleInstance->getOption('permitPublicSynchronizeApplication')
+                    && $this->_configuration->getOption('permitWrite')
+                    && $this->_configuration->getOption('permitWriteObject')
+                    && $this->_configuration->getOption('permitWriteLink')
+                    && $this->_configuration->getOption('permitSynchronizeObject')
+                    && $this->_configuration->getOption('permitSynchronizeLink')
+                    && $this->_configuration->getOption('permitSynchronizeApplication')
+                    && ($this->_configuration->getOption('permitPublicSynchronizeApplication')
                         || $this->_unlocked
                     )
                 ) {
@@ -2284,10 +2254,10 @@ class ModuleManage extends Modules
 
                 // Ajout d'un module.
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[0]
-                    && $this->_nebuleInstance->getOption('permitWrite')
-                    && $this->_nebuleInstance->getOption('permitWriteLink')
-                    && $this->_nebuleInstance->getOption('permitUploadLink')
-                    && $this->_nebuleInstance->getOption('permitWriteObject')
+                    && $this->_configuration->getOption('permitWrite')
+                    && $this->_configuration->getOption('permitWriteLink')
+                    && $this->_configuration->getOption('permitUploadLink')
+                    && $this->_configuration->getOption('permitWriteObject')
                     && $this->_unlocked
                 ) {
                     $hookArray[1]['name'] = '::sylabe:module:manage:create:createModule';
@@ -2299,14 +2269,14 @@ class ModuleManage extends Modules
 
                 // Synchronisation du module.
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]
-                    && $this->_nebuleInstance->getOption('permitWrite')
-                    && $this->_nebuleInstance->getOption('permitWriteObject')
-                    && $this->_nebuleInstance->getOption('permitWriteLink')
-                    && $this->_nebuleInstance->getOption('permitSynchronizeObject')
-                    && $this->_nebuleInstance->getOption('permitSynchronizeLink')
-                    && $this->_nebuleInstance->getOption('permitSynchronizeApplication')
+                    && $this->_configuration->getOption('permitWrite')
+                    && $this->_configuration->getOption('permitWriteObject')
+                    && $this->_configuration->getOption('permitWriteLink')
+                    && $this->_configuration->getOption('permitSynchronizeObject')
+                    && $this->_configuration->getOption('permitSynchronizeLink')
+                    && $this->_configuration->getOption('permitSynchronizeApplication')
                     && isset($listModulesRID[$this->getExtractCommandDisplayModule()])
-                    && ($this->_nebuleInstance->getOption('permitPublicSynchronizeApplication')
+                    && ($this->_configuration->getOption('permitPublicSynchronizeApplication')
                         || $this->_unlocked
                     )
                 ) {
@@ -2323,8 +2293,8 @@ class ModuleManage extends Modules
 
                 // Modification du code du module.
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]
-                    && $this->_nebuleInstance->getOption('permitWrite')
-                    && $this->_nebuleInstance->getOption('permitWriteLink')
+                    && $this->_configuration->getOption('permitWrite')
+                    && $this->_configuration->getOption('permitWriteLink')
                     && isset($listModulesRID[$this->getExtractCommandDisplayModule()])
                     && $this->_unlocked
                 ) {
@@ -2440,9 +2410,9 @@ class ModuleManage extends Modules
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la crétion de liens soit authorisé.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -2486,8 +2456,8 @@ class ModuleManage extends Modules
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la crétion de liens soit authorisé.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -2534,9 +2504,9 @@ class ModuleManage extends Modules
         global $bootstrapApplicationStartID;
 
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add module', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -2578,8 +2548,8 @@ class ModuleManage extends Modules
     private function _actionAddModuleCode()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add code ' . $this->_actionAddModuleID . ' to module ' . $this->_actionAddModuleRID, Metrology::LOG_LEVEL_NORMAL); // Log
@@ -2971,13 +2941,13 @@ class ModuleManage extends Modules
 
                 // Activation du module.
                 if ($this->_unlocked
-                    && $this->_nebuleInstance->getOption('permitWrite')
-                    && $this->_nebuleInstance->getOption('permitWriteLink')
+                    && $this->_configuration->getOption('permitWrite')
+                    && $this->_configuration->getOption('permitWriteLink')
                     && ($this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getCodeMaster()
                         || $this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getDefaultEntity()
-                        && $this->_nebuleInstance->getOption('permitInstanceEntityAsAuthority')
+                        && $this->_configuration->getOption('permitInstanceEntityAsAuthority')
                         || $this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getDefaultEntity()
-                        && $this->_nebuleInstance->getOption('permitDefaultEntityAsAuthority')
+                        && $this->_configuration->getOption('permitDefaultEntityAsAuthority')
                         || $this->_nebuleInstance->getCurrentEntity() == REFERENCE_DEV_ID
                         && (!REFERENCES_FOLLOW_ONLY_AUTORITY
                             && REFERENCE_DEV_ID != ''
@@ -3069,13 +3039,13 @@ class ModuleManage extends Modules
                 echo $this->_display->getDisplayInformation($instance->getDevelopper() . ' <br />' . $instance->getLicence(), $param);
 
                 // Synchronisation de l'application.
-                /*		if ( $this->_nebuleInstance->getOption('permitWrite')
-				&& $this->_nebuleInstance->getOption('permitWriteObject')
-				&& $this->_nebuleInstance->getOption('permitWriteLink')
-				&& $this->_nebuleInstance->getOption('permitSynchronizeObject')
-				&& $this->_nebuleInstance->getOption('permitSynchronizeLink')
-				&& $this->_nebuleInstance->getOption('permitSynchronizeApplication')
-				&& ( $this->_nebuleInstance->getOption('permitPublicSynchronizeApplication')
+                /*		if ( $this->_configuration->getOption('permitWrite')
+				&& $this->_configuration->getOption('permitWriteObject')
+				&& $this->_configuration->getOption('permitWriteLink')
+				&& $this->_configuration->getOption('permitSynchronizeObject')
+				&& $this->_configuration->getOption('permitSynchronizeLink')
+				&& $this->_configuration->getOption('permitSynchronizeApplication')
+				&& ( $this->_configuration->getOption('permitPublicSynchronizeApplication')
 						|| $this->_unlocked
 					)
 				&& $rid != '0'
@@ -3116,9 +3086,9 @@ class ModuleManage extends Modules
         echo $this->_display->getDisplayTitle('::sylabe:module:manage:create:createModule', $this->MODULE_REGISTERED_ICONS[0]);
 
         // Si autorisé à créer des liens.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteObject')
             && $this->_unlocked
         ) {
             ?>
@@ -3178,8 +3148,8 @@ class ModuleManage extends Modules
         }
 
         // Si autorisé à créer des liens.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
             && $rid != '0'
             && $this->_unlocked
         ) {
@@ -3389,17 +3359,6 @@ class ModuleHelp extends Modules
     protected $MODULE_APP_DESC_LIST = array('::sylabe:module:help:AppDesc1');
     protected $MODULE_APP_VIEW_LIST = array('hlp');
 
-
-    /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
 
     /**
      * Configuration spécifique au module.
@@ -3926,17 +3885,6 @@ class ModuleEntities extends Modules
 
 
     /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
-
-    /**
      * Configuration spécifique au module.
      *
      * @return void
@@ -4024,11 +3972,11 @@ class ModuleEntities extends Modules
                     . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
 
                 // Vérifie que la création soit authorisée.
-                if ($this->_nebuleInstance->getOption('permitWrite')
-                    && $this->_nebuleInstance->getOption('permitWriteObject')
-                    && $this->_nebuleInstance->getOption('permitWriteLink')
-                    && $this->_nebuleInstance->getOption('permitWriteEntity')
-                    && ($this->_unlocked || $this->_nebuleInstance->getOption('permitPublicCreateEntity'))
+                if ($this->_configuration->getOption('permitWrite')
+                    && $this->_configuration->getOption('permitWriteObject')
+                    && $this->_configuration->getOption('permitWriteLink')
+                    && $this->_configuration->getOption('permitWriteEntity')
+                    && ($this->_unlocked || $this->_configuration->getOption('permitPublicCreateEntity'))
                 ) {
                     // Créer une nouvelle entité.
                     $hookArray[6]['name'] = '::sylabe:module:entities:CreateEntity';
@@ -4040,11 +3988,11 @@ class ModuleEntities extends Modules
                 }
 
                 // Vérifie que la synchronisation soit authorisée.
-                if ($this->_nebuleInstance->getOption('permitWrite')
-                    && $this->_nebuleInstance->getOption('permitWriteObject')
-                    && $this->_nebuleInstance->getOption('permitWriteLink')
-                    && $this->_nebuleInstance->getOption('permitSynchronizeObject')
-                    && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+                if ($this->_configuration->getOption('permitWrite')
+                    && $this->_configuration->getOption('permitWriteObject')
+                    && $this->_configuration->getOption('permitWriteLink')
+                    && $this->_configuration->getOption('permitSynchronizeObject')
+                    && $this->_configuration->getOption('permitSynchronizeLink')
                     && $this->_unlocked
                 ) {
                     // Rechercher une entité.
@@ -4513,11 +4461,11 @@ class ModuleEntities extends Modules
 
         // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
         if ($arg !== false
-            && $this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
-            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+            && $this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitSynchronizeObject')
+            && $this->_configuration->getOption('permitSynchronizeLink')
             && $this->_unlocked
         ) {
             $this->_synchronizeEntity = true;
@@ -4533,11 +4481,11 @@ class ModuleEntities extends Modules
      */
     private function _actionSynchronizeEntity()
     {
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
-            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitSynchronizeObject')
+            && $this->_configuration->getOption('permitSynchronizeLink')
             && $this->_unlocked
             && $this->_synchronizeEntity
         ) {
@@ -4605,11 +4553,11 @@ class ModuleEntities extends Modules
 
     private function _actionSearchEntity()
     {
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
-            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitSynchronizeObject')
+            && $this->_configuration->getOption('permitSynchronizeLink')
             && $this->_unlocked
             && ($this->_searchEntityID != ''
                 || $this->_searchEntityURL != ''
@@ -5647,12 +5595,12 @@ class ModuleEntities extends Modules
         echo $this->_display->getDisplayTitle('::sylabe:module:entities:CreateEntity', $this->MODULE_REGISTERED_ICONS[5], false);
 
         // Vérifie que la création soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteEntity')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteEntity')
             && ($this->_unlocked
-                || $this->_nebuleInstance->getOption('permitPublicCreateEntity')
+                || $this->_configuration->getOption('permitPublicCreateEntity')
             )
         ) {
             ?>
@@ -5840,11 +5788,11 @@ class ModuleEntities extends Modules
             '::sylabe:module:entities:SearchEntityHelp');
 
         // Vérifie que la création soit authorisée.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitSynchronizeObject')
-            && $this->_nebuleInstance->getOption('permitSynchronizeLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitSynchronizeObject')
+            && $this->_configuration->getOption('permitSynchronizeLink')
             && $this->_unlocked
         ) {
             ?>
@@ -6489,17 +6437,6 @@ class ModuleGroups extends Modules
 
 
     /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
-
-    /**
      * Configuration spécifique au module.
      *
      * @return void
@@ -7119,10 +7056,10 @@ class ModuleGroups extends Modules
         echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:createGroup', $this->MODULE_REGISTERED_ICONS[1]);
 
         // Si autorisé à créer un groupe.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteGroup')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteGroup')
             && $this->_unlocked
         ) {
             ?>
@@ -7256,9 +7193,9 @@ class ModuleGroups extends Modules
 
                         // Supprimer le groupe.
                         if ($this->_unlocked
-                            && $this->_nebuleInstance->getOption('permitWrite')
-                            && $this->_nebuleInstance->getOption('permitWriteLink')
-                            && $this->_nebuleInstance->getOption('permitWriteGroup')
+                            && $this->_configuration->getOption('permitWrite')
+                            && $this->_configuration->getOption('permitWriteLink')
+                            && $this->_configuration->getOption('permitWriteGroup')
                         ) {
                             $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                             $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
@@ -7309,9 +7246,9 @@ class ModuleGroups extends Modules
 
                             // Supprimer le groupe.
                             if ($this->_unlocked
-                                && $this->_nebuleInstance->getOption('permitWrite')
-                                && $this->_nebuleInstance->getOption('permitWriteLink')
-                                && $this->_nebuleInstance->getOption('permitWriteGroup')
+                                && $this->_configuration->getOption('permitWrite')
+                                && $this->_configuration->getOption('permitWriteLink')
+                                && $this->_configuration->getOption('permitWriteGroup')
                             ) {
                                 $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                                 $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
@@ -7373,9 +7310,9 @@ class ModuleGroups extends Modules
 
                         // Supprimer le groupe.
                         if ($this->_unlocked
-                            && $this->_nebuleInstance->getOption('permitWrite')
-                            && $this->_nebuleInstance->getOption('permitWriteLink')
-                            && $this->_nebuleInstance->getOption('permitWriteGroup')
+                            && $this->_configuration->getOption('permitWrite')
+                            && $this->_configuration->getOption('permitWriteLink')
+                            && $this->_configuration->getOption('permitWriteGroup')
                         ) {
                             $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                             $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
@@ -7559,17 +7496,6 @@ class ModuleObjects extends Modules
 
 
     /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
-
-    /**
      * Configuration spécifique au module.
      *
      * @return void
@@ -7683,9 +7609,9 @@ class ModuleObjects extends Modules
 
                     // Si l'entité est déverrouillée.
                     if ($this->_unlocked
-                        && $this->_nebuleInstance->getOption('permitWrite')
-                        && $this->_nebuleInstance->getOption('permitWriteLink')
-                        && $this->_nebuleInstance->getOption('permitWriteObject')
+                        && $this->_configuration->getOption('permitWrite')
+                        && $this->_configuration->getOption('permitWriteLink')
+                        && $this->_configuration->getOption('permitWriteObject')
                     ) {
                         // Supprimer l'objet.
                         $hookArray[5]['name'] = '::sylabe:module:objects:ObjectDelete';
@@ -7885,9 +7811,9 @@ class ModuleObjects extends Modules
             case '::sylabe:module:objet:ProtectionButtons' :
                 // Si l'entité est déverrouillée.
                 if ($this->_unlocked
-                    && $this->_nebuleInstance->getOption('permitWrite')
-                    && $this->_nebuleInstance->getOption('permitWriteLink')
-                    && $this->_nebuleInstance->getOption('permitWriteObject')
+                    && $this->_configuration->getOption('permitWrite')
+                    && $this->_configuration->getOption('permitWriteLink')
+                    && $this->_configuration->getOption('permitWriteObject')
                     && $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected()
                 ) {
                     $hookArray[0]['name'] = '::sylabe:module:objects:ShareProtection';
@@ -8413,9 +8339,9 @@ class ModuleObjects extends Modules
 
             // N'affiche un message que si la modification est possible.
             if ($this->_unlocked
-                && $this->_nebuleInstance->getOption('permitWrite')
-                && $this->_nebuleInstance->getOption('permitWriteLink')
-                && $this->_nebuleInstance->getOption('permitWriteObject')
+                && $this->_configuration->getOption('permitWrite')
+                && $this->_configuration->getOption('permitWriteLink')
+                && $this->_configuration->getOption('permitWriteObject')
             ) {
                 // Vérifie la présence de l'objet.
                 if ($object->checkPresent()
@@ -8477,9 +8403,9 @@ class ModuleObjects extends Modules
             // Ajoute l'action de protection.
             if ($object->checkPresent()
                 && $this->_unlocked
-                && $this->_nebuleInstance->getOption('permitWrite')
-                && $this->_nebuleInstance->getOption('permitWriteLink')
-                && $this->_nebuleInstance->getOption('permitWriteObject')
+                && $this->_configuration->getOption('permitWrite')
+                && $this->_configuration->getOption('permitWriteLink')
+                && $this->_configuration->getOption('permitWriteObject')
                 && $this->_applicationInstance->getCurrentObject() != $this->_nebuleInstance->getCurrentEntity()
             ) {
                 $list[2]['param']['selfHookList'][0]['name'] = '::ProtectObject';
@@ -8612,9 +8538,9 @@ class ModuleObjects extends Modules
 
                     // Ajout l'action de déprotection ou de suppression de partage de protection.
                     if ($this->_unlocked
-                        && $this->_nebuleInstance->getOption('permitWrite')
-                        && $this->_nebuleInstance->getOption('permitWriteLink')
-                        && $this->_nebuleInstance->getOption('permitWriteObject')
+                        && $this->_configuration->getOption('permitWrite')
+                        && $this->_configuration->getOption('permitWriteLink')
+                        && $this->_configuration->getOption('permitWriteObject')
                     ) {
                         if ($entity == $this->_nebuleInstance->getCurrentEntity()) {
                             // Déprotéger l'objet.
@@ -8626,7 +8552,7 @@ class ModuleObjects extends Modules
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                                 . $this->_nebuleInstance->getActionTicket();
                         } elseif (!$this->_nebuleInstance->getIsRecoveryEntity($entity)
-                            || $this->_nebuleInstance->getOption('permitRecoveryRemoveEntity')
+                            || $this->_configuration->getOption('permitRecoveryRemoveEntity')
                         ) {
                             // Annuler le partage de protection. Non fiable...
                             $list[$i]['param']['selfHookList'][0]['name'] = '::RemoveShareProtect';
@@ -8693,9 +8619,9 @@ class ModuleObjects extends Modules
             echo $this->_display->getDisplayHookMenuList('::sylabe:module:objet:ProtectionShareButtons', 'medium');
 
             if ($this->_unlocked
-                && $this->_nebuleInstance->getOption('permitWrite')
-                && $this->_nebuleInstance->getOption('permitWriteLink')
-                && $this->_nebuleInstance->getOption('permitWriteObject')
+                && $this->_configuration->getOption('permitWrite')
+                && $this->_configuration->getOption('permitWriteLink')
+                && $this->_configuration->getOption('permitWriteObject')
             ) {
                 // Affiche le titre.
                 echo $this->_display->getDisplayTitle('::sylabe:module:objects:ShareObjectProtection', $this->MODULE_REGISTERED_ICONS[3], false);
@@ -8719,9 +8645,9 @@ class ModuleObjects extends Modules
         // Si l'objet est présent et protégé et si l'entité est déverrouillée
         if ($object->getMarkProtected()
             && $this->_unlocked
-            && $this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitWriteObject')
+            && $this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitWriteObject')
         ) {
             $listOkEntities = array();
             $listOkGroups = array();
@@ -9094,17 +9020,6 @@ class ModuleAdmin extends Modules
 
 
     /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
-
-    /**
      * Configuration spécifique au module.
      *
      * @return void
@@ -9313,7 +9228,7 @@ class ModuleAdmin extends Modules
             $i = 0;
             foreach ($listOptions as $optionName) {
                 // Extrait les propriétés de l'option.
-                $optionValue = $this->_applicationInstance->getOption($optionName);
+                $optionValue = $this->_configuration->getOption($optionName);
                 $optionID = $this->_nebuleInstance->getCrypto()->hash($optionName);
                 $optionValueDisplay = (string)$optionValue;
                 $optionType = $listOptionsType[$optionName];
@@ -9375,7 +9290,7 @@ class ModuleAdmin extends Modules
             $i = 0;
             foreach ($listOptions as $optionName) {
                 // Extrait les propriétés de l'option.
-                $optionValue = $this->_nebuleInstance->getOption($optionName);
+                $optionValue = $this->_configuration->getOption($optionName);
                 $optionID = $this->_nebuleInstance->getCrypto()->hash($optionName);
                 $optionValueDisplay = (string)$optionValue;
                 $optionType = $listOptionsType[$optionName];
@@ -9729,17 +9644,6 @@ class ModuleTranslateFRFR extends Modules
     protected $MODULE_APP_DESC_LIST = array();
     protected $MODULE_APP_VIEW_LIST = array();
 
-
-    /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
 
     /**
      * Configuration spécifique au module.
