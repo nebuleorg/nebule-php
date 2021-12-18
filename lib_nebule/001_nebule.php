@@ -267,8 +267,6 @@ class nebule
      */
     private $_social;
 
-    private $_ioDefaultPrefix = '';
-
     /**
      * Le tableau de mise en cache des liens.
      *
@@ -351,9 +349,9 @@ class nebule
      *
      * @var int
      */
-    private int $_sessionBufferLimit = 0;
+    private $_sessionBufferLimit = 0;
 
-    private bool $_flushCache = false;
+    private $_flushCache = false;
 
 
 
@@ -382,7 +380,6 @@ class nebule
         $this->_io = new io($this->_nebuleInstance);
         $this->_crypto = new CryptoOpenssl($this->_nebuleInstance);
         $this->_social = new Social($this->_nebuleInstance);
-        $this->_ioDefaultPrefix = $this->_io->getDefaultLocalisation();
 
         $this->_metrology->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL); // Log
 
@@ -458,15 +455,15 @@ class nebule
 
     public function __sleep()
     {
-        // @todo
-        return array('_ioDefaultPrefix',
+        // TODO
+        /*return array(
             // '_flushCache',
             //	'_optionCheckedWriteableIO',
             //	'_referenceObjectConversation',
             //	'_referenceObjectConversationClosed',
             //	'_referenceObjectConversationProtected',
             //	'_referenceObjectConversationObfuscated',
-        );
+        );*/
     }
 
     public function __wakeup()
@@ -491,7 +488,6 @@ class nebule
         $this->_io = new io($this->_nebuleInstance);
         $this->_crypto = new CryptoOpenssl($this->_nebuleInstance);
         $this->_social = new Social($this->_nebuleInstance);
-        $this->_ioDefaultPrefix = $this->_io->getDefaultLocalisation();
 
         $this->_metrology->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL); // Log
 
@@ -549,7 +545,7 @@ class nebule
      *
      * @var node|null
      */
-    private node|null $_subordinationEntity = null;
+    private $_subordinationEntity = null;
 
     /**
      * Extrait l'entité de subordination des options si présente.
@@ -1070,7 +1066,7 @@ class nebule
      * @param boolean $obfuscated
      * @return Node
      */
-    public function newObject(string $id, bool $protect, bool $obfuscated): Node
+    public function newObject(string $id, bool $protect = false, bool $obfuscated = false): Node
     {
         if ($id == '')
             $id = '0';
@@ -2154,14 +2150,14 @@ class nebule
      *
      * @var string $_defaultEntity
      */
-    private string $_defaultEntity = '';
+    private $_defaultEntity = '';
 
     /**
      * Instance de l'entité par défaut.
      *
      * @var Entity|null $_defaultEntityInstance
      */
-    private Entity|null $_defaultEntityInstance = null;
+    private $_defaultEntityInstance = null;
 
     /**
      * Recherche l'entité par défaut.
