@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
+use Nebule\Library\nebule;
+use Nebule\Library\Node;
 
 /**
  * ------------------------------------------------------------------------------------------
@@ -23,7 +25,7 @@ class Localisation extends Node
 {
     private $_localisation = '', $_protocol = '', $_communication, $_ioDefaultPrefix = '';
 
-    public function __construct(nebule $nebuleInstance, $id, $localisation = '')
+    public function __construct(nebule $nebuleInstance, string $id, string $localisation = '')
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();

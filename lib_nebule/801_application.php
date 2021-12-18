@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
+use Nebule\Library\nebule;
 
 /**
  * Classe de référence des applications.
@@ -70,7 +71,7 @@ abstract class Applications
     /**
      * Instance de traduction linguistique de l'application.
      *
-     * @var Traduction
+     * @var Traductions
      */
     protected $_traductionInstance;
 

@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
+use Nebule\Library\nebule;
+use Nebule\Library\Node;
 
 /**
  * ------------------------------------------------------------------------------------------
@@ -64,7 +66,6 @@ class Entity extends Node
 
     /**
      * Constructeur.
-     *
      * Toujours transmettre l'instance de la librairie nebule.
      * Si l'entité existe, juste préciser l'ID de celle-ci.
      * Si c'est une nouvelle entité à créer, mettre l'ID à 'new'.
@@ -72,7 +73,7 @@ class Entity extends Node
      * @param nebule $nebuleInstance
      * @param string $id
      */
-    public function __construct(nebule $nebuleInstance, $id)
+    public function __construct(nebule $nebuleInstance, string $id)
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();

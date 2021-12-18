@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
+use Nebule\Library\nebule;
 
 /**
  * Classe Modules
@@ -84,7 +85,7 @@ abstract class Modules
      *
      * @var Configuration
      */
-    private $_configuration;
+    protected $_configuration;
 
     /**
      * Instance de la classe d'affichage.

@@ -1,6 +1,12 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Option;
+use Nebule\Library\nebule;
+use Nebule\Library\Actions;
+use Nebule\Library\Applications;
+use Nebule\Library\Displays;
+//use Nebule\Library\Modules;
+use Nebule\Library\Traductions;
 
 /*
 ------------------------------------------------------------------------------------------
@@ -16,6 +22,7 @@ namespace Nebule\Application\Option;
 
 ------------------------------------------------------------------------------------------
 */
+
 
 
 /**
@@ -34,7 +41,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020210510';
+    const APPLICATION_VERSION = '020211218';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2021';
     const APPLICATION_WEBSITE = 'www.nebule.org';
 
@@ -552,7 +559,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     color: #454545;
                     margin: 2px;
                     border: 0;
-                    box-shadow: 0;
+                    box-shadow: unset;
                     padding: 1px;
                     background-origin: border-box;
                 }
@@ -829,7 +836,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
          */
         $nebuleInstance = $this->_nebuleInstance;
 
-        $refAuthority = $nebuleInstance->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
+        $refAuthority = $nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
 
         // Titre
         echo $this->getDisplayTitle('Primary local authorities');
@@ -1145,7 +1152,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     $optionDefaultDisplay = (string)$optionDefaultValue;
                     $optionCriticality = $listOptionsCriticality[$optionName];
                     $optionDescription = $listOptionsDescription[$optionName];
-                    $optionLocked = ($nebuleInstance->getOptionFromEnvironment($optionName) !== null);
+                    $optionLocked = ($this->_configuration->getOptionFromEnvironment($optionName) !== null);
 
                     // Prépare l'affichage du status de verrouillage ou de lecture seule.
                     if ($optionLocked) {
@@ -1379,21 +1386,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     $signersList[$hashTarget] = $link->getHashSigner();
                 }
             }
-
-            // Liste les applications reconnues par l'id de développement, si autorité locale et pas en mode de récupération.
-            if (!REFERENCES_FOLLOW_ONLY_AUTORITY
-                && REFERENCE_DEV_ID != ''
-                && REFERENCE_DEV_ID != '0'
-                && !$nebuleInstance->getModeRescue()
-            ) {
-                $linksList = $instanceAppsID->readLinksFilterFull(REFERENCE_DEV_ID, '', 'f', $refAppsID, '', $refAppsID);
-                foreach ($linksList as $link) {
-                    $hashTarget = $link->getHashTarget();
-                    $applicationsList[$hashTarget] = $hashTarget;
-                    $signersList[$hashTarget] = $link->getHashSigner();
-                }
-            }
-            unset($refAppsID, $linksList, $link, $hashTarget, $instanceAppsID);
+            unset($linksList);
 
             // Lister les applications.
             $application = '';
@@ -1426,7 +1419,6 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     }
                     unset($signer, $authority);
                 }
-                unset($refNoPreload);
 
                 // Recherche si l'application est activée par l'entité instance de serveur.
                 // Ou si l'application est en liste blanche.
@@ -2060,7 +2052,7 @@ class Action extends Actions
             $argValue = trim(filter_input(INPUT_GET, self::COMMAND_OPTION_VALUE, FILTER_SANITIZE_STRING));
 
             // Récupère les noms des options connues et vérifie que l'option demandée en fait partie.
-            $listOptions = $this->_nebuleInstance->getListOptions();
+            $listOptions = $this->_configuration->getListOptions();
             $okOption = false;
             foreach ($listOptions as $option) {
                 if ($argName == $option) {
@@ -2098,7 +2090,7 @@ class Action extends Actions
             $this->_metrology->addLog('Action change option ' . $this->_actionOptionName . ' = ' . $this->_actionOptionValue, Metrology::LOG_LEVEL_DEBUG); // Log
 
             // Vérifie que l'option est du bon type.
-            $listOptionsType = $this->_nebuleInstance->getListOptionsType();
+            $listOptionsType = $this->_configuration->getListOptionsType();
             $okOption = false;
             $value = null;
             $type = $listOptionsType[$this->_actionOptionName];
@@ -2126,7 +2118,7 @@ class Action extends Actions
                 && $value !== null
             ) {
                 // Change l'option.
-                $this->_nebuleInstance->setOption($this->_actionOptionName, $value);
+                $this->_configuration->setOptionEnvironment($this->_actionOptionName, $value);
 
                 // Affichage des actions.
                 $this->_display->displayInlineAllActions();

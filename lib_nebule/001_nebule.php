@@ -221,7 +221,7 @@ class nebule
     /**
      * Liste des objets à usage réservé.
      */
-    static public $RESERVED_OBJECTS_LIST = array(
+    static private array $RESERVED_OBJECTS_LIST = array(
         'nebule/objet',
         'nebule/objet/hash',
         'nebule/objet/homomorphe',
@@ -305,42 +305,42 @@ class nebule
      *
      * @var nebule
      */
-    private $_nebuleInstance;
+    private nebule $_nebuleInstance;
 
     /**
      * Instance de gestion de la métrologie, des journaux et des statistiques internes.
      *
      * @var Metrology
      */
-    private $_metrology;
+    private Metrology $_metrology;
 
     /**
      * Instance de gestion de la configuration et des options.
      *
      * @var Configuration
      */
-    private $_configuration;
+    private Configuration $_configuration;
 
     /**
      * Instance des entrées/sorties.
      *
      * @var ioInterface
      */
-    private $_io;
+    private ioInterface $_io;
 
     /**
      * Instance de gestion de la cryptographie.
      *
      * @var CryptoInterface
      */
-    private $_crypto;
+    private CryptoInterface $_crypto;
 
     /**
      * Instance de gestion des relations sociales des liens.
      *
      * @var SocialInterface
      */
-    private $_social;
+    private SocialInterface $_social;
 
     private $_ioDefaultPrefix = '';
 
@@ -349,95 +349,87 @@ class nebule
      *
      * @var array
      */
-    private $_cacheLinks = array();
+    private array $_cacheLinks = array();
 
     /**
      * Le tableau de mise en cache des objets.
      *
      * @var array
      */
-    private $_cacheObjects = array();
+    private array $_cacheObjects = array();
 
     /**
      * Le tableau de mise en cache des entités.
      *
      * @var array
      */
-    private $_cacheEntities = array();
+    private array $_cacheEntities = array();
 
     /**
      * Le tableau de mise en cache des groupes.
      *
      * @var array
      */
-    private $_cacheGroups = array();
+    private array $_cacheGroups = array();
 
     /**
      * Le tableau de mise en cache des conversations.
      *
      * @var array
      */
-    private $_cacheConversations = array();
+    private array $_cacheConversations = array();
 
     /**
      * Le tableau de mise en cache des monnaies.
      *
      * @var array
      */
-    private $_cacheCurrencies = array();
+    private array $_cacheCurrencies = array();
 
     /**
      * Le tableau de mise en cache des sacs de jetons.
      *
      * @var array
      */
-    private $_cacheTokenPools = array();
+    private array $_cacheTokenPools = array();
 
     /**
      * Le tableau de mise en cache des jetons.
      *
      * @var array
      */
-    private $_cacheTokens = array();
+    private array $_cacheTokens = array();
 
     /**
      * Le tableau de mise en cache des portefeuille.
      *
      * @var array
      */
-    private $_cacheWallets = array();
+    private array $_cacheWallets = array();
 
     /**
      * Le tableau de mise en cache des transactions.
      *
      * @var array
      */
-    private $_cacheTransactions = array();
+    private array $_cacheTransactions = array();
 
     /**
      * Le tableau de mémorisation de la date de mise en cache des objets/entités/groupes/conversations/liens.
      *
      * @var array
      */
-    private $_cacheDateInsertion = array();
+    private array $_cacheDateInsertion = array();
 
     /**
      * Taille du cache.
      *
-     * @var double
+     * @var int
      */
-    private $_sessionBufferLimit = self::DEFAULT_SESSION_BUFFER_SIZE;
+    private int $_sessionBufferLimit = 0;
 
-    private $_flushCache = false;
+    private bool $_flushCache = false;
 
-    /**
-     * Marque la fin de l'initialisation.
-     * C'est nécessaire pour certaines parties qui nécessitent l'accès à la journalisation mais trop tôt.
-     * C'est le cas dans la lecture des options dans les liens.
-     *
-     * @var boolean
-     */
-    private $_permitOptionsByLinks = false;
 
 
     /**
@@ -470,7 +462,7 @@ class nebule
         $this->_metrology->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL); // Log
 
         // Activation des options par liens. Vide le cache.
-        $this->_permitOptionsByLinks = true;
+        $this->_configuration->setPermitOptionsByLinks(true);
         $this->_configuration->flushCache();
 
         // Détermine si la session utilisateur doit être effacée.
@@ -486,7 +478,7 @@ class nebule
         // Vérifie les options importantes.
         $this->_getsubordinationEntity();
         $this->_checkWriteableIO();
-        $this->_checkReadOnlyOptions();
+        $this->_configuration->checkReadOnlyOptions();
 
         // Recherche les entités.
         $this->_findPuppetmaster();
@@ -543,7 +535,7 @@ class nebule
     {
         // @todo
         return array('_ioDefaultPrefix',
-            '_flushCache',
+            // '_flushCache',
             //	'_optionCheckedWriteableIO',
             //	'_referenceObjectConversation',
             //	'_referenceObjectConversationClosed',
@@ -579,7 +571,7 @@ class nebule
         $this->_metrology->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL); // Log
 
         // Activation des options par liens. Vide le cache.
-        $this->_permitOptionsByLinks = true;
+        $this->_configuration->setPermitOptionsByLinks(true);
         $this->_configuration->flushCache();
 
         // Détermine si la session utilisateur doit être effacée.
@@ -595,7 +587,6 @@ class nebule
         // Vérifie les options importantes.
         $this->_getsubordinationEntity();
         $this->_checkWriteableIO();
-        //$this->_checkReadOnlyOptions();
 
         // Recherche les entités.
         $this->_findPuppetmaster();
@@ -1214,129 +1205,12 @@ class nebule
     );
 
     /**
-     * Donne la liste des noms des options disponibles.
-     *
-     * @return array:string
-     */
-    public static function getListOptions()
-    {
-        return self::$_listOptions;
-    }
-
-    /**
-     * Donne la liste de catégories d'options.
-     *
-     * @return array:string
-     */
-    public static function getListCategoriesOptions()
-    {
-        return self::$_listCategoriesOptions;
-    }
-
-    /**
-     * Donne la liste de catégorisation des options disponibles.
-     *
-     * @return array:string
-     */
-    public static function getListOptionsCategory()
-    {
-        return self::$_listOptionsCategory;
-    }
-
-    /**
-     * Donne la liste des types des options disponibles.
-     *
-     * @return array:string
-     */
-    public static function getListOptionsType()
-    {
-        return self::$_listOptionsType;
-    }
-
-    /**
-     * Donne la liste de capacité d'écriture des options disponibles.
-     *
-     * @return array:boolean
-     */
-    public static function getListOptionsWritable()
-    {
-        return self::$_listOptionsWritable;
-    }
-
-    /**
-     * Donne la liste des valeurs par défaut des options disponibles.
-     *
-     * @return array:string|boolean|integer
-     */
-    public static function getListOptionsDefaultValue()
-    {
-        return self::$_listOptionsDefaultValue;
-    }
-
-    /**
-     * Donne la liste de criticité des options disponibles.
-     *
-     * @return array:string
-     */
-    public static function getListOptionsCriticality()
-    {
-        return self::$_listOptionsCriticality;
-    }
-
-    /**
-     * Donne la liste des descriptions des options disponibles.
-     *
-     * @return array:string
-     */
-    public static function getListOptionsDescription()
-    {
-        return self::$_listOptionsDescription;
-    }
-
-    /**
-     * Le cache des options déjà lues.
-     *
-     * @var array
-     */
-    private $_optionCache = array();
-
-    /**
-     * Vérifie l'état des options importantes.
-     * Ajoute aux logs en cas de divergeance à la valeur par défaut.
-     *
-     * @return void
-     */
-    private function _checkReadOnlyOptions()
-    {
-        $this->_metrology->addLog('Check options', Metrology::LOG_LEVEL_DEBUG); // Log
-
-        foreach (self::$_listOptions as $option) {
-            if (self::$_listOptionsCriticality[$option] == 'critical') {
-                $value = $this->_configuration->getOption($option);
-                if ($value != self::$_listOptionsDefaultValue[$option]) {
-                    if (is_bool($value)) {
-                        if ($value) {
-                            $value = 'true';
-                        } else {
-                            $value = 'false';
-                        }
-                    }
-                    if (is_int($value)) {
-                        $value = (string)$value;
-                    }
-                    $this->_metrology->addLog('Warning:critical_option ' . $option . '=' . $value, Metrology::LOG_LEVEL_NORMAL); // Log
-                }
-            }
-        }
-    }
-
-    /**
      * Entité de subordination des options de l'entité en cours.
      * Par défaut vide.
      *
      * @var node|null
      */
-    private $_subordinationEntity = null;
+    private node|null $_subordinationEntity = null;
 
     /**
      * Extrait l'entité de subordination des options si présente.
@@ -1360,7 +1234,7 @@ class nebule
      *
      * @return node
      */
-    public function getSubordinationEntity()
+    public function getSubordinationEntity(): node
     {
         return $this->_subordinationEntity;
     }
@@ -1370,10 +1244,10 @@ class nebule
      * Force les options permitWrite permitWriteObject et permitWriteLink au besoin.
      *
      * @return void
-     * @todo ne fonctionne pas correctement mais non blocant.
+     * @todo ne fonctionne pas correctement mais non bloquant.
      *
      */
-    private function _checkWriteableIO()
+    private function _checkWriteableIO(): void
     {
         if ($this->_io->getMode() == 'RW') {
             if (!$this->_io->checkObjectsWrite())
@@ -1386,12 +1260,10 @@ class nebule
             $this->_configuration->lockWriteLink();
         }
 
-        if (!$this->_configuration->getOption('permitWriteObject')) {
+        if (!$this->_configuration->getOption('permitWriteObject'))
             $this->_metrology->addLog('objects ro not rw', Metrology::LOG_LEVEL_NORMAL); // Log
-        }
-        if (!$this->_configuration->getOption('permitWriteLink')) {
+        if (!$this->_configuration->getOption('permitWriteLink'))
             $this->_metrology->addLog('links ro not rw', Metrology::LOG_LEVEL_NORMAL); // Log
-        }
     }
 
 
@@ -1408,7 +1280,7 @@ class nebule
      * @param string $name
      * @return mixed
      */
-    public function getSessionStore($name)
+    public function getSessionStore(string $name): mixed
     {
         session_start();
 
@@ -1431,24 +1303,20 @@ class nebule
      * Ecrit la valeur d'une option dans la session php.
      *
      * @param string $name
-     * @param mixed $content
+     * @param mixed  $content
      * @return boolean
      */
-    public function setSessionStore($name, $content)
+    public function setSessionStore(string $name, mixed $content): bool
     {
         if ($name == ''
             || $this->_flushCache
             || !$this->_configuration->getOption('permitSessionOptions')
-        ) {
+        )
             return false;
-        }
 
         session_start();
-
         $_SESSION['Option'][$name] = $content;
-
         session_write_close();
-
         return true;
     }
 
@@ -1457,16 +1325,12 @@ class nebule
      *
      * @return boolean
      */
-    private function _flushSessionStore()
+    private function _flushSessionStore(): bool
     {
         $this->_metrology->addLog('Flush session store', Metrology::LOG_LEVEL_NORMAL);
-
         session_start();
-
         unset($_SESSION['Option']);
-
         session_write_close();
-
         return true;
     }
 
@@ -1477,7 +1341,7 @@ class nebule
      * @param string $name
      * @return mixed
      */
-    private function _getSessionBuffer($name)
+    private function _getSessionBuffer(string $name): mixed
     {
         session_start();
 
@@ -1487,13 +1351,11 @@ class nebule
             || !isset($_SESSION['Buffer'][$name])
         ) {
             session_write_close();
-
             return false;
         }
+
         $val = unserialize($_SESSION['Buffer'][$name]);
-
         session_write_close();
-
         return $val;
     }
 
@@ -1502,24 +1364,20 @@ class nebule
      * Le nombre de contenus mémorisés n'est pas comptabilisé par cette fonction.
      *
      * @param string $name
-     * @param mixed $content
+     * @param mixed  $content
      * @return boolean
      */
-    private function _setSessionBuffer($name, $content)
+    private function _setSessionBuffer(string $name, mixed $content): bool
     {
         if ($name == ''
             || $this->_flushCache
             || !$this->_configuration->getOption('permitSessionBuffer')
-        ) {
+        )
             return false;
-        }
 
         session_start();
-
         $_SESSION['Buffer'][$name] = serialize($content);
-
         session_write_close();
-
         return true;
     }
 
@@ -1531,24 +1389,18 @@ class nebule
      * @param string $name
      * @return boolean
      */
-    public function unsetSessionBuffer($name)
+    public function unsetSessionBuffer(string $name): bool
     {
-        return false; // Fonction désactivée !
-        if ($name == ''
+/*        if ($name == ''
             || $this->_flushCache
             || !$this->_configuration->getOption('permitSessionBuffer')
-        ) {
+        )
             return false;
-        }
 
         session_start();
-
-        if (isset($_SESSION['Buffer'][$name])) {
+        if (isset($_SESSION['Buffer'][$name]))
             unset($_SESSION['Buffer'][$name]);
-        }
-
-        session_write_close();
-
+        session_write_close();*/
         return true;
     }
 
@@ -1557,24 +1409,22 @@ class nebule
      *
      * @return void
      */
-    private function _readCacheOnSessionBuffer()
+    private function _readCacheOnSessionBuffer(): void
     {
         if ($this->_flushCache
             || !$this->_configuration->getOption('permitSessionBuffer')
-        ) {
+        )
             return;
-        }
 
         session_start();
 
         // Extrait les objets/liens du cache.
         $list = array();
-        if (isset($_SESSION['Buffer'])) {
+        if (isset($_SESSION['Buffer']))
             $list = $_SESSION['Buffer'];
-        }
         if (sizeof($list) > 0) {
             foreach ($list as $string) {
-                $instance = unserialize($string);
+                $instance = unserialize($string); // TODO à simplifier par rapport à la class parente
                 if (is_a($instance, 'Transaction')) {
                     $id = $instance->getFullLink();
                     $this->_cacheTransactions[$id] = $instance;
@@ -1610,13 +1460,11 @@ class nebule
 
             // Extrait les objets/liens du cache.
             $list = array();
-            if (isset($_SESSION['BufferDateInsertion'])) {
+            if (isset($_SESSION['BufferDateInsertion']))
                 $list = $_SESSION['BufferDateInsertion'];
-            }
             if (sizeof($list) > 0) {
-                foreach ($list as $id => $string) {
+                foreach ($list as $id => $string)
                     $this->_cacheDateInsertion[$id] = $string;
-                }
             }
         }
 
@@ -1632,7 +1480,7 @@ class nebule
      *
      * @return void
      */
-    private function _saveCurrentsObjectsOnSessionBuffer()
+    private function _saveCurrentsObjectsOnSessionBuffer(): void
     {
         $this->setSessionStore('nebuleHostEntityInstance', serialize($this->_instanceEntityInstance));
         $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
@@ -1643,20 +1491,15 @@ class nebule
      *
      * @return void
      */
-    private function _saveCacheOnSessionBuffer()
+    private function _saveCacheOnSessionBuffer(): void
     {
         if ($this->_flushCache
             || !$this->_configuration->getOption('permitSessionBuffer')
-        ) {
+        )
             return;
-        }
 
-        // Vérifie si le cache n'est pas trop gros. Le vide au besoin.
         $this->_getCacheNeedCleaning();
-
         session_start();
-
-        // Vide le cache de la session PHP.
         $_SESSION['Buffer'] = array();
 
         // Mémorise les objets/liens.
@@ -1729,7 +1572,7 @@ class nebule
      *
      * @return boolean
      */
-    private function _flushBufferStore()
+    private function _flushBufferStore(): bool
     {
         $this->_metrology->addLog('Flush buffer store', Metrology::LOG_LEVEL_NORMAL);
         session_start();
@@ -1742,22 +1585,16 @@ class nebule
     /**
      * Nettoye le cache du nombre d'entrés demandées.
      *
-     * @020200315
-     * @param number $c
+     * @param int $c
+     * @return void
      */
-    private function _cleanCacheOverflow($c = 0)
+    private function _cleanCacheOverflow(int $c = 0): void
     {
-        // Quitte tout de suite si le cache n'est pas acctivé.
-        if (!$this->_configuration->getOption('permitSessionBuffer')) {
-            return;
-        }
-
-        // Quitte si le nombre est nul ou négatif.
-        if (!is_numeric($c)
+        if (!$this->_configuration->getOption('permitSessionBuffer')
+            || !is_numeric($c)
             || $c <= 0
-        ) {
+        )
             return;
-        }
 
         if ($c > 100)
             $this->_metrology->addLog(__METHOD__ . ' cache need flush ' . $c . '/' . sizeof($this->_cacheDateInsertion), Metrology::LOG_LEVEL_NORMAL); // Log
@@ -1766,9 +1603,8 @@ class nebule
         asort($this->_cacheDateInsertion);
         $i = 1;
         foreach ($this->_cacheDateInsertion as $id => $item) {
-            if ($i > $c) {
+            if ($i > $c)
                 break;
-            }
 
             // Nettoie le temps.
             unset($this->_cacheDateInsertion[$id]);
@@ -1843,9 +1679,9 @@ class nebule
      * Retourne la taille totale de tous les caches.
      * Cette taille ne doit pas exéder la taille définie dans l'option sessionBufferSize.
      *
-     * @return number
+     * @return int
      */
-    private function _getAllCachesSize()
+    private function _getAllCachesSize(): int
     {
         return sizeof($this->_cacheObjects) + sizeof($this->_cacheLinks) + sizeof($this->_cacheEntities) + sizeof($this->_cacheGroups) + sizeof($this->_cacheConversations) + sizeof($this->_cacheCurrencies) + sizeof($this->_cacheTokenPools) + sizeof($this->_cacheTokens) + sizeof($this->_cacheWallets) + sizeof($this->_cacheTransactions);
     }
@@ -1857,18 +1693,15 @@ class nebule
      *
      * @return void
      */
-    private function _getCacheNeedOnePlace()
+    private function _getCacheNeedOnePlace(): void
     {
-        // Quitte tout de suite si le cache n'est pas acctivé.
-        if (!$this->_configuration->getOption('permitSessionBuffer')) {
+        if (!$this->_configuration->getOption('permitSessionBuffer'))
             return;
-        }
 
         $size = $this->_getAllCachesSize();
         $limit = $this->_sessionBufferLimit;
-        if ($size >= $limit) {
+        if ($size >= $limit)
             $this->_cleanCacheOverflow($size - $limit + 1);
-        }
     }
 
     /**
@@ -1878,36 +1711,30 @@ class nebule
      *
      * @return void
      */
-    private function _getCacheNeedCleaning()
+    private function _getCacheNeedCleaning(): void
     {
-        // Quitte tout de suite si le cache n'est pas acctivé.
-        if (!$this->_configuration->getOption('permitSessionBuffer')) {
+        if (!$this->_configuration->getOption('permitSessionBuffer'))
             return;
-        }
 
         $size = $this->_getAllCachesSize();
         $limit = $this->_sessionBufferLimit;
-        if ($size >= $limit) {
+        if ($size >= $limit)
             $this->_cleanCacheOverflow($size - $limit);
-        }
     }
 
 
     /**
      * Nouvelle instance d'un objet.
      *
-     * @param string $id
+     * @param string  $id
      * @param boolean $protect
      * @param boolean $obfuscated
      * @return Node
      */
-    public function newObject($id, $protect = false, $obfuscated = false)
+    public function newObject(string $id, bool $protect, bool $obfuscated): Node
     {
-        if (!is_string($id)
-            || $id == ''
-        ) {
+        if ($id == '')
             $id = '0';
-        }
 
         if (!$this->_flushCache
             && isset($this->_cacheObjects[$id])
@@ -1939,11 +1766,10 @@ class nebule
      * @param string $id
      * @return boolean
      */
-    public function removeCacheObject($id)
+    public function removeCacheObject(string $id): bool
     {
-        if (isset($this->_cacheObjects[$id])) {
+        if (isset($this->_cacheObjects[$id]))
             unset($this->_cacheObjects[$id], $this->_cacheDateInsertion[$id]);
-        }
         return true;
     }
 
@@ -1952,7 +1778,7 @@ class nebule
      *
      * @return integer
      */
-    public function getCacheObjectSize()
+    public function getCacheObjectSize(): int
     {
         return sizeof($this->_cacheObjects);
     }
@@ -1962,14 +1788,12 @@ class nebule
      * Nouvelle instance d'un lien.
      *
      * @param string $link
-     * @param string $version
      * @return Link
      */
-    public function newLink($link, $version = 'UNKNOWN')
+    public function newLink(string $link): Link
     {
-        if ($link == '') {
-            return false;
-        }
+        if ($link == '')
+            $link = 'invalid';
 
         if (!$this->_flushCache
             && isset($this->_cacheLinks[$link])
@@ -1982,7 +1806,7 @@ class nebule
             $this->_getCacheNeedOnePlace();
 
             // Génère une instance.
-            $instance = new Link($this, $link, $version);
+            $instance = new Link($this, $link);
 
             // Si le cache est activé.
             if ($this->_configuration->getOption('permitSessionBuffer')) {
@@ -2001,11 +1825,10 @@ class nebule
      * @param string $link
      * @return boolean
      */
-    public function removeCacheLink($link)
+    public function removeCacheLink(string $link): bool
     {
-        if (isset($this->_cacheLinks[$link])) {
+        if (isset($this->_cacheLinks[$link]))
             unset($this->_cacheLinks[$link], $this->_cacheDateInsertion[$link]);
-        }
         return true;
     }
 
@@ -2014,7 +1837,7 @@ class nebule
      *
      * @return integer
      */
-    public function getCacheLinkSize()
+    public function getCacheLinkSize(): int
     {
         return sizeof($this->_cacheLinks);
     }
@@ -2026,13 +1849,12 @@ class nebule
      * @param string $id
      * @return Entity
      */
-    public function newEntity($id)
+    public function newEntity(string $id): Entity
     {
         if (!is_string($id)
             || $id == ''
-        ) {
+        )
             $id = '0';
-        }
 
         if (!$this->_flushCache
             && isset($this->_cacheEntities[$id])
@@ -2064,11 +1886,10 @@ class nebule
      * @param string $id
      * @return boolean
      */
-    public function removeCacheEntity($id)
+    public function removeCacheEntity(string $id): bool
     {
-        if (isset($this->_cacheEntities[$id])) {
+        if (isset($this->_cacheEntities[$id]))
             unset($this->_cacheEntities[$id], $this->_cacheDateInsertion[$id]);
-        }
         return true;
     }
 
@@ -2077,7 +1898,7 @@ class nebule
      *
      * @return integer
      */
-    public function getCacheEntitySize()
+    public function getCacheEntitySize(): int
     {
         return sizeof($this->_cacheEntities);
     }
@@ -2089,13 +1910,10 @@ class nebule
      * @param string $id
      * @return Group
      */
-    public function newGroup($id)
+    public function newGroup(string $id): Group
     {
-        if (!is_string($id)
-            || $id == ''
-        ) {
+        if ($id == '')
             $id = '0';
-        }
 
         if (!$this->_flushCache
             && isset($this->_cacheGroups[$id])
@@ -2127,11 +1945,10 @@ class nebule
      * @param string $id
      * @return boolean
      */
-    public function removeCacheGroup($id)
+    public function removeCacheGroup(string $id): bool
     {
-        if (isset($this->_cacheGroups[$id])) {
+        if (isset($this->_cacheGroups[$id]))
             unset($this->_cacheGroups[$id], $this->_cacheDateInsertion[$id]);
-        }
         return true;
     }
 
@@ -2140,7 +1957,7 @@ class nebule
      *
      * @return integer
      */
-    public function getCacheGroupSize()
+    public function getCacheGroupSize(): int
     {
         return sizeof($this->_cacheGroups);
     }
@@ -2149,19 +1966,16 @@ class nebule
     /**
      * Nouvelle instance d'une conversation.
      *
-     * @param string $id
+     * @param string  $id
      * @param boolean $closed
      * @param boolean $protect
      * @param boolean $obfuscated
      * @return Conversation
      */
-    public function newConversation($id, $closed = false, $protected = false, $obfuscated = false)
+    public function newConversation(string $id, bool $closed, bool $protected = false, bool $obfuscated = false): Conversation
     {
-        if (!is_string($id)
-            || $id == ''
-        ) {
+        if ($id == '')
             $id = '0';
-        }
 
         if (!$this->_flushCache
             && isset($this->_cacheConversations[$id])
@@ -2193,11 +2007,10 @@ class nebule
      * @param string $id
      * @return boolean
      */
-    public function removeCacheConversation($id)
+    public function removeCacheConversation(string $id): bool
     {
-        if (isset($this->_cacheConversations[$id])) {
+        if (isset($this->_cacheConversations[$id]))
             unset($this->_cacheConversations[$id], $this->_cacheDateInsertion[$id]);
-        }
         return true;
     }
 
@@ -2206,7 +2019,7 @@ class nebule
      *
      * @return integer
      */
-    public function getCacheConversationSize()
+    public function getCacheConversationSize(): int
     {
         return sizeof($this->_cacheConversations);
     }
@@ -2215,19 +2028,16 @@ class nebule
     /**
      * Nouvelle instance d'une monnaie.
      *
-     * @param string $id
-     * @param array $param
+     * @param string  $id
+     * @param array   $param
      * @param boolean $protect
      * @param boolean $obfuscated
      * @return Currency
      */
-    public function newCurrency($id, $param = array(), $protected = false, $obfuscated = false)
+    public function newCurrency(string $id, array $param = array(), bool $protected = false, bool $obfuscated = false): Currency
     {
-        if (!is_string($id)
-            || $id == ''
-        ) {
+        if ($id == '')
             $id = '0';
-        }
 
         if (!$this->_flushCache
             && isset($this->_cacheCurrencies[$id])
@@ -2259,7 +2069,7 @@ class nebule
      * @param string $id
      * @return boolean
      */
-    public function removeCacheCurrency($id)
+    public function removeCacheCurrency(string $id): bool
     {
         if (isset($this->_cacheCurrencies[$id])) {
             unset($this->_cacheCurrencies[$id], $this->_cacheDateInsertion[$id]);
@@ -2272,7 +2082,7 @@ class nebule
      *
      * @return integer
      */
-    public function getCacheCurrencySize()
+    public function getCacheCurrencySize(): int
     {
         return sizeof($this->_cacheCurrencies);
     }
@@ -2281,19 +2091,16 @@ class nebule
     /**
      * Nouvelle instance d'un jeton.
      *
-     * @param string $id
-     * @param array $param
+     * @param string  $id
+     * @param array   $param
      * @param boolean $protect
      * @param boolean $obfuscated
      * @return Token
      */
-    public function newToken($id, $param = array(), $protected = false, $obfuscated = false)
+    public function newToken(string $id, array $param = array(), bool $protected = false, bool $obfuscated = false): Token
     {
-        if (!is_string($id)
-            || $id == ''
-        ) {
+        if ($id == '')
             $id = '0';
-        }
 
         if (!$this->_flushCache
             && isset($this->_cacheTokens[$id])
@@ -2325,11 +2132,10 @@ class nebule
      * @param string $id
      * @return boolean
      */
-    public function removeCacheToken($id)
+    public function removeCacheToken(string $id): bool
     {
-        if (isset($this->_cacheTokens[$id])) {
+        if (isset($this->_cacheTokens[$id]))
             unset($this->_cacheTokens[$id], $this->_cacheDateInsertion[$id]);
-        }
         return true;
     }
 
@@ -2338,7 +2144,7 @@ class nebule
      *
      * @return integer
      */
-    public function getCacheTokenSize()
+    public function getCacheTokenSize(): int
     {
         return sizeof($this->_cacheTokens);
     }
@@ -2347,19 +2153,16 @@ class nebule
     /**
      * Nouvelle instance d'un sac de jetons.
      *
-     * @param string $id
-     * @param array $param
+     * @param string  $id
+     * @param array   $param
      * @param boolean $protect
      * @param boolean $obfuscated
      * @return TokenPool
      */
-    public function newTokenPool($id, $param = array(), $protected = false, $obfuscated = false)
+    public function newTokenPool(string $id, array $param = array(), bool $protected = false, bool $obfuscated = false): TokenPool
     {
-        if (!is_string($id)
-            || $id == ''
-        ) {
+        if ($id == '')
             $id = '0';
-        }
 
         if (!$this->_flushCache
             && isset($this->_cacheTokenPools[$id])
@@ -2391,11 +2194,10 @@ class nebule
      * @param string $id
      * @return boolean
      */
-    public function removeCacheTokenPool($id)
+    public function removeCacheTokenPool(string $id): bool
     {
-        if (isset($this->_cacheTokenPools[$id])) {
+        if (isset($this->_cacheTokenPools[$id]))
             unset($this->_cacheTokenPools[$id], $this->_cacheDateInsertion[$id]);
-        }
         return true;
     }
 
@@ -2404,7 +2206,7 @@ class nebule
      *
      * @return integer
      */
-    public function getCacheTokenPoolSize()
+    public function getCacheTokenPoolSize(): int
     {
         return sizeof($this->_cacheTokenPools);
     }
@@ -2413,19 +2215,16 @@ class nebule
     /**
      * Nouvelle instance d'un portefeuille.
      *
-     * @param string $id
-     * @param array $param
+     * @param string  $id
+     * @param array   $param
      * @param boolean $protect
      * @param boolean $obfuscated
      * @return Wallet
      */
-    public function newWallet($id, $param = array(), $protected = false, $obfuscated = false)
+    public function newWallet(string $id, array $param = array(), bool $protected = false, bool $obfuscated = false): Wallet
     {
-        if (!is_string($id)
-            || $id == ''
-        ) {
+        if ($id == '')
             $id = '0';
-        }
 
         if (!$this->_flushCache
             && isset($this->_cacheWallets[$id])
@@ -2457,11 +2256,10 @@ class nebule
      * @param string $id
      * @return boolean
      */
-    public function removeCacheWallet($id)
+    public function removeCacheWallet(string $id): bool
     {
-        if (isset($this->_cacheWallets[$id])) {
+        if (isset($this->_cacheWallets[$id]))
             unset($this->_cacheWallets[$id], $this->_cacheDateInsertion[$id]);
-        }
         return true;
     }
 
@@ -2470,7 +2268,7 @@ class nebule
      *
      * @return integer
      */
-    public function getCacheWalletSize()
+    public function getCacheWalletSize(): int
     {
         return sizeof($this->_cacheWallets);
     }
@@ -2481,14 +2279,12 @@ class nebule
      * Attention, c'est un lien !
      *
      * @param string $link
-     * @param string $version
      * @return Transaction
      */
-    public function newTransaction($link, $version = 'UNKNOWN')
+    public function newTransaction(string $link): Transaction
     {
-        if ($link == '') {
-            return false;
-        }
+        if ($link == '')
+            $link = 'invalid';
 
         if (!$this->_flushCache
             && isset($this->_cacheTransactions[$link])
@@ -2501,7 +2297,7 @@ class nebule
             $this->_getCacheNeedOnePlace();
 
             // Génère une instance.
-            $instance = new Transaction($this, $link, $version);
+            $instance = new Transaction($this, $link);
 
             // Si le cache est activé.
             if ($this->_configuration->getOption('permitSessionBuffer')) {
@@ -2520,11 +2316,10 @@ class nebule
      * @param string $link
      * @return boolean
      */
-    public function removeCacheTransaction($link)
+    public function removeCacheTransaction(string $link): bool
     {
-        if (isset($this->_cacheTransactions[$link])) {
+        if (isset($this->_cacheTransactions[$link]))
             unset($this->_cacheTransactions[$link], $this->_cacheDateInsertion[$link]);
-        }
         return true;
     }
 
@@ -2533,10 +2328,11 @@ class nebule
      *
      * @return integer
      */
-    public function getCacheTransactionSize()
+    public function getCacheTransactionSize(): int
     {
         return sizeof($this->_cacheTransactions);
     }
+
 
 
     /**

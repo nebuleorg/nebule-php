@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
+use Nebule\Library\nebule;
+use Nebule\Library\nodeInterface;
 
 /**
  * ------------------------------------------------------------------------------------------
@@ -20,7 +22,7 @@ namespace Nebule\Library;
  * L'ID d'un objet est forcément un texte en hexadécimal.
  * ------------------------------------------------------------------------------------------
  */
-class Node
+class Node implements nodeInterface
 {
     const CRYPTO_SESSION_KEY_SIZE = 117; // @todo utilisé par setProtected(), à refaire pour le cas général.
 
@@ -276,7 +278,7 @@ class Node
      * @param string  $data
      * @param boolean $protect
      */
-    public function __construct(nebule $nebuleInstance, string $id, string $data = '', bool $protect, bool $obfuscated = false)
+    public function __construct(nebule $nebuleInstance, string $id, string $data = '', bool $protect = false, bool $obfuscated = false)
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();

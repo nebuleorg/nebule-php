@@ -1,11 +1,12 @@
 #!/bin/bash
 # Prepare or restore an environment to develop and test code.
+# !!! Do not use on real world !!!
 
 # Author Projet nebule
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020211115
+# Version 020211218
 
 export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
@@ -326,7 +327,7 @@ EOF
     echo '//   '$(basename "${F}") >> "${WORKSPACE}/lib_nebule.php"
     echo '//   0'$(stat -c '%y' "${F}" | cut -d' ' -f1-2 | cut -d. -f1 | tr -dc "[0-9]") >> "${WORKSPACE}/lib_nebule.php"
     echo "//   ${library_hash}" >> "${WORKSPACE}/lib_nebule.php"
-    tail +4 "${F}" >> "${WORKSPACE}/lib_nebule.php"
+    tail +4 "${F}" | grep -v "^use Nebule\Library" >> "${WORKSPACE}/lib_nebule.php"
   done
   library_hash=$(sha256sum "${WORKSPACE}/lib_nebule.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new library : ${library_hash}"

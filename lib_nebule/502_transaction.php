@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
+use Nebule\Library\nebule;
+use Nebule\Library\Link;
+use DateTime;
 
 /**
  * ------------------------------------------------------------------------------------------
@@ -26,7 +29,7 @@ namespace Nebule\Library;
  * La description de la transaction peut en fait contenir plusieurs transactions élémentaires.
  * ------------------------------------------------------------------------------------------
  */
-class Transaction extends Link
+class Transaction extends Link implements linkInterface
 {
     /**
      * Booléen si le lien est une transaction ET qu'elle est valide.
@@ -105,7 +108,7 @@ class Transaction extends Link
      *
      * @return void
      */
-    protected function _initialisation()
+    protected function _initialisation(): void
     {
         // Vérifications de base.
         if ($this->_action != 'f'

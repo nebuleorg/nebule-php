@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
+use Nebule\Library\nebule;
+use Nebule\Library\Node;
+use Nebule\Library\Group;
 
 /**
  * ------------------------------------------------------------------------------------------
@@ -57,18 +60,17 @@ class Conversation extends Group
 
     /**
      * Constructeur.
-     *
      * Toujours transmettre l'instance de la librairie nebule.
      * Si la conversation existe, juste préciser l'ID de celle-ci.
      * Si c'est une nouvelle conversation à créer, mettre l'ID à 'new'.
      *
-     * @param nebule $nebuleInstance
-     * @param string $id
-     * @param boolean $closed si $id == 'new'
-     * @param boolean $protected si $id == 'new'
+     * @param nebule  $nebuleInstance
+     * @param string  $id
+     * @param boolean $closed     si $id == 'new'
+     * @param boolean $protected  si $id == 'new'
      * @param boolean $obfuscated si $id == 'new'
      */
-    public function __construct(nebule $nebuleInstance, $id, $closed = false, $protected = false, $obfuscated = false)
+    public function __construct(nebule $nebuleInstance, string $id, bool $closed = false, bool $protected = false, bool $obfuscated = false)
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();

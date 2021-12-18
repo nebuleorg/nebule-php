@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
+use Nebule\Library\nebule;
+use Nebule\Library\linkInterface;
 
 /**
  * La classe Link.
@@ -27,7 +29,7 @@ namespace Nebule\Library;
  * Il reste dans ce cas géré comme un lien normal mais de type c.
  * Cependant, si l'entité destinataire est déverrouillée mais ne peut déchiffrer le lien, alors le lien est considéré corrompu.
  */
-class Link
+class Link implements linkInterface
 {
     /**
      * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
@@ -66,7 +68,7 @@ class Link
      *
      * @var Configuration
      */
-    protected $_configuration;
+    protected Configuration $_configuration;
 
     /**
      * Instance io en cours.

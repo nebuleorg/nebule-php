@@ -1,6 +1,12 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Qantion;
+use Nebule\Library\nebule;
+use Nebule\Library\Actions;
+use Nebule\Library\Applications;
+use Nebule\Library\Displays;
+use Nebule\Library\Modules;
+use Nebule\Library\Traductions;
 
 /*
 ------------------------------------------------------------------------------------------
@@ -16,6 +22,7 @@ namespace Nebule\Application\Qantion;
 
 ------------------------------------------------------------------------------------------
 */
+
 
 
 /**
@@ -34,7 +41,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'qantion';
     const APPLICATION_SURNAME = 'nebule/qantion';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020210510';
+    const APPLICATION_VERSION = '020211218';
     const APPLICATION_LICENCE = 'GNU GPL 2019-2021';
     const APPLICATION_WEBSITE = 'www.qantion.org';
 
@@ -3715,39 +3722,26 @@ class ModuleEntities extends Modules
      */
     private function _findSearchEntity()
     {
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-		 *  ------------------------------------------------------------------------------------------
-		 */
-        // extrait l'URL.
         $arg_url = trim(filter_input(INPUT_GET, 'srchurl', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW)); // Lit et nettoye le contenu de la variable GET.
         if ($arg_url != ''
             && strlen($arg_url) >= 8
-        ) // Si la variable est une URL.
-        {
-            $this->_searchEntityURL = $arg_url; // Ecrit l'objet dans la variable.
-        }
+        )
+            $this->_searchEntityURL = $arg_url;
 
-        // Extrait l'ID.
         $arg_id = trim(filter_input(INPUT_GET, 'srchid', FILTER_SANITIZE_URL, FILTER_FLAG_ENCODE_LOW)); // Lit et nettoye le contenu de la variable GET.
         if ($arg_id != ''
             && strlen($arg_id) >= nebule::NEBULE_MINIMUM_ID_SIZE
             && ctype_xdigit($arg_id)
-            && $action_entgurl != 'http://localhost'
-            && $action_entgurl != 'http://127.0.0.1'
-            && $action_entgurl != 'http://localhost/'
-            && $action_entgurl != 'http://127.0.0.1/'
-            && $action_entgurl != 'https://localhost'
-            && $action_entgurl != 'https://127.0.0.1'
-            && $action_entgurl != 'https://localhost/'
-            && $action_entgurl != 'https://127.0.0.1/'
-        ) // Si la variable est un hash.
-        {
-            $this->_searchEntityID = $arg_id; // Ecrit l'objet dans la variable.
-        }
-
-        unset($arg_url, $arg_id);
+            && $arg_url != 'http://localhost'
+            && $arg_url != 'http://127.0.0.1'
+            && $arg_url != 'http://localhost/'
+            && $arg_url != 'http://127.0.0.1/'
+            && $arg_url != 'https://localhost'
+            && $arg_url != 'https://127.0.0.1'
+            && $arg_url != 'https://localhost/'
+            && $arg_url != 'https://127.0.0.1/'
+        )
+            $this->_searchEntityID = $arg_id;
     }
 
     private function _actionSearchEntity()

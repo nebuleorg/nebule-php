@@ -1,6 +1,16 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Sylabe;
+use Nebule\Library\nebule;
+use Nebule\Library\Actions;
+use Nebule\Library\Applications;
+use Nebule\Library\Displays;
+use Nebule\Library\Modules;
+use Nebule\Library\Traductions;
+use const Nebule\Bootstrap\BOOTSTRAP_NAME;
+use const Nebule\Bootstrap\BOOTSTRAP_SURNAME;
+use const Nebule\Bootstrap\BOOTSTRAP_WEBSITE;
+use const Nebule\Bootstrap\LIB_BOOTSTRAP_ICON;
 
 /*
 ------------------------------------------------------------------------------------------
@@ -16,6 +26,7 @@ namespace Nebule\Application\Sylabe;
 
 ------------------------------------------------------------------------------------------
 */
+
 
 
 /**
@@ -34,7 +45,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020210510';
+    const APPLICATION_VERSION = '020211218';
     const APPLICATION_LICENCE = 'GNU GPL 2013-2021';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
 
@@ -2944,16 +2955,10 @@ class ModuleManage extends Modules
                     && $this->_configuration->getOption('permitWrite')
                     && $this->_configuration->getOption('permitWriteLink')
                     && ($this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getCodeMaster()
-                        || $this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getDefaultEntity()
-                        && $this->_configuration->getOption('permitInstanceEntityAsAuthority')
-                        || $this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getDefaultEntity()
-                        && $this->_configuration->getOption('permitDefaultEntityAsAuthority')
-                        || $this->_nebuleInstance->getCurrentEntity() == REFERENCE_DEV_ID
-                        && (!REFERENCES_FOLLOW_ONLY_AUTORITY
-                            && REFERENCE_DEV_ID != ''
-                            && REFERENCE_DEV_ID != '0'
-                            && !$this->_nebuleInstance->getModeRescue()
-                        )
+                        || ($this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getDefaultEntity()
+                            && $this->_configuration->getOption('permitInstanceEntityAsAuthority') )
+                        || ($this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getDefaultEntity()
+                            && $this->_configuration->getOption('permitDefaultEntityAsAuthority'))
                     )
                     && $rid != '0'
                 ) {
@@ -3604,7 +3609,7 @@ class ModuleHelp extends Modules
         $param['informationType'] = 'information';
         $list[4]['information'] = BOOTSTRAP_SURNAME;
         $list[4]['param'] = $param;
-        $list[4]['param']['icon'] = REFERENCE_BOOTSTRAP_ICON;
+        $list[4]['param']['icon'] = LIB_BOOTSTRAP_ICON;
         //$list[4]['object'] = '1';
         $list[5]['information'] = '<a href="http://' . BOOTSTRAP_WEBSITE . '" target="_blank">' . BOOTSTRAP_WEBSITE . '</a>';
         $list[5]['param'] = $param;
@@ -4516,39 +4521,26 @@ class ModuleEntities extends Modules
      */
     private function _findSearchEntity()
     {
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-		 *  ------------------------------------------------------------------------------------------
-		 */
-        // extrait l'URL.
         $arg_url = trim(filter_input(INPUT_GET, 'srchurl', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW)); // Lit et nettoye le contenu de la variable GET.
         if ($arg_url != ''
             && strlen($arg_url) >= 8
-        ) // Si la variable est une URL.
-        {
-            $this->_searchEntityURL = $arg_url; // Ecrit l'objet dans la variable.
-        }
+        )
+            $this->_searchEntityURL = $arg_url;
 
-        // Extrait l'ID.
         $arg_id = trim(filter_input(INPUT_GET, 'srchid', FILTER_SANITIZE_URL, FILTER_FLAG_ENCODE_LOW)); // Lit et nettoye le contenu de la variable GET.
         if ($arg_id != ''
             && strlen($arg_id) >= nebule::NEBULE_MINIMUM_ID_SIZE
             && ctype_xdigit($arg_id)
-            && $action_entgurl != 'http://localhost'
-            && $action_entgurl != 'http://127.0.0.1'
-            && $action_entgurl != 'http://localhost/'
-            && $action_entgurl != 'http://127.0.0.1/'
-            && $action_entgurl != 'https://localhost'
-            && $action_entgurl != 'https://127.0.0.1'
-            && $action_entgurl != 'https://localhost/'
-            && $action_entgurl != 'https://127.0.0.1/'
-        ) // Si la variable est un hash.
-        {
-            $this->_searchEntityID = $arg_id; // Ecrit l'objet dans la variable.
-        }
-
-        unset($arg_url, $arg_id);
+            && $arg_url != 'http://localhost'
+            && $arg_url != 'http://127.0.0.1'
+            && $arg_url != 'http://localhost/'
+            && $arg_url != 'http://127.0.0.1/'
+            && $arg_url != 'https://localhost'
+            && $arg_url != 'https://127.0.0.1'
+            && $arg_url != 'https://localhost/'
+            && $arg_url != 'https://127.0.0.1/'
+        )
+            $this->_searchEntityID = $arg_id;
     }
 
     private function _actionSearchEntity()
@@ -9300,7 +9292,7 @@ class ModuleAdmin extends Modules
                 $optionDefaultDisplay = (string)$optionDefaultValue;
                 $optionCriticality = $listOptionsCriticality[$optionName];
                 $optionDescription = $listOptionsDescription[$optionName];
-                $optionLocked = ($this->_nebuleInstance->getOptionFromEnvironment($optionName) !== null);
+                $optionLocked = ($this->_configuration->getOptionFromEnvironment($optionName) !== null);
 
                 $list[$i]['information'] = $optionName . ' = ' . $optionValueDisplay . '<br />' . $optionDescription;
                 $list[$i]['param'] = $param;

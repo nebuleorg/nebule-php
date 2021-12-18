@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
+use Nebule\Library\nebule;
 
 /**
  * Configuration class for the nebule library.
@@ -90,11 +91,6 @@ class Configuration
         'defaultLinksVersion',
         'subordinationEntity',
     );
-
-    /**
-     * @var Metrology $_metrology
-     */
-    private $_metrology;
 
     /**
      * Liste des catégories de tri des options.
@@ -598,6 +594,51 @@ class Configuration
         'subordinationEntity' => 'Define the external entity which can modify writeable options on this server instance.',
     );
 
+    /**
+     * Instance de la librairie en cours.
+     *
+     * @var nebule
+     */
+    protected nebule $_nebuleInstance;
+
+    /**
+     * Instance de la métrologie.
+     *
+     * @var Metrology
+     */
+    private Metrology $_metrologyInstance;
+
+    /**
+     * Verrou des modifications des options dans le cache.
+     * @var boolean
+     */
+    private bool $_writeOptionCacheLock = false;
+
+    /**
+     * Verrouillage de la recherche d'option via les liens.
+     * Anti-boucle infinie.
+     *
+     * @var boolean
+     */
+    private bool $_optionsByLinksIsInUse = false;
+
+    /**
+     * Le cache des options déjà lues.
+     *
+     * @var array
+     */
+    private array $_optionCache = array();
+
+    /**
+     * Marque la fin de l'initialisation.
+     * C'est nécessaire pour certaines parties qui nécessitent l'accès à la journalisation mais trop tôt.
+     * C'est le cas dans la lecture des options dans les liens.
+     *
+     * @var boolean
+     */
+    private bool $_permitOptionsByLinks = false;
+
+
 
     /**
      * Constructeur.
@@ -606,7 +647,8 @@ class Configuration
      */
     public function __construct(nebule $nebuleInstance)
     {
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
+        $this->_nebuleInstance = $nebuleInstance;
+        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
     }
 
     /**
@@ -614,7 +656,7 @@ class Configuration
      *
      * @return array
      */
-    public static function getListOptions()
+    public static function getListOptions(): array
     {
         return self::OPTIONS_LIST;
     }
@@ -624,7 +666,7 @@ class Configuration
      *
      * @return array
      */
-    public static function getListCategoriesOptions()
+    public static function getListCategoriesOptions(): array
     {
         return self::OPTIONS_CATEGORIES;
     }
@@ -634,7 +676,7 @@ class Configuration
      *
      * @return array
      */
-    public static function getListOptionsCategory()
+    public static function getListOptionsCategory(): array
     {
         return self::OPTIONS_CATEGORY;
     }
@@ -644,7 +686,7 @@ class Configuration
      *
      * @return array
      */
-    public static function getListOptionsType()
+    public static function getListOptionsType(): array
     {
         return self::OPTIONS_TYPE;
     }
@@ -654,7 +696,7 @@ class Configuration
      *
      * @return array
      */
-    public static function getListOptionsWritable()
+    public static function getListOptionsWritable(): array
     {
         return self::OPTIONS_WRITABLE;
     }
@@ -664,7 +706,7 @@ class Configuration
      *
      * @return array
      */
-    public static function getListOptionsDefaultValue()
+    public static function getListOptionsDefaultValue(): array
     {
         return self::OPTIONS_DEFAULT_VALUE;
     }
@@ -674,7 +716,7 @@ class Configuration
      *
      * @return array
      */
-    public static function getListOptionsCriticality()
+    public static function getListOptionsCriticality(): array
     {
         return self::OPTIONS_CRITICALITY;
     }
@@ -684,17 +726,10 @@ class Configuration
      *
      * @return array
      */
-    public static function getListOptionsDescription()
+    public static function getListOptionsDescription(): array
     {
         return self::OPTIONS_DESCRIPTION;
     }
-
-    /**
-     * Le cache des options déjà lues.
-     *
-     * @var array
-     */
-    private $_optionCache = array();
 
     /**
      * Extrait les options nebule.
@@ -708,19 +743,19 @@ class Configuration
      * C'est la façon de forcer une option.
      *
      * @param string $name
-     * @return string/bool/int
+     * @return string|bool|int|null
      */
-    public function getOption(string $name): string|bool|int
+    public function getOption(string $name): string|bool|int|null
     {
         // Vérifie le nom.
         if ($name == ''
             || !is_string($name)
             || !isset(self::OPTIONS_TYPE[$name])
         )
-            return false;
+            return null;
 
-        if ($this->_metrology !== null)
-            $this->_metrology->addLog('Get option ' . $name, Metrology::LOG_LEVEL_DEBUG); // Log
+        if ($this->_metrologyInstance !== null)
+            $this->_metrologyInstance->addLog('Get option ' . $name, Metrology::LOG_LEVEL_DEBUG); // Log
 
         // La réponse.
         $result = null;
@@ -742,20 +777,20 @@ class Configuration
         // Si non trouvé, cherche la valeur par défaut de l'option.
         if ($result === null) {
             $result = self::OPTIONS_DEFAULT_VALUE[$name];
-            if ($this->_metrology !== null) {
-                $this->_metrology->addLog('Get default option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
+            if ($this->_metrologyInstance !== null) {
+                $this->_metrologyInstance->addLog('Get default option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
             }
         }
 
         // Si non trouvé, retourne la valeur par défaut.
         if ($result === null) {
             $result = false;
-            if ($this->_metrology !== null)
-                $this->_metrology->addLog('Get unknown option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
+            if ($this->_metrologyInstance !== null)
+                $this->_metrologyInstance->addLog('Get unknown option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
         }
 
-        if ($this->_metrology !== null)
-            $this->_metrology->addLog('Return option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
+        if ($this->_metrologyInstance !== null)
+            $this->_metrologyInstance->addLog('Return option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Ecrit le cache.
         if ($result !== null)
@@ -768,10 +803,16 @@ class Configuration
      * Donne la liste des valeurs par défaut des options disponibles.
      *
      * @param string $name
-     * @return string|bool|int
+     * @return string|bool|int|null
      */
-    public static function getOptionDefaultValue(string $name): string|bool|int
+    public static function getOptionDefaultValue(string $name): string|bool|int|null
     {
+        if ($name == ''
+            || !is_string($name)
+            || !isset(self::OPTIONS_DEFAULT_VALUE[$name])
+        )
+            return null;
+
         return self::OPTIONS_DEFAULT_VALUE[$name];
     }
 
@@ -794,9 +835,8 @@ class Configuration
         if ($name == ''
             || !is_string($name)
             || !isset(self::OPTIONS_TYPE[$name])
-        ) {
+        )
             return null;
-        }
 
         // La réponse.
         $result = null;
@@ -810,9 +850,8 @@ class Configuration
                 $l = trim($line);
 
                 // Si commentaire, passe à la ligne suivante.
-                if (substr($l, 0, 1) == "#") {
+                if (substr($l, 0, 1) == "#")
                     continue;
-                }
 
                 // Recherche l'option demandée.
                 if (filter_var(trim(strtok($l, '=')), FILTER_SANITIZE_STRING) == $name) {
@@ -824,9 +863,8 @@ class Configuration
         }
 
         // Si pas trouvé, quitte.
-        if ($value == null) {
+        if ($value == null)
             return null;
-        }
 
         // Extrait la valeur en fonction du type de l'option.
         switch (self::OPTIONS_TYPE[$name]) {
@@ -837,44 +875,31 @@ class Configuration
                 if ($value == 'true'
                     || $value == 'false'
                 ) {
-                    if (self::OPTIONS_DEFAULT_VALUE[$name]) {
+                    if (self::OPTIONS_DEFAULT_VALUE[$name])
                         $reference = 'false';
-                    } else {
+                    else
                         $reference = 'true';
-                    }
 
-                    if ($value == $reference) {
+                    if ($value == $reference)
                         $result = !self::OPTIONS_DEFAULT_VALUE[$name];
-                    } else {
+                    else
                         $result = self::OPTIONS_DEFAULT_VALUE[$name];
-                    }
-                } else {
+                } else
                     $result = null;
-                }
                 break;
             case 'integer' :
-                if ($value != '') {
+                if ($value != '')
                     $result = (int)$value;
-                }
                 break;
             default :
                 $result = null;
         }
 
-        if ($this->_metrology !== null) {
-            $this->_metrology->addLog('Return option env = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
-        }
+        if ($this->_metrologyInstance !== null)
+            $this->_metrologyInstance->addLog('Return option env = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
 
         return $result;
     }
-
-    /**
-     * Verrouillage de la recherche d'option via les liens.
-     * Anti-boucle infinie.
-     *
-     * @var boolean
-     */
-    private $_optionsByLinksIsInUse = false;
 
     /**
      * Extrait les options depuis les liens.
@@ -892,9 +917,8 @@ class Configuration
         if ($name == ''
             || !is_string($name)
             || !isset(self::OPTIONS_TYPE[$name])
-        ) {
+        )
             return null;
-        }
 
         // La réponse.
         $result = null;
@@ -961,26 +985,11 @@ class Configuration
             }
         }
 
-        if ($this->_metrology !== null) {
-            $this->_metrology->addLog('Return option links = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
+        if ($this->_metrologyInstance !== null) {
+            $this->_metrologyInstance->addLog('Return option links = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
         }
 
         return $result;
-    }
-
-    /**
-     * Verrou des modifications des options dans le cache.
-     * @var boolean
-     */
-    private $_writeOptionCacheLock = false;
-
-    /**
-     * Verrouille la possibilité de modification des options dans le cache.
-     * L'opération n'est pas annulable.
-     */
-    public function setOptionCacheLock(): void
-    {
-        $this->_writeOptionCacheLock = true;
     }
 
     /**
@@ -1000,27 +1009,25 @@ class Configuration
     public function setOptionCache(string $name, string|bool|int $value): string|bool|int
     {
         // Vérifie le verrouillage.
-        if ($this->_writeOptionCacheLock) {
+        if ($this->_writeOptionCacheLock)
             return false;
-        }
 
         // Vérifie le nom.
         if ($name == ''
             || !is_string($name)
             || !isset(self::OPTIONS_TYPE[$name])
             || !self::OPTIONS_WRITABLE[$name]
-        ) {
+        )
             return false;
-        }
 
-        $this->_metrology->addLog('Set option cache ' . $name, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Set option cache ' . $name, Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Transcode value.
-        $writeValue = _transcodeValue($name, $value);
+        $writeValue = $this->_transtypeValue($name, $value);
         if (is_null($writeValue))
             return false;
 
-        $this->_metrology->addLog('Set option cache value = ' . $writeValue, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Set option cache value = ' . $writeValue, Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Ecrit l'option.
         $this->_optionCache[$name] = $value;
@@ -1040,7 +1047,7 @@ class Configuration
      * @param string $entity
      * @return boolean
      */
-    public function setOption(string $name, string|bool|int $value, string $entity = ''): bool
+    public function setOptionEnvironment(string $name, string|bool|int $value, string $entity = ''): bool
     {
         // Vérifie le nom.
         if ($name == ''
@@ -1048,37 +1055,35 @@ class Configuration
             || !isset(self::OPTIONS_TYPE[$name])
             || !self::OPTIONS_WRITABLE[$name]
             || $this->getOptionFromEnvironment($name) !== null
-        ) {
+        )
             return false;
-        }
 
         // Détermine l'entité ciblée par l'option.
         if ($entity = ''
             || $entity == '0'
-        ) {
-            $entity = $this->_currentEntity;
-        }
+        )
+            $entity = $this->_nebuleInstance->getCurrentEntity();
 
-        $this->_metrology->addLog('Set option ' . $name, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Set option ' . $name, Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Prépare la valeur.
-        $writeValue = _transcodeValue($name, $value);
+        $writeValue = $this->_transtypeValue($name, $value);
         if (is_null($writeValue))
             return false;
 
-        $this->_metrology->addLog('Set option value = ' . $writeValue, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Set option value = ' . $writeValue, Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Crée l'instance de l'objet de la valeur.
         $instance = new Node($this->_nebuleInstance, '0', $writeValue);
         if ($instance === false) {
-            $this->_metrology->addLog("L'instance de l'objet n'a pas pu être créée.", Metrology::LOG_LEVEL_ERROR); // Log
+            $this->_metrologyInstance->addLog("L'instance de l'objet n'a pas pu être créée.", Metrology::LOG_LEVEL_ERROR); // Log
             return false;
         }
 
         // Lit l'ID.
         $id = $instance->getID();
         if ($id == '0') {
-            $this->_metrology->addLog("L'objet n'a pas pu être créé.", Metrology::LOG_LEVEL_ERROR); // Log
+            $this->_metrologyInstance->addLog("L'objet n'a pas pu être créé.", Metrology::LOG_LEVEL_ERROR); // Log
             return false;
         }
 
@@ -1106,7 +1111,7 @@ class Configuration
             $this->_optionCache[$name] = $value;
             return true;
         } else {
-            $this->_metrology->addLog('Set option write error', Metrology::LOG_LEVEL_ERROR); // Log
+            $this->_metrologyInstance->addLog('Set option write error', Metrology::LOG_LEVEL_ERROR); // Log
             return false;
         }
     }
@@ -1115,7 +1120,7 @@ class Configuration
      * Lock write capabilities on demande.
      * Can be reloaded by flushCache().
      */
-    public function lockWrite()
+    public function lockWrite(): void
     {
         $this->_optionCache['permitWrite'] = false;
     }
@@ -1124,7 +1129,7 @@ class Configuration
      * Lock object's write capabilities on demande.
      * Can be reloaded by flushCache().
      */
-    public function lockWriteObject()
+    public function lockWriteObject(): void
     {
         $this->_optionCache['permitWriteObject'] = false;
     }
@@ -1133,18 +1138,63 @@ class Configuration
      * Lock link's write capabilities on demande.
      * Can be reloaded by flushCache().
      */
-    public function lockWriteLink()
+    public function lockWriteLink(): void
     {
         $this->_optionCache['permitWriteLink'] = false;
+    }
+
+    /**
+     * Verrouille la possibilité de modification des options dans le cache.
+     * L'opération n'est pas annulable.
+     */
+    public function lockCache(): void
+    {
+        $this->_writeOptionCacheLock = true;
     }
 
     /**
      * Reinitialize the values of options on cache.
      * Each option will be reloaded on demand.
      */
-    public function flushCache()
+    public function flushCache(): void
     {
         $this->_optionCache = array();
+    }
+
+    /**
+     * Change capability to use links for options.
+     * @param bool $value
+     */
+    public function setPermitOptionsByLinks(bool $value): void
+    {
+        $this->_permitOptionsByLinks = $value;
+    }
+
+    /**
+     * Check values of criticals options.
+     * If not default value, add a log with the value.
+     * @return void
+     */
+    public function checkReadOnlyOptions()
+    {
+        $this->_metrologyInstance->addLog('Check options', Metrology::LOG_LEVEL_DEBUG); // Log
+
+        foreach (self::OPTIONS_LIST as $option) {
+            if (self::OPTIONS_CRITICALITY[$option] == 'critical') {
+                $value = $this->getOption($option);
+                if ($value != self::OPTIONS_DEFAULT_VALUE[$option]) {
+                    if (is_bool($value)) {
+                        if ($value)
+                            $value = 'true';
+                        else
+                            $value = 'false';
+                    }
+                    if (is_int($value))
+                        $value = (string)$value;
+                    $this->_metrologyInstance->addLog('Warning:critical_option ' . $option . '=' . $value, Metrology::LOG_LEVEL_NORMAL); // Log
+                }
+            }
+        }
     }
 
     /**
@@ -1152,22 +1202,19 @@ class Configuration
      * @param string|bool|int $value
      * @return bool|int|string|null
      */
-    private function _transcodeValue(string $name, string|bool|int $value): bool|int|string|null
+    private function _transtypeValue(string $name, string|bool|int $value): bool|int|string|null
     {
         // Transcode value.
         switch (self::OPTIONS_TYPE[$name]) {
             case 'string' :
                 return $value;
-                break;
             case 'boolean' :
                 if ($value === true)
                     return 'true';
                 else
                     return 'false';
-                break;
             case 'integer' :
                 return (string)$value;
-                break;
             default :
                 return null;
         }

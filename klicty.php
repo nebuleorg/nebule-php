@@ -1,6 +1,12 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Klicty;
+use Nebule\Library\nebule;
+use Nebule\Library\Actions;
+use Nebule\Library\Applications;
+use Nebule\Library\Displays;
+//use Nebule\Library\Modules;
+use Nebule\Library\Traductions;
 
 /*
 ------------------------------------------------------------------------------------------
@@ -16,6 +22,7 @@ namespace Nebule\Application\Klicty;
 
 ------------------------------------------------------------------------------------------
 */
+
 
 
 /**
@@ -34,7 +41,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020210510';
+    const APPLICATION_VERSION = '020211218';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2021';
     const APPLICATION_WEBSITE = 'www.klicty.org';
 

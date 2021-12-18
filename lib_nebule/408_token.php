@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
+use Nebule\Library\nebule;
+use Nebule\Library\TokenPool;
+use Nebule\Library\Node;
 
 /**
  * ------------------------------------------------------------------------------------------
@@ -64,18 +67,17 @@ class Token extends TokenPool
 
     /**
      * Constructeur.
-     *
      * Toujours transmettre l'instance de la librairie nebule.
      * Si le jeton existe, juste préciser l'ID de celui-ci.
      * Si c'est un nouveau jeton à créer, mettre l'ID à 'new'.
      *
-     * @param nebule $nebuleInstance
-     * @param string $id
-     * @param array $param si $id == 'new'
-     * @param boolean $protected si $id == 'new'
+     * @param nebule  $nebuleInstance
+     * @param string  $id
+     * @param array   $param      si $id == 'new'
+     * @param boolean $protected  si $id == 'new'
      * @param boolean $obfuscated si $id == 'new'
      */
-    public function __construct(nebule $nebuleInstance, $id, $param = array(), $protected = false, $obfuscated = false)
+    public function __construct(nebule $nebuleInstance, string $id, array $param = array(), bool $protected = false, bool $obfuscated = false)
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();

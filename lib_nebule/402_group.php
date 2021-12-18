@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
+use Nebule\Library\nebule;
+use Nebule\Library\Node;
 
 /**
  * ------------------------------------------------------------------------------------------
@@ -60,16 +62,16 @@ class Group extends Node
 
     /**
      * Constructeur.
-     *
      * Toujours transmettre l'instance de la librairie nebule.
      * Si le groupe existe, juste préciser l'ID de celle-ci.
      * Si c'est un nouveau groupe à créer, mettre l'ID à 'new'.
      *
-     * @param nebule $nebuleInstance
-     * @param string $id
+     * @param nebule  $nebuleInstance
+     * @param string  $id
      * @param boolean $closed
+     * @param bool    $obfuscated
      */
-    public function __construct(nebule $nebuleInstance, $id, $closed = false, $obfuscated = false)
+    public function __construct(nebule $nebuleInstance, string $id, bool $closed = false, bool $obfuscated = false)
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
