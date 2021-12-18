@@ -112,12 +112,6 @@ class Metrology
     private $_actionArray = array();
 
     /**
-     * Instance de la bibliothèque nebule.
-     * @var nebule
-     */
-    private $_nebuleInstance;
-
-    /**
      * Instance de gestion de la configuration et des options.
      *
      * @var Configuration
@@ -132,7 +126,6 @@ class Metrology
     public function __construct(nebule $nebuleInstance)
     {
         $this->_timeStart(); // Démarre le compteur de temps.
-        $this->_nebuleInstance = $nebuleInstance;
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_readLogsLevel();
     }

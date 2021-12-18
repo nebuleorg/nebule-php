@@ -2936,7 +2936,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare à afficher un objet comme image avec éventuellement un texte et un identifiant CSS.
      *
-     * @param Node|Node $object
+     * @param Node|string $object
      * @param string $alt
      * @param string $class
      * @param string $id

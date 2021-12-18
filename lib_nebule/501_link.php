@@ -61,168 +61,168 @@ class Link implements linkInterface
      *
      * @var nebule
      */
-    protected nebule $_nebuleInstance;
+    protected $_nebuleInstance;
 
     /**
      * Instance de gestion de la configuration et des options.
      *
      * @var Configuration
      */
-    protected Configuration $_configuration;
+    protected $_configuration;
 
     /**
      * Instance io en cours.
      *
      * @var io
      */
-    protected ioInterface $_io;
+    protected $_io;
 
     /**
      * Instance crypto en cours.
      *
      * @var CryptoInterface $_crypto
      */
-    protected CryptoInterface $_crypto;
+    protected $_crypto;
 
     /**
      * Instance métrologie en cours.
      *
      * @var Metrology
      */
-    protected Metrology $_metrology;
+    protected $_metrology;
 
     /**
      * Texte lien complet "s.a_s_d_a_s_t_m" .
      *
      * @var string
      */
-    protected string $_fullLink = '';
+    protected $_fullLink = '';
 
     /**
      * Parsed link contents.
      *
      * @var array $_parsedLink
      */
-    protected array $_parsedLink = array();
+    protected $_parsedLink = array();
 
     /**
      * Texte signature avec algorithme.
      *
      * @var string $_signe
      */
-    protected string $_signe = '0';
+    protected $_signe = '0';
 
     /**
      * Texte valeur hexa de la signature.
      *
      * @var string $_signeValue
      */
-    protected string $_signeValue = '';
+    protected $_signeValue = '';
 
     /**
      * Texte algorithme de signature.
      *
      * @var string $_signeAlgo
      */
-    protected string $_signeAlgo = '';
+    protected $_signeAlgo = '';
 
     /**
      * Texte hexa entité signataire.
      *
      * @var string $_hashSigner
      */
-    protected string $_hashSigner = '0';
+    protected $_hashSigner = '0';
 
     /**
      * Texte date du lien.
      *
      * @var string $_date
      */
-    protected string $_date = '';
+    protected $_date = '';
 
     /**
      * Texte action du lien, sur un octet.
      *
      * @var string $_action
      */
-    protected string $_action = '';
+    protected $_action = '';
 
     /**
      * Texte hexa objet source.
      *
      * @var string $_hashSource
      */
-    protected string $_hashSource = '0';
+    protected $_hashSource = '0';
 
     /**
      * Texte hexa objet destination.
      *
      * @var string $_hashTarget
      */
-    protected string $_hashTarget = '0';
+    protected $_hashTarget = '0';
 
     /**
      * Texte hexa objet méta.
      *
      * @var string $_hashMeta
      */
-    protected string $_hashMeta = '0';
+    protected $_hashMeta = '0';
 
     /**
      * Booléen si le lien est dissimulé.
      *
      * @var boolean $_obfuscated
      */
-    protected bool $_obfuscated = false;
+    protected $_obfuscated = false;
 
     /**
      * Booléen si le lien a été vérifié.
      *
      * @var boolean $_verified
      */
-    protected bool $_verified = false;
+    protected $_verified = false;
 
     /**
      * Booléen si le lien est vérifié et valide.
      *
      * @var boolean $_valid
      */
-    protected bool $_valid = false;
+    protected $_valid = false;
 
     /**
      * Booléen si le lien a une structure valide.
      *
      * @var boolean $_validStructure
      */
-    protected bool $_validStructure = false;
+    protected $_validStructure = false;
 
     /**
      * Booléen si le lien est signé.
      *
      * @var boolean $_signed
      */
-    protected bool $_signed = false;
+    protected $_signed = false;
 
     /**
      * Nombre représentant un code d'erreur de vérification.
      *
      * @var integer $_verifyNumError
      */
-    protected int $_verifyNumError = 0;
+    protected $_verifyNumError = 0;
 
     /**
      * Texte de la description de l'erreur de vérification.
      *
      * @var string $_verifyTextError
      */
-    protected string $_verifyTextError = 'Initialisation';
+    protected $_verifyTextError = 'Initialisation';
 
     /**
      * Booléen si la dissimulation de lien est autorisée.
      *
      * @var boolean $_permitObfuscated
      */
-    protected bool $_permitObfuscated = false;
+    protected $_permitObfuscated = false;
 
 
     /**

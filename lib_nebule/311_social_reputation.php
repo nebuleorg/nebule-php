@@ -23,9 +23,8 @@ class SocialReputation implements SocialInterface
     /**
      * Constructeur.
      */
-    public function __construct()
+    public function __construct(nebule $nebuleInstance)
     {
-        global $nebuleInstance;
         $this->_nebuleInstance = $nebuleInstance;
     }
 

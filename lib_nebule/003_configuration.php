@@ -599,20 +599,20 @@ class Configuration
      *
      * @var nebule
      */
-    protected nebule $_nebuleInstance;
+    protected $_nebuleInstance;
 
     /**
      * Instance de la métrologie.
      *
      * @var Metrology
      */
-    private Metrology $_metrologyInstance;
+    private $_metrologyInstance;
 
     /**
      * Verrou des modifications des options dans le cache.
      * @var boolean
      */
-    private bool $_writeOptionCacheLock = false;
+    private $_writeOptionCacheLock = false;
 
     /**
      * Verrouillage de la recherche d'option via les liens.
@@ -620,14 +620,14 @@ class Configuration
      *
      * @var boolean
      */
-    private bool $_optionsByLinksIsInUse = false;
+    private $_optionsByLinksIsInUse = false;
 
     /**
      * Le cache des options déjà lues.
      *
      * @var array
      */
-    private array $_optionCache = array();
+    private $_optionCache = array();
 
     /**
      * Marque la fin de l'initialisation.
@@ -636,7 +636,7 @@ class Configuration
      *
      * @var boolean
      */
-    private bool $_permitOptionsByLinks = false;
+    private $_permitOptionsByLinks = false;
 
 
 
@@ -745,7 +745,7 @@ class Configuration
      * @param string $name
      * @return string|bool|int|null
      */
-    public function getOption(string $name): string|bool|int|null
+    public function getOption(string $name): mixed
     {
         // Vérifie le nom.
         if ($name == ''
@@ -805,7 +805,7 @@ class Configuration
      * @param string $name
      * @return string|bool|int|null
      */
-    public static function getOptionDefaultValue(string $name): string|bool|int|null
+    public static function getOptionDefaultValue(string $name): mixed
     {
         if ($name == ''
             || !is_string($name)
@@ -830,7 +830,7 @@ class Configuration
      * Est utilisé directement par la fonction _getsubordinationEntity() avant la lecture des options.
      *
      */
-    public function getOptionFromEnvironment(string $name): string|bool|int|null
+    public function getOptionFromEnvironment(string $name): mixed
     {
         if ($name == ''
             || !is_string($name)
@@ -912,7 +912,7 @@ class Configuration
      * @param string $name
      * @return string|bool|int|null
      */
-    public function getOptionFromLinks(string $name): string|bool|int|null
+    public function getOptionFromLinks(string $name): mixed
     {
         if ($name == ''
             || !is_string($name)
@@ -1006,7 +1006,7 @@ class Configuration
      * @param string|bool|int $value
      * @return boolean
      */
-    public function setOptionCache(string $name, string|bool|int $value): string|bool|int
+    public function setOptionCache(string $name, mixed $value): mixed
     {
         // Vérifie le verrouillage.
         if ($this->_writeOptionCacheLock)
@@ -1047,7 +1047,7 @@ class Configuration
      * @param string $entity
      * @return boolean
      */
-    public function setOptionEnvironment(string $name, string|bool|int $value, string $entity = ''): bool
+    public function setOptionEnvironment(string $name, mixed $value, string $entity = ''): bool
     {
         // Vérifie le nom.
         if ($name == ''
@@ -1202,7 +1202,7 @@ class Configuration
      * @param string|bool|int $value
      * @return bool|int|string|null
      */
-    private function _transtypeValue(string $name, string|bool|int $value): bool|int|string|null
+    private function _transtypeValue(string $name, mixed $value): mixed
     {
         // Transcode value.
         switch (self::OPTIONS_TYPE[$name]) {

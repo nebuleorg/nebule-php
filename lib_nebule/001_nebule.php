@@ -27,85 +27,10 @@ class nebule
     const SECURITY_MASTER_URL = 'http://security.master.nebule.org';
     const CODE_MASTER_URL = 'http://code.master.nebule.org';
 
-    // Les valeurs par défaut des options.
-    const DEFAULT_PUPPETMASTER = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
-    const DEFAULT_HOST_URL = 'localhost';
-    const DEFAULT_PERMIT_WRITE = true;
-    const DEFAULT_PERMIT_WRITE_OBJECT = true;
-    const DEFAULT_PERMIT_CREATE_OBJECT = true;
-    const DEFAULT_PERMIT_SYNCHRONIZE_OBJECT = false;
-    const DEFAULT_PERMIT_PROTECTED_OBJECT = true;
-    const DEFAULT_PERMIT_WRITE_LINK = true;
-    const DEFAULT_PERMIT_CREATE_LINK = true;
-    const DEFAULT_PERMIT_SYNCHRONIZE_LINK = false;
-    const DEFAULT_PERMIT_UPLOAD_LINK = false;
-    const DEFAULT_PERMIT_PUBLIC_UPLOAD_LINK = false;
-    const DEFAULT_PERMIT_PUBLIC_UPLOAD_CODE_MASTER_LINK = true;
-    const DEFAULT_PERMIT_OBFUSCATED_LINK = true;
-    const DEFAULT_PERMIT_WRITE_ENTITY = true;
-    const DEFAULT_PERMIT_WRITE_GROUP = true;
-    const DEFAULT_PERMIT_WRITE_CONVERSATION = true;
-    const DEFAULT_PERMIT_CURRENCY = true;
-    const DEFAULT_PERMIT_WRITE_CURRENCY = true;
-    const DEFAULT_PERMIT_CREATE_CURRENCY = false;
-    const DEFAULT_PERMIT_WRITE_TRANSACTION = true;
-    const DEFAULT_PERMIT_OBFUSCATED_TRANSACTION = false;
-    const DEFAULT_PERMIT_SYNCHRONIZE_APPLICATIONS = false;
-    const DEFAULT_PERMIT_PUBLIC_SYNCHRONIZE_APPLICATIONS = false;
-    const DEFAULT_PERMIT_PUBLIC_CREATE_ENTITY = false;
-    const DEFAULT_PERMIT_DELETE_OBJECT_ON_UNKNOW_HASH = true;
-    const DEFAULT_PERMIT_CHECK_SIGN_ON_VERIFY = true;
-    const DEFAULT_PERMIT_CHECK_SIGN_ON_LIST = true;
-    const DEFAULT_PERMIT_CHECK_OBJECT_HASH = true;
-    const DEFAULT_PERMIT_LIST_INVALID_LINKS = false;
-    const DEFAULT_PERMIT_HISTORY_LINKS_SIGN = false;
-    const DEFAULT_PERMIT_INSTANCE_ENTITY_AS_AUTHORITY = false;
-    const DEFAULT_PERMIT_DEFAULT_ENTITY_AS_AUTHORITY = false;
-    const DEFAULT_PERMIT_LOCAL_SECONDARY_AUTHORITY = true;
-    const DEFAULT_PERMIT_RECOVERY_ENTITIES = false;
-    const DEFAULT_PERMIT_RECOVERY_REMOVE_ENTITY = false;
-    const DEFAULT_PERMIT_INSTANCE_ENTITY_AS_RECOVERY = false;
-    const DEFAULT_PERMIT_DEFAULT_ENTITY_AS_RECOVERY = false;
-    const DEFAULT_PERMIT_ADD_LINK_TO_SIGNER = true;
-    const DEFAULT_PERMIT_LIST_OTHER_HASH = false;
-    const DEFAULT_PERMIT_LOCALISATION_STATS = true;
-    const DEFAULT_PERMIT_FOLLOW_UPDATES = true;
-    const DEFAULT_PERMIT_ONLINE_RESCUE = false;
-    const DEFAULT_PERMIT_LOGS = false;
-    const DEFAULT_PERMIT_JAVASCRIPT = true;
-    const DEFAULT_LOGS_LEVEL = 'NORMAL';
-    const DEFAULT_MODE_RESCUE = false;
-    const DEFAULT_CRYPTO_LIBRARY = 'openssl';
-    const DEFAULT_CRYPTO_HASH_ALGORITHM = 'sha2.256';
-    const DEFAULT_CRYPTO_SYMETRIC_ALGORITHM = 'aes-256-ctr';
-    const DEFAULT_CRYPTO_ASYMETRIC_ALGORITHM = 'rsa.2048';
-    const DEFAULT_SOCIAL_LIBRARY = 'strict';
-    const DEFAULT_IO = 'ioFileSystem';
-    const DEFAULT_IO_READ_MAX_LINKS = 2000;
-    const DEFAULT_IO_READ_MAX_DATA = 10000;
-    const DEFAULT_IO_READ_MAX_UPLOAD = 2000000;
-    const DEFAULT_IO_TIMEOUT = 1;
-    const DEFAULT_DISPLAY_UNSECURE_URL = true;
-    const DEFAULT_DISPLAY_NAME_SIZE = 128;
-    const DEFAULT_DISPLAY_EMOTIONS = true;
-    const DEFAULT_FORCE_DISPLAY_ENTITY_ON_TITLE = false;
-    const DEFAULT_MAX_FOLLOWED_UPDATES = 100;
-    const DEFAULT_PERMIT_SESSION_OPTIONS = true;
-    const DEFAULT_PERMIT_SESSION_BUFFER = true;
-    const DEFAULT_PERMIT_BUFFER_IO = true;
-    const DEFAULT_SESSION_BUFFER_SIZE = 1000;
-    const DEFAULT_APPLICATION = '0';
-    const DEFAULT_OBFUSCATE_LINKS = false;
-    const DEFAULT_LINKS_VERSION = '2.0';
-    const DEFAULT_SUBORDINATION_TO_ENTITY = '';
-
     // Les commandes.
     const COMMAND_SWITCH_APPLICATION = 'a';
-    const COMMAND_BREAK_BOOTSTRAP = 'b';
     const COMMAND_FLUSH = 'f';
-    const COMMAND_INLINE = 'i';
     const COMMAND_RESCUE = 'r';
-    const COMMAND_UPDATE = 'u';
     const COMMAND_LOGOUT_ENTITY = 'logout';
     const COMMAND_SWITCH_TO_ENTITY = 'switch';
     const COMMAND_SELECT_OBJECT = 'obj';
@@ -221,7 +146,7 @@ class nebule
     /**
      * Liste des objets à usage réservé.
      */
-    static private array $RESERVED_OBJECTS_LIST = array(
+    static private $RESERVED_OBJECTS_LIST = array(
         'nebule/objet',
         'nebule/objet/hash',
         'nebule/objet/homomorphe',
@@ -305,42 +230,42 @@ class nebule
      *
      * @var nebule
      */
-    private nebule $_nebuleInstance;
+    private $_nebuleInstance;
 
     /**
      * Instance de gestion de la métrologie, des journaux et des statistiques internes.
      *
      * @var Metrology
      */
-    private Metrology $_metrology;
+    private $_metrology;
 
     /**
      * Instance de gestion de la configuration et des options.
      *
      * @var Configuration
      */
-    private Configuration $_configuration;
+    private $_configuration;
 
     /**
      * Instance des entrées/sorties.
      *
      * @var ioInterface
      */
-    private ioInterface $_io;
+    private $_io;
 
     /**
      * Instance de gestion de la cryptographie.
      *
      * @var CryptoInterface
      */
-    private CryptoInterface $_crypto;
+    private $_crypto;
 
     /**
      * Instance de gestion des relations sociales des liens.
      *
      * @var SocialInterface
      */
-    private SocialInterface $_social;
+    private $_social;
 
     private $_ioDefaultPrefix = '';
 
@@ -349,77 +274,77 @@ class nebule
      *
      * @var array
      */
-    private array $_cacheLinks = array();
+    private $_cacheLinks = array();
 
     /**
      * Le tableau de mise en cache des objets.
      *
      * @var array
      */
-    private array $_cacheObjects = array();
+    private $_cacheObjects = array();
 
     /**
      * Le tableau de mise en cache des entités.
      *
      * @var array
      */
-    private array $_cacheEntities = array();
+    private $_cacheEntities = array();
 
     /**
      * Le tableau de mise en cache des groupes.
      *
      * @var array
      */
-    private array $_cacheGroups = array();
+    private $_cacheGroups = array();
 
     /**
      * Le tableau de mise en cache des conversations.
      *
      * @var array
      */
-    private array $_cacheConversations = array();
+    private $_cacheConversations = array();
 
     /**
      * Le tableau de mise en cache des monnaies.
      *
      * @var array
      */
-    private array $_cacheCurrencies = array();
+    private $_cacheCurrencies = array();
 
     /**
      * Le tableau de mise en cache des sacs de jetons.
      *
      * @var array
      */
-    private array $_cacheTokenPools = array();
+    private $_cacheTokenPools = array();
 
     /**
      * Le tableau de mise en cache des jetons.
      *
      * @var array
      */
-    private array $_cacheTokens = array();
+    private $_cacheTokens = array();
 
     /**
      * Le tableau de mise en cache des portefeuille.
      *
      * @var array
      */
-    private array $_cacheWallets = array();
+    private $_cacheWallets = array();
 
     /**
      * Le tableau de mise en cache des transactions.
      *
      * @var array
      */
-    private array $_cacheTransactions = array();
+    private $_cacheTransactions = array();
 
     /**
      * Le tableau de mémorisation de la date de mise en cache des objets/entités/groupes/conversations/liens.
      *
      * @var array
      */
-    private array $_cacheDateInsertion = array();
+    private $_cacheDateInsertion = array();
 
     /**
      * Taille du cache.
@@ -617,592 +542,6 @@ class nebule
         $this->_metrology->addLog('End init nebule instance', Metrology::LOG_LEVEL_DEBUG); // Log
     }
 
-
-    /**
-     * Liste des noms des options.
-     *
-     * @var array:string
-     */
-    private static $_listOptions = array(
-        'puppetmaster',
-        'hostURL',
-        'permitWrite',
-        'permitWriteObject',
-        'permitCreateObject',
-        'permitSynchronizeObject',
-        'permitProtectedObject',
-        'permitWriteLink',
-        'permitCreateLink',
-        'permitSynchronizeLink',
-        'permitUploadLink',
-        'permitPublicUploadLink',
-        'permitPublicUploadCodeAuthoritiesLink',
-        'permitObfuscatedLink',
-        'permitWriteEntity',
-        'permitPublicCreateEntity',
-        'permitWriteGroup',
-        'permitWriteConversation',
-        'permitCurrency',
-        'permitWriteCurrency',
-        'permitCreateCurrency',
-        'permitWriteTransaction',
-        'permitObfuscatedTransaction',
-        'permitSynchronizeApplication',
-        'permitPublicSynchronizeApplication',
-        'permitDeleteObjectOnUnknownHash',
-        'permitCheckSignOnVerify',
-        'permitCheckSignOnList',
-        'permitCheckObjectHash',
-        'permitListInvalidLinks',
-        'permitHistoryLinksSign',
-        'permitInstanceEntityAsAuthority',
-        'permitDefaultEntityAsAuthority',
-        'permitLocalSecondaryAuthorities',
-        'permitRecoveryEntities',
-        'permitRecoveryRemoveEntity',
-        'permitInstanceEntityAsRecovery',
-        'permitDefaultEntityAsRecovery',
-        'permitAddLinkToSigner',
-        'permitListOtherHash',
-        'permitLocalisationStats',
-        'permitFollowUpdates',
-        'permitOnlineRescue',
-        'permitLogs',
-        'permitJavaScript',
-        'logsLevel',
-        'modeRescue',
-        'cryptoLibrary',
-        'cryptoHashAlgorithm',
-        'cryptoSymetricAlgorithm',
-        'cryptoAsymetricAlgorithm',
-        'socialLibrary',
-        'ioLibrary',
-        'ioReadMaxLinks',
-        'ioReadMaxData',
-        'ioReadMaxUpload',
-        'ioTimeout',
-        'displayUnsecureURL',
-        'displayNameSize',
-        'displayEmotions',
-        'forceDisplayEntityOnTitle',
-        'maxFollowedUpdates',
-        'permitSessionOptions',
-        'permitSessionBuffer',
-        'permitBufferIO', //  TODO Need to be used on the library in side of permitSessionBuffer...
-        'sessionBufferSize',
-        'defaultCurrentEntity',
-        'defaultApplication',
-        'defaultObfuscateLinks',
-        'defaultLinksVersion',
-        'subordinationEntity',
-    );
-
-    /**
-     * Liste des catégories de tri des options.
-     *
-     * @var array:string
-     */
-    private static $_listCategoriesOptions = array(
-        'Global',
-        'Objects',
-        'Links',
-        'Entities',
-        'Groups',
-        'Conversations',
-        'Currencies',
-        'Applications',
-        'Logs',
-        'Cryptography',
-        'I/O',
-        'Social',
-        'Display',
-    );
-
-    /**
-     * Liste de catégorisation des options.
-     *
-     * Les types supportés :
-     * - string
-     * - boolean
-     * - integer
-     *
-     * @var array:string
-     */
-    private static $_listOptionsCategory = array(
-        'puppetmaster' => 'Global',
-        'hostURL' => 'Global',
-        'permitWrite' => 'Global',
-        'permitWriteObject' => 'Objects',
-        'permitCreateObject' => 'Objects',
-        'permitSynchronizeObject' => 'Objects',
-        'permitProtectedObject' => 'Objects',
-        'permitWriteLink' => 'Links',
-        'permitCreateLink' => 'Links',
-        'permitSynchronizeLink' => 'Links',
-        'permitUploadLink' => 'Links',
-        'permitPublicUploadLink' => 'Links',
-        'permitPublicUploadCodeAuthoritiesLink' => 'Links',
-        'permitObfuscatedLink' => 'Links',
-        'permitWriteEntity' => 'Entities',
-        'permitPublicCreateEntity' => 'Entities',
-        'permitWriteGroup' => 'Groups',
-        'permitWriteConversation' => 'Conversations',
-        'permitCurrency' => 'Currencies',
-        'permitWriteCurrency' => 'Currencies',
-        'permitCreateCurrency' => 'Currencies',
-        'permitWriteTransaction' => 'Currencies',
-        'permitObfuscatedTransaction' => 'Currencies',
-        'permitSynchronizeApplication' => 'Applications',
-        'permitPublicSynchronizeApplication' => 'Applications',
-        'permitDeleteObjectOnUnknownHash' => 'Objects',
-        'permitCheckSignOnVerify' => 'Links',
-        'permitCheckSignOnList' => 'Links',
-        'permitCheckObjectHash' => 'Objects',
-        'permitListInvalidLinks' => 'Links',
-        'permitHistoryLinksSign' => 'Links',
-        'permitInstanceEntityAsAuthority' => 'Entities',
-        'permitDefaultEntityAsAuthority' => 'Entities',
-        'permitLocalSecondaryAuthorities' => 'Entities',
-        'permitRecoveryEntities' => 'Entities',
-        'permitRecoveryRemoveEntity' => 'Entities',
-        'permitInstanceEntityAsRecovery' => 'Entities',
-        'permitDefaultEntityAsRecovery' => 'Entities',
-        'permitAddLinkToSigner' => 'Links',
-        'permitListOtherHash' => 'Links',
-        'permitLocalisationStats' => 'Global',
-        'permitFollowUpdates' => 'Links',
-        'permitOnlineRescue' => 'Global',
-        'permitLogs' => 'Logs',
-        'permitJavaScript' => 'Display',
-        'logsLevel' => 'Logs',
-        'modeRescue' => 'Global',
-        'cryptoLibrary' => 'Cryptography',
-        'cryptoHashAlgorithm' => 'Cryptography',
-        'cryptoSymetricAlgorithm' => 'Cryptography',
-        'cryptoAsymetricAlgorithm' => 'Cryptography',
-        'socialLibrary' => 'Social',
-        'ioLibrary' => 'I/O',
-        'ioReadMaxLinks' => 'I/O',
-        'ioReadMaxData' => 'I/O',
-        'ioReadMaxUpload' => 'I/O',
-        'ioTimeout' => 'I/O',
-        'displayUnsecureURL' => 'Display',
-        'displayNameSize' => 'Display',
-        'displayEmotions' => 'Display',
-        'forceDisplayEntityOnTitle' => 'Display',
-        'maxFollowedUpdates' => 'Links',
-        'permitSessionOptions' => 'I/O',
-        'permitSessionBuffer' => 'I/O',
-        'permitBufferIO' => 'I/O',
-        'sessionBufferSize' => 'I/O',
-        'defaultCurrentEntity' => 'Entities',
-        'defaultApplication' => 'Applications',
-        'defaultObfuscateLinks' => 'Links',
-        'defaultLinksVersion' => 'Links',
-        'subordinationEntity' => 'Global',
-    );
-
-    /**
-     * Liste des types des options.
-     *
-     * Les types supportés :
-     * - string
-     * - boolean
-     * - integer
-     *
-     * @var array:string
-     */
-    private static $_listOptionsType = array(
-        'puppetmaster' => 'string',
-        'hostURL' => 'string',
-        'permitWrite' => 'boolean',
-        'permitWriteObject' => 'boolean',
-        'permitCreateObject' => 'boolean',
-        'permitSynchronizeObject' => 'boolean',
-        'permitProtectedObject' => 'boolean',
-        'permitWriteLink' => 'boolean',
-        'permitCreateLink' => 'boolean',
-        'permitSynchronizeLink' => 'boolean',
-        'permitUploadLink' => 'boolean',
-        'permitPublicUploadLink' => 'boolean',
-        'permitPublicUploadCodeAuthoritiesLink' => 'boolean',
-        'permitObfuscatedLink' => 'boolean',
-        'permitWriteEntity' => 'boolean',
-        'permitPublicCreateEntity' => 'boolean',
-        'permitWriteGroup' => 'boolean',
-        'permitWriteConversation' => 'boolean',
-        'permitCurrency' => 'boolean',
-        'permitWriteCurrency' => 'boolean',
-        'permitCreateCurrency' => 'boolean',
-        'permitWriteTransaction' => 'boolean',
-        'permitObfuscatedTransaction' => 'boolean',
-        'permitSynchronizeApplication' => 'boolean',
-        'permitPublicSynchronizeApplication' => 'boolean',
-        'permitDeleteObjectOnUnknownHash' => 'boolean',
-        'permitCheckSignOnVerify' => 'boolean',
-        'permitCheckSignOnList' => 'boolean',
-        'permitCheckObjectHash' => 'boolean',
-        'permitListInvalidLinks' => 'boolean',
-        'permitHistoryLinksSign' => 'boolean',
-        'permitInstanceEntityAsAuthority' => 'boolean',
-        'permitDefaultEntityAsAuthority' => 'boolean',
-        'permitLocalSecondaryAuthorities' => 'boolean',
-        'permitRecoveryEntities' => 'boolean',
-        'permitRecoveryRemoveEntity' => 'boolean',
-        'permitInstanceEntityAsRecovery' => 'boolean',
-        'permitDefaultEntityAsRecovery' => 'boolean',
-        'permitAddLinkToSigner' => 'boolean',
-        'permitListOtherHash' => 'boolean',
-        'permitLocalisationStats' => 'boolean',
-        'permitFollowUpdates' => 'boolean',
-        'permitOnlineRescue' => 'boolean',
-        'permitLogs' => 'boolean',
-        'permitJavaScript' => 'boolean',
-        'logsLevel' => 'string',
-        'modeRescue' => 'boolean',
-        'cryptoLibrary' => 'string',
-        'cryptoHashAlgorithm' => 'string',
-        'cryptoSymetricAlgorithm' => 'string',
-        'cryptoAsymetricAlgorithm' => 'string',
-        'socialLibrary' => 'string',
-        'ioLibrary' => 'string',
-        'ioReadMaxLinks' => 'integer',
-        'ioReadMaxData' => 'integer',
-        'ioReadMaxUpload' => 'integer',
-        'ioTimeout' => 'integer',
-        'displayUnsecureURL' => 'boolean',
-        'displayNameSize' => 'integer',
-        'displayEmotions' => 'boolean',
-        'forceDisplayEntityOnTitle' => 'boolean',
-        'maxFollowedUpdates' => 'integer',
-        'permitSessionOptions' => 'boolean',
-        'permitSessionBuffer' => 'boolean',
-        'permitBufferIO' => 'boolean',
-        'sessionBufferSize' => 'integer',
-        'defaultCurrentEntity' => 'string',
-        'defaultApplication' => 'string',
-        'defaultObfuscateLinks' => 'boolean',
-        'defaultLinksVersion' => 'string',
-        'subordinationEntity' => 'string',
-    );
-
-    /**
-     * Liste des options qui sont modifiables.
-     * Les options non modifiables peuvent cependant être forcées dans le fichier d'environnement.
-     *
-     * @var array:boolean
-     */
-    private static $_listOptionsWritable = array(
-        'puppetmaster' => false,
-        'hostURL' => true,
-        'permitWrite' => false,
-        'permitWriteObject' => true,
-        'permitCreateObject' => true,
-        'permitSynchronizeObject' => true,
-        'permitProtectedObject' => true,
-        'permitWriteLink' => true,
-        'permitCreateLink' => true,
-        'permitSynchronizeLink' => true,
-        'permitUploadLink' => true,
-        'permitPublicUploadLink' => true,
-        'permitPublicUploadCodeAuthoritiesLink' => true,
-        'permitObfuscatedLink' => true,
-        'permitWriteEntity' => true,
-        'permitPublicCreateEntity' => true,
-        'permitWriteGroup' => true,
-        'permitWriteConversation' => true,
-        'permitCurrency' => true,
-        'permitWriteCurrency' => true,
-        'permitCreateCurrency' => true,
-        'permitWriteTransaction' => true,
-        'permitObfuscatedTransaction' => true,
-        'permitSynchronizeApplication' => true,
-        'permitPublicSynchronizeApplication' => true,
-        'permitDeleteObjectOnUnknownHash' => false,
-        'permitCheckSignOnVerify' => false,
-        'permitCheckSignOnList' => true,
-        'permitCheckObjectHash' => false,
-        'permitListInvalidLinks' => false,
-        'permitHistoryLinksSign' => true,
-        'permitInstanceEntityAsAuthority' => false,
-        'permitDefaultEntityAsAuthority' => false,
-        'permitLocalSecondaryAuthorities' => true, // @todo à voir...
-        'permitRecoveryEntities' => false,
-        'permitRecoveryRemoveEntity' => false,
-        'permitInstanceEntityAsRecovery' => false,
-        'permitDefaultEntityAsRecovery' => false,
-        'permitAddLinkToSigner' => true,
-        'permitListOtherHash' => true,
-        'permitLocalisationStats' => true,
-        'permitFollowUpdates' => true,
-        'permitOnlineRescue' => true,
-        'permitLogs' => true,
-        'permitJavaScript' => false,
-        'logsLevel' => true,
-        'modeRescue' => false,
-        'cryptoLibrary' => true,
-        'cryptoHashAlgorithm' => true,
-        'cryptoSymetricAlgorithm' => true,
-        'cryptoAsymetricAlgorithm' => true,
-        'socialLibrary' => true,
-        'ioLibrary' => true,
-        'ioReadMaxLinks' => true,
-        'ioReadMaxData' => true,
-        'ioReadMaxUpload' => true,
-        'ioTimeout' => true,
-        'displayUnsecureURL' => false,
-        'displayNameSize' => true,
-        'displayEmotions' => true,
-        'forceDisplayEntityOnTitle' => true,
-        'maxFollowedUpdates' => true,
-        'permitSessionOptions' => true,
-        'permitSessionBuffer' => true,
-        'permitBufferIO' => true,
-        'sessionBufferSize' => true,
-        'defaultCurrentEntity' => true,
-        'defaultApplication' => true,
-        'defaultObfuscateLinks' => true,
-        'defaultLinksVersion' => true,
-        'subordinationEntity' => false,
-    );
-
-    /**
-     * Liste des valeurs par défaut des options.
-     *
-     * @var array:string|boolean|integer
-     */
-    private static $_listOptionsDefaultValue = array(
-        'puppetmaster' => nebule::DEFAULT_PUPPETMASTER,
-        'hostURL' => nebule::DEFAULT_HOST_URL,
-        'permitWrite' => nebule::DEFAULT_PERMIT_WRITE,
-        'permitWriteObject' => nebule::DEFAULT_PERMIT_WRITE_OBJECT,
-        'permitCreateObject' => nebule::DEFAULT_PERMIT_CREATE_OBJECT,
-        'permitSynchronizeObject' => nebule::DEFAULT_PERMIT_SYNCHRONIZE_OBJECT,
-        'permitProtectedObject' => nebule::DEFAULT_PERMIT_PROTECTED_OBJECT,
-        'permitWriteLink' => nebule::DEFAULT_PERMIT_WRITE_LINK,
-        'permitCreateLink' => nebule::DEFAULT_PERMIT_CREATE_LINK,
-        'permitSynchronizeLink' => nebule::DEFAULT_PERMIT_SYNCHRONIZE_LINK,
-        'permitUploadLink' => nebule::DEFAULT_PERMIT_UPLOAD_LINK,
-        'permitPublicUploadLink' => nebule::DEFAULT_PERMIT_PUBLIC_UPLOAD_LINK,
-        'permitPublicUploadCodeAuthoritiesLink' => nebule::DEFAULT_PERMIT_PUBLIC_UPLOAD_CODE_MASTER_LINK,
-        'permitObfuscatedLink' => nebule::DEFAULT_PERMIT_OBFUSCATED_LINK,
-        'permitWriteEntity' => nebule::DEFAULT_PERMIT_WRITE_ENTITY,
-        'permitPublicCreateEntity' => nebule::DEFAULT_PERMIT_PUBLIC_CREATE_ENTITY,
-        'permitWriteGroup' => nebule::DEFAULT_PERMIT_WRITE_GROUP,
-        'permitWriteConversation' => nebule::DEFAULT_PERMIT_WRITE_CONVERSATION,
-        'permitCurrency' => nebule::DEFAULT_PERMIT_CURRENCY,
-        'permitWriteCurrency' => nebule::DEFAULT_PERMIT_WRITE_CURRENCY,
-        'permitCreateCurrency' => nebule::DEFAULT_PERMIT_CREATE_CURRENCY,
-        'permitWriteTransaction' => nebule::DEFAULT_PERMIT_WRITE_TRANSACTION,
-        'permitObfuscatedTransaction' => nebule::DEFAULT_PERMIT_OBFUSCATED_TRANSACTION,
-        'permitSynchronizeApplication' => nebule::DEFAULT_PERMIT_SYNCHRONIZE_APPLICATIONS,
-        'permitPublicSynchronizeApplication' => nebule::DEFAULT_PERMIT_PUBLIC_SYNCHRONIZE_APPLICATIONS,
-        'permitDeleteObjectOnUnknownHash' => nebule::DEFAULT_PERMIT_DELETE_OBJECT_ON_UNKNOW_HASH,
-        'permitCheckSignOnVerify' => nebule::DEFAULT_PERMIT_CHECK_SIGN_ON_VERIFY,
-        'permitCheckSignOnList' => nebule::DEFAULT_PERMIT_CHECK_SIGN_ON_LIST,
-        'permitCheckObjectHash' => nebule::DEFAULT_PERMIT_CHECK_OBJECT_HASH,
-        'permitListInvalidLinks' => nebule::DEFAULT_PERMIT_LIST_INVALID_LINKS,
-        'permitHistoryLinksSign' => nebule::DEFAULT_PERMIT_HISTORY_LINKS_SIGN,
-        'permitInstanceEntityAsAuthority' => nebule::DEFAULT_PERMIT_INSTANCE_ENTITY_AS_AUTHORITY,
-        'permitDefaultEntityAsAuthority' => nebule::DEFAULT_PERMIT_DEFAULT_ENTITY_AS_AUTHORITY,
-        'permitLocalSecondaryAuthorities' => nebule::DEFAULT_PERMIT_LOCAL_SECONDARY_AUTHORITY,
-        'permitRecoveryEntities' => nebule::DEFAULT_PERMIT_RECOVERY_ENTITIES,
-        'permitRecoveryRemoveEntity' => nebule::DEFAULT_PERMIT_RECOVERY_REMOVE_ENTITY,
-        'permitInstanceEntityAsRecovery' => nebule::DEFAULT_PERMIT_INSTANCE_ENTITY_AS_RECOVERY,
-        'permitDefaultEntityAsRecovery' => nebule::DEFAULT_PERMIT_DEFAULT_ENTITY_AS_RECOVERY,
-        'permitAddLinkToSigner' => nebule::DEFAULT_PERMIT_ADD_LINK_TO_SIGNER,
-        'permitListOtherHash' => nebule::DEFAULT_PERMIT_LIST_OTHER_HASH,
-        'permitLocalisationStats' => nebule::DEFAULT_PERMIT_LOCALISATION_STATS,
-        'permitFollowUpdates' => nebule::DEFAULT_PERMIT_FOLLOW_UPDATES,
-        'permitOnlineRescue' => nebule::DEFAULT_PERMIT_ONLINE_RESCUE,
-        'permitLogs' => nebule::DEFAULT_PERMIT_LOGS,
-        'permitJavaScript' => nebule::DEFAULT_PERMIT_JAVASCRIPT,
-        'logsLevel' => nebule::DEFAULT_LOGS_LEVEL,
-        'modeRescue' => nebule::DEFAULT_MODE_RESCUE,
-        'cryptoLibrary' => nebule::DEFAULT_CRYPTO_LIBRARY,
-        'cryptoHashAlgorithm' => nebule::DEFAULT_CRYPTO_HASH_ALGORITHM,
-        'cryptoSymetricAlgorithm' => nebule::DEFAULT_CRYPTO_SYMETRIC_ALGORITHM,
-        'cryptoAsymetricAlgorithm' => nebule::DEFAULT_CRYPTO_ASYMETRIC_ALGORITHM,
-        'socialLibrary' => nebule::DEFAULT_SOCIAL_LIBRARY,
-        'ioLibrary' => nebule::DEFAULT_IO,
-        'ioReadMaxLinks' => nebule::DEFAULT_IO_READ_MAX_LINKS,
-        'ioReadMaxData' => nebule::DEFAULT_IO_READ_MAX_DATA,
-        'ioReadMaxUpload' => nebule::DEFAULT_IO_READ_MAX_UPLOAD,
-        'ioTimeout' => nebule::DEFAULT_IO_TIMEOUT,
-        'displayUnsecureURL' => nebule::DEFAULT_DISPLAY_UNSECURE_URL,
-        'displayNameSize' => nebule::DEFAULT_DISPLAY_NAME_SIZE,
-        'displayEmotions' => nebule::DEFAULT_DISPLAY_EMOTIONS,
-        'forceDisplayEntityOnTitle' => nebule::DEFAULT_FORCE_DISPLAY_ENTITY_ON_TITLE,
-        'maxFollowedUpdates' => nebule::DEFAULT_MAX_FOLLOWED_UPDATES,
-        'permitSessionOptions' => nebule::DEFAULT_PERMIT_SESSION_OPTIONS,
-        'permitSessionBuffer' => nebule::DEFAULT_PERMIT_SESSION_BUFFER,
-        'permitBufferIO' => nebule::DEFAULT_PERMIT_BUFFER_IO,
-        'sessionBufferSize' => nebule::DEFAULT_SESSION_BUFFER_SIZE,
-        'defaultCurrentEntity' => nebule::DEFAULT_PUPPETMASTER,
-        'defaultApplication' => nebule::DEFAULT_APPLICATION,
-        'defaultObfuscateLinks' => nebule::DEFAULT_OBFUSCATE_LINKS,
-        'defaultLinksVersion' => nebule::DEFAULT_LINKS_VERSION,
-        'subordinationEntity' => nebule::DEFAULT_SUBORDINATION_TO_ENTITY,
-    );
-
-    /**
-     * Liste de la criticité des options.
-     *
-     * @var array:string
-     */
-    private static $_listOptionsCriticality = array(
-        'puppetmaster' => 'critical',
-        'hostURL' => 'useful',
-        'permitWrite' => 'useful',
-        'permitWriteObject' => 'useful',
-        'permitCreateObject' => 'useful',
-        'permitSynchronizeObject' => 'useful',
-        'permitProtectedObject' => 'useful',
-        'permitWriteLink' => 'useful',
-        'permitCreateLink' => 'useful',
-        'permitSynchronizeLink' => 'useful',
-        'permitUploadLink' => 'careful',
-        'permitPublicUploadLink' => 'careful',
-        'permitPublicUploadCodeAuthoritiesLink' => 'useful',
-        'permitObfuscatedLink' => 'useful',
-        'permitWriteEntity' => 'useful',
-        'permitPublicCreateEntity' => 'critical',
-        'permitWriteGroup' => 'useful',
-        'permitWriteConversation' => 'useful',
-        'permitCurrency' => 'useful',
-        'permitWriteCurrency' => 'useful',
-        'permitCreateCurrency' => 'useful',
-        'permitWriteTransaction' => 'useful',
-        'permitObfuscatedTransaction' => 'careful',
-        'permitSynchronizeApplication' => 'careful',
-        'permitPublicSynchronizeApplication' => 'careful',
-        'permitDeleteObjectOnUnknownHash' => 'critical',
-        'permitCheckSignOnVerify' => 'critical',
-        'permitCheckSignOnList' => 'critical',
-        'permitCheckObjectHash' => 'critical',
-        'permitListInvalidLinks' => 'critical',
-        'permitHistoryLinksSign' => 'useful',
-        'permitInstanceEntityAsAuthority' => 'careful',
-        'permitDefaultEntityAsAuthority' => 'careful',
-        'permitLocalSecondaryAuthorities' => 'careful',
-        'permitRecoveryEntities' => 'critical',
-        'permitRecoveryRemoveEntity' => 'careful',
-        'permitInstanceEntityAsRecovery' => 'critical',
-        'permitDefaultEntityAsRecovery' => 'critical',
-        'permitAddLinkToSigner' => 'useful',
-        'permitListOtherHash' => 'useful',
-        'permitLocalisationStats' => 'useful',
-        'permitFollowUpdates' => 'useful',
-        'permitOnlineRescue' => 'careful',
-        'permitLogs' => 'useful',
-        'permitJavaScript' => 'careful',
-        'logsLevel' => 'useful',
-        'modeRescue' => 'critical',
-        'cryptoLibrary' => 'careful',
-        'cryptoHashAlgorithm' => 'careful',
-        'cryptoSymetricAlgorithm' => 'careful',
-        'cryptoAsymetricAlgorithm' => 'careful',
-        'socialLibrary' => 'careful',
-        'ioLibrary' => 'careful',
-        'ioReadMaxLinks' => 'useful',
-        'ioReadMaxData' => 'useful',
-        'ioReadMaxUpload' => 'useful',
-        'ioTimeout' => 'useful',
-        'displayUnsecureURL' => 'critical',
-        'displayNameSize' => 'useful',
-        'displayEmotions' => 'useful',
-        'forceDisplayEntityOnTitle' => 'useful',
-        'maxFollowedUpdates' => 'useful',
-        'permitSessionOptions' => 'careful',
-        'permitSessionBuffer' => 'careful',
-        'permitBufferIO' => 'careful',
-        'sessionBufferSize' => 'useful',
-        'defaultCurrentEntity' => 'useful',
-        'defaultApplication' => 'useful',
-        'defaultObfuscateLinks' => 'useful',
-        'defaultLinksVersion' => 'useful',
-        'subordinationEntity' => 'critical',
-    );
-
-    /**
-     * Liste des descriptions des options.
-     * @todo
-     *
-     * @var array:string
-     */
-    private static $_listOptionsDescription = array(
-        'puppetmaster' => 'The master of all. the authority of all globals authorities.',
-        'hostURL' => "The URL, domain name, of this server. This is use by others servers and others entities to find this server and it's local entities.",
-        'permitWrite' => 'The big switch to write protect all the instance on this server. This switch is not an object but is on the options file.',
-        'permitWriteObject' => 'The switch to permit objects writing.',
-        'permitCreateObject' => 'The switch to permit creation of new objects localy.',
-        'permitSynchronizeObject' => 'The switch to permit to synchronize (update) objects from other localisations.',
-        'permitProtectedObject' => 'The switch to permit read/write protected objects. On false, generation of liens k for protected objects is disabled and all existing/downloaded links for protected objects are assumed as invalid and dropped.',
-        'permitWriteLink' => 'The switch to permit links writing.',
-        'permitCreateLink' => 'The switch to permit creation of new links localy.',
-        'permitSynchronizeLink' => 'The switch to permit to synchronize links of objects from other localisations.',
-        'permitUploadLink' => 'The switch to permit ask creation and sign of new links uploaded within an URL.',
-        'permitPublicUploadLink' => 'The switch to permit ask upload signed links (from known entities) within an URL.',
-        'permitPublicUploadCodeAuthoritiesLink' => 'The switch to permit ask upload signed links by the code master within an URL.',
-        'permitObfuscatedLink' => 'The switch to permit read/write obfuscated links. On false, generation of obfuscated liens c is disabled and all existing/downloaded obfuscated links are assumed as invalid and dropped.',
-        'permitWriteEntity' => 'The switch to permit entities writing.',
-        'permitPublicCreateEntity' => 'The switch to permit create new entity by anyone.',
-        'permitWriteGroup' => 'The switch to permit groups writing.',
-        'permitWriteConversation' => 'The switch to permit conversations writing.',
-        'permitCurrency' => 'The switch to permit use of currencies.',
-        'permitWriteCurrency' => 'The switch to permit currencies writing.',
-        'permitCreateCurrency' => 'The switch to permit currencies creation.',
-        'permitWriteTransaction' => 'The switch to permit transactions writing.',
-        'permitObfuscatedTransaction' => 'The switch to permit transactions on obfuscated links.',
-        'permitSynchronizeApplication' => 'The switch to permit to synchronize (update) applications from other localisations.',
-        'permitPublicSynchronizeApplication' => 'The switch to permit to synchronize (update) applications by anyone from other localisations.',
-        'permitDeleteObjectOnUnknownHash' => 'Permit erasing object if not valid hash type can be found.',
-        'permitCheckSignOnVerify' => 'Todo description...',
-        'permitCheckSignOnList' => 'Todo description...',
-        'permitCheckObjectHash' => 'Todo description...',
-        'permitListInvalidLinks' => 'Todo description...',
-        'permitHistoryLinksSign' => 'Todo description...',
-        'permitInstanceEntityAsAuthority' => 'Declare instance entity of this server as local authority.',
-        'permitDefaultEntityAsAuthority' => 'Declare default entity on this server as local authority.',
-        'permitLocalSecondaryAuthorities' => 'Todo description...',
-        'permitRecoveryEntities' => 'Activate the recovery process. Local recovery entities are listed and new protection of objects are automaticaly shared with recovery entities.',
-        'permitRecoveryRemoveEntity' => 'An entity can remove shared protection to recovery entity. By default, it is not permited.',
-        'permitInstanceEntityAsRecovery' => 'Declare instance entity of this server as recovery entity.',
-        'permitDefaultEntityAsRecovery' => 'Declare default entity on this server as recovery entity.',
-        'permitAddLinkToSigner' => 'Todo description...',
-        'permitListOtherHash' => 'Todo description...',
-        'permitLocalisationStats' => 'Todo description...',
-        'permitFollowUpdates' => 'Todo description...',
-        'permitOnlineRescue' => 'Todo description...',
-        'permitLogs' => 'Activate more logs (syslog) on internal process.',
-        'permitJavaScript' => 'Activate by default JavaScript (JS) on web pages.',
-        'logsLevel' => 'Select verbosity of logs. Select on NORMAL, ERROR, FUNCTION and DEBUG.',
-        'modeRescue' => 'Activate the rescue mode. Follow only links from globals authorities for applications detection.',
-        'cryptoLibrary' => 'Define the default cryptographic library used.',
-        'cryptoHashAlgorithm' => 'Define the default cryptographic hash algorythm used.',
-        'cryptoSymetricAlgorithm' => 'Define the default cryptographic symetric algorythm used.',
-        'cryptoAsymetricAlgorithm' => 'Define the default cryptographic asymetric algorythm used.',
-        'socialLibrary' => 'Todo description...',
-        'ioLibrary' => 'Todo description...',
-        'ioReadMaxLinks' => 'Maximum number of links readable in one time for one object.',
-        'ioReadMaxData' => 'Maximum quantity of bytes readable in one time from one object file content.',
-        'ioReadMaxUpload' => 'Maximum file size on upload. Overload default value upload_max_filesize on php.ini file.',
-        'ioTimeout' => 'Todo description...',
-        'displayUnsecureURL' => 'Display a warning message if the connexion link is not protected (https : HTTP overs TLS).',
-        'displayNameSize' => 'The maximum displayable size of a name of objects.',
-        'displayEmotions' => 'Display all emotions when asked by applications, or not.',
-        'forceDisplayEntityOnTitle' => 'Force display of current selected entity on application even if is the same of current entity used on library.',
-        'maxFollowedUpdates' => 'Todo description...',
-        'permitSessionOptions' => 'Todo description...',
-        'permitSessionBuffer' => 'Todo description...',
-        'permitBufferIO' => 'Todo description...',
-        'sessionBufferSize' => 'Todo description...',
-        'defaultCurrentEntity' => 'Todo description...',
-        'defaultApplication' => 'Todo description...',
-        'defaultObfuscateLinks' => 'Todo description...',
-        'defaultLinksVersion' => 'Define the version of new generated links.',
-        'subordinationEntity' => 'Define the external entity which can modify writeable options on this server instance.',
-    );
 
     /**
      * Entité de subordination des options de l'entité en cours.

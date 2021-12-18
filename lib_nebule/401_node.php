@@ -64,7 +64,7 @@ class Node implements nodeInterface
      *
      * @var nebule $_nebuleInstance
      */
-    protected nebule $_nebuleInstance;
+    protected $_nebuleInstance;
 
     /**
      * Instance de gestion de la configuration et des options.
@@ -78,28 +78,28 @@ class Node implements nodeInterface
      *
      * @var ioInterface $_io
      */
-    protected ioInterface $_io;
+    protected $_io;
 
     /**
      * Instance de la cryptographie.
      *
      * @var CryptoInterface $_crypto
      */
-    protected CryptoInterface $_crypto;
+    protected $_crypto;
 
     /**
      * Instance sociale.
      *
      * @var SocialInterface $_social
      */
-    protected SocialInterface $_social;
+    protected $_social;
 
     /**
      * Instance de la métrologie.
      *
      * @var Metrology $_metrology
      */
-    protected Metrology $_metrology;
+    protected $_metrology;
 
     /**
      * Identifiant de l'objet.
@@ -107,7 +107,7 @@ class Node implements nodeInterface
      *
      * @var string $_id
      */
-    protected string $_id;
+    protected $_id;
 
     /**
      * Le nom complet.
@@ -115,118 +115,118 @@ class Node implements nodeInterface
      *
      * @var string $_fullname
      */
-    protected string $_fullname;
+    protected $_fullname;
 
     /**
      * Cache.
      *
      * @var array $_cachePropertyLink
      */
-    protected array $_cachePropertyLink = array();
+    protected $_cachePropertyLink = array();
 
     /**
      * Cache.
      *
      * @var array $_cachePropertiesLinks
      */
-    protected array $_cachePropertiesLinks = array();
+    protected $_cachePropertiesLinks = array();
 
     /**
      * Cache.
      *
      * @var array $_cachePropertyID
      */
-    protected array $_cachePropertyID = array();
+    protected $_cachePropertyID = array();
 
     /**
      * Cache.
      *
      * @var array $_cachePropertiesID
      */
-    protected array $_cachePropertiesID = array();
+    protected $_cachePropertiesID = array();
 
     /**
      * Cache.
      *
      * @var array $_cacheProperty
      */
-    protected array $_cacheProperty = array();
+    protected $_cacheProperty = array();
 
     /**
      * Cache.
      *
      * @var array $_cacheProperties
      */
-    protected array $_cacheProperties = array();
+    protected $_cacheProperties = array();
 
     /**
      * Cache.
      *
      * @var string $_cacheUpdate
      */
-    protected string $_cacheUpdate = '';
+    protected $_cacheUpdate = '';
 
     /**
      * Cache.
      *
      * @var boolean $_cacheMarkDanger
      */
-    protected bool $_cacheMarkDanger = false;
+    protected $_cacheMarkDanger = false;
 
     /**
      * Cache.
      *
      * @var boolean $_cacheMarkWarning
      */
-    protected bool $_cacheMarkWarning = false;
+    protected $_cacheMarkWarning = false;
 
     /**
      * Cache.
      *
      * @var boolean $_cacheMarkProtected
      */
-    protected bool $_cacheMarkProtected = false;
+    protected $_cacheMarkProtected = false;
 
     /**
      * Identifiant de l'objet ayant le contenu protégé (chiffré).
      *
      * @var string $_idProtected
      */
-    protected string $_idProtected = '0';
+    protected $_idProtected = '0';
 
     /**
      * Identifiant de l'objet ayant le contenu non protégé (en clair).
      *
      * @var string $_idUnprotected
      */
-    protected string $_idUnprotected = '0';
+    protected $_idUnprotected = '0';
 
     /**
      * Identifiant de l'objet ayant le contenu de la clé protégée de déchiffrement de l'objet.
      *
      * @var string $_idProtectedKey
      */
-    protected string $_idProtectedKey = '0';
+    protected $_idProtectedKey = '0';
 
     /**
      * Identifiant de l'objet ayant le contenu de la clé non protégée de déchiffrement de l'objet.
      *
      * @var string $_idUnprotectedKey
      */
-    protected string $_idUnprotectedKey = '0';
+    protected $_idUnprotectedKey = '0';
 
     /**
      * Marqueur de détection de la protection de l'objet.
      *
      * @var boolean $_markProtectedChecked
      */
-    protected bool $_markProtectedChecked = false;
+    protected $_markProtectedChecked = false;
 
     /**
      *
      * @var bool $_cacheCurrentEntityUnlocked
      */
-    protected bool|null $_cacheCurrentEntityUnlocked = null;
+    protected $_cacheCurrentEntityUnlocked = null;
 
     /**
      * Copie des données non encodées.

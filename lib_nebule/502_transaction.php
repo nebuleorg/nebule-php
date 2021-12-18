@@ -36,7 +36,7 @@ class Transaction extends Link implements linkInterface
      *
      * @var boolean
      */
-    private bool $_isTransaction = false;
+    protected $_isTransaction = false;
 
     /**
      * ID de l'objet contenant les transactions.
@@ -44,21 +44,21 @@ class Transaction extends Link implements linkInterface
      *
      * @var string
      */
-    private string $_transactionsObjectID = '';
+    protected $_transactionsObjectID = '';
 
     /**
      * Mode de transaction, si valide dans la monnaie.
      *
      * @var string
      */
-    private string $_transactionsMode = '';
+    protected $_transactionsMode = '';
 
     /**
      * Date des transactions.
      *
      * @var DateTime|null
      */
-    private DateTime|null $_transactionsTimestamp = null;
+    protected $_transactionsTimestamp = null;
 
     /**
      * Table des transactions unitaires.
@@ -75,7 +75,7 @@ class Transaction extends Link implements linkInterface
      *
      * @var array
      */
-    private array $_transactionsArray = array();
+    protected $_transactionsArray = array();
 
     /**
      * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
