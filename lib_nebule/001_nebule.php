@@ -360,75 +360,12 @@ class nebule
      */
     public function __construct()
     {
-        global $nebuleInstance;
+        $this->_initialisation();
+    }
 
-        // S'auto-référence pour être capable de se transmettre aux objets.
-        $this->_nebuleInstance = $this;
-        $nebuleInstance = $this;
-
-        // Détecte le mode rescue.
-        $this->_findModeRescue();
-
-        // Vérifie le minimum vital.
-        if (!$this->_nebuleCheckEnvironment()) {
-            $this->_nebuleInitEnvironment();
-        }
-
-        // Initialise les IO et la crypto.
-        $this->_metrology = new Metrology($this->_nebuleInstance);
-        $this->_configuration = new Configuration($this->_nebuleInstance);
-        $this->_io = new io($this->_nebuleInstance);
-        $this->_crypto = new CryptoOpenssl($this->_nebuleInstance);
-        $this->_social = new Social($this->_nebuleInstance);
-
-        $this->_metrology->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL); // Log
-
-        // Activation des options par liens. Vide le cache.
-        $this->_configuration->setPermitOptionsByLinks(true);
-        $this->_configuration->flushCache();
-
-        // Détermine si la session utilisateur doit être effacée.
-        $this->_findFlushCache();
-
-        // Restaure les instances depuis le cache de session.
-        $this->_sessionBufferLimit = $this->_configuration->getOption('sessionBufferSize');
-        $this->_readCacheOnSessionBuffer();
-
-        // Vérifie le ticket. Doit être après après la détection du flush cache.
-        $this->_findActionTicket();
-
-        // Vérifie les options importantes.
-        $this->_getsubordinationEntity();
-        $this->_checkWriteableIO();
-        $this->_configuration->checkReadOnlyOptions();
-
-        // Recherche les entités.
-        $this->_findPuppetmaster();
-        $this->_findSecurityMaster();
-        $this->_findCodeMaster();
-        $this->_findDirectoryMaster();
-        $this->_findTimeMaster();
-        $this->_findLocalAuthorities();
-        $this->_findInstanceEntity();
-        $this->_findDefaultEntity();
-        $this->_addInstanceEntityAsAuthorities();
-        $this->_addDefaultEntityAsAuthorities();
-        $this->_findCurrentEntity();
-        $this->_addLocalAuthorities();
-        $this->_findRecoveryEntities();
-        $this->_addInstanceEntityAsRecovery();
-        $this->_addDefaultEntityAsRecovery();
-
-        $this->_findCurrentObjet();
-        $this->_findCurrentEntityPrivateKey();
-        $this->_findCurrentEntityPassword();
-        $this->_findCurrentGroup();
-        $this->_findCurrentConversation();
-        $this->_findCurrentCurrency();
-        $this->_findCurrentTokenPool();
-        $this->_findCurrentToken();
-
-        $this->_metrology->addLog('End init nebule instance', Metrology::LOG_LEVEL_DEBUG); // Log
+    public function __wakeup()
+    {
+        $this->_initialisation();
     }
 
     /**
@@ -466,50 +403,40 @@ class nebule
         );*/
     }
 
-    public function __wakeup()
+    private function _initialisation()
     {
         global $nebuleInstance;
 
-        // S'auto-référence pour être capable de se transmettre aux objets.
         $this->_nebuleInstance = $this;
         $nebuleInstance = $this;
-
-        // Détecte le mode rescue.
-        $this->_findModeRescue();
-
-        // Vérifie le minimum vital.
-        if (!$this->_nebuleCheckEnvironment()) {
-            $this->_nebuleInitEnvironment();
-        }
-
-        // Initialise les IO et la crypto.
         $this->_metrology = new Metrology($this->_nebuleInstance);
         $this->_configuration = new Configuration($this->_nebuleInstance);
+        $this->_metrology->setConfigurationInstance($this->_configuration);
+
+        $this->_findModeRescue();
+
+        if (!$this->_nebuleCheckEnvironment())
+            $this->_nebuleInitEnvironment();
+
         $this->_io = new io($this->_nebuleInstance);
         $this->_crypto = new CryptoOpenssl($this->_nebuleInstance);
         $this->_social = new Social($this->_nebuleInstance);
 
         $this->_metrology->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL); // Log
 
-        // Activation des options par liens. Vide le cache.
         $this->_configuration->setPermitOptionsByLinks(true);
         $this->_configuration->flushCache();
 
-        // Détermine si la session utilisateur doit être effacée.
         $this->_findFlushCache();
 
-        // Restaure les instances depuis le cache de session.
         $this->_sessionBufferLimit = $this->_configuration->getOption('sessionBufferSize');
         $this->_readCacheOnSessionBuffer();
 
-        // Vérifie le ticket. Doit être après la détection du flush cache.
         $this->_findActionTicket();
 
-        // Vérifie les options importantes.
         $this->_getsubordinationEntity();
         $this->_checkWriteableIO();
 
-        // Recherche les entités.
         $this->_findPuppetmaster();
         $this->_findSecurityMaster();
         $this->_findCodeMaster();
@@ -537,6 +464,7 @@ class nebule
 
         $this->_metrology->addLog('End init nebule instance', Metrology::LOG_LEVEL_DEBUG); // Log
     }
+
 
 
     /**

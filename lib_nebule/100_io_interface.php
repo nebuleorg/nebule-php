@@ -4,8 +4,6 @@ namespace Nebule\Library;
 use Nebule\Library\nebule;
 
 /**
- * L'interface ioInterface
- *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule

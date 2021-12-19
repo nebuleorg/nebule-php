@@ -126,8 +126,7 @@ class Metrology
     public function __construct(nebule $nebuleInstance)
     {
         $this->_timeStart(); // Démarre le compteur de temps.
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_readLogsLevel();
+        $this->setDefaultLogsLevel();
     }
 
     /**
@@ -145,18 +144,22 @@ class Metrology
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return 'Metrology';
     }
 
+    public function setConfigurationInstance(Configuration $configuration)
+    {
+        $this->_configuration = $configuration;
+    }
 
     /**
      * Incrémente le compteur de liens lus.
      *
-     * @return null
+     * @return void
      */
-    public function addLinkRead()
+    public function addLinkRead(): void
     {
         $this->_countLinkRead++;
     }
@@ -166,7 +169,7 @@ class Metrology
      *
      * @return integer
      */
-    public function getLinkRead()
+    public function getLinkRead(): int
     {
         return $this->_countLinkRead;
     }
@@ -174,9 +177,9 @@ class Metrology
     /**
      * Incrémente le compteur de liens vérifiés.
      *
-     * @return null
+     * @return void
      */
-    public function addLinkVerify()
+    public function addLinkVerify(): void
     {
         $this->_countLinkVerify++;
     }
@@ -186,7 +189,7 @@ class Metrology
      *
      * @return integer
      */
-    public function getLinkVerify()
+    public function getLinkVerify(): int
     {
         return $this->_countLinkVerify;
     }
@@ -194,9 +197,9 @@ class Metrology
     /**
      * Incrémente le compteur d'objets lus.
      *
-     * @return null
+     * @return void
      */
-    public function addObjectRead()
+    public function addObjectRead(): void
     {
         $this->_countObjectRead++;
     }
@@ -206,7 +209,7 @@ class Metrology
      *
      * @return integer
      */
-    public function getObjectRead()
+    public function getObjectRead(): int
     {
         return $this->_countObjectRead;
     }
@@ -214,9 +217,9 @@ class Metrology
     /**
      * Incrémente le compteur d'objets vérifiés.
      *
-     * @return null
+     * @return void
      */
-    public function addObjectVerify()
+    public function addObjectVerify(): void
     {
         $this->_countObjectVerify++;
     }
@@ -226,7 +229,7 @@ class Metrology
      *
      * @return integer
      */
-    public function getObjectVerify()
+    public function getObjectVerify(): int
     {
         return $this->_countObjectVerify;
     }
@@ -235,9 +238,9 @@ class Metrology
     /**
      * Démarre le compteur de temps.
      *
-     * @return null
+     * @return void
      */
-    private function _timeStart()
+    private function _timeStart(): void
     {
         global $metrologyStartTime;
 
@@ -250,7 +253,7 @@ class Metrology
      *
      * @return number
      */
-    public function getTime()
+    public function getTime(): int
     {
         return microtime(true) - $this->_timeStart;
     }
@@ -258,9 +261,9 @@ class Metrology
     /**
      * Ajoute un temps au tableau des temps intermédiaires.
      *
-     * @return null
+     * @return void
      */
-    public function addTime()
+    public function addTime(): void
     {
         $time = microtime(true);
         $this->_timeArray[$this->_timeCount] = $time - $this->_timeTemp;
@@ -273,7 +276,7 @@ class Metrology
      *
      * @return array:double
      */
-    public function getTimeArray()
+    public function getTimeArray(): array
     {
         return $this->_timeArray;
     }
@@ -291,42 +294,20 @@ class Metrology
      *
      * @var integer
      */
-    private $_logsLevel = 0;
+    private $_logsLevel = self::LOG_LEVEL_NORMAL;
 
     /**
-     * Lit le niveau de log à utiliser par défaut.
+     * Restaure le niveau de log par défaut.
      *
      * @return void
      */
-    private function _readLogsLevel()
+    public function setDefaultLogsLevel(): void
     {
-        $this->_permitLogs = $this->_configuration->getOption('permitLogs');
-        $level = $this->_configuration->getOption('logsLevel');
-        $this->_logsLevel = self::LOG_LEVEL_NORMAL;
-
-        switch ($level) {
-            case 'NORMAL':
-                $this->_logsLevel = self::LOG_LEVEL_NORMAL;
-                break;
-            case 'ERROR':
-                $this->_logsLevel = self::LOG_LEVEL_ERROR;
-                break;
-            case 'DEVELOP':
-                $this->_logsLevel = self::LOG_LEVEL_DEVELOP;
-                break;
-            case 'FUNCTION':
-                $this->_logsLevel = self::LOG_LEVEL_FUNCTION;
-                break;
-            case 'DEBUG':
-                $this->_logsLevel = self::LOG_LEVEL_DEBUG;
-                break;
-            default:
-                $this->_logsLevel = self::DEFAULT_LOG_LEVEL;
-        }
-
-        if ($this->_logsLevel > self::LOG_LEVEL_ERROR) {
-            syslog(LOG_INFO, 'LogT=' . (microtime(true) - $this->_timeStart) . ' LogLdef=' . $this->_logsLevel . '(' . $level . ')');
-        }
+        //$this->_permitLogs = $this->_configuration->getOption('permitLogs');
+        //$level = $this->_configuration->getOption('logsLevel');
+        $this->_permitLogs = Configuration::getOptionFromEnvironment('permitLogs');
+        $level = Configuration::getOptionFromEnvironment('logsLevel');
+        $this->setLogsLevel($level);
     }
 
     /**
@@ -335,13 +316,8 @@ class Metrology
      * @param integer $level
      * @return void
      */
-    public function setLogsLevel($level)
+    public function setLogsLevel(int $level): void
     {
-        // Vérifie le droit de journaliser.
-        if (!$this->_permitLogs) {
-            return;
-        }
-
         switch ($level) {
             case 'NORMAL':
                 $this->_logsLevel = self::LOG_LEVEL_NORMAL;
@@ -362,49 +338,12 @@ class Metrology
                 $this->_logsLevel = self::DEFAULT_LOG_LEVEL;
         }
 
-        syslog(LOG_INFO, 'LogT=' . (microtime(true) - $this->_timeStart) . ' LogLset=' . $this->_logsLevel . '(' . $level . ')');
-    }
-
-    /**
-     * Restaure le niveau de log par défaut.
-     *
-     * @return void
-     */
-    public function setDefaultLogsLevel()
-    {
-        // Vérifie le droit de journaliser.
-        if (!$this->_permitLogs) {
-            return;
-        }
-
-        $level = $this->_configuration->getOption('logsLevel');
-
-        switch ($level) {
-            case 'NORMAL':
-                $this->_logsLevel = self::LOG_LEVEL_NORMAL;
-                break;
-            case 'ERROR':
-                $this->_logsLevel = self::LOG_LEVEL_ERROR;
-                break;
-            case 'DEVELOP':
-                $this->_logsLevel = self::LOG_LEVEL_DEVELOP;
-                break;
-            case 'FUNCTION':
-                $this->_logsLevel = self::LOG_LEVEL_FUNCTION;
-                break;
-            case 'DEBUG':
-                $this->_logsLevel = self::LOG_LEVEL_DEBUG;
-                break;
-            default:
-                $this->_logsLevel = self::DEFAULT_LOG_LEVEL;
-        }
-
-        syslog(LOG_INFO, 'LogT=' . (microtime(true) - $this->_timeStart) . ' LogLrst=' . $this->_logsLevel . '(' . $level . ')');
+        if ($this->_permitLogs && $this->_logsLevel > self::LOG_LEVEL_ERROR)
+            syslog(LOG_INFO, 'LogT=' . (microtime(true) - $this->_timeStart) . ' LogLset=' . $this->_logsLevel . '(' . $level . ')');
     }
 
     /**
      * Ajoute une ligne dans les logs système.
-     *
      * Le niveau doit être :
      *  - Metrology::LOG_LEVEL_NORMAL
      *  - Metrology::LOG_LEVEL_ERROR
@@ -413,23 +352,19 @@ class Metrology
      *  - Metrology::LOG_LEVEL_DEBUG
      *
      * @param string $message
-     * @param string $level
+     * @param int $level
      * @return void
      * @todo modifier la gestion de la journalisation pour avoir plusieurs niveaux concurrents.
-     *
      */
-    public function addLog($message, $level = self::LOG_LEVEL_ERROR)
+    public function addLog(string $message, int $level = self::LOG_LEVEL_ERROR): void
     {
-        // Vérifie le droit de journaliser.
-        if (!$this->_permitLogs) {
+        if (!$this->_permitLogs)
             return;
-        }
 
         // Extrait le niveau de log demandé.
         $logLevel = self::DEFAULT_LOG_LEVEL;
-        if (is_int($level)) {
+        if (is_int($level))
             $logLevel = $level;
-        }
         /*	elseif ( is_string($level) )
 		{
 			$level = strtoupper($level);
@@ -475,13 +410,13 @@ class Metrology
 
     /**
      * Ajoute une ligne dans les actions mémorisées.
-     * @param string $type
-     * @param undefined $action
-     * @param boolean $result
      *
+     * @param string  $type
+     * @param string  $action
+     * @param boolean $result
      * Type : addlnk addobj addent delobj
      */
-    public function addAction($type, $action, $result)
+    public function addAction(string $type, string $action, bool $result): void
     {
         // Vérifie si on a atteint la limite de remplissage.
         if ($this->_actionCount >= self::DEFAULT_ACTION_STATE_SIZE)
@@ -499,7 +434,7 @@ class Metrology
     /**
      * Supprime les actions mémorisées.
      */
-    public function flushActions()
+    public function flushActions(): void
     {
         $this->_actionCount = 0;
         $this->_actionArray = array();

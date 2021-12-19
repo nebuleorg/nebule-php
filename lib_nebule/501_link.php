@@ -520,9 +520,9 @@ class Link implements linkInterface
      * 71 : L'identifiant de l'objet méta est invalide.
      * 72 : L'identifiant de l'objet méta est null avec une action c/k.
      *
-     * @return number
+     * @return int
      */
-    public function getVerifyNumError()
+    public function getVerifyNumError(): int
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -556,7 +556,7 @@ class Link implements linkInterface
      *
      * @return string
      */
-    public function getVerifyTextError()
+    public function getVerifyTextError(): string
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -567,7 +567,7 @@ class Link implements linkInterface
      * Retourne si le lien est signé et si la signature est valide.
      * @return boolean
      */
-    public function getSigned()
+    public function getSigned(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -580,7 +580,7 @@ class Link implements linkInterface
      *
      * @return boolean
      */
-    public function getObfuscated()
+    public function getObfuscated(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -592,7 +592,7 @@ class Link implements linkInterface
      * TODO à supprimer !
      * @return string
      */
-    public function getVersion_disabled()
+    public function getVersion_disabled(): string
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -683,14 +683,13 @@ class Link implements linkInterface
      * Extraction du lien.
      * Extrait les champs d'un lien après avoir vérifié la cohérence de sa forme.
      * Ne vérifie pas la cohérence ou la validité des champs !
-     *
      * Le nombre de champs doit être de 7.
      * Le champs signature peut être vide ou à 0 si c'est pour un nouveau lien à signer.
      *
      * @param string $link
      * @return boolean
      */
-    protected function _extract($link)
+    protected function _extract(string $link): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr(trim($link), 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -814,7 +813,7 @@ class Link implements linkInterface
      *
      * @return boolean
      */
-    protected function _verify()
+    protected function _verify(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -879,7 +878,7 @@ class Link implements linkInterface
      *
      * @return boolean
      */
-    protected function _verifyHashSigner()
+    protected function _verifyHashSigner(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -905,7 +904,7 @@ class Link implements linkInterface
      *
      * @return boolean
      */
-    protected function _verifyDate()
+    protected function _verifyDate(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -953,7 +952,7 @@ class Link implements linkInterface
      *
      * @return boolean
      */
-    protected function _verifyAction()
+    protected function _verifyAction(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -999,7 +998,7 @@ class Link implements linkInterface
      *
      * @return boolean
      */
-    protected function _verifyHashSource()
+    protected function _verifyHashSource(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -1027,7 +1026,7 @@ class Link implements linkInterface
      *
      * @return boolean
      */
-    protected function _verifyHashTarget()
+    protected function _verifyHashTarget(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -1062,7 +1061,7 @@ class Link implements linkInterface
      *
      * @return boolean
      */
-    protected function _verifyHashMeta()
+    protected function _verifyHashMeta(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -1095,7 +1094,7 @@ class Link implements linkInterface
      *
      * @return boolean
      */
-    protected function _verifySign()
+    protected function _verifySign(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -1171,9 +1170,10 @@ class Link implements linkInterface
      *
      * @return boolean
      */
-    protected function _extractObfuscated()
+    protected function _extractObfuscated(): bool
     {
-        // @todo
+        // TODO
+        return false;
     }
 
 
@@ -1183,9 +1183,10 @@ class Link implements linkInterface
      *
      * @return boolean
      */
-    protected function _verifyObfuscated()
+    protected function _verifyObfuscated(): bool
     {
-        // @todo
+        // TODO
+        return false;
     }
 
 
@@ -1195,7 +1196,7 @@ class Link implements linkInterface
      * @param string $publicKey
      * @return boolean
      */
-    public function sign($publicKey = '0')
+    public function sign(string $publicKey = '0'): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -1264,7 +1265,7 @@ class Link implements linkInterface
      *
      * @return boolean
      */
-    public function write()
+    public function write(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -1333,7 +1334,7 @@ class Link implements linkInterface
      * @param string $publicKey
      * @return boolean
      */
-    public function signWrite($publicKey = '0')
+    public function signWrite(string $publicKey = '0'): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -1352,7 +1353,7 @@ class Link implements linkInterface
      * Le lien à dissimulé est concaténé avec un bourrage (padding) d'espace de taille aléatoire compris entre 3 et 5 fois la taille du champs source.
      *
      */
-    public function obfuscate()
+    public function obfuscate(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -1373,7 +1374,7 @@ class Link implements linkInterface
      *
      * @return boolean
      */
-    public function obfuscateWrite()
+    public function obfuscateWrite(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -1391,7 +1392,7 @@ class Link implements linkInterface
      * @todo
      *
      */
-    public function deobfuscate()
+    public function deobfuscate(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -1411,7 +1412,7 @@ class Link implements linkInterface
      *
      * @return boolean
      */
-    public function deobfuscateWrite()
+    public function deobfuscateWrite(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -1425,7 +1426,7 @@ class Link implements linkInterface
      * @todo
      *
      */
-    public function decrypt()
+    public function decrypt(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -1436,6 +1437,7 @@ class Link implements linkInterface
         ) {
             // @todo
         }
+        return false;
     }
 
 
@@ -1444,7 +1446,7 @@ class Link implements linkInterface
      *
      * @return void
      */
-    public function echoDocumentationTitles()
+    public function echoDocumentationTitles(): void
     {
         ?>
 
@@ -1513,7 +1515,7 @@ class Link implements linkInterface
      *
      * @return void
      */
-    public function echoDocumentationCore()
+    public function echoDocumentationCore(): void
     {
         ?>
 
