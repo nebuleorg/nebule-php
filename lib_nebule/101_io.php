@@ -66,7 +66,7 @@ class io implements ioInterface
             }
         }
 
-        $this->_defaultIO = new ioLocal();
+        $this->_defaultIO = new ioLocal($nebuleInstance);
     }
 
     public function __sleep()

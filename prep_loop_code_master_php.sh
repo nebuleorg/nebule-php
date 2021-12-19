@@ -331,6 +331,7 @@ EOF
   done
   library_hash=$(sha256sum "${WORKSPACE}/lib_nebule.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new library : ${library_hash}"
+  cp "${WORKSPACE}/lib_nebule.php" "/tmp/lib_nebule.php"
   mv "${WORKSPACE}/lib_nebule.php" "o/${library_hash}"
 
   sylabe_hash=$(sha256sum "${WORKSPACE}/sylabe.php" | cut -d' ' -f1)'.sha2.256'

@@ -45,9 +45,9 @@ class SocialOnList implements SocialInterface
      * Gère le classement social des liens.
      *
      * @param array &$links table des liens.
-     * @return float
+     * @return void
      */
-    public function arraySocialFilter(array &$links, $socialClass = '')
+    public function arraySocialFilter(array &$links, $socialClass = ''): void
     {
         foreach ($links as $i => $link) {
             if ($this->linkSocialScore($link) != 1) {
@@ -62,7 +62,7 @@ class SocialOnList implements SocialInterface
      * @param Link &$link lien à calculer.
      * @return float
      */
-    public function linkSocialScore(Link &$link, $socialClass = '')
+    public function linkSocialScore(Link &$link, $socialClass = ''): float
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=onlist score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
 

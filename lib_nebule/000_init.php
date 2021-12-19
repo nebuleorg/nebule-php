@@ -7,7 +7,7 @@ $nebuleName = 'library';
 $nebuleSurname = 'nebule/library';
 $nebuleDescription = 'Library of functions for nebule in php object-oriented.';
 $nebuleAuthor = 'Projet nebule';
-$nebuleLibVersion = '02021128';
+$nebuleLibVersion = '020211219';
 $nebuleLicence = 'GNU GPL 2010-2021';
 $nebuleWebsite = 'www.nebule.org';
 // ----------------------------------------------------------------------------------------
@@ -33,14 +33,16 @@ $nebuleWebsite = 'www.nebule.org';
 
 // Initialisation des logs de la librairie.
 closelog();
-if (isset($loggerSessionID) === false)
+if (!isset($loggerSessionID))
     $loggerSessionID = '000000';
+if (!isset($metrologyStartTime))
+    $metrologyStartTime = 0;
 openlog($nebuleName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
-syslog(LOG_INFO, 'LogT=0 LogTabs=' . (microtime(true)) . ' Loading nebule library');
+syslog(LOG_INFO, 'LogT=' . (microtime(true) - $metrologyStartTime) . ' LogL="info" LogI="a77c98f7" LogF="include nebule library" LogM="Reading nebule library"');
 
 
 
-// Paramètres de l'application par défaut.
+// Default application params.
 $applicationName = 'defolt';
 $applicationSurname = 'nebule/defolt';
 $applicationDescription = 'Default web page for servers without interactive application.';

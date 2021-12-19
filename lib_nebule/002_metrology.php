@@ -303,20 +303,24 @@ class Metrology
      */
     public function setDefaultLogsLevel(): void
     {
-        //$this->_permitLogs = $this->_configuration->getOption('permitLogs');
-        //$level = $this->_configuration->getOption('logsLevel');
-        $this->_permitLogs = Configuration::getOptionFromEnvironment('permitLogs');
-        $level = Configuration::getOptionFromEnvironment('logsLevel');
+        $this->_permitLogs = Configuration::getOptionFromEnvironmentStatic('permitLogs');
+        if ($this->_permitLogs === null)
+            $this->_permitLogs = Configuration::OPTIONS_DEFAULT_VALUE['permitLogs'];
+
+        $level = Configuration::getOptionFromEnvironmentStatic('logsLevel');
+        if ($level === null)
+            $level = Configuration::OPTIONS_DEFAULT_VALUE['logsLevel'];
+
         $this->setLogsLevel($level);
     }
 
     /**
      * Change le niveau de log courant.
      *
-     * @param integer $level
+     * @param string $level
      * @return void
      */
-    public function setLogsLevel(int $level): void
+    public function setLogsLevel(string $level): void
     {
         switch ($level) {
             case 'NORMAL':
@@ -352,11 +356,13 @@ class Metrology
      *  - Metrology::LOG_LEVEL_DEBUG
      *
      * @param string $message
-     * @param int $level
+     * @param int    $level
+     * @param string $function
+     * @param string $luid
      * @return void
      * @todo modifier la gestion de la journalisation pour avoir plusieurs niveaux concurrents.
      */
-    public function addLog(string $message, int $level = self::LOG_LEVEL_ERROR): void
+    public function addLog(string $message, int $level = self::LOG_LEVEL_ERROR, string $function = '', string $luid = '00000000'): void
     {
         if (!$this->_permitLogs)
             return;
@@ -365,43 +371,13 @@ class Metrology
         $logLevel = self::DEFAULT_LOG_LEVEL;
         if (is_int($level))
             $logLevel = $level;
-        /*	elseif ( is_string($level) )
-		{
-			$level = strtoupper($level);
-			switch ( $level )
-			{
-				case 'NORMAL':
-					$logLevel = self::LOG_LEVEL_NORMAL;
-					break;
-				case 'ERROR':
-					$logLevel = self::LOG_LEVEL_ERROR;
-					break;
-				case 'DEVELOP':
-					$logLevel = self::LOG_LEVEL_DEVELOP;
-					break;
-				case 'FUNCTION':
-					$logLevel = self::LOG_LEVEL_FUNCTION;
-					break;
-				case 'DEBUG':
-					$logLevel = self::LOG_LEVEL_DEBUG;
-					break;
-				default:
-					$logLevel = self::DEFAULT_LOG_LEVEL;
-			}
-		}*/
 
         // Si le niveau de log est suffisant, écrit le message.
         if ($logLevel <= $this->_logsLevel) {
-            // Ajoute le niveau du log.
-            $message = 'LogL=' . $logLevel . ' ' . $message;
+            $message = 'LogT=' . (microtime(true) - $this->_timeStart) . 'LogL="' . $logLevel . '" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"';
 
-            // Ajout de l'état système en debug.
-            if ($logLevel == self::LOG_LEVEL_DEBUG) {
-                $message = 'LogM=' . memory_get_usage() . ' ' . $message;
-            }
-
-            // Ajoute la marque de temps.
-            $message = 'LogT=' . (microtime(true) - $this->_timeStart) . ' LogL=L LogM="' . $message . '"';
+            if ($logLevel == self::LOG_LEVEL_DEBUG)
+                $message = $message . ' LogM="' . memory_get_usage() . '"';
 
             syslog(LOG_INFO, $message);
         }
@@ -428,7 +404,7 @@ class Metrology
         $this->_actionArray[$this->_actionCount]['result'] = $result;
         $this->_actionCount++;
 
-        $this->addLog($type . ' ' . $action, self::LOG_LEVEL_DEBUG);
+        $this->addLog($type . ' ' . $action, self::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
     }
 
     /**

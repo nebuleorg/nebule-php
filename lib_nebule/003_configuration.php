@@ -745,7 +745,7 @@ class Configuration
      * @param string $name
      * @return string|bool|int|null
      */
-    public function getOption(string $name): mixed
+    public function getOption(string $name)
     {
         // Vérifie le nom.
         if ($name == ''
@@ -755,7 +755,7 @@ class Configuration
             return null;
 
         if ($this->_metrologyInstance !== null)
-            $this->_metrologyInstance->addLog('Get option ' . $name, Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrologyInstance->addLog('Get option ' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         // La réponse.
         $result = null;
@@ -778,7 +778,7 @@ class Configuration
         if ($result === null) {
             $result = self::OPTIONS_DEFAULT_VALUE[$name];
             if ($this->_metrologyInstance !== null) {
-                $this->_metrologyInstance->addLog('Get default option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
+                $this->_metrologyInstance->addLog('Get default option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
             }
         }
 
@@ -786,11 +786,11 @@ class Configuration
         if ($result === null) {
             $result = false;
             if ($this->_metrologyInstance !== null)
-                $this->_metrologyInstance->addLog('Get unknown option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
+                $this->_metrologyInstance->addLog('Get unknown option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
         }
 
         if ($this->_metrologyInstance !== null)
-            $this->_metrologyInstance->addLog('Return option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrologyInstance->addLog('Return option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         // Ecrit le cache.
         if ($result !== null)
@@ -805,7 +805,7 @@ class Configuration
      * @param string $name
      * @return string|bool|int|null
      */
-    public static function getOptionDefaultValue(string $name): mixed
+    public static function getOptionDefaultValue(string $name)
     {
         if ($name == ''
             || !is_string($name)
@@ -817,90 +817,108 @@ class Configuration
     }
 
     /**
-     * Extrait les options du fichier d'environnement nebule : nebule.env @param string $name : le nom de l'option demandée.
      * @param string $name
      * @return string|bool|int|null
-     * @todo
-     * Retourne :
-     *  - une chaine de caractères avec le contenu de l'option _ou_ un nombre _ou_ un booléen ;
-     *  - ou null si rien n'est trouvé.
-     *
-     * Pour les booléens, on regarde si on a l'inverse de la valeur par défaut de l'option.
-     *
-     * Est utilisé directement par la fonction _getsubordinationEntity() avant la lecture des options.
-     *
      */
-    public function getOptionFromEnvironment(string $name): mixed
+    public function getOptionFromEnvironment(string $name)
+    {
+        $result = self::getOptionFromEnvironmentStatic($name);
+
+        if ($this->_metrologyInstance !== null)
+            $this->_metrologyInstance->addLog('Return option env = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+
+        return $result;
+    }
+
+    /**
+     * @param string $name
+     * @return string|bool|int|null
+     */
+    static public function getOptionFromEnvironmentStatic(string $name)
     {
         if ($name == ''
-            || !is_string($name)
             || !isset(self::OPTIONS_TYPE[$name])
         )
             return null;
 
-        // La réponse.
-        $result = null;
-        $value = null;
-
-        // Lit le fichier d'environnement.
+        // Read configuration file.
+        $value = '';
         if (file_exists(nebule::NEBULE_ENVIRONMENT_FILE)) {
-            // Extrait un tableau avec une ligne par élément.
             $file = file(nebule::NEBULE_ENVIRONMENT_FILE, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
             foreach ($file as $line) {
                 $l = trim($line);
 
-                // Si commentaire, passe à la ligne suivante.
                 if (substr($l, 0, 1) == "#")
                     continue;
 
-                // Recherche l'option demandée.
                 if (filter_var(trim(strtok($l, '=')), FILTER_SANITIZE_STRING) == $name) {
                     $value = trim(filter_var(trim(substr($l, strpos($l, '=') + 1)), FILTER_SANITIZE_STRING));
                     break;
                 }
             }
-            unset($file, $line, $l);
+            unset($file);
         }
 
-        // Si pas trouvé, quitte.
-        if ($value == null)
+        return self::_transtypeValueFromString($name, $value);
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @return string|bool|int|null
+     */
+    static private function _transtypeValueFromString(string $name, string $value)
+    {
+        if ($name == ''
+            || !isset(self::OPTIONS_TYPE[$name])
+            || $value == ''
+        )
             return null;
 
-        // Extrait la valeur en fonction du type de l'option.
         switch (self::OPTIONS_TYPE[$name]) {
             case 'string' :
-                $result = $value;
+                $result = trim($value);
                 break;
             case 'boolean' :
-                if ($value == 'true'
-                    || $value == 'false'
-                ) {
-                    if (self::OPTIONS_DEFAULT_VALUE[$name])
-                        $reference = 'false';
-                    else
-                        $reference = 'true';
-
-                    if ($value == $reference)
-                        $result = !self::OPTIONS_DEFAULT_VALUE[$name];
-                    else
-                        $result = self::OPTIONS_DEFAULT_VALUE[$name];
-                } else
-                    $result = null;
+                if ($value == 'true')
+                    $result = true;
+                elseif ($value == 'false')
+                    $result = false;
+                else
+                    $result = self::OPTIONS_DEFAULT_VALUE[$name];
                 break;
             case 'integer' :
-                if ($value != '')
-                    $result = (int)$value;
+                $result = (int)$value;
                 break;
             default :
                 $result = null;
         }
 
-        if ($this->_metrologyInstance !== null)
-            $this->_metrologyInstance->addLog('Return option env = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
-
         return $result;
     }
 
+    /**
+     * @param string          $name
+     * @param string|bool|int $value
+     * @return string
+     */
+    private function _transtypeValueToString(string $name, $value)
+    {
+        // Transcode value.
+        switch (self::OPTIONS_TYPE[$name]) {
+            case 'string' :
+                return $value;
+            case 'boolean' :
+                if ($value === true)
+                    return 'true';
+                else
+                    return 'false';
+            case 'integer' :
+                return (string)$value;
+            default :
+                return '';
+        }
+    }
     /**
      * Extrait les options depuis les liens.
      * Retourne :
@@ -912,81 +930,37 @@ class Configuration
      * @param string $name
      * @return string|bool|int|null
      */
-    public function getOptionFromLinks(string $name): mixed
+    public function getOptionFromLinks(string $name)
     {
         if ($name == ''
-            || !is_string($name)
             || !isset(self::OPTIONS_TYPE[$name])
+            || !$this->_permitOptionsByLinks
+            || $this->_optionsByLinksIsInUse
         )
             return null;
 
-        // La réponse.
-        $result = null;
+        $this->_optionsByLinksIsInUse = true;
+
+        // Si une entité de subordination est défini, lit l'option forcée par cette entité.
         $value = '';
-
-        // Extrait la valeur de l'option, lorsque disponible.
-        if ($this->_permitOptionsByLinks
-            && !$this->_optionsByLinksIsInUse
-        ) {
-            $this->_optionsByLinksIsInUse = true;
-
-            //$instance = $this->newObject($this->_crypto->hash($name));
-            //$value = trim($instance->getProperty(nebule::REFERENCE_NEBULE_OPTION));
-
-            // Si une entité de subordination est défini, lit l'option forcée par cette entité.
-            if ($this->_subordinationEntity != '') {
-                $instance = $this->newEntity($this->_subordinationEntity);
-                $value = trim($instance->getProperty(nebule::REFERENCE_NEBULE_OPTION . '/' . $name));
-                unset($instance);
-            }
-
-            // Si aucune valeur trouvée de l'entité de subordination, lit l'option pour l'entité en cours.
-            if ($value == ''
-                && $this->_currentEntity != ''
-            ) {
-                $value = trim($this->_currentEntityInstance->getProperty(nebule::REFERENCE_NEBULE_OPTION . '/' . $name));
-            }
-
-            $this->_optionsByLinksIsInUse = false;
-
-            // Extrait la valeur en fonction du type de l'option.
-            switch (self::OPTIONS_TYPE[$name]) {
-                case 'string' :
-                    if ($value != '') {
-                        $result = $value;
-                    }
-                    break;
-                case 'boolean' :
-                    if ($value == 'true'
-                        || $value == 'false'
-                    ) {
-                        if (self::OPTIONS_DEFAULT_VALUE[$name]) {
-                            $reference = 'false';
-                        } else {
-                            $reference = 'true';
-                        }
-
-                        if ($value == $reference) {
-                            $result = !self::OPTIONS_DEFAULT_VALUE[$name];
-                        } else {
-                            $result = self::OPTIONS_DEFAULT_VALUE[$name];
-                        }
-                    } else {
-                        $result = null;
-                    }
-                    break;
-                case 'integer' :
-                    if ($value != '') {
-                        $result = (int)$value;
-                    }
-                    break;
-                default :
-                    $result = null;
-            }
+        if ($this->_nebuleInstance->getSubordinationEntity() != '') {
+            $instance = $this->_nebuleInstance->getSubordinationEntity();
+            $value = trim($instance->getProperty(nebule::REFERENCE_NEBULE_OPTION . '/' . $name));
+            unset($instance);
         }
 
+        // Si aucune valeur trouvée de l'entité de subordination, lit l'option pour l'entité en cours.
+        if ($value == ''
+            && is_a($this->_nebuleInstance->getCurrentEntityInstance(), 'Entity')
+        )
+            $value = trim($this->_nebuleInstance->getCurrentEntityInstance()->getProperty(nebule::REFERENCE_NEBULE_OPTION . '/' . $name));
+
+        $this->_optionsByLinksIsInUse = false;
+
+        $result = self::_transtypeValueToString($name, $value);
+
         if ($this->_metrologyInstance !== null) {
-            $this->_metrologyInstance->addLog('Return option links = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrologyInstance->addLog('Return option links = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
         }
 
         return $result;
@@ -1006,7 +980,7 @@ class Configuration
      * @param string|bool|int $value
      * @return boolean
      */
-    public function setOptionCache(string $name, mixed $value): mixed
+    public function setOptionCache(string $name, $value)
     {
         // Vérifie le verrouillage.
         if ($this->_writeOptionCacheLock)
@@ -1020,14 +994,14 @@ class Configuration
         )
             return false;
 
-        $this->_metrologyInstance->addLog('Set option cache ' . $name, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Set option cache ' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         // Transcode value.
-        $writeValue = $this->_transtypeValue($name, $value);
+        $writeValue = $this->_transtypeValueToString($name, $value);
         if (is_null($writeValue))
             return false;
 
-        $this->_metrologyInstance->addLog('Set option cache value = ' . $writeValue, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Set option cache value = ' . $writeValue, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         // Ecrit l'option.
         $this->_optionCache[$name] = $value;
@@ -1047,7 +1021,7 @@ class Configuration
      * @param string $entity
      * @return boolean
      */
-    public function setOptionEnvironment(string $name, mixed $value, string $entity = ''): bool
+    public function setOptionEnvironment(string $name, $value, string $entity = ''): bool
     {
         // Vérifie le nom.
         if ($name == ''
@@ -1064,26 +1038,26 @@ class Configuration
         )
             $entity = $this->_nebuleInstance->getCurrentEntity();
 
-        $this->_metrologyInstance->addLog('Set option ' . $name, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Set option ' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         // Prépare la valeur.
-        $writeValue = $this->_transtypeValue($name, $value);
+        $writeValue = $this->_transtypeValueFromString($name, $value);
         if (is_null($writeValue))
             return false;
 
-        $this->_metrologyInstance->addLog('Set option value = ' . $writeValue, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Set option value = ' . $writeValue, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         // Crée l'instance de l'objet de la valeur.
         $instance = new Node($this->_nebuleInstance, '0', $writeValue);
         if ($instance === false) {
-            $this->_metrologyInstance->addLog("L'instance de l'objet n'a pas pu être créée.", Metrology::LOG_LEVEL_ERROR); // Log
+            $this->_metrologyInstance->addLog("L'instance de l'objet n'a pas pu être créée.", Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
             return false;
         }
 
         // Lit l'ID.
         $id = $instance->getID();
         if ($id == '0') {
-            $this->_metrologyInstance->addLog("L'objet n'a pas pu être créé.", Metrology::LOG_LEVEL_ERROR); // Log
+            $this->_metrologyInstance->addLog("L'objet n'a pas pu être créé.", Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
             return false;
         }
 
@@ -1111,7 +1085,7 @@ class Configuration
             $this->_optionCache[$name] = $value;
             return true;
         } else {
-            $this->_metrologyInstance->addLog('Set option write error', Metrology::LOG_LEVEL_ERROR); // Log
+            $this->_metrologyInstance->addLog('Set option write error', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
             return false;
         }
     }
@@ -1177,7 +1151,7 @@ class Configuration
      */
     public function checkReadOnlyOptions()
     {
-        $this->_metrologyInstance->addLog('Check options', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Check options', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         foreach (self::OPTIONS_LIST as $option) {
             if (self::OPTIONS_CRITICALITY[$option] == 'critical') {
@@ -1191,32 +1165,10 @@ class Configuration
                     }
                     if (is_int($value))
                         $value = (string)$value;
-                    $this->_metrologyInstance->addLog('Warning:critical_option ' . $option . '=' . $value, Metrology::LOG_LEVEL_NORMAL); // Log
+                    $this->_metrologyInstance->addLog('Warning:critical_option ' . $option . '=' . $value, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
                 }
             }
         }
     }
 
-    /**
-     * @param string          $name
-     * @param string|bool|int $value
-     * @return bool|int|string|null
-     */
-    private function _transtypeValue(string $name, mixed $value): mixed
-    {
-        // Transcode value.
-        switch (self::OPTIONS_TYPE[$name]) {
-            case 'string' :
-                return $value;
-            case 'boolean' :
-                if ($value === true)
-                    return 'true';
-                else
-                    return 'false';
-            case 'integer' :
-                return (string)$value;
-            default :
-                return null;
-        }
-    }
 }

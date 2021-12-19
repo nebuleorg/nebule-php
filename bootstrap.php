@@ -9,7 +9,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020211218';
+const BOOTSTRAP_VERSION = '020211219';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -49,6 +49,12 @@ const BOOTSTRAP_WEBSITE = 'www.nebule.org';
  PART12 : Main display router.
  ------------------------------------------------------------------------------------------
 */
+
+
+
+const PHP_VERSION_MINIMUM = '7.3.0';
+if (version_compare(phpversion(),PHP_VERSION_MINIMUM, '<'))
+    exit('Found PHP version ' . phpversion() . ', need >= ' . PHP_VERSION_MINIMUM);
 
 
 
@@ -4073,20 +4079,34 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryID, string &$bootstra
  */
 function bootstrap_loadLibraryPOO(string $bootstrapLibraryID, string $bootstrapLibraryInstanceSleep): void
 {
-    global $nebuleInstance;
+    global $nebuleInstance, $loggerSessionID, $metrologyStartTime; // Used by lib include.
 
     if ($bootstrapLibraryID != '') {
-        // Load lib from object. @todo faire via les i/o.
-        include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapLibraryID);
+        try {
+            // Load lib from object. @todo faire via les i/o.
+            include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapLibraryID);
+        } catch (\Error $e) {
+            log_reopen(BOOTSTRAP_NAME);
+            log_add('Library nebule include error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'fa2f570a');
+            bootstrap_setBreak('42', 'Library nebule include error');
+        }
 
-        if ($bootstrapLibraryInstanceSleep == '')
-            $nebuleInstance = new nebule();
-        else
-            $nebuleInstance = unserialize($bootstrapLibraryInstanceSleep);
-
-        log_reopen(BOOTSTRAP_NAME);
+        try {
+            if (!class_exists('nebule', false))
+            {
+                if ($bootstrapLibraryInstanceSleep == '')
+                    $nebuleInstance = new nebule();
+                else
+                    $nebuleInstance = unserialize($bootstrapLibraryInstanceSleep);
+                log_reopen(BOOTSTRAP_NAME);
+            }
+        } catch (\Error $e) {
+            log_reopen(BOOTSTRAP_NAME);
+            log_add('Library nebule load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '959c188b');
+            bootstrap_setBreak('43', 'Library nebule load error');
+        }
     } else
-        bootstrap_setBreak('41', 'Library nebule error');
+        bootstrap_setBreak('41', 'Library nebule find error');
 }
 
 
@@ -4359,25 +4379,24 @@ function bootstrap_getInlineDisplay(): void
 // ------------------------------------------------------------------------------------------
 function bootstrap_getCheckFingerprint(): void
 {
-    global $nebuleLocalAuthorities;
+    global $nebuleLocalAuthorities, $codeBranchNID;
+
     $data = file_get_contents(BOOTSTRAP_FILE_NAME);
     $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
     unset($data);
-    // Recherche les liens de validation.
-    $hashRef = LIB_RID_INTERFACE_BOOTSTRAP;
+
     $links = array();
-    lnk_findInclusive_FIXME($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
-    // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
-    $ok = false;
-    foreach ($links as $link) {
-        foreach ($nebuleLocalAuthorities as $authority) {
-            if ($link[2] == $authority) {
-                $ok = true;
-                break 2;
-            }
-        }
-    }
-    if (!$ok) {
+    $filter = array(
+        'bl/rl/req' => 'f',
+        'bl/rl/nid1' => LIB_RID_INTERFACE_BOOTSTRAP,
+        'bl/rl/nid2' => $hash,
+        'bl/rl/nid3' => $codeBranchNID,
+        'bl/rl/nid4' => '',
+    );
+    lnk_getList($hash, $links, $filter, false);
+    lnk_filterBySigners($links, $nebuleLocalAuthorities);
+
+    if (sizeof($links) == 0) {
         log_add('unknown bootstrap hash - critical', 'error', __FUNCTION__, 'e294b7b3');
         bootstrap_setBreak('51', 'Unknown bootstrap hash');
     }
@@ -5412,14 +5431,38 @@ function bootstrap_displayPreloadApplication()
     log_reopen('preload');
     log_add('Loading application ' . $bootstrapApplicationID, 'info', __FUNCTION__, '202824cb');
 
-    // Charge l'objet de l'application. TODO faire via les i/o.
-    include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+    try {
+        // Charge l'objet de l'application. TODO faire via les i/o.
+        include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+    } catch (\Error $e) {
+        log_reopen(BOOTSTRAP_NAME);
+        log_add('Application include error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '8101a6fa');
+    }
 
-    // Instanciation des classes de l'application.
-    $applicationInstance = new Application($nebuleInstance);
-    $applicationTraductionInstance = new Traduction($applicationInstance);
-    $applicationDisplayInstance = new Display($applicationInstance);
-    $applicationActionInstance = new Action($applicationInstance);
+    try {
+        $applicationInstance = new Application($nebuleInstance);
+    } catch (\Error $e) {
+        log_reopen(BOOTSTRAP_NAME);
+        log_add('Application load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'a6901e43');
+    }
+    try {
+        $applicationTraductionInstance = new Traduction($applicationInstance);
+    } catch (\Error $e) {
+        log_reopen(BOOTSTRAP_NAME);
+        log_add('Application traduction load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '17c889d7');
+    }
+    try {
+        $applicationDisplayInstance = new Display($applicationInstance);
+    } catch (\Error $e) {
+        log_reopen(BOOTSTRAP_NAME);
+        log_add('Application display load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'e61c0842');
+    }
+    try {
+        $applicationActionInstance = new Action($applicationInstance);
+    } catch (\Error $e) {
+        log_reopen(BOOTSTRAP_NAME);
+        log_add('Application action load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '18adef64');
+    }
 
     // Initialisation des instances.
     $applicationInstance->initialisation();
@@ -6556,8 +6599,12 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
                 && $bootstrapApplicationTraductionInstanceSleep != ''
             ) {
 
-                // Charge l'objet de l'application. @todo faire via les i/o.
-                include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+                try {
+                    // Charge l'objet de l'application. TODO faire via les i/o.
+                    include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+                } catch (\Error $e) {
+                    log_add('Application include error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'ad4c908e');
+                }
 
                 $applicationName = Application::APPLICATION_NAME;
 
@@ -6565,10 +6612,30 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
                 log_reopen($applicationName);
 
                 // Désérialise les instances.
-                $applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
-                $applicationDisplayInstance = unserialize($bootstrapApplicationDisplayInstanceSleep);
-                $applicationActionInstance = unserialize($bootstrapApplicationActionInstanceSleep);
-                $applicationTraductionInstance = unserialize($bootstrapApplicationTraductionInstanceSleep);
+                try {
+                    $applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
+                } catch (\Error $e) {
+                    log_reopen(BOOTSTRAP_NAME);
+                    log_add('Application unserialize error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'de82bc8b');
+                }
+                try {
+                    $applicationDisplayInstance = unserialize($bootstrapApplicationDisplayInstanceSleep);
+                } catch (\Error $e) {
+                    log_reopen(BOOTSTRAP_NAME);
+                    log_add('Application traduction unserialize error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '8e344763');
+                }
+                try {
+                    $applicationActionInstance = unserialize($bootstrapApplicationActionInstanceSleep);
+                } catch (\Error $e) {
+                    log_reopen(BOOTSTRAP_NAME);
+                    log_add('Application display unserialize error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'b15fd5d3');
+                }
+                try {
+                    $applicationTraductionInstance = unserialize($bootstrapApplicationTraductionInstanceSleep);
+                } catch (\Error $e) {
+                    log_reopen(BOOTSTRAP_NAME);
+                    log_add('Application action unserialize error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '972ddf39');
+                }
 
                 // Initialisation de réveil de l'instance de l'application.
                 $applicationInstance->initialisation2();
@@ -6593,19 +6660,42 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
 
                 log_add('load application whitout preload ' . $bootstrapApplicationID, 'info', __FUNCTION__, 'e01ea813');
 
-                // Charge l'objet de l'application. @todo faire via les i/o.
-                include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+                try {
+                    // Charge l'objet de l'application. TODO faire via les i/o.
+                    include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+                } catch (\Error $e) {
+                    log_add('Application include error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '96fc25ef');
+                }
 
                 $applicationName = Application::APPLICATION_NAME;
 
                 // Change les logs au nom de l'application.
                 log_reopen($applicationName);
 
-                // Instanciation des classes de l'application.
-                $applicationInstance = new Application($nebuleInstance);
-                $applicationTraductionInstance = new Traduction($applicationInstance);
-                $applicationDisplayInstance = new Display($applicationInstance);
-                $applicationActionInstance = new Action($applicationInstance);
+                try {
+                    $applicationInstance = new Application($nebuleInstance);
+                } catch (\Error $e) {
+                    log_reopen(BOOTSTRAP_NAME);
+                    log_add('Application load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '202824cb');
+                }
+                try {
+                    $applicationTraductionInstance = new Traduction($applicationInstance);
+                } catch (\Error $e) {
+                    log_reopen(BOOTSTRAP_NAME);
+                    log_add('Application traduction load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '585648a2');
+                }
+                try {
+                    $applicationDisplayInstance = new Display($applicationInstance);
+                } catch (\Error $e) {
+                    log_reopen(BOOTSTRAP_NAME);
+                    log_add('Application display load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '4c7da4e2');
+                }
+                try {
+                    $applicationActionInstance = new Action($applicationInstance);
+                } catch (\Error $e) {
+                    log_reopen(BOOTSTRAP_NAME);
+                    log_add('Application action load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '3c042de3');
+                }
 
                 // Initialisation des instances.
                 $applicationInstance->initialisation();

@@ -41,9 +41,9 @@ class SocialNone implements SocialInterface
      * Gère le classement social des liens.
      *
      * @param array &$links table des liens.
-     * @return float
+     * @return void
      */
-    public function arraySocialFilter(array &$links, $socialClass = '')
+    public function arraySocialFilter(array &$links, $socialClass = ''): void
     {
         $links = array();
     }
@@ -54,7 +54,7 @@ class SocialNone implements SocialInterface
      * @param Link &$link lien à calculer.
      * @return float
      */
-    public function linkSocialScore(Link &$link, $socialClass = '')
+    public function linkSocialScore(Link &$link, $socialClass = ''): float
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=none score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=none score 0 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);

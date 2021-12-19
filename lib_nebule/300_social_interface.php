@@ -20,7 +20,7 @@ interface SocialInterface
      */
     public function __construct(nebule $nebuleInstance);
 
-    public function arraySocialFilter(array &$links, $socialClass = '');
+    public function arraySocialFilter(array &$links, string $socialClass = ''): void;
 
-    public function linkSocialScore(Link &$link, $socialClass = '');
+    public function linkSocialScore(Link &$link, string $socialClass = ''): float;
 }

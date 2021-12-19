@@ -48,60 +48,7 @@ class Social implements SocialInterface
      */
     public function __construct(nebule $nebuleInstance)
     {
-        global $nebuleInstance;
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_instanceSocialMySelf = new SocialMySelf();
-        $this->_instanceSocialNotMySelf = new SocialNotMySelf();
-        $this->_instanceSocialSelf = new SocialSelf();
-        $this->_instanceSocialNotself = new SocialNotself();
-        $this->_instanceSocialStrict = new SocialStrict();
-        $this->_instanceSocialAll = new SocialAll();
-        $this->_instanceSocialNone = new SocialNone();
-        $this->_instanceSocialOnList = new SocialOnList();
-        $this->_instanceSocialOffList = new SocialOffList();
-        $this->_instanceSocialReputation = new SocialReputation();
-        $this->_instanceSocialUnreputation = new SocialUnreputation();
-
-        // Détermine le traitement social par défaut.
-        switch ($this->_configuration->getOption('socialLibrary')) {
-            case 'myself':
-                $this->_instanceSocialDefault = $this->_instanceSocialMySelf;
-                break;
-            case 'notmyself':
-                $this->_instanceSocialDefault = $this->_instanceSocialNotMySelf;
-                break;
-            case 'self':
-                $this->_instanceSocialDefault = $this->_instanceSocialSelf;
-                break;
-            case 'notself':
-                $this->_instanceSocialDefault = $this->_instanceSocialNotself;
-                break;
-            case 'strict':
-                $this->_instanceSocialDefault = $this->_instanceSocialStrict;
-                break;
-            case 'all':
-                $this->_instanceSocialDefault = $this->_instanceSocialAll;
-                break;
-            case 'none':
-                $this->_instanceSocialDefault = $this->_instanceSocialNone;
-                break;
-            case 'onlist':
-                $this->_instanceSocialDefault = $this->_instanceSocialOnList;
-                break;
-            case 'offlist':
-                $this->_instanceSocialDefault = $this->_instanceSocialOffList;
-                break;
-            case 'reputation':
-                $this->_instanceSocialDefault = $this->_instanceSocialOffList;
-                break;
-            case 'offlist':
-                $this->_instanceSocialDefault = $this->_instanceSocialOffList;
-                break;
-            default:
-                $this->_instanceSocialDefault = $this->_instanceSocialStrict;
-                break;
-        }
+        $this->_initialisation($nebuleInstance);
     }
 
     public function __sleep()
@@ -112,19 +59,24 @@ class Social implements SocialInterface
     public function __wakeup()
     {
         global $nebuleInstance;
+        $this->_initialisation($nebuleInstance);
+    }
+
+    private function _initialisation(nebule $nebuleInstance)
+    {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_instanceSocialMySelf = new SocialMySelf();
-        $this->_instanceSocialNotMySelf = new SocialNotMySelf();
-        $this->_instanceSocialSelf = new SocialSelf();
-        $this->_instanceSocialNotself = new SocialNotself();
-        $this->_instanceSocialStrict = new SocialStrict();
-        $this->_instanceSocialAll = new SocialAll();
-        $this->_instanceSocialNone = new SocialNone();
-        $this->_instanceSocialOnList = new SocialOnList();
-        $this->_instanceSocialOffList = new SocialOffList();
-        $this->_instanceSocialReputation = new SocialReputation();
-        $this->_instanceSocialUnreputation = new SocialUnreputation();
+        $this->_instanceSocialMySelf = new SocialMySelf($nebuleInstance);
+        $this->_instanceSocialNotMySelf = new SocialNotMySelf($nebuleInstance);
+        $this->_instanceSocialSelf = new SocialSelf($nebuleInstance);
+        $this->_instanceSocialNotself = new SocialNotself($nebuleInstance);
+        $this->_instanceSocialStrict = new SocialStrict($nebuleInstance);
+        $this->_instanceSocialAll = new SocialAll($nebuleInstance);
+        $this->_instanceSocialNone = new SocialNone($nebuleInstance);
+        $this->_instanceSocialOnList = new SocialOnList($nebuleInstance);
+        $this->_instanceSocialOffList = new SocialOffList($nebuleInstance);
+        $this->_instanceSocialReputation = new SocialReputation($nebuleInstance);
+        $this->_instanceSocialUnreputation = new SocialUnreputation($nebuleInstance);
 
         // Détermine le traitement social par défaut.
         switch ($this->_configuration->getOption('socialLibrary')) {
@@ -170,47 +122,48 @@ class Social implements SocialInterface
     /**
      * Gère le classement social des liens.
      *
-     * @param array &$links table des liens.
-     * @return float
+     * @param array  $links
+     * @param string $socialClass
+     * @return void
      */
-    public function arraySocialFilter(array &$links, $socialClass = '')
+    public function arraySocialFilter(array &$links, string $socialClass = ''): void
     {
         switch ($socialClass) {
             case 'myself':
-                return $this->_instanceSocialMySelf->arraySocialFilter($links, '');
+                $this->_instanceSocialMySelf->arraySocialFilter($links, '');
                 break;
             case 'notmyself':
-                return $this->_instanceSocialNotMySelf->arraySocialFilter($links, '');
+                $this->_instanceSocialNotMySelf->arraySocialFilter($links, '');
                 break;
             case 'self':
-                return $this->_instanceSocialSelf->arraySocialFilter($links, '');
+                $this->_instanceSocialSelf->arraySocialFilter($links, '');
                 break;
             case 'notself':
-                return $this->_instanceSocialNotself->arraySocialFilter($links, '');
+                $this->_instanceSocialNotself->arraySocialFilter($links, '');
                 break;
             case 'strict':
-                return $this->_instanceSocialStrict->arraySocialFilter($links, '');
+                $this->_instanceSocialStrict->arraySocialFilter($links, '');
                 break;
             case 'all':
-                return $this->_instanceSocialAll->arraySocialFilter($links, '');
+                $this->_instanceSocialAll->arraySocialFilter($links, '');
                 break;
             case 'none':
-                return $this->_instanceSocialNone->arraySocialFilter($links, '');
+                $this->_instanceSocialNone->arraySocialFilter($links, '');
                 break;
             case 'onlist':
-                return $this->_instanceSocialOnList->arraySocialFilter($links, '');
+                $this->_instanceSocialOnList->arraySocialFilter($links, '');
                 break;
             case 'offlist':
-                return $this->_instanceSocialOffList->arraySocialFilter($links, '');
+                $this->_instanceSocialOffList->arraySocialFilter($links, '');
                 break;
             case 'reputation':
-                return $this->_instanceSocialReputation->arraySocialFilter($links, '');
+                $this->_instanceSocialReputation->arraySocialFilter($links, '');
                 break;
             case 'unreputation':
-                return $this->_instanceSocialUnreputation->arraySocialFilter($links, '');
+                $this->_instanceSocialUnreputation->arraySocialFilter($links, '');
                 break;
             default:
-                return $this->_instanceSocialDefault->arraySocialFilter($links, '');
+                $this->_instanceSocialDefault->arraySocialFilter($links, '');
                 break;
         }
     }
@@ -221,7 +174,7 @@ class Social implements SocialInterface
      * @param Link &$link lien à calculer.
      * @return float
      */
-    public function linkSocialScore(Link &$link, $socialClass = '')
+    public function linkSocialScore(Link &$link, string $socialClass = ''): float
     {
         $result = 0;
 
