@@ -243,11 +243,11 @@ class Link implements linkInterface
         $this->_metrology->addLinkRead(); // Metrologie.
 
         // Extrait le lien et vérifie sa structure.
-        if (!$this->_extract($link))
+        if (!$this->_extract_disabled($link))
             return false;
 
         // Vérifie la validité du lien.
-        if (!$this->_verify())
+        if (!$this->_verify_disabled())
             return false;
 
         // Détecte si c'est un lien dissimulé.
@@ -689,7 +689,7 @@ class Link implements linkInterface
      * @param string $link
      * @return boolean
      */
-    protected function _extract(string $link): bool
+    protected function _extract_disabled(string $link): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr(trim($link), 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -813,7 +813,7 @@ class Link implements linkInterface
      *
      * @return boolean
      */
-    protected function _verify(): bool
+    protected function _verify_disabled(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 

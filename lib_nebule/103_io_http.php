@@ -107,7 +107,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::setFilesTranscodeKey()
      */
-    public function setFilesTranscodeKey(&$key)
+    public function setFilesTranscodeKey(string &$key)
     {
         $this->_filesTrancodeKey = $key;
     }
@@ -135,7 +135,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getInstanceEntityID()
      */
-    public function getInstanceEntityID($localisation = '')
+    public function getInstanceEntityID(string $localisation = '')
     {
         if ($localisation == '') {
             $localisation = $this->_defaultLocalisation;
@@ -151,7 +151,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksDirectory()
      */
-    public function checkLinksDirectory($localisation = '')
+    public function checkLinksDirectory(string $localisation = '')
     {
         if ($localisation == '') {
             $localisation = $this->_defaultLocalisation;
@@ -164,7 +164,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsDirectory()
      */
-    public function checkObjectsDirectory($localisation = '')
+    public function checkObjectsDirectory(string $localisation = '')
     {
         if ($localisation == '') {
             $localisation = $this->_defaultLocalisation;
@@ -177,7 +177,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksRead()
      */
-    public function checkLinksRead($localisation = '')
+    public function checkLinksRead(string $localisation = '')
     {
         if ($localisation == '') {
             $localisation = $this->_defaultLocalisation;
@@ -190,7 +190,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksWrite()
      */
-    public function checkLinksWrite($localisation = '')
+    public function checkLinksWrite(string $localisation = '')
     {
         return false;
     }
@@ -199,7 +199,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsRead()
      */
-    public function checkObjectsRead($localisation = '')
+    public function checkObjectsRead(string $localisation = '')
     {
         if ($localisation == '') {
             $localisation = $this->_defaultLocalisation;
@@ -212,7 +212,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsWrite()
      */
-    public function checkObjectsWrite($localisation = '')
+    public function checkObjectsWrite(string $localisation = '')
     {
         return false;
     }
@@ -221,7 +221,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinkPresent()
      */
-    public function checkLinkPresent(&$object, $localisation = '')
+    public function checkLinkPresent($object, string $localisation = '')
     {
         if ($localisation == '') {
             $localisation = $this->_defaultLocalisation;
@@ -241,7 +241,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectPresent()
      */
-    public function checkObjectPresent(&$object, $localisation = '')
+    public function checkObjectPresent($object, string $localisation = '')
     {
         if ($localisation == '') {
             $localisation = $this->_defaultLocalisation;
@@ -261,7 +261,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::linksRead()
      */
-    public function linksRead(&$object, $localisation = '')
+    public function linksRead(string &$object, string $localisation = '')
     {
         if ($localisation == '') {
             $localisation = $this->_defaultLocalisation;
@@ -304,7 +304,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::ObfuscatedLinksRead()
      */
-    public function obfuscatedLinksRead(&$entity, $signer = '0', $localisation = '')
+    public function obfuscatedLinksRead(string &$entity, string $signer = '0', string $localisation = '')
     {
         // @todo
     }
@@ -313,7 +313,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::objectRead()
      */
-    public function objectRead(&$object, $maxsize = 0, $localisation = '')
+    public function objectRead(string $object, int $maxsize = 0, string $localisation = '')
     {
         if ($localisation == '') {
             $localisation = $this->_defaultLocalisation;
@@ -339,7 +339,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::linkWrite()
      */
-    public function linkWrite(&$object, &$link, $localisation = '')
+    public function linkWrite(string $object, string &$link, string $localisation = '')
     {
         return false;
     }
@@ -348,7 +348,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::objectWrite()
      */
-    public function objectWrite(&$data, $localisation = '')
+    public function objectWrite(string &$data, string $localisation = '')
     {
         // Désactivé sur du HTTP
         return false;
@@ -358,7 +358,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::objectDelete()
      */
-    public function objectDelete(&$object, $localisation = '')
+    public function objectDelete(string &$object, $localisation = '')
     {
         // Désactivé sur du HTTP
         return false;
@@ -368,7 +368,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::linkDelete()
      */
-    public function linkDelete(&$object, &$link, $localisation = '')
+    public function linkDelete(string $object, string &$link, $localisation = '')
     {
         // Désactivé sur du HTTP
         return false;
@@ -378,7 +378,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::linksDelete()
      */
-    public function linksDelete(&$object, $localisation = '')
+    public function linksDelete(string &$object, $localisation = '')
     {
         // Désactivé sur du HTTP
         return false;

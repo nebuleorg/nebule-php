@@ -36,28 +36,28 @@ interface ioInterface
      *
      * @return string
      */
-    public function getType();
+    public function getType(): string;
 
     /**
      * Retourne la chaine de filtre de ce type de FS.
      *
      * @return string
      */
-    public function getFilterString();
+    public function getFilterString(): string;
 
     /**
      * Retourne le mode de lecture/écriture RO/RW.
      *
      * @return string
      */
-    public function getMode();
+    public function getMode(): string;
 
     /**
      * Retourne la chaine de localisation par défaut.
      *
      * @return string
      */
-    public function getDefaultLocalisation();
+    public function getDefaultLocalisation(): string;
 
     /**
      * Initialise la clé de transcodage des fichiers de liens dissimulés.
@@ -65,14 +65,14 @@ interface ioInterface
      * @param string $key
      * @return void
      */
-    public function setFilesTranscodeKey(&$key);
+    public function setFilesTranscodeKey(string &$key): void;
 
     /**
      * Supprime la clé de transcodage des fichiers de liens dissimulés.
      *
      * @return void
      */
-    public function unsetFilesTranscodeKey();
+    public function unsetFilesTranscodeKey(): void;
 
     /**
      * Retourne l'ID de l'entité locale de l'instance.
@@ -80,7 +80,7 @@ interface ioInterface
      * @param string $localisation
      * @return string
      */
-    public function getInstanceEntityID($localisation = '');
+    public function getInstanceEntityID(string $localisation = ''): string;
 
 
     // Fonctions d'auto-test.
@@ -91,7 +91,7 @@ interface ioInterface
      * @param string $localisation
      * @return boolean
      */
-    public function checkLinksDirectory($localisation = '');
+    public function checkLinksDirectory(string $localisation = ''): bool;
 
     /**
      * Vérifie l'arborescence des objets.
@@ -99,7 +99,7 @@ interface ioInterface
      * @param string $localisation
      * @return boolean
      */
-    public function checkObjectsDirectory($localisation = '');
+    public function checkObjectsDirectory(string $localisation = ''): bool;
 
     /**
      * Vérifie les capacité de lecture de l'arborescence des liens.
@@ -107,7 +107,7 @@ interface ioInterface
      * @param string $localisation
      * @return boolean
      */
-    public function checkLinksRead($localisation = '');
+    public function checkLinksRead(string $localisation = ''): bool;
 
     /**
      * Vérifie les capacité d'écriture de l'arborescence des liens.
@@ -115,7 +115,7 @@ interface ioInterface
      * @param string $localisation
      * @return boolean
      */
-    public function checkLinksWrite($localisation = '');
+    public function checkLinksWrite(string $localisation = ''): bool;
 
     /**
      * Vérifie les capacité de lecture de l'arborescence des objets.
@@ -123,7 +123,7 @@ interface ioInterface
      * @param string $localisation
      * @return boolean
      */
-    public function checkObjectsRead($localisation = '');
+    public function checkObjectsRead(string $localisation = ''): bool;
 
     /**
      * Vérifie les capacité d'écriture de l'arborescence des objets.
@@ -131,7 +131,7 @@ interface ioInterface
      * @param string $localisation
      * @return boolean
      */
-    public function checkObjectsWrite($localisation = '');
+    public function checkObjectsWrite(string $localisation = ''): bool;
 
 
     // Fonctions de test de présence.
@@ -140,21 +140,21 @@ interface ioInterface
      * Indique true si l'objet a des liens, ou false sinon.
      * Attend en entrée une chaine avec l'ID de l'objet.
      *
-     * @param unknown $object
+     * @param string $object
      * @param string $localisation
      * @return boolean
      */
-    public function checkLinkPresent(&$object, $localisation = '');
+    public function checkLinkPresent(string $object, string $localisation = ''): bool;
 
     /**
      * Indique true si l'objet est présent, ou false sinon.
      * Attend en entrée une chaine avec l'ID de l'objet.
      *
-     * @param unknown $object
+     * @param string $object
      * @param string $localisation
      * @return boolean
      */
-    public function checkObjectPresent(&$object, $localisation = '');
+    public function checkObjectPresent(string $object, string $localisation = ''): bool;
 
 
     // Fonctions de lecture.
@@ -167,12 +167,11 @@ interface ioInterface
      * @param string $localisation
      * @return array|boolean
      */
-    public function linksRead(&$object, $localisation = '');
+    public function linksRead(string $object, string $localisation = '');
 
     /**
      * Lit les liens dissimulés de l'entité dite destinataire. Retourne un tableau des liens lus, même vide.
      * Attend en entrée une chaine avec l'ID de l'entité et si besoin une chaine avec l'ID du signataire source.
-     *
      * Si le signataire n'est pas précisé, il doit être positionné à 0.
      * Dans ce cas la recherche se fera sur tous les signataires qui ont générés des liens dissimulés pour l'entité destinataire.
      *
@@ -181,17 +180,17 @@ interface ioInterface
      * @param string $localisation
      * @return array
      */
-    public function obfuscatedLinksRead(&$entity, $signer = '0', $localisation = '');
+    public function obfuscatedLinksRead(string $entity, string $signer = '0', string $localisation = ''): array;
 
     /**
      * Lit le contenu de l'objet. Retourne le contenu lu ou false si erreur.
      *
      * @param string $object
-     * @param number $maxsize
+     * @param int    $maxsize
      * @param string $localisation
      * @return string|boolean
      */
-    public function objectRead(&$object, $maxsize = 0, $localisation = '');
+    public function objectRead(string $object, int $maxsize = 0, string $localisation = '');
 
 
     // Fonctions d'écriture.
@@ -204,7 +203,7 @@ interface ioInterface
      * @param string $localisation
      * @return number|boolean
      */
-    public function linkWrite(&$object, &$link, $localisation = '');
+    public function linkWrite(string $object, string &$link, string $localisation = '');
 
     /**
      * Ecrit des données dans un objet. Retourne l'empreinte de l'objet écrit ou false si erreur.
@@ -213,7 +212,7 @@ interface ioInterface
      * @param string $localisation
      * @return string|boolean
      */
-    public function objectWrite(&$data, $localisation = '');
+    public function objectWrite(string &$data, string $localisation = '');
 
 
     // Fonctions de suppression.
@@ -227,7 +226,7 @@ interface ioInterface
      * @return boolean
      */
 
-    public function linkDelete(&$object, &$link, $localisation = '');
+    public function linkDelete(string $object, string &$link, string $localisation = ''): bool;
 
     /**
      * Supprime tous les liens d'un objet.
@@ -237,7 +236,7 @@ interface ioInterface
      * @return boolean
      */
 
-    public function linksDelete(&$object, $localisation = '');
+    public function linksDelete(string $object, string $localisation = ''): bool;
 
     /**
      * Supprime le contenu d'un objet. Retourne true si la suppression a réussi ou false si erreur.
@@ -247,5 +246,5 @@ interface ioInterface
      * @param string $localisation
      * @return boolean
      */
-    public function objectDelete(&$object, $localisation = '');
+    public function objectDelete(string $object, string $localisation = ''): bool;
 }

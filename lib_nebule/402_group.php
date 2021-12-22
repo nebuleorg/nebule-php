@@ -516,7 +516,7 @@ class Group extends Node
         }
 
         // Liste tous mes liens de définition de groupe fermé.
-        $links = $this->readLinksFilterFull(
+        $links = $this->readLinksFilterFull_disabled(
             '',
             '',
             'l',
@@ -687,7 +687,7 @@ class Group extends Node
         }
 
         // Liste tous mes liens de définition de groupe protégé.
-        $links = $this->readLinksFilterFull(
+        $links = $this->readLinksFilterFull_disabled(
             '',
             '',
             'l',
@@ -863,7 +863,7 @@ class Group extends Node
         }
 
         // Liste tous mes liens de définition de groupe dissimulé.
-        $links = $this->readLinksFilterFull(
+        $links = $this->readLinksFilterFull_disabled(
             '',
             '',
             'l',
@@ -1039,7 +1039,7 @@ class Group extends Node
         }
 
         // Liste tous les liens de définition des membres du groupe.
-        $links = $this->readLinksFilterFull(
+        $links = $this->readLinksFilterFull_disabled(
             '',
             '',
             'l',
@@ -1184,7 +1184,7 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Liste tous les liens des membres de la conversation.
-        $links = $this->readLinksFilterFull(
+        $links = $this->readLinksFilterFull_disabled(
             '',
             '',
             'l',
@@ -1260,7 +1260,7 @@ class Group extends Node
         }
 
         // Liste tous les liens de définition des entités à l'écoutes du groupe.
-        $links = $this->readLinksFilterFull(
+        $links = $this->readLinksFilterFull_disabled(
             '',
             '',
             'l',
@@ -1430,7 +1430,7 @@ class Group extends Node
         }
 
         // Liste tous les liens des entités à l'écoutes du groupe.
-        $links = $this->readLinksFilterFull(
+        $links = $this->readLinksFilterFull_disabled(
             '',
             '',
             'l',

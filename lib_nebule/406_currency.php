@@ -929,7 +929,7 @@ class Currency extends Node
         }
 
         // Recherche les monnaies pour l'entité en cours.
-        $links1 = $this->readLinksFilterFull(
+        $links1 = $this->readLinksFilterFull_disabled(
             '',
             '',
             'l',
@@ -941,7 +941,7 @@ class Currency extends Node
         // Filtrage type recherché. @todo faire filtrage sur MID.
         foreach ($links1 as $i => $link) {
             $instance = $this->_nebuleInstance->newObject($link->getHashSource());
-            $links2 = $instance->readLinksFilterFull(
+            $links2 = $instance->readLinksFilterFull_disabled(
                 $link->getHashSigner(),
                 '',
                 'l',

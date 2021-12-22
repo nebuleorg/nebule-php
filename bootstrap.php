@@ -5479,7 +5479,7 @@ function bootstrap_displayPreloadApplication()
     $nb = 0;
     foreach ($items as $item) {
         if (!$nebuleInstance->getIO()->checkObjectPresent($item)) {
-            $instance = $nebuleInstance->newObject($item, false, false);
+            $instance = $nebuleInstance->newObject($item);
             $applicationDisplayInstance->displayInlineObjectColorNolink($instance);
             echo "\n";
             $instance->syncObject(false);

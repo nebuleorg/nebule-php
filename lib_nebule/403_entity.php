@@ -424,7 +424,7 @@ class Entity extends Node
             return true;
         }
         // Extrait les liens f vers la clé publique.
-        $list = $this->readLinksFilterFull($this->_id, '', 'f', '', $this->_id, '0');
+        $list = $this->readLinksFilterFull_disabled($this->_id, '', 'f', '', $this->_id, '0');
         if (sizeof($list) == 0) {
             return true;
         }
@@ -802,7 +802,7 @@ class Entity extends Node
         $list = array();
         $links = array();
         //_l_fnd($this->_id, $links, 'f', $this->_id, '', '0');				// @todo Vérifier le bon fonctionnement.
-        $links = $this->readLinksFilterFull('', '', 'f', $this->_id, '', '0');
+        $links = $this->readLinksFilterFull_disabled('', '', 'f', $this->_id, '', '0');
         foreach ($links as $link) {
             $instance6 = $this->_nebuleInstance->newObject($link->getHashTarget());
             $type = $instance6->getType('all');
@@ -849,7 +849,7 @@ class Entity extends Node
         {
             $uplinks = array();
             //_l_fnd($this->_id, $uplinks, 'f', '', $this->_id, '0');							// @todo Vérifier le bon fonctionnement.
-            $uplinks = $this->readLinksFilterFull('', '', 'f', '', $this->_id, '0');
+            $uplinks = $this->readLinksFilterFull_disabled('', '', 'f', '', $this->_id, '0');
             foreach ($uplinks as $uplink) {
                 $instance5 = $this->_nebuleInstance->newObject($uplink->getHashSource());
                 $type = $instance5->getType('all');
@@ -857,7 +857,7 @@ class Entity extends Node
                     $list = array();
                     $links = array();
                     //_l_fnd($instance5->getID(), $links, 'f', $instance5->getID(), '', '0');          // @todo Vérifier le bon fonctionnement.
-                    $links = $instance5->readLinksFilterFull('', '', 'f', $instance5->getID(), '', '0');
+                    $links = $instance5->readLinksFilterFull_disabled('', '', 'f', $instance5->getID(), '', '0');
                     foreach ($links as $link) {
                         $instance6 = $this->_nebuleInstance->newObject($link->getHashTarget());
                         $type = $instance6->getType('all');
@@ -1049,7 +1049,7 @@ class Entity extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Liste tous les liens de définition des membres du groupe.
-        $links = $this->readLinksFilterFull(
+        $links = $this->readLinksFilterFull_disabled(
             '',
             '',
             'l',
@@ -1085,7 +1085,7 @@ class Entity extends Node
         $list = array();
 
         // Liste tous les liens de définition des membres du groupe.
-        $links = $this->readLinksFilterFull(
+        $links = $this->readLinksFilterFull_disabled(
             '',
             '',
             'l',
@@ -1120,7 +1120,7 @@ class Entity extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Liste tous les liens de définition des membres du groupe.
-        $links = $this->readLinksFilterFull(
+        $links = $this->readLinksFilterFull_disabled(
             '',
             '',
             'l',

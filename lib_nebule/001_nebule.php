@@ -146,7 +146,7 @@ class nebule
     /**
      * Liste des objets à usage réservé.
      */
-    static private $RESERVED_OBJECTS_LIST = array(
+    const RESERVED_OBJECTS_LIST = array(
         'nebule/objet',
         'nebule/objet/hash',
         'nebule/objet/homomorphe',
@@ -247,6 +247,13 @@ class nebule
     private $_configuration;
 
     /**
+     * Instance de gestion du cache.
+     *
+     * @var Cache
+     */
+    private $_cache;
+
+    /**
      * Instance des entrées/sorties.
      *
      * @var ioInterface
@@ -266,90 +273,6 @@ class nebule
      * @var SocialInterface
      */
     private $_social;
-
-    /**
-     * Le tableau de mise en cache des liens.
-     *
-     * @var array
-     */
-    private $_cacheLinks = array();
-
-    /**
-     * Le tableau de mise en cache des objets.
-     *
-     * @var array
-     */
-    private $_cacheObjects = array();
-
-    /**
-     * Le tableau de mise en cache des entités.
-     *
-     * @var array
-     */
-    private $_cacheEntities = array();
-
-    /**
-     * Le tableau de mise en cache des groupes.
-     *
-     * @var array
-     */
-    private $_cacheGroups = array();
-
-    /**
-     * Le tableau de mise en cache des conversations.
-     *
-     * @var array
-     */
-    private $_cacheConversations = array();
-
-    /**
-     * Le tableau de mise en cache des monnaies.
-     *
-     * @var array
-     */
-    private $_cacheCurrencies = array();
-
-    /**
-     * Le tableau de mise en cache des sacs de jetons.
-     *
-     * @var array
-     */
-    private $_cacheTokenPools = array();
-
-    /**
-     * Le tableau de mise en cache des jetons.
-     *
-     * @var array
-     */
-    private $_cacheTokens = array();
-
-    /**
-     * Le tableau de mise en cache des portefeuille.
-     *
-     * @var array
-     */
-    private $_cacheWallets = array();
-
-    /**
-     * Le tableau de mise en cache des transactions.
-     *
-     * @var array
-     */
-    private $_cacheTransactions = array();
-
-    /**
-     * Le tableau de mémorisation de la date de mise en cache des objets/entités/groupes/conversations/liens.
-     *
-     * @var array
-     */
-    private $_cacheDateInsertion = array();
-
-    /**
-     * Taille du cache.
-     *
-     * @var int
-     */
-    private $_sessionBufferLimit = 0;
 
     private $_flushCache = false;
 
@@ -382,7 +305,7 @@ class nebule
     public function __destruct()
     {
         $this->_saveCurrentsObjectsOnSessionBuffer();
-        $this->_saveCacheOnSessionBuffer();
+        $this->_cache->saveCacheOnSessionBuffer();
         return true;
     }
 
@@ -417,6 +340,7 @@ class nebule
         $nebuleInstance = $this;
         $this->_metrology = new Metrology($this->_nebuleInstance);
         $this->_configuration = new Configuration($this->_nebuleInstance);
+        $this->_cache = new Cache($this->_nebuleInstance);
         $this->_metrology->setConfigurationInstance($this->_configuration);
 
         $this->_findModeRescue();
@@ -436,8 +360,7 @@ class nebule
         $this->_findFlushCache();
 
         $this->_getSubordinationEntity();
-        $this->_sessionBufferLimit = $this->_configuration->getOption('sessionBufferSize');
-        $this->_readCacheOnSessionBuffer();
+        $this->_cache->readCacheOnSessionBuffer();
 
         $this->_findActionTicket();
 
@@ -650,6 +573,18 @@ class nebule
     }
 
     /**
+     * Re-sauvegarde les instances des certains objets avant la sauvegarde du cache vers le buffer de session.
+     * Ces objets sont potentiellement modifiés depuis leur première instanciation.
+     *
+     * @return void
+     */
+    private function _saveCurrentsObjectsOnSessionBuffer(): void
+    {
+        $this->setSessionStore('nebuleHostEntityInstance', serialize($this->_instanceEntityInstance));
+        $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
+    }
+
+    /**
      * Supprime un contenu mémorisé dans la session php.
      *
      * Fonction désactivée !
@@ -672,386 +607,96 @@ class nebule
         return true;
     }
 
-    /**
-     * Extrait les instances du buffer de session vers le cache.
-     *
-     * @return void
-     */
-    private function _readCacheOnSessionBuffer(): void
-    {
-        if ($this->_flushCache
-            || !$this->_configuration->getOption('permitSessionBuffer')
-        )
-            return;
-
-        session_start();
-
-        // Extrait les objets/liens du cache.
-        $list = array();
-        if (isset($_SESSION['Buffer']))
-            $list = $_SESSION['Buffer'];
-        if (sizeof($list) > 0) {
-            foreach ($list as $string) {
-                $instance = unserialize($string); // TODO à simplifier par rapport à la class parente
-                if (is_a($instance, 'Transaction')) {
-                    $id = $instance->getFullLink();
-                    $this->_cacheTransactions[$id] = $instance;
-                } elseif (is_a($instance, 'Wallet')) {
-                    $id = $instance->getID();
-                    $this->_cacheWallets[$id] = $instance;
-                } elseif (is_a($instance, 'Token')) {
-                    $id = $instance->getID();
-                    $this->_cacheTokens[$id] = $instance;
-                } elseif (is_a($instance, 'TokenPool')) {
-                    $id = $instance->getID();
-                    $this->_cacheTokenPools[$id] = $instance;
-                } elseif (is_a($instance, 'Currency')) {
-                    $id = $instance->getID();
-                    $this->_cacheCurrencies[$id] = $instance;
-                } elseif (is_a($instance, 'Conversation')) {
-                    $id = $instance->getID();
-                    $this->_cacheConversations[$id] = $instance;
-                } elseif (is_a($instance, 'Group')) {
-                    $id = $instance->getID();
-                    $this->_cacheGroups[$id] = $instance;
-                } elseif (is_a($instance, 'Entity')) {
-                    $id = $instance->getID();
-                    $this->_cacheEntities[$id] = $instance;
-                } elseif (is_a($instance, 'Node')) {
-                    $id = $instance->getID();
-                    $this->_cacheObjects[$id] = $instance;
-                } elseif (is_a($instance, 'Link')) {
-                    $id = $instance->getFullLink();
-                    $this->_cacheLinks[$id] = $instance;
-                }
-            }
-
-            // Extrait les objets/liens du cache.
-            $list = array();
-            if (isset($_SESSION['BufferDateInsertion']))
-                $list = $_SESSION['BufferDateInsertion'];
-            if (sizeof($list) > 0) {
-                foreach ($list as $id => $string)
-                    $this->_cacheDateInsertion[$id] = $string;
-            }
-        }
-
-        session_write_close();
-
-        // Vérifie si le cache n'est pas trop gros. Le vide au besoin.
-        $this->_getCacheNeedCleaning();
-    }
-
-    /**
-     * Re-sauvegarde les instances des certains objets avant la sauvegarde du cache vers le buffer de session.
-     * Ces objets sont potentiellement modifiés depuis leur première instanciation.
-     *
-     * @return void
-     */
-    private function _saveCurrentsObjectsOnSessionBuffer(): void
-    {
-        $this->setSessionStore('nebuleHostEntityInstance', serialize($this->_instanceEntityInstance));
-        $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
-    }
-
-    /**
-     * Sauvegarde les instances du cache vers le buffer de session.
-     *
-     * @return void
-     */
-    private function _saveCacheOnSessionBuffer(): void
-    {
-        if ($this->_flushCache
-            || !$this->_configuration->getOption('permitSessionBuffer')
-        )
-            return;
-
-        $this->_getCacheNeedCleaning();
-        session_start();
-        $_SESSION['Buffer'] = array();
-
-        // Mémorise les objets/liens.
-        foreach ($this->_cacheLinks as $instance) {
-            if (isset($this->_cacheDateInsertion[$instance->getFullLink()])) {
-                $_SESSION['Buffer'][$instance->getFullLink()] = serialize($instance);
-                $_SESSION['BufferDateInsertion'][$instance->getFullLink()] = $this->_cacheDateInsertion[$instance->getFullLink()];
-            }
-        }
-        foreach ($this->_cacheObjects as $instance) {
-            if (isset($this->_cacheDateInsertion[$instance->getID()])) {
-                $_SESSION['Buffer'][$instance->getID()] = serialize($instance);
-                $_SESSION['BufferDateInsertion'][$instance->getID()] = $this->_cacheDateInsertion[$instance->getID()];
-            }
-        }
-        foreach ($this->_cacheEntities as $instance) {
-            if (isset($this->_cacheDateInsertion[$instance->getID()])) {
-                $_SESSION['Buffer'][$instance->getID()] = serialize($instance);
-                $_SESSION['BufferDateInsertion'][$instance->getID()] = $this->_cacheDateInsertion[$instance->getID()];
-            }
-        }
-        foreach ($this->_cacheGroups as $instance) {
-            if (isset($this->_cacheDateInsertion[$instance->getID()])) {
-                $_SESSION['Buffer'][$instance->getID()] = serialize($instance);
-                $_SESSION['BufferDateInsertion'][$instance->getID()] = $this->_cacheDateInsertion[$instance->getID()];
-            }
-        }
-        foreach ($this->_cacheConversations as $instance) {
-            if (isset($this->_cacheDateInsertion[$instance->getID()])) {
-                $_SESSION['Buffer'][$instance->getID()] = serialize($instance);
-                $_SESSION['BufferDateInsertion'][$instance->getID()] = $this->_cacheDateInsertion[$instance->getID()];
-            }
-        }
-        foreach ($this->_cacheCurrencies as $instance) {
-            if (isset($this->_cacheDateInsertion[$instance->getID()])) {
-                $_SESSION['Buffer'][$instance->getID()] = serialize($instance);
-                $_SESSION['BufferDateInsertion'][$instance->getID()] = $this->_cacheDateInsertion[$instance->getID()];
-            }
-        }
-        foreach ($this->_cacheTokenPools as $instance) {
-            if (isset($this->_cacheDateInsertion[$instance->getID()])) {
-                $_SESSION['Buffer'][$instance->getID()] = serialize($instance);
-                $_SESSION['BufferDateInsertion'][$instance->getID()] = $this->_cacheDateInsertion[$instance->getID()];
-            }
-        }
-        foreach ($this->_cacheTokens as $instance) {
-            if (isset($this->_cacheDateInsertion[$instance->getID()])) {
-                $_SESSION['Buffer'][$instance->getID()] = serialize($instance);
-                $_SESSION['BufferDateInsertion'][$instance->getID()] = $this->_cacheDateInsertion[$instance->getID()];
-            }
-        }
-        foreach ($this->_cacheWallets as $instance) {
-            if (isset($this->_cacheDateInsertion[$instance->getID()])) {
-                $_SESSION['Buffer'][$instance->getID()] = serialize($instance);
-                $_SESSION['BufferDateInsertion'][$instance->getID()] = $this->_cacheDateInsertion[$instance->getID()];
-            }
-        }
-        foreach ($this->_cacheTransactions as $instance) {
-            if (isset($this->_cacheDateInsertion[$instance->getFullLink()])) {
-                $_SESSION['Buffer'][$instance->getFullLink()] = serialize($instance);
-                $_SESSION['BufferDateInsertion'][$instance->getFullLink()] = $this->_cacheDateInsertion[$instance->getFullLink()];
-            }
-        }
-
-        session_write_close();
-    }
-
-    /**
-     * Vide le buffer dans la session php.
-     *
-     * @return boolean
-     */
-    private function _flushBufferStore(): bool
-    {
-        $this->_metrology->addLog('Flush buffer store', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-        session_start();
-        unset($_SESSION['Buffer']);
-        $_SESSION['Buffer'] = array();
-        session_write_close();
-        return true;
-    }
-
-    /**
-     * Nettoye le cache du nombre d'entrés demandées.
-     *
-     * @param int $c
-     * @return void
-     */
-    private function _cleanCacheOverflow(int $c = 0): void
-    {
-        if (!$this->_configuration->getOption('permitSessionBuffer')
-            || !is_numeric($c)
-            || $c <= 0
-        )
-            return;
-
-        if ($c > 100)
-            $this->_metrology->addLog(__METHOD__ . ' cache need flush ' . $c . '/' . sizeof($this->_cacheDateInsertion), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
-
-        // Tri le tableau des temps. Les plus anciens sont au début.
-        asort($this->_cacheDateInsertion);
-        $i = 1;
-        foreach ($this->_cacheDateInsertion as $id => $item) {
-            if ($i > $c)
-                break;
-
-            // Nettoie le temps.
-            unset($this->_cacheDateInsertion[$id]);
-
-            // Nettoie un objet.
-            if (isset($this->_cacheObjects[$id])) {
-                $this->_metrology->addLog(__METHOD__ . ' cache_supp_obj=' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-                unset($this->_cacheObjects[$id]);
-            }
-
-            // Nettoie un lien.
-            if (isset($this->_cacheLinks[$id])) // @todo bugg de suppression des liens !?
-            {
-                $this->_metrology->addLog(__METHOD__ . ' cache_supp_lnk=' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-                unset($this->_cacheLinks[$id]);
-            }
-
-            // Nettoie une entité.
-            if (isset($this->_cacheEntities[$id])) {
-                $this->_metrology->addLog(__METHOD__ . ' cache_supp_ent=' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-                unset($this->_cacheEntities[$id]);
-            }
-
-            // Nettoie un groupe.
-            if (isset($this->_cacheGroups[$id])) {
-                $this->_metrology->addLog(__METHOD__ . ' cache_supp_grp=' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-                unset($this->_cacheGroups[$id]);
-            }
-
-            // Nettoie une conversation.
-            if (isset($this->_cacheConversations[$id])) {
-                $this->_metrology->addLog(__METHOD__ . ' cache_supp_cvt=' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-                unset($this->_cacheConversations[$id]);
-            }
-
-            // Nettoie une monnaie.
-            if (isset($this->_cacheCurrencies[$id])) {
-                $this->_metrology->addLog(__METHOD__ . ' cache_supp_cur=' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-                unset($this->_cacheCurrencies[$id]);
-            }
-
-            // Nettoie un sac de jetons.
-            if (isset($this->_cacheTokenPools[$id])) {
-                $this->_metrology->addLog(__METHOD__ . ' cache_supp_tkp=' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-                unset($this->_cacheTokenPools[$id]);
-            }
-
-            // Nettoie un jeton.
-            if (isset($this->_cacheTokens[$id])) {
-                $this->_metrology->addLog(__METHOD__ . ' cache_supp_tkn=' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-                unset($this->_cacheTokens[$id]);
-            }
-
-            // Nettoie un portefeuille.
-            if (isset($this->_cacheWallets[$id])) {
-                $this->_metrology->addLog(__METHOD__ . ' cache_supp_wlt=' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-                unset($this->_cacheWallets[$id]);
-            }
-
-            // Nettoie une transaction.
-            if (isset($this->_cacheTransactions[$id])) {
-                $this->_metrology->addLog(__METHOD__ . ' cache_supp_trt=' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-                unset($this->_cacheTransactions[$id]);
-            }
-
-            $i++;
-        }
-        unset($list);
-    }
-
-    /**
-     * Retourne la taille totale de tous les caches.
-     * Cette taille ne doit pas exéder la taille définie dans l'option sessionBufferSize.
-     *
-     * @return int
-     */
-    private function _getAllCachesSize(): int
-    {
-        return sizeof($this->_cacheObjects) + sizeof($this->_cacheLinks) + sizeof($this->_cacheEntities) + sizeof($this->_cacheGroups) + sizeof($this->_cacheConversations) + sizeof($this->_cacheCurrencies) + sizeof($this->_cacheTokenPools) + sizeof($this->_cacheTokens) + sizeof($this->_cacheWallets) + sizeof($this->_cacheTransactions);
-    }
-
-    /**
-     * Vérifie si il faut libérer une place pour l'ajout en cache d'un nouvel objet/lien.
-     * C'est à dire que la taille maximum du cache est atteinte.
-     * Libère au moins une place si besoin.
-     *
-     * @return void
-     */
-    private function _getCacheNeedOnePlace(): void
-    {
-        if (!$this->_configuration->getOption('permitSessionBuffer'))
-            return;
-
-        $size = $this->_getAllCachesSize();
-        $limit = $this->_sessionBufferLimit;
-        if ($size >= $limit)
-            $this->_cleanCacheOverflow($size - $limit + 1);
-    }
-
-    /**
-     * Vérifie si il faut libérer de la place en cache.
-     * C'est à dire que la taille maximum du cache est atteinte.
-     * Libère de la place si besoin.
-     *
-     * @return void
-     */
-    private function _getCacheNeedCleaning(): void
-    {
-        if (!$this->_configuration->getOption('permitSessionBuffer'))
-            return;
-
-        $size = $this->_getAllCachesSize();
-        $limit = $this->_sessionBufferLimit;
-$this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-        if ($size >= $limit)
-            $this->_cleanCacheOverflow($size - $limit);
-    }
 
 
     /**
      * Nouvelle instance d'un objet.
      *
-     * @param string  $id
-     * @param boolean $protect
-     * @param boolean $obfuscated
-     * @return Node
+     * @param string $oid
+     * @return Node|nodeInterface
      */
-    public function newObject(string $id, bool $protect = false, bool $obfuscated = false): Node
+    public function newObject(string $oid): Node
     {
-        if ($id == '')
-            $id = '0';
+        return $this->_cache->newNode($oid, Cache::TYPE_NODE);
+    }
 
-        if (!$this->_flushCache
-            && isset($this->_cacheObjects[$id])
-        ) {
-            // Surchage la date d'ajout.
-            $this->_cacheDateInsertion[$id] = microtime(true);
-            return $this->_cacheObjects[$id];
-        } else {
-            // Regarde si la limite de taille du cache est atteinte.
-            $this->_getCacheNeedOnePlace();
 
-            // Génère une instance.
-            $instance = new Node($this, $id, '', $protect, $obfuscated);
-
-            // Si le cache est activé.
-            if ($this->_configuration->getOption('permitSessionBuffer')) {
-                // Ajoute l'instance au cache.
-                $this->_cacheObjects[$id] = $instance;
-                $this->_cacheDateInsertion[$id] = microtime(true);
-            }
-
-            return $instance;
-        }
+    /**
+     * Nouvelle instance d'une entité.
+     *
+     * @param string $nid
+     * @return Entity|nodeInterface
+     */
+    public function newEntity(string $nid): Entity
+    {
+        return $this->_cache->newNode($nid, Cache::TYPE_ENTITY);
     }
 
     /**
-     * Supprime le cache d'un objet.
+     * Nouvelle instance d'un groupe.
      *
-     * @param string $id
-     * @return boolean
+     * @param string $nid
+     * @return Group|nodeInterface
      */
-    public function removeCacheObject(string $id): bool
+    public function newGroup(string $nid): Group
     {
-        if (isset($this->_cacheObjects[$id]))
-            unset($this->_cacheObjects[$id], $this->_cacheDateInsertion[$id]);
-        return true;
+        return $this->_cache->newNode($nid, Cache::TYPE_GROUP);
     }
 
     /**
-     * Retourne le nombre d'objets dans le cache.
+     * Nouvelle instance d'une conversation.
      *
-     * @return integer
+     * @param string $nid
+     * @return Conversation|nodeInterface
      */
-    public function getCacheObjectSize(): int
+    public function newConversation(string $nid): Conversation
     {
-        return sizeof($this->_cacheObjects);
+        return $this->_cache->newNode($nid, Cache::TYPE_CONVERSATION);
     }
 
+    /**
+     * Nouvelle instance d'une monnaie.
+     *
+     * @param string $nid
+     * @return Currency|nodeInterface
+     */
+    public function newCurrency(string $nid): Currency
+    {
+        return $this->_cache->newNode($nid, Cache::TYPE_CURRENCY);
+    }
+
+    /**
+     * Nouvelle instance d'un jeton.
+     *
+     * @param string $nid
+     * @return Token|nodeInterface
+     */
+    public function newToken(string $nid): Token
+    {
+        return $this->_cache->newNode($nid, Cache::TYPE_TOKEN);
+    }
+
+    /**
+     * Nouvelle instance d'un sac de jetons.
+     *
+     * @param string $nid
+     * @return TokenPool|nodeInterface
+     */
+    public function newTokenPool(string $nid): TokenPool
+    {
+        return $this->_cache->newNode($nid, Cache::TYPE_TOKENPOOL);
+    }
+
+    /**
+     * Nouvelle instance d'un portefeuille.
+     *
+     * @param string $nid
+     * @return Wallet|nodeInterface
+     */
+    public function newWallet(string $nid): Wallet
+    {
+        return $this->_cache->newNode($nid, Cache::TYPE_WALLET);
+    }
 
     /**
      * Nouvelle instance d'un lien.
@@ -1061,487 +706,8 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
      */
     public function newLink(string $link): Link
     {
-        if ($link == '')
-            $link = 'invalid';
-
-        if (!$this->_flushCache
-            && isset($this->_cacheLinks[$link])
-        ) {
-            // Surchage la date d'ajout.
-            $this->_cacheDateInsertion[$link] = microtime(true);
-            return $this->_cacheLinks[$link];
-        } else {
-            // Regarde si la limite de taille du cache est atteinte.
-            $this->_getCacheNeedOnePlace();
-
-            // Génère une instance.
-            $instance = new Link($this, $link);
-
-            // Si le cache est activé.
-            if ($this->_configuration->getOption('permitSessionBuffer')) {
-                // Ajoute l'instance au cache.
-                $this->_cacheLinks[$link] = $instance;
-                $this->_cacheDateInsertion[$link] = microtime(true);
-            }
-
-            return $instance;
-        }
+        return $this->_cache->newLink($link, Cache::TYPE_LINK);
     }
-
-    /**
-     * Supprime le cache d'un lien.
-     *
-     * @param string $link
-     * @return boolean
-     */
-    public function removeCacheLink(string $link): bool
-    {
-        if (isset($this->_cacheLinks[$link]))
-            unset($this->_cacheLinks[$link], $this->_cacheDateInsertion[$link]);
-        return true;
-    }
-
-    /**
-     * Retourne le nombre de liens dans le cache.
-     *
-     * @return integer
-     */
-    public function getCacheLinkSize(): int
-    {
-        return sizeof($this->_cacheLinks);
-    }
-
-
-    /**
-     * Nouvelle instance d'une entité.
-     *
-     * @param string $id
-     * @return Entity
-     */
-    public function newEntity(string $id): Entity
-    {
-        if (!is_string($id)
-            || $id == ''
-        )
-            $id = '0';
-
-        if (!$this->_flushCache
-            && isset($this->_cacheEntities[$id])
-        ) {
-            // Surchage la date d'ajout.
-            $this->_cacheDateInsertion[$id] = microtime(true);
-            return $this->_cacheEntities[$id];
-        } else {
-            // Regarde si la limite de taille du cache est atteinte.
-            $this->_getCacheNeedOnePlace();
-
-            // Génère une instance.
-            $instance = new Entity($this, $id);
-
-            // Si le cache est activé.
-            if ($this->_configuration->getOption('permitSessionBuffer')) {
-                // Ajoute l'instance au cache.
-                $this->_cacheEntities[$id] = $instance;
-                $this->_cacheDateInsertion[$id] = microtime(true);
-            }
-
-            return $instance;
-        }
-    }
-
-    /**
-     * Supprime le cache d'une entité.
-     *
-     * @param string $id
-     * @return boolean
-     */
-    public function removeCacheEntity(string $id): bool
-    {
-        if (isset($this->_cacheEntities[$id]))
-            unset($this->_cacheEntities[$id], $this->_cacheDateInsertion[$id]);
-        return true;
-    }
-
-    /**
-     * Retourne le nombre d'entités dans le cache.
-     *
-     * @return integer
-     */
-    public function getCacheEntitySize(): int
-    {
-        return sizeof($this->_cacheEntities);
-    }
-
-
-    /**
-     * Nouvelle instance d'un groupe.
-     *
-     * @param string $id
-     * @return Group
-     */
-    public function newGroup(string $id): Group
-    {
-        if ($id == '')
-            $id = '0';
-
-        if (!$this->_flushCache
-            && isset($this->_cacheGroups[$id])
-        ) {
-            // Surchage la date d'ajout.
-            $this->_cacheDateInsertion[$id] = microtime(true);
-            return $this->_cacheGroups[$id];
-        } else {
-            // Regarde si la limite de taille du cache est atteinte.
-            $this->_getCacheNeedOnePlace();
-
-            // Génère une instance.
-            $instance = new Group($this, $id);
-
-            // Si le cache est activé.
-            if ($this->_configuration->getOption('permitSessionBuffer')) {
-                // Ajoute l'instance au cache.
-                $this->_cacheGroups[$id] = $instance;
-                $this->_cacheDateInsertion[$id] = microtime(true);
-            }
-
-            return $instance;
-        }
-    }
-
-    /**
-     * Supprime le cache d'un groupe.
-     *
-     * @param string $id
-     * @return boolean
-     */
-    public function removeCacheGroup(string $id): bool
-    {
-        if (isset($this->_cacheGroups[$id]))
-            unset($this->_cacheGroups[$id], $this->_cacheDateInsertion[$id]);
-        return true;
-    }
-
-    /**
-     * Retourne le nombre de groupes dans le cache.
-     *
-     * @return integer
-     */
-    public function getCacheGroupSize(): int
-    {
-        return sizeof($this->_cacheGroups);
-    }
-
-
-    /**
-     * Nouvelle instance d'une conversation.
-     *
-     * @param string  $id
-     * @param boolean $closed
-     * @param boolean $protect
-     * @param boolean $obfuscated
-     * @return Conversation
-     */
-    public function newConversation(string $id, bool $closed = false, bool $protected = false, bool $obfuscated = false): Conversation
-    {
-        if ($id == '')
-            $id = '0';
-
-        if (!$this->_flushCache
-            && isset($this->_cacheConversations[$id])
-        ) {
-            // Surchage la date d'ajout.
-            $this->_cacheDateInsertion[$id] = microtime(true);
-            return $this->_cacheConversations[$id];
-        } else {
-            // Regarde si la limite de taille du cache est atteinte.
-            $this->_getCacheNeedOnePlace();
-
-            // Génère une instance.
-            $instance = new Conversation($this, $id, $closed, $protected, $obfuscated);
-
-            // Si le cache est activé.
-            if ($this->_configuration->getOption('permitSessionBuffer')) {
-                // Ajoute l'instance au cache.
-                $this->_cacheConversations[$id] = $instance;
-                $this->_cacheDateInsertion[$id] = microtime(true);
-            }
-
-            return $instance;
-        }
-    }
-
-    /**
-     * Supprime le cache d'une conversation.
-     *
-     * @param string $id
-     * @return boolean
-     */
-    public function removeCacheConversation(string $id): bool
-    {
-        if (isset($this->_cacheConversations[$id]))
-            unset($this->_cacheConversations[$id], $this->_cacheDateInsertion[$id]);
-        return true;
-    }
-
-    /**
-     * Retourne le nombre de conversations dans le cache.
-     *
-     * @return integer
-     */
-    public function getCacheConversationSize(): int
-    {
-        return sizeof($this->_cacheConversations);
-    }
-
-
-    /**
-     * Nouvelle instance d'une monnaie.
-     *
-     * @param string  $id
-     * @param array   $param
-     * @param boolean $protect
-     * @param boolean $obfuscated
-     * @return Currency
-     */
-    public function newCurrency(string $id, array $param = array(), bool $protected = false, bool $obfuscated = false): Currency
-    {
-        if ($id == '')
-            $id = '0';
-
-        if (!$this->_flushCache
-            && isset($this->_cacheCurrencies[$id])
-        ) {
-            // Surchage la date d'ajout.
-            $this->_cacheDateInsertion[$id] = microtime(true);
-            return $this->_cacheCurrencies[$id];
-        } else {
-            // Regarde si la limite de taille du cache est atteinte.
-            $this->_getCacheNeedOnePlace();
-
-            // Génère une instance.
-            $instance = new Currency($this, $id, $param, $protected, $obfuscated);
-
-            // Si le cache est activé.
-            if ($this->_configuration->getOption('permitSessionBuffer')) {
-                // Ajoute l'instance au cache.
-                $this->_cacheCurrencies[$id] = $instance;
-                $this->_cacheDateInsertion[$id] = microtime(true);
-            }
-
-            return $instance;
-        }
-    }
-
-    /**
-     * Supprime le cache d'une monnaie.
-     *
-     * @param string $id
-     * @return boolean
-     */
-    public function removeCacheCurrency(string $id): bool
-    {
-        if (isset($this->_cacheCurrencies[$id])) {
-            unset($this->_cacheCurrencies[$id], $this->_cacheDateInsertion[$id]);
-        }
-        return true;
-    }
-
-    /**
-     * Retourne le nombre de monnaies dans le cache.
-     *
-     * @return integer
-     */
-    public function getCacheCurrencySize(): int
-    {
-        return sizeof($this->_cacheCurrencies);
-    }
-
-
-    /**
-     * Nouvelle instance d'un jeton.
-     *
-     * @param string  $id
-     * @param array   $param
-     * @param boolean $protect
-     * @param boolean $obfuscated
-     * @return Token
-     */
-    public function newToken(string $id, array $param = array(), bool $protected = false, bool $obfuscated = false): Token
-    {
-        if ($id == '')
-            $id = '0';
-
-        if (!$this->_flushCache
-            && isset($this->_cacheTokens[$id])
-        ) {
-            // Surchage la date d'ajout.
-            $this->_cacheDateInsertion[$id] = microtime(true);
-            return $this->_cacheTokens[$id];
-        } else {
-            // Regarde si la limite de taille du cache est atteinte.
-            $this->_getCacheNeedOnePlace();
-
-            // Génère une instance.
-            $instance = new Token($this, $id, $param, $protected, $obfuscated);
-
-            // Si le cache est activé.
-            if ($this->_configuration->getOption('permitSessionBuffer')) {
-                // Ajoute l'instance au cache.
-                $this->_cacheTokens[$id] = $instance;
-                $this->_cacheDateInsertion[$id] = microtime(true);
-            }
-
-            return $instance;
-        }
-    }
-
-    /**
-     * Supprime le cache d'un jeton.
-     *
-     * @param string $id
-     * @return boolean
-     */
-    public function removeCacheToken(string $id): bool
-    {
-        if (isset($this->_cacheTokens[$id]))
-            unset($this->_cacheTokens[$id], $this->_cacheDateInsertion[$id]);
-        return true;
-    }
-
-    /**
-     * Retourne le nombre de jetons dans le cache.
-     *
-     * @return integer
-     */
-    public function getCacheTokenSize(): int
-    {
-        return sizeof($this->_cacheTokens);
-    }
-
-
-    /**
-     * Nouvelle instance d'un sac de jetons.
-     *
-     * @param string  $id
-     * @param array   $param
-     * @param boolean $protect
-     * @param boolean $obfuscated
-     * @return TokenPool
-     */
-    public function newTokenPool(string $id, array $param = array(), bool $protected = false, bool $obfuscated = false): TokenPool
-    {
-        if ($id == '')
-            $id = '0';
-
-        if (!$this->_flushCache
-            && isset($this->_cacheTokenPools[$id])
-        ) {
-            // Surchage la date d'ajout.
-            $this->_cacheDateInsertion[$id] = microtime(true);
-            return $this->_cacheTokenPools[$id];
-        } else {
-            // Regarde si la limite de taille du cache est atteinte.
-            $this->_getCacheNeedOnePlace();
-
-            // Génère une instance.
-            $instance = new TokenPool($this, $id, $param, $protected, $obfuscated);
-
-            // Si le cache est activé.
-            if ($this->_configuration->getOption('permitSessionBuffer')) {
-                // Ajoute l'instance au cache.
-                $this->_cacheTokenPools[$id] = $instance;
-                $this->_cacheDateInsertion[$id] = microtime(true);
-            }
-
-            return $instance;
-        }
-    }
-
-    /**
-     * Supprime le cache d'un sac de jetons.
-     *
-     * @param string $id
-     * @return boolean
-     */
-    public function removeCacheTokenPool(string $id): bool
-    {
-        if (isset($this->_cacheTokenPools[$id]))
-            unset($this->_cacheTokenPools[$id], $this->_cacheDateInsertion[$id]);
-        return true;
-    }
-
-    /**
-     * Retourne le nombre de sacs de jetons dans le cache.
-     *
-     * @return integer
-     */
-    public function getCacheTokenPoolSize(): int
-    {
-        return sizeof($this->_cacheTokenPools);
-    }
-
-
-    /**
-     * Nouvelle instance d'un portefeuille.
-     *
-     * @param string  $id
-     * @param array   $param
-     * @param boolean $protect
-     * @param boolean $obfuscated
-     * @return Wallet
-     */
-    public function newWallet(string $id, array $param = array(), bool $protected = false, bool $obfuscated = false): Wallet
-    {
-        if ($id == '')
-            $id = '0';
-
-        if (!$this->_flushCache
-            && isset($this->_cacheWallets[$id])
-        ) {
-            // Surchage la date d'ajout.
-            $this->_cacheDateInsertion[$id] = microtime(true);
-            return $this->_cacheWallets[$id];
-        } else {
-            // Regarde si la limite de taille du cache est atteinte.
-            $this->_getCacheNeedOnePlace();
-
-            // Génère une instance.
-            $instance = new Wallet($this, $id, $param, $protected, $obfuscated);
-
-            // Si le cache est activé.
-            if ($this->_configuration->getOption('permitSessionBuffer')) {
-                // Ajoute l'instance au cache.
-                $this->_cacheWallets[$id] = $instance;
-                $this->_cacheDateInsertion[$id] = microtime(true);
-            }
-
-            return $instance;
-        }
-    }
-
-    /**
-     * Supprime le cache d'un portefeuille.
-     *
-     * @param string $id
-     * @return boolean
-     */
-    public function removeCacheWallet(string $id): bool
-    {
-        if (isset($this->_cacheWallets[$id]))
-            unset($this->_cacheWallets[$id], $this->_cacheDateInsertion[$id]);
-        return true;
-    }
-
-    /**
-     * Retourne le nombre de portefeuilles dans le cache.
-     *
-     * @return integer
-     */
-    public function getCacheWalletSize(): int
-    {
-        return sizeof($this->_cacheWallets);
-    }
-
 
     /**
      * Nouvelle instance d'une transaction.
@@ -1552,299 +718,7 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
      */
     public function newTransaction(string $link): Transaction
     {
-        if ($link == '')
-            $link = 'invalid';
-
-        if (!$this->_flushCache
-            && isset($this->_cacheTransactions[$link])
-        ) {
-            // Surchage la date d'ajout.
-            $this->_cacheDateInsertion[$link] = microtime(true);
-            return $this->_cacheTransactions[$link];
-        } else {
-            // Regarde si la limite de taille du cache est atteinte.
-            $this->_getCacheNeedOnePlace();
-
-            // Génère une instance.
-            $instance = new Transaction($this, $link);
-
-            // Si le cache est activé.
-            if ($this->_configuration->getOption('permitSessionBuffer')) {
-                // Ajoute l'instance au cache.
-                $this->_cacheTransactions[$link] = $instance;
-                $this->_cacheDateInsertion[$link] = microtime(true);
-            }
-
-            return $instance;
-        }
-    }
-
-    /**
-     * Supprime le cache d'une transaction.
-     *
-     * @param string $link
-     * @return boolean
-     */
-    public function removeCacheTransaction(string $link): bool
-    {
-        if (isset($this->_cacheTransactions[$link]))
-            unset($this->_cacheTransactions[$link], $this->_cacheDateInsertion[$link]);
-        return true;
-    }
-
-    /**
-     * Retourne le nombre de transactions dans le cache.
-     *
-     * @return integer
-     */
-    public function getCacheTransactionSize(): int
-    {
-        return sizeof($this->_cacheTransactions);
-    }
-
-
-
-    /**
-     * Retire le cache d'un objet.
-     * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture de l'objet.
-     *
-     * @param $id string
-     * @return boolean
-     */
-    public function unsetObjectCache($id)
-    {
-        if (is_a($id, 'Node')) {
-            $id = $id->getID();
-        }
-
-        if ($id == ''
-            || $id == '0'
-        ) {
-            return false;
-        }
-
-        if (!$this->_flushCache
-            && isset($this->_cacheObjects[$id])
-        ) {
-            unset($this->_cacheObjects[$id], $this->_cacheDateInsertion[$id]);
-        }
-        return true;
-    }
-
-    /**
-     * Retire le cache d'une entité.
-     * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture de l'entité.
-     *
-     * @param $id string
-     * @return boolean
-     */
-    public function unsetEntityCache($id)
-    {
-        if (is_a($id, 'Node')) {
-            $id = $id->getID();
-        }
-
-        if ($id == ''
-            || $id == '0'
-        ) {
-            return false;
-        }
-
-        if (!$this->_flushCache
-            && isset($this->_cacheEntities[$id])
-        ) {
-            unset($this->_cacheEntities[$id], $this->_cacheDateInsertion[$id]);
-        }
-        return true;
-    }
-
-    /**
-     * Retire le cache d'un groupe.
-     * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture du groupe.
-     *
-     * @param $id string
-     * @return boolean
-     */
-    public function unsetGroupCache($id)
-    {
-        if (is_a($id, 'Node')) {
-            $id = $id->getID();
-        }
-
-        if ($id == ''
-            || $id == '0'
-        ) {
-            return false;
-        }
-
-        if (!$this->_flushCache
-            && isset($this->_cacheGroups[$id])
-        ) {
-            unset($this->_cacheGroups[$id], $this->_cacheDateInsertion[$id]);
-        }
-        return true;
-    }
-
-    /**
-     * Retire le cache d'une conversation.
-     * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture de la conversation.
-     *
-     * @param $id string
-     * @return boolean
-     */
-    public function unsetConversationCache($id)
-    {
-        if (is_a($id, 'Node')) {
-            $id = $id->getID();
-        }
-
-        if ($id == ''
-            || $id == '0'
-        ) {
-            return false;
-        }
-
-        if (!$this->_flushCache
-            && isset($this->_cacheConversations[$id])
-        ) {
-            unset($this->_cacheConversations[$id], $this->_cacheDateInsertion[$id]);
-        }
-        return true;
-    }
-
-    /**
-     * Retire le cache d'une monnaie.
-     * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture de la monnaie.
-     *
-     * @param $id string
-     * @return boolean
-     */
-    public function unsetCurrencyCache($id)
-    {
-        if (is_a($id, 'Node')) {
-            $id = $id->getID();
-        }
-
-        if ($id == ''
-            || $id == '0'
-        ) {
-            return false;
-        }
-
-        if (!$this->_flushCache
-            && isset($this->_cacheCurrencies[$id])
-        ) {
-            unset($this->_cacheCurrencies[$id], $this->_cacheDateInsertion[$id]);
-        }
-        return true;
-    }
-
-    /**
-     * Retire le cache d'un sac de jetons.
-     * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture du sac de jetons.
-     *
-     * @param $id string
-     * @return boolean
-     */
-    public function unsetTokenPoolCache($id)
-    {
-        if (is_a($id, 'Node')) {
-            $id = $id->getID();
-        }
-
-        if ($id == ''
-            || $id == '0'
-        ) {
-            return false;
-        }
-
-        if (!$this->_flushCache
-            && isset($this->_cacheTokenPools[$id])
-        ) {
-            unset($this->_cacheTokenPools[$id], $this->_cacheDateInsertion[$id]);
-        }
-        return true;
-    }
-
-    /**
-     * Retire le cache d'un jeton.
-     * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture du jeton.
-     *
-     * @param $id string
-     * @return boolean
-     */
-    public function unsetTokenCache($id)
-    {
-        if (is_a($id, 'Node')) {
-            $id = $id->getID();
-        }
-
-        if ($id == ''
-            || $id == '0'
-        ) {
-            return false;
-        }
-
-        if (!$this->_flushCache
-            && isset($this->_cacheTokens[$id])
-        ) {
-            unset($this->_cacheTokens[$id], $this->_cacheDateInsertion[$id]);
-        }
-        return true;
-    }
-
-    /**
-     * Retire le cache d'un poretfeuille.
-     * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture du poretfeuille.
-     *
-     * @param $id string
-     * @return boolean
-     */
-    public function unsetWalletCache($id)
-    {
-        if (is_a($id, 'Node')) {
-            $id = $id->getID();
-        }
-
-        if ($id == ''
-            || $id == '0'
-        ) {
-            return false;
-        }
-
-        if (!$this->_flushCache
-            && isset($this->_cacheWallets[$id])
-        ) {
-            unset($this->_cacheWallets[$id], $this->_cacheDateInsertion[$id]);
-        }
-        return true;
-    }
-
-    /**
-     * Retire le cache d'une transaction.
-     * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture de la transaction.
-     *
-     * @param $link string
-     * @return boolean
-     */
-    public function unsetTransactionCache($link)
-    {
-        if (is_a($link, 'Link')) {
-            $link = $link->getID();
-        }
-
-        if ($link == ''
-            || $link == '0'
-        ) {
-            return false;
-        }
-
-        if (!$this->_flushCache
-            && isset($this->_cacheTransactions[$link])
-        ) {
-            unset($this->_cacheTransactions[$link], $this->_cacheDateInsertion[$link]);
-        }
-        return true;
+        return $this->_cache->newLink($link, Cache::TYPE_TRANSACTION);
     }
 
 
@@ -2455,7 +1329,7 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
         session_start();
 
         //$this->_flushSessionStore();
-        $this->_flushBufferStore();
+        $this->_cache->flushBufferStore();
 
         // Change l'entité en cours.
         $this->_currentEntityInstance = $entity;
@@ -2490,7 +1364,7 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
         session_start();
 
         //$this->_flushSessionStore();
-        $this->_flushBufferStore();
+        $this->_cache->flushBufferStore();
 
         // Enregistre l'ancienne entité.
         $this->setSessionStore('nebuleTempPublicEntityInstance', serialize($this->_currentEntityInstance));
@@ -2530,7 +1404,7 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
         }
 
         //$this->_flushSessionStore();
-        $this->_flushBufferStore();
+        $this->_cache->flushBufferStore();
 
         // Change l'entité en cours.
         $this->_currentEntityInstance = unserialize($entity);
@@ -2564,9 +1438,9 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
     /**
      * Lit la liste des ID des entités déverrouillées.
      *
-     * @return string
+     * @return array
      */
-    public function getListEntitiesUnlocked()
+    public function getListEntitiesUnlocked(): array
     {
         return $this->_listEntitiesUnlocked;
     }
@@ -2574,9 +1448,9 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
     /**
      * Lit la liste des instances des entités déverrouillées.
      *
-     * @return Entity
+     * @return array
      */
-    public function getListEntitiesUnlockedInstances()
+    public function getListEntitiesUnlockedInstances(): array
     {
         return $this->_listEntitiesUnlockedInstances;
     }
@@ -2584,10 +1458,10 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
     /**
      * Ajoute une entité à la liste des entités déverrouillées.
      *
-     * @param string|Entity $id
+     * @param Entity $id
      * @return void
      */
-    public function addListEntitiesUnlocked($id)
+    public function addListEntitiesUnlocked(Entity $id): void
     {
         $instance = $this->convertIdToTypedObjectInstance($id);
         if (!is_a($id, 'Entity')) {
@@ -3221,7 +2095,7 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
      *
      * Définit par une option ou en dur dans une constante.
      *
-     * @return null
+     * @return void
      */
     private function _findPuppetmaster()
     {
@@ -3271,7 +2145,7 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
         $typeInstance = $this->newObject($typeID);
 
         // Recherche les liens signés du maître du tout de type f avec source et méta le rôle recherché.
-        $list = $typeInstance->readLinksFilterFull(
+        $list = $typeInstance->readLinksFilterFull_disabled(
             $this->_puppetmaster,
             '',
             'f',
@@ -3589,7 +2463,7 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
         // Liste les liens de l'entité instance du serveur..
         $list = array();
         if ($this->_permitInstanceEntityAsAuthority) {
-            $list = $this->_instanceEntityInstance->readLinksFilterFull(
+            $list = $this->_instanceEntityInstance->readLinksFilterFull_disabled(
                 $this->_instanceEntity,
                 '',
                 'f',
@@ -3613,7 +2487,7 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
         // Liste les liens de l'entité instance du serveur..
         $list = array();
         if ($this->_permitDefaultEntityAsAuthority) {
-            $list = $this->_instanceEntityInstance->readLinksFilterFull(
+            $list = $this->_instanceEntityInstance->readLinksFilterFull_disabled(
                 $this->_defaultEntity,
                 '',
                 'f',
@@ -3830,7 +2704,7 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
         // Liste les liens de l'entité instance du serveur..
         $list = array();
         if ($this->_permitInstanceEntityAsAuthority) {
-            $list = $this->_instanceEntityInstance->readLinksFilterFull(
+            $list = $this->_instanceEntityInstance->readLinksFilterFull_disabled(
                 $this->_instanceEntity,
                 '',
                 'f',
@@ -3851,7 +2725,7 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
         // Liste les liens de l'entité instance du serveur..
         $list = array();
         if ($this->_permitDefaultEntityAsAuthority) {
-            $list = $this->_instanceEntityInstance->readLinksFilterFull(
+            $list = $this->_instanceEntityInstance->readLinksFilterFull_disabled(
                 $this->_defaultEntity,
                 '',
                 'f',
@@ -3924,13 +2798,33 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
 
 
     /**
+     * Export l'objet de la métrologie.
+     *
+     * @return Metrology
+     */
+    public function getMetrologyInstance(): Metrology
+    {
+        return $this->_metrology;
+    }
+
+    /**
      * Export l'objet de la configuration.
      *
      * @return Configuration
      */
-    public function getConfigurationInstance()
+    public function getConfigurationInstance(): Configuration
     {
         return $this->_configuration;
+    }
+
+    /**
+     * Export l'objet de la métrologie.
+     *
+     * @return Cache
+     */
+    public function getCacheInstance(): Cache
+    {
+        return $this->_cache;
     }
 
     /**
@@ -3938,7 +2832,7 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
      *
      * @return io
      */
-    public function getIO()
+    public function getIO(): ioInterface
     {
         return $this->_io;
     }
@@ -3946,9 +2840,9 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
     /**
      * Export l'objet de la crypto.
      *
-     * @return Crypto
+     * @return CryptoInterface
      */
-    public function getCrypto()
+    public function getCrypto(): CryptoInterface
     {
         return $this->_crypto;
     }
@@ -3956,21 +2850,11 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
     /**
      * Export l'objet du calcul social.
      *
-     * @return Social
+     * @return SocialInterface
      */
-    public function getSocial()
+    public function getSocial(): SocialInterface
     {
         return $this->_social;
-    }
-
-    /**
-     * Export l'objet de la métrologie.
-     *
-     * @return Metrology
-     */
-    public function getMetrologyInstance()
-    {
-        return $this->_metrology;
     }
 
 
@@ -3980,14 +2864,14 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
      *
      * @return array:Entity
      */
-    public function getListEntitiesInstances()
+    public function getListEntitiesInstances(): array
     {
         $hashType = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
         $hashEntity = $this->_crypto->hash('application/x-pem-file');
         $hashEntityObject = $this->newObject($hashEntity);
 
         // Liste les liens.
-        $links = $hashEntityObject->readLinksFilterFull('', '', 'l', '', $hashEntity, $hashType);
+        $links = $hashEntityObject->readLinksFilterFull_disabled('', '', 'l', '', $hashEntity, $hashType);
         unset($hashType, $hashEntity, $hashEntityObject);
 
         // Filtre les entités sur le contenu de l'objet de la clé publique. @todo
@@ -4037,7 +2921,7 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
     /**
      * Extrait si on est en mode de récupération.
      *
-     * @return null
+     * @return void
      */
     private function _findModeRescue()
     {
@@ -4216,7 +3100,7 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
     /**
      * Détermine si on doit vider le cache des objets et effacer la session utilisateur.
      *
-     * @return null
+     * @return void
      */
     private function _findFlushCache()
     {
@@ -4302,7 +3186,7 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
 
             // Si besoin, obfuscation du lien.
             if ($obfuscate)
-                $link->obfuscate();
+                $newLink->obfuscate();
             // Ecrit le lien.
             $newLink->write();
 
@@ -4342,19 +3226,16 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
      * Recherche des liens par rapport à une référence qui est le type d'objet.
      * La recherche se fait dans les liens de l'objet type.
      * Cette recherche est utilisée pour retrouver les groupes et les conversations.
-     *
      * Toutes les références et propriétés sont hachées avec un algorithme fixe.
-     *
      * $entity Permet de ne sélectionner que les liens générés par une entité.
      *
-     * @param string|Node $type
-     * @param string $socialClass
+     * @param string|Node   $type
+     * @param string        $socialClass
      * @param string|Entity $entity
      * @return array:Link
      * @todo ajouter un filtre sur le type mime des objets.
-     *
      */
-    public function getListLinksByType($type, $entity = '', $socialClass = '')
+    public function getListLinksByType($type, $entity = '', string $socialClass = ''): array
     {
         /**
          * Résultat de la recherche de liens à retourner.
@@ -4407,7 +3288,7 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
         }
 
         // Lit les liens de l'objet de référence.
-        $result = $type->readLinksFilterFull(
+        $result = $type->readLinksFilterFull_disabled(
             $hashEntity,
             '',
             'l',
@@ -4525,7 +3406,7 @@ $this->_metrology->addLog('MARK ' . $size . '-' . $limit, Metrology::LOG_LEVEL_N
      * Pour que certaines actions puissent être validées, un ticket doit être présenté dans l'URL.
      * Le ticket doit être connu, valide et non utilisé.
      *
-     * @return null
+     * @return void
      */
     private function _findActionTicket()
     {

@@ -4279,7 +4279,7 @@ class ModuleEntities extends Modules
         unset($dispWarn);
 
         // liste les liens pour l'entité.
-        $links = $entity->readLinksFilterFull($entity, '', 'f', '', '', '');
+        $links = $entity->readLinksFilterFull_disabled($entity, '', 'f', '', '', '');
 
         if (sizeof($links) != 0) {
             // Indice de fond paire ou impaire.
@@ -5096,7 +5096,7 @@ class ModuleEntities extends Modules
         if (sizeof($links) != 0) {
             // Indice de fond paire ou impaire.
             $bg = 1;
-            $attribList = nebule::$RESERVED_OBJECTS_LIST;
+            $attribList = nebule::RESERVED_OBJECTS_LIST;
             $emotionsList = array(
                 $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
                 $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
@@ -7189,7 +7189,7 @@ class ModuleObjects extends Modules
         $nextLinkSigne = '';
 
         // Liste des attributs, càd des liens de type l.
-        $links = $this->_applicationInstance->getCurrentObjectInstance()->readLinksFilterFull(
+        $links = $this->_applicationInstance->getCurrentObjectInstance()->readLinksFilterFull_disabled(
             '',
             '',
             '',
@@ -7201,7 +7201,7 @@ class ModuleObjects extends Modules
         if (sizeof($links) != 0) {
             // Indice de fond paire ou impaire.
             $bg = 1;
-            $attribList = nebule::$RESERVED_OBJECTS_LIST;
+            $attribList = nebule::RESERVED_OBJECTS_LIST;
             $emotionsList = array(
                 $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
                 $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
@@ -7953,7 +7953,7 @@ class ModuleObjects extends Modules
             $hashType = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
             $hashEntity = $this->_nebuleInstance->getCrypto()->hash('application/x-pem-file');
             $hashEntityObject = $this->_nebuleInstance->newObject($hashEntity);
-            $links = $hashEntityObject->readLinksFilterFull('', '', 'l', '', $hashEntity, $hashType);
+            $links = $hashEntityObject->readLinksFilterFull_disabled('', '', 'l', '', $hashEntity, $hashType);
 
             $typeEntity = false;
             $link = null;
@@ -8881,7 +8881,7 @@ class ModuleMessenger extends Modules
             // Récupération du résultat de la création.
             $createConversationID = $this->_applicationInstance->getActionInstance()->getCreateConversationID();
             $createConversationInstance = $this->_applicationInstance->getActionInstance()->getCreateConversationInstance();
-            $this->_nebuleInstance->removeCacheConversation($createConversationID);
+            $this->_nebuleInstance->unsetCacheConversation($createConversationID);
             $createConversationError = $this->_applicationInstance->getActionInstance()->getCreateConversationError();
             $createConversationErrorMessage = $this->_applicationInstance->getActionInstance()->getCreateConversationErrorMessage();
 
@@ -10589,7 +10589,7 @@ class ModuleMessenger extends Modules
         $hashType = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/type');
         $hashEntity = $this->_nebuleInstance->getCrypto()->hash('application/x-pem-file');
         $hashEntityObject = $this->_nebuleInstance->newObject($hashEntity);
-        $links = $hashEntityObject->readLinksFilterFull(
+        $links = $hashEntityObject->readLinksFilterFull_disabled(
             '',
             '',
             'l',

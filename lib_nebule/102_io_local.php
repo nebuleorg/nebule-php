@@ -114,7 +114,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::setFilesTranscodeKey()
      */
-    public function setFilesTranscodeKey(&$key)
+    public function setFilesTranscodeKey(string &$key)
     {
         $this->_filesTrancodeKey = $key;
     }
@@ -142,7 +142,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getInstanceEntityID()
      */
-    public function getInstanceEntityID($localisation = '')
+    public function getInstanceEntityID(string $localisation = '')
     {
         $filesize = filesize(nebule::NEBULE_LOCAL_ENTITY_FILE);
         $data = file_get_contents(nebule::NEBULE_LOCAL_ENTITY_FILE, false, null, 0, $filesize);
@@ -154,7 +154,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksDirectory()
      */
-    public function checkLinksDirectory($localisation = '')
+    public function checkLinksDirectory(string $localisation = '')
     {
         if ($localisation != ''
             || !file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER)
@@ -170,7 +170,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsDirectory()
      */
-    public function checkObjectsDirectory($localisation = '')
+    public function checkObjectsDirectory(string $localisation = '')
     {
         if ($localisation != ''
             || !file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER)
@@ -186,7 +186,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksRead()
      */
-    public function checkLinksRead($localisation = '')
+    public function checkLinksRead(string $localisation = '')
     {
         if ($localisation != '') {
             return false;
@@ -207,7 +207,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksWrite()
      */
-    public function checkLinksWrite($localisation = '')
+    public function checkLinksWrite(string $localisation = '')
     {
         if ($localisation != '') {
             return false;
@@ -241,7 +241,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsRead()
      */
-    public function checkObjectsRead($localisation = '')
+    public function checkObjectsRead(string $localisation = '')
     {
         if ($localisation != '') {
             return false;
@@ -262,7 +262,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsWrite()
      */
-    public function checkObjectsWrite($localisation = '')
+    public function checkObjectsWrite(string $localisation = '')
     {
         if ($localisation != '') {
             return false;
@@ -296,7 +296,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinkPresent()
      */
-    public function checkLinkPresent(&$object, $localisation = '')
+    public function checkLinkPresent($object, string $localisation = '')
     {
         if ($localisation != ''
             || !is_string($object)
@@ -316,7 +316,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectPresent()
      */
-    public function checkObjectPresent(&$object, $localisation = '')
+    public function checkObjectPresent($object, string $localisation = '')
     {
         if ($localisation != ''
             || !is_string($object)
@@ -336,7 +336,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::linksRead()
      */
-    public function linksRead(&$object, $localisation = '')
+    public function linksRead(string &$object, string $localisation = '')
     {
         /**
          * Compteur de liens lus.
@@ -382,7 +382,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::ObfuscatedLinksRead()
      */
-    public function obfuscatedLinksRead(&$entity, $signer = '0', $localisation = '')
+    public function obfuscatedLinksRead(string &$entity, string $signer = '0', string $localisation = '')
     {
         /**
          * Compteur de liens lus.
@@ -479,7 +479,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::objectRead()
      */
-    public function objectRead(&$object, $maxsize = 0, $localisation = '')
+    public function objectRead(string $object, int $maxsize = 0, string $localisation = '')
     {
         if ($localisation != ''
             || !is_string($object)
@@ -510,7 +510,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::linkWrite()
      */
-    public function linkWrite(&$object, &$link, $localisation = '')
+    public function linkWrite(string $object, string &$link, string $localisation = '')
     {
         // Vérifie les arguments.
         if ($localisation != ''
@@ -556,7 +556,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::objectWrite()
      */
-    public function objectWrite(&$data, $localisation = '')
+    public function objectWrite(string &$data, string $localisation = '')
     {
         if ($localisation != ''
             || !$this->_configuration->getOption('permitWrite')
@@ -584,7 +584,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::objectDelete()
      */
-    public function objectDelete(&$object, $localisation = '')
+    public function objectDelete(string &$object, $localisation = '')
     {
         if ($localisation != ''
             || !is_string($object)
@@ -618,7 +618,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::linkDelete()
      */
-    public function linkDelete(&$object, &$link, $localisation = '')
+    public function linkDelete(string $object, string &$link, $localisation = '')
     {
         if ($localisation != ''
             || !is_string($object)
@@ -648,7 +648,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::linksDelete()
      */
-    public function linksDelete(&$object, $localisation = '')
+    public function linksDelete(string &$object, $localisation = '')
     {
         if ($localisation != ''
             || !is_string($object)

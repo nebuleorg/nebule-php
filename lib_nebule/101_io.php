@@ -25,6 +25,8 @@ class io implements ioInterface
     private $_listFilterStrings = array();
     private $_listMode = array();
     private $_listInstances = array();
+    private $_listTypes = '';
+    private $_listModes = '';
 
     /**
      * Instance de la bibliothèque nebule.
@@ -97,7 +99,7 @@ class io implements ioInterface
      * @param string $localisation
      * @return ioInterface
      */
-    private function _findType($localisation)
+    private function _findType(string $localisation)
     {
         if ($localisation == '') {
             return $this->_defaultIO;
@@ -117,7 +119,7 @@ class io implements ioInterface
      *
      * @return array:string
      */
-    public function getModulesList()
+    public function getModulesList(): array
     {
         return $this->_listTypes;
     }
@@ -128,7 +130,7 @@ class io implements ioInterface
      * @param string $type
      * @return ioInterface
      */
-    public function getModule($type)
+    public function getModule(string $type)
     {
         if ($type != ''
             && isset($this->_listInstances[$type])
@@ -142,7 +144,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getType()
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->_defaultIO->getType();
     }
@@ -151,7 +153,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getFilterString()
      */
-    public function getFilterString()
+    public function getFilterString(): string
     {
         return $this->_defaultIO->getFilterString();
     }
@@ -160,7 +162,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getMode()
      */
-    public function getMode()
+    public function getMode(): string
     {
         return $this->_defaultIO->getMode();
     }
@@ -169,7 +171,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::setFilesTranscodeKey()
      */
-    public function setFilesTranscodeKey(&$key)
+    public function setFilesTranscodeKey(string &$key): void
     {
         // Fait le tour des modules IO pour injecter la clé.
         foreach ($this->_listClasses as $instance) {
@@ -181,7 +183,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::unsetFilesTranscodeKey()
      */
-    public function unsetFilesTranscodeKey()
+    public function unsetFilesTranscodeKey(): void
     {
         // Fait le tour des modules IO pour supprimer la clé.
         foreach ($this->_listClasses as $instance) {
@@ -193,7 +195,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getInstanceEntityID()
      */
-    public function getInstanceEntityID($localisation = '')
+    public function getInstanceEntityID(string $localisation = ''): string
     {
         return $this->_defaultIO->getInstanceEntityID($localisation);
     }
@@ -202,7 +204,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getDefaultLocalisation()
      */
-    public function getDefaultLocalisation()
+    public function getDefaultLocalisation(): string
     {
         return $this->_defaultIO->getDefaultLocalisation();
     }
@@ -211,7 +213,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksDirectory()
      */
-    public function checkLinksDirectory($localisation = '')
+    public function checkLinksDirectory(string $localisation = ''): bool
     {
         $instance = $this->_findType($localisation);
         return $instance->checkLinksDirectory();
@@ -221,7 +223,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsDirectory()
      */
-    public function checkObjectsDirectory($localisation = '')
+    public function checkObjectsDirectory(string $localisation = ''): bool
     {
         $instance = $this->_findType($localisation);
         return $instance->checkObjectsDirectory();
@@ -231,7 +233,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksRead()
      */
-    public function checkLinksRead($localisation = '')
+    public function checkLinksRead(string $localisation = ''): bool
     {
         $instance = $this->_findType($localisation);
         return $instance->checkLinksRead();
@@ -241,7 +243,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksWrite()
      */
-    public function checkLinksWrite($localisation = '')
+    public function checkLinksWrite(string $localisation = ''): bool
     {
         $instance = $this->_findType($localisation);
         return $instance->checkLinksWrite();
@@ -251,7 +253,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsRead()
      */
-    public function checkObjectsRead($localisation = '')
+    public function checkObjectsRead(string $localisation = ''): bool
     {
         $instance = $this->_findType($localisation);
         return $instance->checkObjectsRead();
@@ -261,7 +263,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsWrite()
      */
-    public function checkObjectsWrite($localisation = '')
+    public function checkObjectsWrite(string $localisation = ''): bool
     {
         $instance = $this->_findType($localisation);
         return $instance->checkObjectsWrite();
@@ -271,7 +273,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinkPresent()
      */
-    public function checkLinkPresent(&$object, $localisation = '')
+    public function checkLinkPresent(string $object, string $localisation = ''): bool
     {
         $instance = $this->_findType($localisation);
         return $instance->checkLinkPresent($object);
@@ -281,7 +283,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectPresent()
      */
-    public function checkObjectPresent(&$object, $localisation = '')
+    public function checkObjectPresent(string $object, string $localisation = ''): bool
     {
         $instance = $this->_findType($localisation);
         return $instance->checkObjectPresent($object);
@@ -291,7 +293,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::linksRead()
      */
-    public function linksRead(&$object, $localisation = '')
+    public function linksRead(string $object, string $localisation = '')
     {
         $instance = $this->_findType($localisation);
         return $instance->linksRead($object);
@@ -301,7 +303,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::ObfuscatedLinksRead()
      */
-    public function obfuscatedLinksRead(&$entity, $signer = '0', $localisation = '')
+    public function obfuscatedLinksRead(string $entity, string $signer = '0', string $localisation = ''): array
     {
         $instance = $this->_findType($localisation);
         return $instance->obfuscatedLinksRead($object);
@@ -311,7 +313,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::objectRead()
      */
-    public function objectRead(&$object, $maxsize = 0, $localisation = '')
+    public function objectRead(string $object, int $maxsize = 0, string $localisation = '')
     {
         $instance = $this->_findType($localisation);
         return $instance->objectRead($object, $maxsize);
@@ -321,7 +323,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::linkWrite()
      */
-    public function linkWrite(&$object, &$link, $localisation = '')
+    public function linkWrite(string $object, string &$link, string $localisation = ''): bool
     {
         $instance = $this->_findType($localisation);
         return $instance->linkWrite($object, $link);
@@ -331,7 +333,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::objectWrite()
      */
-    public function objectWrite(&$data, $localisation = '')
+    public function objectWrite(string &$data, string $localisation = '')
     {
         $instance = $this->_findType($localisation);
         return $instance->objectWrite($data);
@@ -341,7 +343,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::linkDelete()
      */
-    public function linkDelete(&$object, &$link, $localisation = '')
+    public function linkDelete(string $object, string &$link, $localisation = ''): bool
     {
         $instance = $this->_findType($localisation);
         return $instance->linkDelete($object, $link);
@@ -351,7 +353,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::linksDelete()
      */
-    public function linksDelete(&$object, $localisation = '')
+    public function linksDelete(string $object, $localisation = ''): bool
     {
         $instance = $this->_findType($localisation);
         return $instance->linksDelete($object);
@@ -361,7 +363,7 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::objectDelete()
      */
-    public function objectDelete(&$object, $localisation = '')
+    public function objectDelete(string $object, $localisation = ''): bool
     {
         $instance = $this->_findType($localisation);
         return $instance->objectDelete($object);

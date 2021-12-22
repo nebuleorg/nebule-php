@@ -1856,10 +1856,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         // Si c'est l'entité du serveur, affiche tous les objets.
         if ($id == $this->_configuration->getOption('defaultCurrentEntity')) {
-            $list = $instance->readLinksFilterFull('', '', 'l', '', '', $meta);
+            $list = $instance->readLinksFilterFull_disabled('', '', 'l', '', '', $meta);
         } // Sinon affiche les objets de l'entité.
         else {
-            $list = $instance->readLinksFilterFull($id, '', 'l', '', '', $meta);
+            $list = $instance->readLinksFilterFull_disabled($id, '', 'l', '', '', $meta);
         }
 
         // Fait un pré-tri.
@@ -1937,7 +1937,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         // Recherche du lien de chiffrement des objets.
                         $source = $item->getHashSource();
                         $instance = $this->_nebuleInstance->newObject($source);
-                        $list2 = $instance->readLinksFilterFull(
+                        $list2 = $instance->readLinksFilterFull_disabled(
                             '',
                             '',
                             'k',
@@ -2054,7 +2054,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         }
 
         // Liste toutes les autres entités.
-        $links = $hashEntityObject->readLinksFilterFull(
+        $links = $hashEntityObject->readLinksFilterFull_disabled(
             '',
             '',
             'l',
@@ -3308,7 +3308,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             $listOkEntities[$this->_nebuleInstance->getCurrentEntity()] = true;
 
             // Liste toutes les autres entités.
-            $links = $hashEntityObject->readLinksFilterFull('', '', 'l', '', $hashEntity, $hashType);
+            $links = $hashEntityObject->readLinksFilterFull_disabled('', '', 'l', '', $hashEntity, $hashType);
 
             // Enlève les entités pour lequelles la protection est déjà faite.
             $shareTo = $object->getProtectedTo();

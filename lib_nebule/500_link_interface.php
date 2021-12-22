@@ -72,27 +72,4 @@ interface linkInterface
      * @return boolean
      */
     public function getSigned(): bool;
-
-    /**
-     * Retourne si le lien est dissimulé.
-     * Dans ce cas les informations retournées sont les informations du lien non dissimulé.
-     *
-     * @return boolean
-     */
-    public function getObfuscated(): bool;
-
-    /**
-     * Retourne la version avec laquelle est exploité le lien.
-     * TODO à supprimer !
-     * @return string
-     */
-    public function getVersion_disabled(): string;
-
-    /**
-     * Signature du lien par l'entité en cours.
-     *
-     * @param string $publicKey
-     * @return boolean
-     */
-    public function sign(string $publicKey = '0'): bool;
 }

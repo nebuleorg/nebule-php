@@ -428,7 +428,7 @@ class Conversation extends Group
         }
 
         // Liste tous les liens de définition des entités à l'écoutes du groupe.
-        $links = $this->readLinksFilterFull(
+        $links = $this->readLinksFilterFull_disabled(
             '',
             '',
             'l',

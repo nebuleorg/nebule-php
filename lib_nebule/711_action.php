@@ -3775,7 +3775,7 @@ abstract class Actions
             $this->_actionSynchronizeNewEntityInstance->syncLinks();
 
             // Liste des liens l pour l'entité en source.
-            $links = $this->_actionSynchronizeNewEntityInstance->readLinksFilterFull('', '', 'l', $hash, '', '');
+            $links = $this->_actionSynchronizeNewEntityInstance->readLinksFilterFull_disabled('', '', 'l', $hash, '', '');
             // Synchronise l'objet cible.
             $object = null;
             foreach ($links as $link) {
@@ -3786,7 +3786,7 @@ abstract class Actions
                 $object->syncObject();
             }
             // Liste des liens l pour l'entité en cible.
-            $links = $this->_actionSynchronizeNewEntityInstance->readLinksFilterFull('', '', 'l', '', $hash, '');
+            $links = $this->_actionSynchronizeNewEntityInstance->readLinksFilterFull_disabled('', '', 'l', '', $hash, '');
             // Synchronise l'objet source.
             $object = null;
             foreach ($links as $link) {
@@ -4197,7 +4197,7 @@ abstract class Actions
                 $this->_nebuleInstance->unsetTempCurrentEntity();
 
                 // Efface le cache pour recharger l'entité.
-                $this->_nebuleInstance->unsetEntityCache($this->_actionCreateEntityID);
+                $this->_nebuleInstance->unsetCacheEntity($this->_actionCreateEntityID);
 
                 // Recrée l'instance de l'objet.
                 $this->_actionCreateEntityInstance = $this->_nebuleInstance->newEntity($this->_actionCreateEntityID);
@@ -4634,7 +4634,7 @@ abstract class Actions
             }
 
             // Création de l'instance du message.
-            $instanceMessage = $this->_nebuleInstance->newObject($id, $this->_actionCreateMessageProtected, $this->_actionCreateMessageObfuscateLinks);
+            $instanceMessage = $this->_nebuleInstance->newObject($id);
 
             // Affichage des actions.
             $this->_display->displayInlineAllActions();
