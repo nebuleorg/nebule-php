@@ -3208,15 +3208,14 @@ class nebule
 
     /**
      * Recherche des ID d'objets par rapport à une référence qui est le type d'objet.
-     *
      * $entity Permet de ne sélectionner que les liens générés par une entité.
      *
-     * @param string|Node $type
-     * @param string $socialClass
+     * @param string|Node   $type
+     * @param string        $socialClass
      * @param string|Entity $entity
      * @return array:Link
      */
-    public function getListIdByType($type = '', $entity = '', $socialClass = '')
+    public function getListIdByType($type = '', $entity = '', string $socialClass = ''): array
     {
         /**
          * Résultat de la recherche de liens à retourner.
@@ -3234,28 +3233,26 @@ class nebule
 
     /**
      * Extrait la liste des liens définissant les groupes d'objets.
-     *
      * $entity Permet de ne sélectionner que les groupes générés par une entité.
      *
-     * @param string $socialClass
+     * @param string        $socialClass
      * @param string|Entity $entity
      * @return array:Link
      */
-    public function getListGroupsLinks($entity = '', $socialClass = '')
+    public function getListGroupsLinks($entity = '', string $socialClass = ''): array
     {
         return $this->getListLinksByType(self::REFERENCE_NEBULE_OBJET_GROUPE, $entity, $socialClass);
     }
 
     /**
      * Extrait la liste des ID des groupes d'objets.
-     *
      * $entity Permet de ne sélectionner que les groupes générés par une entité.
      *
      * @param string|entity $entity
-     * @param string $socialClass
+     * @param string        $socialClass
      * @return array
      */
-    public function getListGroupsID($entity = '', $socialClass = '')
+    public function getListGroupsID($entity = '', string $socialClass = ''): array
     {
         return $this->getListIdByType(self::REFERENCE_NEBULE_OBJET_GROUPE, $entity, $socialClass);
     }
@@ -3273,7 +3270,7 @@ class nebule
      * @param string|entity $entity
      * @return array
      */
-    public function getListConversationsLinks($entity = '', $socialClass = '')
+    public function getListConversationsLinks($entity = '', $socialClass = ''): array
     {
         return $this->getListLinksByType(self::REFERENCE_NEBULE_OBJET_CONVERSATION, $entity, $socialClass);
     }
@@ -3281,14 +3278,13 @@ class nebule
     /**
      * Extrait la liste des ID des conversations.
      * Géré comme des groupes d'objets.
-     *
      * $entity Permet de ne sélectionner que les conversations générées par une entité.
      *
      * @param string|entity $entity
-     * @param string $socialClass
+     * @param string        $socialClass
      * @return array
      */
-    public function getListConversationsID($entity = '', $socialClass = '')
+    public function getListConversationsID($entity = '', string $socialClass = ''): array
     {
         return $this->getListIdByType(self::REFERENCE_NEBULE_OBJET_CONVERSATION, $entity, $socialClass);
     }
@@ -3310,7 +3306,7 @@ class nebule
      *
      * @return void
      */
-    private function _findActionTicket()
+    private function _findActionTicket(): void
     {
         /*
 		 *  ------------------------------------------------------------------------------------------
@@ -3384,7 +3380,7 @@ class nebule
      *
      * @return string
      */
-    public function getActionTicket()
+    public function getActionTicket(): string
     {
         return '&' . self::COMMAND_SELECT_TICKET . '=' . $this->getActionTicketValue();
     }
@@ -3402,7 +3398,7 @@ class nebule
      *
      * @return string
      */
-    public function getActionTicketValue()
+    public function getActionTicketValue(): string
     {
         session_start();
         $data = $this->_cryptoInstance->getPseudoRandom(2048);
@@ -3421,7 +3417,7 @@ class nebule
      *
      * @return boolean
      */
-    public function checkActionTicket()
+    public function checkActionTicket(): bool
     {
         return $this->_validTicket;
     }
@@ -3434,7 +3430,7 @@ class nebule
      *
      * @return string
      */
-    public function getDisplayNextObject()
+    public function getDisplayNextObject(): string
     {
         /*
 		 *  ------------------------------------------------------------------------------------------
@@ -3450,9 +3446,8 @@ class nebule
         if ($arg != ''
             && strlen($arg) >= self::NEBULE_MINIMUM_ID_SIZE
             && ctype_xdigit($arg)
-        ) {
+        )
             return $arg;
-        }
         return '';
     }
 
@@ -3461,92 +3456,53 @@ class nebule
      * Détermine si c'est un objet.
      * Retourne une instance appropriée en fonction du type d'objet.
      *
-     * @param string|Node|Conversation|Group|Entity|Currency|TokenPool|Token|Wallet $id
+     * @param string|Node|Conversation|Group|Entity|Currency|TokenPool|Token|Wallet $nid
      * @return Node|Conversation|Group|Entity|Currency|TokenPool|Token|Wallet
      */
-    public function convertIdToTypedObjectInstance($id)
+    public function convertIdToTypedObjectInstance($nid)
     {
-        if (is_a($id, 'Node')
-            || is_a($id, 'Group')
-            || is_a($id, 'Entity')
-            || is_a($id, 'Conversation')
-            || is_a($id, 'Currency')
-            || is_a($id, 'TokenPool')
-            || is_a($id, 'Token')
-            || is_a($id, 'Wallet')
-        ) {
-            return $id;
-        }
+        if (is_a($nid, 'Node')
+            || is_a($nid, 'Group')
+            || is_a($nid, 'Entity')
+            || is_a($nid, 'Conversation')
+            || is_a($nid, 'Currency')
+            || is_a($nid, 'TokenPool')
+            || is_a($nid, 'Token')
+            || is_a($nid, 'Wallet')
+        )
+            return $nid;
 
         $social = 'all';
 
-        if ($id == '0'
-            || $id == ''
-        ) {
+        if ($nid == '0'
+            || $nid == ''
+        )
             $instance = $this->_nebuleInstance->newObject('0');
-        } else {
-            $instance = $this->_nebuleInstance->newObject($id);
-            if ($instance->getIsEntity($social)) {
-                $instance = $this->_nebuleInstance->newEntity($id);
-            } elseif ($instance->getIsWallet($social)) {
-                $instance = $this->_nebuleInstance->newWallet($id);
-            } elseif ($instance->getIsToken($social)) {
-                $instance = $this->_nebuleInstance->newToken($id);
-            } elseif ($instance->getIsTokenPool($social)) {
-                $instance = $this->_nebuleInstance->newTokenPool($id);
-            } elseif ($instance->getIsCurrency($social)) {
-                $instance = $this->_nebuleInstance->newCurrency($id);
-            } elseif ($instance->getIsConversation($social)) {
-                $instance = $this->_nebuleInstance->newConversation($id);
-            } elseif ($instance->getIsGroup($social)) {
-                $instance = $this->_nebuleInstance->newGroup($id);
-            } else {
+        else {
+            $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_NODE);
+            if ($instance->getIsEntity($social))
+                $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_ENTITY);
+            elseif ($instance->getIsWallet($social))
+                $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_WALLET);
+            elseif ($instance->getIsToken($social))
+                $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_TOKEN);
+            elseif ($instance->getIsTokenPool($social))
+                $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_TOKENPOOL);
+            elseif ($instance->getIsCurrency($social))
+                $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_CURRENCY);
+            elseif ($instance->getIsConversation($social))
+                $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_CONVERSATION);
+            elseif ($instance->getIsGroup($social))
+                $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_GROUP);
+            else {
                 $protected = $instance->getMarkProtected();
-                if ($protected) {
-                    $instance = $this->_nebuleInstance->newObject($instance->getID());
-                }
-                if ($instance->getType('all') == nebule::REFERENCE_OBJECT_ENTITY) {
-                    $instance = $this->_nebuleInstance->newEntity($id);
-                }
+                if ($protected)
+                    $instance = $this->_cacheInstance->newNode($instance->getID(), Cache::TYPE_NODE);
+                if ($instance->getType('all') == nebule::REFERENCE_OBJECT_ENTITY)
+                    $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_ENTITY);
             }
         }
 
         return $instance;
-    }
-
-
-    /**
-     * Extrait une valeur associée à une clé dans un objet, typiquement une variable dans un code.
-     *
-     * Retourne false si non trouvé.
-     *
-     * @param string $id
-     * @param string $key
-     * @return string
-     */
-    public function _readFileValue($id, $key, $size = 0)
-    {
-        if ($key == '') {
-            return false;
-        }
-
-        if ($size == 0) {
-            $size = $this->_configurationInstance->getOption('ioReadMaxData');
-        }
-
-        $value = false;
-        $readValue = $this->_nebuleInstance->getIoInstance()->objectRead($id);
-        $startValue = strpos($readValue, $key);
-        $trimLine = substr($readValue, $startValue, $size);
-        $arrayValue = explode('"', $trimLine);
-        if ($arrayValue[1] != null) {
-            $value = $arrayValue[1];
-        } else {
-            $arrayValue = explode("'", $trimLine);
-            if ($arrayValue[1] != null) {
-                $value = $arrayValue[1];
-            }
-        }
-        return $value;
     }
 }
