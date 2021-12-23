@@ -33,13 +33,6 @@ interface linkInterface
     public function getValid(): bool;
 
     /**
-     * Retourne l'état de validité de la forme syntaxique du lien.
-     *
-     * @return boolean
-     */
-    public function getValidStructure(): bool;
-
-    /**
      * Retourne si le lien a été vérifié dans sa forme syntaxique.
      *
      * @return boolean

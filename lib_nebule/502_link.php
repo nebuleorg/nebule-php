@@ -234,10 +234,10 @@ class Link implements linkInterface
      * Constructeur.
      *
      * @param nebule $nebuleInstance
-     * @param string $link
+     * @param string $rl
      * @return boolean
      */
-    public function __construct(nebule $nebuleInstance, string $link, Bloclink $bloclink)
+    public function __construct(nebule $nebuleInstance, string $rl, Bloclink $bloclink)
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
@@ -245,11 +245,13 @@ class Link implements linkInterface
         $this->_io = $nebuleInstance->getIoInstance();
         $this->_crypto = $nebuleInstance->getCryptoInstance();
         $this->_permitObfuscated = (bool)$this->_configuration->getOption('permitObfuscatedLink');
-        $this->_metrology->addLinkRead(); // Metrologie.
+        //$this->_metrology->addLinkRead();
         $this->_bloclink = $bloclink;
 
+        $this->_validStructure = $this->_checkRL($rl);
+
         // Extrait le lien et vérifie sa structure.
-        if (!$this->_extract_disabled($link))
+        if (!$this->_extract_disabled($rl))
             return false;
 
         // Vérifie la validité du lien.
@@ -272,6 +274,66 @@ class Link implements linkInterface
 
         // Actions supplémentaires pour les dérivés de liens.
         $this->_initialisation();
+
+        return true;
+    }
+
+    /**
+     * Link - Check block RL on link.
+     *
+     * @param string $rl
+     * @return bool
+     */
+    protected function _checkRL(string $rl): bool
+    {
+        if (strlen($rl) > 4096) return false; // TODO à revoir.
+
+        // Extract items from RL 1 : REQ>NID>NID>NID>NID
+        $req = strtok($rl, '>');
+        $rl1nid1 = strtok('>');
+        if ($rl1nid1 === false) $rl1nid1 = '';
+        $rl1nid2 = strtok('>');
+        if ($rl1nid2 === false) $rl1nid2 = '';
+        $rl1nid3 = strtok('>');
+        if ($rl1nid3 === false) $rl1nid3 = '';
+        $rl1nid4 = strtok('>');
+        if ($rl1nid4 === false) $rl1nid4 = '';
+
+        // Check registry overflow
+        if (strtok('>') !== false) return false;
+
+        // --- --- --- --- --- --- --- --- ---
+        // Check REQ, NID1, NID2, NID3 and NID4.
+        if (!$this->_checkREQ($req)) return false;
+        if (!Node::checkNID($rl1nid1, false)) return false;
+        if (!Node::checkNID($rl1nid2, true)) return false;
+        if (!Node::checkNID($rl1nid3, true)) return false;
+        if (!Node::checkNID($rl1nid4, true)) return false;
+
+        $this->_parsedLink['bl/rl'] = $rl;
+        $this->_valid = true;
+        return true;
+    }
+
+    /**
+     * Link - Check block REQ on link.
+     *
+     * @param string $req
+     * @return bool
+     */
+    protected function _checkREQ(string &$req): bool
+    {
+        if ($req != 'l'
+            && $req != 'f'
+            && $req != 'u'
+            && $req != 'd'
+            && $req != 'e'
+            && $req != 'c'
+            && $req != 'k'
+            && $req != 's'
+            && $req != 'x'
+        )
+            return false;
 
         return true;
     }
