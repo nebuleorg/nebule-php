@@ -67,11 +67,25 @@ class Node implements nodeInterface
     protected $_nebuleInstance;
 
     /**
+     * Instance de la métrologie.
+     *
+     * @var Metrology $_metrology
+     */
+    protected $_metrology;
+
+    /**
      * Instance de gestion de la configuration et des options.
      *
      * @var Configuration
      */
     protected $_configuration;
+
+    /**
+     * Instance de gestion du cache.
+     *
+     * @var Cache
+     */
+    protected $_cache;
 
     /**
      * Instance des I/O (entrées/sorties).
@@ -93,13 +107,6 @@ class Node implements nodeInterface
      * @var SocialInterface $_social
      */
     protected $_social;
-
-    /**
-     * Instance de la métrologie.
-     *
-     * @var Metrology $_metrology
-     */
-    protected $_metrology;
 
     /**
      * Identifiant de l'objet.
@@ -283,6 +290,7 @@ class Node implements nodeInterface
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
+        $this->_cache = $nebuleInstance->getCacheInstance();
         $this->_io = $nebuleInstance->getIoInstance();
         $this->_crypto = $nebuleInstance->getCryptoInstance();
         $this->_social = $nebuleInstance->getSocialInstance();
@@ -353,6 +361,7 @@ class Node implements nodeInterface
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
+        $this->_cache = $nebuleInstance->getCacheInstance();
         $this->_io = $nebuleInstance->getIoInstance();
         $this->_crypto = $nebuleInstance->getCryptoInstance();
         $this->_social = $nebuleInstance->getSocialInstance();
@@ -3309,26 +3318,28 @@ class Node implements nodeInterface
      */
     public function getLinks(string &$nid, array &$links, array $filter, bool $withInvalidLinks = false): void
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '2b4fb5d4'); // Log
 
         if ($nid == '0' || !$this->_io->checkLinkPresent($nid))
             return;
 
-        // TODO as _lnkGetListFilterNid()
-        // If not permitted, do not list invalid links.
         if (!$this->_configuration->getOption('permitListInvalidLinks'))
             $withInvalidLinks = false;
 
-        // TODO add social filter
-
-        $blocs = array();
         $lines = $this->_io->linksRead($nid, '');
         if ($lines === false)
             return;
 
         foreach ($lines as $line)
         {
-
+            $bloc = $this->_cache->newLink($line, Cache::TYPE_BLOCLINK);
+            if ($bloc->getVerified()
+                && $bloc->getValidStructure()
+                && ( $bloc->getValid() || $withInvalidLinks )
+            )
+                $links = array_merge($links, $bloc->getLinks());
+            else
+                $this->_cache->unsetCache($line, Cache::TYPE_BLOCLINK);
         }
 
         /*$lines = array();

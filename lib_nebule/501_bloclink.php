@@ -29,7 +29,7 @@ use Nebule\Library\linkInterface;
  * Il reste dans ce cas géré comme un lien normal mais de type c.
  * Cependant, si l'entité destinataire est déverrouillée mais ne peut déchiffrer le lien, alors le lien est considéré corrompu.
  */
-class Bloclink //implements linkInterface
+class Bloclink implements linkInterface
 {
     /**
      * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
@@ -241,5 +241,50 @@ class Bloclink //implements linkInterface
         return true;
     }
 
+    public function getLinks(): array
+    {
+        return array();
+    }
 
+    public function getParsedLink(): array
+    {
+        // TODO: Implement getParsedLink() method.
+        return array();
+    }
+
+    public function getValid(): bool
+    {
+        // TODO: Implement getValid() method.
+        return false;
+    }
+
+    public function getValidStructure(): bool
+    {
+        // TODO: Implement getValidStructure() method.
+        return false;
+    }
+
+    public function getVerified(): bool
+    {
+        // TODO: Implement getVerified() method.
+        return false;
+    }
+
+    public function getVerifyNumError(): int
+    {
+        // TODO: Implement getVerifyNumError() method.
+        return 0;
+    }
+
+    public function getVerifyTextError(): string
+    {
+        // TODO: Implement getVerifyTextError() method.
+        return '';
+    }
+
+    public function getSigned(): bool
+    {
+        // TODO: Implement getSigned() method.
+        return false;
+    }
 }

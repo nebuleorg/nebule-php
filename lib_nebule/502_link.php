@@ -92,6 +92,11 @@ class Link implements linkInterface
     protected $_metrology;
 
     /**
+     * @var Bloclink
+     */
+    protected $_bloclink;
+
+    /**
      * Texte lien complet "s.a_s_d_a_s_t_m" .
      *
      * @var string
@@ -232,7 +237,7 @@ class Link implements linkInterface
      * @param string $link
      * @return boolean
      */
-    public function __construct(nebule $nebuleInstance, string $link)
+    public function __construct(nebule $nebuleInstance, string $link, Bloclink $bloclink)
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
@@ -241,6 +246,7 @@ class Link implements linkInterface
         $this->_crypto = $nebuleInstance->getCryptoInstance();
         $this->_permitObfuscated = (bool)$this->_configuration->getOption('permitObfuscatedLink');
         $this->_metrology->addLinkRead(); // Metrologie.
+        $this->_bloclink = $bloclink;
 
         // Extrait le lien et vérifie sa structure.
         if (!$this->_extract_disabled($link))
@@ -337,6 +343,18 @@ class Link implements linkInterface
         $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
 
         return $this->_fullLink;
+    }
+
+    /**
+     * Retourne le lien complet.
+     *
+     * @return Bloclink
+     */
+    public function getBloclink(): Bloclink
+    {
+        $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
+
+        return $this->_bloclink;
     }
 
     /**

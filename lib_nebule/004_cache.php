@@ -264,26 +264,26 @@ class Cache
 
     private function _filterNodeType(string &$type): void
     {
-        if ($type != Cache::TYPE_NODE
-            && $type != Cache::TYPE_GROUP
-            && $type != Cache::TYPE_ENTITY
-            && $type != Cache::TYPE_LOCATION
-            && $type != Cache::TYPE_CONVERSATION
-            && $type != Cache::TYPE_CURRENCY
-            && $type != Cache::TYPE_TOKENPOOL
-            && $type != Cache::TYPE_TOKEN
-            && $type != Cache::TYPE_WALLET
+        if ($type != self::TYPE_NODE
+            && $type != self::TYPE_GROUP
+            && $type != self::TYPE_ENTITY
+            && $type != self::TYPE_LOCATION
+            && $type != self::TYPE_CONVERSATION
+            && $type != self::TYPE_CURRENCY
+            && $type != self::TYPE_TOKENPOOL
+            && $type != self::TYPE_TOKEN
+            && $type != self::TYPE_WALLET
         )
-            $type = Cache::TYPE_NODE;
+            $type = self::TYPE_NODE;
     }
 
     private function _filterLinkType(string &$type): void
     {
-        if ($type != Cache::TYPE_BLOCLINK
-            && $type != Cache::TYPE_LINK
-            && $type != Cache::TYPE_TRANSACTION
+        if ($type != self::TYPE_BLOCLINK
+            && $type != self::TYPE_LINK
+            && $type != self::TYPE_TRANSACTION
         )
-            $type = Cache::TYPE_BLOCLINK;
+            $type = self::TYPE_BLOCLINK;
     }
 
     /**
@@ -293,7 +293,7 @@ class Cache
      * @param string $type
      * @return nodeInterface
      */
-    public function newNode(string $nid, string $type = Cache::TYPE_NODE): nodeInterface
+    public function newNode(string $nid, string $type = self::TYPE_NODE): nodeInterface
     {
         if ($nid == '')
             $nid = '0';
@@ -310,28 +310,28 @@ class Cache
 
             switch ($type)
             {
-                case Cache::TYPE_GROUP:
+                case self::TYPE_GROUP:
                     $instance = new Group($this->_nebuleInstance, $nid);
                     break;
-                case Cache::TYPE_ENTITY:
+                case self::TYPE_ENTITY:
                     $instance = new Entity($this->_nebuleInstance, $nid);
                     break;
-                case Cache::TYPE_LOCATION:
+                case self::TYPE_LOCATION:
                     $instance = new Localisation($this->_nebuleInstance, $nid);
                     break;
-                case Cache::TYPE_CONVERSATION:
+                case self::TYPE_CONVERSATION:
                     $instance = new Conversation($this->_nebuleInstance, $nid);
                     break;
-                case Cache::TYPE_CURRENCY:
+                case self::TYPE_CURRENCY:
                     $instance = new Currency($this->_nebuleInstance, $nid);
                     break;
-                case Cache::TYPE_TOKENPOOL:
+                case self::TYPE_TOKENPOOL:
                     $instance = new TokenPool($this->_nebuleInstance, $nid);
                     break;
-                case Cache::TYPE_TOKEN:
+                case self::TYPE_TOKEN:
                     $instance = new Token($this->_nebuleInstance, $nid);
                     break;
-                case Cache::TYPE_WALLET:
+                case self::TYPE_WALLET:
                     $instance = new Wallet($this->_nebuleInstance, $nid);
                     break;
                 default:
@@ -353,7 +353,7 @@ class Cache
      * @param string $type
      * @return boolean
      */
-    public function unsetCache(string $item, string $type = Cache::TYPE_NODE): bool
+    public function unsetCache(string $item, string $type = self::TYPE_NODE): bool
     {
         $this->_filterNodeType($type);
 
@@ -373,7 +373,7 @@ class Cache
      */
     public function unsetObjectCache(string $id): bool
     {
-        return $this->unsetCache($id, Cache::TYPE_NODE);
+        return $this->unsetCache($id, self::TYPE_NODE);
     }
 
     /**
@@ -383,7 +383,7 @@ class Cache
      */
     public function getCacheObjectSize(): int
     {
-        return sizeof($this->_cache[Cache::TYPE_NODE]);
+        return sizeof($this->_cache[self::TYPE_NODE]);
     }
 
     /**
@@ -395,7 +395,7 @@ class Cache
      */
     public function unsetCacheEntity(string $id): bool
     {
-        return $this->unsetCache($id, Cache::TYPE_ENTITY);
+        return $this->unsetCache($id, self::TYPE_ENTITY);
     }
 
     /**
@@ -405,7 +405,7 @@ class Cache
      */
     public function getCacheEntitySize(): int
     {
-        return sizeof($this->_cache[Cache::TYPE_ENTITY]);
+        return sizeof($this->_cache[self::TYPE_ENTITY]);
     }
 
     /**
@@ -417,7 +417,7 @@ class Cache
      */
     public function unsetCacheGroup(string $id): bool
     {
-        return $this->unsetCache($id, Cache::TYPE_GROUP);
+        return $this->unsetCache($id, self::TYPE_GROUP);
     }
 
     /**
@@ -427,7 +427,7 @@ class Cache
      */
     public function getCacheGroupSize(): int
     {
-        return sizeof($this->_cache[Cache::TYPE_GROUP]);
+        return sizeof($this->_cache[self::TYPE_GROUP]);
     }
 
     /**
@@ -438,7 +438,7 @@ class Cache
      */
     public function unsetCacheConversation(string $id): bool
     {
-        return $this->unsetCache($id, Cache::TYPE_CONVERSATION);
+        return $this->unsetCache($id, self::TYPE_CONVERSATION);
     }
 
     /**
@@ -448,7 +448,7 @@ class Cache
      */
     public function getCacheConversationSize(): int
     {
-        return sizeof($this->_cache[Cache::TYPE_CONVERSATION]);
+        return sizeof($this->_cache[self::TYPE_CONVERSATION]);
     }
 
     /**
@@ -460,7 +460,7 @@ class Cache
      */
     public function unsetCacheCurrency(string $id): bool
     {
-        return $this->unsetCache($id, Cache::TYPE_CURRENCY);
+        return $this->unsetCache($id, self::TYPE_CURRENCY);
     }
 
     /**
@@ -470,7 +470,7 @@ class Cache
      */
     public function getCacheCurrencySize(): int
     {
-        return sizeof($this->_cache[Cache::TYPE_CURRENCY]);
+        return sizeof($this->_cache[self::TYPE_CURRENCY]);
     }
 
     /**
@@ -482,7 +482,7 @@ class Cache
      */
     public function unsetCacheTokenPool(string $id): bool
     {
-        return $this->unsetCache($id, Cache::TYPE_TOKEN);
+        return $this->unsetCache($id, self::TYPE_TOKEN);
     }
 
     /**
@@ -492,7 +492,7 @@ class Cache
      */
     public function getCacheTokenSize(): int
     {
-        return sizeof($this->_cache[Cache::TYPE_TOKEN]);
+        return sizeof($this->_cache[self::TYPE_TOKEN]);
     }
 
     /**
@@ -504,7 +504,7 @@ class Cache
      */
     public function unsetCacheToken(string $id): bool
     {
-        return $this->unsetCache($id, Cache::TYPE_TOKENPOOL);
+        return $this->unsetCache($id, self::TYPE_TOKENPOOL);
     }
 
     /**
@@ -514,7 +514,7 @@ class Cache
      */
     public function getCacheTokenPoolSize(): int
     {
-        return sizeof($this->_cache[Cache::TYPE_TOKENPOOL]);
+        return sizeof($this->_cache[self::TYPE_TOKENPOOL]);
     }
 
     /**
@@ -526,7 +526,7 @@ class Cache
      */
     public function unsetCacheWallet(string $id): bool
     {
-        return $this->unsetCache($id, Cache::TYPE_WALLET);
+        return $this->unsetCache($id, self::TYPE_WALLET);
     }
 
     /**
@@ -536,7 +536,7 @@ class Cache
      */
     public function getCacheWalletSize(): int
     {
-        return sizeof($this->_cache[Cache::TYPE_WALLET]);
+        return sizeof($this->_cache[self::TYPE_WALLET]);
     }
 
     /**
@@ -544,9 +544,9 @@ class Cache
      *
      * @param string $link
      * @param string $type
-     * @return Link|Transaction
+     * @return Bloclink|Link|Transaction|linkInterface
      */
-    public function newLink(string $link, string $type = Cache::TYPE_LINK): Link
+    public function newLink(string $link, string $type = self::TYPE_LINK): linkInterface
     {
         if ($link == '')
             $link = 'invalid';
@@ -563,7 +563,10 @@ class Cache
 
             switch ($type)
             {
-                case Cache::TYPE_TRANSACTION:
+                case self::TYPE_BLOCLINK:
+                    $instance = new Bloclink($this->_nebuleInstance, $link);
+                    break;
+                case self::TYPE_TRANSACTION:
                     $instance = new Transaction($this->_nebuleInstance, $link);
                     break;
                 default:
@@ -587,7 +590,7 @@ class Cache
      */
     public function unsetCacheLink(string $link): bool
     {
-        return $this->unsetCache($link, Cache::TYPE_LINK);
+        return $this->unsetCache($link, self::TYPE_LINK);
     }
 
     /**
@@ -597,7 +600,28 @@ class Cache
      */
     public function getCacheLinkSize(): int
     {
-        return sizeof($this->_cache[Cache::TYPE_LINK]);
+        return sizeof($this->_cache[self::TYPE_LINK]);
+    }
+
+    /**
+     * Supprime le cache d'un bloc de liens.
+     *
+     * @param string $link
+     * @return boolean
+     */
+    public function unsetCacheBloclink(string $link): bool
+    {
+        return $this->unsetCache($link, self::TYPE_BLOCLINK);
+    }
+
+    /**
+     * Retourne le nombre de blocs de liens dans le cache.
+     *
+     * @return integer
+     */
+    public function getCacheBloclinkSize(): int
+    {
+        return sizeof($this->_cache[self::TYPE_BLOCLINK]);
     }
 
     /**
@@ -608,7 +632,7 @@ class Cache
      */
     public function unsetCacheTransaction(string $link): bool
     {
-        return $this->unsetCache($link, Cache::TYPE_TRANSACTION);
+        return $this->unsetCache($link, self::TYPE_TRANSACTION);
     }
 
     /**
@@ -618,6 +642,6 @@ class Cache
      */
     public function getCacheTransactionSize(): int
     {
-        return sizeof($this->_cache[Cache::TYPE_TRANSACTION]);
+        return sizeof($this->_cache[self::TYPE_TRANSACTION]);
     }
 }

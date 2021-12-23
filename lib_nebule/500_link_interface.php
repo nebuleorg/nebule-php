@@ -12,13 +12,6 @@ use Nebule\Library\nebule;
 interface linkInterface
 {
     /**
-     * Constructeur.
-     *
-     * @param nebule $nebuleInstance
-     */
-    public function __construct(nebule $nebuleInstance, string $link);
-
-    /**
      * Retourne le lien complet.
      *
      * @return string
