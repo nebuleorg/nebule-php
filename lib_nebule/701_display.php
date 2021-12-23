@@ -6189,7 +6189,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         // Prépare l'objet.
         $messageInstance = $this->_nebuleInstance->convertIdToTypedObjectInstance($link->getHashTarget_disabled());
-        $signerInstance = $this->_nebuleInstance->convertIdToTypedObjectInstance($link->getHashSigner_disabled());
+        $signerInstance = $this->_nebuleInstance->convertIdToTypedObjectInstance($link->getSigners());
 
         // Prépare les paramètres d'activation de contenus.
         if (!isset($param['enableDisplayColor'])
@@ -6428,7 +6428,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $headerFlagsContent .= $this->_getDisplayMessageFlags($messageInstance, $link, $param, 'Footer');
 
             // Prépare la date.
-            $headerDateContent = $this->convertDate($link->getDate_disabled());
+            $headerDateContent = $this->convertDate($link->getDate());
 
             // Ajoute le bandeau bas du message.
             $footerEmotsContent .= $this->_getDisplayObjectFlagEmotions($messageInstance, false);
@@ -8377,7 +8377,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $contantDisplayValid .= '/>';
             }
 
-            $object = $this->_nebuleInstance->newObject($instance->getHashSigner_disabled());
+            $object = $this->_nebuleInstance->newObject($instance->getSigners());
             $contantDisplaySigner .= '<img title="' . $object->getFullName();
             $contantDisplaySigner .= '" style="background:#' . $object->getPrimaryColor();
             $contantDisplaySigner .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
@@ -8385,7 +8385,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $contantDisplayDate = '';
 
             $icon = self::REFERENCE_ICON_LINK_LL;
-            switch ($instance->getAction_disabled()) {
+            switch ($instance->getAction()) {
                 case 'f':
                     $icon = self::REFERENCE_ICON_LINK_LF;
                     break;
@@ -8411,8 +8411,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     $icon = self::REFERENCE_ICON_LINK_LX;
                     break;
             }
-            $contantDisplayAction .= '<img title="Action ' . $instance->getAction_disabled() . '" ';
-            $contantDisplayAction .= 'alt="[' . $instance->getAction_disabled() . ']" ';
+            $contantDisplayAction .= '<img title="Action ' . $instance->getAction() . '" ';
+            $contantDisplayAction .= 'alt="[' . $instance->getAction() . ']" ';
             $contantDisplayAction .= 'src="o/' . $this->_getImageByReference($icon) . '" />';
 
             $object = $this->_nebuleInstance->newObject($instance->getHashSource_disabled());
@@ -8763,7 +8763,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             return '';
         }
 
-        switch ($link->getAction_disabled()) {
+        switch ($link->getAction()) {
             case 'f':
                 $icon = $this->convertUpdateImage(self::DEFAULT_ICON_LF, 'f', 'iconInlineDisplay');
                 break;
@@ -8793,10 +8793,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 break;
         }
 
-        $colorDate = $this->convertUpdateImage(self::DEFAULT_ICON_IMLOG, $link->getDate_disabled(), 'iconInlineDisplay');
+        $colorDate = $this->convertUpdateImage(self::DEFAULT_ICON_IMLOG, $link->getDate(), 'iconInlineDisplay');
 
         // Prépare le contenu à afficher.
-        $return = $this->convertInlineObjectColor($link->getHashSigner_disabled());
+        $return = $this->convertInlineObjectColor($link->getSigners());
         $return .= $colorDate;
         $return .= $icon;
         $return .= $this->convertInlineObjectColor($link->getHashSource_disabled());

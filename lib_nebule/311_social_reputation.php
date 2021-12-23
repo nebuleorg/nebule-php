@@ -73,7 +73,7 @@ class SocialReputation implements SocialInterface
         }
 
         // Sinon par défaut retourne la valeur sociale 0.
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=reputation score 0 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=reputation score 0 for ' . $link->getSigners(), Metrology::LOG_LEVEL_DEBUG);
         return 0;
     }
 

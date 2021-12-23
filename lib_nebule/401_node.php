@@ -3397,7 +3397,7 @@ class Node implements nodeInterface
         // Tri les liens par date.
         if (sizeof($linksResult) != 0) {
             foreach ($linksResult as $n => $t) {
-                $linkdate[$n] = $t->getDate_disabled();
+                $linkdate[$n] = $t->getDate();
             }
             array_multisort($linkdate, SORT_STRING, SORT_ASC, $linksResult);
             unset($n, $t);
@@ -3524,7 +3524,7 @@ class Node implements nodeInterface
         // Tri les liens par date.
         if (sizeof($linksResult) != 0) {
             foreach ($linksResult as $n => $t) {
-                $linkdate[$n] = $t->getDate_disabled();
+                $linkdate[$n] = $t->getDate();
             }
             array_multisort($linkdate, SORT_STRING, SORT_ASC, $linksResult);
             unset($linkdate, $n, $t);
@@ -3535,14 +3535,14 @@ class Node implements nodeInterface
             // Liste tous les liens.
             // Ils sont triés par date.
             foreach ($linksResult as $n1 => $t1) {
-                if ($t1->getAction_disabled() != 'x') {
+                if ($t1->getAction() != 'x') {
                     // Si ce n'est pas un lien x.
                     foreach ($linksResult as $t2) {
-                        if ($t2->getAction_disabled() == 'x'
+                        if ($t2->getAction() == 'x'
                             && $t1->getHashSource_disabled() == $t2->getHashSource_disabled()
                             && $t1->getHashTarget_disabled() == $t2->getHashTarget_disabled()
                             && $t1->getHashMeta_disabled() == $t2->getHashMeta_disabled()
-                            && $this->_nebuleInstance->dateCompare($t1->getDate_disabled(), $t2->getDate_disabled()) <= 0
+                            && $this->_nebuleInstance->dateCompare($t1->getDate(), $t2->getDate()) <= 0
                         ) {
                             unset($linksResult[$n1]);
                         }
@@ -3556,7 +3556,7 @@ class Node implements nodeInterface
         if (sizeof($linksResult) != 0) {
             // Liste tous les liens.
             foreach ($linksResult as $n => $t) {
-                if ($t->getAction_disabled() == 'x') {
+                if ($t->getAction() == 'x') {
                     // Si lien x, le supprime.
                     unset($linksResult[$n]);
                 }
@@ -3718,7 +3718,7 @@ class Node implements nodeInterface
         if (sizeof($linksResult) != 0) {
             $linkdate = array();
             foreach ($linksResult as $n => $t) {
-                $linkdate[$n] = $t->getDate_disabled();
+                $linkdate[$n] = $t->getDate();
             }
             array_multisort($linkdate, SORT_STRING, SORT_ASC, $linksResult);
             unset($linkdate, $n, $t);
@@ -3729,14 +3729,14 @@ class Node implements nodeInterface
             // Liste tous les liens.
             // Ils sont triés par date.
             foreach ($linksResult as $n1 => $t1) {
-                if ($t1->getAction_disabled() != 'x') {
+                if ($t1->getAction() != 'x') {
                     // Si ce n'est pas un lien x.
                     foreach ($linksResult as $t2) {
-                        if ($t2->getAction_disabled() == 'x'
+                        if ($t2->getAction() == 'x'
                             && $t1->getHashSource_disabled() == $t2->getHashSource_disabled()
                             && $t1->getHashTarget_disabled() == $t2->getHashTarget_disabled()
                             && $t1->getHashMeta_disabled() == $t2->getHashMeta_disabled()
-                            && $this->_nebuleInstance->dateCompare($t1->getDate_disabled(), $t2->getDate_disabled()) <= 0
+                            && $this->_nebuleInstance->dateCompare($t1->getDate(), $t2->getDate()) <= 0
                         ) {
                             unset($linksResult[$n1]);
                         }
@@ -3750,7 +3750,7 @@ class Node implements nodeInterface
         if (sizeof($linksResult) != 0) {
             // Liste tous les liens.
             foreach ($linksResult as $n => $t) {
-                if ($t->getAction_disabled() == 'x') {
+                if ($t->getAction() == 'x') {
                     // Si lien x, le supprime.
                     unset($linksResult[$n]);
                 }
@@ -3940,16 +3940,16 @@ class Node implements nodeInterface
         $s = sizeof($r); // Nombre de liens.
         $links = array(); // Tableau des liens non marqués supprimés.
         foreach ($r as $l) {
-            if ($l->getAction_disabled() == 'x') {
+            if ($l->getAction() == 'x') {
                 continue;
             }
             $ok = true;
             for ($j = 0; $j < $s; $j++) {
                 // Teste si le lien en cours (i) est supprimé par un lien plus récent (j).
-                if ($r[$j]->getAction_disabled() == 'x'
+                if ($r[$j]->getAction() == 'x'
                     && $l->getHashSource_disabled() == $r[$j]->getHashSource_disabled()
                     && $l->getHashTarget_disabled() == $r[$j]->getHashTarget_disabled()
-                    && $this->_nebuleInstance->dateCompare($l->getDate_disabled(), $r[$j]->getDate_disabled()) <= 0)
+                    && $this->_nebuleInstance->dateCompare($l->getDate(), $r[$j]->getDate()) <= 0)
                     $ok = false;
             }
             if ($ok) {

@@ -738,7 +738,7 @@ abstract class Actions
                 if ($instance->getVerified()
                     && $instance->getValid()
                     && $instance->getSigned()
-                    && ($instance->getHashSigner_disabled() == $this->_nebuleInstance->getCodeAuthority()
+                    && ($instance->getSigners() == $this->_nebuleInstance->getCodeAuthority()
                         || $permitNotCodeMaster
                     )
                 ) {
@@ -3358,7 +3358,7 @@ abstract class Actions
             $this->_metrology->addLog('Action upload link', Metrology::LOG_LEVEL_DEBUG); // Log
 
             if ($link->getSigned()
-                && (($link->getHashSigner_disabled() == $this->_nebuleInstance->getCodeAuthority()
+                && (($link->getSigners() == $this->_nebuleInstance->getCodeAuthority()
                         && $this->_configuration->getOption('permitPublicUploadCodeAuthoritiesLink')
                     )
                     || $this->_configuration->getOption('permitPublicUploadLink')
@@ -3366,19 +3366,19 @@ abstract class Actions
                 )
             ) {
                 $link->write();
-                $this->_metrology->addLog('Action upload link - signed link ' . $link->getFullLink(), Metrology::LOG_LEVEL_NORMAL); // Log
+                $this->_metrology->addLog('Action upload link - signed link ' . $link->getRawLink(), Metrology::LOG_LEVEL_NORMAL); // Log
             } elseif ($this->_unlocked) {
                 $link = $this->_nebuleInstance->newLink(
                     '0_'
                     . $this->_nebuleInstance->getCurrentEntity() . '_'
-                    . $link->getDate_disabled() . '_'
-                    . $link->getAction_disabled() . '_'
+                    . $link->getDate() . '_'
+                    . $link->getAction() . '_'
                     . $link->getHashSource_disabled() . '_'
                     . $link->getHashTarget_disabled() . '_'
                     . $link->getHashMeta_disabled()
                 );
                 $link->signWrite();
-                $this->_metrology->addLog('Action upload link - unsigned link ' . $link->getFullLink(), Metrology::LOG_LEVEL_NORMAL); // Log
+                $this->_metrology->addLog('Action upload link - unsigned link ' . $link->getRawLink(), Metrology::LOG_LEVEL_NORMAL); // Log
             }
 
             // Affichage des actions.
@@ -4024,7 +4024,7 @@ abstract class Actions
                         && $instance->getValid()
                     ) {
                         if ($instance->getSigned()
-                            && (($instance->getHashSigner_disabled() == $this->_nebuleInstance->getCodeAuthority()
+                            && (($instance->getSigners() == $this->_nebuleInstance->getCodeAuthority()
                                     && $this->_configuration->getOption('permitPublicUploadCodeAuthoritiesLink')
                                 )
                                 || $this->_configuration->getOption('permitPublicUploadLink')
@@ -4033,20 +4033,20 @@ abstract class Actions
                         ) {
                             $instance->write();
                             $nbLinks++;
-                            $this->_metrology->addLog('Action upload file links - signed link ' . $instance->getFullLink(), Metrology::LOG_LEVEL_NORMAL); // Log
+                            $this->_metrology->addLog('Action upload file links - signed link ' . $instance->getRawLink(), Metrology::LOG_LEVEL_NORMAL); // Log
                         } elseif ($this->_unlocked) {
                             $instance = $this->_nebuleInstance->newLink(
                                 '0_'
                                 . $this->_nebuleInstance->getCurrentEntity() . '_'
-                                . $instance->getDate_disabled() . '_'
-                                . $instance->getAction_disabled() . '_'
+                                . $instance->getDate() . '_'
+                                . $instance->getAction() . '_'
                                 . $instance->getHashSource_disabled() . '_'
                                 . $instance->getHashTarget_disabled() . '_'
                                 . $instance->getHashMeta_disabled()
                             );
                             $instance->signWrite();
                             $nbLinks++;
-                            $this->_metrology->addLog('Action upload file links - unsigned link ' . $instance->getFullLink(), Metrology::LOG_LEVEL_NORMAL); // Log
+                            $this->_metrology->addLog('Action upload file links - unsigned link ' . $instance->getRawLink(), Metrology::LOG_LEVEL_NORMAL); // Log
                         }
                     }
                 }

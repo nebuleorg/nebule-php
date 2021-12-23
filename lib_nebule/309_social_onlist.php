@@ -72,14 +72,14 @@ class SocialOnList implements SocialInterface
 
         // Si l'entité signataire du lien est une des entités autorités, retourne la valeur sociale 1.
         foreach ($this->_list as $id) {
-            if ($link->getHashSigner_disabled() == $id) {
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=onlist score 1 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
+            if ($link->getSigners() == $id) {
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=onlist score 1 for ' . $link->getSigners(), Metrology::LOG_LEVEL_DEBUG);
                 return 1;
             }
         }
 
         // Sinon par défaut retourne la valeur sociale 0.
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=onlist score 0 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=onlist score 0 for ' . $link->getSigners(), Metrology::LOG_LEVEL_DEBUG);
         return 0;
     }
 

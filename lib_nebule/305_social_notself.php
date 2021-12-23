@@ -74,13 +74,13 @@ class SocialNotself implements SocialInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=notself score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
 
         // Si l'entité signataire du lien est une des entités courante, retourne la valeur sociale 1.
-        if ($link->getHashSigner_disabled() != $this->_applicationInstance->getCurrentEntity()) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=notself score 1 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
+        if ($link->getSigners() != $this->_applicationInstance->getCurrentEntity()) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=notself score 1 for ' . $link->getSigners(), Metrology::LOG_LEVEL_DEBUG);
             return 1;
         }
 
         // Sinon par défaut retourne la valeur sociale 0.
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=notself score 0 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=notself score 0 for ' . $link->getSigners(), Metrology::LOG_LEVEL_DEBUG);
         return 0;
     }
 

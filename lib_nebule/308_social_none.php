@@ -57,7 +57,7 @@ class SocialNone implements SocialInterface
     public function linkSocialScore(Link &$link, $socialClass = ''): float
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=none score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=none score 0 for ' . $link->getHashSigner_disabled(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=none score 0 for ' . $link->getSigners(), Metrology::LOG_LEVEL_DEBUG);
 
         return 0;
     }

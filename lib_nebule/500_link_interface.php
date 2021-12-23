@@ -16,7 +16,7 @@ interface linkInterface
      *
      * @return string
      */
-    public function getFullLink(): string;
+    public function getRawLink(): string;
 
     /**
      * Retourne le lien pré-décomposé.
@@ -65,4 +65,10 @@ interface linkInterface
      * @return boolean
      */
     public function getSigned(): bool;
+
+    public function getVersion(): string;
+
+    public function getDate(): string;
+
+    public function getSigners(): array;
 }

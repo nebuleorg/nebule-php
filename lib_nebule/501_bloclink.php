@@ -92,11 +92,14 @@ class Bloclink implements linkInterface
     protected $_metrology;
 
     /**
-     * Texte lien complet "s.a_s_d_a_s_t_m" .
-     *
-     * @var string
+     * @var string $_rawBloclink
      */
-    protected $_fullLink = '';
+    protected $_rawBloclink = '';
+
+    /**
+     * @var array $_links
+     */
+    protected $_links = array();
 
     /**
      * Parsed link contents.
@@ -175,23 +178,13 @@ class Bloclink implements linkInterface
     }
 
     /**
-     * Fonction de suppression de l'instance.
-     *
-     * @return boolean
-     */
-    public function __destruct()
-    {
-        return true;
-    }
-
-    /**
      * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
      *
      * @return string
      */
     public function __toString()
     {
-        return $this->_fullLink;
+        return $this->_rawBloclink;
     }
 
     /**
@@ -219,18 +212,6 @@ class Bloclink implements linkInterface
         $this->_crypto = $nebuleInstance->getCryptoInstance();
     }
 
-    /**
-     * Retourne le lien complet.
-     *
-     * @return string
-     */
-    public function getFullLink(): string
-    {
-        $this->_metrology->addLog(__METHOD__ . ' ' . substr($this->_fullLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION); // Log
-
-        return $this->_fullLink;
-    }
-
     private function _extract(string $bloclink): bool
     {
         return true;
@@ -241,50 +222,101 @@ class Bloclink implements linkInterface
         return true;
     }
 
+    /**
+     * Retourne le lien complet.
+     *
+     * @return string
+     */
+    public function getRawLink(): string
+    {
+        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '9c53bb45');
+
+        return $this->_rawBloclink;
+    }
+
     public function getLinks(): array
     {
-        return array();
+        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'ad2228cc');
+
+        return $this->_links;
+    }
+
+    public function getSigners(): array
+    {
+        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'ad2228cc');
+
+        return $this->_links;
     }
 
     public function getParsedLink(): array
     {
+        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+
         // TODO: Implement getParsedLink() method.
         return array();
     }
 
     public function getValid(): bool
     {
+        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+
         // TODO: Implement getValid() method.
         return false;
     }
 
     public function getValidStructure(): bool
     {
+        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+
         // TODO: Implement getValidStructure() method.
         return false;
     }
 
     public function getVerified(): bool
     {
+        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+
         // TODO: Implement getVerified() method.
         return false;
     }
 
+    public function getSigned(): bool
+    {
+        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+
+        // TODO: Implement getSigned() method.
+        return false;
+    }
+
+    public function getVersion(): string
+    {
+        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+
+        // TODO: Implement getVerifyTextError() method.
+        return '';
+    }
+
+    public function getDate(): string
+    {
+        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+
+        // TODO: Implement getVerifyTextError() method.
+        return '';
+    }
+
     public function getVerifyNumError(): int
     {
+        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+
         // TODO: Implement getVerifyNumError() method.
         return 0;
     }
 
     public function getVerifyTextError(): string
     {
+        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+
         // TODO: Implement getVerifyTextError() method.
         return '';
-    }
-
-    public function getSigned(): bool
-    {
-        // TODO: Implement getSigned() method.
-        return false;
     }
 }
