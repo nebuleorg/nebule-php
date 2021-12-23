@@ -246,7 +246,7 @@ abstract class Applications
     /**
      * Lit l'instance de traduction linguistique de l'application.
      *
-     * @return Traduction
+     * @return Traductions
      */
     public function getTraductionInstance()
     {
@@ -258,7 +258,7 @@ abstract class Applications
      *
      * @return Metrology
      */
-    public function getMetrologyInstance()
+    public function getMetrologyInstance(): Metrology
     {
         return $this->_metrologyInstance;
     }
@@ -268,7 +268,7 @@ abstract class Applications
      *
      * @return Actions
      */
-    public function getActionInstance()
+    public function getActionInstance(): Actions
     {
         return $this->_actionInstance;
     }
@@ -278,7 +278,7 @@ abstract class Applications
      *
      * @return string
      */
-    public function getCurrentObject()
+    public function getCurrentObject(): string
     {
         return $this->_nebuleInstance->getCurrentObject();
     }
@@ -288,7 +288,7 @@ abstract class Applications
      *
      * @return Node
      */
-    public function getCurrentObjectInstance()
+    public function getCurrentObjectInstance(): Node
     {
         return $this->_nebuleInstance->getCurrentObjectInstance();
     }
@@ -441,8 +441,8 @@ abstract class Applications
         if ($arg_ent != ''
             && strlen($arg_ent) >= nebule::NEBULE_MINIMUM_ID_SIZE
             && ctype_xdigit($arg_ent)
-            && ($this->_nebuleInstance->getIO()->checkObjectPresent($arg_ent)
-                || $this->_nebuleInstance->getIO()->checkLinkPresent($arg_ent)
+            && ($this->_nebuleInstance->getIoInstance()->checkObjectPresent($arg_ent)
+                || $this->_nebuleInstance->getIoInstance()->checkLinkPresent($arg_ent)
             )
         ) // Si la variable est un objet avec ou sans liens.
         {
@@ -571,7 +571,7 @@ abstract class Applications
         $err404 = false;
         if ($this->_askDownloadLinks != '') // Détermine si c'est un lien à télécharger.
         {
-            if ($this->_nebuleInstance->getIO()->checkLinkPresent($this->_askDownloadLinks)) {
+            if ($this->_nebuleInstance->getIoInstance()->checkLinkPresent($this->_askDownloadLinks)) {
                 $this->_metrologyInstance->addLog('Sending links ' . $this->_askDownloadLinks, Metrology::LOG_LEVEL_DEBUG); // Log
                 // Flush des erreurs.
                 ob_end_clean();
@@ -794,7 +794,7 @@ abstract class Applications
 
         // Extrait les modules référencés.
         $object = $this->_nebuleInstance->newObject($bootstrapApplicationStartID);
-        $hashRef = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
+        $hashRef = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
         $links = $object->readLinksFilterFull_disabled('', '', 'f', $bootstrapApplicationStartID, '', $hashRef);
 
         // Lit les ID des modules.
@@ -805,7 +805,7 @@ abstract class Applications
             foreach ($this->_nebuleInstance->getLocalAuthorities() as $autority) {
                 if ($link->getHashSigner() == $autority
                     && $module != '0'
-                    && $this->_nebuleInstance->getIO()->checkLinkPresent($module)
+                    && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($module)
                 ) {
                     $ok = true;
                     break;
@@ -873,7 +873,7 @@ abstract class Applications
             ) {
                 $instanceModule = $this->_nebuleInstance->newObject($updateModule);
                 if ($instanceModule->getType('strict') == 'application/x-php'
-                    && $this->_nebuleInstance->getIO()->checkObjectPresent($updateModule)
+                    && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($updateModule)
                 ) {
                     $this->getMetrologyInstance()->addLog('Find module update ' . $updateModule, Metrology::LOG_LEVEL_DEBUG);
                     $okValid = true;
@@ -947,7 +947,7 @@ abstract class Applications
     protected function _getObjectClassName($id)
     {
         $name = false;
-        $readValue = $this->_nebuleInstance->getIO()->objectRead($id);
+        $readValue = $this->_nebuleInstance->getIoInstance()->objectRead($id);
         $startValue = strpos($readValue, 'class');
         $trimLine = substr($readValue, $startValue, 128);
         $arrayValue = explode(' ', $trimLine);
@@ -1006,7 +1006,7 @@ abstract class Applications
      */
     public function getIsModuleActivated($module)
     {
-        $hashActivation = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MOD_ACTIVE);
+        $hashActivation = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MOD_ACTIVE);
 
         // Liste les modules reconnues par une entité locale.
         $linksList = $module->readLinksFilterFull_disabled('', '', 'f', $module->getID(), $hashActivation, $module->getID());
@@ -1336,10 +1336,10 @@ abstract class Applications
     {
         $this->_checkSecurityBootstrap = 'ERROR';
         $data = file_get_contents(nebule::NEBULE_BOOTSTRAP_FILE);
-        $hash = $this->_nebuleInstance->getCrypto()->hash($data);
+        $hash = $this->_nebuleInstance->getCryptoInstance()->hash($data);
 
         // Recherche les liens de validation.
-        $hashRef = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP);
+        $hashRef = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP);
         $object = $this->_nebuleInstance->newObject($hashRef);
         $links = $object->readLinksFilterFull_disabled('', '', 'f', $hashRef, $hash, $hashRef);
 
@@ -1414,7 +1414,7 @@ abstract class Applications
     protected function _checkSecurityCryptoHash()
     {
         $this->_checkSecurityCryptoHash = 'WARN';
-        if ($this->_nebuleInstance->getCrypto()->checkHashFunction()) {
+        if ($this->_nebuleInstance->getCryptoInstance()->checkHashFunction()) {
             $this->_checkSecurityCryptoHash = 'OK';
             $this->_checkSecurityCryptoHashMessage = 'OK';
             $this->_metrologyInstance->addLog('SECURITY OK Hash Crypto', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -1468,7 +1468,7 @@ abstract class Applications
     protected function _checkSecurityCryptoSym()
     {
         $this->_checkSecurityCryptoSym = 'WARN';
-        if ($this->_nebuleInstance->getCrypto()->checkSymetricFunction()) {
+        if ($this->_nebuleInstance->getCryptoInstance()->checkSymetricFunction()) {
             $this->_checkSecurityCryptoSym = 'OK';
             $this->_checkSecurityCryptoSymMessage = 'OK';
             $this->_metrologyInstance->addLog('SECURITY OK Sym Crypto', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -1522,7 +1522,7 @@ abstract class Applications
     protected function _checkSecurityCryptoAsym()
     {
         $this->_checkSecurityCryptoAsym = 'WARN';
-        if ($this->_nebuleInstance->getCrypto()->checkAsymetricFunction()) {
+        if ($this->_nebuleInstance->getCryptoInstance()->checkAsymetricFunction()) {
             $this->_checkSecurityCryptoAsym = 'OK';
             $this->_checkSecurityCryptoAsymMessage = 'OK';
             $this->_metrologyInstance->addLog('SECURITY OK Asym Crypto', Metrology::LOG_LEVEL_DEBUG); // Log

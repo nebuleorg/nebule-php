@@ -283,9 +283,9 @@ class Node implements nodeInterface
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIO();
-        $this->_crypto = $nebuleInstance->getCrypto();
-        $this->_social = $nebuleInstance->getSocial();
+        $this->_io = $nebuleInstance->getIoInstance();
+        $this->_crypto = $nebuleInstance->getCryptoInstance();
+        $this->_social = $nebuleInstance->getSocialInstance();
 
         $id = trim(strtolower($id));
 
@@ -353,9 +353,9 @@ class Node implements nodeInterface
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIO();
-        $this->_crypto = $nebuleInstance->getCrypto();
-        $this->_social = $nebuleInstance->getSocial();
+        $this->_io = $nebuleInstance->getIoInstance();
+        $this->_crypto = $nebuleInstance->getCryptoInstance();
+        $this->_social = $nebuleInstance->getSocialInstance();
         $this->_cacheMarkDanger = false;
         $this->_cacheMarkWarning = false;
         $this->_data = '';
@@ -493,9 +493,9 @@ class Node implements nodeInterface
         }
         // Si l'objet est protégé.
         if ($this->_getMarkProtected()) {
-            $result = $this->_nebuleInstance->getIO()->checkObjectPresent($this->_idProtected);
+            $result = $this->_nebuleInstance->getIoInstance()->checkObjectPresent($this->_idProtected);
         } else {
-            $result = $this->_nebuleInstance->getIO()->checkObjectPresent($this->_id);
+            $result = $this->_nebuleInstance->getIoInstance()->checkObjectPresent($this->_id);
         }
         return $result;
     }
@@ -1950,7 +1950,7 @@ class Node implements nodeInterface
                         $targetA = $linkAsym->getHashTarget();
                         if ($linkAsym->getAction() == 'k'
                             && $linkAsym->getHashTarget() != $this->_idProtected
-                            && $this->_nebuleInstance->getIO()->checkObjectPresent($targetA)
+                            && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($targetA)
                         ) {
                             $result = true;
                             $this->_idUnprotected = $linkSym->getHashSource();
@@ -1976,7 +1976,7 @@ class Node implements nodeInterface
                 // Si lien de chiffrement et l'objet source est l'objet en cours non protégé.
                 if ($linkSym->getAction() == 'k'
                     && $linkSym->getHashSource() == $this->_idUnprotected
-                    && $this->_nebuleInstance->getIO()->checkObjectPresent($targetS)
+                    && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($targetS)
                 ) {
                     // Lit l'objet de clé de chiffrement symétrique et ses liens.
                     $instanceSym = $this->_nebuleInstance->newObject($linkSym->getHashMeta());
@@ -1988,7 +1988,7 @@ class Node implements nodeInterface
                         if ($linkAsym->getAction() == 'k'
                             && $linkAsym->getHashSource() != $this->_idUnprotected
                             && $linkAsym->getHashMeta() == $this->_nebuleInstance->getCurrentEntity()
-                            && $this->_nebuleInstance->getIO()->checkObjectPresent($targetA)
+                            && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($targetA)
                         ) {
                             $result = true;
                             $this->_idProtected = $targetS;
@@ -2085,7 +2085,7 @@ class Node implements nodeInterface
             } else {
                 // Sinon, on lit le contenu de l'objet. @todo à remplacer par getContent...
                 $limit = $this->_configuration->getOption('ioReadMaxData');
-                $data = $this->_nebuleInstance->getIO()->objectRead($this->_id, $limit);
+                $data = $this->_nebuleInstance->getIoInstance()->objectRead($this->_id, $limit);
 
                 // Vérification de quota de lecture. @todo à revoir...
                 if (strlen($data) >= $limit) {
@@ -2414,7 +2414,7 @@ class Node implements nodeInterface
 
         // Lit la clé chiffrée. @todo à remplacer par getContent ...
         $limit = $this->_configuration->getOption('ioReadMaxData');
-        $codeKey = $this->_nebuleInstance->getIO()->objectRead($this->_idProtectedKey, $limit);
+        $codeKey = $this->_nebuleInstance->getIoInstance()->objectRead($this->_idProtectedKey, $limit);
         // Calcul l'empreinte de la clé chiffrée.
         $hash = $this->_crypto->hash($codeKey);
         if ($hash != $this->_idProtectedKey) {

@@ -836,7 +836,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
          */
         $nebuleInstance = $this->_nebuleInstance;
 
-        $refAuthority = $nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
+        $refAuthority = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
 
         // Titre
         echo $this->getDisplayTitle('Primary local authorities');
@@ -1143,7 +1143,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
                     // Extrait les propriétés de l'option.
                     $optionValue = $this->_configuration->getOption($optionName);
-                    $optionID = $nebuleInstance->getCrypto()->hash($optionName);
+                    $optionID = $nebuleInstance->getCryptoInstance()->hash($optionName);
                     $optionValueDisplay = (string)$optionValue;
                     $optionType = $listOptionsType[$optionName];
                     $optionWritable = $listOptionsWritable[$optionName];
@@ -1349,7 +1349,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         <div id="apps">
             <?php
             // Extraire la liste des applications disponibles.
-            $refAppsID = $nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
+            $refAppsID = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
             $instanceAppsID = $nebuleInstance->newObject($refAppsID);
             $i = 0;
             $applicationsList = array();
@@ -1402,7 +1402,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
                 // Recherche si l'application ne doit pas être pré-chargée.
                 $noPreloadSigner = '';
-                $refNoPreload = $nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT);
+                $refNoPreload = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT);
                 $linksList = $instance->readLinksFilterFull('', '', 'f', $application, $refNoPreload, $application);
                 if (sizeof($linksList) != 0) {
                     $signer = '';
@@ -1435,7 +1435,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     $activated = true;
                 }
                 if (!$activated) {
-                    $refActivated = $nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE);
+                    $refActivated = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE);
                     $linksList = $instance->readLinksFilterFull($nebuleInstance->getInstanceEntity(), '', 'f', $application, $refActivated, $application);
                     if (sizeof($linksList) != 0) {
                         $activated = true;
@@ -1666,7 +1666,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
         // Affiche les entités de recouvrement.
         if ($this->_configuration->getOption('permitRecoveryEntities')) {
-            $refRecovery = $nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
+            $refRecovery = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
             $list = array();
             $i = 0;
 
@@ -1783,7 +1783,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             $listEntities = $nebuleInstance->getListEntitiesInstances();
 
             // Affiche les entités.
-            $refRecovery = $nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
+            $refRecovery = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
             $list = array();
             $i = 0;
 

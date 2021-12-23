@@ -76,9 +76,9 @@ class Group extends Node
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIO();
-        $this->_crypto = $nebuleInstance->getCrypto();
-        $this->_social = $nebuleInstance->getSocial();
+        $this->_io = $nebuleInstance->getIoInstance();
+        $this->_crypto = $nebuleInstance->getCryptoInstance();
+        $this->_social = $nebuleInstance->getSocialInstance();
 
         $id = trim(strtolower($id));
         $this->_metrology->addLog('New instance group ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
@@ -142,9 +142,9 @@ class Group extends Node
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIO();
-        $this->_crypto = $nebuleInstance->getCrypto();
-        $this->_social = $nebuleInstance->getSocial();
+        $this->_io = $nebuleInstance->getIoInstance();
+        $this->_crypto = $nebuleInstance->getCryptoInstance();
+        $this->_social = $nebuleInstance->getSocialInstance();
         $this->_cacheMarkDanger = false;
         $this->_cacheMarkWarning = false;
         $this->_cacheUpdate = '';
@@ -194,7 +194,7 @@ class Group extends Node
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // calcul l'ID.
-            $this->_id = $this->_nebuleInstance->getCrypto()->hash($this->_nebuleInstance->getCrypto()->getPseudoRandom(128)) . self::DEFAULT_SUFFIX_NEW_GROUP;
+            $this->_id = $this->_nebuleInstance->getCryptoInstance()->hash($this->_nebuleInstance->getCryptoInstance()->getPseudoRandom(128)) . self::DEFAULT_SUFFIX_NEW_GROUP;
 
             // Log
             $this->_metrology->addLog('Create group ' . $this->_id, Metrology::LOG_LEVEL_DEBUG);

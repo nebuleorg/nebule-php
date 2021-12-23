@@ -76,9 +76,9 @@ class Wallet extends Entity
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIO();
-        $this->_crypto = $nebuleInstance->getCrypto();
-        $this->_social = $nebuleInstance->getSocial();
+        $this->_io = $nebuleInstance->getIoInstance();
+        $this->_crypto = $nebuleInstance->getCryptoInstance();
+        $this->_social = $nebuleInstance->getSocialInstance();
 
         $id = trim(strtolower($id));
         $this->_metrology->addLog('New instance wallet ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.

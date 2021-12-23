@@ -237,8 +237,8 @@ class Link implements linkInterface
         $this->_nebuleInstance = $nebuleInstance;
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_io = $nebuleInstance->getIO();
-        $this->_crypto = $nebuleInstance->getCrypto();
+        $this->_io = $nebuleInstance->getIoInstance();
+        $this->_crypto = $nebuleInstance->getCryptoInstance();
         $this->_permitObfuscated = (bool)$this->_configuration->getOption('permitObfuscatedLink');
         $this->_metrology->addLinkRead(); // Metrologie.
 
@@ -311,8 +311,8 @@ class Link implements linkInterface
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIO();
-        $this->_crypto = $nebuleInstance->getCrypto();
+        $this->_io = $nebuleInstance->getIoInstance();
+        $this->_crypto = $nebuleInstance->getCryptoInstance();
         $this->_permitObfuscated = (bool)$this->_configuration->getOption('permitObfuscatedLink');
     }
 

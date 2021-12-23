@@ -5173,39 +5173,39 @@ function bootstrap_displayOnBreak(): void
 
         // Vérifie la cryptographie.
         echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: ';
-        if (!is_object($nebuleInstance->getCrypto()))
+        if (!is_object($nebuleInstance->getCryptoInstance()))
             echo '<span class="error">ERROR!</span>';
         else {
-            echo get_class($nebuleInstance->getCrypto());
+            echo get_class($nebuleInstance->getCryptoInstance());
             echo "<br />\n";
 
             // Vérifie la fonction de hash.
-            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: hash ' . $nebuleInstance->getCrypto()->hashAlgorithm() . ' ';
-            if ($nebuleInstance->getCrypto()->checkHashFunction())
+            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: hash ' . $nebuleInstance->getCryptoInstance()->hashAlgorithm() . ' ';
+            if ($nebuleInstance->getCryptoInstance()->checkHashFunction())
                 echo 'OK';
             else
                 echo '<span class="error">ERROR!</span>';
             echo "<br />\n";
 
             // Vérifie la fonction de cryptographie symétrique.
-            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: Symmetric ' . $nebuleInstance->getCrypto()->SymmetricAlgorithm() . ' ';
-            if ($nebuleInstance->getCrypto()->checkSymmetricFunction())
+            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: Symmetric ' . $nebuleInstance->getCryptoInstance()->SymmetricAlgorithm() . ' ';
+            if ($nebuleInstance->getCryptoInstance()->checkSymmetricFunction())
                 echo 'OK';
             else
                 echo '<span class="error">ERROR!</span>';
             echo "<br />\n";
 
             // Vérifie la fonction de cryptographie asymétrique.
-            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: asymmetric ' . $nebuleInstance->getCrypto()->asymmetricAlgorithm() . ' ';
-            if ($nebuleInstance->getCrypto()->checkAsymmetricFunction())
+            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: asymmetric ' . $nebuleInstance->getCryptoInstance()->asymmetricAlgorithm() . ' ';
+            if ($nebuleInstance->getCryptoInstance()->checkAsymmetricFunction())
                 echo 'OK';
             else
                 echo '<span class="error">ERROR!</span>';
             echo "<br />\n";
 
             // Vérifie la fonction de génération pseudo-aléatoire.
-            $random = $nebuleInstance->getCrypto()->getPseudoRandom(2048);
-            $entropy = $nebuleInstance->getCrypto()->getEntropy($random);
+            $random = $nebuleInstance->getCryptoInstance()->getPseudoRandom(2048);
+            $entropy = $nebuleInstance->getCryptoInstance()->getEntropy($random);
             echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: pseudo-random ' . substr(bin2hex($random), 0, 32) . '(' . $entropy . ') ';
             if ($entropy > 7.85)
                 echo 'OK';
@@ -5215,12 +5215,12 @@ function bootstrap_displayOnBreak(): void
         echo "<br />\n";
 
         // Vérifie des entrées/sorties (I/O).
-        if (!is_object($nebuleInstance->getIO()))
+        if (!is_object($nebuleInstance->getIoInstance()))
             echo 'i/o <span class="error">ERROR!</span>' . "<br />\n";
         else {
-            $list = $nebuleInstance->getIO()->getModulesList();
+            $list = $nebuleInstance->getIoInstance()->getModulesList();
             foreach ($list as $class) {
-                $module = $nebuleInstance->getIO()->getModule($class);
+                $module = $nebuleInstance->getIoInstance()->getModule($class);
                 echo 'i/o &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $class . ' (' . $module->getMode() . ') ' . $module->getDefaultLocalisation() . ', links ';
                 if (!$module->checkLinksDirectory())
                     echo 'directory <span class="error">ERROR!</span>';
@@ -5252,10 +5252,10 @@ function bootstrap_displayOnBreak(): void
         }
 
         // Vérifie de la gestion des relations sociales.
-        if (!is_object($nebuleInstance->getSocial()))
+        if (!is_object($nebuleInstance->getSocialInstance()))
             echo '<span class="error">ERROR!</span>' . "<br />\n";
         else {
-            foreach ($nebuleInstance->getSocial()->getList() as $moduleName)
+            foreach ($nebuleInstance->getSocialInstance()->getList() as $moduleName)
                 echo 'social &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $moduleName . " OK<br />\n";
         }
 
@@ -5478,7 +5478,7 @@ function bootstrap_displayPreloadApplication()
     $items = $applicationDisplayInstance->getNeededObjectsList();
     $nb = 0;
     foreach ($items as $item) {
-        if (!$nebuleInstance->getIO()->checkObjectPresent($item)) {
+        if (!$nebuleInstance->getIoInstance()->checkObjectPresent($item)) {
             $instance = $nebuleInstance->newObject($item);
             $applicationDisplayInstance->displayInlineObjectColorNolink($instance);
             echo "\n";
@@ -6367,7 +6367,7 @@ function bootstrap_displayApplication0()
     <div id="appslist">
         <?php
         // Extraire la liste des applications disponibles.
-        $refAppsID = $nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
+        $refAppsID = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
         $instanceAppsID = new Object($nebuleInstance, $refAppsID);
         $applicationsList = array();
         $signersList = array();
@@ -6431,7 +6431,7 @@ function bootstrap_displayApplication0()
                 $activated = true;
             }
             if (!$activated) {
-                $refActivated = $nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE);
+                $refActivated = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE);
                 $linksList = $instance->readLinksFilterFull($nebuleInstance->getInstanceEntity(), '', 'f', $application, $refActivated, $application);
                 if (sizeof($linksList) != 0) {
                     $activated = true;

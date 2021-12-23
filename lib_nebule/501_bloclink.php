@@ -159,8 +159,8 @@ class Bloclink //implements linkInterface
         $this->_nebuleInstance = $nebuleInstance;
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_io = $nebuleInstance->getIO();
-        $this->_crypto = $nebuleInstance->getCrypto();
+        $this->_io = $nebuleInstance->getIoInstance();
+        $this->_crypto = $nebuleInstance->getCryptoInstance();
         $this->_metrology->addLinkRead(); // Metrologie.
 
         // Extrait le bloc de liens et vérifie sa structure.
@@ -215,8 +215,8 @@ class Bloclink //implements linkInterface
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIO();
-        $this->_crypto = $nebuleInstance->getCrypto();
+        $this->_io = $nebuleInstance->getIoInstance();
+        $this->_crypto = $nebuleInstance->getCryptoInstance();
     }
 
     /**

@@ -112,13 +112,6 @@ class Metrology
     private $_actionArray = array();
 
     /**
-     * Instance de gestion de la configuration et des options.
-     *
-     * @var Configuration
-     */
-    private $_configuration;
-
-    /**
      * Constructeur.
      *
      * @param nebule $nebuleInstance
@@ -147,11 +140,6 @@ class Metrology
     public function __toString(): string
     {
         return 'Metrology';
-    }
-
-    public function setConfigurationInstance(Configuration $configuration)
-    {
-        $this->_configuration = $configuration;
     }
 
     /**

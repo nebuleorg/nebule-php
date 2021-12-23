@@ -82,9 +82,9 @@ class TokenPool extends Currency
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIO();
-        $this->_crypto = $nebuleInstance->getCrypto();
-        $this->_social = $nebuleInstance->getSocial();
+        $this->_io = $nebuleInstance->getIoInstance();
+        $this->_crypto = $nebuleInstance->getCryptoInstance();
+        $this->_social = $nebuleInstance->getSocialInstance();
 
         // Complément des paramètres.
         //$this->_propertiesList['currency']['CurrencyForgeID']['force'] = $this->_nebuleInstance->getCurrentEntity();
@@ -355,8 +355,8 @@ class TokenPool extends Currency
 
         // Le lien de type.
         $action = 'l';
-        $target = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_SAC);
-        $meta = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+        $target = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_SAC);
+        $meta = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
         $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
 
         // Crée les liens associés au sac de jetons.
@@ -396,7 +396,7 @@ class TokenPool extends Currency
 
                 if ($value != null) {
                     $this->_metrology->addLog('Generate token pool SID:' . $sid . ' add ' . $property['key'] . ':' . $value, Metrology::LOG_LEVEL_DEBUG); // Log
-                    $meta = $this->_nebuleInstance->getCrypto()->hash($property['key']);
+                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash($property['key']);
                     $this->_createLink($signer, $date, $action, $source, $target, $meta, $argObf);
                     $this->_metrology->addLog('Generate token pool SID:' . $sid . ' link=' . $target . '_' . $meta, Metrology::LOG_LEVEL_DEBUG); // Log
                 }

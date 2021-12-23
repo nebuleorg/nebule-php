@@ -251,7 +251,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     public function initialisation()
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_ioInstance = $this->_nebuleInstance->getIO();
+        $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL); // Log
         $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
@@ -293,7 +293,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     public function initialisation2()
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_ioInstance = $this->_nebuleInstance->getIO();
+        $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL); // Log
         $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
@@ -3101,8 +3101,8 @@ class ModuleEntities extends Modules
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_findDisplayEntity();
         $this->_initTable();
-        $this->_hashType = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/type');
-        $this->_hashEntity = $this->_nebuleInstance->getCrypto()->hash('application/x-pem-file');
+        $this->_hashType = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/type');
+        $this->_hashEntity = $this->_nebuleInstance->getCryptoInstance()->hash('application/x-pem-file');
         $this->_hashEntityObject = $this->_nebuleInstance->newObject($this->_hashEntity);
     }
 
@@ -4232,7 +4232,7 @@ class ModuleEntities extends Modules
         // Extrait des propriétés de l'objet.
         $id = $this->_applicationInstance->getCurrentObjectInstance()->getID();
         $typemime = $this->_applicationInstance->getCurrentObjectInstance()->getType('all');
-        $ispresent = $this->_nebuleInstance->getIO()->checkObjectPresent($id);
+        $ispresent = $this->_nebuleInstance->getIoInstance()->checkObjectPresent($id);
         $owned = false;
         ?>
 
@@ -4907,9 +4907,9 @@ class ModuleEntities extends Modules
                                 <select
                                         name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_ALGORITHM; ?>"
                                         class="sylabeModuleEntityCreatePropertyEntry">
-                                    <option value="<?php echo $this->_nebuleInstance->getCrypto()->asymetricAlgorithm(); ?>"
+                                    <option value="<?php echo $this->_nebuleInstance->getCryptoInstance()->asymetricAlgorithm(); ?>"
                                             selected>
-                                        <?php echo $this->_nebuleInstance->getCrypto()->asymetricAlgorithmName(); ?>
+                                        <?php echo $this->_nebuleInstance->getCryptoInstance()->asymetricAlgorithmName(); ?>
 
                                     </option>
                                 </select>
@@ -5098,14 +5098,14 @@ class ModuleEntities extends Modules
             $bg = 1;
             $attribList = nebule::RESERVED_OBJECTS_LIST;
             $emotionsList = array(
-                $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
-                $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
-                $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR,
-                $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE,
-                $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE,
-                $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT,
-                $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE,
-                $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
+                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
+                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
+                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR,
+                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE,
+                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE,
+                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT,
+                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE,
+                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
             );
             $emotionsIcons = array(
                 nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Display::REFERENCE_ICON_EMOTION_JOIE1,
@@ -5639,9 +5639,9 @@ class ModuleGroups extends Modules
         $this->_traduction = $this->_applicationInstance->getTraductionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
-        $this->_hashGroup = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
+        $this->_hashGroup = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
         $this->_hashGroupObject = $this->_nebuleInstance->newObject($this->_hashGroup);
-        $this->_hashGroupClosed = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
+        $this->_hashGroupClosed = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
         $this->_hashGroupClosedObject = $this->_nebuleInstance->newObject($this->_hashGroupClosed);
     }
 
@@ -6412,7 +6412,7 @@ class ModuleGroups extends Modules
 
                 //Prépare l'affichage.
                 if (sizeof($groupListLinks) != 0) {
-                    $hashGroupPriv = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
+                    $hashGroupPriv = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
                     $list = array();
                     $listOkItems = array();
                     $i = 0;
@@ -6479,7 +6479,7 @@ class ModuleGroups extends Modules
 
             //Prépare l'affichage.
             if (sizeof($groupListLinks) != 0) {
-                $hashGroupPriv = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
+                $hashGroupPriv = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
                 $list = array();
                 $listOkItems = array();
                 $i = 0;
@@ -7203,14 +7203,14 @@ class ModuleObjects extends Modules
             $bg = 1;
             $attribList = nebule::RESERVED_OBJECTS_LIST;
             $emotionsList = array(
-                $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
-                $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
-                $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR,
-                $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE,
-                $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE,
-                $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT,
-                $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE,
-                $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
+                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
+                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
+                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR,
+                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE,
+                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE,
+                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT,
+                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE,
+                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
             );
             $emotionsIcons = array(
                 nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Display::REFERENCE_ICON_EMOTION_JOIE1,
@@ -7950,8 +7950,8 @@ class ModuleObjects extends Modules
             unset($listGroups, $group, $listOkGroups, $typeGroup, $sharedTo);
 
             // Liste toutes les autres entités.
-            $hashType = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
-            $hashEntity = $this->_nebuleInstance->getCrypto()->hash('application/x-pem-file');
+            $hashType = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+            $hashEntity = $this->_nebuleInstance->getCryptoInstance()->hash('application/x-pem-file');
             $hashEntityObject = $this->_nebuleInstance->newObject($hashEntity);
             $links = $hashEntityObject->readLinksFilterFull_disabled('', '', 'l', '', $hashEntity, $hashType);
 
@@ -8246,10 +8246,10 @@ class ModuleMessenger extends Modules
         $this->_traduction = $this->_applicationInstance->getTraductionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
-        $this->_hashConversation = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION);
-        $this->_hashConversationFollow = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE);
+        $this->_hashConversation = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION);
+        $this->_hashConversationFollow = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE);
         $this->_hashConversationObject = $this->_nebuleInstance->newObject($this->_hashConversation);
-        $this->_hashConversationClosed = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_FERMEE);
+        $this->_hashConversationClosed = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_FERMEE);
         $this->_hashConversationClosedObject = $this->_nebuleInstance->newObject($this->_hashConversationClosed);
         $this->_conversation = $this->_nebuleInstance->getCurrentConversation();
         $this->_conversationInstance = $this->_nebuleInstance->getCurrentConversationInstance();
@@ -9398,7 +9398,7 @@ class ModuleMessenger extends Modules
 
             // Initialise le tri social.
             $socialClass = 'onlist';
-            $this->_nebuleInstance->getSocial()->setList($listID, 'onlist');
+            $this->_nebuleInstance->getSocialInstance()->setList($listID, 'onlist');
         }
 
         // Extrait la liste des conversations.
@@ -9528,7 +9528,7 @@ class ModuleMessenger extends Modules
 
             // Initialise le tri social.
             $socialClass = 'onlist';
-            $this->_nebuleInstance->getSocial()->setList($listID, 'onlist');
+            $this->_nebuleInstance->getSocialInstance()->setList($listID, 'onlist');
         }
 
         // Extrait la liste des conversations.
@@ -9612,7 +9612,7 @@ class ModuleMessenger extends Modules
             && !$this->_extractDisplayAsOpened()
         ) {
             $socialClass = 'onlist';
-            $this->_nebuleInstance->getSocial()->setList($listID, 'onlist');
+            $this->_nebuleInstance->getSocialInstance()->setList($listID, 'onlist');
         }
 
         // Extrait la liste des conversations.
@@ -10586,8 +10586,8 @@ class ModuleMessenger extends Modules
         }
 
         // Liste toutes les autres entités.
-        $hashType = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/type');
-        $hashEntity = $this->_nebuleInstance->getCrypto()->hash('application/x-pem-file');
+        $hashType = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/type');
+        $hashEntity = $this->_nebuleInstance->getCryptoInstance()->hash('application/x-pem-file');
         $hashEntityObject = $this->_nebuleInstance->newObject($hashEntity);
         $links = $hashEntityObject->readLinksFilterFull_disabled(
             '',

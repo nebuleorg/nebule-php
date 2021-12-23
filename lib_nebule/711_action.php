@@ -192,7 +192,7 @@ abstract class Actions
         $this->_traduction = $this->_applicationInstance->getTraductionInstance();
         $this->_display = $this->_applicationInstance->getDisplayInstance();
         $this->_metrology = $this->_applicationInstance->getMetrologyInstance();
-        $this->_io = $this->_nebuleInstance->getIO();
+        $this->_io = $this->_nebuleInstance->getIoInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
 
         // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.
@@ -257,7 +257,7 @@ abstract class Actions
         $this->_traduction = $this->_applicationInstance->getTraductionInstance();
         $this->_display = $this->_applicationInstance->getDisplayInstance();
         $this->_metrology = $this->_applicationInstance->getMetrologyInstance();
-        $this->_io = $this->_nebuleInstance->getIO();
+        $this->_io = $this->_nebuleInstance->getIoInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
 
         // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.
@@ -584,7 +584,7 @@ abstract class Actions
             if ($arg != ''
                 && strlen($arg) != 0
             ) {
-                $this->_actionSignLinkInstance1 = $this->_nebuleInstance->flatLinkExtractAsInstance($arg);
+                $this->_actionSignLinkInstance1 = $this->flatLinkExtractAsInstance_disabled($arg);
                 $this->_actionSignLinkInstance1Obfuscate = $argObfuscate;
             }
             unset($arg);
@@ -625,7 +625,7 @@ abstract class Actions
             if ($arg != ''
                 && strlen($arg) != 0
             ) {
-                $this->_actionSignLinkInstance2 = $this->_nebuleInstance->flatLinkExtractAsInstance($arg);
+                $this->_actionSignLinkInstance2 = $this->flatLinkExtractAsInstance_disabled($arg);
                 $this->_actionSignLinkInstance2Obfuscate = $argObfuscate;
             }
             unset($arg);
@@ -666,7 +666,7 @@ abstract class Actions
             if ($arg != ''
                 && strlen($arg) != 0
             ) {
-                $this->_actionSignLinkInstance3 = $this->_nebuleInstance->flatLinkExtractAsInstance($arg);
+                $this->_actionSignLinkInstance3 = $this->flatLinkExtractAsInstance_disabled($arg);
                 $this->_actionSignLinkInstance3Obfuscate = $argObfuscate;
             }
             unset($arg);
@@ -734,7 +734,7 @@ abstract class Actions
             if ($arg != ''
                 && strlen($arg) != 0
             ) {
-                $instance = $this->_nebuleInstance->flatLinkExtractAsInstance($arg);
+                $instance = $this->flatLinkExtractAsInstance_disabled($arg);
                 if ($instance->getVerified()
                     && $instance->getValid()
                     && $instance->getSigned()
@@ -779,7 +779,7 @@ abstract class Actions
 
             // Extraction du lien et stockage pour traitement.
             if (strlen($arg) != 0) {
-                $this->_actionObfuscateLinkInstance = $this->_nebuleInstance->flatLinkExtractAsInstance($arg);
+                $this->_actionObfuscateLinkInstance = $this->flatLinkExtractAsInstance_disabled($arg);
             }
             unset($arg);
         }
@@ -3404,9 +3404,9 @@ abstract class Actions
                 )
             )
             && $this->_configuration->getOption('permitObfuscatedLink')
-            && $link->getVerified()
-            && $link->getValid()
-            && $link->getSigned()
+            && $this->_actionObfuscateLinkInstance->getVerified()
+            && $this->_actionObfuscateLinkInstance->getValid()
+            && $this->_actionObfuscateLinkInstance->getSigned()
         ) {
             $this->_metrology->addLog('Action obfuscate link', Metrology::LOG_LEVEL_DEBUG); // Log
 
@@ -3747,7 +3747,7 @@ abstract class Actions
             // Lecture de l'objet.
             $data = $this->_io->objectRead($this->_actionSynchronizeNewEntityID, Entity::ENTITY_MAX_SIZE, $this->_actionSynchronizeNewEntityURL);
             // Calcul de l'empreinte.
-            $hash = hash($this->_nebuleInstance->getCrypto()->hashAlgorithmName(), $data);
+            $hash = hash($this->_nebuleInstance->getCryptoInstance()->hashAlgorithmName(), $data);
             if ($hash != $this->_actionSynchronizeNewEntityID) {
                 $this->_metrology->addLog('Action synchronize new entity - Hash error', Metrology::LOG_LEVEL_DEBUG); // Log
                 unset($data);
@@ -4122,7 +4122,7 @@ abstract class Actions
                         $action = 'l';
                         $source = $this->_actionCreateEntityID;
                         $target = $textID;
-                        $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/nom');
+                        $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/nom');
                         $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
                     }
                 }
@@ -4134,7 +4134,7 @@ abstract class Actions
                         $action = 'l';
                         $source = $this->_actionCreateEntityID;
                         $target = $textID;
-                        $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/prenom');
+                        $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/prenom');
                         $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
                     }
                 }
@@ -4146,7 +4146,7 @@ abstract class Actions
                         $action = 'l';
                         $source = $this->_actionCreateEntityID;
                         $target = $textID;
-                        $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/surnom');
+                        $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/surnom');
                         $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
                     }
                 }
@@ -4162,7 +4162,7 @@ abstract class Actions
                         $action = 'l';
                         $source = $this->_actionCreateEntityID;
                         $target = $textID;
-                        $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/prefix');
+                        $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/prefix');
                         $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
                     }
                 }
@@ -4174,7 +4174,7 @@ abstract class Actions
                         $action = 'l';
                         $source = $this->_actionCreateEntityID;
                         $target = $textID;
-                        $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/suffix');
+                        $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/suffix');
                         $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
                     }
                 }
@@ -4186,7 +4186,7 @@ abstract class Actions
                         $action = 'l';
                         $source = $this->_actionCreateEntityID;
                         $target = $textID;
-                        $meta = $this->_nebuleInstance->getCrypto()->hash('nebule/objet/entite/type');
+                        $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/entite/type');
                         $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
                     }
                 }
@@ -4681,12 +4681,12 @@ abstract class Actions
             && !$this->_actionAddPropertyError
         ) {
             $prop = $this->_actionAddProperty;
-            $propID = $this->_nebuleInstance->getCrypto()->hash($prop);
+            $propID = $this->_nebuleInstance->getCryptoInstance()->hash($prop);
             $this->_metrology->addLog('Action add property ' . $prop, Metrology::LOG_LEVEL_DEBUG); // Log
             $objectID = $this->_actionAddPropertyObject;
             $this->_metrology->addLog('Action add property for ' . $objectID, Metrology::LOG_LEVEL_DEBUG); // Log
             $value = $this->_actionAddPropertyValue;
-            $valueID = $this->_nebuleInstance->getCrypto()->hash($value);
+            $valueID = $this->_nebuleInstance->getCryptoInstance()->hash($value);
             $this->_metrology->addLog('Action add property value : ' . $value, Metrology::LOG_LEVEL_DEBUG); // Log
             $protected = $this->_actionAddPropertyProtected;
             if ($protected) {
@@ -4697,10 +4697,10 @@ abstract class Actions
             }
 
             // Création des objets si besoin.
-            if (!$this->_nebuleInstance->getIO()->checkObjectPresent($propID)) {
+            if (!$this->_nebuleInstance->getIoInstance()->checkObjectPresent($propID)) {
                 $this->_nebuleInstance->createTextAsObject($prop);
             }
-            if (!$this->_nebuleInstance->getIO()->checkObjectPresent($valueID)) {
+            if (!$this->_nebuleInstance->getIoInstance()->checkObjectPresent($valueID)) {
                 $this->_nebuleInstance->createTextAsObject($value, $protected, $this->_actionAddPropertyObfuscateLinks);
             }
 
@@ -4901,5 +4901,102 @@ abstract class Actions
 
         // Ecrit le lien.
         return $newLink->write();
+    }
+
+
+
+
+    /**
+     * Extrait et analyse un lien.
+     * Accepte une chaine de caractère représentant un lien.
+     * En fonction du nombre de champs, c'est interprété :
+     * 2 champs : 0_0_0_action_source_0_0
+     * 3 champs : 0_0_0_action_source_target_0
+     * 4 champs : 0_0_0_action_source_target_meta
+     * 5 champs : 0_0_date_action_source_target_meta
+     * 6 champs : 0_signer_date_action_source_target_meta
+     * 7 champs : signe_signer_date_action_source_target_meta
+     * Sinon    : 0_0_0_0_0_0_0
+     * Retourne un tableau des constituants du lien :
+     * [signature, signataire, date, action, source, destination, méta]
+     * Les champs non renseignés sont à '0'.
+     *
+     * @param string $link : lien à extraire.
+     * @return array:string : un tableau des champs (signature, signataire, date, action, source, destination, méta).
+     */
+    public function flatLinkExtractAsArray_disabled(string $link): array
+    {
+        return array('0', '0', '0', '0', '0', '0', '0');
+        /*    // Variables.
+            $list = array();
+            $date = date(DATE_ATOM);
+            $ent = $this->_currentEntity;
+    
+            // Extraction du lien.
+            $arg1 = strtok($link, '_');
+            $arg2 = strtok('_');
+            $arg3 = strtok('_');
+            $arg4 = strtok('_');
+            $arg5 = strtok('_');
+            $arg6 = strtok('_');
+            $arg7 = strtok('_');
+    
+            // Nettoyage du lien.
+            if ($arg1 != '' && $arg2 != '' && $arg3 != '' && $arg4 != '' && $arg5 != '' && $arg6 != '' && $arg7 != '') {
+                // Forme : signe_signer_date_action_source_target_meta
+                $list = array($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7);
+            } elseif ($arg1 != '' && $arg2 != '' && $arg3 != '' && $arg4 != '' && $arg5 != '' && $arg6 != '' && $arg7 == '') {
+                // Forme : 0_signer_date_action_source_target_meta
+                $list = array('0', $arg1, $arg2, $arg3, $arg4, $arg5, $arg6);
+            } elseif ($arg1 != '' && $arg2 != '' && $arg3 != '' && $arg4 != '' && $arg5 != '' && $arg6 == '' && $arg7 == '') {
+                // Forme : 0_0_date_action_source_target_meta
+                $list = array('0', $ent, $arg1, $arg2, $arg3, $arg4, $arg5);
+            } elseif ($arg1 != '' && $arg2 != '' && $arg3 != '' && $arg4 != '' && $arg5 == '' && $arg6 == '' && $arg7 == '') {
+                // Forme : 0_0_0_action_source_target_meta
+                $list = array('0', $ent, $date, $arg1, $arg2, $arg3, $arg4);
+            } elseif ($arg1 != '' && $arg2 != '' && $arg3 != '' && $arg4 == '' && $arg5 == '' && $arg6 == '' && $arg7 == '') {
+                // Forme : 0_0_0_action_source_target_0
+                $list = array('0', $ent, $date, $arg1, $arg2, $arg3, '0');
+            } elseif ($arg1 != '' && $arg2 != '' && $arg3 == '' && $arg4 == '' && $arg5 == '' && $arg6 == '' && $arg7 == '') {
+                // Forme : 0_0_0_action_source_0_0 : le minimum !
+                $list = array('0', $ent, $date, $arg1, $arg2, '0', '0');
+            } else {
+                $list = array('0', '0', '0', '0', '0', '0', '0');
+            }
+    
+            unset($date, $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7);
+            return $list;*/
+    }
+
+    /**
+     * Extrait et analyse un lien.
+     *
+     * @param string $link : lien à extraire.
+     * @return Link : une instance de lien.
+     * @todo
+     * Accepte une chaine de caractère représentant un lien.
+     * En fonction du nombre de champs, c'est interprété :
+     * 2 champs : 0_0_0_action_source_0_0
+     * 3 champs : 0_0_0_action_source_target_0
+     * 4 champs : 0_0_0_action_source_target_meta
+     * 5 champs : 0_0_date_action_source_target_meta
+     * 6 champs : 0_signer_date_action_source_target_meta
+     * 7 champs : signe_signer_date_action_source_target_meta
+     * Sinon    : 0_0_0_0_0_0_0
+     * Retourne une instance du lien.
+     */
+    public function flatLinkExtractAsInstance_disabled(string $link): Link
+    {
+        // Vérifier compatibilité avec liens incomplets...
+
+        // Extrait le lien.
+        $linkArray = $this->flatLinkExtractAsArray_disabled($link);
+
+        // Création du lien.
+        $flatLink = $linkArray[0] . '_' . $linkArray[1] . '_' . $linkArray[2] . '_' . $linkArray[3] . '_' . $linkArray[4] . '_' . $linkArray[5] . '_' . $linkArray[6];
+        $linkInstance = $this->newLink($flatLink);
+
+        unset($linkArray, $flatLink);
+        return $linkInstance;
     }
 }

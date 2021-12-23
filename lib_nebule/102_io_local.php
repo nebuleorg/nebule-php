@@ -567,7 +567,7 @@ class ioLocal extends io implements ioInterface
         }
 
         // Calcul de l'empreinte des données.
-        $hash = hash($this->_nebuleInstance->getCrypto()->hashAlgorithmName(), $data, false);
+        $hash = hash($this->_nebuleInstance->getCryptoInstance()->hashAlgorithmName(), $data, false);
 
         if (file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . "/$hash")) {
             return $hash;
@@ -694,7 +694,7 @@ class ioLocal extends io implements ioInterface
     private function _getTranlateID($id)
     {
         $val = $id . $this->_nebuleInstance->getCurrentEntity() . $this->_filesTrancodeKey;
-        $tid = hash($this->_nebuleInstance->getCrypto()->hashAlgorithmName(), $val, false);
+        $tid = hash($this->_nebuleInstance->getCryptoInstance()->hashAlgorithmName(), $val, false);
         unset($val);
 
         return $tid;

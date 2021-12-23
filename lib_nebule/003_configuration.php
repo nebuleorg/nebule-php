@@ -1065,14 +1065,14 @@ class Configuration
         $instance->setType(nebule::REFERENCE_OBJECT_TEXT);
 
         // Crée le lien de l'option.
-        $signer = $this->_currentEntity;
+        $signer = $this->_nebuleInstance->getCurrentEntity();
         $date = date(DATE_ATOM);
         $action = 'l';
         //$source	= $this->_crypto->hash( $name );
         $source = $entity;
         $target = $id;
         //$meta	= $this->_crypto->hash(nebule::REFERENCE_NEBULE_OPTION);
-        $meta = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OPTION . '/' . $name);
+        $meta = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OPTION . '/' . $name);
         // Génère le lien.
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new Link($this->_nebuleInstance, $link);

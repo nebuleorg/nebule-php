@@ -602,7 +602,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         global $applicationName;
 
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_ioInstance = $this->_nebuleInstance->getIO();
+        $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL); // Log
         $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
@@ -710,7 +710,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         global $applicationName;
 
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_ioInstance = $this->_nebuleInstance->getIO();
+        $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL); // Log
         $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
@@ -4736,7 +4736,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         ) {
             $param['social'] = 'all'; // Par défaut vide.
         } else {
-            $socialList = $this->_nebuleInstance->getSocial()->getList();
+            $socialList = $this->_nebuleInstance->getSocialInstance()->getList();
             $ok = false;
             foreach ($socialList as $s) {
                 if ($param['social'] == $s) {
@@ -5166,7 +5166,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($param['enableDisplayObjectActions']
             && $param['enableDisplayJS']
         ) {
-            $ObjectActionsID = bin2hex($this->_nebuleInstance->getCrypto()->getPseudoRandom(8));
+            $ObjectActionsID = bin2hex($this->_nebuleInstance->getCryptoInstance()->getPseudoRandom(8));
         }
         $contentDisplayColor = '';
         if ($param['enableDisplayColor']) {
@@ -5835,7 +5835,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
             // Préparation du lien.
             $source = $object->getID();
-            $target = $this->_nebuleInstance->getCrypto()->hash($emotion);
+            $target = $this->_nebuleInstance->getCryptoInstance()->hash($emotion);
             $meta = $this->_nebuleInstance->getCurrentEntity();
 
             // Détermine si l'émotion a été marqué par l'entité en cours.
@@ -8814,7 +8814,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertInlineIconFace($iconName)
     {
         $iconID = '';
-        if (ctype_xdigit($iconName) && $this->_nebuleInstance->getIO()->checkLinkPresent($iconName)) {
+        if (ctype_xdigit($iconName) && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($iconName)) {
             $iconID = $iconName;
         } elseif (strstr($iconName, ':') !== false) {
             $iconID = constant($iconName);
@@ -9045,7 +9045,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
             // Préparation du lien.
             $source = $object->getID();
-            $target = $this->_nebuleInstance->getCrypto()->hash($emotion);
+            $target = $this->_nebuleInstance->getCryptoInstance()->hash($emotion);
             $meta = $this->_nebuleInstance->getCurrentEntity();
 
             // Détermine si l'émotion a été marqué par l'entité en cours.
@@ -9182,8 +9182,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         } elseif ($item['entity'] != ''
             && $item['entity'] != '0'
             && ctype_xdigit($item['entity'])
-            && $this->_nebuleInstance->getIO()->checkObjectPresent($item['entity'])
-            && $this->_nebuleInstance->getIO()->checkLinkPresent($item['entity'])
+            && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($item['entity'])
+            && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($item['entity'])
         ) {
             $entity = $this->_nebuleInstance->newEntity($item['entity']);
             $entityID = $entity->getID();

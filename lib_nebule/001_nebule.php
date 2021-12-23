@@ -237,42 +237,42 @@ class nebule
      *
      * @var Metrology
      */
-    private $_metrology;
+    private $_metrologyInstance;
 
     /**
      * Instance de gestion de la configuration et des options.
      *
      * @var Configuration
      */
-    private $_configuration;
+    private $_configurationInstance;
 
     /**
      * Instance de gestion du cache.
      *
      * @var Cache
      */
-    private $_cache;
+    private $_cacheInstance;
 
     /**
      * Instance des entrées/sorties.
      *
      * @var ioInterface
      */
-    private $_io;
+    private $_ioInstance;
 
     /**
      * Instance de gestion de la cryptographie.
      *
      * @var CryptoInterface
      */
-    private $_crypto;
+    private $_cryptoInstance;
 
     /**
      * Instance de gestion des relations sociales des liens.
      *
      * @var SocialInterface
      */
-    private $_social;
+    private $_socialInstance;
 
     private $_flushCache = false;
 
@@ -305,7 +305,7 @@ class nebule
     public function __destruct()
     {
         $this->_saveCurrentsObjectsOnSessionBuffer();
-        $this->_cache->saveCacheOnSessionBuffer();
+        $this->_cacheInstance->saveCacheOnSessionBuffer();
         return true;
     }
 
@@ -338,29 +338,28 @@ class nebule
 
         $this->_nebuleInstance = $this;
         $nebuleInstance = $this;
-        $this->_metrology = new Metrology($this->_nebuleInstance);
-        $this->_configuration = new Configuration($this->_nebuleInstance);
-        $this->_cache = new Cache($this->_nebuleInstance);
-        $this->_metrology->setConfigurationInstance($this->_configuration);
+        $this->_metrologyInstance = new Metrology($this->_nebuleInstance);
+        $this->_configurationInstance = new Configuration($this->_nebuleInstance);
+        $this->_cacheInstance = new Cache($this->_nebuleInstance);
 
         $this->_findModeRescue();
 
         if (!$this->_nebuleCheckEnvironment())
             $this->_nebuleInitEnvironment();
 
-        $this->_io = new io($this->_nebuleInstance);
-        $this->_crypto = new CryptoOpenssl($this->_nebuleInstance);
-        $this->_social = new Social($this->_nebuleInstance);
+        $this->_ioInstance = new io($this->_nebuleInstance);
+        $this->_cryptoInstance = new CryptoOpenssl($this->_nebuleInstance);
+        $this->_socialInstance = new Social($this->_nebuleInstance);
 
-        $this->_metrology->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
 
-        $this->_configuration->setPermitOptionsByLinks(true);
-        $this->_configuration->flushCache();
+        $this->_configurationInstance->setPermitOptionsByLinks(true);
+        $this->_configurationInstance->flushCache();
 
         $this->_findFlushCache();
 
         $this->_getSubordinationEntity();
-        $this->_cache->readCacheOnSessionBuffer();
+        $this->_cacheInstance->readCacheOnSessionBuffer();
 
         $this->_findActionTicket();
 
@@ -391,7 +390,7 @@ class nebule
         $this->_findCurrentTokenPool();
         $this->_findCurrentToken();
 
-        $this->_metrology->addLog('End init nebule instance', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('End init nebule instance', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
 
@@ -415,8 +414,8 @@ class nebule
     {
         $this->_subordinationEntity = new Entity($this->_nebuleInstance, (string)Configuration::getOptionFromEnvironmentStatic('subordinationEntity'));
 
-        if ($this->_metrology !== null)
-            $this->_metrology->addLog('Get subordination entity = ' . $this->_subordinationEntity, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+        if ($this->_metrologyInstance !== null)
+            $this->_metrologyInstance->addLog('Get subordination entity = ' . $this->_subordinationEntity, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
     }
 
     /**
@@ -440,21 +439,21 @@ class nebule
      */
     private function _checkWriteableIO(): void
     {
-        if ($this->_io->getMode() == 'RW') {
-            if (!$this->_io->checkObjectsWrite())
-                $this->_configuration->lockWriteObject();;
-            if (!$this->_io->checkLinksWrite())
-                $this->_configuration->lockWriteLink();;
+        if ($this->_ioInstance->getMode() == 'RW') {
+            if (!$this->_ioInstance->checkObjectsWrite())
+                $this->_configurationInstance->lockWriteObject();;
+            if (!$this->_ioInstance->checkLinksWrite())
+                $this->_configurationInstance->lockWriteLink();;
         } else {
-            $this->_configuration->lockWrite();
-            $this->_configuration->lockWriteObject();
-            $this->_configuration->lockWriteLink();
+            $this->_configurationInstance->lockWrite();
+            $this->_configurationInstance->lockWriteObject();
+            $this->_configurationInstance->lockWriteLink();
         }
 
-        if (!$this->_configuration->getOption('permitWriteObject'))
-            $this->_metrology->addLog('objects ro not rw', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
-        if (!$this->_configuration->getOption('permitWriteLink'))
-            $this->_metrology->addLog('links ro not rw', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+        if (!$this->_configurationInstance->getOption('permitWriteObject'))
+            $this->_metrologyInstance->addLog('objects ro not rw', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+        if (!$this->_configurationInstance->getOption('permitWriteLink'))
+            $this->_metrologyInstance->addLog('links ro not rw', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
     }
 
 
@@ -477,7 +476,7 @@ class nebule
 
         if ($name == ''
             || $this->_flushCache
-            || !$this->_configuration->getOption('permitSessionOptions')
+            || !$this->_configurationInstance->getOption('permitSessionOptions')
             || !isset($_SESSION['Option'][$name])
         ) {
             session_write_close();
@@ -501,7 +500,7 @@ class nebule
     {
         if ($name == ''
             || $this->_flushCache
-            || !$this->_configuration->getOption('permitSessionOptions')
+            || !$this->_configurationInstance->getOption('permitSessionOptions')
         )
             return false;
 
@@ -518,7 +517,7 @@ class nebule
      */
     private function _flushSessionStore(): bool
     {
-        $this->_metrology->addLog('Flush session store', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        $this->_metrologyInstance->addLog('Flush session store', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         session_start();
         unset($_SESSION['Option']);
         session_write_close();
@@ -538,7 +537,7 @@ class nebule
 
         if ($name == ''
             || $this->_flushCache
-            || !$this->_configuration->getOption('permitSessionBuffer')
+            || !$this->_configurationInstance->getOption('permitSessionBuffer')
             || !isset($_SESSION['Buffer'][$name])
         ) {
             session_write_close();
@@ -562,7 +561,7 @@ class nebule
     {
         if ($name == ''
             || $this->_flushCache
-            || !$this->_configuration->getOption('permitSessionBuffer')
+            || !$this->_configurationInstance->getOption('permitSessionBuffer')
         )
             return false;
 
@@ -617,7 +616,7 @@ class nebule
      */
     public function newObject(string $oid): Node
     {
-        return $this->_cache->newNode($oid, Cache::TYPE_NODE);
+        return $this->_cacheInstance->newNode($oid, Cache::TYPE_NODE);
     }
 
 
@@ -629,7 +628,7 @@ class nebule
      */
     public function newEntity(string $nid): Entity
     {
-        return $this->_cache->newNode($nid, Cache::TYPE_ENTITY);
+        return $this->_cacheInstance->newNode($nid, Cache::TYPE_ENTITY);
     }
 
     /**
@@ -640,7 +639,7 @@ class nebule
      */
     public function newGroup(string $nid): Group
     {
-        return $this->_cache->newNode($nid, Cache::TYPE_GROUP);
+        return $this->_cacheInstance->newNode($nid, Cache::TYPE_GROUP);
     }
 
     /**
@@ -651,7 +650,7 @@ class nebule
      */
     public function newConversation(string $nid): Conversation
     {
-        return $this->_cache->newNode($nid, Cache::TYPE_CONVERSATION);
+        return $this->_cacheInstance->newNode($nid, Cache::TYPE_CONVERSATION);
     }
 
     /**
@@ -662,7 +661,7 @@ class nebule
      */
     public function newCurrency(string $nid): Currency
     {
-        return $this->_cache->newNode($nid, Cache::TYPE_CURRENCY);
+        return $this->_cacheInstance->newNode($nid, Cache::TYPE_CURRENCY);
     }
 
     /**
@@ -673,7 +672,7 @@ class nebule
      */
     public function newToken(string $nid): Token
     {
-        return $this->_cache->newNode($nid, Cache::TYPE_TOKEN);
+        return $this->_cacheInstance->newNode($nid, Cache::TYPE_TOKEN);
     }
 
     /**
@@ -684,7 +683,7 @@ class nebule
      */
     public function newTokenPool(string $nid): TokenPool
     {
-        return $this->_cache->newNode($nid, Cache::TYPE_TOKENPOOL);
+        return $this->_cacheInstance->newNode($nid, Cache::TYPE_TOKENPOOL);
     }
 
     /**
@@ -695,7 +694,7 @@ class nebule
      */
     public function newWallet(string $nid): Wallet
     {
-        return $this->_cache->newNode($nid, Cache::TYPE_WALLET);
+        return $this->_cacheInstance->newNode($nid, Cache::TYPE_WALLET);
     }
 
     /**
@@ -706,7 +705,7 @@ class nebule
      */
     public function newLink(string $link): Link
     {
-        return $this->_cache->newLink($link, Cache::TYPE_LINK);
+        return $this->_cacheInstance->newLink($link, Cache::TYPE_LINK);
     }
 
     /**
@@ -718,7 +717,7 @@ class nebule
      */
     public function newTransaction(string $link): Transaction
     {
-        return $this->_cache->newLink($link, Cache::TYPE_TRANSACTION);
+        return $this->_cacheInstance->newLink($link, Cache::TYPE_TRANSACTION);
     }
 
 
@@ -800,8 +799,8 @@ class nebule
         if ($arg_obj != ''
             && strlen($arg_obj) >= self::NEBULE_MINIMUM_ID_SIZE
             && ctype_xdigit($arg_obj)
-            && ($this->getIO()->checkObjectPresent($arg_obj)
-                || $this->getIO()->checkLinkPresent($arg_obj)
+            && ($this->getIoInstance()->checkObjectPresent($arg_obj)
+                || $this->getIoInstance()->checkLinkPresent($arg_obj)
             )
         ) {
             // Ecrit l'objet dans la variable.
@@ -826,7 +825,7 @@ class nebule
         }
         unset($arg_obj);
 
-        $this->_metrology->addLog('Find current object ' . $this->_currentObject, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Find current object ' . $this->_currentObject, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
         $this->_currentObjectInstance->getMarkProtected();
     }
 
@@ -907,8 +906,8 @@ class nebule
             if ($id != ''
                 && strlen($id) >= self::NEBULE_MINIMUM_ID_SIZE
                 && ctype_xdigit($id)
-                && $this->_io->checkObjectPresent($id)
-                && $this->_io->checkLinkPresent($id)
+                && $this->_ioInstance->checkObjectPresent($id)
+                && $this->_ioInstance->checkLinkPresent($id)
             ) {
                 $this->_instanceEntity = $id;
                 $this->_instanceEntityInstance = $this->newEntity($id);
@@ -919,7 +918,7 @@ class nebule
             }
 
             // Log
-            $this->_metrology->addLog('Find server entity ' . $this->_instanceEntity, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Find server entity ' . $this->_instanceEntity, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
             // Mémorisation.
             $this->setSessionStore('nebuleHostEntity', $this->_instanceEntity);
@@ -996,13 +995,13 @@ class nebule
         } else {
             // Sinon recherche une entité par défaut.
             // C'est définit comme une option.
-            $id = $this->_configuration->getOption('defaultCurrentEntity');
+            $id = $this->_configurationInstance->getOption('defaultCurrentEntity');
 
             if ($id != ''
                 && strlen($id) >= self::NEBULE_MINIMUM_ID_SIZE
                 && ctype_xdigit($id)
-                && $this->_io->checkObjectPresent($id)
-                && $this->_io->checkLinkPresent($id)
+                && $this->_ioInstance->checkObjectPresent($id)
+                && $this->_ioInstance->checkLinkPresent($id)
             ) {
                 $this->_defaultEntity = $id;
                 $this->_defaultEntityInstance = $this->newEntity($id);
@@ -1013,7 +1012,7 @@ class nebule
             }
 
             // Log
-            $this->_metrology->addLog('Find default entity ' . $this->_defaultEntity, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Find default entity ' . $this->_defaultEntity, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
             // Mémorisation.
             $this->setSessionStore('nebuleDefaultEntity', $this->_defaultEntity);
@@ -1101,8 +1100,8 @@ class nebule
             && $arg_ent != ''
             && strlen($arg_ent) >= self::NEBULE_MINIMUM_ID_SIZE
             && ctype_xdigit($arg_ent)
-            && $this->_io->checkObjectPresent($arg_ent)
-            && $this->_io->checkLinkPresent($arg_ent)
+            && $this->_ioInstance->checkObjectPresent($arg_ent)
+            && $this->_ioInstance->checkLinkPresent($arg_ent)
         ) {
             $itc_ent = $this->newObject($arg_ent);
         }
@@ -1126,7 +1125,7 @@ class nebule
             $this->_currentEntityPrivateKey = '';
             $this->_currentEntityPrivateKeyInstance = '';
             $this->setSessionStore('nebulePrivateEntity', '');
-            $this->_metrology->addLog('New current entity ' . $this->_currentEntity, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrologyInstance->addLog('New current entity ' . $this->_currentEntity, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
         } else {
             $tID = $this->getSessionStore('nebulePublicEntity');
             $sInstance = $this->getSessionStore('nebulePublicEntityInstance');
@@ -1140,16 +1139,16 @@ class nebule
             ) {
                 $this->_currentEntity = $tID;
                 $this->_currentEntityInstance = $tInstance;
-                $this->_metrology->addLog('Reuse current entity ' . $this->_currentEntity, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+                $this->_metrologyInstance->addLog('Reuse current entity ' . $this->_currentEntity, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
             } else // Sinon essaie de la trouver ailleurs.
             {
                 $itc_ent = '';
-                $ext_ent = $this->_configuration->getOption('defaultCurrentEntity');
+                $ext_ent = $this->_configurationInstance->getOption('defaultCurrentEntity');
                 if ($ext_ent != ''
                     && strlen($ext_ent) >= self::NEBULE_MINIMUM_ID_SIZE
                     && ctype_xdigit($ext_ent)
-                    && $this->_io->checkObjectPresent($ext_ent)
-                    && $this->_io->checkLinkPresent($ext_ent)) {
+                    && $this->_ioInstance->checkObjectPresent($ext_ent)
+                    && $this->_ioInstance->checkLinkPresent($ext_ent)) {
                     $itc_ent = $this->newObject($ext_ent);
                 }
                 if (is_a($itc_ent, 'Node') && $itc_ent->getType('all') == Entity::ENTITY_TYPE) {
@@ -1163,7 +1162,7 @@ class nebule
                     $this->_currentEntityPrivateKey = '';
                     $this->_currentEntityPrivateKeyInstance = '';
                     $this->setSessionStore('nebulePrivateEntity', '');
-                    $this->_metrology->addLog('Find default current entity ' . $this->_currentEntity, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+                    $this->_metrologyInstance->addLog('Find default current entity ' . $this->_currentEntity, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
                 } // Sinon utilise l'entité de l'instance.
                 else {
                     $this->_currentEntity = $this->_instanceEntity;
@@ -1174,7 +1173,7 @@ class nebule
                     $this->_currentEntityPrivateKey = '';
                     $this->_currentEntityPrivateKeyInstance = '';
                     $this->setSessionStore('nebulePrivateEntity', '');
-                    $this->_metrology->addLog('Find current (instance) entity ' . $this->_currentEntity, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+                    $this->_metrologyInstance->addLog('Find current (instance) entity ' . $this->_currentEntity, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
                 }
                 unset($ext_ent);
             }
@@ -1192,7 +1191,7 @@ class nebule
             $this->_currentEntityPrivateKey = $this->getSessionStore('nebulePrivateEntity');
             $this->_currentEntityPrivateKeyInstance = $this->newObject($this->_currentEntityPrivateKey);
             // Log
-            $this->_metrology->addLog('Reuse current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Reuse current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         } // Sinon essaie de la trouver ailleurs
         else {
             if (is_a($this->_currentEntityInstance, 'Entity')) {
@@ -1200,11 +1199,11 @@ class nebule
                 if ($this->_currentEntityPrivateKey != '') {
                     $this->_currentEntityPrivateKeyInstance = $this->newObject($this->_currentEntityPrivateKey);
                     // Log
-                    $this->_metrology->addLog('Find current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                    $this->_metrologyInstance->addLog('Find current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                 } else {
                     $this->_currentEntityPrivateKeyInstance = '';
                     // Log
-                    $this->_metrology->addLog('Cant find current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                    $this->_metrologyInstance->addLog('Cant find current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                 }
                 $this->setSessionStore('nebulePrivateEntity', $this->_currentEntityPrivateKey);
             } else {
@@ -1246,7 +1245,7 @@ class nebule
             if (is_a($this->_currentEntityInstance, 'Entity')) {
                 $this->_currentEntityInstance->unsetPrivateKeyPassword();
                 $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
-                $this->_metrology->addLog('Logout ' . $this->_currentEntity, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+                $this->_metrologyInstance->addLog('Logout ' . $this->_currentEntity, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
             }
         } else {
             // Ajoute le mot de passe à l'entité en cours.
@@ -1255,9 +1254,9 @@ class nebule
             // Test si le mot de passe est bon.
             $this->_currentEntityUnlocked = $this->_currentEntityInstance->checkPrivateKeyPassword();
             if ($this->_currentEntityUnlocked) {
-                $this->_metrology->addLog('Login password ' . $this->_currentEntity . ' OK', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+                $this->_metrologyInstance->addLog('Login password ' . $this->_currentEntity . ' OK', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
             } else {
-                $this->_metrology->addLog('Login password ' . $this->_currentEntity . ' NOK', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
+                $this->_metrologyInstance->addLog('Login password ' . $this->_currentEntity . ' NOK', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
             }
         }
         unset($arg_logout, $arg_pwd, $arg_get_pwd, $arg_post_pwd);
@@ -1329,7 +1328,7 @@ class nebule
         session_start();
 
         //$this->_flushSessionStore();
-        $this->_cache->flushBufferStore();
+        $this->_cacheInstance->flushBufferStore();
 
         // Change l'entité en cours.
         $this->_currentEntityInstance = $entity;
@@ -1364,7 +1363,7 @@ class nebule
         session_start();
 
         //$this->_flushSessionStore();
-        $this->_cache->flushBufferStore();
+        $this->_cacheInstance->flushBufferStore();
 
         // Enregistre l'ancienne entité.
         $this->setSessionStore('nebuleTempPublicEntityInstance', serialize($this->_currentEntityInstance));
@@ -1404,7 +1403,7 @@ class nebule
         }
 
         //$this->_flushSessionStore();
-        $this->_cache->flushBufferStore();
+        $this->_cacheInstance->flushBufferStore();
 
         // Change l'entité en cours.
         $this->_currentEntityInstance = unserialize($entity);
@@ -1542,8 +1541,8 @@ class nebule
                 || $arg_grp == '0'
             )
             && ctype_xdigit($arg_grp)
-            && ($this->getIO()->checkObjectPresent($arg_grp)
-                || $this->getIO()->checkLinkPresent($arg_grp)
+            && ($this->getIoInstance()->checkObjectPresent($arg_grp)
+                || $this->getIoInstance()->checkLinkPresent($arg_grp)
                 || $arg_grp == '0'
             )
         ) {
@@ -1572,7 +1571,7 @@ class nebule
         }
         unset($arg_grp);
 
-        $this->_metrology->addLog('Find current group ' . $this->_currentGroup, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Find current group ' . $this->_currentGroup, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
     /**
@@ -1644,8 +1643,8 @@ class nebule
                 || $arg_cvt == '0'
             )
             && ctype_xdigit($arg_cvt)
-            && ($this->getIO()->checkObjectPresent($arg_cvt)
-                || $this->getIO()->checkLinkPresent($arg_cvt)
+            && ($this->getIoInstance()->checkObjectPresent($arg_cvt)
+                || $this->getIoInstance()->checkLinkPresent($arg_cvt)
                 || $arg_cvt == '0'
             )
         ) {
@@ -1674,7 +1673,7 @@ class nebule
         }
         unset($arg_cvt);
 
-        $this->_metrology->addLog('Find current conversation ' . $this->_currentConversation, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Find current conversation ' . $this->_currentConversation, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
     /**
@@ -1729,7 +1728,7 @@ class nebule
     private function _findCurrentCurrency()
     {
         // Si pas autorisé, retourne ID=0.
-        if (!$this->_configuration->getOption('permitCurrency')) {
+        if (!$this->_configurationInstance->getOption('permitCurrency')) {
             $this->_currentCurrency = '0';
             $this->_currentCurrencyInstance = $this->newCurrency('0');
             // Ecrit la monnaie dans la session.
@@ -1755,8 +1754,8 @@ class nebule
                 || $arg == '0'
             )
             && ctype_xdigit($arg)
-            && ($this->getIO()->checkObjectPresent($arg)
-                || $this->getIO()->checkLinkPresent($arg)
+            && ($this->getIoInstance()->checkObjectPresent($arg)
+                || $this->getIoInstance()->checkLinkPresent($arg)
                 || $arg == '0'
             )
         ) {
@@ -1785,7 +1784,7 @@ class nebule
         }
         unset($arg);
 
-        $this->_metrology->addLog('Find current currency ' . $this->_currentCurrency, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Find current currency ' . $this->_currentCurrency, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
     /**
@@ -1840,7 +1839,7 @@ class nebule
     private function _findCurrentTokenPool()
     {
         // Si pas autorisé, retourne ID=0.
-        if (!$this->_configuration->getOption('permitCurrency')) {
+        if (!$this->_configurationInstance->getOption('permitCurrency')) {
             $this->_currentTokenPool = '0';
             $this->_currentTokenPoolInstance = $this->newTokenPool('0');
             // Ecrit le sac de jetons dans la session.
@@ -1866,8 +1865,8 @@ class nebule
                 || $arg == '0'
             )
             && ctype_xdigit($arg)
-            && ($this->getIO()->checkObjectPresent($arg)
-                || $this->getIO()->checkLinkPresent($arg)
+            && ($this->getIoInstance()->checkObjectPresent($arg)
+                || $this->getIoInstance()->checkLinkPresent($arg)
                 || $arg == '0'
             )
         ) {
@@ -1896,7 +1895,7 @@ class nebule
         }
         unset($arg);
 
-        $this->_metrology->addLog('Find current token pool ' . $this->_currentTokenPool, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Find current token pool ' . $this->_currentTokenPool, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
     /**
@@ -1951,7 +1950,7 @@ class nebule
     private function _findCurrentToken()
     {
         // Si pas autorisé, retourne ID=0.
-        if (!$this->_configuration->getOption('permitCurrency')) {
+        if (!$this->_configurationInstance->getOption('permitCurrency')) {
             $this->_currentToken = '0';
             $this->_currentTokenInstance = $this->newToken('0');
             // Ecrit le jeton dans la session.
@@ -1977,8 +1976,8 @@ class nebule
                 || $arg == '0'
             )
             && ctype_xdigit($arg)
-            && ($this->getIO()->checkObjectPresent($arg)
-                || $this->getIO()->checkLinkPresent($arg)
+            && ($this->getIoInstance()->checkObjectPresent($arg)
+                || $this->getIoInstance()->checkLinkPresent($arg)
                 || $arg == '0'
             )
         ) {
@@ -2007,7 +2006,7 @@ class nebule
         }
         unset($arg);
 
-        $this->_metrology->addLog('Find current token ' . $this->_currentToken, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Find current token ' . $this->_currentToken, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
     /**
@@ -2049,7 +2048,7 @@ class nebule
     {
         // Vérifie que le maître est une entité et est bien celui définit par la constante.
         if (!$this->_puppetmasterInstance instanceof Entity) return 0;
-        if ($this->_puppetmasterInstance->getID() != $this->_configuration->getOption('puppetmaster')) return 0;
+        if ($this->_puppetmasterInstance->getID() != $this->_configurationInstance->getOption('puppetmaster')) return 0;
         // Vérifie que le maître de la sécurité est une entité et a été trouvé.
         if (!$this->_securityMasterInstance instanceof Entity) return 1;
         if ($this->_securityMasterInstance->getID() == '0') return 1;
@@ -2099,9 +2098,9 @@ class nebule
      */
     private function _findPuppetmaster()
     {
-        $this->_puppetmaster = $this->_configuration->getOption('puppetmaster');
+        $this->_puppetmaster = $this->_configurationInstance->getOption('puppetmaster');
         $this->_puppetmasterInstance = $this->newEntity($this->_puppetmaster);
-        $this->_metrology->addLog('Find puppetmaster ' . $this->_puppetmaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Find puppetmaster ' . $this->_puppetmaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
     /**
@@ -2138,7 +2137,7 @@ class nebule
         if ($type == '')
             return $this->_puppetmaster;
 
-        $typeID = $this->_crypto->hash($type);
+        $typeID = $this->_cryptoInstance->hash($type);
         if ($typeID === false)
             return $this->_puppetmaster;
 
@@ -2185,7 +2184,7 @@ class nebule
         $this->_securityMaster = $this->_findEntityByType($type);
         $this->_securityMasterInstance = $this->newEntity($this->_securityMaster);
 
-        $this->_metrology->addLog('Find security master ' . $this->_securityMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Find security master ' . $this->_securityMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
     public function getSecurityAuthority()
@@ -2221,7 +2220,7 @@ class nebule
         $this->_codeMaster = $this->_findEntityByType($type);
         $this->_codeMasterInstance = $this->newEntity($this->_codeMaster);
 
-        $this->_metrology->addLog('Find code master ' . $this->_codeMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Find code master ' . $this->_codeMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
     public function getCodeAuthority()
@@ -2257,7 +2256,7 @@ class nebule
         $this->_directoryMaster = $this->_findEntityByType($type);
         $this->_directoryMasterInstance = $this->newEntity($this->_directoryMaster);
 
-        $this->_metrology->addLog('Find directory master ' . $this->_directoryMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Find directory master ' . $this->_directoryMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
     public function getDirectoryAuthority()
@@ -2293,7 +2292,7 @@ class nebule
         $this->_timeMaster = $this->_findEntityByType($type);
         $this->_timeMasterInstance = $this->newEntity($this->_timeMaster);
 
-        $this->_metrology->addLog('Find time master ' . $this->_timeMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Find time master ' . $this->_timeMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
     public function getTimeAuthority()
@@ -2401,7 +2400,7 @@ class nebule
     {
         // Ajoute si nécessaire l'entité du serveur.
         if (!$this->_modeRescue)
-            $this->_permitInstanceEntityAsAuthority = $this->_configuration->getOption('permitInstanceEntityAsAuthority');
+            $this->_permitInstanceEntityAsAuthority = $this->_configurationInstance->getOption('permitInstanceEntityAsAuthority');
         else
             $this->_permitInstanceEntityAsAuthority = false;
 
@@ -2415,7 +2414,7 @@ class nebule
             $this->_localPrimaryAuthorities[$this->_instanceEntity] = $this->_instanceEntity;
             $this->_localPrimaryAuthoritiesInstances[$this->_instanceEntity] = $this->_instanceEntityInstance;
 
-            $this->_metrology->addLog('Add instance entity as authority', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrologyInstance->addLog('Add instance entity as authority', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
         }
     }
 
@@ -2429,7 +2428,7 @@ class nebule
     {
         // Ajoute si nécessaire l'entité par défaut.
         if (!$this->_modeRescue)
-            $this->_permitDefaultEntityAsAuthority = $this->_configuration->getOption('permitDefaultEntityAsAuthority');
+            $this->_permitDefaultEntityAsAuthority = $this->_configurationInstance->getOption('permitDefaultEntityAsAuthority');
         else
             $this->_permitDefaultEntityAsAuthority = false;
 
@@ -2443,7 +2442,7 @@ class nebule
             $this->_localPrimaryAuthorities[$this->_defaultEntity] = $this->_defaultEntity;
             $this->_localPrimaryAuthoritiesInstances[$this->_defaultEntity] = $this->_defaultEntityInstance;
 
-            $this->_metrology->addLog('Add default entity as authority', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrologyInstance->addLog('Add default entity as authority', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
         }
     }
 
@@ -2455,10 +2454,10 @@ class nebule
     private function _addLocalAuthorities()
     {
         // Vérifie si les entités autorités locales sont autorisées.
-        if (!$this->_configuration->getOption('permitLocalSecondaryAuthorities'))
+        if (!$this->_configurationInstance->getOption('permitLocalSecondaryAuthorities'))
             return;
 
-        $refAuthority = $this->_crypto->hash(self::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
+        $refAuthority = $this->_cryptoInstance->hash(self::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
 
         // Liste les liens de l'entité instance du serveur..
         $list = array();
@@ -2649,17 +2648,17 @@ class nebule
     private function _addInstanceEntityAsRecovery()
     {
         // Vérifie si les entités de recouvrement sont autorisées.
-        if (!$this->_configuration->getOption('permitRecoveryEntities'))
+        if (!$this->_configurationInstance->getOption('permitRecoveryEntities'))
             return;
 
-        $this->_permitInstanceEntityAsRecovery = $this->_configuration->getOption('permitInstanceEntityAsRecovery');
+        $this->_permitInstanceEntityAsRecovery = $this->_configurationInstance->getOption('permitInstanceEntityAsRecovery');
 
         if ($this->_permitInstanceEntityAsRecovery) {
             $this->_recoveryEntities[$this->_instanceEntity] = $this->_instanceEntity;
             $this->_recoveryEntitiesInstances[$this->_instanceEntity] = $this->_instanceEntityInstance;
             $this->_recoveryEntitiesSigners[$this->_instanceEntity] = '0';
 
-            $this->_metrology->addLog('Add instance entity as recovery', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrologyInstance->addLog('Add instance entity as recovery', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
         }
     }
 
@@ -2671,17 +2670,17 @@ class nebule
     private function _addDefaultEntityAsRecovery()
     {
         // Vérifie si les entités de recouvrement sont autorisées.
-        if (!$this->_configuration->getOption('permitRecoveryEntities'))
+        if (!$this->_configurationInstance->getOption('permitRecoveryEntities'))
             return;
 
-        $this->_permitDefaultEntityAsRecovery = $this->_configuration->getOption('permitDefaultEntityAsRecovery');
+        $this->_permitDefaultEntityAsRecovery = $this->_configurationInstance->getOption('permitDefaultEntityAsRecovery');
 
         if ($this->_permitDefaultEntityAsRecovery) {
             $this->_recoveryEntities[$this->_defaultEntity] = $this->_defaultEntity;
             $this->_recoveryEntitiesInstances[$this->_defaultEntity] = $this->_defaultEntityInstance;
             $this->_recoveryEntitiesSigners[$this->_defaultEntity] = '0';
 
-            $this->_metrology->addLog('Add default entity as recovery', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrologyInstance->addLog('Add default entity as recovery', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
         }
     }
 
@@ -2690,16 +2689,16 @@ class nebule
      *
      * @return void
      */
-    private function _findRecoveryEntities()
+    private function _findRecoveryEntities(): void
     {
         $this->_recoveryEntities = array();
         $this->_recoveryEntitiesInstances = array();
 
         // Vérifie si les entités de recouvrement sont autorisées.
-        if (!$this->_configuration->getOption('permitRecoveryEntities'))
+        if (!$this->_configurationInstance->getOption('permitRecoveryEntities'))
             return;
 
-        $refRecovery = $this->_crypto->hash(self::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
+        $refRecovery = $this->_cryptoInstance->hash(self::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
 
         // Liste les liens de l'entité instance du serveur..
         $list = array();
@@ -2750,7 +2749,7 @@ class nebule
      *
      * @return array:string
      */
-    public function getRecoveryEntities()
+    public function getRecoveryEntities(): array
     {
         return $this->_recoveryEntities;
     }
@@ -2760,7 +2759,7 @@ class nebule
      *
      * @return array:Entity
      */
-    public function getRecoveryEntitiesInstance()
+    public function getRecoveryEntitiesInstance(): array
     {
         return $this->_recoveryEntitiesInstances;
     }
@@ -2770,7 +2769,7 @@ class nebule
      *
      * @return array:string
      */
-    public function getRecoveryEntitiesSigners()
+    public function getRecoveryEntitiesSigners(): array
     {
         return $this->_recoveryEntitiesSigners;
     }
@@ -2781,7 +2780,7 @@ class nebule
      * @param Entity|string $entity
      * @return boolean
      */
-    public function getIsRecoveryEntity($entity)
+    public function getIsRecoveryEntity($entity): bool
     {
         if (is_a($entity, 'Node'))
             $entity = $entity->getID();
@@ -2804,7 +2803,7 @@ class nebule
      */
     public function getMetrologyInstance(): Metrology
     {
-        return $this->_metrology;
+        return $this->_metrologyInstance;
     }
 
     /**
@@ -2814,7 +2813,7 @@ class nebule
      */
     public function getConfigurationInstance(): Configuration
     {
-        return $this->_configuration;
+        return $this->_configurationInstance;
     }
 
     /**
@@ -2824,7 +2823,7 @@ class nebule
      */
     public function getCacheInstance(): Cache
     {
-        return $this->_cache;
+        return $this->_cacheInstance;
     }
 
     /**
@@ -2832,9 +2831,9 @@ class nebule
      *
      * @return io
      */
-    public function getIO(): ioInterface
+    public function getIoInstance(): ioInterface
     {
-        return $this->_io;
+        return $this->_ioInstance;
     }
 
     /**
@@ -2842,9 +2841,9 @@ class nebule
      *
      * @return CryptoInterface
      */
-    public function getCrypto(): CryptoInterface
+    public function getCryptoInstance(): CryptoInterface
     {
-        return $this->_crypto;
+        return $this->_cryptoInstance;
     }
 
     /**
@@ -2852,9 +2851,9 @@ class nebule
      *
      * @return SocialInterface
      */
-    public function getSocial(): SocialInterface
+    public function getSocialInstance(): SocialInterface
     {
-        return $this->_social;
+        return $this->_socialInstance;
     }
 
 
@@ -2866,8 +2865,8 @@ class nebule
      */
     public function getListEntitiesInstances(): array
     {
-        $hashType = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
-        $hashEntity = $this->_crypto->hash('application/x-pem-file');
+        $hashType = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+        $hashEntity = $this->_cryptoInstance->hash('application/x-pem-file');
         $hashEntityObject = $this->newObject($hashEntity);
 
         // Liste les liens.
@@ -2894,7 +2893,7 @@ class nebule
      *
      * @return array:string
      */
-    public function getListEntitiesID()
+    public function getListEntitiesID(): array
     {
         // Liste les instances.
         $list = $this->getListEntitiesInstances();
@@ -2923,10 +2922,10 @@ class nebule
      *
      * @return void
      */
-    private function _findModeRescue()
+    private function _findModeRescue(): void
     {
-        if ($this->_configuration->getOption('modeRescue')
-            || ($this->_configuration->getOption('permitOnlineRescue')
+        if ($this->_configurationInstance->getOption('modeRescue')
+            || ($this->_configurationInstance->getOption('permitOnlineRescue')
                 && (filter_has_var(INPUT_GET, nebule::COMMAND_RESCUE)
                     || filter_has_var(INPUT_POST, nebule::COMMAND_RESCUE)
                 )
@@ -2939,108 +2938,11 @@ class nebule
      * Retourne si le mode de récupération est activé.
      * @return boolean
      */
-    public function getModeRescue()
+    public function getModeRescue(): bool
     {
         return $this->_modeRescue;
     }
 
-
-    /**
-     * Extrait et analyse un lien.
-     *
-     * Accepte une chaine de caractère représentant un lien.
-     * En fonction du nombre de champs, c'est interprété :
-     * 2 champs : 0_0_0_action_source_0_0
-     * 3 champs : 0_0_0_action_source_target_0
-     * 4 champs : 0_0_0_action_source_target_meta
-     * 5 champs : 0_0_date_action_source_target_meta
-     * 6 champs : 0_signer_date_action_source_target_meta
-     * 7 champs : signe_signer_date_action_source_target_meta
-     * Sinon    : 0_0_0_0_0_0_0
-     *
-     * Retourne un tableau des constituants du lien :
-     * [signature, signataire, date, action, source, destination, méta]
-     * Les champs non renseignés sont à '0'.
-     *
-     * @param string $link : lien à extraire.
-     * @return array:string : un tableau des champs (signature, signataire, date, action, source, destination, méta).
-     */
-    public function flatLinkExtractAsArray($link)
-    {
-        // Variables.
-        $list = array();
-        $date = date(DATE_ATOM);
-        $ent = $this->_currentEntity;
-
-        // Extraction du lien.
-        $arg1 = strtok($link, '_');
-        $arg2 = strtok('_');
-        $arg3 = strtok('_');
-        $arg4 = strtok('_');
-        $arg5 = strtok('_');
-        $arg6 = strtok('_');
-        $arg7 = strtok('_');
-
-        // Nettoyage du lien.
-        if ($arg1 != '' && $arg2 != '' && $arg3 != '' && $arg4 != '' && $arg5 != '' && $arg6 != '' && $arg7 != '') {
-            // Forme : signe_signer_date_action_source_target_meta
-            $list = array($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7);
-        } elseif ($arg1 != '' && $arg2 != '' && $arg3 != '' && $arg4 != '' && $arg5 != '' && $arg6 != '' && $arg7 == '') {
-            // Forme : 0_signer_date_action_source_target_meta
-            $list = array('0', $arg1, $arg2, $arg3, $arg4, $arg5, $arg6);
-        } elseif ($arg1 != '' && $arg2 != '' && $arg3 != '' && $arg4 != '' && $arg5 != '' && $arg6 == '' && $arg7 == '') {
-            // Forme : 0_0_date_action_source_target_meta
-            $list = array('0', $ent, $arg1, $arg2, $arg3, $arg4, $arg5);
-        } elseif ($arg1 != '' && $arg2 != '' && $arg3 != '' && $arg4 != '' && $arg5 == '' && $arg6 == '' && $arg7 == '') {
-            // Forme : 0_0_0_action_source_target_meta
-            $list = array('0', $ent, $date, $arg1, $arg2, $arg3, $arg4);
-        } elseif ($arg1 != '' && $arg2 != '' && $arg3 != '' && $arg4 == '' && $arg5 == '' && $arg6 == '' && $arg7 == '') {
-            // Forme : 0_0_0_action_source_target_0
-            $list = array('0', $ent, $date, $arg1, $arg2, $arg3, '0');
-        } elseif ($arg1 != '' && $arg2 != '' && $arg3 == '' && $arg4 == '' && $arg5 == '' && $arg6 == '' && $arg7 == '') {
-            // Forme : 0_0_0_action_source_0_0 : le minimum !
-            $list = array('0', $ent, $date, $arg1, $arg2, '0', '0');
-        } else {
-            $list = array('0', '0', '0', '0', '0', '0', '0');
-        }
-
-        unset($date, $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7);
-        return $list;
-    }
-
-    /**
-     * Extrait et analyse un lien.
-     * @param string $link : lien à extraire.
-     * @return Link : une instance de lien.
-     * @todo
-     *
-     * Accepte une chaine de caractère représentant un lien.
-     * En fonction du nombre de champs, c'est interprété :
-     * 2 champs : 0_0_0_action_source_0_0
-     * 3 champs : 0_0_0_action_source_target_0
-     * 4 champs : 0_0_0_action_source_target_meta
-     * 5 champs : 0_0_date_action_source_target_meta
-     * 6 champs : 0_signer_date_action_source_target_meta
-     * 7 champs : signe_signer_date_action_source_target_meta
-     * Sinon    : 0_0_0_0_0_0_0
-     *
-     * Retourne une instance du lien.
-     *
-     */
-    public function flatLinkExtractAsInstance($link)
-    {
-        // Vérifier compatibilité avec liens incomplets...
-
-        // Extrait le lien.
-        $linkArray = $this->flatLinkExtractAsArray($link);
-
-        // Création du lien.
-        $flatLink = $linkArray[0] . '_' . $linkArray[1] . '_' . $linkArray[2] . '_' . $linkArray[3] . '_' . $linkArray[4] . '_' . $linkArray[5] . '_' . $linkArray[6];
-        $linkInstance = $this->newLink($flatLink);
-
-        unset($linkArray, $flatLink);
-        return $linkInstance;
-    }
 
 
     /**
@@ -3113,7 +3015,7 @@ class nebule
 		 */
         //if ( filter_has_var(INPUT_GET, self::COMMAND_FLUSH) )
         if ($bootstrap_flush) {
-            $this->_metrology->addLog('Ask flush cache', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+            $this->_metrologyInstance->addLog('Ask flush cache', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
             // Enregistre la demande de le pas alimenter le cache des entités/objets et liens.
             $this->_flushCache = true;
 
@@ -3150,17 +3052,17 @@ class nebule
     public function createTextAsObject(string &$text, bool $protect = false, bool $obfuscate = false)
     {
         // Vérifie que l'écriture est autorisée.
-        if ($this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteObject')
-            && $this->_configuration->getOption('permitWriteLink')
+        if ($this->_configurationInstance->getOption('permitWrite')
+            && $this->_configurationInstance->getOption('permitWriteObject')
+            && $this->_configurationInstance->getOption('permitWriteLink')
             && $this->_currentEntityUnlocked
             && strlen($text) != 0
         ) {
             // Calcule l'ID de l'objet à créer.
-            $id = $this->_crypto->hash($text);
+            $id = $this->_cryptoInstance->hash($text);
 
             // Vérifie si l'ID n'existe pas déjà.
-            if ($this->_io->checkObjectPresent($id))
+            if ($this->_ioInstance->checkObjectPresent($id))
                 return $id;
 
             // Ecrit l'objet.
@@ -3176,8 +3078,8 @@ class nebule
             // Crée le lien de type d'objet.
             $action = 'l';
             $source = $id;
-            $target = $this->getCrypto()->hash('text/plain');
-            $meta = $this->getCrypto()->hash(self::REFERENCE_NEBULE_OBJET_TYPE);
+            $target = $this->getCryptoInstance()->hash('text/plain');
+            $meta = $this->getCryptoInstance()->hash(self::REFERENCE_NEBULE_OBJET_TYPE);
             $link = '_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
             $newLink = new Link($this->_nebuleInstance, $link);
 
@@ -3263,7 +3165,7 @@ class nebule
             if (ctype_xdigit($type))
                 $hashType = $type;
             else
-                $hashType = $this->_crypto->hash($type, self::REFERENCE_CRYPTO_HASH_ALGORITHM);
+                $hashType = $this->_cryptoInstance->hash($type, self::REFERENCE_CRYPTO_HASH_ALGORITHM);
             // $type doit être une instance d'objet au final.
             $type = $this->newObject($hashType);
         }
@@ -3279,8 +3181,8 @@ class nebule
         } else {
             // Si l'entité est un ID (héxadécimal), l'utilise directement. Sinon calcul l'empreinte de l'entité.
             if (ctype_xdigit($entity)
-                && $this->getIO()->checkLinkPresent($entity)
-                && $this->getIO()->checkObjectPresent($entity)
+                && $this->getIoInstance()->checkLinkPresent($entity)
+                && $this->getIoInstance()->checkObjectPresent($entity)
             )
                 $hashEntity = $entity;
             else
@@ -3294,11 +3196,11 @@ class nebule
             'l',
             '',
             $hashType,
-            $this->_crypto->hash(self::REFERENCE_NEBULE_OBJET_TYPE, self::REFERENCE_CRYPTO_HASH_ALGORITHM)
+            $this->_cryptoInstance->hash(self::REFERENCE_NEBULE_OBJET_TYPE, self::REFERENCE_CRYPTO_HASH_ALGORITHM)
         );
 
         // Fait un tri par pertinance sociale.
-        $this->_social->arraySocialFilter($result, $socialClass);
+        $this->_socialInstance->arraySocialFilter($result, $socialClass);
 
         // retourne le résultat.
         return $result;
@@ -3442,14 +3344,14 @@ class nebule
         ) {
             // Le ticket est null, aucun ticket trouvé en argument.
             // Aucune action ne doit être réalisée.
-            $this->_metrology->addLog('Ticket: none', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrologyInstance->addLog('Ticket: none', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
             $this->_validTicket = false;
         } elseif (isset($_SESSION['Ticket'][$ticket])
             && $_SESSION['Ticket'][$ticket] !== true
         ) {
             // Le ticket est déjà connu mais est déjà utilisé, c'est un rejeu.
             // Aucune action ne doit être réalisée.
-            $this->_metrology->addLog('Ticket: replay ' . $ticket, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
+            $this->_metrologyInstance->addLog('Ticket: replay ' . $ticket, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
             $this->_validTicket = false;
             $_SESSION['Ticket'][$ticket] = false;
         } elseif (isset($_SESSION['Ticket'][$ticket])
@@ -3458,14 +3360,14 @@ class nebule
             // Le ticket est connu et n'est pas utilisé, c'est bon.
             // Il est marqué maintenant comme utilisé.
             // Les actions peuvent être réalisées.
-            $this->_metrology->addLog('Ticket: valid ' . $ticket, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrologyInstance->addLog('Ticket: valid ' . $ticket, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
             $this->_validTicket = true;
             $_SESSION['Ticket'][$ticket] = false;
         } else {
             // Le ticket est inconnu.
             // Pas de mémorisation.
             // Aucune action ne doit être réalisée.
-            $this->_metrology->addLog('Ticket: error ' . $ticket, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
+            $this->_metrologyInstance->addLog('Ticket: error ' . $ticket, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
             $this->_validTicket = false;
         }
         session_write_close();
@@ -3503,8 +3405,8 @@ class nebule
     public function getActionTicketValue()
     {
         session_start();
-        $data = $this->_crypto->getPseudoRandom(2048);
-        $ticket = $this->_crypto->hash($data);
+        $data = $this->_cryptoInstance->getPseudoRandom(2048);
+        $ticket = $this->_cryptoInstance->hash($data);
         unset($data);
         $_SESSION['Ticket'][$ticket] = true;
         session_write_close();
@@ -3539,7 +3441,7 @@ class nebule
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
 		 *  ------------------------------------------------------------------------------------------
 		 */
-        $this->_metrology->addLog('Extract display next object', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Extract display next object', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         // Lit et nettoye le contenu de la variable GET.
         $arg = trim(' ' . filter_input(INPUT_GET, Displays::DEFAULT_NEXT_COMMAND, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
@@ -3629,11 +3531,11 @@ class nebule
         }
 
         if ($size == 0) {
-            $size = $this->_configuration->getOption('ioReadMaxData');
+            $size = $this->_configurationInstance->getOption('ioReadMaxData');
         }
 
         $value = false;
-        $readValue = $this->_nebuleInstance->getIO()->objectRead($id);
+        $readValue = $this->_nebuleInstance->getIoInstance()->objectRead($id);
         $startValue = strpos($readValue, $key);
         $trimLine = substr($readValue, $startValue, $size);
         $arrayValue = explode('"', $trimLine);

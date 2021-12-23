@@ -220,9 +220,9 @@ class Currency extends Node
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIO();
-        $this->_crypto = $nebuleInstance->getCrypto();
-        $this->_social = $nebuleInstance->getSocial();
+        $this->_io = $nebuleInstance->getIoInstance();
+        $this->_crypto = $nebuleInstance->getCryptoInstance();
+        $this->_social = $nebuleInstance->getSocialInstance();
 
         $id = trim(strtolower($id));
         $this->_metrology->addLog('New instance currency ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
@@ -285,9 +285,9 @@ class Currency extends Node
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIO();
-        $this->_crypto = $nebuleInstance->getCrypto();
-        $this->_social = $nebuleInstance->getSocial();
+        $this->_io = $nebuleInstance->getIoInstance();
+        $this->_crypto = $nebuleInstance->getCryptoInstance();
+        $this->_social = $nebuleInstance->getSocialInstance();
         $this->_cacheMarkDanger = false;
         $this->_cacheMarkWarning = false;
         $this->_cacheUpdate = '';
@@ -803,8 +803,8 @@ class Currency extends Node
 
         // Le lien de type.
         $action = 'l';
-        $target = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE);
-        $meta = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+        $target = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE);
+        $meta = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
         $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
 
         // Le lien de nommage si le nom est présent.
@@ -850,7 +850,7 @@ class Currency extends Node
 
                 if ($value != null) {
                     $this->_metrology->addLog('Generate currency SID:' . $sid . ' add ' . $property['key'] . ':' . $value, Metrology::LOG_LEVEL_DEBUG); // Log
-                    $meta = $this->_nebuleInstance->getCrypto()->hash($property['key']);
+                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash($property['key']);
                     $this->_createLink($signer, $date, $action, $source, $target, $meta, $argObf);
                     $this->_metrology->addLog('Generate currency SID:' . $sid . ' link=' . $target . '_' . $meta, Metrology::LOG_LEVEL_DEBUG); // Log
                 }
@@ -918,12 +918,12 @@ class Currency extends Node
         $list = array();
 
         // Prépare la recherche des monnaies.
-        $referenceType = $this->_nebuleInstance->getCrypto()->hash($type);
-        $meta = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+        $referenceType = $this->_nebuleInstance->getCryptoInstance()->hash($type);
+        $meta = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
         if ($type == 'CID') {
-            $target = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_SAC);
+            $target = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_SAC);
         } elseif ($type == 'PID') {
-            $target = $this->_nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_JETON);
+            $target = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_JETON);
         } else {
             return $list;
         }
@@ -1561,7 +1561,7 @@ class Currency extends Node
 
         // Si besoin, génère le compteur interne.
         if ($this->_seed == '') {
-            $this->_seed = $this->_nebuleInstance->getCrypto()->getPseudoRandom(32);
+            $this->_seed = $this->_nebuleInstance->getCryptoInstance()->getPseudoRandom(32);
             $this->_seed = hash($algo, $this->_seed);
         }
 
