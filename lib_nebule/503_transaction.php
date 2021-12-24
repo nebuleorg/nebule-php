@@ -83,21 +83,16 @@ class Transaction extends Link implements linkInterface
      * @var array:string
      */
     const SESSION_SAVED_VARS = array(
-        '_fullLink',
+        '_rawLink',
+        '_parsedLink',
+        '_parsedLinkObfuscated',
         '_signe',
-        '_signeValue',
-        '_signeAlgo',
-        '_signed',
-        '_hashSigner',
         '_date',
         '_action',
-        '_hashSource',
-        '_hashTarget',
-        '_hashMeta',
         '_obfuscated',
-        '_verified',
         '_valid',
         '_validStructure',
+        '_signed',
         '_verifyNumError',
         '_verifyTextError',
         '_isTransaction',
@@ -110,16 +105,7 @@ class Transaction extends Link implements linkInterface
      */
     protected function _initialisation(): void
     {
-        // Vérifications de base.
-        if ($this->_action != 'f'
-            || $this->_hashSource == '0'
-            || $this->_hashTarget == '0'
-            || $this->_hashMeta == '0'
-        ) {
-            return;
-        }
-
-        $this->_extractByMode();
+        $this->_extractByMode_disabled();
     }
 
     /**
@@ -127,12 +113,12 @@ class Transaction extends Link implements linkInterface
      *
      * @return void
      */
-    private function _extractByMode()
+    private function _extractByMode_disabled()
     {
         // Si transaction en mode mode LNS.
         $hashLNS = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_TRANSACTION);
         if ($this->_hashMeta == $hashLNS) {
-            $this->_extractModeLNS();
+            $this->_extractModeLNS_disabled();
         } else {
             $this->_isTransaction = false;
         }
@@ -154,9 +140,10 @@ class Transaction extends Link implements linkInterface
      *
      * @return void
      */
-    private function _extractModeLNS()
+    private function _extractModeLNS_disabled()
     {
-        $this->_transactionsMode = 'LNS';
+        return;
+    /*    $this->_transactionsMode = 'LNS';
 
         // Vérifie si l'objet source est un jeton.
         $instanceSource = $this->_nebuleInstance->newToken($this->_hashSource);
@@ -188,17 +175,7 @@ class Transaction extends Link implements linkInterface
             }
         } else {
             $this->_isTransaction = false;
-        }
-    }
-
-    /**
-     * Fonction de suppression de l'instance.
-     *
-     * @return boolean
-     */
-    public function __destruct()
-    {
-        return true;
+        }*/
     }
 
     /**
@@ -206,7 +183,7 @@ class Transaction extends Link implements linkInterface
      *
      * @return boolean
      */
-    public function getIsTransaction()
+    public function getIsTransaction(): bool
     {
         return $this->_isTransaction;
     }
@@ -217,7 +194,7 @@ class Transaction extends Link implements linkInterface
      *
      * @return string
      */
-    public function getTransactionsObjetID()
+    public function getTransactionsObjetID(): string
     {
         return $this->_transactionsObjectID;
     }
@@ -228,18 +205,18 @@ class Transaction extends Link implements linkInterface
      *
      * @return string
      */
-    public function getTransactionsTimestamp()
+    public function getTransactionsTimestamp(): string
     {
-        return $this->_transactionsTimestamp;
+        return (string)$this->_transactionsTimestamp;
     }
 
     /**
      * Retourne la liste des transactions unitaires.
      * Retourne null en mode LNS
      *
-     * @return string
+     * @return array
      */
-    public function getTransactionsArray()
+    public function getTransactionsArray(): array
     {
         return $this->_transactionsArray;
     }

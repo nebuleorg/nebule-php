@@ -216,7 +216,7 @@ class Bloclink implements bloclinkInterface
     /**
      * Fonction de réveil de l'instance et de ré-initialisation de certaines variables non sauvegardées.
      *
-     * @return null
+     * @return void
      */
     public function __wakeup()
     {
@@ -234,7 +234,7 @@ class Bloclink implements bloclinkInterface
      * @param string $link
      * @return bool
      */
-    protected function _parse(string $link):bool
+    protected function _parse(string $link): bool
     {
         $this->_validStructure = false;
         if (strlen($link) > 4096) return false; // TODO à revoir.
@@ -262,91 +262,6 @@ class Bloclink implements bloclinkInterface
         $this->_parsedLink['link'] = $link;
         $this->_validStructure = true;
         return true;
-    }
-
-    /**
-     * Explode link and it's values into array.
-     *
-     * @param string $link
-     * @return array
-     */
-    private function _parse_old(string $link): array
-    {
-        // Extract blocs from link L : BH_BL_BS
-        $bh = strtok(trim($link), '_');
-        $bl = strtok('_');
-        $bs = strtok('_');
-
-        $bh_rf = strtok($bh, '/');
-        $bh_rv = strtok('/');
-
-        // Check items from RF : APP:TYP
-        $bh_rf_app = strtok($bh_rf, ':');
-        $bh_rf_typ = strtok(':');
-
-        // Check items from RV : VER:SUB
-        $bh_rv_ver = strtok($bh_rv, ':');
-        $bh_rv_sub = strtok(':');
-
-        $bl_rc = strtok($bl, '/');
-        $bl_rl = strtok('/');
-
-        // Check items from RC : MOD>CHR
-        $bl_rc_mod = strtok($bl_rc, '>');
-        $bl_rc_chr = strtok('>');
-
-        // Extract items from RL 1 : REQ>NID>NID>NID>NID
-        $bl_rl_req = strtok($bl_rl, '>');
-        $bl_rl_nid1 = strtok('>');
-        $bl_rl_nid2 = strtok('>');
-        if ($bl_rl_nid2 === false) $bl_rl_nid2 = '';
-        $bl_rl_nid3 = strtok('>');
-        if ($bl_rl_nid3 === false) $bl_rl_nid3 = '';
-        $bl_rl_nid4 = strtok('>');
-        if ($bl_rl_nid4 === false) $bl_rl_nid4 = '';
-
-        $bs_rs1 = strtok($bs, '/');
-
-        // Extract items from RS : NID>SIG
-        $bs_rs1_nid = strtok($bs_rs1, '>');
-        $bs_rs1_sig = strtok('>');
-
-        // Check hash value.
-        $bs_rs1_sig_sign = strtok($bs_rs1_sig, '.');
-
-        // Check algo value.
-        $bs_rs1_sig_algo = strtok('.');
-
-        // Check size value.
-        $bs_rs1_sig_size = strtok('.');
-
-        return array(
-            'link' => $link, // original link
-            'bh' => $bh,
-            'bh/rf' => $bh_rf,
-            'bh/rf/app' => $bh_rf_app,
-            'bh/rf/typ' => $bh_rf_typ,
-            'bh/rv' => $bh_rv,
-            'bh/rv/ver' => $bh_rv_ver,
-            'bh/rv/sub' => $bh_rv_sub,
-            'bl' => $bl,
-            'bl/rc' => $bl_rc,
-            'bl/rc/mod' => $bl_rc_mod,
-            'bl/rc/chr' => $bl_rc_chr,
-            'bl/rl' => $bl_rl,
-            'bl/rl/req' => $bl_rl_req,
-            'bl/rl/nid1' => $bl_rl_nid1,
-            'bl/rl/nid2' => $bl_rl_nid2,
-            'bl/rl/nid3' => $bl_rl_nid3,
-            'bl/rl/nid4' => $bl_rl_nid4,
-            'bs' => $bs,
-            'bs/rs' => $bs_rs1,
-            'bs/rs1/eid' => $bs_rs1_nid,
-            'bs/rs1/sig' => $bs_rs1_sig,
-            'bs/rs1/sig/sign' => $bs_rs1_sig_sign,
-            'bs/rs1/sig/algo' => $bs_rs1_sig_algo,
-            'bs/rs1/sig/size' => $bs_rs1_sig_size,
-        );
     }
 
     /**
@@ -411,64 +326,56 @@ class Bloclink implements bloclinkInterface
     {
         $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
-        // TODO: Implement getParsedLink() method.
-        return array();
+        return $this->_parsedLink;
     }
 
     public function getValid(): bool
     {
         $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
-        // TODO: Implement getValid() method.
-        return false;
+        return $this->_valid;
     }
 
     public function getValidStructure(): bool
     {
         $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
-        // TODO: Implement getValidStructure() method.
-        return false;
+        return $this->_validStructure;
     }
 
     public function getSigned(): bool
     {
         $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
-        // TODO: Implement getSigned() method.
-        return false;
+        return $this->_signed;
     }
 
     public function getVersion(): string
     {
         $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
-        // TODO: Implement getVerifyTextError() method.
-        return '';
+        return $this->_parsedLink['bl/rv'];
     }
 
     public function getDate(): string
     {
         $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
-        // TODO: Implement getVerifyTextError() method.
-        return '';
+        return $this->_parsedLink['bl/rc/chr'];
     }
 
     public function getVerifyNumError(): int
     {
         $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
-        // TODO: Implement getVerifyNumError() method.
-        return 0;
+        return $this->_verifyNumError;
     }
 
     public function getVerifyTextError(): string
     {
         $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
-        // TODO: Implement getVerifyTextError() method.
-        return '';
+        return $this->_verifyTextError;
     }
 
 
@@ -750,7 +657,7 @@ class Bloclink implements bloclinkInterface
         $this->_parsedLink["bs/rs$i/nid"] = $nid;
 
         //if (!$this->_checkSIG($bh, $bl, $sig, $nid)) $this->_metrology->addLog('check link BS/RS1/SIG failed '.$rs, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e99ec81f');
-        if (!$this->_checkSIG($bh, $bl, $sig, $nid)) return false;
+        if (!$this->_checkSIG($bh, $bl, $sig, $nid, (string)$i)) return false;
 
         $this->_parsedLink["bs/rs$i"] = $rs;
         return true;

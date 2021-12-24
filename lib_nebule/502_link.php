@@ -37,20 +37,16 @@ class Link implements linkInterface
      * @var array:string
      */
     const SESSION_SAVED_VARS = array(
-        '_fullLink',
+        '_rawLink',
+        '_parsedLink',
+        '_parsedLinkObfuscated',
         '_signe',
-        '_signeValue',
-        '_signeAlgo',
-        '_signed',
-        '_hashSigner',
         '_date',
         '_action',
-        '_hashSource',
-        '_hashTarget',
-        '_hashMeta',
         '_obfuscated',
         '_valid',
         '_validStructure',
+        '_signed',
         '_verifyNumError',
         '_verifyTextError',
     );
@@ -124,27 +120,6 @@ class Link implements linkInterface
     protected $_signe = '0';
 
     /**
-     * Texte valeur hexa de la signature.
-     *
-     * @var string $_signeValue
-     */
-    protected $_signeValue = '';
-
-    /**
-     * Texte algorithme de signature.
-     *
-     * @var string $_signeAlgo
-     */
-    protected $_signeAlgo = '';
-
-    /**
-     * Texte hexa entité signataire.
-     *
-     * @var string $_hashSigner
-     */
-    protected $_hashSigner = '0';
-
-    /**
      * Texte date du lien.
      *
      * @var string $_date
@@ -157,27 +132,6 @@ class Link implements linkInterface
      * @var string $_action
      */
     protected $_action = '';
-
-    /**
-     * Texte hexa objet source.
-     *
-     * @var string $_hashSource
-     */
-    protected $_hashSource = '0';
-
-    /**
-     * Texte hexa objet destination.
-     *
-     * @var string $_hashTarget
-     */
-    protected $_hashTarget = '0';
-
-    /**
-     * Texte hexa objet méta.
-     *
-     * @var string $_hashMeta
-     */
-    protected $_hashMeta = '0';
 
     /**
      * Booléen si le lien est dissimulé.
@@ -346,7 +300,7 @@ class Link implements linkInterface
     /**
      * Fonction de réveil de l'instance et de ré-initialisation de certaines variables non sauvegardées.
      *
-     * @return null
+     * @return void
      */
     public function __wakeup()
     {
