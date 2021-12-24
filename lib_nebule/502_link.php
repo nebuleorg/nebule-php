@@ -49,7 +49,6 @@ class Link implements linkInterface
         '_hashTarget',
         '_hashMeta',
         '_obfuscated',
-        '_verified',
         '_valid',
         '_validStructure',
         '_verifyNumError',
@@ -109,6 +108,13 @@ class Link implements linkInterface
      * @var array $_parsedLink
      */
     protected $_parsedLink = array();
+
+    /**
+     * Parsed link contents.
+     *
+     * @var array $_parsedLinkObfuscated
+     */
+    protected $_parsedLinkObfuscated = array();
 
     /**
      * Texte signature avec algorithme.
@@ -181,13 +187,6 @@ class Link implements linkInterface
     protected $_obfuscated = false;
 
     /**
-     * Booléen si le lien a été vérifié.
-     *
-     * @var boolean $_verified
-     */
-    protected $_verified = false;
-
-    /**
      * Booléen si le lien est vérifié et valide.
      *
      * @var boolean $_valid
@@ -233,11 +232,12 @@ class Link implements linkInterface
     /**
      * Constructeur.
      *
-     * @param nebule $nebuleInstance
-     * @param string $rl
+     * @param nebule   $nebuleInstance
+     * @param string   $rl
+     * @param Bloclink $bloclink
      * @return boolean
      */
-    public function __construct(nebule $nebuleInstance, string $rl, Bloclink $bloclink)
+    public function __construct(nebule $nebuleInstance, string $rl, bloclinkInterface $bloclink)
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
@@ -250,25 +250,10 @@ class Link implements linkInterface
 
         $this->_validStructure = $this->_checkRL($rl);
 
-        // Extrait le lien et vérifie sa structure.
-        if (!$this->_extract_disabled($rl))
-            return false;
-
-        // Vérifie la validité du lien.
-        if (!$this->_verify_disabled())
-            return false;
-
         // Détecte si c'est un lien dissimulé.
         $this->_obfuscated = false;
         if ($this->_action == 'c') {
-            // Extrait la partie dissimulée du lien si la clé de déchiffrement est accessible à l'entité.
             if (!$this->_extractObfuscated())
-                return false;
-
-            // Vérifie la validité de la partie dissimulée du lien.
-            if ($this->_obfuscated
-                && !$this->_verifyObfuscated()
-            )
                 return false;
         }
 
@@ -376,21 +361,21 @@ class Link implements linkInterface
 
 
     /**
-     * Initialisation post-constructeur.
+     * Initialisation post-constructor.
      *
      * @return void
      */
     protected function _initialisation(): void
     {
-        // Rien à faire ici.
+        // Nothing to do here.
     }
 
     /**
-     * Retourne le lien complet.
+     * Get full link content as text.
      *
      * @return string
      */
-    public function getRawLink(): string
+    public function getRaw(): string
     {
         $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
@@ -414,47 +399,11 @@ class Link implements linkInterface
      *
      * @return array
      */
-    public function getParsedLink(): array
+    public function getParsed(): array
     {
         $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         return $this->_parsedLink;
-    }
-
-    /**
-     * Retourne la valeur de la signature.
-     *
-     * @return string
-     */
-    public function getSigneValueAlgo_disabled(): string
-    {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
-
-        return $this->_signeValue . '.' . $this->_signeAlgo;
-    }
-
-    /**
-     * Retourne la valeur de la signature.
-     *
-     * @return string
-     */
-    public function getSigneValue_disabled(): string
-    {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
-
-        return $this->_signeValue;
-    }
-
-    /**
-     * Retourne l'algorithme de la signature.
-     *
-     * @return string
-     */
-    public function getSigneAlgo_disabled(): string
-    {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
-
-        return $this->_signeAlgo;
     }
 
     /**
@@ -494,42 +443,6 @@ class Link implements linkInterface
     }
 
     /**
-     * Retourne l'objet source du lien.
-     *
-     * @return string
-     */
-    public function getHashSource_disabled()
-    {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
-
-        return $this->_hashSource;
-    }
-
-    /**
-     * Retourne l'objet cible du lien.
-     *
-     * @return string
-     */
-    public function getHashTarget_disabled()
-    {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
-
-        return $this->_hashTarget;
-    }
-
-    /**
-     * Retourne l'objet méta (contextualisation) du lien.
-     *
-     * @return string
-     */
-    public function getHashMeta_disabled()
-    {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
-
-        return $this->_hashMeta;
-    }
-
-    /**
      * Retourne l'état de vérification et de validité du lien.
      *
      * @return boolean
@@ -538,7 +451,7 @@ class Link implements linkInterface
     {
         $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
-        return $this->_valid;
+        return $this->_bloclink->getValid() && $this->_valid;
     }
 
     /**
@@ -551,18 +464,6 @@ class Link implements linkInterface
         $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         return $this->_validStructure;
-    }
-
-    /**
-     * Retourne si le lien a été vérifié dans sa forme syntaxique.
-     *
-     * @return boolean
-     */
-    public function getVerified(): bool
-    {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
-
-        return $this->_verified;
     }
 
     /**
@@ -641,7 +542,7 @@ class Link implements linkInterface
     {
         $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
-        return $this->_signed;
+        return $this->_bloclink->getSigned();
     }
 
     /**
@@ -669,86 +570,6 @@ class Link implements linkInterface
         return $this->_bloclink->getVersion();
     }
 
-
-    protected function _parse(string $link): array
-    {
-        // Extract blocs from link L : BH_BL_BS
-        $bh = strtok(trim($link), '_');
-        $bl = strtok('_');
-        $bs = strtok('_');
-
-        $bh_rf = strtok($bh, '/');
-        $bh_rv = strtok('/');
-
-        // Check items from RF : APP:TYP
-        $bh_rf_app = strtok($bh_rf, ':');
-        $bh_rf_typ = strtok(':');
-
-        // Check items from RV : VER:SUB
-        $bh_rv_ver = strtok($bh_rv, ':');
-        $bh_rv_sub = strtok(':');
-
-        $bl_rc = strtok($bl, '/');
-        $bl_rl = strtok('/');
-
-        // Check items from RC : MOD>CHR
-        $bl_rc_mod = strtok($bl_rc, '>');
-        $bl_rc_chr = strtok('>');
-
-        // Extract items from RL 1 : REQ>NID>NID>NID>NID
-        $bl_rl_req = strtok($bl_rl, '>');
-        $bl_rl_nid1 = strtok('>');
-        $bl_rl_nid2 = strtok('>');
-        if ($bl_rl_nid2 === false) $bl_rl_nid2 = '';
-        $bl_rl_nid3 = strtok('>');
-        if ($bl_rl_nid3 === false) $bl_rl_nid3 = '';
-        $bl_rl_nid4 = strtok('>');
-        if ($bl_rl_nid4 === false) $bl_rl_nid4 = '';
-
-        $bs_rs1 = strtok($bs, '/');
-
-        // Extract items from RS : NID>SIG
-        $bs_rs1_nid = strtok($bs_rs1, '>');
-        $bs_rs1_sig = strtok('>');
-
-        // Check hash value.
-        $bs_rs1_sig_sign = strtok($bs_rs1_sig, '.');
-
-        // Check algo value.
-        $bs_rs1_sig_algo = strtok('.');
-
-        // Check size value.
-        $bs_rs1_sig_size = strtok('.');
-
-        return array(
-            'link' => $link, // original link
-            'bh' => $bh,
-            'bh/rf' => $bh_rf,
-            'bh/rf/app' => $bh_rf_app,
-            'bh/rf/typ' => $bh_rf_typ,
-            'bh/rv' => $bh_rv,
-            'bh/rv/ver' => $bh_rv_ver,
-            'bh/rv/sub' => $bh_rv_sub,
-            'bl' => $bl,
-            'bl/rc' => $bl_rc,
-            'bl/rc/mod' => $bl_rc_mod,
-            'bl/rc/chr' => $bl_rc_chr,
-            'bl/rl' => $bl_rl,
-            'bl/rl/req' => $bl_rl_req,
-            'bl/rl/nid1' => $bl_rl_nid1,
-            'bl/rl/nid2' => $bl_rl_nid2,
-            'bl/rl/nid3' => $bl_rl_nid3,
-            'bl/rl/nid4' => $bl_rl_nid4,
-            'bs' => $bs,
-            'bs/rs' => $bs_rs1,
-            'bs/rs1/eid' => $bs_rs1_nid,
-            'bs/rs1/sig' => $bs_rs1_sig,
-            'bs/rs1/sig/sign' => $bs_rs1_sig_sign,
-            'bs/rs1/sig/algo' => $bs_rs1_sig_algo,
-            'bs/rs1/sig/size' => $bs_rs1_sig_size,
-        );
-    }
-
     /**
      * Extraction du lien.
      * Extrait les champs d'un lien après avoir vérifié la cohérence de sa forme.
@@ -770,7 +591,6 @@ class Link implements linkInterface
 
         $link = trim($link);
         $this->_valid = false;
-        $this->_verified = false;
 
         // Indice du champs lu, de 1 à 7.
         $j = 1;
@@ -890,7 +710,6 @@ class Link implements linkInterface
         // Tant que le lien n'est pas complètement vérifé, il est marqué invalide.
         $this->_valid = false;
         $this->_signed = false;
-        $this->_verified = false;
 
         // Vérifie les différents champs.
         if (!$this->_verifyHashSigner()) {
@@ -914,7 +733,6 @@ class Link implements linkInterface
 
         // Ce lien est maintenant marqué comme ayant été vérifié et valide dans sa structure même si sa signature n'est pas encore reconnu valide.
         $this->_valid = true;
-        $this->_verified = true;
 
         //         La vérification est-elle permise ?
         //   / \   DANGER !!! Si non permit, c'est très dangereux !!!
@@ -1234,6 +1052,7 @@ class Link implements linkInterface
     }
 
 
+
     /**
      * Extraction de la partie dissimulée du lien.
      * Ne vérifie pas la cohérence ou la validité des champs !
@@ -1242,177 +1061,14 @@ class Link implements linkInterface
      */
     protected function _extractObfuscated(): bool
     {
+        $this->_parsedLinkObfuscated = $this->_parsedLink;
+
         // TODO
-        return false;
-    }
-
-
-    /**
-     * Vérification de la partie dissimulée du lien.
-     * Vérifie la cohérence et la validité des champs du lien extraits de la partie dissimulée.
-     *
-     * @return boolean
-     */
-    protected function _verifyObfuscated(): bool
-    {
-        // TODO
-        return false;
-    }
-
-
-    /**
-     * Signature du lien par l'entité en cours.
-     *
-     * @param string $publicKey
-     * @return boolean
-     */
-    public function sign(string $publicKey = '0'): bool
-    {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
-
-        // Si autorisé à signer.
-        if (!$this->_configuration->getOption('permitCreateLink')) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Can not sign link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-            return false;
-        }
-
-        // Si le lien est valide.
-        if ($this->_validStructure
-            && $this->_verified
-            && $this->_valid
-            && $this->_verifyNumError == 11
-            && $this->_signe == '0'
-        ) {
-            // Lit la clé publique.
-            if (is_a($publicKey, 'Entity')) {
-                $pubkeyInstance = $publicKey;
-                $pubkeyID = $publicKey->getID();
-            } else {
-                if ($publicKey == '0') {
-                    $pubkeyID = $this->_nebuleInstance->getCurrentEntity();
-                    $pubkeyInstance = $this->_nebuleInstance->getCurrentEntityInstance();
-                } elseif ($publicKey == $this->_nebuleInstance->getCurrentEntity()) {
-                    $pubkeyInstance = $this->_nebuleInstance->getCurrentEntityInstance();
-                    $pubkeyID = $publicKey;
-                } else {
-                    $pubkeyInstance = $this->_nebuleInstance->newEntity($publicKey);
-                    $pubkeyID = $publicKey;
-                }
-            }
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Sign link for ' . $pubkeyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-
-            // Récupère l'algorithme de hash.
-            $hashAlgo = $this->_crypto->hashAlgorithmName();
-
-            // Génère le lien sans signature et son hash pour vérification.
-            $shortLink = '_' . $pubkeyID . '_' . $this->_date . '_' . $this->_action . '_' . $this->_hashSource . '_' . $this->_hashTarget . '_' . $this->_hashMeta;
-
-            // Génère la signature.
-            $sign = $pubkeyInstance->signLink($shortLink, $hashAlgo);
-
-            if ($sign !== false) {
-                $this->_signeValue = $sign;
-                $this->_signeAlgo = $hashAlgo;
-                $this->_signe = $sign . '.' . $hashAlgo;
-                $this->_hashSigner = $pubkeyID;
-                $this->_rawLink = $this->_signe . $shortLink;
-                $this->_signed = true;
-                $this->_valid = true;
-                $this->_verified = true;
-                $this->_verifyNumError = 0;
-                $this->_verifyTextError = 'Signe is valid.';
-                return true;
-            }
-        } else {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Invalid link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-        }
 
         return false;
     }
 
-    /**
-     * Ecrit le lien pour les objets concernés.
-     *
-     * @return boolean
-     */
-    public function write(): bool
-    {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
-        // Si autorisé à écrire.
-        if (!$this->_configuration->getOption('permitWrite')
-            || !$this->_configuration->getOption('permitWriteLink')
-        ) {
-            return false;
-        }
-
-        // Métrologie.
-        $this->_nebuleInstance->getMetrologyInstance()->addAction('addlnk', $this->_rawLink, $this->_verified);
-
-        // Si le lien n'est pas valide, quitte.
-        if (!$this->_validStructure
-            || !$this->_verified
-            || !$this->_valid
-            || !$this->_signed
-        ) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link unsigned', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-            return false;
-        }
-
-        // Ecrit l'historique.
-        if ($this->_configuration->getOption('permitHistoryLinksSign')) {
-            $history = nebule::NEBULE_LOCAL_HISTORY_FILE;
-            $this->_io->linkWrite($history, $this->_rawLink);
-        }
-
-        // Ecrit le lien pour l'objet de l'entité signataire.
-        if ($this->_configuration->getOption('permitAddLinkToSigner')) {
-            $this->_io->linkWrite($this->_hashSigner, $this->_rawLink);
-        }
-
-        if ($this->_action != 'c') {
-            // Ecrit le lien pour l'objet source.
-            $this->_io->linkWrite($this->_hashSource, $this->_rawLink);
-
-            // Ecrit le lien pour l'objet cible.
-            if ($this->_hashTarget != $this->_hashSource
-                && $this->_hashTarget != '0'
-            ) {
-                $this->_io->linkWrite($this->_hashTarget, $this->_rawLink);
-            }
-
-            // Ecrit le lien pour l'objet méta.
-            if ($this->_hashMeta != $this->_hashSource
-                && $this->_hashMeta != $this->_hashTarget
-                && $this->_hashMeta != '0'
-            ) {
-                $this->_io->linkWrite($this->_hashMeta, $this->_rawLink);
-            }
-        } elseif ($this->_configuration->getOption('permitObfuscatedLink')) {
-            // Ecrit le lien dissimulé.
-            $this->_io->linkWrite($this->_hashSigner . '-' . $this->_hashSource, $this->_rawLink); // @todo
-        } else {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Signe et écrit le lien.
-     *
-     * @param string $publicKey
-     * @return boolean
-     */
-    public function signWrite(string $publicKey = '0'): bool
-    {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
-
-        if ($this->sign($publicKey)) {
-            return $this->write();
-        }
-        return false;
-    }
 
 
     /**
@@ -1428,7 +1084,6 @@ class Link implements linkInterface
         $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         if (!$this->_obfuscated
-            && $this->_verified
             && $this->_valid
             && $this->_verifyNumError == 0
             && $this->_permitObfuscated
@@ -1437,23 +1092,6 @@ class Link implements linkInterface
         }
 
         return false;
-    }
-
-    /**
-     * Offusque et écrit le lien.
-     *
-     * @return boolean
-     */
-    public function obfuscateWrite(): bool
-    {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
-
-        // Vérifie si autorisé à dissimuler des liens.
-        if (!$this->_permitObfuscated)
-            return false;
-
-        $this->obfuscate();
-        return $this->write();
     }
 
     /**
@@ -1467,7 +1105,6 @@ class Link implements linkInterface
         $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         if ($this->_obfuscated
-            && $this->_verified
             && $this->_valid
             && $this->_verifyNumError == 0
         ) {
@@ -1475,19 +1112,6 @@ class Link implements linkInterface
         }
 
         return false;
-    }
-
-    /**
-     * Désoffusque et écrit le lien.
-     *
-     * @return boolean
-     */
-    public function deobfuscateWrite(): bool
-    {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
-
-        $this->deobfuscate();
-        return $this->write();
     }
 
     /**
@@ -1501,7 +1125,6 @@ class Link implements linkInterface
         $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         if ($this->_obfuscated
-            && $this->_verified
             && $this->_valid
             && $this->_verifyNumError == 0
         ) {
@@ -1509,6 +1132,7 @@ class Link implements linkInterface
         }
         return false;
     }
+
 
 
     /**
@@ -1590,6 +1214,7 @@ class Link implements linkInterface
         ?>
 
         <h1 id="l">L / Lien</h1>
+        <p style="color:red;">Cette partie est périmée avec la nouvelle version de liens !</p>
         <p>Le lien est la matérialisation dans un graphe d’une relation entre deux objets pondéré par un troisième
             objet.</p>
 
@@ -1803,20 +1428,20 @@ class Link implements linkInterface
 
         <h3 id="lsd">LSD / Dissimulation</h3>
         <p>Le lien de dissimulation, de type <code>c</code>, contient un lien dissimulé sans signature (cf <a
-                href="#lrac">LRAC</a>). Il permet d’offusquer des liens entre objets et donc d’anonymiser certaines
+                    href="#lrac">LRAC</a>). Il permet d’offusquer des liens entre objets et donc d’anonymiser certaines
             actions de l’entité (cf <a href="#ckl">CKL</a>).</p>
 
         <h5 id="lsdrp">LSDRP / Registre public</h5>
         <p>Le registre du lien de dissimulation, public par nature, est conforme au registre des autres liens (cf <a
-                href="#lr">LR</a>). Si ce lien ne respectait pas cette structure il serait automatiquement ignoré ou
+                    href="#lr">LR</a>). Si ce lien ne respectait pas cette structure il serait automatiquement ignoré ou
             rejeté. Son stockage et sa transmission ont cependant quelques particularités.</p>
         <p>Les champs <code>Signature</code> (cf <a href="#lrsi">LRSI</a>) et <code>HashSignataire</code> (cf <a
-                href="#lrhsi">LRHSI</a>) du registre sont conformes aux autres liens. Ils assurent la protection du
+                    href="#lrhsi">LRHSI</a>) du registre sont conformes aux autres liens. Ils assurent la protection du
             lien. Le champs signataire fait office d'émeteur du lien dissimulé.</p>
         <p>Le champs <code>TimeStamp</code> (cf <a href="#lrt">LRT</a>) du registre est conformes aux autres liens. Il a
             cependant une valeur non significative et sourtout pas liée au <code>TimeStamp</code> du lien dissimulé.</p>
         <p>Le champs <code>Action</code> (cf <a href="#lrt">LRT</a>) du registre est de type <code>c</code> (cf <a
-                href="#lra">LRA</a> et <a href="#lrac">LRAC</a>).</p>
+                    href="#lra">LRA</a> et <a href="#lrac">LRAC</a>).</p>
         <p>Le champs <code>HashSource</code> fait référence à l’entité destinataire du lien, celle qui peut le
             déchiffrer. A part le champs de l’entité signataire, c’est le seul champs qui fait référence à un objet.</p>
         <p>Le champs <code>HashCible</code> ne contient pas la référence d’un objet mais le lien chiffré et encodé en

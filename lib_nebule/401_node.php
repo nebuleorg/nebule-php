@@ -448,7 +448,7 @@ class Node implements nodeInterface
      *
      * @return string
      */
-    public function getID()
+    public function getID(): string
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
@@ -471,23 +471,23 @@ class Node implements nodeInterface
         // Check hash value.
         $hash = strtok($nid, '.');
         if ($hash === false) return false;
-        if (strlen($hash) < LIB_NID_MIN_HASH_SIZE) return false;
-        if (strlen($hash) > LIB_NID_MAX_HASH_SIZE) return false;
+        if (strlen($hash) < Bloclink::NID_MIN_HASH_SIZE) return false;
+        if (strlen($hash) > Bloclink::NID_MAX_HASH_SIZE) return false;
         if (!ctype_xdigit($hash)) return false;
 
         // Check algo value.
         $algo = strtok('.');
         if ($algo === false) return false;
-        if (strlen($algo) < LIB_NID_MIN_ALGO_SIZE) return false;
-        if (strlen($algo) > LIB_NID_MAX_ALGO_SIZE) return false;
+        if (strlen($algo) < Bloclink::NID_MIN_ALGO_SIZE) return false;
+        if (strlen($algo) > Bloclink::NID_MAX_ALGO_SIZE) return false;
         if (!ctype_alnum($algo)) return false;
 
         // Check size value.
         $size = strtok('.');
         if ($size === false) return false;
         if (!ctype_digit($size)) return false; // Check content before!
-        if ((int)$size < LIB_NID_MIN_HASH_SIZE) return false;
-        if ((int)$size > LIB_NID_MAX_HASH_SIZE) return false;
+        if ((int)$size < Bloclink::NID_MIN_HASH_SIZE) return false;
+        if ((int)$size > Bloclink::NID_MAX_HASH_SIZE) return false;
         if ((strlen($hash) * 4) != (int)$size) return false;
 
         // Check item overflow
@@ -3374,8 +3374,7 @@ class Node implements nodeInterface
         foreach ($lines as $line)
         {
             $bloc = $this->_cache->newLink($line, Cache::TYPE_BLOCLINK);
-            if ($bloc->getVerified()
-                && $bloc->getValidStructure()
+            if ($bloc->getValidStructure()
                 && ( $bloc->getValid() || $withInvalidLinks )
             )
                 $links = array_merge($links, $bloc->getLinks());
@@ -3847,9 +3846,8 @@ class Node implements nodeInterface
         $this->_usedUpdate[$this->_id] = true;
 
         // Vérifie si pas dépassé le nombre max à traiter, anti trou noir.
-        if (sizeof($this->_usedUpdate) > $this->_configuration->getOption('maxFollowedUpdates')) {
+        if (sizeof($this->_usedUpdate) > $this->_configuration->getOption('linkMaxFollowedUpdates'))
             return '0';
-        }
 
         // Recherche la mise à jour de l'objet.
         while (!$ok) {

@@ -7,7 +7,7 @@ $nebuleName = 'library';
 $nebuleSurname = 'nebule/library';
 $nebuleDescription = 'Library of functions for nebule in php object-oriented.';
 $nebuleAuthor = 'Projet nebule';
-$nebuleLibVersion = '020211219';
+$nebuleLibVersion = '020211224';
 $nebuleLicence = 'GNU GPL 2010-2021';
 $nebuleWebsite = 'www.nebule.org';
 // ----------------------------------------------------------------------------------------

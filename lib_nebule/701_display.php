@@ -8364,8 +8364,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $contantDisplayTarget = '';
         $contantDisplayMeta = '';
 
-        if ($instance->getVerified()
-            && $instance->getValid()
+        if ($instance->getValid()
         ) {
             if ($instance->getSigned()) {
                 $contantDisplayValid .= '<img title="OK" ';

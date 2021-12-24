@@ -9,7 +9,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020211219';
+const BOOTSTRAP_VERSION = '020211224';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -481,7 +481,10 @@ const LIB_CONFIGURATIONS_TYPE = array(
     'displayNameSize' => 'integer',
     'displayEmotions' => 'boolean',
     'forceDisplayEntityOnTitle' => 'boolean',
-    'maxFollowedUpdates' => 'integer',
+    'linkMaxFollowedUpdates' => 'integer',
+    'linkMaxRL' => 'integer',
+    'linkMaxRLUID' => 'integer',
+    'linkMaxRS' => 'integer',
     'permitSessionOptions' => 'boolean',
     'permitSessionBuffer' => 'boolean',
     'permitBufferIO' => 'boolean',
@@ -558,7 +561,10 @@ const LIB_CONFIGURATIONS_DEFAULT = array(
     'displayNameSize' => 128,
     'displayEmotions' => false,
     'forceDisplayEntityOnTitle' => false,
-    'maxFollowedUpdates' => 100,
+    'linkMaxFollowedUpdates' => 100,
+    'linkMaxRL' => 1,
+    'linkMaxRLUID' => 3,
+    'linkMaxRS' => 1,
     'permitSessionOptions' => true,
     'permitSessionBuffer' => true,
     'permitBufferIO' => true,
@@ -4079,6 +4085,7 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryID, string &$bootstra
  */
 function bootstrap_loadLibraryPOO(string $bootstrapLibraryID, string $bootstrapLibraryInstanceSleep): void
 {
+    /** @noinspection PhpUnusedLocalVariableInspection */
     global $nebuleInstance, $loggerSessionID, $metrologyStartTime; // Used by lib include.
 
     if ($bootstrapLibraryID != '') {
@@ -5290,16 +5297,15 @@ function bootstrap_displayOnBreak(): void
         echo 'L(v)=' . lib_getMetrology('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify() . ' ';
         echo 'O(r)=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead() . ' ';
         echo 'O(v)=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
-        echo 'L(c)=' . $nebuleInstance->getCacheLinkSize() . ' ';
-        echo 'O(c)=' . $nebuleInstance->getCacheObjectSize() . ' ';
-        echo 'E(c)=' . $nebuleInstance->getCacheEntitySize() . ' ';
-        echo 'G(c)=' . $nebuleInstance->getCacheGroupSize() . ' ';
-        echo 'C(c)=' . $nebuleInstance->getCacheConversationSize() . ' ';
-        echo 'CU(c)=' . $nebuleInstance->getCacheCurrencySize() . ' ';
-        echo 'CP(c)=' . $nebuleInstance->getCacheTokenPoolSize() . ' ';
-        echo 'CT(c)=' . $nebuleInstance->getCacheTokenSize() . ' ';
-        echo 'CW(c)=' . $nebuleInstance->getCacheWalletSize() . ' ';
-        echo 'CS(c)=' . $nebuleInstance->getCacheTransactionSize();
+        echo 'L(c)=' . $nebuleInstance->getCacheInstance()->getCacheLinkSize() . ' ';
+        echo 'O(c)=' . $nebuleInstance->getCacheInstance()->getCacheObjectSize() . ' ';
+        echo 'E(c)=' . $nebuleInstance->getCacheInstance()->getCacheEntitySize() . ' ';
+        echo 'G(c)=' . $nebuleInstance->getCacheInstance()->getCacheGroupSize() . ' ';
+        echo 'C(c)=' . $nebuleInstance->getCacheInstance()->getCacheConversationSize() . ' ';
+        echo 'CU(c)=' . $nebuleInstance->getCacheInstance()->getCacheCurrencySize() . ' ';
+        echo 'CP(c)=' . $nebuleInstance->getCacheInstance()->getCacheTokenPoolSize() . ' ';
+        echo 'CT(c)=' . $nebuleInstance->getCacheInstance()->getCacheTokenSize() . ' ';
+        echo 'CW(c)=' . $nebuleInstance->getCacheInstance()->getCacheWalletSize();
     }
     ?>
 
@@ -6774,11 +6780,11 @@ function bootstrap_logMetrology()
             . ' Or=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead()
             . ' Ov=' . lib_getMetrology('ov') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify()
             . ' (PP+POO) -'
-            . ' LC=' . $nebuleInstance->getCacheLinkSize()
-            . ' OC=' . $nebuleInstance->getCacheObjectSize()
-            . ' EC=' . $nebuleInstance->getCacheEntitySize()
-            . ' GC=' . $nebuleInstance->getCacheGroupSize()
-            . ' CC=' . $nebuleInstance->getCacheConversationSize(),
+            . ' LC=' . $nebuleInstance->getCacheInstance()->getCacheLinkSize()
+            . ' OC=' . $nebuleInstance->getCacheInstance()->getCacheObjectSize()
+            . ' EC=' . $nebuleInstance->getCacheInstance()->getCacheEntitySize()
+            . ' GC=' . $nebuleInstance->getCacheInstance()->getCacheGroupSize()
+            . ' CC=' . $nebuleInstance->getCacheInstance()->getCacheConversationSize(),
             'info',
             __FUNCTION__,
             '0d99ad8b');

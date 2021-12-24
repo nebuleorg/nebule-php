@@ -236,7 +236,7 @@ abstract class Applications
     /**
      * Lit l'instance d'affichage de l'application.
      *
-     * @return Display
+     * @return Displays
      */
     public function getDisplayInstance()
     {

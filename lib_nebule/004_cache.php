@@ -277,15 +277,6 @@ class Cache
             $type = self::TYPE_NODE;
     }
 
-    private function _filterLinkType(string &$type): void
-    {
-        if ($type != self::TYPE_BLOCLINK
-            && $type != self::TYPE_LINK
-            && $type != self::TYPE_TRANSACTION
-        )
-            $type = self::TYPE_BLOCLINK;
-    }
-
     /**
      * Nouvelle instance d'un objet.
      *
@@ -539,14 +530,24 @@ class Cache
         return sizeof($this->_cache[self::TYPE_WALLET]);
     }
 
+
+
+    private function _filterLinkType(string &$type): void
+    {
+        if ($type != self::TYPE_LINK
+            && $type != self::TYPE_TRANSACTION
+        )
+            $type = self::TYPE_LINK;
+    }
+
     /**
      * Nouvelle instance d'un lien.
      *
      * @param string $link
      * @param string $type
-     * @return Bloclink|Link|Transaction|linkInterface
+     * @return bloclinkInterface
      */
-    public function newLink(string $link, string $type = self::TYPE_LINK): linkInterface
+    public function newLink(string $link, string $type = self::TYPE_LINK): bloclinkInterface
     {
         if ($link == '')
             $link = 'invalid';
@@ -561,17 +562,7 @@ class Cache
         } else {
             $this->_getCacheNeedOnePlace();
 
-            switch ($type)
-            {
-                case self::TYPE_BLOCLINK:
-                    $instance = new Bloclink($this->_nebuleInstance, $link);
-                    break;
-                case self::TYPE_TRANSACTION:
-                    $instance = new Transaction($this->_nebuleInstance, $link);
-                    break;
-                default:
-                    $instance = new Link($this->_nebuleInstance, $link);
-            }
+            $instance = new Bloclink($this->_nebuleInstance, $link, $type);
 
             if ($this->_configuration->getOption('permitSessionBuffer')) {
                 $this->_cache[$type][$link] = $instance;
@@ -601,47 +592,5 @@ class Cache
     public function getCacheLinkSize(): int
     {
         return sizeof($this->_cache[self::TYPE_LINK]);
-    }
-
-    /**
-     * Supprime le cache d'un bloc de liens.
-     *
-     * @param string $link
-     * @return boolean
-     */
-    public function unsetCacheBloclink(string $link): bool
-    {
-        return $this->unsetCache($link, self::TYPE_BLOCLINK);
-    }
-
-    /**
-     * Retourne le nombre de blocs de liens dans le cache.
-     *
-     * @return integer
-     */
-    public function getCacheBloclinkSize(): int
-    {
-        return sizeof($this->_cache[self::TYPE_BLOCLINK]);
-    }
-
-    /**
-     * Supprime le cache d'une transaction.
-     *
-     * @param string $link
-     * @return boolean
-     */
-    public function unsetCacheTransaction(string $link): bool
-    {
-        return $this->unsetCache($link, self::TYPE_TRANSACTION);
-    }
-
-    /**
-     * Retourne le nombre de transactions dans le cache.
-     *
-     * @return integer
-     */
-    public function getCacheTransactionSize(): int
-    {
-        return sizeof($this->_cache[self::TYPE_TRANSACTION]);
     }
 }

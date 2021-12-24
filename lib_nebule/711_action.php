@@ -735,8 +735,7 @@ abstract class Actions
                 && strlen($arg) != 0
             ) {
                 $instance = $this->flatLinkExtractAsInstance_disabled($arg);
-                if ($instance->getVerified()
-                    && $instance->getValid()
+                if ($instance->getValid()
                     && $instance->getSigned()
                     && ($instance->getSigners() == $this->_nebuleInstance->getCodeAuthority()
                         || $permitNotCodeMaster
@@ -3352,7 +3351,6 @@ abstract class Actions
                 || $this->_unlocked
             )
             && is_a($link, 'Link')
-            && $link->getVerified()
             && $link->getValid()
         ) {
             $this->_metrology->addLog('Action upload link', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -3366,7 +3364,7 @@ abstract class Actions
                 )
             ) {
                 $link->write();
-                $this->_metrology->addLog('Action upload link - signed link ' . $link->getRawLink(), Metrology::LOG_LEVEL_NORMAL); // Log
+                $this->_metrology->addLog('Action upload link - signed link ' . $link->getRaw(), Metrology::LOG_LEVEL_NORMAL); // Log
             } elseif ($this->_unlocked) {
                 $link = $this->_nebuleInstance->newLink(
                     '0_'
@@ -3378,7 +3376,7 @@ abstract class Actions
                     . $link->getHashMeta_disabled()
                 );
                 $link->signWrite();
-                $this->_metrology->addLog('Action upload link - unsigned link ' . $link->getRawLink(), Metrology::LOG_LEVEL_NORMAL); // Log
+                $this->_metrology->addLog('Action upload link - unsigned link ' . $link->getRaw(), Metrology::LOG_LEVEL_NORMAL); // Log
             }
 
             // Affichage des actions.
@@ -3404,7 +3402,6 @@ abstract class Actions
                 )
             )
             && $this->_configuration->getOption('permitObfuscatedLink')
-            && $this->_actionObfuscateLinkInstance->getVerified()
             && $this->_actionObfuscateLinkInstance->getValid()
             && $this->_actionObfuscateLinkInstance->getSigned()
         ) {
@@ -4020,9 +4017,7 @@ abstract class Actions
                 if (substr($line, 0, 21) != 'nebule/liens/version/') {
                     $nbLines++;
                     $instance = $this->_nebuleInstance->newLink($line);
-                    if ($instance->getVerified()
-                        && $instance->getValid()
-                    ) {
+                    if ($instance->getValid()) {
                         if ($instance->getSigned()
                             && (($instance->getSigners() == $this->_nebuleInstance->getCodeAuthority()
                                     && $this->_configuration->getOption('permitPublicUploadCodeAuthoritiesLink')
@@ -4033,7 +4028,7 @@ abstract class Actions
                         ) {
                             $instance->write();
                             $nbLinks++;
-                            $this->_metrology->addLog('Action upload file links - signed link ' . $instance->getRawLink(), Metrology::LOG_LEVEL_NORMAL); // Log
+                            $this->_metrology->addLog('Action upload file links - signed link ' . $instance->getRaw(), Metrology::LOG_LEVEL_NORMAL); // Log
                         } elseif ($this->_unlocked) {
                             $instance = $this->_nebuleInstance->newLink(
                                 '0_'
@@ -4046,7 +4041,7 @@ abstract class Actions
                             );
                             $instance->signWrite();
                             $nbLinks++;
-                            $this->_metrology->addLog('Action upload file links - unsigned link ' . $instance->getRawLink(), Metrology::LOG_LEVEL_NORMAL); // Log
+                            $this->_metrology->addLog('Action upload file links - unsigned link ' . $instance->getRaw(), Metrology::LOG_LEVEL_NORMAL); // Log
                         }
                     }
                 }
