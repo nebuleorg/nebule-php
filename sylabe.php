@@ -5708,9 +5708,9 @@ class ModuleEntities extends Modules
                                 <select
                                         name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_ALGORITHM; ?>"
                                         class="sylabeModuleEntityCreatePropertyEntry">
-                                    <option value="<?php echo $this->_nebuleInstance->getCryptoInstance()->asymetricAlgorithm(); ?>"
+                                    <option value="<?php echo $this->_nebuleInstance->getCryptoInstance()->asymmetricAlgorithm(); ?>"
                                             selected>
-                                        <?php echo $this->_nebuleInstance->getCryptoInstance()->asymetricAlgorithmName(); ?>
+                                        <?php echo $this->_nebuleInstance->getCryptoInstance()->asymmetricAlgorithmName(); ?>
 
                                     </option>
                                 </select>

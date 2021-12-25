@@ -79,7 +79,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getType()
      */
-    public function getType()
+    public function getType(): string
     {
         return 'FileSystem';
     }
@@ -88,7 +88,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getFilterString()
      */
-    public function getFilterString()
+    public function getFilterString(): string
     {
         return '/^\//';
     }
@@ -97,7 +97,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getMode()
      */
-    public function getMode()
+    public function getMode(): string
     {
         if ($this->_mode == '') {
             $this->_mode = 'RO';
@@ -114,7 +114,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::setFilesTranscodeKey()
      */
-    public function setFilesTranscodeKey(string &$key)
+    public function setFilesTranscodeKey(string &$key): void
     {
         $this->_filesTrancodeKey = $key;
     }
@@ -123,7 +123,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::unsetFilesTranscodeKey()
      */
-    public function unsetFilesTranscodeKey()
+    public function unsetFilesTranscodeKey(): void
     {
         $this->_filesTrancodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
         $this->_filesTrancodeKey = '';
@@ -133,7 +133,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getDefaultLocalisation()
      */
-    public function getDefaultLocalisation()
+    public function getDefaultLocalisation(): string
     {
         return self::DEFAULT_LOCALISATION;
     }
@@ -142,7 +142,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getInstanceEntityID()
      */
-    public function getInstanceEntityID(string $localisation = '')
+    public function getInstanceEntityID(string $localisation = ''): string
     {
         $filesize = filesize(nebule::NEBULE_LOCAL_ENTITY_FILE);
         $data = file_get_contents(nebule::NEBULE_LOCAL_ENTITY_FILE, false, null, 0, $filesize);
@@ -154,7 +154,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksDirectory()
      */
-    public function checkLinksDirectory(string $localisation = '')
+    public function checkLinksDirectory(string $localisation = ''): bool
     {
         if ($localisation != ''
             || !file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER)
@@ -170,7 +170,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsDirectory()
      */
-    public function checkObjectsDirectory(string $localisation = '')
+    public function checkObjectsDirectory(string $localisation = ''): bool
     {
         if ($localisation != ''
             || !file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER)
@@ -186,13 +186,13 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksRead()
      */
-    public function checkLinksRead(string $localisation = '')
+    public function checkLinksRead(string $localisation = ''): bool
     {
         if ($localisation != '') {
             return false;
         }
 
-        $file = nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . nebule::DEFAULT_PUPPETMASTER;
+        $file = nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . Configuration::OPTIONS_DEFAULT_VALUE['puppetmaster'];
         $result = false;
 
         $data = file_get_contents($file, false, null, 0, 16);
@@ -207,7 +207,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksWrite()
      */
-    public function checkLinksWrite(string $localisation = '')
+    public function checkLinksWrite(string $localisation = ''): bool
     {
         if ($localisation != '') {
             return false;
@@ -241,13 +241,13 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsRead()
      */
-    public function checkObjectsRead(string $localisation = '')
+    public function checkObjectsRead(string $localisation = ''): bool
     {
         if ($localisation != '') {
             return false;
         }
 
-        $file = nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . nebule::DEFAULT_PUPPETMASTER;
+        $file = nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Configuration::OPTIONS_DEFAULT_VALUE['puppetmaster'];
         $result = false;
 
         $data = file_get_contents($file, false, null, 0, 16);
@@ -262,7 +262,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsWrite()
      */
-    public function checkObjectsWrite(string $localisation = '')
+    public function checkObjectsWrite(string $localisation = ''): bool
     {
         if ($localisation != '') {
             return false;
@@ -296,7 +296,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinkPresent()
      */
-    public function checkLinkPresent($object, string $localisation = '')
+    public function checkLinkPresent($object, string $localisation = ''): bool
     {
         if ($localisation != ''
             || !is_string($object)
@@ -316,7 +316,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectPresent()
      */
-    public function checkObjectPresent($object, string $localisation = '')
+    public function checkObjectPresent($object, string $localisation = ''):bool
     {
         if ($localisation != ''
             || !is_string($object)
@@ -336,7 +336,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::linksRead()
      */
-    public function linksRead(string &$object, string $localisation = '')
+    public function linksRead(string $object, string $localisation = '')
     {
         /**
          * Compteur de liens lus.
@@ -382,7 +382,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::ObfuscatedLinksRead()
      */
-    public function obfuscatedLinksRead(string &$entity, string $signer = '0', string $localisation = '')
+    public function obfuscatedLinksRead(string $entity, string $signer = '0', string $localisation = ''): array
     {
         /**
          * Compteur de liens lus.
@@ -510,7 +510,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::linkWrite()
      */
-    public function linkWrite(string $object, string &$link, string $localisation = '')
+    public function linkWrite(string $object, string &$link, string $localisation = ''): bool
     {
         // Vérifie les arguments.
         if ($localisation != ''
@@ -584,7 +584,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::objectDelete()
      */
-    public function objectDelete(string &$object, $localisation = '')
+    public function objectDelete(string $object, $localisation = ''): bool
     {
         if ($localisation != ''
             || !is_string($object)
@@ -618,7 +618,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::linkDelete()
      */
-    public function linkDelete(string $object, string &$link, $localisation = '')
+    public function linkDelete(string $object, string &$link, $localisation = ''): bool
     {
         if ($localisation != ''
             || !is_string($object)
@@ -648,7 +648,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::linksDelete()
      */
-    public function linksDelete(string &$object, $localisation = '')
+    public function linksDelete(string $object, $localisation = ''): bool
     {
         if ($localisation != ''
             || !is_string($object)
@@ -680,18 +680,16 @@ class ioLocal extends io implements ioInterface
 
     /**
      * Retourne l'identifiant traduit d'un objet en fonction de la clé de translation.
-     *
      * La traduction se fait par la prise d'empreinte de la concaténation de l'identifiant de l'objet, de l'identifiant de l'entité et de la clé de translation.
      * L'empreinte sur juste l'identifiant de l'objet est déjà non réversible en elle-même.
      * Même sans clé de translation, la translation varie d'une entité à l'autre. Et c'est pareil si deux enttiés utilisent la même clé de translation.
      * La valeur retournée dépend aussi de l'algorithme utilisé, c'est à dire celui par défaut pour les prises d'empreinte.
-     *
      * La fonction est non réversible.
      *
      * @param string $id
      * @return string
      */
-    private function _getTranlateID($id)
+    private function _getTranlateID(string $id)
     {
         $val = $id . $this->_nebuleInstance->getCurrentEntity() . $this->_filesTrancodeKey;
         $tid = hash($this->_nebuleInstance->getCryptoInstance()->hashAlgorithmName(), $val, false);
@@ -709,7 +707,7 @@ class ioLocal extends io implements ioInterface
      * @param string $link
      * @return number|boolean
      */
-    private function _checkFileLink(&$object, &$link)
+    private function _checkFileLink(string &$object, string &$link)
     {
         /**
          * Indice du champs lu, de 1 à 7.

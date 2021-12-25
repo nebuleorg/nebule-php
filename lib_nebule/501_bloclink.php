@@ -69,11 +69,25 @@ class Bloclink implements bloclinkInterface
     protected $_nebuleInstance;
 
     /**
+     * Instance métrologie en cours.
+     *
+     * @var Metrology
+     */
+    protected $_metrology;
+
+    /**
      * Instance de gestion de la configuration et des options.
      *
      * @var Configuration
      */
     protected $_configuration;
+
+    /**
+     * Instance de gestion du cache.
+     *
+     * @var Cache
+     */
+    protected $_cache;
 
     /**
      * Instance io en cours.
@@ -88,20 +102,6 @@ class Bloclink implements bloclinkInterface
      * @var CryptoInterface $_crypto
      */
     protected $_crypto;
-
-    /**
-     * Instance métrologie en cours.
-     *
-     * @var Metrology
-     */
-    protected $_metrology;
-
-    /**
-     * Instance de gestion du cache.
-     *
-     * @var Cache
-     */
-    protected $_cache;
 
     /**
      * @var string $_rawBloclink
@@ -175,8 +175,8 @@ class Bloclink implements bloclinkInterface
     public function __construct(nebule $nebuleInstance, string $bloclink, string $linkType = Cache::TYPE_LINK)
     {
         $this->_nebuleInstance = $nebuleInstance;
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_cache = $nebuleInstance->getCacheInstance();
         $this->_io = $nebuleInstance->getIoInstance();
         $this->_crypto = $nebuleInstance->getCryptoInstance();
@@ -705,9 +705,9 @@ class Bloclink implements bloclinkInterface
         if (!$this->_configuration->getOption('permitCheckSignOnVerify')) return true;
         if ($this->_checkObjectContent($nid)) {
             $data = $bh . '_' . $bl;
-            $hash = $this->_crypto->hash($data, $algo . '.' . $size); // TODO convertir l'algo
+            $hash = $this->_crypto->hash($data, $algo . '.' . $size);
 
-            if (crypto_asymmetricVerify($sign, $hash, $nid))
+            if ($this->_crypto->verify($hash, $sign, $nid))
             {
                 $this->_parsedLink["bs/rs$i/sig"] = $sig;
                 return true;

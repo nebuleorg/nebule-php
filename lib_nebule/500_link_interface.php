@@ -13,14 +13,14 @@ interface bloclinkInterface
     public function __construct(nebule $nebuleInstance, string $bloclink, string $linkType = Cache::TYPE_LINK);
 
     /**
-     * Retourne le lien complet.
+     * Get full string of the link.
      *
      * @return string
      */
     public function getRaw(): string;
 
     /**
-     * Retourne le lien pré-décomposé.
+     * Get parsed content of the link.
      *
      * @return array
      */

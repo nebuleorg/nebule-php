@@ -2208,7 +2208,7 @@ class Node implements nodeInterface
             $newLink->signWrite();
 
             // Création du type mime des données chiffrées.
-            $text = 'application/x-encrypted/' . $this->_crypto->symetricAlgorithmName();
+            $text = 'application/x-encrypted/' . $this->_crypto->symmetricAlgorithmName();
             $textID = $this->_nebuleInstance->createTextAsObject($text);
             if ($textID !== false) {
                 // Crée le lien de type d'empreinte.
@@ -2226,7 +2226,7 @@ class Node implements nodeInterface
             }
 
             // Création du type mime de la clé chiffrée.
-            $text = 'application/x-encrypted/' . $this->_crypto->asymetricAlgorithmName();
+            $text = 'application/x-encrypted/' . $this->_crypto->asymmetricAlgorithmName();
             $textID = $this->_nebuleInstance->createTextAsObject($text);
             if ($textID !== false) {
                 // Crée le lien de type d'empreinte.
@@ -2343,7 +2343,7 @@ class Node implements nodeInterface
                         }
 
                         // Création du type mime de la clé chiffrée.
-                        $text = 'application/x-encrypted/' . $this->_crypto->asymetricAlgorithmName();
+                        $text = 'application/x-encrypted/' . $this->_crypto->asymmetricAlgorithmName();
                         $textID = $this->_nebuleInstance->createTextAsObject($text);
                         if ($textID !== false) {
                             // Crée le lien de type d'empreinte.
@@ -2505,7 +2505,7 @@ class Node implements nodeInterface
         $date = date(DATE_ATOM);
 
         // Création du type mime de la clé chiffrée.
-        $text = 'application/x-encrypted/' . $this->_crypto->asymetricAlgorithmName();
+        $text = 'application/x-encrypted/' . $this->_crypto->asymmetricAlgorithmName();
         $textID = $this->_nebuleInstance->createTextAsObject($text);
         if ($textID !== false) {
             // Crée le lien de type d'empreinte.

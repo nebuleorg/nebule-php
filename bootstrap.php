@@ -3077,7 +3077,7 @@ function obj_getAsText(string &$oid, int $maxData = 0): string
  */
 function obj_checkTypeMime(string &$nid, string $typeMime): bool
 {
-    global $nebuleLocalAuthorities, $nebuleCacheReadObjTypeMime;
+    global $nebuleLocalAuthorities, $nebuleCacheReadObjTypeMime, $nebuleServerEntity;
 
     if (isset($nebuleCacheReadObjTypeMime [$nid])) {
         if ($nebuleCacheReadObjTypeMime [$nid] == $typeMime)
@@ -3100,7 +3100,9 @@ function obj_checkTypeMime(string &$nid, string $typeMime): bool
     );
     $links = array();
     lnk_getList($nid, $links, $filter);
-    lnk_filterBySigners($links, $nebuleLocalAuthorities);
+    $signers = $nebuleLocalAuthorities;
+    $signers[] = $nid;
+    lnk_filterBySigners($links, $signers);
 
     if (sizeof($links) == 0)
         return false;

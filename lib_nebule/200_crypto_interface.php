@@ -16,11 +16,11 @@ use Nebule\Library\nebule;
 interface CryptoInterface
 {
     // Fonction de génération.
-    public function getPseudoRandom($size = 32);
+    public function getPseudoRandom(int $size = 32): string;
 
-    public function getStrongRandom($size = 32);
+    public function getStrongRandom(int $size = 32): string;
 
-    public function getEntropy(&$data);
+    public function getEntropy(string &$data): float;
 
     // Fonction de prise d'empreinte.
     public function hashAlgorithm();
@@ -31,55 +31,55 @@ interface CryptoInterface
 
     public function checkHashFunction();
 
-    public function setHashAlgorithm($algo);
+    public function setHashAlgorithm(string $algo);
 
-    public function checkHashAlgorithm($algo);
+    public function checkHashAlgorithm(string $algo);
 
-    public function hash($data, $algo = '');
+    public function hash(string $data, string $algo = '');
 
     // Fonction de chiffrement symétrique.
-    public function symetricAlgorithm();
+    public function symmetricAlgorithm();
 
-    public function symetricAlgorithmName();
+    public function symmetricAlgorithmName();
 
-    public function symetricAlgorithmMode();
+    public function symmetricAlgorithmMode();
 
-    public function symetricKeyLength();
+    public function symmetricKeyLength();
 
-    public function checkSymetricFunction();
+    public function checkSymmetricFunction();
 
-    public function setSymetricAlgorithm($algo);
+    public function setSymmetricAlgorithm(string $algo);
 
-    public function checkSymetricAlgorithm($algo);
+    public function checkSymmetricAlgorithm(string $algo);
 
-    public function crypt($data, $hexKey, $hexIV = '');
+    public function crypt(string $data, string $hexKey, string $hexIV = '');
 
-    public function decrypt($data, $hexKey, $hexIV = '');
+    public function decrypt(string $data, string $hexKey, string $hexIV = '');
 
     // Fonction de chiffrement asymétrique.
-    public function asymetricAlgorithm();
+    public function asymmetricAlgorithm();
 
-    public function asymetricAlgorithmName();
+    public function asymmetricAlgorithmName();
 
-    public function asymetricKeyLength();
+    public function asymmetricKeyLength();
 
-    public function checkAsymetricFunction();
+    public function checkAsymmetricFunction();
 
-    public function setAsymetricAlgorithm($algo);
+    public function setAsymmetricAlgorithm(string $algo);
 
-    public function checkAsymetricAlgorithm($algo);
+    public function checkAsymmetricAlgorithm(string $algo);
 
-    public function sign($hash, $privkey, $privatePassword);
+    public function sign(string $hash, string $eid, string $privatePassword);
 
-    public function verify($hash, $sign, $pubkey);
+    public function verify(string $hash, string $sign, string $eid);
 
-    public function cryptTo($data, $pubkey);
+    public function cryptTo(string $data, string $eid);
 
-    public function decryptTo($code, $privateKey, $privatePassword);
+    public function decryptTo(string $code, string $privateKey, string $privatePassword);
 
     public function newPkey();
 
     public function getPkeyPublic($pkey);
 
-    public function getPkeyPrivate($pkey, $password = '');
+    public function getPkeyPrivate(string $pkey, string $password = '');
 }

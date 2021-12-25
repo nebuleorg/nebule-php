@@ -1468,7 +1468,7 @@ abstract class Applications
     protected function _checkSecurityCryptoSym()
     {
         $this->_checkSecurityCryptoSym = 'WARN';
-        if ($this->_nebuleInstance->getCryptoInstance()->checkSymetricFunction()) {
+        if ($this->_nebuleInstance->getCryptoInstance()->checkSymmetricFunction()) {
             $this->_checkSecurityCryptoSym = 'OK';
             $this->_checkSecurityCryptoSymMessage = 'OK';
             $this->_metrologyInstance->addLog('SECURITY OK Sym Crypto', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -1522,7 +1522,7 @@ abstract class Applications
     protected function _checkSecurityCryptoAsym()
     {
         $this->_checkSecurityCryptoAsym = 'WARN';
-        if ($this->_nebuleInstance->getCryptoInstance()->checkAsymetricFunction()) {
+        if ($this->_nebuleInstance->getCryptoInstance()->checkAsymmetricFunction()) {
             $this->_checkSecurityCryptoAsym = 'OK';
             $this->_checkSecurityCryptoAsymMessage = 'OK';
             $this->_metrologyInstance->addLog('SECURITY OK Asym Crypto', Metrology::LOG_LEVEL_DEBUG); // Log

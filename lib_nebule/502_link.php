@@ -325,8 +325,8 @@ class Link implements linkInterface
     }
 
     /**
-     * Get full link content as text.
-     *
+     * {@inheritDoc}
+     * @see linkInterface::getRaw()
      * @return string
      */
     public function getRaw(): string
@@ -349,8 +349,8 @@ class Link implements linkInterface
     }
 
     /**
-     * Retourne le lien pré-décomposé.
-     *
+     * {@inheritDoc}
+     * @see linkInterface::getParsed()
      * @return array
      */
     public function getParsed(): array
