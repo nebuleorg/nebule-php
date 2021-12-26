@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Bootstrap;
+
 //use nebule;
 // ------------------------------------------------------------------------------------------
 use Nebule\Library\nebule;
@@ -8,7 +9,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020211118';
+const BOOTSTRAP_VERSION = '020211224';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -48,6 +49,12 @@ const BOOTSTRAP_WEBSITE = 'www.nebule.org';
  PART12 : Main display router.
  ------------------------------------------------------------------------------------------
 */
+
+
+
+const PHP_VERSION_MINIMUM = '7.3.0';
+if (version_compare(phpversion(),PHP_VERSION_MINIMUM, '<'))
+    exit('Found PHP version ' . phpversion() . ', need >= ' . PHP_VERSION_MINIMUM);
 
 
 
@@ -474,7 +481,10 @@ const LIB_CONFIGURATIONS_TYPE = array(
     'displayNameSize' => 'integer',
     'displayEmotions' => 'boolean',
     'forceDisplayEntityOnTitle' => 'boolean',
-    'maxFollowedUpdates' => 'integer',
+    'linkMaxFollowedUpdates' => 'integer',
+    'linkMaxRL' => 'integer',
+    'linkMaxRLUID' => 'integer',
+    'linkMaxRS' => 'integer',
     'permitSessionOptions' => 'boolean',
     'permitSessionBuffer' => 'boolean',
     'permitBufferIO' => 'boolean',
@@ -551,7 +561,10 @@ const LIB_CONFIGURATIONS_DEFAULT = array(
     'displayNameSize' => 128,
     'displayEmotions' => false,
     'forceDisplayEntityOnTitle' => false,
-    'maxFollowedUpdates' => 100,
+    'linkMaxFollowedUpdates' => 100,
+    'linkMaxRL' => 1,
+    'linkMaxRLUID' => 3,
+    'linkMaxRS' => 1,
     'permitSessionOptions' => true,
     'permitSessionBuffer' => true,
     'permitBufferIO' => true,
@@ -3064,7 +3077,7 @@ function obj_getAsText(string &$oid, int $maxData = 0): string
  */
 function obj_checkTypeMime(string &$nid, string $typeMime): bool
 {
-    global $nebuleLocalAuthorities, $nebuleCacheReadObjTypeMime;
+    global $nebuleLocalAuthorities, $nebuleCacheReadObjTypeMime, $nebuleServerEntity;
 
     if (isset($nebuleCacheReadObjTypeMime [$nid])) {
         if ($nebuleCacheReadObjTypeMime [$nid] == $typeMime)
@@ -3087,7 +3100,9 @@ function obj_checkTypeMime(string &$nid, string $typeMime): bool
     );
     $links = array();
     lnk_getList($nid, $links, $filter);
-    lnk_filterBySigners($links, $nebuleLocalAuthorities);
+    $signers = $nebuleLocalAuthorities;
+    $signers[] = $nid;
+    lnk_filterBySigners($links, $signers);
 
     if (sizeof($links) == 0)
         return false;
@@ -4072,20 +4087,35 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryID, string &$bootstra
  */
 function bootstrap_loadLibraryPOO(string $bootstrapLibraryID, string $bootstrapLibraryInstanceSleep): void
 {
-    global $nebuleInstance;
+    /** @noinspection PhpUnusedLocalVariableInspection */
+    global $nebuleInstance, $loggerSessionID, $metrologyStartTime; // Used by lib include.
 
     if ($bootstrapLibraryID != '') {
-        // Load lib from object. @todo faire via les i/o.
-        include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapLibraryID);
+        try {
+            // Load lib from object. @todo faire via les i/o.
+            include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapLibraryID);
+        } catch (\Error $e) {
+            log_reopen(BOOTSTRAP_NAME);
+            log_add('Library nebule include error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'fa2f570a');
+            bootstrap_setBreak('42', 'Library nebule include error');
+        }
 
-        if ($bootstrapLibraryInstanceSleep == '')
-            $nebuleInstance = new nebule();
-        else
-            $nebuleInstance = unserialize($bootstrapLibraryInstanceSleep);
-
-        log_reopen(BOOTSTRAP_NAME);
+        try {
+            if (!class_exists('nebule', false))
+            {
+                if ($bootstrapLibraryInstanceSleep == '')
+                    $nebuleInstance = new nebule();
+                else
+                    $nebuleInstance = unserialize($bootstrapLibraryInstanceSleep);
+                log_reopen(BOOTSTRAP_NAME);
+            }
+        } catch (\Error $e) {
+            log_reopen(BOOTSTRAP_NAME);
+            log_add('Library nebule load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '959c188b');
+            bootstrap_setBreak('43', 'Library nebule load error');
+        }
     } else
-        bootstrap_setBreak('41', 'Library nebule error');
+        bootstrap_setBreak('41', 'Library nebule find error');
 }
 
 
@@ -4358,25 +4388,24 @@ function bootstrap_getInlineDisplay(): void
 // ------------------------------------------------------------------------------------------
 function bootstrap_getCheckFingerprint(): void
 {
-    global $nebuleLocalAuthorities;
+    global $nebuleLocalAuthorities, $codeBranchNID;
+
     $data = file_get_contents(BOOTSTRAP_FILE_NAME);
     $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
     unset($data);
-    // Recherche les liens de validation.
-    $hashRef = LIB_RID_INTERFACE_BOOTSTRAP;
+
     $links = array();
-    lnk_findInclusive_FIXME($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
-    // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
-    $ok = false;
-    foreach ($links as $link) {
-        foreach ($nebuleLocalAuthorities as $authority) {
-            if ($link[2] == $authority) {
-                $ok = true;
-                break 2;
-            }
-        }
-    }
-    if (!$ok) {
+    $filter = array(
+        'bl/rl/req' => 'f',
+        'bl/rl/nid1' => LIB_RID_INTERFACE_BOOTSTRAP,
+        'bl/rl/nid2' => $hash,
+        'bl/rl/nid3' => $codeBranchNID,
+        'bl/rl/nid4' => '',
+    );
+    lnk_getList($hash, $links, $filter, false);
+    lnk_filterBySigners($links, $nebuleLocalAuthorities);
+
+    if (sizeof($links) == 0) {
         log_add('unknown bootstrap hash - critical', 'error', __FUNCTION__, 'e294b7b3');
         bootstrap_setBreak('51', 'Unknown bootstrap hash');
     }
@@ -5153,39 +5182,39 @@ function bootstrap_displayOnBreak(): void
 
         // Vérifie la cryptographie.
         echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: ';
-        if (!is_object($nebuleInstance->getCrypto()))
+        if (!is_object($nebuleInstance->getCryptoInstance()))
             echo '<span class="error">ERROR!</span>';
         else {
-            echo get_class($nebuleInstance->getCrypto());
+            echo get_class($nebuleInstance->getCryptoInstance());
             echo "<br />\n";
 
             // Vérifie la fonction de hash.
-            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: hash ' . $nebuleInstance->getCrypto()->hashAlgorithm() . ' ';
-            if ($nebuleInstance->getCrypto()->checkHashFunction())
+            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: hash ' . $nebuleInstance->getCryptoInstance()->hashAlgorithm() . ' ';
+            if ($nebuleInstance->getCryptoInstance()->checkHashFunction())
                 echo 'OK';
             else
                 echo '<span class="error">ERROR!</span>';
             echo "<br />\n";
 
             // Vérifie la fonction de cryptographie symétrique.
-            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: Symmetric ' . $nebuleInstance->getCrypto()->SymmetricAlgorithm() . ' ';
-            if ($nebuleInstance->getCrypto()->checkSymmetricFunction())
+            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: Symmetric ' . $nebuleInstance->getCryptoInstance()->SymmetricAlgorithm() . ' ';
+            if ($nebuleInstance->getCryptoInstance()->checkSymmetricFunction())
                 echo 'OK';
             else
                 echo '<span class="error">ERROR!</span>';
             echo "<br />\n";
 
             // Vérifie la fonction de cryptographie asymétrique.
-            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: asymmetric ' . $nebuleInstance->getCrypto()->asymmetricAlgorithm() . ' ';
-            if ($nebuleInstance->getCrypto()->checkAsymmetricFunction())
+            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: asymmetric ' . $nebuleInstance->getCryptoInstance()->asymmetricAlgorithm() . ' ';
+            if ($nebuleInstance->getCryptoInstance()->checkAsymmetricFunction())
                 echo 'OK';
             else
                 echo '<span class="error">ERROR!</span>';
             echo "<br />\n";
 
             // Vérifie la fonction de génération pseudo-aléatoire.
-            $random = $nebuleInstance->getCrypto()->getPseudoRandom(2048);
-            $entropy = $nebuleInstance->getCrypto()->getEntropy($random);
+            $random = $nebuleInstance->getCryptoInstance()->getPseudoRandom(2048);
+            $entropy = $nebuleInstance->getCryptoInstance()->getEntropy($random);
             echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: pseudo-random ' . substr(bin2hex($random), 0, 32) . '(' . $entropy . ') ';
             if ($entropy > 7.85)
                 echo 'OK';
@@ -5195,12 +5224,12 @@ function bootstrap_displayOnBreak(): void
         echo "<br />\n";
 
         // Vérifie des entrées/sorties (I/O).
-        if (!is_object($nebuleInstance->getIO()))
+        if (!is_object($nebuleInstance->getIoInstance()))
             echo 'i/o <span class="error">ERROR!</span>' . "<br />\n";
         else {
-            $list = $nebuleInstance->getIO()->getModulesList();
+            $list = $nebuleInstance->getIoInstance()->getModulesList();
             foreach ($list as $class) {
-                $module = $nebuleInstance->getIO()->getModule($class);
+                $module = $nebuleInstance->getIoInstance()->getModule($class);
                 echo 'i/o &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $class . ' (' . $module->getMode() . ') ' . $module->getDefaultLocalisation() . ', links ';
                 if (!$module->checkLinksDirectory())
                     echo 'directory <span class="error">ERROR!</span>';
@@ -5232,10 +5261,10 @@ function bootstrap_displayOnBreak(): void
         }
 
         // Vérifie de la gestion des relations sociales.
-        if (!is_object($nebuleInstance->getSocial()))
+        if (!is_object($nebuleInstance->getSocialInstance()))
             echo '<span class="error">ERROR!</span>' . "<br />\n";
         else {
-            foreach ($nebuleInstance->getSocial()->getList() as $moduleName)
+            foreach ($nebuleInstance->getSocialInstance()->getList() as $moduleName)
                 echo 'social &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $moduleName . " OK<br />\n";
         }
 
@@ -5270,16 +5299,15 @@ function bootstrap_displayOnBreak(): void
         echo 'L(v)=' . lib_getMetrology('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify() . ' ';
         echo 'O(r)=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead() . ' ';
         echo 'O(v)=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
-        echo 'L(c)=' . $nebuleInstance->getCacheLinkSize() . ' ';
-        echo 'O(c)=' . $nebuleInstance->getCacheObjectSize() . ' ';
-        echo 'E(c)=' . $nebuleInstance->getCacheEntitySize() . ' ';
-        echo 'G(c)=' . $nebuleInstance->getCacheGroupSize() . ' ';
-        echo 'C(c)=' . $nebuleInstance->getCacheConversationSize() . ' ';
-        echo 'CU(c)=' . $nebuleInstance->getCacheCurrencySize() . ' ';
-        echo 'CP(c)=' . $nebuleInstance->getCacheTokenPoolSize() . ' ';
-        echo 'CT(c)=' . $nebuleInstance->getCacheTokenSize() . ' ';
-        echo 'CW(c)=' . $nebuleInstance->getCacheWalletSize() . ' ';
-        echo 'CS(c)=' . $nebuleInstance->getCacheTransactionSize();
+        echo 'L(c)=' . $nebuleInstance->getCacheInstance()->getCacheLinkSize() . ' ';
+        echo 'O(c)=' . $nebuleInstance->getCacheInstance()->getCacheObjectSize() . ' ';
+        echo 'E(c)=' . $nebuleInstance->getCacheInstance()->getCacheEntitySize() . ' ';
+        echo 'G(c)=' . $nebuleInstance->getCacheInstance()->getCacheGroupSize() . ' ';
+        echo 'C(c)=' . $nebuleInstance->getCacheInstance()->getCacheConversationSize() . ' ';
+        echo 'CU(c)=' . $nebuleInstance->getCacheInstance()->getCacheCurrencySize() . ' ';
+        echo 'CP(c)=' . $nebuleInstance->getCacheInstance()->getCacheTokenPoolSize() . ' ';
+        echo 'CT(c)=' . $nebuleInstance->getCacheInstance()->getCacheTokenSize() . ' ';
+        echo 'CW(c)=' . $nebuleInstance->getCacheInstance()->getCacheWalletSize();
     }
     ?>
 
@@ -5411,14 +5439,38 @@ function bootstrap_displayPreloadApplication()
     log_reopen('preload');
     log_add('Loading application ' . $bootstrapApplicationID, 'info', __FUNCTION__, '202824cb');
 
-    // Charge l'objet de l'application. TODO faire via les i/o.
-    include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+    try {
+        // Charge l'objet de l'application. TODO faire via les i/o.
+        include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+    } catch (\Error $e) {
+        log_reopen(BOOTSTRAP_NAME);
+        log_add('Application include error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '8101a6fa');
+    }
 
-    // Instanciation des classes de l'application.
-    $applicationInstance = new Application($nebuleInstance);
-    $applicationTraductionInstance = new Traduction($applicationInstance);
-    $applicationDisplayInstance = new Display($applicationInstance);
-    $applicationActionInstance = new Action($applicationInstance);
+    try {
+        $applicationInstance = new Application($nebuleInstance);
+    } catch (\Error $e) {
+        log_reopen(BOOTSTRAP_NAME);
+        log_add('Application load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'a6901e43');
+    }
+    try {
+        $applicationTraductionInstance = new Traduction($applicationInstance);
+    } catch (\Error $e) {
+        log_reopen(BOOTSTRAP_NAME);
+        log_add('Application traduction load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '17c889d7');
+    }
+    try {
+        $applicationDisplayInstance = new Display($applicationInstance);
+    } catch (\Error $e) {
+        log_reopen(BOOTSTRAP_NAME);
+        log_add('Application display load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'e61c0842');
+    }
+    try {
+        $applicationActionInstance = new Action($applicationInstance);
+    } catch (\Error $e) {
+        log_reopen(BOOTSTRAP_NAME);
+        log_add('Application action load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '18adef64');
+    }
 
     // Initialisation des instances.
     $applicationInstance->initialisation();
@@ -5434,8 +5486,8 @@ function bootstrap_displayPreloadApplication()
     $items = $applicationDisplayInstance->getNeededObjectsList();
     $nb = 0;
     foreach ($items as $item) {
-        if (!$nebuleInstance->getIO()->checkObjectPresent($item)) {
-            $instance = $nebuleInstance->newObject($item, false, false);
+        if (!$nebuleInstance->getIoInstance()->checkObjectPresent($item)) {
+            $instance = $nebuleInstance->newObject($item);
             $applicationDisplayInstance->displayInlineObjectColorNolink($instance);
             echo "\n";
             $instance->syncObject(false);
@@ -6323,7 +6375,7 @@ function bootstrap_displayApplication0()
     <div id="appslist">
         <?php
         // Extraire la liste des applications disponibles.
-        $refAppsID = $nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
+        $refAppsID = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
         $instanceAppsID = new Object($nebuleInstance, $refAppsID);
         $applicationsList = array();
         $signersList = array();
@@ -6387,7 +6439,7 @@ function bootstrap_displayApplication0()
                 $activated = true;
             }
             if (!$activated) {
-                $refActivated = $nebuleInstance->getCrypto()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE);
+                $refActivated = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE);
                 $linksList = $instance->readLinksFilterFull($nebuleInstance->getInstanceEntity(), '', 'f', $application, $refActivated, $application);
                 if (sizeof($linksList) != 0) {
                     $activated = true;
@@ -6555,8 +6607,12 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
                 && $bootstrapApplicationTraductionInstanceSleep != ''
             ) {
 
-                // Charge l'objet de l'application. @todo faire via les i/o.
-                include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+                try {
+                    // Charge l'objet de l'application. TODO faire via les i/o.
+                    include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+                } catch (\Error $e) {
+                    log_add('Application include error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'ad4c908e');
+                }
 
                 $applicationName = Application::APPLICATION_NAME;
 
@@ -6564,10 +6620,30 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
                 log_reopen($applicationName);
 
                 // Désérialise les instances.
-                $applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
-                $applicationDisplayInstance = unserialize($bootstrapApplicationDisplayInstanceSleep);
-                $applicationActionInstance = unserialize($bootstrapApplicationActionInstanceSleep);
-                $applicationTraductionInstance = unserialize($bootstrapApplicationTraductionInstanceSleep);
+                try {
+                    $applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
+                } catch (\Error $e) {
+                    log_reopen(BOOTSTRAP_NAME);
+                    log_add('Application unserialize error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'de82bc8b');
+                }
+                try {
+                    $applicationDisplayInstance = unserialize($bootstrapApplicationDisplayInstanceSleep);
+                } catch (\Error $e) {
+                    log_reopen(BOOTSTRAP_NAME);
+                    log_add('Application traduction unserialize error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '8e344763');
+                }
+                try {
+                    $applicationActionInstance = unserialize($bootstrapApplicationActionInstanceSleep);
+                } catch (\Error $e) {
+                    log_reopen(BOOTSTRAP_NAME);
+                    log_add('Application display unserialize error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'b15fd5d3');
+                }
+                try {
+                    $applicationTraductionInstance = unserialize($bootstrapApplicationTraductionInstanceSleep);
+                } catch (\Error $e) {
+                    log_reopen(BOOTSTRAP_NAME);
+                    log_add('Application action unserialize error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '972ddf39');
+                }
 
                 // Initialisation de réveil de l'instance de l'application.
                 $applicationInstance->initialisation2();
@@ -6592,19 +6668,42 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
 
                 log_add('load application whitout preload ' . $bootstrapApplicationID, 'info', __FUNCTION__, 'e01ea813');
 
-                // Charge l'objet de l'application. @todo faire via les i/o.
-                include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+                try {
+                    // Charge l'objet de l'application. TODO faire via les i/o.
+                    include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
+                } catch (\Error $e) {
+                    log_add('Application include error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '96fc25ef');
+                }
 
                 $applicationName = Application::APPLICATION_NAME;
 
                 // Change les logs au nom de l'application.
                 log_reopen($applicationName);
 
-                // Instanciation des classes de l'application.
-                $applicationInstance = new Application($nebuleInstance);
-                $applicationTraductionInstance = new Traduction($applicationInstance);
-                $applicationDisplayInstance = new Display($applicationInstance);
-                $applicationActionInstance = new Action($applicationInstance);
+                try {
+                    $applicationInstance = new Application($nebuleInstance);
+                } catch (\Error $e) {
+                    log_reopen(BOOTSTRAP_NAME);
+                    log_add('Application load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '202824cb');
+                }
+                try {
+                    $applicationTraductionInstance = new Traduction($applicationInstance);
+                } catch (\Error $e) {
+                    log_reopen(BOOTSTRAP_NAME);
+                    log_add('Application traduction load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '585648a2');
+                }
+                try {
+                    $applicationDisplayInstance = new Display($applicationInstance);
+                } catch (\Error $e) {
+                    log_reopen(BOOTSTRAP_NAME);
+                    log_add('Application display load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '4c7da4e2');
+                }
+                try {
+                    $applicationActionInstance = new Action($applicationInstance);
+                } catch (\Error $e) {
+                    log_reopen(BOOTSTRAP_NAME);
+                    log_add('Application action load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '3c042de3');
+                }
 
                 // Initialisation des instances.
                 $applicationInstance->initialisation();
@@ -6683,11 +6782,11 @@ function bootstrap_logMetrology()
             . ' Or=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead()
             . ' Ov=' . lib_getMetrology('ov') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify()
             . ' (PP+POO) -'
-            . ' LC=' . $nebuleInstance->getCacheLinkSize()
-            . ' OC=' . $nebuleInstance->getCacheObjectSize()
-            . ' EC=' . $nebuleInstance->getCacheEntitySize()
-            . ' GC=' . $nebuleInstance->getCacheGroupSize()
-            . ' CC=' . $nebuleInstance->getCacheConversationSize(),
+            . ' LC=' . $nebuleInstance->getCacheInstance()->getCacheLinkSize()
+            . ' OC=' . $nebuleInstance->getCacheInstance()->getCacheObjectSize()
+            . ' EC=' . $nebuleInstance->getCacheInstance()->getCacheEntitySize()
+            . ' GC=' . $nebuleInstance->getCacheInstance()->getCacheGroupSize()
+            . ' CC=' . $nebuleInstance->getCacheInstance()->getCacheConversationSize(),
             'info',
             __FUNCTION__,
             '0d99ad8b');

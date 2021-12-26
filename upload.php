@@ -1,6 +1,12 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Upload;
+use Nebule\Library\nebule;
+use Nebule\Library\Actions;
+use Nebule\Library\Applications;
+use Nebule\Library\Displays;
+//use Nebule\Library\Modules;
+use Nebule\Library\Traductions;
 
 /*
 ------------------------------------------------------------------------------------------
@@ -16,6 +22,7 @@ namespace Nebule\Application\Upload;
 
 ------------------------------------------------------------------------------------------
 */
+
 
 
 /**
@@ -34,7 +41,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'upload';
     const APPLICATION_SURNAME = 'nebule/upload';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020210510';
+    const APPLICATION_VERSION = '020211218';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2021';
     const APPLICATION_WEBSITE = 'www.nebule.org';
 
@@ -47,6 +54,7 @@ class Application extends Applications
     public function __construct(nebule $nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
     }
 
     // Tout par défaut.
@@ -63,18 +71,6 @@ class Application extends Applications
  */
 class Display extends Displays
 {
-    /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
-
-
     /**
      * Affichage de la page.
      */
@@ -220,7 +216,7 @@ class Display extends Displays
                     $param['informationType'] = 'warn';
                     echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityURLMessage(), $param);
                 }
-                if (!$this->_nebuleInstance->getOption('permitWrite')) {
+                if (!$this->_configuration->getOption('permitWrite')) {
                     $param['informationType'] = 'warn';
                     echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::warn_ServNotPermitWrite', $param);
                 }
@@ -230,11 +226,11 @@ class Display extends Displays
                 }
 
                 // Vérifie que la création et le chargement de liens soit autorisé.
-                if ($this->_nebuleInstance->getOption('permitWrite')
-                    && $this->_nebuleInstance->getOption('permitWriteLink')
-                    && $this->_nebuleInstance->getOption('permitUploadLink')
-                    && ($this->_nebuleInstance->getOption('permitPublicUploadLink')
-                        || $this->_nebuleInstance->getOption('permitPublicUploadCodeMasterLink')
+                if ($this->_configuration->getOption('permitWrite')
+                    && $this->_configuration->getOption('permitWriteLink')
+                    && $this->_configuration->getOption('permitUploadLink')
+                    && ($this->_configuration->getOption('permitPublicUploadLink')
+                        || $this->_configuration->getOption('permitPublicUploadCodeMasterLink')
                         || $this->_unlocked
                     )
                 ) {
@@ -246,7 +242,7 @@ class Display extends Displays
                             'informationType' => 'warn',
                             'displayRatio' => 'short',
                         );
-                        if ($this->_nebuleInstance->getOption('permitPublicUploadLink')) {
+                        if ($this->_configuration->getOption('permitPublicUploadLink')) {
                             echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::info_OnlySignedLinks', $param);
                         } else {
                             echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::info_OnlyLinksFromCodeMaster', $param);
@@ -274,7 +270,7 @@ class Display extends Displays
                                   action="<?php echo '?' . $this->_nebuleInstance->getActionTicket(); ?>">
                                 <input type="hidden"
                                        name="MAX_FILE_SIZE"
-                                       value="<?php echo $this->_nebuleInstance->getOption('ioReadMaxData'); ?>"/>
+                                       value="<?php echo $this->_configuration->getOption('ioReadMaxData'); ?>"/>
                                 <input type="file"
                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LINKS; ?>"/><br/>
                                 <input type="submit"
@@ -326,18 +322,6 @@ class Action extends Actions
     const ACTION_APPLY_DELAY = 5;
 
     /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }
-
-
-    /**
      * Traitement des actions génériques.
      */
     public function genericActions()
@@ -363,11 +347,11 @@ class Action extends Actions
         $this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Vérifie que l'action de chargement de lien soit permise.
-        if ($this->_nebuleInstance->getOption('permitWrite')
-            && $this->_nebuleInstance->getOption('permitWriteLink')
-            && $this->_nebuleInstance->getOption('permitUploadLink')
-            && ($this->_nebuleInstance->getOption('permitPublicUploadCodeMasterLink')
-                || $this->_nebuleInstance->getOption('permitPublicUploadLink')
+        if ($this->_configuration->getOption('permitWrite')
+            && $this->_configuration->getOption('permitWriteLink')
+            && $this->_configuration->getOption('permitUploadLink')
+            && ($this->_configuration->getOption('permitPublicUploadCodeMasterLink')
+                || $this->_configuration->getOption('permitPublicUploadLink')
                 || $this->_unlocked
             )
         ) {

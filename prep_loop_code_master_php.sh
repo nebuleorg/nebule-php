@@ -1,11 +1,12 @@
 #!/bin/bash
 # Prepare or restore an environment to develop and test code.
+# !!! Do not use on real world !!!
 
 # Author Projet nebule
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020211115
+# Version 020211218
 
 export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
@@ -311,15 +312,31 @@ function work_refresh()
 
   bootstrap_hash=$(sha256sum "${WORKSPACE}/bootstrap.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new bootstrap : ${bootstrap_hash}"
-  cp "${WORKSPACE}/bootstrap.php" "l/${bootstrap_hash}"
+  cp "${WORKSPACE}/bootstrap.php" "o/${bootstrap_hash}"
 
+  cat > "${WORKSPACE}/lib_nebule.php" << EOF
+<?php
+declare(strict_types=1);
+namespace Nebule\Library;
+EOF
+  for F in "${WORKSPACE}/lib_nebule"/*
+  do
+    library_hash=$(sha256sum "${F}" | cut -d' ' -f1)'.sha2.256'
+    echo -e "\n\n" >> "${WORKSPACE}/lib_nebule.php"
+    echo '// ========================================================================================' >> "${WORKSPACE}/lib_nebule.php"
+    echo '//   '$(basename "${F}") >> "${WORKSPACE}/lib_nebule.php"
+    echo '//   0'$(stat -c '%y' "${F}" | cut -d' ' -f1-2 | cut -d. -f1 | tr -dc "[0-9]") >> "${WORKSPACE}/lib_nebule.php"
+    echo "//   ${library_hash}" >> "${WORKSPACE}/lib_nebule.php"
+    tail +4 "${F}" | grep -v '^use Nebule\\Library' >> "${WORKSPACE}/lib_nebule.php"
+  done
   library_hash=$(sha256sum "${WORKSPACE}/lib_nebule.php" | cut -d' ' -f1)'.sha2.256'
-  echo " > new library : ${bootstrap_hash}"
-  cp "${WORKSPACE}/lib_nebule.php" "l/${library_hash}"
+  echo " > new library : ${library_hash}"
+  cp "${WORKSPACE}/lib_nebule.php" "/tmp/lib_nebule.php"
+  mv "${WORKSPACE}/lib_nebule.php" "o/${library_hash}"
 
   sylabe_hash=$(sha256sum "${WORKSPACE}/sylabe.php" | cut -d' ' -f1)'.sha2.256'
-  echo " > new sylabe : ${bootstrap_hash}"
-  cp "${WORKSPACE}/sylabe.php" "l/${sylabe_hash}"
+  echo " > new sylabe : ${sylabe_hash}"
+  cp "${WORKSPACE}/sylabe.php" "o/${sylabe_hash}"
 
   echo ' > links'
   echo '   - type mime = application/x-httpd-php'
