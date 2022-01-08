@@ -9,7 +9,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020211224';
+const BOOTSTRAP_VERSION = '020220108';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -110,13 +110,13 @@ function log_reopen(string $name): void
  * @param string $message
  * @param string $level
  * @param string $function
- * @param string $luid
+ * @param string $id
  * @return void
  */
-function log_add(string $message, string $level = 'msg', string $function = '', string $luid = '00000000'): void
+function log_add(string $message, string $level = 'msg', string $function = '', string $id = '00000000'): void
 {
     global $metrologyStartTime;
-    syslog(LOG_INFO, 'LogT=' . (microtime(true) - $metrologyStartTime) . ' LogL="' . $level . '" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"');
+    syslog(LOG_INFO, 'LogT=' . (microtime(true) - $metrologyStartTime) . ' LogL="' . $level . '" LogI="' . $id . '" LogF="' . $function . '" LogM="' . $message . '"');
 }
 
 // Initialize logs.
@@ -229,17 +229,6 @@ $applicationActionInstance = null;
  */
 $applicationTraductionInstance = null;
 
-// Metrology vars.
-$metrologyLibraryPOOLinksRead = 0;
-$metrologyLibraryPOOLinksVerified = 0;
-$metrologyLibraryPOOObjectsRead = 0;
-$metrologyLibraryPOOObjectsVerified = 0;
-$metrologyLibraryPOOLinkCache = 0;
-$metrologyLibraryPOOObjectCache = 0;
-$metrologyLibraryPOOEntityCache = 0;
-$metrologyLibraryPOOGroupCache = 0;
-$metrologyLibraryPOOConvertationCache = 0;
-
 
 
 /*
@@ -286,7 +275,7 @@ const LIB_FIRST_LOCALISATIONS = array(
     'http://puppetmaster.nebule.org',
     'http://bachue.nebule.org',
 );
-const LIB_FIRST_AUTORITIES_PUBLIC_KEY = array(
+const LIB_FIRST_AUTHORITIES_PUBLIC_KEY = array(
     '-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAudMrAyvG3uqI9JLZRtqi
 nlgiF6hAp/whKWlujNXE+x0p6ibJEaIAPS+VyR4Lw9819UqObpMI2fa+Ql8/dJPM
@@ -827,7 +816,6 @@ function lib_getConfiguration(string $name)
     global $configurationList;
 
     if ($name == ''
-        || !is_string($name)
         || !isset(LIB_CONFIGURATIONS_TYPE[$name])
     )
         return null;
@@ -860,28 +848,25 @@ function lib_getConfiguration(string $name)
         $value = LIB_CONFIGURATIONS_DEFAULT[$name];
 
     // Convert value onto asked type.
-    if (isset(LIB_CONFIGURATIONS_TYPE[$name])) {
-        switch (LIB_CONFIGURATIONS_TYPE[$name]) {
-            case 'string' :
-                $result = $value;
-                break;
-            case 'boolean' :
-                if ($value == 'true')
-                    $result = true;
-                else
-                    $result = false;
-                break;
-            case 'integer' :
-                if ($value != '')
-                    $result = (int)$value;
-                else
-                    $result = 0;
-                break;
-            default :
-                $result = null;
-        }
-    } else
-        $result = $value;
+    switch (LIB_CONFIGURATIONS_TYPE[$name]) {
+        case 'string' :
+            $result = $value;
+            break;
+        case 'boolean' :
+            if ($value == 'true')
+                $result = true;
+            else
+                $result = false;
+            break;
+        case 'integer' :
+            if ($value != '')
+                $result = (int)$value;
+            else
+                $result = 0;
+            break;
+        default :
+            $result = null;
+    }
 
     $configurationList[$name] = $result;
     return $result;
@@ -1362,7 +1347,7 @@ function io_linkSynchronize(string $nid, string $location): bool
         || !lib_getConfiguration('permitSynchronizeLink')
         || !nod_checkNID($nid)
         || $location == ''
-        || !is_string($location) // TODO renforcer la vérification de l'URL.
+        //|| !is_string($location) // TODO renforcer la vérification de l'URL.
         || nod_checkBanned_FIXME($nid)
     )
         return false;
@@ -1446,7 +1431,7 @@ function io_objectSynchronize(string $nid, string $location): bool
         || !lib_getConfiguration('permitSynchronizeObject')
         || !nod_checkNID($nid)
         || $location == ''
-        || !is_string($location) // TODO renforcer la vérification de l'URL.
+        //|| !is_string($location) // TODO renforcer la vérification de l'URL.
         || nod_checkBanned_FIXME($nid)
     )
         return false;
@@ -1464,12 +1449,11 @@ function io_objectSynchronize(string $nid, string $location): bool
     if ($distobj) {
         $localobj = fopen(LIB_LOCAL_OBJECTS_FOLDER . '/' . $tmpIdName, 'w');
         if ($localobj) {
-            while (($line = fgets($distobj, lib_getConfiguration('ioReadMaxData'))) !== false) {
+            while (($line = fgets($distobj, lib_getConfiguration('ioReadMaxData'))) !== false)
                 fputs($localobj, $line);
-            }
             fclose($localobj);
             $algo = nod_getAlgo($nid);
-            if ($algo !== false)
+            if ($algo != '')
                 $hash = crypto_getFileHash($tmpIdName, crypto_getTranslatedHashAlgo($algo));
             else
                 $hash = 'invalid';
@@ -1518,9 +1502,8 @@ function io_checkExistOverHTTP(string $location): bool
     $url = parse_url($location);
 
     $handle = fsockopen($url['host'], 80, $errno, $errstr, 1);
-    if ($handle === false) {
+    if ($handle === false)
         return false;
-    }
 
     $out = "HEAD " . $url['path'] . " HTTP/1.1\r\n" . "Host: " . $url['host'] . "\r\n" . "Connection: Close\r\n\r\n";
     $response = '';
@@ -1851,9 +1834,7 @@ function lnk_generate(string $rc, string $req, string $nid1, string $nid2 = '', 
         $rl .= '>' . $nid4;
     $bl = $rc . '/' . $rl;
 
-    $bh_bl = $bh . '_' . $bl;
-
-    return $bh_bl;
+    return $bh . '_' . $bl;
 }
 
 /**
@@ -1937,26 +1918,26 @@ function lnk_generateSign(string $rc, string $req, string $nid1, string $nid2 = 
  * @param string  $dstobj
  * @param string  $metobj
  * @param boolean $withinvalid
- * @return null
+ * @return void
  */
 function lnk_findInclusive_FIXME(&$nid, &$table, $action, $srcobj, $dstobj, $metobj, $withinvalid = false): void
 {
     $followXOnSameDate = true; // TODO à supprimer.
 
-    $linkdate = array();
-    $tmptable = array();
+    $linkDate = array();
+    $tmpArray = array();
     $i1 = 0;
 
-    lnk_getListFilterNid($nid, $tmptable, $metobj, $action, $withinvalid);
+    lnk_getListFilterNid($nid, $tmpArray, $metobj, $action, $withinvalid);
 
-    foreach ($tmptable as $n => $t) {
-        $linkdate [$n] = $t [3];
+    foreach ($tmpArray as $n => $t) {
+        $linkDate [$n] = $t [3];
     }
 
     // Tri par date.
-    array_multisort($linkdate, SORT_STRING, SORT_ASC, $tmptable);
+    array_multisort($linkDate, SORT_STRING, SORT_ASC, $tmpArray);
 
-    foreach ($tmptable as $tline) {
+    foreach ($tmpArray as $tline) {
         if ($tline [4] == 'x') {
             continue 1; // Suppression de l'affichage des liens x.
         }
@@ -1974,7 +1955,7 @@ function lnk_findInclusive_FIXME(&$nid, &$table, $action, $srcobj, $dstobj, $met
         }
 
         // Filtre du lien.
-        foreach ($tmptable as $vline) {
+        foreach ($tmpArray as $vline) {
             if ($vline [4] == 'x'
                 && $tline [4] != 'x'
                 && $tline [5] == $vline [5]
@@ -2021,7 +2002,7 @@ function lnk_findInclusive_FIXME(&$nid, &$table, $action, $srcobj, $dstobj, $met
         $table [$i1] [12] = $tline [12];
         $i1++;
     }
-    unset($linkdate, $i1, $n, $t, $tline);
+    unset($linkDate, $i1, $n, $t, $tline);
 }
 
 /**
@@ -2048,7 +2029,7 @@ function lnk_getList(string &$nid, array &$links, array $filter, bool $withInval
     $lines = array();
     io_linksRead($nid, $lines);
     foreach ($lines as $line) {
-        if (lnk_verify($line)) {
+        if ($withInvalidLinks || lnk_verify($line)) {
             $link = lnk_parse($line);
             if (lnk_checkNotSuppressed($link, $lines) && lnk_filterStructure($link, $filter))
                 $links [] = $link;
@@ -2248,7 +2229,7 @@ function lnk_getListFilterNid(string &$nid, array &$result, string $filterOnNid 
 /**
  * Link - Download links on many locations, anywhere.
  *
- * @param $nid
+ * @param string $nid
  * @return void
  */
 function lnk_getDistantAnywhere(string $nid): void
@@ -3141,42 +3122,42 @@ function obj_setContentAsText(string $data, bool $skipIfPresent = true): bool
  * Object - Create new object from data.
  *
  * @param string $data
- * @param string $typemime
+ * @param string $typeMime
  * @return bool
  */
-function obj_generate_FIXME(string &$data, string $typemime = ''): bool
+function obj_generate_FIXME(string &$data, string $typeMime = ''): bool
 {
     if (strlen($data) == 0
         || !lib_getConfiguration('permitWrite')
         || !lib_getConfiguration('permitWriteObject')
     )
         return false;
-    $dat = '0' . date('YmdHis');
+    $date = '0' . date('YmdHis');
     $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
-    // Ecrit l'objet.
+
     if (!io_checkNodeHaveContent($hash))
         obj_setContent($data, $hash);
-    // Ecrit le lien de hash.
-    $lnk = lnk_generateSign(
-        $dat,
+
+    $link = lnk_generateSign(
+        $date,
         'l',
         $hash,
         obj_getNID(lib_getConfiguration('cryptoHashAlgorithm'), lib_getConfiguration('cryptoHashAlgorithm')),
         obj_getNID('nebule/objet/hash', lib_getConfiguration('cryptoHashAlgorithm'))
     );
-    if ((lnk_verify($lnk)) == 1)
-        lnk_write($lnk);
-    // Ecrit le lien de type mime.
-    if ($typemime != '') {
-        $lnk = lnk_generateSign(
-            $dat,
+    if (lnk_verify($link))
+        lnk_write($link);
+
+    if ($typeMime != '') {
+        $link = lnk_generateSign(
+            $date,
             'l',
             $hash,
-            obj_getNID($typemime, lib_getConfiguration('cryptoHashAlgorithm')),
+            obj_getNID($typeMime, lib_getConfiguration('cryptoHashAlgorithm')),
             obj_getNID('nebule/objet/type', lib_getConfiguration('cryptoHashAlgorithm'))
         );
-        if ((lnk_verify($lnk)) == 1)
-            lnk_write($lnk);
+        if (lnk_verify($link))
+            lnk_write($link);
     }
     return true;
 }
@@ -3200,7 +3181,7 @@ function obj_getLocalContent(string &$nid, string &$data, int $maxData = 0): boo
 
 /**
  * Object - Download node content (object) on web locations.
- * Only valid content are writen on local filesystem.
+ * Only valid content are written on local filesystem.
  *
  * @param string $nid
  * @param array  $locations
@@ -3237,7 +3218,7 @@ function obj_getDistantContent(string $nid, array $locations = array()): bool
  * @param string $nid
  * @return boolean
  */
-function obj_checkContent(&$nid): bool
+function obj_checkContent(string &$nid): bool
 {
     global $nebuleCacheLibrary_o_vr;
 
@@ -3310,7 +3291,7 @@ function obj_setContent(string &$data, string $oid = '0'): bool
  * @param string $nid
  * @return string
  */
-function ent_getFullName(&$nid): string
+function ent_getFullName(string &$nid): string
 {
     global $nebuleCacheReadEntityFullName;
 
@@ -3628,7 +3609,7 @@ function ent_syncPuppetmaster(string $oid): void
 
     if ($oid == LIB_DEFAULT_PUPPETMASTER_EID) {
         log_add('Write default puppetmaster', 'info', __FUNCTION__, '555ec326');
-        foreach (LIB_FIRST_AUTORITIES_PUBLIC_KEY as $data)
+        foreach (LIB_FIRST_AUTHORITIES_PUBLIC_KEY as $data)
         {
             $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
             io_objectWrite($data, $hash);
@@ -3888,13 +3869,13 @@ function app_getByRef($rid): string
         return '';
 
     // Get newest link
-    $rlink=$links[0];
+    $resultLink=$links[0];
     foreach ($links as $link)
     {
-        if (lnk_dateCompare($link['bl/rc/mod'],$link['bl/rc/chr'],$rlink['bl/rc/mod'],$rlink['bl/rc/chr']) > 0)
-            $rlink = $link;
+        if (lnk_dateCompare($link['bl/rc/mod'],$link['bl/rc/chr'],$resultLink['bl/rc/mod'],$resultLink['bl/rc/chr']) > 0)
+            $resultLink = $link;
     }
-    return $rlink['bl/rl/nid2'];
+    return $resultLink['bl/rl/nid2'];
 }
 
 
@@ -4137,7 +4118,7 @@ function bootstrap_findApplication(): void
     global $libraryCheckOK, $bootstrapSwitchApplication, $bootstrapUpdate, $nebuleLocalAuthorities,
            $bootstrapApplicationInstanceSleep, $bootstrapApplicationDisplayInstanceSleep,
            $bootstrapApplicationActionInstanceSleep, $bootstrapApplicationTraductionInstanceSleep,
-           $bootstrapApplicationStartID;
+           $bootstrapApplicationStartID, $bootstrapApplicationNoPreload;
 
     if (!$libraryCheckOK)
         return;
@@ -4230,10 +4211,18 @@ function bootstrap_findApplication(): void
         ) {
             $refAppsID = LIB_RID_INTERFACE_APPLICATIONS;
             $links = array();
-            lnk_findInclusive_FIXME($refAppsID, $links, 'f', $refAppsID, $bootstrapSwitchApplication, $refAppsID);
+            $filter = array(
+                'bl/rl/req' => 'f',
+                'bl/rl/nid1' => $refAppsID,
+                'bl/rl/nid2' => $bootstrapSwitchApplication,
+                'bl/rl/nid3' => $refAppsID,
+                'bl/rl/nid4' => '',
+            );
+            lnk_getList($refAppsID, $links, $filter);
 
             // Vérifie que l'application est autorisée.
             if (sizeof($links) != 0) {
+                unset($links);
                 // Fait le changement d'application.
                 $bootstrapApplicationStartID = $bootstrapSwitchApplication;
 
@@ -4266,8 +4255,6 @@ function bootstrap_findApplication(): void
 
                 log_add('find switched application ' . $bootstrapApplicationID, 'info', __FUNCTION__, '0cbacda8');
             }
-            unset($refAppsID, $links);
-            // Sinon l'application par défaut sera chargée, plus loin.
         }
     }
 
@@ -4309,27 +4296,22 @@ function bootstrap_findApplication(): void
         // Lit les liens de non pré-chargement pour l'application.
         $refNoPreload = LIB_RID_INTERFACE_APPLICATIONS_DIRECT;
         $links = array();
-        lnk_findInclusive_FIXME($bootstrapApplicationStartID, $links, 'f', $bootstrapApplicationStartID, $refNoPreload, $bootstrapApplicationStartID);
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid1' => $bootstrapApplicationStartID,
+            'bl/rl/nid2' => $refNoPreload,
+            'bl/rl/nid3' => $bootstrapApplicationStartID,
+            'bl/rl/nid4' => '',
+        );
+        lnk_getList($bootstrapApplicationStartID, $links, $filter);
 
         // Filtre sur les autorités locales.
         $bootstrapApplicationNoPreload = false;
         if (sizeof($links) != 0) {
-            $signer = '';
-            $authority = '';
-            foreach ($links as $link) {
-                $signer = $link[2];
-                foreach ($nebuleLocalAuthorities as $authority) {
-                    if ($signer == $authority) {
-                        // Si le lien est valide, active le chargement direct de l'application.
-                        $bootstrapApplicationNoPreload = true;
-                        log_add('do not preload application', 'info', __FUNCTION__, '0ac7d800');
-                        break 2;
-                    }
-                }
-            }
-            unset($signer, $authority);
+            unset($links);
+            $bootstrapApplicationNoPreload = true;
+            log_add('do not preload application', 'info', __FUNCTION__, '0ac7d800');
         }
-        unset($links, $refNoPreload);
     }
 }
 
@@ -5527,11 +5509,11 @@ function bootstrap_partDisplayReloadPage(bool $ok = true, int $delay = 0): void
     if ($ok) {
         ?>
 
-        &gt; <a onclick="javascript:window.location.reload(true);">reloading <?php echo BOOTSTRAP_NAME; ?></a> ...
+        &gt; <a onclick="javascript:window.location.reload();">reloading <?php echo BOOTSTRAP_NAME; ?></a> ...
         <script type="text/javascript">
             <!--
             setTimeout(function () {
-                window.location.reload(true)
+                window.location.reload()
             }, <?php echo $delay; ?>);
             //-->
         </script>
@@ -5539,7 +5521,7 @@ function bootstrap_partDisplayReloadPage(bool $ok = true, int $delay = 0): void
     } else {
         ?>
 
-        <button onclick="javascript:window.location.reload(true);">when ready,
+        <button onclick="javascript:window.location.reload();">when ready,
             reload <?php echo BOOTSTRAP_NAME; ?></button>
         <?php
     }
@@ -5570,8 +5552,8 @@ function bootstrap_getNeedFirstSynchronization(): bool
     if (file_exists(LIB_LOCAL_ENTITY_FILE)
         && is_file(LIB_LOCAL_ENTITY_FILE)
     ) {
-        $serverEntite = filter_var(strtok(trim(file_get_contents(LIB_LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-        if (!ent_checkIsPublicKey($serverEntite)) {
+        $serverEntity = filter_var(strtok(trim(file_get_contents(LIB_LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        if (!ent_checkIsPublicKey($serverEntity)) {
             bootstrap_setBreak('62', 'Local server entity error');
             return true;
         }
@@ -5589,7 +5571,7 @@ function bootstrap_getNeedFirstSynchronization(): bool
  *
  * @return void
  */
-function bootstrap_displayApplicationfirst(): void
+function bootstrap_displayApplicationFirst(): void
 {
     bootstrap_firstInitEnv();
     bootstrap_htmlHeader();
@@ -6743,7 +6725,7 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
             log_add('load first', 'info', __FUNCTION__, '63d9bc00');
 
             // Affichage sur interruption du chargement.
-            bootstrap_displayApplicationfirst();
+            bootstrap_displayApplicationFirst();
         } elseif ($bootstrapServerEntityDisplay) {
             if (file_exists(LIB_LOCAL_ENTITY_FILE))
                 echo file_get_contents(LIB_LOCAL_ENTITY_FILE, false, null, -1, lib_getConfiguration('ioReadMaxData'));
