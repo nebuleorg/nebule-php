@@ -185,12 +185,12 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que l'on puisse créer un groupe et tous ses attributs.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitCreateObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitCreateLink')
-            && $this->_configuration->getOptionUntyped('permitWriteGroup')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitCreateObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitCreateLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // calcul l'ID.
@@ -461,10 +461,10 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteLink')
-            || !$this->_configuration->getOptionUntyped('permitCreateLink')
-            || !$this->_configuration->getOptionUntyped('permitWriteGroup')
+        if (!$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+            || !$this->_configuration->getOptionAsBoolean('permitCreateLink')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -557,10 +557,10 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteLink')
-            || !$this->_configuration->getOptionUntyped('permitCreateLink')
-            || !$this->_configuration->getOptionUntyped('permitWriteGroup')
+        if (!$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+            || !$this->_configuration->getOptionAsBoolean('permitCreateLink')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -621,10 +621,10 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteLink')
-            || !$this->_configuration->getOptionUntyped('permitCreateLink')
-            || !$this->_configuration->getOptionUntyped('permitWriteGroup')
+        if (!$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+            || !$this->_configuration->getOptionAsBoolean('permitCreateLink')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -728,10 +728,10 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteLink')
-            || !$this->_configuration->getOptionUntyped('permitCreateLink')
-            || !$this->_configuration->getOptionUntyped('permitWriteGroup')
+        if (!$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+            || !$this->_configuration->getOptionAsBoolean('permitCreateLink')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -792,10 +792,10 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteLink')
-            || !$this->_configuration->getOptionUntyped('permitCreateLink')
-            || !$this->_configuration->getOptionUntyped('permitWriteGroup')
+        if (!$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+            || !$this->_configuration->getOptionAsBoolean('permitCreateLink')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -851,7 +851,7 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Désactivée si option à false.
-        if (!$this->_configuration->getOptionUntyped('permitObfuscatedLink')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
             return false;
         }
 
@@ -904,15 +904,15 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Désactivée si option à false.
-        if (!$this->_configuration->getOptionUntyped('permitObfuscatedLink')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
             return false;
         }
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteLink')
-            || !$this->_configuration->getOptionUntyped('permitCreateLink')
-            || !$this->_configuration->getOptionUntyped('permitWriteGroup')
+        if (!$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+            || !$this->_configuration->getOptionAsBoolean('permitCreateLink')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -973,15 +973,15 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Désactivée si option à false.
-        if (!$this->_configuration->getOptionUntyped('permitObfuscatedLink')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
             return false;
         }
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteLink')
-            || !$this->_configuration->getOptionUntyped('permitCreateLink')
-            || !$this->_configuration->getOptionUntyped('permitWriteGroup')
+        if (!$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+            || !$this->_configuration->getOptionAsBoolean('permitCreateLink')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -1069,10 +1069,10 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteLink')
-            || !$this->_configuration->getOptionUntyped('permitCreateLink')
-            || !$this->_configuration->getOptionUntyped('permitWriteGroup')
+        if (!$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+            || !$this->_configuration->getOptionAsBoolean('permitCreateLink')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -1126,10 +1126,10 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteLink')
-            || !$this->_configuration->getOptionUntyped('permitCreateLink')
-            || !$this->_configuration->getOptionUntyped('permitWriteGroup')
+        if (!$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+            || !$this->_configuration->getOptionAsBoolean('permitCreateLink')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -1292,10 +1292,10 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteLink')
-            || !$this->_configuration->getOptionUntyped('permitCreateLink')
-            || !$this->_configuration->getOptionUntyped('permitWriteGroup')
+        if (!$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+            || !$this->_configuration->getOptionAsBoolean('permitCreateLink')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -1349,10 +1349,10 @@ class Group extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteLink')
-            || !$this->_configuration->getOptionUntyped('permitCreateLink')
-            || !$this->_configuration->getOptionUntyped('permitWriteGroup')
+        if (!$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+            || !$this->_configuration->getOptionAsBoolean('permitCreateLink')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteGroup')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;

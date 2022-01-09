@@ -188,10 +188,10 @@ class Conversation extends Group
         $this->_metrology->addLog('Ask create conversation', Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Vérifie que l'on puisse créer une conversation.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteConversation')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // Génère un contenu aléatoire.
@@ -460,10 +460,10 @@ class Conversation extends Group
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteLink')
-            || !$this->_configuration->getOptionUntyped('permitCreateLink')
-            || !$this->_configuration->getOptionUntyped('permitWriteConversation')
+        if (!$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+            || !$this->_configuration->getOptionAsBoolean('permitCreateLink')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteConversation')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;
@@ -517,10 +517,10 @@ class Conversation extends Group
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que la création de liens est possible.
-        if (!$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteLink')
-            || !$this->_configuration->getOptionUntyped('permitCreateLink')
-            || !$this->_configuration->getOptionUntyped('permitWriteConversation')
+        if (!$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+            || !$this->_configuration->getOptionAsBoolean('permitCreateLink')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteConversation')
             || !$this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             return false;

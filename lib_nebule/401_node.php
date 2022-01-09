@@ -382,9 +382,9 @@ class Node implements nodeInterface
         $this->_markProtectedChecked = false;
 
         // Vérifie que l'on puisse créer un objet.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // calcul l'ID.
@@ -595,7 +595,7 @@ class Node implements nodeInterface
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($list) == 0
-            && $this->_configuration->getOptionUntyped('permitListOtherHash')
+            && $this->_configuration->getOptionAsBoolean('permitListOtherHash')
         ) {
             // A faire...
         }
@@ -1717,7 +1717,7 @@ class Node implements nodeInterface
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($list) == 0
-            && $this->_configuration->getOptionUntyped('permitListOtherHash')
+            && $this->_configuration->getOptionAsBoolean('permitListOtherHash')
         ) {
             // A faire...
         }
@@ -1792,7 +1792,7 @@ class Node implements nodeInterface
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($list) == 0
-            && $this->_configuration->getOptionUntyped('permitListOtherHash')
+            && $this->_configuration->getOptionAsBoolean('permitListOtherHash')
         ) {
             // A faire...
         }
@@ -1954,12 +1954,12 @@ class Node implements nodeInterface
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($listS) == 0
-            && $this->_configuration->getOptionUntyped('permitListOtherHash')
+            && $this->_configuration->getOptionAsBoolean('permitListOtherHash')
         ) {
             // A faire...
         }
         if (sizeof($listT) == 0
-            && $this->_configuration->getOptionUntyped('permitListOtherHash')
+            && $this->_configuration->getOptionAsBoolean('permitListOtherHash')
         ) {
             // A faire...
         }
@@ -2112,9 +2112,9 @@ class Node implements nodeInterface
         $this->_metrology->addLog('Ask protect object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         // Vérifie que l'écriture d'objets et de liens est permise.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // Génération de la clé de chiffrement.
@@ -2314,7 +2314,7 @@ class Node implements nodeInterface
             $this->_idUnprotectedKey = $keyID;
 
             // Si autorisé, partage la protection avec les entités de recouvrement.
-            if ($this->_configuration->getOptionUntyped('permitRecoveryEntities')) {
+            if ($this->_configuration->getOptionAsBoolean('permitRecoveryEntities')) {
                 $listEntities = $this->_nebuleInstance->getRecoveryEntitiesInstance();
                 foreach ($listEntities as $entity) {
                     if (is_a($entity, 'Entity')
@@ -2576,7 +2576,7 @@ class Node implements nodeInterface
         }
 
         // Vérifie que la protection n'est pas partagée à une entité de recouvrement.
-        if (!$this->_configuration->getOptionUntyped('permitRecoveryRemoveEntity')
+        if (!$this->_configuration->getOptionAsBoolean('permitRecoveryRemoveEntity')
             && $this->_nebuleInstance->getIsRecoveryEntity($entity->getID())
         ) {
             return false;
@@ -2730,7 +2730,7 @@ class Node implements nodeInterface
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($list) == 0
-            && $this->_configuration->getOptionUntyped('permitListOtherHash')
+            && $this->_configuration->getOptionAsBoolean('permitListOtherHash')
         ) {
             // A faire...
         }
@@ -3000,12 +3000,12 @@ class Node implements nodeInterface
         // Détermine l'algorithme de hash.
         $hashAlgo = $this->getHashAlgo();
         if (!$this->_crypto->checkHashAlgorithm($hashAlgo)
-            && $this->_configuration->getOptionUntyped('permitSynchronizeLink')
+            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
         )
             $this->syncLinks(false);
         $hashAlgo = $this->getHashAlgo();
         if (!$this->_crypto->checkHashAlgorithm($hashAlgo)) {
-            if ($this->_configuration->getOptionUntyped('permitDeleteObjectOnUnknownHash'))
+            if ($this->_configuration->getOptionAsBoolean('permitDeleteObjectOnUnknownHash'))
                 $hashAlgo = $this->_crypto->hashAlgorithmName();
             else
                 return false;
@@ -3038,7 +3038,7 @@ class Node implements nodeInterface
         }
 
         // Si la vérification est désactivée, quitte.
-        if (!$this->_configuration->getOptionUntyped('permitCheckObjectHash')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash')) {
             $this->_metrology->addLog('Warning - Invalid object hash ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
             $this->_haveData = true;
             return true;
@@ -3117,14 +3117,14 @@ class Node implements nodeInterface
         // Détermine l'algorithme de hash.
         $hashAlgo = $this->getHashAlgo();
         if (!$this->_crypto->checkHashAlgorithm($hashAlgo)
-            && $this->_configuration->getOptionUntyped('permitSynchronizeLink')
+            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
         ) {
             // Essaie une synchronisation rapide des liens.
             $this->syncLinks(false);
         }
         $hashAlgo = $this->getHashAlgo();
         if (!$this->_crypto->checkHashAlgorithm($hashAlgo)) {
-            if ($this->_configuration->getOptionUntyped('permitDeleteObjectOnUnknownHash')) {
+            if ($this->_configuration->getOptionAsBoolean('permitDeleteObjectOnUnknownHash')) {
                 // Si pas trouvé d'algorithme valide, utilise celui par défaut.
                 $hashAlgo = $this->_crypto->hashAlgorithmName();
             } else {
@@ -3168,7 +3168,7 @@ class Node implements nodeInterface
         }
 
         // Si la vérification est désactivée, quitte.
-        if (!$this->_configuration->getOptionUntyped('permitCheckObjectHash')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash')) {
             $this->_metrology->addLog('Warning - Invalid object hash ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
             $this->_haveData = true;
             return $this->_data;
@@ -3364,7 +3364,7 @@ class Node implements nodeInterface
         if ($nid == '0' || !$this->_io->checkLinkPresent($nid))
             return;
 
-        if (!$this->_configuration->getOptionUntyped('permitListInvalidLinks'))
+        if (!$this->_configuration->getOptionAsBoolean('permitListInvalidLinks'))
             $withInvalidLinks = false;
 
         $lines = $this->_io->linksRead($nid, '');
@@ -3405,7 +3405,7 @@ class Node implements nodeInterface
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
-        $permitListInvalidLinks = $this->_configuration->getOptionUntyped('permitListInvalidLinks');
+        $permitListInvalidLinks = $this->_configuration->getOptionAsBoolean('permitListInvalidLinks');
         $linkVersion = 'nebule/liens/version/' . $this->_configuration->getOptionUntyped('defaultLinksVersion'); // Version de lien.
         $linksResult = array();
         if (!$this->_io->checkLinkPresent($this->_id)) {
@@ -3469,7 +3469,7 @@ class Node implements nodeInterface
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
-        $permitListInvalidLinks = $this->_configuration->getOptionUntyped('permitListInvalidLinks');
+        $permitListInvalidLinks = $this->_configuration->getOptionAsBoolean('permitListInvalidLinks');
         $linkVersion = 'nebule/liens/version/' . $this->_configuration->getOptionUntyped('defaultLinksVersion'); // Version de lien.
         $linksResult = array();
         if (!$this->_io->checkLinkPresent($this->_id)) {
@@ -3635,7 +3635,7 @@ class Node implements nodeInterface
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
-        $permitListInvalidLinks = $this->_configuration->getOptionUntyped('permitListInvalidLinks');
+        $permitListInvalidLinks = $this->_configuration->getOptionAsBoolean('permitListInvalidLinks');
         $linkVersion = 'nebule/liens/version/' . $this->_configuration->getOptionUntyped('defaultLinksVersion'); // Version de lien par défaut.
         $linksResult = array();
         if (!$this->_io->checkLinkPresent($this->_id)) {
@@ -3818,7 +3818,7 @@ class Node implements nodeInterface
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         // Vérifier si authorisé à rechercher les mises à jours.
-        if (!$this->_configuration->getOptionUntyped('permitFollowUpdates')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitFollowUpdates')) {
             return $this->_id;
         }
 
@@ -3921,7 +3921,7 @@ class Node implements nodeInterface
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
-        $x = $this->_configuration->getOptionUntyped('permitListInvalidLinks');
+        $x = $this->_configuration->getOptionAsBoolean('permitListInvalidLinks');
         $v = 'nebule/liens/version/' . $this->_configuration->getOptionUntyped('defaultLinksVersion'); // Version de lien.
         $r = array(); // Tableau des liens de mise à jour.
         $o = array(); // Tableau des objets résultats.
@@ -4379,10 +4379,10 @@ class Node implements nodeInterface
         }
 
         // Vérifie si autorisé.
-        if (!$this->_configuration->getOptionUntyped('permitWriteObject')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitWriteObject')) {
             return false;
         }
-        if (!$this->_configuration->getOptionUntyped('permitSynchronizeObject')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitSynchronizeObject')) {
             return false;
         }
 
@@ -4397,7 +4397,7 @@ class Node implements nodeInterface
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($links) == 0
-            && $this->_configuration->getOptionUntyped('permitListOtherHash')
+            && $this->_configuration->getOptionAsBoolean('permitListOtherHash')
         ) {
             // A faire...
         }
@@ -4441,10 +4441,10 @@ class Node implements nodeInterface
         }
 
         // Vérifie si autorisé.
-        if (!$this->_configuration->getOptionUntyped('permitWriteLink')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitWriteLink')) {
             return false;
         }
-        if (!$this->_configuration->getOptionUntyped('permitSynchronizeLink')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitSynchronizeLink')) {
             return false;
         }
 
@@ -4459,7 +4459,7 @@ class Node implements nodeInterface
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($links) == 0
-            && $this->_configuration->getOptionUntyped('permitListOtherHash')
+            && $this->_configuration->getOptionAsBoolean('permitListOtherHash')
         ) {
             // A faire...
         }
@@ -4714,8 +4714,8 @@ class Node implements nodeInterface
 
         if (!$this->_io->checkObjectPresent($this->_id)) {
             // Si autorisé à écrire un nouvel objet.
-            if ($this->_configuration->getOptionUntyped('permitWriteObject')
-                && $this->_configuration->getOptionUntyped('permitCreateObject')
+            if ($this->_configuration->getOptionAsBoolean('permitWriteObject')
+                && $this->_configuration->getOptionAsBoolean('permitCreateObject')
             ) {
                 $id = $this->_io->objectWrite($this->_data);
             } else {

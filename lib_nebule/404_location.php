@@ -109,7 +109,7 @@ class Localisation extends Node
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
-        if ($this->_configuration->getOptionUntyped('permitLocalisationStats')) {
+        if ($this->_configuration->getOptionAsBoolean('permitLocalisationStats')) {
             return false;
         }
 

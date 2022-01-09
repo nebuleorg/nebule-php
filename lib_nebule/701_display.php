@@ -1989,7 +1989,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function commonScripts()
     {
-        if (!$this->_configuration->getOptionUntyped('permitJavaScript')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitJavaScript')) {
             return;
         }
         ?>
@@ -2792,7 +2792,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $result = $result . $divOpen . '<img src="?o=' . $id
                             . '" alt="Image ' . $id . '">' . $divClose;
                     } else {
-                        if (!$this->_configuration->getOptionUntyped('permitCheckObjectHash')) {
+                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash')) {
                             $result = $result . $this->convertLineMessage(':::display:content:warningTooBig', 'warning');
                         } else {
                             $result = $result . $this->convertLineMessage(':::display:content:errorNotDisplayable', 'error');
@@ -2804,7 +2804,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     if ($content != null) {
                         $result = $result . $divOpen . '<p>' . $content . '</p>' . $divClose;
                     } else {
-                        if (!$this->_configuration->getOptionUntyped('permitCheckObjectHash')) {
+                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash')) {
                             $result = $result . $this->convertLineMessage(':::display:content:warningTooBig', 'warning');
                         } else {
                             $result = $result . $this->convertLineMessage(':::display:content:errorNotDisplayable', 'error');
@@ -2821,7 +2821,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     if ($content != null) {
                         $result = $result . $divOpen . '<pre>' . $content . '</pre>' . $divClose;
                     } else {
-                        if (!$this->_configuration->getOptionUntyped('permitCheckObjectHash')) {
+                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash')) {
                             $result = $result . $this->convertLineMessage(':::display:content:warningTooBig', 'warning');
                         } else {
                             $result = $result . $this->convertLineMessage(':::display:content:errorNotDisplayable', 'error');
@@ -2834,7 +2834,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     if ($content != null) {
                         $result = $result . $divOpen . '<br /><audio controls><source src="?o=' . $id . '" type="audio/mp3" />' . $this->_traductionInstance->getTraduction(':::warn_NoAudioTagSupport') . '</audio><br />' . $divClose;
                     } else {
-                        if (!$this->_configuration->getOptionUntyped('permitCheckObjectHash')) {
+                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash')) {
                             $result = $result . $this->convertLineMessage(':::display:content:warningTooBig', 'warning');
                         } else {
                             $result = $result . $this->convertLineMessage(':::display:content:errorNotDisplayable', 'error');
@@ -2846,7 +2846,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     if ($content != null) {
                         $result = $result . $divOpen . '<br /><audio controls><source src="?o=' . $id . '" type="audio/ogg" />' . $this->_traductionInstance->getTraduction(':::warn_NoAudioTagSupport') . '</audio><br />' . $divClose;
                     } else {
-                        if (!$this->_configuration->getOptionUntyped('permitCheckObjectHash')) {
+                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash')) {
                             $result = $result . $this->convertLineMessage(':::display:content:warningTooBig', 'warning');
                         } else {
                             $result = $result . $this->convertLineMessage(':::display:content:errorNotDisplayable', 'error');
@@ -3325,7 +3325,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     private function _getImageUpdate($object, $useBuffer = true)
     {
-        if (!$this->_configuration->getOptionUntyped('permitSessionBuffer')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitSessionBuffer')) {
             $useBuffer = false;
         }
 
@@ -3373,7 +3373,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     private function _getImageByReference($reference, $useBuffer = true)
     {
-        if (!$this->_configuration->getOptionUntyped('permitSessionBuffer')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitSessionBuffer')) {
             $useBuffer = false;
         }
 
@@ -4643,14 +4643,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         if (!isset($param['enableDisplayFlagProtection'])
             || $param['enableDisplayFlagProtection'] !== true
-            || !$this->_configuration->getOptionUntyped('permitProtectedObject')
+            || !$this->_configuration->getOptionAsBoolean('permitProtectedObject')
         ) {
             $param['enableDisplayFlagProtection'] = false; // Par défaut à false.
         }
 
         if (!isset($param['enableDisplayFlagObfuscate'])
             || $param['enableDisplayFlagObfuscate'] !== true
-            || !$this->_configuration->getOptionUntyped('permitObfuscatedLink')
+            || !$this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
         ) {
             $param['enableDisplayFlagObfuscate'] = false; // Par défaut à false.
         }
@@ -4708,7 +4708,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         ) {
             $param['enableDisplayJS'] = true; // Par défaut à true.
         }
-        if (!$this->_configuration->getOptionUntyped('permitJavaScript')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitJavaScript')) {
             $param['enableDisplayJS'] = false; // A false si l'option globale est à false.
         }
 
@@ -5859,8 +5859,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
             // Si connecté, l'icône est active.
             if ($this->_unlocked
-                && $this->_configuration->getOptionUntyped('permitWrite')
-                && $this->_configuration->getOptionUntyped('permitWriteLink')
+                && $this->_configuration->getOptionAsBoolean('permitWrite')
+                && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             ) {
                 $result .= $this->convertHypertextLink($icon, $htlink);
             } else {
@@ -6218,14 +6218,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         if (!isset($param['enableDisplayFlagProtection'])
             || $param['enableDisplayFlagProtection'] !== true
-            || !$this->_configuration->getOptionUntyped('permitProtectedObject')
+            || !$this->_configuration->getOptionAsBoolean('permitProtectedObject')
         ) {
             $param['enableDisplayFlagProtection'] = false; // Par défaut à false.
         }
 
         if (!isset($param['enableDisplayFlagObfuscate'])
             || $param['enableDisplayFlagObfuscate'] !== true
-            || !$this->_configuration->getOptionUntyped('permitObfuscatedLink')
+            || !$this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
         ) {
             $param['enableDisplayFlagObfuscate'] = false; // Par défaut à false.
         }
@@ -6456,8 +6456,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 'enableDisplayID' => false,
                 'enableDisplayFlags' => false,
                 'enableDisplayFlagEmotions' => $param['enableDisplayFlagEmotions'],
-                'enableDisplayFlagProtection' => $this->_configuration->getOptionUntyped('permitProtectedObject'),
-                'enableDisplayFlagObfuscate' => $this->_configuration->getOptionUntyped('permitObfuscatedLink'),
+                'enableDisplayFlagProtection' => $this->_configuration->getOptionAsBoolean('permitProtectedObject'),
+                'enableDisplayFlagObfuscate' => $this->_configuration->getOptionAsBoolean('permitObfuscatedLink'),
                 'enableDisplayFlagUnlocked' => false,
                 'enableDisplayFlagActivated' => false,
                 'enableDisplayFlagState' => false,
@@ -9068,8 +9068,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
             // Si connecté, l'icône est active.
             if ($this->_unlocked
-                && $this->_configuration->getOptionUntyped('permitWrite')
-                && $this->_configuration->getOptionUntyped('permitWriteLink')
+                && $this->_configuration->getOptionAsBoolean('permitWrite')
+                && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             ) {
                 $result .= $this->convertHypertextLink($icon, $htlink);
             } else {

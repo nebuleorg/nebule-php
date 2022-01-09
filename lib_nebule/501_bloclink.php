@@ -702,7 +702,7 @@ class Bloclink implements bloclinkInterface
         // Check item overflow
         if (strtok('.') !== false) return false;
 
-        if (!$this->_configuration->getOptionUntyped('permitCheckSignOnVerify')) return true;
+        if (!$this->_configuration->getOptionAsBoolean('permitCheckSignOnVerify')) return true;
         if ($this->_checkObjectContent($nid)) {
             $data = $bh . '_' . $bl;
             $hash = $this->_crypto->hash($data, $algo . '.' . $size);
@@ -733,7 +733,7 @@ class Bloclink implements bloclinkInterface
         $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         // Si autorisé à signer.
-        if (!$this->_configuration->getOptionUntyped('permitCreateLink')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitCreateLink')) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Can not sign link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             return false;
         }
@@ -800,8 +800,8 @@ class Bloclink implements bloclinkInterface
         $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         // Si autorisé à écrire.
-        if (!$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteLink')
+        if (!$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
         ) {
             return false;
         }
@@ -818,13 +818,13 @@ class Bloclink implements bloclinkInterface
         }
 
         // Ecrit l'historique.
-        if ($this->_configuration->getOptionUntyped('permitHistoryLinksSign')) {
+        if ($this->_configuration->getOptionAsBoolean('permitHistoryLinksSign')) {
             $history = nebule::NEBULE_LOCAL_HISTORY_FILE;
             $this->_io->linkWrite($history, $this->_rawLink);
         }
 
         // Ecrit le lien pour l'objet de l'entité signataire.
-        if ($this->_configuration->getOptionUntyped('permitAddLinkToSigner')) {
+        if ($this->_configuration->getOptionAsBoolean('permitAddLinkToSigner')) {
             $this->_io->linkWrite($this->_hashSigner, $this->_rawLink);
         }
 
@@ -846,7 +846,7 @@ class Bloclink implements bloclinkInterface
             ) {
                 $this->_io->linkWrite($this->_hashMeta, $this->_rawLink);
             }
-        } elseif ($this->_configuration->getOptionUntyped('permitObfuscatedLink')) {
+        } elseif ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
             // Ecrit le lien dissimulé.
             $this->_io->linkWrite($this->_hashSigner . '-' . $this->_hashSource, $this->_rawLink); // @todo
         } else {

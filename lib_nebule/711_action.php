@@ -324,7 +324,7 @@ abstract class Actions
         // Gère la dissimulation d'un lien.
         if ($this->_actionObfuscateLinkInstance != ''
             && is_a($this->_actionObfuscateLinkInstance, 'Link')
-            && $this->_configuration->getOptionUntyped('permitObfuscatedLink')
+            && $this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
         ) {
             $this->_actionObfuscateLink();
         }
@@ -476,13 +476,13 @@ abstract class Actions
 
         // Vérifie que l'action de création d'entité soit permise entité verrouillée.
         if ($this->_unlocked
-            || $this->_configuration->getOptionUntyped('permitPublicCreateEntity')
+            || $this->_configuration->getOptionAsBoolean('permitPublicCreateEntity')
         ) {
             $this->_extractActionCreateEntity();
         }
 
         // Vérifie que l'action de chargement de lien soit permise.
-        if ($this->_configuration->getOptionUntyped('permitUploadLink')
+        if ($this->_configuration->getOptionAsBoolean('permitUploadLink')
             || $this->_unlocked
         ) {
             // Extrait les actions.
@@ -501,17 +501,17 @@ abstract class Actions
         }
 
         // Si l'action de chargement de lien est permise y compris entité verrouillée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitUploadLink')
-            && ($this->_configuration->getOptionUntyped('permitPublicUploadCodeAuthoritiesLink')
-                || $this->_configuration->getOptionUntyped('permitPublicUploadLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitUploadLink')
+            && ($this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+                || $this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_unlocked
             )
         ) {
             // Lien à signer 1.
             if ($this->_unlocked
-                && $this->_configuration->getOptionUntyped('permitCreateLink')
+                && $this->_configuration->getOptionAsBoolean('permitCreateLink')
                 && $this->_actionSignLinkInstance1 != ''
                 && is_a($this->_actionSignLinkInstance1, 'Link')
             ) {
@@ -520,7 +520,7 @@ abstract class Actions
 
             // Lien à signer 2.
             if ($this->_unlocked
-                && $this->_configuration->getOptionUntyped('permitCreateLink')
+                && $this->_configuration->getOptionAsBoolean('permitCreateLink')
                 && $this->_actionSignLinkInstance2 != ''
                 && is_a($this->_actionSignLinkInstance2, 'Link')
             ) {
@@ -529,7 +529,7 @@ abstract class Actions
 
             // Lien à signer 3.
             if ($this->_unlocked
-                && $this->_configuration->getOptionUntyped('permitCreateLink')
+                && $this->_configuration->getOptionAsBoolean('permitCreateLink')
                 && $this->_actionSignLinkInstance3 != ''
                 && is_a($this->_actionSignLinkInstance3, 'Link')
             ) {
@@ -559,9 +559,9 @@ abstract class Actions
     protected function _extractActionSignLink1()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitCreateLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitCreateLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action sign link 1', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -600,9 +600,9 @@ abstract class Actions
     protected function _extractActionSignLink2()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitCreateLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitCreateLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action sign link 2', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -641,9 +641,9 @@ abstract class Actions
     protected function _extractActionSignLink3()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitCreateLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitCreateLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action sign link 3', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -699,11 +699,11 @@ abstract class Actions
     protected function _extractActionUploadLink()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitUploadLink')
-            && ($this->_configuration->getOptionUntyped('permitPublicUploadLink')
-                || $this->_configuration->getOptionUntyped('permitPublicUploadCodeAuthoritiesLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitUploadLink')
+            && ($this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
+                || $this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                 || $this->_unlocked
             )
         ) {
@@ -724,7 +724,7 @@ abstract class Actions
 
             // Vérifie si restriction des liens au maître du code. Non par défaut.
             $permitNotCodeMaster = false;
-            if ($this->_configuration->getOptionUntyped('permitPublicUploadLink')
+            if ($this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_unlocked
             ) {
                 $permitNotCodeMaster = true;
@@ -756,9 +756,9 @@ abstract class Actions
     protected function _extractActionObfuscateLink()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitObfuscatedLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action obfuscate link', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -809,9 +809,9 @@ abstract class Actions
     protected function _extractActionDeleteObject()
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action delete object', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -841,7 +841,7 @@ abstract class Actions
             }
             // Extraction si la suppression doit être cachée.
             if ($argObfuscate
-                && $this->_configuration->getOptionUntyped('permitObfuscatedLink')
+                && $this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
             ) {
                 $this->_actionDeleteObjectObfuscate = true;
             }
@@ -863,9 +863,9 @@ abstract class Actions
     protected function _extractActionProtectObject()
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action protect object', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -898,9 +898,9 @@ abstract class Actions
     protected function _extractActionUnprotectObject()
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action unprotect object', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -933,9 +933,9 @@ abstract class Actions
     protected function _extractActionShareProtectObjectToEntity()
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action share protect object to entity', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -968,9 +968,9 @@ abstract class Actions
     protected function _extractActionShareProtectObjectToGroupOpened()
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action share protect object to opened group', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -1003,9 +1003,9 @@ abstract class Actions
     protected function _extractActionShareProtectObjectToGroupClosed()
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action share protect object to closed group', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -1038,9 +1038,9 @@ abstract class Actions
     protected function _extractActionCancelShareProtectObjectToEntity()
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action cancel share protect object to entity', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -1082,8 +1082,8 @@ abstract class Actions
     protected function _extractActionSynchronizeObject()
     {
         // Vérifie que l'écriture d'objets soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
         ) {
             $this->_metrology->addLog('Extract action synchronize object', Metrology::LOG_LEVEL_DEBUG); // Log
 
@@ -1124,8 +1124,8 @@ abstract class Actions
     protected function _extractActionSynchronizeEntity()
     {
         // Vérifie que l'écriture d'objets soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
         ) {
             $this->_metrology->addLog('Extract action synchronize entity', Metrology::LOG_LEVEL_DEBUG); // Log
 
@@ -1166,8 +1166,8 @@ abstract class Actions
     protected function _extractActionSynchronizeObjectLinks()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
         ) {
             $this->_metrology->addLog('Extract action synchronize object links', Metrology::LOG_LEVEL_DEBUG); // Log
 
@@ -1208,13 +1208,13 @@ abstract class Actions
     protected function _extractActionSynchronizeApplication()
     {
         // Vérifie que l'écriture d'objets soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitSynchronizeObject')
-            && $this->_configuration->getOptionUntyped('permitSynchronizeLink')
-            && $this->_configuration->getOptionUntyped('permitSynchronizeApplication')
-            && ($this->_configuration->getOptionUntyped('permitPublicSynchronizeApplication')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
+            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
+            && $this->_configuration->getOptionAsBoolean('permitSynchronizeApplication')
+            && ($this->_configuration->getOptionAsBoolean('permitPublicSynchronizeApplication')
                 || $this->_unlocked
             )
         ) {
@@ -1257,10 +1257,10 @@ abstract class Actions
     protected function _extractActionSynchronizeNewEntity()
     {
         // Vérifie que l'écriture d'objets soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitSynchronizeObject')
-            && $this->_configuration->getOptionUntyped('permitSynchronizeLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
+            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
         ) {
             $this->_metrology->addLog('Extract action synchronize new entity', Metrology::LOG_LEVEL_DEBUG); // Log
 
@@ -1467,11 +1467,11 @@ abstract class Actions
     protected function _extractActionUploadFileLinks()
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitUploadLink')
-            && ($this->_configuration->getOptionUntyped('permitPublicUploadLink')
-                || $this->_configuration->getOptionUntyped('permitPublicUploadCodeAuthoritiesLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitUploadLink')
+            && ($this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
+                || $this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                 || $this->_unlocked
             )
         ) {
@@ -1581,9 +1581,9 @@ abstract class Actions
     protected function _extractActionUploadFile()
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action upload file', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -1635,10 +1635,10 @@ abstract class Actions
                             $this->_actionUploadFileSize = $upsize;
                             $this->_actionUploadFilePath = $uppath;
                             $this->_actionUploadFileUpdate = $argUpd;
-                            if ($this->_configuration->getOptionUntyped('permitProtectedObject')) {
+                            if ($this->_configuration->getOptionAsBoolean('permitProtectedObject')) {
                                 $this->_actionUploadFileProtect = $argPrt;
                             }
-                            if ($this->_configuration->getOptionUntyped('permitObfuscatedLink')) {
+                            if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
                                 $this->_actionUploadFileObfuscateLinks = $argObf;
                             }
                         } else {
@@ -1782,9 +1782,9 @@ abstract class Actions
     protected function _extractActionUploadText()
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action upload text', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -1818,10 +1818,10 @@ abstract class Actions
                         $this->_actionUploadTextType = nebule::REFERENCE_OBJECT_TEXT;
                     }
 
-                    if ($this->_configuration->getOptionUntyped('permitProtectedObject')) {
+                    if ($this->_configuration->getOptionAsBoolean('permitProtectedObject')) {
                         $this->_actionUploadTextProtect = $argPrt;
                     }
-                    if ($this->_configuration->getOptionUntyped('permitObfuscatedLink')) {
+                    if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
                         $this->_actionUploadTextObfuscateLinks = $argObf;
                     }
                 }
@@ -1899,12 +1899,12 @@ abstract class Actions
     protected function _extractActionCreateEntity()
     {
         // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteEntity')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteEntity')
             && ($this->_unlocked
-                || $this->_configuration->getOptionUntyped('permitPublicCreateEntity')
+                || $this->_configuration->getOptionAsBoolean('permitPublicCreateEntity')
             )
         ) {
             $this->_metrology->addLog('Extract action create entity', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -1944,7 +1944,7 @@ abstract class Actions
                 $this->_actionCreateEntityFirstname = $argFstnam;
                 $this->_actionCreateEntityNikename = $argNiknam;
                 $this->_actionCreateEntityName = $argName;
-                if ($this->_configuration->getOptionUntyped('permitObfuscatedLink')) {
+                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
                     $this->_actionCreateEntityObfuscateLinks = $argObf;
                 }
 
@@ -2020,10 +2020,10 @@ abstract class Actions
     protected function _extractActionCreateGroup()
     {
         // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteGroup')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action create group', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -2054,7 +2054,7 @@ abstract class Actions
                 // Sauvegarde les valeurs.
                 $this->_actionCreateGroupName = $argName;
                 $this->_actionCreateGroupClosed = $argCld;
-                if ($this->_configuration->getOptionUntyped('permitObfuscatedLink')) {
+                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
                     $this->_actionCreateGroupObfuscateLinks = $argObf;
                 }
 
@@ -2115,9 +2115,9 @@ abstract class Actions
     protected function _extractActionDeleteGroup()
     {
         // Vérifie que la suppression de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteGroup')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action delete group', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -2166,9 +2166,9 @@ abstract class Actions
     protected function _extractActionAddToGroup()
     {
         // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteGroup')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action add to group', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -2209,9 +2209,9 @@ abstract class Actions
     protected function _extractActionRemoveFromGroup()
     {
         // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteGroup')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action remove from group', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -2252,9 +2252,9 @@ abstract class Actions
     protected function _extractActionAddItemToGroup()
     {
         // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteGroup')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action add item to group', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -2295,9 +2295,9 @@ abstract class Actions
     protected function _extractActionRemoveItemFromGroup()
     {
         // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteGroup')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action remove item from group', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -2370,10 +2370,10 @@ abstract class Actions
     protected function _extractActionCreateConversation()
     {
         // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteConversation')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action create group', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -2405,10 +2405,10 @@ abstract class Actions
                 // Sauvegarde les valeurs.
                 $this->_actionCreateConversationName = $argName;
                 $this->_actionCreateConversationClosed = $argCld;
-                if ($this->_configuration->getOptionUntyped('permitProtectedObject')) {
+                if ($this->_configuration->getOptionAsBoolean('permitProtectedObject')) {
                     $this->_actionCreateConversationProtected = $argPrt;
                 }
-                if ($this->_configuration->getOptionUntyped('permitObfuscatedLink')) {
+                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
                     $this->_actionCreateConversationObfuscateLinks = $argObf;
                 }
 
@@ -2470,9 +2470,9 @@ abstract class Actions
     protected function _extractActionDeleteConversation()
     {
         // Vérifie que la suppression de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteConversation')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action delete conversation', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -2521,9 +2521,9 @@ abstract class Actions
     protected function _extractActionAddMessageOnConversation()
     {
         // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteConversation')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action add to conversation', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -2564,9 +2564,9 @@ abstract class Actions
     protected function _extractActionRemoveMessageOnConversation()
     {
         // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteConversation')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action remove from conversation', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -2607,9 +2607,9 @@ abstract class Actions
     protected function _extractActionAddMemberOnConversation()
     {
         // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteConversation')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action add item to conversation', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -2650,9 +2650,9 @@ abstract class Actions
     protected function _extractActionRemoveMemberOnConversation()
     {
         // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteConversation')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action remove item from conversation', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -2686,10 +2686,10 @@ abstract class Actions
     protected function _extractActionCreateMessage()
     {
         // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteConversation')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action create message', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -2717,10 +2717,10 @@ abstract class Actions
                 $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_OBFUSCATE_LINKS);
 
                 // Sauvegarde les valeurs.
-                if ($this->_configuration->getOptionUntyped('permitProtectedObject')) {
+                if ($this->_configuration->getOptionAsBoolean('permitProtectedObject')) {
                     $this->_actionCreateMessageProtected = $argPrt;
                 }
-                if ($this->_configuration->getOptionUntyped('permitObfuscatedLink')) {
+                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
                     $this->_actionCreateMessageObfuscateLinks = $argObf;
                 }
             }
@@ -2765,9 +2765,9 @@ abstract class Actions
     protected function _extractActionAddProperty()
     {
         // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action add property', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -2801,10 +2801,10 @@ abstract class Actions
                         $this->_actionAddPropertyObject = $argObj;
                     }
                     $this->_actionAddPropertyValue = $argVal;
-                    if ($this->_configuration->getOptionUntyped('permitProtectedObject')) {
+                    if ($this->_configuration->getOptionAsBoolean('permitProtectedObject')) {
                         $this->_actionAddPropertyProtected = $argPrt;
                     }
-                    if ($this->_configuration->getOptionUntyped('permitObfuscatedLink')) {
+                    if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
                         $this->_actionAddPropertyObfuscateLinks = $argObf;
                     }
                 } else {
@@ -2914,12 +2914,12 @@ abstract class Actions
     protected function _extractActionCreateCurrency()
     {
         // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitCurrency')
-            && $this->_configuration->getOptionUntyped('permitWriteCurrency')
-            && $this->_configuration->getOptionUntyped('permitCreateCurrency')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitCurrency')
+            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
+            && $this->_configuration->getOptionAsBoolean('permitCreateCurrency')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action create currency', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -3051,12 +3051,12 @@ abstract class Actions
     protected function _extractActionCreateTokenPool()
     {
         // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitCurrency')
-            && $this->_configuration->getOptionUntyped('permitWriteCurrency')
-            && $this->_configuration->getOptionUntyped('permitCreateCurrency')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitCurrency')
+            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
+            && $this->_configuration->getOptionAsBoolean('permitCreateCurrency')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action create token pool', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -3188,12 +3188,12 @@ abstract class Actions
     protected function _extractActionCreateTokens()
     {
         // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitCurrency')
-            && $this->_configuration->getOptionUntyped('permitWriteCurrency')
-            && $this->_configuration->getOptionUntyped('permitCreateCurrency')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitCurrency')
+            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
+            && $this->_configuration->getOptionAsBoolean('permitCreateCurrency')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action create tokens', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -3272,9 +3272,9 @@ abstract class Actions
     protected function _actionSignLink(Link $link, $obfuscate = 'default')
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitUploadLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitUploadLink')
         ) {
             if ($this->_unlocked) {
                 $this->_metrology->addLog('Action sign link', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -3289,8 +3289,8 @@ abstract class Actions
 
                 // Signature du lien.
                 $link->signWrite();
-            } elseif ($this->_configuration->getOptionUntyped('permitPublicUploadCodeAuthoritiesLink')
-                || $this->_configuration->getOptionUntyped('permitPublicUploadLink')
+            } elseif ($this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+                || $this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
             ) {
                 $this->_metrology->addLog('Action sign link', Metrology::LOG_LEVEL_DEBUG); // Log
 
@@ -3343,11 +3343,11 @@ abstract class Actions
     protected function _actionUploadLink(Link $link)
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitUploadLink')
-            && ($this->_configuration->getOptionUntyped('permitPublicUploadCodeAuthoritiesLink')
-                || $this->_configuration->getOptionUntyped('permitPublicUploadLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitUploadLink')
+            && ($this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+                || $this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_unlocked
             )
             && is_a($link, 'Link')
@@ -3357,9 +3357,9 @@ abstract class Actions
 
             if ($link->getSigned()
                 && (($link->getSigners() == $this->_nebuleInstance->getCodeAuthority()
-                        && $this->_configuration->getOptionUntyped('permitPublicUploadCodeAuthoritiesLink')
+                        && $this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                     )
-                    || $this->_configuration->getOptionUntyped('permitPublicUploadLink')
+                    || $this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
                     || $this->_unlocked
                 )
             ) {
@@ -3393,15 +3393,15 @@ abstract class Actions
     protected function _actionObfuscateLink()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && ($this->_configuration->getOptionUntyped('permitPublicUploadLink')
-                || $this->_configuration->getOptionUntyped('permitPublicUploadCodeAuthoritiesLink')
-                || ($this->_configuration->getOptionUntyped('permitUploadLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && ($this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
+                || $this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+                || ($this->_configuration->getOptionAsBoolean('permitUploadLink')
                     && $this->_unlocked
                 )
             )
-            && $this->_configuration->getOptionUntyped('permitObfuscatedLink')
+            && $this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
             && $this->_actionObfuscateLinkInstance->getValid()
             && $this->_actionObfuscateLinkInstance->getSigned()
         ) {
@@ -3422,9 +3422,9 @@ abstract class Actions
     protected function _actionDeleteObject()
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisés.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action delete object', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -3447,9 +3447,9 @@ abstract class Actions
     protected function _actionProtectObject()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action protect object', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -3469,9 +3469,9 @@ abstract class Actions
     protected function _actionUnprotectObject()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action unprotect object', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -3490,9 +3490,9 @@ abstract class Actions
     protected function _actionShareProtectObjectToEntity()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action share protect object to entity ' . $this->_actionShareProtectObjectToEntity, Metrology::LOG_LEVEL_DEBUG); // Log
@@ -3511,9 +3511,9 @@ abstract class Actions
     protected function _actionShareProtectObjectToGroupOpened()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action share protect object to opened group', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -3536,9 +3536,9 @@ abstract class Actions
     protected function _actionShareProtectObjectToGroupClosed()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action share protect object to closed group', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -3561,9 +3561,9 @@ abstract class Actions
     protected function _actionCancelShareProtectObjectToEntity()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action cancel share protect object to entity', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -3583,9 +3583,9 @@ abstract class Actions
     protected function _actionSynchronizeObject()
     {
         // Vérifie que la création d'objet soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitSynchronizeObject')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
         ) {
             $this->_metrology->addLog('Action synchronize object', Metrology::LOG_LEVEL_DEBUG); // Log
 
@@ -3606,11 +3606,11 @@ abstract class Actions
     protected function _actionSynchronizeEntity()
     {
         // Vérifie que la création d'objet soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitSynchronizeObject')
-            && $this->_configuration->getOptionUntyped('permitSynchronizeLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
+            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
         ) {
             $this->_metrology->addLog('Action synchronize entity', Metrology::LOG_LEVEL_DEBUG); // Log
 
@@ -3655,9 +3655,9 @@ abstract class Actions
     protected function _actionSynchronizeObjectLinks()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitSynchronizeLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
         ) {
             $this->_metrology->addLog('Action synchronize object links', Metrology::LOG_LEVEL_DEBUG); // Log
 
@@ -3678,13 +3678,13 @@ abstract class Actions
     protected function _actionSynchronizeApplication()
     {
         // Vérifie que la création d'objet soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitSynchronizeObject')
-            && $this->_configuration->getOptionUntyped('permitSynchronizeLink')
-            && $this->_configuration->getOptionUntyped('permitSynchronizeApplication')
-            && ($this->_configuration->getOptionUntyped('permitPublicSynchronizeApplication')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
+            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
+            && $this->_configuration->getOptionAsBoolean('permitSynchronizeApplication')
+            && ($this->_configuration->getOptionAsBoolean('permitPublicSynchronizeApplication')
                 || $this->_unlocked()
             )
         ) {
@@ -3731,11 +3731,11 @@ abstract class Actions
     protected function _actionSynchronizeNewEntity()
     {
         // Vérifie que la création d'objet soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitSynchronizeObject')
-            && $this->_configuration->getOptionUntyped('permitSynchronizeLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
+            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
         ) {
             $this->_metrology->addLog('Action synchronize new entity', Metrology::LOG_LEVEL_DEBUG); // Log
 
@@ -3851,9 +3851,9 @@ abstract class Actions
     protected function _actionUploadFile()
     {
         // Vérifie que la création d'objet soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action upload file', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -3918,9 +3918,9 @@ abstract class Actions
     protected function _actionUploadText()
     {
         // Vérifie que la création d'objet soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action upload text', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -3999,11 +3999,11 @@ abstract class Actions
     protected function _actionUploadFileLinks()
     {
         // Vérifie que la création d'objet soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitUploadLink')
-            && ($this->_configuration->getOptionUntyped('permitPublicUploadCodeAuthoritiesLink')
-                || $this->_configuration->getOptionUntyped('permitPublicUploadLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitUploadLink')
+            && ($this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+                || $this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_unlocked
             )
         ) {
@@ -4020,9 +4020,9 @@ abstract class Actions
                     if ($instance->getValid()) {
                         if ($instance->getSigned()
                             && (($instance->getSigners() == $this->_nebuleInstance->getCodeAuthority()
-                                    && $this->_configuration->getOptionUntyped('permitPublicUploadCodeAuthoritiesLink')
+                                    && $this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                                 )
-                                || $this->_configuration->getOptionUntyped('permitPublicUploadLink')
+                                || $this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
                                 || $this->_unlocked
                             )
                         ) {
@@ -4062,12 +4062,12 @@ abstract class Actions
     protected function _actionCreateEntity()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteEntity')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteEntity')
             && ($this->_unlocked
-                || $this->_configuration->getOptionUntyped('permitPublicCreateEntity')
+                || $this->_configuration->getOptionAsBoolean('permitPublicCreateEntity')
             )
             && $this->_actionCreateEntity
             && !$this->_actionCreateEntityError
@@ -4220,10 +4220,10 @@ abstract class Actions
     protected function _actionCreateGroup()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteGroup')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
             && $this->_unlocked
             && !$this->_actionCreateGroupError
         ) {
@@ -4265,9 +4265,9 @@ abstract class Actions
     protected function _actionDeleteGroup()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteGroup')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
             && $this->_unlocked
             && !$this->_actionDeleteGroupError
         ) {
@@ -4323,9 +4323,9 @@ abstract class Actions
     protected function _actionAddToGroup()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteGroup')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action add to group ' . $this->_actionAddToGroup, Metrology::LOG_LEVEL_DEBUG); // Log
@@ -4347,9 +4347,9 @@ abstract class Actions
     protected function _actionRemoveFromGroup()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteGroup')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action remove from group ' . $this->_actionRemoveFromGroup, Metrology::LOG_LEVEL_DEBUG); // Log
@@ -4369,9 +4369,9 @@ abstract class Actions
     protected function _actionAddItemToGroup()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteGroup')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action add item to group ' . $this->_actionAddItemToGroup, Metrology::LOG_LEVEL_DEBUG); // Log
@@ -4389,9 +4389,9 @@ abstract class Actions
     protected function _actionRemoveItemFromGroup()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteGroup')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action remove item from group ' . $this->_actionRemoveItemFromGroup, Metrology::LOG_LEVEL_DEBUG); // Log
@@ -4409,10 +4409,10 @@ abstract class Actions
     protected function _actionCreateConversation()
     {
         // Vérifie que la création de conversation soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteConversation')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
             && $this->_unlocked
             && !$this->_actionCreateConversationError
         ) {
@@ -4464,9 +4464,9 @@ abstract class Actions
     protected function _actionDeleteConversation()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteConversation')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
             && $this->_unlocked
             && !$this->_actionDeleteConversationError
         ) {
@@ -4518,9 +4518,9 @@ abstract class Actions
     protected function _actionAddMessageOnConversation()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteConversation')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action add message to conversation ' . $this->_actionAddMessageOnConversation, Metrology::LOG_LEVEL_DEBUG); // Log
@@ -4541,9 +4541,9 @@ abstract class Actions
     protected function _actionRemoveMessageOnConversation()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteConversation')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action remove message to conversation ' . $this->_actionRemoveMessageOnConversation, Metrology::LOG_LEVEL_DEBUG); // Log
@@ -4564,9 +4564,9 @@ abstract class Actions
     protected function _actionAddMemberOnConversation()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteConversation')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action add member to conversation ' . $this->_actionAddMemberOnConversation, Metrology::LOG_LEVEL_DEBUG); // Log
@@ -4587,9 +4587,9 @@ abstract class Actions
     protected function _actionRemoveMemberOnConversation()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteConversation')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action remove member to conversation ' . $this->_actionRemoveMemberOnConversation, Metrology::LOG_LEVEL_DEBUG); // Log
@@ -4611,10 +4611,10 @@ abstract class Actions
     protected function _actionCreateMessage()
     {
         // Vérifie que la création de message soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteConversation')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
             && $this->_unlocked
             && !$this->_actionCreateMessageError
             && !$this->_actionUploadTextError
@@ -4669,9 +4669,9 @@ abstract class Actions
     protected function _actionAddProperty()
     {
         // Vérifie que la création d'objet soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
             && !$this->_actionAddPropertyError
         ) {
@@ -4724,11 +4724,11 @@ abstract class Actions
     protected function _actionCreateCurrency()
     {
         // Vérifie que la création de monnaie soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteCurrency')
-            && $this->_configuration->getOptionUntyped('permitCreateCurrency')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
+            && $this->_configuration->getOptionAsBoolean('permitCreateCurrency')
             && $this->_unlocked
             && !$this->_actionCreateCurrencyError
         ) {
@@ -4773,11 +4773,11 @@ abstract class Actions
     protected function _actionCreateTokenPool()
     {
         // Vérifie que la création de sac de jetons soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteCurrency')
-            && $this->_configuration->getOptionUntyped('permitCreateCurrency')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
+            && $this->_configuration->getOptionAsBoolean('permitCreateCurrency')
             && $this->_unlocked
             && !$this->_actionCreateTokenPoolError
         ) {
@@ -4822,11 +4822,11 @@ abstract class Actions
     protected function _actionCreateTokens()
     {
         // Vérifie que la création de sac de jetons soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteCurrency')
-            && $this->_configuration->getOptionUntyped('permitCreateCurrency')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
+            && $this->_configuration->getOptionAsBoolean('permitCreateCurrency')
             && $this->_unlocked
             && !$this->_actionCreateTokensError
             && $this->_actionCreateTokensCount > 0
@@ -4889,7 +4889,7 @@ abstract class Actions
 
         // Si besoin, obfuscation du lien.
         if ($obfuscate
-            && $this->_configuration->getOptionUntyped('permitObfuscatedLink')
+            && $this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
         ) {
             $newLink->obfuscate();
         }

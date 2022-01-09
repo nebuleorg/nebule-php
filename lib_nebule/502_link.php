@@ -198,7 +198,7 @@ class Link implements linkInterface
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_io = $nebuleInstance->getIoInstance();
         $this->_crypto = $nebuleInstance->getCryptoInstance();
-        $this->_permitObfuscated = (bool)$this->_configuration->getOptionUntyped('permitObfuscatedLink');
+        $this->_permitObfuscated = (bool)$this->_configuration->getOptionAsBoolean('permitObfuscatedLink');
         //$this->_metrology->addLinkRead();
         $this->_bloclink = $bloclink;
 
@@ -310,7 +310,7 @@ class Link implements linkInterface
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_io = $nebuleInstance->getIoInstance();
         $this->_crypto = $nebuleInstance->getCryptoInstance();
-        $this->_permitObfuscated = (bool)$this->_configuration->getOptionUntyped('permitObfuscatedLink');
+        $this->_permitObfuscated = (bool)$this->_configuration->getOptionAsBoolean('permitObfuscatedLink');
     }
 
 
@@ -693,7 +693,7 @@ class Link implements linkInterface
         //  / ! \
         //   ---   Is verify permitted ?
         //         DANGER !!! If not permitted, it's very dangerous !!!
-        if (!$this->_configuration->getOptionUntyped('permitCheckSignOnVerify')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitCheckSignOnVerify')) {
             $this->_signed = false;
             $this->_verifyNumError = -1;
             $this->_verifyTextError = 'Option ask to not permit check sign on verify - DANGER !!!';
@@ -816,7 +816,7 @@ class Link implements linkInterface
 
         // Vérifie que l'action de dissimulation de lien est autorisée.
         if ($this->_action == 'k'
-            && !$this->_configuration->getOptionUntyped('permitProtectedObject')
+            && !$this->_configuration->getOptionAsBoolean('permitProtectedObject')
         ) {
             $this->_verifyNumError = 42;
             $this->_verifyTextError = 'Action k is not autorized.';
@@ -825,7 +825,7 @@ class Link implements linkInterface
 
         // Vérifie que l'action de dissimulation de lien est autorisée.
         if ($this->_action == 'c'
-            && !$this->_configuration->getOptionUntyped('permitObfuscatedLink')
+            && !$this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
         ) {
             $this->_verifyNumError = 43;
             $this->_verifyTextError = 'Action c is not autorized.';

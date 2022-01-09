@@ -1576,7 +1576,7 @@ abstract class Applications
     protected function _checkSecuritySign()
     {
         $this->_checkSecuritySign = 'WARN';
-        if (!$this->_configuration->getOptionUntyped('permitCheckSignOnVerify')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitCheckSignOnVerify')) {
             $this->_checkSecuritySign = 'WARN';
             $this->_checkSecuritySignMessage = ':::act_chk_warnSigns';
         } else {

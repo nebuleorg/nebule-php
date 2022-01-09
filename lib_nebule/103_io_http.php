@@ -261,7 +261,7 @@ class ioHTTP extends io implements ioInterface
             || !ctype_xdigit($object)
         )
             return false;
-        if (!$this->_configuration->getOptionUntyped('permitSynchronizeLink'))
+        if (!$this->_configuration->getOptionAsBoolean('permitSynchronizeLink'))
             return false;
         $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object;
         if (!$this->_checkExistOverHTTP($localisation))
@@ -309,7 +309,7 @@ class ioHTTP extends io implements ioInterface
             || !ctype_xdigit($object)
         )
             return false;
-        if (!$this->_configuration->getOptionUntyped('permitSynchronizeObject'))
+        if (!$this->_configuration->getOptionAsBoolean('permitSynchronizeObject'))
             return false;
         $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object;
         if ($this->_checkExistOverHTTP($localisation))

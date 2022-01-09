@@ -1716,7 +1716,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         if ($this->_applicationInstance->getCheckSecurityURL() == 'WARN') {
             $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityURLMessage());
         }
-        if (!$this->_configuration->getOptionUntyped('permitWrite')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitWrite')) {
             $this->displayMessageWarning(':::warn_ServNotPermitWrite');
         }
         if ($this->_nebuleInstance->getFlushCache()) {
@@ -2148,9 +2148,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                 // Supprimer ce groupes.
                 if ($this->_unlocked
-                    && $this->_configuration->getOptionUntyped('permitWrite')
-                    && $this->_configuration->getOptionUntyped('permitWriteLink')
-                    && $this->_configuration->getOptionUntyped('permitWriteGroup')
+                    && $this->_configuration->getOptionAsBoolean('permitWrite')
+                    && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+                    && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
                 ) {
                     $param['selfHookList'][0]['name'] = '::DeleteGroup';
                     $param['selfHookList'][0]['icon'] = self::DEFAULT_ICON_LX;
@@ -2235,10 +2235,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             echo $this->getDisplayTitle('::EntitiesGroupAdd', self::DEFAULT_ICON_GRPENTADD);
 
             // Si autorisé à créer un groupe.
-            if ($this->_configuration->getOptionUntyped('permitWrite')
-                && $this->_configuration->getOptionUntyped('permitWriteObject')
-                && $this->_configuration->getOptionUntyped('permitWriteLink')
-                && $this->_configuration->getOptionUntyped('permitWriteGroup')
+            if ($this->_configuration->getOptionAsBoolean('permitWrite')
+                && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+                && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+                && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
                 && $this->_unlocked
             ) {
                 ?>
@@ -2352,9 +2352,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Affiche le menu des actions.
         if ($isGroup) {
             if ($this->_unlocked
-                && $this->_configuration->getOptionUntyped('permitWrite')
-                && $this->_configuration->getOptionUntyped('permitWriteLink')
-                && $this->_configuration->getOptionUntyped('permitWriteGroup')
+                && $this->_configuration->getOptionAsBoolean('permitWrite')
+                && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+                && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
             ) {
                 // Supprimer le groupe.
                 $actionList[0]['name'] = '::DeleteGroup';
@@ -2380,7 +2380,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id;
             }
 
-            if ($this->_configuration->getOptionUntyped('permitSynchronizeLink') && $this->_configuration->getOptionUntyped('permitSynchronizeObject')) {
+            if ($this->_configuration->getOptionAsBoolean('permitSynchronizeLink') && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')) {
                 // Synchroniser l'entité.
                 $actionList[2]['name'] = '::SynchronizeEntity';
                 $actionList[2]['icon'] = self::DEFAULT_ICON_SYNENT;
@@ -2540,9 +2540,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                             // Retirer l'objet du groupe.
                             if ($this->_unlocked
-                                && $this->_configuration->getOptionUntyped('permitWrite')
-                                && $this->_configuration->getOptionUntyped('permitWriteLink')
-                                && $this->_configuration->getOptionUntyped('permitWriteGroup')
+                                && $this->_configuration->getOptionAsBoolean('permitWrite')
+                                && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+                                && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
                             ) {
                                 $list[$i]['actions'][0]['name'] = '::RemoveFromGroup';
                                 $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
@@ -2595,9 +2595,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                         // Supprimer le groupe.
                         if ($this->_unlocked
-                            && $this->_configuration->getOptionUntyped('permitWrite')
-                            && $this->_configuration->getOptionUntyped('permitWriteLink')
-                            && $this->_configuration->getOptionUntyped('permitWriteGroup')
+                            && $this->_configuration->getOptionAsBoolean('permitWrite')
+                            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+                            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
                         ) {
                             $list[$i]['actions'][0]['name'] = '::RemoveFromGroup';
                             $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
@@ -2702,9 +2702,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     private function _displayContentObjectAdd()
     {
         // Si autorisé à transferer des fichier.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
             && $this->_configuration->getOptionUntyped('klictyPermitUploadObject')
             && $this->_unlocked
         ) {
@@ -2912,12 +2912,12 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             echo $this->getDisplayTitle('::CreateEntity', self::DEFAULT_ICON_ADDENT);
 
             // Si autorisé à créer une entité.
-            if ($this->_configuration->getOptionUntyped('permitWrite')
-                && $this->_configuration->getOptionUntyped('permitWriteObject')
-                && $this->_configuration->getOptionUntyped('permitWriteLink')
-                && $this->_configuration->getOptionUntyped('permitWriteEntity')
+            if ($this->_configuration->getOptionAsBoolean('permitWrite')
+                && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+                && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+                && $this->_configuration->getOptionAsBoolean('permitWriteEntity')
                 && !$this->_unlocked
-                && $this->_configuration->getOptionUntyped('permitPublicCreateEntity')
+                && $this->_configuration->getOptionAsBoolean('permitPublicCreateEntity')
             ) {
                 ?>
 
@@ -3001,11 +3001,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         echo $this->getDisplayTitle('::EntitySync', self::DEFAULT_ICON_SYNENT);
 
         // Si autorisé à synchroniser une entité.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitSynchronizeObject')
-            && $this->_configuration->getOptionUntyped('permitSynchronizeLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
+            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
             && !$this->_unlocked
         ) {
             ?>
@@ -3153,9 +3153,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['actions'] = array();
 
                         if ($this->_unlocked
-                            && $this->_configuration->getOptionUntyped('permitWrite')
-                            && $this->_configuration->getOptionUntyped('permitWriteLink')
-                            && $this->_configuration->getOptionUntyped('permitWriteObject')
+                            && $this->_configuration->getOptionAsBoolean('permitWrite')
+                            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+                            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
                         ) {
                             if ($entity == $this->_nebuleInstance->getCurrentEntity()) {
                                 // Déprotéger l'objet.
@@ -3166,7 +3166,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
                                     . $this->_nebuleInstance->getActionTicket();
                             } elseif (!$this->_nebuleInstance->getIsRecoveryEntity($entity)
-                                || $this->_configuration->getOptionUntyped('permitRecoveryRemoveEntity')
+                                || $this->_configuration->getOptionAsBoolean('permitRecoveryRemoveEntity')
                             ) {
                                 // Annuler le partage de protection. Non fiable...
                                 $list[$i]['actions'][0]['name'] = '::RemoveShareProtect';
@@ -3198,9 +3198,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
             // Si l'entité est déverrouillée.
             if ($this->_unlocked
-                && $this->_configuration->getOptionUntyped('permitWrite')
-                && $this->_configuration->getOptionUntyped('permitWriteLink')
-                && $this->_configuration->getOptionUntyped('permitWriteObject')
+                && $this->_configuration->getOptionAsBoolean('permitWrite')
+                && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+                && $this->_configuration->getOptionAsBoolean('permitWriteObject')
             ) {
                 // Protéger l'objet.
                 $actionList[0]['name'] = '::ProtectObject';
@@ -3230,9 +3230,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         if ($object->checkPresent()
             && $protect
             && $this->_unlocked
-            && $this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
         ) {
             // Liste tous les groupes.
             $listGroups = $this->_nebuleInstance->getListGroupsID($this->_nebuleInstance->getCurrentEntity(), '');
@@ -4687,9 +4687,9 @@ class Action extends Actions
     protected function _extractActionUploadFile()
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Extract action upload file', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -4775,9 +4775,9 @@ class Action extends Actions
     protected function _actionUploadFile()
     {
         // Vérifie que la création d'objet soit authorisée.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_metrology->addLog('Action upload file', Metrology::LOG_LEVEL_NORMAL); // Log

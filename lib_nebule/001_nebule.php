@@ -450,9 +450,9 @@ class nebule
             $this->_configurationInstance->lockWriteLink();
         }
 
-        if (!$this->_configurationInstance->getOptionUntyped('permitWriteObject'))
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitWriteObject'))
             $this->_metrologyInstance->addLog('objects ro not rw', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
-        if (!$this->_configurationInstance->getOptionUntyped('permitWriteLink'))
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitWriteLink'))
             $this->_metrologyInstance->addLog('links ro not rw', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
     }
 
@@ -476,7 +476,7 @@ class nebule
 
         if ($name == ''
             || $this->_flushCache
-            || !$this->_configurationInstance->getOptionUntyped('permitSessionOptions')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitSessionOptions')
             || !isset($_SESSION['Option'][$name])
         ) {
             session_write_close();
@@ -500,7 +500,7 @@ class nebule
     {
         if ($name == ''
             || $this->_flushCache
-            || !$this->_configurationInstance->getOptionUntyped('permitSessionOptions')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitSessionOptions')
         )
             return false;
 
@@ -537,7 +537,7 @@ class nebule
 
         if ($name == ''
             || $this->_flushCache
-            || !$this->_configurationInstance->getOptionUntyped('permitSessionBuffer')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
             || !isset($_SESSION['Buffer'][$name])
         ) {
             session_write_close();
@@ -561,7 +561,7 @@ class nebule
     {
         if ($name == ''
             || $this->_flushCache
-            || !$this->_configurationInstance->getOptionUntyped('permitSessionBuffer')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
         )
             return false;
 
@@ -726,12 +726,12 @@ class nebule
 
     /**
      * Liste les modules.
+     *
      * @param string $name
      * @return boolean
      * @todo
-     *
      */
-    public function listModule($name)
+    public function listModule(string $name): bool
     {
         if ($name == '') {
             return false;
@@ -744,12 +744,12 @@ class nebule
 
     /**
      * Charge un module.
+     *
      * @param string $name
      * @return boolean|Modules
      * @todo
-     *
      */
-    public function loadModule($name)
+    public function loadModule(string $name)
     {
         if ($name == '') {
             return false;
@@ -834,7 +834,7 @@ class nebule
      *
      * @return string
      */
-    public function getCurrentObject()
+    public function getCurrentObject(): string
     {
         return $this->_currentObject;
     }
@@ -844,7 +844,7 @@ class nebule
      *
      * @return Node|null
      */
-    public function getCurrentObjectInstance()
+    public function getCurrentObjectInstance(): ?Node
     {
         return $this->_currentObjectInstance;
     }
@@ -932,7 +932,7 @@ class nebule
      *
      * @return string
      */
-    public function getInstanceEntity()
+    public function getInstanceEntity(): string
     {
         return $this->_instanceEntity;
     }
@@ -940,9 +940,9 @@ class nebule
     /**
      * Donne l'instance de l'entité de l'instance de serveur.
      *
-     * @return Entity|NULL
+     * @return Entity|null
      */
-    public function getInstanceEntityInstance()
+    public function getInstanceEntityInstance(): ?Entity
     {
         return $this->_instanceEntityInstance;
     }
@@ -1026,7 +1026,7 @@ class nebule
      *
      * @return string
      */
-    public function getDefaultEntity()
+    public function getDefaultEntity(): string
     {
         return $this->_defaultEntity;
     }
@@ -1034,9 +1034,9 @@ class nebule
     /**
      * Donne l'instance de l'entité par défaut.
      *
-     * @return Entity|NULL
+     * @return Entity|null
      */
-    public function getDefaultEntityInstance()
+    public function getDefaultEntityInstance(): ?Entity
     {
         return $this->_defaultEntityInstance;
     }
@@ -1267,7 +1267,7 @@ class nebule
      *
      * @return string
      */
-    public function getCurrentEntity()
+    public function getCurrentEntity(): string
     {
         return $this->_currentEntity;
     }
@@ -1275,9 +1275,9 @@ class nebule
     /**
      * Lit l'instance de l'entité en cours.
      *
-     * @return Entity
+     * @return Entity|null
      */
-    public function getCurrentEntityInstance()
+    public function getCurrentEntityInstance(): ?Entity
     {
         return $this->_currentEntityInstance;
     }
@@ -1287,7 +1287,7 @@ class nebule
      *
      * @return string
      */
-    public function getCurrentEntityPrivateKey()
+    public function getCurrentEntityPrivateKey(): string
     {
         return $this->_currentEntityPrivateKey;
     }
@@ -1295,9 +1295,9 @@ class nebule
     /**
      * Lit l'instance de la clé privée de l'entité en cours.
      *
-     * @return Node
+     * @return Node|null
      */
-    public function getCurrentEntityPrivateKeyInstance()
+    public function getCurrentEntityPrivateKeyInstance(): ?Node
     {
         return $this->_currentEntityPrivateKeyInstance;
     }
@@ -1309,7 +1309,7 @@ class nebule
      *
      * @return boolean
      */
-    public function getCurrentEntityUnlocked()
+    public function getCurrentEntityUnlocked(): bool
     {
         return $this->_currentEntityUnlocked;
     }
@@ -1321,7 +1321,7 @@ class nebule
      * @param Entity $entity
      * @return boolean
      */
-    public function setCurrentEntity(Entity $entity)
+    public function setCurrentEntity(Entity $entity): bool
     {
         if (!$entity instanceof Entity) return false;
         // Reouvre une nouvelle session pour la suite.
@@ -1356,7 +1356,7 @@ class nebule
      * @param Entity $entity
      * @return boolean
      */
-    public function setTempCurrentEntity(Entity $entity)
+    public function setTempCurrentEntity(Entity $entity): bool
     {
         if (!$entity instanceof Entity) return false;
         // Reouvre une nouvelle session pour la suite.
@@ -1390,7 +1390,7 @@ class nebule
      *
      * @return boolean
      */
-    public function unsetTempCurrentEntity()
+    public function unsetTempCurrentEntity(): bool
     {
         // Reouvre une nouvelle session pour la suite.
         session_start();
@@ -1581,7 +1581,7 @@ class nebule
      *
      * @return string
      */
-    public function getCurrentGroup()
+    public function getCurrentGroup(): string
     {
         return $this->_currentGroup;
     }
@@ -1593,7 +1593,7 @@ class nebule
      *
      * @return Group
      */
-    public function getCurrentGroupInstance()
+    public function getCurrentGroupInstance(): ?Group
     {
         return $this->_currentGroupInstance;
     }
@@ -1683,7 +1683,7 @@ class nebule
      *
      * @return string
      */
-    public function getCurrentConversation()
+    public function getCurrentConversation(): string
     {
         return $this->_currentConversation;
     }
@@ -1695,7 +1695,7 @@ class nebule
      *
      * @return Conversation
      */
-    public function getCurrentConversationInstance()
+    public function getCurrentConversationInstance(): ?Conversation
     {
         return $this->_currentConversationInstance;
     }
@@ -1728,7 +1728,7 @@ class nebule
     private function _findCurrentCurrency()
     {
         // Si pas autorisé, retourne ID=0.
-        if (!$this->_configurationInstance->getOptionUntyped('permitCurrency')) {
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentCurrency = '0';
             $this->_currentCurrencyInstance = $this->newCurrency('0');
             // Ecrit la monnaie dans la session.
@@ -1794,7 +1794,7 @@ class nebule
      *
      * @return string
      */
-    public function getCurrentCurrency()
+    public function getCurrentCurrency(): string
     {
         return $this->_currentCurrency;
     }
@@ -1806,7 +1806,7 @@ class nebule
      *
      * @return Currency
      */
-    public function getCurrentCurrencyInstance()
+    public function getCurrentCurrencyInstance(): ?Currency
     {
         return $this->_currentCurrencyInstance;
     }
@@ -1839,7 +1839,7 @@ class nebule
     private function _findCurrentTokenPool()
     {
         // Si pas autorisé, retourne ID=0.
-        if (!$this->_configurationInstance->getOptionUntyped('permitCurrency')) {
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentTokenPool = '0';
             $this->_currentTokenPoolInstance = $this->newTokenPool('0');
             // Ecrit le sac de jetons dans la session.
@@ -1905,7 +1905,7 @@ class nebule
      *
      * @return string
      */
-    public function getCurrentTokenPool()
+    public function getCurrentTokenPool(): string
     {
         return $this->_currentTokenPool;
     }
@@ -1917,7 +1917,7 @@ class nebule
      *
      * @return TokenPool
      */
-    public function getCurrentTokenPoolInstance()
+    public function getCurrentTokenPoolInstance(): ?TokenPool
     {
         return $this->_currentTokenPoolInstance;
     }
@@ -1950,7 +1950,7 @@ class nebule
     private function _findCurrentToken()
     {
         // Si pas autorisé, retourne ID=0.
-        if (!$this->_configurationInstance->getOptionUntyped('permitCurrency')) {
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentToken = '0';
             $this->_currentTokenInstance = $this->newToken('0');
             // Ecrit le jeton dans la session.
@@ -2016,7 +2016,7 @@ class nebule
      *
      * @return string
      */
-    public function getCurrentToken()
+    public function getCurrentToken(): string
     {
         return $this->_currentToken;
     }
@@ -2028,7 +2028,7 @@ class nebule
      *
      * @return Token
      */
-    public function getCurrentTokenInstance()
+    public function getCurrentTokenInstance(): ?Token
     {
         return $this->_currentTokenInstance;
     }
@@ -2044,7 +2044,7 @@ class nebule
      *
      * @return integer
      */
-    public function checkInstance()
+    public function checkInstance(): int
     {
         // Vérifie que le maître est une entité et est bien celui définit par la constante.
         if (!$this->_puppetmasterInstance instanceof Entity) return 0;
@@ -2116,9 +2116,9 @@ class nebule
     /**
      * Donne l'instance du maître du tout.
      *
-     * @return Entity|NULL
+     * @return Entity|null
      */
-    public function getPuppetmasterInstance()
+    public function getPuppetmasterInstance(): ?Entity
     {
         return $this->_puppetmasterInstance;
     }
@@ -2132,7 +2132,7 @@ class nebule
      * @param $type string
      * @return string
      */
-    private function _findEntityByType($type)
+    private function _findEntityByType($type): string
     {
         if ($type == '')
             return $this->_puppetmaster;
@@ -2187,7 +2187,7 @@ class nebule
         $this->_metrologyInstance->addLog('Find security master ' . $this->_securityMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
-    public function getSecurityAuthority()
+    public function getSecurityAuthority(): string
     {
         return $this->_securityMaster;
     }
@@ -2400,7 +2400,7 @@ class nebule
     {
         // Ajoute si nécessaire l'entité du serveur.
         if (!$this->_modeRescue)
-            $this->_permitInstanceEntityAsAuthority = $this->_configurationInstance->getOptionUntyped('permitInstanceEntityAsAuthority');
+            $this->_permitInstanceEntityAsAuthority = $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority');
         else
             $this->_permitInstanceEntityAsAuthority = false;
 
@@ -2428,7 +2428,7 @@ class nebule
     {
         // Ajoute si nécessaire l'entité par défaut.
         if (!$this->_modeRescue)
-            $this->_permitDefaultEntityAsAuthority = $this->_configurationInstance->getOptionUntyped('permitDefaultEntityAsAuthority');
+            $this->_permitDefaultEntityAsAuthority = $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority');
         else
             $this->_permitDefaultEntityAsAuthority = false;
 
@@ -2454,7 +2454,7 @@ class nebule
     private function _addLocalAuthorities()
     {
         // Vérifie si les entités autorités locales sont autorisées.
-        if (!$this->_configurationInstance->getOptionUntyped('permitLocalSecondaryAuthorities'))
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities'))
             return;
 
         $refAuthority = $this->_cryptoInstance->hash(self::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
@@ -2514,7 +2514,7 @@ class nebule
      *
      * @return array:string
      */
-    public function getAuthorities()
+    public function getAuthorities(): array
     {
         return $this->_authorities;
     }
@@ -2524,7 +2524,7 @@ class nebule
      *
      * @return array:Entity
      */
-    public function getAuthoritiesInstance()
+    public function getAuthoritiesInstance(): array
     {
         return $this->_authoritiesInstances;
     }
@@ -2534,7 +2534,7 @@ class nebule
      *
      * @return array:string
      */
-    public function getLocalAuthorities()
+    public function getLocalAuthorities(): array
     {
         return $this->_localAuthorities;
     }
@@ -2544,7 +2544,7 @@ class nebule
      *
      * @return array:Entity
      */
-    public function getLocalAuthoritiesInstance()
+    public function getLocalAuthoritiesInstance(): array
     {
         return $this->_localAuthoritiesInstances;
     }
@@ -2554,7 +2554,7 @@ class nebule
      *
      * @return array:string
      */
-    public function getLocalAuthoritiesSigners()
+    public function getLocalAuthoritiesSigners(): array
     {
         return $this->_localAuthoritiesSigners;
     }
@@ -2564,7 +2564,7 @@ class nebule
      *
      * @return array:string
      */
-    public function getLocalPrimaryAuthorities()
+    public function getLocalPrimaryAuthorities(): array
     {
         return $this->_localPrimaryAuthorities;
     }
@@ -2574,7 +2574,7 @@ class nebule
      *
      * @return array:Entity
      */
-    public function getLocalPrimaryAuthoritiesInstance()
+    public function getLocalPrimaryAuthoritiesInstance(): array
     {
         return $this->_localPrimaryAuthoritiesInstances;
     }
@@ -2584,7 +2584,7 @@ class nebule
      *
      * @return array:string
      */
-    public function getSpecialEntities()
+    public function getSpecialEntities(): array
     {
         return $this->_specialEntities;
     }
@@ -2595,7 +2595,7 @@ class nebule
      * @param Entity|string $entity
      * @return boolean
      */
-    public function getIsLocalAuthority($entity)
+    public function getIsLocalAuthority($entity): bool
     {
         if (is_a($entity, 'Node'))
             $entity = $entity->getID();
@@ -2648,10 +2648,10 @@ class nebule
     private function _addInstanceEntityAsRecovery()
     {
         // Vérifie si les entités de recouvrement sont autorisées.
-        if (!$this->_configurationInstance->getOptionUntyped('permitRecoveryEntities'))
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities'))
             return;
 
-        $this->_permitInstanceEntityAsRecovery = $this->_configurationInstance->getOptionUntyped('permitInstanceEntityAsRecovery');
+        $this->_permitInstanceEntityAsRecovery = $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsRecovery');
 
         if ($this->_permitInstanceEntityAsRecovery) {
             $this->_recoveryEntities[$this->_instanceEntity] = $this->_instanceEntity;
@@ -2670,10 +2670,10 @@ class nebule
     private function _addDefaultEntityAsRecovery()
     {
         // Vérifie si les entités de recouvrement sont autorisées.
-        if (!$this->_configurationInstance->getOptionUntyped('permitRecoveryEntities'))
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities'))
             return;
 
-        $this->_permitDefaultEntityAsRecovery = $this->_configurationInstance->getOptionUntyped('permitDefaultEntityAsRecovery');
+        $this->_permitDefaultEntityAsRecovery = $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsRecovery');
 
         if ($this->_permitDefaultEntityAsRecovery) {
             $this->_recoveryEntities[$this->_defaultEntity] = $this->_defaultEntity;
@@ -2695,7 +2695,7 @@ class nebule
         $this->_recoveryEntitiesInstances = array();
 
         // Vérifie si les entités de recouvrement sont autorisées.
-        if (!$this->_configurationInstance->getOptionUntyped('permitRecoveryEntities'))
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities'))
             return;
 
         $refRecovery = $this->_cryptoInstance->hash(self::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
@@ -2925,7 +2925,7 @@ class nebule
     private function _findModeRescue(): void
     {
         if ($this->_configurationInstance->getOptionUntyped('modeRescue')
-            || ($this->_configurationInstance->getOptionUntyped('permitOnlineRescue')
+            || ($this->_configurationInstance->getOptionAsBoolean('permitOnlineRescue')
                 && (filter_has_var(INPUT_GET, nebule::COMMAND_RESCUE)
                     || filter_has_var(INPUT_POST, nebule::COMMAND_RESCUE)
                 )
@@ -3052,9 +3052,9 @@ class nebule
     public function createTextAsObject(string &$text, bool $protect = false, bool $obfuscate = false)
     {
         // Vérifie que l'écriture est autorisée.
-        if ($this->_configurationInstance->getOptionUntyped('permitWrite')
-            && $this->_configurationInstance->getOptionUntyped('permitWriteObject')
-            && $this->_configurationInstance->getOptionUntyped('permitWriteLink')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             && $this->_currentEntityUnlocked
             && strlen($text) != 0
         ) {

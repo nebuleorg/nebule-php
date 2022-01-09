@@ -519,8 +519,8 @@ class ioLocal extends io implements ioInterface
             || $object == ''
             || $link == ''
             || !$this->_checkFileLink($object, $link)
-            || !$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteLink')
+            || !$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
             || $this->getMode() != 'RW'
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object)
         ) {
@@ -559,8 +559,8 @@ class ioLocal extends io implements ioInterface
     public function objectWrite(string &$data, string $localisation = '')
     {
         if ($localisation != ''
-            || !$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteObject')
+            || !$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteObject')
             || $this->getMode() != 'RW'
         ) {
             return false;
@@ -591,8 +591,8 @@ class ioLocal extends io implements ioInterface
             || $object == '0'
             || $object == ''
             || !ctype_xdigit($object)
-            || !$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteObject')
+            || !$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteObject')
             || $this->getMode() != 'RW'
             || is_dir(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object)
         ) {
@@ -626,8 +626,8 @@ class ioLocal extends io implements ioInterface
             || $object == ''
             || !$this->_checkFileLink($object, $link)
             || $link == ''
-            || !$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteLink')
+            || !$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
             || $this->getMode() != 'RW'
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object)
         ) {
@@ -655,8 +655,8 @@ class ioLocal extends io implements ioInterface
             || $object == '0'
             || $object == ''
             || !ctype_xdigit($object)
-            || !$this->_configuration->getOptionUntyped('permitWrite')
-            || !$this->_configuration->getOptionUntyped('permitWriteLink')
+            || !$this->_configuration->getOptionAsBoolean('permitWrite')
+            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
             || $this->getMode() != 'RW'
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object)
         ) {

@@ -122,7 +122,7 @@ class Wallet extends Entity
             || $id == ''
             || !ctype_xdigit($id)
             || !$this->_io->checkLinkPresent($id)
-            || !$this->_configuration->getOptionUntyped('permitCurrency')
+            || !$this->_configuration->getOptionAsBoolean('permitCurrency')
         ) {
             $id = '0';
         }
@@ -142,11 +142,11 @@ class Wallet extends Entity
         $this->_metrology->addLog('Ask create wallet', Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Vérifie que l'on puisse créer un sac de jetons.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitCurrency')
-            && $this->_configuration->getOptionUntyped('permitWriteCurrency')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitCurrency')
+            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // Génère la nouveau sac de jetons.

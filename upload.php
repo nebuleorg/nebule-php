@@ -216,7 +216,7 @@ class Display extends Displays
                     $param['informationType'] = 'warn';
                     echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityURLMessage(), $param);
                 }
-                if (!$this->_configuration->getOptionUntyped('permitWrite')) {
+                if (!$this->_configuration->getOptionAsBoolean('permitWrite')) {
                     $param['informationType'] = 'warn';
                     echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::warn_ServNotPermitWrite', $param);
                 }
@@ -226,11 +226,11 @@ class Display extends Displays
                 }
 
                 // Vérifie que la création et le chargement de liens soit autorisé.
-                if ($this->_configuration->getOptionUntyped('permitWrite')
-                    && $this->_configuration->getOptionUntyped('permitWriteLink')
-                    && $this->_configuration->getOptionUntyped('permitUploadLink')
-                    && ($this->_configuration->getOptionUntyped('permitPublicUploadLink')
-                        || $this->_configuration->getOptionUntyped('permitPublicUploadCodeMasterLink')
+                if ($this->_configuration->getOptionAsBoolean('permitWrite')
+                    && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+                    && $this->_configuration->getOptionAsBoolean('permitUploadLink')
+                    && ($this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
+                        || $this->_configuration->getOptionAsBoolean('permitPublicUploadCodeMasterLink')
                         || $this->_unlocked
                     )
                 ) {
@@ -242,7 +242,7 @@ class Display extends Displays
                             'informationType' => 'warn',
                             'displayRatio' => 'short',
                         );
-                        if ($this->_configuration->getOptionUntyped('permitPublicUploadLink')) {
+                        if ($this->_configuration->getOptionAsBoolean('permitPublicUploadLink')) {
                             echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::info_OnlySignedLinks', $param);
                         } else {
                             echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::info_OnlyLinksFromCodeMaster', $param);
@@ -347,11 +347,11 @@ class Action extends Actions
         $this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Vérifie que l'action de chargement de lien soit permise.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitUploadLink')
-            && ($this->_configuration->getOptionUntyped('permitPublicUploadCodeMasterLink')
-                || $this->_configuration->getOptionUntyped('permitPublicUploadLink')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitUploadLink')
+            && ($this->_configuration->getOptionAsBoolean('permitPublicUploadCodeMasterLink')
+                || $this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_unlocked
             )
         ) {

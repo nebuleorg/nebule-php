@@ -183,12 +183,12 @@ class Entity extends Node
         $this->_metrology->addLog(__METHOD__, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         // Vérifie que l'on puisse créer une entité.
-        if ($this->_configuration->getOptionUntyped('permitWrite')
-            && $this->_configuration->getOptionUntyped('permitWriteObject')
-            && $this->_configuration->getOptionUntyped('permitWriteLink')
-            && $this->_configuration->getOptionUntyped('permitWriteEntity')
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteEntity')
             && ($this->_nebuleInstance->getCurrentEntityUnlocked()
-                || $this->_configuration->getOptionUntyped('permitPublicCreateEntity')
+                || $this->_configuration->getOptionAsBoolean('permitPublicCreateEntity')
             )
         ) {
             $this->_metrology->addLog('Create entity ' . $this->_crypto->asymmetricAlgorithmName(), Metrology::LOG_LEVEL_NORMAL); // Log
