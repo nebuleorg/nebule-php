@@ -229,7 +229,7 @@ class Group extends Node
             $newLink = new Link($this->_nebuleInstance, $link);
             $newLink->sign();
             if ($obfuscated) {
-                $newLink->obfuscate();
+                $newLink->setObfuscate();
             }
             $newLink->write();
 
@@ -243,7 +243,7 @@ class Group extends Node
                 $newLink = new Link($this->_nebuleInstance, $link);
                 $newLink->sign();
                 if ($obfuscated) {
-                    $newLink->obfuscate();
+                    $newLink->setObfuscate();
                 }
                 $newLink->write();
 
@@ -596,7 +596,7 @@ class Group extends Node
 
         // Si besoin, obfuscation du lien.
         if ($obfuscated) {
-            $newLink->obfuscate();
+            $newLink->setObfuscate();
         }
 
         // Ecrit le lien.
@@ -767,7 +767,7 @@ class Group extends Node
 
         // Si besoin, obfuscation du lien.
         if ($obfuscated) {
-            $newLink->obfuscate();
+            $newLink->setObfuscate();
         }
 
         // Ecrit le lien.
@@ -948,7 +948,7 @@ class Group extends Node
 
         // Si besoin, obfuscation du lien.
         if ($obfuscated) {
-            $newLink->obfuscate();
+            $newLink->setObfuscate();
         }
 
         // Ecrit le lien.
@@ -1104,7 +1104,7 @@ class Group extends Node
 
         // Si besoin, obfuscation du lien.
         if ($obfuscated) {
-            $newLink->obfuscate();
+            $newLink->setObfuscate();
         }
 
         // Ecrit le lien.
@@ -1161,7 +1161,7 @@ class Group extends Node
 
         // Si besoin, obfuscation du lien.
         if ($obfuscated) {
-            $newLink->obfuscate();
+            $newLink->setObfuscate();
         }
 
         // Ecrit le lien.
@@ -1327,7 +1327,7 @@ class Group extends Node
 
         // Si besoin, obfuscation du lien.
         if ($obfuscated) {
-            $newLink->obfuscate();
+            $newLink->setObfuscate();
         }
 
         // Ecrit le lien.
@@ -1384,7 +1384,7 @@ class Group extends Node
 
         // Si besoin, obfuscation du lien.
         if ($obfuscated) {
-            $newLink->obfuscate();
+            $newLink->setObfuscate();
         }
 
         // Ecrit le lien.

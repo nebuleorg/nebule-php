@@ -296,75 +296,48 @@ class Bloclink implements bloclinkInterface
     }
 
     /**
-     * array(
-     *   'link'
-     *   'bh'
-     *   'bh/rf'
-     *   'bh/rf/app'
-     *   'bh/rf/typ'
-     *   'bh/rv'
-     *   'bh/rv/ver'
-     *   'bh/rv/sub'
-     *   'bl'
-     *   'bl/rc'
-     *   'bl/rc/mod'
-     *   'bl/rc/chr'
-     *   'bl/rl1'
-     *   'bl/rl1/req'
-     *   'bl/rl1/nid1'
-     *   'bl/rl1/nid2'
-     *   'bl/rl1/nid3'
-     *           ...
-     *   'bl/rl2'
-     *       ...
-     *   'bs' => $bs,
-     *   'bs/rs1'
-     *   'bs/rs1/eid'
-     *   'bs/rs1/sig'
-     *   'bs/rs2'
-     *       ...
-     * )
-     *
+     * {@inheritDoc}
+     * @see bloclinkInterface::getParsed()
      * @return array
      */
     public function getParsed(): array
     {
-        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '51d42c1b');
 
         return $this->_parsedLink;
     }
 
     public function getValid(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '513a5ba1');
 
         return $this->_valid;
     }
 
     public function getValidStructure(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'bd937ab3');
 
         return $this->_validStructure;
     }
 
     public function getSigned(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '58ce3724');
 
         return $this->_signed;
     }
 
     public function getVersion(): string
     {
-        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '614d794c');
 
         return $this->_parsedLink['bl/rv'];
     }
 
     public function getDate(): string
     {
-        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'e76bbadb');
 
         return $this->_parsedLink['bl/rc/chr'];
     }
@@ -536,6 +509,7 @@ class Bloclink implements bloclinkInterface
         $req = strtok($rl, '>');
         if (is_bool($req)) return false;
         if (!$this->_checkREQ($req, (string)$i)) return false;
+        $this->_parsedLink["bl/rl$i/req"] = $req;
 
         $rl1nid = strtok('/');
         if (is_bool($rl1nid)) return false;
@@ -748,13 +722,13 @@ class Bloclink implements bloclinkInterface
      */
     public function sign(string $publicKey = '0'): bool
     {
-        $this->_metrology->addLog('sign ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog('sign ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'b6e89674');
 
         // Si autorisé à signer.
         if (!$this->_newLink
             || !$this->_configuration->getOptionAsBoolean('permitCreateLink')
         ) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Can not sign link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Can not sign link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '09c33dba');
             return false;
         }
 
@@ -776,7 +750,7 @@ class Bloclink implements bloclinkInterface
                 $publicKeyInstance = $this->_nebuleInstance->newEntity($publicKey);
                 $publicKeyID = $publicKey;
             }
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Sign link for ' . $publicKeyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Sign link for ' . $publicKeyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd3c9521d');
 
             // Récupère l'algorithme de hash.
             $hashAlgo = $this->_crypto->hashAlgorithmName();
@@ -798,7 +772,7 @@ class Bloclink implements bloclinkInterface
                 return true;
             }
         } else
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Invalid link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Invalid link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'cd989943');
         return false;
     }
 
@@ -809,7 +783,7 @@ class Bloclink implements bloclinkInterface
      */
     public function write(): bool
     {
-        $this->_metrology->addLog('write ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog('write ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '50faf214');
 
         if (!$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
@@ -862,7 +836,7 @@ class Bloclink implements bloclinkInterface
      */
     public function signWrite(string $publicKey = '0'): bool
     {
-        $this->_metrology->addLog('sign write ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog('sign write ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '51a338d4');
 
         if ($this->sign($publicKey))
             return $this->write();

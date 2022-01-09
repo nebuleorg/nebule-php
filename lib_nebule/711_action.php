@@ -4891,7 +4891,7 @@ abstract class Actions
         if ($obfuscate
             && $this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
         ) {
-            $newLink->obfuscate();
+            $newLink->setObfuscate();
         }
 
         // Ecrit le lien.

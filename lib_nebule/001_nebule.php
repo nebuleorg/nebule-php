@@ -3088,7 +3088,7 @@ class nebule
 
             // Si besoin, obfuscation du lien.
             if ($obfuscate)
-                $newLink->obfuscate();
+                $newLink->setObfuscate();
             // Ecrit le lien.
             $newLink->write();
 

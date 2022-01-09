@@ -424,7 +424,7 @@ class Node implements nodeInterface
             $newLink = new Link($this->_nebuleInstance, $link);
             $newLink->sign();
             if ($obfuscated) {
-                $newLink->obfuscate();
+                $newLink->setObfuscate();
             }
             $newLink->write();
 
@@ -1018,7 +1018,7 @@ class Node implements nodeInterface
         $newLink = new Link($this->_nebuleInstance, $link);
         $newLink->sign();
         if ($obfuscated) {
-            $newLink->obfuscate();
+            $newLink->setObfuscate();
         }
         $newLink->write();
 
@@ -2220,7 +2220,7 @@ class Node implements nodeInterface
                 $newLink = new Link($this->_nebuleInstance, $link);
                 $newLink->sign();
                 if ($obfuscated) {
-                    $newLink->obfuscate();
+                    $newLink->setObfuscate();
                 }
                 $newLink->write();
             }
@@ -2238,7 +2238,7 @@ class Node implements nodeInterface
                 $newLink = new Link($this->_nebuleInstance, $link);
                 $newLink->sign();
                 if ($obfuscated) {
-                    $newLink->obfuscate();
+                    $newLink->setObfuscate();
                 }
                 $newLink->write();
             }
@@ -2252,7 +2252,7 @@ class Node implements nodeInterface
             $newLink = new Link($this->_nebuleInstance, $link);
             $newLink->sign();
             if ($obfuscated) {
-                $newLink->obfuscate();
+                $newLink->setObfuscate();
             }
             $newLink->write();
 
@@ -2265,7 +2265,7 @@ class Node implements nodeInterface
             $newLink = new Link($this->_nebuleInstance, $link);
             $newLink->sign();
             if ($obfuscated) {
-                $newLink->obfuscate();
+                $newLink->setObfuscate();
             }
             $newLink->write();
 
@@ -2281,7 +2281,7 @@ class Node implements nodeInterface
             $newLink = new Link($this->_nebuleInstance, $link);
             $newLink->sign();
             if ($obfuscated) {
-                $newLink->obfuscate();
+                $newLink->setObfuscate();
             }
             $newLink->write();
 
@@ -2355,7 +2355,7 @@ class Node implements nodeInterface
                             $newLink = new Link($this->_nebuleInstance, $link);
                             $newLink->sign();
                             if ($obfuscated) {
-                                $newLink->obfuscate();
+                                $newLink->setObfuscate();
                             }
                             $newLink->write();
                         }
@@ -2369,7 +2369,7 @@ class Node implements nodeInterface
                         $newLink = new Link($this->_nebuleInstance, $link);
                         $newLink->sign();
                         if ($obfuscated) {
-                            $newLink->obfuscate();
+                            $newLink->setObfuscate();
                         }
                         $newLink->write();
 
@@ -2848,7 +2848,7 @@ class Node implements nodeInterface
         $newLink = new Link($this->_nebuleInstance, $link);
         $newLink->sign();
         if ($obfuscate) {
-            $newLink->obfuscate();
+            $newLink->setObfuscate();
         }
         $newLink->write();
 
@@ -2910,7 +2910,7 @@ class Node implements nodeInterface
         $newLink = new Link($this->_nebuleInstance, $link);
         $newLink->sign();
         if ($obfuscate) {
-            $newLink->obfuscate();
+            $newLink->setObfuscate();
         }
         $newLink->write();
 

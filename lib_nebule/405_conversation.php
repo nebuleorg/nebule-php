@@ -237,7 +237,7 @@ class Conversation extends Group
                 $newLink = $this->_nebuleInstance->newLink($link);
                 $newLink->sign();
                 if ($obfuscated) {
-                    $newLink->obfuscate();
+                    $newLink->setObfuscate();
                 }
                 $newLink->write();
 
@@ -252,7 +252,7 @@ class Conversation extends Group
                     $newLink = $this->_nebuleInstance->newLink($link);
                     $newLink->sign();
                     if ($obfuscated) {
-                        $newLink->obfuscate();
+                        $newLink->setObfuscate();
                     }
                     $newLink->write();
                 }
@@ -268,7 +268,7 @@ class Conversation extends Group
                     $newLink = $this->_nebuleInstance->newLink($link);
                     $newLink->sign();
                     if ($obfuscated) {
-                        $newLink->obfuscate();
+                        $newLink->setObfuscate();
                     }
                     $newLink->write();
                 }
@@ -283,7 +283,7 @@ class Conversation extends Group
                     $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
                     $newLink = $this->_nebuleInstance->newLink($link);
                     $newLink->sign();
-                    $newLink->obfuscate();
+                    $newLink->setObfuscate();
                     $newLink->write();
                 }
 
@@ -296,7 +296,7 @@ class Conversation extends Group
                 $newLink = $this->_nebuleInstance->newLink($link);
                 $newLink->sign();
                 if ($obfuscated) {
-                    $newLink->obfuscate();
+                    $newLink->setObfuscate();
                 }
                 $newLink->write();
 
@@ -495,7 +495,7 @@ class Conversation extends Group
 
         // Si besoin, obfuscation du lien.
         if ($obfuscated) {
-            $newLink->obfuscate();
+            $newLink->setObfuscate();
         }
 
         // Ecrit le lien.
@@ -552,7 +552,7 @@ class Conversation extends Group
 
         // Si besoin, obfuscation du lien.
         if ($obfuscated) {
-            $newLink->obfuscate();
+            $newLink->setObfuscate();
         }
 
         // Ecrit le lien.

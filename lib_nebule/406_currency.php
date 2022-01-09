@@ -1592,7 +1592,7 @@ class Currency extends Node
         if ($obfuscate
             && $this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
         ) {
-            $newLink->obfuscate();
+            $newLink->setObfuscate();
         }
 
         // Ecrit le lien.
