@@ -69,9 +69,9 @@ interface CryptoInterface
 
     public function checkAsymmetricAlgorithm(string $algo);
 
-    public function sign(string $hash, string $eid, string $privatePassword);
+    public function sign(string $hash, string $eid, string $privatePassword): ?string;
 
-    public function verify(string $hash, string $sign, string $eid);
+    public function verify(string $hash, string $sign, string $eid): bool;
 
     public function cryptTo(string $data, string $eid);
 

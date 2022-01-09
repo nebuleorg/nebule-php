@@ -617,23 +617,22 @@ class Entity extends Node
      *
      * @param string $link
      * @param string $algo
-     * @return string
+     * @return string|null
      */
-    public function signLink($link, $algo = '')
+    public function signLink(string $link, string $algo = ''): ?string
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
         if ($this->_privateKey == '') {
             $this->_metrology->addLog('ERROR entity no private key', Metrology::LOG_LEVEL_NORMAL); // Log
-            return false;
+            return null;
         }
         if ($this->_privateKeyPassword == '') {
             $this->_metrology->addLog('ERROR entity no password for private key', Metrology::LOG_LEVEL_NORMAL); // Log
-            return false;
+            return null;
         }
-        if ($algo == '') {
+        if ($algo == '')
             $algo = $this->_crypto->hashAlgorithmName();
-        }
 
         $hash = $this->_crypto->hash($link, $algo);
         return $this->_crypto->sign($hash, $this->_privateKey, $this->_privateKeyPassword);

@@ -102,9 +102,9 @@ class Bloclink implements bloclinkInterface
     protected $_crypto;
 
     /**
-     * @var string $_rawBloclink
+     * @var string $_rawBlocLink
      */
-    protected $_rawBloclink = '';
+    protected $_rawBlocLink = '';
 
     /**
      * @var string
@@ -198,7 +198,7 @@ class Bloclink implements bloclinkInterface
      */
     public function __toString()
     {
-        return $this->_rawBloclink;
+        return $this->_rawBlocLink;
     }
 
     /**
@@ -264,7 +264,7 @@ class Bloclink implements bloclinkInterface
 
     protected function _new(): void
     {
-        $this->_rawBloclink = 'nebule:link/' . $this->_configuration->getOptionAsString('defaultLinksVersion') . '_';
+        $this->_rawBlocLink = 'nebule:link/' . $this->_configuration->getOptionAsString('defaultLinksVersion') . '_';
         $this->_newLink = true;
         $this->_newLinkCount = 0;
     }
@@ -276,21 +276,21 @@ class Bloclink implements bloclinkInterface
      */
     public function getRaw(): string
     {
-        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '9c53bb45');
+        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '9c53bb45');
 
-        return $this->_rawBloclink;
+        return $this->_rawBlocLink;
     }
 
     public function getLinks(): array
     {
-        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'ad2228cc');
+        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'ad2228cc');
 
         return $this->_links;
     }
 
     public function getSigners(): array
     {
-        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'ad2228cc');
+        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'ad2228cc');
 
         return $this->_links;
     }
@@ -329,42 +329,42 @@ class Bloclink implements bloclinkInterface
      */
     public function getParsed(): array
     {
-        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         return $this->_parsedLink;
     }
 
     public function getValid(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         return $this->_valid;
     }
 
     public function getValidStructure(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         return $this->_validStructure;
     }
 
     public function getSigned(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         return $this->_signed;
     }
 
     public function getVersion(): string
     {
-        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         return $this->_parsedLink['bl/rv'];
     }
 
     public function getDate(): string
     {
-        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         return $this->_parsedLink['bl/rc/chr'];
     }
@@ -713,6 +713,12 @@ class Bloclink implements bloclinkInterface
         return false;
     }
 
+    /**
+     * Add a link (RL) on new bloc of links (BL).
+     *
+     * @param string $rl
+     * @return bool
+     */
     public function addLink(string $rl): bool
     {
         if (!$this->_newLink
@@ -726,8 +732,8 @@ class Bloclink implements bloclinkInterface
         )
         {
             if ($this->_newLinkCount > 0)
-                $this->_rawBloclink .= '/';
-            $this->_rawBloclink .= $rl;
+                $this->_rawBlocLink .= '/';
+            $this->_rawBlocLink .= $rl;
             $this->_newLinkCount++;
         }
 
@@ -735,14 +741,14 @@ class Bloclink implements bloclinkInterface
     }
 
     /**
-     * Signature du lien par l'entité en cours.
+     * Sign the link.
      *
      * @param string $publicKey
      * @return boolean
      */
     public function sign(string $publicKey = '0'): bool
     {
-        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog('sign ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         // Si autorisé à signer.
         if (!$this->_newLink
@@ -753,26 +759,22 @@ class Bloclink implements bloclinkInterface
         }
 
         // Prepare new link to sign.
-        $this->_rawBloclink .= '_';
-        $this->_parse($this->_rawBloclink);
+        $this->_rawBlocLink .= '_';
+        $this->_parse($this->_rawBlocLink);
         $this->_newLink = false;
+        $bh = $this->_parsedLink['bh'];
+        $bl = $this->_parsedLink['bl'];
 
         if ($this->_validStructure) {
-            // Lit la clé publique.
-            if (is_a($publicKey, 'Entity')) {
-                $publicKeyInstance = $publicKey;
-                $publicKeyID = $publicKey->getID();
+            if ($publicKey == '0') {
+                $publicKeyID = $this->_nebuleInstance->getCurrentEntity();
+                $publicKeyInstance = $this->_nebuleInstance->getCurrentEntityInstance();
+            } elseif ($publicKey == $this->_nebuleInstance->getCurrentEntity()) {
+                $publicKeyInstance = $this->_nebuleInstance->getCurrentEntityInstance();
+                $publicKeyID = $publicKey;
             } else {
-                if ($publicKey == '0') {
-                    $publicKeyID = $this->_nebuleInstance->getCurrentEntity();
-                    $publicKeyInstance = $this->_nebuleInstance->getCurrentEntityInstance();
-                } elseif ($publicKey == $this->_nebuleInstance->getCurrentEntity()) {
-                    $publicKeyInstance = $this->_nebuleInstance->getCurrentEntityInstance();
-                    $publicKeyID = $publicKey;
-                } else {
-                    $publicKeyInstance = $this->_nebuleInstance->newEntity($publicKey);
-                    $publicKeyID = $publicKey;
-                }
+                $publicKeyInstance = $this->_nebuleInstance->newEntity($publicKey);
+                $publicKeyID = $publicKey;
             }
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Sign link for ' . $publicKeyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
@@ -780,48 +782,42 @@ class Bloclink implements bloclinkInterface
             $hashAlgo = $this->_crypto->hashAlgorithmName();
 
             // Génère le lien sans signature et son hash pour vérification.
-            $shortLink = $this->_parsedLink['bh'] . '_' . $this->_parsedLink['bl'];
+            $shortLink = $bh . '_' . $bl;
 
             // Génère la signature.
             $sign = $publicKeyInstance->signLink($shortLink, $hashAlgo);
-
-            if ($sign !== false) {
-                $this->_signeValue = $sign;
-                $this->_signeAlgo = $hashAlgo;
-                $this->_signe = $sign . '.' . $hashAlgo;
-                $this->_hashSigner = $publicKeyID;
-                $this->_rawLink = $this->_signe . $shortLink;
+            if ($sign !== null)
+            {
+                $bs = $publicKeyID . '>' . $sign;
+                $this->_parsedLink['bs'] = $bs;
+                $this->_checkBS($bh, $bl, $bs);
+                $this->_rawBlocLink .= $bs;
+                $this->_parsedLink['link'] = $this->_rawBlocLink;
                 $this->_signed = true;
                 $this->_valid = true;
                 return true;
             }
-        } else {
+        } else
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Invalid link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-        }
-
         return false;
     }
 
     /**
-     * Ecrit le lien pour les objets concernés.
+     * Write the link.
      *
      * @return boolean
      */
     public function write(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog('write ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
-        // Si autorisé à écrire.
         if (!$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
-        ) {
+        )
             return false;
-        }
 
-        // Métrologie.
-        $this->_nebuleInstance->getMetrologyInstance()->addAction('addlnk', $this->_rawLink, $this->_valid);
+        $this->_nebuleInstance->getMetrologyInstance()->addAction('addlnk', $this->_rawBlocLink, $this->_valid);
 
-        // Si le lien n'est pas valide, quitte.
         if (!$this->_valid
             || !$this->_signed
         ) {
@@ -829,58 +825,52 @@ class Bloclink implements bloclinkInterface
             return false;
         }
 
-        // Ecrit l'historique.
-        if ($this->_configuration->getOptionAsBoolean('permitHistoryLinksSign')) {
-            $history = nebule::NEBULE_LOCAL_HISTORY_FILE;
-            $this->_io->linkWrite($history, $this->_rawLink);
+        // If needed, in history.
+        if ($this->_configuration->getOptionAsBoolean('permitHistoryLinksSign'))
+            $this->_io->linkWrite(nebule::NEBULE_LOCAL_HISTORY_FILE, $this->_rawBlocLink);
+
+        // If needed, in signers.
+        for ($j = 0; $j > $this->_maxRS; $j++) {
+            if (isset($this->_parsedLink['bs/rs'.$j.'/eid']))
+                $this->_io->linkWrite($this->_parsedLink['bs/rs'.$j.'/eid'], $this->_rawBlocLink);
+            else
+                break;
         }
 
-        // Ecrit le lien pour l'objet de l'entité signataire.
-        if ($this->_configuration->getOptionAsBoolean('permitAddLinkToSigner')) {
-            $this->_io->linkWrite($this->_hashSigner, $this->_rawLink);
+        for ($i = 0 ; $i > $this->_maxRL; $i++)
+        {
+            if (isset($this->_parsedLink['bl/rl'.$i.'/req'])) {
+                if ($this->_parsedLink['bl/rl' . $i . '/req'] != 'c') {
+                    for ($j = 0; $j > $this->_maxRLUID; $j++) {
+                        if (isset($this->_parsedLink['bl/rl' . $i . '/nid' . $j]))
+                            $this->_io->linkWrite($this->_parsedLink['bl/rl' . $i . '/nid' . $j], $this->_rawBlocLink);
+                    }
+                } elseif ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+                    for ($j = 0; $j > $this->_maxRS; $j++) {
+                        if (isset($this->_parsedLink['bs/rs'.$j.'/eid']))
+                            $this->_io->linkWrite($this->_parsedLink['bs/rs'.$j.'/eid'] . '-' . $this->_parsedLink['bl/rl' . $i . '/nid1'], $this->_rawBlocLink);
+                        else
+                            break;
+                    }
+                }
+            } else
+                break;
         }
-
-        if ($this->_action != 'c') {
-            // Ecrit le lien pour l'objet source.
-            $this->_io->linkWrite($this->_hashSource, $this->_rawLink);
-
-            // Ecrit le lien pour l'objet cible.
-            if ($this->_hashTarget != $this->_hashSource
-                && $this->_hashTarget != '0'
-            ) {
-                $this->_io->linkWrite($this->_hashTarget, $this->_rawLink);
-            }
-
-            // Ecrit le lien pour l'objet méta.
-            if ($this->_hashMeta != $this->_hashSource
-                && $this->_hashMeta != $this->_hashTarget
-                && $this->_hashMeta != '0'
-            ) {
-                $this->_io->linkWrite($this->_hashMeta, $this->_rawLink);
-            }
-        } elseif ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
-            // Ecrit le lien dissimulé.
-            $this->_io->linkWrite($this->_hashSigner . '-' . $this->_hashSource, $this->_rawLink); // @todo
-        } else {
-            return false;
-        }
-
         return true;
     }
 
     /**
-     * Signe et écrit le lien.
+     * Sign and write the link.
      *
      * @param string $publicKey
      * @return boolean
      */
     public function signWrite(string $publicKey = '0'): bool
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog('sign write ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
-        if ($this->sign($publicKey)) {
+        if ($this->sign($publicKey))
             return $this->write();
-        }
         return false;
     }
 
@@ -902,10 +892,10 @@ class Bloclink implements bloclinkInterface
                 <li><a href="#le">BE / Entête</a></li>
                 <li><a href="#lr">BR / Registre</a>
                     <ul>
-                        <li><a href="#lrsi">BRSI / Le champ <code>Signature</code></a></li>
-                        <li><a href="#lrusi">BRHSI / Le champ <code>HashSignataire</code></a></li>
-                        <li><a href="#lrt">BRT / Le champ <code>TimeStamp</code></a></li>
-                        <li><a href="#lra">BRA / Le champ <code>Action</code></a>
+                        <li><a href="#lrsi">BRSI / Le champs <code>Signature</code></a></li>
+                        <li><a href="#lrusi">BRHSI / Le champs <code>HashSignataire</code></a></li>
+                        <li><a href="#lrt">BRT / Le champs <code>TimeStamp</code></a></li>
+                        <li><a href="#lra">BRA / Le champs <code>Action</code></a>
                             <ul>
                                 <li><a href="#lral">BRAL / Action <code>l</code> – Lien entre objets</a></li>
                                 <li><a href="#lraf">BRAF / Action <code>f</code> – Dérivé d’objet</a></li>
@@ -918,9 +908,9 @@ class Bloclink implements bloclinkInterface
                                 <li><a href="#lrax">BRAX / Action <code>x</code> – Suppression de lien</a></li>
                             </ul>
                         </li>
-                        <li><a href="#lrhs">BRHS / Le champ <code>HashSource</code></a></li>
-                        <li><a href="#lrhc">BRHC / Le champ <code>HashCible</code></a></li>
-                        <li><a href="#lrhm">BRHM / Le champ <code>HashMeta</code></a></li>
+                        <li><a href="#lrhs">BRHS / Le champs <code>HashSource</code></a></li>
+                        <li><a href="#lrhc">BRHC / Le champs <code>HashCible</code></a></li>
+                        <li><a href="#lrhm">BRHM / Le champs <code>HashMeta</code></a></li>
                     </ul>
                 </li>
                 <li><a href="#l1">B1 / Lien simple</a></li>
@@ -970,11 +960,11 @@ class Bloclink implements bloclinkInterface
             objet.</p>
 
         <h5 id="lelpo">BELPO / Liens à Propos d’un Objet</h5>
-        <p>Les liens d’un objet sont consultables séquentiellement. Il doivent être perçus comme des méta-données d’un
+        <p>Les liens d’un objet sont consultables séquentiellement. Ils doivent être perçus comme des méta-données d’un
             objet.</p>
         <p>Les liens sont séparés soit par un caractère espace «&nbsp;», soit par un retour chariot «&nbsp;\n&nbsp;». Un
-            lien est donc une suite de caractères ininterrompue, c’est à dire sans espace ou retour à la ligne.</p>
-        <p>La taille du lien dépend de la taille de chaque champs.</p>
+            lien est donc une suite de caractères ininterrompue, c'est-à-dire sans espace ou retour à la ligne.</p>
+        <p>La taille du lien dépend de la taille de chaque champ.</p>
         <p>Chaque localisation contenant des liens doit avoir un entête de version.</p>
 
         <h5 id="lelco">BELCO / Liens Contenu dans un Objet</h5>
@@ -983,11 +973,11 @@ class Bloclink implements bloclinkInterface
             peut ainsi profiter du découpage et du chiffrement. Plusieurs liens peuvent être stockés sans être
             nécessairement en rapport avec les mêmes objets.</p>
         <p>Les liens stockés dans un objet ne peuvent pas faire référence à ce même objet.</p>
-        <p>Tout ajout de lien crée implicitement un nouvel objet de mise à jour, c’est à dire lié par un lien de type
+        <p>Tout ajout de lien crée implicitement un nouvel objet de mise à jour, c'est-à-dire lié par un lien de type
             u.</p>
         <p>Chaque fichier contenant des liens doit avoir un entête de version.</p>
         <p>Les objets contenants des liens ne sont pas reconnus et exploités lors de la lecture des liens. Ceux-ci
-            doivent d’abord être extraits et injectés dans les liens des objets concernés. En clair, on ne peux pas s’en
+            doivent d’abord être extraits et injectés dans les liens des objets concernés. En clair, on ne peut pas s’en
             servir facilement pour de l’anonymisation.</p>
 
         <h2 id="le">BE / Entête</h2>
@@ -1004,36 +994,36 @@ class Bloclink implements bloclinkInterface
             l’underscore «&nbsp;_&nbsp;» ni l’espace &nbsp;» &nbsp;» ni le retour chariot «&nbsp;\n&nbsp;».</p>
         <p>Tout lien qui ne respecte pas cette syntaxe est à considérer comme invalide et à supprimer. Tout lien dont la
             <code>Signature</code> est invalide est à considérer comme invalide et à supprimer. La vérification peut
-            être réalisée en ré-assemblant les champs après nettoyage.</p>
+            être réalisée en réassemblant les champs après nettoyage.</p>
 
-        <h4 id="lrsi">BRSI / Le champ <code>Signature</code></h4>
-        <p>Le champ <code>Signature</code> est représenté en deux parties séparées par un point «&nbsp;.&nbsp;» . La
+        <h4 id="lrsi">BRSI / Le champs <code>Signature</code></h4>
+        <p>Le champs <code>Signature</code> est représenté en deux parties séparées par un point «&nbsp;.&nbsp;» . La
             première partie contient la valeur de la signature. La deuxième partie contient le nom court de la fonction
             de prise d’empreinte utilisée.</p>
         <p>La signature est calculée sur l’empreinte du lien réalisée avec la fonction de prise d’empreinte désignée
             dans la deuxième partie. L’empreinte du lien est calculée sur tout le lien sauf le champs
-            <code>signature</code>, c’est à dire sur «&nbsp;<code>_HashSignataire_TimeStamp_Action_HashSource_HashCible_HashMeta</code>&nbsp;»
+            <code>signature</code>, c'est-à-dire sur «&nbsp;<code>_HashSignataire_TimeStamp_Action_HashSource_HashCible_HashMeta</code>&nbsp;»
             avec le premier underscore inclus.</p>
-        <p>La signature ne contient que des caractères hexadécimaux, c’est à dire de «&nbsp;0&nbsp;» à «&nbsp;9&nbsp;»
+        <p>La signature ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;» à «&nbsp;9&nbsp;»
             et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule. La fonction de prise d’empreinte est notée en
             caractères alpha-numériques en minuscule.</p>
 
-        <h5 id="lrusi">BRHSI / Le champ <code>HashSignataire</code></h5>
-        <p>Le champ <code>HashSignataire</code> désigne l’objet de l’entité qui génère le lien et le signe.</p>
-        <p>Il ne contient que des caractères hexadécimaux, c’est à dire de «&nbsp;0&nbsp;» à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;»
+        <h5 id="lrusi">BRHSI / Le champs <code>HashSignataire</code></h5>
+        <p>Le champs <code>HashSignataire</code> désigne l’objet de l’entité qui génère le lien et le signe.</p>
+        <p>Il ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;» à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;»
             à «&nbsp;f&nbsp;» en minuscule.</p>
 
-        <h3 id="lrt">BRT / Le champ <code>TimeStamp</code></h3>
-        <p>Le champ <code>TimeStamp</code> est une marque de temps qui donne un ordre temporel aux liens. Ce champs peut
+        <h3 id="lrt">BRT / Le champs <code>TimeStamp</code></h3>
+        <p>Le champs <code>TimeStamp</code> est une marque de temps qui donne un ordre temporel aux liens. Ce champs peut
             être une date et une heure au format <a class="external text" title="http://fr.wikipedia.org/wiki/ISO_8601"
                                                     href="http://fr.wikipedia.org/wiki/ISO_8601"
                                                     rel="nofollow">ISO8601</a> ou simplement un compteur incrémental.
         </p>
 
-        <h3 id="lra">BRA / Le champ <code>Action</code></h3>
-        <p>Le champ <code>Action</code> détermine la façon dont le lien doit être utilisé.</p>
-        <p>Quand on parle du type d’un lien, on fait référence à son champ <code>Action</code>.</p>
-        <p>L’interprétation de ce champ est limité au premier caractère. Des caractères alpha-numériques supplémentaires
+        <h3 id="lra">BRA / Le champs <code>Action</code></h3>
+        <p>Le champs <code>Action</code> détermine la façon dont le lien doit être utilisé.</p>
+        <p>Quand on parle du type d’un lien, on fait référence à son champs <code>Action</code>.</p>
+        <p>L’interprétation de ce champs est limité au premier caractère. Des caractères alpha-numériques supplémentaires
             sont autorisés mais ignorés.</p>
         <p>Cette interprétation est basée sur un vocabulaire particulier. Ce vocabulaire est spécifique à <i>nebule
                 v1.2</i> (et <i>nebule v1.1</i>).</p>
@@ -1049,7 +1039,7 @@ class Bloclink implements bloclinkInterface
         <h4 id="lraf">BRAF / Action <code>f</code> – Dérivé d’objet</h4>
         <p>Le nouvel objet est considéré comme enfant ou parent suivant le sens du lien.</p>
         <p>Le champs <code>ObjetMeta</code> doit être vu comme le contexte du lien. Par exemple, deux objets contenants
-            du texte peuvent être reliés simplement sans contexte, c’est à dire reliés de façon simplement hiérarchique.
+            du texte peuvent être reliés simplement sans contexte, c'est-à-dire reliés de façon simplement hiérarchique.
             Ces deux mêmes textes peuvent être plutôt (ou en plus) reliés avec un contexte comme celui d’une discussion
             dans un blog. Dans ce deuxième cas, la relation entre les deux textes n’a pas de sens en dehors de cette
             discussion sur ce blog. Il est même probable que le blog n’affichera pas les autres textes en relations si
@@ -1063,19 +1053,19 @@ class Bloclink implements bloclinkInterface
         <h4 id="lrad">BRAD / Action <code>d</code> – Suppression d’objet</h4>
         <p>L’objet est marqué comme à supprimer d’un ou de tous ses emplacements de stockage.</p>
         <p><code>d</code> comme <i>delete</i>.</p>
-        <p>Le champs <code>HashCible</code> <span style="text-decoration: underline;">peut</span> être nuls, c’est à
-            dire égal à <code>0</code>. Si non nul, ce champs doit contenir une entité destinataire de <i>l’ordre</i> de
+        <p>Le champs <code>HashCible</code> <span style="text-decoration: underline;">peut</span> être nuls, c'est-à-dire égal à <code>0</code>.
+            Si non nul, ce champs doit contenir une entité destinataire de <i>l’ordre</i> de
             suppression. C’est utilisé pour demander à une entité relaie de supprimer un objet spécifique. Cela peut
             être utilisé pour demander à une entité en règle générale de bien vouloir supprimer l’objet, ce qui n’est
             pas forcément exécuté.</p>
-        <p>Le champs <code>HashMeta</code> <span style="text-decoration: underline;">doit</span> être nuls, c’est à dire
+        <p>Le champs <code>HashMeta</code> <span style="text-decoration: underline;">doit</span> être nuls, c'est-à-dire
             égal à <code>0</code>.</p>
         <p>Un lien de suppression sur un objet ne veut pas forcément dire qu’il a été supprimé. Même localement, l’objet
             est peut-être encore présent. Si le lien de suppression vient d’une autre entité, on ne va sûrement pas par
             défaut en tenir compte.</p>
         <p>Lorsque le lien de suppression est généré, le serveur sur lequel est généré le lien doit essayer par défaut
             de supprimer l’objet. Dans le cas d’un serveur hébergeant plusieurs entités, un objet ne sera pas supprimé
-            si il est encore utilisé par une autre entité, c’est à dire si une entité a un lien qui le concerne et n’a
+            s'il est encore utilisé par une autre entité, c'est-à-dire si une entité a un lien qui le concerne et n’a
             pas de lien de suppression.</p>
 
         <h4 id="lrae">BRAE / Action <code>e</code> – Équivalence d’objets</h4>
@@ -1088,15 +1078,15 @@ class Bloclink implements bloclinkInterface
             déchiffrer. A part le champs de l’entité signataire, c’est le seul champs qui fait référence à un objet.</p>
         <p>Le champs <code>HashCible</code> ne contient pas la référence d’un objet mais le lien chiffré et encodé en
             hexadécimal. Le chiffrement est de type symétrique avec la clé de session. Le lien offusqué n’a pas grand
-            intérêt en lui même, c’est le lien déchiffré qui en a.</p>
+            intérêt en lui-même, c’est le lien déchiffré qui en a.</p>
         <p>Le champs <code>HashMeta</code> ne contient pas la référence d’un objet mais la clé de chiffrement du lien,
             dite clé de session. Cette clé est chiffrée (asymétrique) pour l’entité destinataire et encodée en
-            hexadécimal. Chaque entités destinataires d'un lien de dissimulé doit disposer d'un lien de dissimulation
+            hexadécimal. Chaque entité destinataires d'un lien de dissimulé doit disposer d'un lien de dissimulation
             qui lui est propre.</p>
         <p>Lors du traitement des liens, si une entité est déverrouillée, les liens offusqués pour cette entité doivent
             être déchiffrés et utilisés en remplacement des liens offusqués originels. Les liens offusqués doivent être
             vérifiés avant déchiffrement. Les liens déchiffrés doivent être vérifiés avant exploitation.</p>
-        <p>Les liens de dissimulations posent un problème pour être efficacement utilisés par les entités émetrices et
+        <p>Les liens de dissimulations posent un problème pour être efficacement utilisés par les entités émettrices et
             destinataires. Pour résoudre ce problème sans risquer de révéler les identifiants des objets utilisés dans
             un lien dissimulé, les liens de dissimulation sont attachés à des objets virtuels translatés depuis les
             identifiants des objets originaux (cf <a href="#ld">BD</a>).</p>
@@ -1110,7 +1100,7 @@ class Bloclink implements bloclinkInterface
 
         <h4 id="lras">BRAS / Action <code>s</code> – Subdivision d’objet</h4>
         <p>Désigne un fragment de l’objet.</p>
-        <p>Ce champ nécessite un objet méta qui précise intervalle de contenu de l’objet d’origine. Le contenu de
+        <p>Ce champs nécessite un objet méta qui précise l'intervalle de contenu de l’objet d’origine. Le contenu de
             l’objet méta doit être de la forme <code>x-y</code> avec :</p>
         <ul>
             <li><code>x</code> et <code>y</code> exprimé en octet sans zéro et sans unité ;</li>
@@ -1126,29 +1116,29 @@ class Bloclink implements bloclinkInterface
         <p>Supprime un ou plusieurs liens précédemment mis en place.</p>
         <p>Les liens concernés par la suppression sont les liens antérieurs de type <code>l</code>, <code>f</code>,
             <code>u</code>, <code>d</code>, <code>e</code>, <code>k</code> et <code>s</code>. Ils sont repérés par les 3
-            derniers champs, c’est à dire sur <code>HashSource_HashCible_HashMeta</code>. Les champs nuls sont
+            derniers champs, c'est-à-dire sur <code>HashSource_HashCible_HashMeta</code>. Les champs nuls sont
             strictement pris en compte.</p>
-        <p>Le champ <code>TimeStamp</code> permet de déterminer l’antériorité du lien et donc de déterminer sa
+        <p>Le champs <code>TimeStamp</code> permet de déterminer l’antériorité du lien et donc de déterminer sa
             suppression ou pas.</p>
         <p>C’est la seule action sur les liens et non sur les objets.</p>
 
-        <h4 id="lrhs">BRHS / Le champ <code>HashSource</code></h4>
-        <p>Le champ <code>HashSource</code> désigne l’objet source du lien.</p>
-        <p>Le champ <code>signataire</code> ne contient que des caractères hexadécimaux, c’est à dire de «&nbsp;0&nbsp;»
+        <h4 id="lrhs">BRHS / Le champs <code>HashSource</code></h4>
+        <p>Le champs <code>HashSource</code> désigne l’objet source du lien.</p>
+        <p>Le champs <code>signataire</code> ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;»
             à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule.</p>
 
-        <h4 id="lrhc">BRHC / Le champ <code>HashCible</code></h4>
-        <p>Le champ <code>HashCible</code> désigne l’objet destination du lien.</p>
-        <p>Le champ <code>signataire</code> ne contient que des caractères hexadécimaux, c’est à dire de «&nbsp;0&nbsp;»
+        <h4 id="lrhc">BRHC / Le champs <code>HashCible</code></h4>
+        <p>Le champs <code>HashCible</code> désigne l’objet destination du lien.</p>
+        <p>Le champs <code>signataire</code> ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;»
             à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule.</p>
-        <p>Il peut être nuls, c’est à dire représentés par la valeur «&nbsp;0&nbsp;» sur un seul caractère.</p>
+        <p>Il peut être nuls, c'est-à-dire représentés par la valeur «&nbsp;0&nbsp;» sur un seul caractère.</p>
 
-        <h4 id="lrhm">BRHM / Le champ <code>HashMeta</code></h4>
-        <p>Le champ <code>HashMeta</code> désigne l’objet contenant une caractérisation du lien entre l’objet source et
+        <h4 id="lrhm">BRHM / Le champs <code>HashMeta</code></h4>
+        <p>Le champs <code>HashMeta</code> désigne l’objet contenant une caractérisation du lien entre l’objet source et
             l’objet destination.</p>
-        <p>Le champ <code>signataire</code> ne contient que des caractères hexadécimaux, c’est à dire de «&nbsp;0&nbsp;»
+        <p>Le champs <code>signataire</code> ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;»
             à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule.</p>
-        <p>Il peut être nuls, c’est à dire représentés par la valeur «&nbsp;0&nbsp;» sur un seul caractère.</p>
+        <p>Il peut être nuls, c'est-à-dire représentés par la valeur «&nbsp;0&nbsp;» sur un seul caractère.</p>
 
         <h2 id="l1">B1 / Lien simple</h2>
         <p>Le registre du lien simple a ses champs <code>HashCible</code> et <code>HashMeta</code> égaux à «&nbsp;0&nbsp;».
@@ -1157,7 +1147,7 @@ class Bloclink implements bloclinkInterface
         <p class="pcenter"><code>Signature_HashSignataire_TimeStamp_Action_HashSource_0_0</code></p>
 
         <h2 id="l2">B2 / Lien double</h2>
-        <p>Le registre du lien double a son champ <code>HashMeta</code> égal à «&nbsp;0&nbsp;».</p>
+        <p>Le registre du lien double a son champs <code>HashMeta</code> égal à «&nbsp;0&nbsp;».</p>
         <p>Il ressemble à :</p>
         <p class="pcenter"><code>Signature_HashSignataire_TimeStamp_Action_HashSource_HashCible_0</code></p>
 
@@ -1167,7 +1157,7 @@ class Bloclink implements bloclinkInterface
         <p class="pcenter"><code>Signature_HashSignataire_TimeStamp_Action_HashSource_HashCible_HashMeta</code></p>
 
         <h2 id="ls">BS / Stockage</h2>
-        <p>Tous les liens sont stockés dans un même emplacement ou sont visible comme étant dans un même emplacement.
+        <p>Tous les liens sont stockés dans un même emplacement où sont visibles comme étant dans un même emplacement.
             Cet emplacement ne contient pas les contenus des objets (cf <a href="#oos">OOS</a>).</p>
         <p>Le lien dissimulé est stocké dans le même emplacement mais dispose de fichiers de stockages différents du
             fait de la spécificité (cf <a href="#lsds">BSDS</a>).</p>
@@ -1184,7 +1174,7 @@ class Bloclink implements bloclinkInterface
 
         <h5 id="lsdrp">BSDRP / Registre public</h5>
         <p>Le registre du lien de dissimulation, public par nature, est conforme au registre des autres liens (cf <a
-                href="#lr">BR</a>). Si ce lien ne respectait pas cette structure il serait automatiquement ignoré ou
+                href="#lr">BR</a>). Si ce lien ne respectait pas cette structure, il serait automatiquement ignoré ou
             rejeté. Son stockage et sa transmission ont cependant quelques particularités.</p>
         <p>Les champs <code>Signature</code> (cf <a href="#lrsi">BRSI</a>) et <code>HashSignataire</code> (cf <a
                 href="#lrhsi">BRHSI</a>) du registre sont conformes aux autres liens. Ils assurent la protection du
@@ -1197,7 +1187,7 @@ class Bloclink implements bloclinkInterface
             déchiffrer. A part le champs de l’entité signataire, c’est le seul champs qui fait référence à un objet.</p>
         <p>Le champs <code>HashCible</code> ne contient pas la référence d’un objet mais le lien chiffré et encodé en
             hexadécimal. Le chiffrement est de type symétrique avec la clé de session. Le lien offusqué n’a pas grand
-            intérêt en lui même, c’est le lien déchiffré qui en a.</p>
+            intérêt en lui-même, c’est le lien déchiffré qui en a.</p>
         <p>Le champs <code>HashMeta</code> ne contient pas la référence d’un objet mais la clé de chiffrement du lien,
             dite clé de session. Cette clé est chiffrée (asymétrique) pour l’entité destinataire et encodée en
             hexadécimal. Chaque entités destinataires d'un lien de dissimulé doit disposer d'un lien de dissimulation

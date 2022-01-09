@@ -749,7 +749,7 @@ OPENSSL_KEYTYPE_EC (entier)
         }
     }
 
-    public function sign(string $hash, string $eid, string $privatePassword)
+    public function sign(string $hash, string $eid, string $privatePassword): ?string
     {
         $instance = $this->_cache->newNode($eid, Cache::TYPE_NODE);
         $privateKey = $instance->getContent();
@@ -769,7 +769,7 @@ OPENSSL_KEYTYPE_EC (entier)
             return bin2hex($signatureBin);
         // Sinon retourne que ça s'est mal passé.
         $this->_metrology->addLog('ERROR crypto sign', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3c5e617d'); // Log
-        return false;
+        return null;
     }
 
     public function verify(string $hash, string $sign, string $eid): bool
