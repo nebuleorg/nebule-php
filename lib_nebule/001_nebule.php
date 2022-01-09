@@ -441,13 +441,13 @@ class nebule
     {
         if ($this->_ioInstance->getMode() == 'RW') {
             if (!$this->_ioInstance->checkObjectsWrite())
-                $this->_configurationInstance->lockWriteObject();;
+                $this->_configurationInstance->lockPermitWriteObject();;
             if (!$this->_ioInstance->checkLinksWrite())
-                $this->_configurationInstance->lockWriteLink();;
+                $this->_configurationInstance->lockPermitWriteLink();;
         } else {
-            $this->_configurationInstance->lockWrite();
-            $this->_configurationInstance->lockWriteObject();
-            $this->_configurationInstance->lockWriteLink();
+            $this->_configurationInstance->lockPermitWrite();
+            $this->_configurationInstance->lockPermitWriteObject();
+            $this->_configurationInstance->lockPermitWriteLink();
         }
 
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWriteObject'))

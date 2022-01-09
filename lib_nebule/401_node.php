@@ -1993,7 +1993,7 @@ class Node implements nodeInterface
                 ) {
                     // Lit l'objet de clé de chiffrement symétrique et ses liens.
                     $instanceSym = $this->_nebuleInstance->newObject($linkSym->getHashMeta());
-                    $linksAsym = $instanceSym->readLinksUnfiltred();
+                    $linksAsym = $instanceSym->readLinksUnfiltered();
                     unset($instanceSym);
                     foreach ($linksAsym as $linkAsym) {
                         // Si lien de chiffrement.
@@ -2030,7 +2030,7 @@ class Node implements nodeInterface
                 ) {
                     // Lit l'objet de clé de chiffrement symétrique et ses liens.
                     $instanceSym = $this->_nebuleInstance->newObject($linkSym->getHashMeta());
-                    $linksAsym = $instanceSym->readLinksUnfiltred();
+                    $linksAsym = $instanceSym->readLinksUnfiltered();
                     unset($instanceSym);
                     foreach ($linksAsym as $linkAsym) {
                         $targetA = $linkAsym->getHashTarget();
@@ -2286,7 +2286,7 @@ class Node implements nodeInterface
             $newLink->write();
 
             // Lit les liens.
-            $links = $this->readLinksUnfiltred();
+            $links = $this->readLinksUnfiltered();
             $entity = $this->_nebuleInstance->getCurrentEntity();
             foreach ($links as $link) {
                 // Vérifie si l'entité signataire du lien est l'entité courante.
@@ -3401,12 +3401,12 @@ class Node implements nodeInterface
      *
      * @return array
      */
-    public function readLinksUnfiltred(): array
+    public function readLinksUnfiltered(): array
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         $permitListInvalidLinks = $this->_configuration->getOptionAsBoolean('permitListInvalidLinks');
-        $linkVersion = 'nebule/liens/version/' . $this->_configuration->getOptionUntyped('defaultLinksVersion'); // Version de lien.
+        $linkVersion = 'nebule/liens/version/' . $this->_configuration->getOptionAsString('defaultLinksVersion'); // Version de lien.
         $linksResult = array();
         if (!$this->_io->checkLinkPresent($this->_id)) {
             return $linksResult;
@@ -3437,9 +3437,9 @@ class Node implements nodeInterface
         // Tri les liens par date.
         if (sizeof($linksResult) != 0) {
             foreach ($linksResult as $n => $t) {
-                $linkdate[$n] = $t->getDate();
+                $linkDate[$n] = $t->getDate();
             }
-            array_multisort($linkdate, SORT_STRING, SORT_ASC, $linksResult);
+            array_multisort($linkDate, SORT_STRING, SORT_ASC, $linksResult);
             unset($n, $t);
         }
 
@@ -4522,7 +4522,7 @@ class Node implements nodeInterface
         $newLink->signWrite();
 
         // Lit les liens.
-        $links = $this->readLinksUnfiltred();
+        $links = $this->readLinksUnfiltered();
         $entity = $this->_nebuleInstance->getCurrentEntity();
         foreach ($links as $link) {
             // Vérifie si l'entité signataire du lien est l'entité courante.
@@ -4556,7 +4556,7 @@ class Node implements nodeInterface
             $newLink->signWrite();
 
             // Lit les liens.
-            $links = $this->readLinksUnfiltred();
+            $links = $this->readLinksUnfiltered();
             $entity = $this->_nebuleInstance->getCurrentEntity();
             foreach ($links as $link) {
                 // Vérifie si l'entité signataire du lien est l'entité courante.
@@ -4600,7 +4600,7 @@ class Node implements nodeInterface
         $newLink->signWrite();
 
         // Lit les liens.
-        $links = $this->readLinksUnfiltred();
+        $links = $this->readLinksUnfiltered();
         $entity = $this->_nebuleInstance->getCurrentEntity();
         foreach ($links as $link) {
             // Vérifie si l'entité signataire du lien est l'entité courante.
@@ -4673,7 +4673,7 @@ class Node implements nodeInterface
      * @param array $list
      * @return boolean
      */
-    protected function _arrayDateSort(&$list)
+    protected function _arrayDateSort(array &$list): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 

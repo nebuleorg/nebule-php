@@ -188,10 +188,10 @@ class Link implements linkInterface
      *
      * @param nebule   $nebuleInstance
      * @param string   $rl
-     * @param Bloclink $bloclink
+     * @param Bloclink $blocLink
      * @return boolean
      */
-    public function __construct(nebule $nebuleInstance, string $rl, bloclinkInterface $bloclink)
+    public function __construct(nebule $nebuleInstance, string $rl, bloclinkInterface $blocLink)
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
@@ -200,7 +200,7 @@ class Link implements linkInterface
         $this->_crypto = $nebuleInstance->getCryptoInstance();
         $this->_permitObfuscated = (bool)$this->_configuration->getOptionAsBoolean('permitObfuscatedLink');
         //$this->_metrology->addLinkRead();
-        $this->_bloclink = $bloclink;
+        $this->_bloclink = $blocLink;
 
         $this->_validStructure = $this->_checkRL($rl);
 

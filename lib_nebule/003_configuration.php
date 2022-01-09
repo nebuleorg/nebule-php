@@ -1203,28 +1203,18 @@ class Configuration
             $this->_metrologyInstance->addLog("L'objet n'a pas pu être créé.", Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'e064cd5c'); // Log
             return false;
         }
-
-        // Création du type mime.
         $instance->setType(nebule::REFERENCE_OBJECT_TEXT);
 
-        // Crée le lien de l'option.
         $signer = $this->_nebuleInstance->getCurrentEntity();
-        $date = date(DATE_ATOM);
-        $action = 'l';
-        //$source	= $this->_crypto->hash( $name );
         $source = $entity;
-        $target = $id;
-        //$meta	= $this->_crypto->hash(nebule::REFERENCE_NEBULE_OPTION);
         $meta = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OPTION . '/' . $name);
-        // Génère le lien.
-        $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
-        // Signe le lien.
-        $newLink->sign($signer);
-        // Ecrit le lien.
-        $ok = $newLink->write();
+        $link = '_l>' . $source . '>' . $id . '>' . $meta;
+        $newLink = new Bloclink($this->_nebuleInstance, 'new', Cache::TYPE_LINK);
 
-        if ($ok) {
+        if ($newLink->addLink($link)
+            && $newLink->sign($signer)
+            && $newLink->write()
+        ) {
             $this->_optionCache[$name] = $value;
             return true;
         } else {
@@ -1237,7 +1227,7 @@ class Configuration
      * Lock write capabilities on demande.
      * Can be reloaded by flushCache().
      */
-    public function lockWrite(): void
+    public function lockPermitWrite(): void
     {
         $this->_optionCache['permitWrite'] = false;
     }
@@ -1246,7 +1236,7 @@ class Configuration
      * Lock object's write capabilities on demande.
      * Can be reloaded by flushCache().
      */
-    public function lockWriteObject(): void
+    public function lockPermitWriteObject(): void
     {
         $this->_optionCache['permitWriteObject'] = false;
     }
@@ -1255,7 +1245,7 @@ class Configuration
      * Lock link's write capabilities on demande.
      * Can be reloaded by flushCache().
      */
-    public function lockWriteLink(): void
+    public function lockPermitWriteLink(): void
     {
         $this->_optionCache['permitWriteLink'] = false;
     }

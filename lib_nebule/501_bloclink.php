@@ -51,8 +51,6 @@ class Bloclink implements bloclinkInterface
         '_obfuscated',
         '_valid',
         '_validStructure',
-        '_verifyNumError',
-        '_verifyTextError',
     );
 
     const LINK_VERSION = '2:0';
@@ -126,6 +124,20 @@ class Bloclink implements bloclinkInterface
     protected $_parsedLink = array();
 
     /**
+     * Booléen si le lien est en cours de création.
+     *
+     * @var boolean $_newLink
+     */
+    protected $_newLink = false;
+
+    /**
+     * Nombre de lien ajoutés.
+     *
+     * @var int $_newLinkCount
+     */
+    protected $_newLinkCount = 0;
+
+    /**
      * Booléen si le lien est vérifié et valide.
      *
      * @var boolean $_valid
@@ -146,33 +158,19 @@ class Bloclink implements bloclinkInterface
      */
     protected $_signed = false;
 
-    protected $_maxRL = Configuration::OPTIONS_DEFAULT_VALUE['linkMaxRL'];
-    protected $_maxRLUID = Configuration::OPTIONS_DEFAULT_VALUE['linkMaxRLUID'];
-    protected $_maxRS = Configuration::OPTIONS_DEFAULT_VALUE['linkMaxRS'];
-
-    /**
-     * Nombre représentant un code d'erreur de vérification.
-     *
-     * @var integer $_verifyNumError
-     */
-    protected $_verifyNumError = 0;
-
-    /**
-     * Texte de la description de l'erreur de vérification.
-     *
-     * @var string $_verifyTextError
-     */
-    protected $_verifyTextError = 'Initialisation';
+    protected $_maxRL = 1;
+    protected $_maxRLUID = 3;
+    protected $_maxRS = 1;
 
     /**
      * Constructeur.
      *
      * @param nebule $nebuleInstance
-     * @param string $bloclink
+     * @param string $blocLink
      * @param string $linkType
-     * @return boolean
+     * @return void
      */
-    public function __construct(nebule $nebuleInstance, string $bloclink, string $linkType = Cache::TYPE_LINK)
+    public function __construct(nebule $nebuleInstance, string $blocLink, string $linkType = Cache::TYPE_LINK)
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
@@ -181,16 +179,16 @@ class Bloclink implements bloclinkInterface
         $this->_io = $nebuleInstance->getIoInstance();
         $this->_crypto = $nebuleInstance->getCryptoInstance();
         $this->_linksType = $linkType;
-        $this->_maxRL = $this->_configuration->getOptionUntyped('linkMaxRL');
-        $this->_maxRLUID = $this->_configuration->getOptionUntyped('linkMaxRLUID');
-        $this->_maxRS = $this->_configuration->getOptionUntyped('linkMaxRS');
+        $this->_maxRL = $this->_configuration->getOptionAsInteger('linkMaxRL');
+        $this->_maxRLUID = $this->_configuration->getOptionAsInteger('linkMaxRLUID');
+        $this->_maxRS = $this->_configuration->getOptionAsInteger('linkMaxRS');
 
         $this->_metrology->addLinkRead();
 
-        if (!$this->_parse($bloclink))
-            return false;
-
-        return true;
+        if ($blocLink == 'new')
+            $this->_new();
+        else
+            $this->_parse($blocLink);
     }
 
     /**
@@ -257,11 +255,18 @@ class Bloclink implements bloclinkInterface
         //if (!$this->_checkBL($bl)) $this->_metrology->addLog('check link BL failed '.$link, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c5d22fda');
         if (!$this->_checkBL($bl)) return false;
         //if (!$this->_checkBS($bh, $bl, $bs)) $this->_metrology->addLog('check link BS failed '.$link, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2828e6ae');
-        if (!$this->_checkBS($bh, $bl, $bs)) return false;
+        if (!$this->_newLink && !$this->_checkBS($bh, $bl, $bs)) return false;
 
         $this->_parsedLink['link'] = $link;
         $this->_validStructure = true;
         return true;
+    }
+
+    protected function _new(): void
+    {
+        $this->_rawBloclink = 'nebule:link/' . $this->_configuration->getOptionAsString('defaultLinksVersion') . '_';
+        $this->_newLink = true;
+        $this->_newLinkCount = 0;
     }
 
     /**
@@ -362,20 +367,6 @@ class Bloclink implements bloclinkInterface
         $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         return $this->_parsedLink['bl/rc/chr'];
-    }
-
-    public function getVerifyNumError(): int
-    {
-        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
-
-        return $this->_verifyNumError;
-    }
-
-    public function getVerifyTextError(): string
-    {
-        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
-
-        return $this->_verifyTextError;
     }
 
 
@@ -722,6 +713,27 @@ class Bloclink implements bloclinkInterface
         return false;
     }
 
+    public function addLink(string $rl): bool
+    {
+        if (!$this->_newLink
+            || $rl == ''
+        )
+            return false;
+
+        $instance = new Link($this->_nebuleInstance, $rl, $this);
+        if ($instance->getValidStructure()
+            && $this->_newLinkCount <= $this->_configuration->getOptionAsInteger('linkMaxRL')
+        )
+        {
+            if ($this->_newLinkCount > 0)
+                $this->_rawBloclink .= '/';
+            $this->_rawBloclink .= $rl;
+            $this->_newLinkCount++;
+        }
+
+        return true;
+    }
+
     /**
      * Signature du lien par l'entité en cours.
      *
@@ -730,57 +742,57 @@ class Bloclink implements bloclinkInterface
      */
     public function sign(string $publicKey = '0'): bool
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
+        $this->_metrology->addLog(substr($this->_rawBloclink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         // Si autorisé à signer.
-        if (!$this->_configuration->getOptionAsBoolean('permitCreateLink')) {
+        if (!$this->_newLink
+            || !$this->_configuration->getOptionAsBoolean('permitCreateLink')
+        ) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Can not sign link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             return false;
         }
 
-        // Si le lien est valide.
-        if ($this->_validStructure
-            && $this->_valid
-            && $this->_verifyNumError == 11
-            && $this->_signe == '0'
-        ) {
+        // Prepare new link to sign.
+        $this->_rawBloclink .= '_';
+        $this->_parse($this->_rawBloclink);
+        $this->_newLink = false;
+
+        if ($this->_validStructure) {
             // Lit la clé publique.
             if (is_a($publicKey, 'Entity')) {
-                $pubkeyInstance = $publicKey;
-                $pubkeyID = $publicKey->getID();
+                $publicKeyInstance = $publicKey;
+                $publicKeyID = $publicKey->getID();
             } else {
                 if ($publicKey == '0') {
-                    $pubkeyID = $this->_nebuleInstance->getCurrentEntity();
-                    $pubkeyInstance = $this->_nebuleInstance->getCurrentEntityInstance();
+                    $publicKeyID = $this->_nebuleInstance->getCurrentEntity();
+                    $publicKeyInstance = $this->_nebuleInstance->getCurrentEntityInstance();
                 } elseif ($publicKey == $this->_nebuleInstance->getCurrentEntity()) {
-                    $pubkeyInstance = $this->_nebuleInstance->getCurrentEntityInstance();
-                    $pubkeyID = $publicKey;
+                    $publicKeyInstance = $this->_nebuleInstance->getCurrentEntityInstance();
+                    $publicKeyID = $publicKey;
                 } else {
-                    $pubkeyInstance = $this->_nebuleInstance->newEntity($publicKey);
-                    $pubkeyID = $publicKey;
+                    $publicKeyInstance = $this->_nebuleInstance->newEntity($publicKey);
+                    $publicKeyID = $publicKey;
                 }
             }
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Sign link for ' . $pubkeyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Sign link for ' . $publicKeyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
             // Récupère l'algorithme de hash.
             $hashAlgo = $this->_crypto->hashAlgorithmName();
 
             // Génère le lien sans signature et son hash pour vérification.
-            $shortLink = '_' . $pubkeyID . '_' . $this->_date . '_' . $this->_action . '_' . $this->_hashSource . '_' . $this->_hashTarget . '_' . $this->_hashMeta;
+            $shortLink = $this->_parsedLink['bh'] . '_' . $this->_parsedLink['bl'];
 
             // Génère la signature.
-            $sign = $pubkeyInstance->signLink($shortLink, $hashAlgo);
+            $sign = $publicKeyInstance->signLink($shortLink, $hashAlgo);
 
             if ($sign !== false) {
                 $this->_signeValue = $sign;
                 $this->_signeAlgo = $hashAlgo;
                 $this->_signe = $sign . '.' . $hashAlgo;
-                $this->_hashSigner = $pubkeyID;
+                $this->_hashSigner = $publicKeyID;
                 $this->_rawLink = $this->_signe . $shortLink;
                 $this->_signed = true;
                 $this->_valid = true;
-                $this->_verifyNumError = 0;
-                $this->_verifyTextError = 'Signe is valid.';
                 return true;
             }
         } else {

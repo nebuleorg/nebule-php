@@ -10,7 +10,7 @@ namespace Nebule\Library;
  */
 interface bloclinkInterface
 {
-    public function __construct(nebule $nebuleInstance, string $bloclink, string $linkType = Cache::TYPE_LINK);
+    public function __construct(nebule $nebuleInstance, string $blocLink, string $linkType = Cache::TYPE_LINK);
 
     /**
      * Get full string of the link.
@@ -36,20 +36,6 @@ interface bloclinkInterface
     public function getLinks(): array;
 
     /**
-     * Retourne le code d'erreur de vérification.
-     *
-     * @return int
-     */
-    public function getVerifyNumError(): int;
-
-    /**
-     * Retourne le texte de description de l'erreur de vérification.
-     *
-     * @return string
-     */
-    public function getVerifyTextError(): string;
-
-    /**
      * Retourne si le lien est signé et si la signature est valide.
      * @return boolean
      */
@@ -70,7 +56,7 @@ interface bloclinkInterface
  */
 interface linkInterface
 {
-    public function __construct(nebule $nebuleInstance, string $rl, bloclinkInterface $bloclink);
+    public function __construct(nebule $nebuleInstance, string $rl, bloclinkInterface $blocLink);
 
     /**
      * Retourne le lien complet.
@@ -92,20 +78,6 @@ interface linkInterface
      * @return boolean
      */
     public function getValid(): bool;
-
-    /**
-     * Retourne le code d'erreur de vérification.
-     *
-     * @return int
-     */
-    public function getVerifyNumError(): int;
-
-    /**
-     * Retourne le texte de description de l'erreur de vérification.
-     *
-     * @return string
-     */
-    public function getVerifyTextError(): string;
 
     /**
      * Retourne si le lien est signé et si la signature est valide.
