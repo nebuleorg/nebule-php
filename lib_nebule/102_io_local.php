@@ -65,8 +65,8 @@ class ioLocal extends io implements ioInterface
 
         $this->_nebuleInstance = $nebuleInstance;
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_maxLink = $this->_configuration->getOption('ioReadMaxLinks');
-        $this->_maxData = $this->_configuration->getOption('ioReadMaxData');
+        $this->_maxLink = $this->_configuration->getOptionUntyped('ioReadMaxLinks');
+        $this->_maxData = $this->_configuration->getOptionUntyped('ioReadMaxData');
     }
 
     public function __sleep()
@@ -519,8 +519,8 @@ class ioLocal extends io implements ioInterface
             || $object == ''
             || $link == ''
             || !$this->_checkFileLink($object, $link)
-            || !$this->_configuration->getOption('permitWrite')
-            || !$this->_configuration->getOption('permitWriteLink')
+            || !$this->_configuration->getOptionUntyped('permitWrite')
+            || !$this->_configuration->getOptionUntyped('permitWriteLink')
             || $this->getMode() != 'RW'
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object)
         ) {
@@ -541,7 +541,7 @@ class ioLocal extends io implements ioInterface
             // Si le fichier de lien n'est pas présent, le crée.
             file_put_contents(
                 nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object,
-                'nebule/liens/version/' . $this->_configuration->getOption('defaultLinksVersion') . "\n");
+                'nebule/liens/version/' . $this->_configuration->getOptionUntyped('defaultLinksVersion') . "\n");
         }
 
         if (file_put_contents(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object, $link . "\n", FILE_APPEND) !== false) {
@@ -559,8 +559,8 @@ class ioLocal extends io implements ioInterface
     public function objectWrite(string &$data, string $localisation = '')
     {
         if ($localisation != ''
-            || !$this->_configuration->getOption('permitWrite')
-            || !$this->_configuration->getOption('permitWriteObject')
+            || !$this->_configuration->getOptionUntyped('permitWrite')
+            || !$this->_configuration->getOptionUntyped('permitWriteObject')
             || $this->getMode() != 'RW'
         ) {
             return false;
@@ -591,8 +591,8 @@ class ioLocal extends io implements ioInterface
             || $object == '0'
             || $object == ''
             || !ctype_xdigit($object)
-            || !$this->_configuration->getOption('permitWrite')
-            || !$this->_configuration->getOption('permitWriteObject')
+            || !$this->_configuration->getOptionUntyped('permitWrite')
+            || !$this->_configuration->getOptionUntyped('permitWriteObject')
             || $this->getMode() != 'RW'
             || is_dir(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object)
         ) {
@@ -626,8 +626,8 @@ class ioLocal extends io implements ioInterface
             || $object == ''
             || !$this->_checkFileLink($object, $link)
             || $link == ''
-            || !$this->_configuration->getOption('permitWrite')
-            || !$this->_configuration->getOption('permitWriteLink')
+            || !$this->_configuration->getOptionUntyped('permitWrite')
+            || !$this->_configuration->getOptionUntyped('permitWriteLink')
             || $this->getMode() != 'RW'
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object)
         ) {
@@ -655,8 +655,8 @@ class ioLocal extends io implements ioInterface
             || $object == '0'
             || $object == ''
             || !ctype_xdigit($object)
-            || !$this->_configuration->getOption('permitWrite')
-            || !$this->_configuration->getOption('permitWriteLink')
+            || !$this->_configuration->getOptionUntyped('permitWrite')
+            || !$this->_configuration->getOptionUntyped('permitWriteLink')
             || $this->getMode() != 'RW'
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object)
         ) {

@@ -79,7 +79,7 @@ class Cache
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_sessionBufferLimit = $this->_configuration->getOption('sessionBufferSize');
+        $this->_sessionBufferLimit = $this->_configuration->getOptionUntyped('sessionBufferSize');
         $this->_flushCache = $this->_nebuleInstance->getFlushCache();
     }
 
@@ -89,7 +89,7 @@ class Cache
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_sessionBufferLimit = $this->_configuration->getOption('sessionBufferSize');
+        $this->_sessionBufferLimit = $this->_configuration->getOptionUntyped('sessionBufferSize');
         $this->_flushCache = $this->_nebuleInstance->getFlushCache();
     }
 
@@ -101,7 +101,7 @@ class Cache
     public function readCacheOnSessionBuffer(): void
     {
         if ($this->_flushCache
-            || !$this->_configuration->getOption('permitSessionBuffer')
+            || !$this->_configuration->getOptionUntyped('permitSessionBuffer')
         )
             return;
 
@@ -138,7 +138,7 @@ class Cache
     public function saveCacheOnSessionBuffer(): void
     {
         if ($this->_flushCache
-            || !$this->_configuration->getOption('permitSessionBuffer')
+            || !$this->_configuration->getOptionUntyped('permitSessionBuffer')
         )
             return;
 
@@ -181,7 +181,7 @@ class Cache
      */
     private function _cleanCacheOverflow(int $c = 0): void
     {
-        if (!$this->_configuration->getOption('permitSessionBuffer')
+        if (!$this->_configuration->getOptionUntyped('permitSessionBuffer')
             || !is_numeric($c)
             || $c <= 0
         )
@@ -235,7 +235,7 @@ class Cache
      */
     private function _getCacheNeedOnePlace(): void
     {
-        if (!$this->_configuration->getOption('permitSessionBuffer'))
+        if (!$this->_configuration->getOptionUntyped('permitSessionBuffer'))
             return;
 
         $size = $this->_getAllCachesSize();
@@ -253,7 +253,7 @@ class Cache
      */
     private function _getCacheNeedCleaning(): void
     {
-        if (!$this->_configuration->getOption('permitSessionBuffer'))
+        if (!$this->_configuration->getOptionUntyped('permitSessionBuffer'))
             return;
 
         $size = $this->_getAllCachesSize();
@@ -329,7 +329,7 @@ class Cache
                     $instance = new Node($this->_nebuleInstance, $nid, '');
             }
 
-            if ($this->_configuration->getOption('permitSessionBuffer')) {
+            if ($this->_configuration->getOptionUntyped('permitSessionBuffer')) {
                 $this->_cache[$type][$nid] = $instance;
                 $this->_cacheDateInsertion[$type][$nid] = microtime(true);
             }
@@ -564,7 +564,7 @@ class Cache
 
             $instance = new Bloclink($this->_nebuleInstance, $link, $type);
 
-            if ($this->_configuration->getOption('permitSessionBuffer')) {
+            if ($this->_configuration->getOptionUntyped('permitSessionBuffer')) {
                 $this->_cache[$type][$link] = $instance;
                 $this->_cacheDateInsertion[$type][$link] = microtime(true);
             }

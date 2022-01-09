@@ -308,7 +308,7 @@ class Currency extends Node
             || $id == ''
             || !ctype_xdigit($id)
             || !$this->_io->checkLinkPresent($id)
-            || !$this->_configuration->getOption('permitCurrency')
+            || !$this->_configuration->getOptionUntyped('permitCurrency')
         ) {
             $id = '0';
         }
@@ -358,12 +358,12 @@ class Currency extends Node
         $this->_metrology->addLog('Ask create currency', Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Vérifie que l'on puisse créer une monnaie.
-        if ($this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteObject')
-            && $this->_configuration->getOption('permitWriteLink')
-            && $this->_configuration->getOption('permitCurrency')
-            && $this->_configuration->getOption('permitWriteCurrency')
-            && $this->_configuration->getOption('permitCreateCurrency')
+        if ($this->_configuration->getOptionUntyped('permitWrite')
+            && $this->_configuration->getOptionUntyped('permitWriteObject')
+            && $this->_configuration->getOptionUntyped('permitWriteLink')
+            && $this->_configuration->getOptionUntyped('permitCurrency')
+            && $this->_configuration->getOptionUntyped('permitWriteCurrency')
+            && $this->_configuration->getOptionUntyped('permitCreateCurrency')
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // Génère la nouvelle monnaie.
@@ -1142,7 +1142,7 @@ class Currency extends Node
         $result = null;
 
         // Lit le contenu de l'objet.
-        $maxLimit = $this->_configuration->getOption('ioReadMaxData');
+        $maxLimit = $this->_configuration->getOptionUntyped('ioReadMaxData');
         $content = $this->getContent($maxLimit);
 
         // Si l'objet monnaie a du contenu.
@@ -1590,7 +1590,7 @@ class Currency extends Node
 
         // Si besoin, obfuscation du lien.
         if ($obfuscate
-            && $this->_configuration->getOption('permitObfuscatedLink')
+            && $this->_configuration->getOptionUntyped('permitObfuscatedLink')
         ) {
             $newLink->obfuscate();
         }

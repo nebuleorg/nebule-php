@@ -412,7 +412,7 @@ class nebule
      */
     private function _getSubordinationEntity()
     {
-        $this->_subordinationEntity = new Entity($this->_nebuleInstance, (string)Configuration::getOptionFromEnvironmentStatic('subordinationEntity'));
+        $this->_subordinationEntity = new Entity($this->_nebuleInstance, (string)Configuration::getOptionFromEnvironmentUntypedStatic('subordinationEntity'));
 
         if ($this->_metrologyInstance !== null)
             $this->_metrologyInstance->addLog('Get subordination entity = ' . $this->_subordinationEntity, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
@@ -450,9 +450,9 @@ class nebule
             $this->_configurationInstance->lockWriteLink();
         }
 
-        if (!$this->_configurationInstance->getOption('permitWriteObject'))
+        if (!$this->_configurationInstance->getOptionUntyped('permitWriteObject'))
             $this->_metrologyInstance->addLog('objects ro not rw', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
-        if (!$this->_configurationInstance->getOption('permitWriteLink'))
+        if (!$this->_configurationInstance->getOptionUntyped('permitWriteLink'))
             $this->_metrologyInstance->addLog('links ro not rw', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
     }
 
@@ -476,7 +476,7 @@ class nebule
 
         if ($name == ''
             || $this->_flushCache
-            || !$this->_configurationInstance->getOption('permitSessionOptions')
+            || !$this->_configurationInstance->getOptionUntyped('permitSessionOptions')
             || !isset($_SESSION['Option'][$name])
         ) {
             session_write_close();
@@ -500,7 +500,7 @@ class nebule
     {
         if ($name == ''
             || $this->_flushCache
-            || !$this->_configurationInstance->getOption('permitSessionOptions')
+            || !$this->_configurationInstance->getOptionUntyped('permitSessionOptions')
         )
             return false;
 
@@ -537,7 +537,7 @@ class nebule
 
         if ($name == ''
             || $this->_flushCache
-            || !$this->_configurationInstance->getOption('permitSessionBuffer')
+            || !$this->_configurationInstance->getOptionUntyped('permitSessionBuffer')
             || !isset($_SESSION['Buffer'][$name])
         ) {
             session_write_close();
@@ -561,7 +561,7 @@ class nebule
     {
         if ($name == ''
             || $this->_flushCache
-            || !$this->_configurationInstance->getOption('permitSessionBuffer')
+            || !$this->_configurationInstance->getOptionUntyped('permitSessionBuffer')
         )
             return false;
 
@@ -995,7 +995,7 @@ class nebule
         } else {
             // Sinon recherche une entité par défaut.
             // C'est définit comme une option.
-            $id = $this->_configurationInstance->getOption('defaultCurrentEntity');
+            $id = $this->_configurationInstance->getOptionUntyped('defaultCurrentEntity');
 
             if ($id != ''
                 && strlen($id) >= self::NEBULE_MINIMUM_ID_SIZE
@@ -1143,7 +1143,7 @@ class nebule
             } else // Sinon essaie de la trouver ailleurs.
             {
                 $itc_ent = '';
-                $ext_ent = $this->_configurationInstance->getOption('defaultCurrentEntity');
+                $ext_ent = $this->_configurationInstance->getOptionUntyped('defaultCurrentEntity');
                 if ($ext_ent != ''
                     && strlen($ext_ent) >= self::NEBULE_MINIMUM_ID_SIZE
                     && ctype_xdigit($ext_ent)
@@ -1728,7 +1728,7 @@ class nebule
     private function _findCurrentCurrency()
     {
         // Si pas autorisé, retourne ID=0.
-        if (!$this->_configurationInstance->getOption('permitCurrency')) {
+        if (!$this->_configurationInstance->getOptionUntyped('permitCurrency')) {
             $this->_currentCurrency = '0';
             $this->_currentCurrencyInstance = $this->newCurrency('0');
             // Ecrit la monnaie dans la session.
@@ -1839,7 +1839,7 @@ class nebule
     private function _findCurrentTokenPool()
     {
         // Si pas autorisé, retourne ID=0.
-        if (!$this->_configurationInstance->getOption('permitCurrency')) {
+        if (!$this->_configurationInstance->getOptionUntyped('permitCurrency')) {
             $this->_currentTokenPool = '0';
             $this->_currentTokenPoolInstance = $this->newTokenPool('0');
             // Ecrit le sac de jetons dans la session.
@@ -1950,7 +1950,7 @@ class nebule
     private function _findCurrentToken()
     {
         // Si pas autorisé, retourne ID=0.
-        if (!$this->_configurationInstance->getOption('permitCurrency')) {
+        if (!$this->_configurationInstance->getOptionUntyped('permitCurrency')) {
             $this->_currentToken = '0';
             $this->_currentTokenInstance = $this->newToken('0');
             // Ecrit le jeton dans la session.
@@ -2048,7 +2048,7 @@ class nebule
     {
         // Vérifie que le maître est une entité et est bien celui définit par la constante.
         if (!$this->_puppetmasterInstance instanceof Entity) return 0;
-        if ($this->_puppetmasterInstance->getID() != $this->_configurationInstance->getOption('puppetmaster')) return 0;
+        if ($this->_puppetmasterInstance->getID() != $this->_configurationInstance->getOptionUntyped('puppetmaster')) return 0;
         // Vérifie que le maître de la sécurité est une entité et a été trouvé.
         if (!$this->_securityMasterInstance instanceof Entity) return 1;
         if ($this->_securityMasterInstance->getID() == '0') return 1;
@@ -2098,7 +2098,7 @@ class nebule
      */
     private function _findPuppetmaster()
     {
-        $this->_puppetmaster = $this->_configurationInstance->getOption('puppetmaster');
+        $this->_puppetmaster = $this->_configurationInstance->getOptionUntyped('puppetmaster');
         $this->_puppetmasterInstance = $this->newEntity($this->_puppetmaster);
         $this->_metrologyInstance->addLog('Find puppetmaster ' . $this->_puppetmaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
@@ -2400,7 +2400,7 @@ class nebule
     {
         // Ajoute si nécessaire l'entité du serveur.
         if (!$this->_modeRescue)
-            $this->_permitInstanceEntityAsAuthority = $this->_configurationInstance->getOption('permitInstanceEntityAsAuthority');
+            $this->_permitInstanceEntityAsAuthority = $this->_configurationInstance->getOptionUntyped('permitInstanceEntityAsAuthority');
         else
             $this->_permitInstanceEntityAsAuthority = false;
 
@@ -2428,7 +2428,7 @@ class nebule
     {
         // Ajoute si nécessaire l'entité par défaut.
         if (!$this->_modeRescue)
-            $this->_permitDefaultEntityAsAuthority = $this->_configurationInstance->getOption('permitDefaultEntityAsAuthority');
+            $this->_permitDefaultEntityAsAuthority = $this->_configurationInstance->getOptionUntyped('permitDefaultEntityAsAuthority');
         else
             $this->_permitDefaultEntityAsAuthority = false;
 
@@ -2454,7 +2454,7 @@ class nebule
     private function _addLocalAuthorities()
     {
         // Vérifie si les entités autorités locales sont autorisées.
-        if (!$this->_configurationInstance->getOption('permitLocalSecondaryAuthorities'))
+        if (!$this->_configurationInstance->getOptionUntyped('permitLocalSecondaryAuthorities'))
             return;
 
         $refAuthority = $this->_cryptoInstance->hash(self::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
@@ -2648,10 +2648,10 @@ class nebule
     private function _addInstanceEntityAsRecovery()
     {
         // Vérifie si les entités de recouvrement sont autorisées.
-        if (!$this->_configurationInstance->getOption('permitRecoveryEntities'))
+        if (!$this->_configurationInstance->getOptionUntyped('permitRecoveryEntities'))
             return;
 
-        $this->_permitInstanceEntityAsRecovery = $this->_configurationInstance->getOption('permitInstanceEntityAsRecovery');
+        $this->_permitInstanceEntityAsRecovery = $this->_configurationInstance->getOptionUntyped('permitInstanceEntityAsRecovery');
 
         if ($this->_permitInstanceEntityAsRecovery) {
             $this->_recoveryEntities[$this->_instanceEntity] = $this->_instanceEntity;
@@ -2670,10 +2670,10 @@ class nebule
     private function _addDefaultEntityAsRecovery()
     {
         // Vérifie si les entités de recouvrement sont autorisées.
-        if (!$this->_configurationInstance->getOption('permitRecoveryEntities'))
+        if (!$this->_configurationInstance->getOptionUntyped('permitRecoveryEntities'))
             return;
 
-        $this->_permitDefaultEntityAsRecovery = $this->_configurationInstance->getOption('permitDefaultEntityAsRecovery');
+        $this->_permitDefaultEntityAsRecovery = $this->_configurationInstance->getOptionUntyped('permitDefaultEntityAsRecovery');
 
         if ($this->_permitDefaultEntityAsRecovery) {
             $this->_recoveryEntities[$this->_defaultEntity] = $this->_defaultEntity;
@@ -2695,7 +2695,7 @@ class nebule
         $this->_recoveryEntitiesInstances = array();
 
         // Vérifie si les entités de recouvrement sont autorisées.
-        if (!$this->_configurationInstance->getOption('permitRecoveryEntities'))
+        if (!$this->_configurationInstance->getOptionUntyped('permitRecoveryEntities'))
             return;
 
         $refRecovery = $this->_cryptoInstance->hash(self::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
@@ -2924,8 +2924,8 @@ class nebule
      */
     private function _findModeRescue(): void
     {
-        if ($this->_configurationInstance->getOption('modeRescue')
-            || ($this->_configurationInstance->getOption('permitOnlineRescue')
+        if ($this->_configurationInstance->getOptionUntyped('modeRescue')
+            || ($this->_configurationInstance->getOptionUntyped('permitOnlineRescue')
                 && (filter_has_var(INPUT_GET, nebule::COMMAND_RESCUE)
                     || filter_has_var(INPUT_POST, nebule::COMMAND_RESCUE)
                 )
@@ -3052,9 +3052,9 @@ class nebule
     public function createTextAsObject(string &$text, bool $protect = false, bool $obfuscate = false)
     {
         // Vérifie que l'écriture est autorisée.
-        if ($this->_configurationInstance->getOption('permitWrite')
-            && $this->_configurationInstance->getOption('permitWriteObject')
-            && $this->_configurationInstance->getOption('permitWriteLink')
+        if ($this->_configurationInstance->getOptionUntyped('permitWrite')
+            && $this->_configurationInstance->getOptionUntyped('permitWriteObject')
+            && $this->_configurationInstance->getOptionUntyped('permitWriteLink')
             && $this->_currentEntityUnlocked
             && strlen($text) != 0
         ) {

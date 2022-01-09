@@ -289,7 +289,7 @@ class Configuration
      * Liste des options qui sont modifiables.
      * Les options non modifiables peuvent cependant être forcées dans le fichier d'environnement.
      *
-     * @var array:boolean
+     * @var array:bool
      */
     const OPTIONS_WRITABLE = array(
         'puppetmaster' => false,
@@ -325,7 +325,7 @@ class Configuration
         'permitHistoryLinksSign' => true,
         'permitInstanceEntityAsAuthority' => false,
         'permitDefaultEntityAsAuthority' => false,
-        'permitLocalSecondaryAuthorities' => true, // @todo à voir...
+        'permitLocalSecondaryAuthorities' => false,
         'permitRecoveryEntities' => false,
         'permitRecoveryRemoveEntity' => false,
         'permitInstanceEntityAsRecovery' => false,
@@ -371,81 +371,81 @@ class Configuration
     /**
      * Liste des valeurs par défaut des options.
      *
-     * @var array
+     * @var array:string
      */
     const OPTIONS_DEFAULT_VALUE = array(
         'puppetmaster' => '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256',
         'hostURL' => 'localhost',
-        'permitWrite' => true,
-        'permitWriteObject' => true,
-        'permitCreateObject' => true,
-        'permitSynchronizeObject' => false,
-        'permitProtectedObject' => true,
-        'permitWriteLink' => true,
-        'permitCreateLink' => true,
-        'permitSynchronizeLink' => false,
-        'permitUploadLink' => false,
-        'permitPublicUploadLink' => false,
-        'permitPublicUploadCodeAuthoritiesLink' => true,
-        'permitObfuscatedLink' => true,
-        'permitWriteEntity' => true,
-        'permitPublicCreateEntity' => false,
-        'permitWriteGroup' => true,
-        'permitWriteConversation' => true,
-        'permitCurrency' => true,
-        'permitWriteCurrency' => true,
-        'permitCreateCurrency' => false,
-        'permitWriteTransaction' => true,
-        'permitObfuscatedTransaction' => false,
-        'permitSynchronizeApplication' => false,
-        'permitPublicSynchronizeApplication' => false,
-        'permitDeleteObjectOnUnknownHash' => true,
-        'permitCheckSignOnVerify' => true,
-        'permitCheckSignOnList' => true,
-        'permitCheckObjectHash' => true,
-        'permitListInvalidLinks' => false,
-        'permitHistoryLinksSign' => false,
-        'permitInstanceEntityAsAuthority' => false,
-        'permitDefaultEntityAsAuthority' => false,
-        'permitLocalSecondaryAuthorities' => true,
-        'permitRecoveryEntities' => false,
-        'permitRecoveryRemoveEntity' => false,
-        'permitInstanceEntityAsRecovery' => false,
-        'permitDefaultEntityAsRecovery' => false,
-        'permitAddLinkToSigner' => true,
-        'permitListOtherHash' => false,
-        'permitLocalisationStats' => true,
-        'permitFollowUpdates' => true,
-        'permitOnlineRescue' => false,
-        'permitLogs' => false,
-        'permitJavaScript' => true,
+        'permitWrite' => 'true',
+        'permitWriteObject' => 'true',
+        'permitCreateObject' => 'true',
+        'permitSynchronizeObject' => 'false',
+        'permitProtectedObject' => 'true',
+        'permitWriteLink' => 'true',
+        'permitCreateLink' => 'true',
+        'permitSynchronizeLink' => 'false',
+        'permitUploadLink' => 'false',
+        'permitPublicUploadLink' => 'false',
+        'permitPublicUploadCodeAuthoritiesLink' => 'true',
+        'permitObfuscatedLink' => 'true',
+        'permitWriteEntity' => 'true',
+        'permitPublicCreateEntity' => 'false',
+        'permitWriteGroup' => 'true',
+        'permitWriteConversation' => 'true',
+        'permitCurrency' => 'true',
+        'permitWriteCurrency' => 'true',
+        'permitCreateCurrency' => 'false',
+        'permitWriteTransaction' => 'true',
+        'permitObfuscatedTransaction' => 'false',
+        'permitSynchronizeApplication' => 'false',
+        'permitPublicSynchronizeApplication' => 'false',
+        'permitDeleteObjectOnUnknownHash' => 'true',
+        'permitCheckSignOnVerify' => 'true',
+        'permitCheckSignOnList' => 'true',
+        'permitCheckObjectHash' => 'true',
+        'permitListInvalidLinks' => 'false',
+        'permitHistoryLinksSign' => 'false',
+        'permitInstanceEntityAsAuthority' => 'false',
+        'permitDefaultEntityAsAuthority' => 'false',
+        'permitLocalSecondaryAuthorities' => 'true',
+        'permitRecoveryEntities' => 'false',
+        'permitRecoveryRemoveEntity' => 'false',
+        'permitInstanceEntityAsRecovery' => 'false',
+        'permitDefaultEntityAsRecovery' => 'false',
+        'permitAddLinkToSigner' => 'true',
+        'permitListOtherHash' => 'false',
+        'permitLocalisationStats' => 'true',
+        'permitFollowUpdates' => 'true',
+        'permitOnlineRescue' => 'false',
+        'permitLogs' => 'false',
+        'permitJavaScript' => 'true',
         'logsLevel' => 'NORMAL',
-        'modeRescue' => false,
+        'modeRescue' => 'false',
         'cryptoLibrary' => 'openssl',
         'cryptoHashAlgorithm' => 'sha2.256',
         'cryptoSymetricAlgorithm' => 'aes-256-ctr',
         'cryptoAsymetricAlgorithm' => 'rsa.2048',
         'socialLibrary' => 'strict',
         'ioLibrary' => 'ioFileSystem',
-        'ioReadMaxLinks' => 2000,
-        'ioReadMaxData' => 10000,
-        'ioReadMaxUpload' => 2000000,
+        'ioReadMaxLinks' => '2000',
+        'ioReadMaxData' => '10000',
+        'ioReadMaxUpload' => '2000000',
         'ioTimeout' => 1,
-        'displayUnsecureURL' => true,
-        'displayNameSize' => 128,
-        'displayEmotions' => true,
-        'forceDisplayEntityOnTitle' => false,
-        'linkMaxFollowedUpdates' => 100,
-        'linkMaxRL' => 1,
-        'linkMaxRLUID' => 3,
-        'linkMaxRS' => 1,
-        'permitSessionOptions' => true,
-        'permitSessionBuffer' => true,
-        'permitBufferIO' => true,
-        'sessionBufferSize' => 1000,
+        'displayUnsecureURL' => 'true',
+        'displayNameSize' => '128',
+        'displayEmotions' => 'true',
+        'forceDisplayEntityOnTitle' => 'false',
+        'linkMaxFollowedUpdates' => '100',
+        'linkMaxRL' => '1',
+        'linkMaxRLUID' => '3',
+        'linkMaxRS' => '1',
+        'permitSessionOptions' => 'true',
+        'permitSessionBuffer' => 'true',
+        'permitBufferIO' => 'true',
+        'sessionBufferSize' => '1000',
         'defaultCurrentEntity' => '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256',
         'defaultApplication' => '0',
-        'defaultObfuscateLinks' => false,
+        'defaultObfuscateLinks' => 'false',
         'defaultLinksVersion' => '2.0',
         'subordinationEntity' => '',
     );
@@ -534,7 +534,6 @@ class Configuration
 
     /**
      * Liste des descriptions des options.
-     * @todo
      *
      * @var array:string
      */
@@ -543,11 +542,11 @@ class Configuration
         'hostURL' => "The URL, domain name, of this server. This is use by others servers and others entities to find this server and it's local entities.",
         'permitWrite' => 'The big switch to write protect all the instance on this server. This switch is not an object but is on the options file.',
         'permitWriteObject' => 'The switch to permit objects writing.',
-        'permitCreateObject' => 'The switch to permit creation of new objects localy.',
+        'permitCreateObject' => 'The switch to permit creation of new objects locally.',
         'permitSynchronizeObject' => 'The switch to permit to synchronize (update) objects from other localisations.',
         'permitProtectedObject' => 'The switch to permit read/write protected objects. On false, generation of liens k for protected objects is disabled and all existing/downloaded links for protected objects are assumed as invalid and dropped.',
         'permitWriteLink' => 'The switch to permit links writing.',
-        'permitCreateLink' => 'The switch to permit creation of new links localy.',
+        'permitCreateLink' => 'The switch to permit creation of new links locally.',
         'permitSynchronizeLink' => 'The switch to permit to synchronize links of objects from other localisations.',
         'permitUploadLink' => 'The switch to permit ask creation and sign of new links uploaded within an URL.',
         'permitPublicUploadLink' => 'The switch to permit ask upload signed links (from known entities) within an URL.',
@@ -573,8 +572,8 @@ class Configuration
         'permitInstanceEntityAsAuthority' => 'Declare instance entity of this server as local authority.',
         'permitDefaultEntityAsAuthority' => 'Declare default entity on this server as local authority.',
         'permitLocalSecondaryAuthorities' => 'Todo description...',
-        'permitRecoveryEntities' => 'Activate the recovery process. Local recovery entities are listed and new protection of objects are automaticaly shared with recovery entities.',
-        'permitRecoveryRemoveEntity' => 'An entity can remove shared protection to recovery entity. By default, it is not permited.',
+        'permitRecoveryEntities' => 'Activate the recovery process. Local recovery entities are listed and new protection of objects are automatically shared with recovery entities.',
+        'permitRecoveryRemoveEntity' => 'An entity can remove shared protection to recovery entity. By default, it is not permitted.',
         'permitInstanceEntityAsRecovery' => 'Declare instance entity of this server as recovery entity.',
         'permitDefaultEntityAsRecovery' => 'Declare default entity on this server as recovery entity.',
         'permitAddLinkToSigner' => 'Todo description...',
@@ -587,23 +586,23 @@ class Configuration
         'logsLevel' => 'Select verbosity of logs. Select on NORMAL, ERROR, FUNCTION and DEBUG.',
         'modeRescue' => 'Activate the rescue mode. Follow only links from globals authorities for applications detection.',
         'cryptoLibrary' => 'Define the default cryptographic library used.',
-        'cryptoHashAlgorithm' => 'Define the default cryptographic hash algorythm used.',
-        'cryptoSymetricAlgorithm' => 'Define the default cryptographic symetric algorythm used.',
-        'cryptoAsymetricAlgorithm' => 'Define the default cryptographic asymetric algorythm used.',
-        'socialLibrary' => 'Todo description...',
-        'ioLibrary' => 'Todo description...',
+        'cryptoHashAlgorithm' => 'Define the default cryptographic hash algorithm used.',
+        'cryptoSymetricAlgorithm' => 'Define the default cryptographic symmetric algorithm used.',
+        'cryptoAsymetricAlgorithm' => 'Define the default cryptographic asymmetric algorithm used.',
+        'socialLibrary' => "Default social understanding of link's signers.",
+        'ioLibrary' => 'Default storage type for I/O operations.',
         'ioReadMaxLinks' => 'Maximum number of links readable in one time for one object.',
         'ioReadMaxData' => 'Maximum quantity of bytes readable in one time from one object file content.',
         'ioReadMaxUpload' => 'Maximum file size on upload. Overload default value upload_max_filesize on php.ini file.',
-        'ioTimeout' => 'Todo description...',
+        'ioTimeout' => 'Timeout for I/O operations with distant storage.',
         'displayUnsecureURL' => 'Display a warning message if the connexion link is not protected (https : HTTP overs TLS).',
         'displayNameSize' => 'The maximum displayable size of a name of objects.',
         'displayEmotions' => 'Display all emotions when asked by applications, or not.',
         'forceDisplayEntityOnTitle' => 'Force display of current selected entity on application even if is the same of current entity used on library.',
         'linkMaxFollowedUpdates' => 'Todo description...',
-        'linkMaxRL' => 'Todo description...',
-        'linkMaxRLUID' => 'Todo description...',
-        'linkMaxRS' => 'Todo description...',
+        'linkMaxRL' => 'Maximum links that can be read on the registry RL. If more, link is marked to have invalid structure.',
+        'linkMaxRLUID' => 'Maximum UIDs of links that can be read on the registry RL. If more, link is marked to have invalid structure.',
+        'linkMaxRS' => 'Maximum signes that can be read on the registry RS. If more, ignored.',
         'permitSessionOptions' => 'Todo description...',
         'permitSessionBuffer' => 'Todo description...',
         'permitBufferIO' => 'Todo description...',
@@ -652,7 +651,7 @@ class Configuration
 
     /**
      * Marque la fin de l'initialisation.
-     * C'est nécessaire pour certaines parties qui nécessitent l'accès à la journalisation mais trop tôt.
+     * C'est nécessaire pour certaines parties qui nécessitent l'accès à la journalisation, mais trop tôt.
      * C'est le cas dans la lecture des options dans les liens.
      *
      * @var boolean
@@ -758,7 +757,7 @@ class Configuration
      *  - le contenu de l'option dans l'environnement ;
      *  - ou le contenu de l'option dans les liens ;
      *  - ou le contenu de l'option par défaut ;
-     *  - ou false.
+     *  - ou null.
      *
      * La valeur trouvée dans l'environnement est prioritaire.
      * C'est la façon de forcer une option.
@@ -766,55 +765,118 @@ class Configuration
      * @param string $name
      * @return string|bool|int|null
      */
-    public function getOption(string $name)
+    public function getOptionUntyped(string $name)
     {
-        // Vérifie le nom.
-        if ($name == ''
-            || !is_string($name)
-            || !isset(self::OPTIONS_TYPE[$name])
-        )
+        return self::_changeTypeValueFromString($name, $this->_getOption($name));
+    }
+
+    /**
+     * Extrait les options nebule.
+     * Retourne :
+     *  - un texte ;
+     *  - le contenu de l'option dans l'environnement ;
+     *  - ou le contenu de l'option dans les liens ;
+     *  - ou le contenu de l'option par défaut ;
+     *  - ou ''.
+     *
+     * La valeur trouvée dans l'environnement est prioritaire.
+     * C'est la façon de forcer une option.
+     *
+     * @param string $name
+     * @return string
+     */
+    public function getOptionAsString(string $name): string
+    {
+        return $this->_getOption($name);
+    }
+
+    /**
+     * Extrait les options nebule.
+     * Retourne :
+     *  - un booléen ;
+     *  - le contenu de l'option dans l'environnement ;
+     *  - ou le contenu de l'option dans les liens ;
+     *  - ou le contenu de l'option par défaut ;
+     *  - ou false.
+     *
+     * La valeur trouvée dans l'environnement est prioritaire.
+     * C'est la façon de forcer une option.
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function getOptionAsBoolean(string $name): bool
+    {
+        if ($this->_getOption($name) == 'true')
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * Extrait les options nebule.
+     * Retourne :
+     *  - un nombre ;
+     *  - le contenu de l'option dans l'environnement ;
+     *  - ou le contenu de l'option dans les liens ;
+     *  - ou le contenu de l'option par défaut ;
+     *  - ou 0.
+     *
+     * La valeur trouvée dans l'environnement est prioritaire.
+     * C'est la façon de forcer une option.
+     *
+     * @param string $name
+     * @return int
+     */
+    public function getOptionAsInteger(string $name): int
+    {
+        return (int)$this->_getOption($name);
+    }
+
+    /**
+     * Get content of an option.
+     *
+     * @param string $name
+     * @return string|null
+     */
+    private function _getOption(string $name): ?string
+    {
+        if ($name == '')
             return null;
 
         if ($this->_metrologyInstance !== null)
-            $this->_metrologyInstance->addLog('Get option ' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrologyInstance->addLog('Get option ' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '56a98331'); // Log
 
-        // La réponse.
         $result = null;
 
-        // Lit le cache.
+        // Read on cache.
         if (isset($this->_optionCache[$name]))
             $result = $this->_optionCache[$name];
 
-        // Cherche l'option dans l'environnement.
         if ($result === null)
-            $result = $this->getOptionFromEnvironment($name);
+            $result = $this->_getOptionFromEnvironmentStatic($name);
 
-        // Si non trouvé et si non protégée, cherche l'option dans les liens.
         if (self::OPTIONS_WRITABLE[$name]
             && $result === null
         )
-            $result = $this->getOptionFromLinks($name);
+            $result = $this->_getOptionFromLinks($name);
 
-        // Si non trouvé, cherche la valeur par défaut de l'option.
-        if ($result === null) {
+        if ($result === null
+            && isset(self::OPTIONS_DEFAULT_VALUE[$name])
+        ) {
             $result = self::OPTIONS_DEFAULT_VALUE[$name];
             if ($this->_metrologyInstance !== null) {
-                $this->_metrologyInstance->addLog('Get default option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+                $this->_metrologyInstance->addLog('Get default value for option ' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '3e39271b'); // Log
             }
         }
 
-        // Si non trouvé, retourne la valeur par défaut.
-        if ($result === null) {
-            $result = false;
-            if ($this->_metrologyInstance !== null)
-                $this->_metrologyInstance->addLog('Get unknown option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-        }
-
         if ($this->_metrologyInstance !== null)
-            $this->_metrologyInstance->addLog('Return option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrologyInstance->addLog('Return option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'd2fd4284'); // Log
 
-        // Ecrit le cache.
-        if ($result !== null)
+        // Write on cache.
+        if ($result !== null
+            && !$this->_writeOptionCacheLock
+        )
             $this->_optionCache[$name] = $result;
 
         return $result;
@@ -828,38 +890,69 @@ class Configuration
      */
     public static function getOptionDefaultValue(string $name)
     {
-        if ($name == ''
-            || !is_string($name)
-            || !isset(self::OPTIONS_DEFAULT_VALUE[$name])
-        )
-            return null;
-
-        return self::OPTIONS_DEFAULT_VALUE[$name];
+        return self::_changeTypeValueFromString($name, self::OPTIONS_DEFAULT_VALUE[$name]);
     }
 
     /**
      * @param string $name
      * @return string|bool|int|null
      */
-    public function getOptionFromEnvironment(string $name)
+    static public function getOptionFromEnvironmentUntypedStatic(string $name)
     {
-        $result = self::getOptionFromEnvironmentStatic($name);
+        return self::_changeTypeValueFromString($name, self::_getOptionFromEnvironmentStatic($name));
+    }
+
+    /**
+     * @param string $name
+     * @return string|bool|int|null
+     */
+    public function getOptionFromEnvironmentUntyped(string $name)
+    {
+        $result = self::_changeTypeValueFromString($name, self::_getOptionFromEnvironmentStatic($name));
 
         if ($this->_metrologyInstance !== null)
-            $this->_metrologyInstance->addLog('Return option env = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrologyInstance->addLog('Return option env = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '52ac2506'); // Log
 
         return $result;
     }
 
     /**
      * @param string $name
-     * @return string|bool|int|null
+     * @return string|null
      */
-    static public function getOptionFromEnvironmentStatic(string $name)
+    public function getOptionFromEnvironmentAsString(string $name): ?string
     {
-        if ($name == ''
-            || !isset(self::OPTIONS_TYPE[$name])
-        )
+        return self::_getOptionFromEnvironmentStatic($name);
+    }
+
+    /**
+     * @param string $name
+     * @return boolean
+     */
+    public function getOptionFromEnvironmentAsBoolean(string $name): bool
+    {
+        if (self::_getOptionFromEnvironmentStatic($name) == 'true')
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * @param string $name
+     * @return integer
+     */
+    public function getOptionFromEnvironmentAsInteger(string $name): int
+    {
+        return (int)self::_getOptionFromEnvironmentStatic($name);
+    }
+
+    /**
+     * @param string $name
+     * @return string|null
+     */
+    static private function _getOptionFromEnvironmentStatic(string $name): ?string
+    {
+        if ($name == '' )
             return null;
 
         // Read configuration file.
@@ -880,52 +973,52 @@ class Configuration
             unset($file);
         }
 
-        return self::_transtypeValueFromString($name, $value);
+        return $value;
     }
 
     /**
+     * Transcode option's value from a string.
+     *
      * @param string $name
      * @param string $value
      * @return string|bool|int|null
      */
-    static private function _transtypeValueFromString(string $name, string $value)
+    static private function _changeTypeValueFromString(string $name, string $value)
     {
-        if ($name == ''
-            || !isset(self::OPTIONS_TYPE[$name])
-            || $value == ''
+        if (!isset(self::OPTIONS_TYPE[$name])
+            || !isset(self::OPTIONS_DEFAULT_VALUE[$name])
         )
             return null;
 
         switch (self::OPTIONS_TYPE[$name]) {
             case 'string' :
-                $result = trim($value);
-                break;
+                return trim($value);
             case 'boolean' :
                 if ($value == 'true')
-                    $result = true;
+                    return true;
                 elseif ($value == 'false')
-                    $result = false;
+                    return false;
                 else
-                    $result = self::OPTIONS_DEFAULT_VALUE[$name];
-                break;
+                    return self::OPTIONS_DEFAULT_VALUE[$name];
             case 'integer' :
-                $result = (int)$value;
-                break;
+                return (int)$value;
             default :
-                $result = null;
+                return null;
         }
-
-        return $result;
     }
 
     /**
+     * Transcode option's value to a string.
+     *
      * @param string          $name
      * @param string|bool|int $value
      * @return string
      */
-    private function _transtypeValueToString(string $name, $value)
+    private function _changeTypeValueToString(string $name, $value): string
     {
-        // Transcode value.
+        if (!isset(self::OPTIONS_TYPE[$name]) )
+            return '';
+
         switch (self::OPTIONS_TYPE[$name]) {
             case 'string' :
                 return $value;
@@ -940,21 +1033,75 @@ class Configuration
                 return '';
         }
     }
+
     /**
      * Extrait les options depuis les liens.
      * Retourne :
      *  - une chaine de caractères avec le contenu de l'option _ou_ un nombre _ou_ un booléen ;
      *  - ou null si rien n'est trouvé.
      *
-     * Pour les booléens, on regarde si on a l'inverse de la valeur par défaut de l'option.
-     *
      * @param string $name
      * @return string|bool|int|null
      */
-    public function getOptionFromLinks(string $name)
+    public function getOptionFromLinksUntyped(string $name)
+    {
+        return $this->_changeTypeValueFromString($name, $this->_getOptionFromLinks($name));
+    }
+
+    /**
+     * Extrait les options depuis les liens.
+     * Retourne :
+     *  - une chaine de caractères avec le contenu de l'option ;
+     *  - ou null si rien n'est trouvé.
+     *
+     * @param string $name
+     * @return string|null
+     */
+    public function getOptionFromLinksAsString(string $name): ?string
+    {
+        return $this->_getOptionFromLinks($name);
+    }
+
+    /**
+     * Extrait les options depuis les liens.
+     * Retourne :
+     *  - un booléen avec le contenu de l'option ;
+     *  - ou false si rien n'est trouvé.
+     *
+     * @param string $name
+     * @return boolean
+     */
+    public function getOptionFromLinksAsBoolean(string $name): bool
+    {
+        if ($this->_getOptionFromLinks($name) == 'true')
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * Extrait les options depuis les liens.
+     * Retourne :
+     *  - un nombre avec le contenu de l'option ;
+     *  - ou zéro si rien n'est trouvé.
+     *
+     * @param string $name
+     * @return integer
+     */
+    public function getOptionFromLinksAsInt(string $name): int
+    {
+        return (int)$this->_getOptionFromLinks($name);
+    }
+
+    /**
+     * Extrait les options depuis les liens.
+     *
+     * @param string $name
+     * @return string|null
+     */
+    private function _getOptionFromLinks(string $name): ?string
     {
         if ($name == ''
-            || !isset(self::OPTIONS_TYPE[$name])
             || !$this->_permitOptionsByLinks
             || $this->_optionsByLinksIsInUse
         )
@@ -978,21 +1125,16 @@ class Configuration
 
         $this->_optionsByLinksIsInUse = false;
 
-        $result = self::_transtypeValueToString($name, $value);
+        if ($this->_metrologyInstance !== null)
+            $this->_metrologyInstance->addLog('Return option links = ' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '1dc46c1a'); // Log
 
-        if ($this->_metrologyInstance !== null) {
-            $this->_metrologyInstance->addLog('Return option links = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-        }
-
-        return $result;
+        return $value;
     }
 
     /**
      * Ecrit une option en cache.
      *
-     * La valeur est traduite sous forme de texte au besoin.
-     *
-     * L'écritue en cache n'est possible que si cette possibilité n'est pas verrouillée.
+     * L'écriture en cache n'est possible que si cette possibilité n'est pas verrouillée.
      * Le bootstrap verrouille automatiquement en fin de chargement la possibilité
      *   de modification des options directement en cache.
      * Le verrouillage n'est pas annulable.
@@ -1001,30 +1143,17 @@ class Configuration
      * @param string|bool|int $value
      * @return boolean
      */
-    public function setOptionCache(string $name, $value)
+    public function setOptionCache(string $name, $value): bool
     {
-        // Vérifie le verrouillage.
-        if ($this->_writeOptionCacheLock)
-            return false;
-
-        // Vérifie le nom.
         if ($name == ''
-            || !is_string($name)
             || !isset(self::OPTIONS_TYPE[$name])
             || !self::OPTIONS_WRITABLE[$name]
+            || $this->_writeOptionCacheLock
         )
             return false;
 
-        $this->_metrologyInstance->addLog('Set option cache ' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Set option cache value ' . $name .' = ' . $this->_changeTypeValueToString($name, $value), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '73802724'); // Log
 
-        // Transcode value.
-        $writeValue = $this->_transtypeValueToString($name, $value);
-        if (is_null($writeValue))
-            return false;
-
-        $this->_metrologyInstance->addLog('Set option cache value = ' . $writeValue, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-
-        // Ecrit l'option.
         $this->_optionCache[$name] = $value;
         return true;
     }
@@ -1046,10 +1175,9 @@ class Configuration
     {
         // Vérifie le nom.
         if ($name == ''
-            || !is_string($name)
             || !isset(self::OPTIONS_TYPE[$name])
             || !self::OPTIONS_WRITABLE[$name]
-            || $this->getOptionFromEnvironment($name) !== null
+            || $this->getOptionFromEnvironmentUntyped($name) !== null
         )
             return false;
 
@@ -1059,26 +1187,20 @@ class Configuration
         )
             $entity = $this->_nebuleInstance->getCurrentEntity();
 
-        $this->_metrologyInstance->addLog('Set option ' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Set option ' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '3ae7eea2'); // Log
 
         // Prépare la valeur.
-        $writeValue = $this->_transtypeValueFromString($name, $value);
+        $writeValue = $this->_changeTypeValueFromString($name, $value);
         if (is_null($writeValue))
             return false;
 
-        $this->_metrologyInstance->addLog('Set option value = ' . $writeValue, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Set option value = ' . $writeValue, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'aa699a23'); // Log
 
         // Crée l'instance de l'objet de la valeur.
         $instance = new Node($this->_nebuleInstance, '0', $writeValue);
-        if ($instance === false) {
-            $this->_metrologyInstance->addLog("L'instance de l'objet n'a pas pu être créée.", Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
-            return false;
-        }
-
-        // Lit l'ID.
         $id = $instance->getID();
         if ($id == '0') {
-            $this->_metrologyInstance->addLog("L'objet n'a pas pu être créé.", Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
+            $this->_metrologyInstance->addLog("L'objet n'a pas pu être créé.", Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'e064cd5c'); // Log
             return false;
         }
 
@@ -1106,7 +1228,7 @@ class Configuration
             $this->_optionCache[$name] = $value;
             return true;
         } else {
-            $this->_metrologyInstance->addLog('Set option write error', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
+            $this->_metrologyInstance->addLog('Set option write error', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'ac640a99'); // Log
             return false;
         }
     }
@@ -1139,21 +1261,24 @@ class Configuration
     }
 
     /**
-     * Verrouille la possibilité de modification des options dans le cache.
-     * L'opération n'est pas annulable.
+     * Lock writes on cache capabilities.
+     * Not cancelable.
      */
     public function lockCache(): void
     {
+        $this->_metrologyInstance->addLog('Cache lock', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'a65d3e7e'); // Log
         $this->_writeOptionCacheLock = true;
     }
 
     /**
      * Reinitialize the values of options on cache.
      * Each option will be reloaded on demand.
+     * No effet if cache locked.
      */
     public function flushCache(): void
     {
-        $this->_optionCache = array();
+        if (!$this->_writeOptionCacheLock)
+            $this->_optionCache = array();
     }
 
     /**
@@ -1166,17 +1291,17 @@ class Configuration
     }
 
     /**
-     * Check values of criticals options.
+     * Check values of critical options.
      * If not default value, add a log with the value.
      * @return void
      */
     public function checkReadOnlyOptions()
     {
-        $this->_metrologyInstance->addLog('Check options', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Check options', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'aa19c70a'); // Log
 
         foreach (self::OPTIONS_LIST as $option) {
             if (self::OPTIONS_CRITICALITY[$option] == 'critical') {
-                $value = $this->getOption($option);
+                $value = $this->getOptionUntyped($option);
                 if ($value != self::OPTIONS_DEFAULT_VALUE[$option]) {
                     if (is_bool($value)) {
                         if ($value)
@@ -1186,7 +1311,7 @@ class Configuration
                     }
                     if (is_int($value))
                         $value = (string)$value;
-                    $this->_metrologyInstance->addLog('Warning:critical_option ' . $option . '=' . $value, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+                    $this->_metrologyInstance->addLog('Warning:critical_option ' . $option . '=' . $value, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '319eab8f'); // Log
                 }
             }
         }

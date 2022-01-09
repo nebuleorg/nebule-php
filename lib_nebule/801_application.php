@@ -366,7 +366,7 @@ abstract class Applications
             $this->_urlProtocol = 'http';
         }
         //$this->_urlHost	= $_SERVER['HTTP_HOST'];
-        $this->_urlHost = $this->_configuration->getOption('hostURL');
+        $this->_urlHost = $this->_configuration->getOptionUntyped('hostURL');
         $explodeBaseName = explode('/', $_SERVER['REQUEST_URI']);
         $this->_urlBasename = end($explodeBaseName);
         $this->_urlPath = substr($_SERVER['REQUEST_URI'], 0, strlen($_SERVER['REQUEST_URI']) - strlen($this->_urlBasename) - 1);
@@ -1576,7 +1576,7 @@ abstract class Applications
     protected function _checkSecuritySign()
     {
         $this->_checkSecuritySign = 'WARN';
-        if (!$this->_configuration->getOption('permitCheckSignOnVerify')) {
+        if (!$this->_configuration->getOptionUntyped('permitCheckSignOnVerify')) {
             $this->_checkSecuritySign = 'WARN';
             $this->_checkSecuritySignMessage = ':::act_chk_warnSigns';
         } else {
@@ -1644,7 +1644,7 @@ abstract class Applications
     {
         $this->_checkSecurityURL = 'OK';
         if ($this->_urlProtocol == 'http'
-            && $this->_configuration->getOption('displayUnsecureURL')
+            && $this->_configuration->getOptionUntyped('displayUnsecureURL')
         ) {
             $this->_checkSecurityURL = 'WARN';
             $this->_checkSecurityURLMessage = $this->_traductionInstance->getTraduction('Connexion non sécurisée')

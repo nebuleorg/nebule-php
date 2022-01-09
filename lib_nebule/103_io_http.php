@@ -59,15 +59,15 @@ class ioHTTP extends io implements ioInterface
 
         $this->_nebuleInstance = $nebuleInstance;
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_maxLink = $this->_configuration->getOption('ioReadMaxLinks');
-        $this->_maxData = $this->_configuration->getOption('ioReadMaxData');
+        $this->_maxLink = $this->_configuration->getOptionUntyped('ioReadMaxLinks');
+        $this->_maxData = $this->_configuration->getOptionUntyped('ioReadMaxData');
         // Détermination de l'URL par défaut.
         $this->_defaultLocalisation = self::DEFAULT_LOCALISATION;
         // Environnement PHP.
         ini_set('allow_url_fopen', 'true');
         ini_set('allow_url_include', 'true');
         ini_set('user_agent', 'nebule/ioHTTP/' . $nebuleLibVersion);
-        ini_set('default_socket_timeout', $this->_configuration->getOption('ioTimeout'));
+        ini_set('default_socket_timeout', $this->_configuration->getOptionUntyped('ioTimeout'));
     }
 
     public function __sleep()
@@ -261,7 +261,7 @@ class ioHTTP extends io implements ioInterface
             || !ctype_xdigit($object)
         )
             return false;
-        if (!$this->_configuration->getOption('permitSynchronizeLink'))
+        if (!$this->_configuration->getOptionUntyped('permitSynchronizeLink'))
             return false;
         $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object;
         if (!$this->_checkExistOverHTTP($localisation))
@@ -309,7 +309,7 @@ class ioHTTP extends io implements ioInterface
             || !ctype_xdigit($object)
         )
             return false;
-        if (!$this->_configuration->getOption('permitSynchronizeObject'))
+        if (!$this->_configuration->getOptionUntyped('permitSynchronizeObject'))
             return false;
         $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object;
         if ($this->_checkExistOverHTTP($localisation))

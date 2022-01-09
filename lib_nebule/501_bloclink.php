@@ -181,9 +181,9 @@ class Bloclink implements bloclinkInterface
         $this->_io = $nebuleInstance->getIoInstance();
         $this->_crypto = $nebuleInstance->getCryptoInstance();
         $this->_linksType = $linkType;
-        $this->_maxRL = $this->_configuration->getOption('linkMaxRL');
-        $this->_maxRLUID = $this->_configuration->getOption('linkMaxRLUID');
-        $this->_maxRS = $this->_configuration->getOption('linkMaxRS');
+        $this->_maxRL = $this->_configuration->getOptionUntyped('linkMaxRL');
+        $this->_maxRLUID = $this->_configuration->getOptionUntyped('linkMaxRLUID');
+        $this->_maxRS = $this->_configuration->getOptionUntyped('linkMaxRS');
 
         $this->_metrology->addLinkRead();
 
@@ -702,7 +702,7 @@ class Bloclink implements bloclinkInterface
         // Check item overflow
         if (strtok('.') !== false) return false;
 
-        if (!$this->_configuration->getOption('permitCheckSignOnVerify')) return true;
+        if (!$this->_configuration->getOptionUntyped('permitCheckSignOnVerify')) return true;
         if ($this->_checkObjectContent($nid)) {
             $data = $bh . '_' . $bl;
             $hash = $this->_crypto->hash($data, $algo . '.' . $size);
@@ -733,7 +733,7 @@ class Bloclink implements bloclinkInterface
         $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         // Si autorisé à signer.
-        if (!$this->_configuration->getOption('permitCreateLink')) {
+        if (!$this->_configuration->getOptionUntyped('permitCreateLink')) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Can not sign link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             return false;
         }
@@ -800,8 +800,8 @@ class Bloclink implements bloclinkInterface
         $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         // Si autorisé à écrire.
-        if (!$this->_configuration->getOption('permitWrite')
-            || !$this->_configuration->getOption('permitWriteLink')
+        if (!$this->_configuration->getOptionUntyped('permitWrite')
+            || !$this->_configuration->getOptionUntyped('permitWriteLink')
         ) {
             return false;
         }
@@ -818,13 +818,13 @@ class Bloclink implements bloclinkInterface
         }
 
         // Ecrit l'historique.
-        if ($this->_configuration->getOption('permitHistoryLinksSign')) {
+        if ($this->_configuration->getOptionUntyped('permitHistoryLinksSign')) {
             $history = nebule::NEBULE_LOCAL_HISTORY_FILE;
             $this->_io->linkWrite($history, $this->_rawLink);
         }
 
         // Ecrit le lien pour l'objet de l'entité signataire.
-        if ($this->_configuration->getOption('permitAddLinkToSigner')) {
+        if ($this->_configuration->getOptionUntyped('permitAddLinkToSigner')) {
             $this->_io->linkWrite($this->_hashSigner, $this->_rawLink);
         }
 
@@ -846,7 +846,7 @@ class Bloclink implements bloclinkInterface
             ) {
                 $this->_io->linkWrite($this->_hashMeta, $this->_rawLink);
             }
-        } elseif ($this->_configuration->getOption('permitObfuscatedLink')) {
+        } elseif ($this->_configuration->getOptionUntyped('permitObfuscatedLink')) {
             // Ecrit le lien dissimulé.
             $this->_io->linkWrite($this->_hashSigner . '-' . $this->_hashSource, $this->_rawLink); // @todo
         } else {

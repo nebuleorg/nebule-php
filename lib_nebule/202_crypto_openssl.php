@@ -306,7 +306,7 @@ class CryptoOpenssl implements CryptoInterface
     {
         //$this->_hashAlgorithmList = array('sha128', 'sha256', 'sha512'); // Génère la liste des algorithmes disponibles. @todo A revoir...
         $this->_hashAlgorithmList = openssl_get_md_methods(true); // Génère la liste des algorithmes disponibles.
-        $this->_hashAlgorithmName = $this->_configuration->getOption('cryptoHashAlgorithm');
+        $this->_hashAlgorithmName = $this->_configuration->getOptionUntyped('cryptoHashAlgorithm');
         $this->_parseHashAlgorithm();
     }
 
@@ -465,7 +465,7 @@ class CryptoOpenssl implements CryptoInterface
     {
         //$this->_symetricAlgorithmList = array('aes-256-cbc', 'aes-256-ctr'); // Génère la liste des algorithmes disponibles. A revoir...
         $this->_symetricAlgorithmList = openssl_get_cipher_methods(true); // Génère la liste des algorithmes disponibles.
-        $this->_symetricAlgorithmName = $this->_configuration->getOption('cryptoSymetricAlgorithm');
+        $this->_symetricAlgorithmName = $this->_configuration->getOptionUntyped('cryptoSymetricAlgorithm');
         $this->_parseSymmetricAlgorithm();
     }
 
@@ -707,7 +707,7 @@ EOD;
     {
         // Génère la liste des algorithmes disponibles. A revoir...
         $this->_asymetricAlgorithmList = array('rsa1024', 'rsa2048', 'rsa4096', 'ecdsa');        // A revoir...
-        $this->_asymetricAlgorithmName = $this->_configuration->getOption('cryptoAsymetricAlgorithm');
+        $this->_asymetricAlgorithmName = $this->_configuration->getOptionUntyped('cryptoAsymetricAlgorithm');
         $this->_parseAsymmetricAlgorithm();
         /*
 OPENSSL_KEYTYPE_RSA (entier)

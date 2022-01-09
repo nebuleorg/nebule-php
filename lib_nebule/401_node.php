@@ -382,9 +382,9 @@ class Node implements nodeInterface
         $this->_markProtectedChecked = false;
 
         // Vérifie que l'on puisse créer un objet.
-        if ($this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteObject')
-            && $this->_configuration->getOption('permitWriteLink')
+        if ($this->_configuration->getOptionUntyped('permitWrite')
+            && $this->_configuration->getOptionUntyped('permitWriteObject')
+            && $this->_configuration->getOptionUntyped('permitWriteLink')
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // calcul l'ID.
@@ -595,7 +595,7 @@ class Node implements nodeInterface
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($list) == 0
-            && $this->_configuration->getOption('permitListOtherHash')
+            && $this->_configuration->getOptionUntyped('permitListOtherHash')
         ) {
             // A faire...
         }
@@ -1717,7 +1717,7 @@ class Node implements nodeInterface
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($list) == 0
-            && $this->_configuration->getOption('permitListOtherHash')
+            && $this->_configuration->getOptionUntyped('permitListOtherHash')
         ) {
             // A faire...
         }
@@ -1792,7 +1792,7 @@ class Node implements nodeInterface
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($list) == 0
-            && $this->_configuration->getOption('permitListOtherHash')
+            && $this->_configuration->getOptionUntyped('permitListOtherHash')
         ) {
             // A faire...
         }
@@ -1954,12 +1954,12 @@ class Node implements nodeInterface
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($listS) == 0
-            && $this->_configuration->getOption('permitListOtherHash')
+            && $this->_configuration->getOptionUntyped('permitListOtherHash')
         ) {
             // A faire...
         }
         if (sizeof($listT) == 0
-            && $this->_configuration->getOption('permitListOtherHash')
+            && $this->_configuration->getOptionUntyped('permitListOtherHash')
         ) {
             // A faire...
         }
@@ -2112,9 +2112,9 @@ class Node implements nodeInterface
         $this->_metrology->addLog('Ask protect object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         // Vérifie que l'écriture d'objets et de liens est permise.
-        if ($this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteObject')
-            && $this->_configuration->getOption('permitWriteLink')
+        if ($this->_configuration->getOptionUntyped('permitWrite')
+            && $this->_configuration->getOptionUntyped('permitWriteObject')
+            && $this->_configuration->getOptionUntyped('permitWriteLink')
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // Génération de la clé de chiffrement.
@@ -2134,7 +2134,7 @@ class Node implements nodeInterface
                 $data = $this->_data;
             } else {
                 // Sinon, on lit le contenu de l'objet. @todo à remplacer par getContent...
-                $limit = $this->_configuration->getOption('ioReadMaxData');
+                $limit = $this->_configuration->getOptionUntyped('ioReadMaxData');
                 $data = $this->_nebuleInstance->getIoInstance()->objectRead($this->_id, $limit);
 
                 // Vérification de quota de lecture. @todo à revoir...
@@ -2314,7 +2314,7 @@ class Node implements nodeInterface
             $this->_idUnprotectedKey = $keyID;
 
             // Si autorisé, partage la protection avec les entités de recouvrement.
-            if ($this->_configuration->getOption('permitRecoveryEntities')) {
+            if ($this->_configuration->getOptionUntyped('permitRecoveryEntities')) {
                 $listEntities = $this->_nebuleInstance->getRecoveryEntitiesInstance();
                 foreach ($listEntities as $entity) {
                     if (is_a($entity, 'Entity')
@@ -2463,7 +2463,7 @@ class Node implements nodeInterface
         $this->_metrology->addLog('Set protected to ' . $entity->getID(), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         // Lit la clé chiffrée. @todo à remplacer par getContent ...
-        $limit = $this->_configuration->getOption('ioReadMaxData');
+        $limit = $this->_configuration->getOptionUntyped('ioReadMaxData');
         $codeKey = $this->_nebuleInstance->getIoInstance()->objectRead($this->_idProtectedKey, $limit);
         // Calcul l'empreinte de la clé chiffrée.
         $hash = $this->_crypto->hash($codeKey);
@@ -2576,7 +2576,7 @@ class Node implements nodeInterface
         }
 
         // Vérifie que la protection n'est pas partagée à une entité de recouvrement.
-        if (!$this->_configuration->getOption('permitRecoveryRemoveEntity')
+        if (!$this->_configuration->getOptionUntyped('permitRecoveryRemoveEntity')
             && $this->_nebuleInstance->getIsRecoveryEntity($entity->getID())
         ) {
             return false;
@@ -2730,7 +2730,7 @@ class Node implements nodeInterface
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($list) == 0
-            && $this->_configuration->getOption('permitListOtherHash')
+            && $this->_configuration->getOptionUntyped('permitListOtherHash')
         ) {
             // A faire...
         }
@@ -3000,12 +3000,12 @@ class Node implements nodeInterface
         // Détermine l'algorithme de hash.
         $hashAlgo = $this->getHashAlgo();
         if (!$this->_crypto->checkHashAlgorithm($hashAlgo)
-            && $this->_configuration->getOption('permitSynchronizeLink')
+            && $this->_configuration->getOptionUntyped('permitSynchronizeLink')
         )
             $this->syncLinks(false);
         $hashAlgo = $this->getHashAlgo();
         if (!$this->_crypto->checkHashAlgorithm($hashAlgo)) {
-            if ($this->_configuration->getOption('permitDeleteObjectOnUnknownHash'))
+            if ($this->_configuration->getOptionUntyped('permitDeleteObjectOnUnknownHash'))
                 $hashAlgo = $this->_crypto->hashAlgorithmName();
             else
                 return false;
@@ -3019,7 +3019,7 @@ class Node implements nodeInterface
             $this->_data = null;
             return false;
         }
-        $limit = $this->_configuration->getOption('DEFAULT_IO_READ_MAX_DATA');
+        $limit = $this->_configuration->getOptionUntyped('DEFAULT_IO_READ_MAX_DATA');
         $this->_metrology->addLog('Object size ' . $this->_id . ' ' . strlen($this->_data) . '/' . $limit, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         // Vérifie la taille.
@@ -3038,7 +3038,7 @@ class Node implements nodeInterface
         }
 
         // Si la vérification est désactivée, quitte.
-        if (!$this->_configuration->getOption('permitCheckObjectHash')) {
+        if (!$this->_configuration->getOptionUntyped('permitCheckObjectHash')) {
             $this->_metrology->addLog('Warning - Invalid object hash ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
             $this->_haveData = true;
             return true;
@@ -3117,14 +3117,14 @@ class Node implements nodeInterface
         // Détermine l'algorithme de hash.
         $hashAlgo = $this->getHashAlgo();
         if (!$this->_crypto->checkHashAlgorithm($hashAlgo)
-            && $this->_configuration->getOption('permitSynchronizeLink')
+            && $this->_configuration->getOptionUntyped('permitSynchronizeLink')
         ) {
             // Essaie une synchronisation rapide des liens.
             $this->syncLinks(false);
         }
         $hashAlgo = $this->getHashAlgo();
         if (!$this->_crypto->checkHashAlgorithm($hashAlgo)) {
-            if ($this->_configuration->getOption('permitDeleteObjectOnUnknownHash')) {
+            if ($this->_configuration->getOptionUntyped('permitDeleteObjectOnUnknownHash')) {
                 // Si pas trouvé d'algorithme valide, utilise celui par défaut.
                 $hashAlgo = $this->_crypto->hashAlgorithmName();
             } else {
@@ -3133,7 +3133,7 @@ class Node implements nodeInterface
         }
 
         // Prépare la limite de lecture.
-        $maxLimit = $this->_configuration->getOption('ioReadMaxData');
+        $maxLimit = $this->_configuration->getOptionUntyped('ioReadMaxData');
         if ($limit == 0
             || $limit > $maxLimit
         ) {
@@ -3168,7 +3168,7 @@ class Node implements nodeInterface
         }
 
         // Si la vérification est désactivée, quitte.
-        if (!$this->_configuration->getOption('permitCheckObjectHash')) {
+        if (!$this->_configuration->getOptionUntyped('permitCheckObjectHash')) {
             $this->_metrology->addLog('Warning - Invalid object hash ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
             $this->_haveData = true;
             return $this->_data;
@@ -3310,7 +3310,7 @@ class Node implements nodeInterface
         }
 
         if ($limit == 0) {
-            $limit = $this->_configuration->getOption('ioReadMaxData');
+            $limit = $this->_configuration->getOptionUntyped('ioReadMaxData');
         }
         if ($limit < 4) {
             $limit = 4;
@@ -3364,7 +3364,7 @@ class Node implements nodeInterface
         if ($nid == '0' || !$this->_io->checkLinkPresent($nid))
             return;
 
-        if (!$this->_configuration->getOption('permitListInvalidLinks'))
+        if (!$this->_configuration->getOptionUntyped('permitListInvalidLinks'))
             $withInvalidLinks = false;
 
         $lines = $this->_io->linksRead($nid, '');
@@ -3405,8 +3405,8 @@ class Node implements nodeInterface
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
-        $permitListInvalidLinks = $this->_configuration->getOption('permitListInvalidLinks');
-        $linkVersion = 'nebule/liens/version/' . $this->_configuration->getOption('defaultLinksVersion'); // Version de lien.
+        $permitListInvalidLinks = $this->_configuration->getOptionUntyped('permitListInvalidLinks');
+        $linkVersion = 'nebule/liens/version/' . $this->_configuration->getOptionUntyped('defaultLinksVersion'); // Version de lien.
         $linksResult = array();
         if (!$this->_io->checkLinkPresent($this->_id)) {
             return $linksResult;
@@ -3469,8 +3469,8 @@ class Node implements nodeInterface
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
-        $permitListInvalidLinks = $this->_configuration->getOption('permitListInvalidLinks');
-        $linkVersion = 'nebule/liens/version/' . $this->_configuration->getOption('defaultLinksVersion'); // Version de lien.
+        $permitListInvalidLinks = $this->_configuration->getOptionUntyped('permitListInvalidLinks');
+        $linkVersion = 'nebule/liens/version/' . $this->_configuration->getOptionUntyped('defaultLinksVersion'); // Version de lien.
         $linksResult = array();
         if (!$this->_io->checkLinkPresent($this->_id)) {
             return $linksResult;
@@ -3635,8 +3635,8 @@ class Node implements nodeInterface
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
-        $permitListInvalidLinks = $this->_configuration->getOption('permitListInvalidLinks');
-        $linkVersion = 'nebule/liens/version/' . $this->_configuration->getOption('defaultLinksVersion'); // Version de lien par défaut.
+        $permitListInvalidLinks = $this->_configuration->getOptionUntyped('permitListInvalidLinks');
+        $linkVersion = 'nebule/liens/version/' . $this->_configuration->getOptionUntyped('defaultLinksVersion'); // Version de lien par défaut.
         $linksResult = array();
         if (!$this->_io->checkLinkPresent($this->_id)) {
             return $linksResult;
@@ -3818,7 +3818,7 @@ class Node implements nodeInterface
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         // Vérifier si authorisé à rechercher les mises à jours.
-        if (!$this->_configuration->getOption('permitFollowUpdates')) {
+        if (!$this->_configuration->getOptionUntyped('permitFollowUpdates')) {
             return $this->_id;
         }
 
@@ -3846,7 +3846,7 @@ class Node implements nodeInterface
         $this->_usedUpdate[$this->_id] = true;
 
         // Vérifie si pas dépassé le nombre max à traiter, anti trou noir.
-        if (sizeof($this->_usedUpdate) > $this->_configuration->getOption('linkMaxFollowedUpdates'))
+        if (sizeof($this->_usedUpdate) > $this->_configuration->getOptionUntyped('linkMaxFollowedUpdates'))
             return '0';
 
         // Recherche la mise à jour de l'objet.
@@ -3921,8 +3921,8 @@ class Node implements nodeInterface
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
-        $x = $this->_configuration->getOption('permitListInvalidLinks');
-        $v = 'nebule/liens/version/' . $this->_configuration->getOption('defaultLinksVersion'); // Version de lien.
+        $x = $this->_configuration->getOptionUntyped('permitListInvalidLinks');
+        $v = 'nebule/liens/version/' . $this->_configuration->getOptionUntyped('defaultLinksVersion'); // Version de lien.
         $r = array(); // Tableau des liens de mise à jour.
         $o = array(); // Tableau des objets résultats.
         if (!$this->_io->checkLinkPresent($this->_id)) {
@@ -4379,10 +4379,10 @@ class Node implements nodeInterface
         }
 
         // Vérifie si autorisé.
-        if (!$this->_configuration->getOption('permitWriteObject')) {
+        if (!$this->_configuration->getOptionUntyped('permitWriteObject')) {
             return false;
         }
-        if (!$this->_configuration->getOption('permitSynchronizeObject')) {
+        if (!$this->_configuration->getOptionUntyped('permitSynchronizeObject')) {
             return false;
         }
 
@@ -4397,7 +4397,7 @@ class Node implements nodeInterface
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($links) == 0
-            && $this->_configuration->getOption('permitListOtherHash')
+            && $this->_configuration->getOptionUntyped('permitListOtherHash')
         ) {
             // A faire...
         }
@@ -4441,10 +4441,10 @@ class Node implements nodeInterface
         }
 
         // Vérifie si autorisé.
-        if (!$this->_configuration->getOption('permitWriteLink')) {
+        if (!$this->_configuration->getOptionUntyped('permitWriteLink')) {
             return false;
         }
-        if (!$this->_configuration->getOption('permitSynchronizeLink')) {
+        if (!$this->_configuration->getOptionUntyped('permitSynchronizeLink')) {
             return false;
         }
 
@@ -4459,7 +4459,7 @@ class Node implements nodeInterface
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($links) == 0
-            && $this->_configuration->getOption('permitListOtherHash')
+            && $this->_configuration->getOptionUntyped('permitListOtherHash')
         ) {
             // A faire...
         }
@@ -4714,8 +4714,8 @@ class Node implements nodeInterface
 
         if (!$this->_io->checkObjectPresent($this->_id)) {
             // Si autorisé à écrire un nouvel objet.
-            if ($this->_configuration->getOption('permitWriteObject')
-                && $this->_configuration->getOption('permitCreateObject')
+            if ($this->_configuration->getOptionUntyped('permitWriteObject')
+                && $this->_configuration->getOptionUntyped('permitCreateObject')
             ) {
                 $id = $this->_io->objectWrite($this->_data);
             } else {

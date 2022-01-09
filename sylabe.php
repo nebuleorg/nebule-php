@@ -1331,7 +1331,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         } ?>">
             <div class="header-left">
                 <?php
-                if ($this->_configuration->getOption('permitJavaScript')) {
+                if ($this->_configuration->getOptionUntyped('permitJavaScript')) {
                     ?>
                     <img src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>" alt="[M]"
                          title="<?php echo $this->_traductionInstance->getTraduction('::menu'); ?>"
@@ -1732,7 +1732,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         if ($this->_applicationInstance->getCheckSecurityURL() == 'WARN') {
             $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityURLMessage());
         }
-        if (!$this->_configuration->getOption('permitWrite')) {
+        if (!$this->_configuration->getOptionUntyped('permitWrite')) {
             $this->displayMessageWarning(':::warn_ServNotPermitWrite');
         }
         if ($this->_nebuleInstance->getFlushCache()) {
@@ -1771,7 +1771,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
      */
     private function _displayMetrology()
     {
-        if ($this->_configuration->getOption('sylabeDisplayMetrology')) {
+        if ($this->_configuration->getOptionUntyped('sylabeDisplayMetrology')) {
             ?>
 
             <?php $this->displayDivTextTitle(self::DEFAULT_ICON_IMLOG, 'Métrologie', 'Mesures quantitatives et temporelles.') ?>
@@ -1925,7 +1925,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'tooBig':
-                        if ($this->_configuration->getOption('sylabeDisplayUnverifyLargeContent')) {
+                        if ($this->_configuration->getOptionUntyped('sylabeDisplayUnverifyLargeContent')) {
                             $msg = $this->_traductionInstance->getTraduction(':::display:content:warningTooBig');
                             $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         } else {
@@ -1974,7 +1974,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     private function _displayDivOnlineHelp($help)
     {
         // Si authorisé à afficher l'aide.
-        if ($this->_configuration->getOption('sylabeDisplayOnlineHelp')) {
+        if ($this->_configuration->getOptionUntyped('sylabeDisplayOnlineHelp')) {
             // Prépare le texte à afficher dans la bulle.
             $txt = $this->_applicationInstance->getTraductionInstance()->getTraduction($help);
             $txt = str_replace('&', '&amp;', $txt);
@@ -2242,13 +2242,13 @@ class ModuleManage extends Modules
 
                 // Synchronisation des applications.
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[0]
-                    && $this->_configuration->getOption('permitWrite')
-                    && $this->_configuration->getOption('permitWriteObject')
-                    && $this->_configuration->getOption('permitWriteLink')
-                    && $this->_configuration->getOption('permitSynchronizeObject')
-                    && $this->_configuration->getOption('permitSynchronizeLink')
-                    && $this->_configuration->getOption('permitSynchronizeApplication')
-                    && ($this->_configuration->getOption('permitPublicSynchronizeApplication')
+                    && $this->_configuration->getOptionUntyped('permitWrite')
+                    && $this->_configuration->getOptionUntyped('permitWriteObject')
+                    && $this->_configuration->getOptionUntyped('permitWriteLink')
+                    && $this->_configuration->getOptionUntyped('permitSynchronizeObject')
+                    && $this->_configuration->getOptionUntyped('permitSynchronizeLink')
+                    && $this->_configuration->getOptionUntyped('permitSynchronizeApplication')
+                    && ($this->_configuration->getOptionUntyped('permitPublicSynchronizeApplication')
                         || $this->_unlocked
                     )
                 ) {
@@ -2265,10 +2265,10 @@ class ModuleManage extends Modules
 
                 // Ajout d'un module.
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[0]
-                    && $this->_configuration->getOption('permitWrite')
-                    && $this->_configuration->getOption('permitWriteLink')
-                    && $this->_configuration->getOption('permitUploadLink')
-                    && $this->_configuration->getOption('permitWriteObject')
+                    && $this->_configuration->getOptionUntyped('permitWrite')
+                    && $this->_configuration->getOptionUntyped('permitWriteLink')
+                    && $this->_configuration->getOptionUntyped('permitUploadLink')
+                    && $this->_configuration->getOptionUntyped('permitWriteObject')
                     && $this->_unlocked
                 ) {
                     $hookArray[1]['name'] = '::sylabe:module:manage:create:createModule';
@@ -2280,14 +2280,14 @@ class ModuleManage extends Modules
 
                 // Synchronisation du module.
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]
-                    && $this->_configuration->getOption('permitWrite')
-                    && $this->_configuration->getOption('permitWriteObject')
-                    && $this->_configuration->getOption('permitWriteLink')
-                    && $this->_configuration->getOption('permitSynchronizeObject')
-                    && $this->_configuration->getOption('permitSynchronizeLink')
-                    && $this->_configuration->getOption('permitSynchronizeApplication')
+                    && $this->_configuration->getOptionUntyped('permitWrite')
+                    && $this->_configuration->getOptionUntyped('permitWriteObject')
+                    && $this->_configuration->getOptionUntyped('permitWriteLink')
+                    && $this->_configuration->getOptionUntyped('permitSynchronizeObject')
+                    && $this->_configuration->getOptionUntyped('permitSynchronizeLink')
+                    && $this->_configuration->getOptionUntyped('permitSynchronizeApplication')
                     && isset($listModulesRID[$this->getExtractCommandDisplayModule()])
-                    && ($this->_configuration->getOption('permitPublicSynchronizeApplication')
+                    && ($this->_configuration->getOptionUntyped('permitPublicSynchronizeApplication')
                         || $this->_unlocked
                     )
                 ) {
@@ -2304,8 +2304,8 @@ class ModuleManage extends Modules
 
                 // Modification du code du module.
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]
-                    && $this->_configuration->getOption('permitWrite')
-                    && $this->_configuration->getOption('permitWriteLink')
+                    && $this->_configuration->getOptionUntyped('permitWrite')
+                    && $this->_configuration->getOptionUntyped('permitWriteLink')
                     && isset($listModulesRID[$this->getExtractCommandDisplayModule()])
                     && $this->_unlocked
                 ) {
@@ -2421,9 +2421,9 @@ class ModuleManage extends Modules
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la crétion de liens soit authorisé.
-        if ($this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteLink')
-            && $this->_configuration->getOption('permitWriteObject')
+        if ($this->_configuration->getOptionUntyped('permitWrite')
+            && $this->_configuration->getOptionUntyped('permitWriteLink')
+            && $this->_configuration->getOptionUntyped('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -2467,8 +2467,8 @@ class ModuleManage extends Modules
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Vérifie que la crétion de liens soit authorisé.
-        if ($this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteLink')
+        if ($this->_configuration->getOptionUntyped('permitWrite')
+            && $this->_configuration->getOptionUntyped('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -2515,9 +2515,9 @@ class ModuleManage extends Modules
         global $bootstrapApplicationStartID;
 
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteLink')
-            && $this->_configuration->getOption('permitWriteObject')
+        if ($this->_configuration->getOptionUntyped('permitWrite')
+            && $this->_configuration->getOptionUntyped('permitWriteLink')
+            && $this->_configuration->getOptionUntyped('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add module', Metrology::LOG_LEVEL_NORMAL); // Log
@@ -2559,8 +2559,8 @@ class ModuleManage extends Modules
     private function _actionAddModuleCode()
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteLink')
+        if ($this->_configuration->getOptionUntyped('permitWrite')
+            && $this->_configuration->getOptionUntyped('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add code ' . $this->_actionAddModuleID . ' to module ' . $this->_actionAddModuleRID, Metrology::LOG_LEVEL_NORMAL); // Log
@@ -2952,13 +2952,13 @@ class ModuleManage extends Modules
 
                 // Activation du module.
                 if ($this->_unlocked
-                    && $this->_configuration->getOption('permitWrite')
-                    && $this->_configuration->getOption('permitWriteLink')
+                    && $this->_configuration->getOptionUntyped('permitWrite')
+                    && $this->_configuration->getOptionUntyped('permitWriteLink')
                     && ($this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getCodeMaster()
                         || ($this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getDefaultEntity()
-                            && $this->_configuration->getOption('permitInstanceEntityAsAuthority') )
+                            && $this->_configuration->getOptionUntyped('permitInstanceEntityAsAuthority') )
                         || ($this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getDefaultEntity()
-                            && $this->_configuration->getOption('permitDefaultEntityAsAuthority'))
+                            && $this->_configuration->getOptionUntyped('permitDefaultEntityAsAuthority'))
                     )
                     && $rid != '0'
                 ) {
@@ -3091,9 +3091,9 @@ class ModuleManage extends Modules
         echo $this->_display->getDisplayTitle('::sylabe:module:manage:create:createModule', $this->MODULE_REGISTERED_ICONS[0]);
 
         // Si autorisé à créer des liens.
-        if ($this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteLink')
-            && $this->_configuration->getOption('permitWriteObject')
+        if ($this->_configuration->getOptionUntyped('permitWrite')
+            && $this->_configuration->getOptionUntyped('permitWriteLink')
+            && $this->_configuration->getOptionUntyped('permitWriteObject')
             && $this->_unlocked
         ) {
             ?>
@@ -3153,8 +3153,8 @@ class ModuleManage extends Modules
         }
 
         // Si autorisé à créer des liens.
-        if ($this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteLink')
+        if ($this->_configuration->getOptionUntyped('permitWrite')
+            && $this->_configuration->getOptionUntyped('permitWriteLink')
             && $rid != '0'
             && $this->_unlocked
         ) {
@@ -3977,11 +3977,11 @@ class ModuleEntities extends Modules
                     . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
 
                 // Vérifie que la création soit authorisée.
-                if ($this->_configuration->getOption('permitWrite')
-                    && $this->_configuration->getOption('permitWriteObject')
-                    && $this->_configuration->getOption('permitWriteLink')
-                    && $this->_configuration->getOption('permitWriteEntity')
-                    && ($this->_unlocked || $this->_configuration->getOption('permitPublicCreateEntity'))
+                if ($this->_configuration->getOptionUntyped('permitWrite')
+                    && $this->_configuration->getOptionUntyped('permitWriteObject')
+                    && $this->_configuration->getOptionUntyped('permitWriteLink')
+                    && $this->_configuration->getOptionUntyped('permitWriteEntity')
+                    && ($this->_unlocked || $this->_configuration->getOptionUntyped('permitPublicCreateEntity'))
                 ) {
                     // Créer une nouvelle entité.
                     $hookArray[6]['name'] = '::sylabe:module:entities:CreateEntity';
@@ -3993,11 +3993,11 @@ class ModuleEntities extends Modules
                 }
 
                 // Vérifie que la synchronisation soit authorisée.
-                if ($this->_configuration->getOption('permitWrite')
-                    && $this->_configuration->getOption('permitWriteObject')
-                    && $this->_configuration->getOption('permitWriteLink')
-                    && $this->_configuration->getOption('permitSynchronizeObject')
-                    && $this->_configuration->getOption('permitSynchronizeLink')
+                if ($this->_configuration->getOptionUntyped('permitWrite')
+                    && $this->_configuration->getOptionUntyped('permitWriteObject')
+                    && $this->_configuration->getOptionUntyped('permitWriteLink')
+                    && $this->_configuration->getOptionUntyped('permitSynchronizeObject')
+                    && $this->_configuration->getOptionUntyped('permitSynchronizeLink')
                     && $this->_unlocked
                 ) {
                     // Rechercher une entité.
@@ -4466,11 +4466,11 @@ class ModuleEntities extends Modules
 
         // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
         if ($arg !== false
-            && $this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteObject')
-            && $this->_configuration->getOption('permitWriteLink')
-            && $this->_configuration->getOption('permitSynchronizeObject')
-            && $this->_configuration->getOption('permitSynchronizeLink')
+            && $this->_configuration->getOptionUntyped('permitWrite')
+            && $this->_configuration->getOptionUntyped('permitWriteObject')
+            && $this->_configuration->getOptionUntyped('permitWriteLink')
+            && $this->_configuration->getOptionUntyped('permitSynchronizeObject')
+            && $this->_configuration->getOptionUntyped('permitSynchronizeLink')
             && $this->_unlocked
         ) {
             $this->_synchronizeEntity = true;
@@ -4486,11 +4486,11 @@ class ModuleEntities extends Modules
      */
     private function _actionSynchronizeEntity()
     {
-        if ($this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteObject')
-            && $this->_configuration->getOption('permitWriteLink')
-            && $this->_configuration->getOption('permitSynchronizeObject')
-            && $this->_configuration->getOption('permitSynchronizeLink')
+        if ($this->_configuration->getOptionUntyped('permitWrite')
+            && $this->_configuration->getOptionUntyped('permitWriteObject')
+            && $this->_configuration->getOptionUntyped('permitWriteLink')
+            && $this->_configuration->getOptionUntyped('permitSynchronizeObject')
+            && $this->_configuration->getOptionUntyped('permitSynchronizeLink')
             && $this->_unlocked
             && $this->_synchronizeEntity
         ) {
@@ -4545,11 +4545,11 @@ class ModuleEntities extends Modules
 
     private function _actionSearchEntity()
     {
-        if ($this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteObject')
-            && $this->_configuration->getOption('permitWriteLink')
-            && $this->_configuration->getOption('permitSynchronizeObject')
-            && $this->_configuration->getOption('permitSynchronizeLink')
+        if ($this->_configuration->getOptionUntyped('permitWrite')
+            && $this->_configuration->getOptionUntyped('permitWriteObject')
+            && $this->_configuration->getOptionUntyped('permitWriteLink')
+            && $this->_configuration->getOptionUntyped('permitSynchronizeObject')
+            && $this->_configuration->getOptionUntyped('permitSynchronizeLink')
             && $this->_unlocked
             && ($this->_searchEntityID != ''
                 || $this->_searchEntityURL != ''
@@ -5587,12 +5587,12 @@ class ModuleEntities extends Modules
         echo $this->_display->getDisplayTitle('::sylabe:module:entities:CreateEntity', $this->MODULE_REGISTERED_ICONS[5], false);
 
         // Vérifie que la création soit authorisée.
-        if ($this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteObject')
-            && $this->_configuration->getOption('permitWriteLink')
-            && $this->_configuration->getOption('permitWriteEntity')
+        if ($this->_configuration->getOptionUntyped('permitWrite')
+            && $this->_configuration->getOptionUntyped('permitWriteObject')
+            && $this->_configuration->getOptionUntyped('permitWriteLink')
+            && $this->_configuration->getOptionUntyped('permitWriteEntity')
             && ($this->_unlocked
-                || $this->_configuration->getOption('permitPublicCreateEntity')
+                || $this->_configuration->getOptionUntyped('permitPublicCreateEntity')
             )
         ) {
             ?>
@@ -5780,11 +5780,11 @@ class ModuleEntities extends Modules
             '::sylabe:module:entities:SearchEntityHelp');
 
         // Vérifie que la création soit authorisée.
-        if ($this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteObject')
-            && $this->_configuration->getOption('permitWriteLink')
-            && $this->_configuration->getOption('permitSynchronizeObject')
-            && $this->_configuration->getOption('permitSynchronizeLink')
+        if ($this->_configuration->getOptionUntyped('permitWrite')
+            && $this->_configuration->getOptionUntyped('permitWriteObject')
+            && $this->_configuration->getOptionUntyped('permitWriteLink')
+            && $this->_configuration->getOptionUntyped('permitSynchronizeObject')
+            && $this->_configuration->getOptionUntyped('permitSynchronizeLink')
             && $this->_unlocked
         ) {
             ?>
@@ -7048,10 +7048,10 @@ class ModuleGroups extends Modules
         echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:createGroup', $this->MODULE_REGISTERED_ICONS[1]);
 
         // Si autorisé à créer un groupe.
-        if ($this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteObject')
-            && $this->_configuration->getOption('permitWriteLink')
-            && $this->_configuration->getOption('permitWriteGroup')
+        if ($this->_configuration->getOptionUntyped('permitWrite')
+            && $this->_configuration->getOptionUntyped('permitWriteObject')
+            && $this->_configuration->getOptionUntyped('permitWriteLink')
+            && $this->_configuration->getOptionUntyped('permitWriteGroup')
             && $this->_unlocked
         ) {
             ?>
@@ -7185,9 +7185,9 @@ class ModuleGroups extends Modules
 
                         // Supprimer le groupe.
                         if ($this->_unlocked
-                            && $this->_configuration->getOption('permitWrite')
-                            && $this->_configuration->getOption('permitWriteLink')
-                            && $this->_configuration->getOption('permitWriteGroup')
+                            && $this->_configuration->getOptionUntyped('permitWrite')
+                            && $this->_configuration->getOptionUntyped('permitWriteLink')
+                            && $this->_configuration->getOptionUntyped('permitWriteGroup')
                         ) {
                             $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                             $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
@@ -7238,9 +7238,9 @@ class ModuleGroups extends Modules
 
                             // Supprimer le groupe.
                             if ($this->_unlocked
-                                && $this->_configuration->getOption('permitWrite')
-                                && $this->_configuration->getOption('permitWriteLink')
-                                && $this->_configuration->getOption('permitWriteGroup')
+                                && $this->_configuration->getOptionUntyped('permitWrite')
+                                && $this->_configuration->getOptionUntyped('permitWriteLink')
+                                && $this->_configuration->getOptionUntyped('permitWriteGroup')
                             ) {
                                 $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                                 $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
@@ -7302,9 +7302,9 @@ class ModuleGroups extends Modules
 
                         // Supprimer le groupe.
                         if ($this->_unlocked
-                            && $this->_configuration->getOption('permitWrite')
-                            && $this->_configuration->getOption('permitWriteLink')
-                            && $this->_configuration->getOption('permitWriteGroup')
+                            && $this->_configuration->getOptionUntyped('permitWrite')
+                            && $this->_configuration->getOptionUntyped('permitWriteLink')
+                            && $this->_configuration->getOptionUntyped('permitWriteGroup')
                         ) {
                             $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                             $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
@@ -7601,9 +7601,9 @@ class ModuleObjects extends Modules
 
                     // Si l'entité est déverrouillée.
                     if ($this->_unlocked
-                        && $this->_configuration->getOption('permitWrite')
-                        && $this->_configuration->getOption('permitWriteLink')
-                        && $this->_configuration->getOption('permitWriteObject')
+                        && $this->_configuration->getOptionUntyped('permitWrite')
+                        && $this->_configuration->getOptionUntyped('permitWriteLink')
+                        && $this->_configuration->getOptionUntyped('permitWriteObject')
                     ) {
                         // Supprimer l'objet.
                         $hookArray[5]['name'] = '::sylabe:module:objects:ObjectDelete';
@@ -7803,9 +7803,9 @@ class ModuleObjects extends Modules
             case '::sylabe:module:objet:ProtectionButtons' :
                 // Si l'entité est déverrouillée.
                 if ($this->_unlocked
-                    && $this->_configuration->getOption('permitWrite')
-                    && $this->_configuration->getOption('permitWriteLink')
-                    && $this->_configuration->getOption('permitWriteObject')
+                    && $this->_configuration->getOptionUntyped('permitWrite')
+                    && $this->_configuration->getOptionUntyped('permitWriteLink')
+                    && $this->_configuration->getOptionUntyped('permitWriteObject')
                     && $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected()
                 ) {
                     $hookArray[0]['name'] = '::sylabe:module:objects:ShareProtection';
@@ -8331,9 +8331,9 @@ class ModuleObjects extends Modules
 
             // N'affiche un message que si la modification est possible.
             if ($this->_unlocked
-                && $this->_configuration->getOption('permitWrite')
-                && $this->_configuration->getOption('permitWriteLink')
-                && $this->_configuration->getOption('permitWriteObject')
+                && $this->_configuration->getOptionUntyped('permitWrite')
+                && $this->_configuration->getOptionUntyped('permitWriteLink')
+                && $this->_configuration->getOptionUntyped('permitWriteObject')
             ) {
                 // Vérifie la présence de l'objet.
                 if ($object->checkPresent()
@@ -8395,9 +8395,9 @@ class ModuleObjects extends Modules
             // Ajoute l'action de protection.
             if ($object->checkPresent()
                 && $this->_unlocked
-                && $this->_configuration->getOption('permitWrite')
-                && $this->_configuration->getOption('permitWriteLink')
-                && $this->_configuration->getOption('permitWriteObject')
+                && $this->_configuration->getOptionUntyped('permitWrite')
+                && $this->_configuration->getOptionUntyped('permitWriteLink')
+                && $this->_configuration->getOptionUntyped('permitWriteObject')
                 && $this->_applicationInstance->getCurrentObject() != $this->_nebuleInstance->getCurrentEntity()
             ) {
                 $list[2]['param']['selfHookList'][0]['name'] = '::ProtectObject';
@@ -8530,9 +8530,9 @@ class ModuleObjects extends Modules
 
                     // Ajout l'action de déprotection ou de suppression de partage de protection.
                     if ($this->_unlocked
-                        && $this->_configuration->getOption('permitWrite')
-                        && $this->_configuration->getOption('permitWriteLink')
-                        && $this->_configuration->getOption('permitWriteObject')
+                        && $this->_configuration->getOptionUntyped('permitWrite')
+                        && $this->_configuration->getOptionUntyped('permitWriteLink')
+                        && $this->_configuration->getOptionUntyped('permitWriteObject')
                     ) {
                         if ($entity == $this->_nebuleInstance->getCurrentEntity()) {
                             // Déprotéger l'objet.
@@ -8544,7 +8544,7 @@ class ModuleObjects extends Modules
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                                 . $this->_nebuleInstance->getActionTicket();
                         } elseif (!$this->_nebuleInstance->getIsRecoveryEntity($entity)
-                            || $this->_configuration->getOption('permitRecoveryRemoveEntity')
+                            || $this->_configuration->getOptionUntyped('permitRecoveryRemoveEntity')
                         ) {
                             // Annuler le partage de protection. Non fiable...
                             $list[$i]['param']['selfHookList'][0]['name'] = '::RemoveShareProtect';
@@ -8611,9 +8611,9 @@ class ModuleObjects extends Modules
             echo $this->_display->getDisplayHookMenuList('::sylabe:module:objet:ProtectionShareButtons', 'medium');
 
             if ($this->_unlocked
-                && $this->_configuration->getOption('permitWrite')
-                && $this->_configuration->getOption('permitWriteLink')
-                && $this->_configuration->getOption('permitWriteObject')
+                && $this->_configuration->getOptionUntyped('permitWrite')
+                && $this->_configuration->getOptionUntyped('permitWriteLink')
+                && $this->_configuration->getOptionUntyped('permitWriteObject')
             ) {
                 // Affiche le titre.
                 echo $this->_display->getDisplayTitle('::sylabe:module:objects:ShareObjectProtection', $this->MODULE_REGISTERED_ICONS[3], false);
@@ -8637,9 +8637,9 @@ class ModuleObjects extends Modules
         // Si l'objet est présent et protégé et si l'entité est déverrouillée
         if ($object->getMarkProtected()
             && $this->_unlocked
-            && $this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteLink')
-            && $this->_configuration->getOption('permitWriteObject')
+            && $this->_configuration->getOptionUntyped('permitWrite')
+            && $this->_configuration->getOptionUntyped('permitWriteLink')
+            && $this->_configuration->getOptionUntyped('permitWriteObject')
         ) {
             $listOkEntities = array();
             $listOkGroups = array();
@@ -9220,7 +9220,7 @@ class ModuleAdmin extends Modules
             $i = 0;
             foreach ($listOptions as $optionName) {
                 // Extrait les propriétés de l'option.
-                $optionValue = $this->_configuration->getOption($optionName);
+                $optionValue = $this->_configuration->getOptionUntyped($optionName);
                 $optionID = $this->_nebuleInstance->getCryptoInstance()->hash($optionName);
                 $optionValueDisplay = (string)$optionValue;
                 $optionType = $listOptionsType[$optionName];
@@ -9282,7 +9282,7 @@ class ModuleAdmin extends Modules
             $i = 0;
             foreach ($listOptions as $optionName) {
                 // Extrait les propriétés de l'option.
-                $optionValue = $this->_configuration->getOption($optionName);
+                $optionValue = $this->_configuration->getOptionUntyped($optionName);
                 $optionID = $this->_nebuleInstance->getCryptoInstance()->hash($optionName);
                 $optionValueDisplay = (string)$optionValue;
                 $optionType = $listOptionsType[$optionName];
@@ -9292,7 +9292,7 @@ class ModuleAdmin extends Modules
                 $optionDefaultDisplay = (string)$optionDefaultValue;
                 $optionCriticality = $listOptionsCriticality[$optionName];
                 $optionDescription = $listOptionsDescription[$optionName];
-                $optionLocked = ($this->_configuration->getOptionFromEnvironment($optionName) !== null);
+                $optionLocked = ($this->_configuration->getOptionFromEnvironmentUntyped($optionName) !== null);
 
                 $list[$i]['information'] = $optionName . ' = ' . $optionValueDisplay . '<br />' . $optionDescription;
                 $list[$i]['param'] = $param;

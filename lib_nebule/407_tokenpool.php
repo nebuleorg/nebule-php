@@ -134,7 +134,7 @@ class TokenPool extends Currency
             || $id == ''
             || !ctype_xdigit($id)
             || !$this->_io->checkLinkPresent($id)
-            || !$this->_configuration->getOption('permitCurrency')
+            || !$this->_configuration->getOptionUntyped('permitCurrency')
         ) {
             $id = '0';
         }
@@ -178,12 +178,12 @@ class TokenPool extends Currency
         $this->_metrology->addLog('Ask create token pool', Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Vérifie que l'on puisse créer un sac de jetons.
-        if ($this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteObject')
-            && $this->_configuration->getOption('permitWriteLink')
-            && $this->_configuration->getOption('permitCurrency')
-            && $this->_configuration->getOption('permitWriteCurrency')
-            && $this->_configuration->getOption('permitCreateCurrency')
+        if ($this->_configuration->getOptionUntyped('permitWrite')
+            && $this->_configuration->getOptionUntyped('permitWriteObject')
+            && $this->_configuration->getOptionUntyped('permitWriteLink')
+            && $this->_configuration->getOptionUntyped('permitCurrency')
+            && $this->_configuration->getOptionUntyped('permitWriteCurrency')
+            && $this->_configuration->getOptionUntyped('permitCreateCurrency')
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // Génère la nouveau sac de jetons.

@@ -79,7 +79,7 @@ class Social implements SocialInterface
         $this->_instanceSocialUnreputation = new SocialUnreputation($nebuleInstance);
 
         // Détermine le traitement social par défaut.
-        switch ($this->_configuration->getOption('socialLibrary')) {
+        switch ($this->_configuration->getOptionUntyped('socialLibrary')) {
             case 'myself':
                 $this->_instanceSocialDefault = $this->_instanceSocialMySelf;
                 break;

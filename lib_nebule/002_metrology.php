@@ -291,11 +291,11 @@ class Metrology
      */
     public function setDefaultLogsLevel(): void
     {
-        $this->_permitLogs = Configuration::getOptionFromEnvironmentStatic('permitLogs');
+        $this->_permitLogs = Configuration::getOptionFromEnvironmentUntypedStatic('permitLogs');
         if ($this->_permitLogs === null)
             $this->_permitLogs = Configuration::OPTIONS_DEFAULT_VALUE['permitLogs'];
 
-        $level = Configuration::getOptionFromEnvironmentStatic('logsLevel');
+        $level = Configuration::getOptionFromEnvironmentUntypedStatic('logsLevel');
         if ($level === null)
             $level = Configuration::OPTIONS_DEFAULT_VALUE['logsLevel'];
 

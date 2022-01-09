@@ -216,7 +216,7 @@ class Display extends Displays
                     $param['informationType'] = 'warn';
                     echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityURLMessage(), $param);
                 }
-                if (!$this->_configuration->getOption('permitWrite')) {
+                if (!$this->_configuration->getOptionUntyped('permitWrite')) {
                     $param['informationType'] = 'warn';
                     echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::warn_ServNotPermitWrite', $param);
                 }
@@ -226,11 +226,11 @@ class Display extends Displays
                 }
 
                 // Vérifie que la création et le chargement de liens soit autorisé.
-                if ($this->_configuration->getOption('permitWrite')
-                    && $this->_configuration->getOption('permitWriteLink')
-                    && $this->_configuration->getOption('permitUploadLink')
-                    && ($this->_configuration->getOption('permitPublicUploadLink')
-                        || $this->_configuration->getOption('permitPublicUploadCodeMasterLink')
+                if ($this->_configuration->getOptionUntyped('permitWrite')
+                    && $this->_configuration->getOptionUntyped('permitWriteLink')
+                    && $this->_configuration->getOptionUntyped('permitUploadLink')
+                    && ($this->_configuration->getOptionUntyped('permitPublicUploadLink')
+                        || $this->_configuration->getOptionUntyped('permitPublicUploadCodeMasterLink')
                         || $this->_unlocked
                     )
                 ) {
@@ -242,7 +242,7 @@ class Display extends Displays
                             'informationType' => 'warn',
                             'displayRatio' => 'short',
                         );
-                        if ($this->_configuration->getOption('permitPublicUploadLink')) {
+                        if ($this->_configuration->getOptionUntyped('permitPublicUploadLink')) {
                             echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::info_OnlySignedLinks', $param);
                         } else {
                             echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::info_OnlyLinksFromCodeMaster', $param);
@@ -270,7 +270,7 @@ class Display extends Displays
                                   action="<?php echo '?' . $this->_nebuleInstance->getActionTicket(); ?>">
                                 <input type="hidden"
                                        name="MAX_FILE_SIZE"
-                                       value="<?php echo $this->_configuration->getOption('ioReadMaxData'); ?>"/>
+                                       value="<?php echo $this->_configuration->getOptionUntyped('ioReadMaxData'); ?>"/>
                                 <input type="file"
                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LINKS; ?>"/><br/>
                                 <input type="submit"
@@ -347,11 +347,11 @@ class Action extends Actions
         $this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Vérifie que l'action de chargement de lien soit permise.
-        if ($this->_configuration->getOption('permitWrite')
-            && $this->_configuration->getOption('permitWriteLink')
-            && $this->_configuration->getOption('permitUploadLink')
-            && ($this->_configuration->getOption('permitPublicUploadCodeMasterLink')
-                || $this->_configuration->getOption('permitPublicUploadLink')
+        if ($this->_configuration->getOptionUntyped('permitWrite')
+            && $this->_configuration->getOptionUntyped('permitWriteLink')
+            && $this->_configuration->getOptionUntyped('permitUploadLink')
+            && ($this->_configuration->getOptionUntyped('permitPublicUploadCodeMasterLink')
+                || $this->_configuration->getOptionUntyped('permitPublicUploadLink')
                 || $this->_unlocked
             )
         ) {
