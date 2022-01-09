@@ -384,26 +384,26 @@ class CryptoOpenssl implements CryptoInterface
 	 * ------------------------------------------------------------------------------------------
 	 * Gestion du chiffrement symétrique.
 	 */
-    private $_symetricAlgorithmList = array(), // Liste des fonctions de chiffrement symétrique.
-        $_symetricAlgorithm,               // Fonction de chiffrement symétrique.
-        $_symetricAlgorithmName,           // Fonction de chiffrement symétrique.
-        $_symetricAlgorithmMode,           // Fonction de chiffrement symétrique.
+    private $_symmetricAlgorithmList = array(), // Liste des fonctions de chiffrement symétrique.
+        $_symmetricAlgorithm,               // Fonction de chiffrement symétrique.
+        $_symmetricAlgorithmName,           // Fonction de chiffrement symétrique.
+        $_symmetricAlgorithmMode,           // Fonction de chiffrement symétrique.
         $_symetricKeyLength;               // Taille d'une clé et d'un bloc de chiffrement.
 
     // Retourne l'algorithme de chiffrement symétrique en cours d'utilisation.
     public function symmetricAlgorithm()
     {
-        return $this->_symetricAlgorithm;
+        return $this->_symmetricAlgorithm;
     }
 
     public function symmetricAlgorithmName()
     {
-        return $this->_symetricAlgorithmName;
+        return $this->_symmetricAlgorithmName;
     }
 
     public function symmetricAlgorithmMode()
     {
-        return $this->_symetricAlgorithmMode;
+        return $this->_symmetricAlgorithmMode;
     }
 
     // Retourne la longueur de clé de l'algorithme de chiffrement symétrique en cours d'utilisation.
@@ -423,7 +423,7 @@ class CryptoOpenssl implements CryptoInterface
         // Pour chacun...
         foreach ($l as $a) {
             // Si c'est l'algorithme en cours.
-            if ($a == $this->_symetricAlgorithmName) {
+            if ($a == $this->_symmetricAlgorithmName) {
                 // Compile les données sources, la clé et l'IV.
                 $data = 'Bienvenue dans le projet nebule.';
                 $hexIV = $this->_genSymmetricAlgorithmNullIV();
@@ -431,9 +431,9 @@ class CryptoOpenssl implements CryptoInterface
                 $hexKey = "8fdf208b4a79cef62f4e610ef7d409c110cb5d20b0148b9770cad5130106b6a1";
                 $binKey = pack("H*", $hexKey);
                 // Encode.
-                $code = openssl_encrypt($data, $this->_symetricAlgorithmName, $binKey, OPENSSL_RAW_DATA, $binIV);
+                $code = openssl_encrypt($data, $this->_symmetricAlgorithmName, $binKey, OPENSSL_RAW_DATA, $binIV);
                 // Décode.
-                $dcod = openssl_decrypt($code, $this->_symetricAlgorithmName, $binKey, OPENSSL_RAW_DATA, $binIV);
+                $dcod = openssl_decrypt($code, $this->_symmetricAlgorithmName, $binKey, OPENSSL_RAW_DATA, $binIV);
                 // Si les données décodées sont les mêmes que les données sources.
                 if ($data == $dcod)
                     $check = true; // Le test est bon.
@@ -447,9 +447,9 @@ class CryptoOpenssl implements CryptoInterface
     public function setSymmetricAlgorithm(string $algo): bool
     {
         $algo = (string)$algo;
-        if (sizeof($this->_symetricAlgorithmList) == 0) return false; // Vérifie si la liste des algorithmes n'est pas vide.
-        if (!in_array($algo, $this->_symetricAlgorithmName)) return false;
-        $this->_symetricAlgorithmName = $algo;
+        if (sizeof($this->_symmetricAlgorithmList) == 0) return false; // Vérifie si la liste des algorithmes n'est pas vide.
+        if (!in_array($algo, $this->_symmetricAlgorithmName)) return false;
+        $this->_symmetricAlgorithmName = $algo;
         $this->_parseSymmetricAlgorithm();
         return true;
     }
@@ -463,9 +463,9 @@ class CryptoOpenssl implements CryptoInterface
 
     private function _genSymmetricAlgorithmList()
     {
-        //$this->_symetricAlgorithmList = array('aes-256-cbc', 'aes-256-ctr'); // Génère la liste des algorithmes disponibles. A revoir...
-        $this->_symetricAlgorithmList = openssl_get_cipher_methods(true); // Génère la liste des algorithmes disponibles.
-        $this->_symetricAlgorithmName = $this->_configuration->getOptionUntyped('cryptoSymetricAlgorithm');
+        //$this->_symmetricAlgorithmList = array('aes-256-cbc', 'aes-256-ctr'); // Génère la liste des algorithmes disponibles. A revoir...
+        $this->_symmetricAlgorithmList = openssl_get_cipher_methods(true); // Génère la liste des algorithmes disponibles.
+        $this->_symmetricAlgorithmName = $this->_configuration->getOptionUntyped('cryptoSymmetricAlgorithm');
         $this->_parseSymmetricAlgorithm();
     }
 
@@ -500,15 +500,15 @@ class CryptoOpenssl implements CryptoInterface
 
     private function _parseSymmetricAlgorithm(): void
     {
-        $name = $this->_parseSymmetricAlgorithmName($this->_symetricAlgorithmName);
+        $name = $this->_parseSymmetricAlgorithmName($this->_symmetricAlgorithmName);
         if ($name == '') {
-            $this->_symetricAlgorithm = ' ';
+            $this->_symmetricAlgorithm = ' ';
             $this->_symetricKeyLength = 0;
-            $this->_symetricAlgorithmMode = '';
+            $this->_symmetricAlgorithmMode = '';
         } else {
-            $this->_symetricAlgorithm = strtok($name, '.');
+            $this->_symmetricAlgorithm = strtok($name, '.');
             $this->_symetricKeyLength = (int)strtok('.');
-            $this->_symetricAlgorithmMode = strtok('.');
+            $this->_symmetricAlgorithmMode = strtok('.');
         }
     }
 
@@ -550,7 +550,7 @@ class CryptoOpenssl implements CryptoInterface
         $binIV = pack("H*", $hexIV);
 
         // Réalise le chiffrement.
-        return openssl_encrypt($data, $this->_symetricAlgorithmName, $key, OPENSSL_RAW_DATA, $binIV);
+        return openssl_encrypt($data, $this->_symmetricAlgorithmName, $key, OPENSSL_RAW_DATA, $binIV);
     }
 
     /**
@@ -579,7 +579,7 @@ class CryptoOpenssl implements CryptoInterface
         $binIV = pack("H*", $hexIV);
 
         // Réalise le déchiffrement.
-        return openssl_decrypt($data, $this->_symetricAlgorithmName, $key, OPENSSL_RAW_DATA, $binIV);
+        return openssl_decrypt($data, $this->_symmetricAlgorithmName, $key, OPENSSL_RAW_DATA, $binIV);
     }
 
 
@@ -587,20 +587,20 @@ class CryptoOpenssl implements CryptoInterface
 	 * ------------------------------------------------------------------------------------------
 	 * Gestion du chiffrement asymétrique.
 	 */
-    private $_asymetricAlgorithmList = array(), // Fonction de chiffrement asymétrique (càd avec clé publique/privée).
-        $_asymetricAlgorithm,               // Fonction de chiffrement asymétrique (càd avec clé publique/privée).
-        $_asymetricAlgorithmName,           // Fonction de chiffrement asymétrique (càd avec clé publique/privée).
+    private $_asymmetricAlgorithmList = array(), // Fonction de chiffrement asymétrique (càd avec clé publique/privée).
+        $_asymmetricAlgorithm,               // Fonction de chiffrement asymétrique (càd avec clé publique/privée).
+        $_asymmetricAlgorithmName,           // Fonction de chiffrement asymétrique (càd avec clé publique/privée).
         $_asymetricKeyLength;               // Taille d'une clé publique/privée.
 
     // Retourne l'algorithme de chiffrement asymétrique en cours d'utilisation.
     public function asymmetricAlgorithm()
     {
-        return $this->_asymetricAlgorithm;
+        return $this->_asymmetricAlgorithm;
     }
 
     public function asymmetricAlgorithmName()
     {
-        return $this->_asymetricAlgorithmName;
+        return $this->_asymmetricAlgorithmName;
     }
 
     // Retourne la longueur de clé de l'algorithme de chiffrement asymétrique en cours d'utilisation.
@@ -689,9 +689,9 @@ EOD;
     public function setAsymmetricAlgorithm(string $algo): bool
     {
         $algo = (string)$algo;
-        if (sizeof($this->_asymetricAlgorithmList) == 0) return false; // Vérifie si la liste des algorithmes n'est pas vide.
-        if (!in_array($algo, $this->_asymetricAlgorithmName)) return false;
-        $this->_asymetricAlgorithmName = $algo;
+        if (sizeof($this->_asymmetricAlgorithmList) == 0) return false; // Vérifie si la liste des algorithmes n'est pas vide.
+        if (!in_array($algo, $this->_asymmetricAlgorithmName)) return false;
+        $this->_asymmetricAlgorithmName = $algo;
         $this->_parseAsymmetricAlgorithm();
         return true;
     }
@@ -706,8 +706,8 @@ EOD;
     private function _genAsymmetricAlgorithmList()
     {
         // Génère la liste des algorithmes disponibles. A revoir...
-        $this->_asymetricAlgorithmList = array('rsa1024', 'rsa2048', 'rsa4096', 'ecdsa');        // A revoir...
-        $this->_asymetricAlgorithmName = $this->_configuration->getOptionUntyped('cryptoAsymetricAlgorithm');
+        $this->_asymmetricAlgorithmList = array('rsa1024', 'rsa2048', 'rsa4096', 'ecdsa');        // A revoir...
+        $this->_asymmetricAlgorithmName = $this->_configuration->getOptionUntyped('cryptoAsymmetricAlgorithm');
         $this->_parseAsymmetricAlgorithm();
         /*
 OPENSSL_KEYTYPE_RSA (entier)
@@ -739,12 +739,12 @@ OPENSSL_KEYTYPE_EC (entier)
 
     private function _parseAsymmetricAlgorithm()
     {
-        $name = $this->_parseAsymmetricAlgorithmName($this->_asymetricAlgorithmName);
+        $name = $this->_parseAsymmetricAlgorithmName($this->_asymmetricAlgorithmName);
         if ($name == '') {
-            $this->_asymetricAlgorithm = ' ';
+            $this->_asymmetricAlgorithm = ' ';
             $this->_asymetricKeyLength = 0;
         } else {
-            $this->_asymetricAlgorithm = strtok($name, '.');
+            $this->_asymmetricAlgorithm = strtok($name, '.');
             $this->_asymetricKeyLength = (int)strtok('.');
         }
     }
@@ -849,11 +849,11 @@ OPENSSL_KEYTYPE_EC (entier)
     public function newPkey(): bool
     {
         // Vérifie que l'algorithme est correcte.
-        if ($this->_asymetricAlgorithm == '') return false;
+        if ($this->_asymmetricAlgorithm == '') return false;
 
         // Configuration de la génération.
         $config = array();
-        switch ($this->_asymetricAlgorithm) {
+        switch ($this->_asymmetricAlgorithm) {
             case 'rsa' :
                 $config['private_key_type'] = OPENSSL_KEYTYPE_RSA;
                 break;
