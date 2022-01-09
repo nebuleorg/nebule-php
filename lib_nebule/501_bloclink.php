@@ -813,17 +813,12 @@ class Bloclink implements bloclinkInterface
 
         if (!$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+            || !$this->_valid
+            || !$this->_signed
         )
             return false;
 
         $this->_nebuleInstance->getMetrologyInstance()->addAction('addlnk', $this->_rawBlocLink, $this->_valid);
-
-        if (!$this->_valid
-            || !$this->_signed
-        ) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link unsigned', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-            return false;
-        }
 
         // If needed, in history.
         if ($this->_configuration->getOptionAsBoolean('permitHistoryLinksSign'))
