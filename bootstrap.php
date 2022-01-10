@@ -77,6 +77,7 @@ ob_start();
  */
 
 // Logs setting and initializing.
+/** @noinspection PhpUnusedLocalVariableInspection */
 $loggerSessionID = bin2hex(openssl_random_pseudo_bytes(6, $false));
 $metrologyStartTime = microtime(true);
 
@@ -131,101 +132,121 @@ const BOOTSTRAP_FILE_NAME = 'index.php';
  * Instance de la bibliothèque nebule en PHP orienté objet.
  *
  * @var nebule $nebuleInstance
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebuleInstance = null;
 
 /**
  * Variable de raison d'interruption de chargement du bootstrap.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapBreak = array();
 
 /**
  * Variable de détection d'affichage inserré en ligne.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapInlineDisplay = false;
 
 /**
  * Variable de détection d'affichage de l'ID de l'entité instance du serveur.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapServerEntityDisplay = false;
 
 /**
  * Activation d'un nettoyage de session général.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapFlush = false;
 
 /**
  * Activation d'une mise à jour des instances de bibliothèque et d'application.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapUpdate = false;
 
 /**
  * ID de la bibliothèque mémorisé dans la session PHP.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapLibraryID = '';
 
 /**
  * Instance non dé-sérialisée de la bibliothèque mémorisée dans la session PHP.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapLibraryInstanceSleep = '';
 
 /**
  * ID de l'application mémorisé dans la session PHP.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapApplicationID = '';
 
 /**
  * ID de départ de l'application mémorisé dans la session PHP.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapApplicationStartID = '';
 
 /**
  * Instance non dé-sérialisée de l'application mémorisée dans la session PHP.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapApplicationInstanceSleep = '';
 
 /**
  * Instance non dé-sérialisée de l'affichage de l'application mémorisée dans la session PHP.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapApplicationDisplayInstanceSleep = '';
 
 /**
  * Instance non dé-sérialisée des actions de l'application mémorisée dans la session PHP.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapApplicationActionInstanceSleep = '';
 
 /**
  * Instance non dé-sérialisée des traductions de l'application mémorisée dans la session PHP.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapApplicationTraductionInstanceSleep = '';
 
 /**
  * Commutateur pour charger directement une application sans passer par le pré-chargement.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapApplicationNoPreload = false;
 
 /**
  * Demande de changement d'application.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapSwitchApplication = '';
 
 /**
  * Instance de l'application.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $applicationInstance = null;
 
 /**
  * Instance d'affichage de l'application.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $applicationDisplayInstance = null;
 
 /**
  * Instance d'action de l'application.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $applicationActionInstance = null;
 
 /**
  * Instance de traduction de l'application.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $applicationTraductionInstance = null;
 
@@ -395,6 +416,7 @@ const LIB_ARG_UPDATE_APPLICATION = 'u';
 const LIB_ARG_SWITCH_APPLICATION = 'a';
 const LIB_ARG_RESCUE_MODE = 'r';
 const LIB_ARG_INLINE_DISPLAY = 'i';
+/** @noinspection PhpUnusedLocalVariableInspection */
 const LIB_ARG_STATIC_DISPLAY = 's'; // TODO not used yet
 const LIB_ARG_FIRST_PUPPETMASTER_EID = 'bootstrapfirstpuppetmastereid';
 const LIB_ARG_FIRST_PUPPETMASTER_LOC = 'bootstrapfirstpuppetmasterlocation';
@@ -678,130 +700,172 @@ Jggg==";
 
 /**
  * Result of Lib PP initialisation.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $libraryCheckOK = false;
 
 /**
  * Activate rescue mode to recovery code problems.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $libraryRescueMode = false;
 
 /**
  * Buffer of option's values.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $configurationList = array();
 
 /**
  * ID authorities of security.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebuleSecurityAuthorities = array();
 
 /**
  * ID authorities of code.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebuleCodeAuthorities = array();
 
 /**
  * ID authorities of directory.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebuleDirectoryAuthorities = array();
 
 /**
  * ID authorities of time.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebuleTimeAuthorities = array();
 
 /**
  * ID de l'entité locale du serveur.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebuleServerEntity = '';
 
 /**
  * ID de l'entité par défaut.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebuleDefaultEntity = '';
 
 /**
  * ID de l'entité en cours.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebulePublicEntity = '';
 
 /**
  * Clé privée de l'entité en cours.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebulePrivateEntity = '';
 
 /**
  * Mot de passe de l'entité en cours.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebulePasswordEntity = '';
 
 /**
  * Liste des entités autorités locale.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebuleLocalAuthorities = array();
 
 /**
  * Current code branch NID used to find different apps codes.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $codeBranchNID = '';
 
 /**
  * Metrology - Lib PP link read counter.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebuleMetrologyLinkRead = 0;
 
 /**
  * Metrology - Lib PP link verify counter.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebuleMetrologyLinkVerify = 0;
 
 /**
  * Metrology - Lib PP object read counter.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebuleMetrologyObjectRead = 0;
 
 /**
  * Metrology - Lib PP object verify counter.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebuleMetrologyObjectVerify = 0;
 
 /**
  * Metrology - Lib PP timers.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebuleMetrologyTimers = array();
 
 /**
  * First run - EID of an alternative puppetmaster.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $firstAlternativePuppetmasterEid = '';
 
 /**
  * First run - EID of an optional subordination.
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 $firstSubordinationEID = '';
 
 // Cache of many search result and content.
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheReadObjText1line = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheReadObjName = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheReadObjSize = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheReadEntityType = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheReadEntityLoc = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheReadEntityFName = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheReadEntityName = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheReadEntityPName = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheReadEntityFullName = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheFindObjType = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheReadObjTypeMime = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheReadObjTypeHash = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheIsText = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheIsBanned = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheIsSuppr = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheIsPublicKey = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheIsPrivateKey = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheIsEncrypt = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheFindPrivKey = '';
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheLibrary_o_vr = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheLibrary_l_grx = array();
 
 /**
