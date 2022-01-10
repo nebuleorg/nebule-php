@@ -8,7 +8,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-interface bloclinkInterface
+interface blocLinkInterface
 {
     public function __construct(nebule $nebuleInstance, string $blocLink, string $linkType = Cache::TYPE_LINK);
 
@@ -18,6 +18,10 @@ interface bloclinkInterface
      * @return string
      */
     public function getRaw(): string;
+
+    public function getLinks(): array;
+
+    public function getSigners(): array;
 
     /**
      * Get parsed content of the link.
@@ -61,7 +65,7 @@ interface bloclinkInterface
      */
     public function getValid(): bool;
 
-    public function getLinks(): array;
+    public function getValidStructure(): bool;
 
     /**
      * Retourne si le lien est signé et si la signature est valide.
@@ -69,11 +73,50 @@ interface bloclinkInterface
      */
     public function getSigned(): bool;
 
+    /**
+     * Get version of the link.
+     *
+     * @return string
+     */
     public function getVersion(): string;
 
+    /**
+     * Get date of the link.
+     *
+     * @return string
+     */
     public function getDate(): string;
 
-    public function getSigners(): array;
+    /**
+     * Add a link (RL) on new bloc of links (BL).
+     *
+     * @param string $rl
+     * @return bool
+     */
+    public function addLink(string $rl): bool;
+
+    /**
+     * Sign the link.
+     *
+     * @param string $publicKey
+     * @return boolean
+     */
+    public function sign(string $publicKey = '0'): bool;
+
+    /**
+     * Write the link.
+     *
+     * @return boolean
+     */
+    public function write(): bool;
+
+    /**
+     * Sign and write the link.
+     *
+     * @param string $publicKey
+     * @return boolean
+     */
+    public function signWrite(string $publicKey = '0'): bool;
 }
 
 /**
@@ -84,7 +127,7 @@ interface bloclinkInterface
  */
 interface linkInterface
 {
-    public function __construct(nebule $nebuleInstance, string $rl, bloclinkInterface $blocLink);
+    public function __construct(nebule $nebuleInstance, string $rl, blocLinkInterface $blocLink);
 
     /**
      * Retourne le lien complet.

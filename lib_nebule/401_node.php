@@ -471,23 +471,23 @@ class Node implements nodeInterface
         // Check hash value.
         $hash = strtok($nid, '.');
         if ($hash === false) return false;
-        if (strlen($hash) < Bloclink::NID_MIN_HASH_SIZE) return false;
-        if (strlen($hash) > Bloclink::NID_MAX_HASH_SIZE) return false;
+        if (strlen($hash) < blocLink::NID_MIN_HASH_SIZE) return false;
+        if (strlen($hash) > blocLink::NID_MAX_HASH_SIZE) return false;
         if (!ctype_xdigit($hash)) return false;
 
         // Check algo value.
         $algo = strtok('.');
         if ($algo === false) return false;
-        if (strlen($algo) < Bloclink::NID_MIN_ALGO_SIZE) return false;
-        if (strlen($algo) > Bloclink::NID_MAX_ALGO_SIZE) return false;
+        if (strlen($algo) < blocLink::NID_MIN_ALGO_SIZE) return false;
+        if (strlen($algo) > blocLink::NID_MAX_ALGO_SIZE) return false;
         if (!ctype_alnum($algo)) return false;
 
         // Check size value.
         $size = strtok('.');
         if ($size === false) return false;
         if (!ctype_digit($size)) return false; // Check content before!
-        if ((int)$size < Bloclink::NID_MIN_HASH_SIZE) return false;
-        if ((int)$size > Bloclink::NID_MAX_HASH_SIZE) return false;
+        if ((int)$size < blocLink::NID_MIN_HASH_SIZE) return false;
+        if ((int)$size > blocLink::NID_MAX_HASH_SIZE) return false;
         if ((strlen($hash) * 4) != (int)$size) return false;
 
         // Check item overflow

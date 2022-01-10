@@ -29,7 +29,7 @@ use Nebule\Library\linkInterface;
  * Il reste dans ce cas géré comme un lien normal mais de type c.
  * Cependant, si l'entité destinataire est déverrouillée mais ne peut déchiffrer le lien, alors le lien est considéré corrompu.
  */
-class Bloclink implements bloclinkInterface
+class blocLink implements blocLinkInterface
 {
     /**
      * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
@@ -270,8 +270,8 @@ class Bloclink implements bloclinkInterface
     }
 
     /**
-     * Get full link content as text.
-     *
+     * {@inheritDoc}
+     * @see blocLinkInterface::getRaw()
      * @return string
      */
     public function getRaw(): string
@@ -297,7 +297,7 @@ class Bloclink implements bloclinkInterface
 
     /**
      * {@inheritDoc}
-     * @see bloclinkInterface::getParsed()
+     * @see blocLinkInterface::getParsed()
      * @return array
      */
     public function getParsed(): array

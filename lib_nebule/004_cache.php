@@ -545,9 +545,9 @@ class Cache
      *
      * @param string $link
      * @param string $type
-     * @return bloclinkInterface
+     * @return blocLinkInterface
      */
-    public function newLink(string $link, string $type = self::TYPE_LINK): bloclinkInterface
+    public function newLink(string $link, string $type = self::TYPE_LINK): blocLinkInterface
     {
         if ($link == '')
             $link = 'invalid';
@@ -562,7 +562,7 @@ class Cache
         } else {
             $this->_getCacheNeedOnePlace();
 
-            $instance = new Bloclink($this->_nebuleInstance, $link, $type);
+            $instance = new blocLink($this->_nebuleInstance, $link, $type);
 
             if ($this->_configuration->getOptionAsBoolean('permitSessionBuffer')) {
                 $this->_cache[$type][$link] = $instance;

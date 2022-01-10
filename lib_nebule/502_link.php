@@ -88,9 +88,9 @@ class Link implements linkInterface
 
     /**
      * Bloc of links where is this one.
-     * @TODO peut être dans plusieurs blocs !
      *
-     * @var BlocLink
+     * @TODO peut être dans plusieurs blocs !
+     * @var blocLink
      */
     protected $_blocLink;
 
@@ -180,10 +180,10 @@ class Link implements linkInterface
      *
      * @param nebule   $nebuleInstance
      * @param string   $rl
-     * @param Bloclink $blocLink
+     * @param blocLink $blocLink
      * @return void
      */
-    public function __construct(nebule $nebuleInstance, string $rl, bloclinkInterface $blocLink)
+    public function __construct(nebule $nebuleInstance, string $rl, blocLinkInterface $blocLink)
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
@@ -328,9 +328,9 @@ class Link implements linkInterface
     /**
      * Retourne le bloc du lien.
      *
-     * @return Bloclink
+     * @return blocLink
      */
-    public function getBlocLink(): Bloclink
+    public function getBlocLink(): blocLink
     {
         $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'c9e671f6');
 
