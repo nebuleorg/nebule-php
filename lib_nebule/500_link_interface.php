@@ -19,8 +19,18 @@ interface blocLinkInterface
      */
     public function getRaw(): string;
 
+    /**
+     * Get list of links in the bloc of links.
+     *
+     * @return array
+     */
     public function getLinks(): array;
 
+    /**
+     * Get list of signers of the bloc of links.
+     *
+     * @return array
+     */
     public function getSigners(): array;
 
     /**
@@ -59,12 +69,17 @@ interface blocLinkInterface
     public function getParsed(): array;
 
     /**
-     * Retourne l'état de vérification et de validité du lien.
+     * Get validity state of the link.
      *
      * @return boolean
      */
     public function getValid(): bool;
 
+    /**
+     * Get validity state of the structure of the link.
+     *
+     * @return boolean
+     */
     public function getValidStructure(): bool;
 
     /**

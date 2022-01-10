@@ -281,6 +281,11 @@ class blocLink implements blocLinkInterface
         return $this->_rawBlocLink;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see blocLinkInterface::getLinks()
+     * @return array
+     */
     public function getLinks(): array
     {
         $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'ad2228cc');
@@ -288,6 +293,11 @@ class blocLink implements blocLinkInterface
         return $this->_links;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see blocLinkInterface::getSigners()
+     * @return array
+     */
     public function getSigners(): array
     {
         $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'ad2228cc');
@@ -307,6 +317,11 @@ class blocLink implements blocLinkInterface
         return $this->_parsedLink;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see blocLinkInterface::getValid()
+     * @return boolean
+     */
     public function getValid(): bool
     {
         $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '513a5ba1');
@@ -314,6 +329,11 @@ class blocLink implements blocLinkInterface
         return $this->_valid;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see blocLinkInterface::getValidStructure()
+     * @return boolean
+     */
     public function getValidStructure(): bool
     {
         $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'bd937ab3');
@@ -321,6 +341,11 @@ class blocLink implements blocLinkInterface
         return $this->_validStructure;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see blocLinkInterface::getSigned()
+     * @return boolean
+     */
     public function getSigned(): bool
     {
         $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '58ce3724');
@@ -328,6 +353,11 @@ class blocLink implements blocLinkInterface
         return $this->_signed;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see blocLinkInterface::getVersion()
+     * @return string
+     */
     public function getVersion(): string
     {
         $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '614d794c');
@@ -335,6 +365,11 @@ class blocLink implements blocLinkInterface
         return $this->_parsedLink['bl/rv'];
     }
 
+    /**
+     * {@inheritDoc}
+     * @see blocLinkInterface::getDate()
+     * @return string
+     */
     public function getDate(): string
     {
         $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'e76bbadb');
@@ -715,8 +750,8 @@ class blocLink implements blocLinkInterface
     }
 
     /**
-     * Sign the link.
-     *
+     * {@inheritDoc}
+     * @see blocLinkInterface::sign()
      * @param string $publicKey
      * @return boolean
      */
@@ -777,8 +812,8 @@ class blocLink implements blocLinkInterface
     }
 
     /**
-     * Write the link.
-     *
+     * {@inheritDoc}
+     * @see blocLinkInterface::write()
      * @return boolean
      */
     public function write(): bool
@@ -829,8 +864,8 @@ class blocLink implements blocLinkInterface
     }
 
     /**
-     * Sign and write the link.
-     *
+     * {@inheritDoc}
+     * @see blocLinkInterface::signWrite()
      * @param string $publicKey
      * @return boolean
      */
