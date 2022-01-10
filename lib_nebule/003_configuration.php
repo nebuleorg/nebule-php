@@ -1159,12 +1159,7 @@ class Configuration
     }
 
     /**
-     * Ecrit une option.
-     * L'option est écrite sous forme de lien si elle n'est pas protégée ou forcée.
-     *
-     * La valeur est traduite sous forme de texte au besoin.
-     *
-     * La variable $entity permet de cibler une entité pour l'application de l'option... si on est entité de subordination.
+     * Write an option as link for an entity if this option is not protected.
      *
      * @param string $name
      * @param string|bool|int $value

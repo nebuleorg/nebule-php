@@ -9,7 +9,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220108';
+const BOOTSTRAP_VERSION = '020220110';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -965,17 +965,17 @@ function lib_init(): bool
 
     // Initialize i/o.
     if (!io_open()) {
-        log_add('lib init : I/O open error!', 'error', __FUNCTION__, 'fd54d78c');
+        bootstrap_setBreak('81', 'lib init : I/O open error');
         return false;
     }
 
-    // Pour la suite, seul le puppetmaster est enregirstré.
+    // Pour la suite, seul le puppetmaster est enregistré.
     // Une fois les autres entités trouvées, ajoute les autres autorités.
-    // Cela empêche qu'une entié compromise ne génère un lien qui passerait avant le puppetmaster
+    // Cela empêche qu'une entité compromise ne génère un lien qui passerait avant le puppetmaster
     //   dans la recherche par référence nebFindByRef.
     $puppetmaster = lib_getConfiguration('puppetmaster');
     if (!ent_checkPuppetmaster($puppetmaster)) {
-        log_add('lib init : puppetmaster error!', 'error', __FUNCTION__, '8e5a7fe9');
+        bootstrap_setBreak('82', 'lib init : puppetmaster error');
         return false;
     }
     $nebuleLocalAuthorities = array($puppetmaster);
@@ -985,7 +985,7 @@ function lib_init(): bool
     if (!ent_checkSecurityAuthorities($nebuleSecurityAuthorities)) {
         $nebuleSecurityAuthorities = ent_getSecurityAuthorities(true);
         if (!ent_checkSecurityAuthorities($nebuleSecurityAuthorities)) {
-            log_add('lib init : security authority error!', 'error', __FUNCTION__, '6001a43e');
+            bootstrap_setBreak('83', 'lib init : security authority error');
             return false;
         }
     }
@@ -996,7 +996,7 @@ function lib_init(): bool
     if (!ent_checkCodeAuthorities($nebuleCodeAuthorities)) {
         $nebuleCodeAuthorities = ent_getCodeAuthorities(true);
         if (!ent_checkCodeAuthorities($nebuleCodeAuthorities)) {
-            log_add('lib init : code authority error!', 'error', __FUNCTION__, '0a82529e');
+            bootstrap_setBreak('84', 'lib init : code authority error');
             return false;
         }
     }
@@ -1007,7 +1007,7 @@ function lib_init(): bool
     if (!ent_checkTimeAuthorities($nebuleTimeAuthorities)) {
         $nebuleTimeAuthorities = ent_getTimeAuthorities(true);
         if (!ent_checkTimeAuthorities($nebuleTimeAuthorities)) {
-            log_add('lib init : time authority error!', 'error', __FUNCTION__, '874dfd89');
+            bootstrap_setBreak('85', 'lib init : time authority error');
             return false;
         }
     }
@@ -1016,7 +1016,7 @@ function lib_init(): bool
     if (!ent_checkDirectoryAuthorities($nebuleDirectoryAuthorities)) {
         $nebuleDirectoryAuthorities = ent_getDirectoryAuthorities(true);
         if (!ent_checkDirectoryAuthorities($nebuleDirectoryAuthorities)) {
-            log_add('lib init : directory authority error!', 'error', __FUNCTION__, 'be3a8b9f');
+            bootstrap_setBreak('86', 'lib init : directory authority error');
             return false;
         }
     }
@@ -4341,10 +4341,8 @@ function bootstrap_setBreak(string $errorCode, string $errorDesc): void
     global $bootstrapBreak;
 
     $bootstrapBreak[$errorCode] = $errorDesc;
-    log_add('bootstrap break code=' . $errorCode . ' : ' . $errorDesc, 'info', __FUNCTION__, '1a59f99c');
+    log_add('bootstrap break code=' . $errorCode . ' : ' . $errorDesc, 'info', __FUNCTION__, '100000' . $errorDesc);
 }
-
-// ------------------------------------------------------------------------------------------
 
 function bootstrap_getUserBreak(): void
 {
@@ -4354,8 +4352,6 @@ function bootstrap_getUserBreak(): void
         bootstrap_setBreak('11', 'User interrupt.');
 }
 
-
-// ------------------------------------------------------------------------------------------
 function bootstrap_getInlineDisplay(): void
 {
     global $bootstrapInlineDisplay;
@@ -4366,8 +4362,6 @@ function bootstrap_getInlineDisplay(): void
         $bootstrapInlineDisplay = true;
 }
 
-
-// ------------------------------------------------------------------------------------------
 function bootstrap_getCheckFingerprint(): void
 {
     global $nebuleLocalAuthorities, $codeBranchNID;

@@ -374,11 +374,11 @@ class Metrology
 
     /**
      * Ajoute une ligne dans les actions mémorisées.
+     * Type : addlnk addobj addent delobj
      *
      * @param string  $type
      * @param string  $action
      * @param boolean $result
-     * Type : addlnk addobj addent delobj
      */
     public function addAction(string $type, string $action, bool $result): void
     {
@@ -412,9 +412,6 @@ class Metrology
         if ($this->_actionCount > 0) {
             $this->_actionCount--;
             $r = $this->_actionArray[$this->_actionCount];
-            $this->_actionArray[$this->_actionCount]['type'] = null;
-            $this->_actionArray[$this->_actionCount]['action'] = null;
-            $this->_actionArray[$this->_actionCount]['result'] = null;
             $this->_actionArray[$this->_actionCount] = null;
             return $r;
         } else

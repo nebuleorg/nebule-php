@@ -4,10 +4,12 @@ namespace Nebule\Library;
 
 // ----------------------------------------------------------------------------------------
 $nebuleName = 'library';
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleSurname = 'nebule/library';
+/** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleDescription = 'Library of functions for nebule in php object-oriented.';
 $nebuleAuthor = 'Projet nebule';
-$nebuleLibVersion = '020211224';
+$nebuleLibVersion = '020220110';
 $nebuleLicence = 'GNU GPL 2010-2021';
 $nebuleWebsite = 'www.nebule.org';
 // ----------------------------------------------------------------------------------------
@@ -43,10 +45,17 @@ syslog(LOG_INFO, 'LogT=' . (microtime(true) - $metrologyStartTime) . ' LogL="inf
 
 
 // Default application params.
+/** @noinspection PhpUnusedLocalVariableInspection */
 $applicationName = 'defolt';
+/** @noinspection PhpUnusedLocalVariableInspection */
 $applicationSurname = 'nebule/defolt';
+/** @noinspection PhpUnusedLocalVariableInspection */
 $applicationDescription = 'Default web page for servers without interactive application.';
+/** @noinspection PhpUnusedLocalVariableInspection */
 $applicationVersion = $nebuleLibVersion;
+/** @noinspection PhpUnusedLocalVariableInspection */
 $applicationLicence = $nebuleLicence;
+/** @noinspection PhpUnusedLocalVariableInspection */
 $applicationAuthor = $nebuleAuthor;
+/** @noinspection PhpUnusedLocalVariableInspection */
 $applicationWebsite = $nebuleWebsite;
