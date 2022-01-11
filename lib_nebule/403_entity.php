@@ -59,10 +59,14 @@ class Entity extends Node
         '_faceCache',
     );
 
-    private $_publicKey = '',
-        $_privateKeyID = '0', $_privateKey = '', $_newPrivateKey = false,
-        $_privateKeyPassword = '', $_privateKeyPasswordSalt = '', $_issetPrivateKeyPassword = false,
-        $_faceCache = array();
+    private $_publicKey = '';
+    private $_privateKeyID = '0';
+    private $_privateKey = '';
+    private $_newPrivateKey = false;
+    private $_privateKeyPassword = '';
+    private $_privateKeyPasswordSalt = '';
+    private $_issetPrivateKeyPassword = false;
+    private $_faceCache = array();
 
     /**
      * Constructeur.
@@ -72,6 +76,7 @@ class Entity extends Node
      *
      * @param nebule $nebuleInstance
      * @param string $id
+     * @return void
      */
     public function __construct(nebule $nebuleInstance, string $id)
     {
@@ -83,51 +88,18 @@ class Entity extends Node
         $this->_social = $nebuleInstance->getSocialInstance();
 
         $id = trim(strtolower($id));
-        $this->_metrology->addLog('New instance entity ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
+        $this->_metrology->addLog('New instance entity ' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
-        if (is_string($id)
-            && $id != '' && ctype_xdigit($id)
-        ) {
-            $this->_loadEntity($id);        // Si l'ID est cohérent et l'objet nebule présent, c'est bon.
-        } elseif (is_string($id) && $id == 'new') {
-            $this->_createNewEntity();        // Si c'est une nouvelle entité à créer, renvoie à la création.
-        } else {
-            $this->_id = '0';                // Sinon, l'entité est invalide, retourne 0.
-        }
+        if ($id != '' && ctype_xdigit($id))
+            $this->_loadEntity($id);
+        elseif ($id == 'new')
+            $this->_createNewEntity();
+        else
+            $this->_id = '0';
     }
 
     /**
-     * Fonction de suppression de l'instance.
-     *
-     * @return boolean
-     */
-    public function __destruct()
-    {
-        return true;
-    }
-
-    /**
-     * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->_id;
-    }
-
-    /**
-     * Retourne les variables à sauvegarder dans la session php lors d'une mise en sommeil de l'instance.
-     *
-     * @return array:string
-     */
-    public function __sleep()
-    {
-        return self::SESSION_SAVED_VARS;
-    }
-
-    /**
-     * Foncion de réveil de l'instance et de ré-initialisation de certaines variables non sauvegardées.
+     * Fonction de réveil de l'instance et de réinitialisation de certaines variables non sauvegardées.
      *
      * @return null
      */
@@ -146,27 +118,22 @@ class Entity extends Node
     }
 
     // Chargement d'une entité existante.
-    private function _loadEntity($id)
+    private function _loadEntity(string $id): void
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
-        // Vérifie que c'est bien un objet.
-        if (!is_string($id)) {
+        if ($id == ''
+            || !ctype_xdigit($id)
+            || !$this->_io->checkObjectPresent($id)
+            || !$this->_io->checkLinkPresent($id)
+        )
             $id = '0';
-        } elseif ($id == '') {
-            $id = '0';
-        } elseif (!ctype_xdigit($id)) {
-            $id = '0';
-        } elseif (!$this->_io->checkObjectPresent($id)) {
-            $id = '0';
-        } elseif (!$this->_io->checkLinkPresent($id)) {
-            $id = '0';
-        }
+
         $this->_id = $id;
-        $this->_metrology->addLog('Load entity ' . $id, Metrology::LOG_LEVEL_NORMAL); // Log
-        if ($id == '0') {
-            return false;
-        }
+        $this->_metrology->addLog('Load entity ' . $id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+        if ($id == '0')
+            return;
+        
         // Trouve la clé publique.
         $this->_findPublicKey();
     }
@@ -176,11 +143,11 @@ class Entity extends Node
      * La création est légèrement différente de la création d'un objet parce que les liens de l'entité ne peuvent pas encore être vérifiés.
      * Une entité par nature ne peut pas être dissimulée.
      *
-     * @return boolean
+     * @return void
      */
-    private function _createNewEntity()
+    private function _createNewEntity(): void
     {
-        $this->_metrology->addLog(__METHOD__, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         // Vérifie que l'on puisse créer une entité.
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
@@ -191,15 +158,15 @@ class Entity extends Node
                 || $this->_configuration->getOptionAsBoolean('permitPublicCreateEntity')
             )
         ) {
-            $this->_metrology->addLog('Create entity ' . $this->_crypto->asymmetricAlgorithmName(), Metrology::LOG_LEVEL_NORMAL); // Log
+            $this->_metrology->addLog('Create entity ' . $this->_crypto->asymmetricAlgorithmName(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
 
-            // Génère un bi-clé cryptographique.
+            // Génère une biclé cryptographique.
             $newPkey = $this->_crypto->newPkey();
             if ($newPkey !== false) {
                 // Extraction des infos.
                 $this->_publicKey = $this->_crypto->getPkeyPublic($newPkey);
                 $this->_id = $this->_crypto->hash($this->_publicKey);
-                $this->_metrology->addLog('Generated entity ' . $this->_id, Metrology::LOG_LEVEL_NORMAL); // Log
+                $this->_metrology->addLog('Generated entity ' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
                 $this->_privateKeyPassword = $this->_crypto->getStrongRandom(32);
                 $this->_privateKeyPasswordSalt = '';
                 $this->_privateKey = $this->_crypto->getPkeyPrivate($newPkey, $this->_privateKeyPassword);
@@ -207,7 +174,7 @@ class Entity extends Node
                 $this->_issetPrivateKeyPassword = true;
                 $this->_newPrivateKey = true;
 
-                // Ecriture de la clé publique.
+                // Écriture de la clé publique.
                 $this->write();
                 // La clé privée n'est pas écrite. Son mot de passe doit être changé avant son écriture.
 
@@ -215,66 +182,55 @@ class Entity extends Node
                 $date = date(DATE_ATOM);
 
                 // Création lien 1.
-                $action = 'l';
                 $source = $this->_id;
                 $target = $this->_crypto->hash($this->_crypto->hashAlgorithmName());
                 $meta = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_HASH);
-                $link = '_' . $this->_id . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
+                $link = '_' . $this->_id . '_' . $date . '_l_' . $source . '_' . $target . '_' . $meta;
                 $this->_createNewEntityWriteLink($link, $source, $target, $meta);
 
                 // Création lien 2.
-                $action = 'l';
                 $source = $this->_id;
                 $target = $this->_crypto->hash(self::ENTITY_TYPE);
                 $meta = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
-                $link = '_' . $this->_id . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
+                $link = '_' . $this->_id . '_' . $date . '_l_' . $source . '_' . $target . '_' . $meta;
                 $this->_createNewEntityWriteLink($link, $source, $target, $meta);
 
-                unset($date, $action, $source, $target, $meta, $link);
-
-                // A faire : effacement sécurisé...
+                // TODO effacement sécurisé...
                 unset($newPkey);
             } else {
-                $this->_metrology->addLog('Create entity error on generation', Metrology::LOG_LEVEL_ERROR); // Log
+                $this->_metrology->addLog('Create entity error on generation', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
                 $this->_id = '0';
-                return false;
             }
         } else {
-            $this->_metrology->addLog('Create entity error no autorized', Metrology::LOG_LEVEL_ERROR); // Log
+            $this->_metrology->addLog('Create entity error no authorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
             $this->_id = '0';
-            return false;
         }
     }
 
     // Ecrit le lien pour les objets concernés.
     // Utilisé pour la création d'une nouvelle entité, càd dont la clé publique n'est pas encore reconnue.
-    private function _createNewEntityWriteLink($link, $source, $target, $meta)
+    private function _createNewEntityWriteLink(string $link, string $source, string $target, string $meta): void
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         // Signe le lien.
         $signe = $this->signLink($link);
-        if ($signe === false) {
-            return false;
-        }
+        if ($signe === false)
+            return;
         $signedLink = $signe . '.' . $this->_crypto->hashAlgorithmName() . $link;
 
-        // Ecrit le lien pour l'objet de l'entité signataire.
-        if ($this->_configuration->getOptionUntyped('NEBULE_DEFAULT_PERMIT_ADD_LINK_TO_SIGNER')) {
+        // Écrit le lien pour l'objet de l'entité signataire.
+        if ($this->_configuration->getOptionUntyped('NEBULE_DEFAULT_PERMIT_ADD_LINK_TO_SIGNER'))
             $this->_io->linkWrite($this->_id, $signedLink);
-        }
 
-        // Ecrit le lien pour l'objet source.
+        // Écrit le lien pour l'objet source.
         $this->_io->linkWrite($source, $signedLink);
 
-        // Ecrit le lien pour l'objet cible.
+        // Écrit le lien pour l'objet cible.
         $this->_io->linkWrite($target, $signedLink);
 
-        // Ecrit le lien pour l'objet méta.
+        // Écrit le lien pour l'objet méta.
         $this->_io->linkWrite($meta, $signedLink);
-
-        unset($signe, $signedLink);
-        return true;
     }
 
 
@@ -282,9 +238,9 @@ class Entity extends Node
      * Vérifier que c'est en hexa, et que c'est une entité.
      * @return boolean
      */
-    private function _verifyEntity()
+    private function _verifyEntity(): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         $t = false;
         // Extrait le contenu de l'objet source.
@@ -299,7 +255,7 @@ class Entity extends Node
         }
         unset($objHead);
 
-        // Faire une vérif plus complète...
+        // TODO Faire une vérifications plus complète...
 
         $this->_typeVerified = $t;
         return $t;
@@ -307,9 +263,9 @@ class Entity extends Node
 
     private $_typeVerified = false;
 
-    public function getKeyType()
+    public function getKeyType(): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         if ($this->_id == '0') {
             return '';
@@ -317,17 +273,17 @@ class Entity extends Node
         return $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_ENTITE_TYPE, 'all');
     }
 
-    public function getTypeVerify()
+    public function getTypeVerify(): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         $this->_verifyEntity();
         return $this->_typeVerified;
     }
 
-    public function getIsPublicKey()
+    public function getIsPublicKey(): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         $t = false;
         // Extrait le contenu de l'objet source.
@@ -340,9 +296,9 @@ class Entity extends Node
         return $t;
     }
 
-    public function getIsPrivateKey()
+    public function getIsPrivateKey(): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         $t = false;
         // Extrait le contenu de l'objet source.
@@ -357,16 +313,16 @@ class Entity extends Node
 
 
     // Retrouve et retourne la clé publique.
-    public function getPublicKeyID()
+    public function getPublicKeyID(): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         return $this->_id;
     }
 
-    public function getPublicKey()
+    public function getPublicKey(): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         if ($this->_id == '0') {
             return '';
@@ -378,9 +334,9 @@ class Entity extends Node
     }
 
     // Retrouve la clé publique.
-    private function _findPublicKey()
+    private function _findPublicKey(): void
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
 //		$key = '';
         if ($this->_io->checkObjectPresent($this->_id)
@@ -398,9 +354,9 @@ class Entity extends Node
 
 
     // Retourne l'identifiant de la clé privée.
-    public function getPrivateKeyID()
+    public function getPrivateKeyID(): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         // Vérifie la présence d'un ID de clé privée. La recherche au besoin.
         if (!isset($this->_privateKeyID)
@@ -413,9 +369,9 @@ class Entity extends Node
     }
 
     // Retrouve l'identifiant de la clé privée.
-    private function _findPrivateKeyID()
+    private function _findPrivateKeyID(): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         // Vérifie la présence d'un ID de clé privée.
         if (isset($this->_privateKeyID)
@@ -457,9 +413,9 @@ class Entity extends Node
     }
 
     // Retrouve la clé privée.
-    private function _findPrivateKey()
+    private function _findPrivateKey(): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         // Vérifie la présence d'une clé privée.
         if (isset($this->_privateKey)
@@ -480,21 +436,22 @@ class Entity extends Node
     }
 
     // Définit le mot de passe de la clé privée.
-    public function setPrivateKeyPassword($passwd)
+    public function setPrivateKeyPassword(string $passwd): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         $this->_findPrivateKey();
         // Vérifie le mot de passe sur la clé privée.
-        $check = $this->_crypto->getPrivateKey($this->_privateKey, $passwd);
-        if ($check === false) {
+        $check = false;
+        if (is_string($this->_privateKey))
+            $check = $this->_crypto->getPrivateKey($this->_privateKey, $passwd);
+        if ($check === false)
             return false;
-        }
         $this->_privateKeyPasswordSalt = $this->_crypto->getStrongRandom(self::ENTITY_PASSWORD_SALT_SIZE);
-        // A faire... le chiffrement du mot de passe avec le sel et l'ID de session php...
+        // TODO le chiffrement du mot de passe avec le sel et l'ID de session php...
         $this->_privateKeyPassword = $passwd;
         $this->_issetPrivateKeyPassword = true;
-        $this->_nebuleInstance->addListEntitiesUnlocked($this->_id);
+        $this->_nebuleInstance->addListEntitiesUnlocked($this);
         return true;
     }
 
@@ -504,13 +461,14 @@ class Entity extends Node
      *
      * @return boolean
      */
-    public function unsetPrivateKeyPassword()
+    public function unsetPrivateKeyPassword(): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         if ($this->_id == '0') {
             return false;
         }
+        /** @noinspection PhpFieldImmediatelyRewrittenInspection */
         $this->_privateKeyPassword = $this->_privateKeyPasswordSalt;
         $this->_privateKeyPassword = '';
         $this->_privateKeyPasswordSalt = '';
@@ -519,16 +477,16 @@ class Entity extends Node
         return true;
     }
 
-    public function checkPrivateKeyPassword()
+    public function checkPrivateKeyPassword(): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         return $this->_issetPrivateKeyPassword;
     }
 
-    public function changePrivateKeyPassword($newPasswd)
+    public function changePrivateKeyPassword(string $newPasswd): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         if ($this->_id == '0') {
             return false;
@@ -538,7 +496,7 @@ class Entity extends Node
             return false;
         }
 
-        $this->_metrology->addLog('Change entity password - old ' . $this->_privateKeyID, Metrology::LOG_LEVEL_NORMAL); // Log
+        $this->_metrology->addLog('Change entity password - old ' . $this->_privateKeyID, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
         $oldPrivateKeyID = $this->_privateKeyID;
 
         $privateKey = $this->_crypto->getPrivateKey($this->_privateKey, $this->_privateKeyPassword);
@@ -557,7 +515,7 @@ class Entity extends Node
         $this->_privateKey = $newKey;
         $this->_privateKeyID = $this->_crypto->hash($this->_privateKey);
         $this->_issetPrivateKeyPassword = true;
-        $this->_metrology->addLog('Change entity password - new ' . $this->_privateKeyID, Metrology::LOG_LEVEL_NORMAL); // Log
+        $this->_metrology->addLog('Change entity password - new ' . $this->_privateKeyID, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
 
         unset($newKey, $privateKey);
 
@@ -567,43 +525,33 @@ class Entity extends Node
         // Définition de la date.
         $date = date(DATE_ATOM);
 
-        // Si ce n'est pas une création d'entité, fait les liens de mises à jours de clés privées.
+        // Si ce n'est pas une création d'entité, fait les liens de mises à jour de clés privées.
         if (!$this->_newPrivateKey) {
             // Création lien 1.
-            $source = $oldPrivateKeyID;
-            $target = $this->_id;
-            $meta = '0';
-            $link = '_' . $this->_id . '_' . $date . '_x_' . $source . '_' . $target . '_' . $meta;
-            $this->_createNewEntityWriteLink($link, $source, $target, $meta);
+            $link = '_' . $this->_id . '_' . $date . '_x_' . $oldPrivateKeyID . '_' . $this->_id . '_0';
+            $this->_createNewEntityWriteLink($link, $oldPrivateKeyID, $this->_id, '0');
 
             // Création lien 2.
-            $source = $oldPrivateKeyID;
-            $target = $this->_privateKeyID;
-            $meta = '0';
-            $link = '_' . $this->_id . '_' . $date . '_u_' . $source . '_' . $target . '_' . $meta;
-            $this->_createNewEntityWriteLink($link, $source, $target, $meta);
+            $link = '_' . $this->_id . '_' . $date . '_u_' . $oldPrivateKeyID . '_' . $this->_privateKeyID . '_0';
+            $this->_createNewEntityWriteLink($link, $oldPrivateKeyID, $this->_privateKeyID, '0');
         }
 
         // Création lien 3.
-        $source = $this->_privateKeyID;
         $target = $this->_crypto->hash($this->_crypto->hashAlgorithmName());
         $meta = $this->_crypto->hash('nebule/objet/hash');
-        $link = '_' . $this->_id . '_' . $date . '_l_' . $source . '_' . $target . '_' . $meta;
-        $this->_createNewEntityWriteLink($link, $source, $target, $meta);
+        $link = '_' . $this->_id . '_' . $date . '_l_' . $this->_privateKeyID . '_' . $target . '_' . $meta;
+        $this->_createNewEntityWriteLink($link, $this->_privateKeyID, $target, $meta);
 
         // Création lien 4.
-        $source = $this->_privateKeyID;
         $target = $this->_crypto->hash(self::ENTITY_TYPE);
         $meta = $this->_crypto->hash('nebule/objet/type');
-        $link = '_' . $this->_id . '_' . $date . '_l_' . $source . '_' . $target . '_' . $meta;
-        $this->_createNewEntityWriteLink($link, $source, $target, $meta);
+        $link = '_' . $this->_id . '_' . $date . '_l_' . $this->_privateKeyID . '_' . $target . '_' . $meta;
+        $this->_createNewEntityWriteLink($link, $this->_privateKeyID, $target, $meta);
 
         // Création lien 5.
-        $source = $this->_privateKeyID;
         $target = $this->_id;
-        $meta = '0';
-        $link = '_' . $this->_id . '_' . $date . '_f_' . $source . '_' . $target . '_' . $meta;
-        $this->_createNewEntityWriteLink($link, $source, $target, $meta);
+        $link = '_' . $this->_id . '_' . $date . '_f_' . $this->_privateKeyID . '_' . $target . '_0';
+        $this->_createNewEntityWriteLink($link, $this->_privateKeyID, $target, '0');
 
         unset($date, $source, $target, $meta, $link);
 
@@ -621,14 +569,14 @@ class Entity extends Node
      */
     public function signLink(string $link, string $algo = ''): ?string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         if ($this->_privateKey == '') {
-            $this->_metrology->addLog('ERROR entity no private key', Metrology::LOG_LEVEL_NORMAL); // Log
+            $this->_metrology->addLog('ERROR entity no private key', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
             return null;
         }
         if ($this->_privateKeyPassword == '') {
-            $this->_metrology->addLog('ERROR entity no password for private key', Metrology::LOG_LEVEL_NORMAL); // Log
+            $this->_metrology->addLog('ERROR entity no password for private key', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
             return null;
         }
         if ($algo == '')
@@ -642,11 +590,11 @@ class Entity extends Node
      * Signature et écriture de liens.
      *
      * @param string $link
-     * @return string
+     * @return string|boolean
      */
-    public function signWriteLink($link)
+    public function signWriteLink(string $link)
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         $signe = $this->signLink($link);
         if ($signe === false) {
@@ -654,18 +602,19 @@ class Entity extends Node
         }
         $signedLink = $signe . $link;
         // A faire...
+        return $signedLink;
     }
 
     /**
      * Déchiffrement de données pour l'entité.
      * Déchiffrement asymétrique uniquement, càd avec la clé privée.
      *
-     * @param string $data
+     * @param string $code
      * @return string
      */
-    public function decrypt($code)
+    public function decrypt(string $code): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         return $this->_crypto->decryptTo($code, $this->_privateKey, $this->_privateKeyPassword);
     }
@@ -678,9 +627,9 @@ class Entity extends Node
      * @param string $socialClass
      * @return string
      */
-    public function getFullName($socialClass = '')
+    public function getFullName(string $socialClass = ''): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         if ($this->_id == '0') {
             return '';
@@ -719,9 +668,9 @@ class Entity extends Node
     }
 
     // Retourne les localisations de l'entité.
-    public function getLocalisations($socialClass = '')
+    public function getLocalisations(string $socialClass = '')
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         if ($this->_id == '0') {
             return '';
@@ -729,9 +678,9 @@ class Entity extends Node
         return $this->getProperties(nebule::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
     }
 
-    public function getLocalisationsID($socialClass = '')
+    public function getLocalisationsID(string $socialClass = '')
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         if ($this->_id == '0') {
             return '';
@@ -739,9 +688,9 @@ class Entity extends Node
         return $this->getPropertiesID(nebule::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
     }
 
-    public function getLocalisation($socialClass = '')
+    public function getLocalisation(string $socialClass = ''): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         if ($this->_id == '0') {
             return '';
@@ -749,9 +698,9 @@ class Entity extends Node
         return $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
     }
 
-    public function getLocalisationID($socialClass = '')
+    public function getLocalisationID(string $socialClass = ''): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         if ($this->_id == '0') {
             return '';
@@ -765,9 +714,9 @@ class Entity extends Node
      * @param number $size
      * @return string
      */
-    public function getFaceID($size = 400)
+    public function getFaceID(int$size = 400): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         if ($this->_id == '0') {
             return '';
@@ -900,9 +849,9 @@ class Entity extends Node
 
 
     // Ecrit l'objet si non présent.
-    public function write()
+    public function write(): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         if (!$this->_io->checkObjectPresent($this->_id)) {
             $id = $this->_io->objectWrite($this->_publicKey);
@@ -931,9 +880,9 @@ class Entity extends Node
      *
      * @return boolean
      */
-    public function getMarkProtected()
+    public function getMarkProtected(): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         return false;
     }
@@ -943,9 +892,9 @@ class Entity extends Node
      *
      * @return boolean
      */
-    public function getReloadMarkProtected()
+    public function getReloadMarkProtected(): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         return false;
     }
@@ -955,9 +904,9 @@ class Entity extends Node
      *
      * @return string
      */
-    public function getProtectedID()
+    public function getProtectedID(): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         return '0';
     }
@@ -967,9 +916,9 @@ class Entity extends Node
      *
      * @return string
      */
-    public function getUnprotectedID()
+    public function getUnprotectedID(): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         return $this->_id;
     }
@@ -977,11 +926,12 @@ class Entity extends Node
     /**
      * Fonction pour les objets, désactivée pour les groupes.
      *
+     * @param bool $obfuscated
      * @return boolean
      */
-    public function setProtected($obfuscated = false)
+    public function setProtected(bool $obfuscated = false): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         return false;
     }
@@ -991,9 +941,9 @@ class Entity extends Node
      *
      * @return boolean
      */
-    public function setUnprotected()
+    public function setUnprotected(): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         return false;
     }
@@ -1001,11 +951,12 @@ class Entity extends Node
     /**
      * Fonction pour les objets, désactivée pour les groupes.
      *
+     * @param string $entity
      * @return boolean
      */
-    public function setProtectedTo($entity)
+    public function setProtectedTo(string $entity): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         return false;
     }
@@ -1015,9 +966,9 @@ class Entity extends Node
      *
      * @return array
      */
-    public function getProtectedTo()
+    public function getProtectedTo(): array
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         return array();
     }
@@ -1029,9 +980,9 @@ class Entity extends Node
      *
      * @return boolean
      */
-    public function getIsLocalAuthority()
+    public function getIsLocalAuthority(): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         return $this->_nebuleInstance->getIsLocalAuthority($this->_id);
     }
@@ -1043,9 +994,9 @@ class Entity extends Node
      * @param string $socialClass
      * @return array:Link
      */
-    public function getListIsFollowerOfGroupLinks($socialClass = 'myself')
+    public function getListIsFollowerOfGroupLinks(string $socialClass = 'myself'): array
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         // Liste tous les liens de définition des membres du groupe.
         $links = $this->readLinksFilterFull_disabled(
@@ -1077,9 +1028,9 @@ class Entity extends Node
      * @param string $socialClass
      * @return array:string
      */
-    public function getListIsFollowerOnGroupID($socialClass = 'myself')
+    public function getListIsFollowerOnGroupID(string $socialClass = 'myself'): array
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         $list = array();
 
@@ -1093,7 +1044,7 @@ class Entity extends Node
             $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
         );
 
-        // Fait un tri par pertinance sociale.
+        // Fait un tri par pertinence sociale.
         $this->_social->arraySocialFilter($links, $socialClass);
 
         // Tri les objets de type groupe.
@@ -1114,9 +1065,9 @@ class Entity extends Node
      * @param string $socialClass
      * @return array:Link
      */
-    public function getListIsFollowerOfConversationLinks($socialClass = 'myself')
+    public function getListIsFollowerOfConversationLinks(string $socialClass = 'myself'): array
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         // Liste tous les liens de définition des membres du groupe.
         $links = $this->readLinksFilterFull_disabled(
@@ -1128,7 +1079,7 @@ class Entity extends Node
             $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE)
         );
 
-        // Fait un tri par pertinance sociale.
+        // Fait un tri par pertinence sociale.
         $this->_social->arraySocialFilter($links, $socialClass);
 
         // Tri les objets de type groupe.
@@ -1149,9 +1100,9 @@ class Entity extends Node
      * @param string $socialClass
      * @return array:string
      */
-    public function getListIsFollowerOnConversationID($socialClass = 'myself')
+    public function getListIsFollowerOnConversationID(string $socialClass = 'myself'): array
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         $list = array();
 

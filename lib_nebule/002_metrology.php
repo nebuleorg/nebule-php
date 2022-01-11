@@ -362,7 +362,7 @@ class Metrology
 
         // Si le niveau de log est suffisant, écrit le message.
         if ($logLevel <= $this->_logsLevel) {
-            $message = 'LogT=' . (microtime(true) - $this->_timeStart) . 'LogL="' . $logLevel . '" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"';
+            $message = 'LogT=' . (microtime(true) - $this->_timeStart) . ' LogL="' . $logLevel . '" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"';
 
             if ($logLevel == self::LOG_LEVEL_DEBUG)
                 $message = $message . ' LogM="' . memory_get_usage() . '"';

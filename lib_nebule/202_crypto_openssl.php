@@ -891,7 +891,7 @@ OPENSSL_KEYTYPE_EC (entier)
     }
 
     // Extrait une clé privée.
-    public function getPrivateKey(string $privateKey, string $password): bool
+    public function getPrivateKey(string $privateKey, string $password)
     {
         return openssl_pkey_get_private($privateKey, $password);
     }
