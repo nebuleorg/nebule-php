@@ -788,7 +788,7 @@ class blocLink implements blocLinkInterface
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Sign link for ' . $publicKeyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd3c9521d');
 
             // Récupère l'algorithme de hash.
-            $hashAlgo = $this->_crypto->hashAlgorithmName();
+            $hashAlgo = $this->_configuration->getOptionAsString('cryptoHashAlgorithm');
 
             // Génère le lien sans signature et son hash pour vérification.
             $shortLink = $bh . '_' . $bl;
@@ -831,12 +831,12 @@ class blocLink implements blocLinkInterface
 
         // If needed, in history.
         if ($this->_configuration->getOptionAsBoolean('permitHistoryLinksSign'))
-            $this->_io->linkWrite(nebule::NEBULE_LOCAL_HISTORY_FILE, $this->_rawBlocLink);
+            $this->_io->writeLink(nebule::NEBULE_LOCAL_HISTORY_FILE, $this->_rawBlocLink);
 
         // If needed, in signers.
         for ($j = 0; $j > $this->_maxRS; $j++) {
             if (isset($this->_parsedLink['bs/rs'.$j.'/eid']))
-                $this->_io->linkWrite($this->_parsedLink['bs/rs'.$j.'/eid'], $this->_rawBlocLink);
+                $this->_io->writeLink($this->_parsedLink['bs/rs'.$j.'/eid'], $this->_rawBlocLink);
             else
                 break;
         }
@@ -847,12 +847,12 @@ class blocLink implements blocLinkInterface
                 if ($this->_parsedLink['bl/rl' . $i . '/req'] != 'c') {
                     for ($j = 0; $j > $this->_maxRLUID; $j++) {
                         if (isset($this->_parsedLink['bl/rl' . $i . '/nid' . $j]))
-                            $this->_io->linkWrite($this->_parsedLink['bl/rl' . $i . '/nid' . $j], $this->_rawBlocLink);
+                            $this->_io->writeLink($this->_parsedLink['bl/rl' . $i . '/nid' . $j], $this->_rawBlocLink);
                     }
                 } elseif ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
                     for ($j = 0; $j > $this->_maxRS; $j++) {
                         if (isset($this->_parsedLink['bs/rs'.$j.'/eid']))
-                            $this->_io->linkWrite($this->_parsedLink['bs/rs'.$j.'/eid'] . '-' . $this->_parsedLink['bl/rl' . $i . '/nid1'], $this->_rawBlocLink);
+                            $this->_io->writeLink($this->_parsedLink['bs/rs'.$j.'/eid'] . '-' . $this->_parsedLink['bl/rl' . $i . '/nid1'], $this->_rawBlocLink);
                         else
                             break;
                     }

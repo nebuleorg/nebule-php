@@ -1,11 +1,13 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Sylabe;
+use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
 use Nebule\Library\Actions;
 use Nebule\Library\Applications;
 use Nebule\Library\Displays;
 use Nebule\Library\Modules;
+use Nebule\Library\Node;
 use Nebule\Library\Traductions;
 use const Nebule\Bootstrap\BOOTSTRAP_NAME;
 use const Nebule\Bootstrap\BOOTSTRAP_SURNAME;
@@ -2533,7 +2535,7 @@ class ModuleManage extends Modules
             $signer = $this->_nebuleInstance->getCurrentEntity();
             $action = 'l';
             $source = $this->_actionAddModuleRID;
-            $target = $this->_nebuleInstance->getCryptoInstance()->hash($this->_nebuleInstance->getCryptoInstance()->hashAlgorithmName());
+            $target = $this->_nebuleInstance->getCryptoInstance()->hash($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
             $meta = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_HASH);
             $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
 

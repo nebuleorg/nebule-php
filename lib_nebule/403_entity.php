@@ -183,7 +183,7 @@ class Entity extends Node
 
                 // Création lien 1.
                 $source = $this->_id;
-                $target = $this->_crypto->hash($this->_crypto->hashAlgorithmName());
+                $target = $this->_crypto->hash($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
                 $meta = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_HASH);
                 $link = '_' . $this->_id . '_' . $date . '_l_' . $source . '_' . $target . '_' . $meta;
                 $this->_createNewEntityWriteLink($link, $source, $target, $meta);
@@ -217,20 +217,20 @@ class Entity extends Node
         $signe = $this->signLink($link);
         if ($signe === false)
             return;
-        $signedLink = $signe . '.' . $this->_crypto->hashAlgorithmName() . $link;
+        $signedLink = $signe . '.' . $this->_configuration->getOptionAsString('cryptoHashAlgorithm') . $link;
 
         // Écrit le lien pour l'objet de l'entité signataire.
         if ($this->_configuration->getOptionUntyped('NEBULE_DEFAULT_PERMIT_ADD_LINK_TO_SIGNER'))
-            $this->_io->linkWrite($this->_id, $signedLink);
+            $this->_io->writeLink($this->_id, $signedLink);
 
         // Écrit le lien pour l'objet source.
-        $this->_io->linkWrite($source, $signedLink);
+        $this->_io->writeLink($source, $signedLink);
 
         // Écrit le lien pour l'objet cible.
-        $this->_io->linkWrite($target, $signedLink);
+        $this->_io->writeLink($target, $signedLink);
 
         // Écrit le lien pour l'objet méta.
-        $this->_io->linkWrite($meta, $signedLink);
+        $this->_io->writeLink($meta, $signedLink);
     }
 
 
@@ -520,7 +520,7 @@ class Entity extends Node
         unset($newKey, $privateKey);
 
         // Ecrit l'objet de la nouvelle clé privée.
-        $this->_io->objectWrite($this->_privateKey);
+        $this->_io->writeObject($this->_privateKey);
 
         // Définition de la date.
         $date = date(DATE_ATOM);
@@ -537,7 +537,7 @@ class Entity extends Node
         }
 
         // Création lien 3.
-        $target = $this->_crypto->hash($this->_crypto->hashAlgorithmName());
+        $target = $this->_crypto->hash($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
         $meta = $this->_crypto->hash('nebule/objet/hash');
         $link = '_' . $this->_id . '_' . $date . '_l_' . $this->_privateKeyID . '_' . $target . '_' . $meta;
         $this->_createNewEntityWriteLink($link, $this->_privateKeyID, $target, $meta);
@@ -580,7 +580,7 @@ class Entity extends Node
             return null;
         }
         if ($algo == '')
-            $algo = $this->_crypto->hashAlgorithmName();
+            $algo = $this->_configuration->getOptionAsString('cryptoHashAlgorithm');
 
         $hash = $this->_crypto->hash($link, $algo);
         return $this->_crypto->sign($hash, $this->_privateKey, $this->_privateKeyPassword);
@@ -854,7 +854,7 @@ class Entity extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         if (!$this->_io->checkObjectPresent($this->_id)) {
-            $id = $this->_io->objectWrite($this->_publicKey);
+            $id = $this->_io->writeObject($this->_publicKey);
         } else {
             $id = $this->_id;
         }

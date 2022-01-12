@@ -10,7 +10,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220110';
+const BOOTSTRAP_VERSION = '020220112';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -5230,7 +5230,7 @@ function bootstrap_displayOnBreak(): void
             echo "<br />\n";
 
             // Vérifie la fonction de hash.
-            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: hash ' . $nebuleInstance->getCryptoInstance()->hashAlgorithm() . ' ';
+            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: hash ' . $nebuleInstance->getConfigurationInstance()->getOptionAsString('cryptoHashAlgorithm') . ' ';
             if ($nebuleInstance->getCryptoInstance()->checkHashFunction())
                 echo 'OK';
             else
@@ -5238,7 +5238,7 @@ function bootstrap_displayOnBreak(): void
             echo "<br />\n";
 
             // Vérifie la fonction de cryptographie symétrique.
-            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: Symmetric ' . $nebuleInstance->getCryptoInstance()->SymmetricAlgorithm() . ' ';
+            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: Symmetric ' .  $nebuleInstance->getConfigurationInstance()->getOptionAsString('cryptoSymmetricAlgorithm') . ' ';
             if ($nebuleInstance->getCryptoInstance()->checkSymmetricFunction())
                 echo 'OK';
             else
@@ -5246,7 +5246,7 @@ function bootstrap_displayOnBreak(): void
             echo "<br />\n";
 
             // Vérifie la fonction de cryptographie asymétrique.
-            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: asymmetric ' . $nebuleInstance->getCryptoInstance()->asymmetricAlgorithm() . ' ';
+            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: asymmetric ' .  $nebuleInstance->getConfigurationInstance()->getOptionAsString('cryptoAsymmetricAlgorithm') . ' ';
             if ($nebuleInstance->getCryptoInstance()->checkAsymmetricFunction())
                 echo 'OK';
             else

@@ -11,6 +11,21 @@ use Nebule\Library\nebule;
  */
 class CryptoOpenssl implements CryptoInterface
 {
+    const HASH_ALGORITHM = array(
+        'sha1-128',
+        'sha2-224',
+        'sha2-256',
+        'sha2-384',
+        'sha2-512',
+    );
+    const TRANSLATE_HASH_ALGORITHM = array(
+        'sha1-128' => 'sha1',
+        'sha2-224' => 'sha224',
+        'sha2-256' => 'sha256',
+        'sha2-384' => 'sha384',
+        'sha2-512' => 'sha512',
+    );
+
     /**
      * Instance de la bibliothèque nebule.
      *
@@ -90,25 +105,6 @@ class CryptoOpenssl implements CryptoInterface
         return $data;
     }
 
-    /**
-     * Calcul l'entropie des données.
-     *
-     * @param string $data
-     * @return float
-     */
-    public function getEntropy(string &$data): float
-    {
-        $h = 0;
-        $s = strlen($data);
-        if ($s == 0)
-            return 0;
-        foreach (count_chars($data, 1) as $v) {
-            $p = $v / $s;
-            $h -= $p * log($p) / log(2);
-        }
-        return $h;
-    }
-
 
     /*
 	 * ------------------------------------------------------------------------------------------
@@ -120,23 +116,6 @@ class CryptoOpenssl implements CryptoInterface
         $_hashLength,                  // Taille d'une empreinte.
         $_hashStrength;                // Classification de résistance de l'algorithme.
 
-    // Retourne l'algorithme de hash en cours d'utilisation.
-    public function hashAlgorithm()
-    {
-        return $this->_hashAlgorithm;
-    }
-
-    public function hashAlgorithmName()
-    {
-        return $this->_hashAlgorithmName;
-    }
-
-    // Retourne la longueur de l'empreinte de l'algorithme de hash en cours d'utilisation.
-    public function hashLength()
-    {
-        return $this->_hashLength;
-    }
-
     // Vérifie le bon fonctionnement de l'algorithme de hash en cours d'utilisation.
     public function checkHashFunction(): bool
     {
@@ -144,12 +123,8 @@ class CryptoOpenssl implements CryptoInterface
         $data = 'Bienvenue dans le projet nebule.';
         $hash = $this->hash($data);
         switch ($this->_hashAlgorithmName) {
-            case 'dss1':
-                if ($hash == 'd689bc73bbf35e6547e6de4b0ea79a5fd3b83ffa') {
-                    $check = true;
-                }
-                break;
             case 'sha1':
+            case 'dss1':
                 if ($hash == 'd689bc73bbf35e6547e6de4b0ea79a5fd3b83ffa') {
                     $check = true;
                 }
@@ -202,12 +177,10 @@ class CryptoOpenssl implements CryptoInterface
     {
         $algo = $this->_translateHashAlgorithmName($algo);
         // Vérifie si la liste des algorithmes n'est pas vide.
-        if (sizeof($this->_hashAlgorithmList) == 0) {
+        if (sizeof($this->_hashAlgorithmList) == 0)
             return false;
-        }
-        if (!in_array($algo, $this->_hashAlgorithmList)) {
+        if (!in_array($algo, $this->_hashAlgorithmList))
             return false;
-        }
         $this->_hashAlgorithmName = $algo;
         $this->_parseHashAlgorithm();
         return true;

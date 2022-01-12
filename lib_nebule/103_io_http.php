@@ -72,6 +72,7 @@ class ioHTTP extends io implements ioInterface
 
     public function __sleep()
     {
+        /** @noinspection PhpFieldImmediatelyRewrittenInspection */
         $this->_filesTrancodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
         $this->_filesTrancodeKey = '';
     }
@@ -118,6 +119,7 @@ class ioHTTP extends io implements ioInterface
      */
     public function unsetFilesTranscodeKey(): void
     {
+        /** @noinspection PhpFieldImmediatelyRewrittenInspection */
         $this->_filesTrancodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
         $this->_filesTrancodeKey = '';
     }
@@ -255,8 +257,7 @@ class ioHTTP extends io implements ioInterface
     {
         if ($localisation == '')
             $localisation = $this->_defaultLocalisation;
-        if (!is_string($object)
-            || $object == '0'
+        if ($object == '0'
             || $object == ''
             || !ctype_xdigit($object)
         )
@@ -303,8 +304,7 @@ class ioHTTP extends io implements ioInterface
     {
         if ($localisation == '')
             $localisation = $this->_defaultLocalisation;
-        if (!is_string($object)
-            || $object == '0'
+        if ($object == '0'
             || $object == ''
             || !ctype_xdigit($object)
         )
@@ -319,28 +319,18 @@ class ioHTTP extends io implements ioInterface
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::linkWrite()
+     * @see ioInterface::writeLink()
      */
-    public function linkWrite(string $object, string &$link, string $localisation = ''): bool
+    public function writeLink(string $object, string &$link, string $localisation = ''): bool
     {
         return false;
     }
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::objectWrite()
+     * @see ioInterface::writeObject()
      */
-    public function objectWrite(string &$data, string $localisation = ''): bool
-    {
-        // Désactivé sur du HTTP
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see ioInterface::objectDelete()
-     */
-    public function objectDelete(string $object, $localisation = ''): bool
+    public function writeObject(string &$data, string $localisation = ''): bool
     {
         // Désactivé sur du HTTP
         return false;
@@ -348,9 +338,9 @@ class ioHTTP extends io implements ioInterface
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::linkDelete()
+     * @see ioInterface::deleteObject()
      */
-    public function linkDelete(string $object, string &$link, $localisation = ''): bool
+    public function deleteObject(string $object, $localisation = ''): bool
     {
         // Désactivé sur du HTTP
         return false;
@@ -358,9 +348,19 @@ class ioHTTP extends io implements ioInterface
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::linksDelete()
+     * @see ioInterface::deleteLink()
      */
-    public function linksDelete(string $object, $localisation = ''): bool
+    public function deleteLink(string $object, string &$link, $localisation = ''): bool
+    {
+        // Désactivé sur du HTTP
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see ioInterface::flushLinks()
+     */
+    public function flushLinks(string $object, $localisation = ''): bool
     {
         // Désactivé sur du HTTP
         return false;
@@ -372,6 +372,7 @@ class ioHTTP extends io implements ioInterface
      */
     public function __destruct()
     {
+        /** @noinspection PhpFieldImmediatelyRewrittenInspection */
         $this->_filesTrancodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
         $this->_filesTrancodeKey = '';
     }
@@ -387,9 +388,8 @@ class ioHTTP extends io implements ioInterface
         $url = parse_url($localisation);
 
         $handle = fsockopen($url['host'], 80, $errno, $errstr, 1);
-        if ($handle === false) {
+        if ($handle === false)
             return false;
-        }
 
         $out = "HEAD " . $url['path'] . " HTTP/1.1\r\n"
             . "Host: " . $url['host'] . "\r\n"

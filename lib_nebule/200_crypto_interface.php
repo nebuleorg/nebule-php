@@ -12,7 +12,7 @@ use Nebule\Library\nebule;
 interface CryptoInterface
 {
     /**
-     * Get random string in hexadecimal form.
+     * Get $size octets of random string in hexadecimal form.
      * Quality of random sequence can be selected with strong or pseudo random.
      * But, to save precious entropy, you have to use pseudo random in all case where you do not absolutely need strong random.
      *
@@ -23,12 +23,6 @@ interface CryptoInterface
     public function getRandom(int $size = 32, int $quality = Crypto::RANDOM_PSEUDO): string;
 
     // Fonction de prise d'empreinte.
-    public function hashAlgorithm();
-
-    public function hashAlgorithmName();
-
-    public function hashLength();
-
     public function checkHashFunction();
 
     public function setHashAlgorithm(string $algo);
@@ -38,14 +32,6 @@ interface CryptoInterface
     public function hash(string $data, string $algo = '');
 
     // Fonction de chiffrement symétrique.
-    public function symmetricAlgorithm();
-
-    public function symmetricAlgorithmName();
-
-    public function symmetricAlgorithmMode();
-
-    public function symmetricKeyLength();
-
     public function checkSymmetricFunction();
 
     public function setSymmetricAlgorithm(string $algo);
@@ -57,12 +43,6 @@ interface CryptoInterface
     public function decrypt(string $data, string $hexKey, string $hexIV = '');
 
     // Fonction de chiffrement asymétrique.
-    public function asymmetricAlgorithm();
-
-    public function asymmetricAlgorithmName();
-
-    public function asymmetricKeyLength();
-
     public function checkAsymmetricFunction();
 
     public function setAsymmetricAlgorithm(string $algo);

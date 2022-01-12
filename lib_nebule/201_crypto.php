@@ -79,21 +79,6 @@ class Crypto implements CryptoInterface
         return $this->_softwareInstance->getEntropy($data);
     }
 
-    public function hashAlgorithm()
-    {
-        // TODO: Implement hashAlgorithm() method.
-    }
-
-    public function hashAlgorithmName()
-    {
-        // TODO: Implement hashAlgorithmName() method.
-    }
-
-    public function hashLength()
-    {
-        // TODO: Implement hashLength() method.
-    }
-
     public function checkHashFunction()
     {
         // TODO: Implement checkHashFunction() method.
@@ -191,11 +176,13 @@ class Crypto implements CryptoInterface
 
     public function sign(string $hash, string $eid, string $privatePassword): ?string
     {
+        return null;
         // TODO: Implement sign() method.
     }
 
     public function verify(string $hash, string $sign, string $eid): bool
     {
+        return false;
         // TODO: Implement verify() method.
     }
 

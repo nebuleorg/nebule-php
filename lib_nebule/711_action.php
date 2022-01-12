@@ -3744,7 +3744,7 @@ abstract class Actions
             // Lecture de l'objet.
             $data = $this->_io->objectRead($this->_actionSynchronizeNewEntityID, Entity::ENTITY_MAX_SIZE, $this->_actionSynchronizeNewEntityURL);
             // Calcul de l'empreinte.
-            $hash = hash($this->_nebuleInstance->getCryptoInstance()->hashAlgorithmName(), $data);
+            $hash = $this->_nebuleInstance->getCryptoInstance()->hash($data);
             if ($hash != $this->_actionSynchronizeNewEntityID) {
                 $this->_metrology->addLog('Action synchronize new entity - Hash error', Metrology::LOG_LEVEL_DEBUG); // Log
                 unset($data);
@@ -3756,7 +3756,7 @@ abstract class Actions
                 return false;
             }
             // Ecriture de l'objet.
-            $this->_io->objectWrite($data);
+            $this->_io->writeObject($data);
 
             $this->_actionSynchronizeNewEntityInstance = $this->_nebuleInstance->newEntity($this->_actionSynchronizeNewEntityID);
 

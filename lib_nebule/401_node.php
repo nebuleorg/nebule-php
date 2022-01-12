@@ -395,7 +395,7 @@ class Node implements nodeInterface
             if ($obfuscated)
                 $date2 = '0';
             $action = 'l';
-            $target = $this->_crypto->hash($this->_crypto->hashAlgorithmName());
+            $target = $this->_crypto->hash($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
             $meta = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_HASH);
             $link = '0_' . $signer . '_' . $date2 . '_' . $action . '_' . $this->_id . '_' . $target . '_' . $meta;
             $newLink = new Link($this->_nebuleInstance, $link);
@@ -2184,7 +2184,7 @@ class Node implements nodeInterface
             // Crée le lien de type d'empreinte de la clé.
             $action = 'l';
             $source = $keyID;
-            $target = $this->_crypto->hash($this->_crypto->hashAlgorithmName());
+            $target = $this->_crypto->hash($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
             $meta = $this->_crypto->hash('nebule/objet/hash');
             $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
             $newLink = new Link($this->_nebuleInstance, $link);
@@ -2282,7 +2282,7 @@ class Node implements nodeInterface
 
             if ($deleteObject) {
                 // Supprime l'objet.
-                $r = $this->_io->objectDelete($this->_id);
+                $r = $this->_io->deleteObject($this->_id);
 
                 // Métrologie.
                 $this->_metrology->addAction('delobj', $this->_id, $r);
@@ -2610,7 +2610,7 @@ class Node implements nodeInterface
                     }
                 }
                 if ($delete) {
-                    $this->_io->objectDelete($idProtectedKey);
+                    $this->_io->deleteObject($idProtectedKey);
                 }
                 unset($object, $signerLinks, $itemSigner, $delete);
             }
@@ -2976,7 +2976,7 @@ class Node implements nodeInterface
             $this->_data = null;
             $this->_metrology->addLog('Delete object 0', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
             $nid = '0';
-            $this->_io->objectDelete($nid);
+            $this->_io->deleteObject($nid);
             return false;
         }
 
@@ -2989,7 +2989,7 @@ class Node implements nodeInterface
         $hashAlgo = $this->getHashAlgo();
         if (!$this->_crypto->checkHashAlgorithm($hashAlgo)) {
             if ($this->_configuration->getOptionAsBoolean('permitDeleteObjectOnUnknownHash'))
-                $hashAlgo = $this->_crypto->hashAlgorithmName();
+                $hashAlgo = $this->_configuration->getOptionAsString('cryptoHashAlgorithm');
             else
                 return false;
         }
@@ -3030,7 +3030,7 @@ class Node implements nodeInterface
         // Sinon l'objet est présent mais invalide, le supprime.
         $this->_data = null;
         $this->_metrology->addLog('Delete unconsistency object ' . $this->_id . ' ' . $hashAlgo . ':' . $hash, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
-        $this->_io->objectDelete($this->_id);
+        $this->_io->deleteObject($this->_id);
         return false;
     }
 
@@ -3093,7 +3093,7 @@ class Node implements nodeInterface
             $this->_data = null;
             $this->_metrology->addLog('Delete object 0', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
             $nid = '0';
-            $this->_io->objectDelete($nid);
+            $this->_io->deleteObject($nid);
             return null;
         }
 
@@ -3109,7 +3109,7 @@ class Node implements nodeInterface
         if (!$this->_crypto->checkHashAlgorithm($hashAlgo)) {
             if ($this->_configuration->getOptionAsBoolean('permitDeleteObjectOnUnknownHash')) {
                 // Si pas trouvé d'algorithme valide, utilise celui par défaut.
-                $hashAlgo = $this->_crypto->hashAlgorithmName();
+                $hashAlgo = $this->_configuration->getOptionAsString('cryptoHashAlgorithm');
             } else {
                 return null;
             }
@@ -3160,7 +3160,7 @@ class Node implements nodeInterface
         // Sinon l'objet est présent mais invalide, le supprime.
         $this->_data = null;
         $this->_metrology->addLog('Delete unconsistency object ' . $this->_id . ' ' . $hashAlgo . ':' . $hash, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
-        $this->_io->objectDelete($this->_id);
+        $this->_io->deleteObject($this->_id);
         return null;
     }
 
@@ -4401,7 +4401,7 @@ class Node implements nodeInterface
             // Lecture de l'objet.
             $data = $this->_io->objectRead($this->_id, 0, $localisation);
             // Ecriture de l'objet.
-            $this->_io->objectWrite($data);
+            $this->_io->writeObject($data);
         }
 
         unset($localisations, $localisation);
@@ -4518,7 +4518,7 @@ class Node implements nodeInterface
 
         if ($deleteObject) {
             // Supprime l'objet.
-            $r1 = $this->_io->objectDelete($id); // FIXME declare vars r1 r2
+            $r1 = $this->_io->deleteObject($id); // FIXME declare vars r1 r2
             $r2 = true;
 
             // Métrologie.
@@ -4552,7 +4552,7 @@ class Node implements nodeInterface
 
             if ($deleteObject) {
                 // Supprime l'objet.
-                $r2 = $this->_io->objectDelete($id);
+                $r2 = $this->_io->deleteObject($id);
 
                 // Métrologie.
                 $this->_metrology->addAction('delobj', $id, $r2);
@@ -4597,7 +4597,7 @@ class Node implements nodeInterface
         unset($links, $entity, $link);
 
         // Supprime l'objet.
-        $r = $this->_io->objectDelete($this->_id);
+        $r = $this->_io->deleteObject($this->_id);
 
         // Métrologie.
         $this->_metrology->addAction('delobj', $this->_id, $r);
@@ -4627,7 +4627,7 @@ class Node implements nodeInterface
         $newLink->signWrite();
 
         // Supprime l'objet.
-        $r = $this->_io->objectDelete($this->_id);
+        $r = $this->_io->deleteObject($this->_id);
 
         // Métrologie.
         $this->_metrology->addAction('delobj', $this->_id, $r);
@@ -4644,10 +4644,10 @@ class Node implements nodeInterface
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         // Supprime l'objet.
-        $this->_io->objectDelete($this->_id);
+        $this->_io->deleteObject($this->_id);
 
         // Supprime les liens de l'objet.
-        $this->_io->linksDelete($this->_id);
+        $this->_io->flushLinks($this->_id);
     }
 
     /**
@@ -4700,7 +4700,7 @@ class Node implements nodeInterface
             if ($this->_configuration->getOptionAsBoolean('permitWriteObject')
                 && $this->_configuration->getOptionAsBoolean('permitCreateObject')
             ) {
-                $id = $this->_io->objectWrite($this->_data);
+                $id = $this->_io->writeObject($this->_data);
             } else {
                 $id = false;
             }

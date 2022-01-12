@@ -203,7 +203,7 @@ interface ioInterface
      * @param string $localisation
      * @return number|boolean
      */
-    public function linkWrite(string $object, string &$link, string $localisation = '');
+    public function writeLink(string $object, string &$link, string $localisation = '');
 
     /**
      * Ecrit des données dans un objet. Retourne l'empreinte de l'objet écrit ou false si erreur.
@@ -212,7 +212,7 @@ interface ioInterface
      * @param string $localisation
      * @return string|boolean
      */
-    public function objectWrite(string &$data, string $localisation = '');
+    public function writeObject(string &$data, string $localisation = '');
 
 
     // Fonctions de suppression.
@@ -226,7 +226,7 @@ interface ioInterface
      * @return boolean
      */
 
-    public function linkDelete(string $object, string &$link, string $localisation = ''): bool;
+    public function deleteLink(string $object, string &$link, string $localisation = ''): bool;
 
     /**
      * Supprime tous les liens d'un objet.
@@ -236,7 +236,7 @@ interface ioInterface
      * @return boolean
      */
 
-    public function linksDelete(string $object, string $localisation = ''): bool;
+    public function flushLinks(string $object, string $localisation = ''): bool;
 
     /**
      * Supprime le contenu d'un objet. Retourne true si la suppression a réussi ou false si erreur.
@@ -246,5 +246,5 @@ interface ioInterface
      * @param string $localisation
      * @return boolean
      */
-    public function objectDelete(string $object, string $localisation = ''): bool;
+    public function deleteObject(string $object, string $localisation = ''): bool;
 }

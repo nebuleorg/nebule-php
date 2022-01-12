@@ -222,7 +222,7 @@ class Conversation extends Group
                 }
                 $action = 'l';
                 $source = $this->_id;
-                $target = $this->_crypto->hash($this->_crypto->hashAlgorithmName());
+                $target = $this->_crypto->hash($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
                 $meta = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_HASH);
                 $link = '0_' . $signer . '_' . $date2 . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
                 $newLink = $this->_nebuleInstance->newLink($link);

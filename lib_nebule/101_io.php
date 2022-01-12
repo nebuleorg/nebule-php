@@ -306,7 +306,7 @@ class io implements ioInterface
     public function obfuscatedLinksRead(string $entity, string $signer = '0', string $localisation = ''): array
     {
         $instance = $this->_findType($localisation);
-        return $instance->obfuscatedLinksRead($object);
+        return $instance->obfuscatedLinksRead($entity);
     }
 
     /**
@@ -321,51 +321,51 @@ class io implements ioInterface
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::linkWrite()
+     * @see ioInterface::writeLink()
      */
-    public function linkWrite(string $object, string &$link, string $localisation = ''): bool
+    public function writeLink(string $object, string &$link, string $localisation = ''): bool
     {
         $instance = $this->_findType($localisation);
-        return $instance->linkWrite($object, $link);
+        return $instance->writeLink($object, $link);
     }
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::objectWrite()
+     * @see ioInterface::writeObject()
      */
-    public function objectWrite(string &$data, string $localisation = '')
+    public function writeObject(string &$data, string $localisation = '')
     {
         $instance = $this->_findType($localisation);
-        return $instance->objectWrite($data);
+        return $instance->writeObject($data);
     }
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::linkDelete()
+     * @see ioInterface::deleteLink()
      */
-    public function linkDelete(string $object, string &$link, $localisation = ''): bool
+    public function deleteLink(string $object, string &$link, string $localisation = ''): bool
     {
         $instance = $this->_findType($localisation);
-        return $instance->linkDelete($object, $link);
+        return $instance->deleteLink($object, $link);
     }
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::linksDelete()
+     * @see ioInterface::flushLinks()
      */
-    public function linksDelete(string $object, $localisation = ''): bool
+    public function flushLinks(string $object, string $localisation = ''): bool
     {
         $instance = $this->_findType($localisation);
-        return $instance->linksDelete($object);
+        return $instance->flushLinks($object);
     }
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::objectDelete()
+     * @see ioInterface::deleteObject()
      */
-    public function objectDelete(string $object, $localisation = ''): bool
+    public function deleteObject(string $object, string $localisation = ''): bool
     {
         $instance = $this->_findType($localisation);
-        return $instance->objectDelete($object);
+        return $instance->deleteObject($object);
     }
 }
