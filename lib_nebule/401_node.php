@@ -2105,7 +2105,7 @@ class Node implements nodeInterface
             // CF : http://php.net/manual/fr/function.openssl-public-encrypt.php
             // @todo à faire pour le cas général.
             $keySize = self::CRYPTO_SESSION_KEY_SIZE; // En octets.
-            $key = $this->_crypto->getStrongRandom($keySize);
+            $key = $this->_crypto->getRandom($keySize, Crypto::RANDOM_STRONG);
             if (strlen($key) != $keySize) {
                 return false;
             }

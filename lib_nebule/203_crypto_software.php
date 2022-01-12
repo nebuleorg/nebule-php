@@ -118,6 +118,25 @@ class CryptoSoftware implements CryptoInterface
         return $result;
     }
 
+    /**
+     * Get a value of the data entropy.
+     *
+     * @param string $data
+     * @return float
+     */
+    public function getEntropy(string &$data): float
+    {
+        $h = 0;
+        $s = strlen($data);
+        if ($s == 0)
+            return 0;
+        foreach (count_chars($data, 1) as $v) {
+            $p = $v / $s;
+            $h -= $p * log($p) / log(2);
+        }
+        return $h;
+    }
+
     public function hashAlgorithm()
     {
         // TODO: Implement hashAlgorithm() method.

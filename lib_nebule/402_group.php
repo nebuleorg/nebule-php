@@ -194,7 +194,7 @@ class Group extends Node
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // calcul l'ID.
-            $this->_id = $this->_nebuleInstance->getCryptoInstance()->hash($this->_nebuleInstance->getCryptoInstance()->getPseudoRandom(128)) . self::DEFAULT_SUFFIX_NEW_GROUP;
+            $this->_id = $this->_nebuleInstance->getCryptoInstance()->hash($this->_nebuleInstance->getCryptoInstance()->getRandom(128, Crypto::RANDOM_PSEUDO)) . self::DEFAULT_SUFFIX_NEW_GROUP;
 
             // Log
             $this->_metrology->addLog('Create group ' . $this->_id, Metrology::LOG_LEVEL_DEBUG);

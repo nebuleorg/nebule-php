@@ -195,7 +195,7 @@ class Conversation extends Group
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // Génère un contenu aléatoire.
-            $data = $this->_crypto->getPseudoRandom(32);
+            $data = $this->_crypto->getRandom(32, Crypto::RANDOM_PSEUDO);
 
             // Si le contenu est valide.
             if ($data != ''

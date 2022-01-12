@@ -9342,7 +9342,7 @@ class Moduleqantion extends Modules
                             if ($property['key'] == 'SID'
                                 && !$update
                             ) {
-                                $preparedValue = hash('sha256', $this->_nebuleInstance->getCryptoInstance()->getPseudoRandom(32) . 'liberté égalité fraternité');
+                                $preparedValue = hash('sha256', $this->_nebuleInstance->getCryptoInstance()->getRandom(128, Crypto::RANDOM_PSEUDO));
                             }
 
                             // Récupère l'état de précalcule.

@@ -5166,7 +5166,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($param['enableDisplayObjectActions']
             && $param['enableDisplayJS']
         ) {
-            $ObjectActionsID = bin2hex($this->_nebuleInstance->getCryptoInstance()->getPseudoRandom(8));
+            $ObjectActionsID = bin2hex($this->_nebuleInstance->getCryptoInstance()->getRandom(8, Crypto::RANDOM_PSEUDO));
         }
         $contentDisplayColor = '';
         if ($param['enableDisplayColor']) {

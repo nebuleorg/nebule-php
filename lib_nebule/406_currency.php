@@ -710,7 +710,7 @@ class Currency extends Node
             $this->_metrology->addLog('Generate currency asked SID:' . $sid, Metrology::LOG_LEVEL_NORMAL); // Log
         } else {
             // Génération d'un numéro de série de monnaie unique aléatoire.
-            $sid = $this->_getPseudoRandom();
+            $sid = $this->_nebuleInstance->getCryptoInstance()->getRandom(128, Crypto::RANDOM_PSEUDO);
             $param['CurrencySerialID'] = $sid;
             $this->_metrology->addLog('Generate currency rand SID:' . $sid, Metrology::LOG_LEVEL_NORMAL); // Log
         }
@@ -1541,38 +1541,6 @@ class Currency extends Node
         }
         $this->_metrology->addLog('error set FID for ' . $this->_id, Metrology::LOG_LEVEL_ERROR); // Log
         return false;
-    }
-
-    /**
-     * Crée un texte pseudo-aléatoire.
-     * Retourne une chaine de caractères représentant de l'héxadécimale, c'est à dire une suite de chiffres de 0 à f.
-     *
-     * La fonction gère une graine afin d'améliorer la génératon successivement de l'aléa.
-     *
-     * @return string
-     */
-    protected function _getPseudoRandom()
-    {
-        // Définit l'algorithme de divergence.
-        $algo = 'sha256';
-
-        // Résultat à remplir.
-        $result = '';
-
-        // Si besoin, génère le compteur interne.
-        if ($this->_seed == '') {
-            $this->_seed = $this->_nebuleInstance->getCryptoInstance()->getPseudoRandom(32);
-            $this->_seed = hash($algo, $this->_seed);
-        }
-
-        // Fait évoluer le compteur interne.
-        $this->_seed = hash($algo, $this->_seed);
-
-        // Fait diverger le compteur interne pour la sortie.
-        // La concaténation avec un texte empêche de remonter à la valeur du compteur interne.
-        $result = hash($algo, $this->_seed . 'liberté égalité fraternité');
-
-        return $result;
     }
 
     /**

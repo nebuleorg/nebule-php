@@ -167,7 +167,7 @@ class Entity extends Node
                 $this->_publicKey = $this->_crypto->getPkeyPublic($newPkey);
                 $this->_id = $this->_crypto->hash($this->_publicKey);
                 $this->_metrology->addLog('Generated entity ' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
-                $this->_privateKeyPassword = $this->_crypto->getStrongRandom(32);
+                $this->_privateKeyPassword = $this->_crypto->getRandom(32, Crypto::RANDOM_STRONG);
                 $this->_privateKeyPasswordSalt = '';
                 $this->_privateKey = $this->_crypto->getPkeyPrivate($newPkey, $this->_privateKeyPassword);
                 $this->_privateKeyID = $this->_crypto->hash($this->_privateKey);
@@ -447,7 +447,7 @@ class Entity extends Node
             $check = $this->_crypto->getPrivateKey($this->_privateKey, $passwd);
         if ($check === false)
             return false;
-        $this->_privateKeyPasswordSalt = $this->_crypto->getStrongRandom(self::ENTITY_PASSWORD_SALT_SIZE);
+        $this->_privateKeyPasswordSalt = $this->_crypto->getRandom(self::ENTITY_PASSWORD_SALT_SIZE, Crypto::RANDOM_STRONG);
         // TODO le chiffrement du mot de passe avec le sel et l'ID de session php...
         $this->_privateKeyPassword = $passwd;
         $this->_issetPrivateKeyPassword = true;
@@ -509,7 +509,7 @@ class Entity extends Node
             return false;
         }
 
-        $this->_privateKeyPasswordSalt = $this->_crypto->getStrongRandom(self::ENTITY_PASSWORD_SALT_SIZE);
+        $this->_privateKeyPasswordSalt = $this->_crypto->getRandom(self::ENTITY_PASSWORD_SALT_SIZE, Crypto::RANDOM_STRONG);
         // A faire... le chiffrement du mot de passe avec le sel et l'ID de session php...
         $this->_privateKeyPassword = $newPasswd;
         $this->_privateKey = $newKey;

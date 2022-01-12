@@ -4,6 +4,7 @@ namespace Nebule\Bootstrap;
 
 //use nebule;
 // ------------------------------------------------------------------------------------------
+use Nebule\Library\Crypto;
 use Nebule\Library\nebule;
 
 const BOOTSTRAP_NAME = 'bootstrap';
@@ -5253,7 +5254,7 @@ function bootstrap_displayOnBreak(): void
             echo "<br />\n";
 
             // Vérifie la fonction de génération pseudo-aléatoire.
-            $random = $nebuleInstance->getCryptoInstance()->getPseudoRandom(2048);
+            $random = $nebuleInstance->getCryptoInstance()->getRandom(2048, Crypto::RANDOM_PSEUDO);
             $entropy = $nebuleInstance->getCryptoInstance()->getEntropy($random);
             echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: pseudo-random ' . substr(bin2hex($random), 0, 32) . '(' . $entropy . ') ';
             if ($entropy > 7.85)

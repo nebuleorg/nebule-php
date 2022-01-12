@@ -255,7 +255,7 @@ class TokenPool extends Currency
             $this->_metrology->addLog('Generate token pool asked SID:' . $sid, Metrology::LOG_LEVEL_NORMAL); // Log
         } else {
             // Génération d'un identifiant de sac de jetons unique aléatoire.
-            $sid = $this->_getPseudoRandom();
+            $sid = $this->_nebuleInstance->getCryptoInstance()->getRandom(128, Crypto::RANDOM_PSEUDO);
             $param['PoolSerialID'] = $sid;
             $this->_metrology->addLog('Generate token pool rand SID:' . $sid, Metrology::LOG_LEVEL_NORMAL); // Log
         }

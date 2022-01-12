@@ -3401,7 +3401,7 @@ class nebule
     public function getActionTicketValue(): string
     {
         session_start();
-        $data = $this->_cryptoInstance->getPseudoRandom(2048);
+        $data = $this->_cryptoInstance->getRandom(2048, Crypto::RANDOM_PSEUDO);
         $ticket = $this->_cryptoInstance->hash($data);
         unset($data);
         $_SESSION['Ticket'][$ticket] = true;
