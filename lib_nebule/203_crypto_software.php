@@ -9,11 +9,8 @@ use Nebule\Library\nebule;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Crypto implements CryptoInterface
+class CryptoSoftware implements CryptoInterface
 {
-    const RANDOM_PSEUDO = 1;
-    const RANDOM_STRONG = 2;
-
     /**
      * Instance de la bibliothèque nebule.
      *
@@ -42,17 +39,12 @@ class Crypto implements CryptoInterface
      */
     protected $_cache;
 
-    private $_opensslInstance;
-    private $_softwareInstance;
-
     public function __construct(nebule $nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_cache = $nebuleInstance->getCacheInstance();
-        $this->_opensslInstance = new CryptoOpenssl($nebuleInstance);
-        $this->_softwareInstance = new CryptoSoftware($nebuleInstance);
     }
 
     /**
@@ -62,29 +54,68 @@ class Crypto implements CryptoInterface
      */
     public function getRandom(int $size = 32, int $quality = Crypto::RANDOM_PSEUDO): string
     {
-        if ($quality == Crypto::RANDOM_STRONG)
-            return $this->_opensslInstance->getRandom($size);
+        if ($quality == Crypto::RANDOM_PSEUDO)
+            return $this->_getPseudoRandom($size);
         else
-            return $this->_softwareInstance->getRandom($size);
+            return '';
     }
 
     /**
-     * Calcul l'entropie des données.
+     * Génère de l'aléa avec une source pas forcément fiable.
+     * La taille est en octets.
      *
-     * @param string $data
-     * @return float
+     * La graine de génération pseudo-aléatoire est un mélange de la date,
+     *   de l'heure avec une précision de la micro-seconde,
+     *   du nom et de la version de la bibliothèque.
+     *
+     * Ne doit pas être utilisé pour générer des mots de passes !
+     *
+     * @param int $size
+     * @return string
      */
-    public function getEntropy(string &$data): float
+    private function _getPseudoRandom(int $size = 32): string
     {
-        $h = 0;
-        $s = strlen($data);
-        if ($s == 0)
-            return 0;
-        foreach (count_chars($data, 1) as $v) {
-            $p = $v / $s;
-            $h -= $p * log($p) / log(2);
+        global $nebuleSurname, $nebuleLibVersion;
+
+        if ($size == 0
+            || !is_int($size)
+        )
+            return '';
+
+        // Résultat à remplir.
+        $result = '';
+
+        // Définit l'algorithme de divergence.
+        $algo = 'sha256';
+
+        // Génère une graine avec la date pour le compteur interne.
+        $intcount = date(DATE_ATOM) . microtime(false) . $nebuleSurname . $nebuleLibVersion . $this->_nebuleInstance->getInstanceEntity();
+
+        // Boucle de remplissage.
+        while (strlen($result) < $size) {
+            $diffsize = $size - strlen($result);
+
+            // Fait évoluer le compteur interne.
+            $intcount = hash($algo, $intcount);
+
+            // Fait diverger le compteur interne pour la sortie.
+            // La concaténation avec un texte empêche de remonter à la valeur du compteur interne.
+            $outvalue = pack("H*", hash($algo, $intcount . 'liberté égalité fraternité'));
+
+            // Tronc au besoin la taille de la sortie.
+            if (strlen($outvalue) > $diffsize) {
+                $outvalue = substr($outvalue, 0, $diffsize);
+            }
+
+            // Ajoute la sortie au résultat final.
+            $result .= $outvalue;
         }
-        return $h;
+
+        // Nettoyage.
+        unset($intcount, $outvalue, $diffsize);
+
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Calculated rand : ' . strlen($result) . '/' . $size, Metrology::LOG_LEVEL_DEBUG);
+        return $result;
     }
 
     public function hashAlgorithm()

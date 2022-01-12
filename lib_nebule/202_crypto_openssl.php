@@ -3,17 +3,12 @@ declare(strict_types=1);
 namespace Nebule\Library;
 use Nebule\Library\nebule;
 
-/*
- * ------------------------------------------------------------------------------------------
- * La classe CryptoOpenssl.
- * ------------------------------------------------------------------------------------------
- *
+/**
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-
 class CryptoOpenssl implements CryptoInterface
 {
     /**
@@ -61,61 +56,16 @@ class CryptoOpenssl implements CryptoInterface
 	 */
 
     /**
-     * Génère de l'aléa avec une source pas forcément fiable.
-     * La taille est en octets.
-     *
-     * La graine de génération pseudo-aléatoire est un mélange de la date,
-     *   de l'heure avec une précision de la micro-seconde,
-     *   du nom et de la version de la bibliothèque.
-     *
-     * Ne doit pas être utilisé pour générer des mots de passes !
-     *
-     * @param int $size
+     * {@inheritDoc}
+     * @see CryptoInterface::getRandom()
      * @return string
      */
-    public function getPseudoRandom(int $size = 32): string
+    public function getRandom(int $size = 32, int $quality = Crypto::RANDOM_STRONG): string
     {
-        global $nebuleSurname, $nebuleLibVersion;
-
-        if ($size == 0
-            || !is_int($size)
-        )
+        if ($quality == Crypto::RANDOM_STRONG)
+            return $this->_getStrongRandom($size);
+        else
             return '';
-
-        // Résultat à remplir.
-        $result = '';
-
-        // Définit l'algorithme de divergence.
-        $algo = 'sha256';
-
-        // Génère une graine avec la date pour le compteur interne.
-        $intcount = date(DATE_ATOM) . microtime(false) . $nebuleSurname . $nebuleLibVersion . $this->_nebuleInstance->getInstanceEntity();
-
-        // Boucle de remplissage.
-        while (strlen($result) < $size) {
-            $diffsize = $size - strlen($result);
-
-            // Fait évoluer le compteur interne.
-            $intcount = hash($algo, $intcount);
-
-            // Fait diverger le compteur interne pour la sortie.
-            // La concaténation avec un texte empêche de remonter à la valeur du compteur interne.
-            $outvalue = pack("H*", hash($algo, $intcount . 'liberté égalité fraternité'));
-
-            // Tronc au besoin la taille de la sortie.
-            if (strlen($outvalue) > $diffsize) {
-                $outvalue = substr($outvalue, 0, $diffsize);
-            }
-
-            // Ajoute la sortie au résultat final.
-            $result .= $outvalue;
-        }
-
-        // Nettoyage.
-        unset($intcount, $outvalue, $diffsize);
-
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Calculated rand : ' . strlen($result) . '/' . $size, Metrology::LOG_LEVEL_DEBUG);
-        return $result;
     }
 
     /**
@@ -127,7 +77,7 @@ class CryptoOpenssl implements CryptoInterface
      * @param int $size
      * @return string
      */
-    public function getStrongRandom(int $size = 32): string
+    private function _getStrongRandom(int $size = 32): string
     {
         if ($size == 0
             || !is_int($size)

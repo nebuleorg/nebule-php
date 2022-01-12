@@ -1284,10 +1284,10 @@ class Group extends Node
      * Ajoute une entité comme à l'écoute du groupe.
      *
      * @param string|Node $entity
-     * @param boolean $obfuscated
+     * @param boolean     $obfuscated
      * @return boolean
      */
-    public function setFollower($entity, $obfuscated = false)
+    public function setFollower(string $entity, bool $obfuscated = false): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -1322,7 +1322,7 @@ class Group extends Node
         $target = $this->_id;
         $meta = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI);
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+        $newLink = new blocLink($this->_nebuleInstance, $link);
         $newLink->sign();
 
         // Si besoin, obfuscation du lien.
@@ -1336,15 +1336,14 @@ class Group extends Node
 
     /**
      * Retire un entité à l'écoute du groupe.
+     *
      * @todo détecter le lien dissimulé d'origine, et dissimuler en conséquence.
-     *
      * @todo retirer la dissimulation déjà faite dans le code.
-     *
      * @param string|Node $entity
-     * @param boolean $obfuscated
+     * @param boolean     $obfuscated
      * @return boolean
      */
-    public function unsetFollower($entity = '', $obfuscated = false)
+    public function unsetFollower(string $entity = '', bool $obfuscated = false): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 

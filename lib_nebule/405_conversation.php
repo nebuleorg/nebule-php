@@ -452,10 +452,10 @@ class Conversation extends Group
      * Ajoute une entité comme à l'écoute du groupe.
      *
      * @param string|Node $entity
-     * @param boolean $obfuscated
+     * @param boolean     $obfuscated
      * @return boolean
      */
-    public function setFollower($entity, $obfuscated = false)
+    public function setFollower($entity, bool $obfuscated = false)
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -504,15 +504,14 @@ class Conversation extends Group
 
     /**
      * Retire un entité à l'écoute du groupe.
+     *
      * @todo détecter le lien dissimulé d'origine, et dissimuler en conséquence.
-     *
      * @todo retirer la dissimulation déjà faite dans le code.
-     *
      * @param string|Node $entity
-     * @param boolean $obfuscated
+     * @param boolean     $obfuscated
      * @return boolean
      */
-    public function unsetFollower($entity = '', $obfuscated = false)
+    public function unsetFollower($entity = '', bool $obfuscated = false)
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 

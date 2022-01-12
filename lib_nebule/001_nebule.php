@@ -348,7 +348,7 @@ class nebule
             $this->_nebuleInitEnvironment();
 
         $this->_ioInstance = new io($this->_nebuleInstance);
-        $this->_cryptoInstance = new CryptoOpenssl($this->_nebuleInstance);
+        $this->_cryptoInstance = new Crypto($this->_nebuleInstance);
         $this->_socialInstance = new Social($this->_nebuleInstance);
 
         $this->_metrologyInstance->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log

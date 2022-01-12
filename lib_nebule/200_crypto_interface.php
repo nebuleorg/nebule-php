@@ -4,10 +4,6 @@ namespace Nebule\Library;
 use Nebule\Library\nebule;
 
 /**
- * ------------------------------------------------------------------------------------------
- * L'interface CryptoInterface
- * ------------------------------------------------------------------------------------------
- *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
@@ -15,12 +11,16 @@ use Nebule\Library\nebule;
  */
 interface CryptoInterface
 {
-    // Fonction de génération.
-    public function getPseudoRandom(int $size = 32): string;
-
-    public function getStrongRandom(int $size = 32): string;
-
-    public function getEntropy(string &$data): float;
+    /**
+     * Get random string in hexadecimal form.
+     * Quality of random sequence can be selected with strong or pseudo random.
+     * But, to save precious entropy, you have to use pseudo random in all case where you do not absolutely need strong random.
+     *
+     * @param int $size
+     * @param int $quality
+     * @return string
+     */
+    public function getRandom(int $size = 32, int $quality = Crypto::RANDOM_PSEUDO): string;
 
     // Fonction de prise d'empreinte.
     public function hashAlgorithm();
