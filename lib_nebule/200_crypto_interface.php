@@ -93,18 +93,18 @@ interface CryptoInterface
 
     /**
      * @param string $data
-     * @param string $eid
-     * @return mixed
+     * @param string $publicKey
+     * @return string
      */
-    public function encryptTo(string $data, string $eid);
+    public function encryptTo(string $data, string $publicKey): string;
 
     /**
      * @param string $code
-     * @param string $eid
+     * @param string $privateKey
      * @param string $password
-     * @return mixed
+     * @return string
      */
-    public function decryptTo(string $code, string $eid, string $password);
+    public function decryptTo(string $code, string $privateKey, string $password): string;
 
     /**
      * @param string $password

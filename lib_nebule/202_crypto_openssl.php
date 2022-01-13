@@ -124,6 +124,18 @@ class CryptoOpenssl implements CryptoInterface
         return false;
     }
 
+    private function _getAlgorithmName(string $algo): int
+    {
+        $v = preg_split('/\./', $algo); // aes.256.ctr
+        return (int)$v[0];
+    }
+
+    private function _getAlgorithmSize(string $algo): int
+    {
+        $v = preg_split('/\./', $algo); // aes.256.ctr
+        return (int)$v[1];
+    }
+
     // --------------------------------------------------------------------------------
 
     /**
@@ -162,6 +174,18 @@ class CryptoOpenssl implements CryptoInterface
 
     // --------------------------------------------------------------------------------
 
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::hash()
+     */
+    public function hash(string $data, string $algo = ''): string
+    {
+        $algo = $this->_translateHashAlgorithm($algo);
+        if ($algo == '')
+            return '';
+        return hash($algo, $data);
+    }
+
     private function _checkHashFunction(string $algo): bool
     {
         if (!$this->_checkHashAlgorithm($algo))
@@ -187,19 +211,43 @@ class CryptoOpenssl implements CryptoInterface
         return '';
     }
 
+    // --------------------------------------------------------------------------------
+
     /**
      * {@inheritDoc}
-     * @see CryptoInterface::hash()
+     * @see CryptoInterface::encrypt()
      */
-    public function hash(string $data, string $algo = ''): string
+    public function encrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
     {
-        $algo = $this->_translateHashAlgorithm($algo);
-        if ($algo == '')
+        if ($data == ''
+            || $hexKey == ''
+            || !$this->_checkSymmetricAlgorithm($algo)
+        )
             return '';
-        return hash($algo, $data);
+
+        $binIV = $this->_getBinIV($hexIV, $algo);
+        $binKey = pack("H*", $hexKey);
+
+        return openssl_encrypt($data, $this->_translateSymmetricAlgorithm($algo), $binKey, OPENSSL_RAW_DATA, pack("H*", $binIV));
     }
 
-    // --------------------------------------------------------------------------------
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::decrypt()
+     */
+    public function decrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
+    {
+        if ($data == ''
+            || $hexKey == ''
+            || !$this->_checkSymmetricAlgorithm($algo)
+        )
+            return '';
+
+        $binIV = $this->_getBinIV($hexIV, $algo);
+        $binKey = pack("H*", $hexKey);
+
+        return openssl_decrypt($data, $this->_translateSymmetricAlgorithm($algo), $binKey, OPENSSL_RAW_DATA, pack("H*", $binIV));
+    }
 
     private function _checkSymmetricFunction(string $algo): bool
     {
@@ -264,110 +312,7 @@ class CryptoOpenssl implements CryptoInterface
         return $binIV;
     }
 
-    /**
-     * {@inheritDoc}
-     * @see CryptoInterface::encrypt()
-     */
-    public function encrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
-    {
-        if ($data == ''
-            || $hexKey == ''
-            || !$this->_checkSymmetricAlgorithm($algo)
-        )
-            return '';
-
-        $binIV = $this->_getBinIV($hexIV, $algo);
-        $binKey = pack("H*", $hexKey);
-
-        return openssl_encrypt($data, $this->_translateSymmetricAlgorithm($algo), $binKey, OPENSSL_RAW_DATA, pack("H*", $binIV));
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see CryptoInterface::decrypt()
-     */
-    public function decrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
-    {
-        if ($data == ''
-            || $hexKey == ''
-            || !$this->_checkSymmetricAlgorithm($algo)
-        )
-            return '';
-
-        $binIV = $this->_getBinIV($hexIV, $algo);
-        $binKey = pack("H*", $hexKey);
-
-        return openssl_decrypt($data, $this->_translateSymmetricAlgorithm($algo), $binKey, OPENSSL_RAW_DATA, pack("H*", $binIV));
-    }
-
-
-
-    private function _checkAsymmetricFunction(string $algo): bool
-    {
-        $private_pem = <<<EOD
------BEGIN RSA PRIVATE KEY-----
-Proc-Type: 4,ENCRYPTED
-DEK-Info: AES-128-CBC,687B57E822A2DA943BFE465B95E9C217
-
-A0Cv5nNdSrFq5R5kGgWlNytpTOlJh5E4+PiZK5L5D2JMwjIogB7ASjf+RDCwWWeJ
-pgGBnMDLXyHdC10x0vMSidp6oUHv/fT8hgEKPr+KaUKAhLIQTrh/MiTmmaOlXBED
-i1cTv3ZPo4u9m593vJ79dSP4DKNVmVoS2b7iZlPAimHx2CE+raKAttYYZv9yhWti
-7HyA/cJcHypsK3WtTzBEkhtkD73wcAn7dmWBVaitrPUzZDJLtiwW4I4TmfMnOvFB
-bQRia5vJzGg97rBhi7pc/hPozdQaFDrAvsnB/pqea486iIvVH6u7rEOd0gFSei1H
-/O4zjxW/1Nx97cJkqGvaJ4ZMgKIz2t/YXUgZUMLBdaav4D4cUx9s05c9mwop1Vk6
-ZEWbQ42aefq9GmU0N2sqCUwdrvxzO6Trf7T554F+kibqkY2YGZrEDD0iLK4ZWWOc
-ILu5MNEvDrdBMi4JBr/BhWSOkCDmm6/l9qaWdSQW7x29I3KGcbPdNcbtzoqT+Sqa
-T7UHkzbgHcLCjRtyecyLIBdgwJzoS+uS98dlQI+KOuxJk7Iw/+73z8aM5tuPDdtf
-V3BAxDAIT6spAjomWgGBtGaOKXVuJjmj177qhY97L79PmFYvPZPVVVKBpbQNcH8z
-3sso2/aWy4qotavOM4wWNBa/dmJmXa6kJ/VjwScaUUrTXYnHTr8uIoXqlldDj1sE
-A+KwfxWveZxC6IE9XzQQuyk7DgfkHdbwKQ5+IKzDrrmSTjyDY5u6xiEsvLd8oSw6
-LfMSjTNzTsdGnojuLQAt4r8t+K3cV6TgF1T+rxt67iXe0xn340KJK8jt31XN//F5
-ktUEvdKGM4VuWt9E51bPC5p3znwTUGfP49Aeh2g3vhIJc51FSvMUtjIBytaTwqht
-V37UMmkR6LtMOzwdGaoasZ0IZFVu2KvWt31OL9lEtWFAtLGWZ4NfwOVy0yQHeLkV
-EtOLBWpMaxkwlTd5XS5TlGoS+/M9JGpHh0LnNrf5VsfixXEyiITyci32HEv/u8pS
-zrJ/9cSj8mhj/gT0Tr2yp59YC6+3AoVX/qn8ucZX/Nwtd+XPvGeJ20z7IoJXbtjQ
-0nnTnpOKEhjE41+Vc7ZxTeLtZ1dtW9PnoWHznGXYjb+Rj8FXBuRBz9tnsmBbtHs8
-vORC2bv1py1GgvVbMuavNx4Y0MzbEfvNlLcctvarcN4zr2CavSmpAgVsmrjDFBWY
-YfUKzDiIn3+O5T/nOXXvIjN5dw5tS2KUeZ+TFVQezoYhc6fZM5pNVlnbwa0zkXWZ
-DW8RWy+bmB5nJiMliARWxqSSkaI5RG3dAyT5LsCV0U9Aolfr//bqvHWk/49zT0gf
-uOUf4HEEslKM/f9RBDkLLOYAJzmq1Be/kWc4MkhVOqBu8qQg841aPsuioJdC6Ib2
-mMw+at7hw80kCB6xqSJaSvbaSS4isTSGKxjPFtqXWQc9E2cvStTcoIaiT33JG/TN
-U9tOokWpyoUJtPZanhMyBF/A9GAzo7DFuuL/4bGZ5bmoyFfH+wAjQPKqBDTREmHO
-sTqIWSkAHD8dEZgukAY7kUsWrYnAqxaKbyAuT4Ni6SUcU2PiF2agvJh7Pe2SZyLj
------END RSA PRIVATE KEY-----
-EOD;
-        $public_pem = <<<EOD
------BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvUKNo2kJ5XYg7hh1X6rS
-roMdy5d1CAhGzas2PzAwAc/8UdTiaOpQkhVYgyP/oM5ouROaTuALQ4RCY04O14op
-wk56EQTPZfnbIIFZYyGZeH8w8S5Nabv2F9XK9eQJL0LgozBWBMAQpsuiqgJiq0Fe
-XAUetu3McVlSd9Ro1F0xsjTTff6HIxNvCEwLM748rCXIDLxTxGYG5+YehigzH/at
-jRAiRdZxSruYPyQcxWhZei5mSqLr31beZ2HmoNRiqOgx9FRqrJSLlCQSjv0Z9Ubu
-17EVQB2iTsdjaNk7GqPdclBnXkaOg/VxIHsVeoUylukOPda+uTkvMiu9Ao9s/+A9
-bwIDAQAB
------END PUBLIC KEY-----
-EOD;
-        $private_pass = "0000";
-        $data = 'Bienvenue dans le projet nebule.';
-        $hashData = hash('sha256', $data);
-        $signed = $this->sign($hashData, $private_pem, $private_pass);
-        return $this->verify($hashData, $signed, $public_pem);
-    }
-
-    private function _checkAsymmetricAlgorithm(string $algo): bool
-    {
-        if (isset(self::ASYMMETRIC_ALGORITHM[$algo]))
-            return true;
-        return false;
-    }
-
-    private function _translateAsymmetricAlgorithm(string $name): string
-    {
-        if (isset(self::TRANSLATE_ASYMMETRIC_ALGORITHM[$name]))
-            return self::TRANSLATE_ASYMMETRIC_ALGORITHM[$name];
-        $this->_metrology->addLog('Invalid asymmetric algorithm ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2b4c9b6b');
-        return '';
-    }
+    // --------------------------------------------------------------------------------
 
     /**
      * {@inheritDoc}
@@ -415,54 +360,32 @@ EOD;
      * {@inheritDoc}
      * @see CryptoInterface::encryptTo()
      */
-    public function encryptTo(string $data, string $eid)
+    public function encryptTo(string $data, string $publicKey): string
     {
-        $instance = $this->_cache->newNode($eid, Cache::TYPE_NODE);
-        $publicKey = $instance->getContent();
+        $ressource = openssl_pkey_get_public($publicKey);
+        if ($ressource === false)
+            return '';
 
         $code = '';
-        // Extrait la clé privée déchiffrée.
-        $publicKeyID = openssl_pkey_get_public($publicKey);
-        // Vérifie la présence et la cohérence de la clé publique.
-        if ($publicKeyID === false)
-            return false;
-        // Chiffre les données.
-        $ok = openssl_public_encrypt($data, $code, $publicKeyID, OPENSSL_PKCS1_PADDING);
-        // Nettoyage des variables.
-        $data = null;
-        $publicKey = null;
-        unset($publicKeyID);
-        // Si la fonction de chiffrement a bien fonctionnée.
-        if ($ok !== false)
+        if (openssl_public_encrypt($data, $code, $ressource, OPENSSL_PKCS1_PADDING))
             return $code;
-        // Sinon retourne que ça s'est mal passé.
-        return false;
+        return '';
     }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::decryptTo()
      */
-    public function decryptTo(string $code, string $eid, string $password)
+    public function decryptTo(string $code, string $privateKey, string $password): string
     {
-        $instance = $this->_cache->newNode($eid, Cache::TYPE_NODE);
-        $privateKey = $instance->getContent();
+        $ressource = openssl_pkey_get_private($privateKey, $password);
+        if ($ressource === false)
+            return '';
 
         $data = '';
-        // Extrait la clé privée déchiffrée.
-        $privateKeyBin = openssl_pkey_get_private($privateKey, $password);
-        // Signe les données.
-        //$ok = openssl_public_decrypt($code, $data, $privateKeyBin, OPENSSL_PKCS1_PADDING);
-        $ok = openssl_private_decrypt($code, $data, $privateKeyBin, OPENSSL_PKCS1_PADDING);
-        // Nettoyage des variables.
-        $code = null;
-        $password = null;
-        unset($privateKeyBin);
-        // Si la fonction de déchiffrement a bien fonctionnée.
-        if ($ok !== false)
+        if (openssl_private_decrypt($code, $data, $ressource, OPENSSL_PKCS1_PADDING))
             return $data;
-        // Sinon retourne que ça s'est mal passé.
-        return false;
+        return '';
     }
 
     /**
@@ -539,15 +462,70 @@ EOD;
         return $privateKey;
     }
 
-    private function _getAlgorithmName(string $algo): int
+    private function _checkAsymmetricFunction(string $algo): bool
     {
-        $v = preg_split('/\./', $algo); // aes.256.ctr
-        return (int)$v[0];
+        $private_pem = <<<EOD
+-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: AES-128-CBC,687B57E822A2DA943BFE465B95E9C217
+
+A0Cv5nNdSrFq5R5kGgWlNytpTOlJh5E4+PiZK5L5D2JMwjIogB7ASjf+RDCwWWeJ
+pgGBnMDLXyHdC10x0vMSidp6oUHv/fT8hgEKPr+KaUKAhLIQTrh/MiTmmaOlXBED
+i1cTv3ZPo4u9m593vJ79dSP4DKNVmVoS2b7iZlPAimHx2CE+raKAttYYZv9yhWti
+7HyA/cJcHypsK3WtTzBEkhtkD73wcAn7dmWBVaitrPUzZDJLtiwW4I4TmfMnOvFB
+bQRia5vJzGg97rBhi7pc/hPozdQaFDrAvsnB/pqea486iIvVH6u7rEOd0gFSei1H
+/O4zjxW/1Nx97cJkqGvaJ4ZMgKIz2t/YXUgZUMLBdaav4D4cUx9s05c9mwop1Vk6
+ZEWbQ42aefq9GmU0N2sqCUwdrvxzO6Trf7T554F+kibqkY2YGZrEDD0iLK4ZWWOc
+ILu5MNEvDrdBMi4JBr/BhWSOkCDmm6/l9qaWdSQW7x29I3KGcbPdNcbtzoqT+Sqa
+T7UHkzbgHcLCjRtyecyLIBdgwJzoS+uS98dlQI+KOuxJk7Iw/+73z8aM5tuPDdtf
+V3BAxDAIT6spAjomWgGBtGaOKXVuJjmj177qhY97L79PmFYvPZPVVVKBpbQNcH8z
+3sso2/aWy4qotavOM4wWNBa/dmJmXa6kJ/VjwScaUUrTXYnHTr8uIoXqlldDj1sE
+A+KwfxWveZxC6IE9XzQQuyk7DgfkHdbwKQ5+IKzDrrmSTjyDY5u6xiEsvLd8oSw6
+LfMSjTNzTsdGnojuLQAt4r8t+K3cV6TgF1T+rxt67iXe0xn340KJK8jt31XN//F5
+ktUEvdKGM4VuWt9E51bPC5p3znwTUGfP49Aeh2g3vhIJc51FSvMUtjIBytaTwqht
+V37UMmkR6LtMOzwdGaoasZ0IZFVu2KvWt31OL9lEtWFAtLGWZ4NfwOVy0yQHeLkV
+EtOLBWpMaxkwlTd5XS5TlGoS+/M9JGpHh0LnNrf5VsfixXEyiITyci32HEv/u8pS
+zrJ/9cSj8mhj/gT0Tr2yp59YC6+3AoVX/qn8ucZX/Nwtd+XPvGeJ20z7IoJXbtjQ
+0nnTnpOKEhjE41+Vc7ZxTeLtZ1dtW9PnoWHznGXYjb+Rj8FXBuRBz9tnsmBbtHs8
+vORC2bv1py1GgvVbMuavNx4Y0MzbEfvNlLcctvarcN4zr2CavSmpAgVsmrjDFBWY
+YfUKzDiIn3+O5T/nOXXvIjN5dw5tS2KUeZ+TFVQezoYhc6fZM5pNVlnbwa0zkXWZ
+DW8RWy+bmB5nJiMliARWxqSSkaI5RG3dAyT5LsCV0U9Aolfr//bqvHWk/49zT0gf
+uOUf4HEEslKM/f9RBDkLLOYAJzmq1Be/kWc4MkhVOqBu8qQg841aPsuioJdC6Ib2
+mMw+at7hw80kCB6xqSJaSvbaSS4isTSGKxjPFtqXWQc9E2cvStTcoIaiT33JG/TN
+U9tOokWpyoUJtPZanhMyBF/A9GAzo7DFuuL/4bGZ5bmoyFfH+wAjQPKqBDTREmHO
+sTqIWSkAHD8dEZgukAY7kUsWrYnAqxaKbyAuT4Ni6SUcU2PiF2agvJh7Pe2SZyLj
+-----END RSA PRIVATE KEY-----
+EOD;
+        $public_pem = <<<EOD
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvUKNo2kJ5XYg7hh1X6rS
+roMdy5d1CAhGzas2PzAwAc/8UdTiaOpQkhVYgyP/oM5ouROaTuALQ4RCY04O14op
+wk56EQTPZfnbIIFZYyGZeH8w8S5Nabv2F9XK9eQJL0LgozBWBMAQpsuiqgJiq0Fe
+XAUetu3McVlSd9Ro1F0xsjTTff6HIxNvCEwLM748rCXIDLxTxGYG5+YehigzH/at
+jRAiRdZxSruYPyQcxWhZei5mSqLr31beZ2HmoNRiqOgx9FRqrJSLlCQSjv0Z9Ubu
+17EVQB2iTsdjaNk7GqPdclBnXkaOg/VxIHsVeoUylukOPda+uTkvMiu9Ao9s/+A9
+bwIDAQAB
+-----END PUBLIC KEY-----
+EOD;
+        $private_pass = "0000";
+        $data = 'Bienvenue dans le projet nebule.';
+        $hashData = hash('sha256', $data);
+        $signed = $this->sign($hashData, $private_pem, $private_pass);
+        return $this->verify($hashData, $signed, $public_pem);
     }
 
-    private function _getAlgorithmSize(string $algo): int
+    private function _checkAsymmetricAlgorithm(string $algo): bool
     {
-        $v = preg_split('/\./', $algo); // aes.256.ctr
-        return (int)$v[1];
+        if (isset(self::ASYMMETRIC_ALGORITHM[$algo]))
+            return true;
+        return false;
+    }
+
+    private function _translateAsymmetricAlgorithm(string $name): string
+    {
+        if (isset(self::TRANSLATE_ASYMMETRIC_ALGORITHM[$name]))
+            return self::TRANSLATE_ASYMMETRIC_ALGORITHM[$name];
+        $this->_metrology->addLog('Invalid asymmetric algorithm ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2b4c9b6b');
+        return '';
     }
 }

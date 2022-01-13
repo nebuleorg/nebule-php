@@ -2146,7 +2146,7 @@ class Node implements nodeInterface
             unset($data, $keySize);
 
             // Vérification de bon chiffrement.
-            if ($code === false) {
+            if ($code == '') {
                 return false;
             }
 
@@ -2497,7 +2497,7 @@ class Node implements nodeInterface
             $target = $textID;
             $meta = $this->_crypto->hash('nebule/objet/type');
             $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-            $newLink = new Link($this->_nebuleInstance, $link);
+            $newLink = new BlocLink($this->_nebuleInstance, $link);
             // Signe le lien.
             $newLink->sign();
             // Ecrit le lien.

@@ -1420,13 +1420,13 @@ function io_linkSynchronize(string $nid, string $location): bool
     if (!io_checkExistOverHTTP($location . '/l/' . $nid))
         return false;
 
-    $resource = fopen($location . '/l/' . $nid, 'r');
-    if ($resource !== false) {
-        while (feof($resource) !== false) {
-            $line = trim(fgets($resource));
+    $ressource = fopen($location . '/l/' . $nid, 'r');
+    if ($ressource !== false) {
+        while (feof($ressource) !== false) {
+            $line = trim(fgets($ressource));
             lnk_write($line);
         }
-        fclose($resource);
+        fclose($ressource);
     }
 
     return true;

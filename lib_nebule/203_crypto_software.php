@@ -260,18 +260,18 @@ class CryptoSoftware implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::encryptTo()
      */
-    public function encryptTo(string $data, string $eid)
+    public function encryptTo(string $data, string $publicKey): string
     {
-        // TODO: Implement cryptTo() method.
+        return '';
     }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::decryptTo()
      */
-    public function decryptTo(string $code, string $eid, string $password)
+    public function decryptTo(string $code, string $privateKey, string $password): string
     {
-        // TODO: Implement decryptTo() method.
+        return '';
     }
 
     /**

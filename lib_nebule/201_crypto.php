@@ -159,18 +159,18 @@ class Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::encryptTo()
      */
-    public function encryptTo(string $data, string $eid)
+    public function encryptTo(string $data, string $publicKey): string
     {
-        return $this->_opensslInstance->encryptTo($data, $eid);
+        return $this->_opensslInstance->encryptTo($data, $publicKey);
     }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::decryptTo()
      */
-    public function decryptTo(string $code, string $eid, string $password)
+    public function decryptTo(string $code, string $privateKey, string $password): string
     {
-        return $this->_opensslInstance->decryptTo($code, $eid, $password);
+        return $this->_opensslInstance->decryptTo($code, $privateKey, $password);
     }
 
     /**
