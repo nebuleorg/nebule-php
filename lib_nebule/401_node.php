@@ -2074,7 +2074,7 @@ class Node implements nodeInterface
      * @param boolean $obfuscated
      * @return boolean
      */
-    public function setProtected($obfuscated = false)
+    public function setProtected(bool $obfuscated = false): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
@@ -2117,7 +2117,7 @@ class Node implements nodeInterface
                 $data = $this->_data;
             } else {
                 // Sinon, on lit le contenu de l'objet. @todo à remplacer par getContent...
-                $limit = $this->_configuration->getOptionUntyped('ioReadMaxData');
+                $limit = $this->_configuration->getOptionAsInteger('ioReadMaxData');
                 $data = $this->_nebuleInstance->getIoInstance()->objectRead($this->_id, $limit);
 
                 // Vérification de quota de lecture. @todo à revoir...
@@ -2142,7 +2142,7 @@ class Node implements nodeInterface
             }
 
             // Chiffrement (symétrique) du contenu.
-            $code = $this->_crypto->crypt($data, $key);
+            $code = $this->_crypto->encrypt($data, $this->_configuration->getOptionAsString('cryptoSymmetricAlgorithm'), $key);
             unset($data, $keySize);
 
             // Vérification de bon chiffrement.
@@ -3227,7 +3227,7 @@ class Node implements nodeInterface
             return null;
         }
 
-        $data = $this->_crypto->decrypt($code, $key);
+        $data = $this->_crypto->decrypt($code, $this->_configuration->getOptionAsString('cryptoSymmetricAlgorithm'), $key);
         // Calcul l'empreinte des données.
         $hash = $this->_crypto->hash($data);
         if ($hash != $this->_idUnprotected) {

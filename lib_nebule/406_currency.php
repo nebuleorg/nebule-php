@@ -421,7 +421,7 @@ class Currency extends Node
      *
      * @return boolean
      */
-    public function setProtected($obfuscated = false)
+    public function setProtected(bool $obfuscated = false)
     {
         return false;
     }

@@ -13,13 +13,9 @@ class Crypto implements CryptoInterface
 {
     const RANDOM_PSEUDO = 1;
     const RANDOM_STRONG = 2;
-
-    /**
-     * Instance de la bibliothèque nebule.
-     *
-     * @var nebule
-     */
-    private $_nebuleInstance;
+    const TYPE_HASH = 1;
+    const TYPE_SYMMETRIC = 2;
+    const TYPE_ASYMMETRIC = 3;
 
     /**
      * Instance métrologie en cours.
@@ -45,20 +41,47 @@ class Crypto implements CryptoInterface
     private $_opensslInstance;
     private $_softwareInstance;
 
+    /**
+     * @var CryptoInterface
+     */
+    private $_defaultCryptoLibraryInstance;
+
     public function __construct(nebule $nebuleInstance)
     {
-        $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_cache = $nebuleInstance->getCacheInstance();
+
         $this->_opensslInstance = new CryptoOpenssl($nebuleInstance);
         $this->_softwareInstance = new CryptoSoftware($nebuleInstance);
+
+        if ($this->_configuration->getOptionAsString('cryptoLibrary') == 'software')
+            $this->_defaultCryptoLibraryInstance = $this->_softwareInstance;
+        else
+            $this->_defaultCryptoLibraryInstance = $this->_opensslInstance;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::checkFunction()
+     */
+    public function checkFunction(string $algo, int $type): bool
+    {
+        return $this->_defaultCryptoLibraryInstance->checkFunction($algo, $type);
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::checkValidAlgorithm()
+     */
+    public function checkValidAlgorithm(string $algo, int $type): bool
+    {
+        return $this->_defaultCryptoLibraryInstance->checkValidAlgorithm($algo, $type);
     }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::getRandom()
-     * @return string
      */
     public function getRandom(int $size = 32, int $quality = Crypto::RANDOM_PSEUDO): string
     {
@@ -79,111 +102,29 @@ class Crypto implements CryptoInterface
         return $this->_softwareInstance->getEntropy($data);
     }
 
-    public function checkHashFunction()
+    public function hash(string $data, string $algo = ''): string
     {
-        // TODO: Implement checkHashFunction() method.
+        return $this->_opensslInstance->hash($data, $algo);
     }
 
-    public function setHashAlgorithm(string $algo)
+    public function encrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
     {
-        // TODO: Implement setHashAlgorithm() method.
+        return $this->_opensslInstance->encrypt($data, $hexKey, $hexIV);
     }
 
-    public function checkHashAlgorithm(string $algo)
+    public function decrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
     {
-        // TODO: Implement checkHashAlgorithm() method.
+        return $this->_opensslInstance->decrypt($data, $hexKey, $hexIV);
     }
 
-    public function hash(string $data, string $algo = '')
+    public function sign(string $hash, string $eid, string $privatePassword): string
     {
-        // TODO: Implement hash() method.
-    }
-
-    public function symmetricAlgorithm()
-    {
-        // TODO: Implement symmetricAlgorithm() method.
-    }
-
-    public function symmetricAlgorithmName()
-    {
-        // TODO: Implement symmetricAlgorithmName() method.
-    }
-
-    public function symmetricAlgorithmMode()
-    {
-        // TODO: Implement symmetricAlgorithmMode() method.
-    }
-
-    public function symmetricKeyLength()
-    {
-        // TODO: Implement symmetricKeyLength() method.
-    }
-
-    public function checkSymmetricFunction()
-    {
-        // TODO: Implement checkSymmetricFunction() method.
-    }
-
-    public function setSymmetricAlgorithm(string $algo)
-    {
-        // TODO: Implement setSymmetricAlgorithm() method.
-    }
-
-    public function checkSymmetricAlgorithm(string $algo)
-    {
-        // TODO: Implement checkSymmetricAlgorithm() method.
-    }
-
-    public function crypt(string $data, string $hexKey, string $hexIV = '')
-    {
-        // TODO: Implement crypt() method.
-    }
-
-    public function decrypt(string $data, string $hexKey, string $hexIV = '')
-    {
-        // TODO: Implement decrypt() method.
-    }
-
-    public function asymmetricAlgorithm()
-    {
-        // TODO: Implement asymmetricAlgorithm() method.
-    }
-
-    public function asymmetricAlgorithmName()
-    {
-        // TODO: Implement asymmetricAlgorithmName() method.
-    }
-
-    public function asymmetricKeyLength()
-    {
-        // TODO: Implement asymmetricKeyLength() method.
-    }
-
-    public function checkAsymmetricFunction()
-    {
-        // TODO: Implement checkAsymmetricFunction() method.
-    }
-
-    public function setAsymmetricAlgorithm(string $algo)
-    {
-        // TODO: Implement setAsymmetricAlgorithm() method.
-    }
-
-    public function checkAsymmetricAlgorithm(string $algo)
-    {
-        // TODO: Implement checkAsymmetricAlgorithm() method.
-    }
-
-    public function sign(string $hash, string $eid, string $privatePassword): ?string
-    {
-        return null;
-        // TODO: Implement sign() method.
+        return $this->_opensslInstance->sign($hash, $eid, $privatePassword);
     }
 
     public function verify(string $hash, string $sign, string $eid): bool
     {
-        return false;
-        // TODO: Implement verify() method.
+        return $this->_opensslInstance->verify($hash, $sign, $eid);
     }
 
     public function cryptTo(string $data, string $eid)

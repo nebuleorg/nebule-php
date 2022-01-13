@@ -10,7 +10,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220112';
+const BOOTSTRAP_VERSION = '020220113';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -5134,22 +5134,25 @@ function bootstrap_displayOnBreak(): void
     if (!is_a($nebuleInstance, 'nebule'))
         echo "Not loaded.\n";
     else {
+        $_configurationInstance = $nebuleInstance->getConfigurationInstance();
+        $_cryptoInstance = $nebuleInstance->getCryptoInstance();
+
         // Version.
         echo 'library ID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $bootstrapLibraryID . "<br />\n";
         echo 'library version &nbsp;: ' . $nebuleLibVersion . "<br />\n";
 
-        $checkInstance = $nebuleInstance->checkInstance();
+        $nebuleInstanceCheck = $nebuleInstance->checkInstance();
 
         // Test le puppetmaster.
         echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ';
-        if ($checkInstance == 0)
+        if ($nebuleInstanceCheck == 0)
             echo "<span id=\"error\">ERROR!</span><br />\n";
         else {
             echo "OK (local authority)<br />\n";
 
             // Test le security authority.
             echo 'security authority &nbsp;: ';
-            if ($checkInstance == 1)
+            if ($nebuleInstanceCheck == 1)
                 echo "<span id=\"error\">ERROR!</span><br />\n";
             else {
                 echo '<a href="o/' . $nebuleInstance->getSecurityAuthority() . '">'
@@ -5157,7 +5160,7 @@ function bootstrap_displayOnBreak(): void
 
                 // Test le code authority.
                 echo 'code authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
-                if ($checkInstance == 2)
+                if ($nebuleInstanceCheck == 2)
                     echo "<span id=\"error\">ERROR!</span><br />\n";
                 else {
                     echo '<a href="o/' . $nebuleInstance->getCodeAuthority() . '">'
@@ -5165,7 +5168,7 @@ function bootstrap_displayOnBreak(): void
 
                     // Test le directory authority.
                     echo 'directory authority : ';
-                    if ($checkInstance == 3)
+                    if ($nebuleInstanceCheck == 3)
                         echo "<span id=\"error\">ERROR!</span><br />\n";
                     else
                         echo '<a href="o/' . $nebuleInstance->getDirectoryAuthority() . '">'
@@ -5173,7 +5176,7 @@ function bootstrap_displayOnBreak(): void
 
                     // Test le time authority.
                     echo 'time authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
-                    if ($checkInstance == 4)
+                    if ($nebuleInstanceCheck == 4)
                         echo "<span id=\"error\">ERROR!</span><br />\n";
                     else
                         echo '<a href="o/' . $nebuleInstance->getTimeAuthority() . '">'
@@ -5181,7 +5184,7 @@ function bootstrap_displayOnBreak(): void
 
                     // Test l'entité de l'instance du serveur.
                     echo 'server entity &nbsp;&nbsp;&nbsp;: ';
-                    if ($checkInstance <= 32)
+                    if ($nebuleInstanceCheck <= 32)
                         echo "<span id=\"error\">ERROR!</span><br />\n";
                     else {
                         echo '<a href="o/' . $nebuleInstance->getInstanceEntity() . '">'
@@ -5223,40 +5226,40 @@ function bootstrap_displayOnBreak(): void
 
         // Vérifie la cryptographie.
         echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: ';
-        if (!is_object($nebuleInstance->getCryptoInstance()))
+        if (!is_object($_cryptoInstance))
             echo '<span class="error">ERROR!</span>';
         else {
-            echo get_class($nebuleInstance->getCryptoInstance());
+            echo get_class($_cryptoInstance);
             echo "<br />\n";
 
             // Vérifie la fonction de hash.
-            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: hash ' . $nebuleInstance->getConfigurationInstance()->getOptionAsString('cryptoHashAlgorithm') . ' ';
-            if ($nebuleInstance->getCryptoInstance()->checkHashFunction())
+            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: hash ' . $_configurationInstance->getOptionAsString('cryptoHashAlgorithm') . ' ';
+            if ($_cryptoInstance->checkFunction($_configurationInstance->getOptionAsString('cryptoHashAlgorithm'), Crypto::TYPE_HASH))
                 echo 'OK';
             else
                 echo '<span class="error">ERROR!</span>';
             echo "<br />\n";
 
             // Vérifie la fonction de cryptographie symétrique.
-            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: Symmetric ' .  $nebuleInstance->getConfigurationInstance()->getOptionAsString('cryptoSymmetricAlgorithm') . ' ';
-            if ($nebuleInstance->getCryptoInstance()->checkSymmetricFunction())
+            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: Symmetric ' .  $_configurationInstance->getOptionAsString('cryptoSymmetricAlgorithm') . ' ';
+            if ($_cryptoInstance->checkFunction($_configurationInstance->getOptionAsString('cryptoSymmetricAlgorithm'), Crypto::TYPE_SYMMETRIC))
                 echo 'OK';
             else
                 echo '<span class="error">ERROR!</span>';
             echo "<br />\n";
 
             // Vérifie la fonction de cryptographie asymétrique.
-            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: asymmetric ' .  $nebuleInstance->getConfigurationInstance()->getOptionAsString('cryptoAsymmetricAlgorithm') . ' ';
-            if ($nebuleInstance->getCryptoInstance()->checkAsymmetricFunction())
+            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: asymmetric ' .  $_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm') . ' ';
+            if ($_cryptoInstance->checkFunction($_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm'), Crypto::TYPE_ASYMMETRIC))
                 echo 'OK';
             else
                 echo '<span class="error">ERROR!</span>';
             echo "<br />\n";
 
             // Vérifie la fonction de génération pseudo-aléatoire.
-            $random = $nebuleInstance->getCryptoInstance()->getRandom(2048, Crypto::RANDOM_PSEUDO);
-            $entropy = $nebuleInstance->getCryptoInstance()->getEntropy($random);
-            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: pseudo-random ' . substr(bin2hex($random), 0, 32) . '(' . $entropy . ') ';
+            $random = $_cryptoInstance->getRandom(2048, Crypto::RANDOM_PSEUDO);
+            $entropy = $_cryptoInstance->getEntropy($random);
+            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: pseudo-random entropy ' . $entropy . ' ';
             if ($entropy > 7.85)
                 echo 'OK';
             else

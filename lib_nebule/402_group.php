@@ -406,7 +406,7 @@ class Group extends Node
      *
      * @return boolean
      */
-    public function setProtected($obfuscated = false)
+    public function setProtected(bool $obfuscated = false)
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 

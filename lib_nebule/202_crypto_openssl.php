@@ -18,12 +18,48 @@ class CryptoOpenssl implements CryptoInterface
         'sha2-384',
         'sha2-512',
     );
-    const TRANSLATE_HASH_ALGORITHM_IN = array(
+    const TRANSLATE_HASH_ALGORITHM = array(
         'sha1-128' => 'sha1',
         'sha2-224' => 'sha224',
         'sha2-256' => 'sha256',
         'sha2-384' => 'sha384',
         'sha2-512' => 'sha512',
+    );
+    const TEST_HASH_ALGORITHM = array(
+        'value'    => 'Bienvenue dans le projet nebule.',
+        'sha1-128' => 'd689bc73bbf35e6547e6de4b0ea79a5fd3b83ffa',
+        'sha2-224' => '8ee809ef3ec56e4e31273e2ee232697683d260db72d543ce6db4ab64',
+        'sha2-256' => '0b8dc4408e7ab1c81716ae978abe1f75d4bd3ea9a7b882b8da6afacdafc0e32b',
+        'sha2-384' => 'fef7e57afdbf243a756eae37fa7c556bc71050f555209d78b29d2e8feef56e62ed92da5e291669b6262170cd4f0dd0ba',
+        'sha2-512' => 'b9d7b17462c0e2657171975ee0bd37e8dc0cab5d6ebc6496864af2e261f16d35c16642898ba0af5174ad80bada202032c641595be0fc56e4d35599add72f8079',
+    );
+
+    const SYMMETRIC_ALGORITHM = array(
+        'aes.128.cbc',
+        'aes.128.ctr',
+        'aes.192.cbc',
+        'aes.192.ctr',
+        'aes.256.cbc',
+        'aes.256.ctr',
+    );
+    const TRANSLATE_SYMMETRIC_ALGORITHM = array(
+        'aes.128.cbc' => 'aes-128-cbc',
+        'aes.128.ctr' => 'aes-128-ctr',
+        'aes.192.cbc' => 'aes-192-cbc',
+        'aes.192.ctr' => 'aes-192-ctr',
+        'aes.256.cbc' => 'aes-256-cbc',
+        'aes.256.ctr' => 'aes-256-ctr',
+    );
+
+    const ASYMMETRIC_ALGORITHM = array(
+        'rsa.1024',
+        'rsa.2048',
+        'rsa.4096',
+    );
+    const TRANSLATE_ASYMMETRIC_ALGORITHM = array(
+        'rsa.1024',
+        'rsa.2048',
+        'rsa.4096',
     );
 
     /**
@@ -60,20 +96,47 @@ class CryptoOpenssl implements CryptoInterface
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_cache = $nebuleInstance->getCacheInstance();
-        $this->_genHashAlgorithmList();
-        $this->_genSymmetricAlgorithmList();
-        $this->_genAsymmetricAlgorithmList();
     }
 
-    /*
-	 * ------------------------------------------------------------------------------------------
-	 * Gestion de la génération pseudo-aléatoire.
-	 */
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::checkFunction()
+     */
+    public function checkFunction(string $algo, int $type): bool
+    {
+        switch ($type) {
+            case (Crypto::TYPE_HASH):
+                return $this->_checkHashFunction($algo);
+            case (Crypto::TYPE_SYMMETRIC):
+                return $this->_checkSymmetricFunction($algo);
+            case (Crypto::TYPE_ASYMMETRIC):
+                return $this->_checkAsymmetricFunction($algo);
+        }
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::checkValidAlgorithm()
+     */
+    public function checkValidAlgorithm(string $algo, int $type): bool
+    {
+        switch ($type) {
+            case (Crypto::TYPE_HASH):
+                return $this->_checkHashAlgorithm($algo);
+            case (Crypto::TYPE_SYMMETRIC):
+                return $this->_checkSymmetricAlgorithm($algo);
+            case (Crypto::TYPE_ASYMMETRIC):
+                return $this->_checkAsymmetricAlgorithm($algo);
+        }
+        return false;
+    }
+
+
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::getRandom()
-     * @return string
      */
     public function getRandom(int $size = 32, int $quality = Crypto::RANDOM_STRONG): string
     {
@@ -94,113 +157,42 @@ class CryptoOpenssl implements CryptoInterface
      */
     private function _getStrongRandom(int $size = 32): string
     {
-        if ($size == 0
-            || !is_int($size)
-        )
+        if ($size == 0)
             return '';
         $strong = false;
         $data = openssl_random_pseudo_bytes($size, $strong);
-        if (!$strong)
+        if (!$strong
+            || $data === false
+        )
             return '';
         return $data;
     }
 
 
-    /*
-	 * ------------------------------------------------------------------------------------------
-	 * Gestion de la prise d'empreinte cryptographique.
-	 */
-    private $_hashAlgorithmList = array(), // Liste des fonctions de prise d'empreintes.
-        $_hashAlgorithm,               // Fonction de prise d'empreintes.
-        $_hashAlgorithmName,           // Fonction de prise d'empreintes.
-        $_hashLength,                  // Taille d'une empreinte.
-        $_hashStrength;                // Classification de résistance de l'algorithme.
 
-    // Vérifie le bon fonctionnement de l'algorithme de hash en cours d'utilisation.
-    public function checkHashFunction(): bool
+    private function _checkHashFunction(string $algo): bool
     {
-        $check = false;
-        $data = 'Bienvenue dans le projet nebule.';
-        $hash = $this->hash($data);
-        switch ($this->_hashAlgorithmName) {
-            case 'sha1':
-                if ($hash == 'd689bc73bbf35e6547e6de4b0ea79a5fd3b83ffa') {
-                    $check = true;
-                }
-                break;
-            case 'sha224':
-                if ($hash == '8ee809ef3ec56e4e31273e2ee232697683d260db72d543ce6db4ab64') {
-                    $check = true;
-                }
-                break;
-            case 'sha256':
-                if ($hash == '0b8dc4408e7ab1c81716ae978abe1f75d4bd3ea9a7b882b8da6afacdafc0e32b') {
-                    $check = true;
-                }
-                break;
-            case 'sha384':
-                if ($hash == 'fef7e57afdbf243a756eae37fa7c556bc71050f555209d78b29d2e8feef56e62ed92da5e291669b6262170cd4f0dd0ba') {
-                    $check = true;
-                }
-                break;
-            case 'sha512':
-                if ($hash == 'b9d7b17462c0e2657171975ee0bd37e8dc0cab5d6ebc6496864af2e261f16d35c16642898ba0af5174ad80bada202032c641595be0fc56e4d35599add72f8079') {
-                    $check = true;
-                }
-                break;
-            case 'rmd160':
-                if ($hash == '148e5adf9723d612de6bd4d2b9477852d6544ee1') {
-                    $check = true;
-                }
-                break;
-            case 'md5':
-                if ($hash == 'a6675f8e9ac88030bf106d2801089e6e') {
-                    $check = true;
-                }
-                break;
-            case 'md4':
-                if ($hash == '3c9aaffef0fc30b9cbc598637e6b64e5') {
-                    $check = true;
-                }
-                break;
-        }
-        return $check;
+        if (!$this->_checkHashAlgorithm($algo))
+            return false;
+        $hash = $this->hash(self::TEST_HASH_ALGORITHM['value'], $algo);
+        if (self::TEST_HASH_ALGORITHM[$algo] == $hash)
+            return true;
+        return false;
     }
 
-    /**
-     * {@inheritDoc}
-     * @see CryptoInterface::setHashAlgorithm()
-     */
-    public function setHashAlgorithm(string $algo): bool
+    private function _checkHashAlgorithm(string $algo): bool
     {
-        $algo = $this->_translateHashAlgorithmIn($algo);
-        if (sizeof($this->_hashAlgorithmList) == 0)
-            return false;
-        if (!in_array($algo, $this->_hashAlgorithmList))
-            return false;
-        $this->_hashAlgorithmName = $algo;
-        $this->_parseHashAlgorithm();
-        return true;
+        if (isset(self::HASH_ALGORITHM[$algo]))
+            return true;
+        return false;
     }
 
-    /**
-     * {@inheritDoc}
-     * @see CryptoInterface::checkHashAlgorithm()
-     */
-    public function checkHashAlgorithm(string $algo): bool
+    private function _translateHashAlgorithm(string $name): string
     {
-        if ($algo == '') return false;
-        elseif ($algo == 'dss1') return true;
-        elseif ($algo == 'sha1') return true;
-        elseif ($algo == 'sha224') return true;
-        elseif ($algo == 'sha256') return true;
-        elseif ($algo == 'sha384') return true;
-        elseif ($algo == 'sha512') return true;
-        elseif ($algo == 'rmd160') return true;
-        elseif ($algo == 'md5') return true;
-        elseif ($algo == 'md4') return true;
-        else return false;
-        // @todo ... ajouter une option PERMIT pour gérer les algo non sûrs.
+        if (isset(self::TRANSLATE_HASH_ALGORITHM[$name]))
+            return self::TRANSLATE_HASH_ALGORITHM[$name];
+        $this->_metrology->addLog('Invalid hash algorithm ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '43c10796');
+        return '';
     }
 
     /**
@@ -209,121 +201,29 @@ class CryptoOpenssl implements CryptoInterface
      */
     public function hash(string $data, string $algo = ''): string
     {
-        if (strlen($data) == 0)
-            return '';
-        $algo = $this->_translateHashAlgorithmIn($algo);
+        $algo = $this->_translateHashAlgorithm($algo);
         if ($algo == '')
-            $algo = $this->_hashAlgorithmName;
-        if (!$this->checkHashAlgorithm($algo))
             return '';
         return hash($algo, $data);
     }
 
-    /**
-     * Génère (récupère) la liste des algorithmes supportés.
-     */
-    private function _genHashAlgorithmList()
-    {
-        //$this->_hashAlgorithmList = array('sha128', 'sha256', 'sha512'); // Génère la liste des algorithmes disponibles. @todo A revoir...
-        $this->_hashAlgorithmList = openssl_get_md_methods(true); // Génère la liste des algorithmes disponibles.
-        $this->_hashAlgorithmName = $this->_configuration->getOptionUntyped('cryptoHashAlgorithm');
-        $this->_parseHashAlgorithm();
-    }
-
-    private function _translateHashAlgorithmIn(string $name): string
-    {
-        if (isset(self::TRANSLATE_HASH_ALGORITHM_IN[$name]))
-            return self::TRANSLATE_HASH_ALGORITHM_IN[$name];
-        $this->_metrology->addLog('Invalid hash algo ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '43c10796');
-        return '';
-    }
-
-    /**
-     * Convertit le nom de la fonction de l'algorithme et la taille de hash en fonction du nom court de l'algorithme.
-     */
-    private function _translateHashAlgorithmOut(string $name): string
-    {
-        switch ($name) {
-            case 'sha1':
-                $return = 'sha1.128';
-                break;
-            case 'sha224':
-                $return = 'sha2.224';
-                break;
-            case 'sha256':
-                $return = 'sha2.256';
-                break;
-            case 'sha384':
-                $return = 'sha2.384';
-                break;
-            case 'sha512':
-                $return = 'sha2.512';
-                break;
-            default:
-                $this->_metrology->addLog('Invalid hash algo ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'dfcabd6f');
-                $return = '';
-                break;
-        }
-        return $return;
-    }
-
-    /**
-     * Prépare le nom de la fonction de l'algorithme et la taille de hash en fonction du nom court de l'algorithme.
-     */
-    private function _parseHashAlgorithm(): void
-    {
-        $name = $this->_translateHashAlgorithmOut($this->_hashAlgorithmName);
-        if ($name == '') {
-            $this->_hashAlgorithm = ' ';
-            $this->_hashLength = 0;
-        } else {
-            $this->_hashAlgorithm = strtok($name, '.');
-            $this->_hashLength = (int)strtok('.');
-        }
-    }
 
 
     /*
 	 * ------------------------------------------------------------------------------------------
 	 * Gestion du chiffrement symétrique.
 	 */
-    private $_symmetricAlgorithmList = array(), // Liste des fonctions de chiffrement symétrique.
-        $_symmetricAlgorithm,               // Fonction de chiffrement symétrique.
-        $_symmetricAlgorithmName,           // Fonction de chiffrement symétrique.
-        $_symmetricAlgorithmMode,           // Fonction de chiffrement symétrique.
-        $_symetricKeyLength;               // Taille d'une clé et d'un bloc de chiffrement.
-
-    // Retourne l'algorithme de chiffrement symétrique en cours d'utilisation.
-    public function symmetricAlgorithm()
+    private function _checkSymmetricFunction(string $algo): bool
     {
-        return $this->_symmetricAlgorithm;
-    }
+        $algo = $this->_translateHashAlgorithm($algo);
+        if ($algo == '')
+            return false;
 
-    public function symmetricAlgorithmName()
-    {
-        return $this->_symmetricAlgorithmName;
-    }
-
-    public function symmetricAlgorithmMode()
-    {
-        return $this->_symmetricAlgorithmMode;
-    }
-
-    // Retourne la longueur de clé de l'algorithme de chiffrement symétrique en cours d'utilisation.
-    public function symmetricKeyLength()
-    {
-        return $this->_symetricKeyLength;
-    }
-
-    // Vérifie le bon fonctionnement de l'algorithme de chiffrement symétrique en cours d'utilisation.
-    public function checkSymmetricFunction(): bool
-    {
         $check = false;
 
         // Liste tous les algorithmes de chiffrement supportés.
         $l = openssl_get_cipher_methods(true);
 
-        // Pour chacun...
         foreach ($l as $a) {
             // Si c'est l'algorithme en cours.
             if ($a == $this->_symmetricAlgorithmName) {
@@ -336,153 +236,74 @@ class CryptoOpenssl implements CryptoInterface
                 // Encode.
                 $code = openssl_encrypt($data, $this->_symmetricAlgorithmName, $binKey, OPENSSL_RAW_DATA, $binIV);
                 // Décode.
-                $dcod = openssl_decrypt($code, $this->_symmetricAlgorithmName, $binKey, OPENSSL_RAW_DATA, $binIV);
+                $decode = openssl_decrypt($code, $this->_symmetricAlgorithmName, $binKey, OPENSSL_RAW_DATA, $binIV);
                 // Si les données décodées sont les mêmes que les données sources.
-                if ($data == $dcod)
+                if ($data == $decode)
                     $check = true; // Le test est bon.
-                unset($data, $binIV, $hexIV, $binKey, $hexKey, $code, $dcod);
             }
         }
         unset($l, $a);
         return $check;
     }
 
-    public function setSymmetricAlgorithm(string $algo): bool
+    private function _checkSymmetricAlgorithm(string $algo): bool
     {
-        $algo = (string)$algo;
-        if (sizeof($this->_symmetricAlgorithmList) == 0) return false; // Vérifie si la liste des algorithmes n'est pas vide.
-        if (!in_array($algo, $this->_symmetricAlgorithmName)) return false;
-        $this->_symmetricAlgorithmName = $algo;
-        $this->_parseSymmetricAlgorithm();
-        return true;
-    }
-
-    public function checkSymmetricAlgorithm(string $algo): bool
-    {
-        if ($algo == '') return false;
-        return true;
-        // A faire...
-    }
-
-    private function _genSymmetricAlgorithmList()
-    {
-        //$this->_symmetricAlgorithmList = array('aes-256-cbc', 'aes-256-ctr'); // Génère la liste des algorithmes disponibles. A revoir...
-        $this->_symmetricAlgorithmList = openssl_get_cipher_methods(true); // Génère la liste des algorithmes disponibles.
-        $this->_symmetricAlgorithmName = $this->_configuration->getOptionUntyped('cryptoSymmetricAlgorithm');
-        $this->_parseSymmetricAlgorithm();
-    }
-
-    private function _parseSymmetricAlgorithmName(string $name): string
-    {
-        switch ($name) {
-            case 'aes-128-ctr':
-                $return = 'aes.128.ctr';
-                break;
-            case 'aes-128-ecb':
-                $return = 'aes.128.ecb';
-                break;
-            case 'aes-128-cbc':
-                $return = 'aes.128.cbc';
-                break;
-            case 'aes-256-ctr':
-                $return = 'aes.256.ctr';
-                break;
-            case 'aes-256-ecb':
-                $return = 'aes.256.ecb';
-                break;
-            case 'aes-256-cbc':
-                $return = 'aes.256.cbc';
-                break;
-            default:
-                $this->_metrology->addLog('Invalid symmetric algo ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '9e1ce2f0');
-                $return = '';
-                break;
-        }
-        return $return;
-    }
-
-    private function _parseSymmetricAlgorithm(): void
-    {
-        $name = $this->_parseSymmetricAlgorithmName($this->_symmetricAlgorithmName);
-        if ($name == '') {
-            $this->_symmetricAlgorithm = ' ';
-            $this->_symetricKeyLength = 0;
-            $this->_symmetricAlgorithmMode = '';
-        } else {
-            $this->_symmetricAlgorithm = strtok($name, '.');
-            $this->_symetricKeyLength = (int)strtok('.');
-            $this->_symmetricAlgorithmMode = strtok('.');
-        }
+        if (isset(self::SYMMETRIC_ALGORITHM[$algo]))
+            return true;
+        return false;
     }
 
     /**
-     * Génère un IV nul pour l'algorythme symétrique.
+     * Génère un IV nul pour l'algorithme symétrique.
      */
-    private function _genSymmetricAlgorithmNullIV(): string
+    private function _genSymmetricAlgorithmNullIV(int $length): string
     {
-        $l = $this->_symetricKeyLength / 8;
         $r = '';
-        for ($i = 0; $i < $l; $i++)
+        for ($i = 0; $i < $length; $i++)
             $r = $r . '0';
         return $r;
     }
 
-    /**
-     * Chiffrement de données avec algorithme symétrique.
-     * @param string $data
-     * @param string $key
-     * @param string $hexIV
-     * @return string
-     */
-    public function crypt(string $data, string $key, string $hexIV = '')
+    private function _translateSymmetricAlgorithm(string $name): string
     {
-        // Vérifications.
-        if (strlen($data) == 0) {
-            return false;
-        }
-        if (strlen($key) == 0) {
-            return false;
-        }
-
-        // Si IV null, en génère un à zéro.
-        if ($hexIV == '') {
-            $hexIV = $this->_genSymmetricAlgorithmNullIV();
-        }
-
-        // Encode l'IV en binaire.
-        $binIV = pack("H*", $hexIV);
-
-        // Réalise le chiffrement.
-        return openssl_encrypt($data, $this->_symmetricAlgorithmName, $key, OPENSSL_RAW_DATA, $binIV);
+        if (isset(self::TRANSLATE_SYMMETRIC_ALGORITHM[$name]))
+            return self::TRANSLATE_SYMMETRIC_ALGORITHM[$name];
+        $this->_metrology->addLog('Invalid symmetric algorithm ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '5f83d258');
+        return '';
     }
 
     /**
-     * Déchiffrement de données avec algorithme symétrique.
-     * @param string $data
-     * @param string $key
-     * @param string $hexIV
-     * @return string
+     * {@inheritDoc}
+     * @see CryptoInterface::encrypt()
      */
-    public function decrypt(string $data, string $key, string $hexIV = '')
+    public function encrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
     {
-        // Vérifications.
-        if (strlen($data) == 0) {
-            return false;
-        }
-        if (strlen($key) == 0) {
-            return false;
-        }
+        if ($data == '' || $hexKey == '')
+            return '';
 
-        // Si IV null, en génère un à zéro.
         if ($hexIV == '') {
-            $hexIV = $this->_genSymmetricAlgorithmNullIV();
+            $size = preg_split('/./', $algo);
+            $hexIV = $this->_genSymmetricAlgorithmNullIV((int)$size[1]/8);
         }
 
-        // Encode l'IV en binaire.
-        $binIV = pack("H*", $hexIV);
+        return openssl_encrypt($data, $this->_translateSymmetricAlgorithm($algo), $hexKey, OPENSSL_RAW_DATA, pack("H*", $hexIV));
+    }
 
-        // Réalise le déchiffrement.
-        return openssl_decrypt($data, $this->_symmetricAlgorithmName, $key, OPENSSL_RAW_DATA, $binIV);
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::decrypt()
+     */
+    public function decrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
+    {
+        if ($data == '' || $hexKey == '')
+            return '';
+
+        if ($hexIV == '') {
+            $size = preg_split('/./', $algo);
+            $hexIV = $this->_genSymmetricAlgorithmNullIV((int)$size[1]/8);
+        }
+
+        return openssl_decrypt($data, $this->_symmetricAlgorithmName, $hexKey, OPENSSL_RAW_DATA, pack("H*", $hexIV));
     }
 
 
@@ -495,25 +316,7 @@ class CryptoOpenssl implements CryptoInterface
         $_asymmetricAlgorithmName,           // Fonction de chiffrement asymétrique (càd avec clé publique/privée).
         $_asymetricKeyLength;               // Taille d'une clé publique/privée.
 
-    // Retourne l'algorithme de chiffrement asymétrique en cours d'utilisation.
-    public function asymmetricAlgorithm()
-    {
-        return $this->_asymmetricAlgorithm;
-    }
-
-    public function asymmetricAlgorithmName()
-    {
-        return $this->_asymmetricAlgorithmName;
-    }
-
-    // Retourne la longueur de clé de l'algorithme de chiffrement asymétrique en cours d'utilisation.
-    public function asymmetricKeyLength()
-    {
-        return $this->_asymetricKeyLength;
-    }
-
-    // Vérifie le bon fonctionnement de l'algorithme de chiffrement asymétrique en cours d'utilisation.
-    public function checkAsymmetricFunction(): bool
+    private function _checkAsymmetricFunction(string $algo): bool
     {
         $check = false;
         // Essai avec un couple de clés public/privé de test. mdp=0000
@@ -566,7 +369,7 @@ EOD;
         $private_key = openssl_pkey_get_private($private_pem, $private_pass);
         $public_key = openssl_pkey_get_public($public_pem);
         $decrypted = '';
-        $hashdata = hash($this->_hashAlgorithmName, $data);
+        $hashdata = hash('sha256', $data);
 
         // Signe les données.
         $binary_signature = '';
@@ -583,76 +386,29 @@ EOD;
         if ($ok && $decrypted == $hashdata)
             $check = true;
 
-        unset($data, $private_pass, $private_pem, $private_key, $public_pem, $public_key, $ok,
-            $data, $hashdata, $binary_signature, $hexsign, $binsign, $decrypted);
-
         return $check;
     }
 
-    public function setAsymmetricAlgorithm(string $algo): bool
+    private function _checkAsymmetricAlgorithm(string $algo): bool
     {
-        $algo = (string)$algo;
-        if (sizeof($this->_asymmetricAlgorithmList) == 0) return false; // Vérifie si la liste des algorithmes n'est pas vide.
-        if (!in_array($algo, $this->_asymmetricAlgorithmName)) return false;
-        $this->_asymmetricAlgorithmName = $algo;
-        $this->_parseAsymmetricAlgorithm();
-        return true;
+        if (isset(self::ASYMMETRIC_ALGORITHM[$algo]))
+            return true;
+        return false;
     }
 
-    public function checkAsymmetricAlgorithm(string $algo): bool
+    private function _translateAsymmetricAlgorithm(string $name): string
     {
-        if ($algo == '') return false;
-        return true;
-        // A faire...
+        if (isset(self::TRANSLATE_ASYMMETRIC_ALGORITHM[$name]))
+            return self::TRANSLATE_ASYMMETRIC_ALGORITHM[$name];
+        $this->_metrology->addLog('Invalid asymmetric algorithm ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2b4c9b6b');
+        return '';
     }
 
-    private function _genAsymmetricAlgorithmList()
-    {
-        // Génère la liste des algorithmes disponibles. A revoir...
-        $this->_asymmetricAlgorithmList = array('rsa1024', 'rsa2048', 'rsa4096', 'ecdsa');        // A revoir...
-        $this->_asymmetricAlgorithmName = $this->_configuration->getOptionUntyped('cryptoAsymmetricAlgorithm');
-        $this->_parseAsymmetricAlgorithm();
-        /*
-OPENSSL_KEYTYPE_RSA (entier)
-OPENSSL_KEYTYPE_DSA (entier)
-OPENSSL_KEYTYPE_DH (entier)
-OPENSSL_KEYTYPE_EC (entier)
-		 */
-    }
-
-    private function _parseAsymmetricAlgorithmName(string $name): string
-    {
-        switch ($name) {
-            case 'rsa1024':
-                $return = 'rsa.1024';
-                break;
-            case 'rsa2048':
-                $return = 'rsa.2048';
-                break;
-            case 'rsa4096':
-                $return = 'rsa.4096';
-                break;
-            default:
-                $this->_metrology->addLog('Invalid asymmetric algo ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '0c2a5398');
-                $return = '';
-                break;
-        }
-        return $return;
-    }
-
-    private function _parseAsymmetricAlgorithm()
-    {
-        $name = $this->_parseAsymmetricAlgorithmName($this->_asymmetricAlgorithmName);
-        if ($name == '') {
-            $this->_asymmetricAlgorithm = ' ';
-            $this->_asymetricKeyLength = 0;
-        } else {
-            $this->_asymmetricAlgorithm = strtok($name, '.');
-            $this->_asymetricKeyLength = (int)strtok('.');
-        }
-    }
-
-    public function sign(string $hash, string $eid, string $privatePassword): ?string
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::sign()
+     */
+    public function sign(string $hash, string $eid, string $privatePassword): string
     {
         $instance = $this->_cache->newNode($eid, Cache::TYPE_NODE);
         $privateKey = $instance->getContent();
@@ -672,9 +428,13 @@ OPENSSL_KEYTYPE_EC (entier)
             return bin2hex($signatureBin);
         // Sinon retourne que ça s'est mal passé.
         $this->_metrology->addLog('ERROR crypto sign', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3c5e617d'); // Log
-        return null;
+        return '';
     }
 
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::verify()
+     */
     public function verify(string $hash, string $sign, string $eid): bool
     {
         $instance = $this->_cache->newNode($eid, Cache::TYPE_NODE);
@@ -702,6 +462,10 @@ OPENSSL_KEYTYPE_EC (entier)
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::cryptTo()
+     */
     public function cryptTo(string $data, string $eid)
     {
         $instance = $this->_cache->newNode($eid, Cache::TYPE_NODE);
@@ -726,6 +490,10 @@ OPENSSL_KEYTYPE_EC (entier)
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::decryptTo()
+     */
     public function decryptTo(string $code, string $eid, string $privatePassword)
     {
         $instance = $this->_cache->newNode($eid, Cache::TYPE_NODE);
@@ -748,7 +516,10 @@ OPENSSL_KEYTYPE_EC (entier)
         return false;
     }
 
-    // Génération d'une pkey pour une entité nebule.
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::newPkey()
+     */
     public function newPkey(): bool
     {
         // Vérifie que l'algorithme est correcte.
@@ -766,7 +537,7 @@ OPENSSL_KEYTYPE_EC (entier)
             default    :
                 return false;
         }
-        $config['digest_alg'] = $this->_hashAlgorithmName;
+        $config['digest_alg'] = $this->_hashAlgorithmName; // TODO
         $config['private_key_bits'] = $this->_asymetricKeyLength;
 
         // Génération d'un bi-clé.
@@ -775,14 +546,20 @@ OPENSSL_KEYTYPE_EC (entier)
         return $newPkey;
     }
 
-    // Extraction de la clé publique.
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::getPkeyPublic()
+     */
     public function getPkeyPublic($pkey)
     {
         $fullPublicKey = openssl_pkey_get_details($pkey);
         return $fullPublicKey['key'];
     }
 
-    // Extraction de la clé privée, de préférence protégée par mot de passe.
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::getPkeyPrivate()
+     */
     public function getPkeyPrivate(string $pkey, string $password = '')
     {
         if ($password == '') {
@@ -794,7 +571,7 @@ OPENSSL_KEYTYPE_EC (entier)
     }
 
     // Extrait une clé privée.
-    public function getPrivateKey(string $privateKey, string $password)
+    public function getPrivateKey(string $privateKey, string $password): bool
     {
         return openssl_pkey_get_private($privateKey, $password);
     }

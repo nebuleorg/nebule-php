@@ -4,6 +4,9 @@ namespace Nebule\Library;
 use Nebule\Library\nebule;
 
 /**
+ * Fallback library.
+ * TODO
+ *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
@@ -49,8 +52,41 @@ class CryptoSoftware implements CryptoInterface
 
     /**
      * {@inheritDoc}
+     * @see CryptoInterface::checkFunction()
+     */
+    public function checkFunction(string $algo, int $type): bool
+    {
+        switch ($type) {
+            case (Crypto::TYPE_HASH):
+                return $this->_checkHashFunction($algo);
+            case (Crypto::TYPE_SYMMETRIC):
+                return $this->_checkSymmetricFunction($algo);
+            case (Crypto::TYPE_ASYMMETRIC):
+                return $this->_checkAsymmetricFunction($algo);
+        }
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::checkValidAlgorithm()
+     */
+    public function checkValidAlgorithm(string $algo, int $type): bool
+    {
+        switch ($type) {
+            case (Crypto::TYPE_HASH):
+                return $this->_checkHashAlgorithm($algo);
+            case (Crypto::TYPE_SYMMETRIC):
+                return $this->_checkSymmetricAlgorithm($algo);
+            case (Crypto::TYPE_ASYMMETRIC):
+                return $this->_checkAsymmetricAlgorithm($algo);
+        }
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
      * @see CryptoInterface::getRandom()
-     * @return string
      */
     public function getRandom(int $size = 32, int $quality = Crypto::RANDOM_PSEUDO): string
     {
@@ -137,148 +173,121 @@ class CryptoSoftware implements CryptoInterface
         return $h;
     }
 
-    public function hashAlgorithm()
+    private function _checkHashFunction(string $algo): bool
     {
-        // TODO: Implement hashAlgorithm() method.
+        return false;
     }
 
-    public function hashAlgorithmName()
+    private function _checkHashAlgorithm(string $algo): bool
     {
-        // TODO: Implement hashAlgorithmName() method.
+        return false;
     }
 
-    public function hashLength()
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::hash()
+     */
+    public function hash(string $data, string $algo = ''): string
     {
-        // TODO: Implement hashLength() method.
+        return '';
     }
 
-    public function checkHashFunction()
+    private function _checkSymmetricFunction(string $algo): bool
     {
-        // TODO: Implement checkHashFunction() method.
+        return false;
     }
 
-    public function setHashAlgorithm(string $algo)
+    private function _checkSymmetricAlgorithm(string $algo): bool
     {
-        // TODO: Implement setHashAlgorithm() method.
+        return false;
     }
 
-    public function checkHashAlgorithm(string $algo)
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::encrypt()
+     */
+    public function encrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
     {
-        // TODO: Implement checkHashAlgorithm() method.
+        return '';
     }
 
-    public function hash(string $data, string $algo = '')
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::decrypt()
+     */
+    public function decrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
     {
-        // TODO: Implement hash() method.
+        return '';
     }
 
-    public function symmetricAlgorithm()
+    private function _checkAsymmetricFunction(string $algo): bool
     {
-        // TODO: Implement symmetricAlgorithm() method.
+        return false;
     }
 
-    public function symmetricAlgorithmName()
+    private function _checkAsymmetricAlgorithm(string $algo): bool
     {
-        // TODO: Implement symmetricAlgorithmName() method.
+        return false;
     }
 
-    public function symmetricAlgorithmMode()
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::sign()
+     */
+    public function sign(string $hash, string $eid, string $privatePassword): string
     {
-        // TODO: Implement symmetricAlgorithmMode() method.
+        return '';
     }
 
-    public function symmetricKeyLength()
-    {
-        // TODO: Implement symmetricKeyLength() method.
-    }
-
-    public function checkSymmetricFunction()
-    {
-        // TODO: Implement checkSymmetricFunction() method.
-    }
-
-    public function setSymmetricAlgorithm(string $algo)
-    {
-        // TODO: Implement setSymmetricAlgorithm() method.
-    }
-
-    public function checkSymmetricAlgorithm(string $algo)
-    {
-        // TODO: Implement checkSymmetricAlgorithm() method.
-    }
-
-    public function crypt(string $data, string $hexKey, string $hexIV = '')
-    {
-        // TODO: Implement crypt() method.
-    }
-
-    public function decrypt(string $data, string $hexKey, string $hexIV = '')
-    {
-        // TODO: Implement decrypt() method.
-    }
-
-    public function asymmetricAlgorithm()
-    {
-        // TODO: Implement asymmetricAlgorithm() method.
-    }
-
-    public function asymmetricAlgorithmName()
-    {
-        // TODO: Implement asymmetricAlgorithmName() method.
-    }
-
-    public function asymmetricKeyLength()
-    {
-        // TODO: Implement asymmetricKeyLength() method.
-    }
-
-    public function checkAsymmetricFunction()
-    {
-        // TODO: Implement checkAsymmetricFunction() method.
-    }
-
-    public function setAsymmetricAlgorithm(string $algo)
-    {
-        // TODO: Implement setAsymmetricAlgorithm() method.
-    }
-
-    public function checkAsymmetricAlgorithm(string $algo)
-    {
-        // TODO: Implement checkAsymmetricAlgorithm() method.
-    }
-
-    public function sign(string $hash, string $eid, string $privatePassword): ?string
-    {
-        return null;
-        // TODO: Implement sign() method.
-    }
-
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::verify()
+     */
     public function verify(string $hash, string $sign, string $eid): bool
     {
         return false;
-        // TODO: Implement verify() method.
     }
 
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::cryptTo()
+     */
     public function cryptTo(string $data, string $eid)
     {
         // TODO: Implement cryptTo() method.
     }
 
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::decryptTo()
+     */
     public function decryptTo(string $code, string $privateKey, string $privatePassword)
     {
         // TODO: Implement decryptTo() method.
     }
 
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::newPkey()
+     */
     public function newPkey()
     {
         // TODO: Implement newPkey() method.
     }
 
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::getPkeyPublic()
+     */
     public function getPkeyPublic($pkey)
     {
         // TODO: Implement getPkeyPublic() method.
     }
 
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::getPkeyPrivate()
+     */
     public function getPkeyPrivate(string $pkey, string $password = '')
     {
         // TODO: Implement getPkeyPrivate() method.

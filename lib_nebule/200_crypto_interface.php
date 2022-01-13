@@ -12,6 +12,24 @@ use Nebule\Library\nebule;
 interface CryptoInterface
 {
     /**
+     * Check if the cryptographique function have correct return value.
+     *
+     * @param string $algo
+     * @param int $type
+     * @return bool
+     */
+    public function checkFunction(string $algo, int $type): bool;
+
+    /**
+     * Check if the cryptographique function is supported.
+     *
+     * @param string $algo
+     * @param int $type
+     * @return bool
+     */
+    public function checkValidAlgorithm(string $algo, int $type): bool;
+
+    /**
      * Get $size octets of random string in hexadecimal form.
      * Quality of random sequence can be selected with strong or pseudo random.
      * But, to save precious entropy, you have to use pseudo random in all case where you do not absolutely need strong random.
@@ -22,44 +40,75 @@ interface CryptoInterface
      */
     public function getRandom(int $size = 32, int $quality = Crypto::RANDOM_PSEUDO): string;
 
-    // Fonction de prise d'empreinte.
-    public function checkHashFunction();
-
-    public function setHashAlgorithm(string $algo);
-
-    public function checkHashAlgorithm(string $algo);
-
+    /**
+     * @param string $data
+     * @param string $algo
+     * @return string
+     */
     public function hash(string $data, string $algo = ''): string;
 
-    // Fonction de chiffrement symétrique.
-    public function checkSymmetricFunction();
+    /**
+     * @param string $data
+     * @param string $hexKey
+     * @param string $hexIV
+     * @return mixed
+     */
+    public function encrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string;
 
-    public function setSymmetricAlgorithm(string $algo);
+    /**
+     * @param string $data
+     * @param string $hexKey
+     * @param string $hexIV
+     * @return mixed
+     */
+    public function decrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string;
 
-    public function checkSymmetricAlgorithm(string $algo);
+    /**
+     * @param string $hash
+     * @param string $eid
+     * @param string $privatePassword
+     * @return string
+     */
+    public function sign(string $hash, string $eid, string $privatePassword): string;
 
-    public function crypt(string $data, string $hexKey, string $hexIV = '');
-
-    public function decrypt(string $data, string $hexKey, string $hexIV = '');
-
-    // Fonction de chiffrement asymétrique.
-    public function checkAsymmetricFunction();
-
-    public function setAsymmetricAlgorithm(string $algo);
-
-    public function checkAsymmetricAlgorithm(string $algo);
-
-    public function sign(string $hash, string $eid, string $privatePassword): ?string;
-
+    /**
+     * @param string $hash
+     * @param string $sign
+     * @param string $eid
+     * @return bool
+     */
     public function verify(string $hash, string $sign, string $eid): bool;
 
+    /**
+     * @param string $data
+     * @param string $eid
+     * @return mixed
+     */
     public function cryptTo(string $data, string $eid);
 
+    /**
+     * @param string $code
+     * @param string $privateKey
+     * @param string $privatePassword
+     * @return mixed
+     */
     public function decryptTo(string $code, string $privateKey, string $privatePassword);
 
+    /**
+     * @return mixed
+     */
     public function newPkey();
 
+    /**
+     * @param $pkey
+     * @return mixed
+     */
     public function getPkeyPublic($pkey);
 
+    /**
+     * @param string $pkey
+     * @param string $password
+     * @return mixed
+     */
     public function getPkeyPrivate(string $pkey, string $password = '');
 }

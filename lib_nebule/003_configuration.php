@@ -423,7 +423,7 @@ class Configuration
         'modeRescue' => 'false',
         'cryptoLibrary' => 'openssl',
         'cryptoHashAlgorithm' => 'sha2.256',
-        'cryptoSymmetricAlgorithm' => 'aes-256-ctr',
+        'cryptoSymmetricAlgorithm' => 'aes.256.ctr',
         'cryptoAsymmetricAlgorithm' => 'rsa.2048',
         'socialLibrary' => 'strict',
         'ioLibrary' => 'ioFileSystem',
