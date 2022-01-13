@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
-use Nebule\Library\nebule;
 
 /**
  * Fallback library.
@@ -29,13 +28,6 @@ class CryptoSoftware implements CryptoInterface
     protected $_metrology;
 
     /**
-     * Instance de gestion de la configuration et des options.
-     *
-     * @var Configuration
-     */
-    private $_configuration;
-
-    /**
      * Instance de gestion du cache.
      *
      * @var Cache
@@ -46,7 +38,6 @@ class CryptoSoftware implements CryptoInterface
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_cache = $nebuleInstance->getCacheInstance();
     }
 

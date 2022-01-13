@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
-use Nebule\Library\nebule;
 
 /**
  * @author Projet nebule
@@ -56,11 +55,11 @@ class CryptoOpenssl implements CryptoInterface
         'rsa.2048',
         'rsa.4096',
     );
-    const TRANSLATE_ASYMMETRIC_ALGORITHM = array(
+    /*const TRANSLATE_ASYMMETRIC_ALGORITHM = array(
         'rsa.1024',
         'rsa.2048',
         'rsa.4096',
-    );
+    );*/
 
     /**
      * Instance métrologie en cours.
@@ -102,7 +101,7 @@ class CryptoOpenssl implements CryptoInterface
             case (Crypto::TYPE_SYMMETRIC):
                 return $this->_checkSymmetricFunction($algo);
             case (Crypto::TYPE_ASYMMETRIC):
-                return $this->_checkAsymmetricFunction($algo);
+                return $this->_checkAsymmetricFunction();
         }
         return false;
     }
@@ -151,10 +150,10 @@ class CryptoOpenssl implements CryptoInterface
     }
 
     /**
-     * Génère de l'aléa avec une source attendue comme fiable.
-     * La taille est en octets.
-     * Vérifie que générateur se déclare comme retournant une valeur cryptographiquement fiable.
-     * Retourne false si ce n'est pas le cas.
+     * Get robust random binary content.
+     * Size is in octets.
+     * If problem, return empty string.
+     * To save precious entropy, you have to use pseudo random in all case where you do not absolutely need strong random.
      *
      * @param int $size
      * @return string
@@ -462,7 +461,7 @@ class CryptoOpenssl implements CryptoInterface
         return $privateKey;
     }
 
-    private function _checkAsymmetricFunction(string $algo): bool
+    private function _checkAsymmetricFunction(): bool
     {
         $private_pem = <<<EOD
 -----BEGIN RSA PRIVATE KEY-----
@@ -521,11 +520,11 @@ EOD;
         return false;
     }
 
-    private function _translateAsymmetricAlgorithm(string $name): string
+    /*private function _translateAsymmetricAlgorithm(string $name): string
     {
         if (isset(self::TRANSLATE_ASYMMETRIC_ALGORITHM[$name]))
             return self::TRANSLATE_ASYMMETRIC_ALGORITHM[$name];
         $this->_metrology->addLog('Invalid asymmetric algorithm ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2b4c9b6b');
         return '';
-    }
+    }*/
 }
