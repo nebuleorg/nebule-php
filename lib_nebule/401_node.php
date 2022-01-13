@@ -2191,7 +2191,7 @@ class Node implements nodeInterface
             $newLink->signWrite();
 
             // Création du type mime des données chiffrées.
-            $text = 'application/x-encrypted/' . $this->_crypto->symmetricAlgorithmName();
+            $text = 'application/x-encrypted/' . $this->_configuration->getOptionAsString('cryptoSymmetricAlgorithm');
             $textID = $this->_nebuleInstance->createTextAsObject($text);
             if ($textID !== false) {
                 // Crée le lien de type d'empreinte.
@@ -2209,7 +2209,7 @@ class Node implements nodeInterface
             }
 
             // Création du type mime de la clé chiffrée.
-            $text = 'application/x-encrypted/' . $this->_crypto->asymmetricAlgorithmName();
+            $text = 'application/x-encrypted/' . $this->_configuration->getOptionAsString('cryptoAsymmetricAlgorithm');
             $textID = $this->_nebuleInstance->createTextAsObject($text);
             if ($textID !== false) {
                 // Crée le lien de type d'empreinte.
@@ -2326,7 +2326,7 @@ class Node implements nodeInterface
                         }
 
                         // Création du type mime de la clé chiffrée.
-                        $text = 'application/x-encrypted/' . $this->_crypto->asymmetricAlgorithmName();
+                        $text = 'application/x-encrypted/' . $this->_configuration->getOptionAsString('cryptoAsymmetricAlgorithm');
                         $textID = $this->_nebuleInstance->createTextAsObject($text);
                         if ($textID !== false) {
                             // Crée le lien de type d'empreinte.
@@ -2488,7 +2488,7 @@ class Node implements nodeInterface
         $date = date(DATE_ATOM);
 
         // Création du type mime de la clé chiffrée.
-        $text = 'application/x-encrypted/' . $this->_crypto->asymmetricAlgorithmName();
+        $text = 'application/x-encrypted/' . $this->_configuration->getOptionAsString('cryptoAsymmetricAlgorithm');
         $textID = $this->_nebuleInstance->createTextAsObject($text);
         if ($textID !== false) {
             // Crée le lien de type d'empreinte.

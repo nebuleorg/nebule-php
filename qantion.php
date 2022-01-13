@@ -4888,7 +4888,7 @@ class ModuleEntities extends Modules
 
                                 </div>
                                 <input type="password"
-                                       name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2; ?>"
+                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2; ?>"
                                        size="30" value=""
                                        class="sylabeModuleEntityCreatePropertyEntry"
                                        id="sylabeModuleEntityCreatePropertyEntryPWD2"/>
@@ -4907,11 +4907,11 @@ class ModuleEntities extends Modules
 
                                 </div>
                                 <select
-                                        name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_ALGORITHM; ?>"
+                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_ALGORITHM; ?>"
                                         class="sylabeModuleEntityCreatePropertyEntry">
                                     <option value="<?php echo $this->_nebuleInstance->getCryptoInstance()->asymmetricAlgorithm(); ?>"
                                             selected>
-                                        <?php echo $this->_nebuleInstance->getCryptoInstance()->asymmetricAlgorithmName(); ?>
+                                        <?php echo $this->_nebuleInstance->getConfigurationInstance()->getOptionAsString('cryptoAsymmetricAlgorithm'); ?>
 
                                     </option>
                                 </select>
@@ -4922,7 +4922,7 @@ class ModuleEntities extends Modules
 
                                 </div>
                                 <select
-                                        name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_TYPE; ?>"
+                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_TYPE; ?>"
                                         class="sylabeModuleEntityCreatePropertyEntry">
                                     <option value="undef" selected>
                                         <?php $this->_echoTraduction('::sylabe:module:entities:CreateEntityTypeUndefined'); ?>
@@ -4944,7 +4944,7 @@ class ModuleEntities extends Modules
 
                                 </div>
                                 <select
-                                        name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_AUTONOMY; ?>"
+                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_AUTONOMY; ?>"
                                         class="sylabeModuleEntityCreatePropertyEntry">
                                     <option value="y" selected>
                                         <?php $this->_echoTraduction('::yes'); ?>

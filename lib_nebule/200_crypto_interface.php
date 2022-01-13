@@ -29,7 +29,7 @@ interface CryptoInterface
 
     public function checkHashAlgorithm(string $algo);
 
-    public function hash(string $data, string $algo = '');
+    public function hash(string $data, string $algo = ''): string;
 
     // Fonction de chiffrement symétrique.
     public function checkSymmetricFunction();

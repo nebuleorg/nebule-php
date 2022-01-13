@@ -158,7 +158,7 @@ class Entity extends Node
                 || $this->_configuration->getOptionAsBoolean('permitPublicCreateEntity')
             )
         ) {
-            $this->_metrology->addLog('Create entity ' . $this->_crypto->asymmetricAlgorithmName(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Create entity ' . $this->_configuration->getOptionAsString('cryptoAsymmetricAlgorithm'), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
 
             // Génère une biclé cryptographique.
             $newPkey = $this->_crypto->newPkey();

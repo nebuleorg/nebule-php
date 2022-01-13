@@ -18,7 +18,7 @@ class CryptoOpenssl implements CryptoInterface
         'sha2-384',
         'sha2-512',
     );
-    const TRANSLATE_HASH_ALGORITHM = array(
+    const TRANSLATE_HASH_ALGORITHM_IN = array(
         'sha1-128' => 'sha1',
         'sha2-224' => 'sha224',
         'sha2-256' => 'sha256',
@@ -124,7 +124,6 @@ class CryptoOpenssl implements CryptoInterface
         $hash = $this->hash($data);
         switch ($this->_hashAlgorithmName) {
             case 'sha1':
-            case 'dss1':
                 if ($hash == 'd689bc73bbf35e6547e6de4b0ea79a5fd3b83ffa') {
                     $check = true;
                 }
@@ -165,7 +164,6 @@ class CryptoOpenssl implements CryptoInterface
                 }
                 break;
         }
-        unset($data, $hash);
         return $check;
     }
 
@@ -175,8 +173,7 @@ class CryptoOpenssl implements CryptoInterface
      */
     public function setHashAlgorithm(string $algo): bool
     {
-        $algo = $this->_translateHashAlgorithmName($algo);
-        // Vérifie si la liste des algorithmes n'est pas vide.
+        $algo = $this->_translateHashAlgorithmIn($algo);
         if (sizeof($this->_hashAlgorithmList) == 0)
             return false;
         if (!in_array($algo, $this->_hashAlgorithmList))
@@ -202,7 +199,7 @@ class CryptoOpenssl implements CryptoInterface
         elseif ($algo == 'rmd160') return true;
         elseif ($algo == 'md5') return true;
         elseif ($algo == 'md4') return true;
-        else                         return false;
+        else return false;
         // @todo ... ajouter une option PERMIT pour gérer les algo non sûrs.
     }
 
@@ -210,15 +207,15 @@ class CryptoOpenssl implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::hash()
      */
-    public function hash($data, $algo = '')
+    public function hash(string $data, string $algo = ''): string
     {
         if (strlen($data) == 0)
-            return false;
-        $algo = $this->_translateHashAlgorithmName($algo);
+            return '';
+        $algo = $this->_translateHashAlgorithmIn($algo);
         if ($algo == '')
             $algo = $this->_hashAlgorithmName;
         if (!$this->checkHashAlgorithm($algo))
-            return false;
+            return '';
         return hash($algo, $data);
     }
 
@@ -233,35 +230,18 @@ class CryptoOpenssl implements CryptoInterface
         $this->_parseHashAlgorithm();
     }
 
-    private function _translateHashAlgorithmName(string $name): string
+    private function _translateHashAlgorithmIn(string $name): string
     {
-        switch ($name) {
-            case 'sha1.128':
-                $return = 'sha1';
-                break;
-            case 'sha2.224':
-                $return = 'sha224';
-                break;
-            case 'sha2.256':
-                $return = 'sha256';
-                break;
-            case 'sha2.384':
-                $return = 'sha384';
-                break;
-            case 'sha2.512':
-                $return = 'sha512';
-                break;
-            default:
-                $this->_metrology->addLog('Invalid hash algo ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '43c10796');
-                $return = '';
-        }
-        return $return;
+        if (isset(self::TRANSLATE_HASH_ALGORITHM_IN[$name]))
+            return self::TRANSLATE_HASH_ALGORITHM_IN[$name];
+        $this->_metrology->addLog('Invalid hash algo ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '43c10796');
+        return '';
     }
 
     /**
-     * Convertit le nom de la fonction de l'algorithme et la taille de hash en fontion du nom court de l'algorithme.
+     * Convertit le nom de la fonction de l'algorithme et la taille de hash en fonction du nom court de l'algorithme.
      */
-    private function _parseHashAlgorithmName(string $name): string
+    private function _translateHashAlgorithmOut(string $name): string
     {
         switch ($name) {
             case 'sha1':
@@ -288,11 +268,11 @@ class CryptoOpenssl implements CryptoInterface
     }
 
     /**
-     * Prépare le nom de la fonction de l'algorithme et la taille de hash en fontion du nom court de l'algorithme.
+     * Prépare le nom de la fonction de l'algorithme et la taille de hash en fonction du nom court de l'algorithme.
      */
     private function _parseHashAlgorithm(): void
     {
-        $name = $this->_parseHashAlgorithmName($this->_hashAlgorithmName);
+        $name = $this->_translateHashAlgorithmOut($this->_hashAlgorithmName);
         if ($name == '') {
             $this->_hashAlgorithm = ' ';
             $this->_hashLength = 0;
