@@ -348,26 +348,10 @@ bwIDAQAB
 -----END PUBLIC KEY-----
 EOD;
         $private_pass = "0000";
-
         $data = 'Bienvenue dans le projet nebule.';
-        $private_key = openssl_pkey_get_private($private_pem, $private_pass);
-        $public_key = openssl_pkey_get_public($public_pem);
-        $decrypted = '';
         $hashData = hash('sha256', $data);
-
-        $binary_signature = '';
-        $binHash = pack('H*', $hashData);
-        openssl_private_encrypt($binHash, $binary_signature, $private_key, OPENSSL_PKCS1_PADDING);
-
-        $hexSign = bin2hex($binary_signature);
-        $binSign = pack('H*', $hexSign);
-
-        $ok = openssl_public_decrypt($binSign, $decrypted, $public_key, OPENSSL_PKCS1_PADDING);
-        $decrypted = (bin2hex($decrypted));
-        if ($ok && $decrypted == $hashData)
-            return true;
-
-        return false;
+        $signed = $this->sign($hashData, $private_pem, $private_pass);
+        return $this->verify($hashData, $signed, $public_pem);
     }
 
     private function _checkAsymmetricAlgorithm(string $algo): bool
