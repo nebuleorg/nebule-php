@@ -395,7 +395,7 @@ EOD;
         $ressource = openssl_pkey_get_private($privateKey, $privatePassword);
         if ($ressource === false)
             return '';
-        $maxSize = (int)openssl_pkey_get_details($ressource)['bits'] - 11;
+        $maxSize = ((int)openssl_pkey_get_details($ressource)['bits']/8) - 11;
         if (strlen($data) > $maxSize)
             $data = substr($data, 0, $maxSize); // for PKCS padding # 1.
 
@@ -415,7 +415,7 @@ EOD;
         $ressource = openssl_pkey_get_public($publicKey);
         if ($ressource === false)
             return false;
-        $maxSize = (int)openssl_pkey_get_details($ressource)['bits'] - 11;
+        $maxSize = ((int)openssl_pkey_get_details($ressource)['bits']/8) - 11;
         if (strlen($data) > $maxSize)
             $data = substr($data, 0, $maxSize); // for PKCS padding # 1.
 
