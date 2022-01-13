@@ -215,6 +215,10 @@ class CryptoOpenssl implements CryptoInterface
 	 */
     private function _checkSymmetricFunction(string $algo): bool
     {
+        $data = 'Bienvenue dans le projet nebule.';
+        $hexKey = "8fdf208b4a79cef62f4e610ef7d409c110cb5d20b0148b9770cad5130106b6a1";
+        $code = $this->encrypt($data, $algo, $hexKey);
+
         $algo = $this->_translateHashAlgorithm($algo);
         if ($algo == '')
             return false;
@@ -231,7 +235,6 @@ class CryptoOpenssl implements CryptoInterface
                 $data = 'Bienvenue dans le projet nebule.';
                 $hexIV = $this->_genSymmetricAlgorithmNullIV();
                 $binIV = pack("H*", $hexIV);
-                $hexKey = "8fdf208b4a79cef62f4e610ef7d409c110cb5d20b0148b9770cad5130106b6a1";
                 $binKey = pack("H*", $hexKey);
                 // Encode.
                 $code = openssl_encrypt($data, $this->_symmetricAlgorithmName, $binKey, OPENSSL_RAW_DATA, $binIV);
@@ -272,21 +275,30 @@ class CryptoOpenssl implements CryptoInterface
         return '';
     }
 
+    private function _getAlgorithmSize(string $algo): int
+    {
+        $v = preg_split('/\./', $algo); // aes.256.ctr
+        return (int)$v[1];
+    }
+
     /**
      * {@inheritDoc}
      * @see CryptoInterface::encrypt()
      */
     public function encrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
     {
-        if ($data == '' || $hexKey == '')
+        if ($data == ''
+            || $hexKey == ''
+            || !$this->_checkSymmetricAlgorithm($algo)
+        )
             return '';
 
-        if ($hexIV == '') {
-            $size = preg_split('/./', $algo);
-            $hexIV = $this->_genSymmetricAlgorithmNullIV((int)$size[1]/8);
-        }
+        if ($hexIV == '')
+            $hexIV = $this->_genSymmetricAlgorithmNullIV($this->_getAlgorithmSize($algo));
 
-        return openssl_encrypt($data, $this->_translateSymmetricAlgorithm($algo), $hexKey, OPENSSL_RAW_DATA, pack("H*", $hexIV));
+        $binKey = pack("H*", $hexKey);
+
+        return openssl_encrypt($data, $this->_translateSymmetricAlgorithm($algo), $binKey, OPENSSL_RAW_DATA, pack("H*", $hexIV));
     }
 
     /**
@@ -295,15 +307,18 @@ class CryptoOpenssl implements CryptoInterface
      */
     public function decrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
     {
-        if ($data == '' || $hexKey == '')
+        if ($data == ''
+            || $hexKey == ''
+            || !$this->_checkSymmetricAlgorithm($algo)
+        )
             return '';
 
-        if ($hexIV == '') {
-            $size = preg_split('/./', $algo);
-            $hexIV = $this->_genSymmetricAlgorithmNullIV((int)$size[1]/8);
-        }
+        if ($hexIV == '')
+            $hexIV = $this->_genSymmetricAlgorithmNullIV($this->_getAlgorithmSize($algo));
 
-        return openssl_decrypt($data, $this->_symmetricAlgorithmName, $hexKey, OPENSSL_RAW_DATA, pack("H*", $hexIV));
+        $binKey = pack("H*", $hexKey);
+
+        return openssl_decrypt($data, $this->_translateSymmetricAlgorithm($algo), $binKey, OPENSSL_RAW_DATA, pack("H*", $hexIV));
     }
 
 

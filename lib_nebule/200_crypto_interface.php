@@ -30,7 +30,7 @@ interface CryptoInterface
     public function checkValidAlgorithm(string $algo, int $type): bool;
 
     /**
-     * Get $size octets of random string in hexadecimal form.
+     * Get $size octets of random string in raw form (strong) or in hexadecimal form (pseudo).
      * Quality of random sequence can be selected with strong or pseudo random.
      * But, to save precious entropy, you have to use pseudo random in all case where you do not absolutely need strong random.
      *
