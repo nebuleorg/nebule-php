@@ -161,15 +161,15 @@ class Entity extends Node
             $this->_metrology->addLog('Create entity ' . $this->_configuration->getOptionAsString('cryptoAsymmetricAlgorithm'), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
 
             // Génère une biclé cryptographique.
-            $newPkey = $this->_crypto->newPkey();
-            if ($newPkey !== false) {
+            $this->_privateKeyPassword = $this->_crypto->getRandom(32, Crypto::RANDOM_STRONG);
+            $newPkey = $this->_crypto->newAsymmetricKeys($this->_privateKeyPassword);
+            if (sizeof($newPkey) != 0) {
                 // Extraction des infos.
-                $this->_publicKey = $this->_crypto->getPkeyPublic($newPkey);
+                $this->_publicKey = $newPkey['public'];
                 $this->_id = $this->_crypto->hash($this->_publicKey);
                 $this->_metrology->addLog('Generated entity ' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
-                $this->_privateKeyPassword = $this->_crypto->getRandom(32, Crypto::RANDOM_STRONG);
                 $this->_privateKeyPasswordSalt = '';
-                $this->_privateKey = $this->_crypto->getPkeyPrivate($newPkey, $this->_privateKeyPassword);
+                $this->_privateKey = $newPkey['private'];
                 $this->_privateKeyID = $this->_crypto->hash($this->_privateKey);
                 $this->_issetPrivateKeyPassword = true;
                 $this->_newPrivateKey = true;
@@ -441,11 +441,9 @@ class Entity extends Node
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
         $this->_findPrivateKey();
-        // Vérifie le mot de passe sur la clé privée.
-        $check = false;
-        if (is_string($this->_privateKey))
-            $check = $this->_crypto->getPrivateKey($this->_privateKey, $passwd);
-        if ($check === false)
+        if (is_string($this->_privateKey)
+            && !$this->_crypto->checkPrivateKeyPassword($this->_privateKey, $passwd)
+        )
             return false;
         $this->_privateKeyPasswordSalt = $this->_crypto->getRandom(self::ENTITY_PASSWORD_SALT_SIZE, Crypto::RANDOM_STRONG);
         // TODO le chiffrement du mot de passe avec le sel et l'ID de session php...
@@ -499,25 +497,22 @@ class Entity extends Node
         $this->_metrology->addLog('Change entity password - old ' . $this->_privateKeyID, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
         $oldPrivateKeyID = $this->_privateKeyID;
 
-        $privateKey = $this->_crypto->getPrivateKey($this->_privateKey, $this->_privateKeyPassword);
-        if ($privateKey === false) {
+        if (!$this->_crypto->checkPrivateKeyPassword($this->_privateKey, $this->_privateKeyPassword))
             return false;
-        }
 
-        $newKey = $this->_crypto->getPkeyPrivate($privateKey, $newPasswd);
-        if ($newKey === false) {
+        $newKey = $this->_crypto->changePrivateKeyPassword($this->_privateKey, $this->_privateKeyPassword, $newPasswd);
+        if ($newKey == '')
             return false;
-        }
 
         $this->_privateKeyPasswordSalt = $this->_crypto->getRandom(self::ENTITY_PASSWORD_SALT_SIZE, Crypto::RANDOM_STRONG);
         // A faire... le chiffrement du mot de passe avec le sel et l'ID de session php...
         $this->_privateKeyPassword = $newPasswd;
         $this->_privateKey = $newKey;
-        $this->_privateKeyID = $this->_crypto->hash($this->_privateKey);
+        $this->_privateKeyID = $this->_crypto->hash($newKey);
         $this->_issetPrivateKeyPassword = true;
         $this->_metrology->addLog('Change entity password - new ' . $this->_privateKeyID, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
 
-        unset($newKey, $privateKey);
+        unset($newKey);
 
         // Ecrit l'objet de la nouvelle clé privée.
         $this->_io->writeObject($this->_privateKey);

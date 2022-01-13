@@ -79,6 +79,8 @@ class Crypto implements CryptoInterface
         return $this->_defaultCryptoLibraryInstance->checkValidAlgorithm($algo, $type);
     }
 
+    // --------------------------------------------------------------------------------
+
     /**
      * {@inheritDoc}
      * @see CryptoInterface::getRandom()
@@ -102,53 +104,99 @@ class Crypto implements CryptoInterface
         return $this->_softwareInstance->getEntropy($data);
     }
 
+    // --------------------------------------------------------------------------------
+
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::hash()
+     */
     public function hash(string $data, string $algo = ''): string
     {
         return $this->_opensslInstance->hash($data, $algo);
     }
 
+    // --------------------------------------------------------------------------------
+
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::encrypt()
+     */
     public function encrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
     {
         return $this->_opensslInstance->encrypt($data, $hexKey, $hexIV);
     }
 
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::decrypt()
+     */
     public function decrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
     {
         return $this->_opensslInstance->decrypt($data, $hexKey, $hexIV);
     }
 
-    public function sign(string $hash, string $eid, string $privatePassword): string
+    // --------------------------------------------------------------------------------
+
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::sign()
+     */
+    public function sign(string $data, string $privateKey, string $privatePassword): string
     {
-        return $this->_opensslInstance->sign($hash, $eid, $privatePassword);
+        return $this->_opensslInstance->sign($data, $privateKey, $privatePassword);
     }
 
-    public function verify(string $hash, string $sign, string $eid): bool
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::verify()
+     */
+    public function verify(string $data, string $sign, string $publicKey): bool
     {
-        return $this->_opensslInstance->verify($hash, $sign, $eid);
+        return $this->_opensslInstance->verify($data, $sign, $publicKey);
     }
 
-    public function cryptTo(string $data, string $eid)
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::encryptTo()
+     */
+    public function encryptTo(string $data, string $eid)
     {
-        // TODO: Implement cryptTo() method.
+        return $this->_opensslInstance->encryptTo($data, $eid);
     }
 
-    public function decryptTo(string $code, string $privateKey, string $privatePassword)
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::decryptTo()
+     */
+    public function decryptTo(string $code, string $eid, string $password)
     {
-        // TODO: Implement decryptTo() method.
+        return $this->_opensslInstance->decryptTo($code, $eid, $password);
     }
 
-    public function newPkey()
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::newAsymmetricKeys()
+     */
+    public function newAsymmetricKeys(string $password = ''): array
     {
-        // TODO: Implement newPkey() method.
+        return $this->_opensslInstance->newAsymmetricKeys($password);
     }
 
-    public function getPkeyPublic($pkey)
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::checkPrivateKeyPassword()
+     */
+    public function checkPrivateKeyPassword(string $privateKey, string $password): bool
     {
-        // TODO: Implement getPkeyPublic() method.
+        return $this->_opensslInstance->checkPrivateKeyPassword($privateKey, $password);
     }
 
-    public function getPkeyPrivate(string $pkey, string $password = '')
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::changePrivateKeyPassword()
+     */
+    public function changePrivateKeyPassword(string $privateKey, string $oldPassword, string $newPassword): string
     {
-        // TODO: Implement getPkeyPrivate() method.
+        return $this->_opensslInstance->changePrivateKeyPassword($privateKey, $oldPassword, $newPassword);
     }
 }

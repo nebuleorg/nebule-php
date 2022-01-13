@@ -2151,7 +2151,7 @@ class Node implements nodeInterface
             }
 
             // Chiffrement (asymétrique) de la clé de chiffrement du contenu.
-            $codeKey = $this->_crypto->cryptTo($key, $this->_nebuleInstance->getCurrentEntityInstance()->getPublicKey());
+            $codeKey = $this->_crypto->encryptTo($key, $this->_nebuleInstance->getCurrentEntityInstance()->getPublicKey());
 
             // Vérification de bon chiffrement.
             if ($codeKey === false) {
@@ -2306,7 +2306,7 @@ class Node implements nodeInterface
                         && $entity != $this->_nebuleInstance->getCurrentEntity()
                     ) {
                         // Chiffrement (asymétrique) de la clé de chiffrement du contenu.
-                        $codeKey = $this->_crypto->cryptTo($key, $entity->getPublicKey());
+                        $codeKey = $this->_crypto->encryptTo($key, $entity->getPublicKey());
 
                         // Vérification de bon chiffrement.
                         if ($codeKey === false) {
@@ -2467,7 +2467,7 @@ class Node implements nodeInterface
         }
 
         // Chiffrement (asymétrique) de la clé de chiffrement du contenu.
-        $codeKey = $this->_crypto->cryptTo($key, $entity->getPublicKey());
+        $codeKey = $this->_crypto->encryptTo($key, $entity->getPublicKey());
 
         // Vérification de bon chiffrement.
         if ($codeKey === false) {

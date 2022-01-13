@@ -29,6 +29,8 @@ interface CryptoInterface
      */
     public function checkValidAlgorithm(string $algo, int $type): bool;
 
+    // --------------------------------------------------------------------------------
+
     /**
      * Get $size octets of random string in raw form (strong) or in hexadecimal form (pseudo).
      * Quality of random sequence can be selected with strong or pseudo random.
@@ -40,75 +42,88 @@ interface CryptoInterface
      */
     public function getRandom(int $size = 32, int $quality = Crypto::RANDOM_PSEUDO): string;
 
+    // --------------------------------------------------------------------------------
+
     /**
+     * Get the hash value for $data with a specified hash algorithm.
+     *
      * @param string $data
      * @param string $algo
      * @return string
      */
     public function hash(string $data, string $algo = ''): string;
 
+    // --------------------------------------------------------------------------------
+
     /**
      * @param string $data
+     * @param string $algo
      * @param string $hexKey
      * @param string $hexIV
-     * @return mixed
+     * @return string
      */
     public function encrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string;
 
     /**
      * @param string $data
+     * @param string $algo
      * @param string $hexKey
      * @param string $hexIV
-     * @return mixed
+     * @return string
      */
     public function decrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string;
 
+    // --------------------------------------------------------------------------------
+
     /**
-     * @param string $hash
-     * @param string $eid
+     * @param string $data
+     * @param string $privateKey
      * @param string $privatePassword
      * @return string
      */
-    public function sign(string $hash, string $eid, string $privatePassword): string;
+    public function sign(string $data, string $privateKey, string $privatePassword): string;
 
     /**
-     * @param string $hash
+     * @param string $data
      * @param string $sign
-     * @param string $eid
+     * @param string $publicKey
      * @return bool
      */
-    public function verify(string $hash, string $sign, string $eid): bool;
+    public function verify(string $data, string $sign, string $publicKey): bool;
 
     /**
      * @param string $data
      * @param string $eid
      * @return mixed
      */
-    public function cryptTo(string $data, string $eid);
+    public function encryptTo(string $data, string $eid);
 
     /**
      * @param string $code
-     * @param string $privateKey
-     * @param string $privatePassword
-     * @return mixed
-     */
-    public function decryptTo(string $code, string $privateKey, string $privatePassword);
-
-    /**
-     * @return mixed
-     */
-    public function newPkey();
-
-    /**
-     * @param $pkey
-     * @return mixed
-     */
-    public function getPkeyPublic($pkey);
-
-    /**
-     * @param string $pkey
+     * @param string $eid
      * @param string $password
      * @return mixed
      */
-    public function getPkeyPrivate(string $pkey, string $password = '');
+    public function decryptTo(string $code, string $eid, string $password);
+
+    /**
+     * @param string $password
+     * @return array
+     */
+    public function newAsymmetricKeys(string $password = ''): array;
+
+    /**
+     * @param string $privateKey
+     * @param string $password
+     * @return bool
+     */
+    public function checkPrivateKeyPassword(string $privateKey, string $password): bool;
+
+    /**
+     * @param string $privateKey
+     * @param string $oldPassword
+     * @param string $newPassword
+     * @return string
+     */
+    public function changePrivateKeyPassword(string $privateKey, string $oldPassword, string $newPassword): string;
 }

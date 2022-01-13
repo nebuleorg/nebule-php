@@ -5,7 +5,7 @@ use Nebule\Library\nebule;
 
 /**
  * Fallback library.
- * TODO
+ * TODO can be used for new cryptogrammes.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -83,6 +83,8 @@ class CryptoSoftware implements CryptoInterface
         }
         return false;
     }
+
+    // --------------------------------------------------------------------------------
 
     /**
      * {@inheritDoc}
@@ -173,6 +175,8 @@ class CryptoSoftware implements CryptoInterface
         return $h;
     }
 
+    // --------------------------------------------------------------------------------
+
     private function _checkHashFunction(string $algo): bool
     {
         return false;
@@ -191,6 +195,8 @@ class CryptoSoftware implements CryptoInterface
     {
         return '';
     }
+
+    // --------------------------------------------------------------------------------
 
     private function _checkSymmetricFunction(string $algo): bool
     {
@@ -220,6 +226,8 @@ class CryptoSoftware implements CryptoInterface
         return '';
     }
 
+    // --------------------------------------------------------------------------------
+
     private function _checkAsymmetricFunction(string $algo): bool
     {
         return false;
@@ -234,7 +242,7 @@ class CryptoSoftware implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::sign()
      */
-    public function sign(string $hash, string $eid, string $privatePassword): string
+    public function sign(string $data, string $privateKey, string $privatePassword): string
     {
         return '';
     }
@@ -243,16 +251,16 @@ class CryptoSoftware implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::verify()
      */
-    public function verify(string $hash, string $sign, string $eid): bool
+    public function verify(string $data, string $sign, string $publicKey): bool
     {
         return false;
     }
 
     /**
      * {@inheritDoc}
-     * @see CryptoInterface::cryptTo()
+     * @see CryptoInterface::encryptTo()
      */
-    public function cryptTo(string $data, string $eid)
+    public function encryptTo(string $data, string $eid)
     {
         // TODO: Implement cryptTo() method.
     }
@@ -261,36 +269,36 @@ class CryptoSoftware implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::decryptTo()
      */
-    public function decryptTo(string $code, string $privateKey, string $privatePassword)
+    public function decryptTo(string $code, string $eid, string $password)
     {
         // TODO: Implement decryptTo() method.
     }
 
     /**
      * {@inheritDoc}
-     * @see CryptoInterface::newPkey()
+     * @see CryptoInterface::newAsymmetricKeys()
      */
-    public function newPkey()
+    public function newAsymmetricKeys(string $password = ''): array
     {
-        // TODO: Implement newPkey() method.
+        return array();
     }
 
     /**
      * {@inheritDoc}
-     * @see CryptoInterface::getPkeyPublic()
+     * @see CryptoInterface::checkPrivateKeyPassword()
      */
-    public function getPkeyPublic($pkey)
+    public function checkPrivateKeyPassword(string $privateKey, string $password): bool
     {
-        // TODO: Implement getPkeyPublic() method.
+        return false;
     }
 
     /**
      * {@inheritDoc}
-     * @see CryptoInterface::getPkeyPrivate()
+     * @see CryptoInterface::changePrivateKeyPassword()
      */
-    public function getPkeyPrivate(string $pkey, string $password = '')
+    public function changePrivateKeyPassword(string $privateKey, string $oldPassword, string $newPassword): string
     {
-        // TODO: Implement getPkeyPrivate() method.
+        return '';
     }
 }
 

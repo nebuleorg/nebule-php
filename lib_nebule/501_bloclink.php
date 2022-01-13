@@ -706,8 +706,9 @@ class blocLink implements blocLinkInterface
         if ($this->_checkObjectContent($nid)) {
             $data = $bh . '_' . $bl;
             $hash = $this->_crypto->hash($data, $algo . '.' . $size);
+            $publicKey = $this->_io->objectRead($nid);
 
-            if ($this->_crypto->verify($hash, $sign, $nid))
+            if ($this->_crypto->verify($hash, $sign, $publicKey))
             {
                 $this->_parsedLink["bs/rs$i/sig"] = $sig;
                 return true;
