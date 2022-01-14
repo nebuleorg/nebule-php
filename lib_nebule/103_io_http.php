@@ -332,7 +332,7 @@ class ioHTTP extends io implements ioInterface
      */
     public function writeObject(string &$data, string $localisation = ''): bool
     {
-        // Désactivé sur du HTTP
+        // Disabled on HTTP
         return false;
     }
 
@@ -342,7 +342,7 @@ class ioHTTP extends io implements ioInterface
      */
     public function deleteObject(string $object, $localisation = ''): bool
     {
-        // Désactivé sur du HTTP
+        // Disabled on HTTP
         return false;
     }
 
@@ -352,7 +352,7 @@ class ioHTTP extends io implements ioInterface
      */
     public function deleteLink(string $object, string &$link, $localisation = ''): bool
     {
-        // Désactivé sur du HTTP
+        // Disabled on HTTP
         return false;
     }
 
@@ -362,7 +362,7 @@ class ioHTTP extends io implements ioInterface
      */
     public function flushLinks(string $object, $localisation = ''): bool
     {
-        // Désactivé sur du HTTP
+        // Disabled on HTTP
         return false;
     }
 

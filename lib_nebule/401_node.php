@@ -1263,7 +1263,7 @@ class Node implements nodeInterface
      * @param string $socialClass
      * @return array
      */
-    public function getLocalisations($socialClass = '')
+    public function getLocalisations(string $socialClass = ''): array
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
@@ -1272,10 +1272,11 @@ class Node implements nodeInterface
 
     /**
      * Lecture de la localisation.
+     *
      * @param string $socialClass
      * @return string
      */
-    public function getLocalisation($socialClass = '')
+    public function getLocalisation(string $socialClass = ''): string
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
@@ -1284,10 +1285,11 @@ class Node implements nodeInterface
 
     /**
      * Ecriture de la localisation.
+     *
      * @param string $localisation
      * @return boolean
      */
-    public function setLocalisation($localisation)
+    public function setLocalisation(string $localisation): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
@@ -1307,7 +1309,7 @@ class Node implements nodeInterface
      * @param string $socialClass
      * @return boolean
      */
-    public function getIsEntity($socialClass = 'myself')
+    public function getIsEntity(string $socialClass = 'myself'): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 

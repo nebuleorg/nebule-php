@@ -363,27 +363,13 @@ class ioLocal extends io implements ioInterface
      */
     public function obfuscatedLinksRead(string $entity, string $signer = '0', string $localisation = ''): array
     {
-        /**
-         * Compteur de liens lus.
-         * @var double $linkRead
-         */
-        $linkRead = 0;
-
-        /**
-         * Liste des fichiers de liens à lire.
-         * @var array $fileList
-         */
+        $linksRead = 0;
         $fileList = array();
-
-        /**
-         * Table des liens lus.
-         * @var array $linkList
-         */
-        $linkList = array();
+        $linksList = array();
 
         // Vérifie la présence d'une clé de transcodage des noms des fichiers.
         if ($this->_filesTrancodeKey == '')
-            return $linkList; // TODO ou return false ???
+            return $linksList;
 
         // Vérifie l'entité destinataire des liens dissimulés.
         if ($localisation != ''
@@ -393,7 +379,7 @@ class ioLocal extends io implements ioInterface
             || !file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $entity)
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $entity)
         )
-            return $linkList; // TODO ou return false ???
+            return $linksList;
 
         // Vérifie l'entité signataire des liens dissimulés.
         if (!is_string($signer)
@@ -422,7 +408,7 @@ class ioLocal extends io implements ioInterface
             $fileList[0] = $entity . '-' . $signer;
         } else {
             // Sinon il n'y a pas de liens dissimulés entre ces deux entités.
-            return $linkList;
+            return $linksList;
         }
 
         // Pour chaque fichier listé, lit les liens.
@@ -431,15 +417,15 @@ class ioLocal extends io implements ioInterface
             foreach ($file as $link) {
                 // @todo vérifier regex que le lien est de type c ...
                 if (true)
-                    $linkList[$linkRead] = $link;
+                    $linksList[$linksRead] = $link;
                 // Vérifie que le nombre maximum de liens à lire n'est pas dépassé.
-                $linkRead++;
-                if ($linkRead > $this->_maxLink)
+                $linksRead++;
+                if ($linksRead > $this->_maxLink)
                     break 1;
             }
         }
 
-        return $linkList;
+        return $linksList;
     }
 
     /**

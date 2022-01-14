@@ -639,23 +639,21 @@ class Entity extends Node
     }
 
     // Retourne les localisations de l'entité.
-    public function getLocalisations(string $socialClass = '')
+    public function getLocalisations(string $socialClass = ''): array
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
-        if ($this->_id == '0') {
-            return '';
-        }
+        if ($this->_id == '0')
+            return array();
         return $this->getProperties(nebule::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
     }
 
-    public function getLocalisationsID(string $socialClass = '')
+    public function getLocalisationsID(string $socialClass = ''): array
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
-        if ($this->_id == '0') {
-            return '';
-        }
+        if ($this->_id == '0')
+            return array();
         return $this->getPropertiesID(nebule::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
     }
 
@@ -663,9 +661,8 @@ class Entity extends Node
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
-        if ($this->_id == '0') {
+        if ($this->_id == '0')
             return '';
-        }
         return $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
     }
 
@@ -682,7 +679,7 @@ class Entity extends Node
     /**
      * Recherche la miniature d'un image la plus proche possible de la dimension demandée. Recherche faite sur un seul niveau d'arborescence.
      *
-     * @param number $size
+     * @param int $size
      * @return string
      */
     public function getFaceID(int$size = 400): string

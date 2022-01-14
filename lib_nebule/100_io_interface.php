@@ -201,9 +201,9 @@ interface ioInterface
      * @param string $object
      * @param string $link
      * @param string $localisation
-     * @return number|boolean
+     * @return boolean
      */
-    public function writeLink(string $object, string &$link, string $localisation = '');
+    public function writeLink(string $object, string &$link, string $localisation = ''): bool;
 
     /**
      * Ecrit des données dans un objet. Retourne l'empreinte de l'objet écrit ou false si erreur.

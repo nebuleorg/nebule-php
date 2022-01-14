@@ -5,6 +5,7 @@ namespace Nebule\Bootstrap;
 //use nebule;
 // ------------------------------------------------------------------------------------------
 use Nebule\Library\Crypto;
+use Nebule\Library\Entity;
 use Nebule\Library\nebule;
 
 const BOOTSTRAP_NAME = 'bootstrap';
@@ -168,10 +169,22 @@ $bootstrapFlush = false;
 $bootstrapUpdate = false;
 
 /**
+ * ID of the last signer find on a link search by reference.
+ * @noinspection PhpUnusedLocalVariableInspection
+ */
+$lastReferenceSignerID = '';
+
+/**
  * ID de la bibliothèque mémorisé dans la session PHP.
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapLibraryID = '';
+
+/**
+ * ID of the signer for the library.
+ * @noinspection PhpUnusedLocalVariableInspection
+ */
+$bootstrapLibrarySignerID = '';
 
 /**
  * Instance non dé-sérialisée de la bibliothèque mémorisée dans la session PHP.
@@ -1593,13 +1606,56 @@ function io_checkExistOverHTTP(string $location): bool
 }
 
 /**
+ * I/O - Include code from object.
+ *
+ * @param string $nid
+ * @return boolean
+ */
+function io_objectInclude(string &$nid): bool
+{
+    /** @noinspection PhpUnusedLocalVariableInspection */
+    global $loggerSessionID, // Used by lib include.
+           $metrologyStartTime, // Used by lib include.
+           $nebuleName, // Used by lib include.
+           $nebuleSurname, // Used by lib include.
+           $nebuleDescription, // Used by lib include.
+           $nebuleAuthor, // Used by lib include.
+           $nebuleLibVersion, // Used by lib include.
+           $nebuleLicence, // Used by lib include.
+           $nebuleWebsite, // Used by lib include.
+           $applicationName, // Used by lib include.
+           $applicationSurname, // Used by lib include.
+           $applicationDescription, // Used by lib include.
+           $applicationVersion, // Used by lib include.
+           $applicationLicence, // Used by lib include.
+           $applicationAuthor, // Used by lib include.
+           $applicationWebsite; // Used by lib include.
+
+    if (!nod_checkNID($nid)
+        || !io_checkNodeHaveContent($nid)
+    )
+        return false;
+
+    $result = true;
+    try {
+        include_once(LIB_LOCAL_OBJECTS_FOLDER . '/' . $nid);
+    } catch (\Error $e) {
+        log_add('error include code NID=' . $nid .' ('  . $e->getCode() . ') : ' . $e->getFile()
+            . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+            . $e->getTraceAsString(), 'error', __FUNCTION__, 'fa2f570a');
+        $result = false;
+    }
+    return $result;
+}
+
+/**
  * I/O - End of work on I/O subsystem.
  *
  * @return void
  */
 function io_close(): void
 {
-    // Rien à fermer sur un fs.
+    // Nothing to do for local filesystem.
 }
 
 /**
@@ -3914,7 +3970,9 @@ function app_getCodeBranch(): void
  */
 function app_getByRef($rid): string
 {
-    global $nebuleLocalAuthorities, $codeBranchNID;
+    global $nebuleLocalAuthorities,
+           $codeBranchNID,
+           $lastReferenceSignerID;
 
     if ($codeBranchNID == '')
         app_getCodeBranch();
@@ -3940,6 +3998,8 @@ function app_getByRef($rid): string
         if (lnk_dateCompare($link['bl/rc/mod'],$link['bl/rc/chr'],$resultLink['bl/rc/mod'],$resultLink['bl/rc/chr']) > 0)
             $resultLink = $link;
     }
+
+    $lastReferenceSignerID = $resultLink['bs/rs1/eid'];
     return $resultLink['bl/rl/nid2'];
 }
 
@@ -4082,13 +4142,15 @@ function bootstrap_setPermitOpenFileCode()
 /**
  * Try to find nebule Lib POO.
  *
- * @param string $bootstrapLibraryID
  * @param string $bootstrapLibraryInstanceSleep
  * @return void
  */
-function bootstrap_findLibraryPOO(string &$bootstrapLibraryID, string &$bootstrapLibraryInstanceSleep): void
+function bootstrap_findLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
 {
-    global $libraryCheckOK;
+    global $libraryCheckOK,
+           $bootstrapLibraryID,
+           $bootstrapLibrarySignerID,
+           $lastReferenceSignerID;
 
     if (!$libraryCheckOK)
         return;
@@ -4118,34 +4180,43 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryID, string &$bootstra
             $bootstrapLibraryID = '';
             $bootstrapLibraryInstanceSleep = '';
             bootstrap_setBreak('31', 'Finding nebule library error.');
-        }
-        else
+        } else {
             log_add('find nebule library (' . $bootstrapLibraryID . ')', 'info', __FUNCTION__, '90ee41fc');
+            $bootstrapLibrarySignerID = $lastReferenceSignerID;
+        }
     }
 }
 
 /**
- * Load and initialize nebule Lib POO.
+ * Include nebule Library POO code.
  *
- * @param string $bootstrapLibraryID
+ * @return void
+ */
+function bootstrap_includeLibraryPOO(): void
+{
+    global $bootstrapLibraryID;
+
+    if ($bootstrapLibraryID == '')
+        bootstrap_setBreak('41', 'Library nebule find error');
+    elseif (!io_objectInclude($bootstrapLibraryID)) {
+        log_reopen(BOOTSTRAP_NAME);
+        bootstrap_setBreak('42', 'Library nebule include error');
+        $bootstrapLibraryID = '';
+    }
+}
+
+/**
+ * Load and initialize nebule Library POO.
+ *
  * @param string $bootstrapLibraryInstanceSleep
  * @return void
  */
-function bootstrap_loadLibraryPOO(string $bootstrapLibraryID, string $bootstrapLibraryInstanceSleep): void
+function bootstrap_loadLibraryPOO(string $bootstrapLibraryInstanceSleep): void
 {
-    /** @noinspection PhpUnusedLocalVariableInspection */
-    global $nebuleInstance, $loggerSessionID, $metrologyStartTime; // Used by lib include.
+    global $nebuleInstance,
+           $bootstrapLibraryID;
 
     if ($bootstrapLibraryID != '') {
-        try {
-            // Load lib from object. @todo faire via les i/o.
-            include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapLibraryID);
-        } catch (\Error $e) {
-            log_reopen(BOOTSTRAP_NAME);
-            log_add('Library nebule include error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'fa2f570a');
-            bootstrap_setBreak('42', 'Library nebule include error');
-        }
-
         try {
             if (!class_exists('nebule', false))
             {
@@ -4157,11 +4228,12 @@ function bootstrap_loadLibraryPOO(string $bootstrapLibraryID, string $bootstrapL
             }
         } catch (\Error $e) {
             log_reopen(BOOTSTRAP_NAME);
-            log_add('Library nebule load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '959c188b');
+            log_add('Library nebule load error ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), 'error', __FUNCTION__, '959c188b');
             bootstrap_setBreak('43', 'Library nebule load error');
         }
-    } else
-        bootstrap_setBreak('41', 'Library nebule find error');
+    }
 }
 
 
@@ -4377,6 +4449,26 @@ function bootstrap_findApplication(): void
             $bootstrapApplicationNoPreload = true;
             log_add('do not preload application', 'info', __FUNCTION__, '0ac7d800');
         }
+    }
+}
+
+/**
+ * Include application code.
+ *
+ * @return void
+ */
+function bootstrap_includeApplication(): void
+{
+    global $bootstrapApplicationID,
+           $libraryCheckOK;
+
+    if ($bootstrapApplicationID != ''
+        && $libraryCheckOK
+        && !io_objectInclude($bootstrapApplicationID)
+    ) {
+        log_reopen(BOOTSTRAP_NAME);
+        log_add('error include application code ' . $bootstrapApplicationID, 'error', __FUNCTION__, '6fa5eb2b');
+        $bootstrapApplicationID = '';
     }
 }
 
@@ -5134,80 +5226,34 @@ function bootstrap_breakDisplay2LibraryPP()
 
 function bootstrap_breakDisplay3LibraryPOO()
 {
-    global $nebuleInstance;
+    global $nebuleInstance,
+           $bootstrapLibraryID,
+           $bootstrapLibrarySignerID,
+           $nebuleLibVersion;
 
     echo '<div class="parts">' . "\n" . '<span class="partstitle">#3 nebule library POO</span><br/>';
     flush();
 
-    // Chargement de la bibliothèque PHP POO.
     echo "tL=" . lib_getMetrologyTimer('tL') . "<br />\n";
     echo 'library RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . LIB_RID_INTERFACE_LIBRARY . "<br />\n";
+    echo 'library ID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $bootstrapLibraryID . "<br />\n";
 
-    if (!is_a($nebuleInstance, 'nebule'))
+    if (is_a($nebuleInstance, 'Nebule\Library\nebule')) {
+        echo 'library signer &nbsp;&nbsp;: ' . $bootstrapLibrarySignerID . "<br />\n";
+        echo 'library version &nbsp;: ' . $nebuleLibVersion . "<br />\n";
+        bootstrap_breakDisplay31LibraryEntities();
+        bootstrap_breakDisplay32LibraryCryptography();
+        bootstrap_breakDisplay33LibraryIO();
+        bootstrap_breakDisplay34LibrarySocial();
+        bootstrap_breakDisplay35LibraryBootstrap();
+        bootstrap_breakDisplay36LibraryStats();
+    } else
         echo "Not loaded.\n";
-    else
-        bootstrap_breakDisplay3LibraryLoaded();
+
     echo '</div>' . "\n";
 }
 
-function bootstrap_breakDisplay3LibraryLoaded()
-{
-    global $nebuleInstance,
-           $bootstrapLibraryID,
-           $nebuleLocalAuthorities,
-           $nebuleLibVersion;
-
-    // Version.
-    echo 'library ID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $bootstrapLibraryID . "<br />\n";
-    echo 'library version &nbsp;: ' . $nebuleLibVersion . "<br />\n";
-
-    bootstrap_breakDisplay3LibraryEntities();
-    bootstrap_breakDisplay3LibraryIO();
-    bootstrap_breakDisplay3LibrarySocial();
-
-    // Vérifie le bootstrap. @todo ajouter vérification de marquage de danger.
-    $data = file_get_contents(BOOTSTRAP_FILE_NAME);
-    $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
-    unset($data);
-    echo 'bootstrap &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $hash . ' ';
-    // Recherche les liens de validation.
-    $hashRef = LIB_RID_INTERFACE_BOOTSTRAP;
-    $links = array();
-    lnk_findInclusive_FIXME($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
-    // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
-    $ok = false;
-    foreach ($links as $link) {
-        foreach ($nebuleLocalAuthorities as $authority) {
-            if ($link[2] == $authority) {
-                $ok = true;
-                break 2;
-            }
-        }
-    }
-    if ($ok)
-        echo 'OK';
-    else
-        echo '<span class="error">ERROR!</span>';
-    echo "<br />\n";
-
-    // Affichage des valeurs de métrologie.
-    echo "<br />\n";
-    echo 'L(r)=' . lib_getMetrology('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead() . ' ';
-    echo 'L(v)=' . lib_getMetrology('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify() . ' ';
-    echo 'O(r)=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead() . ' ';
-    echo 'O(v)=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
-    echo 'L(c)=' . $nebuleInstance->getCacheInstance()->getCacheLinkSize() . ' ';
-    echo 'O(c)=' . $nebuleInstance->getCacheInstance()->getCacheObjectSize() . ' ';
-    echo 'E(c)=' . $nebuleInstance->getCacheInstance()->getCacheEntitySize() . ' ';
-    echo 'G(c)=' . $nebuleInstance->getCacheInstance()->getCacheGroupSize() . ' ';
-    echo 'C(c)=' . $nebuleInstance->getCacheInstance()->getCacheConversationSize() . ' ';
-    echo 'CU(c)=' . $nebuleInstance->getCacheInstance()->getCacheCurrencySize() . ' ';
-    echo 'CP(c)=' . $nebuleInstance->getCacheInstance()->getCacheTokenPoolSize() . ' ';
-    echo 'CT(c)=' . $nebuleInstance->getCacheInstance()->getCacheTokenSize() . ' ';
-    echo 'CW(c)=' . $nebuleInstance->getCacheInstance()->getCacheWalletSize();
-}
-
-function bootstrap_breakDisplay3LibraryEntities()
+function bootstrap_breakDisplay31LibraryEntities()
 {
     global $nebuleInstance;
 
@@ -5295,7 +5341,7 @@ function bootstrap_breakDisplay3LibraryEntities()
     echo "<br />\n";
 }
 
-function bootstrap_breakDisplay3LibraryCryptography()
+function bootstrap_breakDisplay32LibraryCryptography()
 {
     global $nebuleInstance;
 
@@ -5346,7 +5392,7 @@ function bootstrap_breakDisplay3LibraryCryptography()
     echo "<br />\n";
 }
 
-function bootstrap_breakDisplay3LibraryIO()
+function bootstrap_breakDisplay33LibraryIO()
 {
     global $nebuleInstance;
 
@@ -5388,7 +5434,7 @@ function bootstrap_breakDisplay3LibraryIO()
     }
 }
 
-function bootstrap_breakDisplay3LibrarySocial()
+function bootstrap_breakDisplay34LibrarySocial()
 {
     global $nebuleInstance;
 
@@ -5399,6 +5445,57 @@ function bootstrap_breakDisplay3LibrarySocial()
         foreach ($nebuleInstance->getSocialInstance()->getList() as $moduleName)
             echo 'social &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $moduleName . " OK<br />\n";
     }
+}
+
+function bootstrap_breakDisplay35LibraryBootstrap()
+{
+    global $nebuleLocalAuthorities;
+
+    // Vérifie le bootstrap. @todo ajouter vérification de marquage de danger.
+    $data = file_get_contents(BOOTSTRAP_FILE_NAME);
+    $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
+    unset($data);
+    echo 'bootstrap &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $hash . ' ';
+    // Recherche les liens de validation.
+    $hashRef = LIB_RID_INTERFACE_BOOTSTRAP;
+    $links = array();
+    lnk_findInclusive_FIXME($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
+    // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
+    $ok = false;
+    foreach ($links as $link) {
+        foreach ($nebuleLocalAuthorities as $authority) {
+            if ($link[2] == $authority) {
+                $ok = true;
+                break 2;
+            }
+        }
+    }
+    if ($ok)
+        echo 'OK';
+    else
+        echo '<span class="error">ERROR!</span>';
+    echo "<br />\n";
+
+}
+
+function bootstrap_breakDisplay36LibraryStats()
+{
+    global $nebuleInstance;
+
+    echo "<br />\n";
+    echo 'L(r)=' . lib_getMetrology('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead() . ' ';
+    echo 'L(v)=' . lib_getMetrology('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify() . ' ';
+    echo 'O(r)=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead() . ' ';
+    echo 'O(v)=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
+    echo 'L(c)=' . $nebuleInstance->getCacheInstance()->getCacheLinkSize() . ' ';
+    echo 'O(c)=' . $nebuleInstance->getCacheInstance()->getCacheObjectSize() . ' ';
+    echo 'E(c)=' . $nebuleInstance->getCacheInstance()->getCacheEntitySize() . ' ';
+    echo 'G(c)=' . $nebuleInstance->getCacheInstance()->getCacheGroupSize() . ' ';
+    echo 'C(c)=' . $nebuleInstance->getCacheInstance()->getCacheConversationSize() . ' ';
+    echo 'CU(c)=' . $nebuleInstance->getCacheInstance()->getCacheCurrencySize() . ' ';
+    echo 'CP(c)=' . $nebuleInstance->getCacheInstance()->getCacheTokenPoolSize() . ' ';
+    echo 'CT(c)=' . $nebuleInstance->getCacheInstance()->getCacheTokenSize() . ' ';
+    echo 'CW(c)=' . $nebuleInstance->getCacheInstance()->getCacheWalletSize();
 }
 
 function bootstrap_breakDisplay4Application()
@@ -6660,12 +6757,17 @@ function bootstrap_displayApplication2()
  ------------------------------------------------------------------------------------------
  */
 
-function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibraryID)
+function bootstrap_displayRouter(bool $needFirstSynchronization)
 {
-    global $bootstrapBreak, $libraryRescueMode, $bootstrapInlineDisplay,
-           $bootstrapApplicationID, $bootstrapApplicationNoPreload,
-           $bootstrapApplicationStartID, $nebuleInstance,
-           $bootstrapServerEntityDisplay;
+    global $bootstrapBreak,
+           $libraryRescueMode,
+           $bootstrapInlineDisplay,
+           $bootstrapApplicationID,
+           $bootstrapApplicationNoPreload,
+           $bootstrapApplicationStartID,
+           $nebuleInstance,
+           $bootstrapServerEntityDisplay,
+           $bootstrapLibraryID;
 
     // Fin de la bufferisation de la sortie avec effacement du buffer.
     // Ecrit dans le buffer pour test, ne devra jamais apparaître.
@@ -6673,7 +6775,23 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
     // Tout ce qui aurait éventuellement essayé d'être affiché est perdu.
     ob_end_clean();
 
-    if (sizeof($bootstrapBreak) == 0) {
+    if (sizeof($bootstrapBreak) > 0) {
+        if ($needFirstSynchronization && !$bootstrapInlineDisplay) {
+            log_add('load first', 'info', __FUNCTION__, '63d9bc00');
+            bootstrap_displayApplicationFirst();
+        } elseif ($bootstrapServerEntityDisplay) {
+            if (file_exists(LIB_LOCAL_ENTITY_FILE))
+                echo file_get_contents(LIB_LOCAL_ENTITY_FILE, false, null, -1, lib_getConfiguration('ioReadMaxData'));
+            else
+                echo '0';
+        } else {
+            log_add('load break', 'info', __FUNCTION__, '4abf554b');
+            if ($bootstrapInlineDisplay)
+                bootstrap_inlineDisplayOnBreak();
+            else
+                bootstrap_displayOnBreak();
+        }
+    } else {
         unset($bootstrapBreak, $libraryRescueMode, $bootstrapInlineDisplay);
 
         // Ferme les I/O de la bibliothèque PHP PP.
@@ -6688,7 +6806,7 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
         elseif ($bootstrapApplicationID == '2')
             bootstrap_displayApplication2();
         else {
-            // Si tout est déjà pré-chargé, on déserialise.
+            // Si tout est déjà préchargé, on déserialise.
             if (isset($bootstrapApplicationInstanceSleep)
                 && $bootstrapApplicationInstanceSleep != ''
                 && isset($bootstrapApplicationDisplayInstanceSleep)
@@ -6698,13 +6816,7 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
                 && isset($bootstrapApplicationTraductionInstanceSleep)
                 && $bootstrapApplicationTraductionInstanceSleep != ''
             ) {
-
-                try {
-                    // Charge l'objet de l'application. TODO faire via les i/o.
-                    include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
-                } catch (\Error $e) {
-                    log_add('Application include error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'ad4c908e');
-                }
+                bootstrap_includeApplication();
 
                 $applicationName = Application::APPLICATION_NAME;
 
@@ -6740,7 +6852,7 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
                 // Initialisation de réveil de l'instance de l'application.
                 $applicationInstance->initialisation2();
 
-                // Si la requête web est un téléchargement d'objet ou de lien, des accélérations pruvent être prévues dans ce cas.
+                // Si la requête web est un téléchargement d'objet ou de lien, des accélérations peuvent être prévues dans ce cas.
                 if (!$applicationInstance->askDownload()) {
                     // Initialisation de réveil des instances.
                     $applicationTraductionInstance->initialisation2();
@@ -6754,18 +6866,13 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
                 // Appel de l'application.
                 $applicationInstance->router();
             } elseif ($bootstrapApplicationNoPreload) {
-                // Si l'application ne doit être pré-chargée,
-                //   réalise maintenant le pré-chargement de façon transparente et lance l'application.
-                // Ainsi, le pré-chargement n'est pas fait sur une page web à part.
+                // Si l'application ne doit être préchargée,
+                //   réalise maintenant le préchargement de façon transparente et lance l'application.
+                // Ainsi, le préchargement n'est pas fait sur une page web à part.
 
-                log_add('load application whitout preload ' . $bootstrapApplicationID, 'info', __FUNCTION__, 'e01ea813');
+                log_add('load application without preload ' . $bootstrapApplicationID, 'info', __FUNCTION__, 'e01ea813');
 
-                try {
-                    // Charge l'objet de l'application. TODO faire via les i/o.
-                    include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationID);
-                } catch (\Error $e) {
-                    log_add('Application include error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '96fc25ef');
-                }
+                bootstrap_includeApplication();
 
                 $applicationName = Application::APPLICATION_NAME;
 
@@ -6830,26 +6937,6 @@ function bootstrap_displayRouter(bool $needFirstSynchronization, $bootstrapLibra
             // Fermeture de la session avec écriture.
             session_write_close();
         }
-    } else {
-        if ($needFirstSynchronization) {
-            log_add('load first', 'info', __FUNCTION__, '63d9bc00');
-
-            // Affichage sur interruption du chargement.
-            bootstrap_displayApplicationFirst();
-        } elseif ($bootstrapServerEntityDisplay) {
-            if (file_exists(LIB_LOCAL_ENTITY_FILE))
-                echo file_get_contents(LIB_LOCAL_ENTITY_FILE, false, null, -1, lib_getConfiguration('ioReadMaxData'));
-            else
-                echo '0';
-        } else {
-            log_add('load break', 'info', __FUNCTION__, '4abf554b');
-
-            // Affichage sur interruption du chargement.
-            if ($bootstrapInlineDisplay)
-                bootstrap_inlineDisplayOnBreak();
-            else
-                bootstrap_displayOnBreak();
-        }
     }
 
     log_reopen(BOOTSTRAP_NAME);
@@ -6912,14 +6999,14 @@ function main()
     bootstrap_setPermitOpenFileCode();
     lib_setMetrologyTimer('tB');
 
-    $bootstrapLibraryID = '';
     $bootstrapLibraryInstanceSleep = '';
-    bootstrap_findLibraryPOO($bootstrapLibraryID, $bootstrapLibraryInstanceSleep);
-    bootstrap_loadLibraryPOO($bootstrapLibraryID, $bootstrapLibraryInstanceSleep);
+    bootstrap_findLibraryPOO($bootstrapLibraryInstanceSleep);
+    bootstrap_includeLibraryPOO();
+    bootstrap_loadLibraryPOO($bootstrapLibraryInstanceSleep);
     lib_setMetrologyTimer('tL');
 
     bootstrap_findApplication();
-    bootstrap_displayRouter($needFirstSynchronization, $bootstrapLibraryID);
+    bootstrap_displayRouter($needFirstSynchronization);
     lib_setMetrologyTimer('tA');
     bootstrap_logMetrology();
 }

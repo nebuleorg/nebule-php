@@ -25,7 +25,7 @@ class io implements ioInterface
     private $_listFilterStrings = array();
     private $_listMode = array();
     private $_listInstances = array();
-    private $_listTypes = '';
+    private $_listTypes = array();
     private $_listModes = '';
 
     /**
@@ -101,15 +101,13 @@ class io implements ioInterface
      */
     private function _findType(string $localisation)
     {
-        if ($localisation == '') {
+        if ($localisation == '')
             return $this->_defaultIO;
-        }
 
         // Fait le tour des modules IO et de leurs filtres pour déterminer le protocole.
         foreach ($this->_listFilterStrings as $type => $pattern) {
-            if (preg_match($pattern, $localisation)) {
+            if (preg_match($pattern, $localisation))
                 return $this->_listInstances[$type];
-            }
         }
         return $this->_defaultIO;
     }
@@ -134,9 +132,8 @@ class io implements ioInterface
     {
         if ($type != ''
             && isset($this->_listInstances[$type])
-        ) {
+        )
             return $this->_listInstances[$type];
-        }
         return $this->_defaultIO;
     }
 
@@ -174,9 +171,8 @@ class io implements ioInterface
     public function setFilesTranscodeKey(string &$key): void
     {
         // Fait le tour des modules IO pour injecter la clé.
-        foreach ($this->_listClasses as $instance) {
+        foreach ($this->_listClasses as $instance)
             $instance->setFilesTranscodeKey($key);
-        }
     }
 
     /**
@@ -186,9 +182,8 @@ class io implements ioInterface
     public function unsetFilesTranscodeKey(): void
     {
         // Fait le tour des modules IO pour supprimer la clé.
-        foreach ($this->_listClasses as $instance) {
+        foreach ($this->_listClasses as $instance)
             $instance->unsetFilesTranscodeKey();
-        }
     }
 
     /**
