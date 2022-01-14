@@ -11,26 +11,27 @@ namespace Nebule\Library;
 class CryptoOpenssl implements CryptoInterface
 {
     const HASH_ALGORITHM = array(
-        'sha1-128',
-        'sha2-224',
-        'sha2-256',
-        'sha2-384',
-        'sha2-512',
+        'sha1.128',
+        'sha2.224',
+        'sha2.256',
+        'sha2.384',
+        'sha2.512',
     );
     const TRANSLATE_HASH_ALGORITHM = array(
-        'sha1-128' => 'sha1',
-        'sha2-224' => 'sha224',
-        'sha2-256' => 'sha256',
-        'sha2-384' => 'sha384',
-        'sha2-512' => 'sha512',
+        'sha1.128' => 'sha1',
+        'sha2.224' => 'sha224',
+        'sha2.256' => 'sha256',
+        'sha2.384' => 'sha384',
+        'sha2.512' => 'sha512',
+        '' => '',
     );
     const TEST_HASH_ALGORITHM = array(
         'value'    => 'Bienvenue dans le projet nebule.',
-        'sha1-128' => 'd689bc73bbf35e6547e6de4b0ea79a5fd3b83ffa',
-        'sha2-224' => '8ee809ef3ec56e4e31273e2ee232697683d260db72d543ce6db4ab64',
-        'sha2-256' => '0b8dc4408e7ab1c81716ae978abe1f75d4bd3ea9a7b882b8da6afacdafc0e32b',
-        'sha2-384' => 'fef7e57afdbf243a756eae37fa7c556bc71050f555209d78b29d2e8feef56e62ed92da5e291669b6262170cd4f0dd0ba',
-        'sha2-512' => 'b9d7b17462c0e2657171975ee0bd37e8dc0cab5d6ebc6496864af2e261f16d35c16642898ba0af5174ad80bada202032c641595be0fc56e4d35599add72f8079',
+        'sha1.128' => 'd689bc73bbf35e6547e6de4b0ea79a5fd3b83ffa',
+        'sha2.224' => '8ee809ef3ec56e4e31273e2ee232697683d260db72d543ce6db4ab64',
+        'sha2.256' => '0b8dc4408e7ab1c81716ae978abe1f75d4bd3ea9a7b882b8da6afacdafc0e32b',
+        'sha2.384' => 'fef7e57afdbf243a756eae37fa7c556bc71050f555209d78b29d2e8feef56e62ed92da5e291669b6262170cd4f0dd0ba',
+        'sha2.512' => 'b9d7b17462c0e2657171975ee0bd37e8dc0cab5d6ebc6496864af2e261f16d35c16642898ba0af5174ad80bada202032c641595be0fc56e4d35599add72f8079',
     );
 
     const SYMMETRIC_ALGORITHM = array(
@@ -48,6 +49,7 @@ class CryptoOpenssl implements CryptoInterface
         'aes.192.ctr' => 'aes-192-ctr',
         'aes.256.cbc' => 'aes-256-cbc',
         'aes.256.ctr' => 'aes-256-ctr',
+        '' => '',
     );
 
     const ASYMMETRIC_ALGORITHM = array(
@@ -56,9 +58,10 @@ class CryptoOpenssl implements CryptoInterface
         'rsa.4096',
     );
     /*const TRANSLATE_ASYMMETRIC_ALGORITHM = array(
-        'rsa.1024',
-        'rsa.2048',
-        'rsa.4096',
+        'rsa.1024' => 'rsa1024',
+        'rsa.2048' => 'rsa2048',
+        'rsa.4096' => 'rsa4096',
+        '' => '',
     );*/
 
     /**

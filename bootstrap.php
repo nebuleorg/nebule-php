@@ -5072,25 +5072,21 @@ function bootstrap_htmlBottom()
  */
 function bootstrap_displayOnBreak(): void
 {
-    global $nebuleInstance,
-           $bootstrapBreak,
-           $libraryRescueMode,
-           $bootstrapFlush,
-           $bootstrapLibraryID,
-           $bootstrapApplicationID,
-           $bootstrapApplicationStartID,
-           $nebuleSecurityAuthorities,
-           $nebuleCodeAuthorities,
-           $nebuleDirectoryAuthorities,
-           $nebuleTimeAuthorities,
-           $nebuleLocalAuthorities,
-           $nebuleServerEntity,
-           $nebuleDefaultEntity,
-           $nebulePublicEntity,
-           $nebuleLibVersion;
-
     bootstrap_htmlHeader();
     bootstrap_htmlTop();
+    bootstrap_breakDisplay1OnError();
+    bootstrap_breakDisplay2LibraryPP();
+    bootstrap_breakDisplay3LibraryPOO();
+    bootstrap_breakDisplay4Application();
+    bootstrap_breakDisplay5End();
+    bootstrap_htmlBottom();
+}
+
+function bootstrap_breakDisplay1OnError()
+{
+    global $bootstrapBreak,
+           $libraryRescueMode,
+           $bootstrapFlush;
 
     echo '<div class="parts">' . "\n";
     echo '<span class="partstitle">#1 ' . BOOTSTRAP_NAME . ' break on</span><br/>' . "\n";
@@ -5107,10 +5103,21 @@ function bootstrap_displayOnBreak(): void
     $sessionId = session_id();
     echo '<a href="?f">&gt; Flush PHP session</a> (' . substr(crypto_getDataHash($sessionId), 0, 6) . ')' . "\n";
     echo '</div>' . "\n";
+}
+
+function bootstrap_breakDisplay2LibraryPP()
+{
+    global $nebuleSecurityAuthorities,
+           $nebuleCodeAuthorities,
+           $nebuleDirectoryAuthorities,
+           $nebuleTimeAuthorities,
+           $nebuleServerEntity,
+           $nebuleDefaultEntity,
+           $nebulePublicEntity;
 
     echo '<div class="parts">' . "\n";
+    echo '<span class="partstitle">#2 nebule library PP</span><br/>' . "\n";
     ?>
-    <span class="partstitle">#2 <?php echo BOOTSTRAP_NAME; ?> nebule library PP</span><br/>
     library version &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo BOOTSTRAP_VERSION ?><br/>
     puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo lib_getConfiguration('puppetmaster'); ?> (local authority)<br/>
     security authorities &nbsp;: <?php foreach ($nebuleSecurityAuthorities as $m) echo $m . ' '; ?> (local authority)<br/>
@@ -5123,6 +5130,11 @@ function bootstrap_displayOnBreak(): void
     current entity &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $nebulePublicEntity; ?>
     <?php
     echo '</div>' . "\n";
+}
+
+function bootstrap_breakDisplay3LibraryPOO()
+{
+    global $nebuleInstance;
 
     echo '<div class="parts">' . "\n" . '<span class="partstitle">#3 nebule library POO</span><br/>';
     flush();
@@ -5133,248 +5145,284 @@ function bootstrap_displayOnBreak(): void
 
     if (!is_a($nebuleInstance, 'nebule'))
         echo "Not loaded.\n";
+    else
+        bootstrap_breakDisplay3LibraryLoaded();
+    echo '</div>' . "\n";
+}
+
+function bootstrap_breakDisplay3LibraryLoaded()
+{
+    global $nebuleInstance,
+           $bootstrapLibraryID,
+           $nebuleLocalAuthorities,
+           $nebuleLibVersion;
+
+    // Version.
+    echo 'library ID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $bootstrapLibraryID . "<br />\n";
+    echo 'library version &nbsp;: ' . $nebuleLibVersion . "<br />\n";
+
+    bootstrap_breakDisplay3LibraryEntities();
+    bootstrap_breakDisplay3LibraryIO();
+    bootstrap_breakDisplay3LibrarySocial();
+
+    // Vérifie le bootstrap. @todo ajouter vérification de marquage de danger.
+    $data = file_get_contents(BOOTSTRAP_FILE_NAME);
+    $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
+    unset($data);
+    echo 'bootstrap &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $hash . ' ';
+    // Recherche les liens de validation.
+    $hashRef = LIB_RID_INTERFACE_BOOTSTRAP;
+    $links = array();
+    lnk_findInclusive_FIXME($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
+    // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
+    $ok = false;
+    foreach ($links as $link) {
+        foreach ($nebuleLocalAuthorities as $authority) {
+            if ($link[2] == $authority) {
+                $ok = true;
+                break 2;
+            }
+        }
+    }
+    if ($ok)
+        echo 'OK';
+    else
+        echo '<span class="error">ERROR!</span>';
+    echo "<br />\n";
+
+    // Affichage des valeurs de métrologie.
+    echo "<br />\n";
+    echo 'L(r)=' . lib_getMetrology('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead() . ' ';
+    echo 'L(v)=' . lib_getMetrology('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify() . ' ';
+    echo 'O(r)=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead() . ' ';
+    echo 'O(v)=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
+    echo 'L(c)=' . $nebuleInstance->getCacheInstance()->getCacheLinkSize() . ' ';
+    echo 'O(c)=' . $nebuleInstance->getCacheInstance()->getCacheObjectSize() . ' ';
+    echo 'E(c)=' . $nebuleInstance->getCacheInstance()->getCacheEntitySize() . ' ';
+    echo 'G(c)=' . $nebuleInstance->getCacheInstance()->getCacheGroupSize() . ' ';
+    echo 'C(c)=' . $nebuleInstance->getCacheInstance()->getCacheConversationSize() . ' ';
+    echo 'CU(c)=' . $nebuleInstance->getCacheInstance()->getCacheCurrencySize() . ' ';
+    echo 'CP(c)=' . $nebuleInstance->getCacheInstance()->getCacheTokenPoolSize() . ' ';
+    echo 'CT(c)=' . $nebuleInstance->getCacheInstance()->getCacheTokenSize() . ' ';
+    echo 'CW(c)=' . $nebuleInstance->getCacheInstance()->getCacheWalletSize();
+}
+
+function bootstrap_breakDisplay3LibraryEntities()
+{
+    global $nebuleInstance;
+
+    $nebuleInstanceCheck = $nebuleInstance->checkInstance();
+
+    // Test le puppetmaster.
+    echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ';
+    if ($nebuleInstanceCheck == 0)
+        echo "<span id=\"error\">ERROR!</span><br />\n";
     else {
-        $_configurationInstance = $nebuleInstance->getConfigurationInstance();
-        $_cryptoInstance = $nebuleInstance->getCryptoInstance();
+        echo "OK (local authority)<br />\n";
 
-        // Version.
-        echo 'library ID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $bootstrapLibraryID . "<br />\n";
-        echo 'library version &nbsp;: ' . $nebuleLibVersion . "<br />\n";
-
-        $nebuleInstanceCheck = $nebuleInstance->checkInstance();
-
-        // Test le puppetmaster.
-        echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ';
-        if ($nebuleInstanceCheck == 0)
+        // Test le security authority.
+        echo 'security authority &nbsp;: ';
+        if ($nebuleInstanceCheck == 1)
             echo "<span id=\"error\">ERROR!</span><br />\n";
         else {
-            echo "OK (local authority)<br />\n";
+            echo '<a href="o/' . $nebuleInstance->getSecurityAuthority() . '">'
+                . $nebuleInstance->getSecurityAuthorityInstance()->getName() . "</a> OK (local authority)<br />\n";
 
-            // Test le security authority.
-            echo 'security authority &nbsp;: ';
-            if ($nebuleInstanceCheck == 1)
+            // Test le code authority.
+            echo 'code authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+            if ($nebuleInstanceCheck == 2)
                 echo "<span id=\"error\">ERROR!</span><br />\n";
             else {
-                echo '<a href="o/' . $nebuleInstance->getSecurityAuthority() . '">'
-                    . $nebuleInstance->getSecurityAuthorityInstance()->getName() . "</a> OK (local authority)<br />\n";
+                echo '<a href="o/' . $nebuleInstance->getCodeAuthority() . '">'
+                    . $nebuleInstance->getCodeAuthorityInstance()->getName() . "</a> OK (local authority)<br />\n";
 
-                // Test le code authority.
-                echo 'code authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
-                if ($nebuleInstanceCheck == 2)
+                // Test le directory authority.
+                echo 'directory authority : ';
+                if ($nebuleInstanceCheck == 3)
+                    echo "<span id=\"error\">ERROR!</span><br />\n";
+                else
+                    echo '<a href="o/' . $nebuleInstance->getDirectoryAuthority() . '">'
+                        . $nebuleInstance->getDirectoryAuthorityInstance()->getName() . "</a> OK<br />\n";
+
+                // Test le time authority.
+                echo 'time authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+                if ($nebuleInstanceCheck == 4)
+                    echo "<span id=\"error\">ERROR!</span><br />\n";
+                else
+                    echo '<a href="o/' . $nebuleInstance->getTimeAuthority() . '">'
+                        . $nebuleInstance->getTimeAuthorityInstance()->getName() . "</a> OK<br />\n";
+
+                // Test l'entité de l'instance du serveur.
+                echo 'server entity &nbsp;&nbsp;&nbsp;: ';
+                if ($nebuleInstanceCheck <= 32)
                     echo "<span id=\"error\">ERROR!</span><br />\n";
                 else {
-                    echo '<a href="o/' . $nebuleInstance->getCodeAuthority() . '">'
-                        . $nebuleInstance->getCodeAuthorityInstance()->getName() . "</a> OK (local authority)<br />\n";
-
-                    // Test le directory authority.
-                    echo 'directory authority : ';
-                    if ($nebuleInstanceCheck == 3)
-                        echo "<span id=\"error\">ERROR!</span><br />\n";
-                    else
-                        echo '<a href="o/' . $nebuleInstance->getDirectoryAuthority() . '">'
-                            . $nebuleInstance->getDirectoryAuthorityInstance()->getName() . "</a> OK<br />\n";
-
-                    // Test le time authority.
-                    echo 'time authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
-                    if ($nebuleInstanceCheck == 4)
-                        echo "<span id=\"error\">ERROR!</span><br />\n";
-                    else
-                        echo '<a href="o/' . $nebuleInstance->getTimeAuthority() . '">'
-                            . $nebuleInstance->getTimeAuthorityInstance()->getName() . "</a> OK<br />\n";
-
-                    // Test l'entité de l'instance du serveur.
-                    echo 'server entity &nbsp;&nbsp;&nbsp;: ';
-                    if ($nebuleInstanceCheck <= 32)
-                        echo "<span id=\"error\">ERROR!</span><br />\n";
-                    else {
-                        echo '<a href="o/' . $nebuleInstance->getInstanceEntity() . '">'
-                            . $nebuleInstance->getInstanceEntityInstance()->getName() . '</a> OK';
-                        if ($nebuleInstance->getIsLocalAuthority($nebuleInstance->getInstanceEntity()))
-                            echo ' (local authority)';
-                        echo "<br />\n";
-                    }
+                    echo '<a href="o/' . $nebuleInstance->getInstanceEntity() . '">'
+                        . $nebuleInstance->getInstanceEntityInstance()->getName() . '</a> OK';
+                    if ($nebuleInstance->getIsLocalAuthority($nebuleInstance->getInstanceEntity()))
+                        echo ' (local authority)';
+                    echo "<br />\n";
                 }
             }
         }
-        // Affichage de l'entité par défaut.
-        echo 'default entity &nbsp;&nbsp;: <a href="o/' . $nebuleInstance->getDefaultEntity() . '">'
-            . $nebuleInstance->getDefaultEntityInstance()->getName() . '</a>';
-        if ($nebuleInstance->getIsLocalAuthority($nebuleInstance->getDefaultEntity()))
-            echo ' (local authority)';
+    }
+    // Affichage de l'entité par défaut.
+    echo 'default entity &nbsp;&nbsp;: <a href="o/' . $nebuleInstance->getDefaultEntity() . '">'
+        . $nebuleInstance->getDefaultEntityInstance()->getName() . '</a>';
+    if ($nebuleInstance->getIsLocalAuthority($nebuleInstance->getDefaultEntity()))
+        echo ' (local authority)';
+    echo "<br />\n";
+
+    // Affichage de l'entité courante.
+    echo 'current entity &nbsp;&nbsp;: <a href="o/' . $nebuleInstance->getCurrentEntity() . '">'
+        . $nebuleInstance->getCurrentEntityInstance()->getName() . '</a>';
+    if ($nebuleInstance->getIsLocalAuthority($nebuleInstance->getCurrentEntity()))
+        echo ' (local authority)';
+    echo "<br />\n";
+
+    // Affichage de la subordination de l'instance.
+    echo 'subordination &nbsp;&nbsp;&nbsp;: ';
+    $entity = lib_getConfiguration('subordinationEntity');
+    if ($entity != '') {
+        $instance = new Entity($nebuleInstance, $entity);
+        echo '<a href="o/' . $entity . '">' . $instance->getName() . '</a>';
+        unset($instance);
+    } else
+        echo '/';
+    if ($nebuleInstance->getIsLocalAuthority($entity))
+        echo ' (local authority)';
+    unset($entity);
+    echo "<br />\n";
+}
+
+function bootstrap_breakDisplay3LibraryCryptography()
+{
+    global $nebuleInstance;
+
+    $_cryptoInstance = $nebuleInstance->getCryptoInstance();
+    $_configurationInstance = $nebuleInstance->getConfigurationInstance();
+
+    // Vérifie la cryptographie.
+    echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: ';
+    if (!is_object($_cryptoInstance))
+        echo '<span class="error">ERROR!</span>';
+    else {
+        echo get_class($_cryptoInstance);
         echo "<br />\n";
 
-        // Affichage de l'entité courante.
-        echo 'current entity &nbsp;&nbsp;: <a href="o/' . $nebuleInstance->getCurrentEntity() . '">'
-            . $nebuleInstance->getCurrentEntityInstance()->getName() . '</a>';
-        if ($nebuleInstance->getIsLocalAuthority($nebuleInstance->getCurrentEntity()))
-            echo ' (local authority)';
-        echo "<br />\n";
-
-        // Affichage de la subordination de l'instance.
-        echo 'subordination &nbsp;&nbsp;&nbsp;: ';
-        $entity = lib_getConfiguration('subordinationEntity');
-        if ($entity != '') {
-            $instance = new Entity($nebuleInstance, $entity);
-            echo '<a href="o/' . $entity . '">' . $instance->getName() . '</a>';
-            unset($instance);
-        } else
-            echo '/';
-        if ($nebuleInstance->getIsLocalAuthority($entity))
-            echo ' (local authority)';
-        unset($entity);
-        echo "<br />\n";
-
-        // Vérifie la cryptographie.
-        echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: ';
-        if (!is_object($_cryptoInstance))
-            echo '<span class="error">ERROR!</span>';
-        else {
-            echo get_class($_cryptoInstance);
-            echo "<br />\n";
-
-            // Vérifie la fonction de hash.
-            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: hash ' . $_configurationInstance->getOptionAsString('cryptoHashAlgorithm') . ' ';
-            if ($_cryptoInstance->checkFunction($_configurationInstance->getOptionAsString('cryptoHashAlgorithm'), Crypto::TYPE_HASH))
-                echo 'OK';
-            else
-                echo '<span class="error">ERROR!</span>';
-            echo "<br />\n";
-
-            // Vérifie la fonction de cryptographie symétrique.
-            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: Symmetric ' .  $_configurationInstance->getOptionAsString('cryptoSymmetricAlgorithm') . ' ';
-            if ($_cryptoInstance->checkFunction($_configurationInstance->getOptionAsString('cryptoSymmetricAlgorithm'), Crypto::TYPE_SYMMETRIC))
-                echo 'OK';
-            else
-                echo '<span class="error">ERROR!</span>';
-            echo "<br />\n";
-
-            // Vérifie la fonction de cryptographie asymétrique.
-            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: asymmetric ' .  $_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm') . ' ';
-            if ($_cryptoInstance->checkFunction($_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm'), Crypto::TYPE_ASYMMETRIC))
-                echo 'OK';
-            else
-                echo '<span class="error">ERROR!</span>';
-            echo "<br />\n";
-
-            // Vérifie la fonction de génération pseudo-aléatoire.
-            $random = $_cryptoInstance->getRandom(2048, Crypto::RANDOM_PSEUDO);
-            $entropy = $_cryptoInstance->getEntropy($random);
-            echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: pseudo-random entropy ' . $entropy . ' ';
-            if ($entropy > 7.85)
-                echo 'OK';
-            else
-                echo '<span class="error">ERROR!</span>';
-        }
-        echo "<br />\n";
-
-        // Vérifie des entrées/sorties (I/O).
-        if (!is_object($nebuleInstance->getIoInstance()))
-            echo 'i/o <span class="error">ERROR!</span>' . "<br />\n";
-        else {
-            $list = $nebuleInstance->getIoInstance()->getModulesList();
-            foreach ($list as $class) {
-                $module = $nebuleInstance->getIoInstance()->getModule($class);
-                echo 'i/o &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $class . ' (' . $module->getMode() . ') ' . $module->getDefaultLocalisation() . ', links ';
-                if (!$module->checkLinksDirectory())
-                    echo 'directory <span class="error">ERROR!</span>';
-                else {
-                    if (!$module->checkLinksRead())
-                        echo 'read <span class="error">ERROR!</span>';
-                    else {
-                        if (!$module->checkLinksWrite() && $module->getMode() == 'RW' )
-                            echo 'OK no write.';
-                        else
-                            echo 'OK';
-                    }
-                }
-                echo ', objects ';
-                if (!$module->checkObjectsDirectory())
-                    echo 'directory <span class="error">ERROR!</span>';
-                else {
-                    if (!$module->checkObjectsRead())
-                        echo 'read <span class="error">ERROR!</span>';
-                    else {
-                        if (!$module->checkObjectsWrite() && $module->getMode() == 'RW' )
-                            echo 'OK no write.';
-                        else
-                            echo 'OK';
-                    }
-                }
-                echo "<br />\n";
-            }
-        }
-
-        // Vérifie de la gestion des relations sociales.
-        if (!is_object($nebuleInstance->getSocialInstance()))
-            echo '<span class="error">ERROR!</span>' . "<br />\n";
-        else {
-            foreach ($nebuleInstance->getSocialInstance()->getList() as $moduleName)
-                echo 'social &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $moduleName . " OK<br />\n";
-        }
-
-        // Vérifie le bootstrap. @todo ajouter vérification de marquage de danger.
-        $data = file_get_contents(BOOTSTRAP_FILE_NAME);
-        $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
-        unset($data);
-        echo 'bootstrap &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $hash . ' ';
-        // Recherche les liens de validation.
-        $hashRef = LIB_RID_INTERFACE_BOOTSTRAP;
-        $links = array();
-        lnk_findInclusive_FIXME($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
-        // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
-        $ok = false;
-        foreach ($links as $link) {
-            foreach ($nebuleLocalAuthorities as $authority) {
-                if ($link[2] == $authority) {
-                    $ok = true;
-                    break 2;
-                }
-            }
-        }
-        if ($ok)
+        // Vérifie la fonction de hash.
+        echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: hash ' . $_configurationInstance->getOptionAsString('cryptoHashAlgorithm') . ' ';
+        if ($_cryptoInstance->checkFunction($_configurationInstance->getOptionAsString('cryptoHashAlgorithm'), Crypto::TYPE_HASH))
             echo 'OK';
         else
             echo '<span class="error">ERROR!</span>';
         echo "<br />\n";
 
-        // Affichage des valeurs de métrologie.
+        // Vérifie la fonction de cryptographie symétrique.
+        echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: Symmetric ' .  $_configurationInstance->getOptionAsString('cryptoSymmetricAlgorithm') . ' ';
+        if ($_cryptoInstance->checkFunction($_configurationInstance->getOptionAsString('cryptoSymmetricAlgorithm'), Crypto::TYPE_SYMMETRIC))
+            echo 'OK';
+        else
+            echo '<span class="error">ERROR!</span>';
         echo "<br />\n";
-        echo 'L(r)=' . lib_getMetrology('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead() . ' ';
-        echo 'L(v)=' . lib_getMetrology('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify() . ' ';
-        echo 'O(r)=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead() . ' ';
-        echo 'O(v)=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
-        echo 'L(c)=' . $nebuleInstance->getCacheInstance()->getCacheLinkSize() . ' ';
-        echo 'O(c)=' . $nebuleInstance->getCacheInstance()->getCacheObjectSize() . ' ';
-        echo 'E(c)=' . $nebuleInstance->getCacheInstance()->getCacheEntitySize() . ' ';
-        echo 'G(c)=' . $nebuleInstance->getCacheInstance()->getCacheGroupSize() . ' ';
-        echo 'C(c)=' . $nebuleInstance->getCacheInstance()->getCacheConversationSize() . ' ';
-        echo 'CU(c)=' . $nebuleInstance->getCacheInstance()->getCacheCurrencySize() . ' ';
-        echo 'CP(c)=' . $nebuleInstance->getCacheInstance()->getCacheTokenPoolSize() . ' ';
-        echo 'CT(c)=' . $nebuleInstance->getCacheInstance()->getCacheTokenSize() . ' ';
-        echo 'CW(c)=' . $nebuleInstance->getCacheInstance()->getCacheWalletSize();
+
+        // Vérifie la fonction de cryptographie asymétrique.
+        echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: asymmetric ' .  $_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm') . ' ';
+        if ($_cryptoInstance->checkFunction($_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm'), Crypto::TYPE_ASYMMETRIC))
+            echo 'OK';
+        else
+            echo '<span class="error">ERROR!</span>';
+        echo "<br />\n";
+
+        // Vérifie la fonction de génération pseudo-aléatoire.
+        $random = $_cryptoInstance->getRandom(2048, Crypto::RANDOM_PSEUDO);
+        $entropy = $_cryptoInstance->getEntropy($random);
+        echo 'cryptography &nbsp;&nbsp;&nbsp;&nbsp;: pseudo-random entropy ' . $entropy . ' ';
+        if ($entropy > 7.85)
+            echo 'OK';
+        else
+            echo '<span class="error">ERROR!</span>';
     }
-    ?>
-
-    <?php
-    echo '</div>' . "\n";
-    echo '<div class="parts">' . "\n";
-    ?>
-    <span class="partstitle">#4 application</span><br/>
-    application RID &nbsp;: <a
-        href="/?<?php echo LIB_ARG_SWITCH_APPLICATION . '=' . $bootstrapApplicationStartID; ?>"><?php echo $bootstrapApplicationStartID; ?></a>
-    <br/>
-    application ID &nbsp;&nbsp;: <?php echo $bootstrapApplicationID; ?>
-    <?php
-    echo '</div>' . "\n";
-    lib_setMetrologyTimer('tE');
-    ?>
-
-    <span class="partstitle">#- end <?php echo BOOTSTRAP_NAME; ?></span><br/>
-    tE=<?php echo lib_getMetrologyTimer('tE'); ?><br/>
-    <?php
-
-    bootstrap_htmlBottom();
+    echo "<br />\n";
 }
+
+function bootstrap_breakDisplay3LibraryIO()
+{
+    global $nebuleInstance;
+
+    // Vérifie des entrées/sorties (I/O).
+    if (!is_object($nebuleInstance->getIoInstance()))
+        echo 'i/o <span class="error">ERROR!</span>' . "<br />\n";
+    else {
+        $list = $nebuleInstance->getIoInstance()->getModulesList();
+        foreach ($list as $class) {
+            $module = $nebuleInstance->getIoInstance()->getModule($class);
+            echo 'i/o &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $class . ' (' . $module->getMode() . ') ' . $module->getDefaultLocalisation() . ', links ';
+            if (!$module->checkLinksDirectory())
+                echo 'directory <span class="error">ERROR!</span>';
+            else {
+                if (!$module->checkLinksRead())
+                    echo 'read <span class="error">ERROR!</span>';
+                else {
+                    if (!$module->checkLinksWrite() && $module->getMode() == 'RW' )
+                        echo 'OK no write.';
+                    else
+                        echo 'OK';
+                }
+            }
+            echo ', objects ';
+            if (!$module->checkObjectsDirectory())
+                echo 'directory <span class="error">ERROR!</span>';
+            else {
+                if (!$module->checkObjectsRead())
+                    echo 'read <span class="error">ERROR!</span>';
+                else {
+                    if (!$module->checkObjectsWrite() && $module->getMode() == 'RW' )
+                        echo 'OK no write.';
+                    else
+                        echo 'OK';
+                }
+            }
+            echo "<br />\n";
+        }
+    }
+}
+
+function bootstrap_breakDisplay3LibrarySocial()
+{
+    global $nebuleInstance;
+
+    // Vérifie de la gestion des relations sociales.
+    if (!is_object($nebuleInstance->getSocialInstance()))
+        echo '<span class="error">ERROR!</span>' . "<br />\n";
+    else {
+        foreach ($nebuleInstance->getSocialInstance()->getList() as $moduleName)
+            echo 'social &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $moduleName . " OK<br />\n";
+    }
+}
+
+function bootstrap_breakDisplay4Application()
+{
+    global $bootstrapApplicationStartID,
+           $bootstrapApplicationID;
+
+    echo '<div class="parts">' . "\n";
+    echo '<span class="partstitle">#4 application</span><br/>' . "\n";
+    echo 'application RID &nbsp;: <a href="/?' . LIB_ARG_SWITCH_APPLICATION . '=' . $bootstrapApplicationStartID  . '">'
+        . $bootstrapApplicationStartID . '</a><br/>' . "\n";
+    echo 'application ID &nbsp;&nbsp;: ' . $bootstrapApplicationID . "\n";
+    echo '</div>' . "\n";
+}
+
+function bootstrap_breakDisplay5End()
+{
+    lib_setMetrologyTimer('tE');
+    echo '<div class="parts">' . "\n";
+    echo '<span class="partstitle">#- end ' . BOOTSTRAP_NAME . '</span><br/>' . "\n";
+    echo 'tE=' . lib_getMetrologyTimer('tE') . '<br/>' . "\n";
+    echo '</div>' . "\n";
+}
+
 
 
 // ------------------------------------------------------------------------------------------
