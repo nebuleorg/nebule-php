@@ -1327,7 +1327,7 @@ function io_createObjectFolder(): bool
  * @param string $nid
  * @return boolean
  */
-function io_checkNodeHaveLink(string &$nid): bool
+function io_checkNodeHaveLink(string $nid): bool
 {
     if (file_exists(LIB_LOCAL_LINKS_FOLDER . '/' . $nid))
         return true;
@@ -1340,7 +1340,7 @@ function io_checkNodeHaveLink(string &$nid): bool
  * @param string $nid
  * @return boolean
  */
-function io_checkNodeHaveContent(string &$nid): bool
+function io_checkNodeHaveContent(string $nid): bool
 {
     if (file_exists(LIB_LOCAL_OBJECTS_FOLDER . '/' . $nid))
         return true;
@@ -1356,7 +1356,7 @@ function io_checkNodeHaveContent(string &$nid): bool
  * @param integer $maxLinks
  * @return array
  */
-function io_linksRead(string &$nid, array &$lines, int $maxLinks = 0): array
+function io_linksRead(string $nid, array &$lines, int $maxLinks = 0): array
 {
     $count = 0;
 
@@ -1386,7 +1386,7 @@ function io_linksRead(string &$nid, array &$lines, int $maxLinks = 0): array
  * @param string $link
  * @return boolean
  */
-function io_linkWrite(string &$nid, string &$link): bool
+function io_linkWrite(string $nid, string &$link): bool
 {
     if (!lib_getConfiguration('permitWrite')
         || !lib_getConfiguration('permitWriteLink')
@@ -1555,7 +1555,7 @@ function io_objectSynchronize(string $nid, string $location): bool
  * @param string $nid
  * @return boolean
  */
-function io_objectDelete(string &$nid): bool
+function io_objectDelete(string $nid): bool
 {
     if (!lib_getConfiguration('permitWrite') || !lib_getConfiguration('permitWriteObject') || $nid == '')
         return false;
@@ -1611,7 +1611,7 @@ function io_checkExistOverHTTP(string $location): bool
  * @param string $nid
  * @return boolean
  */
-function io_objectInclude(string &$nid): bool
+function io_objectInclude(string $nid): bool
 {
     /** @noinspection PhpUnusedLocalVariableInspection */
     global $loggerSessionID, // Used by lib include.
@@ -2135,8 +2135,10 @@ function lnk_findInclusive_FIXME(&$nid, &$table, $action, $srcobj, $dstobj, $met
  * @param bool   $withInvalidLinks
  * @return void
  */
-function lnk_getList(string &$nid, array &$links, array $filter, bool $withInvalidLinks = false): void
+function lnk_getList(string $nid, array &$links, array $filter, bool $withInvalidLinks = false): void
 {
+    global $nebuleLocalAuthorities;
+
     if ($nid == '0' || !io_checkNodeHaveLink($nid))
         return;
 
@@ -2144,8 +2146,6 @@ function lnk_getList(string &$nid, array &$links, array $filter, bool $withInval
     // If not permitted, do not list invalid links.
     if (!lib_getConfiguration('permitListInvalidLinks'))
         $withInvalidLinks = false;
-
-    // TODO add social filter
 
     $lines = array();
     io_linksRead($nid, $lines);
@@ -2156,6 +2156,28 @@ function lnk_getList(string &$nid, array &$links, array $filter, bool $withInval
                 $links [] = $link;
         }
     }
+
+    // Social filter.
+    if (!$withInvalidLinks)
+        lnk_filterBySigners($links, $nebuleLocalAuthorities);
+}
+
+function lnk_checkExist(string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): bool
+{
+
+    $links = array();
+    $filter = array(
+        'bl/rl/req' => $req,
+        'bl/rl/nid1' => $nid1,
+        'bl/rl/nid2' => $nid2,
+        'bl/rl/nid3' => $nid3,
+        'bl/rl/nid4' => $nid4,
+    );
+    lnk_getList($nid1, $links, $filter);
+
+    if (sizeof($links) == 0)
+        return false;
+    return true;
 }
 
 /**
@@ -2316,7 +2338,7 @@ function lnk_filterBySigners(array &$links, array $signers): void
  * @param false  $withInvalidLinks
  * @return void
  */
-function lnk_getListFilterNid(string &$nid, array &$result, string $filterOnNid = '', string $filterOnReq = '', bool $withInvalidLinks = false): void
+function lnk_getListFilterNid(string $nid, array &$result, string $filterOnNid = '', string $filterOnReq = '', bool $withInvalidLinks = false): void
 {
     if (!nod_checkNID($nid) || !io_checkNodeHaveLink($nid))
         return;
@@ -2909,7 +2931,7 @@ function nod_findByReference(string $nid, string $rid): string
  * @param string $nid
  * @return string
  */
-function nod_getFirstName(string &$nid): string
+function nod_getFirstName(string $nid): string
 {
     global $nebuleCacheReadEntityFName;
 
@@ -2930,7 +2952,7 @@ function nod_getFirstName(string &$nid): string
  * @param string $nid
  * @return string
  */
-function nod_getName(string &$nid): string
+function nod_getName(string $nid): string
 {
     global $nebuleCacheReadEntityName;
 
@@ -2951,7 +2973,7 @@ function nod_getName(string &$nid): string
  * @param string $nid
  * @return string
  */
-function nod_getPostName(string &$nid): string
+function nod_getPostName(string $nid): string
 {
     global $nebuleCacheReadEntityPName;
 
@@ -2973,7 +2995,7 @@ function nod_getPostName(string &$nid): string
  * @param string $type
  * @return string
  */
-function nod_getByType(string &$nid, string $type): string
+function nod_getByType(string $nid, string $type): string
 {
     global $nebuleCacheFindObjType;
 
@@ -3021,7 +3043,7 @@ function nod_getAlgo(&$nid): string
  * @param boolean $permitNull
  * @return boolean
  */
-function nod_checkNID(string &$nid, bool $permitNull = false): bool
+function nod_checkNID(string $nid, bool $permitNull = false): bool
 {
     // May be null in some case.
     if ($permitNull && $nid == '')
@@ -3177,7 +3199,7 @@ function obj_getAsText(string &$oid, int $maxData = 0): string
  * @param string $typeMime
  * @return bool
  */
-function obj_checkTypeMime(string &$nid, string $typeMime): bool
+function obj_checkTypeMime(string $nid, string $typeMime): bool
 {
     global $nebuleLocalAuthorities, $nebuleCacheReadObjTypeMime, $nebuleServerEntity;
 
@@ -3291,7 +3313,7 @@ function obj_generate_FIXME(string &$data, string $typeMime = ''): bool
  * @param numeric $maxData
  * @return boolean
  */
-function obj_getLocalContent(string &$nid, string &$data, int $maxData = 0): bool
+function obj_getLocalContent(string $nid, string &$data, int $maxData = 0): bool
 {
     if (obj_checkContent($nid)) {
         $data = io_objectRead($nid, $maxData);
@@ -3339,7 +3361,7 @@ function obj_getDistantContent(string $nid, array $locations = array()): bool
  * @param string $nid
  * @return boolean
  */
-function obj_checkContent(string &$nid): bool
+function obj_checkContent(string $nid): bool
 {
     global $nebuleCacheLibrary_o_vr;
 
@@ -3412,7 +3434,7 @@ function obj_setContent(string &$data, string $oid = '0'): bool
  * @param string $nid
  * @return string
  */
-function ent_getFullName(string &$nid): string
+function ent_getFullName(string $nid): string
 {
     global $nebuleCacheReadEntityFullName;
 
@@ -3768,7 +3790,7 @@ function ent_syncAuthorities(array $oidList): void
  * @param string $nid
  * @return boolean
  */
-function ent_checkIsPublicKey(string &$nid): bool
+function ent_checkIsPublicKey(string $nid): bool
 {
     global $nebuleCacheIsPublicKey;
 
@@ -3840,10 +3862,9 @@ function ent_checkIsPrivateKey(&$nid): bool
  * @param string $oid
  * @return bool
  */
-function app_checkOid(string $oid): bool
+function app_checkOID(string $oid): bool
 {
-    if (!is_string($oid)
-        || (!nod_checkNID($oid, false)
+    if ((!nod_checkNID($oid, false)
             && $oid != '0'
             && $oid != '1'
             && $oid != '2'
@@ -3964,6 +3985,7 @@ function app_getCodeBranch(): void
 
 /**
  * Find a valid application OID from an RID for current code branch.
+ * Can be used both for library and application.
  *
  * @param $rid
  * @return string
@@ -4091,7 +4113,7 @@ function bootstrap_getUpdate(): void
 }
 
 /**
- * Read arg to switch application.
+ * Read arg to ask switching of application.
  */
 function bootstrap_getSwitchApplication(): void
 {
@@ -4101,13 +4123,12 @@ function bootstrap_getSwitchApplication(): void
         return;
 
     $arg = '';
-    if (filter_has_var(INPUT_GET, LIB_ARG_SWITCH_APPLICATION)) {
+    if (filter_has_var(INPUT_GET, LIB_ARG_SWITCH_APPLICATION))
         $arg = trim(filter_input(INPUT_GET, LIB_ARG_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-    } elseif (filter_has_var(INPUT_POST, LIB_ARG_SWITCH_APPLICATION)) {
+    elseif (filter_has_var(INPUT_POST, LIB_ARG_SWITCH_APPLICATION))
         $arg = trim(filter_input(INPUT_POST, LIB_ARG_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-    }
 
-    if (!app_checkOid($arg))
+    if (!app_checkOID($arg))
         return;
 
     if (app_getActivated($arg)) {
@@ -4252,14 +4273,16 @@ function bootstrap_loadLibraryPOO(string $bootstrapLibraryInstanceSleep): void
 
 function bootstrap_findApplication(): void
 {
-    global $libraryCheckOK, $bootstrapSwitchApplication, $bootstrapUpdate, $nebuleLocalAuthorities,
+    global $libraryCheckOK, $bootstrapSwitchApplication, $bootstrapUpdate, $bootstrapApplicationID,
            $bootstrapApplicationInstanceSleep, $bootstrapApplicationDisplayInstanceSleep,
            $bootstrapApplicationActionInstanceSleep, $bootstrapApplicationTraductionInstanceSleep,
-           $bootstrapApplicationStartID, $bootstrapApplicationNoPreload;
+           $bootstrapApplicationStartID;
 
     if (!$libraryCheckOK)
         return;
 
+    $bootstrapApplicationID = '';
+    $bootstrapApplicationStartID = '';
     session_start();
 
     // Enregistre l'identifiant de session pour le suivi d'un utilisateur.
@@ -4269,136 +4292,98 @@ function bootstrap_findApplication(): void
     // Vérifie l'ID de départ de l'application mémorisé.
     if (isset($_SESSION['bootstrapApplicationStartID'])
         && nod_checkNID($_SESSION['bootstrapApplicationStartID'])
-    ) {
-        // Mémorise l'ID de départ de l'application en cours.
+    )
         $bootstrapApplicationStartID = $_SESSION['bootstrapApplicationStartID'];
+
+    // Check ask to switch of application.
+    if ($bootstrapSwitchApplication != ''
+        && $bootstrapSwitchApplication != $bootstrapApplicationStartID
+    )
+    {
+        switch ($bootstrapSwitchApplication) {
+            case '0':
+                log_add('ask switch application 0', 'info', __FUNCTION__, '35b3a0dc');
+                $bootstrapApplicationStartID = '0';
+                $bootstrapApplicationID = '0';
+                break;
+            case '1':
+                log_add('ask switch application 1', 'info', __FUNCTION__, '18b6ab88');
+                $bootstrapApplicationStartID = '1';
+                $bootstrapApplicationID = '1';
+                break;
+            case '2':
+                log_add('ask switch application 2', 'info', __FUNCTION__, '936abfaa');
+                $bootstrapApplicationStartID = '2';
+                $bootstrapApplicationID = '2';
+                break;
+            default:
+                if (lnk_checkExist('f', LIB_RID_INTERFACE_APPLICATIONS, $bootstrapSwitchApplication, LIB_RID_INTERFACE_APPLICATIONS, '')) {
+
+                    // Vérifie l'application non dé-sérialisée.
+                    if (isset($_SESSION['bootstrapApplicationStartsID'][$bootstrapSwitchApplication])
+                        && nod_checkNID($_SESSION['bootstrapApplicationStartsID'][$bootstrapSwitchApplication])
+                        && io_checkNodeHaveLink($_SESSION['bootstrapApplicationStartsID'][$bootstrapSwitchApplication])
+                        && obj_checkContent($_SESSION['bootstrapApplicationStartsID'][$bootstrapSwitchApplication]) // TODO à vérifier si utile
+                        && isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapSwitchApplication])
+                        && $_SESSION['bootstrapApplicationsInstances'][$bootstrapSwitchApplication] != ''
+                        && isset($_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapSwitchApplication])
+                        && $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapSwitchApplication] != ''
+                        && isset($_SESSION['bootstrapApplicationsActionInstances'][$bootstrapSwitchApplication])
+                        && $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapSwitchApplication] != ''
+                        && isset($_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapSwitchApplication])
+                        && $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapSwitchApplication] != ''
+                    ) {
+                        // Mémorise l'instance non dé-sérialisée de l'application en cours et de ses composants.
+                        $bootstrapApplicationStartID = $bootstrapSwitchApplication;
+                        $bootstrapApplicationID = $_SESSION['bootstrapApplicationStartsID'][$bootstrapSwitchApplication]; // TODO vérifier le bon remplissage
+                        $bootstrapApplicationInstanceSleep = $_SESSION['bootstrapApplicationsInstances'][$bootstrapSwitchApplication];
+                        $bootstrapApplicationDisplayInstanceSleep = $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapSwitchApplication];
+                        $bootstrapApplicationActionInstanceSleep = $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapSwitchApplication];
+                        $bootstrapApplicationTraductionInstanceSleep = $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapSwitchApplication];
+                    } else {
+                        $bootstrapApplicationID = app_getByRef($bootstrapApplicationStartID);
+                    }
+                    log_add('find switched application ' . $bootstrapApplicationID, 'info', __FUNCTION__, '0cbacda8');
+                }
+        }
     }
 
-    /*
-     * Lit la session PHP et place en cache les instances de la bibliothèque et de l'application.
-     *
-     * Si un changement d'application est demandé, tente de trouver une instance de l'application
-     *   et l'instance de bibliothèque associée.
-     *
-     * A l'exception de l'ID '0', les variables d'ID font référence à des objets à charger.
-     * Les variables d'instances font référence à des classes à ré-instancier par dé-sérialisation.
-     *
-     * Une dé-sérialisation peut échouer si la classe contenu dans l'objet a été modifiée dans sa structure.
-     */
-    $bootstrapApplicationID = '';
-    // Si pas de demande de changement d'application.
-    if ($bootstrapSwitchApplication == ''
-        || $bootstrapSwitchApplication == $bootstrapApplicationStartID
+    // Check for update.
+    if ($bootstrapApplicationID == ''
+        && $bootstrapApplicationStartID != ''
+        && $bootstrapUpdate
     ) {
-        // Si demande de mise à jour de l'application en cours d'usage.
-        if ($bootstrapUpdate) {
-            // Recherche la dernière application depuis l'objet de référence sur lui-même.
-            $bootstrapApplicationID = nod_findByReference(
-                $bootstrapApplicationStartID,
-                LIB_RID_INTERFACE_APPLICATIONS);
-        } else {
-            // Vérifie l'ID de l'application mémorisé.
-            if (isset($_SESSION['bootstrapApplicationID'])
-                && $_SESSION['bootstrapApplicationID'] != ''
-            )
-                $bootstrapApplicationID = $_SESSION['bootstrapApplicationID'];
-            if (nod_checkNID($bootstrapApplicationID, false)
-                && $bootstrapApplicationID == '0'
-                || (io_checkNodeHaveLink($bootstrapApplicationID)
-                    && obj_checkContent($bootstrapApplicationID)
-                )
-            ) {
-                // Vérifie l'application non dé-sérialisée.
-                if (isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID])
-                    && $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID] != ''
-                    && isset($_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID])
-                    && $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID] != ''
-                    && isset($_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID])
-                    && $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID] != ''
-                    && isset($_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID])
-                    && $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID] != ''
-                ) {
-                    // Mémorise l'instance non dé-sérialisée de l'application en cours et de ses composants.
-                    $bootstrapApplicationInstanceSleep = $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID];
-                    $bootstrapApplicationDisplayInstanceSleep = $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID];
-                    $bootstrapApplicationActionInstanceSleep = $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID];
-                    $bootstrapApplicationTraductionInstanceSleep = $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID];
-                } else {
-                    // Sinon supprime l'ID de l'application en cours.
-                    $bootstrapApplicationID = '';
-                }
-            }
-        }
-    } else {
-        // Sinon essaie de trouver l'ID de l'application demandée.
-        if ($bootstrapSwitchApplication == '0') {
-            log_add('ask switch application 0', 'warn', __FUNCTION__, '35b3a0dc');
+        $bootstrapApplicationID = app_getByRef($bootstrapApplicationStartID);
+    }
 
-            // Application 0 de sélection des applications.
-            $bootstrapApplicationStartID = '0';
-            $bootstrapApplicationID = '0';
-        } elseif ($bootstrapSwitchApplication == '1') {
-            log_add('ask switch application 1', 'warn', __FUNCTION__, '18b6ab88');
+    // If existed, get application from session.
+    if ($bootstrapApplicationID == ''
+        && isset($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+        && nod_checkNID($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+        && io_checkNodeHaveLink($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
+        && obj_checkContent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID]) // TODO à vérifier si utile
+        && isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID])
+        && $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID] != ''
+        && isset($_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID])
+        && $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID] != ''
+        && isset($_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID])
+        && $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID] != ''
+        && isset($_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID])
+        && $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID] != ''
+    ) {
+        // Mémorise l'instance non dé-sérialisée de l'application en cours et de ses composants.
+        $bootstrapApplicationID = $_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID]; // TODO vérifier le bon remplissage
+        $bootstrapApplicationInstanceSleep = $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID];
+        $bootstrapApplicationDisplayInstanceSleep = $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID];
+        $bootstrapApplicationActionInstanceSleep = $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID];
+        $bootstrapApplicationTraductionInstanceSleep = $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID];
 
-            // Application 0 de sélection des applications.
-            $bootstrapApplicationStartID = '1';
-            $bootstrapApplicationID = '1';
-        } elseif (nod_checkNID($bootstrapSwitchApplication)
-            && io_checkNodeHaveLink($bootstrapSwitchApplication)
-        ) {
-            $refAppsID = LIB_RID_INTERFACE_APPLICATIONS;
-            $links = array();
-            $filter = array(
-                'bl/rl/req' => 'f',
-                'bl/rl/nid1' => $refAppsID,
-                'bl/rl/nid2' => $bootstrapSwitchApplication,
-                'bl/rl/nid3' => $refAppsID,
-                'bl/rl/nid4' => '',
-            );
-            lnk_getList($refAppsID, $links, $filter);
-
-            // Vérifie que l'application est autorisée.
-            if (sizeof($links) != 0) {
-                unset($links);
-                // Fait le changement d'application.
-                $bootstrapApplicationStartID = $bootstrapSwitchApplication;
-
-                // Vérifie l'application non dé-sérialisée.
-                if (isset($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
-                    && nod_checkNID($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
-                    && io_checkNodeHaveLink($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
-                    && obj_checkContent($_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID])
-                    && isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID])
-                    && $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID] != ''
-                    && isset($_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID])
-                    && $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID] != ''
-                    && isset($_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID])
-                    && $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID] != ''
-                    && isset($_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID])
-                    && $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID] != ''
-                ) {
-                    // Mémorise l'instance non dé-sérialisée de l'application en cours et de ses composants.
-                    $bootstrapApplicationID = $_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID];
-                    $bootstrapApplicationInstanceSleep = $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID];
-                    $bootstrapApplicationDisplayInstanceSleep = $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID];
-                    $bootstrapApplicationActionInstanceSleep = $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID];
-                    $bootstrapApplicationTraductionInstanceSleep = $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID];
-                } else {
-                    // Sinon recherche la dernière application depuis l'objet de référence sur lui-même.
-                    $bootstrapApplicationID = nod_findByReference(
-                        $bootstrapApplicationStartID,
-                        LIB_RID_INTERFACE_APPLICATIONS);
-                }
-
-                log_add('find switched application ' . $bootstrapApplicationID, 'info', __FUNCTION__, '0cbacda8');
-            }
-        }
     }
 
     // Fermeture de la session sans écriture pour gain de temps.
     session_abort();
 
-    // Désactivation des envois liés aux session après le premier usage. Evite tout un tas de logs inutiles.
+    // Désactivation des envois liés à la session après le premier usage. Evite tout un tas de logs inutiles.
     session_cache_limiter('');
     ini_set('session.use_cookies', '0');
     ini_set('session.use_only_cookies', '0');
@@ -4407,30 +4392,47 @@ function bootstrap_findApplication(): void
     // Si pas d'application trouvée, recherche l'application par défaut
     //   ou charge l'application '0' de sélection d'application.
     if ($bootstrapApplicationID == '') {
-        $forceValue = lib_getConfiguration('defaultApplication');
-        if ($forceValue != null) {
-            // Sinon fait le changement vers l'application par défaut.
-            $bootstrapApplicationStartID = $forceValue;
-
-            // Recherche la dernière application depuis l'objet de référence sur lui-même.
-            $bootstrapApplicationID = nod_findByReference(
-                $bootstrapApplicationStartID,
-                LIB_RID_INTERFACE_APPLICATIONS);
-        } else {
+        $defaultApplicationID = lib_getConfiguration('defaultApplication');
+        if ($defaultApplicationID == 0) {
             $bootstrapApplicationStartID = '0';
             $bootstrapApplicationID = '0';
+        } elseif ($defaultApplicationID == 1) {
+            $bootstrapApplicationStartID = '1';
+            $bootstrapApplicationID = '1';
+        } elseif ($defaultApplicationID == 2) {
+            $bootstrapApplicationStartID = '2';
+            $bootstrapApplicationID = '2';
+        } elseif (nod_checkNID($defaultApplicationID)
+            && io_checkNodeHaveLink($defaultApplicationID)
+        ) {
+            $bootstrapApplicationStartID = $defaultApplicationID;
+            $bootstrapApplicationID = app_getByRef($bootstrapApplicationStartID);
         }
-        unset($forceValue);
-
         log_add('find default application ' . $bootstrapApplicationID, 'info', __FUNCTION__, '423ae49b');
     }
 
-    // Recherche si l'application ne doit pas être pré-chargée.
+    if ($bootstrapApplicationID == '') {
+        $bootstrapApplicationStartID = '0';
+        $bootstrapApplicationID = '0';
+    }
+}
+
+function bootstrap_getApplicationPreload()
+{
+    global $bootstrapApplicationStartID,
+           $bootstrapApplicationInstanceSleep,
+           $bootstrapApplicationNoPreload,
+           $libraryCheckOK;
+
+    if (!$libraryCheckOK)
+        return;
+
+    // Recherche si l'application doit être préchargée.
     if ($bootstrapApplicationStartID != '0'
         && $bootstrapApplicationStartID != '1'
         && $bootstrapApplicationInstanceSleep == ''
     ) {
-        // Lit les liens de non pré-chargement pour l'application.
+        // Lit les liens de non préchargement pour l'application.
         $refNoPreload = LIB_RID_INTERFACE_APPLICATIONS_DIRECT;
         $links = array();
         $filter = array(
@@ -7006,6 +7008,7 @@ function main()
     lib_setMetrologyTimer('tL');
 
     bootstrap_findApplication();
+    bootstrap_getApplicationPreload();
     bootstrap_displayRouter($needFirstSynchronization);
     lib_setMetrologyTimer('tA');
     bootstrap_logMetrology();
