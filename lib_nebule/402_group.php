@@ -73,20 +73,15 @@ class Group extends Node
      */
     public function __construct(nebule $nebuleInstance, string $id, bool $closed = false, bool $obfuscated = false)
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIoInstance();
-        $this->_crypto = $nebuleInstance->getCryptoInstance();
-        $this->_social = $nebuleInstance->getSocialInstance();
+        $this->_initialisation($nebuleInstance);
 
         $id = trim(strtolower($id));
         $this->_metrology->addLog('New instance group ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
 
-        if (is_string($id) && $id != '' && ctype_xdigit($id)) {
+        if ($id != '' && ctype_xdigit($id)) {
             // Si l'ID est cohérent et l'objet nebule présent, c'est bon.
             $this->_loadGroup($id);
-        } elseif (is_string($id) && $id == 'new') {
+        } elseif ($id == 'new') {
             // Si c'est un nouveau groupe à créer, renvoie à la création.
             $this->_createNewGroup($closed, $obfuscated);
         } else {
@@ -99,55 +94,6 @@ class Group extends Node
         $this->getReferenceObjectClosed();
         $this->getReferenceObjectProtected();
         $this->getReferenceObjectObfuscated();
-    }
-
-    /**
-     * Fonction de suppression de l'instance.
-     *
-     * @return boolean
-     */
-    public function __destruct()
-    {
-        return true;
-    }
-
-    /**
-     * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->_id;
-    }
-
-    /**
-     * Retourne les variables à sauvegarder dans la session php lors d'une mise en sommeil de l'instance.
-     *
-     * @return array:string
-     */
-    public function __sleep()
-    {
-        return self::SESSION_SAVED_VARS;
-    }
-
-    /**
-     * Foncion de réveil de l'instance et de ré-initialisation de certaines variables non sauvegardées.
-     *
-     * @return null
-     */
-    public function __wakeup()
-    {
-        global $nebuleInstance;
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIoInstance();
-        $this->_crypto = $nebuleInstance->getCryptoInstance();
-        $this->_social = $nebuleInstance->getSocialInstance();
-        $this->_cacheMarkDanger = false;
-        $this->_cacheMarkWarning = false;
-        $this->_cacheUpdate = '';
     }
 
     /**
@@ -394,7 +340,7 @@ class Group extends Node
      *
      * @return string
      */
-    public function getUnprotectedID()
+    public function getUnprotectedID(): string
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -404,9 +350,10 @@ class Group extends Node
     /**
      * Fonction pour les objets, désactivée pour les groupes.
      *
+     * @param bool $obfuscated
      * @return boolean
      */
-    public function setProtected(bool $obfuscated = false)
+    public function setProtected(bool $obfuscated = false): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -418,7 +365,7 @@ class Group extends Node
      *
      * @return boolean
      */
-    public function setUnprotected()
+    public function setUnprotected(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 

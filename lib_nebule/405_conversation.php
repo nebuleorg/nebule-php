@@ -72,25 +72,17 @@ class Conversation extends Group
      */
     public function __construct(nebule $nebuleInstance, string $id, bool $closed = false, bool $protected = false, bool $obfuscated = false)
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIoInstance();
-        $this->_crypto = $nebuleInstance->getCryptoInstance();
-        $this->_social = $nebuleInstance->getSocialInstance();
+        $this->_initialisation($nebuleInstance);
 
         $id = trim(strtolower($id));
         $this->_metrology->addLog('New instance conversation ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
 
-        if (is_string($id)
-            && $id != ''
+        if ($id != ''
             && ctype_xdigit($id)
         ) {
             // Si l'ID est cohérent et l'objet nebule présent, c'est bon.
             $this->_loadConversation($id);
-        } elseif (is_string($id)
-            && $id == 'new'
-        ) {
+        } elseif ($id == 'new') {
             // Si c'est une nouvelle conversation à créer, renvoie à la création.
             $this->_createNewConversation($closed, $protected, $obfuscated);
         } else {
@@ -106,64 +98,15 @@ class Conversation extends Group
     }
 
     /**
-     * Fonction de suppression de l'instance.
-     *
-     * @return boolean
-     */
-    public function __destruct()
-    {
-        return true;
-    }
-
-    /**
-     * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->_id;
-    }
-
-    /**
-     * Retourne les variables à sauvegarder dans la session php lors d'une mise en sommeil de l'instance.
-     *
-     * @return array:string
-     */
-    public function __sleep()
-    {
-        return self::SESSION_SAVED_VARS;
-    }
-
-    /**
-     * Foncion de réveil de l'instance et de ré-initialisation de certaines variables non sauvegardées.
-     *
-     * @return null
-     */
-    public function __wakeup()
-    {
-        global $nebuleInstance;
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIoInstance();
-        $this->_crypto = $nebuleInstance->getCryptoInstance();
-        $this->_social = $nebuleInstance->getSocialInstance();
-        $this->_cacheMarkDanger = false;
-        $this->_cacheMarkWarning = false;
-        $this->_cacheUpdate = '';
-    }
-
-    /**
      *  Chargement d'une conversation existant.
      *
      * @param string $id
+     * @return void
      */
-    private function _loadConversation($id)
+    private function _loadConversation(string $id)
     {
         // Vérifie que c'est bien un objet.
-        if (!is_string($id)
-            || $id == ''
+        if ($id == ''
             || !ctype_xdigit($id)
             || !$this->_io->checkLinkPresent($id)
         ) {
@@ -183,7 +126,7 @@ class Conversation extends Group
      * @param boolean $obfuscated
      * @return boolean
      */
-    protected function _createNewConversation($closed, $protected, $obfuscated)
+    protected function _createNewConversation(bool $closed, bool $protected, bool $obfuscated): bool
     {
         $this->_metrology->addLog('Ask create conversation', Metrology::LOG_LEVEL_DEBUG); // Log
 
@@ -198,9 +141,7 @@ class Conversation extends Group
             $data = $this->_crypto->getRandom(32, Crypto::RANDOM_PSEUDO);
 
             // Si le contenu est valide.
-            if ($data != ''
-                && $data !== false
-            ) {
+            if ($data != '') {
                 // Calcul l'ID référence de la conversation.
                 $this->_id = substr($this->_crypto->hash($data), 0, 32)
                     . '0000656e7562656c6f2f6a627465632f6e6f6576737274616f690a6e';
@@ -307,10 +248,11 @@ class Conversation extends Group
                 return false;
             }
         } else {
-            $this->_metrology->addLog('Create conversation error not autorized', Metrology::LOG_LEVEL_ERROR); // Log
+            $this->_metrology->addLog('Create conversation error not authorized', Metrology::LOG_LEVEL_ERROR); // Log
             $this->_id = '0';
             return false;
         }
+        return true;
     }
 
 
@@ -355,7 +297,7 @@ class Conversation extends Group
      *
      * @return string
      */
-    public function getUnprotectedID()
+    public function getUnprotectedID(): string
     {
         return $this->_id;
     }
@@ -365,7 +307,7 @@ class Conversation extends Group
      *
      * @return boolean
      */
-    public function setProtected(bool $obfuscated = false)
+    public function setProtected(bool $obfuscated = false): bool
     {
         return false;
     }
@@ -375,7 +317,7 @@ class Conversation extends Group
      *
      * @return boolean
      */
-    public function setUnprotected()
+    public function setUnprotected(): bool
     {
         return false;
     }
@@ -386,7 +328,7 @@ class Conversation extends Group
      * @param string|Entity $entity
      * @return boolean
      */
-    public function setProtectedTo($entity)
+    public function setProtectedTo($entity): bool
     {
         return false;
     }
@@ -396,7 +338,7 @@ class Conversation extends Group
      *
      * @return array
      */
-    public function getProtectedTo()
+    public function getProtectedTo(): array
     {
         return array();
     }
@@ -410,7 +352,7 @@ class Conversation extends Group
      * @param array:string $socialListID
      * @return boolean
      */
-    public function getIsFollower($entity, $socialClass = '', $socialListID = null)
+    public function getIsFollower($entity, $socialClass = '', $socialListID = null): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -455,7 +397,7 @@ class Conversation extends Group
      * @param boolean     $obfuscated
      * @return boolean
      */
-    public function setFollower($entity, bool $obfuscated = false)
+    public function setFollower($entity, bool $obfuscated = false): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -490,7 +432,7 @@ class Conversation extends Group
         $target = $this->_id;
         $meta = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE);
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+        $newLink = new BlocLink($this->_nebuleInstance, $link);
         $newLink->sign();
 
         // Si besoin, obfuscation du lien.
@@ -511,7 +453,7 @@ class Conversation extends Group
      * @param boolean     $obfuscated
      * @return boolean
      */
-    public function unsetFollower($entity = '', bool $obfuscated = false)
+    public function unsetFollower($entity = '', bool $obfuscated = false): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
 
@@ -546,7 +488,7 @@ class Conversation extends Group
         $target = $this->_id;
         $meta = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE);
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+        $newLink = new BlocLink($this->_nebuleInstance, $link);
         $newLink->sign();
 
         // Si besoin, obfuscation du lien.

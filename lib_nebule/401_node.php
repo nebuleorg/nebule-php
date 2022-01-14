@@ -288,13 +288,7 @@ class Node implements nodeInterface
      */
     public function __construct(nebule $nebuleInstance, string $id, string $data = '', bool $protect = false, bool $obfuscated = false)
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_cache = $nebuleInstance->getCacheInstance();
-        $this->_io = $nebuleInstance->getIoInstance();
-        $this->_crypto = $nebuleInstance->getCryptoInstance();
-        $this->_social = $nebuleInstance->getSocialInstance();
+        $this->_initialisation($nebuleInstance);
 
         $id = trim(strtolower($id));
 
@@ -306,8 +300,6 @@ class Node implements nodeInterface
             $this->_metrology->addLog('New instance object ' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Métrologie.
             $this->_getMarkProtected();
             $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
-
-            $this->_getCommunContents();
         } elseif ($id == '0'
             && $data != ''
         ) {
@@ -339,13 +331,24 @@ class Node implements nodeInterface
     }
 
     /**
-     * Fonction de réveil de l'instance et de ré-initialisation de certaines variables non sauvegardées.
+     * Fonction de réveil de l'instance et de réinitialisation de certaines variables non sauvegardées.
      *
      * @return void
      */
     public function __wakeup()
     {
         global $nebuleInstance;
+        $this->_initialisation($nebuleInstance);
+
+        $this->_cacheMarkDanger = false;
+        $this->_cacheMarkWarning = false;
+        $this->_data = '';
+        $this->_haveData = false;
+        $this->_cacheUpdate = '';
+    }
+
+    protected function _initialisation($nebuleInstance)
+    {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
@@ -353,13 +356,6 @@ class Node implements nodeInterface
         $this->_io = $nebuleInstance->getIoInstance();
         $this->_crypto = $nebuleInstance->getCryptoInstance();
         $this->_social = $nebuleInstance->getSocialInstance();
-        $this->_cacheMarkDanger = false;
-        $this->_cacheMarkWarning = false;
-        $this->_data = '';
-        $this->_haveData = false;
-        $this->_cacheUpdate = '';
-
-        $this->_getCommunContents();
     }
 
     protected function _createNewObject(string $data, bool $protect, bool $obfuscated): bool
@@ -544,24 +540,6 @@ class Node implements nodeInterface
 
         return $this->_io->checkLinkPresent($this->_id);
     }
-
-
-    /**
-     * Pré-détermine certains contenus.
-     * Sans ces contenus, certaines fonctions ne se terminent pas bien pour ces objets.
-     *
-     * @return void
-     */
-    protected function _getCommunContents()
-    {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
-
-        if ($this->_id == '5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256') {
-            $this->_data = 'sha256';
-            $this->_haveData = true;
-        }
-    }
-
 
     /**
      * Faire une recherche de liens type l en fonction de l'objet méta.
@@ -2058,9 +2036,9 @@ class Node implements nodeInterface
 
     /**
      * Lit l'ID de l'objet non chiffré.
-     * @return boolean
+     * @return string
      */
-    public function getUnprotectedID()
+    public function getUnprotectedID(): string
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
@@ -2364,13 +2342,14 @@ class Node implements nodeInterface
 
             return true;
         }
+        return false;
     }
 
     /**
      * Déprotège l'objet.
      * @return boolean
      */
-    public function setUnprotected()
+    public function setUnprotected(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 

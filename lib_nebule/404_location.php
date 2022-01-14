@@ -27,25 +27,21 @@ class Localisation extends Node
 
     public function __construct(nebule $nebuleInstance, string $id, string $localisation = '')
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIoInstance();
-        $this->_crypto = $nebuleInstance->getCryptoInstance();
-        $this->_social = $nebuleInstance->getSocialInstance();
+        $this->_initialisation($nebuleInstance);
+
         $this->_ioDefaultPrefix = $this->_io->getDefaultLocalisation();
         $id = trim(strtolower($id));
         $this->_metrology->addLog('New instance localisation ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
 
         // Vérifie sommairement la localisation.
-        if (is_string($id) && $id != '0' && $id != '' && ctype_xdigit($id)) {
+        if ($id != '0' && $id != '' && ctype_xdigit($id)) {
             $this->_id = $id;
             // Extrait la localisation et la convertit en minuscule.
             $this->_localisation = trim(strtolower($this->_io->objectRead($id)));
-        } elseif (is_string($id) && $id == '0') {
+        } elseif ($id == '0') {
             // Crée le nouvel objet.
             $this->_createNewObject($localisation);
-            // Définit la licalisation, en minuscule.
+            // Définit la localisation, en minuscule.
             $this->_localisation = trim(strtolower($localisation));
         } else {
             // La localisation n'est pas valide.

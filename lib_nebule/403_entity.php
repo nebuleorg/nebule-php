@@ -80,12 +80,7 @@ class Entity extends Node
      */
     public function __construct(nebule $nebuleInstance, string $id)
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIoInstance();
-        $this->_crypto = $nebuleInstance->getCryptoInstance();
-        $this->_social = $nebuleInstance->getSocialInstance();
+        $this->_initialisation($nebuleInstance);
 
         $id = trim(strtolower($id));
         $this->_metrology->addLog('New instance entity ' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
@@ -96,25 +91,6 @@ class Entity extends Node
             $this->_createNewEntity();
         else
             $this->_id = '0';
-    }
-
-    /**
-     * Fonction de réveil de l'instance et de réinitialisation de certaines variables non sauvegardées.
-     *
-     * @return null
-     */
-    public function __wakeup()
-    {
-        global $nebuleInstance;
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIoInstance();
-        $this->_crypto = $nebuleInstance->getCryptoInstance();
-        $this->_social = $nebuleInstance->getSocialInstance();
-        $this->_cacheMarkDanger = false;
-        $this->_cacheMarkWarning = false;
-        $this->_cacheUpdate = '';
     }
 
     // Chargement d'une entité existante.

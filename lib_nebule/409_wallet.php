@@ -73,25 +73,17 @@ class Wallet extends Entity
      */
     public function __construct(nebule $nebuleInstance, string $id, array $param = array(), bool $protected = false, bool $obfuscated = false)
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIoInstance();
-        $this->_crypto = $nebuleInstance->getCryptoInstance();
-        $this->_social = $nebuleInstance->getSocialInstance();
+        $this->_initialisation($nebuleInstance);
 
         $id = trim(strtolower($id));
         $this->_metrology->addLog('New instance wallet ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
 
-        if (is_string($id)
-            && $id != ''
+        if ($id != ''
             && ctype_xdigit($id)
         ) {
             // Si l'ID est cohérent et l'objet nebule présent, c'est bon.
             $this->_loadWallet($id);
-        } elseif (is_string($id)
-            && $id == 'new'
-        ) {
+        } elseif ($id == 'new') {
             // Si c'est un nouveau portefeuille à créer, renvoie à la création.
             $this->_createNewWallet($param, $protected, $obfuscated);
         } else {
@@ -101,25 +93,14 @@ class Wallet extends Entity
     }
 
     /**
-     * Fonction de suppression de l'instance.
-     *
-     * @return boolean
-     */
-    public function __destruct()
-    {
-        return true;
-    }
-
-    /**
      *  Chargement d'un portefeuille existant.
      *
      * @param string $id
      */
-    private function _loadWallet($id)
+    private function _loadWallet(string $id)
     {
         // Vérifie que c'est bien un objet.
-        if (!is_string($id)
-            || $id == ''
+        if ($id == ''
             || !ctype_xdigit($id)
             || !$this->_io->checkLinkPresent($id)
             || !$this->_configuration->getOptionAsBoolean('permitCurrency')
@@ -135,9 +116,11 @@ class Wallet extends Entity
      * Création d'une nouveau portefeuille.
      *
      * @param array $param
+     * @param bool  $protected
+     * @param bool  $obfuscated
      * @return boolean
      */
-    private function _createNewWallet($param, $protected = false, $obfuscated = false)
+    private function _createNewWallet(array $param, bool $protected = false, bool $obfuscated = false): bool
     {
         $this->_metrology->addLog('Ask create wallet', Metrology::LOG_LEVEL_DEBUG); // Log
 
@@ -163,24 +146,25 @@ class Wallet extends Entity
             $this->_id = '0';
             return false;
         }
+        return true;
     }
 
 
     /**
      * Crée un portefeuille.
-     *
      * Retourne la chaine avec 0 si erreur.
      *
-     * @param array $param
+     * @param array   $param
      * @param boolean $protected
      * @param boolean $obfuscated
      * @return string
      */
-    private function _createTokenPool($param, $protected = false, $obfuscated = false)
+    private function _createWallet(array $param, bool $protected = false, bool $obfuscated = false): string
     {
         // Identifiant final du portefeuille.
         $this->_id = '0';
 
         // @todo
+        return '';
     }
 }

@@ -79,12 +79,7 @@ class Token extends TokenPool
      */
     public function __construct(nebule $nebuleInstance, string $id, array $param = array(), bool $protected = false, bool $obfuscated = false)
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIoInstance();
-        $this->_crypto = $nebuleInstance->getCryptoInstance();
-        $this->_social = $nebuleInstance->getSocialInstance();
+        $this->_initialisation($nebuleInstance);
 
         // Complément des paramètres.
         //$this->_propertiesList['currency']['CurrencyForgeID']['force'] = $this->_nebuleInstance->getCurrentEntity();
@@ -113,21 +108,11 @@ class Token extends TokenPool
     }
 
     /**
-     * Fonction de suppression de l'instance.
-     *
-     * @return boolean
-     */
-    public function __destruct()
-    {
-        return true;
-    }
-
-    /**
      *  Chargement d'un jeton existant.
      *
      * @param string $id
      */
-    private function _loadToken($id)
+    private function _loadToken(string $id)
     {
         // Vérifie que c'est bien un objet.
         if (!is_string($id)
@@ -174,9 +159,11 @@ class Token extends TokenPool
      * Création d'une nouveau jeton.
      *
      * @param array $param
+     * @param bool  $protected
+     * @param bool  $obfuscated
      * @return boolean
      */
-    private function _createNewToken($param, $protected = false, $obfuscated = false)
+    private function _createNewToken(array $param, bool $protected = false, bool $obfuscated = false): bool
     {
         $this->_metrology->addLog('Ask create token', Metrology::LOG_LEVEL_DEBUG); // Log
 
@@ -203,23 +190,22 @@ class Token extends TokenPool
             $this->_id = '0';
             return false;
         }
+        return true;
     }
 
 
     /**
      * Crée un jeton.
-     *
      * Les paramètres force* ne sont utilisés que si tokenHaveContent est à true.
      * Pour l'instant le code commence à prendre en compte tokenHaveContent à false mais le paramètre est forçé à true tant que le code n'est pas prêt.
-     *
      * Retourne la chaine avec 0 si erreur.
      *
-     * @param array $param
+     * @param array   $param
      * @param boolean $protected
      * @param boolean $obfuscated
      * @return string
      */
-    private function _createToken($param, $protected = false, $obfuscated = false)
+    private function _createToken(array $param, bool $protected = false, bool $obfuscated = false): string
     {
         // Identifiant final du sac de jetons.
         $this->_id = '0';

@@ -217,12 +217,7 @@ class Currency extends Node
      */
     public function __construct(nebule $nebuleInstance, string $id, array $param = array(), bool $protected = false, bool $obfuscated = false)
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIoInstance();
-        $this->_crypto = $nebuleInstance->getCryptoInstance();
-        $this->_social = $nebuleInstance->getSocialInstance();
+        $this->_initialisation($nebuleInstance);
 
         $id = trim(strtolower($id));
         $this->_metrology->addLog('New instance currency ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
@@ -245,16 +240,6 @@ class Currency extends Node
     }
 
     /**
-     * Fonction de suppression de l'instance.
-     *
-     * @return boolean
-     */
-    public function __destruct()
-    {
-        return true;
-    }
-
-    /**
      * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
      *
      * @return string
@@ -262,38 +247,6 @@ class Currency extends Node
     public function __toString()
     {
         return $this->_id;
-    }
-
-    /**
-     * Retourne les variables à sauvegarder dans la session php lors d'une mise en sommeil de l'instance.
-     *
-     * @return array:string
-     */
-    public function __sleep()
-    {
-        return self::SESSION_SAVED_VARS;
-    }
-
-    /**
-     * Foncion de réveil de l'instance et de ré-initialisation de certaines variables non sauvegardées.
-     *
-     * @return null
-     */
-    public function __wakeup()
-    {
-        global $nebuleInstance;
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIoInstance();
-        $this->_crypto = $nebuleInstance->getCryptoInstance();
-        $this->_social = $nebuleInstance->getSocialInstance();
-        $this->_cacheMarkDanger = false;
-        $this->_cacheMarkWarning = false;
-        $this->_cacheUpdate = '';
-
-        // Complément des paramètres.
-//		$this->_propertiesList['currency']['CurrencyAutorityID']['force'] = $this->_nebuleInstance->getCurrentEntity();
     }
 
     /**
@@ -401,7 +354,7 @@ class Currency extends Node
      *
      * @return string
      */
-    public function getProtectedID()
+    public function getProtectedID(): string
     {
         return '0';
     }
@@ -411,7 +364,7 @@ class Currency extends Node
      *
      * @return string
      */
-    public function getUnprotectedID()
+    public function getUnprotectedID(): string
     {
         return $this->_id;
     }
@@ -419,9 +372,10 @@ class Currency extends Node
     /**
      * Fonction pour les objets, désactivée pour les monnaies.
      *
+     * @param bool $obfuscated
      * @return boolean
      */
-    public function setProtected(bool $obfuscated = false)
+    public function setProtected(bool $obfuscated = false): bool
     {
         return false;
     }
@@ -431,7 +385,7 @@ class Currency extends Node
      *
      * @return boolean
      */
-    public function setUnprotected()
+    public function setUnprotected(): bool
     {
         return false;
     }
@@ -442,7 +396,7 @@ class Currency extends Node
      * @param string|Entity $entity
      * @return boolean
      */
-    public function setProtectedTo($entity)
+    public function setProtectedTo($entity): bool
     {
         return false;
     }
@@ -1513,10 +1467,10 @@ class Currency extends Node
      * Initialise l'FID, entité forge de la monnaie.
      * Si l'instance est une monnaie, recherche le paramètre FID et ne tient pas compte de l'argument de la fonction.
      *
-     * @param unknown $id
+     * @param string $id
      * @return boolean
      */
-    public function setFID($id)
+    public function setFID(string $id): bool
     {
         if (get_class($this) == 'Currency') {
             //$id = $this->_getParam('FID', (int)$this->_propertiesList['currency']['CurrencyForgeID']['limit']);
@@ -1548,10 +1502,10 @@ class Currency extends Node
      *
      * @return boolean
      */
-    protected function _createLink($signer, $date, $action, $source, $target, $meta, $obfuscate = false)
+    protected function _createLink($signer, $date, $action, $source, $target, $meta, $obfuscate = false): bool
     {
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+        $newLink = new BlocLink($this->_nebuleInstance, $link);
 
         // Signe le lien.
         $newLink->sign($signer);

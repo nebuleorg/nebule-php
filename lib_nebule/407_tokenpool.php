@@ -79,12 +79,7 @@ class TokenPool extends Currency
      */
     public function __construct(nebule $nebuleInstance, string $id, array $param = array(), bool $protected = false, bool $obfuscated = false)
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIoInstance();
-        $this->_crypto = $nebuleInstance->getCryptoInstance();
-        $this->_social = $nebuleInstance->getSocialInstance();
+        $this->_initialisation($nebuleInstance);
 
         // Complément des paramètres.
         //$this->_propertiesList['currency']['CurrencyForgeID']['force'] = $this->_nebuleInstance->getCurrentEntity();
@@ -95,15 +90,12 @@ class TokenPool extends Currency
         $id = trim(strtolower($id));
         $this->_metrology->addLog('New instance token pool ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
 
-        if (is_string($id)
-            && $id != ''
+        if ($id != ''
             && ctype_xdigit($id)
         ) {
             // Si l'ID est cohérent et l'objet nebule présent, c'est bon.
             $this->_loadTokenPool($id);
-        } elseif (is_string($id)
-            && $id == 'new'
-        ) {
+        } elseif ($id == 'new') {
             // Si c'est un nouveau sac de jetons à créer, renvoie à la création.
             $this->_createNewTokenPool($param, $protected, $obfuscated);
         } else {
@@ -113,25 +105,14 @@ class TokenPool extends Currency
     }
 
     /**
-     * Fonction de suppression de l'instance.
-     *
-     * @return boolean
-     */
-    public function __destruct()
-    {
-        return true;
-    }
-
-    /**
      *  Chargement d'un sac de jetons existant.
      *
      * @param string $id
      */
-    private function _loadTokenPool($id)
+    private function _loadTokenPool(string $id)
     {
         // Vérifie que c'est bien un objet.
-        if (!is_string($id)
-            || $id == ''
+        if ($id == ''
             || !ctype_xdigit($id)
             || !$this->_io->checkLinkPresent($id)
             || !$this->_configuration->getOptionAsBoolean('permitCurrency')
@@ -171,9 +152,11 @@ class TokenPool extends Currency
      * Création d'une nouveau sac de jetons.
      *
      * @param array $param
+     * @param bool  $protected
+     * @param bool  $obfuscated
      * @return boolean
      */
-    private function _createNewTokenPool($param, $protected = false, $obfuscated = false)
+    private function _createNewTokenPool(array $param, bool $protected = false, bool $obfuscated = false): bool
     {
         $this->_metrology->addLog('Ask create token pool', Metrology::LOG_LEVEL_DEBUG); // Log
 
@@ -200,15 +183,14 @@ class TokenPool extends Currency
             $this->_id = '0';
             return false;
         }
+        return true;
     }
 
 
     /**
      * Crée un sac de jetons.
-     *
      * Les paramètres force* ne sont utilisés que si PoolHaveContent est à true.
      * Pour l'instant le code commence à prendre en compte PoolHaveContent à false mais le paramètre est forçé à true tant que le code n'est pas prêt.
-     *
      * Les options pour la génération d'un sac de jetons :
      * poolHaveContent
      * poolSerialID
@@ -217,20 +199,18 @@ class TokenPool extends Currency
      * poolComment
      * poolCopyright
      * poolTokenCount
-     *
      * forcePoolForgeID
      * forcePoolCurrencyID
      * forcePoolComment
      * forcePoolCopyright
-     *
      * Retourne la chaine avec 0 si erreur.
      *
-     * @param array $param
+     * @param array   $param
      * @param boolean $protected
      * @param boolean $obfuscated
      * @return string
      */
-    private function _createTokenPool($param, $protected = false, $obfuscated = false)
+    private function _createTokenPool(array $param, bool $protected = false, bool $obfuscated = false): string
     {
         // Identifiant final du sac de jetons.
         $this->_id = '0';
