@@ -23,7 +23,7 @@ use Nebule\Library\Node;
  * Si une erreur survient lors de la lecture de la monnaie ou lors de la création, assigne l'ID 0.
  * ------------------------------------------------------------------------------------------
  */
-class Currency extends Node
+class Currency extends Node implements nodeInterface
 {
     /**
      * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
@@ -222,15 +222,12 @@ class Currency extends Node
         $id = trim(strtolower($id));
         $this->_metrology->addLog('New instance currency ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
 
-        if (is_string($id)
-            && $id != ''
+        if ($id != ''
             && ctype_xdigit($id)
         ) {
             // Si l'ID est cohérent et l'objet nebule présent, c'est bon.
             $this->_loadCurrency($id);
-        } elseif (is_string($id)
-            && $id == 'new'
-        ) {
+        } elseif ($id == 'new') {
             // Si c'est une nouvelle monnaie à créer, renvoie à la création.
             $this->_createNewCurrency($param, $protected, $obfuscated);
         } else {
@@ -244,7 +241,7 @@ class Currency extends Node
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->_id;
     }
@@ -254,7 +251,7 @@ class Currency extends Node
      *
      * @param string $id
      */
-    private function _loadCurrency($id)
+    private function _loadCurrency(string $id)
     {
         // Vérifie que c'est bien un objet.
         if (!is_string($id)
@@ -267,7 +264,7 @@ class Currency extends Node
         }
 
         $this->_id = $id;
-        $this->_metrology->addLog('Load currency ' . $id, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Load currency ' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         // On ne recherche pas les paramètres si ce n'est pas une monnaie.
         if ($this->getIsCurrency('myself')) {
@@ -308,7 +305,7 @@ class Currency extends Node
      */
     private function _createNewCurrency($param, $protected = false, $obfuscated = false)
     {
-        $this->_metrology->addLog('Ask create currency', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Ask create currency', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         // Vérifie que l'on puisse créer une monnaie.
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
@@ -324,12 +321,12 @@ class Currency extends Node
 
             // Si la génération s'est mal passée.
             if ($this->_id == '0') {
-                $this->_metrology->addLog('Create currency error on generation', Metrology::LOG_LEVEL_ERROR); // Log
+                $this->_metrology->addLog('Create currency error on generation', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
                 $this->_id = '0';
                 return false;
             }
         } else {
-            $this->_metrology->addLog('Create currency error not autorized', Metrology::LOG_LEVEL_ERROR); // Log
+            $this->_metrology->addLog('Create currency error not autorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
             $this->_id = '0';
             return false;
         }
@@ -455,10 +452,10 @@ class Currency extends Node
                                 && $value != ''
                                 && $value != null
                             ) {
-                                $this->_metrology->addLog(get_class($this) . ' - Try to overwrite forced value ' . $propArray['key'] . ':' . $value, Metrology::LOG_LEVEL_ERROR); // Log
+                                $this->_metrology->addLog(get_class($this) . ' - Try to overwrite forced value ' . $propArray['key'] . ':' . $value, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
                             }
 
-                            $this->_metrology->addLog(get_class($this) . ' - Normalize force ' . $propArray['key'] . ':' . $propArray['force'], Metrology::LOG_LEVEL_DEBUG); // Log
+                            $this->_metrology->addLog(get_class($this) . ' - Normalize force ' . $propArray['key'] . ':' . $propArray['force'], Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                             if ($propArray['type'] == 'boolean') {
                                 if ($propArray['force'] == 'true') {
                                     $param[$key] = true;
@@ -474,7 +471,7 @@ class Currency extends Node
                             if ($propArray['type'] == 'boolean'
                                 && is_string($value)
                             ) {
-                                $this->_metrology->addLog(get_class($this) . ' - Normalize bool ' . $key . ':' . $value, Metrology::LOG_LEVEL_DEBUG); // Log
+                                $this->_metrology->addLog(get_class($this) . ' - Normalize bool ' . $key . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                                 if ($value == 'true') {
                                     $param[$key] = true;
                                 }
@@ -485,7 +482,7 @@ class Currency extends Node
                             }
 
                             if ($propArray['type'] == 'string') {
-                                $this->_metrology->addLog(get_class($this) . ' - Normalize string ' . $key . ':' . $value, Metrology::LOG_LEVEL_DEBUG); // Log
+                                $this->_metrology->addLog(get_class($this) . ' - Normalize string ' . $key . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                                 if (isset($propArray['limit'])
                                     && strlen($value) > (int)$propArray['limit']
                                 ) {
@@ -499,7 +496,7 @@ class Currency extends Node
 
                             if ($propArray['type'] == 'hexadecimal') {
                                 if (isset($propArray['checkbox'])) {
-                                    $this->_metrology->addLog(get_class($this) . ' - Normalize multi hex ' . $key . ':' . $value, Metrology::LOG_LEVEL_DEBUG); // Log
+                                    $this->_metrology->addLog(get_class($this) . ' - Normalize multi hex ' . $key . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                                     $valueArray = explode(' ', $value);
                                     $value = '';
                                     foreach ($valueArray as $item) {
@@ -517,7 +514,7 @@ class Currency extends Node
                                         $param[$key] = trim($value);
                                     }
                                 } else {
-                                    $this->_metrology->addLog(get_class($this) . ' - Normalize hex ' . $key . ':' . $value, Metrology::LOG_LEVEL_DEBUG); // Log
+                                    $this->_metrology->addLog(get_class($this) . ' - Normalize hex ' . $key . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                                     if (!ctype_xdigit($value)) {
                                         // Si pas un hexa, supprime la valeur.
                                         $param[$name] = null;
@@ -534,7 +531,7 @@ class Currency extends Node
                             }
 
                             if ($propArray['type'] == 'date') {
-                                $this->_metrology->addLog(get_class($this) . ' - Normalize date ' . $key . ':' . $value, Metrology::LOG_LEVEL_DEBUG); // Log
+                                $this->_metrology->addLog(get_class($this) . ' - Normalize date ' . $key . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                                 if (isset($propArray['limit'])
                                     && strlen($value) > (int)$propArray['limit']
                                 ) {
@@ -549,7 +546,7 @@ class Currency extends Node
                             if ($propArray['type'] == 'number'
                                 && is_string($value)
                             ) {
-                                $this->_metrology->addLog(get_class($this) . ' - Normalize number ' . $key . ':' . $value, Metrology::LOG_LEVEL_DEBUG); // Log
+                                $this->_metrology->addLog(get_class($this) . ' - Normalize number ' . $key . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                                 $param[$key] = (double)$value;
                                 if (isset($propArray['limit'])
                                     && $value > (double)$propArray['limit']
@@ -567,7 +564,7 @@ class Currency extends Node
                         && $propArray['forceable']
                     ) {
                         $param[$key] = false;
-                        $this->_metrology->addLog(get_class($this) . ' - Normalize force ' . $key . ':' . $value, Metrology::LOG_LEVEL_DEBUG); // Log
+                        $this->_metrology->addLog(get_class($this) . ' - Normalize force ' . $key . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                         if ($value === true) {
                             $param[$key] = true;
                         }
@@ -586,10 +583,10 @@ class Currency extends Node
 
                 if ($propArray['type'] == 'boolean') {
                     $param[$name] = false;
-                    $this->_metrology->addLog(get_class($this) . ' - Normalize add ' . $propArray['key'] . ':false', Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_metrology->addLog(get_class($this) . ' - Normalize add ' . $propArray['key'] . ':false', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                 } else {
                     $param[$name] = null;
-                    $this->_metrology->addLog(get_class($this) . ' - Normalize add ' . $propArray['key'] . ':null', Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_metrology->addLog(get_class($this) . ' - Normalize add ' . $propArray['key'] . ':null', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                 }
             }
         }
@@ -661,12 +658,12 @@ class Currency extends Node
             && ctype_xdigit($param['CurrencySerialID'])
         ) {
             $sid = $this->_stringFilter($param['CurrencySerialID']);
-            $this->_metrology->addLog('Generate currency asked SID:' . $sid, Metrology::LOG_LEVEL_NORMAL); // Log
+            $this->_metrology->addLog('Generate currency asked SID:' . $sid, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         } else {
             // Génération d'un numéro de série de monnaie unique aléatoire.
             $sid = $this->_nebuleInstance->getCryptoInstance()->getRandom(128, Crypto::RANDOM_PSEUDO);
             $param['CurrencySerialID'] = $sid;
-            $this->_metrology->addLog('Generate currency rand SID:' . $sid, Metrology::LOG_LEVEL_NORMAL); // Log
+            $this->_metrology->addLog('Generate currency rand SID:' . $sid, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         }
 
 
@@ -674,18 +671,18 @@ class Currency extends Node
         if (isset($param['CurrencyHaveContent'])
             && $param['CurrencyHaveContent'] === true
         ) {
-            $this->_metrology->addLog('Generate currency SID:' . $sid . ' HCT:true', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('Generate currency SID:' . $sid . ' HCT:true', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
             // Le contenu final commence par l'identifiant interne de la monnaie.
             $content = 'TYP:' . $this->_propertiesList['currency']['CurrencyType']['force'] . "\n"; // @todo peut être intégré au reste.
-            $this->_metrology->addLog('Generate currency SID:' . $sid . ' TYP:' . $this->_propertiesList['currency']['CurrencyType']['force'], Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('Generate currency SID:' . $sid . ' TYP:' . $this->_propertiesList['currency']['CurrencyType']['force'], Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             $content .= 'SID:' . $sid . "\n";
             $content .= 'CAP:' . $this->_propertiesList['currency']['CurrencyCapacities']['force'] . "\n";
-            $this->_metrology->addLog('Generate currency SID:' . $sid . ' CAP:' . $this->_propertiesList['currency']['CurrencyCapacities']['force'], Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('Generate currency SID:' . $sid . ' CAP:' . $this->_propertiesList['currency']['CurrencyCapacities']['force'], Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             $content .= 'MOD:' . $this->_propertiesList['currency']['CurrencyExploitationMode']['force'] . "\n";
-            $this->_metrology->addLog('Generate currency SID:' . $sid . ' MOD:' . $this->_propertiesList['currency']['CurrencyExploitationMode']['force'], Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('Generate currency SID:' . $sid . ' MOD:' . $this->_propertiesList['currency']['CurrencyExploitationMode']['force'], Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             $content .= 'AID:' . $this->_nebuleInstance->getCurrentEntity() . "\n";
-            $this->_metrology->addLog('Generate currency SID:' . $sid . ' AID:' . $this->_nebuleInstance->getCurrentEntity(), Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('Generate currency SID:' . $sid . ' AID:' . $this->_nebuleInstance->getCurrentEntity(), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
             // Pour chaque propriété, si présente et forcée, l'écrit dans l'objet.
             foreach ($this->_propertiesList['currency'] as $name => $property) {
@@ -720,7 +717,7 @@ class Currency extends Node
 
                     // Ajoute la ligne.
                     $content .= $property['key'] . ':' . $value . "\n";
-                    $this->_metrology->addLog('Generate currency SID:' . $sid . ' force ' . $property['key'] . ':' . $value, Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_metrology->addLog('Generate currency SID:' . $sid . ' force ' . $property['key'] . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                 }
             }
 
@@ -741,12 +738,12 @@ class Currency extends Node
             }
         } else {
             $this->_id = $sid;
-            $this->_metrology->addLog('Generate currency SID:' . $sid . ' HCT:false', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('Generate currency SID:' . $sid . ' HCT:false', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         }
 
         // La monnaie a maintenant un CID.
         $param['CurrencyID'] = $this->_id;
-        $this->_metrology->addLog('Generate currency SID:' . $sid . ' CID:' . $this->_id, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Generate currency SID:' . $sid . ' CID:' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
 
         // Prépare la génération des liens.
@@ -803,17 +800,17 @@ class Currency extends Node
                 }
 
                 if ($value != null) {
-                    $this->_metrology->addLog('Generate currency SID:' . $sid . ' add ' . $property['key'] . ':' . $value, Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_metrology->addLog('Generate currency SID:' . $sid . ' add ' . $property['key'] . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                     $meta = $this->_nebuleInstance->getCryptoInstance()->hash($property['key']);
                     $this->_createLink($signer, $date, $action, $source, $target, $meta, $argObf);
-                    $this->_metrology->addLog('Generate currency SID:' . $sid . ' link=' . $target . '_' . $meta, Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_metrology->addLog('Generate currency SID:' . $sid . ' link=' . $target . '_' . $meta, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                 }
             }
         }
 
 
         // Retourne l'identifiant de la monnaie.
-        $this->_metrology->addLog('Generate currency end SID:' . $sid, Metrology::LOG_LEVEL_NORMAL); // Log
+        $this->_metrology->addLog('Generate currency end SID:' . $sid, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         return $this->_id;
     }
 
@@ -923,7 +920,7 @@ class Currency extends Node
      */
     protected function _getParam($key, $maxsize)
     {
-        $this->_metrology->addLog(get_class($this) . ' get param start for ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog(get_class($this) . ' get param start for ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         // La réponse.
         $result = null;
@@ -991,7 +988,7 @@ class Currency extends Node
             $result = $this->_getParamFromLinks($key, $maxsize);
         }
 
-        $this->_metrology->addLog(get_class($this) . ' return param final ' . $this->_id . ' - ' . $key . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog(get_class($this) . ' return param final ' . $this->_id . ' - ' . $key . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         // Ecrit le cache.
         $this->_properties[$key] = $result;
@@ -1017,7 +1014,7 @@ class Currency extends Node
             return null;
         }
 
-        $this->_metrology->addLog(get_class($this) . ' get param on currency ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog(get_class($this) . ' get param on currency ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         $return = $this->_inheritedCID->getParam($key);
 
@@ -1033,10 +1030,10 @@ class Currency extends Node
             $this->_propertiesInherited[$key] = false;
         } else {
             $this->_propertiesInherited[$key] = true;
-            $this->_metrology->addLog(get_class($this) . ' return param inherited on currency ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog(get_class($this) . ' return param inherited on currency ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         }
 
-        $this->_metrology->addLog(get_class($this) . ' return param on currency ' . $this->_id . ' - ' . $key . ':' . (string)$return, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog(get_class($this) . ' return param on currency ' . $this->_id . ' - ' . $key . ':' . (string)$return, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         return $return;
     }
 
@@ -1059,7 +1056,7 @@ class Currency extends Node
             return null;
         }
 
-        $this->_metrology->addLog(get_class($this) . ' get param on pool ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog(get_class($this) . ' get param on pool ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         $return = $this->_inheritedPID->getParam($key);
 
@@ -1075,10 +1072,10 @@ class Currency extends Node
             $this->_propertiesInherited[$key] = false;
         } else {
             $this->_propertiesInherited[$key] = true;
-            $this->_metrology->addLog(get_class($this) . ' return param inherited on pool ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog(get_class($this) . ' return param inherited on pool ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         }
 
-        $this->_metrology->addLog(get_class($this) . ' return param on pool ' . $this->_id . ' - ' . $key . ':' . (string)$return, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog(get_class($this) . ' return param on pool ' . $this->_id . ' - ' . $key . ':' . (string)$return, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         return $return;
     }
 
@@ -1091,7 +1088,7 @@ class Currency extends Node
      */
     protected function _getParamFromObject($key, $maxsize)
     {
-        $this->_metrology->addLog(get_class($this) . ' get param on object ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog(get_class($this) . ' get param on object ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         $result = null;
 
@@ -1136,10 +1133,10 @@ class Currency extends Node
             $this->_propertiesForced[$key] = false;
         } else {
             $this->_propertiesForced[$key] = true;
-            $this->_metrology->addLog(get_class($this) . ' return param forced on object ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog(get_class($this) . ' return param forced on object ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         }
 
-        $this->_metrology->addLog(get_class($this) . ' return param on object ' . $this->_id . ' - ' . $key . ':' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog(get_class($this) . ' return param on object ' . $this->_id . ' - ' . $key . ':' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         return $result;
     }
 
@@ -1152,7 +1149,7 @@ class Currency extends Node
      */
     protected function _getParamFromLinks($key, $maxsize)
     {
-        $this->_metrology->addLog(get_class($this) . ' get param on links ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog(get_class($this) . ' get param on links ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         $result = '';
 
@@ -1179,7 +1176,7 @@ class Currency extends Node
             }
         }
 
-        $this->_metrology->addLog(get_class($this) . ' get param on links ' . $this->_id . ' - metatype:' . $meta, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog(get_class($this) . ' get param on links ' . $this->_id . ' - metatype:' . $meta, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         if ($meta != '') {
             $this->_social->setList($autorityList, 'onlist');
@@ -1188,7 +1185,7 @@ class Currency extends Node
             $this->_social->unsetList();
         }
 
-        $this->_metrology->addLog(get_class($this) . ' get param on links ' . $this->_id . ' - meta:' . $id, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog(get_class($this) . ' get param on links ' . $this->_id . ' - meta:' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         if ($id != '') {
             $instance = $this->_nebuleInstance->newObject($id);
@@ -1218,7 +1215,7 @@ class Currency extends Node
 
         unset($meta, $id, $instance);
 
-        $this->_metrology->addLog(get_class($this) . ' return param on links ' . $this->_id . ' - ' . $key . ':' . (string)$result, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog(get_class($this) . ' return param on links ' . $this->_id . ' - ' . $key . ':' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         if ($result == '') {
             return null;
         }
@@ -1300,13 +1297,13 @@ class Currency extends Node
         // Retourne l'état d'héritage.
         if (isset($this->_propertiesInherited[$key])) {
             if ($this->_propertiesInherited[$key]) {
-                $this->_metrology->addLog(get_class($this) . ' get param inherited ' . $this->_id . ' - ' . $key . ':true', Metrology::LOG_LEVEL_DEBUG); // Log
+                $this->_metrology->addLog(get_class($this) . ' get param inherited ' . $this->_id . ' - ' . $key . ':true', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             } else {
-                $this->_metrology->addLog(get_class($this) . ' get param inherited ' . $this->_id . ' - ' . $key . ':false', Metrology::LOG_LEVEL_DEBUG); // Log
+                $this->_metrology->addLog(get_class($this) . ' get param inherited ' . $this->_id . ' - ' . $key . ':false', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             }
             return $this->_propertiesInherited[$key];
         } else {
-            $this->_metrology->addLog(get_class($this) . ' get param inherited ' . $this->_id . ' - ' . $key . ':not defined (false)', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog(get_class($this) . ' get param inherited ' . $this->_id . ' - ' . $key . ':not defined (false)', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             return false;
         }
     }
@@ -1328,13 +1325,13 @@ class Currency extends Node
         // Retourne l'état de forçage.
         if (isset($this->_propertiesForced[$key])) {
             if ($this->_propertiesForced[$key]) {
-                $this->_metrology->addLog(get_class($this) . ' get param forced ' . $this->_id . ' - ' . $key . ':true', Metrology::LOG_LEVEL_DEBUG); // Log
+                $this->_metrology->addLog(get_class($this) . ' get param forced ' . $this->_id . ' - ' . $key . ':true', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             } else {
-                $this->_metrology->addLog(get_class($this) . ' get param forced ' . $this->_id . ' - ' . $key . ':false', Metrology::LOG_LEVEL_DEBUG); // Log
+                $this->_metrology->addLog(get_class($this) . ' get param forced ' . $this->_id . ' - ' . $key . ':false', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             }
             return $this->_propertiesForced[$key];
         } else {
-            $this->_metrology->addLog(get_class($this) . ' get param forced ' . $this->_id . ' - ' . $key . ':not defined (false)', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog(get_class($this) . ' get param forced ' . $this->_id . ' - ' . $key . ':not defined (false)', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             return false;
         }
     }
@@ -1386,7 +1383,7 @@ class Currency extends Node
 
         // @todo vérifier que le CID est cohérent pour cet item dans les liens.
 
-        $this->_metrology->addLog('set CID ' . $currency->getID() . ' for ' . $this->_id, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('set CID ' . $currency->getID() . ' for ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         $this->_inheritedCID = $currency;
 
         // Ecrit le cache.
@@ -1423,7 +1420,7 @@ class Currency extends Node
 
         // @todo vérifier que le PID est cohérent pour ce jeton dans les liens.
 
-        $this->_metrology->addLog('set PID ' . $pool->getID() . ' for ' . $this->_id, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('set PID ' . $pool->getID() . ' for ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         $this->_inheritedPID = $pool;
 
         // Ecrit le cache.
@@ -1442,10 +1439,10 @@ class Currency extends Node
     {
         if (get_class($this) == 'Currency') {
             $id = $this->_getParamFromObject('AID', (int)$this->_propertiesList['currency']['CurrencyAutorityID']['limit']);
-            $this->_metrology->addLog('set AID by param - AID:' . $id, Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('set AID by param - AID:' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         } else {
             $id = $this->_getParamFromCurrency('AID', (int)$this->_propertiesList['currency']['CurrencyAutorityID']['limit']);
-            $this->_metrology->addLog('set AID from currency - AID:' . $id, Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('set AID from currency - AID:' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         }
 
         // Vérifie l'ID.
@@ -1456,10 +1453,10 @@ class Currency extends Node
 //				&& $this->_io->checkLinkPresent($id)
         ) {
             $this->_properties['AID'] = $id;
-            $this->_metrology->addLog('set AID ' . $id . ' for ' . $this->_id, Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('set AID ' . $id . ' for ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             return true;
         }
-        $this->_metrology->addLog('error set AID for ' . $this->_id, Metrology::LOG_LEVEL_ERROR); // Log
+        $this->_metrology->addLog('error set AID for ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
         return false;
     }
 
@@ -1480,7 +1477,7 @@ class Currency extends Node
         } elseif (get_class($this) == 'Token') {
             $id = $this->_getParam('FID', (int)$this->_propertiesList['token']['TokenForgeID']['limit']);
         }
-        $this->_metrology->addLog('set FID by param', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('set FID by param', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         // Vérifie l'ID.
         if (is_string($id)
@@ -1490,10 +1487,10 @@ class Currency extends Node
 //				&& $this->_io->checkLinkPresent($id)
         ) {
             $this->_properties['FID'] = $id;
-            $this->_metrology->addLog('set FID ' . $id . ' for ' . $this->_id, Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('set FID ' . $id . ' for ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             return true;
         }
-        $this->_metrology->addLog('error set FID for ' . $this->_id, Metrology::LOG_LEVEL_ERROR); // Log
+        $this->_metrology->addLog('error set FID for ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
         return false;
     }
 

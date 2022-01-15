@@ -27,7 +27,7 @@ use Nebule\Library\Group;
  *   suffit à créer la conversation.
  * ------------------------------------------------------------------------------------------
  */
-class Conversation extends Group
+class Conversation extends Group implements nodeInterface
 {
     /**
      * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
@@ -59,63 +59,20 @@ class Conversation extends Group
     );
 
     /**
-     * Constructeur.
-     * Toujours transmettre l'instance de la librairie nebule.
-     * Si la conversation existe, juste préciser l'ID de celle-ci.
-     * Si c'est une nouvelle conversation à créer, mettre l'ID à 'new'.
-     *
-     * @param nebule  $nebuleInstance
-     * @param string  $id
-     * @param boolean $closed     si $id == 'new'
-     * @param boolean $protected  si $id == 'new'
-     * @param boolean $obfuscated si $id == 'new'
+     * Specific part of constructor for a group.
+     * @return void
      */
-    public function __construct(nebule $nebuleInstance, string $id, bool $closed = false, bool $protected = false, bool $obfuscated = false)
+    protected function _localConstruct(): void
     {
-        $this->_initialisation($nebuleInstance);
-
-        $id = trim(strtolower($id));
-        $this->_metrology->addLog('New instance conversation ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
-
-        if ($id != ''
-            && ctype_xdigit($id)
-        ) {
-            // Si l'ID est cohérent et l'objet nebule présent, c'est bon.
-            $this->_loadConversation($id);
-        } elseif ($id == 'new') {
-            // Si c'est une nouvelle conversation à créer, renvoie à la création.
-            $this->_createNewConversation($closed, $protected, $obfuscated);
-        } else {
-            // Sinon, la conversation est invalide, retourne 0.
-            $this->_id = '0';
-        }
-
-        // Pré-calcul les références.
         $this->getReferenceObject();
         $this->getReferenceObjectClosed();
         $this->getReferenceObjectProtected();
         $this->getReferenceObjectObfuscated();
-    }
 
-    /**
-     *  Chargement d'une conversation existant.
-     *
-     * @param string $id
-     * @return void
-     */
-    private function _loadConversation(string $id)
-    {
-        // Vérifie que c'est bien un objet.
-        if ($id == ''
-            || !ctype_xdigit($id)
-            || !$this->_io->checkLinkPresent($id)
-        ) {
-            $id = '0';
-        }
-
-        $this->_id = $id;
-        $this->_metrology->addLog('Load conversation ' . $id, Metrology::LOG_LEVEL_DEBUG); // Log
-        $this->getIsConversation();
+        if ($this->_isNew)
+            $this->_createNewConversation();
+        elseif ($this->_id != '0')
+            $this->getIsConversation();
     }
 
     /**
@@ -126,9 +83,9 @@ class Conversation extends Group
      * @param boolean $obfuscated
      * @return boolean
      */
-    protected function _createNewConversation(bool $closed, bool $protected, bool $obfuscated): bool
+    protected function _createNewConversation(bool $closed = false, bool $protected = false, bool $obfuscated = false): bool
     {
-        $this->_metrology->addLog('Ask create conversation', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Ask create conversation', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         // Vérifie que l'on puisse créer une conversation.
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
@@ -145,7 +102,7 @@ class Conversation extends Group
                 // Calcul l'ID référence de la conversation.
                 $this->_id = substr($this->_crypto->hash($data), 0, 32)
                     . '0000656e7562656c6f2f6a627465632f6e6f6576737274616f690a6e';
-                $this->_metrology->addLog('Create conversation ' . $this->_id, Metrology::LOG_LEVEL_DEBUG); // Log
+                $this->_metrology->addLog('Create conversation ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
                 // Mémorise les données.
                 $this->_data = $data;
@@ -184,7 +141,7 @@ class Conversation extends Group
 
                 // Si besoin, marque la conversation comme fermée.
                 if ($closed) {
-                    $this->_metrology->addLog('Create closed conversation', Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_metrology->addLog('Create closed conversation', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                     $action = 'l';
                     $source = $this->_id;
                     $target = $signer;
@@ -200,7 +157,7 @@ class Conversation extends Group
 
                 // Si besoin, marque la conversation comme protégée.
                 if ($protected) {
-                    $this->_metrology->addLog('Create protected conversation', Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_metrology->addLog('Create protected conversation', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                     $action = 'l';
                     $source = $this->_id;
                     $target = $signer;
@@ -216,7 +173,7 @@ class Conversation extends Group
 
                 // Si besoin, marque la conversation comme dissimulée.
                 if ($obfuscated) {
-                    $this->_metrology->addLog('Create obfuscated conversation', Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_metrology->addLog('Create obfuscated conversation', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                     $action = 'l';
                     $source = $this->_id;
                     $target = $signer;
@@ -243,12 +200,12 @@ class Conversation extends Group
 
                 $this->_isConversation = true;
             } else {
-                $this->_metrology->addLog('Create conversation error on generation', Metrology::LOG_LEVEL_ERROR); // Log
+                $this->_metrology->addLog('Create conversation error on generation', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
                 $this->_id = '0';
                 return false;
             }
         } else {
-            $this->_metrology->addLog('Create conversation error not authorized', Metrology::LOG_LEVEL_ERROR); // Log
+            $this->_metrology->addLog('Create conversation error not authorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
             $this->_id = '0';
             return false;
         }
@@ -267,7 +224,7 @@ class Conversation extends Group
      *
      * @return boolean
      */
-    public function checkConsistency()
+    public function checkConsistency(): bool
     {
         return true;
     }
@@ -277,7 +234,7 @@ class Conversation extends Group
      *
      * @return boolean
      */
-    public function getReloadMarkProtected()
+    public function getReloadMarkProtected(): bool
     {
         return false;
     }
@@ -287,7 +244,7 @@ class Conversation extends Group
      *
      * @return string
      */
-    public function getProtectedID()
+    public function getProtectedID(): string
     {
         return '0';
     }
@@ -348,13 +305,13 @@ class Conversation extends Group
      * Retourne si l'entité est à l'écoute du groupe.
      *
      * @param string|Node|Entity $entity
-     * @param string $socialClass
+     * @param string             $socialClass
      * @param array:string $socialListID
      * @return boolean
      */
-    public function getIsFollower($entity, $socialClass = '', $socialListID = null): bool
+    public function getIsFollower($entity, string $socialClass = '', $socialListID = null): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
 
         // Vérifie que c'est bien une entité.
         if ($entity == '') {
@@ -399,7 +356,7 @@ class Conversation extends Group
      */
     public function setFollower($entity, bool $obfuscated = false): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
 
         // Vérifie que la création de liens est possible.
         if (!$this->_configuration->getOptionAsBoolean('permitWrite')
@@ -455,7 +412,7 @@ class Conversation extends Group
      */
     public function unsetFollower($entity = '', bool $obfuscated = false): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
 
         // Vérifie que la création de liens est possible.
         if (!$this->_configuration->getOptionAsBoolean('permitWrite')
@@ -508,9 +465,9 @@ class Conversation extends Group
      * @param array:string $socialListID
      * @return array:Link
      */
-    public function getListFollowersLinks($socialClass = '', $socialListID = null)
+    public function getListFollowersLinks(string $socialClass = '', $socialListID = null): array
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
 
         return $this->_getListFollowersLinks($this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID);
     }
@@ -522,9 +479,9 @@ class Conversation extends Group
      * @param array:string $socialListID
      * @return array:string
      */
-    public function getListFollowersID($socialClass = '', $socialListID = null)
+    public function getListFollowersID(string $socialClass = '', $socialListID = null): array
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
 
         // Extrait les liens des groupes.
         $links = $this->_getListFollowersLinks($this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID);
@@ -545,9 +502,9 @@ class Conversation extends Group
      * @param array:string $socialListID
      * @return float
      */
-    public function getCountFollowers($socialClass = '', $socialListID = null)
+    public function getCountFollowers(string $socialClass = '', $socialListID = null): float
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
 
         return sizeof($this->_getListFollowersLinks($this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID));
     }
@@ -560,7 +517,7 @@ class Conversation extends Group
      * @param array:string $socialListID
      * @return array:string
      */
-    public function getListFollowerAddedByID($entity, $socialClass = 'all', $socialListID = null)
+    public function getListFollowerAddedByID(string $entity, string $socialClass = 'all', $socialListID = null): array
     {
         // Extrait les liens des groupes.
         $links = $this->_getListFollowersLinks($this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID);
@@ -589,9 +546,9 @@ class Conversation extends Group
      *
      * @return string
      */
-    public function getReferenceObject()
+    public function getReferenceObject(): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
 
         if ($this->_referenceObject == '') {
             $this->_referenceObject = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
@@ -611,9 +568,9 @@ class Conversation extends Group
      *
      * @return string
      */
-    public function getReferenceObjectClosed()
+    public function getReferenceObjectClosed(): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
 
         if ($this->_referenceObjectClosed == '') {
             $this->_referenceObjectClosed = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_FERMEE, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
@@ -633,9 +590,9 @@ class Conversation extends Group
      *
      * @return string
      */
-    public function getReferenceObjectProtected()
+    public function getReferenceObjectProtected(): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
 
         if ($this->_referenceObjectProtected == '') {
             $this->_referenceObjectProtected = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_PROTEGEE, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
@@ -655,9 +612,9 @@ class Conversation extends Group
      *
      * @return string
      */
-    public function getReferenceObjectObfuscated()
+    public function getReferenceObjectObfuscated(): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
 
         if ($this->_referenceObjectObfuscated == '') {
             $this->_referenceObjectObfuscated = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_DISSIMULEE, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);

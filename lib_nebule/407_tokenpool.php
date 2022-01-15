@@ -24,7 +24,7 @@ use Nebule\Library\Currency;
  * Si une erreur survient lors de la lecture de le sac de jetons ou lors de la création, assigne l'ID 0.
  * ------------------------------------------------------------------------------------------
  */
-class TokenPool extends Currency
+class TokenPool extends Currency implements nodeInterface
 {
     /**
      * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
@@ -121,7 +121,7 @@ class TokenPool extends Currency
         }
 
         $this->_id = $id;
-        $this->_metrology->addLog('Load token pool ' . $id, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Load token pool ' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         // On ne recherche pas les paramètres si ce n'est pas un sac de jetons.
         if ($this->getIsTokenPool('myself')) {
@@ -158,7 +158,7 @@ class TokenPool extends Currency
      */
     private function _createNewTokenPool(array $param, bool $protected = false, bool $obfuscated = false): bool
     {
-        $this->_metrology->addLog('Ask create token pool', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Ask create token pool', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         // Vérifie que l'on puisse créer un sac de jetons.
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
@@ -174,12 +174,12 @@ class TokenPool extends Currency
 
             // Si la génération s'est mal passée.
             if ($this->_id == '0') {
-                $this->_metrology->addLog('Create token pool error on generation', Metrology::LOG_LEVEL_ERROR); // Log
+                $this->_metrology->addLog('Create token pool error on generation', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
                 $this->_id = '0';
                 return false;
             }
         } else {
-            $this->_metrology->addLog('Create token pool error not autorized', Metrology::LOG_LEVEL_ERROR); // Log
+            $this->_metrology->addLog('Create token pool error not autorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
             $this->_id = '0';
             return false;
         }
@@ -232,12 +232,12 @@ class TokenPool extends Currency
             && ctype_xdigit($param['PoolSerialID'])
         ) {
             $sid = $this->_stringFilter($param['PoolSerialID']);
-            $this->_metrology->addLog('Generate token pool asked SID:' . $sid, Metrology::LOG_LEVEL_NORMAL); // Log
+            $this->_metrology->addLog('Generate token pool asked SID:' . $sid, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         } else {
             // Génération d'un identifiant de sac de jetons unique aléatoire.
             $sid = $this->_nebuleInstance->getCryptoInstance()->getRandom(128, Crypto::RANDOM_PSEUDO);
             $param['PoolSerialID'] = $sid;
-            $this->_metrology->addLog('Generate token pool rand SID:' . $sid, Metrology::LOG_LEVEL_NORMAL); // Log
+            $this->_metrology->addLog('Generate token pool rand SID:' . $sid, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         }
 
         // Détermine la monnaie associée.
@@ -246,7 +246,7 @@ class TokenPool extends Currency
             $this->_propertiesList['tokenpool']['PoolCurrencyID']['force'] = $instanceCurrency->getID();
             $param['PoolCurrencyID'] = $instanceCurrency->getID();
         } else {
-            $this->_metrology->addLog('Generate token pool SID:' . $sid . ' - error no valid CID selected', Metrology::LOG_LEVEL_ERROR); // Log
+            $this->_metrology->addLog('Generate token pool SID:' . $sid . ' - error no valid CID selected', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
             return '0';
         }
 
@@ -259,14 +259,14 @@ class TokenPool extends Currency
         if (isset($param['PoolHaveContent'])
             && $param['PoolHaveContent'] === true
         ) {
-            $this->_metrology->addLog('Generate token pool SID:' . $sid . ' HCT:true', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('Generate token pool SID:' . $sid . ' HCT:true', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
             // Le contenu final commence par l'identifiant interne du sac de jetons.
             $content = 'TYP:' . $this->_propertiesList['tokenpool']['PoolType']['force'] . "\n"; // @todo peut être intégré au reste.
-            $this->_metrology->addLog('Generate token pool SID:' . $sid . ' TYP:' . $this->_propertiesList['tokenpool']['PoolType']['force'], Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('Generate token pool SID:' . $sid . ' TYP:' . $this->_propertiesList['tokenpool']['PoolType']['force'], Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             $content .= 'SID:' . $sid . "\n";
             $content .= 'CID:' . $param['PoolCurrencyID'] . "\n";
-            $this->_metrology->addLog('Generate token pool SID:' . $sid . ' CID:' . $param['PoolCurrencyID'], Metrology::LOG_LEVEL_NORMAL); // Log
+            $this->_metrology->addLog('Generate token pool SID:' . $sid . ' CID:' . $param['PoolCurrencyID'], Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
             // Pour chaque propriété, si présente et forcée, l'écrit dans l'objet.
             foreach ($this->_propertiesList['tokenpool'] as $name => $property) {
@@ -299,7 +299,7 @@ class TokenPool extends Currency
 
                     // Ajoute la ligne.
                     $content .= $property['key'] . ':' . $value . "\n";
-                    $this->_metrology->addLog('Generate token pool SID:' . $sid . ' force ' . $property['key'] . ':' . $value, Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_metrology->addLog('Generate token pool SID:' . $sid . ' force ' . $property['key'] . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                 }
             }
 
@@ -320,11 +320,11 @@ class TokenPool extends Currency
             }
         } else {
             $this->_id = $sid;
-            $this->_metrology->addLog('Generate token pool SID:' . $sid . ' HCT:false', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('Generate token pool SID:' . $sid . ' HCT:false', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         }
 
         // Le sac de jetons a maintenant un PID.
-        $this->_metrology->addLog('Generate token pool SID:' . $sid . ' PID:' . $this->_id, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Generate token pool SID:' . $sid . ' PID:' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
 
         // Prépare la génération des liens.
@@ -375,17 +375,17 @@ class TokenPool extends Currency
                 }
 
                 if ($value != null) {
-                    $this->_metrology->addLog('Generate token pool SID:' . $sid . ' add ' . $property['key'] . ':' . $value, Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_metrology->addLog('Generate token pool SID:' . $sid . ' add ' . $property['key'] . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                     $meta = $this->_nebuleInstance->getCryptoInstance()->hash($property['key']);
                     $this->_createLink($signer, $date, $action, $source, $target, $meta, $argObf);
-                    $this->_metrology->addLog('Generate token pool SID:' . $sid . ' link=' . $target . '_' . $meta, Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_metrology->addLog('Generate token pool SID:' . $sid . ' link=' . $target . '_' . $meta, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                 }
             }
         }
 
 
         // Retourne l'identifiant du sac de jetons.
-        $this->_metrology->addLog('Generate token pool end SID:' . $sid, Metrology::LOG_LEVEL_NORMAL); // Log
+        $this->_metrology->addLog('Generate token pool end SID:' . $sid, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         return $this->_id;
     }
 

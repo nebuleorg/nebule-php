@@ -2046,12 +2046,11 @@ class nebule
      */
     public function checkInstance(): int
     {
-        // Vérifie que le maître est une entité et est bien celui définit par la constante.
         if (!$this->_puppetmasterInstance instanceof Entity) return 0;
-        if ($this->_puppetmasterInstance->getID() != $this->_configurationInstance->getOptionUntyped('puppetmaster')) return 0;
+        if ($this->_puppetmasterInstance->getID() == '0') return 0;
+        if ($this->_puppetmasterInstance->getID() != $this->_configurationInstance->getOptionUntyped('puppetmaster')) return 0; // TODO à retirer
         // Vérifie que le maître de la sécurité est une entité et a été trouvé.
         if (!$this->_securityMasterInstance instanceof Entity) return 1;
-        if ($this->_securityMasterInstance->getID() == '0') return 1;
         // Vérifie que le maître du code est une entité et a été trouvé.
         if (!$this->_codeMasterInstance instanceof Entity) return 2;
         if ($this->_codeMasterInstance->getID() == '0') return 2;
@@ -2108,7 +2107,7 @@ class nebule
      *
      * @return string
      */
-    public function getPuppetmaster()
+    public function getPuppetmaster(): string
     {
         return $this->_puppetmaster;
     }
@@ -2126,13 +2125,12 @@ class nebule
 
     /**
      * Recherche une entité pour un rôle.
-     *
      * Ne tien compte que des liens du puppetmaster uniquement.
      *
      * @param $type string
      * @return string
      */
-    private function _findEntityByType($type): string
+    private function _findEntityByType(string $type): string
     {
         if ($type == '')
             return $this->_puppetmaster;
@@ -2173,6 +2171,7 @@ class nebule
 
     /**
      * Récupération du maître de la sécurité.
+     * @return void
      */
     private function _findSecurityMaster()
     {
@@ -2192,7 +2191,7 @@ class nebule
         return $this->_securityMaster;
     }
 
-    public function getSecurityAuthorityInstance()
+    public function getSecurityAuthorityInstance(): ?Entity
     {
         return $this->_securityMasterInstance;
     }
@@ -2200,15 +2199,16 @@ class nebule
     /**
      * L'ID du maître du code.
      */
-    private $_codeMaster;
+    private $_codeMaster = '';
 
     /**
      * L'instance du maître du code.
      */
-    private $_codeMasterInstance;
+    private $_codeMasterInstance = null;
 
     /**
      * Récupération du maître du code.
+     * @return void
      */
     private function _findCodeMaster()
     {
@@ -2223,12 +2223,12 @@ class nebule
         $this->_metrologyInstance->addLog('Find code master ' . $this->_codeMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
-    public function getCodeAuthority()
+    public function getCodeAuthority(): string
     {
         return $this->_codeMaster;
     }
 
-    public function getCodeAuthorityInstance()
+    public function getCodeAuthorityInstance(): ?Entity
     {
         return $this->_codeMasterInstance;
     }
@@ -2236,15 +2236,16 @@ class nebule
     /**
      * Le maître de l'annuaire.
      */
-    private $_directoryMaster;
+    private $_directoryMaster = '';
 
     /**
      * L'instance du maître de l'annuaire.
      */
-    private $_directoryMasterInstance;
+    private $_directoryMasterInstance = null;
 
     /**
      * Récupération du maître de l'annuaire.
+     * @return void
      */
     private function _findDirectoryMaster()
     {
@@ -2259,12 +2260,12 @@ class nebule
         $this->_metrologyInstance->addLog('Find directory master ' . $this->_directoryMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
-    public function getDirectoryAuthority()
+    public function getDirectoryAuthority(): string
     {
         return $this->_directoryMaster;
     }
 
-    public function getDirectoryAuthorityInstance()
+    public function getDirectoryAuthorityInstance(): ?Entity
     {
         return $this->_directoryMasterInstance;
     }
@@ -2272,15 +2273,16 @@ class nebule
     /**
      * Le maître du temps.
      */
-    private $_timeMaster;
+    private $_timeMaster = '';
 
     /**
      * L'instance du maître du temps.
      */
-    private $_timeMasterInstance;
+    private $_timeMasterInstance = null;
 
     /**
      * Récupération du maître du temps.
+     * @return void
      */
     private function _findTimeMaster()
     {
@@ -2295,12 +2297,12 @@ class nebule
         $this->_metrologyInstance->addLog('Find time master ' . $this->_timeMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
-    public function getTimeAuthority()
+    public function getTimeAuthority(): string
     {
         return $this->_timeMaster;
     }
 
-    public function getTimeAuthorityInstance()
+    public function getTimeAuthorityInstance(): ?Entity
     {
         return $this->_timeMasterInstance;
     }
@@ -2336,7 +2338,7 @@ class nebule
     private $_localPrimaryAuthorities = array();
 
     /**
-     * Liste des instance des autorités locales primaires.
+     * Liste des instances des autorités locales primaires.
      * @var array:Entity
      */
     private $_localPrimaryAuthoritiesInstances = array();

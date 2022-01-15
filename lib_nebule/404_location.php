@@ -21,7 +21,7 @@ use Nebule\Library\Node;
  * La localisation est forcément un texte et est passée automatiquement en minuscule.
  * ------------------------------------------------------------------------------------------
  */
-class Localisation extends Node
+class Localisation extends Node implements nodeInterface
 {
     private $_localisation = '', $_protocol = '', $_communication, $_ioDefaultPrefix = '';
 
@@ -40,7 +40,7 @@ class Localisation extends Node
             $this->_localisation = trim(strtolower($this->_io->objectRead($id)));
         } elseif ($id == '0') {
             // Crée le nouvel objet.
-            $this->_createNewObject($localisation);
+            $this->_createNewObject_DEPRECATED($localisation);
             // Définit la localisation, en minuscule.
             $this->_localisation = trim(strtolower($localisation));
         } else {
@@ -70,7 +70,7 @@ class Localisation extends Node
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->_localisation;
     }
@@ -78,7 +78,7 @@ class Localisation extends Node
     // Synchronise l'objet avec l'ID donné si non présent localement.
     public function syncObjectID($id)
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
 
         // @todo
     }
@@ -86,7 +86,7 @@ class Localisation extends Node
     // Synchronise les liens.
     public function syncLinksID($id)
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
 
         // @todo
     }
@@ -94,7 +94,7 @@ class Localisation extends Node
     // Synchronise à la fois les liens et l'objet avec l'ID donné.
     public function syncID($id)
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
 
         $this->syncLinksID($id);
         $this->syncObjectID($id);
@@ -103,7 +103,7 @@ class Localisation extends Node
 
     private function _addPonderate($time)
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
 
         if ($this->_configuration->getOptionAsBoolean('permitLocalisationStats')) {
             return false;

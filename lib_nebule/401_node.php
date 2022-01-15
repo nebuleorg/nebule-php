@@ -114,7 +114,7 @@ class Node implements nodeInterface
      *
      * @var string $_id
      */
-    protected $_id;
+    protected $_id = '0';
 
     /**
      * Le nom complet.
@@ -273,41 +273,32 @@ class Node implements nodeInterface
      */
     protected $_usedUpdate = array();
 
+
+    protected $_isNew = false;
+
     /**
-     * Constructeur.
-     * Toujours transmettre l'instance de la librairie nebule.
-     * Si l'objet existe, juste préciser l'ID de celui-ci.
-     * Si c'est un nouvel objet à créer, mettre l'ID à 0 et transmettre les données du nouvel objet dans data.
-     * Si c'est un nouvel objet, préciser si il doit être protégé tout de suite avec protect à true.
+     * Create instance of a node or derivative.
+     * Always give a valid nebule instance.
+     * For new node, set $id as 'new'. This is mandatory to add data (or other) after with dedicated function.
+     * If $id is invalid, the instance return getID = '0'.
      *
      * @param nebule  $nebuleInstance
      * @param string  $id
-     * @param string  $data
-     * @param boolean $protect
-     * @param bool    $obfuscated
      */
-    public function __construct(nebule $nebuleInstance, string $id, string $data = '', bool $protect = false, bool $obfuscated = false)
+    public function __construct(nebule $nebuleInstance, string $id)
     {
         $this->_initialisation($nebuleInstance);
 
         $id = trim(strtolower($id));
 
-        if ($id != '0'
-            && $id != ''
-            && ctype_xdigit($id)
+        if (self::checkNID($id, true)
         ) {
             $this->_id = $id;
-            $this->_metrology->addLog('New instance object ' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Métrologie.
+            $this->_metrology->addLog('New instance ' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '7fb8f6e3');
             $this->_getMarkProtected();
-            $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
-        } elseif ($id == '0'
-            && $data != ''
-        ) {
-            $this->_createNewObject($data, $protect, $obfuscated);
-            $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
-        } else {
-            $this->_id = '0';
-        }
+        } elseif ($id == 'new')
+            $this->_isNew = true;
+        $this->_localConstruct();
     }
 
     /**
@@ -315,7 +306,7 @@ class Node implements nodeInterface
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->_id;
     }
@@ -325,7 +316,7 @@ class Node implements nodeInterface
      *
      * @return array:string
      */
-    public function __sleep()
+    public function __sleep(): array
     {
         return self::SESSION_SAVED_VARS;
     }
@@ -347,6 +338,11 @@ class Node implements nodeInterface
         $this->_cacheUpdate = '';
     }
 
+    /**
+     * Common initialisation of a node or derivative.
+     * @param $nebuleInstance
+     * @return void
+     */
     protected function _initialisation($nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
@@ -358,7 +354,90 @@ class Node implements nodeInterface
         $this->_social = $nebuleInstance->getSocialInstance();
     }
 
-    protected function _createNewObject(string $data, bool $protect, bool $obfuscated): bool
+    /**
+     * Specific part of constructor for a node.
+     * @return void
+     */
+    protected function _localConstruct(): void
+    {
+        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+    }
+
+    /**
+     * On new node (ID='n'), add content and recalculate ID.
+     *
+     * @param string $data
+     * @param bool   $protect
+     * @param bool   $obfuscated
+     * @return bool
+     */
+    public function setContent(string &$data, bool $protect = false, bool $obfuscated = false): bool
+    {
+        $this->_metrology->addLog(__METHOD__, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, 'c8b3e694');
+
+        if (!$this->_isNew
+            || strlen($data) == 0
+            || ( get_class($this) != 'Node'
+                && get_class($this) != 'Nebule\Library\Node'
+            )
+        )
+            return false;
+
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_nebuleInstance->getCurrentEntityUnlocked()
+        ) {
+            // calcul l'ID.
+            $this->_id = $this->_crypto->hash($data);
+            if ($protect)
+                $this->_metrology->addLog('Create protected object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '1434b3ed');
+            else
+                $this->_metrology->addLog('Create object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '52b9e412');
+
+            // Mémorise les données.
+            $this->_data = $data;
+            $this->_haveData = true;
+            $data = null;
+
+            // Création lien de hash.
+            $signer = $this->_nebuleInstance->getCurrentEntity();
+            $date = date(DATE_ATOM);
+
+            // Création lien de hash.
+            $date2 = $date;
+            if ($obfuscated)
+                $date2 = '0';
+            $action = 'l';
+            $target = $this->_crypto->hash($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
+            $meta = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_HASH);
+            $link = '0_' . $signer . '_' . $date2 . '_' . $action . '_' . $this->_id . '_' . $target . '_' . $meta;
+            $newLink = new BlocLink($this->_nebuleInstance, $link, Cache::TYPE_LINK);
+            $newLink->signWrite();
+
+            // Création du lien d'annulation de suppression.
+            $action = 'x';
+            $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $this->_id . '_0_0';
+            $newLink = new BlocLink($this->_nebuleInstance, $link, Cache::TYPE_LINK);
+            $newLink->sign();
+            if ($obfuscated)
+                $newLink->setObfuscate();
+            $newLink->write();
+
+            // Si l'objet doit être protégé.
+            if ($protect)
+                $this->setProtected($obfuscated);
+            else
+                $this->write();
+        } else {
+            $this->_metrology->addLog('Create object error no authorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '83a27d1e');
+            $this->_id = '0';
+            return false;
+        }
+        return true;
+    }
+
+    protected function _createNewObject_DEPRECATED(string $data, bool $protect, bool $obfuscated): bool
     {
         $this->_metrology->addLog(__METHOD__, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
@@ -480,7 +559,7 @@ class Node implements nodeInterface
      *
      * @return string
      */
-    public function getPrimaryColor()
+    public function getPrimaryColor(): string
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
@@ -493,7 +572,7 @@ class Node implements nodeInterface
      * @todo
      *
      */
-    public function getHashAlgo()
+    public function getHashAlgo(): string
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
@@ -2887,7 +2966,7 @@ class Node implements nodeInterface
      *
      * @return array:string
      */
-    public function getProtectedTo()
+    public function getProtectedTo(): array
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
@@ -2942,7 +3021,7 @@ class Node implements nodeInterface
      *
      * @return boolean
      */
-    public function checkConsistency()
+    public function checkConsistency(): bool
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
@@ -3022,19 +3101,17 @@ class Node implements nodeInterface
      * @param integer $limit limite de lecture du contenu de l'objet.
      * @return string
      */
-    public function getContent($limit = 0)
+    public function getContent(int $limit = 0): ?string
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
-        if ($this->_haveData) {
+        if ($this->_haveData)
             return $this->_data;
-        }
 
-        if ($this->_getMarkProtected()) {
+        if ($this->_getMarkProtected())
             return $this->_getProtectedContent($limit);
-        } else {
+        else
             return $this->_getUnprotectedContent($limit);
-        }
     }
 
     /**
@@ -3044,7 +3121,7 @@ class Node implements nodeInterface
      * @param integer $limit limite de lecture du contenu de l'objet.
      * @return string
      */
-    public function getContentAsUnprotected($limit = 0)
+    public function getContentAsUnprotected(int $limit = 0): ?string
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 
@@ -3057,7 +3134,7 @@ class Node implements nodeInterface
      * @param integer $limit limite de lecture du contenu de l'objet.
      * @return string|null
      */
-    protected function _getUnprotectedContent($limit = 0)
+    protected function _getUnprotectedContent(int $limit = 0): ?string
     {
         $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
 

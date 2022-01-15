@@ -4,6 +4,7 @@ namespace Nebule\Bootstrap;
 
 //use nebule;
 // ------------------------------------------------------------------------------------------
+use Nebule\Library\Cache;
 use Nebule\Library\Crypto;
 use Nebule\Library\Entity;
 use Nebule\Library\nebule;
@@ -5332,7 +5333,7 @@ function bootstrap_breakDisplay31LibraryEntities()
     echo 'subordination &nbsp;&nbsp;&nbsp;: ';
     $entity = lib_getConfiguration('subordinationEntity');
     if ($entity != '') {
-        $instance = new Entity($nebuleInstance, $entity);
+        $instance = $nebuleInstance->getCacheInstance()->newNode($entity, Cache::TYPE_ENTITY);
         echo '<a href="o/' . $entity . '">' . $instance->getName() . '</a>';
         unset($instance);
     } else
@@ -6401,6 +6402,7 @@ chmod 644 <?php echo LIB_LOCAL_ENVIRONMENT_FILE; ?>
 }
 
 
+
 // ------------------------------------------------------------------------------------------
 /**
  * Crée le fichier des options par défaut.
@@ -6534,6 +6536,7 @@ chmod 644 <?php echo LIB_LOCAL_ENTITY_FILE; ?>
 }
 
 
+
 /*
  *
  *
@@ -6561,107 +6564,99 @@ function bootstrap_displayApplication0()
     bootstrap_htmlHeader();
     bootstrap_htmlTop();
 
-    ?>
+    echo '<div id="appslist">';
+    // Extraire la liste des applications disponibles.
+    $refAppsID = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
+    $instanceAppsID = new Node($nebuleInstance, $refAppsID);
+    $applicationsList = array();
+    $signersList = array();
+    $hashTarget = '';
 
-    <div id="appslist">
-        <?php
-        // Extraire la liste des applications disponibles.
-        $refAppsID = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
-        $instanceAppsID = new Object($nebuleInstance, $refAppsID);
-        $applicationsList = array();
-        $signersList = array();
-        $hashTarget = '';
+    // Liste les applications reconnues par le maître du code.
+    $linksList = $instanceAppsID->readLinksFilterFull($nebuleInstance->getCodeAuthority(), '', 'f', $refAppsID, '', $refAppsID);
+    $link = null;
+    foreach ($linksList as $link) {
+        $hashTarget = $link->getHashTarget();
+        $applicationsList[$hashTarget] = $hashTarget;
+        $signersList[$hashTarget] = $link->getHashSigner();
+    }
 
-        // Liste les applications reconnues par le maître du code.
-        $linksList = $instanceAppsID->readLinksFilterFull($nebuleInstance->getCodeAuthority(), '', 'f', $refAppsID, '', $refAppsID);
-        $link = null;
+    // Liste les applications reconnues par l'entité instance du serveur, si autorité locale et pas en mode de récupération.
+    if ($nebuleInstance->getConfigurationInstance()->getOptionAsBoolean('permitInstanceEntityAsAuthority')
+        && !$nebuleInstance->getModeRescue()
+    ) {
+        $linksList = $instanceAppsID->readLinksFilterFull($nebuleInstance->getInstanceEntity(), '', 'f', $refAppsID, '', $refAppsID);
         foreach ($linksList as $link) {
             $hashTarget = $link->getHashTarget();
             $applicationsList[$hashTarget] = $hashTarget;
             $signersList[$hashTarget] = $link->getHashSigner();
         }
+    }
 
-        // Liste les applications reconnues par l'entité instance du serveur, si autorité locale et pas en mode de récupération.
-        if ($nebuleInstance->getConfiguration('permitInstanceEntityAsAuthority')
-            && !$nebuleInstance->getModeRescue()
-        ) {
-            $linksList = $instanceAppsID->readLinksFilterFull($nebuleInstance->getInstanceEntity(), '', 'f', $refAppsID, '', $refAppsID);
-            foreach ($linksList as $link) {
-                $hashTarget = $link->getHashTarget();
-                $applicationsList[$hashTarget] = $hashTarget;
-                $signersList[$hashTarget] = $link->getHashSigner();
-            }
+    // Liste les applications reconnues par l'entité par défaut, si autorité locale et pas en mode de récupération.
+    if ($nebuleInstance->getConfigurationInstance()->getOptionAsBoolean('permitDefaultEntityAsAuthority')
+        && !$nebuleInstance->getModeRescue()
+    ) {
+        $linksList = $instanceAppsID->readLinksFilterFull($nebuleInstance->getDefaultEntity(), '', 'f', $refAppsID, '', $refAppsID);
+        foreach ($linksList as $link) {
+            $hashTarget = $link->getHashTarget();
+            $applicationsList[$hashTarget] = $hashTarget;
+            $signersList[$hashTarget] = $link->getHashSigner();
         }
+    }
+    unset($refAppsID, $linksList, $link, $hashTarget, $instanceAppsID);
 
-        // Liste les applications reconnues par l'entité par défaut, si autorité locale et pas en mode de récupération.
-        if ($nebuleInstance->getConfiguration('permitDefaultEntityAsAuthority')
-            && !$nebuleInstance->getModeRescue()
-        ) {
-            $linksList = $instanceAppsID->readLinksFilterFull($nebuleInstance->getDefaultEntity(), '', 'f', $refAppsID, '', $refAppsID);
-            foreach ($linksList as $link) {
-                $hashTarget = $link->getHashTarget();
-                $applicationsList[$hashTarget] = $hashTarget;
-                $signersList[$hashTarget] = $link->getHashSigner();
-            }
-        }
-        unset($refAppsID, $linksList, $link, $hashTarget, $instanceAppsID);
+    // Affiche la page d'interruption.
+    echo '<a href="/?b">';
+    echo '<div class="apps" style="background:#000000;">';
+    echo '<span class="appstitle">Nb</span><br /><span class="appsname">break</span>';
+    echo "</div></a>\n";
 
-        // Affiche la page d'interruption.
-        echo '<a href="/?b">';
-        echo '<div class="apps" style="background:#000000;">';
-        echo '<span class="appstitle">Nb</span><br /><span class="appsname">break</span>';
-        echo "</div></a>\n";
+    // Lister les applications.
+    $application = '';
+    foreach ($applicationsList as $application) {
+        $instance = new Node($nebuleInstance, $application);
 
-        // Lister les applications.
-        $application = '';
-        foreach ($applicationsList as $application) {
-            $instance = new Object($nebuleInstance, $application);
-
-            // Recherche si l'application est activée par l'entité instance de serveur.
-            // Ou si l'application est en liste blanche.
-            // Ou si c'est l'application par défaut.
-            $activated = false;
-            foreach (nebule::ACTIVE_APPLICATIONS_WHITELIST as $item) {
-                if ($application == $item) {
-                    $activated = true;
-                }
-            }
-            if ($application == $nebuleInstance->getConfiguration('defaultApplication')) {
+        // Recherche si l'application est activée par l'entité instance de serveur.
+        // Ou si l'application est en liste blanche.
+        // Ou si c'est l'application par défaut.
+        $activated = false;
+        foreach (nebule::ACTIVE_APPLICATIONS_WHITELIST as $item) {
+            if ($application == $item)
                 $activated = true;
-            }
-            if (!$activated) {
-                $refActivated = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE);
-                $linksList = $instance->readLinksFilterFull($nebuleInstance->getInstanceEntity(), '', 'f', $application, $refActivated, $application);
-                if (sizeof($linksList) != 0) {
-                    $activated = true;
-                }
-                unset($linksList);
-            }
-
-            // En fonction de l'état d'activation, affiche ou non l'appication.
-            if (!$activated) {
-                continue;
-            }
-
-            $color = '#' . substr($application . '000000', 0, 6);
-            //$colorSigner = '#'.substr($signersList[$application].'000000',0,6);
-            $title = $instance->getName();
-            $shortName = substr($instance->getSurname() . '--', 0, 2);
-            $shortName = strtoupper(substr($shortName, 0, 1)) . strtolower(substr($shortName, 1, 1));
-            echo '<a href="/?' . LIB_ARG_SWITCH_APPLICATION . '=' . $application . '">';
-            echo '<div class="apps" style="background:' . $color . ';">';
-            echo '<span class="appstitle">' . $shortName . '</span><br /><span class="appsname">' . $title . '</span>';
-            echo "</div></a>\n";
         }
-        unset($application, $applicationsList, $instance, $color, $title, $shortName);
-        ?>
+        if ($application == $nebuleInstance->getConfigurationInstance()->getOptionAsString('defaultApplication'))
+            $activated = true;
+        if (!$activated) {
+            $refActivated = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE);
+            $linksList = $instance->readLinksFilterFull($nebuleInstance->getInstanceEntity(), '', 'f', $application, $refActivated, $application);
+            if (sizeof($linksList) != 0)
+                $activated = true;
+            unset($linksList);
+        }
 
-    </div>
-    <div id="sync">
-    </div>
-    <?php
+        // En fonction de l'état d'activation, affiche ou non l'application.
+        if (!$activated)
+            continue;
+
+        $color = '#' . substr($application . '000000', 0, 6);
+        //$colorSigner = '#'.substr($signersList[$application].'000000',0,6);
+        $title = $instance->getName();
+        $shortName = substr($instance->getSurname() . '--', 0, 2);
+        $shortName = strtoupper(substr($shortName, 0, 1)) . strtolower(substr($shortName, 1, 1));
+        echo '<a href="/?' . LIB_ARG_SWITCH_APPLICATION . '=' . $application . '">';
+        echo '<div class="apps" style="background:' . $color . ';">';
+        echo '<span class="appstitle">' . $shortName . '</span><br /><span class="appsname">' . $title . '</span>';
+        echo "</div></a>\n";
+    }
+    unset($application, $applicationsList, $instance, $color, $title, $shortName);
+
+    echo "</div>\n";
+    echo '<div id="sync">'."\n";
+    echo "</div>\n";
     bootstrap_htmlBottom();
 }
+
 
 
 /*
@@ -6697,7 +6692,8 @@ function bootstrap_displayApplication1()
     // Affiche la documentation.
     echo '<div id="layout_documentation">' . "\n";
     echo ' <div id="title_documentation"><p>Documentation technique de ' . $nebuleInstance->__toString() . '<br />' . "\n";
-    echo '  Version ' . $nebuleInstance->getConfiguration('defaultLinksVersion') . ' - ' . $nebuleLibVersion . ' ' . $nebuleLibLevel . '<br />' . "\n";
+    echo '  Version ' . $nebuleInstance->getConfigurationInstance()->getOptionAsString('defaultLinksVersion')
+        . ' - ' . $nebuleLibVersion . ' ' . $nebuleLibLevel . '<br />' . "\n";
     echo '  (c) ' . $nebuleLicence . ' ' . $nebuleAuthor . ' - <a href="' . $nebuleWebsite . '">' . $nebuleWebsite . "</a></p></div>\n";
     echo ' <div id="content_documentation">' . "\n";
     $instance->display_content();
@@ -6706,6 +6702,7 @@ function bootstrap_displayApplication1()
 
     bootstrap_htmlBottom();
 }
+
 
 
 /*
@@ -6733,17 +6730,15 @@ function bootstrap_displayApplication2()
     bootstrap_htmlHeader();
     bootstrap_htmlTop();
 
-    ?>
-    <div class="layout-main">
-        <div class="layout-content">
-            <img alt="nebule" id="logo" src="<?php echo LIB_APPLICATION_LOGO_LIGHT; ?>"/>
-        </div>
-    </div>
-
-    <?php
+    echo '<div class="layout-main">' . "\n";
+    echo ' <div class="layout-content">' . "\n";
+    echo '  <img alt="nebule" id="logo" src="<?php echo LIB_APPLICATION_LOGO_LIGHT; ?>"/>' . "\n";
+    echo " </div>\n";
+    echo "</div>\n";
 
     bootstrap_htmlBottom();
 }
+
 
 
 /*

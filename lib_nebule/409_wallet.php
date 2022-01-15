@@ -109,7 +109,7 @@ class Wallet extends Entity
         }
 
         $this->_id = $id;
-        $this->_metrology->addLog('Load wallet ' . $id, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Load wallet ' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
     }
 
     /**
@@ -122,7 +122,7 @@ class Wallet extends Entity
      */
     private function _createNewWallet(array $param, bool $protected = false, bool $obfuscated = false): bool
     {
-        $this->_metrology->addLog('Ask create wallet', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Ask create wallet', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         // Vérifie que l'on puisse créer un sac de jetons.
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
@@ -137,12 +137,12 @@ class Wallet extends Entity
 
             // Si la génération s'est mal passée.
             if ($this->_id == '0') {
-                $this->_metrology->addLog('Create wallet error on generation', Metrology::LOG_LEVEL_ERROR); // Log
+                $this->_metrology->addLog('Create wallet error on generation', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
                 $this->_id = '0';
                 return false;
             }
         } else {
-            $this->_metrology->addLog('Create wallet error not autorized', Metrology::LOG_LEVEL_ERROR); // Log
+            $this->_metrology->addLog('Create wallet error not autorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
             $this->_id = '0';
             return false;
         }

@@ -14,5 +14,11 @@ use Nebule\Library\nebule;
  */
 interface nodeInterface
 {
+    public function __construct(nebule $nebuleInstance, string $id);
+    public function __toString(): string;
+    public function __sleep(): array;
+    public function __wakeup();
 
+    public function getID(): string;
+    static public function checkNID(string &$nid, bool $permitNull = false): bool;
 }
