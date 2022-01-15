@@ -910,7 +910,7 @@ class nebule
                 && $this->_ioInstance->checkLinkPresent($id)
             ) {
                 $this->_instanceEntity = $id;
-                $this->_instanceEntityInstance = $this->newEntity($id);
+                $this->_instanceEntityInstance = $this->$this->_cacheInstance->newNode($id, Cache::TYPE_ENTITY);
             } else {
                 // Sinon utilise l'instance du maître du code.
                 $this->_instanceEntity = $this->_codeMaster;
@@ -1004,7 +1004,7 @@ class nebule
                 && $this->_ioInstance->checkLinkPresent($id)
             ) {
                 $this->_defaultEntity = $id;
-                $this->_defaultEntityInstance = $this->newEntity($id);
+                $this->_defaultEntityInstance = $this->$this->_cacheInstance->newNode($id, Cache::TYPE_ENTITY);
             } else {
                 // Sinon utilise l'instance du serveur hôte.
                 $this->_defaultEntity = $this->_instanceEntity;
@@ -2074,6 +2074,7 @@ class nebule
     }
 
 
+
     /**
      * Le maître du tout.
      *
@@ -2098,7 +2099,7 @@ class nebule
     private function _findPuppetmaster()
     {
         $this->_puppetmaster = $this->_configurationInstance->getOptionUntyped('puppetmaster');
-        $this->_puppetmasterInstance = $this->newEntity($this->_puppetmaster);
+        $this->_puppetmasterInstance = $this->_cacheInstance->newNode($this->_puppetmaster, Cache::TYPE_ENTITY);
         $this->_metrologyInstance->addLog('Find puppetmaster ' . $this->_puppetmaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
@@ -2136,7 +2137,7 @@ class nebule
             return $this->_puppetmaster;
 
         $typeID = $this->_cryptoInstance->hash($type);
-        if ($typeID === false)
+        if ($typeID == '')
             return $this->_puppetmaster;
 
         $typeInstance = $this->newObject($typeID);
@@ -2181,7 +2182,7 @@ class nebule
 
         $type = self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_SECURITE;
         $this->_securityMaster = $this->_findEntityByType($type);
-        $this->_securityMasterInstance = $this->newEntity($this->_securityMaster);
+        $this->_securityMasterInstance = $this->$this->_cacheInstance->newNode($this->_securityMaster, Cache::TYPE_ENTITY);
 
         $this->_metrologyInstance->addLog('Find security master ' . $this->_securityMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
@@ -2218,7 +2219,7 @@ class nebule
 
         $type = self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_CODE;
         $this->_codeMaster = $this->_findEntityByType($type);
-        $this->_codeMasterInstance = $this->newEntity($this->_codeMaster);
+        $this->_codeMasterInstance = $this->$this->_cacheInstance->newNode($this->_codeMaster, Cache::TYPE_ENTITY);
 
         $this->_metrologyInstance->addLog('Find code master ' . $this->_codeMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
@@ -2255,7 +2256,7 @@ class nebule
 
         $type = self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_ANNUAIRE;
         $this->_directoryMaster = $this->_findEntityByType($type);
-        $this->_directoryMasterInstance = $this->newEntity($this->_directoryMaster);
+        $this->_directoryMasterInstance = $this->$this->_cacheInstance->newNode($this->_directoryMaster, Cache::TYPE_ENTITY);
 
         $this->_metrologyInstance->addLog('Find directory master ' . $this->_directoryMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
@@ -2292,7 +2293,7 @@ class nebule
 
         $type = self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_TEMPS;
         $this->_timeMaster = $this->_findEntityByType($type);
-        $this->_timeMasterInstance = $this->newEntity($this->_timeMaster);
+        $this->_timeMasterInstance = $this->$this->_cacheInstance->newNode($this->_timeMaster, Cache::TYPE_ENTITY);
 
         $this->_metrologyInstance->addLog('Find time master ' . $this->_timeMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }

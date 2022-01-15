@@ -283,6 +283,9 @@ function work_export()
 function work_dev_deploy()
 {
   echo ' > work dev deploy codes'
+  current_date=$(date "+0%Y%m%d%H%M%S")
+  echo " > date : ${current_date}"
+
   echo ' > copy code on test environment'
   cp "${WORKSPACE}/bootstrap.php" "${PUBSPACE}/index.php"
 

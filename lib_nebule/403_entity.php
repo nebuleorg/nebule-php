@@ -84,8 +84,6 @@ class Entity extends Node implements nodeInterface
     // Chargement d'une entité existante.
     private function _loadEntity(string $id): void
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000', __FUNCTION__, '00000000');
-
         if (!$this->_io->checkObjectPresent($id)
             || !$this->_io->checkLinkPresent($id)
         ) {
@@ -108,8 +106,6 @@ class Entity extends Node implements nodeInterface
      */
     private function _createNewEntity(): void
     {
-        $this->_metrology->addLog(__METHOD__, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000', __FUNCTION__, '00000000');
-
         // Vérifie que l'on puisse créer une entité.
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
             && $this->_configuration->getOptionAsBoolean('permitWriteObject')
@@ -172,8 +168,6 @@ class Entity extends Node implements nodeInterface
     // Utilisé pour la création d'une nouvelle entité, càd dont la clé publique n'est pas encore reconnue.
     private function _createNewEntityWriteLink(string $link, string $source, string $target, string $meta): void
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000', __FUNCTION__, '00000000');
-
         // Signe le lien.
         $signe = $this->signLink($link);
         if ($signe === false)

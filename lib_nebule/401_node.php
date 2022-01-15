@@ -296,7 +296,6 @@ class Node implements nodeInterface
         ) {
             $this->_id = $id;
             $this->_metrology->addLog('New instance ' . get_class($this) . ' ' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '7fb8f6e3');
-            $this->_getMarkProtected();
         } elseif ($id == 'new')
             $this->_isNew = true;
 

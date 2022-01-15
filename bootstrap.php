@@ -6,13 +6,12 @@ namespace Nebule\Bootstrap;
 // ------------------------------------------------------------------------------------------
 use Nebule\Library\Cache;
 use Nebule\Library\Crypto;
-use Nebule\Library\Entity;
 use Nebule\Library\nebule;
 
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220114';
+const BOOTSTRAP_VERSION = '020220115';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -41,10 +40,10 @@ const BOOTSTRAP_WEBSITE = 'www.nebule.org';
  PART1 : Initialization of the bootstrap environment.
  PART2 : Procedural PHP library for nebule (Lib PP) restricted for bootstrap usage.
  PART3 : Manage PHP session and arguments.
- PART4 : Find and load object oriented PHP library for nebule (Lib POO).
+ PART4 : Find and load object-oriented PHP library for nebule (Lib POO).
  PART5 : Find application code.
  PART6 : Manage and display breaking bootstrap on problem or user ask.
- PART7 : Display of pre-load application web page.
+ PART7 : Display of preload application web page.
  PART8 : First synchronization of code and environment.
  PART9 : Display of application 0 web page to select application to run.
  PART10 : Display of application 1 web page to display documentation of nebule.
@@ -839,6 +838,12 @@ $firstAlternativePuppetmasterEid = '';
  */
 $firstSubordinationEID = '';
 
+/**
+ * Remember on local entity file if we are on the first launch.
+ * @noinspection PhpUnusedLocalVariableInspection
+ */
+$needFirstSynchronization = false;
+
 // Cache of many search result and content.
 /** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheReadObjText1line = array();
@@ -1114,19 +1119,31 @@ function lib_init(): bool
 
 /**
  * Get and check local server entity.
+ * If not found, use puppetmaster for temporary replacement.
  *
  * @param bool $rescueMode
  * @return void
  */
 function lib_setServerEntity(bool $rescueMode): void
 {
-    global $nebuleServerEntity, $nebuleLocalAuthorities;
-    if (file_exists(LIB_LOCAL_ENTITY_FILE)
-        && is_file(LIB_LOCAL_ENTITY_FILE)
-    )
-        $nebuleServerEntity = filter_var(strtok(trim(file_get_contents(LIB_LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+    global $nebuleServerEntity, $nebuleLocalAuthorities, $needFirstSynchronization;
 
-    if (!ent_checkIsPublicKey($nebuleServerEntity))
+    if (file_exists(LIB_LOCAL_ENTITY_FILE) && is_file(LIB_LOCAL_ENTITY_FILE))
+    {
+        $nebuleServerEntity = filter_var(strtok(trim(file_get_contents(LIB_LOCAL_ENTITY_FILE, false, null, 0, LIB_NID_MAX_HASH_SIZE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        if (!ent_checkIsPublicKey($nebuleServerEntity))
+        {
+            bootstrap_setBreak('62', 'Local server entity error');
+            $nebuleServerEntity = '';
+            $needFirstSynchronization = true;
+        }
+    } else {
+        bootstrap_setBreak('61', 'No local server entity');
+        $nebuleServerEntity = '';
+        $needFirstSynchronization = true;
+    }
+
+    if ($nebuleServerEntity == '')
         $nebuleServerEntity = lib_getConfiguration('puppetmaster');
 
     if (lib_getConfiguration('permitInstanceEntityAsAuthority') && !$rescueMode)
@@ -2134,9 +2151,10 @@ function lnk_findInclusive_FIXME(&$nid, &$table, $action, $srcobj, $dstobj, $met
  * @param array  $links
  * @param array  $filter
  * @param bool   $withInvalidLinks
+ * @param string $addSigner
  * @return void
  */
-function lnk_getList(string $nid, array &$links, array $filter, bool $withInvalidLinks = false): void
+function lnk_getList(string $nid, array &$links, array $filter, bool $withInvalidLinks = false, string $addSigner = ''): void
 {
     global $nebuleLocalAuthorities;
 
@@ -2158,9 +2176,13 @@ function lnk_getList(string $nid, array &$links, array $filter, bool $withInvali
         }
     }
 
+    $validSigners = $nebuleLocalAuthorities;
+    if ($addSigner != '' && nod_checkNID($addSigner, false))
+        $validSigners[] = $addSigner;
+
     // Social filter.
     if (!$withInvalidLinks)
-        lnk_filterBySigners($links, $nebuleLocalAuthorities);
+        lnk_filterBySigners($links, $validSigners);
 }
 
 function lnk_checkExist(string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): bool
@@ -3198,9 +3220,10 @@ function obj_getAsText(string &$oid, int $maxData = 0): string
  *
  * @param string $nid
  * @param string $typeMime
+ * @param string $addSigner
  * @return bool
  */
-function obj_checkTypeMime(string $nid, string $typeMime): bool
+function obj_checkTypeMime(string $nid, string $typeMime, string $addSigner = ''): bool
 {
     global $nebuleLocalAuthorities, $nebuleCacheReadObjTypeMime, $nebuleServerEntity;
 
@@ -3224,7 +3247,7 @@ function obj_checkTypeMime(string $nid, string $typeMime): bool
         'bl/rl/nid4' => '',
     );
     $links = array();
-    lnk_getList($nid, $links, $filter);
+    lnk_getList($nid, $links, $filter, false, $addSigner);
     $signers = $nebuleLocalAuthorities;
     $signers[] = $nid;
     lnk_filterBySigners($links, $signers);
@@ -3808,7 +3831,7 @@ function ent_checkIsPublicKey(string $nid): bool
         return false;
     }
 
-    if (!obj_checkTypeMime($nid, 'application/x-pem-file')) {
+    if (!obj_checkTypeMime($nid, 'application/x-pem-file', $nid)) {
         log_add('not marked as key ' . $nid, 'warn', __FUNCTION__, 'e040a140');
         return false;
     }
@@ -5256,6 +5279,13 @@ function bootstrap_breakDisplay3LibraryPOO()
     echo '</div>' . "\n";
 }
 
+function bootstrap_breakDisplay311EntityName($instance): string
+{
+    if (gettype($instance) == 'object' && get_class($instance) == 'Entity')
+        return $instance->getName();
+    return '';
+}
+
 function bootstrap_breakDisplay31LibraryEntities()
 {
     global $nebuleInstance;
@@ -5265,14 +5295,14 @@ function bootstrap_breakDisplay31LibraryEntities()
     // Test le puppetmaster.
     echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ';
     if ($nebuleInstanceCheck == 0)
-        echo "<span id=\"error\">ERROR!</span><br />\n";
+        echo '<span class="error">ERROR!</span>' . "<br />\n";
     else {
         echo "OK (local authority)<br />\n";
 
         // Test le security authority.
         echo 'security authority &nbsp;: ';
         if ($nebuleInstanceCheck == 1)
-            echo "<span id=\"error\">ERROR!</span><br />\n";
+            echo '<span class="error">ERROR!</span>' . "<br />\n";
         else {
             echo '<a href="o/' . $nebuleInstance->getSecurityAuthority() . '">'
                 . $nebuleInstance->getSecurityAuthorityInstance()->getName() . "</a> OK (local authority)<br />\n";
@@ -5280,7 +5310,7 @@ function bootstrap_breakDisplay31LibraryEntities()
             // Test le code authority.
             echo 'code authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
             if ($nebuleInstanceCheck == 2)
-                echo "<span id=\"error\">ERROR!</span><br />\n";
+                echo '<span class="error">ERROR!</span>' . "<br />\n";
             else {
                 echo '<a href="o/' . $nebuleInstance->getCodeAuthority() . '">'
                     . $nebuleInstance->getCodeAuthorityInstance()->getName() . "</a> OK (local authority)<br />\n";
@@ -5288,7 +5318,7 @@ function bootstrap_breakDisplay31LibraryEntities()
                 // Test le directory authority.
                 echo 'directory authority : ';
                 if ($nebuleInstanceCheck == 3)
-                    echo "<span id=\"error\">ERROR!</span><br />\n";
+                    echo '<span class="error">ERROR!</span>' . "<br />\n";
                 else
                     echo '<a href="o/' . $nebuleInstance->getDirectoryAuthority() . '">'
                         . $nebuleInstance->getDirectoryAuthorityInstance()->getName() . "</a> OK<br />\n";
@@ -5296,7 +5326,7 @@ function bootstrap_breakDisplay31LibraryEntities()
                 // Test le time authority.
                 echo 'time authority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
                 if ($nebuleInstanceCheck == 4)
-                    echo "<span id=\"error\">ERROR!</span><br />\n";
+                    echo '<span class="error">ERROR!</span>' . "<br />\n";
                 else
                     echo '<a href="o/' . $nebuleInstance->getTimeAuthority() . '">'
                         . $nebuleInstance->getTimeAuthorityInstance()->getName() . "</a> OK<br />\n";
@@ -5304,7 +5334,7 @@ function bootstrap_breakDisplay31LibraryEntities()
                 // Test l'entité de l'instance du serveur.
                 echo 'server entity &nbsp;&nbsp;&nbsp;: ';
                 if ($nebuleInstanceCheck <= 32)
-                    echo "<span id=\"error\">ERROR!</span><br />\n";
+                    echo '<span class="error">ERROR!</span>' . "<br />\n";
                 else {
                     echo '<a href="o/' . $nebuleInstance->getInstanceEntity() . '">'
                         . $nebuleInstance->getInstanceEntityInstance()->getName() . '</a> OK';
@@ -5317,14 +5347,14 @@ function bootstrap_breakDisplay31LibraryEntities()
     }
     // Affichage de l'entité par défaut.
     echo 'default entity &nbsp;&nbsp;: <a href="o/' . $nebuleInstance->getDefaultEntity() . '">'
-        . $nebuleInstance->getDefaultEntityInstance()->getName() . '</a>';
+        . bootstrap_breakDisplay311EntityName($nebuleInstance->getDefaultEntityInstance()) . '</a>';
     if ($nebuleInstance->getIsLocalAuthority($nebuleInstance->getDefaultEntity()))
         echo ' (local authority)';
     echo "<br />\n";
 
     // Affichage de l'entité courante.
     echo 'current entity &nbsp;&nbsp;: <a href="o/' . $nebuleInstance->getCurrentEntity() . '">'
-        . $nebuleInstance->getCurrentEntityInstance()->getName() . '</a>';
+        . bootstrap_breakDisplay311EntityName($nebuleInstance->getCurrentEntityInstance()) . '</a>';
     if ($nebuleInstance->getIsLocalAuthority($nebuleInstance->getCurrentEntity()))
         echo ' (local authority)';
     echo "<br />\n";
@@ -5751,29 +5781,6 @@ function bootstrap_partDisplayReloadPage(bool $ok = true, int $delay = 0): void
  TODO.
  ------------------------------------------------------------------------------------------
  */
-
-/**
- * Check if we need a first synchronization of code and environment.
- *
- * @return boolean
- */
-function bootstrap_getNeedFirstSynchronization(): bool
-{
-    if (file_exists(LIB_LOCAL_ENTITY_FILE)
-        && is_file(LIB_LOCAL_ENTITY_FILE)
-    ) {
-        $serverEntity = filter_var(strtok(trim(file_get_contents(LIB_LOCAL_ENTITY_FILE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-        if (!ent_checkIsPublicKey($serverEntity)) {
-            bootstrap_setBreak('62', 'Local server entity error');
-            return true;
-        }
-    } else {
-        bootstrap_setBreak('61', 'No local server entity');
-        return true;
-    }
-    return false;
-}
-
 
 // ------------------------------------------------------------------------------------------
 /**
@@ -6754,10 +6761,11 @@ function bootstrap_displayApplication2()
  ------------------------------------------------------------------------------------------
  */
 
-function bootstrap_displayRouter(bool $needFirstSynchronization)
+function bootstrap_displayRouter()
 {
     global $bootstrapBreak,
            $libraryRescueMode,
+           $needFirstSynchronization,
            $bootstrapInlineDisplay,
            $bootstrapApplicationID,
            $bootstrapApplicationNoPreload,
@@ -6988,7 +6996,6 @@ function main()
     bootstrap_getUserBreak();
     bootstrap_getInlineDisplay();
     bootstrap_getCheckFingerprint();
-    $needFirstSynchronization = bootstrap_getNeedFirstSynchronization();
     bootstrap_getDisplayServerEntity();
     bootstrap_getFlushSession();
     bootstrap_getUpdate();
@@ -7004,7 +7011,7 @@ function main()
 
     bootstrap_findApplication();
     bootstrap_getApplicationPreload();
-    bootstrap_displayRouter($needFirstSynchronization);
+    bootstrap_displayRouter();
     lib_setMetrologyTimer('tA');
     bootstrap_logMetrology();
 }
