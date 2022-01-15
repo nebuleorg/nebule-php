@@ -66,6 +66,7 @@ class Group extends Node implements nodeInterface
      */
     protected function _localConstruct(): void
     {
+        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->getReferenceObject();
         $this->getReferenceObjectClosed();
         $this->getReferenceObjectProtected();
@@ -83,8 +84,6 @@ class Group extends Node implements nodeInterface
      */
     protected function _createNewGroup(): void
     {
-        $this->_metrology->addLog(__METHOD__, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Vérifie que l'on puisse créer un groupe et tous ses attributs.
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
             && $this->_configuration->getOptionAsBoolean('permitWriteObject')
@@ -142,10 +141,8 @@ class Group extends Node implements nodeInterface
      * @param string|Node|entity $entity
      * @return string
      */
-    protected function _checkExtractEntityID($entity)
+    protected function _checkExtractEntityID($entity): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         $entityInstance = null;
         if (is_string($entity)) {
             if ($entity == ''
@@ -189,10 +186,8 @@ class Group extends Node implements nodeInterface
      * @param string|Node $object
      * @return string
      */
-    private function _checkExtractObjectID($object)
+    private function _checkExtractObjectID($object): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         if (is_string($object)) {
             if ($object == ''
                 || $object == '0'
@@ -233,8 +228,6 @@ class Group extends Node implements nodeInterface
      */
     public function checkConsistency(): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         return true;
     }
 
@@ -245,8 +238,6 @@ class Group extends Node implements nodeInterface
      */
     public function getReloadMarkProtected(): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         return false;
     }
 
@@ -257,8 +248,6 @@ class Group extends Node implements nodeInterface
      */
     public function getProtectedID(): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         return '0';
     }
 
@@ -269,8 +258,6 @@ class Group extends Node implements nodeInterface
      */
     public function getUnprotectedID(): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         return $this->_id;
     }
 
@@ -282,8 +269,6 @@ class Group extends Node implements nodeInterface
      */
     public function setProtected(bool $obfuscated = false): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         return false;
     }
 
@@ -294,8 +279,6 @@ class Group extends Node implements nodeInterface
      */
     public function setUnprotected(): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         return false;
     }
 
@@ -306,8 +289,6 @@ class Group extends Node implements nodeInterface
      */
     public function setProtectedTo($entity): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         return false;
     }
 
@@ -318,8 +299,6 @@ class Group extends Node implements nodeInterface
      */
     public function getProtectedTo(): array
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         return array();
     }
 
@@ -333,8 +312,6 @@ class Group extends Node implements nodeInterface
      */
     public function unsetGroup(): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Vérifie que la création de liens est possible.
         if (!$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
@@ -429,8 +406,6 @@ class Group extends Node implements nodeInterface
      */
     public function setMarkClosed($entity = '', bool $obfuscated = false): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Vérifie que la création de liens est possible.
         if (!$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
@@ -493,8 +468,6 @@ class Group extends Node implements nodeInterface
      */
     public function unsetMarkClosed($entity = ''): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Vérifie que la création de liens est possible.
         if (!$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
@@ -552,8 +525,6 @@ class Group extends Node implements nodeInterface
      */
     public function getMarkProtected($entity = ''): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Extrait l'ID de l'entité.
         $id = $this->_checkExtractEntityID($entity);
 
@@ -600,8 +571,6 @@ class Group extends Node implements nodeInterface
      */
     public function setMarkProtected($entity = '', bool $obfuscated = false): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Vérifie que la création de liens est possible.
         if (!$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
@@ -664,8 +633,6 @@ class Group extends Node implements nodeInterface
      */
     public function unsetMarkProtected($entity = ''): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Vérifie que la création de liens est possible.
         if (!$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
@@ -723,8 +690,6 @@ class Group extends Node implements nodeInterface
      */
     public function getMarkObfuscated($entity = ''): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Désactivée si option à false.
         if (!$this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
             return false;
@@ -776,8 +741,6 @@ class Group extends Node implements nodeInterface
      */
     public function setMarkObfuscated($entity = '', bool $obfuscated = false): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Désactivée si option à false.
         if (!$this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
             return false;
@@ -845,8 +808,6 @@ class Group extends Node implements nodeInterface
      */
     public function unsetMarkObfuscated($entity = ''): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Désactivée si option à false.
         if (!$this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
             return false;
@@ -903,8 +864,6 @@ class Group extends Node implements nodeInterface
      */
     public function getIsMember($object, string $socialClass = ''): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Extrait l'ID de l'objet.
         $id = $this->_checkExtractObjectID($object);
 
@@ -941,8 +900,6 @@ class Group extends Node implements nodeInterface
      */
     public function setMember($object, bool $obfuscated = false): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Vérifie que la création de liens est possible.
         if (!$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
@@ -997,8 +954,6 @@ class Group extends Node implements nodeInterface
      */
     public function unsetMember($object = '', bool $obfuscated = false): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Vérifie que la création de liens est possible.
         if (!$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
@@ -1054,8 +1009,6 @@ class Group extends Node implements nodeInterface
      */
     public function getListMembersLinks(string $socialClass = '', array $socialListID = array()): array
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Liste tous les liens des membres de la conversation.
         $links = $this->readLinksFilterFull_disabled(
             '',
@@ -1083,8 +1036,6 @@ class Group extends Node implements nodeInterface
      */
     public function getListMembersID(string $socialClass = '', array $socialListID = array()): array
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Extrait les liens des groupes.
         $links = $this->getListMembersLinks($socialClass, $socialListID);
 
@@ -1106,8 +1057,6 @@ class Group extends Node implements nodeInterface
      */
     public function getCountMembers(string $socialClass = '', array $socialListID = array()): float
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         return sizeof($this->getListMembersLinks($socialClass, $socialListID));
     }
 
@@ -1122,8 +1071,6 @@ class Group extends Node implements nodeInterface
      */
     public function getIsFollower($entity, string $socialClass = '', array $socialListID = array()): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Extrait l'ID de l'entité.
         $id = $this->_checkExtractEntityID($entity);
 
@@ -1162,8 +1109,6 @@ class Group extends Node implements nodeInterface
      */
     public function setFollower(string $entity, bool $obfuscated = false): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Vérifie que la création de liens est possible.
         if (!$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
@@ -1218,8 +1163,6 @@ class Group extends Node implements nodeInterface
      */
     public function unsetFollower(string $entity = '', bool $obfuscated = false): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Vérifie que la création de liens est possible.
         if (!$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
@@ -1275,8 +1218,6 @@ class Group extends Node implements nodeInterface
      */
     public function getListFollowersLinks(string $socialClass = '', array $socialListID = array()): array
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         return $this->_getListFollowersLinks($this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI), $socialClass, $socialListID);
     }
 
@@ -1291,8 +1232,6 @@ class Group extends Node implements nodeInterface
      */
     protected function _getListFollowersLinks(string $reference, string $socialClass = '', array $socialListID = array()): array
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Vérifie la référence.
         if (!is_string($reference)
             && !ctype_xdigit($reference)
@@ -1327,8 +1266,6 @@ class Group extends Node implements nodeInterface
      */
     public function getListFollowersID(string $socialClass = '', array $socialListID = array()): array
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // Extrait les liens des groupes.
         $links = $this->_getListFollowersLinks($this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI), $socialClass, $socialListID);
 
@@ -1350,8 +1287,6 @@ class Group extends Node implements nodeInterface
      */
     public function getCountFollowers(string $socialClass = '', array $socialListID = array()): float
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         return sizeof($this->_getListFollowersLinks($this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI), $socialClass, $socialListID));
     }
 
@@ -1394,8 +1329,6 @@ class Group extends Node implements nodeInterface
      */
     public function getReferenceObject(): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         if ($this->_referenceObject == '') {
             $this->_referenceObject = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
         }
@@ -1416,8 +1349,6 @@ class Group extends Node implements nodeInterface
      */
     public function getReferenceObjectClosed(): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         if ($this->_referenceObjectClosed == '') {
             $this->_referenceObjectClosed = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_FERME, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
         }
@@ -1438,8 +1369,6 @@ class Group extends Node implements nodeInterface
      */
     public function getReferenceObjectProtected(): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         if ($this->_referenceObjectProtected == '') {
             $this->_referenceObjectProtected = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
         }
@@ -1460,8 +1389,6 @@ class Group extends Node implements nodeInterface
      */
     public function getReferenceObjectObfuscated(): string
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         if ($this->_referenceObjectObfuscated == '') {
             $this->_referenceObjectObfuscated = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
         }

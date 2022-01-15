@@ -23,45 +23,21 @@ use Nebule\Library\Node;
  */
 class Localisation extends Node implements nodeInterface
 {
-    private $_localisation = '', $_protocol = '', $_communication, $_ioDefaultPrefix = '';
+    private $_localisation = '';
+    private $_protocol = '';
 
-    public function __construct(nebule $nebuleInstance, string $id, string $localisation = '')
+    /**
+     * Specific part of constructor for an entity.
+     * @return void
+     */
+    protected function _localConstruct(): void
     {
-        $this->_initialisation($nebuleInstance);
+        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
 
-        $this->_ioDefaultPrefix = $this->_io->getDefaultLocalisation();
-        $id = trim(strtolower($id));
-        $this->_metrology->addLog('New instance localisation ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
-
-        // Vérifie sommairement la localisation.
-        if ($id != '0' && $id != '' && ctype_xdigit($id)) {
-            $this->_id = $id;
-            // Extrait la localisation et la convertit en minuscule.
-            $this->_localisation = trim(strtolower($this->_io->objectRead($id)));
-        } elseif ($id == '0') {
-            // Crée le nouvel objet.
-            $this->_createNewObject_DEPRECATED($localisation);
-            // Définit la localisation, en minuscule.
-            $this->_localisation = trim(strtolower($localisation));
-        } else {
-            // La localisation n'est pas valide.
-            $this->_id = '0';
-            $this->_localisation = '';
-        }
-
-        // Extrait le type de protocole.
-        // Si invalide ou non reconnu, la variable du protocole est vide.
-        if (substr($this->_localisation, 0, 7) == 'http://' || substr($this->_localisation, 0, 8) == 'https://') {
-            // @todo Test la validité de l'adresse.
-            $this->_protocol = 'HTTP';
-        } elseif (substr($this->_localisation, 0, 5) == 'mail:') {
-            // @todo Test la validité de l'adresse.
-            $this->_protocol = 'SMTP';
-        } elseif (substr($this->_localisation, 0, 5) == 'xmpp:') {
-            // @todo Test la validité de l'adresse.
-            $this->_protocol = 'XMPP';
-        } else {
-            $this->_protocol = '';
+        if ($this->_id != '0')
+        {
+            $this->_localisation = trim(strtolower($this->_io->objectRead($this->_id)));
+            $this->_parseURL();
         }
     }
 
@@ -75,36 +51,65 @@ class Localisation extends Node implements nodeInterface
         return $this->_localisation;
     }
 
+    private function _parseURL(): void
+    {
+        switch (preg_split('/:/', $this->_localisation)[0]) {
+            case 'http':
+            case 'https':
+                // TODO Test la validité de l'adresse.
+                $this->_protocol = 'HTTP';
+                break;
+            /*case 'smtp':
+                $this->_protocol = 'SMTP';
+                break;
+            case 'xmpp':
+                $this->_protocol = 'XMPP';
+                break;*/
+            default:
+                $this->_protocol = '';
+        }
+    }
+
+    /**
+     * Create new URL localisation.
+     * @param string $url
+     * @param bool   $protected
+     * @param bool   $obfuscated
+     * @return bool
+     */
+    public function setNewLocalisation(string $url, bool $protected = false, bool $obfuscated = false): bool
+    {
+        $this->_localisation = trim(strtolower($url));
+        $this->_parseURL();
+        if ($this->_protocol == '')
+        {
+            $this->_localisation = '';
+            return false;
+        }
+        return true;
+    }
+
     // Synchronise l'objet avec l'ID donné si non présent localement.
     public function syncObjectID($id)
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // @todo
     }
 
     // Synchronise les liens.
     public function syncLinksID($id)
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         // @todo
     }
 
     // Synchronise à la fois les liens et l'objet avec l'ID donné.
     public function syncID($id)
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         $this->syncLinksID($id);
         $this->syncObjectID($id);
     }
 
-
     private function _addPonderate($time)
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
-
         if ($this->_configuration->getOptionAsBoolean('permitLocalisationStats')) {
             return false;
         }

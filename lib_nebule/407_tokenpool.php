@@ -66,42 +66,21 @@ class TokenPool extends Currency implements nodeInterface
     );
 
     /**
-     * Constructeur.
-     * Toujours transmettre l'instance de la librairie nebule.
-     * Si le sac de jetons existe, juste préciser l'ID de celui-ci.
-     * Si c'est un nouveau sac de jetons à créer, mettre l'ID à 'new'.
-     *
-     * @param nebule  $nebuleInstance
-     * @param string  $id
-     * @param array   $param      si $id == 'new'
-     * @param boolean $protected  si $id == 'new'
-     * @param boolean $obfuscated si $id == 'new'
+     * Specific part of constructor for a token pool.
+     * @return void
      */
-    public function __construct(nebule $nebuleInstance, string $id, array $param = array(), bool $protected = false, bool $obfuscated = false)
+    protected function _localConstruct(): void
     {
-        $this->_initialisation($nebuleInstance);
-
-        // Complément des paramètres.
-        //$this->_propertiesList['currency']['CurrencyForgeID']['force'] = $this->_nebuleInstance->getCurrentEntity();
-//		$this->_propertiesList['tokenpool']['PoolCurrencyID']['force'] = $this->_nebuleInstance->getCurrentCurrency();
-//		$this->_propertiesList['tokenpool']['PoolForgeID']['force'] = $this->_nebuleInstance->getCurrentEntity();
-//		$this->_propertiesList['token']['TokenForgeID']['force'] = $this->_nebuleInstance->getCurrentEntity();
-
-        $id = trim(strtolower($id));
-        $this->_metrology->addLog('New instance token pool ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
-
-        if ($id != ''
-            && ctype_xdigit($id)
-        ) {
-            // Si l'ID est cohérent et l'objet nebule présent, c'est bon.
-            $this->_loadTokenPool($id);
-        } elseif ($id == 'new') {
-            // Si c'est un nouveau sac de jetons à créer, renvoie à la création.
-            $this->_createNewTokenPool($param, $protected, $obfuscated);
-        } else {
-            // Sinon, le sac de jetons est invalide, retourne 0.
+        if ($this->_configuration->getOptionAsBoolean('permitCurrency'))
+        {
             $this->_id = '0';
+            $this->_isNew = false;
+            return;
         }
+        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+
+        if ($this->_id != '0')
+            $this->_loadTokenPool($this->_id);
     }
 
     /**
@@ -149,16 +128,24 @@ class TokenPool extends Currency implements nodeInterface
     }
 
     /**
-     * Création d'une nouveau sac de jetons.
+     * Création d'un nouveau sac de jetons.
      *
      * @param array $param
      * @param bool  $protected
      * @param bool  $obfuscated
      * @return boolean
      */
-    private function _createNewTokenPool(array $param, bool $protected = false, bool $obfuscated = false): bool
+    public function setNewTokenPool(array $param, bool $protected = false, bool $obfuscated = false): bool
     {
         $this->_metrology->addLog('Ask create token pool', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+
+        if (!$this->_isNew
+            || sizeof($param) == 0
+            || ( get_class($this) != 'TokenPool'
+                && get_class($this) != 'Nebule\Library\TokenPool'
+            )
+        )
+            return false;
 
         // Vérifie que l'on puisse créer un sac de jetons.
         if ($this->_configuration->getOptionAsBoolean('permitWrite')

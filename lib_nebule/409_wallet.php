@@ -24,7 +24,7 @@ use Nebule\Library\Entity;
  * Si une erreur survient lors de la lecture du portefeuille ou lors de la création, assigne l'ID 0.
  * ------------------------------------------------------------------------------------------
  */
-class Wallet extends Entity
+class Wallet extends Entity implements nodeInterface
 {
     /**
      * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
@@ -60,60 +60,27 @@ class Wallet extends Entity
     );
 
     /**
-     * Constructeur.
-     * Toujours transmettre l'instance de la librairie nebule.
-     * Si le portefeuille existe, juste préciser l'ID de celui-ci.
-     * Si c'est un nouveau portefeuille à créer, mettre l'ID à 'new'.
-     *
-     * @param nebule  $nebuleInstance
-     * @param string  $id
-     * @param array   $param      si $id == 'new'
-     * @param boolean $protected  si $id == 'new'
-     * @param boolean $obfuscated si $id == 'new'
+     * Specific part of constructor for a wallet.
+     * @return void
      */
-    public function __construct(nebule $nebuleInstance, string $id, array $param = array(), bool $protected = false, bool $obfuscated = false)
+    protected function _localConstruct(): void
     {
-        $this->_initialisation($nebuleInstance);
-
-        $id = trim(strtolower($id));
-        $this->_metrology->addLog('New instance wallet ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
-
-        if ($id != ''
-            && ctype_xdigit($id)
-        ) {
-            // Si l'ID est cohérent et l'objet nebule présent, c'est bon.
-            $this->_loadWallet($id);
-        } elseif ($id == 'new') {
-            // Si c'est un nouveau portefeuille à créer, renvoie à la création.
-            $this->_createNewWallet($param, $protected, $obfuscated);
-        } else {
-            // Sinon, le portefeuille est invalide, retourne 0.
+        if ($this->_configuration->getOptionAsBoolean('permitCurrency'))
+        {
             $this->_id = '0';
+            $this->_isNew = false;
+            return;
         }
+        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+
+        if ($this->_isNew)
+            $this->_createNewWallet();
+        elseif ($this->_id != '0')
+            $this->getIsWallet();
     }
 
     /**
-     *  Chargement d'un portefeuille existant.
-     *
-     * @param string $id
-     */
-    private function _loadWallet(string $id)
-    {
-        // Vérifie que c'est bien un objet.
-        if ($id == ''
-            || !ctype_xdigit($id)
-            || !$this->_io->checkLinkPresent($id)
-            || !$this->_configuration->getOptionAsBoolean('permitCurrency')
-        ) {
-            $id = '0';
-        }
-
-        $this->_id = $id;
-        $this->_metrology->addLog('Load wallet ' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
-    }
-
-    /**
-     * Création d'une nouveau portefeuille.
+     * Création d'un nouveau portefeuille.
      *
      * @param array $param
      * @param bool  $protected

@@ -204,46 +204,21 @@ class Currency extends Node implements nodeInterface
     protected $_CAParray = array();
 
     /**
-     * Constructeur.
-     * Toujours transmettre l'instance de la librairie nebule.
-     * Si la monnaie existe, juste préciser l'ID de celle-ci.
-     * Si c'est une nouvelle monnaie à créer, mettre l'ID à 'new'.
-     *
-     * @param nebule  $nebuleInstance
-     * @param string  $id
-     * @param array   $param      si $id == 'new'
-     * @param boolean $protected  si $id == 'new'
-     * @param boolean $obfuscated si $id == 'new'
+     * Specific part of constructor for a currency.
+     * @return void
      */
-    public function __construct(nebule $nebuleInstance, string $id, array $param = array(), bool $protected = false, bool $obfuscated = false)
+    protected function _localConstruct(): void
     {
-        $this->_initialisation($nebuleInstance);
-
-        $id = trim(strtolower($id));
-        $this->_metrology->addLog('New instance currency ' . $id, Metrology::LOG_LEVEL_DEBUG); // Métrologie.
-
-        if ($id != ''
-            && ctype_xdigit($id)
-        ) {
-            // Si l'ID est cohérent et l'objet nebule présent, c'est bon.
-            $this->_loadCurrency($id);
-        } elseif ($id == 'new') {
-            // Si c'est une nouvelle monnaie à créer, renvoie à la création.
-            $this->_createNewCurrency($param, $protected, $obfuscated);
-        } else {
-            // Sinon, la monnaie est invalide, retourne 0.
+        if ($this->_configuration->getOptionAsBoolean('permitCurrency'))
+        {
             $this->_id = '0';
+            $this->_isNew = false;
+            return;
         }
-    }
+        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
 
-    /**
-     * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
-     *
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->_id;
+        if ($this->_id != '0')
+            $this->_loadCurrency($this->_id);
     }
 
     /**
@@ -254,8 +229,7 @@ class Currency extends Node implements nodeInterface
     private function _loadCurrency(string $id)
     {
         // Vérifie que c'est bien un objet.
-        if (!is_string($id)
-            || $id == ''
+        if ($id == ''
             || !ctype_xdigit($id)
             || !$this->_io->checkLinkPresent($id)
             || !$this->_configuration->getOptionAsBoolean('permitCurrency')
@@ -301,11 +275,21 @@ class Currency extends Node implements nodeInterface
      * Création d'une nouvelle monnaie.
      *
      * @param array $param
+     * @param bool  $protected
+     * @param bool  $obfuscated
      * @return boolean
      */
-    private function _createNewCurrency($param, $protected = false, $obfuscated = false)
+    public function setNewCurrency(array $param, bool $protected = false, bool $obfuscated = false): bool
     {
         $this->_metrology->addLog('Ask create currency', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+
+        if (!$this->_isNew
+            || sizeof($param) == 0
+            || ( get_class($this) != 'Currency'
+                && get_class($this) != 'Nebule\Library\Currency'
+            )
+        )
+            return false;
 
         // Vérifie que l'on puisse créer une monnaie.
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
@@ -330,6 +314,7 @@ class Currency extends Node implements nodeInterface
             $this->_id = '0';
             return false;
         }
+        return true;
     }
 
 
@@ -341,7 +326,7 @@ class Currency extends Node implements nodeInterface
      *
      * @return boolean
      */
-    public function getReloadMarkProtected()
+    public function getReloadMarkProtected(): bool
     {
         return false;
     }
@@ -403,7 +388,7 @@ class Currency extends Node implements nodeInterface
      *
      * @return array
      */
-    public function getProtectedTo()
+    public function getProtectedTo(): array
     {
         return array();
     }
@@ -920,8 +905,6 @@ class Currency extends Node implements nodeInterface
      */
     protected function _getParam($key, $maxsize)
     {
-        $this->_metrology->addLog(get_class($this) . ' get param start for ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
-
         // La réponse.
         $result = null;
 
@@ -1088,8 +1071,6 @@ class Currency extends Node implements nodeInterface
      */
     protected function _getParamFromObject($key, $maxsize)
     {
-        $this->_metrology->addLog(get_class($this) . ' get param on object ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
-
         $result = null;
 
         // Lit le contenu de l'objet.
@@ -1149,8 +1130,6 @@ class Currency extends Node implements nodeInterface
      */
     protected function _getParamFromLinks($key, $maxsize)
     {
-        $this->_metrology->addLog(get_class($this) . ' get param on links ' . $this->_id . ' - ' . $key, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
-
         $result = '';
 
         $id = '';
