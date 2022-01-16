@@ -27,13 +27,6 @@ class Ticketing
     private $_metrology;
 
     /**
-     * Instance de gestion de la cryptographie.
-     *
-     * @var CryptoInterface
-     */
-    private $_crypto;
-
-    /**
      * Instance de gestion du cache.
      *
      * @var Cache
@@ -55,17 +48,6 @@ class Ticketing
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_crypto = $nebuleInstance->getCryptoInstance();
-        $this->_cache = $nebuleInstance->getCacheInstance();
-        $this->_findActionTicket();
-    }
-
-    public function __wakeup()
-    {
-        global $nebuleInstance;
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_crypto = $nebuleInstance->getCryptoInstance();
         $this->_cache = $nebuleInstance->getCacheInstance();
         $this->_findActionTicket();
     }
@@ -84,15 +66,10 @@ class Ticketing
      */
     private function _findActionTicket(): void
     {
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
- 		 *  ------------------------------------------------------------------------------------------
-		 */
         $ticket = '0';
-        // Lit et nettoye le contenu de la variable GET.
+        // Lit et nettoie le contenu de la variable GET.
         $arg_get = trim(' ' . filter_input(INPUT_GET, nebule::COMMAND_SELECT_TICKET, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        // Lit et nettoye le contenu de la variable POST.
+        // Lit et nettoie le contenu de la variable POST.
         $arg_post = trim(' ' . filter_input(INPUT_POST, nebule::COMMAND_SELECT_TICKET, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
         // Vérifie les variables.
@@ -111,35 +88,33 @@ class Ticketing
 
         // Vérifie le ticket.
         session_start();
-        if ($ticket == '0'
-            //|| $this->_flushCache TODO gérer le cas du flush de cache
-        ) {
+        if ($ticket == '0') {
             // Le ticket est null, aucun ticket trouvé en argument.
             // Aucune action ne doit être réalisée.
-            $this->_metrology->addLog('Ticket: none', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Ticket: none', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'd396f0a9'); // Log
             $this->_validTicket = false;
         } elseif (isset($_SESSION['Ticket'][$ticket])
-            && $_SESSION['Ticket'][$ticket] !== true
+            && $_SESSION['Tickets'][$ticket] !== true
         ) {
             // Le ticket est déjà connu mais est déjà utilisé, c'est un rejeu.
             // Aucune action ne doit être réalisée.
-            $this->_metrology->addLog('Ticket: replay ' . $ticket, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Ticket: replay ' . $ticket, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'd516f0d4'); // Log
             $this->_validTicket = false;
             $_SESSION['Ticket'][$ticket] = false;
         } elseif (isset($_SESSION['Ticket'][$ticket])
-            && $_SESSION['Ticket'][$ticket] === true
+            && $_SESSION['Tickets'][$ticket] === true
         ) {
             // Le ticket est connu et n'est pas utilisé, c'est bon.
             // Il est marqué maintenant comme utilisé.
             // Les actions peuvent être réalisées.
-            $this->_metrology->addLog('Ticket: valid ' . $ticket, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Ticket: valid ' . $ticket, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '7083b07d'); // Log
             $this->_validTicket = true;
-            $_SESSION['Ticket'][$ticket] = false;
+            $_SESSION['Tickets'][$ticket] = false;
         } else {
             // Le ticket est inconnu.
             // Pas de mémorisation.
             // Aucune action ne doit être réalisée.
-            $this->_metrology->addLog('Ticket: error ' . $ticket, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Ticket: error ' . $ticket, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'b221e760'); // Log
             $this->_validTicket = false;
         }
         session_write_close();
@@ -156,7 +131,7 @@ class Ticketing
      *
      * @return string
      */
-    public function getActionTicket(): string
+    public function getActionTicketCommand(): string
     {
         return '&' . nebule::COMMAND_SELECT_TICKET . '=' . $this->getActionTicketValue();
     }
@@ -176,11 +151,10 @@ class Ticketing
      */
     public function getActionTicketValue(): string
     {
+        $data = $this->_nebuleInstance->getCryptoInstance()->getRandom(2048, Crypto::RANDOM_PSEUDO);
+        $ticket = $this->_nebuleInstance->getCryptoInstance()->hash($data);
         session_start();
-        $data = $this->_crypto->getRandom(2048, Crypto::RANDOM_PSEUDO);
-        $ticket = $this->_crypto->hash($data);
-        unset($data);
-        $_SESSION['Ticket'][$ticket] = true;
+        $_SESSION['Tickets'][$ticket] = true;
         session_write_close();
         return $ticket;
     }

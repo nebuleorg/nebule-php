@@ -67,7 +67,7 @@ class ioHTTP extends io implements ioInterface
         ini_set('allow_url_fopen', 'true');
         ini_set('allow_url_include', 'true');
         ini_set('user_agent', 'nebule/ioHTTP/' . $nebuleLibVersion);
-        ini_set('default_socket_timeout', $this->_configuration->getOptionUntyped('ioTimeout'));
+        ini_set('default_socket_timeout', $this->_configuration->getOptionAsString('ioTimeout'));
     }
 
     public function __sleep()

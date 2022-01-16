@@ -52,6 +52,13 @@ class Metrology
     const DEFAULT_LOG_LEVEL = 1;
 
     /**
+     * Instance de la librairie en cours.
+     *
+     * @var nebule
+     */
+    protected $_nebuleInstance;
+
+    /**
      * Compteur de liens lus.
      * @var integer
      */
@@ -119,17 +126,8 @@ class Metrology
     public function __construct(nebule $nebuleInstance)
     {
         $this->_timeStart(); // Démarre le compteur de temps.
-        $this->setDefaultLogsLevel();
-    }
-
-    /**
-     * Fonction de suppression de l'instance.
-     *
-     * @return boolean
-     */
-    public function __destruct()
-    {
-        return true;
+        $this->_nebuleInstance = $nebuleInstance;
+        $this->_setDefaultLogsLevel();
     }
 
     /**
@@ -289,14 +287,20 @@ class Metrology
      *
      * @return void
      */
-    public function setDefaultLogsLevel(): void
+    private function _setDefaultLogsLevel(): void
     {
-        $this->_permitLogs = Configuration::getOptionFromEnvironmentUntypedStatic('permitLogs');
-        if ($this->_permitLogs === null)
-            $this->_permitLogs = Configuration::OPTIONS_DEFAULT_VALUE['permitLogs'];
+        $getPermitLogs = Configuration::getOptionFromEnvironmentAsStringStatic('permitLogs');
+        if ($getPermitLogs == 'true')
+            $this->_permitLogs = true;
+        elseif ($getPermitLogs == 'false')
+            $this->_permitLogs = false;
+        elseif (Configuration::OPTIONS_DEFAULT_VALUE['permitLogs'] == 'true')
+            $this->_permitLogs = true;
+        else
+            $this->_permitLogs = false;
 
-        $level = Configuration::getOptionFromEnvironmentUntypedStatic('logsLevel');
-        if ($level === null)
+        $level = Configuration::getOptionFromEnvironmentAsStringStatic('logsLevel');
+        if ($level == '')
             $level = Configuration::OPTIONS_DEFAULT_VALUE['logsLevel'];
 
         $this->setLogsLevel($level);
@@ -331,7 +335,7 @@ class Metrology
         }
 
         if ($this->_permitLogs && $this->_logsLevel > self::LOG_LEVEL_ERROR)
-            syslog(LOG_INFO, 'LogT=' . (microtime(true) - $this->_timeStart) . ' LogLset=' . $this->_logsLevel . '(' . $level . ')');
+            syslog(LOG_INFO, 'LogT=' . (microtime(true) - $this->_timeStart) . ' LogLset="' . $this->_logsLevel . '(' . $level . ')"');
     }
 
     /**
@@ -356,16 +360,14 @@ class Metrology
             return;
 
         // Extrait le niveau de log demandé.
-        $logLevel = self::DEFAULT_LOG_LEVEL;
-        if (is_int($level))
-            $logLevel = $level;
+        $logLevel = $level;
 
         // Si le niveau de log est suffisant, écrit le message.
         if ($logLevel <= $this->_logsLevel) {
             $message = 'LogT=' . (microtime(true) - $this->_timeStart) . ' LogL="' . $logLevel . '" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"';
 
             if ($logLevel == self::LOG_LEVEL_DEBUG)
-                $message = $message . ' LogM="' . memory_get_usage() . '"';
+                $message = $message . ' LogMem="' . memory_get_usage() . '"';
 
             syslog(LOG_INFO, $message);
         }

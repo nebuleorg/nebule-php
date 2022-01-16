@@ -292,7 +292,7 @@ class Node implements nodeInterface
 
         // ID processing.
         $id = trim(strtolower($id));
-        if (self::checkNID($id, true)
+        if (self::checkNID($id, false)
         ) {
             $this->_id = $id;
             $this->_metrology->addLog('New instance ' . get_class($this) . ' ' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '7fb8f6e3');
@@ -1404,7 +1404,7 @@ class Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newGroup($link->getHashSource());
+            $instance = $this->_nebuleInstance->newGroup_DEPRECATED($link->getHashSource());
             if (!$instance->getIsGroup('all')) {
                 unset($links[$i]);
             }
@@ -1445,7 +1445,7 @@ class Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newGroup($link->getHashSource());
+            $instance = $this->_nebuleInstance->newGroup_DEPRECATED($link->getHashSource());
             if ($instance->getIsGroup('all')) {
                 $list[$link->getHashSource()] = $link->getHashSource();
             }
@@ -1510,7 +1510,7 @@ class Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newConversation($link->getHashSource());
+            $instance = $this->_nebuleInstance->newConversation_DEPRECATED($link->getHashSource());
             if (!$instance->getIsConversation('all')) {
                 unset($links[$i]);
             }
@@ -1552,7 +1552,7 @@ class Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newConversation($link->getHashSource());
+            $instance = $this->_nebuleInstance->newConversation_DEPRECATED($link->getHashSource());
             if ($instance->getIsConversation('all')) {
                 $list[$link->getHashSource()] = $link->getHashSource();
             }
@@ -2379,10 +2379,10 @@ class Node implements nodeInterface
     public function shareProtectionTo($entity): bool
     {
         if (is_string($entity)) {
-            $entity = $this->_nebuleInstance->newEntity($entity);
+            $entity = $this->_nebuleInstance->newEntity_DEPRECATED($entity);
         }
         if (!is_a($entity, 'entity')) {
-            $entity = $this->_nebuleInstance->newEntity($entity->getID());
+            $entity = $this->_nebuleInstance->newEntity_DEPRECATED($entity->getID());
         }
         if (!$entity->getIsEntity('all')) {
             return false;
@@ -2485,10 +2485,10 @@ class Node implements nodeInterface
     public function cancelShareProtectionTo($entity): bool
     {
         if (is_string($entity)) {
-            $entity = $this->_nebuleInstance->newEntity($entity);
+            $entity = $this->_nebuleInstance->newEntity_DEPRECATED($entity);
         }
         if (!is_a($entity, 'entity')) {
-            $entity = $this->_nebuleInstance->newEntity($entity->getID());
+            $entity = $this->_nebuleInstance->newEntity_DEPRECATED($entity->getID());
         }
         if (!$entity->getIsEntity('all')) {
             return false;
@@ -3319,7 +3319,7 @@ class Node implements nodeInterface
             if (substr($link, 0, 21) == 'nebule/liens/version/') {
                 $linkVersion = trim(substr($link, 0, 25)); // Mémorise la version mais ne valide pas la ligne comme lien.
             } else {
-                $l = $this->_nebuleInstance->newLink($link, $linkVersion);
+                $l = $this->_nebuleInstance->newLink_DEPRECATED($link, $linkVersion);
                 // Si c'est bon,
                 if ($l->getValid()
                     || $permitListInvalidLinks
@@ -3412,7 +3412,7 @@ class Node implements nodeInterface
                         || $c[7] == $filter
                     ) {
                         // Crée une instance de lien.
-                        $linkInstance = $this->_nebuleInstance->newLink($link, $linkVersion);
+                        $linkInstance = $this->_nebuleInstance->newLink_DEPRECATED($link, $linkVersion);
                         // Si le lien est valide ou que l'on permet les liens invalides.
                         if (is_a($linkInstance, 'Link') && ($linkInstance->getValid() || $permitListInvalidLinks)) {
                             $okWriteNew = true;
@@ -3603,7 +3603,7 @@ class Node implements nodeInterface
                         && ($allMeta || $c[7] == $meta)
                     ) {
                         // Crée une instance de lien.
-                        $linkInstance = $this->_nebuleInstance->newLink($link, $linkVersion);
+                        $linkInstance = $this->_nebuleInstance->newLink_DEPRECATED($link, $linkVersion);
                         // Si le lien est valide ou que l'on permet les liens invalides.
                         if (is_a($linkInstance, 'Link')
                             && ($linkInstance->getValid() || $permitListInvalidLinks)
@@ -3859,7 +3859,7 @@ class Node implements nodeInterface
                     && $c[5] == $this->_id
                     && $c[6] != '0'
                 ) {
-                    $l = $this->_nebuleInstance->newLink($link, $v);
+                    $l = $this->_nebuleInstance->newLink_DEPRECATED($link, $v);
                     if ($l->getValid() || $x) {
                         $r[$i] = $l;        // on l'écrit dans le tableau des résultats.
                         $i++;
@@ -4353,7 +4353,7 @@ class Node implements nodeInterface
             $this->_metrology->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
             foreach ($links as $link) {
-                $linkInstance = $this->_nebuleInstance->newLink($link);
+                $linkInstance = $this->_nebuleInstance->newLink_DEPRECATED($link);
                 $linkInstance->write();
             }
         }

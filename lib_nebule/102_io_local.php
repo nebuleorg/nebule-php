@@ -287,7 +287,6 @@ class ioLocal extends io implements ioInterface
         if ($localisation != ''
             || $object == '0'
             || $object == ''
-            || !ctype_xdigit($object)
             || !file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object)
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object)
         )
@@ -305,7 +304,6 @@ class ioLocal extends io implements ioInterface
         if ($localisation != ''
             || $object == '0'
             || $object == ''
-            || !ctype_xdigit($object)
             || !file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object)
             || is_dir(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object)
         )
@@ -335,7 +333,6 @@ class ioLocal extends io implements ioInterface
         if ($localisation != ''
             || $object == '0'
             || $object == ''
-            || !ctype_xdigit($object)
             || !file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object)
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object)
         )
@@ -375,7 +372,6 @@ class ioLocal extends io implements ioInterface
         if ($localisation != ''
             || $entity == '0'
             || $entity == ''
-            || !ctype_xdigit($entity)
             || !file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $entity)
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $entity)
         )
@@ -384,7 +380,6 @@ class ioLocal extends io implements ioInterface
         // Vérifie l'entité signataire des liens dissimulés.
         if (!is_string($signer)
             || $signer == ''
-            || !ctype_xdigit($signer)
             || !file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $signer)
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $signer)
         )
@@ -437,7 +432,6 @@ class ioLocal extends io implements ioInterface
         if ($localisation != ''
             || $object == '0'
             || $object == ''
-            || !ctype_xdigit($object)
             || !file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object)
             || is_dir(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object)
         )
@@ -528,7 +522,6 @@ class ioLocal extends io implements ioInterface
         if ($localisation != ''
             || $object == '0'
             || $object == ''
-            || !ctype_xdigit($object)
             || !$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteObject')
             || $this->getMode() != 'RW'
@@ -585,7 +578,6 @@ class ioLocal extends io implements ioInterface
         if ($localisation != ''
             || $object == '0'
             || $object == ''
-            || !ctype_xdigit($object)
             || !$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
             || $this->getMode() != 'RW'
@@ -671,11 +663,7 @@ class ioLocal extends io implements ioInterface
         }
 
         // Vérifie l'objet si lien d'offuscation ou non.
-        if ($action != 'c') {
-            if (!ctype_xdigit($object)) {
-                return false;
-            }
-        } else {
+        if ($action == 'c') {
             $hashentsign = '';
             $hashentdest = '';
             $j = 1;
@@ -699,9 +687,7 @@ class ioLocal extends io implements ioInterface
 
             if ($hashentsign = ''
                 || $hashentdest = ''
-                    || !ctype_xdigit($hashentsign)
-                    || !ctype_xdigit($hashentdest)
-                    || $hashentsign . '-' . $hashentdest != $object
+                || $hashentsign . '-' . $hashentdest != $object
             ) {
                 return false;
             }

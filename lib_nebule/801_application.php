@@ -448,7 +448,7 @@ abstract class Applications
         {
             // Ecrit l'objet dans la variable.
             $this->_currentEntity = $arg_ent;
-            $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($arg_ent);
+            $this->_currentEntityInstance = $this->_nebuleInstance->newEntity_DEPRECATED($arg_ent);
             // Ecrit l'objet dans la session.
             $this->_nebuleInstance->setSessionStore('sylabeSelectedEntity', $arg_ent);
         } else {
@@ -457,11 +457,11 @@ abstract class Applications
             // Si il existe une variable de session pour l'objet en cours, la lit.
             if ($cache !== false && $cache != '') {
                 $this->_currentEntity = $cache;
-                $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($cache);
+                $this->_currentEntityInstance = $this->_nebuleInstance->newEntity_DEPRECATED($cache);
             } else // Sinon selectionne l'entite courante par défaut.
             {
                 $this->_currentEntity = $this->_nebuleInstance->getCurrentEntity();
-                $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($this->_nebuleInstance->getCurrentEntity());
+                $this->_currentEntityInstance = $this->_nebuleInstance->newEntity_DEPRECATED($this->_nebuleInstance->getCurrentEntity());
                 $this->_nebuleInstance->setSessionStore('sylabeSelectedEntity', $this->_nebuleInstance->getCurrentEntity());
             }
             unset($cache);
@@ -1582,8 +1582,8 @@ abstract class Applications
         } else {
             $validLink = '66c2dc6023d5a079a592231c06398617e3f7bacdad96624b8921081ab98b5c6edbda3629c1d99550351fd4f0623c0767ca7957d1f240b49a09a74470a2ad14efc0884765563ca575b3d453d1edc11ef1a0c3d16f332e9891224c95cc236f9f5b77199e91ccbff0577c05b214e998dc942e9114c6de11012c8abc4c32bb80735c1953d98772d9d583bae819fb9250cfba8154a13dc7999cf5007af42cc09dbe5f44ce2c00db3d35a143ad1f3dcf644457c35d752a464598eb2142f3ad24b9c2e090515641623e41734a243b28af2296b9b2171e87893f0b07f8bc4af7e1324349b7b4f18c388c559d18047be372634c9c3fa8f948fe844e88643be91191051c99.sha256_19762515dd804577f9fd8c005a7803ddee413f264319748e30aa2aedf318ca57_2013-03-18T22:43:15+0100_l_19762515dd804577f9fd8c005a7803ddee413f264319748e30aa2aedf318ca57_5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e_8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec';
             $invalidLink = '66c2dc6023d5a079a592231c06398617e3f7bacdad96624b8921081ab98b5c6edbda3629c1d99550351fd4f0623c0767ca7957d1f240b49a09e74470a2ad14efc0884765563ca575b3d453d1edc11ef1a0c3d16f332e9891224c95cc236f9f5b77199e91ccbff0577c05b214e998dc942e9114c6de11012c8abc4c32bb80735c1953d98772d9d583bae819fb9250cfba8154a13dc7999cf5007af42cc09dbe5f44ce2c00db3d35a143ad1f3dcf644457c35d752a464598eb2142f3ad24b9c2e090515641623e41734a243b28af2296b9b2171e87893f0b07f8bc4af7e1324349b7b4f18c388c559d18047be372634c9c3fa8f948fe844e88643be91191051c99.sha256_19762515dd804577f9fd8c005a7803ddee413f264319748e30aa2aedf318ca57_2013-03-18T22:43:15+0100_l_19762515dd804577f9fd8c005a7803ddee413f264319748e30aa2aedf318ca57_5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e_8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec';
-            $instanceValidLink = $this->_nebuleInstance->newLink($validLink);
-            $instanceInvalidLink = $this->_nebuleInstance->newLink($invalidLink);
+            $instanceValidLink = $this->_nebuleInstance->newLink_DEPRECATED($validLink);
+            $instanceInvalidLink = $this->_nebuleInstance->newLink_DEPRECATED($invalidLink);
 
             if ($instanceValidLink->getSigned() === false
                 || $instanceInvalidLink->getSigned() === true

@@ -50,10 +50,12 @@ class io implements ioInterface
     public function __construct(nebule $nebuleInstance)
     {
         // Liste toutes les classes io* et les charges une à une.
+        $myClass = get_class($this);
+        $size = strlen($myClass);
         $list = get_declared_classes();
         foreach ($list as $i => $class) {
-            if (substr($class, 0, 2) == 'io' && $class != 'io') {
-                $instance = new $class;
+            if (substr($class, 0, $size) == $myClass && $class != $myClass) {
+                $instance = new $class($nebuleInstance);
                 $type = $instance->getType();
                 $filterString = $instance->getFilterString();
                 $localisation = $instance->getDefaultLocalisation();
@@ -78,9 +80,11 @@ class io implements ioInterface
 
     public function __wakeup()
     {
+        global $nebuleInstance;
+
         $list = $this->_listClasses;
         foreach ($list as $i => $class) {
-            $instance = new $class;
+            $instance = new $class($nebuleInstance);
             $type = $instance->getType();
             $filterString = $instance->getFilterString();
             $mode = $instance->getMode();

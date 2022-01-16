@@ -1544,7 +1544,7 @@ class Currency extends Node implements nodeInterface
         $total = 0;
 
         foreach ($items as $item) {
-            $instance = $this->_nebuleInstance->newTokenPool($item);
+            $instance = $this->_nebuleInstance->newTokenPool_DEPRECATED($item);
             if ($instance->getID() != '0') {
                 $total += $instance->getRelativeValue($date);
             }

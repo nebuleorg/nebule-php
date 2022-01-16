@@ -329,7 +329,9 @@ class Cache
                     $instance = new Node($this->_nebuleInstance, $nid, '');
             }
 
-            if ($this->_configuration->getOptionAsBoolean('permitSessionBuffer')) {
+            if ($this->_configuration->getOptionAsBoolean('permitSessionBuffer')
+                && $instance->getID() != '0'
+            ) {
                 $this->_cache[$type][$nid] = $instance;
                 $this->_cacheDateInsertion[$type][$nid] = microtime(true);
             }

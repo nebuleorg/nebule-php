@@ -783,7 +783,7 @@ class blocLink implements blocLinkInterface
                 $publicKeyInstance = $this->_nebuleInstance->getCurrentEntityInstance();
                 $publicKeyID = $publicKey;
             } else {
-                $publicKeyInstance = $this->_nebuleInstance->newEntity($publicKey);
+                $publicKeyInstance = $this->_nebuleInstance->newEntity_DEPRECATED($publicKey);
                 $publicKeyID = $publicKey;
             }
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Sign link for ' . $publicKeyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd3c9521d');

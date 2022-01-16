@@ -1703,13 +1703,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
         // Modifie le type au besoin.
         if ($isEntity && !is_a($object, 'Entity')) {
-            $object = $this->_nebuleInstance->newEntity($object->getID());
+            $object = $this->_nebuleInstance->newEntity_DEPRECATED($object->getID());
         }
         if ($isGroup && !is_a($object, 'Group')) {
-            $object = $this->_nebuleInstance->newGroup($object->getID());
+            $object = $this->_nebuleInstance->newGroup_DEPRECATED($object->getID());
         }
         if ($isConversation && !is_a($object, 'Conversation')) {
-            $object = $this->_nebuleInstance->newConversation($object->getID());
+            $object = $this->_nebuleInstance->newConversation_DEPRECATED($object->getID());
         }
 
         $name = $object->getFullName('all');
@@ -2164,7 +2164,7 @@ class ModuleHelp extends Modules
         $list = array();
         $i = 0;
         foreach ($links as $link) {
-            $instance = $this->_nebuleInstance->newEntity($link->getHashTarget());
+            $instance = $this->_nebuleInstance->newEntity_DEPRECATED($link->getHashTarget());
             if (!isset($listOkEntities[$link->getHashTarget()])
                 && $instance->getType('all') == Entity::ENTITY_TYPE
                 && $instance->getIsPublicKey()
@@ -4244,7 +4244,7 @@ class ModuleEntities extends Modules
                 $dispWarn = false;
                 // Vérifie si l'objet courant est une entité, affiche les messages de cette entité.
                 if ($typemime == 'application/x-pem-file' && $ispresent) {
-                    $entity = $this->_nebuleInstance->newEntity($id);
+                    $entity = $this->_nebuleInstance->newEntity_DEPRECATED($id);
                     $this->_applicationInstance->getTraductionInstance()->echoTraduction(
                         '::sylabe:module:entities:DisplayEntityPublicMessages',
                         '',
@@ -4422,7 +4422,7 @@ class ModuleEntities extends Modules
         $list = array();
         $i = 0;
         foreach ($links as $link) {
-            $instance = $this->_nebuleInstance->newEntity($link->getHashTarget());
+            $instance = $this->_nebuleInstance->newEntity_DEPRECATED($link->getHashTarget());
             if (!isset($listOkEntities[$link->getHashTarget()])
                 && $instance->getType('all') == Entity::ENTITY_TYPE
                 && $instance->getIsPublicKey()
@@ -4491,7 +4491,7 @@ class ModuleEntities extends Modules
         $list = array();
         $i = 0;
         foreach ($links as $link) {
-            $instance = $this->_nebuleInstance->newEntity($link->getHashTarget());
+            $instance = $this->_nebuleInstance->newEntity_DEPRECATED($link->getHashTarget());
             if (!isset($listOkEntities[$link->getHashTarget()])
                 && $instance->getType('all') == Entity::ENTITY_TYPE
                 && $instance->getIsPublicKey()
@@ -4592,7 +4592,7 @@ class ModuleEntities extends Modules
             $i = 0;
             foreach ($links as $link) {
                 $id = $link->getHashSource();
-                $instance = $this->_nebuleInstance->newEntity($id);
+                $instance = $this->_nebuleInstance->newEntity_DEPRECATED($id);
                 if (!isset($listOkEntities[$id])
                     && $instance->getType('all') == Entity::ENTITY_TYPE
                     && $instance->getIsPublicKey()
@@ -6004,7 +6004,7 @@ class ModuleGroups extends Modules
         $listOkGroups = array();
         $i = 0;
         foreach ($listGroups as $group) {
-            $instance = $this->_nebuleInstance->newGroup($group);
+            $instance = $this->_nebuleInstance->newGroup_DEPRECATED($group);
 
             // Extraction des entités signataires.
             $signers = $instance->getPropertySigners(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
@@ -6076,7 +6076,7 @@ class ModuleGroups extends Modules
         $listOkGroups = array();
         $i = 0;
         foreach ($listGroups as $group) {
-            $instance = $this->_nebuleInstance->newGroup($group);
+            $instance = $this->_nebuleInstance->newGroup_DEPRECATED($group);
 
             // Extraction des entités signataires.
             $signers = $instance->getPropertySigners(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
@@ -6425,7 +6425,7 @@ class ModuleGroups extends Modules
                             && $item->getHashSigner() != $this->_applicationInstance->getCurrentEntity()
                         ) {
                             $instance = $this->_nebuleInstance->convertIdToTypedObjectInstance($item->getHashSource());
-                            $instanceSigner = $this->_nebuleInstance->newEntity($item->getHashSigner());
+                            $instanceSigner = $this->_nebuleInstance->newEntity_DEPRECATED($item->getHashSigner());
                             $closed = '::GroupeOuvert';
                             if ($item->getHashMeta() == $hashGroupPriv)
                                 $closed = '::GroupeFerme';
@@ -6489,7 +6489,7 @@ class ModuleGroups extends Modules
                     // Vérifie si le couple membre/signataire n'est pas déjà pris en compte.
                     if (!isset($listOkItems[$item->getHashSource() . $item->getHashSigner()])) {
                         $instance = $this->_nebuleInstance->convertIdToTypedObjectInstance($item->getHashSource());
-                        $instanceSigner = $this->_nebuleInstance->newEntity($item->getHashSigner());
+                        $instanceSigner = $this->_nebuleInstance->newEntity_DEPRECATED($item->getHashSigner());
                         $closed = '::GroupeOuvert';
                         if ($item->getHashMeta() == $hashGroupPriv)
                             $closed = '::GroupeFerme';
@@ -7698,7 +7698,7 @@ class ModuleObjects extends Modules
             $instance = null;
             $typeEntity = false;
             foreach ($shareTo as $entity) {
-                $instance = $this->_nebuleInstance->newEntity($entity);
+                $instance = $this->_nebuleInstance->newEntity_DEPRECATED($entity);
                 $typeEntity = $instance->getIsEntity('all');
                 if (!isset($listOkEntities[$entity])
                     && $typeEntity
@@ -7888,7 +7888,7 @@ class ModuleObjects extends Modules
             foreach ($listGroups as $group) {
                 // @todo vérifier que le groupe ne contient pas juste des entités pour lesquelles le partage est effectif.
 
-                $instance = $this->_nebuleInstance->newGroup($group);
+                $instance = $this->_nebuleInstance->newGroup_DEPRECATED($group);
                 $typeGroup = $instance->getIsEntity('all');
                 if (!isset($listOkGroups[$group])
                     && $typeGroup
@@ -7960,7 +7960,7 @@ class ModuleObjects extends Modules
             $typeEntity = false;
             $link = null;
             foreach ($links as $link) {
-                $instance = $this->_nebuleInstance->newEntity($link->getHashSource());
+                $instance = $this->_nebuleInstance->newEntity_DEPRECATED($link->getHashSource());
                 $typeEntity = $instance->getIsEntity('all');
                 if (!isset($listOkEntities[$link->getHashSource()])
                     && $typeEntity
@@ -9050,7 +9050,7 @@ class Moduleqantion extends Modules
         $instance = null;
         $listOkObjects = array();
         foreach ($links as $link) {
-            $instance = $this->_nebuleInstance->newCurrency($link->getHashSource());
+            $instance = $this->_nebuleInstance->newCurrency_DEPRECATED($link->getHashSource());
             if (!isset($listOkObjects[$link->getHashSource()])
                 && $instance->getID() != '0' // @todo faire l'affichage des id=0 avec warning.
             ) {
@@ -9325,7 +9325,7 @@ class Moduleqantion extends Modules
                                 // Ajoute les entités.
                                 $instanceEntity = null;
                                 foreach ($links as $link) {
-                                    $instanceEntity = $this->_nebuleInstance->newEntity($link->getHashSource());
+                                    $instanceEntity = $this->_nebuleInstance->newEntity_DEPRECATED($link->getHashSource());
                                     if (!isset($okselected[$link->getHashSource()])
                                         && $instanceEntity->getType('all') == Entity::ENTITY_TYPE
                                         && $instanceEntity->getIsPublicKey()
@@ -9605,7 +9605,7 @@ class Moduleqantion extends Modules
         $instance = null;
         $listOkObjects = array();
         foreach ($links as $link) {
-            $instance = $this->_nebuleInstance->newTokenPool($link->getHashSource());
+            $instance = $this->_nebuleInstance->newTokenPool_DEPRECATED($link->getHashSource());
             if (!isset($listOkObjects[$link->getHashSource()])) {
                 $list[$i]['object'] = $instance;
                 $list[$i]['param'] = array(
@@ -9891,7 +9891,7 @@ class Moduleqantion extends Modules
                 . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
                 . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $instance->getID();
             $icon = $this->MODULE_REGISTERED_ICONS[3];
-            $refInstance = $this->_nebuleInstance->newEntity($instance->getParam('AID'));
+            $refInstance = $this->_nebuleInstance->newEntity_DEPRECATED($instance->getParam('AID'));
         } elseif (get_class($instance) == 'TokenPool') {
             $type1 = 'TokenPool';
             $name = $instance->getParam('NAM');
@@ -9900,7 +9900,7 @@ class Moduleqantion extends Modules
                 . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $instance->getID()
                 . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $instance->getParam('CID');
             $icon = $this->MODULE_REGISTERED_ICONS[4];
-            $refInstance = $this->_nebuleInstance->newEntity($instance->getParam('CID'));
+            $refInstance = $this->_nebuleInstance->newEntity_DEPRECATED($instance->getParam('CID'));
         } elseif (get_class($instance) == 'Token') {
             $type1 = 'Token';
             $name = $instance->getParam('VAL') . $instance->getParam('UNI');
@@ -9910,7 +9910,7 @@ class Moduleqantion extends Modules
                 . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $instance->getParam('PID')
                 . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $instance->getParam('CID');
             $icon = $this->MODULE_REGISTERED_ICONS[5];
-            $refInstance = $this->_nebuleInstance->newEntity($instance->getParam('PID'));
+            $refInstance = $this->_nebuleInstance->newEntity_DEPRECATED($instance->getParam('PID'));
         } else {
             return;
         }
@@ -9963,7 +9963,7 @@ class Moduleqantion extends Modules
                 . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
                 . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $currencyInstance->getID();
             $icon = $this->MODULE_REGISTERED_ICONS[3];
-            $refInstance = $this->_nebuleInstance->newEntity($instance->getParam('AID'));
+            $refInstance = $this->_nebuleInstance->newEntity_DEPRECATED($instance->getParam('AID'));
 
             $list[1]['object'] = $currencyInstance;
             $list[1]['param'] = array(

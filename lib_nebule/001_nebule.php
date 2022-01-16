@@ -16,7 +16,7 @@ class nebule
     const NEBULE_LICENCE_NAME = 'nebule';
     const NEBULE_LICENCE_LINK = 'http://www.nebule.org/';
     const NEBULE_LICENCE_DATE = '2010-2020';
-    const NEBULE_ENVIRONMENT_FILE = 'nebule.env';
+    const NEBULE_ENVIRONMENT_FILE = 'c';
     const NEBULE_BOOTSTRAP_FILE = 'index.php';
     const NEBULE_MINIMUM_ID_SIZE = 6;
     const NEBULE_LOCAL_ENTITY_FILE = 'e';
@@ -359,7 +359,7 @@ class nebule
         $this->_cryptoInstance = new Crypto($this->_nebuleInstance);
         $this->_socialInstance = new Social($this->_nebuleInstance);
 
-        $this->_metrologyInstance->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '64154189'); // Log
 
         $this->_configurationInstance->setPermitOptionsByLinks(true);
         $this->_configurationInstance->flushCache();
@@ -402,6 +402,78 @@ class nebule
 
 
     /**
+     * Export l'objet de la métrologie.
+     *
+     * @return Metrology
+     */
+    public function getMetrologyInstance(): Metrology
+    {
+        return $this->_metrologyInstance;
+    }
+
+    /**
+     * Export l'objet de la configuration.
+     *
+     * @return Configuration
+     */
+    public function getConfigurationInstance(): Configuration
+    {
+        return $this->_configurationInstance;
+    }
+
+    /**
+     * Export l'objet de la métrologie.
+     *
+     * @return Cache
+     */
+    public function getCacheInstance(): Cache
+    {
+        return $this->_cacheInstance;
+    }
+
+    /**
+     * Export l'objet de la gestion des tickets.
+     *
+     * @return Ticketing
+     */
+    public function getTicketingInstance(): Ticketing
+    {
+        return $this->_ticketingInstance;
+    }
+
+    /**
+     * Export l'objet des entrées/sorties.
+     *
+     * @return io
+     */
+    public function getIoInstance(): ioInterface
+    {
+        return $this->_ioInstance;
+    }
+
+    /**
+     * Export l'objet de la crypto.
+     *
+     * @return CryptoInterface
+     */
+    public function getCryptoInstance(): CryptoInterface
+    {
+        return $this->_cryptoInstance;
+    }
+
+    /**
+     * Export l'objet du calcul social.
+     *
+     * @return SocialInterface
+     */
+    public function getSocialInstance(): SocialInterface
+    {
+        return $this->_socialInstance;
+    }
+
+
+
+    /**
      * Entité de subordination des options de l'entité en cours.
      * Par défaut vide.
      *
@@ -418,10 +490,9 @@ class nebule
      */
     private function _getSubordinationEntity()
     {
-        $this->_subordinationEntity = new Entity($this->_nebuleInstance, (string)Configuration::getOptionFromEnvironmentUntypedStatic('subordinationEntity'));
-
-        if ($this->_metrologyInstance !== null)
-            $this->_metrologyInstance->addLog('Get subordination entity = ' . $this->_subordinationEntity, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+        //$this->_subordinationEntity = new Entity($this->_nebuleInstance, (string)Configuration::getOptionFromEnvironmentUntypedStatic('subordinationEntity'));
+        $this->_subordinationEntity = new Entity($this->_nebuleInstance, $this->_configurationInstance->getOptionFromEnvironmentAsString('subordinationEntity'));
+        $this->_metrologyInstance->addLog('Get subordination entity = ' . $this->_subordinationEntity, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '2300b439');
     }
 
     /**
@@ -430,7 +501,7 @@ class nebule
      *
      * @return node
      */
-    public function getSubordinationEntity(): node
+    public function getSubordinationEntity(): ?node
     {
         return $this->_subordinationEntity;
     }
@@ -632,7 +703,7 @@ class nebule
      * @param string $nid
      * @return Entity|nodeInterface
      */
-    public function newEntity(string $nid): Entity
+    public function newEntity_DEPRECATED(string $nid): Entity
     {
         return $this->_cacheInstance->newNode($nid, Cache::TYPE_ENTITY);
     }
@@ -643,7 +714,7 @@ class nebule
      * @param string $nid
      * @return Group|nodeInterface
      */
-    public function newGroup(string $nid): Group
+    public function newGroup_DEPRECATED(string $nid): Group
     {
         return $this->_cacheInstance->newNode($nid, Cache::TYPE_GROUP);
     }
@@ -654,7 +725,7 @@ class nebule
      * @param string $nid
      * @return Conversation|nodeInterface
      */
-    public function newConversation(string $nid): Conversation
+    public function newConversation_DEPRECATED(string $nid): Conversation
     {
         return $this->_cacheInstance->newNode($nid, Cache::TYPE_CONVERSATION);
     }
@@ -665,7 +736,7 @@ class nebule
      * @param string $nid
      * @return Currency|nodeInterface
      */
-    public function newCurrency(string $nid): Currency
+    public function newCurrency_DEPRECATED(string $nid): Currency
     {
         return $this->_cacheInstance->newNode($nid, Cache::TYPE_CURRENCY);
     }
@@ -676,7 +747,7 @@ class nebule
      * @param string $nid
      * @return Token|nodeInterface
      */
-    public function newToken(string $nid): Token
+    public function newToken_DEPRECATED(string $nid): Token
     {
         return $this->_cacheInstance->newNode($nid, Cache::TYPE_TOKEN);
     }
@@ -687,7 +758,7 @@ class nebule
      * @param string $nid
      * @return TokenPool|nodeInterface
      */
-    public function newTokenPool(string $nid): TokenPool
+    public function newTokenPool_DEPRECATED(string $nid): TokenPool
     {
         return $this->_cacheInstance->newNode($nid, Cache::TYPE_TOKENPOOL);
     }
@@ -698,7 +769,7 @@ class nebule
      * @param string $nid
      * @return Wallet|nodeInterface
      */
-    public function newWallet(string $nid): Wallet
+    public function newWallet_DEPRECATED(string $nid): Wallet
     {
         return $this->_cacheInstance->newNode($nid, Cache::TYPE_WALLET);
     }
@@ -707,9 +778,9 @@ class nebule
      * Nouvelle instance d'un lien.
      *
      * @param string $link
-     * @return Link
+     * @return BlocLink
      */
-    public function newLink(string $link): Link
+    public function newLink_DEPRECATED(string $link): BlocLink
     {
         return $this->_cacheInstance->newLink($link, Cache::TYPE_LINK);
     }
@@ -719,9 +790,9 @@ class nebule
      * Attention, c'est un lien !
      *
      * @param string $link
-     * @return Transaction
+     * @return BlocLink
      */
-    public function newTransaction(string $link): Transaction
+    public function newTransaction_DEPRECATED(string $link): BlocLink
     {
         return $this->_cacheInstance->newLink($link, Cache::TYPE_TRANSACTION);
     }
@@ -1554,7 +1625,7 @@ class nebule
         ) {
             // Ecrit le groupe dans la variable.
             $this->_currentGroup = $arg_grp;
-            $this->_currentGroupInstance = $this->newGroup($arg_grp);
+            $this->_currentGroupInstance = $this->newGroup_DEPRECATED($arg_grp);
             // Ecrit le groupe dans la session.
             $this->setSessionStore('nebuleSelectedGroup', $arg_grp);
         } else {
@@ -1565,11 +1636,11 @@ class nebule
                 && $cache != ''
             ) {
                 $this->_currentGroup = $cache;
-                $this->_currentGroupInstance = $this->newGroup($cache);
+                $this->_currentGroupInstance = $this->newGroup_DEPRECATED($cache);
             } else // Sinon désactive le cache.
             {
                 $this->_currentGroup = '0'; // $this->_currentObject;
-                $this->_currentGroupInstance = $this->newGroup('0'); // $this->_currentObjectInstance;
+                $this->_currentGroupInstance = $this->newGroup_DEPRECATED('0'); // $this->_currentObjectInstance;
                 // Ecrit le groupe dans la session.
                 $this->setSessionStore('nebuleSelectedGroup', $this->_currentGroup);
             }
@@ -1656,7 +1727,7 @@ class nebule
         ) {
             // Ecrit la conversation dans la variable.
             $this->_currentConversation = $arg_cvt;
-            $this->_currentConversationInstance = $this->newConversation($arg_cvt);
+            $this->_currentConversationInstance = $this->newConversation_DEPRECATED($arg_cvt);
             // Ecrit la conversation dans la session.
             $this->setSessionStore('nebuleSelectedConversation', $arg_cvt);
         } else {
@@ -1667,11 +1738,11 @@ class nebule
                 && $cache != ''
             ) {
                 $this->_currentConversation = $cache;
-                $this->_currentConversationInstance = $this->newConversation($cache);
+                $this->_currentConversationInstance = $this->newConversation_DEPRECATED($cache);
             } else // Sinon désactive le cache.
             {
                 $this->_currentConversation = '0'; // $this->_currentObject;
-                $this->_currentConversationInstance = $this->newConversation('0'); // $this->_currentObjectInstance;
+                $this->_currentConversationInstance = $this->newConversation_DEPRECATED('0'); // $this->_currentObjectInstance;
                 // Ecrit la conversation dans la session.
                 $this->setSessionStore('nebuleSelectedConversation', $this->_currentConversation);
             }
@@ -1736,7 +1807,7 @@ class nebule
         // Si pas autorisé, retourne ID=0.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentCurrency = '0';
-            $this->_currentCurrencyInstance = $this->newCurrency('0');
+            $this->_currentCurrencyInstance = $this->newCurrency_DEPRECATED('0');
             // Ecrit la monnaie dans la session.
             $this->setSessionStore('nebuleSelectedCurrency', $this->_currentCurrency);
             return;
@@ -1767,7 +1838,7 @@ class nebule
         ) {
             // Ecrit la monnaie dans la variable.
             $this->_currentCurrency = $arg;
-            $this->_currentCurrencyInstance = $this->newCurrency($arg);
+            $this->_currentCurrencyInstance = $this->newCurrency_DEPRECATED($arg);
             // Ecrit la monnaie dans la session.
             $this->setSessionStore('nebuleSelectedCurrency', $arg);
         } else {
@@ -1778,11 +1849,11 @@ class nebule
                 && $cache != ''
             ) {
                 $this->_currentCurrency = $cache;
-                $this->_currentCurrencyInstance = $this->newCurrency($cache);
+                $this->_currentCurrencyInstance = $this->newCurrency_DEPRECATED($cache);
             } else // Sinon désactive le cache.
             {
                 $this->_currentCurrency = '0';
-                $this->_currentCurrencyInstance = $this->newCurrency('0');
+                $this->_currentCurrencyInstance = $this->newCurrency_DEPRECATED('0');
                 // Ecrit la monnaie dans la session.
                 $this->setSessionStore('nebuleSelectedCurrency', $this->_currentCurrency);
             }
@@ -1847,7 +1918,7 @@ class nebule
         // Si pas autorisé, retourne ID=0.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentTokenPool = '0';
-            $this->_currentTokenPoolInstance = $this->newTokenPool('0');
+            $this->_currentTokenPoolInstance = $this->newTokenPool_DEPRECATED('0');
             // Ecrit le sac de jetons dans la session.
             $this->setSessionStore('nebuleSelectedTokenPool', $this->_currentTokenPool);
             return;
@@ -1878,7 +1949,7 @@ class nebule
         ) {
             // Ecrit le sac de jetons dans la variable.
             $this->_currentTokenPool = $arg;
-            $this->_currentTokenPoolInstance = $this->newTokenPool($arg);
+            $this->_currentTokenPoolInstance = $this->newTokenPool_DEPRECATED($arg);
             // Ecrit le sac de jetons dans la session.
             $this->setSessionStore('nebuleSelectedTokenPool', $arg);
         } else {
@@ -1889,11 +1960,11 @@ class nebule
                 && $cache != ''
             ) {
                 $this->_currentTokenPool = $cache;
-                $this->_currentTokenPoolInstance = $this->newTokenPool($cache);
+                $this->_currentTokenPoolInstance = $this->newTokenPool_DEPRECATED($cache);
             } else // Sinon désactive le cache.
             {
                 $this->_currentTokenPool = '0';
-                $this->_currentTokenPoolInstance = $this->newTokenPool('0');
+                $this->_currentTokenPoolInstance = $this->newTokenPool_DEPRECATED('0');
                 // Ecrit le sac de jetons dans la session.
                 $this->setSessionStore('nebuleSelectedTokenPool', $this->_currentTokenPool);
             }
@@ -1958,7 +2029,7 @@ class nebule
         // Si pas autorisé, retourne ID=0.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentToken = '0';
-            $this->_currentTokenInstance = $this->newToken('0');
+            $this->_currentTokenInstance = $this->newToken_DEPRECATED('0');
             // Ecrit le jeton dans la session.
             $this->setSessionStore('nebuleSelectedToken', $this->_currentToken);
             return;
@@ -1989,7 +2060,7 @@ class nebule
         ) {
             // Ecrit le jeton dans la variable.
             $this->_currentToken = $arg;
-            $this->_currentTokenInstance = $this->newToken($arg);
+            $this->_currentTokenInstance = $this->newToken_DEPRECATED($arg);
             // Ecrit le jeton dans la session.
             $this->setSessionStore('nebuleSelectedToken', $arg);
         } else {
@@ -2000,11 +2071,11 @@ class nebule
                 && $cache != ''
             ) {
                 $this->_currentToken = $cache;
-                $this->_currentTokenInstance = $this->newToken($cache);
+                $this->_currentTokenInstance = $this->newToken_DEPRECATED($cache);
             } else // Sinon désactive le cache.
             {
                 $this->_currentToken = '0';
-                $this->_currentTokenInstance = $this->newToken('0');
+                $this->_currentTokenInstance = $this->newToken_DEPRECATED('0');
                 // Ecrit le jeton dans la session.
                 $this->setSessionStore('nebuleSelectedToken', $this->_currentToken);
             }
@@ -2484,7 +2555,7 @@ class nebule
 
         foreach ($list as $link) {
             $target = $link->getHashTarget();
-            $instance = $this->newEntity($target);
+            $instance = $this->newEntity_DEPRECATED($target);
             $this->_localAuthorities[$target] = $target;
             $this->_localAuthoritiesInstances[$target] = $instance;
             $this->_specialEntities[$target] = $target;
@@ -2508,7 +2579,7 @@ class nebule
 
         foreach ($list as $link) {
             $target = $link->getHashTarget();
-            $instance = $this->newEntity($target);
+            $instance = $this->newEntity_DEPRECATED($target);
             $this->_localAuthorities[$target] = $target;
             $this->_localAuthoritiesInstances[$target] = $instance;
             $this->_specialEntities[$target] = $target;
@@ -2725,7 +2796,7 @@ class nebule
 
         foreach ($list as $link) {
             $target = $link->getHashTarget();
-            $instance = $this->newEntity($target);
+            $instance = $this->newEntity_DEPRECATED($target);
             $this->_recoveryEntities[$target] = $target;
             $this->_recoveryEntitiesInstances[$target] = $instance;
             $this->_recoveryEntitiesSigners[$target] = $link->getHashSigner();
@@ -2746,7 +2817,7 @@ class nebule
 
         foreach ($list as $link) {
             $target = $link->getHashTarget();
-            $instance = $this->newEntity($target);
+            $instance = $this->newEntity_DEPRECATED($target);
             $this->_recoveryEntities[$target] = $target;
             $this->_recoveryEntitiesInstances[$target] = $instance;
             $this->_recoveryEntitiesSigners[$target] = $link->getHashSigner();
@@ -2807,78 +2878,6 @@ class nebule
 
 
     /**
-     * Export l'objet de la métrologie.
-     *
-     * @return Metrology
-     */
-    public function getMetrologyInstance(): Metrology
-    {
-        return $this->_metrologyInstance;
-    }
-
-    /**
-     * Export l'objet de la configuration.
-     *
-     * @return Configuration
-     */
-    public function getConfigurationInstance(): Configuration
-    {
-        return $this->_configurationInstance;
-    }
-
-    /**
-     * Export l'objet de la métrologie.
-     *
-     * @return Cache
-     */
-    public function getCacheInstance(): Cache
-    {
-        return $this->_cacheInstance;
-    }
-
-    /**
-     * Export l'objet de la gestion des tickets.
-     *
-     * @return Cache
-     */
-    public function getTicketingInstance(): Cache
-    {
-        return $this->_ticketingInstance;
-    }
-
-    /**
-     * Export l'objet des entrées/sorties.
-     *
-     * @return io
-     */
-    public function getIoInstance(): ioInterface
-    {
-        return $this->_ioInstance;
-    }
-
-    /**
-     * Export l'objet de la crypto.
-     *
-     * @return CryptoInterface
-     */
-    public function getCryptoInstance(): CryptoInterface
-    {
-        return $this->_cryptoInstance;
-    }
-
-    /**
-     * Export l'objet du calcul social.
-     *
-     * @return SocialInterface
-     */
-    public function getSocialInstance(): SocialInterface
-    {
-        return $this->_socialInstance;
-    }
-
-
-
-    /**
      * Retourne la liste des instances de toutes les entités loacles.
      *
      * @return array:Entity
@@ -2899,7 +2898,7 @@ class nebule
         $instance = null;
         foreach ($links as $link) {
             $id = $link->getHashSource();
-            $instance = $this->newEntity($id);
+            $instance = $this->newEntity_DEPRECATED($id);
             if ($instance->getIsPublicKey())
                 $result[$id] = $instance;
         }

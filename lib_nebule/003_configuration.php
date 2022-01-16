@@ -335,9 +335,9 @@ class Configuration
         'permitLocalisationStats' => true,
         'permitFollowUpdates' => true,
         'permitOnlineRescue' => true,
-        'permitLogs' => true,
+        'permitLogs' => false,
         'permitJavaScript' => false,
-        'logsLevel' => true,
+        'logsLevel' => false,
         'modeRescue' => false,
         'cryptoLibrary' => true,
         'cryptoHashAlgorithm' => true,
@@ -417,7 +417,7 @@ class Configuration
         'permitLocalisationStats' => 'true',
         'permitFollowUpdates' => 'true',
         'permitOnlineRescue' => 'false',
-        'permitLogs' => 'false',
+        'permitLogs' => 'true',
         'permitJavaScript' => 'true',
         'logsLevel' => 'NORMAL',
         'modeRescue' => 'false',
@@ -854,7 +854,11 @@ class Configuration
             $result = $this->_optionCache[$name];
 
         if ($result === null)
-            $result = $this->_getOptionFromEnvironmentStatic($name);
+        {
+            $value = $this->_getOptionFromEnvironmentStatic($name);
+            if ($value != '')
+                $result = $value;
+        }
 
         if (self::OPTIONS_WRITABLE[$name]
             && $result === null
@@ -918,9 +922,18 @@ class Configuration
 
     /**
      * @param string $name
-     * @return string|null
+     * @return string
      */
-    public function getOptionFromEnvironmentAsString(string $name): ?string
+    public function getOptionFromEnvironmentAsString(string $name): string
+    {
+        return self::_getOptionFromEnvironmentStatic($name);
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    static public function getOptionFromEnvironmentAsStringStatic(string $name): string
     {
         return self::_getOptionFromEnvironmentStatic($name);
     }
@@ -930,6 +943,15 @@ class Configuration
      * @return boolean
      */
     public function getOptionFromEnvironmentAsBoolean(string $name): bool
+    {
+        return self::getOptionFromEnvironmentAsBooleanStatic($name);
+    }
+
+    /**
+     * @param string $name
+     * @return boolean
+     */
+    static public function getOptionFromEnvironmentAsBooleanStatic(string $name): bool
     {
         if (self::_getOptionFromEnvironmentStatic($name) == 'true')
             return true;
@@ -948,12 +970,21 @@ class Configuration
 
     /**
      * @param string $name
-     * @return string|null
+     * @return integer
      */
-    static private function _getOptionFromEnvironmentStatic(string $name): ?string
+    static public function getOptionFromEnvironmentAsIntegerStatic(string $name): int
+    {
+        return (int)self::_getOptionFromEnvironmentStatic($name);
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    static private function _getOptionFromEnvironmentStatic(string $name): string
     {
         if ($name == '' )
-            return null;
+            return '';
 
         // Read configuration file.
         $value = '';
@@ -965,14 +996,15 @@ class Configuration
                 if (substr($l, 0, 1) == "#")
                     continue;
 
-                if (filter_var(trim(strtok($l, '=')), FILTER_SANITIZE_STRING) == $name) {
-                    $value = trim(filter_var(trim(substr($l, strpos($l, '=') + 1)), FILTER_SANITIZE_STRING));
+                $fname = trim(filter_var(strtok($l, '='), FILTER_SANITIZE_STRING));
+                $fvalue = trim(filter_var(strtok('='), FILTER_SANITIZE_STRING));
+                if ($fname == $name) {
+                    $value = $fvalue;
                     break;
                 }
             }
             unset($file);
         }
-
         return $value;
     }
 
