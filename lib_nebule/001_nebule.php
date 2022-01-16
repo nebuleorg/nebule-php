@@ -2046,28 +2046,29 @@ class nebule
      */
     public function checkInstance(): int
     {
-        if (!$this->_puppetmasterInstance instanceof Entity) return 0;
-        if ($this->_puppetmasterInstance->getID() == '0') return 0;
-        if ($this->_puppetmasterInstance->getID() != $this->_configurationInstance->getOptionUntyped('puppetmaster')) return 0; // TODO à retirer
+        if (!$this->_puppetmasterInstance instanceof Entity) return 1;
+        if ($this->_puppetmasterInstance->getID() == '0') return 2;
+        if ($this->_puppetmasterInstance->getID() != $this->_configurationInstance->getOptionUntyped('puppetmaster')) return 3; // TODO à retirer
         // Vérifie que le maître de la sécurité est une entité et a été trouvé.
-        if (!$this->_securityMasterInstance instanceof Entity) return 1;
+        if (!$this->_securityMasterInstance instanceof Entity) return 11;
+        if ($this->_securityMasterInstance->getID() == '0') return 12;
         // Vérifie que le maître du code est une entité et a été trouvé.
-        if (!$this->_codeMasterInstance instanceof Entity) return 2;
-        if ($this->_codeMasterInstance->getID() == '0') return 2;
+        if (!$this->_codeMasterInstance instanceof Entity) return 21;
+        if ($this->_codeMasterInstance->getID() == '0') return 22;
         // Vérifie que le maître de l'annuaire est une entité et a été trouvé.
-        if (!$this->_directoryMasterInstance instanceof Entity) return 3;
-        if ($this->_directoryMasterInstance->getID() == '0') return 3;
+        if (!$this->_directoryMasterInstance instanceof Entity) return 31;
+        if ($this->_directoryMasterInstance->getID() == '0') return 32;
         // Vérifie que le maître du temps est une entité et a été trouvé.
-        if (!$this->_timeMasterInstance instanceof Entity) return 4;
-        if ($this->_timeMasterInstance->getID() == '0') return 4;
+        if (!$this->_timeMasterInstance instanceof Entity) return 41;
+        if ($this->_timeMasterInstance->getID() == '0') return 42;
 
         // Vérifie que l'entité de l'instance nebule est une entité et a été trouvée.
-        if (!$this->_instanceEntityInstance instanceof Entity) return 32;
-        if ($this->_instanceEntityInstance->getID() == '0') return 32;
+        if (!$this->_instanceEntityInstance instanceof Entity) return 51;
+        if ($this->_instanceEntityInstance->getID() == '0') return 52;
 
         // Vérifie qu'une entité courante existe et est une entité.
-        if (!$this->_currentEntityInstance instanceof Entity) return 64;
-        if ($this->_currentEntityInstance->getID() == '0') return 64;
+        if (!$this->_currentEntityInstance instanceof Entity) return 61;
+        if ($this->_currentEntityInstance->getID() == '0') return 62;
 
         // Tout est bon et l'instance est utilisée.
         return 128;

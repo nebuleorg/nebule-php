@@ -378,14 +378,10 @@ function sign_write_link()
   nid2=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f3)
   nid3=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f4)
   nid4=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f5)
-  touch "l/${nid1}"
-  touch "l/${nid2}"
-  touch "l/${nid3}"
-  touch "l/${nid4}"
-  [ "${nid1}" != '' ] && [ "$(grep '${flink}' l/${nid1})" == '' ] && echo "${flink}" >> "l/${nid1}"
-  [ "${nid2}" != '' ] && [ "$(grep '${flink}' l/${nid2})" == '' ] && echo "${flink}" >> "l/${nid2}"
-  [ "${nid3}" != '' ] && [ "$(grep '${flink}' l/${nid3})" == '' ] && echo "${flink}" >> "l/${nid3}"
-  [ "${nid4}" != '' ] && [ "$(grep '${flink}' l/${nid4})" == '' ] && echo "${flink}" >> "l/${nid4}"
+  [ "${nid1}" != '' ] && touch "l/${nid1}" && [ "$(grep '${flink}' l/${nid1})" == '' ] && echo "${flink}" >> "l/${nid1}"
+  [ "${nid2}" != '' ] && touch "l/${nid2}" && [ "$(grep '${flink}' l/${nid2})" == '' ] && echo "${flink}" >> "l/${nid2}"
+  [ "${nid3}" != '' ] && touch "l/${nid3}" && [ "$(grep '${flink}' l/${nid3})" == '' ] && echo "${flink}" >> "l/${nid3}"
+  [ "${nid4}" != '' ] && touch "l/${nid4}" && [ "$(grep '${flink}' l/${nid4})" == '' ] && echo "${flink}" >> "l/${nid4}"
   echo "${flink}" >> "l/h"
 }
 

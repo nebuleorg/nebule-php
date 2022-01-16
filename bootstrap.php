@@ -5277,6 +5277,9 @@ function bootstrap_breakDisplay2LibraryPP()
     bootstrap_echoLineTitle('current entity');
     echo $nebulePublicEntity. "<br/>\n";
 
+    bootstrap_echoLineTitle('php version');
+    echo 'found ' . phpversion() . ', need >= ' . PHP_VERSION_MINIMUM;
+
     echo '</div>' . "\n";
 }
 
@@ -5320,33 +5323,39 @@ function bootstrap_breakDisplay31LibraryEntities()
     $nebuleInstanceCheck = $nebuleInstance->checkInstance();
 
     bootstrap_breakDisplay311DisplayEntity('puppetmaster', $nebuleInstance->getPuppetmaster(),
-        $nebuleInstance->getPuppetmasterInstance(), $nebuleInstanceCheck > 0);
+        $nebuleInstance->getPuppetmasterInstance(), $nebuleInstanceCheck > 10);
 
     bootstrap_breakDisplay311DisplayEntity('security authority', $nebuleInstance->getSecurityAuthority(),
-        $nebuleInstance->getSecurityAuthorityInstance(), $nebuleInstanceCheck > 1);
+        $nebuleInstance->getSecurityAuthorityInstance(), $nebuleInstanceCheck > 20);
 
     bootstrap_breakDisplay311DisplayEntity('code authority', $nebuleInstance->getCodeAuthority(),
-        $nebuleInstance->getSecurityAuthorityInstance(), $nebuleInstanceCheck > 2);
+        $nebuleInstance->getSecurityAuthorityInstance(), $nebuleInstanceCheck > 30);
 
     bootstrap_breakDisplay311DisplayEntity('directory authority', $nebuleInstance->getDirectoryAuthority(),
-        $nebuleInstance->getDirectoryAuthorityInstance(), $nebuleInstanceCheck > 3);
+        $nebuleInstance->getDirectoryAuthorityInstance(), $nebuleInstanceCheck > 40);
 
     bootstrap_breakDisplay311DisplayEntity('time authority', $nebuleInstance->getTimeAuthority(),
-        $nebuleInstance->getTimeAuthorityInstance(), $nebuleInstanceCheck > 4);
+        $nebuleInstance->getTimeAuthorityInstance(), $nebuleInstanceCheck > 50);
 
     bootstrap_breakDisplay311DisplayEntity('server entity', $nebuleInstance->getInstanceEntity(),
-        $nebuleInstance->getInstanceEntityInstance(), $nebuleInstanceCheck > 32);
+        $nebuleInstance->getInstanceEntityInstance(), $nebuleInstanceCheck > 60);
 
     bootstrap_breakDisplay311DisplayEntity('default entity', $nebuleInstance->getDefaultEntity(),
-        $nebuleInstance->getDefaultEntityInstance(), true);
+        $nebuleInstance->getDefaultEntityInstance(), $nebuleInstanceCheck > 70);
 
     bootstrap_breakDisplay311DisplayEntity('current entity', $nebuleInstance->getCurrentEntity(),
-        $nebuleInstance->getCurrentEntityInstance(), true);
+        $nebuleInstance->getCurrentEntityInstance(), $nebuleInstanceCheck > 70);
 
     $entity = lib_getConfiguration('subordinationEntity');
     if ($entity != '')
         $instance = $nebuleInstance->getCacheInstance()->newNode($entity, Cache::TYPE_ENTITY);
-    bootstrap_breakDisplay311DisplayEntity('subordination', $entity, $instance, true);
+    bootstrap_breakDisplay311DisplayEntity('subordination', $entity, $instance, $nebuleInstanceCheck > 70);
+
+    if ($nebuleInstanceCheck != 128)
+    {
+        bootstrap_echoLineTitle('entities error level');
+        echo (string)$nebuleInstanceCheck . "<br />\n";
+    }
 }
 
 function bootstrap_breakDisplay311DisplayEntity(string $title, string $eid, $instance, bool $ok): void
@@ -5467,29 +5476,13 @@ function bootstrap_breakDisplay34LibrarySocial()
 
 function bootstrap_breakDisplay35LibraryBootstrap()
 {
-    global $nebuleLocalAuthorities;
-
-    // Vérifie le bootstrap. @todo ajouter vérification de marquage de danger.
     $data = file_get_contents(BOOTSTRAP_FILE_NAME);
     $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
     unset($data);
     bootstrap_echoLineTitle('bootstrap');
     echo $hash . ' ';
-    // Recherche les liens de validation.
-    $hashRef = LIB_RID_INTERFACE_BOOTSTRAP;
-    $links = array();
-    lnk_findInclusive_FIXME($hashRef, $links, 'f', $hashRef, $hash, $hashRef, false);
-    // Trie sur les autorités locales, celles reconnues par la bibliothèque PP.
-    $ok = false;
-    foreach ($links as $link) {
-        foreach ($nebuleLocalAuthorities as $authority) {
-            if ($link[2] == $authority) {
-                $ok = true;
-                break 2;
-            }
-        }
-    }
-    bootstrap_echoEndLineTest($ok);
+    $boostrap_hash = app_getByRef(LIB_RID_INTERFACE_BOOTSTRAP);
+    bootstrap_echoEndLineTest($boostrap_hash == $hash);
 }
 
 function bootstrap_breakDisplay36LibraryStats()

@@ -195,6 +195,7 @@ class CryptoOpenssl implements CryptoInterface
         $hash = $this->hash(self::TEST_HASH_ALGORITHM['value'], $algo);
         if (self::TEST_HASH_ALGORITHM[$algo] == $hash)
             return true;
+        $this->_metrology->addLog('Error check hash ' . $algo . ' return ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'f462ce6c');
         return false;
     }
 
@@ -202,6 +203,7 @@ class CryptoOpenssl implements CryptoInterface
     {
         if (isset(self::HASH_ALGORITHM[$algo]))
             return true;
+        $this->_metrology->addLog('Unsupported ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, '965d71cf');
         return false;
     }
 
@@ -258,11 +260,17 @@ class CryptoOpenssl implements CryptoInterface
         $hexIV = $this->hash(date(DATE_ATOM) . microtime(false), 'sha1');
         $code = $this->encrypt($data, $algo, $hexKey, $hexIV);
         if ($code == '')
+        {
+            $this->_metrology->addLog('Error check symmetric ' . $algo . ' can not encode', Metrology::LOG_LEVEL_ERROR, __METHOD__, '3ab8726b');
             return false;
+        }
 
         $decode = $this->decrypt($code, $algo, $hexKey, $hexIV);
         if ($decode == '')
+        {
+            $this->_metrology->addLog('Error check symmetric ' . $algo . ' can not decode ' . $code, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2a6da5e1');
             return false;
+        }
 
         return true;
     }
@@ -271,6 +279,7 @@ class CryptoOpenssl implements CryptoInterface
     {
         if (isset(self::SYMMETRIC_ALGORITHM[$algo]))
             return true;
+        $this->_metrology->addLog('Unsupported ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, '13fab565');
         return false;
     }
 
@@ -513,13 +522,17 @@ EOD;
         $data = 'Bienvenue dans le projet nebule.';
         $hashData = hash('sha256', $data);
         $signed = $this->sign($hashData, $private_pem, $private_pass);
-        return $this->verify($hashData, $signed, $public_pem);
+        if ($this->verify($hashData, $signed, $public_pem))
+            return true;
+        $this->_metrology->addLog('Error check asymmetric ' . $hashData . ' can not verify ' . $signed, Metrology::LOG_LEVEL_ERROR, __METHOD__, '3ab8726b');
+        return false;
     }
 
     private function _checkAsymmetricAlgorithm(string $algo): bool
     {
         if (isset(self::ASYMMETRIC_ALGORITHM[$algo]))
             return true;
+        $this->_metrology->addLog('Unsupported ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2a04d29d');
         return false;
     }
 
