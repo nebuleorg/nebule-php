@@ -254,7 +254,7 @@ class Display extends Displays
                         <h1>One link upload</h1>
                         <div>
                             <form enctype="multipart/form-data" method="post"
-                                  action="<?php echo '?' . $this->_nebuleInstance->getActionTicket(); ?>">
+                                  action="<?php echo '?' . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(); ?>">
                                 <input type="text" class="newlink"
                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_SIGNED_LINK; ?>"
                                        value=""/><br/>
@@ -267,7 +267,7 @@ class Display extends Displays
                         <h1>Link's file upload</h1>
                         <div>
                             <form enctype="multipart/form-data" method="post"
-                                  action="<?php echo '?' . $this->_nebuleInstance->getActionTicket(); ?>">
+                                  action="<?php echo '?' . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(); ?>">
                                 <input type="hidden"
                                        name="MAX_FILE_SIZE"
                                        value="<?php echo $this->_configuration->getOptionUntyped('ioReadMaxData'); ?>"/>

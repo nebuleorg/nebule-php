@@ -254,6 +254,13 @@ class nebule
     private $_cacheInstance;
 
     /**
+     * Instance de gestion des tickets.
+     *
+     * @var Ticketing
+     */
+    private $_ticketingInstance;
+
+    /**
      * Instance des entrées/sorties.
      *
      * @var ioInterface
@@ -341,6 +348,7 @@ class nebule
         $this->_metrologyInstance = new Metrology($this->_nebuleInstance);
         $this->_configurationInstance = new Configuration($this->_nebuleInstance);
         $this->_cacheInstance = new Cache($this->_nebuleInstance);
+        $this->_ticketingInstance = new Ticketing($this->_nebuleInstance);
 
         $this->_findModeRescue();
 
@@ -360,8 +368,6 @@ class nebule
 
         $this->_getSubordinationEntity();
         $this->_cacheInstance->readCacheOnSessionBuffer();
-
-        $this->_findActionTicket();
 
         $this->_checkWriteableIO();
 
@@ -910,7 +916,7 @@ class nebule
                 && $this->_ioInstance->checkLinkPresent($id)
             ) {
                 $this->_instanceEntity = $id;
-                $this->_instanceEntityInstance = $this->$this->_cacheInstance->newNode($id, Cache::TYPE_ENTITY);
+                $this->_instanceEntityInstance = $this->_cacheInstance->newNode($id, Cache::TYPE_ENTITY);
             } else {
                 // Sinon utilise l'instance du maître du code.
                 $this->_instanceEntity = $this->_codeMaster;
@@ -1004,7 +1010,7 @@ class nebule
                 && $this->_ioInstance->checkLinkPresent($id)
             ) {
                 $this->_defaultEntity = $id;
-                $this->_defaultEntityInstance = $this->$this->_cacheInstance->newNode($id, Cache::TYPE_ENTITY);
+                $this->_defaultEntityInstance = $this->_cacheInstance->newNode($id, Cache::TYPE_ENTITY);
             } else {
                 // Sinon utilise l'instance du serveur hôte.
                 $this->_defaultEntity = $this->_instanceEntity;
@@ -2183,7 +2189,7 @@ class nebule
 
         $type = self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_SECURITE;
         $this->_securityMaster = $this->_findEntityByType($type);
-        $this->_securityMasterInstance = $this->$this->_cacheInstance->newNode($this->_securityMaster, Cache::TYPE_ENTITY);
+        $this->_securityMasterInstance = $this->_cacheInstance->newNode($this->_securityMaster, Cache::TYPE_ENTITY);
 
         $this->_metrologyInstance->addLog('Find security master ' . $this->_securityMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
@@ -2220,7 +2226,7 @@ class nebule
 
         $type = self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_CODE;
         $this->_codeMaster = $this->_findEntityByType($type);
-        $this->_codeMasterInstance = $this->$this->_cacheInstance->newNode($this->_codeMaster, Cache::TYPE_ENTITY);
+        $this->_codeMasterInstance = $this->_cacheInstance->newNode($this->_codeMaster, Cache::TYPE_ENTITY);
 
         $this->_metrologyInstance->addLog('Find code master ' . $this->_codeMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
@@ -2257,7 +2263,7 @@ class nebule
 
         $type = self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_ANNUAIRE;
         $this->_directoryMaster = $this->_findEntityByType($type);
-        $this->_directoryMasterInstance = $this->$this->_cacheInstance->newNode($this->_directoryMaster, Cache::TYPE_ENTITY);
+        $this->_directoryMasterInstance = $this->_cacheInstance->newNode($this->_directoryMaster, Cache::TYPE_ENTITY);
 
         $this->_metrologyInstance->addLog('Find directory master ' . $this->_directoryMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
@@ -2294,7 +2300,7 @@ class nebule
 
         $type = self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_TEMPS;
         $this->_timeMaster = $this->_findEntityByType($type);
-        $this->_timeMasterInstance = $this->$this->_cacheInstance->newNode($this->_timeMaster, Cache::TYPE_ENTITY);
+        $this->_timeMasterInstance = $this->_cacheInstance->newNode($this->_timeMaster, Cache::TYPE_ENTITY);
 
         $this->_metrologyInstance->addLog('Find time master ' . $this->_timeMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
@@ -2831,6 +2837,16 @@ class nebule
     }
 
     /**
+     * Export l'objet de la gestion des tickets.
+     *
+     * @return Cache
+     */
+    public function getTicketingInstance(): Cache
+    {
+        return $this->_ticketingInstance;
+    }
+
+    /**
      * Export l'objet des entrées/sorties.
      *
      * @return io
@@ -3294,143 +3310,11 @@ class nebule
     }
 
 
-    /**
-     * Contient l'état de validité du ticket des actions.
-     * @var boolean
-     */
-    private $_validTicket = false;
-
-    /**
-     * Lit le ticket pour les actions et le valide si il est connu et non utilisé.
-     * Le ticket reconnu est marqué dans la liste des ticket afin d'interdire le rejeu.
-     * Le ticket inconnu n'est pas marqué afin d'empêcher une attaque par remplissage.
-     *
-     * Pour que certaines actions puissent être validées, un ticket doit être présenté dans l'URL.
-     * Le ticket doit être connu, valide et non utilisé.
-     *
-     * @return void
-     */
-    private function _findActionTicket(): void
-    {
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
- 		 *  ------------------------------------------------------------------------------------------
-		 */
-        $ticket = '0';
-        // Lit et nettoye le contenu de la variable GET.
-        $arg_get = trim(' ' . filter_input(INPUT_GET, self::COMMAND_SELECT_TICKET, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        // Lit et nettoye le contenu de la variable POST.
-        $arg_post = trim(' ' . filter_input(INPUT_POST, self::COMMAND_SELECT_TICKET, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-
-        // Vérifie les variables.
-        if ($arg_get != ''
-            && strlen($arg_get) >= self::NEBULE_MINIMUM_ID_SIZE
-            && ctype_xdigit($arg_get)
-        ) {
-            $ticket = $arg_get;
-        } elseif ($arg_post != ''
-            && strlen($arg_post) >= self::NEBULE_MINIMUM_ID_SIZE
-            && ctype_xdigit($arg_post)
-        ) {
-            $ticket = $arg_post;
-        }
-        unset($arg_get, $arg_post);
-
-        // Vérifie le ticket.
-        session_start();
-        if ($ticket == '0'
-            || $this->_flushCache
-        ) {
-            // Le ticket est null, aucun ticket trouvé en argument.
-            // Aucune action ne doit être réalisée.
-            $this->_metrologyInstance->addLog('Ticket: none', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-            $this->_validTicket = false;
-        } elseif (isset($_SESSION['Ticket'][$ticket])
-            && $_SESSION['Ticket'][$ticket] !== true
-        ) {
-            // Le ticket est déjà connu mais est déjà utilisé, c'est un rejeu.
-            // Aucune action ne doit être réalisée.
-            $this->_metrologyInstance->addLog('Ticket: replay ' . $ticket, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
-            $this->_validTicket = false;
-            $_SESSION['Ticket'][$ticket] = false;
-        } elseif (isset($_SESSION['Ticket'][$ticket])
-            && $_SESSION['Ticket'][$ticket] === true
-        ) {
-            // Le ticket est connu et n'est pas utilisé, c'est bon.
-            // Il est marqué maintenant comme utilisé.
-            // Les actions peuvent être réalisées.
-            $this->_metrologyInstance->addLog('Ticket: valid ' . $ticket, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-            $this->_validTicket = true;
-            $_SESSION['Ticket'][$ticket] = false;
-        } else {
-            // Le ticket est inconnu.
-            // Pas de mémorisation.
-            // Aucune action ne doit être réalisée.
-            $this->_metrologyInstance->addLog('Ticket: error ' . $ticket, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
-            $this->_validTicket = false;
-        }
-        session_write_close();
-        unset($ticket);
-    }
-
-    /**
-     * Génère un ticket pour valider une action et interdire le rejeu d'action.
-     * Stock le ticket pour vérification ultérieure.
-     * Retourne le ticket avec la ligne pour insertion directe dans une url.
-     *
-     * Pour que certaines actions puissent être validées, un ticket doit être présenté dans l'URL.
-     * Le ticket doit être connu, valide et non utilisé.
-     *
-     * @return string
-     */
-    public function getActionTicket(): string
-    {
-        return '&' . self::COMMAND_SELECT_TICKET . '=' . $this->getActionTicketValue();
-    }
-
-    /**
-     * Génère un ticket pour valider une action et interdire le rejeu d'action.
-     * Stock le ticket pour vérification ultérieure.
-     * Retourne la valeur du ticket.
-     *
-     * La valeur de référence est pseudo-aléatoire mais suffisante pour résister
-     *   à une attaque le temps d'une session utilisateur.
-     *
-     * Pour que certaines actions puissent être validées, un ticket doit être présenté dans l'URL.
-     * Le ticket doit être connu, valide et non utilisé.
-     *
-     * @return string
-     */
-    public function getActionTicketValue(): string
-    {
-        session_start();
-        $data = $this->_cryptoInstance->getRandom(2048, Crypto::RANDOM_PSEUDO);
-        $ticket = $this->_cryptoInstance->hash($data);
-        unset($data);
-        $_SESSION['Ticket'][$ticket] = true;
-        session_write_close();
-        return $ticket;
-    }
-
-    /**
-     * Vérifie que le ticket est connu, valide et non utilisé.
-     *
-     * Pour que certaines actions puissent être validées, un ticket doit être présenté dans l'URL.
-     * Le ticket doit être connu, valide et non utilisé.
-     *
-     * @return boolean
-     */
-    public function checkActionTicket(): bool
-    {
-        return $this->_validTicket;
-    }
-
 
     /**
      * Extrait l'argument pour continuer un affichage en ligne à partir d'un objet particulier.
-     * Rtourne tout type de chaine de texte nécessaire à l'affichage,
-     *   ou une chaine vide si pas d'argument valable trouvé.
+     * Retourne tout type de chaine de texte nécessaire à l'affichage
+     * ou une chaine vide si pas d'argument valable trouvé.
      *
      * @return string
      */

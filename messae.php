@@ -1147,7 +1147,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
             <p>
                 <?php
                 // Vérifie le ticket.
-                if ($this->_nebuleInstance->checkActionTicket()) {
+                if ($this->_nebuleInstance->getTicketingInstance()->checkActionTicket()) {
                     // Appelle les actions spéciales.
                     $this->_actionInstance->specialActions();
 
@@ -3268,7 +3268,7 @@ class ModuleEntities extends Modules
                     . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
                     . '&' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
                     . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object
-                    . $this->_nebuleInstance->getActionTicket();
+                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
 
                 // Voir l'entité.
                 $hookArray[3]['name'] = '::sylabe:module:entities:ShowEntity';
@@ -3288,7 +3288,7 @@ class ModuleEntities extends Modules
                         . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . Action::DEFAULT_COMMAND_ACTION_MARK_OBJECT . '=' . $object
-                        . $this->_nebuleInstance->getActionTicket();
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                 }
                 break;
 
@@ -3303,7 +3303,7 @@ class ModuleEntities extends Modules
                     . '&' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
                     . '&' . self::COMMAND_SYNC_KNOWN_ENTITIES
                     . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity()
-                    . $this->_nebuleInstance->getActionTicket();
+                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                 break;
 
             case '::sylabe:module:entities:DisplayNebuleEntity':
@@ -3316,7 +3316,7 @@ class ModuleEntities extends Modules
                     . '&' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
                     . '&' . self::COMMAND_SYNC_NEBULE_ENTITIES
                     . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity()
-                    . $this->_nebuleInstance->getActionTicket();
+                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                 break;
         }
         return $hookArray;
@@ -4803,7 +4803,7 @@ class ModuleEntities extends Modules
                               . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
                               . '&' . Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY
                               . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity()
-                              . $this->_nebuleInstance->getActionTicket(); ?>">
+                              . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(); ?>">
                         <div class="sylabeModuleEntityCreate" id="sylabeModuleEntityCreateNames">
                             <div class="sylabeModuleEntityCreateHeader">
                                 <p>
@@ -5716,7 +5716,7 @@ class ModuleGroups extends Modules
                     $hookArray[1]['link'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                         . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
-                        . $this->_nebuleInstance->getActionTicket();
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                 }
                 break;
 
@@ -5728,7 +5728,7 @@ class ModuleGroups extends Modules
                 $hookArray[1]['link'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                     . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                     . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
-                    . $this->_nebuleInstance->getActionTicket();
+                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                 break;
 
             case '::sylabe:module:group:remove':
@@ -5748,7 +5748,7 @@ class ModuleGroups extends Modules
                     $hookArray[1]['link'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
                         . '&' . Action::DEFAULT_COMMAND_ACTION_DELETE_GROUP . '=' . $object
-                        . $this->_nebuleInstance->getActionTicket();
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                 }
                 break;
 
@@ -5782,7 +5782,7 @@ class ModuleGroups extends Modules
                             $hookArray[1]['link'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                                 . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
-                                . $this->_nebuleInstance->getActionTicket();
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                         }
                     } // Ou si c'est un groupe pour une autre entité.
                     elseif ($this->_applicationInstance->getCurrentObjectInstance()->getIsGroup('all')) {
@@ -5802,7 +5802,7 @@ class ModuleGroups extends Modules
                             $hookArray[1]['link'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $this->_hashGroup . '_' . $object . '_0'
-                                . $this->_nebuleInstance->getActionTicket();
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
 
                             // Refuser l'objet comme un groupe.
                             $hookArray[2]['name'] = '::sylabe:module:groups:display:refuseGroup';
@@ -5811,7 +5811,7 @@ class ModuleGroups extends Modules
                             $hookArray[2]['link'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                                 . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
-                                . $this->_nebuleInstance->getActionTicket();
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                         }
                     } // Ou si ce n'est pas un groupe.
                     else {
@@ -5823,7 +5823,7 @@ class ModuleGroups extends Modules
                             $hookArray[0]['link'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $this->_hashGroup . '_' . $object . '_0'
-                                . $this->_nebuleInstance->getActionTicket();
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                         }
                     }
                 }
@@ -6152,14 +6152,14 @@ class ModuleGroups extends Modules
 						$list[$i]['actions'][1]['htlink'] = '?'.Display::DEFAULT_DISPLAY_COMMAND_MODE.'='.$this->MODULE_COMMAND_NAME
 							.'&'.Display::DEFAULT_DISPLAY_COMMAND_VIEW.'='.$this->MODULE_REGISTERED_VIEWS[1]
 							.'&'.Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1.'=f_'.$this->_hashGroup.'_'.$link->getHashSource().'_0'
-							.$this->_nebuleInstance->getActionTicket();
+							.$this->_nebuleInstance->getTicketingInstance()->getActionTicket();
 						// Utiliser comme groupe fermé.
 						$list[$i]['actions'][2]['name'] = '::sylabe:module:groups:display:useAsGroupClosed';
 						$list[$i]['actions'][2]['icon'] = Display::DEFAULT_ICON_LLL;
 						$list[$i]['actions'][2]['htlink'] = '?'.Display::DEFAULT_DISPLAY_COMMAND_MODE.'='.$this->MODULE_COMMAND_NAME
 							.'&'.Display::DEFAULT_DISPLAY_COMMAND_VIEW.'='.$this->MODULE_REGISTERED_VIEWS[1]
 							.'&'.Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1.'=f_'.$this->_hashGroupClosed.'_'.$link->getHashSource().'_0'
-							.$this->_nebuleInstance->getActionTicket();
+							.$this->_nebuleInstance->getTicketingInstance()->getActionTicket();
 					}
 					$i++;
 				}
@@ -6261,7 +6261,7 @@ class ModuleGroups extends Modules
                       action="?<?php echo Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                           . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
                           . '&' . Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP
-                          . $this->_nebuleInstance->getActionTicket(); ?>">
+                          . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(); ?>">
                     <div class="floatRight textAlignRight">
                         <input type="checkbox"
                                name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP_CLOSED; ?>"
@@ -6394,7 +6394,7 @@ class ModuleGroups extends Modules
                                 . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_DEFAULT_VIEW
                                 . '&' . $this->_nebuleInstance->getCurrentGroup()
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item
-                                . $this->_nebuleInstance->getActionTicket();
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                         }
 
                         // Marque comme vu.
@@ -6447,7 +6447,7 @@ class ModuleGroups extends Modules
                                     . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_DEFAULT_VIEW
                                     . '&' . nebule::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroup()
                                     . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item->getHashSource()
-                                    . $this->_nebuleInstance->getActionTicket();
+                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                             }
 
                             // Marque comme vu.
@@ -6510,7 +6510,7 @@ class ModuleGroups extends Modules
                             $list[$i]['actions'][0]['htlink'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroup()
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item->getHashSource()
-                                . $this->_nebuleInstance->getActionTicket();
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                         }
 
                         // Marque comme vu.
@@ -6811,7 +6811,7 @@ class ModuleObjects extends Modules
                         $hookArray[5]['link'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                             . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
                             . '&' . Action::DEFAULT_COMMAND_ACTION_DELETE_OBJECT . '=' . $id
-                            . $this->_nebuleInstance->getActionTicket();
+                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
 
                         // Protéger l'objet.
                         if ($mode == $this->MODULE_COMMAND_NAME
@@ -6850,7 +6850,7 @@ class ModuleObjects extends Modules
                         . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
                         . '&' . Action::DEFAULT_COMMAND_ACTION_MARK_OBJECT . '=' . $id
-                        . $this->_nebuleInstance->getActionTicket();
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                 } else {
                     // Retirer la marque de l'objet.
                     $hookArray[8]['name'] = '::MarkRemove';
@@ -6860,7 +6860,7 @@ class ModuleObjects extends Modules
                         . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
                         . '&' . Action::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT . '=' . $id
-                        . $this->_nebuleInstance->getActionTicket();
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                 }
 
                 // Si la liste des marques n'est pas vide.
@@ -6873,7 +6873,7 @@ class ModuleObjects extends Modules
                         . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . Action::DEFAULT_COMMAND_ACTION_UNMARK_ALL_OBJECT
-                        . $this->_nebuleInstance->getActionTicket();
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                 }
                 unset($instance, $id, $protected, $update, $markList, $marked);
                 break;
@@ -6891,7 +6891,7 @@ class ModuleObjects extends Modules
                     $hookArray[0]['link'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                         . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . Action::DEFAULT_COMMAND_ACTION_UNMARK_ALL_OBJECT
-                        . $this->_nebuleInstance->getActionTicket();
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                 }
                 unset($markList);
                 break;
@@ -6954,7 +6954,7 @@ class ModuleObjects extends Modules
                         . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id
                         . '&' . Action::DEFAULT_COMMAND_ACTION_MARK_OBJECT . '=' . $id
-                        . $this->_nebuleInstance->getActionTicket();
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                 } else {
                     // Retirer la marque de l'objet.
                     $hookArray[1]['name'] = '::MarkRemove';
@@ -6964,7 +6964,7 @@ class ModuleObjects extends Modules
                         . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id
                         . '&' . Action::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT . '=' . $id
-                        . $this->_nebuleInstance->getActionTicket();
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                 }
                 unset($instance, $id, $marked);
                 break;
@@ -7605,7 +7605,7 @@ class ModuleObjects extends Modules
                     . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
                     . '&' . Action::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT . '=' . $object->getID()
                     . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object->getID()
-                    . $this->_nebuleInstance->getActionTicket();
+                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
             }
 
             // Affichage.
@@ -7741,7 +7741,7 @@ class ModuleObjects extends Modules
                                 . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_ICONS[3]
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT . '=' . $object->getID()
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object->getID()
-                                . $this->_nebuleInstance->getActionTicket();
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                         } elseif (!$this->_nebuleInstance->getIsRecoveryEntity($entity)
                             || $this->_configuration->getOptionAsBoolean('permitRecoveryRemoveEntity')
                         ) {
@@ -7752,7 +7752,7 @@ class ModuleObjects extends Modules
                                 . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_ICONS[3]
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY . '=' . $entity
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object->getID()
-                                . $this->_nebuleInstance->getActionTicket();
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                         }
                     }
 
@@ -7933,13 +7933,13 @@ class ModuleObjects extends Modules
                             . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_ICONS[4]
                             . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED . '=' . $group
                             . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                            . $this->_nebuleInstance->getActionTicket();
+                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                     } else {
                         $list[$i]['param']['selfHookList'][0]['link'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                             . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_ICONS[4]
                             . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED . '=' . $group
                             . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                            . $this->_nebuleInstance->getActionTicket();
+                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                     }
 
                     // Marque comme vu.
@@ -7995,7 +7995,7 @@ class ModuleObjects extends Modules
                         . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[4]
                         . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY . '=' . $link->getHashSource()
                         . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                        . $this->_nebuleInstance->getActionTicket();
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
 
                     // Marque comme vu.
                     $listOkEntities[$link->getHashSource()] = true;
@@ -8421,7 +8421,7 @@ class ModuleMessenger extends Modules
                                 . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=' . $object
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_OBJECT . '=' . $object
-                                . $this->_nebuleInstance->getActionTicket();
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
 
                             // Création d'un message.
                             $arraySeed++;
@@ -8474,7 +8474,7 @@ class ModuleMessenger extends Modules
                                     . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $object
                                     . '_' . $this->_applicationInstance->getCurrentEntity()
                                     . '_' . $this->_conversationInstance->getReferenceObjectClosed()
-                                    . $this->_nebuleInstance->getActionTicket();
+                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                             } else {
                                 // Rendre la conversation fermée.
                                 $arraySeed++;
@@ -8489,7 +8489,7 @@ class ModuleMessenger extends Modules
                                     . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $object
                                     . '_' . $this->_applicationInstance->getCurrentEntity()
                                     . '_' . $this->_conversationInstance->getReferenceObjectClosed()
-                                    . $this->_nebuleInstance->getActionTicket();
+                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                             }
 
                             // Si la conversation est marquée protégée.
@@ -8507,7 +8507,7 @@ class ModuleMessenger extends Modules
                                     . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $object
                                     . '_' . $this->_applicationInstance->getCurrentEntity()
                                     . '_' . $this->_conversationInstance->getReferenceObjectProtected()
-                                    . $this->_nebuleInstance->getActionTicket();
+                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                             } else {
                                 // Rendre la conversation protégée.
                                 $arraySeed++;
@@ -8522,7 +8522,7 @@ class ModuleMessenger extends Modules
                                     . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $object
                                     . '_' . $this->_applicationInstance->getCurrentEntity()
                                     . '_' . $this->_conversationInstance->getReferenceObjectProtected()
-                                    . $this->_nebuleInstance->getActionTicket();
+                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                             }
 
                             // Si authorisé à dissimuler les liens.
@@ -8542,7 +8542,7 @@ class ModuleMessenger extends Modules
                                         . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $object
                                         . '_' . $this->_applicationInstance->getCurrentEntity()
                                         . '_' . $this->_conversationInstance->getReferenceObjectObfuscated()
-                                        . $this->_nebuleInstance->getActionTicket();
+                                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                                 } else {
                                     // Rendre la conversation dissimulée.
                                     $arraySeed++;
@@ -8557,7 +8557,7 @@ class ModuleMessenger extends Modules
                                         . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $object
                                         . '_' . $this->_applicationInstance->getCurrentEntity()
                                         . '_' . $this->_conversationInstance->getReferenceObjectObfuscated()
-                                        . $this->_nebuleInstance->getActionTicket();
+                                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                                 }
                             }
 
@@ -8575,7 +8575,7 @@ class ModuleMessenger extends Modules
                                     . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $this->_nebuleInstance->getCurrentEntity()
                                     . '_' . $this->_conversation
                                     . '_' . $this->_hashConversationFollow
-                                    . $this->_nebuleInstance->getActionTicket();
+                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                             } else {
                                 // Retirer de ma liste de conversations.
                                 $arraySeed++;
@@ -8589,7 +8589,7 @@ class ModuleMessenger extends Modules
                                     . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_nebuleInstance->getCurrentEntity()
                                     . '_' . $this->_conversation
                                     . '_' . $this->_hashConversationFollow
-                                    . $this->_nebuleInstance->getActionTicket();
+                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                             }
                         }
 
@@ -8631,7 +8631,7 @@ class ModuleMessenger extends Modules
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $this->_nebuleInstance->getCurrentEntity()
                                 . '_' . $this->_conversation
                                 . '_' . $this->_hashConversationFollow
-                                . $this->_nebuleInstance->getActionTicket();
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                         } else {
                             // Retirer de ma liste de conversations.
                             $arraySeed++;
@@ -8645,7 +8645,7 @@ class ModuleMessenger extends Modules
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_nebuleInstance->getCurrentEntity()
                                 . '_' . $this->_conversation
                                 . '_' . $this->_hashConversationFollow
-                                . $this->_nebuleInstance->getActionTicket();
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                         }
                     }
                 }
@@ -8906,7 +8906,7 @@ class ModuleMessenger extends Modules
                     . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $this->_conversation
                     . '_' . $this->_applicationInstance->getCurrentEntity()
                     . '_' . $this->_conversationInstance->getReferenceObjectClosed()
-                    . $this->_nebuleInstance->getActionTicket();
+                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                 if ($markClosed) {
                     $markClosedDesc = '::sylabe:module:messenger:conversationClosed';
                     $markClosedLink = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -8917,7 +8917,7 @@ class ModuleMessenger extends Modules
                         . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_conversation
                         . '_' . $this->_applicationInstance->getCurrentEntity()
                         . '_' . $this->_conversationInstance->getReferenceObjectClosed()
-                        . $this->_nebuleInstance->getActionTicket();
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                 }
 
                 // Détection de l'état de protection.
@@ -8931,7 +8931,7 @@ class ModuleMessenger extends Modules
                     . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $this->_conversation
                     . '_' . $this->_applicationInstance->getCurrentEntity()
                     . '_' . $this->_conversationInstance->getReferenceObjectProtected()
-                    . $this->_nebuleInstance->getActionTicket();
+                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                 if ($markProtected) {
                     $markProtectedDesc = '::sylabe:module:messenger:conversation:defaultProtected';
                     $markProtectedLink = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -8942,7 +8942,7 @@ class ModuleMessenger extends Modules
                         . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_conversation
                         . '_' . $this->_applicationInstance->getCurrentEntity()
                         . '_' . $this->_conversationInstance->getReferenceObjectProtected()
-                        . $this->_nebuleInstance->getActionTicket();
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                 }
 
                 // Détection de l'état de dissimulation.
@@ -8957,7 +8957,7 @@ class ModuleMessenger extends Modules
                         . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $this->_conversation
                         . '_' . $this->_applicationInstance->getCurrentEntity()
                         . '_' . $this->_conversationInstance->getReferenceObjectObfuscated()
-                        . $this->_nebuleInstance->getActionTicket();
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                     if ($markObfuscated) {
                         $markObfuscatedDesc = '::sylabe:module:messenger:conversation:defaultObfuscated';
                         $markObfuscatedLink = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -8968,7 +8968,7 @@ class ModuleMessenger extends Modules
                             . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_conversation
                             . '_' . $this->_applicationInstance->getCurrentEntity()
                             . '_' . $this->_conversationInstance->getReferenceObjectObfuscated()
-                            . $this->_nebuleInstance->getActionTicket();
+                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                     }
                 }
 
@@ -9187,7 +9187,7 @@ class ModuleMessenger extends Modules
                           . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
                           . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntity()
                           . '&' . Action::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION
-                          . $this->_nebuleInstance->getActionTicket()
+                          . $this->_nebuleInstance->getTicketingInstance()->getActionTicket()
                           . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=0'; ?>">
                     <?php $this->_echoTraduction('::sylabe:module:messenger:create:title'); ?><br/>
                     <input type="text"
@@ -9246,7 +9246,7 @@ class ModuleMessenger extends Modules
             . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $this->_conversation
             . '_' . $this->_applicationInstance->getCurrentEntity()
             . '_' . $this->_conversationInstance->getReferenceObjectClosed()
-            . $this->_nebuleInstance->getActionTicket();
+            . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
         if ($markClosed) {
             $markClosedDesc = '::sylabe:module:messenger:conversationClosed';
             $markClosedLink = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -9257,7 +9257,7 @@ class ModuleMessenger extends Modules
                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_conversation
                 . '_' . $this->_applicationInstance->getCurrentEntity()
                 . '_' . $this->_conversationInstance->getReferenceObjectClosed()
-                . $this->_nebuleInstance->getActionTicket();
+                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
         }
 
         // Détection de l'état de protection.
@@ -9271,7 +9271,7 @@ class ModuleMessenger extends Modules
             . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $this->_conversation
             . '_' . $this->_applicationInstance->getCurrentEntity()
             . '_' . $this->_conversationInstance->getReferenceObjectProtected()
-            . $this->_nebuleInstance->getActionTicket();
+            . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
         if ($markProtected) {
             $markProtectedDesc = '::sylabe:module:messenger:conversation:defaultProtected';
             $markProtectedLink = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -9282,7 +9282,7 @@ class ModuleMessenger extends Modules
                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_conversation
                 . '_' . $this->_applicationInstance->getCurrentEntity()
                 . '_' . $this->_conversationInstance->getReferenceObjectProtected()
-                . $this->_nebuleInstance->getActionTicket();
+                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
         }
 
         // Détection de l'état de dissimulation.
@@ -9297,7 +9297,7 @@ class ModuleMessenger extends Modules
                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $this->_conversation
                 . '_' . $this->_applicationInstance->getCurrentEntity()
                 . '_' . $this->_conversationInstance->getReferenceObjectObfuscated()
-                . $this->_nebuleInstance->getActionTicket();
+                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
             if ($markObfuscated) {
                 $markObfuscatedDesc = '::sylabe:module:messenger:conversation:defaultObfuscated';
                 $markObfuscatedLink = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -9308,7 +9308,7 @@ class ModuleMessenger extends Modules
                     . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_conversation
                     . '_' . $this->_applicationInstance->getCurrentEntity()
                     . '_' . $this->_conversationInstance->getReferenceObjectObfuscated()
-                    . $this->_nebuleInstance->getActionTicket();
+                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
             }
         }
 
@@ -9470,7 +9470,7 @@ class ModuleMessenger extends Modules
                             . '&' . Action::DEFAULT_COMMAND_ACTION_CREATE_MESSAGE
                             . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=' . $this->_conversation
                             . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_conversation
-                            . $this->_nebuleInstance->getActionTicket()
+                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicket()
                             . '#refTitle'; ?>">
                     <input
                             type="submit"
@@ -9576,7 +9576,7 @@ class ModuleMessenger extends Modules
                     . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=' . $this->_conversation
                     . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $messageInstance->getID()
                     . '&' . Action::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT . '=' . $messageInstance->getID()
-                    . $this->_nebuleInstance->getActionTicket();
+                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
             } else {
                 $list[$i]['param']['flagProtectionLink'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
@@ -9584,7 +9584,7 @@ class ModuleMessenger extends Modules
                     . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=' . $this->_conversation
                     . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $messageInstance->getID()
                     . '&' . Action::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT . '=' . $messageInstance->getID()
-                    . $this->_nebuleInstance->getActionTicket();
+                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
             }
 
             $i++;
@@ -9746,7 +9746,7 @@ class ModuleMessenger extends Modules
                                         . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=' . $this->_conversation
                                         . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_'
                                         . $signer . '_' . $this->_conversation . '_' . $this->_hashConversation
-                                        . $this->_nebuleInstance->getActionTicket()
+                                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket()
                                         . '#refTitle');
                                     ?>
 
@@ -9802,7 +9802,7 @@ class ModuleMessenger extends Modules
                                         . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=' . $this->_conversation
                                         . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_'
                                         . $link->getHashSource() . '_' . $object . '_' . $this->_hashConversation
-                                        . $this->_nebuleInstance->getActionTicket()
+                                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket()
                                         . '#refTitle');
                                     ?>
 
@@ -9823,7 +9823,7 @@ class ModuleMessenger extends Modules
                                         . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=' . $this->_conversation
                                         . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object
                                         . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_FROM_CONVERSATION . '=' . $this->_conversation
-                                        . $this->_nebuleInstance->getActionTicket()
+                                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket()
                                         . '#refTitle');
                                     ?>
 
@@ -9843,7 +9843,7 @@ class ModuleMessenger extends Modules
                                         . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntity()
                                         . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=' . $this->_conversation
                                         . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object
-                                        . $this->_nebuleInstance->getActionTicket()
+                                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket()
                                         . '#refTitle');
                                     ?>
 
@@ -10008,7 +10008,7 @@ class ModuleMessenger extends Modules
                 . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=' . $this->_conversation
                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $messageInstance->getID()
                 . '&' . Action::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT . '=' . $messageInstance->getID()
-                . $this->_nebuleInstance->getActionTicket();
+                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
         } else {
             $list[0]['param']['flagProtectionLink'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                 . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[6]
@@ -10016,7 +10016,7 @@ class ModuleMessenger extends Modules
                 . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=' . $this->_conversation
                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $messageInstance->getID()
                 . '&' . Action::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT . '=' . $messageInstance->getID()
-                . $this->_nebuleInstance->getActionTicket();
+                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
         }
 
         // Détermine la validité du lien. @todo à vérifier !!!
@@ -10064,7 +10064,7 @@ class ModuleMessenger extends Modules
                           . '&' . Action::DEFAULT_COMMAND_ACTION_CREATE_MESSAGE
                           . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=' . $this->_conversation
                           . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_conversation
-                          . $this->_nebuleInstance->getActionTicket(); ?>">
+                          . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(); ?>">
                     <?php $this->_echoTraduction('::sylabe:module:messenger:create:title'); ?><br/>
                     <input type="text"
                            name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_NAME; ?>"
@@ -10137,7 +10137,7 @@ class ModuleMessenger extends Modules
             . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $this->_conversation
             . '_' . $this->_applicationInstance->getCurrentEntity()
             . '_' . $this->_conversationInstance->getReferenceObjectClosed()
-            . $this->_nebuleInstance->getActionTicket();
+            . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
         if ($markClosed) {
             $markClosedDesc = '::sylabe:module:messenger:conversationClosed';
             $markClosedLink = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -10148,7 +10148,7 @@ class ModuleMessenger extends Modules
                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_conversation
                 . '_' . $this->_applicationInstance->getCurrentEntity()
                 . '_' . $this->_conversationInstance->getReferenceObjectClosed()
-                . $this->_nebuleInstance->getActionTicket();
+                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
         }
 
         // Détection de l'état de protection.
@@ -10162,7 +10162,7 @@ class ModuleMessenger extends Modules
             . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $this->_conversation
             . '_' . $this->_applicationInstance->getCurrentEntity()
             . '_' . $this->_conversationInstance->getReferenceObjectProtected()
-            . $this->_nebuleInstance->getActionTicket();
+            . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
         if ($markProtected) {
             $markProtectedDesc = '::sylabe:module:messenger:conversation:defaultProtected';
             $markProtectedLink = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -10173,7 +10173,7 @@ class ModuleMessenger extends Modules
                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_conversation
                 . '_' . $this->_applicationInstance->getCurrentEntity()
                 . '_' . $this->_conversationInstance->getReferenceObjectProtected()
-                . $this->_nebuleInstance->getActionTicket();
+                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
         }
 
         // Détection de l'état de dissimulation.
@@ -10188,7 +10188,7 @@ class ModuleMessenger extends Modules
                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $this->_conversation
                 . '_' . $this->_applicationInstance->getCurrentEntity()
                 . '_' . $this->_conversationInstance->getReferenceObjectObfuscated()
-                . $this->_nebuleInstance->getActionTicket();
+                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
             if ($markObfuscated) {
                 $markObfuscatedDesc = '::sylabe:module:messenger:conversation:defaultObfuscated';
                 $markObfuscatedLink = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -10199,7 +10199,7 @@ class ModuleMessenger extends Modules
                     . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_conversation
                     . '_' . $this->_applicationInstance->getCurrentEntity()
                     . '_' . $this->_conversationInstance->getReferenceObjectObfuscated()
-                    . $this->_nebuleInstance->getActionTicket();
+                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
             }
         }
 
@@ -10400,7 +10400,7 @@ class ModuleMessenger extends Modules
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $id
                                 . '_' . $this->_conversation
                                 . '_' . $this->_hashConversationFollow
-                                . $this->_nebuleInstance->getActionTicket(),
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(),
                         );
                         if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) // @todo à vérifier si le lien dissimulé est bien pris en compte...
                         {
@@ -10419,7 +10419,7 @@ class ModuleMessenger extends Modules
                                     . '_' . $this->_conversation
                                     . '_' . $this->_hashConversationFollow
                                     . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK2_OBFUSCATE
-                                    . $this->_nebuleInstance->getActionTicket(),
+                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(),
                             );
                         }
                     } else {
@@ -10434,7 +10434,7 @@ class ModuleMessenger extends Modules
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $id
                                 . '_' . $this->_conversation
                                 . '_' . $this->_hashConversationFollow
-                                . $this->_nebuleInstance->getActionTicket(),
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(),
                         );
                         if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
                             $list[$i]['param']['selfHookList'][1] = array(
@@ -10449,7 +10449,7 @@ class ModuleMessenger extends Modules
                                     . '_' . $this->_conversation
                                     . '_' . $this->_hashConversationFollow
                                     . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1_OBFUSCATE
-                                    . $this->_nebuleInstance->getActionTicket(),
+                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(),
                             );
                         }
                     }
@@ -10539,7 +10539,7 @@ class ModuleMessenger extends Modules
                             . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $id
                             . '_' . $this->_conversation
                             . '_' . $this->_hashConversationFollow
-                            . $this->_nebuleInstance->getActionTicket(),
+                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(),
                     );
                     if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
                         $list[$i]['param']['selfHookList'][1] = array(
@@ -10554,7 +10554,7 @@ class ModuleMessenger extends Modules
                                 . '_' . $this->_conversation
                                 . '_' . $this->_hashConversationFollow
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1_OBFUSCATE
-                                . $this->_nebuleInstance->getActionTicket(),
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(),
                         );
                     }
                 }
@@ -10646,7 +10646,7 @@ class ModuleMessenger extends Modules
                             . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $id
                             . '_' . $this->_conversation
                             . '_' . $this->_hashConversationFollow
-                            . $this->_nebuleInstance->getActionTicket(),
+                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(),
                     );
                     if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
                         $list[$i]['param']['selfHookList'][1] = array(
@@ -10661,7 +10661,7 @@ class ModuleMessenger extends Modules
                                 . '_' . $this->_conversation
                                 . '_' . $this->_hashConversationFollow
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1_OBFUSCATE
-                                . $this->_nebuleInstance->getActionTicket(),
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(),
                         );
                     }
                 }

@@ -5843,7 +5843,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 // Création du lien.
                 $action = 'x';
                 $link = $action . '_' . $source . '_' . $target . '_' . $meta;
-                $htlink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getActionTicket();
+                $htlink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
 
                 // Préparation de l'icône de l'émotion.
                 $icon = $this->convertReferenceImage($listEmotions1[$emotion], $emotion, 'iconInlineDisplay');
@@ -5851,7 +5851,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 // Création du lien.
                 $action = 'f';
                 $link = $action . '_' . $source . '_' . $target . '_' . $meta;
-                $htlink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getActionTicket();
+                $htlink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
 
                 // Préparation de l'icône de l'émotion.
                 $icon = $this->convertReferenceImage($listEmotions0[$emotion], $emotion, 'iconInlineDisplay');
@@ -9052,7 +9052,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 // Création du lien.
                 $action = 'x';
                 $link = $action . '_' . $source . '_' . $target . '_' . $meta;
-                $htlink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getActionTicket();
+                $htlink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
 
                 // Préparation de l'icône de l'émotion.
                 $icon = $this->convertReferenceImage($listEmotions1[$emotion], $emotion, 'iconInlineDisplay');
@@ -9060,7 +9060,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 // Création du lien.
                 $action = 'f';
                 $link = $action . '_' . $source . '_' . $target . '_' . $meta;
-                $htlink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getActionTicket();
+                $htlink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
 
                 // Préparation de l'icône de l'émotion.
                 $icon = $this->convertReferenceImage($listEmotions0[$emotion], $emotion, 'iconInlineDisplay');

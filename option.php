@@ -967,7 +967,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         $list[$i]['param']['selfHookList'][0]['icon'] = Display::DEFAULT_ICON_LX;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
                             . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refAuthority
-                            . $nebuleInstance->getActionTicket();
+                            . $nebuleInstance->getTicketingInstance()->getActionTicket();
                     }
 
                     // Marque comme vu.
@@ -1063,7 +1063,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         $list[$i]['param']['selfHookList'][0]['icon'] = Display::DEFAULT_ICON_LL;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
                             . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refAuthority
-                            . $nebuleInstance->getActionTicket();
+                            . $nebuleInstance->getTicketingInstance()->getActionTicket();
                     }
 
                     // Marque comme vu.
@@ -1249,7 +1249,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                                         <input type="hidden" name="<?php echo Action::COMMAND_OPTION_NAME; ?>"
                                                value="<?php echo $optionName; ?>">
                                         <input type="hidden" name="<?php echo nebule::COMMAND_SELECT_TICKET; ?>"
-                                               value="<?php echo $nebuleInstance->getActionTicketValue(); ?>">
+                                               value="<?php echo $nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                                         <?php
                                         if ($optionType == 'string') {
                                             ?>
@@ -1508,13 +1508,13 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                                     $this->displayHypertextLink(
                                         $this->convertInlineIconFace(Display::DEFAULT_ICON_LX) . 'Disable',
                                         '/?' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $application . '_' . $refActivated . '_' . $application
-                                        . $nebuleInstance->getActionTicket()
+                                        . $nebuleInstance->getTicketingInstance()->getActionTicket()
                                     );
                                 } else {
                                     $this->displayHypertextLink(
                                         $this->convertInlineIconFace(Display::DEFAULT_ICON_LL) . 'Enable',
                                         '/?' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $application . '_' . $refActivated . '_' . $application
-                                        . $nebuleInstance->getActionTicket()
+                                        . $nebuleInstance->getTicketingInstance()->getActionTicket()
                                     );
                                 }
                                 echo "<br />\n";
@@ -1533,7 +1533,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                                 $this->displayHypertextLink(
                                     $this->convertInlineIconFace(Display::DEFAULT_ICON_SYNOBJ) . 'Synchronize',
                                     '/?' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=' . $application
-                                    . $nebuleInstance->getActionTicket()
+                                    . $nebuleInstance->getTicketingInstance()->getActionTicket()
                                 );
                             }
                             ?>
@@ -1597,7 +1597,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     $this->displayHypertextLink(
                         $this->convertInlineIconFace(Display::DEFAULT_ICON_SYNOBJ) . 'Synchronize all applications',
                         '/?' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=0'
-                        . $nebuleInstance->getActionTicket()
+                        . $nebuleInstance->getTicketingInstance()->getActionTicket()
                     );
                     ?>
 
@@ -1731,7 +1731,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         $list[$i]['param']['selfHookList'][0]['icon'] = Display::DEFAULT_ICON_LX;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
                             . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refRecovery
-                            . $nebuleInstance->getActionTicket();
+                            . $nebuleInstance->getTicketingInstance()->getActionTicket();
                     }
 
                     // Marque comme vu.
@@ -1823,7 +1823,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         $list[$i]['param']['selfHookList'][0]['icon'] = Display::DEFAULT_ICON_LL;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
                             . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refRecovery
-                            . $nebuleInstance->getActionTicket();
+                            . $nebuleInstance->getTicketingInstance()->getActionTicket();
                     }
 
                     // Marque comme vu.
@@ -1964,7 +1964,7 @@ class Action extends Actions
         // Vérifie que l'entité instance locale du serveur est déverrouillée et que le ticket est valide.
         if ($this->_unlocked
             && $this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getInstanceEntity()
-            && $this->_nebuleInstance->checkActionTicket()
+            && $this->_nebuleInstance->getTicketingInstance()->checkActionTicket()
             && $this->_configuration->getOptionAsBoolean('permitWrite')
             && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_configuration->getOptionAsBoolean('permitCreateLink')
@@ -2002,7 +2002,7 @@ class Action extends Actions
         $this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Vérifie que le ticket est valide.
-        if ($this->_nebuleInstance->checkActionTicket()) {
+        if ($this->_nebuleInstance->getTicketingInstance()->checkActionTicket()) {
             $this->_extractActionSynchronizeApplication();
 
             if ($this->_actionSynchronizeApplicationInstance != '') {

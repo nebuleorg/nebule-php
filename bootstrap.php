@@ -7,6 +7,7 @@ namespace Nebule\Bootstrap;
 use Nebule\Library\Cache;
 use Nebule\Library\Crypto;
 use Nebule\Library\nebule;
+use Nebule\Library\Node;
 
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';

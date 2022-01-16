@@ -1368,7 +1368,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             <p>
                 <?php
                 // Vérifie le ticket.
-                if ($this->_nebuleInstance->checkActionTicket()) {
+                if ($this->_nebuleInstance->getTicketingInstance()->checkActionTicket()) {
                     // Appelle les actions spéciales.
                     $this->_actionInstance->specialActions();
 
@@ -1390,7 +1390,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             <p>
                 <?php
                 // Vérifie le ticket.
-                if ($this->_nebuleInstance->checkActionTicket()) {
+                if ($this->_nebuleInstance->getTicketingInstance()->checkActionTicket()) {
                     // Appelle les actions génériques.
                     $this->_actionInstance->genericActions();
                 }
@@ -2157,7 +2157,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     $param['selfHookList'][0]['link'] = '?'
                         . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_GROUP_LIST_COMMAND
                         . '&' . Action::DEFAULT_COMMAND_ACTION_DELETE_GROUP . '=' . $id
-                        . $this->_nebuleInstance->getActionTicket();
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                 }
 
                 echo $this->getDisplayObject($instance, $param);
@@ -2250,7 +2250,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     <form method="post"
                           action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_GROUP_ENTITY_ADD_COMMAND .
                               '&' . Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP
-                              . $this->_nebuleInstance->getActionTicket(); ?>">
+                              . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(); ?>">
                         <div class="floatRight textAlignRight">
                             <input type="checkbox"
                                    name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP_CLOSED; ?>"
@@ -2365,7 +2365,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
                     . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObject()
                     . '&' . Action::DEFAULT_COMMAND_ACTION_DELETE_GROUP . '=' . $this->_applicationInstance->getCurrentObject()
-                    . $this->_nebuleInstance->getActionTicket();
+                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
             }
         }
         if ($isEntity) {
@@ -2389,7 +2389,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
                     . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
                     . '&' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY . '=' . $id
-                    . $this->_nebuleInstance->getActionTicket();
+                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
             }
 
             if ($this->_unlocked && $id == $this->_nebuleInstance->getCurrentEntity()) {
@@ -2454,7 +2454,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
                         . '&' . Action::DEFAULT_COMMAND_ACTION_DELETE_OBJECT . '=' . $this->_applicationInstance->getCurrentObject()
                         . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                        . $this->_nebuleInstance->getActionTicket();
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
 
                     // Renouveler le bail de durée de vie.
                     $link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
@@ -2470,7 +2470,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
                             . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObject()
                             . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $source . '_' . $target . '_' . $meta
-                            . $this->_nebuleInstance->getActionTicket();
+                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                     }
                 }
             }
@@ -2499,7 +2499,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     <form method="post"
                           action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
                               . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object
-                              . $this->_nebuleInstance->getActionTicket(); ?>">
+                              . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(); ?>">
                         <input type="submit"
                                value="<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::AddToGroup'); ?>"
                                class="klictyModuleEntityInput">
@@ -2549,7 +2549,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
                                     . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObject()
                                     . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_FROM_GROUP . '=' . $group
-                                    . $this->_nebuleInstance->getActionTicket();
+                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                             }
                         }
 
@@ -2604,7 +2604,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObject()
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item
-                                . $this->_nebuleInstance->getActionTicket();
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                         }
 
                         // Marque comme vu.
@@ -2767,7 +2767,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             <div class="text">
                 <form enctype="multipart/form-data" method="post"
                       action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_OBJECT_ADD_COMMAND
-                          . $this->_nebuleInstance->getActionTicket(); ?>">
+                          . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(); ?>">
                     <input type="hidden"
                            name="MAX_FILE_SIZE"
                            value="<?php echo $this->_configuration->getOptionUntyped('klictyIOReadMaxDataPHP'); ?>"/>
@@ -2928,7 +2928,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     <form method="post"
                           action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_ADD_COMMAND
                               . '&' . Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY
-                              . $this->_nebuleInstance->getActionTicket(); ?>">
+                              . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(); ?>">
                         <table>
                             <tr>
                                 <td></td>
@@ -3013,7 +3013,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                 <form method="post"
                       action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_SYNC_COMMAND
-                          . $this->_nebuleInstance->getActionTicket(); ?>">
+                          . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(); ?>">
                     <table>
                         <tr>
                             <td></td>
@@ -3164,7 +3164,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                                     . '&' . Action::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT . '=' . $id
                                     . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                                    . $this->_nebuleInstance->getActionTicket();
+                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                             } elseif (!$this->_nebuleInstance->getIsRecoveryEntity($entity)
                                 || $this->_configuration->getOptionAsBoolean('permitRecoveryRemoveEntity')
                             ) {
@@ -3174,7 +3174,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                                     . '&' . Action::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY . '=' . $entity
                                     . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                                    . $this->_nebuleInstance->getActionTicket();
+                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                             }
                         }
 
@@ -3209,7 +3209,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                     . '&' . Action::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT . '=' . $id
                     . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                    . $this->_nebuleInstance->getActionTicket();
+                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                 $this->displayActionList($actionList);
                 unset($actionList);
 
@@ -3267,12 +3267,12 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED . '=' . $group
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                                . $this->_nebuleInstance->getActionTicket();
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                         else
                             $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED . '=' . $group
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                                . $this->_nebuleInstance->getActionTicket();
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
 
                         // Marque comme vu.
                         $listOkGroups[$group] = true;
@@ -3327,7 +3327,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                             . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY . '=' . $link->getHashSource()
                             . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                            . $this->_nebuleInstance->getActionTicket();
+                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
 
                         // Marque comme vu.
                         $listOkEntities[$link->getHashSource()] = true;
