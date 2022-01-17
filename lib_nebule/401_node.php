@@ -615,12 +615,13 @@ class Node implements nodeInterface
      * @param array  $list
      * @param string $nid3
      */
-    private function _getLinksByNID3(array &$list, string $nid, string $nid3)
+    private function _getLinksByNID3(array &$list, string $nid3)
     {
         $filter = array(
             'bl/rl/req' => 'l',
-            'bl/rl/nid1' => $nid,
+            'bl/rl/nid1' => $this->_id,
             'bl/rl/nid3' => $nid3,
+            'bl/rl/nid4' => '',
         );
         $this->getLinks($list, $filter, null);
 
@@ -2072,7 +2073,7 @@ class Node implements nodeInterface
             } else {
                 // Sinon, on lit le contenu de l'objet. @todo à remplacer par getContent...
                 $limit = $this->_configuration->getOptionAsInteger('ioReadMaxData');
-                $data = $this->_nebuleInstance->getIoInstance()->objectRead($this->_id, $limit);
+                $data = $this->_nebuleInstance->getIoInstance()->getObject($this->_id, $limit);
 
                 // Vérification de quota de lecture. @todo à revoir...
                 if (strlen($data) >= $limit) {
@@ -2236,7 +2237,7 @@ class Node implements nodeInterface
 
             if ($deleteObject) {
                 // Supprime l'objet.
-                $r = $this->_io->deleteObject($this->_id);
+                $r = $this->_io->unsetObject($this->_id);
 
                 // Métrologie.
                 $this->_metrology->addAction('delobj', $this->_id, $r);
@@ -2389,7 +2390,7 @@ class Node implements nodeInterface
 
         // Lit la clé chiffrée. @todo à remplacer par getContent ...
         $limit = $this->_configuration->getOptionUntyped('ioReadMaxData');
-        $codeKey = $this->_nebuleInstance->getIoInstance()->objectRead($this->_idProtectedKey, $limit);
+        $codeKey = $this->_nebuleInstance->getIoInstance()->getObject($this->_idProtectedKey, $limit);
         // Calcul l'empreinte de la clé chiffrée.
         $hash = $this->_crypto->hash($codeKey);
         if ($hash != $this->_idProtectedKey) {
@@ -2550,7 +2551,7 @@ class Node implements nodeInterface
                     }
                 }
                 if ($delete) {
-                    $this->_io->deleteObject($idProtectedKey);
+                    $this->_io->unsetObject($idProtectedKey);
                 }
                 unset($object, $signerLinks, $itemSigner, $delete);
             }
@@ -2895,7 +2896,7 @@ class Node implements nodeInterface
             $this->_data = null;
             $this->_metrology->addLog('Delete object 0', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
             $nid = '0';
-            $this->_io->deleteObject($nid);
+            $this->_io->unsetObject($nid);
             return false;
         }
 
@@ -2915,7 +2916,7 @@ class Node implements nodeInterface
 
         // Extrait le contenu de l'objet, si possible.
         $this->_metrology->addObjectRead(); // Metrologie.
-        $this->_data = $this->_io->objectRead($this->_id);
+        $this->_data = $this->_io->getObject($this->_id);
         if ($this->_data === false) {
             $this->_metrology->addLog('Cant read object ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
             $this->_data = null;
@@ -2949,7 +2950,7 @@ class Node implements nodeInterface
         // Sinon l'objet est présent mais invalide, le supprime.
         $this->_data = null;
         $this->_metrology->addLog('Delete unconsistency object ' . $this->_id . ' ' . $hashAlgo . ':' . $hash, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
-        $this->_io->deleteObject($this->_id);
+        $this->_io->unsetObject($this->_id);
         return false;
     }
 
@@ -3004,7 +3005,7 @@ class Node implements nodeInterface
             $this->_data = null;
             $this->_metrology->addLog('Delete object 0', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
             $nid = '0';
-            $this->_io->deleteObject($nid);
+            $this->_io->unsetObject($nid);
             return null;
         }
 
@@ -3036,7 +3037,7 @@ class Node implements nodeInterface
 
         // Extrait le contenu de l'objet, si possible.
         $this->_metrology->addObjectRead(); // Metrologie.
-        $this->_data = $this->_io->objectRead($this->_id, $limit);
+        $this->_data = $this->_io->getObject($this->_id, $limit);
         if ($this->_data === false) {
             $this->_metrology->addLog('Cant read object ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
             $this->_data = null;
@@ -3071,7 +3072,7 @@ class Node implements nodeInterface
         // Sinon l'objet est présent mais invalide, le supprime.
         $this->_data = null;
         $this->_metrology->addLog('Delete unconsistency object ' . $this->_id . ' ' . $hashAlgo . ':' . $hash, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
-        $this->_io->deleteObject($this->_id);
+        $this->_io->unsetObject($this->_id);
         return null;
     }
 
@@ -3107,7 +3108,7 @@ class Node implements nodeInterface
         $this->_metrology->addLog('Get protected content : ' . $this->_idUnprotected, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         // Lit la clé chiffrée.
-        $codeKey = $this->_io->objectRead($this->_idProtectedKey, 0);
+        $codeKey = $this->_io->getObject($this->_idProtectedKey, 0);
         // Calcul l'empreinte de la clé chiffrée.
         $hash = $this->_crypto->hash($codeKey);
         if ($hash != $this->_idProtectedKey) {
@@ -3127,7 +3128,7 @@ class Node implements nodeInterface
         }
 
         // Lit l'objet chiffré.
-        $code = $this->_io->objectRead($this->_idProtected, $limit);
+        $code = $this->_io->getObject($this->_idProtected, $limit);
         // Calcul l'empreinte des données.
         $hash = $this->_crypto->hash($code);
         if ($hash != $this->_idProtected) {
@@ -3252,7 +3253,7 @@ class Node implements nodeInterface
         if (!$this->_configuration->getOptionAsBoolean('permitListInvalidLinks'))
             $withInvalidLinks = false;
 
-        $lines = $this->_io->linksRead($this->_id, '');
+        $lines = $this->_io->getLinks($this->_id, '');
         if ($lines === false)
             return;
 
@@ -3299,7 +3300,7 @@ class Node implements nodeInterface
         $i = 0;
 
         // Lit les liens.
-        $links = $this->_io->linksRead($this->_id);
+        $links = $this->_io->getLinks($this->_id);
         $this->_metrology->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         // Analyse les liens et les convertis en tableau d'objets de type lien.
@@ -3363,7 +3364,7 @@ class Node implements nodeInterface
         $i = 0;
 
         // Lit les liens.
-        $links = $this->_io->linksRead($this->_id);
+        $links = $this->_io->getLinks($this->_id);
         $this->_metrology->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         // Analyse les liens, les filtre et les convertis en tableau d'objets de type lien.
@@ -3555,7 +3556,7 @@ class Node implements nodeInterface
         }
 
         // Lit les liens.
-        $links = $this->_io->linksRead($this->_id);
+        $links = $this->_io->getLinks($this->_id);
         $this->_metrology->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         // Analyse les liens, les filtre et les convertis en tableau d'objets de type lien.
@@ -3816,7 +3817,7 @@ class Node implements nodeInterface
         $i = 0; // Indice de position dans le tableau des liens.
 
         // Lit les liens.
-        $links = $this->_io->linksRead($this->_id);
+        $links = $this->_io->getLinks($this->_id);
         $this->_metrology->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         // Analyse les liens, les filtre et les convertis en tableau d'objets de type lien.
@@ -4276,9 +4277,9 @@ class Node implements nodeInterface
         // Synchronisation
         foreach ($localisations as $localisation) {
             // Lecture de l'objet.
-            $data = $this->_io->objectRead($this->_id, 0, $localisation);
+            $data = $this->_io->getObject($this->_id, 0, $localisation);
             // Ecriture de l'objet.
-            $this->_io->writeObject($data);
+            $this->_io->setObject($this->_id, $data);
         }
 
         unset($localisations, $localisation);
@@ -4337,7 +4338,7 @@ class Node implements nodeInterface
         $link = null;
         $linkInstance = null;
         foreach ($localisations as $localisation) {
-            $links = $this->_io->linksRead($this->_id, $localisation);
+            $links = $this->_io->getLinks($this->_id, $localisation);
             $this->_metrology->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
             foreach ($links as $link) {
@@ -4391,7 +4392,7 @@ class Node implements nodeInterface
 
         if ($deleteObject) {
             // Supprime l'objet.
-            $r1 = $this->_io->deleteObject($id); // FIXME declare vars r1 r2
+            $r1 = $this->_io->unsetObject($id); // FIXME declare vars r1 r2
             $r2 = true;
 
             // Métrologie.
@@ -4425,7 +4426,7 @@ class Node implements nodeInterface
 
             if ($deleteObject) {
                 // Supprime l'objet.
-                $r2 = $this->_io->deleteObject($id);
+                $r2 = $this->_io->unsetObject($id);
 
                 // Métrologie.
                 $this->_metrology->addAction('delobj', $id, $r2);
@@ -4468,7 +4469,7 @@ class Node implements nodeInterface
         unset($links, $entity, $link);
 
         // Supprime l'objet.
-        $r = $this->_io->deleteObject($this->_id);
+        $r = $this->_io->unsetObject($this->_id);
 
         // Métrologie.
         $this->_metrology->addAction('delobj', $this->_id, $r);
@@ -4496,7 +4497,7 @@ class Node implements nodeInterface
         $newLink->signWrite();
 
         // Supprime l'objet.
-        $r = $this->_io->deleteObject($this->_id);
+        $r = $this->_io->unsetObject($this->_id);
 
         // Métrologie.
         $this->_metrology->addAction('delobj', $this->_id, $r);
@@ -4511,7 +4512,7 @@ class Node implements nodeInterface
     public function deleteForceObjectLinks()
     {
         // Supprime l'objet.
-        $this->_io->deleteObject($this->_id);
+        $this->_io->unsetObject($this->_id);
 
         // Supprime les liens de l'objet.
         $this->_io->flushLinks($this->_id);
@@ -4558,36 +4559,19 @@ class Node implements nodeInterface
             return false;
         }
 
-        if (!$this->_io->checkObjectPresent($this->_id)) {
-            // Si autorisé à écrire un nouvel objet.
-            if ($this->_configuration->getOptionAsBoolean('permitWriteObject')
-                && $this->_configuration->getOptionAsBoolean('permitCreateObject')
-            ) {
-                $id = $this->_io->writeObject($this->_data);
-            } else {
-                $id = false;
-            }
-        } else {
-            $id = $this->_id;
-        }
+        $ok = $this->_io->setObject($this->_id, $this->_data);
 
         // vide les données.
-        $this->_data = '';
-        $this->_haveData = false;
-
-        // Métrologie.
-        $v = true;
-        if ($id === false
-            || $id != $this->_id
-        ) {
-            $v = false;
-            // Si l'écriture échoue, on crée l'objet d'ID '0'. @todo à revoir si vraiment utile... pareil pour entities->write().
-            $this->_id = '0';
+        if (strlen($this->_data) > 1000000)
+        {
+            $this->_data = '';
+            $this->_haveData = false;
         }
-        $this->_metrology->addAction('addobj', $this->_id, $v);
+
+        $this->_metrology->addAction('addobj', $this->_id, $ok);
         $this->_metrology->addLog('OK write objet ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
-        return $v;
+        return $ok;
     }
 
 

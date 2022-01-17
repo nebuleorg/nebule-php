@@ -30,7 +30,10 @@ interface ioInterface
      */
     public function __construct(nebule $nebuleInstance);
 
+
+
     // Fonctions de gestion des modules.
+
     /**
      * Retourne le type de système de fichiers.
      *
@@ -77,10 +80,11 @@ interface ioInterface
     /**
      * Retourne l'ID de l'entité locale de l'instance.
      *
-     * @param string $localisation
+     * @param string $url
      * @return string
      */
-    public function getInstanceEntityID(string $localisation = ''): string;
+    public function getInstanceEntityID(string $url = ''): string;
+
 
 
     // Fonctions d'auto-test.
@@ -88,50 +92,51 @@ interface ioInterface
     /**
      * Vérifie l'arborescence des liens.
      *
-     * @param string $localisation
+     * @param string $url
      * @return boolean
      */
-    public function checkLinksDirectory(string $localisation = ''): bool;
+    public function checkLinksDirectory(string $url = ''): bool;
 
     /**
      * Vérifie l'arborescence des objets.
      *
-     * @param string $localisation
+     * @param string $url
      * @return boolean
      */
-    public function checkObjectsDirectory(string $localisation = ''): bool;
+    public function checkObjectsDirectory(string $url = ''): bool;
 
     /**
      * Vérifie les capacité de lecture de l'arborescence des liens.
      *
-     * @param string $localisation
+     * @param string $url
      * @return boolean
      */
-    public function checkLinksRead(string $localisation = ''): bool;
+    public function checkLinksRead(string $url = ''): bool;
 
     /**
      * Vérifie les capacité d'écriture de l'arborescence des liens.
      *
-     * @param string $localisation
+     * @param string $url
      * @return boolean
      */
-    public function checkLinksWrite(string $localisation = ''): bool;
+    public function checkLinksWrite(string $url = ''): bool;
 
     /**
      * Vérifie les capacité de lecture de l'arborescence des objets.
      *
-     * @param string $localisation
+     * @param string $url
      * @return boolean
      */
-    public function checkObjectsRead(string $localisation = ''): bool;
+    public function checkObjectsRead(string $url = ''): bool;
 
     /**
      * Vérifie les capacité d'écriture de l'arborescence des objets.
      *
-     * @param string $localisation
+     * @param string $url
      * @return boolean
      */
-    public function checkObjectsWrite(string $localisation = ''): bool;
+    public function checkObjectsWrite(string $url = ''): bool;
+
 
 
     // Fonctions de test de présence.
@@ -140,21 +145,22 @@ interface ioInterface
      * Indique true si l'objet a des liens, ou false sinon.
      * Attend en entrée une chaine avec l'ID de l'objet.
      *
-     * @param string $object
-     * @param string $localisation
+     * @param string $oid
+     * @param string $url
      * @return boolean
      */
-    public function checkLinkPresent(string $object, string $localisation = ''): bool;
+    public function checkLinkPresent(string $oid, string $url = ''): bool;
 
     /**
      * Indique true si l'objet est présent, ou false sinon.
      * Attend en entrée une chaine avec l'ID de l'objet.
      *
-     * @param string $object
-     * @param string $localisation
+     * @param string $oid
+     * @param string $url
      * @return boolean
      */
-    public function checkObjectPresent(string $object, string $localisation = ''): bool;
+    public function checkObjectPresent(string $oid, string $url = ''): bool;
+
 
 
     // Fonctions de lecture.
@@ -163,11 +169,11 @@ interface ioInterface
      * Lit les liens de l'objet. Retourne un tableau des liens lus, même vide.
      * Attend en entrée une chaine avec l'ID de l'objet.
      *
-     * @param string $object
-     * @param string $localisation
+     * @param string $oid
+     * @param string $url
      * @return array|boolean
      */
-    public function linksRead(string $object, string $localisation = '');
+    public function getLinks(string $oid, string $url = '');
 
     /**
      * Lit les liens dissimulés de l'entité dite destinataire. Retourne un tableau des liens lus, même vide.
@@ -177,20 +183,21 @@ interface ioInterface
      *
      * @param string $entity
      * @param string $signer
-     * @param string $localisation
+     * @param string $url
      * @return array
      */
-    public function obfuscatedLinksRead(string $entity, string $signer = '0', string $localisation = ''): array;
+    public function obfuscatedLinksRead(string $entity, string $signer = '0', string $url = ''): array;
 
     /**
      * Lit le contenu de l'objet. Retourne le contenu lu ou false si erreur.
      *
-     * @param string $object
+     * @param string $oid
      * @param int    $maxsize
-     * @param string $localisation
+     * @param string $url
      * @return string|boolean
      */
-    public function objectRead(string $object, int $maxsize = 0, string $localisation = '');
+    public function getObject(string $oid, int $maxsize = 0, string $url = '');
+
 
 
     // Fonctions d'écriture.
@@ -198,53 +205,55 @@ interface ioInterface
     /**
      * Ecrit un lien de l'objet. Retourne le nombre d'octets écrits ou false si erreur.
      *
-     * @param string $object
+     * @param string $oid
      * @param string $link
-     * @param string $localisation
+     * @param string $url
      * @return boolean
      */
-    public function writeLink(string $object, string &$link, string $localisation = ''): bool;
+    public function setLink(string $oid, string &$link, string $url = ''): bool;
 
     /**
      * Ecrit des données dans un objet. Retourne l'empreinte de l'objet écrit ou false si erreur.
      *
+     * @param string $oid
      * @param string $data
-     * @param string $localisation
-     * @return string|boolean
+     * @param string $url
+     * @return boolean
      */
-    public function writeObject(string &$data, string $localisation = '');
+    public function setObject(string $oid, string &$data, string $url = ''): bool;
 
+    
 
     // Fonctions de suppression.
 
     /**
      * Supprime la ligne d'un lien dans les liens d'un objet.
      *
-     * @param string $object
+     * @param string $oid
      * @param string $link
-     * @param string $localisation
+     * @param string $url
      * @return boolean
      */
 
-    public function deleteLink(string $object, string &$link, string $localisation = ''): bool;
+    public function unsetLink(string $oid, string &$link, string $url = ''): bool;
 
     /**
      * Supprime tous les liens d'un objet.
      *
-     * @param string $object
-     * @param string $localisation
+     * @param string $oid
+     * @param string $url
      * @return boolean
      */
 
-    public function flushLinks(string $object, string $localisation = ''): bool;
+    public function flushLinks(string $oid, string $url = ''): bool;
 
     /**
      * Supprime le contenu d'un objet. Retourne true si la suppression a réussi ou false si erreur.
      * Attend en entrée une chaine avec l'ID de l'objet.
      *
-     * @param string $object
-     * @param string $localisation
+     * @param string $oid
+     * @param string $url
      * @return boolean
      */
-    public function deleteObject(string $object, string $localisation = ''): bool;
+    public function unsetObject(string $oid, string $url = ''): bool;
 }

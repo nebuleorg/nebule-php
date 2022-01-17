@@ -3742,7 +3742,7 @@ abstract class Actions
             // Vérifie si l'objet est déjà présent.
             $present = $this->_io->checkObjectPresent($this->_actionSynchronizeNewEntityID);
             // Lecture de l'objet.
-            $data = $this->_io->objectRead($this->_actionSynchronizeNewEntityID, Entity::ENTITY_MAX_SIZE, $this->_actionSynchronizeNewEntityURL);
+            $data = $this->_io->getObject($this->_actionSynchronizeNewEntityID, Entity::ENTITY_MAX_SIZE, $this->_actionSynchronizeNewEntityURL);
             // Calcul de l'empreinte.
             $hash = $this->_nebuleInstance->getCryptoInstance()->hash($data);
             if ($hash != $this->_actionSynchronizeNewEntityID) {
@@ -3756,11 +3756,11 @@ abstract class Actions
                 return false;
             }
             // Ecriture de l'objet.
-            $this->_io->writeObject($data);
+            $this->_io->setObject($this->_actionSynchronizeNewEntityID, $data);
 
             $this->_actionSynchronizeNewEntityInstance = $this->_nebuleInstance->newEntity_DEPRECATED($this->_actionSynchronizeNewEntityID);
 
-            if (!$this->_actionSynchronizeNewEntityInstance->getTypeVerify) {
+            if (!$this->_actionSynchronizeNewEntityInstance->getTypeVerify()) {
                 $this->_metrology->addLog('Action synchronize new entity - Not entity', Metrology::LOG_LEVEL_DEBUG); // Log
                 if (!$present)
                     $this->_actionSynchronizeNewEntityInstance->deleteObject();

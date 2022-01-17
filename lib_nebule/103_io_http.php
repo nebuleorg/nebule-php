@@ -137,13 +137,13 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getInstanceEntityID()
      */
-    public function getInstanceEntityID(string $localisation = ''): string
+    public function getInstanceEntityID(string $url = ''): string
     {
-        if ($localisation == '')
-            $localisation = $this->_defaultLocalisation;
-        $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_ENTITY_FILE;
-        if ($this->_checkExistOverHTTP($localisation))
-            return file_get_contents($localisation);
+        if ($url == '')
+            $url = $this->_defaultLocalisation;
+        $url = $url . '/' . nebule::NEBULE_LOCAL_ENTITY_FILE;
+        if ($this->_checkExistOverHTTP($url))
+            return file_get_contents($url);
         return '0';
     }
 
@@ -151,43 +151,43 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksDirectory()
      */
-    public function checkLinksDirectory(string $localisation = ''): bool
+    public function checkLinksDirectory(string $url = ''): bool
     {
-        if ($localisation == '')
-            $localisation = $this->_defaultLocalisation;
-        $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/';
-        return $this->_checkExistOverHTTP($localisation);
+        if ($url == '')
+            $url = $this->_defaultLocalisation;
+        $url = $url . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/';
+        return $this->_checkExistOverHTTP($url);
     }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::checkObjectsDirectory()
      */
-    public function checkObjectsDirectory(string $localisation = ''): bool
+    public function checkObjectsDirectory(string $url = ''): bool
     {
-        if ($localisation == '')
-            $localisation = $this->_defaultLocalisation;
-        $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/';
-        return $this->_checkExistOverHTTP($localisation);
+        if ($url == '')
+            $url = $this->_defaultLocalisation;
+        $url = $url . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/';
+        return $this->_checkExistOverHTTP($url);
     }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::checkLinksRead()
      */
-    public function checkLinksRead(string $localisation = ''): bool
+    public function checkLinksRead(string $url = ''): bool
     {
-        if ($localisation == '')
-            $localisation = $this->_defaultLocalisation;
-        $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . Configuration::OPTIONS_DEFAULT_VALUE['puppetmaster'];
-        return $this->_checkExistOverHTTP($localisation);
+        if ($url == '')
+            $url = $this->_defaultLocalisation;
+        $url = $url . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . Configuration::OPTIONS_DEFAULT_VALUE['puppetmaster'];
+        return $this->_checkExistOverHTTP($url);
     }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::checkLinksWrite()
      */
-    public function checkLinksWrite(string $localisation = ''): bool
+    public function checkLinksWrite(string $url = ''): bool
     {
         return false;
     }
@@ -196,19 +196,19 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsRead()
      */
-    public function checkObjectsRead(string $localisation = ''): bool
+    public function checkObjectsRead(string $url = ''): bool
     {
-        if ($localisation == '')
-            $localisation = $this->_defaultLocalisation;
-        $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Configuration::OPTIONS_DEFAULT_VALUE['puppetmaster'];
-        return $this->_checkExistOverHTTP($localisation);
+        if ($url == '')
+            $url = $this->_defaultLocalisation;
+        $url = $url . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Configuration::OPTIONS_DEFAULT_VALUE['puppetmaster'];
+        return $this->_checkExistOverHTTP($url);
     }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::checkObjectsWrite()
      */
-    public function checkObjectsWrite(string $localisation = ''): bool
+    public function checkObjectsWrite(string $url = ''): bool
     {
         return false;
     }
@@ -217,61 +217,61 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinkPresent()
      */
-    public function checkLinkPresent($object, string $localisation = ''): bool
+    public function checkLinkPresent($oid, string $url = ''): bool
     {
-        if ($localisation == '')
-            $localisation = $this->_defaultLocalisation;
-        if (!is_string($object)
-            || $object == '0'
-            || $object == ''
-            || !ctype_xdigit($object)
+        if ($url == '')
+            $url = $this->_defaultLocalisation;
+        if (!is_string($oid)
+            || $oid == '0'
+            || $oid == ''
+            || !ctype_xdigit($oid)
         )
             return false;
-        $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object;
-        return $this->_checkExistOverHTTP($localisation);
+        $url = $url . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid;
+        return $this->_checkExistOverHTTP($url);
     }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::checkObjectPresent()
      */
-    public function checkObjectPresent($object, string $localisation = ''): bool
+    public function checkObjectPresent($oid, string $url = ''): bool
     {
-        if ($localisation == '')
-            $localisation = $this->_defaultLocalisation;
-        if (!is_string($object)
-            || $object == '0'
-            || $object == ''
-            || !ctype_xdigit($object)
+        if ($url == '')
+            $url = $this->_defaultLocalisation;
+        if (!is_string($oid)
+            || $oid == '0'
+            || $oid == ''
+            || !ctype_xdigit($oid)
         )
             return false;
-        $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object;
-        return $this->_checkExistOverHTTP($localisation);
+        $url = $url . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid;
+        return $this->_checkExistOverHTTP($url);
     }
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::linksRead()
+     * @see ioInterface::getLinks()
      */
-    public function linksRead(string $object, string $localisation = '')
+    public function getLinks(string $oid, string $url = '')
     {
-        if ($localisation == '')
-            $localisation = $this->_defaultLocalisation;
-        if ($object == '0'
-            || $object == ''
-            || !ctype_xdigit($object)
+        if ($url == '')
+            $url = $this->_defaultLocalisation;
+        if ($oid == '0'
+            || $oid == ''
+            || !ctype_xdigit($oid)
         )
             return false;
         if (!$this->_configuration->getOptionAsBoolean('permitSynchronizeLink'))
             return false;
-        $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object;
-        if (!$this->_checkExistOverHTTP($localisation))
+        $url = $url . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid;
+        if (!$this->_checkExistOverHTTP($url))
             return false;
         $n = 0;
         $t = array();
 
         // Lecture et extraction des liens.
-        $c = file_get_contents($localisation);
+        $c = file_get_contents($url);
         $l = array_filter(explode(' ', strtr($c, "\n", ' ')));
         unset($c);
 
@@ -290,7 +290,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::ObfuscatedLinksRead()
      */
-    public function obfuscatedLinksRead(string $entity, string $signer = '0', string $localisation = ''): array
+    public function obfuscatedLinksRead(string $entity, string $signer = '0', string $url = ''): array
     {
         // @todo
         return array();
@@ -298,49 +298,39 @@ class ioHTTP extends io implements ioInterface
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::objectRead()
+     * @see ioInterface::getObject()
      */
-    public function objectRead(string $object, int $maxsize = 0, string $localisation = '')
+    public function getObject(string $oid, int $maxsize = 0, string $url = '')
     {
-        if ($localisation == '')
-            $localisation = $this->_defaultLocalisation;
-        if ($object == '0'
-            || $object == ''
-            || !ctype_xdigit($object)
+        if ($url == '')
+            $url = $this->_defaultLocalisation;
+        if ($oid == '0'
+            || $oid == ''
+            || !ctype_xdigit($oid)
         )
             return false;
         if (!$this->_configuration->getOptionAsBoolean('permitSynchronizeObject'))
             return false;
-        $localisation = $localisation . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object;
-        if ($this->_checkExistOverHTTP($localisation))
-            return file_get_contents($localisation);
+        $url = $url . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid;
+        if ($this->_checkExistOverHTTP($url))
+            return file_get_contents($url);
         return false;
     }
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::writeLink()
+     * @see ioInterface::setLink()
      */
-    public function writeLink(string $object, string &$link, string $localisation = ''): bool
+    public function setLink(string $oid, string &$link, string $url = ''): bool
     {
         return false;
     }
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::writeObject()
+     * @see ioInterface::setObject()
      */
-    public function writeObject(string &$data, string $localisation = ''): bool
-    {
-        // Disabled on HTTP
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see ioInterface::deleteObject()
-     */
-    public function deleteObject(string $object, $localisation = ''): bool
+    public function setObject(string $oid, string &$data, string $url = ''): bool
     {
         // Disabled on HTTP
         return false;
@@ -348,9 +338,19 @@ class ioHTTP extends io implements ioInterface
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::deleteLink()
+     * @see ioInterface::unsetObject()
      */
-    public function deleteLink(string $object, string &$link, $localisation = ''): bool
+    public function unsetObject(string $oid, $url = ''): bool
+    {
+        // Disabled on HTTP
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see ioInterface::unsetLink()
+     */
+    public function unsetLink(string $oid, string &$link, $url = ''): bool
     {
         // Disabled on HTTP
         return false;
@@ -360,7 +360,7 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::flushLinks()
      */
-    public function flushLinks(string $object, $localisation = ''): bool
+    public function flushLinks(string $oid, $url = ''): bool
     {
         // Disabled on HTTP
         return false;
@@ -380,12 +380,12 @@ class ioHTTP extends io implements ioInterface
     /**
      * Vérifie la présence d'un fichier ou dossier via HTTP.
      *
-     * @param string $localisation
+     * @param string $url
      * @return boolean
      */
-    private function _checkExistOverHTTP(string $localisation): bool
+    private function _checkExistOverHTTP(string $url): bool
     {
-        $url = parse_url($localisation);
+        $url = parse_url($url);
 
         $handle = fsockopen($url['host'], 80, $errno, $errstr, 1);
         if ($handle === false)

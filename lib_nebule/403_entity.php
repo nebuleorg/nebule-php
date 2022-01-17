@@ -181,16 +181,16 @@ class Entity extends Node implements nodeInterface
 
         // Écrit le lien pour l'objet de l'entité signataire.
         if ($this->_configuration->getOptionUntyped('NEBULE_DEFAULT_PERMIT_ADD_LINK_TO_SIGNER'))
-            $this->_io->writeLink($this->_id, $signedLink);
+            $this->_io->setLink($this->_id, $signedLink);
 
         // Écrit le lien pour l'objet source.
-        $this->_io->writeLink($source, $signedLink);
+        $this->_io->setLink($source, $signedLink);
 
         // Écrit le lien pour l'objet cible.
-        $this->_io->writeLink($target, $signedLink);
+        $this->_io->setLink($target, $signedLink);
 
         // Écrit le lien pour l'objet méta.
-        $this->_io->writeLink($meta, $signedLink);
+        $this->_io->setLink($meta, $signedLink);
     }
 
 
@@ -281,7 +281,7 @@ class Entity extends Node implements nodeInterface
     // Retrouve la clé publique.
     private function _findPublicKey(): void
     {
-        $this->_publicKey = $this->_io->objectRead($this->_id, self::ENTITY_MAX_SIZE);
+        $this->_publicKey = $this->_io->getObject($this->_id, self::ENTITY_MAX_SIZE);
     }
 
 
@@ -323,7 +323,7 @@ class Entity extends Node implements nodeInterface
                 && $this->_io->checkObjectPresent($hashSource)
             ) {
                 // Extrait le contenu de l'objet source. @todo remplacer par Object::getContent ...
-                $line = $this->_io->objectRead($hashSource, self::ENTITY_MAX_SIZE);
+                $line = $this->_io->getObject($hashSource, self::ENTITY_MAX_SIZE);
                 // Vérifie si le contenu contient un entête de clé privée
                 if (strstr($line, self::ENTITY_PRIVATE_HEADER) !== false) {
                     // Mémorise l'ID de la clé privée.
@@ -356,7 +356,7 @@ class Entity extends Node implements nodeInterface
             $this->_findPrivateKeyID();
         }
         // Extrait le contenu de l'objet.
-        $this->_privateKey = $this->_io->objectRead($this->_privateKeyID, self::ENTITY_MAX_SIZE);
+        $this->_privateKey = $this->_io->getObject($this->_privateKeyID, self::ENTITY_MAX_SIZE);
         return true;
         // A faire... vérifier que c'est bien une clé privée _pour_ cette clé publique.
     }
@@ -433,7 +433,7 @@ class Entity extends Node implements nodeInterface
         unset($newKey);
 
         // Ecrit l'objet de la nouvelle clé privée.
-        $this->_io->writeObject($this->_privateKey);
+        $this->_io->setObject($this->_privateKeyID, $this->_privateKey);
 
         // Définition de la date.
         $date = date(DATE_ATOM);
@@ -734,22 +734,10 @@ class Entity extends Node implements nodeInterface
     // Ecrit l'objet si non présent.
     public function write(): bool
     {
-        if (!$this->_io->checkObjectPresent($this->_id)) {
-            $id = $this->_io->writeObject($this->_publicKey);
-        } else {
-            $id = $this->_id;
-        }
+        $ok = $this->_io->setObject($this->_id, $this->_publicKey);
+        $this->_metrology->addAction('addent', $this->_id, $ok);
 
-        // Métrologie.
-        $v = true;
-        if ($id === false) {
-            $v = false;
-            // Si l'écriture échoue, on crée l'objet d'ID '0'. @todo à revoir si vraiment utile... pareil pour objects->write().
-            $id = '0';
-        }
-        $this->_metrology->addAction('addent', $id, $v);
-
-        return $v;
+        return $ok;
     }
 
 

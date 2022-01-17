@@ -58,12 +58,12 @@ class io implements ioInterface
                 $instance = new $class($nebuleInstance);
                 $type = $instance->getType();
                 $filterString = $instance->getFilterString();
-                $localisation = $instance->getDefaultLocalisation();
+                $url = $instance->getDefaultLocalisation();
                 $mode = $instance->getMode();
                 // Renseigne les tableaux de suivi.
                 $this->_listClasses[$i] = $class;
                 $this->_listTypes[$i] = $type;
-                $this->_listLocalisations[$localisation] = $instance;
+                $this->_listLocalisations[$url] = $instance;
                 $this->_listFilterStrings[$type] = $filterString;
                 $this->_listModes[$type] = $mode;
                 $this->_listInstances[$type] = $instance;
@@ -100,17 +100,17 @@ class io implements ioInterface
     /**
      * Recherche l'instance d'un module IO par rapport à son type de localisation.
      *
-     * @param string $localisation
+     * @param string $url
      * @return ioInterface
      */
-    private function _findType(string $localisation)
+    private function _findType(string $url)
     {
-        if ($localisation == '')
+        if ($url == '')
             return $this->_defaultIO;
 
         // Fait le tour des modules IO et de leurs filtres pour déterminer le protocole.
         foreach ($this->_listFilterStrings as $type => $pattern) {
-            if (preg_match($pattern, $localisation))
+            if (preg_match($pattern, $url))
                 return $this->_listInstances[$type];
         }
         return $this->_defaultIO;
@@ -194,9 +194,9 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getInstanceEntityID()
      */
-    public function getInstanceEntityID(string $localisation = ''): string
+    public function getInstanceEntityID(string $url = ''): string
     {
-        return $this->_defaultIO->getInstanceEntityID($localisation);
+        return $this->_defaultIO->getInstanceEntityID($url);
     }
 
     /**
@@ -212,9 +212,9 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksDirectory()
      */
-    public function checkLinksDirectory(string $localisation = ''): bool
+    public function checkLinksDirectory(string $url = ''): bool
     {
-        $instance = $this->_findType($localisation);
+        $instance = $this->_findType($url);
         return $instance->checkLinksDirectory();
     }
 
@@ -222,9 +222,9 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsDirectory()
      */
-    public function checkObjectsDirectory(string $localisation = ''): bool
+    public function checkObjectsDirectory(string $url = ''): bool
     {
-        $instance = $this->_findType($localisation);
+        $instance = $this->_findType($url);
         return $instance->checkObjectsDirectory();
     }
 
@@ -232,9 +232,9 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksRead()
      */
-    public function checkLinksRead(string $localisation = ''): bool
+    public function checkLinksRead(string $url = ''): bool
     {
-        $instance = $this->_findType($localisation);
+        $instance = $this->_findType($url);
         return $instance->checkLinksRead();
     }
 
@@ -242,9 +242,9 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksWrite()
      */
-    public function checkLinksWrite(string $localisation = ''): bool
+    public function checkLinksWrite(string $url = ''): bool
     {
-        $instance = $this->_findType($localisation);
+        $instance = $this->_findType($url);
         return $instance->checkLinksWrite();
     }
 
@@ -252,9 +252,9 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsRead()
      */
-    public function checkObjectsRead(string $localisation = ''): bool
+    public function checkObjectsRead(string $url = ''): bool
     {
-        $instance = $this->_findType($localisation);
+        $instance = $this->_findType($url);
         return $instance->checkObjectsRead();
     }
 
@@ -262,9 +262,9 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsWrite()
      */
-    public function checkObjectsWrite(string $localisation = ''): bool
+    public function checkObjectsWrite(string $url = ''): bool
     {
-        $instance = $this->_findType($localisation);
+        $instance = $this->_findType($url);
         return $instance->checkObjectsWrite();
     }
 
@@ -272,99 +272,99 @@ class io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinkPresent()
      */
-    public function checkLinkPresent(string $object, string $localisation = ''): bool
+    public function checkLinkPresent(string $oid, string $url = ''): bool
     {
-        $instance = $this->_findType($localisation);
-        return $instance->checkLinkPresent($object);
+        $instance = $this->_findType($url);
+        return $instance->checkLinkPresent($oid);
     }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::checkObjectPresent()
      */
-    public function checkObjectPresent(string $object, string $localisation = ''): bool
+    public function checkObjectPresent(string $oid, string $url = ''): bool
     {
-        $instance = $this->_findType($localisation);
-        return $instance->checkObjectPresent($object);
+        $instance = $this->_findType($url);
+        return $instance->checkObjectPresent($oid);
     }
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::linksRead()
+     * @see ioInterface::getLinks()
      */
-    public function linksRead(string $object, string $localisation = '')
+    public function getLinks(string $oid, string $url = '')
     {
-        $instance = $this->_findType($localisation);
-        return $instance->linksRead($object);
+        $instance = $this->_findType($url);
+        return $instance->getLinks($oid);
     }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::ObfuscatedLinksRead()
      */
-    public function obfuscatedLinksRead(string $entity, string $signer = '0', string $localisation = ''): array
+    public function obfuscatedLinksRead(string $entity, string $signer = '0', string $url = ''): array
     {
-        $instance = $this->_findType($localisation);
+        $instance = $this->_findType($url);
         return $instance->obfuscatedLinksRead($entity);
     }
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::objectRead()
+     * @see ioInterface::getObject()
      */
-    public function objectRead(string $object, int $maxsize = 0, string $localisation = '')
+    public function getObject(string $oid, int $maxsize = 0, string $url = '')
     {
-        $instance = $this->_findType($localisation);
-        return $instance->objectRead($object, $maxsize);
+        $instance = $this->_findType($url);
+        return $instance->getObject($oid, $maxsize);
     }
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::writeLink()
+     * @see ioInterface::setLink()
      */
-    public function writeLink(string $object, string &$link, string $localisation = ''): bool
+    public function setLink(string $oid, string &$link, string $url = ''): bool
     {
-        $instance = $this->_findType($localisation);
-        return $instance->writeLink($object, $link);
+        $instance = $this->_findType($url);
+        return $instance->setLink($oid, $link);
     }
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::writeObject()
+     * @see ioInterface::setObject()
      */
-    public function writeObject(string &$data, string $localisation = '')
+    public function setObject(string $oid, string &$data, string $url = ''): bool
     {
-        $instance = $this->_findType($localisation);
-        return $instance->writeObject($data);
+        $instance = $this->_findType($url);
+        return $instance->setObject($oid, $data);
     }
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::deleteLink()
+     * @see ioInterface::unsetLink()
      */
-    public function deleteLink(string $object, string &$link, string $localisation = ''): bool
+    public function unsetLink(string $oid, string &$link, string $url = ''): bool
     {
-        $instance = $this->_findType($localisation);
-        return $instance->deleteLink($object, $link);
+        $instance = $this->_findType($url);
+        return $instance->unsetLink($oid, $link);
     }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::flushLinks()
      */
-    public function flushLinks(string $object, string $localisation = ''): bool
+    public function flushLinks(string $oid, string $url = ''): bool
     {
-        $instance = $this->_findType($localisation);
-        return $instance->flushLinks($object);
+        $instance = $this->_findType($url);
+        return $instance->flushLinks($oid);
     }
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::deleteObject()
+     * @see ioInterface::unsetObject()
      */
-    public function deleteObject(string $object, string $localisation = ''): bool
+    public function unsetObject(string $oid, string $url = ''): bool
     {
-        $instance = $this->_findType($localisation);
-        return $instance->deleteObject($object);
+        $instance = $this->_findType($url);
+        return $instance->unsetObject($oid);
     }
 }

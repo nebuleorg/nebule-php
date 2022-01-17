@@ -36,7 +36,7 @@ class Localisation extends Node implements nodeInterface
 
         if ($this->_id != '0')
         {
-            $this->_localisation = trim(strtolower($this->_io->objectRead($this->_id)));
+            $this->_localisation = trim(strtolower($this->_io->getObject($this->_id)));
             $this->_parseURL();
         }
     }

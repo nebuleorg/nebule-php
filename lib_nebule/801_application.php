@@ -947,7 +947,7 @@ abstract class Applications
     protected function _getObjectClassName($id)
     {
         $name = false;
-        $readValue = $this->_nebuleInstance->getIoInstance()->objectRead($id);
+        $readValue = $this->_nebuleInstance->getIoInstance()->getObject($id);
         $startValue = strpos($readValue, 'class');
         $trimLine = substr($readValue, $startValue, 128);
         $arrayValue = explode(' ', $trimLine);
