@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Nebule\Library;
 use Nebule\Library\nebule;
 use Nebule\Library\nodeInterface;
+use function Nebule\Bootstrap\lnk_getList;
 
 /**
  * ------------------------------------------------------------------------------------------
@@ -574,10 +575,8 @@ class Node implements nodeInterface
         $algo = $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_HASH, 'all');
         $this->_metrology->addLog('Object ' . $this->_id . ' hash = ' . $algo, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
-        if ($algo != '') {
+        if ($algo != '')
             return $algo;
-        }
-        // else
         return '';
     }
 
@@ -588,16 +587,13 @@ class Node implements nodeInterface
      */
     public function checkPresent(): bool
     {
-        $result = false;
-        if ($this->_id == '0') {
+        if ($this->_id == '0')
             return false;
-        }
-        // Si l'objet est protégé.
-        if ($this->_getMarkProtected()) {
+
+        if ($this->_getMarkProtected())
             $result = $this->_nebuleInstance->getIoInstance()->checkObjectPresent($this->_idProtected);
-        } else {
+        else
             $result = $this->_nebuleInstance->getIoInstance()->checkObjectPresent($this->_id);
-        }
         return $result;
     }
 
@@ -612,40 +608,28 @@ class Node implements nodeInterface
     }
 
     /**
-     * Faire une recherche de liens type l en fonction de l'objet méta.
+     * Faire une recherche de liens type 'l' en fonction de l'objet méta.
      * Typiquement utilisé pour une recherche de propriétés d'un objet.
      * Fait une recherche sur de multiples algorithmes de hash au besoin.
      *
      * @param array  $list
-     * @param string $meta
-     * @todo
+     * @param string $nid3
      */
-    private function _getLinksByMeta(array &$list, string $meta)
+    private function _getLinksByNID3(array &$list, string $nid, string $nid3)
     {
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid1' => $nid,
+            'bl/rl/nid3' => $nid3,
+        );
+        $this->getLinks($list, $filter, null);
+
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($list) == 0
             && $this->_configuration->getOptionAsBoolean('permitListOtherHash')
         ) {
             // TODO
         }
-    }
-
-    /**
-     * Faire une recherche de liens type l en fonction de l'objet méta et d'un algorithme de hash donné.
-     *
-     * @param array  $list
-     * @param string $meta
-     */
-    private function _getLinksByMetaByHash(array &$list, string $meta)
-    {
-        $list = $this->readLinksFilterFull_disabled(
-            '',
-            '',
-            'l',
-            $this->_id,
-            '',
-            $this->_crypto->hash($meta, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM)
-        );
     }
 
     /**
@@ -667,7 +651,7 @@ class Node implements nodeInterface
 
         // Liste les liens à la recherche de la propriété.
         $list = array();
-        $this->_getLinksByMeta($list, $type);
+        $this->_getLinksByNID3($list, $type);
 
         if (sizeof($list) == 0)
             return array();
@@ -786,7 +770,7 @@ class Node implements nodeInterface
 
         // Liste les liens à la recherche de la propriété.
         $list = array();
-        $this->_getLinksByMeta($list, $type);
+        $this->_getLinksByNID3($list, $type);
 
         if (sizeof($list) == 0) {
             return array();
@@ -872,7 +856,7 @@ class Node implements nodeInterface
 
         // Liste les liens à la recherche de la propriété.
         $links = array();
-        $this->_getLinksByMeta($links, $type);
+        $this->_getLinksByNID3($links, $type);
 
         if (sizeof($links) == 0) {
             return array();
@@ -3253,21 +3237,22 @@ class Node implements nodeInterface
     /**
      * Link - Read links, parse and filter each links.
      *
-     * @param string $nid
      * @param array  $links
      * @param array  $filter
-     * @param bool   $withInvalidLinks
+     * @param ?bool  $withInvalidLinks
      * @return void
      */
-    public function getLinks(string &$nid, array &$links, array $filter, bool $withInvalidLinks = false): void
+    public function getLinks(array &$links, array $filter, ?bool $withInvalidLinks = null): void
     {
-        if ($nid == '0' || !$this->_io->checkLinkPresent($nid))
+        if ($this->_id == '0'
+            || !$this->_io->checkLinkPresent($this->_id)
+        )
             return;
 
         if (!$this->_configuration->getOptionAsBoolean('permitListInvalidLinks'))
             $withInvalidLinks = false;
 
-        $lines = $this->_io->linksRead($nid, '');
+        $lines = $this->_io->linksRead($this->_id, '');
         if ($lines === false)
             return;
 
