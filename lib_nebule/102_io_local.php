@@ -285,8 +285,7 @@ class ioLocal extends io implements ioInterface
     public function checkLinkPresent(string $object, string $localisation = ''): bool
     {
         if ($localisation != ''
-            || $object == '0'
-            || $object == ''
+            || !Node::checkNID($object, false)
             || !file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object)
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object)
         )
@@ -302,8 +301,7 @@ class ioLocal extends io implements ioInterface
     public function checkObjectPresent(string $object, string $localisation = ''):bool
     {
         if ($localisation != ''
-            || $object == '0'
-            || $object == ''
+            || !Node::checkNID($object, false)
             || !file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object)
             || is_dir(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object)
         )
@@ -331,8 +329,7 @@ class ioLocal extends io implements ioInterface
         $linkList = array();
 
         if ($localisation != ''
-            || $object == '0'
-            || $object == ''
+            || !Node::checkNID($object, false)
             || !file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object)
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $object)
         )
@@ -370,8 +367,7 @@ class ioLocal extends io implements ioInterface
 
         // Vérifie l'entité destinataire des liens dissimulés.
         if ($localisation != ''
-            || $entity == '0'
-            || $entity == ''
+            || !Node::checkNID($entity, false)
             || !file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $entity)
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $entity)
         )
@@ -430,8 +426,7 @@ class ioLocal extends io implements ioInterface
     public function objectRead(string $object, int $maxsize = 0, string $localisation = '')
     {
         if ($localisation != ''
-            || $object == '0'
-            || $object == ''
+            || !Node::checkNID($object, false)
             || !file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object)
             || is_dir(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object)
         )
@@ -455,8 +450,7 @@ class ioLocal extends io implements ioInterface
     {
         // Vérifie les arguments.
         if ($localisation != ''
-            || $object == '0'
-            || $object == ''
+            || !Node::checkNID($object, false)
             || $link == ''
             || !$this->_checkFileLink($object, $link)
             || !$this->_configuration->getOptionAsBoolean('permitWrite')
@@ -520,8 +514,7 @@ class ioLocal extends io implements ioInterface
     public function deleteObject(string $object, string $localisation = ''): bool
     {
         if ($localisation != ''
-            || $object == '0'
-            || $object == ''
+            || !Node::checkNID($object, false)
             || !$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteObject')
             || $this->getMode() != 'RW'
@@ -549,8 +542,7 @@ class ioLocal extends io implements ioInterface
     public function deleteLink(string $object, string &$link, string $localisation = ''): bool
     {
         if ($localisation != ''
-            || $object == '0'
-            || $object == ''
+            || !Node::checkNID($object, false)
             || !$this->_checkFileLink($object, $link)
             || $link == ''
             || !$this->_configuration->getOptionAsBoolean('permitWrite')
@@ -576,8 +568,7 @@ class ioLocal extends io implements ioInterface
     public function flushLinks(string $object, string $localisation = ''): bool
     {
         if ($localisation != ''
-            || $object == '0'
-            || $object == ''
+            || !Node::checkNID($object, false)
             || !$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
             || $this->getMode() != 'RW'

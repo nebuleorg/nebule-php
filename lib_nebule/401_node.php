@@ -511,6 +511,7 @@ class Node implements nodeInterface
 
     /**
      * Object - Verify name structure of the node : hash.algo.size
+     * There's a specific treatment for NID empty or '0'.
      *
      * @param string  $nid
      * @param boolean $permitNull
@@ -519,7 +520,9 @@ class Node implements nodeInterface
     static public function checkNID(string &$nid, bool $permitNull = false): bool
     {
         // May be null in some case.
-        if ($permitNull && $nid == '')
+        if ($permitNull
+            && ($nid == '' || $nid == '0')
+        )
             return true;
 
         // Check hash value.
