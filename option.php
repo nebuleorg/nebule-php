@@ -1356,7 +1356,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             $signersList = array();
 
             // Liste les applications reconnues par le maître du code.
-            $linksList = $instanceAppsID->readLinksFilterFull_disabled($nebuleInstance->getCodeMaster(), '', 'f', $refAppsID, '', $refAppsID);
+            $linksList = $instanceAppsID->readLinksFilterFull_DEPRECATED($nebuleInstance->getCodeMaster(), '', 'f', $refAppsID, '', $refAppsID);
             foreach ($linksList as $link) {
                 $hashTarget = $link->getHashTarget();
                 $applicationsList[$hashTarget] = $hashTarget;
@@ -1367,7 +1367,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             if ($this->_configuration->getOptionAsBoolean('permitInstanceEntityAsAuthority')
                 && !$nebuleInstance->getModeRescue()
             ) {
-                $linksList = $instanceAppsID->readLinksFilterFull_disabled($nebuleInstance->getInstanceEntity(), '', 'f', $refAppsID, '', $refAppsID);
+                $linksList = $instanceAppsID->readLinksFilterFull_DEPRECATED($nebuleInstance->getInstanceEntity(), '', 'f', $refAppsID, '', $refAppsID);
                 foreach ($linksList as $link) {
                     $hashTarget = $link->getHashTarget();
                     $applicationsList[$hashTarget] = $hashTarget;
@@ -1379,7 +1379,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             if ($this->_configuration->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                 && !$nebuleInstance->getModeRescue()
             ) {
-                $linksList = $instanceAppsID->readLinksFilterFull_disabled($nebuleInstance->getDefaultEntity(), '', 'f', $refAppsID, '', $refAppsID);
+                $linksList = $instanceAppsID->readLinksFilterFull_DEPRECATED($nebuleInstance->getDefaultEntity(), '', 'f', $refAppsID, '', $refAppsID);
                 foreach ($linksList as $link) {
                     $hashTarget = $link->getHashTarget();
                     $applicationsList[$hashTarget] = $hashTarget;

@@ -215,7 +215,7 @@ class io implements ioInterface
     public function checkLinksDirectory(string $url = ''): bool
     {
         $instance = $this->_findType($url);
-        return $instance->checkLinksDirectory();
+        return $instance->checkLinksDirectory($url);
     }
 
     /**
@@ -225,7 +225,7 @@ class io implements ioInterface
     public function checkObjectsDirectory(string $url = ''): bool
     {
         $instance = $this->_findType($url);
-        return $instance->checkObjectsDirectory();
+        return $instance->checkObjectsDirectory($url);
     }
 
     /**
@@ -235,7 +235,7 @@ class io implements ioInterface
     public function checkLinksRead(string $url = ''): bool
     {
         $instance = $this->_findType($url);
-        return $instance->checkLinksRead();
+        return $instance->checkLinksRead($url);
     }
 
     /**
@@ -245,7 +245,7 @@ class io implements ioInterface
     public function checkLinksWrite(string $url = ''): bool
     {
         $instance = $this->_findType($url);
-        return $instance->checkLinksWrite();
+        return $instance->checkLinksWrite($url);
     }
 
     /**
@@ -255,7 +255,7 @@ class io implements ioInterface
     public function checkObjectsRead(string $url = ''): bool
     {
         $instance = $this->_findType($url);
-        return $instance->checkObjectsRead();
+        return $instance->checkObjectsRead($url);
     }
 
     /**
@@ -265,7 +265,7 @@ class io implements ioInterface
     public function checkObjectsWrite(string $url = ''): bool
     {
         $instance = $this->_findType($url);
-        return $instance->checkObjectsWrite();
+        return $instance->checkObjectsWrite($url);
     }
 
     /**
@@ -275,7 +275,7 @@ class io implements ioInterface
     public function checkLinkPresent(string $oid, string $url = ''): bool
     {
         $instance = $this->_findType($url);
-        return $instance->checkLinkPresent($oid);
+        return $instance->checkLinkPresent($oid, $url);
     }
 
     /**
@@ -285,27 +285,27 @@ class io implements ioInterface
     public function checkObjectPresent(string $oid, string $url = ''): bool
     {
         $instance = $this->_findType($url);
-        return $instance->checkObjectPresent($oid);
+        return $instance->checkObjectPresent($oid, $url);
     }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::getLinks()
      */
-    public function getLinks(string $oid, string $url = '')
+    public function getLinks(string $oid, string $url = '', int $offset = 0): array
     {
         $instance = $this->_findType($url);
-        return $instance->getLinks($oid);
+        return $instance->getLinks($oid, $url, $offset);
     }
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::ObfuscatedLinksRead()
+     * @see ioInterface::getObfuscatedLinks()
      */
-    public function obfuscatedLinksRead(string $entity, string $signer = '0', string $url = ''): array
+    public function getObfuscatedLinks(string $entity, string $signer = '0', string $url = ''): array
     {
         $instance = $this->_findType($url);
-        return $instance->obfuscatedLinksRead($entity);
+        return $instance->getObfuscatedLinks($entity, $signer, $url);
     }
 
     /**
@@ -315,7 +315,7 @@ class io implements ioInterface
     public function getObject(string $oid, int $maxsize = 0, string $url = '')
     {
         $instance = $this->_findType($url);
-        return $instance->getObject($oid, $maxsize);
+        return $instance->getObject($oid, $maxsize, $url);
     }
 
     /**
@@ -325,7 +325,7 @@ class io implements ioInterface
     public function setLink(string $oid, string &$link, string $url = ''): bool
     {
         $instance = $this->_findType($url);
-        return $instance->setLink($oid, $link);
+        return $instance->setLink($oid, $link, $url);
     }
 
     /**
@@ -335,7 +335,7 @@ class io implements ioInterface
     public function setObject(string $oid, string &$data, string $url = ''): bool
     {
         $instance = $this->_findType($url);
-        return $instance->setObject($oid, $data);
+        return $instance->setObject($oid, $data, $url);
     }
 
     /**
@@ -345,7 +345,7 @@ class io implements ioInterface
     public function unsetLink(string $oid, string &$link, string $url = ''): bool
     {
         $instance = $this->_findType($url);
-        return $instance->unsetLink($oid, $link);
+        return $instance->unsetLink($oid, $link, $url);
     }
 
     /**
@@ -355,7 +355,7 @@ class io implements ioInterface
     public function flushLinks(string $oid, string $url = ''): bool
     {
         $instance = $this->_findType($url);
-        return $instance->flushLinks($oid);
+        return $instance->flushLinks($oid, $url);
     }
 
     /**
@@ -365,6 +365,6 @@ class io implements ioInterface
     public function unsetObject(string $oid, string $url = ''): bool
     {
         $instance = $this->_findType($url);
-        return $instance->unsetObject($oid);
+        return $instance->unsetObject($oid, $url);
     }
 }

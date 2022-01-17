@@ -41,10 +41,11 @@ class SocialStrict implements SocialInterface
     /**
      * Gère le classement social des liens.
      *
-     * @param array &$links table des liens.
+     * @param array  $links
+     * @param string $socialClass
      * @return void
      */
-    public function arraySocialFilter(array &$links, $socialClass = ''): void
+    public function arraySocialFilter(array &$links, string $socialClass = ''): void
     {
         foreach ($links as $i => $link) {
             if ($this->linkSocialScore($link) != 1) {
@@ -56,10 +57,11 @@ class SocialStrict implements SocialInterface
     /**
      * Calcul le score social d'un lien.
      *
-     * @param Link &$link lien à calculer.
+     * @param Link   $link
+     * @param string $socialClass
      * @return float
      */
-    public function linkSocialScore(Link &$link, $socialClass = ''): float
+    public function linkSocialScore(Link &$link, string $socialClass = ''): float
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=strict score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
 
@@ -84,7 +86,7 @@ class SocialStrict implements SocialInterface
      * @param array:string $listID
      * @return boolean
      */
-    public function setList(&$listID)
+    public function setList(array &$listID): bool
     {
         return true;
     }
@@ -94,7 +96,7 @@ class SocialStrict implements SocialInterface
      *
      * @return boolean
      */
-    public function unsetList()
+    public function unsetList(): bool
     {
         return true;
     }

@@ -2221,7 +2221,7 @@ class nebule
         $typeInstance = $this->newObject($typeID);
 
         // Recherche les liens signés du maître du tout de type f avec source et méta le rôle recherché.
-        $list = $typeInstance->readLinksFilterFull_disabled(
+        $list = $typeInstance->readLinksFilterFull_DEPRECATED(
             $this->_puppetmaster,
             '',
             'f',
@@ -2543,7 +2543,7 @@ class nebule
         // Liste les liens de l'entité instance du serveur..
         $list = array();
         if ($this->_permitInstanceEntityAsAuthority) {
-            $list = $this->_instanceEntityInstance->readLinksFilterFull_disabled(
+            $list = $this->_instanceEntityInstance->readLinksFilterFull_DEPRECATED(
                 $this->_instanceEntity,
                 '',
                 'f',
@@ -2567,7 +2567,7 @@ class nebule
         // Liste les liens de l'entité instance du serveur..
         $list = array();
         if ($this->_permitDefaultEntityAsAuthority) {
-            $list = $this->_instanceEntityInstance->readLinksFilterFull_disabled(
+            $list = $this->_instanceEntityInstance->readLinksFilterFull_DEPRECATED(
                 $this->_defaultEntity,
                 '',
                 'f',
@@ -2784,7 +2784,7 @@ class nebule
         // Liste les liens de l'entité instance du serveur..
         $list = array();
         if ($this->_permitInstanceEntityAsAuthority) {
-            $list = $this->_instanceEntityInstance->readLinksFilterFull_disabled(
+            $list = $this->_instanceEntityInstance->readLinksFilterFull_DEPRECATED(
                 $this->_instanceEntity,
                 '',
                 'f',
@@ -2805,7 +2805,7 @@ class nebule
         // Liste les liens de l'entité instance du serveur..
         $list = array();
         if ($this->_permitDefaultEntityAsAuthority) {
-            $list = $this->_instanceEntityInstance->readLinksFilterFull_disabled(
+            $list = $this->_instanceEntityInstance->readLinksFilterFull_DEPRECATED(
                 $this->_defaultEntity,
                 '',
                 'f',
@@ -2889,7 +2889,7 @@ class nebule
         $hashEntityObject = $this->newObject($hashEntity);
 
         // Liste les liens.
-        $links = $hashEntityObject->readLinksFilterFull_disabled('', '', 'l', '', $hashEntity, $hashType);
+        $links = $hashEntityObject->readLinksFilterFull_DEPRECATED('', '', 'l', '', $hashEntity, $hashType);
         unset($hashType, $hashEntity, $hashEntityObject);
 
         // Filtre les entités sur le contenu de l'objet de la clé publique. @todo
@@ -3209,7 +3209,7 @@ class nebule
         }
 
         // Lit les liens de l'objet de référence.
-        $result = $type->readLinksFilterFull_disabled(
+        $result = $type->readLinksFilterFull_DEPRECATED(
             $hashEntity,
             '',
             'l',

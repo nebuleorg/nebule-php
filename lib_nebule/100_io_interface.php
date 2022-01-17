@@ -171,9 +171,10 @@ interface ioInterface
      *
      * @param string $oid
      * @param string $url
-     * @return array|boolean
+     * @param int    $offset
+     * @return array
      */
-    public function getLinks(string $oid, string $url = '');
+    public function getLinks(string $oid, string $url = '', int $offset = 0): array;
 
     /**
      * Lit les liens dissimulés de l'entité dite destinataire. Retourne un tableau des liens lus, même vide.
@@ -186,7 +187,7 @@ interface ioInterface
      * @param string $url
      * @return array
      */
-    public function obfuscatedLinksRead(string $entity, string $signer = '0', string $url = ''): array;
+    public function getObfuscatedLinks(string $entity, string $signer = '0', string $url = ''): array;
 
     /**
      * Lit le contenu de l'objet. Retourne le contenu lu ou false si erreur.

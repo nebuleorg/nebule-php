@@ -308,7 +308,7 @@ class Entity extends Node implements nodeInterface
             return true;
         }
         // Extrait les liens f vers la clé publique.
-        $list = $this->readLinksFilterFull_disabled($this->_id, '', 'f', '', $this->_id, '0');
+        $list = $this->readLinksFilterFull_DEPRECATED($this->_id, '', 'f', '', $this->_id, '0');
         if (sizeof($list) == 0) {
             return true;
         }
@@ -633,7 +633,7 @@ class Entity extends Node implements nodeInterface
         $list = array();
         $links = array();
         //_l_fnd($this->_id, $links, 'f', $this->_id, '', '0');				// @todo Vérifier le bon fonctionnement.
-        $links = $this->readLinksFilterFull_disabled('', '', 'f', $this->_id, '', '0');
+        $links = $this->readLinksFilterFull_DEPRECATED('', '', 'f', $this->_id, '', '0');
         foreach ($links as $link) {
             $instance6 = $this->_nebuleInstance->newObject($link->getHashTarget());
             $type = $instance6->getType('all');
@@ -680,7 +680,7 @@ class Entity extends Node implements nodeInterface
         {
             $uplinks = array();
             //_l_fnd($this->_id, $uplinks, 'f', '', $this->_id, '0');							// @todo Vérifier le bon fonctionnement.
-            $uplinks = $this->readLinksFilterFull_disabled('', '', 'f', '', $this->_id, '0');
+            $uplinks = $this->readLinksFilterFull_DEPRECATED('', '', 'f', '', $this->_id, '0');
             foreach ($uplinks as $uplink) {
                 $instance5 = $this->_nebuleInstance->newObject($uplink->getHashSource());
                 $type = $instance5->getType('all');
@@ -688,7 +688,7 @@ class Entity extends Node implements nodeInterface
                     $list = array();
                     $links = array();
                     //_l_fnd($instance5->getID(), $links, 'f', $instance5->getID(), '', '0');          // @todo Vérifier le bon fonctionnement.
-                    $links = $instance5->readLinksFilterFull_disabled('', '', 'f', $instance5->getID(), '', '0');
+                    $links = $instance5->readLinksFilterFull_DEPRECATED('', '', 'f', $instance5->getID(), '', '0');
                     foreach ($links as $link) {
                         $instance6 = $this->_nebuleInstance->newObject($link->getHashTarget());
                         $type = $instance6->getType('all');
@@ -848,7 +848,7 @@ class Entity extends Node implements nodeInterface
     public function getListIsFollowerOfGroupLinks(string $socialClass = 'myself'): array
     {
         // Liste tous les liens de définition des membres du groupe.
-        $links = $this->readLinksFilterFull_disabled(
+        $links = $this->readLinksFilterFull_DEPRECATED(
             '',
             '',
             'l',
@@ -882,7 +882,7 @@ class Entity extends Node implements nodeInterface
         $list = array();
 
         // Liste tous les liens de définition des membres du groupe.
-        $links = $this->readLinksFilterFull_disabled(
+        $links = $this->readLinksFilterFull_DEPRECATED(
             '',
             '',
             'l',
@@ -915,7 +915,7 @@ class Entity extends Node implements nodeInterface
     public function getListIsFollowerOfConversationLinks(string $socialClass = 'myself'): array
     {
         // Liste tous les liens de définition des membres du groupe.
-        $links = $this->readLinksFilterFull_disabled(
+        $links = $this->readLinksFilterFull_DEPRECATED(
             '',
             '',
             'l',

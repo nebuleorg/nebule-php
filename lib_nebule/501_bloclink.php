@@ -42,13 +42,6 @@ class blocLink implements blocLinkInterface
         '_signeValue',
         '_signeAlgo',
         '_signed',
-        '_hashSigner',
-        '_date',
-        '_action',
-        '_hashSource',
-        '_hashTarget',
-        '_hashMeta',
-        '_obfuscated',
         '_valid',
         '_validStructure',
     );
@@ -284,7 +277,7 @@ class blocLink implements blocLinkInterface
     /**
      * {@inheritDoc}
      * @see blocLinkInterface::getLinks()
-     * @return array
+     * @return array:linkInterface
      */
     public function getLinks(): array
     {

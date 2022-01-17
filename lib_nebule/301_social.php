@@ -51,18 +51,7 @@ class Social implements SocialInterface
         $this->_initialisation($nebuleInstance);
     }
 
-    public function __sleep()
-    {
-        return array();
-    }
-
-    public function __wakeup()
-    {
-        global $nebuleInstance;
-        $this->_initialisation($nebuleInstance);
-    }
-
-    private function _initialisation(nebule $nebuleInstance)
+    private function _initialisation(nebule $nebuleInstance): void
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
@@ -79,7 +68,7 @@ class Social implements SocialInterface
         $this->_instanceSocialUnreputation = new SocialUnreputation($nebuleInstance);
 
         // Détermine le traitement social par défaut.
-        switch ($this->_configuration->getOptionUntyped('socialLibrary')) {
+        switch ($this->_configuration->getOptionAsString('socialLibrary')) {
             case 'myself':
                 $this->_instanceSocialDefault = $this->_instanceSocialMySelf;
                 break;
@@ -171,7 +160,8 @@ class Social implements SocialInterface
     /**
      * Calcul le score social d'un lien.
      *
-     * @param Link &$link lien à calculer.
+     * @param Link   $link
+     * @param string $socialClass
      * @return float
      */
     public function linkSocialScore(Link &$link, string $socialClass = ''): float
@@ -223,13 +213,13 @@ class Social implements SocialInterface
     /**
      * Permet d'injecter une liste pour le calcul/filtrage social.
      * Nécessaire à certains filtrages sociaux, ignoré par d'autres.
-     *
      * La liste doit contenir des ID d'objet et non des objets.
      *
      * @param array:string $listID
+     * @param string $socialClass
      * @return boolean
      */
-    public function setList(&$list, $socialClass = '')
+    public function setList(array &$list, string $socialClass = ''): bool
     {
         $result = false;
 
@@ -278,9 +268,10 @@ class Social implements SocialInterface
     /**
      * Permet de vider la liste pour le calcul/filtrage social.
      *
+     * @param string $socialClass
      * @return boolean
      */
-    public function unsetList($socialClass = '')
+    public function unsetList(string $socialClass = ''): bool
     {
         $result = false;
 
@@ -331,7 +322,7 @@ class Social implements SocialInterface
      *
      * @return array
      */
-    public function getList()
+    public function getList(): array
     {
         return array('myself', 'notmyself', 'self', 'notself', 'strict', 'all', 'none', 'onlist', 'offlist', 'reputation', 'unreputation');
     }

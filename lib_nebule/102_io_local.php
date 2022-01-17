@@ -153,8 +153,7 @@ class ioLocal extends io implements ioInterface
      */
     public function checkLinksDirectory(string $url = ''): bool
     {
-        if ($url != ''
-            || !file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER)
+        if (!file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER)
             || !is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER)
         )
             return false;
@@ -168,8 +167,7 @@ class ioLocal extends io implements ioInterface
      */
     public function checkObjectsDirectory(string $url = ''): bool
     {
-        if ($url != ''
-            || !file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER)
+        if (!file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER)
             || !is_dir(nebule::NEBULE_LOCAL_OBJECTS_FOLDER)
         ) {
             return false;
@@ -184,9 +182,6 @@ class ioLocal extends io implements ioInterface
      */
     public function checkLinksRead(string $url = ''): bool
     {
-        if ($url != '')
-            return false;
-
         $file = nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . Configuration::OPTIONS_DEFAULT_VALUE['puppetmaster'];
         $result = false;
 
@@ -203,9 +198,6 @@ class ioLocal extends io implements ioInterface
      */
     public function checkLinksWrite(string $url = ''): bool
     {
-        if ($url != '')
-            return false;
-
         $file = nebule::NEBULE_LOCAL_LINKS_FOLDER . '/0';
         $resultCreate = false;
         $resultDelete = false;
@@ -234,9 +226,6 @@ class ioLocal extends io implements ioInterface
      */
     public function checkObjectsRead(string $url = ''): bool
     {
-        if ($url != '')
-            return false;
-
         $file = nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Configuration::OPTIONS_DEFAULT_VALUE['puppetmaster'];
         $result = false;
 
@@ -253,9 +242,6 @@ class ioLocal extends io implements ioInterface
      */
     public function checkObjectsWrite(string $url = ''): bool
     {
-        if ($url != '')
-            return false;
-
         $file = nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/0';
         $resultCreate = false;
         $resultDelete = false;
@@ -284,8 +270,7 @@ class ioLocal extends io implements ioInterface
      */
     public function checkLinkPresent(string $oid, string $url = ''): bool
     {
-        if ($url != ''
-            || !Node::checkNID($oid, false)
+        if (!Node::checkNID($oid, false)
             || !file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid)
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid)
         )
@@ -300,8 +285,7 @@ class ioLocal extends io implements ioInterface
      */
     public function checkObjectPresent(string $oid, string $url = ''):bool
     {
-        if ($url != ''
-            || !Node::checkNID($oid, false)
+        if (!Node::checkNID($oid, false)
             || !file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid)
             || is_dir(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid)
         )
@@ -314,7 +298,7 @@ class ioLocal extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getLinks()
      */
-    public function getLinks(string $oid, string $url = '')
+    public function getLinks(string $oid, string $url = '', int $offset = 0): array
     {
         /**
          * Compteur de liens lus.
@@ -328,12 +312,11 @@ class ioLocal extends io implements ioInterface
          */
         $linkList = array();
 
-        if ($url != ''
-            || !Node::checkNID($oid, false)
+        if (!Node::checkNID($oid, false)
             || !file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid)
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid)
         )
-            return false;
+            return array();
 
         /**
          * Descripteur du fichier en cours de lecture.
@@ -353,9 +336,9 @@ class ioLocal extends io implements ioInterface
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::ObfuscatedLinksRead()
+     * @see ioInterface::getObfuscatedLinks()
      */
-    public function obfuscatedLinksRead(string $entity, string $signer = '0', string $url = ''): array
+    public function getObfuscatedLinks(string $entity, string $signer = '0', string $url = ''): array
     {
         $linksRead = 0;
         $fileList = array();
@@ -366,8 +349,7 @@ class ioLocal extends io implements ioInterface
             return $linksList;
 
         // Vérifie l'entité destinataire des liens dissimulés.
-        if ($url != ''
-            || !Node::checkNID($entity, false)
+        if (!Node::checkNID($entity, false)
             || !file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $entity)
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $entity)
         )
@@ -425,8 +407,7 @@ class ioLocal extends io implements ioInterface
      */
     public function getObject(string $oid, int $maxsize = 0, string $url = '')
     {
-        if ($url != ''
-            || !Node::checkNID($oid, false)
+        if (!Node::checkNID($oid, false)
             || !file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid)
             || is_dir(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid)
         )
@@ -449,8 +430,7 @@ class ioLocal extends io implements ioInterface
     public function setLink(string $oid, string &$link, string $url = ''): bool
     {
         // Vérifie les arguments.
-        if ($url != ''
-            || !Node::checkNID($oid, false)
+        if (!Node::checkNID($oid, false)
             || $link == ''
             || !$this->_checkFileLink($oid, $link)
             || !$this->_configuration->getOptionAsBoolean('permitWrite')
@@ -489,8 +469,7 @@ class ioLocal extends io implements ioInterface
      */
     public function setObject(string $oid, string &$data, string $url = ''): bool
     {
-        if ($url != ''
-            || !Node::checkNID($oid, false)
+        if (!Node::checkNID($oid, false)
             || !$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteObject')
             || $this->getMode() != 'RW'
@@ -512,8 +491,7 @@ class ioLocal extends io implements ioInterface
      */
     public function unsetObject(string $oid, string $url = ''): bool
     {
-        if ($url != ''
-            || !Node::checkNID($oid, false)
+        if (!Node::checkNID($oid, false)
             || !$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteObject')
             || $this->getMode() != 'RW'
@@ -540,8 +518,7 @@ class ioLocal extends io implements ioInterface
      */
     public function unsetLink(string $oid, string &$link, string $url = ''): bool
     {
-        if ($url != ''
-            || !Node::checkNID($oid, false)
+        if (!Node::checkNID($oid, false)
             || !$this->_checkFileLink($oid, $link)
             || $link == ''
             || !$this->_configuration->getOptionAsBoolean('permitWrite')
@@ -566,8 +543,7 @@ class ioLocal extends io implements ioInterface
      */
     public function flushLinks(string $oid, string $url = ''): bool
     {
-        if ($url != ''
-            || !Node::checkNID($oid, false)
+        if (!Node::checkNID($oid, false)
             || !$this->_configuration->getOptionAsBoolean('permitWrite')
             || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
             || $this->getMode() != 'RW'

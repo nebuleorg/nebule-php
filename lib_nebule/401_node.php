@@ -1370,15 +1370,13 @@ class Node implements nodeInterface
      */
     public function getListIsMemberOnGroupLinks(string $socialClass = 'myself'): array
     {
-        // Liste tous les liens de définition des membres du groupe.
-        $links = $this->readLinksFilterFull_disabled(
-            '',
-            '',
-            'l',
-            '',
-            $this->id,
-            ''
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid3' => $this->_id,
+            'bl/rl/nid4' => '',
         );
+        $this->getLinks($links, $filter, null);
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
@@ -1409,17 +1407,13 @@ class Node implements nodeInterface
      */
     public function getListIsMemberOnGroupID(string $socialClass = 'myself'): array
     {
-        $list = array();
-
-        // Liste tous les liens de définition des membres du groupe.
-        $links = $this->readLinksFilterFull_disabled(
-            '',
-            '',
-            'l',
-            '',
-            $this->id,
-            ''
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid3' => $this->_id,
+            'bl/rl/nid4' => '',
         );
+        $this->getLinks($links, $filter, null);
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
@@ -1476,15 +1470,13 @@ class Node implements nodeInterface
      */
     public function getListIsMemberOnConversationLinks(string $socialClass = 'myself'): array
     {
-        // Liste tous les liens de définition des membres du groupe.
-        $links = $this->readLinksFilterFull_disabled(
-            '',
-            '',
-            'l',
-            '',
-            $this->id,
-            ''
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid3' => $this->_id,
+            'bl/rl/nid4' => '',
         );
+        $this->getLinks($links, $filter, null);
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
@@ -1516,17 +1508,13 @@ class Node implements nodeInterface
      */
     public function getListIsMemberOnConversationID(string $socialClass = 'myself'): array
     {
-        $list = array();
-
-        // Liste tous les liens de définition des membres du groupe.
-        $links = $this->readLinksFilterFull_disabled(
-            '',
-            '',
-            'l',
-            '',
-            $this->id,
-            ''
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid3' => $this->_id,
+            'bl/rl/nid4' => '',
         );
+        $this->getLinks($links, $filter, null);
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
@@ -1663,14 +1651,14 @@ class Node implements nodeInterface
             return true;
         }
 
-        // Liste les liens à la recherche de la propriété.
-        $list = $this->readLinksFilterFull_disabled(
-            '',
-            '',
-            'f',
-            $this->_crypto->hash(nebule::REFERENCE_NEBULE_DANGER),
-            $this->_id,
-            '');
+        $list = array();
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid1' => $this->_crypto->hash(nebule::REFERENCE_NEBULE_DANGER),
+            'bl/rl/nid2' => $this->_id,
+            'bl/rl/nid4' => '',
+        );
+        $this->getLinks($list, $filter, null);
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($list) == 0
@@ -1734,14 +1722,14 @@ class Node implements nodeInterface
             return true;
         }
 
-        // Liste les liens à la recherche de la propriété.
-        $list = $this->readLinksFilterFull_disabled(
-            '',
-            '',
-            'f',
-            $this->_crypto->hash(nebule::REFERENCE_NEBULE_WARNING),
-            $this->_id,
-            '');
+        $list = array();
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid1' => $this->_crypto->hash(nebule::REFERENCE_NEBULE_WARNING),
+            'bl/rl/nid2' => $this->_id,
+            'bl/rl/nid4' => '',
+        );
+        $this->getLinks($list, $filter, null);
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($list) == 0
@@ -1820,8 +1808,20 @@ class Node implements nodeInterface
         }
 
         // Liste les liens à la recherche de la propriété.
-        $listS = $this->readLinksFilterFull_disabled('', '', 'k', $this->_id, '', '');
-        $listT = $this->readLinksFilterFull_disabled('', '', 'k', '', $this->_id, '');
+        $listS = array();
+        $filter = array(
+            'bl/rl/req' => 'k',
+            'bl/rl/nid1' => $this->_id,
+            'bl/rl/nid4' => '',
+        );
+        $this->getLinks($listS, $filter, null);
+        $listT = array();
+        $filter = array(
+            'bl/rl/req' => 'k',
+            'bl/rl/nid2' => $this->_id,
+            'bl/rl/nid4' => '',
+        );
+        $this->getLinks($listT, $filter, null);
 
         // Si pas marqué, résultat négatif.
         if (sizeof($listS) == 0
@@ -1880,20 +1880,20 @@ class Node implements nodeInterface
         $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
 
         // Liste les liens à la recherche de la propriété.
-        $listS = $this->readLinksFilterFull_disabled(
-            '',
-            '',
-            'k',
-            $this->_id,
-            '',
-            '');
-        $listT = $this->readLinksFilterFull_disabled(
-            '',
-            '',
-            'k',
-            '',
-            $this->_id,
-            '');
+        $listS = array();
+        $filter = array(
+            'bl/rl/req' => 'k',
+            'bl/rl/nid1' => $this->_id,
+            'bl/rl/nid4' => '',
+        );
+        $this->getLinks($listS, $filter, null);
+        $listT = array();
+        $filter = array(
+            'bl/rl/req' => 'k',
+            'bl/rl/nid2' => $this->_id,
+            'bl/rl/nid4' => '',
+        );
+        $this->getLinks($listT, $filter, null);
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($listS) == 0
@@ -1936,7 +1936,8 @@ class Node implements nodeInterface
                 ) {
                     // Lit l'objet de clé de chiffrement symétrique et ses liens.
                     $instanceSym = $this->_nebuleInstance->newObject($linkSym->getHashMeta());
-                    $linksAsym = $instanceSym->readLinksUnfiltered();
+                    $linksAsym = array();
+                    $this->getLinks($linksAsym, array(), null);
                     unset($instanceSym);
                     foreach ($linksAsym as $linkAsym) {
                         // Si lien de chiffrement.
@@ -1973,7 +1974,8 @@ class Node implements nodeInterface
                 ) {
                     // Lit l'objet de clé de chiffrement symétrique et ses liens.
                     $instanceSym = $this->_nebuleInstance->newObject($linkSym->getHashMeta());
-                    $linksAsym = $instanceSym->readLinksUnfiltered();
+                    $linksAsym = array();
+                    $this->getLinks($linksAsym, array(), null);
                     unset($instanceSym);
                     foreach ($linksAsym as $linkAsym) {
                         $targetA = $linkAsym->getHashTarget();
@@ -2224,7 +2226,8 @@ class Node implements nodeInterface
             $newLink->write();
 
             // Lit les liens.
-            $links = $this->readLinksUnfiltered();
+            $links = array();
+            $this->getLinks($links, array(), null);
             $entity = $this->_nebuleInstance->getCurrentEntity();
             foreach ($links as $link) {
                 // Vérifie si l'entité signataire du lien est l'entité courante.
@@ -2509,13 +2512,14 @@ class Node implements nodeInterface
         $this->_metrology->addLog('Cancel share protection to ' . $entity->getID(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
 
         // Recherche l'objet de clé de chiffrement pour l'entité.
-        $links = $entity->readLinksFilterFull_disabled(
-            $this->_nebuleInstance->getCurrentEntity(),
-            '',
-            'k',
-            $this->_idUnprotectedKey,
-            '',
-            $entity->getID());
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'k',
+            'bl/rl/nid1' => $this->_idUnprotectedKey,
+            'bl/rl/nid3' => $entity->getID(),
+            'bl/rl/nid4' => '',
+        );
+        $this->getLinks($links, $filter, null);
 
         if (sizeof($links) == 0) {
             return true;
@@ -2542,7 +2546,8 @@ class Node implements nodeInterface
                 // Suppression de la clé de chiffrement protégée.
                 $object = $this->_nebuleInstance->newObject($idProtectedKey);
                 //$object->deleteObject();
-                $signerLinks = $object->readLinksFilterFull_disabled('', '', '', '', '', '');
+                $signerLinks = array();
+                $this->getLinks($signerLinks, array(), null);
                 $delete = true;
                 foreach ($signerLinks as $itemSigner) {
                     // Si un lien a été généré par une autre entité, c'est que l'objet est encore utilisé.
@@ -2629,13 +2634,15 @@ class Node implements nodeInterface
         $hashEmotion = $this->_crypto->hash($emotion);
 
         // Liste les liens à la recherche de la propriété.
-        $list = $this->readLinksFilterFull_disabled(
-            '',
-            '',
-            'f',
-            $this->_id,
-            $hashEmotion,
-            $context);
+        $list = array();
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid1' => $this->_id,
+            'bl/rl/nid2' => $hashEmotion,
+            'bl/rl/nid3' => $context,
+            'bl/rl/nid4' => '',
+        );
+        $this->getLinks($list, $filter, null);
 
         // Nettoyage.
         foreach ($list as $i => $link) {
@@ -2838,20 +2845,25 @@ class Node implements nodeInterface
         }
 
         // Lit les liens de chiffrement de l'objet, chiffrement symétrique.
-        $linksSym = $this->readLinksFilterFull_disabled('', '', 'k', $this->_idUnprotected, '', '');
+        $linksSym = array();
+        $filter = array(
+            'bl/rl/req' => 'k',
+            'bl/rl/nid1' => $this->_idUnprotected,
+            'bl/rl/nid4' => '',
+        );
+        $this->getLinks($linksSym, $filter, null);
         foreach ($linksSym as $linkSym) {
             // Si lien de chiffrement.
             if ($linkSym->getHashMeta() != '0') {
                 // Lit l'objet de clé de chiffrement symétrique et ses liens.
                 $instanceSym = $this->_nebuleInstance->newObject($linkSym->getHashMeta());
-                $linksAsym = $instanceSym->readLinksFilterFull_disabled(
-                    '',
-                    '',
-                    'k',
-                    $linkSym->getHashMeta(),
-                    '',
-                    ''
+                $linksAsym = array();
+                $filter = array(
+                    'bl/rl/req' => 'k',
+                    'bl/rl/nid1' => $linkSym->getHashMeta(),
+                    'bl/rl/nid4' => '',
                 );
+                $this->getLinks($linksAsym, $filter, null);
                 unset($instanceSym);
                 foreach ($linksAsym as $linkAsym) {
                     // Si lien de chiffrement.
@@ -3253,8 +3265,8 @@ class Node implements nodeInterface
         if (!$this->_configuration->getOptionAsBoolean('permitListInvalidLinks'))
             $withInvalidLinks = false;
 
-        $lines = $this->_io->getLinks($this->_id, '');
-        if ($lines === false)
+        $lines = $this->_io->getLinks($this->_id, '', 0);
+        if (sizeof($lines) == 0)
             return;
 
         foreach ($lines as $line)
@@ -3263,428 +3275,131 @@ class Node implements nodeInterface
             if ($bloc->getValidStructure()
                 && ( $bloc->getValid() || $withInvalidLinks )
             )
-                $links = array_merge($links, $bloc->getLinks());
+            {
+                $newLinks = $bloc->getLinks();
+                $this->_filterLinksByStructure($newLinks, $filter);
+                $links = array_merge($links, $newLinks);
+            }
             else
                 $this->_cache->unsetCache($line, Cache::TYPE_BLOCLINK);
         }
+    }
 
-        /*$lines = array();
-        io_linksRead($nid, $lines);
-        foreach ($lines as $line) {
-            if (lnk_verify($line)) {
-                $link = lnk_parse($line);
-                if (lnk_checkNotSuppressed($link, $lines) && lnk_filterStructure($link, $filter))
-                    $links [] = $link;
-            }
-        }*/
+    protected function _filterLinksByStructure(array &$links, array $filter): void
+    {
+        foreach ($links as $i => $link)
+        {
+            if (!$this->_filterLinkByStructure($link, $filter))
+                unset($links[$i]);
+        }
     }
 
     /**
-     * Lit les liens.
-     * Retourne un tableau d'objets de type Link ou un tableau vide si ça se passe mal.
-     * Pas de filtre sur l'extraction des liens.
-     * Trie les liens par date.
+     * Test if a link match a filter.
+     * Filtering on have bl/rl/req, bl/rl/nid1, bl/rl/nid2, bl/rl/nid3, bl/rl/nid4, bl/rl/nid*, bs/rs1/eid, or not have.
+     * TODO revoir pour les liens de type x...
      *
-     * @return array
+     * @param Link  $link
+     * @param array $filter
+     * @return bool
      */
-    public function readLinksUnfiltered(): array
+    protected function _filterLinkByStructure(Link &$link, array $filter): bool
     {
-        return array();
+        $ok = false;
+        $parsedLink = $link->getParsed();
 
-        $permitListInvalidLinks = $this->_configuration->getOptionAsBoolean('permitListInvalidLinks');
-        $linkVersion = 'nebule/liens/version/' . $this->_configuration->getOptionAsString('defaultLinksVersion'); // Version de lien.
-        $linksResult = array();
-        if (!$this->_io->checkLinkPresent($this->_id)) {
-            return $linksResult;
-        }
-        $i = 0;
+        // Positive filtering
+        if (isset($filter['bl/rl/req']) && $parsedLink['bl/rl/req'] == $filter['bl/rl/req'])
+            $ok = true;
+        if (isset($filter['bl/rl/nid1']) && $parsedLink['bl/rl/nid1'] == $filter['bl/rl/nid1'])
+            $ok = true;
+        if (isset($filter['bl/rl/nid2']) && isset($parsedLink['bl/rl/nid2']) && $parsedLink['bl/rl/nid2'] == $filter['bl/rl/nid2'])
+            $ok = true;
+        if (isset($filter['bl/rl/nid2']) && !isset($parsedLink['bl/rl/nid2']) && $filter['bl/rl/nid2'] == '')
+            $ok = true;
+        if (isset($filter['bl/rl/nid3']) && isset($parsedLink['bl/rl/nid3']) && $parsedLink['bl/rl/nid3'] == $filter['bl/rl/nid3'])
+            $ok = true;
+        if (isset($filter['bl/rl/nid3']) && !isset($parsedLink['bl/rl/nid3']) && $filter['bl/rl/nid3'] == '')
+            $ok = true;
+        if (isset($filter['bl/rl/nid4']) && isset($parsedLink['bl/rl/nid4']) && $parsedLink['bl/rl/nid4'] == $filter['bl/rl/nid4'])
+            $ok = true;
+        if (isset($filter['bl/rl/nid4']) && !isset($parsedLink['bl/rl/nid4']) && $filter['bl/rl/nid4'] == '')
+            $ok = true;
+        if (isset($filter['bl/rl/nid*']) && ($parsedLink['bl/rl/nid1'] == $filter['bl/rl/nid*']
+                || isset($parsedLink['bl/rl/nid2']) && $parsedLink['bl/rl/nid2'] == $filter['bl/rl/nid*']
+                || isset($parsedLink['bl/rl/nid3']) && $parsedLink['bl/rl/nid3'] == $filter['bl/rl/nid*']
+                || isset($parsedLink['bl/rl/nid4']) && $parsedLink['bl/rl/nid4'] == $filter['bl/rl/nid*']
+            )
+        )
+            $ok = true;
+        if (isset($filter['bs/rs1/eid']) && $parsedLink['bs/rs1/eid'] == $filter['bs/rs1/eid'])
+            $ok = true;
 
-        // Lit les liens.
-        $links = $this->_io->getLinks($this->_id);
-        $this->_metrology->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        if (!$ok)
+            return $ok;
 
-        // Analyse les liens et les convertis en tableau d'objets de type lien.
-        foreach ($links as $link) {
-            if (substr($link, 0, 21) == 'nebule/liens/version/') {
-                $linkVersion = trim(substr($link, 0, 25)); // Mémorise la version mais ne valide pas la ligne comme lien.
-            } else {
-                $l = $this->_nebuleInstance->newLink_DEPRECATED($link, $linkVersion);
-                // Si c'est bon,
-                if ($l->getValid()
-                    || $permitListInvalidLinks
-                ) {
-                    $linksResult[$i] = $l;        // on l'écrit dans le tableau des résultats.
-                    $i++;
-                } else unset($l);                    // Sinon un détruit le lien.
-            }
-        }
-        unset($permitListInvalidLinks, $linkVersion, $i, $links, $link);
+        // Negative filtering
+        if (isset($filter['!bl/rl/req']) && $parsedLink['bl/rl/req'] == $filter['!bl/rl/req'])
+            $ok = false;
+        if (isset($filter['!bl/rl/nid1']) && $parsedLink['bl/rl/nid1'] == $filter['!bl/rl/nid1'])
+            $ok = false;
+        if (isset($filter['!bl/rl/nid2']) && isset($parsedLink['bl/rl/nid2']) && $parsedLink['bl/rl/nid2'] == $filter['!bl/rl/nid2'])
+            $ok = false;
+        if (isset($filter['!bl/rl/nid3']) && isset($parsedLink['bl/rl/nid3']) && $parsedLink['bl/rl/nid3'] == $filter['!bl/rl/nid3'])
+            $ok = false;
+        if (isset($filter['!bl/rl/nid4']) && isset($parsedLink['bl/rl/nid4']) && $parsedLink['bl/rl/nid4'] == $filter['!bl/rl/nid4'])
+            $ok = false;
+        if (isset($filter['!bl/rl/nid*']) && ($parsedLink['bl/rl/nid1'] == $filter['!bl/rl/nid*']
+                || isset($parsedLink['bl/rl/nid2']) && $parsedLink['bl/rl/nid2'] == $filter['!bl/rl/nid*']
+                || isset($parsedLink['bl/rl/nid3']) && $parsedLink['bl/rl/nid3'] == $filter['!bl/rl/nid*']
+                || isset($parsedLink['bl/rl/nid4']) && $parsedLink['bl/rl/nid4'] == $filter['!bl/rl/nid*']
+            )
+        )
+            $ok = false;
+        if (isset($filter['!bs/rs1/eid']) && $parsedLink['bs/rs1/eid'] == $filter['!bs/rs1/eid'])
+            $ok = false;
 
-        // Tri les liens par date.
-        if (sizeof($linksResult) != 0) {
-            foreach ($linksResult as $n => $t) {
-                $linkDate[$n] = $t->getDate();
-            }
-            array_multisort($linkDate, SORT_STRING, SORT_ASC, $linksResult);
-            unset($n, $t);
-        }
-
-        return $linksResult;
+        return $ok;
     }
 
 
     /**
-     * Lit les liens avec un filtrage simple.
-     * Retourne un tableau de liens ou un tableau vide si ça se passe mal.
-     * Un filtre simple est réalisé lors de l'extraction des liens.
-     * Les liens marqués supprimés, càd marqués par un autre lien type x à une date égale ou +, sont enlevés.
-     * Les liens de type x ne sont pas retournés.
-     * Le paramètre $filter doit correspondre à au moins un des champs :
-     * - signataire
-     * - action
-     * - date
-     * - source
-     * - destination
-     * - méta
-     * Trie les liens par date.
-     *
-     * @param string $filter
-     * @return array:Link
-     */
-    public function readLinksFilterOnce_disabled(string $filter): array
-    {
-        return array();
-
-        $permitListInvalidLinks = $this->_configuration->getOptionAsBoolean('permitListInvalidLinks');
-        $linkVersion = 'nebule/liens/version/' . $this->_configuration->getOptionUntyped('defaultLinksVersion'); // Version de lien.
-        $linksResult = array();
-        if (!$this->_io->checkLinkPresent($this->_id)) {
-            return $linksResult;
-        }
-        $i = 0;
-
-        // Lit les liens.
-        $links = $this->_io->getLinks($this->_id);
-        $this->_metrology->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-
-        // Analyse les liens, les filtre et les convertis en tableau d'objets de type lien.
-        // Si la liste des liens n'est pas vide.
-        if (sizeof($links) != 0) {
-            foreach ($links as $link) {
-                // Ce traitement sur champs brutes est une optimisation du temps de traitement. Le gain est de 1 à 10.
-                // Extrait les champs du lien.
-                $j = 1;                        // Indice du champs lu, de 1 à 7.
-                $c = array();                    // Table des champs lus.
-                $e = strtok(trim($link), '_');    // Lecture du champs.
-                while ($e !== false)            // Extrait le lien.
-                {
-                    $c[$j] = trim($e);
-                    if ($j < 8) {
-                        $e = strtok('_');
-                    } else {
-                        $e = false;
-                    }
-                    $j++;
-                }
-
-                if (substr($link, 0, 21) == 'nebule/liens/version/') {
-                    $linkVersion = trim(substr($link, 0, 25)); // Mémorise la version mais ne valide pas la ligne comme lien.
-                } elseif ($j == 8) {
-                    // Filtre les liens.
-                    if ($c[1] == $filter
-                        || $c[2] == $filter
-                        || $c[3] == $filter
-                        || $c[4] == $filter
-                        || $c[4] == 'x'
-                        || $c[5] == $filter
-                        || $c[6] == $filter
-                        || $c[7] == $filter
-                    ) {
-                        // Crée une instance de lien.
-                        $linkInstance = $this->_nebuleInstance->newLink_DEPRECATED($link, $linkVersion);
-                        // Si le lien est valide ou que l'on permet les liens invalides.
-                        if (is_a($linkInstance, 'Link') && ($linkInstance->getValid() || $permitListInvalidLinks)) {
-                            $okWriteNew = true;
-                            // Si la taille du tableau des résultats n'est pas nulle.
-                            if (sizeof($linksResult) != 0) {
-                                // On recherche et compare le nouveau lien avec chacun des anciens liens.
-                                foreach ($linksResult as $k => $t) {
-                                    // Si le nouveau lien est identique.
-                                    if ( // $t->getHashSigner() == $c[2]				!!! A VOIR !!!
-                                        $t->getAction() == $c[4]
-                                        && $t->getHashSource() == $c[5]
-                                        && $t->getHashTarget() == $c[6]
-                                        && $t->getHashMeta() == $c[7]
-                                    ) {
-                                        // Si le nouveau lien est plus récent.
-                                        if ($t->getHashSigner() == $c[2]
-                                            && $this->_nebuleInstance->dateCompare($t->getDate(), $c[3]) <= 0
-                                        ) {
-                                            // Et si ce n'est pas exactement le même.
-                                            if ($t->getDate() != $c[3]) {
-                                                // On l'écrit dans le tableau des résultats à la place du lien plus ancien.
-                                                $linksResult[$k] = $linkInstance;
-                                            }
-                                            // Le lien n'a pas besoin d'être écrit.
-                                            $okWriteNew = false;
-                                        }
-                                        // Sinon c'est que le lien est plus ancien.
-                                    }
-                                }
-                            }
-                            // Si le lien est nouveau et non marqué supprimé.
-                            if ($okWriteNew) {
-                                // On écrit le lien dans le tableau des résultats.
-                                $linksResult[$i] = $linkInstance;
-                                $i++;
-                            }
-                        }
-                    }
-                    unset($okWriteNew);
-                }
-            }
-            unset($link, $linkInstance, $c, $e, $j);
-        }
-        unset($permitListInvalidLinks, $linkVersion, $i, $links);
-
-        // Tri les liens par date.
-        if (sizeof($linksResult) != 0) {
-            foreach ($linksResult as $n => $t) {
-                $linkdate[$n] = $t->getDate();
-            }
-            array_multisort($linkdate, SORT_STRING, SORT_ASC, $linksResult);
-            unset($linkdate, $n, $t);
-        }
-
-        // Supprime les liens marqués supprimés.
-        if (sizeof($linksResult) != 0) {
-            // Liste tous les liens.
-            // Ils sont triés par date.
-            foreach ($linksResult as $n1 => $t1) {
-                if ($t1->getAction() != 'x') {
-                    // Si ce n'est pas un lien x.
-                    foreach ($linksResult as $t2) {
-                        if ($t2->getAction() == 'x'
-                            && $t1->getHashSource_disabled() == $t2->getHashSource_disabled()
-                            && $t1->getHashTarget_disabled() == $t2->getHashTarget_disabled()
-                            && $t1->getHashMeta_disabled() == $t2->getHashMeta_disabled()
-                            && $this->_nebuleInstance->dateCompare($t1->getDate(), $t2->getDate()) <= 0
-                        ) {
-                            unset($linksResult[$n1]);
-                        }
-                    }
-                }
-            }
-            unset($n1, $t1, $t2);
-        }
-
-        // Supprime les liens x.
-        if (sizeof($linksResult) != 0) {
-            // Liste tous les liens.
-            foreach ($linksResult as $n => $t) {
-                if ($t->getAction() == 'x') {
-                    // Si lien x, le supprime.
-                    unset($linksResult[$n]);
-                }
-            }
-            unset($n, $t);
-        }
-
-        return $linksResult;
-    }
-
-
-    /** Lit les liens.
      * Retourne un tableau d'objets de type Link ou un tableau vide si ça se passe mal.
      * Un filtre simple est réalisé lors de l'extraction des liens.
-     * Les liens marqués supprimés, càd marqués par un autre lien type x à une date égale ou +, sont enlevés.
-     * Les liens de type x ne sont pas retournés.
-     * Les paramètres doivent correspondre à la valeur des champs correspondants :
-     * - signataire
-     * - action
-     * - date
-     * - source
-     * - destination
-     * - méta
-     * Un paramètre vide '' équivaut à toute valeur du champs.
-     * Trie les liens par date.
      *
-     * @param string $signer
-     * @param string $date
-     * @param string $action
-     * @param string $source
-     * @param string $target
-     * @param string $meta
+     * @param string $eid
+     * @param string $chr
+     * @param string $req
+     * @param string $nid1
+     * @param string $nid2
+     * @param string $nid3
+     * @param string $nid4
      * @return array:Link
      */
-    public function readLinksFilterFull_disabled($signer = '', $date = '', $action = '', $source = '', $target = '', $meta = ''): array
+    public function readLinksFilterFull_DEPRECATED(string $eid = '', string $chr = '', string $req = '', string $nid1 = '', string $nid2 = '', string $nid3 = '', string $nid4 = ''): array
     {
-        return array();
+        if (!$this->_io->checkLinkPresent($this->_id))
+            return array();
 
-        $permitListInvalidLinks = $this->_configuration->getOptionAsBoolean('permitListInvalidLinks');
-        $linkVersion = 'nebule/liens/version/' . $this->_configuration->getOptionUntyped('defaultLinksVersion'); // Version de lien par défaut.
-        $linksResult = array();
-        if (!$this->_io->checkLinkPresent($this->_id)) {
-            return $linksResult;
-        }
-        $i = 0;
+        $links = array();
+        $filter = array( 'bl/rl/nid4' => '', );
 
-        // Analyse des champs à ne pas prendre en compte.
-        $allSigner = false;
-        $allDate = false;
-        $allAction = false;
-        $allSource = false;
-        $allTarget = false;
-        $allMeta = false;
-        if ($signer == '') {
-            $allSigner = true;
-        }
-        if ($date == '') {
-            $allDate = true;
-        }
-        if ($action == '') {
-            $allAction = true;
-        }
-        if ($source == '') {
-            $allSource = true;
-        }
-        if ($target == '') {
-            $allTarget = true;
-        }
-        if ($meta == '') {
-            $allMeta = true;
-        }
+        if ($eid != '')
+            $filter['bs/rs1/nid'] = $eid;
+        if ($chr != '')
+            $filter['bl/rc/chr'] = $chr;
+        if ($req != '')
+            $filter['bl/rl/req'] = $req;
+        if ($nid1 != '')
+            $filter['bl/rl/nid1'] = $nid1;
+        if ($nid2 != '')
+            $filter['bl/rl/nid2'] = $nid2;
+        if ($nid3 != '')
+            $filter['bl/rl/nid3'] = $nid3;
+        $filter['bl/rl/nid4'] = $nid4;
 
-        // Lit les liens.
-        $links = $this->_io->getLinks($this->_id);
-        $this->_metrology->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-
-        // Analyse les liens, les filtre et les convertis en tableau d'objets de type lien.
-        // Si la liste des liens n'est pas vide.
-        if (sizeof($links) != 0) {
-            foreach ($links as $link) {
-                // Ce traitement sur champs brutes est une optimisation du temps de traitement. Le gain est de 1 à 10.
-                // Extrait les champs du lien.
-                $j = 1;                        // Indice du champs lu, de 1 à 7.
-                $c = array();                    // Table des champs lus.
-                $e = strtok(trim($link), '_');    // Lecture du champs.
-                while ($e !== false)            // Extrait le lien.
-                {
-                    $c[$j] = trim($e);
-                    if ($j < 8) {
-                        $e = strtok('_');
-                    } else {
-                        $e = false;
-                    }
-                    $j++;
-                }
-
-                if (substr($link, 0, 21) == 'nebule/liens/version/') {
-                    // Mémorise la version mais ne valide pas la ligne comme lien.
-                    $linkVersion = trim(substr($link, 0, 25));
-                } elseif ($j == 8) {
-                    // Filtre les liens.
-                    if (($allSigner || $c[2] == $signer)
-                        && ($allDate || $c[3] == $date)
-                        && ($allAction || $c[4] == $action || $c[4] == 'x')
-                        && ($allSource || $c[5] == $source)
-                        && ($allTarget || $c[6] == $target)
-                        && ($allMeta || $c[7] == $meta)
-                    ) {
-                        // Crée une instance de lien.
-                        $linkInstance = $this->_nebuleInstance->newLink_DEPRECATED($link, $linkVersion);
-                        // Si le lien est valide ou que l'on permet les liens invalides.
-                        if (is_a($linkInstance, 'Link')
-                            && ($linkInstance->getValid() || $permitListInvalidLinks)
-                        ) {
-                            $okWriteNew = true;
-                            // Si la taille du tableau des résultats n'est pas nulle.
-                            if (sizeof($linksResult) != 0) {
-                                // On recherche et compare le nouveau lien avec chacun des anciens liens.
-                                foreach ($linksResult as $k => $t) {
-                                    // Si le nouveau lien est identique.
-                                    if ($t->getHashSigner() == $c[2]
-                                        && $t->getAction() == $c[4]
-                                        && $t->getHashSource() == $c[5]
-                                        && $t->getHashTarget() == $c[6]
-                                        && $t->getHashMeta() == $c[7]
-                                    ) {
-                                        // Si le nouveau lien est plus récent.
-                                        if ($t->getHashSigner() == $c[2]
-                                            && $this->_nebuleInstance->dateCompare($t->getDate(), $c[3]) <= 0
-                                        ) {
-                                            // Et si ce n'est pas exactement le même.
-                                            if ($t->getDate() != $c[3]) {
-                                                // On l'écrit dans le tableau des résultats à la place du lien plus ancien.
-                                                $linksResult[$k] = $linkInstance;
-                                            }
-                                            // Le lien n'a pas besoin d'être écrit.
-                                            $okWriteNew = false;
-                                        }
-                                        // Sinon c'est que le lien est plus ancien.
-                                    }
-                                }
-                            }
-                            // Si le lien est nouveau et non marqué supprimé.
-                            if ($okWriteNew) {
-                                // On écrit le lien dans le tableau des résultats.
-                                $linksResult[$i] = $linkInstance;
-                                $i++;
-                            }
-                        }
-                    }
-                    unset($okWriteNew);
-                }
-            }
-            unset($link, $linkInstance, $c, $e, $j);
-        }
-        unset($permitListInvalidLinks, $linkVersion, $i, $links);
-
-        // Tri les liens par date.
-        if (sizeof($linksResult) != 0) {
-            $linkdate = array();
-            foreach ($linksResult as $n => $t) {
-                $linkdate[$n] = $t->getDate();
-            }
-            array_multisort($linkdate, SORT_STRING, SORT_ASC, $linksResult);
-            unset($linkdate, $n, $t);
-        }
-
-        // Supprime les liens marqués supprimés.
-        if (sizeof($linksResult) != 0) {
-            // Liste tous les liens.
-            // Ils sont triés par date.
-            foreach ($linksResult as $n1 => $t1) {
-                if ($t1->getAction() != 'x') {
-                    // Si ce n'est pas un lien x.
-                    foreach ($linksResult as $t2) {
-                        if ($t2->getAction() == 'x'
-                            && $t1->getHashSource_disabled() == $t2->getHashSource_disabled()
-                            && $t1->getHashTarget_disabled() == $t2->getHashTarget_disabled()
-                            && $t1->getHashMeta_disabled() == $t2->getHashMeta_disabled()
-                            && $this->_nebuleInstance->dateCompare($t1->getDate(), $t2->getDate()) <= 0
-                        ) {
-                            unset($linksResult[$n1]);
-                        }
-                    }
-                }
-            }
-            unset($n1, $t1, $t2);
-        }
-
-        // Supprime les liens x.
-        if (sizeof($linksResult) != 0) {
-            // Liste tous les liens.
-            foreach ($linksResult as $n => $t) {
-                if ($t->getAction() == 'x') {
-                    // Si lien x, le supprime.
-                    unset($linksResult[$n]);
-                }
-            }
-            unset($n, $t);
-        }
-
-        return $linksResult;
+        $this->getLinks($links, $filter, null);
+        return $links;
     }
 
     /**
@@ -3969,15 +3684,24 @@ class Node implements nodeInterface
             $reference = $this->_crypto->hash($reference);
         }
 
-        // Liste les liens à la recherche de la propriété.
-        $list = $this->readLinksFilterFull_disabled(
-            '',
-            '',
-            'f',
-            $this->_id,
-            '',
-            $reference
+        $list = array();
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid1' => $this->_id,
+            'bl/rl/nid3' => $reference,
+            'bl/rl/nid4' => '',
         );
+        $this->getLinks($list, $filter, null);
+
+        // Liste les liens à la recherche de la propriété.
+        $list = array();
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid1' => $this->_id,
+            'bl/rl/nid3' => $reference,
+            'bl/rl/nid4' => '',
+        );
+        $this->getLinks($list, $filter, null);
 
         return $list;
     }
@@ -4002,14 +3726,14 @@ class Node implements nodeInterface
         }
 
         // Liste les liens à la recherche de la propriété.
-        $list = $this->readLinksFilterFull_disabled(
-            '',
-            '',
-            'f',
-            '',
-            $this->_id,
-            $reference
+        $list = array();
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid2' => $this->_id,
+            'bl/rl/nid3' => $reference,
+            'bl/rl/nid4' => '',
         );
+        $this->getLinks($list, $filter, null);
 
         return $list;
     }
@@ -4248,13 +3972,13 @@ class Node implements nodeInterface
         }
 
         // Liste les liens à la recherche de la propriété de localisation.
-        $links = $this->readLinksFilterFull_disabled(
-            '',
-            '',
-            'l',
-            '',
-            '',
-            $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION));
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid3' =>  $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION),
+            'bl/rl/nid4' => '',
+        );
+        $this->getLinks($links, $filter, null);
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($links) == 0
@@ -4308,13 +4032,13 @@ class Node implements nodeInterface
         }
 
         // Liste les liens à la recherche de la propriété de localisation.
-        $links = $this->readLinksFilterFull_disabled(
-            '',
-            '',
-            'l',
-            '',
-            '',
-            $this->_crypto->hash('nebule/objet/entite/localisation'));
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid3' => $this->_crypto->hash('nebule/objet/entite/localisation'),
+            'bl/rl/nid4' => '',
+        );
+        $this->getLinks($links, $filter, null);
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($links) == 0
@@ -4379,7 +4103,8 @@ class Node implements nodeInterface
         $newLink->signWrite();
 
         // Lit les liens.
-        $links = $this->readLinksUnfiltered();
+        $links = array();
+        $this->getLinks($links, array(), null);
         $entity = $this->_nebuleInstance->getCurrentEntity();
         foreach ($links as $link) {
             // Vérifie si l'entité signataire du lien est l'entité courante.
@@ -4413,7 +4138,8 @@ class Node implements nodeInterface
             $newLink->signWrite();
 
             // Lit les liens.
-            $links = $this->readLinksUnfiltered();
+            $links = array();
+            $this->getLinks($links, array(), null);
             $entity = $this->_nebuleInstance->getCurrentEntity();
             foreach ($links as $link) {
                 // Vérifie si l'entité signataire du lien est l'entité courante.
@@ -4455,7 +4181,8 @@ class Node implements nodeInterface
         $newLink->signWrite();
 
         // Lit les liens.
-        $links = $this->readLinksUnfiltered();
+        $links = array();
+        $this->getLinks($links, array(), null);
         $entity = $this->_nebuleInstance->getCurrentEntity();
         foreach ($links as $link) {
             // Vérifie si l'entité signataire du lien est l'entité courante.

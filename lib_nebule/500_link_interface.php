@@ -22,7 +22,7 @@ interface blocLinkInterface
     /**
      * Get list of links in the bloc of links.
      *
-     * @return array
+     * @return array:linkInterface
      */
     public function getLinks(): array;
 

@@ -4279,7 +4279,7 @@ class ModuleEntities extends Modules
         unset($dispWarn);
 
         // liste les liens pour l'entité.
-        $links = $entity->readLinksFilterFull_disabled($entity, '', 'f', '', '', '');
+        $links = $entity->readLinksFilterFull_DEPRECATED($entity, '', 'f', '', '', '');
 
         if (sizeof($links) != 0) {
             // Indice de fond paire ou impaire.
@@ -7189,7 +7189,7 @@ class ModuleObjects extends Modules
         $nextLinkSigne = '';
 
         // Liste des attributs, càd des liens de type l.
-        $links = $this->_applicationInstance->getCurrentObjectInstance()->readLinksFilterFull_disabled(
+        $links = $this->_applicationInstance->getCurrentObjectInstance()->readLinksFilterFull_DEPRECATED(
             '',
             '',
             '',
@@ -7953,7 +7953,7 @@ class ModuleObjects extends Modules
             $hashType = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
             $hashEntity = $this->_nebuleInstance->getCryptoInstance()->hash('application/x-pem-file');
             $hashEntityObject = $this->_nebuleInstance->newObject($hashEntity);
-            $links = $hashEntityObject->readLinksFilterFull_disabled('', '', 'l', '', $hashEntity, $hashType);
+            $links = $hashEntityObject->readLinksFilterFull_DEPRECATED('', '', 'l', '', $hashEntity, $hashType);
 
             $typeEntity = false;
             $link = null;
@@ -10589,7 +10589,7 @@ class ModuleMessenger extends Modules
         $hashType = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/type');
         $hashEntity = $this->_nebuleInstance->getCryptoInstance()->hash('application/x-pem-file');
         $hashEntityObject = $this->_nebuleInstance->newObject($hashEntity);
-        $links = $hashEntityObject->readLinksFilterFull_disabled(
+        $links = $hashEntityObject->readLinksFilterFull_DEPRECATED(
             '',
             '',
             'l',

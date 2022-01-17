@@ -217,15 +217,11 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinkPresent()
      */
-    public function checkLinkPresent($oid, string $url = ''): bool
+    public function checkLinkPresent(string $oid, string $url = ''): bool
     {
         if ($url == '')
             $url = $this->_defaultLocalisation;
-        if (!is_string($oid)
-            || $oid == '0'
-            || $oid == ''
-            || !ctype_xdigit($oid)
-        )
+        if (!Node::checkNID($oid, false))
             return false;
         $url = $url . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid;
         return $this->_checkExistOverHTTP($url);
@@ -235,15 +231,11 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectPresent()
      */
-    public function checkObjectPresent($oid, string $url = ''): bool
+    public function checkObjectPresent(string $oid, string $url = ''): bool
     {
         if ($url == '')
             $url = $this->_defaultLocalisation;
-        if (!is_string($oid)
-            || $oid == '0'
-            || $oid == ''
-            || !ctype_xdigit($oid)
-        )
+        if (!Node::checkNID($oid, false))
             return false;
         $url = $url . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid;
         return $this->_checkExistOverHTTP($url);
@@ -253,24 +245,22 @@ class ioHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getLinks()
      */
-    public function getLinks(string $oid, string $url = '')
+    public function getLinks(string $oid, string $url = '', int $offset = 0): array
     {
         if ($url == '')
             $url = $this->_defaultLocalisation;
-        if ($oid == '0'
-            || $oid == ''
-            || !ctype_xdigit($oid)
+        if (!Node::checkNID($oid, false)
+            || !$this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
         )
-            return false;
-        if (!$this->_configuration->getOptionAsBoolean('permitSynchronizeLink'))
-            return false;
+            return array();
         $url = $url . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid;
         if (!$this->_checkExistOverHTTP($url))
-            return false;
+            return array();
+
         $n = 0;
         $t = array();
 
-        // Lecture et extraction des liens.
+        // Lecture et extraction des liens. TODO faire $offset
         $c = file_get_contents($url);
         $l = array_filter(explode(' ', strtr($c, "\n", ' ')));
         unset($c);
@@ -288,9 +278,9 @@ class ioHTTP extends io implements ioInterface
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::ObfuscatedLinksRead()
+     * @see ioInterface::getObfuscatedLinks()
      */
-    public function obfuscatedLinksRead(string $entity, string $signer = '0', string $url = ''): array
+    public function getObfuscatedLinks(string $entity, string $signer = '0', string $url = ''): array
     {
         // @todo
         return array();
@@ -304,12 +294,9 @@ class ioHTTP extends io implements ioInterface
     {
         if ($url == '')
             $url = $this->_defaultLocalisation;
-        if ($oid == '0'
-            || $oid == ''
-            || !ctype_xdigit($oid)
+        if (!Node::checkNID($oid, false)
+            || !$this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
         )
-            return false;
-        if (!$this->_configuration->getOptionAsBoolean('permitSynchronizeObject'))
             return false;
         $url = $url . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid;
         if ($this->_checkExistOverHTTP($url))
