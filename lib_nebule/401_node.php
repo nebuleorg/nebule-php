@@ -3376,13 +3376,13 @@ class Node implements nodeInterface
      * @param string $nid4
      * @return array:Link
      */
-    public function readLinksFilterFull_DEPRECATED(string $eid = '', string $chr = '', string $req = '', string $nid1 = '', string $nid2 = '', string $nid3 = '', string $nid4 = ''): array
+    public function readLinksFilterFull(string $eid = '', string $chr = '', string $req = '', string $nid1 = '', string $nid2 = '', string $nid3 = '', string $nid4 = ''): array
     {
         if (!$this->_io->checkLinkPresent($this->_id))
             return array();
 
         $links = array();
-        $filter = array( 'bl/rl/nid4' => '', );
+        $filter = array( 'bl/rl/nid4' => $nid4, );
 
         if ($eid != '')
             $filter['bs/rs1/nid'] = $eid;
@@ -3396,7 +3396,6 @@ class Node implements nodeInterface
             $filter['bl/rl/nid2'] = $nid2;
         if ($nid3 != '')
             $filter['bl/rl/nid3'] = $nid3;
-        $filter['bl/rl/nid4'] = $nid4;
 
         $this->getLinks($links, $filter, null);
         return $links;
@@ -3404,8 +3403,8 @@ class Node implements nodeInterface
 
     /**
      * Recherche l'identifiant d'un objet final définit comme mise à jour de l'objet courant.
-     * Résoud le graphe des mises à jours d'un objet.
-     * - $present permet de controler si l'on veut que l'objet final soit bien présent localement.
+     * Résout le graphe des mises à jour d'un objet.
+     * - $present permet de controller si l'on veut que l'objet final soit bien présent localement.
      * - $synchro permet ou non la synchronisation des liens et objets auprès d'entités tierces, en clair on télécharge ce qui manque au besoin lors du parcours du graphe.
      * Retourne l'ID de l'objet à jour ou l'ID de l'objet de départ si pas de mise à jour.
      * @param boolean $present

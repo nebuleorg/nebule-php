@@ -795,7 +795,7 @@ abstract class Applications
         // Extrait les modules référencés.
         $object = $this->_nebuleInstance->newObject($bootstrapApplicationStartID);
         $hashRef = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
-        $links = $object->readLinksFilterFull_DEPRECATED('', '', 'f', $bootstrapApplicationStartID, '', $hashRef);
+        $links = $object->readLinksFilterFull('', '', 'f', $bootstrapApplicationStartID, '', $hashRef);
 
         // Lit les ID des modules.
         foreach ($links as $link) {
@@ -1009,7 +1009,7 @@ abstract class Applications
         $hashActivation = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MOD_ACTIVE);
 
         // Liste les modules reconnues par une entité locale.
-        $linksList = $module->readLinksFilterFull_DEPRECATED('', '', 'f', $module->getID(), $hashActivation, $module->getID());
+        $linksList = $module->readLinksFilterFull('', '', 'f', $module->getID(), $hashActivation, $module->getID());
         $link = null;
         foreach ($linksList as $link) {
             // Vérifie que le signataire est une entité locale.
@@ -1341,7 +1341,7 @@ abstract class Applications
         // Recherche les liens de validation.
         $hashRef = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP);
         $object = $this->_nebuleInstance->newObject($hashRef);
-        $links = $object->readLinksFilterFull_DEPRECATED('', '', 'f', $hashRef, $hash, $hashRef);
+        $links = $object->readLinksFilterFull('', '', 'f', $hashRef, $hash, $hashRef);
 
         // Trie sur les autorités locales.
         $ok = false;

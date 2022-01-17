@@ -4281,7 +4281,7 @@ class ModuleEntities extends Modules
         unset($dispWarn);
 
         // liste les liens pour l'entité.
-        $links = $entity->readLinksFilterFull_DEPRECATED($entity, '', 'f', '', '', '');
+        $links = $entity->readLinksFilterFull($entity, '', 'f', '', '', '');
 
         if (sizeof($links) != 0) {
             // Indice de fond paire ou impaire.
@@ -7191,7 +7191,7 @@ class ModuleObjects extends Modules
         $nextLinkSigne = '';
 
         // Liste des attributs, càd des liens de type l.
-        $links = $this->_applicationInstance->getCurrentObjectInstance()->readLinksFilterFull_DEPRECATED(
+        $links = $this->_applicationInstance->getCurrentObjectInstance()->readLinksFilterFull(
             '',
             '',
             '',
@@ -7955,7 +7955,7 @@ class ModuleObjects extends Modules
             $hashType = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
             $hashEntity = $this->_nebuleInstance->getCryptoInstance()->hash('application/x-pem-file');
             $hashEntityObject = $this->_nebuleInstance->newObject($hashEntity);
-            $links = $hashEntityObject->readLinksFilterFull_DEPRECATED('', '', 'l', '', $hashEntity, $hashType);
+            $links = $hashEntityObject->readLinksFilterFull('', '', 'l', '', $hashEntity, $hashType);
 
             $typeEntity = false;
             $link = null;
@@ -9313,7 +9313,7 @@ class Moduleqantion extends Modules
                                 $okselected = array($this->_nebuleInstance->getCurrentEntity() => $this->_nebuleInstance->getCurrentEntity());
 
                                 // Liste les entités conues.
-                                $links = $hashEntityObject->readLinksFilterFull_DEPRECATED(
+                                $links = $hashEntityObject->readLinksFilterFull(
                                     '',
                                     '',
                                     'l',
@@ -10770,7 +10770,7 @@ class Moduleqantion extends Modules
         $referenceInstance = $this->_nebuleInstance->newObject($reference);
 
         // Recherche les monnaies pour l'entité en cours.
-        $result = $referenceInstance->readLinksFilterFull_DEPRECATED(
+        $result = $referenceInstance->readLinksFilterFull(
             $entity,
             '',
             'l',
@@ -10807,7 +10807,7 @@ class Moduleqantion extends Modules
         $referenceType = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
 
         // Recherche les liens de déclaration comme monnaie.
-        $links = $object->readLinksFilterFull_DEPRECATED(
+        $links = $object->readLinksFilterFull(
             $entity,
             '',
             'l',
@@ -10839,7 +10839,7 @@ class Moduleqantion extends Modules
         $referenceType = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
 
         // Recherche les liens de déclaration comme monnaie.
-        $links = $object->readLinksFilterFull_DEPRECATED(
+        $links = $object->readLinksFilterFull(
             '',
             '',
             'l',
@@ -10883,7 +10883,7 @@ class Moduleqantion extends Modules
         $referenceInstance = $this->_nebuleInstance->newObject($reference);
 
         // Recherche les sacs de jetons pour l'entité en cours.
-        $result = $referenceInstance->readLinksFilterFull_DEPRECATED(
+        $result = $referenceInstance->readLinksFilterFull(
             $entity,
             '',
             'l',
@@ -10920,7 +10920,7 @@ class Moduleqantion extends Modules
         $referenceType = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
 
         // Recherche les liens de déclaration comme sac de jetons.
-        $links = $object->readLinksFilterFull_DEPRECATED(
+        $links = $object->readLinksFilterFull(
             $entity,
             '',
             'l',
@@ -10952,7 +10952,7 @@ class Moduleqantion extends Modules
         $referenceType = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
 
         // Recherche les liens de déclaration comme sac de jetons.
-        $links = $object->readLinksFilterFull_DEPRECATED(
+        $links = $object->readLinksFilterFull(
             '',
             '',
             'l',

@@ -865,7 +865,7 @@ class Currency extends Node implements nodeInterface
         }
 
         // Recherche les monnaies pour l'entité en cours.
-        $links1 = $this->readLinksFilterFull_DEPRECATED(
+        $links1 = $this->readLinksFilterFull(
             '',
             '',
             'l',
@@ -877,7 +877,7 @@ class Currency extends Node implements nodeInterface
         // Filtrage type recherché. @todo faire filtrage sur MID.
         foreach ($links1 as $i => $link) {
             $instance = $this->_nebuleInstance->newObject($link->getHashSource());
-            $links2 = $instance->readLinksFilterFull_DEPRECATED(
+            $links2 = $instance->readLinksFilterFull(
                 $link->getHashSigner(),
                 '',
                 'l',

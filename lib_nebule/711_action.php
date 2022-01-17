@@ -3772,7 +3772,7 @@ abstract class Actions
             $this->_actionSynchronizeNewEntityInstance->syncLinks();
 
             // Liste des liens l pour l'entité en source.
-            $links = $this->_actionSynchronizeNewEntityInstance->readLinksFilterFull_DEPRECATED('', '', 'l', $hash, '', '');
+            $links = $this->_actionSynchronizeNewEntityInstance->readLinksFilterFull('', '', 'l', $hash, '', '');
             // Synchronise l'objet cible.
             $object = null;
             foreach ($links as $link) {
@@ -3783,7 +3783,7 @@ abstract class Actions
                 $object->syncObject();
             }
             // Liste des liens l pour l'entité en cible.
-            $links = $this->_actionSynchronizeNewEntityInstance->readLinksFilterFull_DEPRECATED('', '', 'l', '', $hash, '');
+            $links = $this->_actionSynchronizeNewEntityInstance->readLinksFilterFull('', '', 'l', '', $hash, '');
             // Synchronise l'objet source.
             $object = null;
             foreach ($links as $link) {

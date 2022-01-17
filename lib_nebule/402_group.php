@@ -368,7 +368,7 @@ class Group extends Node implements nodeInterface
         }
 
         // Liste tous mes liens de définition de groupe fermé.
-        $links = $this->readLinksFilterFull_DEPRECATED(
+        $links = $this->readLinksFilterFull(
             '',
             '',
             'l',
@@ -533,7 +533,7 @@ class Group extends Node implements nodeInterface
         }
 
         // Liste tous mes liens de définition de groupe protégé.
-        $links = $this->readLinksFilterFull_DEPRECATED(
+        $links = $this->readLinksFilterFull(
             '',
             '',
             'l',
@@ -703,7 +703,7 @@ class Group extends Node implements nodeInterface
         }
 
         // Liste tous mes liens de définition de groupe dissimulé.
-        $links = $this->readLinksFilterFull_DEPRECATED(
+        $links = $this->readLinksFilterFull(
             '',
             '',
             'l',
@@ -873,7 +873,7 @@ class Group extends Node implements nodeInterface
         }
 
         // Liste tous les liens de définition des membres du groupe.
-        $links = $this->readLinksFilterFull_DEPRECATED(
+        $links = $this->readLinksFilterFull(
             '',
             '',
             'l',
@@ -1010,7 +1010,7 @@ class Group extends Node implements nodeInterface
     public function getListMembersLinks(string $socialClass = '', array $socialListID = array()): array
     {
         // Liste tous les liens des membres de la conversation.
-        $links = $this->readLinksFilterFull_DEPRECATED(
+        $links = $this->readLinksFilterFull(
             '',
             '',
             'l',
@@ -1080,7 +1080,7 @@ class Group extends Node implements nodeInterface
         }
 
         // Liste tous les liens de définition des entités à l'écoutes du groupe.
-        $links = $this->readLinksFilterFull_DEPRECATED(
+        $links = $this->readLinksFilterFull(
             '',
             '',
             'l',
@@ -1240,7 +1240,7 @@ class Group extends Node implements nodeInterface
         }
 
         // Liste tous les liens des entités à l'écoutes du groupe.
-        $links = $this->readLinksFilterFull_DEPRECATED(
+        $links = $this->readLinksFilterFull(
             '',
             '',
             'l',
