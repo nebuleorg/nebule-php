@@ -390,7 +390,7 @@ class Node implements nodeInterface
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // calcul l'ID.
-            $this->_id = $this->_crypto->hash($data);
+            $this->_id = $this->_nebuleInstance->getNIDfromData($data);
             if ($protect)
                 $this->_metrology->addLog('Create protected object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '1434b3ed');
             else
@@ -410,8 +410,8 @@ class Node implements nodeInterface
             if ($obfuscated)
                 $date2 = '0';
             $action = 'l';
-            $target = $this->_crypto->hash($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
-            $meta = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_HASH);
+            $target = $this->_nebuleInstance->getNIDfromData($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
+            $meta = $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_HASH);
             $link = '0_' . $signer . '_' . $date2 . '_' . $action . '_' . $this->_id . '_' . $target . '_' . $meta;
             $newLink = new BlocLink($this->_nebuleInstance, $link, Cache::TYPE_LINK);
             $newLink->signWrite();
@@ -449,7 +449,7 @@ class Node implements nodeInterface
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // calcul l'ID.
-            $this->_id = $this->_crypto->hash($data);
+            $this->_id = $this->_nebuleInstance->getNIDfromData($data);
             if ($protect)
                 $this->_metrology->addLog('Create protected object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             else
@@ -469,8 +469,8 @@ class Node implements nodeInterface
             if ($obfuscated)
                 $date2 = '0';
             $action = 'l';
-            $target = $this->_crypto->hash($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
-            $meta = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_HASH);
+            $target = $this->_nebuleInstance->getNIDfromData($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
+            $meta = $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_HASH);
             $link = '0_' . $signer . '_' . $date2 . '_' . $action . '_' . $this->_id . '_' . $target . '_' . $meta;
             $newLink = new Link($this->_nebuleInstance, $link);
             $newLink->signWrite();
@@ -919,7 +919,7 @@ class Node implements nodeInterface
 
         // Si le type de l'objet est précisé, le converti en ID.
         if ($type != '') {
-            $type = $this->_crypto->hash($type, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
+            $type = $this->_nebuleInstance->getNIDfromData($type, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
         }
 
         $signers = array();
@@ -953,7 +953,7 @@ class Node implements nodeInterface
     {
         // Si le type de l'objet est précisé, le converti en ID.
         if ($type != '') {
-            $type = $this->_crypto->hash($type, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
+            $type = $this->_nebuleInstance->getNIDfromData($type, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
         }
 
         // extrait l'ID de l'entité si c'est un objet.
@@ -1011,7 +1011,7 @@ class Node implements nodeInterface
         $action = 'l';
         $source = $this->_id;
         $target = $id;
-        $meta = $this->_crypto->hash($type, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
+        $meta = $this->_nebuleInstance->getNIDfromData($type, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new Link($this->_nebuleInstance, $link);
         $newLink->sign();
@@ -1654,7 +1654,7 @@ class Node implements nodeInterface
         $list = array();
         $filter = array(
             'bl/rl/req' => 'f',
-            'bl/rl/nid1' => $this->_crypto->hash(nebule::REFERENCE_NEBULE_DANGER),
+            'bl/rl/nid1' => $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_DANGER),
             'bl/rl/nid2' => $this->_id,
             'bl/rl/nid4' => '',
         );
@@ -1699,7 +1699,7 @@ class Node implements nodeInterface
         $date = date(DATE_ATOM);
         $action = 'l';
         $source = $this->_id;
-        $target = $this->_crypto->hash(nebule::REFERENCE_NEBULE_DANGER);
+        $target = $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_DANGER);
         $meta = '';
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new Link($this->_nebuleInstance, $link);
@@ -1725,7 +1725,7 @@ class Node implements nodeInterface
         $list = array();
         $filter = array(
             'bl/rl/req' => 'f',
-            'bl/rl/nid1' => $this->_crypto->hash(nebule::REFERENCE_NEBULE_WARNING),
+            'bl/rl/nid1' => $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_WARNING),
             'bl/rl/nid2' => $this->_id,
             'bl/rl/nid4' => '',
         );
@@ -1770,7 +1770,7 @@ class Node implements nodeInterface
         $date = date(DATE_ATOM);
         $action = 'l';
         $source = $this->_id;
-        $target = $this->_crypto->hash(nebule::REFERENCE_NEBULE_WARNING);
+        $target = $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_WARNING);
         $meta = '';
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new Link($this->_nebuleInstance, $link);
@@ -2066,7 +2066,7 @@ class Node implements nodeInterface
             if (strlen($key) != $keySize) {
                 return false;
             }
-            $keyID = $this->_crypto->hash($key);
+            $keyID = $this->_nebuleInstance->getNIDfromData($key);
             $this->_metrology->addLog('Protect object, key : ' . $keyID, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
             // Si des donnnées sont disponibles, on les lit.
@@ -2088,7 +2088,7 @@ class Node implements nodeInterface
 
                 // Vérification de l'empreinte des données. Doit être identique à l'ID.
                 // A faire pour le cas général.
-                $hash = $this->_crypto->hash($data);
+                $hash = $this->_nebuleInstance->getNIDfromData($data);
                 if ($hash != $this->_id) {
                     unset($data);
                     $this->_haveData = false;
@@ -2141,8 +2141,8 @@ class Node implements nodeInterface
             // Crée le lien de type d'empreinte de la clé.
             $action = 'l';
             $source = $keyID;
-            $target = $this->_crypto->hash($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
-            $meta = $this->_crypto->hash('nebule/objet/hash');
+            $target = $this->_nebuleInstance->getNIDfromData($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
+            $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/hash');
             $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
             $newLink = new Link($this->_nebuleInstance, $link);
             $newLink->signWrite();
@@ -2155,7 +2155,7 @@ class Node implements nodeInterface
                 $action = 'l';
                 $source = $codeID;
                 $target = $textID;
-                $meta = $this->_crypto->hash('nebule/objet/type');
+                $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
                 $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
                 $newLink = new Link($this->_nebuleInstance, $link);
                 $newLink->sign();
@@ -2173,7 +2173,7 @@ class Node implements nodeInterface
                 $action = 'l';
                 $source = $codeKeyID;
                 $target = $textID;
-                $meta = $this->_crypto->hash('nebule/objet/type');
+                $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
                 $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
                 $newLink = new Link($this->_nebuleInstance, $link);
                 $newLink->sign();
@@ -2291,7 +2291,7 @@ class Node implements nodeInterface
                             $action = 'l';
                             $source = $codeKeyID;
                             $target = $textID;
-                            $meta = $this->_crypto->hash('nebule/objet/type');
+                            $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
                             $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
                             $newLink = new Link($this->_nebuleInstance, $link);
                             $newLink->sign();
@@ -2395,7 +2395,7 @@ class Node implements nodeInterface
         $limit = $this->_configuration->getOptionUntyped('ioReadMaxData');
         $codeKey = $this->_nebuleInstance->getIoInstance()->getObject($this->_idProtectedKey, $limit);
         // Calcul l'empreinte de la clé chiffrée.
-        $hash = $this->_crypto->hash($codeKey);
+        $hash = $this->_nebuleInstance->getNIDfromData($codeKey);
         if ($hash != $this->_idProtectedKey) {
             $this->_metrology->addLog('Error get protected key content : ' . $this->_idProtectedKey, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
             $this->_metrology->addLog('Protected key content hash : ' . $hash, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
@@ -2405,7 +2405,7 @@ class Node implements nodeInterface
         // Déchiffrement (asymétrique) de la clé de chiffrement du contenu.
         $key = $this->_nebuleInstance->getCurrentEntityInstance()->decrypt($codeKey);
         // Calcul l'empreinte de la clé.
-        $hash = $this->_crypto->hash($key);
+        $hash = $this->_nebuleInstance->getNIDfromData($key);
         if ($hash != $this->_idUnprotectedKey) {
             $this->_metrology->addLog('Error get unprotected key content : ' . $this->_idUnprotectedKey, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
             $this->_metrology->addLog('Unprotected key content hash : ' . $hash, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
@@ -2441,7 +2441,7 @@ class Node implements nodeInterface
             $action = 'l';
             $source = $codeKeyID;
             $target = $textID;
-            $meta = $this->_crypto->hash('nebule/objet/type');
+            $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
             $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
             $newLink = new BlocLink($this->_nebuleInstance, $link);
             // Signe le lien.
@@ -2631,7 +2631,7 @@ class Node implements nodeInterface
             return $list;
         }
 
-        $hashEmotion = $this->_crypto->hash($emotion);
+        $hashEmotion = $this->_nebuleInstance->getNIDfromData($emotion);
 
         // Liste les liens à la recherche de la propriété.
         $list = array();
@@ -2759,7 +2759,7 @@ class Node implements nodeInterface
         $date = date(DATE_ATOM);
         $action = 'f';
         $source = $this->_id;
-        $target = $this->_crypto->hash($emotion);
+        $target = $this->_nebuleInstance->getNIDfromData($emotion);
         $meta = $context;
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new Link($this->_nebuleInstance, $link);
@@ -2818,7 +2818,7 @@ class Node implements nodeInterface
         $date = date(DATE_ATOM);
         $action = 'x';
         $source = $this->_id;
-        $target = $this->_crypto->hash($emotion);
+        $target = $this->_nebuleInstance->getNIDfromData($emotion);
         $meta = $entity;
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new Link($this->_nebuleInstance, $link);
@@ -2944,7 +2944,7 @@ class Node implements nodeInterface
         }
 
         // Calcul l'empreinte.
-        $hash = $this->_crypto->hash($this->_data, $hashAlgo);
+        $hash = $this->_nebuleInstance->getNIDfromData($this->_data, $hashAlgo);
         if ($hash == $this->_id) // Si l'objet est valide.
         {
             $this->_metrology->addObjectVerify(); // Metrologie.
@@ -3066,7 +3066,7 @@ class Node implements nodeInterface
         }
 
         // Calcul l'empreinte.
-        $hash = $this->_crypto->hash($this->_data, $hashAlgo);
+        $hash = $this->_nebuleInstance->getNIDfromData($this->_data, $hashAlgo);
         if ($hash == $this->_id) // Si l'objet est valide.
         {
             $this->_metrology->addObjectVerify(); // Metrologie.
@@ -3122,7 +3122,7 @@ class Node implements nodeInterface
         // Lit la clé chiffrée.
         $codeKey = $this->_io->getObject($this->_idProtectedKey, 0);
         // Calcul l'empreinte de la clé chiffrée.
-        $hash = $this->_crypto->hash($codeKey);
+        $hash = $this->_nebuleInstance->getNIDfromData($codeKey);
         if ($hash != $this->_idProtectedKey) {
             $this->_metrology->addLog('Error get protected key content : ' . $this->_idProtectedKey, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
             $this->_metrology->addLog('Protected key content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
@@ -3132,7 +3132,7 @@ class Node implements nodeInterface
         // Déchiffrement (asymétrique) de la clé de chiffrement du contenu.
         $key = $this->_nebuleInstance->getCurrentEntityInstance()->decrypt($codeKey);
         // Calcul l'empreinte de la clé.
-        $hash = $this->_crypto->hash($key);
+        $hash = $this->_nebuleInstance->getNIDfromData($key);
         if ($hash != $this->_idUnprotectedKey) {
             $this->_metrology->addLog('Error get unprotected key content : ' . $this->_idUnprotectedKey, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
             $this->_metrology->addLog('Unprotected key content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
@@ -3142,7 +3142,7 @@ class Node implements nodeInterface
         // Lit l'objet chiffré.
         $code = $this->_io->getObject($this->_idProtected, $limit);
         // Calcul l'empreinte des données.
-        $hash = $this->_crypto->hash($code);
+        $hash = $this->_nebuleInstance->getNIDfromData($code);
         if ($hash != $this->_idProtected) {
             $this->_metrology->addLog('Error get protected data content : ' . $this->_idProtected, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
             $this->_metrology->addLog('Protected data content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
@@ -3151,7 +3151,7 @@ class Node implements nodeInterface
 
         $data = $this->_crypto->decrypt($code, $this->_configuration->getOptionAsString('cryptoSymmetricAlgorithm'), $key);
         // Calcul l'empreinte des données.
-        $hash = $this->_crypto->hash($data);
+        $hash = $this->_nebuleInstance->getNIDfromData($data);
         if ($hash != $this->_idUnprotected) {
             $this->_metrology->addLog('Error get unprotected data content : ' . $this->_idUnprotected, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
             $this->_metrology->addLog('Unprotected data content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
@@ -3271,7 +3271,7 @@ class Node implements nodeInterface
 
         foreach ($lines as $line)
         {
-            $bloc = $this->_cache->newLink($line, Cache::TYPE_BLOCLINK);
+            $bloc = $this->_cache->newLink($line, Cache::TYPE_LINK);
             if ($bloc->getValidStructure()
                 && ( $bloc->getValid() || $withInvalidLinks )
             )
@@ -3407,102 +3407,45 @@ class Node implements nodeInterface
      * - $present permet de controller si l'on veut que l'objet final soit bien présent localement.
      * - $synchro permet ou non la synchronisation des liens et objets auprès d'entités tierces, en clair on télécharge ce qui manque au besoin lors du parcours du graphe.
      * Retourne l'ID de l'objet à jour ou l'ID de l'objet de départ si pas de mise à jour.
+     *
      * @param boolean $present
      * @param boolean $synchro
      * @return string
-     * @todo
-     *
      */
     public function findUpdate(bool $present = true, bool $synchro = false): string
     {
+        $oneLevelUpdate = $this->_findUpdate($this->_id, 0, $present, $synchro);
+        if ($oneLevelUpdate != '')
+            return $oneLevelUpdate;
         return '';
+    }
 
-        // Vérifier si authorisé à rechercher les mises à jours.
-        if (!$this->_configuration->getOptionAsBoolean('permitFollowUpdates')) {
-            return $this->_id;
+    private function _findUpdate(string $nid, int $level, bool $present = true, bool $synchro = false): string
+    {
+        $level++;
+        if ($level > $this->_configuration->getOptionAsInteger('linkMaxFollowedUpdates'))
+            return '';
+
+        $oneLevelUpdate = $this->findOneLevelUpdateNID(false, false);
+
+        if ($oneLevelUpdate != '' && $present && $this->_io->checkObjectPresent($oneLevelUpdate))
+            return $oneLevelUpdate;
+// FIXME
+        if (!$present || $this->_io->checkObjectPresent($nid))
+            return $nid;
+        elseif ($synchro) {
+            $instance = $this->_cache->newNode($nid);
+            $instance->syncObject();
+            if ($this->_io->checkObjectPresent($nid))
+                return $nid;
         }
 
-        // Si déjà recherché, donne le résultat en cache.
-        if ($this->_cacheUpdate != ''
-            && !$synchro
-        ) {
-            return $this->_cacheUpdate;
+        if ($present && !$this->_io->checkObjectPresent($nid)) {
+            $instance = $this->_cache->newNode($oneLevelUpdate);
+            $instance->syncObject();
         }
 
-        $l = array();        // Liste des branches de l'arborescence que l'on a pris.
-        $i = 0;            // Indice de position dans l'arborescence.
-        $j = 0;            // Indice de position sur les mises à jour un objet.
-        $s = '0';            // L'ID de l'objet suivant.
-        $co = array();    // Cache des objets de l'arborescence.
-        $cl = array();    // Cache des dérivés des objets de l'arborescence.
-        $ov = array();    // Table des objets vus.
-        $oi = array();    // Table de l'indice de lien utilisé pour les objets vus.
-        $ok = false;        // Résultat pour la boucle.
-        $id = $this->_id;    // ID de l'objet courant.
-
-        // Faire une boucle...
-
-        // Vérifie si pas déjà traité, anti boucle infinie.
-        $this->_usedUpdate[$this->_id] = true;
-
-        // Vérifie si pas dépassé le nombre max à traiter, anti trou noir.
-        if (sizeof($this->_usedUpdate) > $this->_configuration->getOptionUntyped('linkMaxFollowedUpdates'))
-            return '0';
-
-        // Recherche la mise à jour de l'objet.
-        while (!$ok) {
-            // Extrait l'objet du cache...
-            if (isset($co[$id])) {
-                // Extrait l'objet.
-                $object = $co[$id];
-                // Extrait les dérivés connus.
-                $sub = $cl[$id];
-            } // ... ou le génère si nouveau.
-            else {
-                // Génère l'objet.
-                $object = $this->_nebuleInstance->newObject($id);
-                $co[$id] = $object;
-                // Génère la liste de ses dérivés connus.
-                $sub = $object->findOneLevelUpdates($present, $synchro);
-                $cl[$id] = $sub;
-                // Marque l'objet comme vu pour qu'il ne soit pas réutilisé.
-                $ov[$id] = true;
-            }
-
-            // Calcul le dérivé suivant dans la liste.
-            // Prend le plus récent non déjà vu.
-            // Si aucun trouvé, retourn l'ID 0.
-            $s = '0';
-            foreach ($sub as $sid) {
-                if (!isset($ov[$sid])) {
-                    $s = $sid;
-                    break;
-                }
-            }
-
-            // Si pas de dérivé connu...
-            if ($s == '0') {
-                // Si objet présent ...
-                if ($this->_io->checkObjectPresent($object)) {
-                    $ok = true; // On a trouvé l'ID de la dernière mise à jour de l'objet.
-                } // ... sinon on remonte d'un niveau.
-                else {
-                    if ($i == 0) {
-                        $ok = true; // OK et retourne implicitement l'ID de l'objet dont on recherchait une mise à jour.
-                    } else {
-                        $i--;
-                        $id = $l[$i]; // Reprend l'ID de la branche du dessus.
-                    }
-                }
-            } else // ... sinon, on continue la recherche sur l'ID dérivé.
-            {
-                $id = $s;
-            }
-        }
-
-        // A faire...
-        unset($l, $i, $j, $c, $s, $ov, $oi, $ok);
-        return $id;
+        return '';
     }
 
     /**
@@ -3513,123 +3456,39 @@ class Node implements nodeInterface
      * On extrait les liens u pré-filtrés x et triés pas date.
      * Retourne un tableau des ID des objets, vide si aucun trouvé.
      *
+     * @param array   $nid
+     * @param array   $exclude
      * @param boolean $present
      * @param boolean $synchro
-     * @return array:string
+     * @return void
      */
-    public function findOneLevelUpdates(bool $present = true, bool $synchro = false): array
+    public function findOneLevelUpdateList(array &$nid, array $exclude, bool $present = true, bool $synchro = false): void
     {
-        return array();
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'u',
+            'bl/rl/nid1' => $this->_id,
+            'bl/rl/nid3' => '',
+            'bl/rl/nid4' => '',
+        );
+        $this->getLinks($links, $filter, null);
 
-        $x = $this->_configuration->getOptionAsBoolean('permitListInvalidLinks');
-        $v = 'nebule/liens/version/' . $this->_configuration->getOptionUntyped('defaultLinksVersion'); // Version de lien.
-        $r = array(); // Tableau des liens de mise à jour.
-        $o = array(); // Tableau des objets résultats.
-        if (!$this->_io->checkLinkPresent($this->_id)) {
-            return $o;
-        }
-        $i = 0; // Indice de position dans le tableau des liens.
+        $this->_arrayDateSort($links);
 
-        // Lit les liens.
-        $links = $this->_io->getLinks($this->_id);
-        $this->_metrology->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-
-        // Analyse les liens, les filtre et les convertis en tableau d'objets de type lien.
-        foreach ($links as $link) {
-            // Ce traitement sur champs brutes est une optimisation du temps de traitement. Le gain est de 1 à 10.
-            // Extrait les champs du lien.
-            $j = 1;                        // Indice du champs lu, de 1 à 7.
-            $c = array();                    // Table des champs lus.
-            $e = strtok(trim($link), '_');    // Lecture du champs.
-            while ($e !== false)            // Extrait le lien.
-            {
-                $c[$j] = trim($e);
-                if ($j < 8) {
-                    $e = strtok('_');
-                } else {
-                    $e = false;
-                }
-                $j++;
-            }
-
-            if (substr($link, 0, 21) == 'nebule/liens/version/') {
-                $v = trim(substr($link, 0, 25)); // Mémorise la version mais ne valide pas la ligne comme lien.
-            } elseif ($j == 8) {
-                // Filtre les liens. Ne tient pas compte du champs meta.
-                if (($c[4] == 'u'
-                        || $c[4] == 'x'
-                    )
-                    && $c[5] == $this->_id
-                    && $c[6] != '0'
-                ) {
-                    $l = $this->_nebuleInstance->newLink_DEPRECATED($link, $v);
-                    if ($l->getValid() || $x) {
-                        $r[$i] = $l;        // on l'écrit dans le tableau des résultats.
-                        $i++;
-                    }
-                }
-            }
-        }
-        unset($links, $link, $j, $c, $e);
-
-        // Tri les liens par date.
-        $this->_arrayDateSort($r);
-
-        // Supprime les liens marqués supprimés.
-        $s = sizeof($r); // Nombre de liens.
-        $links = array(); // Tableau des liens non marqués supprimés.
-        foreach ($r as $l) {
-            if ($l->getAction() == 'x') {
+        foreach ($links as $i => $link)
+        {
+            $target = $link->getParsed()['bl/rl/nid2'];
+            if (isset($exclude[$target]))
                 continue;
-            }
-            $ok = true;
-            for ($j = 0; $j < $s; $j++) {
-                // Teste si le lien en cours (i) est supprimé par un lien plus récent (j).
-                if ($r[$j]->getAction() == 'x'
-                    && $l->getHashSource_disabled() == $r[$j]->getHashSource_disabled()
-                    && $l->getHashTarget_disabled() == $r[$j]->getHashTarget_disabled()
-                    && $this->_nebuleInstance->dateCompare($l->getDate(), $r[$j]->getDate()) <= 0)
-                    $ok = false;
-            }
-            if ($ok) {
-                $links[$l->getHashTarget_disabled()] = $l;
-                // Ecrase les liens même source même destination à une date antérieure.
+            if (!$present || $this->_io->checkObjectPresent($target))
+                $nid[] = $target;
+            elseif ($synchro) {
+                $instance = $this->_cache->newNode($target);
+                $instance->syncObject();
+                if ($this->_io->checkObjectPresent($target))
+                    $nid[] = $target;
             }
         }
-        unset($i, $s, $r);
-
-        // Extrait les objets cibles des liens si les objets sont présents.
-        if (sizeof($links) == 0) {
-            return $o;
-        }
-        $i = 0;
-        if ($present) // Si besoin, teste la présence des objets avant de les ajouter.
-        {
-            foreach ($links as $l) {
-                if ($this->_io->checkObjectPresent($l->getHashTarget_disabled())) {
-                    $o[$i] = $l->getHashTarget_disabled();
-                    $i++;
-                } else {
-                    // Tentative de synchronisation.
-                    $t = $this->_nebuleInstance->newObject($l->getHashTarget_disabled());
-                    $t->syncLinks();
-                    $t->syncObject();
-                    if ($this->_io->checkObjectPresent($l->getHashTarget_disabled())) {
-                        $o[$i] = $l->getHashTarget_disabled();
-                        $i++;
-                    }
-                }
-            }
-        } else // Sinon ajoute tous les objets.
-        {
-            foreach ($links as $l) {
-                $o[$i] = $l->getHashTarget_disabled();
-                $i++;
-            }
-        }
-        unset($i, $l, $links);
-
-        return $o;
     }
 
     /**
@@ -3640,27 +3499,15 @@ class Node implements nodeInterface
      * @param boolean $synchro
      * @return string
      */
-    public function findOneLevelUpdate(bool $present = true, bool $synchro = false): string
+    public function findOneLevelUpdateNID(bool $present = true, bool $synchro = false): string
     {
-        return '';
+        $objects = array();
+        $this->findOneLevelUpdateList($objects, $present, $synchro);
 
-        // Extrait les mises à jours.
-        $objects = $this->findOneLevelUpdates($present, $synchro);
+        if (sizeof($objects) == 0)
+            return '';
 
-        // Vérifie si il y a des réponses.
-        if (sizeof($objects) == 0) {
-            return '0';
-        }
-
-        // Extrait le dernier objet.
-        $object = end($objects);
-        unset($objects);
-
-        // Test la présence de l'objet.
-        if ($this->_io->checkObjectPresent($object)) {
-            return $object;
-        }
-        return '0';
+        return end($objects);
     }
 
 
@@ -3674,14 +3521,11 @@ class Node implements nodeInterface
     private function _getReferencedByLinks(string $reference = ''): array
     {
         // Si pas de référence, utilise la référence par défaut.
-        if ($reference == '') {
+        if ($reference == '')
             $reference = nebule::REFERENCE_NEBULE_REFERENCE;
-        }
 
-        // Converti au besoin en hash.
-        if (!ctype_xdigit($reference)) {
-            $reference = $this->_crypto->hash($reference);
-        }
+        if (!self::checkNID($reference))
+            $reference = $this->_nebuleInstance->getNIDfromData($reference);
 
         $list = array();
         $filter = array(
@@ -3715,14 +3559,12 @@ class Node implements nodeInterface
     private function _getReferenceToLinks(string $reference = ''): array
     {
         // Si pas de référence, utilise la référence par défaut.
-        if ($reference == '') {
+        if ($reference == '')
             $reference = nebule::REFERENCE_NEBULE_REFERENCE;
-        }
 
         // Converti au besoin en hash.
-        if (!ctype_xdigit($reference)) {
-            $reference = $this->_crypto->hash($reference);
-        }
+        if (!ctype_xdigit($reference))
+            $reference = $this->_nebuleInstance->getNIDfromData($reference);
 
         // Liste les liens à la recherche de la propriété.
         $list = array();
@@ -3751,20 +3593,18 @@ class Node implements nodeInterface
         // Liste les liens à la recherche de la propriété.
         $links = $this->_getReferencedByLinks($reference);
 
-        if (sizeof($links) == 0) {
+        if (sizeof($links) == 0)
             return $this->_id;
-        }
 
-        // Fait un tri par pertinance sociale.
+        // Fait un tri par pertinence sociale.
         $this->_social->arraySocialFilter($links, $socialClass);
 
         // Extrait le dernier de la liste.
         $link = end($links);
         unset($links);
 
-        if (!is_a($link, 'link')) {
+        if (!is_a($link, 'link'))
             return $this->_id;
-        }
 
         return $link->getHashTarget();
     }
@@ -3783,11 +3623,10 @@ class Node implements nodeInterface
         // Liste les liens à la recherche de la propriété.
         $links = $this->_getReferencedByLinks($reference);
 
-        if (sizeof($links) == 0) {
+        if (sizeof($links) == 0)
             return '0';
-        }
 
-        // Fait un tri par pertinance sociale.
+        // Fait un tri par pertinence sociale.
         $this->_social->arraySocialFilter($links, $socialClass);
 
         /**
@@ -3798,9 +3637,8 @@ class Node implements nodeInterface
         $link = end($links);
         unset($links);
 
-        if (!is_a($link, 'link')) {
+        if (!is_a($link, 'link'))
             return '0';
-        }
 
         return $link->getHashSigner();
     }
@@ -3821,11 +3659,10 @@ class Node implements nodeInterface
         // Liste les liens à la recherche de la propriété.
         $links = $this->_getReferencedByLinks($reference);
 
-        if (sizeof($links) == 0) {
+        if (sizeof($links) == 0)
             return $list;
-        }
 
-        // Fait un tri par pertinance sociale.
+        // Fait un tri par pertinence sociale.
         $this->_social->arraySocialFilter($links, $socialClass);
 
         // Extrait les signataires de la liste.
@@ -3870,16 +3707,14 @@ class Node implements nodeInterface
         // Liste les liens à la recherche de la propriété.
         $links = $this->_getReferencedByLinks($reference);
 
-        if (sizeof($links) == 0) {
+        if (sizeof($links) == 0)
             return false;
-        }
 
-        // Fait un tri par pertinance sociale.
+        // Fait un tri par pertinence sociale.
         $this->_social->arraySocialFilter($links, $socialClass);
 
-        if (sizeof($links) == 0) {
+        if (sizeof($links) == 0)
             return false;
-        }
         return true;
     }
 
@@ -3898,16 +3733,14 @@ class Node implements nodeInterface
         // Liste les liens à la recherche de la propriété.
         $links = $this->_getReferenceToLinks($reference);
 
-        if (sizeof($links) == 0) {
+        if (sizeof($links) == 0)
             return false;
-        }
 
-        // Fait un tri par pertinance sociale.
+        // Fait un tri par pertinence sociale.
         $this->_social->arraySocialFilter($links, $socialClass);
 
-        if (sizeof($links) == 0) {
+        if (sizeof($links) == 0)
             return false;
-        }
         return true;
     }
 
@@ -3925,20 +3758,18 @@ class Node implements nodeInterface
         // Liste les liens à la recherche de la propriété.
         $links = $this->_getReferenceToLinks($reference);
 
-        if (sizeof($links) == 0) {
+        if (sizeof($links) == 0)
             return $this->_id;
-        }
 
-        // Fait un tri par pertinance sociale.
+        // Fait un tri par pertinence sociale.
         $this->_social->arraySocialFilter($links, $socialClass);
 
         // Extrait le dernier de la liste.
         $link = end($links);
         unset($links);
 
-        if (!is_a($link, 'link')) {
+        if (!is_a($link, 'link'))
             return $this->_id;
-        }
 
         return $link->getHashSource();
     }
@@ -3974,7 +3805,7 @@ class Node implements nodeInterface
         $links = array();
         $filter = array(
             'bl/rl/req' => 'l',
-            'bl/rl/nid3' =>  $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION),
+            'bl/rl/nid3' =>  $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION),
             'bl/rl/nid4' => '',
         );
         $this->getLinks($links, $filter, null);
@@ -4034,7 +3865,7 @@ class Node implements nodeInterface
         $links = array();
         $filter = array(
             'bl/rl/req' => 'l',
-            'bl/rl/nid3' => $this->_crypto->hash('nebule/objet/entite/localisation'),
+            'bl/rl/nid3' => $this->_nebuleInstance->getNIDfromData('nebule/objet/entite/localisation'),
             'bl/rl/nid4' => '',
         );
         $this->getLinks($links, $filter, null);
@@ -4247,19 +4078,16 @@ class Node implements nodeInterface
     /**
      * Trie un tableau de liens en fonction des dates des liens.
      *
-     * @param array $list
+     * @param array $links
      * @return boolean
      */
-    protected function _arrayDateSort(array &$list): bool
+    protected function _arrayDateSort(array &$links): bool
     {
-        if (sizeof($list) == 0) {
+        if (sizeof($links) == 0)
             return false;
-        }
-        foreach ($list as $n => $t) {
-            $linkdate[$n] = $t->getDate();
-        }
-        array_multisort($linkdate, SORT_STRING, SORT_DESC, $list);
-        unset($n, $t, $linkdate);
+        foreach ($links as $n => $t)
+            $linksDate[$n] = $t->getDate();
+        array_multisort($linksDate, SORT_STRING, SORT_DESC, $links);
         return true;
     }
 

@@ -686,6 +686,20 @@ class nebule
 
 
     /**
+     * Object - Calculate NID for data with hash algo.
+     *
+     * @param string $data
+     * @param string $algo
+     * @return string
+     */
+    public function getNIDfromData(string $data, string $algo = ''): string
+    {
+        if ($algo == '')
+            $algo = $this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm');
+        return $this->_cryptoInstance->hash($data, $algo) . '.' . $algo;
+    }
+
+    /**
      * Nouvelle instance d'un objet.
      *
      * @param string $oid

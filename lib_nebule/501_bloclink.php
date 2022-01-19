@@ -5,29 +5,10 @@ use Nebule\Library\nebule;
 use Nebule\Library\linkInterface;
 
 /**
- * La classe Link.
- *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
- *
- * Attend à la création :
- * - l'instance nebule utilisé ;
- * - un texte contenant le lien ;
- * - un texte contenant la version du lien.
- *
- * Le nombre de champs du lien doit être de 7 exactement.
- * Le champs signature peut être vide ou à 0 si c'est pour un nouveau lien à signer.
- * La signature doit être explicitement demandée par l'appelle de sign() après la création du lien.
- *
- * La version du lien n'est pas prise en compte.
- *
- * Un lien peut être valide si sa structure est correcte, et peut être signé si la signature est valide.
- *
- * Un lien dissimulé peut ne pas pouvoir être lu si l'entité n'est pas destinataire, donc n'a pas accès à la clé de déchiffrement.
- * Il reste dans ce cas géré comme un lien normal mais de type c.
- * Cependant, si l'entité destinataire est déverrouillée mais ne peut déchiffrer le lien, alors le lien est considéré corrompu.
  */
 class blocLink implements blocLinkInterface
 {
