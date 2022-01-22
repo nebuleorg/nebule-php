@@ -3414,23 +3414,51 @@ class Node implements nodeInterface
      */
     public function findUpdate(bool $present = true, bool $synchro = false): string
     {
-        $oneLevelUpdate = $this->_findUpdate($this->_id, 0, $present, $synchro);
+        $exclude = array();
+        $oneLevelUpdate = $this->_findUpdate($this->_id, 0, $exclude, $present, $synchro);
         if ($oneLevelUpdate != '')
             return $oneLevelUpdate;
         return '';
     }
 
-    private function _findUpdate(string $nid, int $level, bool $present = true, bool $synchro = false): string
+    /**
+     * Try to find a new level of update for an object.
+     *
+     *
+     * @param string $nid
+     * @param int    $level
+     * @param array  $exclude
+     * @param bool   $present
+     * @param bool   $synchro
+     * @return string
+     */
+    private function _findUpdate(string $nid, int $level, array &$exclude, bool $present = true, bool $synchro = false): string
     {
         $level++;
-        if ($level > $this->_configuration->getOptionAsInteger('linkMaxFollowedUpdates'))
-            return '';
+        $links = array();
+        if ($level < $this->_configuration->getOptionAsInteger('linkMaxFollowedUpdates'))
+        {
+            $filter = array(
+                'bl/rl/req' => 'u',
+                'bl/rl/nid1' => $nid,
+                'bl/rl/nid3' => '',
+                'bl/rl/nid4' => '',
+            );
+            $this->getLinks($links, $filter, null);
+            $this->_arrayDateSort($links);
+        }
 
-        $oneLevelUpdate = $this->findOneLevelUpdateNID(false, false);
+        foreach ($links as $link)
+        {
+            $nid2 = $link->getParsed()['bl/rl/nid2'];
+            $nid2Update = '';
+            if (!isset($exclude[$nid2]))
+                $nid2Update = $this->_findUpdate($nid2, $level, $exclude, $present, $synchro);
+            if ($nid2Update != '')
+                return $nid2Update;
+            $exclude[$nid2] = null;
+        }
 
-        if ($oneLevelUpdate != '' && $present && $this->_io->checkObjectPresent($oneLevelUpdate))
-            return $oneLevelUpdate;
-// FIXME
         if (!$present || $this->_io->checkObjectPresent($nid))
             return $nid;
         elseif ($synchro) {
@@ -3439,76 +3467,9 @@ class Node implements nodeInterface
             if ($this->_io->checkObjectPresent($nid))
                 return $nid;
         }
-
-        if ($present && !$this->_io->checkObjectPresent($nid)) {
-            $instance = $this->_cache->newNode($oneLevelUpdate);
-            $instance->syncObject();
-        }
-
         return '';
     }
 
-    /**
-     * Recherche les identifiants des objets définits comme mises à jour de l'objet courant.
-     * Résoud une seule branche du graphe des mises à jours d'un objet.
-     * - $present permet de controler si l'on veut que l'objet final soit bien présent localement.
-     * - $synchro permet ou non la synchronisation des liens et objets auprès d'entités tierces, en clair on télécharge ce qui manque au besoin lors du parcours du graphe.
-     * On extrait les liens u pré-filtrés x et triés pas date.
-     * Retourne un tableau des ID des objets, vide si aucun trouvé.
-     *
-     * @param array   $nid
-     * @param array   $exclude
-     * @param boolean $present
-     * @param boolean $synchro
-     * @return void
-     */
-    public function findOneLevelUpdateList(array &$nid, array $exclude, bool $present = true, bool $synchro = false): void
-    {
-        $links = array();
-        $filter = array(
-            'bl/rl/req' => 'u',
-            'bl/rl/nid1' => $this->_id,
-            'bl/rl/nid3' => '',
-            'bl/rl/nid4' => '',
-        );
-        $this->getLinks($links, $filter, null);
-
-        $this->_arrayDateSort($links);
-
-        foreach ($links as $i => $link)
-        {
-            $target = $link->getParsed()['bl/rl/nid2'];
-            if (isset($exclude[$target]))
-                continue;
-            if (!$present || $this->_io->checkObjectPresent($target))
-                $nid[] = $target;
-            elseif ($synchro) {
-                $instance = $this->_cache->newNode($target);
-                $instance->syncObject();
-                if ($this->_io->checkObjectPresent($target))
-                    $nid[] = $target;
-            }
-        }
-    }
-
-    /**
-     * Extrait l'identifiant de l'objet (un seul) définit comme mise à jour de l'objet courant.
-     * Dérivé de la fonction précédente findOneLevelUpdates().
-     *
-     * @param boolean $present
-     * @param boolean $synchro
-     * @return string
-     */
-    public function findOneLevelUpdateNID(bool $present = true, bool $synchro = false): string
-    {
-        $objects = array();
-        $this->findOneLevelUpdateList($objects, $present, $synchro);
-
-        if (sizeof($objects) == 0)
-            return '';
-
-        return end($objects);
-    }
 
 
     /**
