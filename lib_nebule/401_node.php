@@ -3402,20 +3402,17 @@ class Node implements nodeInterface
     }
 
     /**
-     * Recherche l'identifiant d'un objet final définit comme mise à jour de l'objet courant.
-     * Résout le graphe des mises à jour d'un objet.
-     * - $present permet de controller si l'on veut que l'objet final soit bien présent localement.
-     * - $synchro permet ou non la synchronisation des liens et objets auprès d'entités tierces, en clair on télécharge ce qui manque au besoin lors du parcours du graphe.
-     * Retourne l'ID de l'objet à jour ou l'ID de l'objet de départ si pas de mise à jour.
+     * Try to find an update NID for the current NID.
      *
      * @param boolean $present
      * @param boolean $synchro
+     * @param string  $social
      * @return string
      */
-    public function findUpdate(bool $present = true, bool $synchro = false): string
+    public function findUpdate(bool $present = true, bool $synchro = false, string $social = ''): string
     {
         $exclude = array();
-        $oneLevelUpdate = $this->_findUpdate($this->_id, 0, $exclude, $present, $synchro);
+        $oneLevelUpdate = $this->_findUpdate($this->_id, 0, $exclude, $social, $present, $synchro);
         if ($oneLevelUpdate != '')
             return $oneLevelUpdate;
         return '';
@@ -3423,16 +3420,20 @@ class Node implements nodeInterface
 
     /**
      * Try to find a new level of update for an object.
-     *
+     * Internal function which try to :
+     * 1) If max update following is not reached, find list of update links ;
+     * 2) Recall the function with each element of the list to search for deepest update, not empty ;
+     * 3) If no deeper update found, check current NID validity. If OK, return NID, or return empty.
      *
      * @param string $nid
      * @param int    $level
      * @param array  $exclude
+     * @param string $social
      * @param bool   $present
      * @param bool   $synchro
      * @return string
      */
-    private function _findUpdate(string $nid, int $level, array &$exclude, bool $present = true, bool $synchro = false): string
+    private function _findUpdate(string $nid, int $level, array &$exclude, string $social, bool $present = true, bool $synchro = false): string
     {
         $level++;
         $links = array();
@@ -3445,6 +3446,7 @@ class Node implements nodeInterface
                 'bl/rl/nid4' => '',
             );
             $this->getLinks($links, $filter, null);
+            $this->_social->arraySocialFilter($links, $social);
             $this->_arrayDateSort($links);
         }
 
@@ -3453,7 +3455,7 @@ class Node implements nodeInterface
             $nid2 = $link->getParsed()['bl/rl/nid2'];
             $nid2Update = '';
             if (!isset($exclude[$nid2]))
-                $nid2Update = $this->_findUpdate($nid2, $level, $exclude, $present, $synchro);
+                $nid2Update = $this->_findUpdate($nid2, $level, $exclude, $social, $present, $synchro);
             if ($nid2Update != '')
                 return $nid2Update;
             $exclude[$nid2] = null;
