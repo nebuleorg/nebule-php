@@ -5328,17 +5328,17 @@ function bootstrap_breakDisplay31LibraryEntities()
         array($nebuleInstance->getPuppetmaster() => $nebuleInstance->getPuppetmasterInstance()),
         $nebuleInstanceCheck > 10);
 
-    bootstrap_breakDisplay311DisplayEntity('security authority', $nebuleInstance->getSecurityAuthority(),
-        $nebuleInstance->getSecurityAuthorityInstance(), $nebuleInstanceCheck > 20);
+    bootstrap_breakDisplay311DisplayEntity('security authority', $nebuleInstance->getSecurityAuthorities(),
+        $nebuleInstance->getSecurityAuthoritiesInstance(), $nebuleInstanceCheck > 20);
 
-    bootstrap_breakDisplay311DisplayEntity('code authority', $nebuleInstance->getCodeAuthority(),
-        $nebuleInstance->getSecurityAuthorityInstance(), $nebuleInstanceCheck > 30);
+    bootstrap_breakDisplay311DisplayEntity('code authority', $nebuleInstance->getCodeAuthorities(),
+        $nebuleInstance->getSecurityAuthoritiesInstance(), $nebuleInstanceCheck > 30);
 
-    bootstrap_breakDisplay311DisplayEntity('directory authority', $nebuleInstance->getDirectoryAuthority(),
-        $nebuleInstance->getDirectoryAuthorityInstance(), $nebuleInstanceCheck > 40);
+    bootstrap_breakDisplay311DisplayEntity('directory authority', $nebuleInstance->getDirectoryAuthorities(),
+        $nebuleInstance->getDirectoryAuthoritiesInstance(), $nebuleInstanceCheck > 40);
 
-    bootstrap_breakDisplay311DisplayEntity('time authority', $nebuleInstance->getTimeAuthority(),
-        $nebuleInstance->getTimeAuthorityInstance(), $nebuleInstanceCheck > 50);
+    bootstrap_breakDisplay311DisplayEntity('time authority', $nebuleInstance->getTimeAuthorities(),
+        $nebuleInstance->getTimeAuthoritiesInstance(), $nebuleInstanceCheck > 50);
 
     bootstrap_breakDisplay311DisplayEntity('server entity',
         array($nebuleInstance->getInstanceEntity() => $nebuleInstance->getInstanceEntity()),

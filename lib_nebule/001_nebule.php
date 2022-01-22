@@ -2132,17 +2132,17 @@ class nebule
         if ($this->_puppetmasterInstance->getID() == '0') return 2;
         if ($this->_puppetmasterInstance->getID() != $this->_configurationInstance->getOptionUntyped('puppetmaster')) return 3; // TODO à retirer
         // Vérifie que le maître de la sécurité est une entité et a été trouvé.
-        if (!$this->_securityAuthorityInstance instanceof Entity) return 11;
-        if ($this->_securityAuthorityInstance->getID() == '0') return 12;
+        if (!$this->_securityAuthoritiesInstance instanceof Entity) return 11;
+        if ($this->_securityAuthoritiesInstance->getID() == '0') return 12;
         // Vérifie que le maître du code est une entité et a été trouvé.
-        if (!$this->_codeAuthorityInstance instanceof Entity) return 21;
-        if ($this->_codeAuthorityInstance->getID() == '0') return 22;
+        if (!$this->_codeAuthoritiesInstance instanceof Entity) return 21;
+        if ($this->_codeAuthoritiesInstance->getID() == '0') return 22;
         // Vérifie que le maître de l'annuaire est une entité et a été trouvé.
-        if (!$this->_directoryAuthorityInstance instanceof Entity) return 31;
-        if ($this->_directoryAuthorityInstance->getID() == '0') return 32;
+        if (!$this->_directoryAuthoritiesInstance instanceof Entity) return 31;
+        if ($this->_directoryAuthoritiesInstance->getID() == '0') return 32;
         // Vérifie que le maître du temps est une entité et a été trouvé.
-        if (!$this->_timeAuthorityInstance instanceof Entity) return 41;
-        if ($this->_timeAuthorityInstance->getID() == '0') return 42;
+        if (!$this->_timeAuthoritiesInstance instanceof Entity) return 41;
+        if ($this->_timeAuthoritiesInstance->getID() == '0') return 42;
 
         // Vérifie que l'entité de l'instance nebule est une entité et a été trouvée.
         if (!$this->_instanceEntityInstance instanceof Entity) return 51;
@@ -2175,42 +2175,42 @@ class nebule
     /**
      * L'ID du maître de la sécurité.
      */
-    private $_securityAuthority = array();
+    private $_securityAuthorities = array();
 
     /**
      * L'instance du maître de la sécurité.
      */
-    private $_securityAuthorityInstance = array();
+    private $_securityAuthoritiesInstance = array();
 
     /**
      * L'ID du maître du code.
      */
-    private $_codeAuthority = array();
+    private $_codeAuthorities = array();
 
     /**
      * L'instance du maître du code.
      */
-    private $_codeAuthorityInstance = array();
+    private $_codeAuthoritiesInstance = array();
 
     /**
      * Le maître de l'annuaire.
      */
-    private $_directoryAuthority = array();
+    private $_directoryAuthorities = array();
 
     /**
      * L'instance du maître de l'annuaire.
      */
-    private $_directoryAuthorityInstance = array();
+    private $_directoryAuthoritiesInstance = array();
 
     /**
      * Le maître du temps.
      */
-    private $_timeAuthority = array();
+    private $_timeAuthorities = array();
 
     /**
      * L'instance du maître du temps.
      */
-    private $_timeAuthorityInstance = array();
+    private $_timeAuthoritiesInstance = array();
 
     /**
      * Récupération du maître.
@@ -2223,7 +2223,7 @@ class nebule
     {
         $this->_puppetmaster = $this->_configurationInstance->getOptionUntyped('puppetmaster');
         $this->_puppetmasterInstance = $this->_cacheInstance->newNode($this->_puppetmaster, Cache::TYPE_ENTITY);
-        $this->_metrologyInstance->addLog('Find puppetmaster ' . $this->_puppetmaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '88848d09'); // Log
+        $this->_metrologyInstance->addLog('Find puppetmaster ' . $this->_puppetmaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '88848d09');
     }
 
 
@@ -2235,10 +2235,22 @@ class nebule
      */
     private function _findGlobalAuthorities()
     {
-        $this->_findEntityByType(self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_SECURITE, $this->_securityAuthority, $this->_securityAuthorityInstance, 'security');
-        $this->_findEntityByType(self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_CODE, $this->_codeAuthority, $this->_codeAuthorityInstance, 'code');
-        $this->_findEntityByType(self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_ANNUAIRE, $this->_directoryAuthority, $this->_directoryAuthorityInstance, 'directory');
-        $this->_findEntityByType(self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_TEMPS, $this->_timeAuthority, $this->_timeAuthorityInstance, 'time');
+        $this->_findEntityByType(self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_SECURITE,
+            $this->_securityAuthorities,
+            $this->_securityAuthoritiesInstance,
+            'security');
+        $this->_findEntityByType(self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_CODE,
+            $this->_codeAuthorities,
+            $this->_codeAuthoritiesInstance,
+            'code');
+        $this->_findEntityByType(self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_ANNUAIRE,
+            $this->_directoryAuthorities,
+            $this->_directoryAuthoritiesInstance,
+            'directory');
+        $this->_findEntityByType(self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_TEMPS,
+            $this->_timeAuthorities,
+            $this->_timeAuthoritiesInstance,
+            'time');
     }
 
     /**
@@ -2301,45 +2313,47 @@ class nebule
         return $this->_puppetmasterInstance;
     }
 
-    public function getSecurityAuthority(): array
+    public function getSecurityAuthorities(): array
     {
-        return $this->_securityAuthority;
+        return $this->_securityAuthorities;
     }
 
-    public function getSecurityAuthorityInstance(): array
+    public function getSecurityAuthoritiesInstance(): array
     {
-        return $this->_securityAuthorityInstance;
+        return $this->_securityAuthoritiesInstance;
     }
 
-    public function getCodeAuthority(): array
+    public function getCodeAuthorities(): array
     {
-        return $this->_codeAuthority;
+        return $this->_codeAuthorities;
     }
 
-    public function getCodeAuthorityInstance(): array
+    public function getCodeAuthoritiesInstance(): array
     {
-        return $this->_codeAuthorityInstance;
+        return $this->_codeAuthoritiesInstance;
     }
 
-    public function getDirectoryAuthority(): array
+    public function getDirectoryAuthorities(): array
     {
-        return $this->_directoryAuthority;
+        return $this->_directoryAuthorities;
     }
 
-    public function getDirectoryAuthorityInstance(): array
+    public function getDirectoryAuthoritiesInstance(): array
     {
-        return $this->_directoryAuthorityInstance;
+        return $this->_directoryAuthoritiesInstance;
     }
 
-    public function getTimeAuthority(): array
+    public function getTimeAuthorities(): array
     {
-        return $this->_timeAuthority;
+        return $this->_timeAuthorities;
     }
 
-    public function getTimeAuthorityInstance(): array
+    public function getTimeAuthoritiesInstance(): array
     {
-        return $this->_timeAuthorityInstance;
+        return $this->_timeAuthoritiesInstance;
     }
+
+
 
     /**
      * Liste des ID des autorités.
@@ -2413,26 +2427,26 @@ class nebule
         $this->_authorities[$this->_puppetmaster] = $this->_puppetmaster;
         $this->_authoritiesInstances[$this->_puppetmaster] = $this->_puppetmasterInstance;
         $this->_specialEntities[$this->_puppetmaster] = $this->_puppetmaster;
-        foreach ($this->_securityAuthority as $item)
+        foreach ($this->_securityAuthorities as $item)
         {
             $this->_authorities[$item] = $item;
-            $this->_authoritiesInstances[$item] = $this->_securityAuthorityInstance[$item];
+            $this->_authoritiesInstances[$item] = $this->_securityAuthoritiesInstance[$item];
             $this->_specialEntities[$item] = $item;
         }
-        foreach ($this->_codeAuthority as $item)
+        foreach ($this->_codeAuthorities as $item)
         {
             $this->_authorities[$item] = $item;
-            $this->_authoritiesInstances[$item] = $this->_codeAuthorityInstance[$item];
+            $this->_authoritiesInstances[$item] = $this->_codeAuthoritiesInstance[$item];
             $this->_specialEntities[$item] = $item;
             $this->_localAuthorities[$item] = $item;
-            $this->_localAuthoritiesInstances[$item] =$this->_codeAuthorityInstance[$item];
+            $this->_localAuthoritiesInstances[$item] =$this->_codeAuthoritiesInstance[$item];
             $this->_localAuthoritiesSigners[$item] = $this->_puppetmaster;
         }
-        foreach ($this->_directoryAuthority as $item)
+        foreach ($this->_directoryAuthorities as $item)
         {
             $this->_specialEntities[$item] = $item;
         }
-        foreach ($this->_timeAuthority as $item)
+        foreach ($this->_timeAuthorities as $item)
         {
             $this->_specialEntities[$item] = $item;
         }
@@ -2505,56 +2519,43 @@ class nebule
         if (!$this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities'))
             return;
 
-        $refAuthority = $this->_cryptoInstance->hash(self::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
+        $refAuthority = $this->getNIDfromData(self::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
 
-        // Liste les liens de l'entité instance du serveur..
+        // Liste les liens de l'entité instance du serveur.
         $list = array();
         if ($this->_permitInstanceEntityAsAuthority) {
-            $list = $this->_instanceEntityInstance->getLinksOnFields(
-                $this->_instanceEntity,
-                '',
-                'f',
-                $this->_instanceEntity,
-                '',
-                $refAuthority
+            $filter = array(
+                'bl/rl/req' => 'f',
+                'bl/rl/nid1' => $this->_instanceEntity,
+                'bl/rl/nid3' => $refAuthority,
+                'bl/rl/nid4' => '',
+                'bs/rs1/eid' => $this->_instanceEntity,
             );
+            $this->_instanceEntityInstance->getLinks($list, $filter, null);
         }
 
-        foreach ($list as $link) {
-            $target = $link->getHashTarget();
-            $instance = $this->newEntity_DEPRECATED($target);
-            $this->_localAuthorities[$target] = $target;
-            $this->_localAuthoritiesInstances[$target] = $instance;
-            $this->_specialEntities[$target] = $target;
-            $this->_localAuthoritiesSigners[$target] = $link->getHashSigner();
-            $this->_authorities[$target] = $target;
-            $this->_authoritiesInstances[$target] = $instance;
-        }
-
-        // Liste les liens de l'entité instance du serveur..
-        $list = array();
+        // Liste les liens de l'entité par défaut.
         if ($this->_permitDefaultEntityAsAuthority) {
-            $list = $this->_instanceEntityInstance->getLinksOnFields(
-                $this->_defaultEntity,
-                '',
-                'f',
-                $this->_instanceEntity,
-                '',
-                $refAuthority
+            $filter = array(
+                'bl/rl/req' => 'f',
+                'bl/rl/nid1' => $this->_instanceEntity,
+                'bl/rl/nid3' => $refAuthority,
+                'bl/rl/nid4' => '',
+                'bs/rs1/eid' => $this->_defaultEntity,
             );
+            $this->_instanceEntityInstance->getLinks($list, $filter, null);
         }
 
         foreach ($list as $link) {
-            $target = $link->getHashTarget();
-            $instance = $this->newEntity_DEPRECATED($target);
-            $this->_localAuthorities[$target] = $target;
-            $this->_localAuthoritiesInstances[$target] = $instance;
-            $this->_specialEntities[$target] = $target;
-            $this->_localAuthoritiesSigners[$target] = $link->getHashSigner();
-            $this->_authorities[$target] = $target;
-            $this->_authoritiesInstances[$target] = $instance;
+            $nid = $link->getParsed()['bl/rl/nid1'];
+            $instance = $this->newEntity_DEPRECATED($nid);
+            $this->_localAuthorities[$nid] = $nid;
+            $this->_localAuthoritiesInstances[$nid] = $instance;
+            $this->_specialEntities[$nid] = $nid;
+            $this->_localAuthoritiesSigners[$nid] = $link->getParsed()['bs/rs1/eid'];
+            $this->_authorities[$nid] = $nid;
+            $this->_authoritiesInstances[$nid] = $instance;
         }
-        unset($list);
     }
 
     /**
@@ -2746,7 +2747,7 @@ class nebule
         if (!$this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities'))
             return;
 
-        $refRecovery = $this->_cryptoInstance->hash(self::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
+        $refRecovery = $this->getNIDfromData(self::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
 
         // Liste les liens de l'entité instance du serveur..
         $list = array();
@@ -2851,8 +2852,8 @@ class nebule
      */
     public function getListEntitiesInstances(): array
     {
-        $hashType = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
-        $hashEntity = $this->_cryptoInstance->hash('application/x-pem-file');
+        $hashType = $this->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+        $hashEntity = $this->getNIDfromData('application/x-pem-file');
         $hashEntityObject = $this->newObject($hashEntity);
 
         // Liste les liens.
@@ -3049,7 +3050,7 @@ class nebule
             && strlen($text) != 0
         ) {
             // Calcule l'ID de l'objet à créer.
-            $id = $this->_cryptoInstance->hash($text);
+            $id = $this->getNIDfromData($text);
 
             // Vérifie si l'ID n'existe pas déjà.
             if ($this->_ioInstance->checkObjectPresent($id))
@@ -3155,7 +3156,7 @@ class nebule
             if (ctype_xdigit($type))
                 $hashType = $type;
             else
-                $hashType = $this->_cryptoInstance->hash($type, self::REFERENCE_CRYPTO_HASH_ALGORITHM);
+                $hashType = $this->getNIDfromData($type, self::REFERENCE_CRYPTO_HASH_ALGORITHM);
             // $type doit être une instance d'objet au final.
             $type = $this->newObject($hashType);
         }
@@ -3186,7 +3187,7 @@ class nebule
             'l',
             '',
             $hashType,
-            $this->_cryptoInstance->hash(self::REFERENCE_NEBULE_OBJET_TYPE, self::REFERENCE_CRYPTO_HASH_ALGORITHM)
+            $this->getNIDfromData(self::REFERENCE_NEBULE_OBJET_TYPE, self::REFERENCE_CRYPTO_HASH_ALGORITHM)
         );
 
         // Fait un tri par pertinance sociale.
