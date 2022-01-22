@@ -2116,11 +2116,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
             ico_lock_off = new Image(64, 64);
             ico_lock_off.src = "/<?php    $objet = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_ENTITY_LOCK);
-                $newobj = $objet->findUpdate(true, false);
+                $newobj = $objet->getUpdateNID(true, false);
                 echo nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $newobj; ?>";
             ico_lock_on = new Image(64, 64);
             ico_lock_on.src = "/<?php    $objet = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_ENT);
-                $newobj = $objet->findUpdate(true, false);
+                $newobj = $objet->getUpdateNID(true, false);
                 echo nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $newobj; ?>";
 
             function hiLite(imgDocID, imgObjName, comment) {
@@ -3345,7 +3345,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             return $this->_cacheIconUpdate[$object->getID()];
         }
 
-        $update = $object->findUpdate(true, false);
+        $update = $object->getUpdateNID(true, false);
 
         // Mémorise le résultat.
         if ($useBuffer) {
@@ -7268,7 +7268,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         // Recherche si l'objet a une mise à jour.
         $instance = $this->_applicationInstance->getCurrentObjectInstance();
-        $UpdateID = $instance->findUpdate(false, false);
+        $UpdateID = $instance->getUpdateNID(false, false);
         if ($instance->getID() != $UpdateID) {
             $param['informationType'] = 'information';
             $param2 = array(

@@ -331,7 +331,7 @@ class Conversation extends Group implements nodeInterface
         }
 
         // Liste tous les liens de définition des entités à l'écoutes du groupe.
-        $links = $this->readLinksFilterFull(
+        $links = $this->getLinksOnFields(
             '',
             '',
             'l',

@@ -5323,8 +5323,10 @@ function bootstrap_breakDisplay31LibraryEntities()
 
     $nebuleInstanceCheck = $nebuleInstance->checkInstance();
 
-    bootstrap_breakDisplay311DisplayEntity('puppetmaster', $nebuleInstance->getPuppetmaster(),
-        $nebuleInstance->getPuppetmasterInstance(), $nebuleInstanceCheck > 10);
+    bootstrap_breakDisplay311DisplayEntity('puppetmaster',
+        array($nebuleInstance->getPuppetmaster() => $nebuleInstance->getPuppetmaster()),
+        array($nebuleInstance->getPuppetmaster() => $nebuleInstance->getPuppetmasterInstance()),
+        $nebuleInstanceCheck > 10);
 
     bootstrap_breakDisplay311DisplayEntity('security authority', $nebuleInstance->getSecurityAuthority(),
         $nebuleInstance->getSecurityAuthorityInstance(), $nebuleInstanceCheck > 20);
@@ -5338,19 +5340,28 @@ function bootstrap_breakDisplay31LibraryEntities()
     bootstrap_breakDisplay311DisplayEntity('time authority', $nebuleInstance->getTimeAuthority(),
         $nebuleInstance->getTimeAuthorityInstance(), $nebuleInstanceCheck > 50);
 
-    bootstrap_breakDisplay311DisplayEntity('server entity', $nebuleInstance->getInstanceEntity(),
-        $nebuleInstance->getInstanceEntityInstance(), $nebuleInstanceCheck > 60);
+    bootstrap_breakDisplay311DisplayEntity('server entity',
+        array($nebuleInstance->getInstanceEntity() => $nebuleInstance->getInstanceEntity()),
+        array($nebuleInstance->getInstanceEntity() => $nebuleInstance->getInstanceEntityInstance()),
+        $nebuleInstanceCheck > 60);
 
-    bootstrap_breakDisplay311DisplayEntity('default entity', $nebuleInstance->getDefaultEntity(),
-        $nebuleInstance->getDefaultEntityInstance(), $nebuleInstanceCheck > 70);
+    bootstrap_breakDisplay311DisplayEntity('default entity',
+        array($nebuleInstance->getDefaultEntity() => $nebuleInstance->getDefaultEntity()),
+        array($nebuleInstance->getDefaultEntity() => $nebuleInstance->getDefaultEntityInstance()),
+        $nebuleInstanceCheck > 70);
 
-    bootstrap_breakDisplay311DisplayEntity('current entity', $nebuleInstance->getCurrentEntity(),
-        $nebuleInstance->getCurrentEntityInstance(), $nebuleInstanceCheck > 70);
+    bootstrap_breakDisplay311DisplayEntity('current entity',
+        array($nebuleInstance->getCurrentEntity() => $nebuleInstance->getCurrentEntity()),
+        array($nebuleInstance->getCurrentEntity() => $nebuleInstance->getCurrentEntityInstance()),
+        $nebuleInstanceCheck > 70);
 
     $entity = lib_getConfiguration('subordinationEntity');
     if ($entity != '')
         $instance = $nebuleInstance->getCacheInstance()->newNode($entity, Cache::TYPE_ENTITY);
-    bootstrap_breakDisplay311DisplayEntity('subordination', $entity, $instance, $nebuleInstanceCheck > 70);
+    bootstrap_breakDisplay311DisplayEntity('subordination',
+        array($entity => $entity),
+        array($entity => $instance),
+        $nebuleInstanceCheck > 70);
 
     if ($nebuleInstanceCheck != 128)
     {
@@ -5359,25 +5370,27 @@ function bootstrap_breakDisplay31LibraryEntities()
     }
 }
 
-function bootstrap_breakDisplay311DisplayEntity(string $title, string $eid, $instance, bool $ok): void
+function bootstrap_breakDisplay311DisplayEntity(string $title, array $listEID, array $listInstance, bool $ok): void
 {
     global $nebuleInstance;
 
-    bootstrap_echoLineTitle($title);
-
-    $name = $eid;
-    if (gettype($instance) == 'object' && get_class($instance) == 'Entity')
-        $name = $instance->getName();
-
-    if ($ok)
+    foreach ($listEID as $eid)
     {
-        echo '<a href="o/' . $eid . '">' . $name . '</a> OK';
-        if ($nebuleInstance->getIsLocalAuthority($instance))
-            echo ' (local authority)';
-    } else {
-        echo '<span class="error">ERROR!</span>';
+        bootstrap_echoLineTitle($title);
+
+        $name = $eid;
+        if (gettype($listInstance[$eid]) == 'object' && get_class($listInstance[$eid]) == 'Entity')
+            $name = $listInstance[$eid]->getName();
+
+        if ($ok)
+        {
+            echo '<a href="o/' . $eid . '">' . $name . '</a> OK';
+            if ($nebuleInstance->getIsLocalAuthority($listInstance[$eid]))
+                echo ' (local authority)';
+        } else
+            echo '<span class="error">ERROR!</span>';
+        echo  "<br />\n";
     }
-    echo  "<br />\n";
 }
 
 function bootstrap_breakDisplay32LibraryCryptography()
@@ -6577,14 +6590,24 @@ function bootstrap_displayApplication0()
 
     echo '<div id="appslist">';
     // Extraire la liste des applications disponibles.
-    $refAppsID = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
+    $refAppsID = $nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
     $instanceAppsID = new Node($nebuleInstance, $refAppsID);
     $applicationsList = array();
     $signersList = array();
     $hashTarget = '';
 
     // Liste les applications reconnues par le maître du code.
-    $linksList = $instanceAppsID->readLinksFilterFull($nebuleInstance->getCodeAuthority(), '', 'f', $refAppsID, '', $refAppsID);
+    $links = array();
+    $filter = array(
+        'bl/rl/req' => 'f',
+        'bl/rl/nid1' => $refAppsID,
+        'bl/rl/nid3' => $refAppsID,
+    );
+    $instanceAppsID->getLinks($links, $filter, null);
+
+
+    $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getPuppetmaster(), // FIXME
+        '', 'f', $refAppsID, '', $refAppsID);
     $link = null;
     foreach ($linksList as $link) {
         $hashTarget = $link->getHashTarget();
@@ -6596,7 +6619,7 @@ function bootstrap_displayApplication0()
     if ($nebuleInstance->getConfigurationInstance()->getOptionAsBoolean('permitInstanceEntityAsAuthority')
         && !$nebuleInstance->getModeRescue()
     ) {
-        $linksList = $instanceAppsID->readLinksFilterFull($nebuleInstance->getInstanceEntity(), '', 'f', $refAppsID, '', $refAppsID);
+        $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getInstanceEntity(), '', 'f', $refAppsID, '', $refAppsID);
         foreach ($linksList as $link) {
             $hashTarget = $link->getHashTarget();
             $applicationsList[$hashTarget] = $hashTarget;
@@ -6608,7 +6631,7 @@ function bootstrap_displayApplication0()
     if ($nebuleInstance->getConfigurationInstance()->getOptionAsBoolean('permitDefaultEntityAsAuthority')
         && !$nebuleInstance->getModeRescue()
     ) {
-        $linksList = $instanceAppsID->readLinksFilterFull($nebuleInstance->getDefaultEntity(), '', 'f', $refAppsID, '', $refAppsID);
+        $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getDefaultEntity(), '', 'f', $refAppsID, '', $refAppsID);
         foreach ($linksList as $link) {
             $hashTarget = $link->getHashTarget();
             $applicationsList[$hashTarget] = $hashTarget;
@@ -6639,8 +6662,8 @@ function bootstrap_displayApplication0()
         if ($application == $nebuleInstance->getConfigurationInstance()->getOptionAsString('defaultApplication'))
             $activated = true;
         if (!$activated) {
-            $refActivated = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE);
-            $linksList = $instance->readLinksFilterFull($nebuleInstance->getInstanceEntity(), '', 'f', $application, $refActivated, $application);
+            $refActivated = $nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE);
+            $linksList = $instance->getLinksOnFields($nebuleInstance->getInstanceEntity(), '', 'f', $application, $refActivated, $application);
             if (sizeof($linksList) != 0)
                 $activated = true;
             unset($linksList);

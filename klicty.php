@@ -972,7 +972,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     {
         // Recherche l'image de fond.
         $bgobj = $this->_nebuleInstance->newObject(self::DEFAULT_CSS_BACKGROUND);
-        $background = $bgobj->findUpdate(true, false);
+        $background = $bgobj->getUpdateNID(true, false);
         ?>
 
         <style type="text/css">
@@ -1846,10 +1846,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         // Si c'est l'entité du serveur, affiche tous les objets.
         if ($id == $this->_configuration->getOptionUntyped('defaultCurrentEntity')) {
-            $list = $instance->readLinksFilterFull('', '', 'l', '', '', $meta);
+            $list = $instance->getLinksOnFields('', '', 'l', '', '', $meta);
         } // Sinon affiche les objets de l'entité.
         else {
-            $list = $instance->readLinksFilterFull($id, '', 'l', '', '', $meta);
+            $list = $instance->getLinksOnFields($id, '', 'l', '', '', $meta);
         }
 
         // Fait un pré-tri.
@@ -1927,7 +1927,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         // Recherche du lien de chiffrement des objets.
                         $source = $item->getHashSource();
                         $instance = $this->_nebuleInstance->newObject($source);
-                        $list2 = $instance->readLinksFilterFull(
+                        $list2 = $instance->getLinksOnFields(
                             '',
                             '',
                             'k',
@@ -2044,7 +2044,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         }
 
         // Liste toutes les autres entités.
-        $links = $hashEntityObject->readLinksFilterFull(
+        $links = $hashEntityObject->getLinksOnFields(
             '',
             '',
             'l',
@@ -3298,7 +3298,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             $listOkEntities[$this->_nebuleInstance->getCurrentEntity()] = true;
 
             // Liste toutes les autres entités.
-            $links = $hashEntityObject->readLinksFilterFull('', '', 'l', '', $hashEntity, $hashType);
+            $links = $hashEntityObject->getLinksOnFields('', '', 'l', '', $hashEntity, $hashType);
 
             // Enlève les entités pour lequelles la protection est déjà faite.
             $shareTo = $object->getProtectedTo();

@@ -372,10 +372,7 @@ class nebule
         $this->_checkWriteableIO();
 
         $this->_findPuppetmaster();
-        $this->_findSecurityMaster();
-        $this->_findCodeMaster();
-        $this->_findDirectoryMaster();
-        $this->_findTimeMaster();
+        $this->_findGlobalAuthorities();
         $this->_findLocalAuthorities();
         $this->_findInstanceEntity();
         $this->_findDefaultEntity();
@@ -1004,8 +1001,8 @@ class nebule
                 $this->_instanceEntityInstance = $this->_cacheInstance->newNode($id, Cache::TYPE_ENTITY);
             } else {
                 // Sinon utilise l'instance du maître du code.
-                $this->_instanceEntity = $this->_codeMaster;
-                $this->_instanceEntityInstance = $this->_codeMasterInstance;
+                $this->_instanceEntity = $this->_puppetmaster;
+                $this->_instanceEntityInstance = $this->_puppetmasterInstance;
             }
 
             // Log
@@ -1548,35 +1545,29 @@ class nebule
     /**
      * Ajoute une entité à la liste des entités déverrouillées.
      *
-     * @param Entity $id
+     * @param Entity $entity
      * @return void
      */
-    public function addListEntitiesUnlocked(Entity $id): void
+    public function addListEntitiesUnlocked(Entity $entity): void
     {
-        $instance = $this->convertIdToTypedObjectInstance($id);
-        if (!is_a($id, 'Entity')) {
+        if ($entity->getID() == '0')
             return;
-        }
-        $id = $instance->getID();
+        $eid = $entity->getID();
 
-        $this->_listEntitiesUnlocked[$id] = $id;
-        $this->_listEntitiesUnlockedInstances[$id] = $instance;
+        $this->_listEntitiesUnlocked[$eid] = $eid;
+        $this->_listEntitiesUnlockedInstances[$eid] = $entity;
     }
 
     /**
      * Retire une entité de la liste des entités déverrouillées.
      *
-     * @param string|Entity $id
+     * @param Entity $entity
      * @return void
      */
-    public function removeListEntitiesUnlocked($id)
+    public function removeListEntitiesUnlocked(Entity $entity)
     {
-        if (is_a($id, 'Node')) {
-            $id = $id->getID();
-        }
-
-        unset($this->_listEntitiesUnlocked[$id]);
-        unset($this->_listEntitiesUnlockedInstances[$id]);
+        unset($this->_listEntitiesUnlocked[$entity->getID()]);
+        unset($this->_listEntitiesUnlockedInstances[$entity->getID()]);
     }
 
     /**
@@ -2141,17 +2132,17 @@ class nebule
         if ($this->_puppetmasterInstance->getID() == '0') return 2;
         if ($this->_puppetmasterInstance->getID() != $this->_configurationInstance->getOptionUntyped('puppetmaster')) return 3; // TODO à retirer
         // Vérifie que le maître de la sécurité est une entité et a été trouvé.
-        if (!$this->_securityMasterInstance instanceof Entity) return 11;
-        if ($this->_securityMasterInstance->getID() == '0') return 12;
+        if (!$this->_securityAuthorityInstance instanceof Entity) return 11;
+        if ($this->_securityAuthorityInstance->getID() == '0') return 12;
         // Vérifie que le maître du code est une entité et a été trouvé.
-        if (!$this->_codeMasterInstance instanceof Entity) return 21;
-        if ($this->_codeMasterInstance->getID() == '0') return 22;
+        if (!$this->_codeAuthorityInstance instanceof Entity) return 21;
+        if ($this->_codeAuthorityInstance->getID() == '0') return 22;
         // Vérifie que le maître de l'annuaire est une entité et a été trouvé.
-        if (!$this->_directoryMasterInstance instanceof Entity) return 31;
-        if ($this->_directoryMasterInstance->getID() == '0') return 32;
+        if (!$this->_directoryAuthorityInstance instanceof Entity) return 31;
+        if ($this->_directoryAuthorityInstance->getID() == '0') return 32;
         // Vérifie que le maître du temps est une entité et a été trouvé.
-        if (!$this->_timeMasterInstance instanceof Entity) return 41;
-        if ($this->_timeMasterInstance->getID() == '0') return 42;
+        if (!$this->_timeAuthorityInstance instanceof Entity) return 41;
+        if ($this->_timeAuthorityInstance->getID() == '0') return 42;
 
         // Vérifie que l'entité de l'instance nebule est une entité et a été trouvée.
         if (!$this->_instanceEntityInstance instanceof Entity) return 51;
@@ -2182,6 +2173,46 @@ class nebule
     private $_puppetmasterInstance = null;
 
     /**
+     * L'ID du maître de la sécurité.
+     */
+    private $_securityAuthority = array();
+
+    /**
+     * L'instance du maître de la sécurité.
+     */
+    private $_securityAuthorityInstance = array();
+
+    /**
+     * L'ID du maître du code.
+     */
+    private $_codeAuthority = array();
+
+    /**
+     * L'instance du maître du code.
+     */
+    private $_codeAuthorityInstance = array();
+
+    /**
+     * Le maître de l'annuaire.
+     */
+    private $_directoryAuthority = array();
+
+    /**
+     * L'instance du maître de l'annuaire.
+     */
+    private $_directoryAuthorityInstance = array();
+
+    /**
+     * Le maître du temps.
+     */
+    private $_timeAuthority = array();
+
+    /**
+     * L'instance du maître du temps.
+     */
+    private $_timeAuthorityInstance = array();
+
+    /**
      * Récupération du maître.
      *
      * Définit par une option ou en dur dans une constante.
@@ -2192,7 +2223,62 @@ class nebule
     {
         $this->_puppetmaster = $this->_configurationInstance->getOptionUntyped('puppetmaster');
         $this->_puppetmasterInstance = $this->_cacheInstance->newNode($this->_puppetmaster, Cache::TYPE_ENTITY);
-        $this->_metrologyInstance->addLog('Find puppetmaster ' . $this->_puppetmaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Find puppetmaster ' . $this->_puppetmaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '88848d09'); // Log
+    }
+
+
+
+    /**
+     * Find all global authorities entities after the puppetmaster.
+     *
+     * @return void
+     */
+    private function _findGlobalAuthorities()
+    {
+        $this->_findEntityByType(self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_SECURITE, $this->_securityAuthority, $this->_securityAuthorityInstance, 'security');
+        $this->_findEntityByType(self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_CODE, $this->_codeAuthority, $this->_codeAuthorityInstance, 'code');
+        $this->_findEntityByType(self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_ANNUAIRE, $this->_directoryAuthority, $this->_directoryAuthorityInstance, 'directory');
+        $this->_findEntityByType(self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_TEMPS, $this->_timeAuthority, $this->_timeAuthorityInstance, 'time');
+    }
+
+    /**
+     * Find authorities by their roles.
+     * Only follow puppetmaster links.
+     *
+     * @param string $type
+     * @param array  $listEID
+     * @param array  $listInstances
+     * @param string $name
+     * @return void
+     */
+    private function _findEntityByType(string $type, array &$listEID, array &$listInstances, string $name): void
+    {
+        $rid = $this->getNIDfromData($type);
+        $instance = $this->getCacheInstance()->newNode($rid, Cache::TYPE_NODE);
+        $list = array();
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid1' => $rid,
+            'bl/rl/nid3' => $rid,
+            'bs/rs1/eid' => $this->_puppetmaster,
+            );
+        $instance->getLinks($list, $filter, null);
+
+        if (sizeof($list) == 0)
+        {
+            $listEID[$this->_puppetmaster] = $this->_puppetmaster;
+            $listInstances[$this->_puppetmaster] = $this->_puppetmasterInstance;
+            return;
+        }
+
+        foreach ($list as $item)
+        {
+            $eid = $item->getParsed()['bl/rl/nid2'];
+            $instance = $this->getCacheInstance()->newNode($eid, Cache::TYPE_ENTITY);
+            $listEID[$eid] = $eid;
+            $listInstances[$eid] = $instance;
+            $this->_metrologyInstance->addLog('Find ' . $name . ' master ' . $eid, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'e6f75b5e');
+        }
     }
 
     /**
@@ -2208,196 +2294,51 @@ class nebule
     /**
      * Donne l'instance du maître du tout.
      *
-     * @return Entity|null
+     * @return Entity
      */
-    public function getPuppetmasterInstance(): ?Entity
+    public function getPuppetmasterInstance(): Entity
     {
         return $this->_puppetmasterInstance;
     }
 
-
-    /**
-     * Recherche une entité pour un rôle.
-     * Ne tien compte que des liens du puppetmaster uniquement.
-     *
-     * @param $type string
-     * @return string
-     */
-    private function _findEntityByType(string $type): string
+    public function getSecurityAuthority(): array
     {
-        if ($type == '')
-            return $this->_puppetmaster;
-
-        $typeID = $this->_cryptoInstance->hash($type);
-        if ($typeID == '')
-            return $this->_puppetmaster;
-
-        $typeInstance = $this->newObject($typeID);
-
-        // Recherche les liens signés du maître du tout de type f avec source et méta le rôle recherché.
-        $list = $typeInstance->readLinksFilterFull(
-            $this->_puppetmaster,
-            '',
-            'f',
-            $typeID,
-            '',
-            $typeID);
-
-        if (sizeof($list) == 0)
-            return $this->_puppetmaster;
-
-        $link = reset($list);
-        unset($list);
-        return $link->getHashTarget();
+        return $this->_securityAuthority;
     }
 
-
-    /**
-     * L'ID du maître de la sécurité.
-     */
-    private $_securityMaster = '';
-
-    /**
-     * L'instance du maître de la sécurité.
-     */
-    private $_securityMasterInstance = null;
-
-    /**
-     * Récupération du maître de la sécurité.
-     * @return void
-     */
-    private function _findSecurityMaster()
+    public function getSecurityAuthorityInstance(): array
     {
-        if ($this->_securityMaster != '') {
-            return;
-        }
-
-        $type = self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_SECURITE;
-        $this->_securityMaster = $this->_findEntityByType($type);
-        $this->_securityMasterInstance = $this->_cacheInstance->newNode($this->_securityMaster, Cache::TYPE_ENTITY);
-
-        $this->_metrologyInstance->addLog('Find security master ' . $this->_securityMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        return $this->_securityAuthorityInstance;
     }
 
-    public function getSecurityAuthority(): string
+    public function getCodeAuthority(): array
     {
-        return $this->_securityMaster;
+        return $this->_codeAuthority;
     }
 
-    public function getSecurityAuthorityInstance(): ?Entity
+    public function getCodeAuthorityInstance(): array
     {
-        return $this->_securityMasterInstance;
+        return $this->_codeAuthorityInstance;
     }
 
-    /**
-     * L'ID du maître du code.
-     */
-    private $_codeMaster = '';
-
-    /**
-     * L'instance du maître du code.
-     */
-    private $_codeMasterInstance = null;
-
-    /**
-     * Récupération du maître du code.
-     * @return void
-     */
-    private function _findCodeMaster()
+    public function getDirectoryAuthority(): array
     {
-        if ($this->_codeMaster != '') {
-            return;
-        }
-
-        $type = self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_CODE;
-        $this->_codeMaster = $this->_findEntityByType($type);
-        $this->_codeMasterInstance = $this->_cacheInstance->newNode($this->_codeMaster, Cache::TYPE_ENTITY);
-
-        $this->_metrologyInstance->addLog('Find code master ' . $this->_codeMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        return $this->_directoryAuthority;
     }
 
-    public function getCodeAuthority(): string
+    public function getDirectoryAuthorityInstance(): array
     {
-        return $this->_codeMaster;
+        return $this->_directoryAuthorityInstance;
     }
 
-    public function getCodeAuthorityInstance(): ?Entity
+    public function getTimeAuthority(): array
     {
-        return $this->_codeMasterInstance;
+        return $this->_timeAuthority;
     }
 
-    /**
-     * Le maître de l'annuaire.
-     */
-    private $_directoryMaster = '';
-
-    /**
-     * L'instance du maître de l'annuaire.
-     */
-    private $_directoryMasterInstance = null;
-
-    /**
-     * Récupération du maître de l'annuaire.
-     * @return void
-     */
-    private function _findDirectoryMaster()
+    public function getTimeAuthorityInstance(): array
     {
-        if ($this->_directoryMaster != '') {
-            return;
-        }
-
-        $type = self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_ANNUAIRE;
-        $this->_directoryMaster = $this->_findEntityByType($type);
-        $this->_directoryMasterInstance = $this->_cacheInstance->newNode($this->_directoryMaster, Cache::TYPE_ENTITY);
-
-        $this->_metrologyInstance->addLog('Find directory master ' . $this->_directoryMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-    }
-
-    public function getDirectoryAuthority(): string
-    {
-        return $this->_directoryMaster;
-    }
-
-    public function getDirectoryAuthorityInstance(): ?Entity
-    {
-        return $this->_directoryMasterInstance;
-    }
-
-    /**
-     * Le maître du temps.
-     */
-    private $_timeMaster = '';
-
-    /**
-     * L'instance du maître du temps.
-     */
-    private $_timeMasterInstance = null;
-
-    /**
-     * Récupération du maître du temps.
-     * @return void
-     */
-    private function _findTimeMaster()
-    {
-        if ($this->_timeMaster != '') {
-            return;
-        }
-
-        $type = self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_TEMPS;
-        $this->_timeMaster = $this->_findEntityByType($type);
-        $this->_timeMasterInstance = $this->_cacheInstance->newNode($this->_timeMaster, Cache::TYPE_ENTITY);
-
-        $this->_metrologyInstance->addLog('Find time master ' . $this->_timeMaster, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
-    }
-
-    public function getTimeAuthority(): string
-    {
-        return $this->_timeMaster;
-    }
-
-    public function getTimeAuthorityInstance(): ?Entity
-    {
-        return $this->_timeMasterInstance;
+        return $this->_timeAuthorityInstance;
     }
 
     /**
@@ -2472,17 +2413,29 @@ class nebule
         $this->_authorities[$this->_puppetmaster] = $this->_puppetmaster;
         $this->_authoritiesInstances[$this->_puppetmaster] = $this->_puppetmasterInstance;
         $this->_specialEntities[$this->_puppetmaster] = $this->_puppetmaster;
-        $this->_authorities[$this->_securityMaster] = $this->_securityMaster;
-        $this->_authoritiesInstances[$this->_securityMaster] = $this->_securityMasterInstance;
-        $this->_specialEntities[$this->_securityMaster] = $this->_securityMaster;
-        $this->_authorities[$this->_codeMaster] = $this->_codeMaster;
-        $this->_authoritiesInstances[$this->_codeMaster] = $this->_codeMasterInstance;
-        $this->_specialEntities[$this->_codeMaster] = $this->_codeMaster;
-        $this->_localAuthorities[$this->_codeMaster] = $this->_codeMaster;
-        $this->_localAuthoritiesInstances[$this->_codeMaster] = $this->_codeMasterInstance;
-        $this->_localAuthoritiesSigners[$this->_codeMaster] = $this->_puppetmaster;
-        $this->_specialEntities[$this->_directoryMaster] = $this->_directoryMaster;
-        $this->_specialEntities[$this->_timeMaster] = $this->_timeMaster;
+        foreach ($this->_securityAuthority as $item)
+        {
+            $this->_authorities[$item] = $item;
+            $this->_authoritiesInstances[$item] = $this->_securityAuthorityInstance[$item];
+            $this->_specialEntities[$item] = $item;
+        }
+        foreach ($this->_codeAuthority as $item)
+        {
+            $this->_authorities[$item] = $item;
+            $this->_authoritiesInstances[$item] = $this->_codeAuthorityInstance[$item];
+            $this->_specialEntities[$item] = $item;
+            $this->_localAuthorities[$item] = $item;
+            $this->_localAuthoritiesInstances[$item] =$this->_codeAuthorityInstance[$item];
+            $this->_localAuthoritiesSigners[$item] = $this->_puppetmaster;
+        }
+        foreach ($this->_directoryAuthority as $item)
+        {
+            $this->_specialEntities[$item] = $item;
+        }
+        foreach ($this->_timeAuthority as $item)
+        {
+            $this->_specialEntities[$item] = $item;
+        }
     }
 
     /**
@@ -2557,7 +2510,7 @@ class nebule
         // Liste les liens de l'entité instance du serveur..
         $list = array();
         if ($this->_permitInstanceEntityAsAuthority) {
-            $list = $this->_instanceEntityInstance->readLinksFilterFull(
+            $list = $this->_instanceEntityInstance->getLinksOnFields(
                 $this->_instanceEntity,
                 '',
                 'f',
@@ -2581,7 +2534,7 @@ class nebule
         // Liste les liens de l'entité instance du serveur..
         $list = array();
         if ($this->_permitDefaultEntityAsAuthority) {
-            $list = $this->_instanceEntityInstance->readLinksFilterFull(
+            $list = $this->_instanceEntityInstance->getLinksOnFields(
                 $this->_defaultEntity,
                 '',
                 'f',
@@ -2798,7 +2751,7 @@ class nebule
         // Liste les liens de l'entité instance du serveur..
         $list = array();
         if ($this->_permitInstanceEntityAsAuthority) {
-            $list = $this->_instanceEntityInstance->readLinksFilterFull(
+            $list = $this->_instanceEntityInstance->getLinksOnFields(
                 $this->_instanceEntity,
                 '',
                 'f',
@@ -2819,7 +2772,7 @@ class nebule
         // Liste les liens de l'entité instance du serveur..
         $list = array();
         if ($this->_permitDefaultEntityAsAuthority) {
-            $list = $this->_instanceEntityInstance->readLinksFilterFull(
+            $list = $this->_instanceEntityInstance->getLinksOnFields(
                 $this->_defaultEntity,
                 '',
                 'f',
@@ -2903,7 +2856,7 @@ class nebule
         $hashEntityObject = $this->newObject($hashEntity);
 
         // Liste les liens.
-        $links = $hashEntityObject->readLinksFilterFull('', '', 'l', '', $hashEntity, $hashType);
+        $links = $hashEntityObject->getLinksOnFields('', '', 'l', '', $hashEntity, $hashType);
         unset($hashType, $hashEntity, $hashEntityObject);
 
         // Filtre les entités sur le contenu de l'objet de la clé publique. @todo
@@ -3079,8 +3032,12 @@ class nebule
 
     /**
      * Crée et écrit un objet avec du texte.
-     * @param string $text
+     * FIXME
+     *
+     * @param string  $text
      * @param boolean $protect
+     * @param bool    $obfuscate
+     * @return false|string
      */
     public function createTextAsObject(string &$text, bool $protect = false, bool $obfuscate = false)
     {
@@ -3111,8 +3068,8 @@ class nebule
             // Crée le lien de type d'objet.
             $action = 'l';
             $source = $id;
-            $target = $this->getCryptoInstance()->hash('text/plain');
-            $meta = $this->getCryptoInstance()->hash(self::REFERENCE_NEBULE_OBJET_TYPE);
+            $target = $this->getNIDfromData('text/plain');
+            $meta = $this->getNIDfromData(self::REFERENCE_NEBULE_OBJET_TYPE);
             $link = '_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
             $newLink = new Link($this->_nebuleInstance, $link);
 
@@ -3223,7 +3180,7 @@ class nebule
         }
 
         // Lit les liens de l'objet de référence.
-        $result = $type->readLinksFilterFull(
+        $result = $type->getLinksOnFields(
             $hashEntity,
             '',
             'l',
@@ -3363,15 +3320,26 @@ class nebule
     public function convertIdToTypedObjectInstance($nid)
     {
         if (is_a($nid, 'Node')
+            || is_a($nid, 'Nebule\Library\Node')
             || is_a($nid, 'Group')
+            || is_a($nid, 'Nebule\Library\Group')
             || is_a($nid, 'Entity')
+            || is_a($nid, 'Nebule\Library\Entity')
             || is_a($nid, 'Conversation')
+            || is_a($nid, 'Nebule\Library\Conversation')
             || is_a($nid, 'Currency')
+            || is_a($nid, 'Nebule\Library\Currency')
             || is_a($nid, 'TokenPool')
+            || is_a($nid, 'Nebule\Library\TokenPool')
             || is_a($nid, 'Token')
+            || is_a($nid, 'Nebule\Library\Token')
             || is_a($nid, 'Wallet')
+            || is_a($nid, 'Nebule\Library\Wallet')
         )
             return $nid;
+
+        if (!is_string($nid))
+            $nid = '0';
 
         $social = 'all';
 

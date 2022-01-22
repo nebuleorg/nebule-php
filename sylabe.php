@@ -726,7 +726,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     {
         // Recherche l'image de fond.
         $bgobj = $this->_nebuleInstance->newObject(self::DEFAULT_CSS_BACKGROUND);
-        $background = $bgobj->findUpdate(true, false);
+        $background = $bgobj->getUpdateNID(true, false);
         ?>
 
         <style type="text/css">
@@ -5082,7 +5082,7 @@ class ModuleEntities extends Modules
         unset($dispWarn);
 
         // liste les liens pour l'entité.
-        $links = $entity->readLinksFilterFull($entity, '', 'f', '', '', '');
+        $links = $entity->getLinksOnFields($entity, '', 'f', '', '', '');
 
         if (sizeof($links) != 0) {
             // Indice de fond paire ou impaire.
@@ -5379,7 +5379,7 @@ class ModuleEntities extends Modules
         }
 
         // Liste toutes les autres entités.
-        $links = $this->_hashEntityObject->readLinksFilterFull(
+        $links = $this->_hashEntityObject->getLinksOnFields(
             '',
             '',
             'l',
@@ -7536,7 +7536,7 @@ class ModuleObjects extends Modules
                 }
 
                 // Recherche une mise à jour.
-                $update = $instance->findUpdate(false, false);
+                $update = $instance->getUpdateNID(false, false);
 
                 // Recherche si l'objet est marqué.
                 $marked = $this->_applicationInstance->getMarkObject($id);
@@ -7992,7 +7992,7 @@ class ModuleObjects extends Modules
         $nextLinkSigne = '';
 
         // Liste des attributs, càd des liens de type l.
-        $links = $this->_applicationInstance->getCurrentObjectInstance()->readLinksFilterFull(
+        $links = $this->_applicationInstance->getCurrentObjectInstance()->getLinksOnFields(
             '',
             '',
             '',
@@ -8756,7 +8756,7 @@ class ModuleObjects extends Modules
             $hashType = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
             $hashEntity = $this->_nebuleInstance->getCryptoInstance()->hash('application/x-pem-file');
             $hashEntityObject = $this->_nebuleInstance->newObject($hashEntity);
-            $links = $hashEntityObject->readLinksFilterFull('', '', 'l', '', $hashEntity, $hashType);
+            $links = $hashEntityObject->getLinksOnFields('', '', 'l', '', $hashEntity, $hashType);
 
             $typeEntity = false;
             $link = null;

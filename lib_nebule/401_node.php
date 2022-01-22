@@ -3376,7 +3376,7 @@ class Node implements nodeInterface
      * @param string $nid4
      * @return array:Link
      */
-    public function readLinksFilterFull(string $eid = '', string $chr = '', string $req = '', string $nid1 = '', string $nid2 = '', string $nid3 = '', string $nid4 = ''): array
+    public function getLinksOnFields(string $eid = '', string $chr = '', string $req = '', string $nid1 = '', string $nid2 = '', string $nid3 = '', string $nid4 = ''): array
     {
         if (!$this->_io->checkLinkPresent($this->_id))
             return array();
@@ -3409,7 +3409,7 @@ class Node implements nodeInterface
      * @param string  $social
      * @return string
      */
-    public function findUpdate(bool $present = true, bool $synchro = false, string $social = ''): string
+    public function getUpdateNID(bool $present = true, bool $synchro = false, string $social = ''): string
     {
         $exclude = array();
         $oneLevelUpdate = $this->_findUpdate($this->_id, 0, $exclude, $social, $present, $synchro);
