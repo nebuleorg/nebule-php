@@ -60,6 +60,10 @@ class nebule
     const REFERENCE_OBJECT_ENTITY = 'application/x-pem-file';
     const REFERENCE_ENTITY_HEADER = '-----BEGIN PUBLIC KEY-----';
     const REFERENCE_CRYPTO_HASH_ALGORITHM = 'sha2.256';
+    const LIB_RID_SECURITY_AUTHORITY = 'a4b210d4fb820a5b715509e501e36873eb9e27dca1dd591a98a5fc264fd2238adf4b489d.none.288';
+    const LIB_RID_CODE_AUTHORITY = '2b9dd679451eaca14a50e7a65352f959fc3ad55efc572dcd009c526bc01ab3fe304d8e69.none.288';
+    const LIB_RID_TIME_AUTHORITY = 'bab7966fd5b483f9556ac34e4fac9f778d0014149f196236064931378785d81cae5e7a6e.none.288';
+    const LIB_RID_DIRECTORY_AUTHORITY = '0a4c1e7930a65672379616a2637b84542049b416053ac0d9345300189791f7f8e05f3ed4.none.288';
 
     // Les objets références de nebule.
     const REFERENCE_NEBULE_OBJET = 'nebule/objet';
@@ -2117,12 +2121,7 @@ class nebule
 
 
     /**
-     * Vérification du niveau de cohérence et d'utilisation de l'instance.
-     * - à 0, il y a un problème grave, le maître manque ;
-     * - de 1 à 4, il manque une entité importante ;
-     * - à 32, il manque l'entité de l'instance locale ;
-     * - à 64, l'instance est prête mais non utilisée ;
-     * - à 128, l'instance est prête et utilisée. Une entité courante a été trouvée.
+     * Calculate the level of usability of entities.
      *
      * @return integer
      */
@@ -2132,17 +2131,33 @@ class nebule
         if ($this->_puppetmasterInstance->getID() == '0') return 2;
         if ($this->_puppetmasterInstance->getID() != $this->_configurationInstance->getOptionUntyped('puppetmaster')) return 3; // TODO à retirer
         // Vérifie que le maître de la sécurité est une entité et a été trouvé.
-        if (!$this->_securityAuthoritiesInstance instanceof Entity) return 11;
-        if ($this->_securityAuthoritiesInstance->getID() == '0') return 12;
+        if (!is_array($this->_securityAuthoritiesInstance)) return 11;
+        foreach ($this->_securityAuthoritiesInstance as $instance)
+        {
+            if (!$instance instanceof Entity) return 12;
+            if ($instance->getID() == '0') return 13;
+        }
         // Vérifie que le maître du code est une entité et a été trouvé.
-        if (!$this->_codeAuthoritiesInstance instanceof Entity) return 21;
-        if ($this->_codeAuthoritiesInstance->getID() == '0') return 22;
+        if (!is_array($this->_codeAuthoritiesInstance)) return 21;
+        foreach ($this->_codeAuthoritiesInstance as $instance)
+        {
+            if (!$instance instanceof Entity) return 22;
+            if ($instance->getID() == '0') return 23;
+        }
         // Vérifie que le maître de l'annuaire est une entité et a été trouvé.
-        if (!$this->_directoryAuthoritiesInstance instanceof Entity) return 31;
-        if ($this->_directoryAuthoritiesInstance->getID() == '0') return 32;
+        if (!is_array($this->_directoryAuthoritiesInstance)) return 31;
+        foreach ($this->_directoryAuthoritiesInstance as $instance)
+        {
+            if (!$instance instanceof Entity) return 32;
+            if ($instance->getID() == '0') return 33;
+        }
         // Vérifie que le maître du temps est une entité et a été trouvé.
-        if (!$this->_timeAuthoritiesInstance instanceof Entity) return 41;
-        if ($this->_timeAuthoritiesInstance->getID() == '0') return 42;
+        if (!is_array($this->_timeAuthoritiesInstance)) return 41;
+        foreach ($this->_timeAuthoritiesInstance as $instance)
+        {
+            if (!$instance instanceof Entity) return 42;
+            if ($instance->getID() == '0') return 43;
+        }
 
         // Vérifie que l'entité de l'instance nebule est une entité et a été trouvée.
         if (!$this->_instanceEntityInstance instanceof Entity) return 51;
@@ -2235,19 +2250,19 @@ class nebule
      */
     private function _findGlobalAuthorities()
     {
-        $this->_findEntityByType(self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_SECURITE,
+        $this->_findEntityByType(self::LIB_RID_SECURITY_AUTHORITY,
             $this->_securityAuthorities,
             $this->_securityAuthoritiesInstance,
             'security');
-        $this->_findEntityByType(self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_CODE,
+        $this->_findEntityByType(self::LIB_RID_CODE_AUTHORITY,
             $this->_codeAuthorities,
             $this->_codeAuthoritiesInstance,
             'code');
-        $this->_findEntityByType(self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_ANNUAIRE,
+        $this->_findEntityByType(self::LIB_RID_DIRECTORY_AUTHORITY,
             $this->_directoryAuthorities,
             $this->_directoryAuthoritiesInstance,
             'directory');
-        $this->_findEntityByType(self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_TEMPS,
+        $this->_findEntityByType(self::LIB_RID_TIME_AUTHORITY,
             $this->_timeAuthorities,
             $this->_timeAuthoritiesInstance,
             'time');
@@ -2257,19 +2272,18 @@ class nebule
      * Find authorities by their roles.
      * Only follow puppetmaster links.
      *
-     * @param string $type
+     * @param string $rid
      * @param array  $listEID
      * @param array  $listInstances
      * @param string $name
      * @return void
      */
-    private function _findEntityByType(string $type, array &$listEID, array &$listInstances, string $name): void
+    private function _findEntityByType(string $rid, array &$listEID, array &$listInstances, string $name): void
     {
-        $rid = $this->getNIDfromData($type);
         $instance = $this->getCacheInstance()->newNode($rid, Cache::TYPE_NODE);
         $list = array();
         $filter = array(
-            'bl/rl/req' => 'f',
+            'bl/rl/req' => 'l',
             'bl/rl/nid1' => $rid,
             'bl/rl/nid3' => $rid,
             'bs/rs1/eid' => $this->_puppetmaster,
@@ -2289,7 +2303,7 @@ class nebule
             $instance = $this->getCacheInstance()->newNode($eid, Cache::TYPE_ENTITY);
             $listEID[$eid] = $eid;
             $listInstances[$eid] = $instance;
-            $this->_metrologyInstance->addLog('Find ' . $name . ' master ' . $eid, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'e6f75b5e');
+            $this->_metrologyInstance->addLog('Find ' . $name . ' authority ' . $eid, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'e6f75b5e');
         }
     }
 
@@ -2526,8 +2540,9 @@ class nebule
         if ($this->_permitInstanceEntityAsAuthority) {
             $filter = array(
                 'bl/rl/req' => 'f',
-                'bl/rl/nid1' => $this->_instanceEntity,
-                'bl/rl/nid3' => $refAuthority,
+                'bl/rl/nid1' => $refAuthority,
+                'bl/rl/nid2' => $this->_instanceEntity,
+                'bl/rl/nid3' => '',
                 'bl/rl/nid4' => '',
                 'bs/rs1/eid' => $this->_instanceEntity,
             );
@@ -2538,8 +2553,9 @@ class nebule
         if ($this->_permitDefaultEntityAsAuthority) {
             $filter = array(
                 'bl/rl/req' => 'f',
-                'bl/rl/nid1' => $this->_instanceEntity,
-                'bl/rl/nid3' => $refAuthority,
+                'bl/rl/nid1' => $refAuthority,
+                'bl/rl/nid2' => $this->_instanceEntity,
+                'bl/rl/nid3' => '',
                 'bl/rl/nid4' => '',
                 'bs/rs1/eid' => $this->_defaultEntity,
             );

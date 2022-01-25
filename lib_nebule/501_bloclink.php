@@ -628,7 +628,7 @@ class blocLink implements blocLinkInterface
         // Check content RS 1 NID 1 : hash.algo.size
         //if (!Node::checkNID($nid, false)) $this->_metrology->addLog('check link bs/rs1/eid failed '.$rs, Metrology::LOG_LEVEL_ERROR, __METHOD__, '6e1150f9');
         if (!Node::checkNID($nid, false)) return false;
-        $this->_parsedLink["bs/rs$i/nid"] = $nid;
+        $this->_parsedLink["bs/rs$i/eid"] = $nid;
 
         //if (!$this->_checkSIG($bh, $bl, $sig, $nid)) $this->_metrology->addLog('check link BS/RS1/SIG failed '.$rs, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e99ec81f');
         if (!$this->_checkSIG($bh, $bl, $sig, $nid, (string)$i)) return false;

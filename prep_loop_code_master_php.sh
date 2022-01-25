@@ -6,7 +6,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020211218
+# Version 020220125
 
 export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
@@ -201,11 +201,11 @@ function work_full_reinit()
     #"nebule:link/2:0_0>020210714/l>${puppetmaster_develop_key_hash}>${pemOID}>${typeRID}"
     "nebule:link/2:0_0>020210714/l>${puppetmaster_develop_pem_hash}>${nameOID}>${nameRID}"
     "nebule:link/2:0_0>020210714/l>${puppetmaster_develop_pem_hash}>${localOID}>${localRID}"
-    "nebule:link/2:0_0>020210714/l>${security_authority_develop_pem_hash}>${LIB_RID_SECURITY_AUTHORITY}"
-    "nebule:link/2:0_0>020210714/l>${security_authority_develop_pem_hash}>${lauthOID}"
-    "nebule:link/2:0_0>020210714/l>${code_authority_develop_pem_hash}>${LIB_RID_CODE_AUTHORITY}"
-    "nebule:link/2:0_0>020210714/l>${directory_authority_develop_pem_hash}>${LIB_RID_DIRECTORY_AUTHORITY}"
-    "nebule:link/2:0_0>020210714/l>${time_authority_develop_pem_hash}>${LIB_RID_TIME_AUTHORITY}"
+    "nebule:link/2:0_0>020210714/l>${LIB_RID_SECURITY_AUTHORITY}>${security_authority_develop_pem_hash}>${LIB_RID_SECURITY_AUTHORITY}"
+    "nebule:link/2:0_0>020210714/f>${lauthOID}>${security_authority_develop_pem_hash}"
+    "nebule:link/2:0_0>020210714/l>${LIB_RID_CODE_AUTHORITY}>${code_authority_develop_pem_hash}>${LIB_RID_CODE_AUTHORITY}"
+    "nebule:link/2:0_0>020210714/l>${LIB_RID_DIRECTORY_AUTHORITY}>${directory_authority_develop_pem_hash}>${LIB_RID_DIRECTORY_AUTHORITY}"
+    "nebule:link/2:0_0>020210714/l>${LIB_RID_TIME_AUTHORITY}>${time_authority_develop_pem_hash}>${LIB_RID_TIME_AUTHORITY}"
   )
   for link in "${links[@]}"
   do

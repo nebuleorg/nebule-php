@@ -12,7 +12,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220124';
+const BOOTSTRAP_VERSION = '020220125';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -2288,71 +2288,14 @@ log_add('MARK in BL='.$link['bl'], 'normal', __FUNCTION__, '00000006');
             if (isset($link[$n]) && $link[$n] != $v
                 || $v == '' && !isset($link[$n])
             )
+            {
+                log_add('MARK out ok=false', 'normal', __FUNCTION__, '00000007');
                 return false;
+            }
         }
     }
+log_add('MARK out ok=true', 'normal', __FUNCTION__, '00000007');
     return true;
-
-
-
-
-
-    $ok = false;
-
-    // Positive filtering
-    if (isset($filter['bl/rl/req']) && $link['bl/rl/req'] == $filter['bl/rl/req'])
-        $ok = true;
-    if (isset($filter['bl/rl/nid1']) && $link['bl/rl/nid1'] == $filter['bl/rl/nid1'])
-        $ok = true;
-    if (isset($filter['bl/rl/nid2']) && isset($link['bl/rl/nid2']) && $link['bl/rl/nid2'] == $filter['bl/rl/nid2'])
-        $ok = true;
-    if (isset($filter['bl/rl/nid2']) && !isset($link['bl/rl/nid2']) && $filter['bl/rl/nid2'] == '')
-        $ok = true;
-    if (isset($filter['bl/rl/nid3']) && isset($link['bl/rl/nid3']) && $link['bl/rl/nid3'] == $filter['bl/rl/nid3'])
-        $ok = true;
-    if (isset($filter['bl/rl/nid3']) && !isset($link['bl/rl/nid3']) && $filter['bl/rl/nid3'] == '')
-        $ok = true;
-    if (isset($filter['bl/rl/nid4']) && isset($link['bl/rl/nid4']) && $link['bl/rl/nid4'] == $filter['bl/rl/nid4'])
-        $ok = true;
-    if (isset($filter['bl/rl/nid4']) && !isset($link['bl/rl/nid4']) && $filter['bl/rl/nid4'] == '')
-        $ok = true;
-    if (isset($filter['bl/rl/nid*']) && ($link['bl/rl/nid1'] == $filter['bl/rl/nid*']
-            || isset($link['bl/rl/nid2']) && $link['bl/rl/nid2'] == $filter['bl/rl/nid*']
-            || isset($link['bl/rl/nid3']) && $link['bl/rl/nid3'] == $filter['bl/rl/nid*']
-            || isset($link['bl/rl/nid4']) && $link['bl/rl/nid4'] == $filter['bl/rl/nid*']
-        )
-    )
-        $ok = true;
-    if (isset($filter['bs/rs1/eid']) && $link['bs/rs1/eid'] == $filter['bs/rs1/eid'])
-        $ok = true;
-
-    if (!$ok)
-        return $ok;
-
-    // Negative filtering
-    if (isset($filter['!bl/rl/req']) && $link['bl/rl/req'] == $filter['!bl/rl/req'])
-        $ok = false;
-    if (isset($filter['!bl/rl/nid1']) && $link['bl/rl/nid1'] == $filter['!bl/rl/nid1'])
-        $ok = false;
-    if (isset($filter['!bl/rl/nid2']) && isset($link['bl/rl/nid2']) && $link['bl/rl/nid2'] == $filter['!bl/rl/nid2'])
-        $ok = false;
-    if (isset($filter['!bl/rl/nid3']) && isset($link['bl/rl/nid3']) && $link['bl/rl/nid3'] == $filter['!bl/rl/nid3'])
-        $ok = false;
-    if (isset($filter['!bl/rl/nid4']) && isset($link['bl/rl/nid4']) && $link['bl/rl/nid4'] == $filter['!bl/rl/nid4'])
-        $ok = false;
-    if (isset($filter['!bl/rl/nid*']) && ($link['bl/rl/nid1'] == $filter['!bl/rl/nid*']
-            || isset($link['bl/rl/nid2']) && $link['bl/rl/nid2'] == $filter['!bl/rl/nid*']
-            || isset($link['bl/rl/nid3']) && $link['bl/rl/nid3'] == $filter['!bl/rl/nid*']
-            || isset($link['bl/rl/nid4']) && $link['bl/rl/nid4'] == $filter['!bl/rl/nid*']
-        )
-    )
-        $ok = false;
-    if (isset($filter['!bs/rs1/eid']) && $link['bs/rs1/eid'] == $filter['!bs/rs1/eid'])
-        $ok = false;
-
-if ($ok) log_add('MARK out ok=true', 'normal', __FUNCTION__, '00000007');
-else log_add('MARK out ok=false', 'normal', __FUNCTION__, '00000007');
-    return $ok;
 }
 
 /**
@@ -2860,7 +2803,7 @@ function lnk_parse(string $link): array
     $bs_rs1 = strtok($bs, '/');
 
     // Extract items from RS : NID>SIG
-    $bs_rs1_nid = strtok($bs_rs1, '>');
+    $bs_rs1_eid = strtok($bs_rs1, '>');
     $bs_rs1_sig = strtok('>');
 
     // Check hash value.
@@ -2893,7 +2836,7 @@ function lnk_parse(string $link): array
         'bl/rl/nid4' => $bl_rl_nid4,
         'bs' => $bs,
         'bs/rs' => $bs_rs1,
-        'bs/rs1/eid' => $bs_rs1_nid,
+        'bs/rs1/eid' => $bs_rs1_eid,
         'bs/rs1/sig' => $bs_rs1_sig,
         'bs/rs1/sig/sign' => $bs_rs1_sig_sign,
         'bs/rs1/sig/algo' => $bs_rs1_sig_algo,
@@ -3603,21 +3546,21 @@ function ent_getAskedAuthorities(string $refNid, array &$result, bool $synchroni
     $entList = array();
     $filter = array(
         'bl/rl/req' => 'l',
-        'bl/rl/nid2' => $refNid,
-        'bl/rl/nid3' => '',
+        'bl/rl/nid1' => $refNid,
+        'bl/rl/nid3' => $refNid,
         'bl/rl/nid4' => '',
         'bs/rs1/eid' => lib_getConfiguration('puppetmaster'),
     );
     lnk_getList($refNid, $lnkList, $filter);
 
-    if (lib_getConfiguration('CodeBranch') != '') {
+    /*if (lib_getConfiguration('CodeBranch') != '') {
         $filter['bl/rl/nid3'] = obj_getNID(lib_getConfiguration('CodeBranch'));
         lnk_getList($refNid, $lnkList, $filter);
-    }
+    }*/
 
     // Extract uniques entities
     foreach ($lnkList as $lnk)
-        $entList[$lnk['bl/rl/nid1']] = $lnk['bl/rl/nid1'];
+        $entList[$lnk['bl/rl/nid2']] = $lnk['bl/rl/nid2'];
     foreach ($entList as $ent)
         $result[] = $ent;
 
@@ -3988,23 +3931,24 @@ function app_getCodeBranch(): void
 
     // Check if it's a name or an OID.
     if (nod_checkNID($codeBranchName, false)
-        && io_checkNodeHaveContent($codeBranchName)
+        && io_checkNodeHaveLink($codeBranchName)
     ) {
         $codeBranchNID = $codeBranchName;
     } else {
         // Get all RID of code branches
-        $CodeBranchRID = LIB_RID_CODE_BRANCH;
+        $codeBranchRID = LIB_RID_CODE_BRANCH;
         $bLinks = array();
         $filter = array(
             'bl/rl/req' => 'l',
-            'bl/rl/nid1' => $CodeBranchRID,
-            'bl/rl/nid3' => $CodeBranchRID,
+            'bl/rl/nid1' => $codeBranchRID,
+            'bl/rl/nid3' => $codeBranchRID,
             'bl/rl/nid4' => '',
         );
-        lnk_getList($CodeBranchRID, $bLinks, $filter, false);
+        lnk_getList($codeBranchRID, $bLinks, $filter, false);
         lnk_filterBySigners($bLinks, $nebuleLocalAuthorities);
 
         // Get all NID with the name of wanted code branch.
+        $codeBranchRID = obj_getNID($codeBranchName, LIB_REF_CODE_ALGO);
         $nLinks = array();
         $filter = array(
             'bl/rl/req' => 'l',
@@ -4012,7 +3956,7 @@ function app_getCodeBranch(): void
             'bl/rl/nid3' => obj_getNID('nebule/objet/nom', LIB_REF_CODE_ALGO),
             'bl/rl/nid4' => '',
         );
-        lnk_getList($CodeBranchRID, $nLinks, $filter, false);
+        lnk_getList($codeBranchRID, $nLinks, $filter, false);
         lnk_filterBySigners($nLinks, $nebuleLocalAuthorities);
 
         // Latest collision of code branches with the name
@@ -4029,8 +3973,8 @@ function app_getCodeBranch(): void
                 }
             }
         }
-        unset($bLinks, $nLinks);
     }
+    log_add('Current branch : ' . $codeBranchNID, 'normal', __FUNCTION__, '9f1bf579');
 }
 
 /**
@@ -4582,6 +4526,9 @@ function bootstrap_getCheckFingerprint(): void
     $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
     unset($data);
 
+    if ($codeBranchNID == '')
+        app_getCodeBranch();
+
     $links = array();
     $filter = array(
         'bl/rl/req' => 'f',
@@ -4590,6 +4537,7 @@ function bootstrap_getCheckFingerprint(): void
         'bl/rl/nid3' => $codeBranchNID,
         'bl/rl/nid4' => '',
     );
+    log_add('MARK get f>'.LIB_RID_INTERFACE_BOOTSTRAP.'>'.$hash.'>'.$codeBranchNID, 'normal', __FUNCTION__, '00000000');
     lnk_getList($hash, $links, $filter, false);
     lnk_filterBySigners($links, $nebuleLocalAuthorities);
 
@@ -5314,22 +5262,27 @@ function bootstrap_breakDisplay3LibraryPOO()
     global $nebuleInstance,
            $bootstrapLibraryID,
            $bootstrapLibrarySignerID,
-           $nebuleLibVersion;
+           $nebuleLibVersion,
+           $codeBranchNID;
 
     echo '<div class="parts">' . "\n" . '<span class="partstitle">#3 nebule library POO</span><br/>';
     flush();
 
     echo "tL=" . lib_getMetrologyTimer('tL') . "<br />\n";
+
+    $codeBranchName = lib_getConfiguration('codeBranch');
+    if ($codeBranchName == '')
+        $codeBranchName = LIB_CONFIGURATIONS_DEFAULT['codeBranch'];
+    bootstrap_echoLineTitle('code branch RID');
+    echo $codeBranchNID . ' (' . $codeBranchName . ")<br />\n";
     bootstrap_echoLineTitle('library RID');
     echo LIB_RID_INTERFACE_LIBRARY . "<br />\n";
-    bootstrap_echoLineTitle('library ID');
-    echo $bootstrapLibraryID . "<br />\n";
+    bootstrap_echoLineTitle('library OID');
+    echo $bootstrapLibraryID . ' version ' . $nebuleLibVersion . "<br />\n";
 
     if (is_a($nebuleInstance, 'Nebule\Library\nebule')) {
-    bootstrap_echoLineTitle('library signer');
+        bootstrap_echoLineTitle('library signer');
         echo $bootstrapLibrarySignerID . "<br />\n";
-    bootstrap_echoLineTitle('library version');
-        echo $nebuleLibVersion . "<br />\n";
         bootstrap_breakDisplay31LibraryEntities();
         bootstrap_breakDisplay32LibraryCryptography();
         bootstrap_breakDisplay33LibraryIO();
@@ -5518,7 +5471,9 @@ function bootstrap_breakDisplay35LibraryBootstrap()
     $data = file_get_contents(BOOTSTRAP_FILE_NAME);
     $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
     unset($data);
-    bootstrap_echoLineTitle('bootstrap');
+    bootstrap_echoLineTitle('bootstrap RID');
+    echo LIB_RID_INTERFACE_BOOTSTRAP . "<br />\n";
+    bootstrap_echoLineTitle('bootstrap OID');
     echo $hash . ' ';
     $boostrap_hash = app_getByRef(LIB_RID_INTERFACE_BOOTSTRAP);
     bootstrap_echoEndLineTest($boostrap_hash == $hash);
@@ -5552,9 +5507,11 @@ function bootstrap_breakDisplay4Application()
 
     echo '<div class="parts">' . "\n";
     echo '<span class="partstitle">#4 application</span><br/>' . "\n";
-    echo 'application RID &nbsp;: <a href="/?' . LIB_ARG_SWITCH_APPLICATION . '=' . $bootstrapApplicationStartID  . '">'
+    bootstrap_echoLineTitle('application RID');
+    echo '<a href="/?' . LIB_ARG_SWITCH_APPLICATION . '=' . $bootstrapApplicationStartID  . '">'
         . $bootstrapApplicationStartID . '</a><br/>' . "\n";
-    echo 'application ID &nbsp;&nbsp;: ' . $bootstrapApplicationID . "\n";
+    bootstrap_echoLineTitle('application OID');
+    echo $bootstrapApplicationID . "\n";
     echo '</div>' . "\n";
 }
 
@@ -6269,12 +6226,12 @@ function bootstrap_firstDisplay6SyncObjects(): bool
     ) {
         log_add('need sync reference objects', 'warn', __FUNCTION__, '0f21ad26');
 
-        echo "<br />\nbootstrap RID &nbsp;&nbsp;&nbsp;&nbsp;: " . $refBootID . ' ';
-        lnk_getDistantOnLocations($refBootID, LIB_FIRST_LOCALISATIONS);
-
         app_getCodeBranch();
         echo "<br />\ncode branch RID &nbsp;&nbsp;: " . $codeBranchNID . ' ';
         lnk_getDistantOnLocations($codeBranchNID, LIB_FIRST_LOCALISATIONS);
+
+        echo "<br />\nbootstrap RID &nbsp;&nbsp;&nbsp;&nbsp;: " . $refBootID . ' ';
+        lnk_getDistantOnLocations($refBootID, LIB_FIRST_LOCALISATIONS);
 
         echo "<br />\nlibrary RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: " . $refLibID . ' ';
         lnk_getDistantOnLocations($refLibID, LIB_FIRST_LOCALISATIONS);

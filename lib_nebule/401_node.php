@@ -4,6 +4,7 @@ namespace Nebule\Library;
 use Nebule\Library\nebule;
 use Nebule\Library\nodeInterface;
 use function Nebule\Bootstrap\lnk_getList;
+use function Nebule\Bootstrap\log_add;
 
 /**
  * ------------------------------------------------------------------------------------------
@@ -3305,61 +3306,22 @@ class Node implements nodeInterface
      */
     protected function _filterLinkByStructure(Link &$link, array $filter): bool
     {
-        $ok = false;
         $parsedLink = $link->getParsed();
 
-        // Positive filtering
-        if (isset($filter['bl/rl/req']) && $parsedLink['bl/rl/req'] == $filter['bl/rl/req'])
-            $ok = true;
-        if (isset($filter['bl/rl/nid1']) && $parsedLink['bl/rl/nid1'] == $filter['bl/rl/nid1'])
-            $ok = true;
-        if (isset($filter['bl/rl/nid2']) && isset($parsedLink['bl/rl/nid2']) && $parsedLink['bl/rl/nid2'] == $filter['bl/rl/nid2'])
-            $ok = true;
-        if (isset($filter['bl/rl/nid2']) && !isset($parsedLink['bl/rl/nid2']) && $filter['bl/rl/nid2'] == '')
-            $ok = true;
-        if (isset($filter['bl/rl/nid3']) && isset($parsedLink['bl/rl/nid3']) && $parsedLink['bl/rl/nid3'] == $filter['bl/rl/nid3'])
-            $ok = true;
-        if (isset($filter['bl/rl/nid3']) && !isset($parsedLink['bl/rl/nid3']) && $filter['bl/rl/nid3'] == '')
-            $ok = true;
-        if (isset($filter['bl/rl/nid4']) && isset($parsedLink['bl/rl/nid4']) && $parsedLink['bl/rl/nid4'] == $filter['bl/rl/nid4'])
-            $ok = true;
-        if (isset($filter['bl/rl/nid4']) && !isset($parsedLink['bl/rl/nid4']) && $filter['bl/rl/nid4'] == '')
-            $ok = true;
-        if (isset($filter['bl/rl/nid*']) && ($parsedLink['bl/rl/nid1'] == $filter['bl/rl/nid*']
-                || isset($parsedLink['bl/rl/nid2']) && $parsedLink['bl/rl/nid2'] == $filter['bl/rl/nid*']
-                || isset($parsedLink['bl/rl/nid3']) && $parsedLink['bl/rl/nid3'] == $filter['bl/rl/nid*']
-                || isset($parsedLink['bl/rl/nid4']) && $parsedLink['bl/rl/nid4'] == $filter['bl/rl/nid*']
-            )
-        )
-            $ok = true;
-        if (isset($filter['bs/rs1/eid']) && $parsedLink['bs/rs1/eid'] == $filter['bs/rs1/eid'])
-            $ok = true;
-
-        if (!$ok)
-            return $ok;
-
-        // Negative filtering
-        if (isset($filter['!bl/rl/req']) && $parsedLink['bl/rl/req'] == $filter['!bl/rl/req'])
-            $ok = false;
-        if (isset($filter['!bl/rl/nid1']) && $parsedLink['bl/rl/nid1'] == $filter['!bl/rl/nid1'])
-            $ok = false;
-        if (isset($filter['!bl/rl/nid2']) && isset($parsedLink['bl/rl/nid2']) && $parsedLink['bl/rl/nid2'] == $filter['!bl/rl/nid2'])
-            $ok = false;
-        if (isset($filter['!bl/rl/nid3']) && isset($parsedLink['bl/rl/nid3']) && $parsedLink['bl/rl/nid3'] == $filter['!bl/rl/nid3'])
-            $ok = false;
-        if (isset($filter['!bl/rl/nid4']) && isset($parsedLink['bl/rl/nid4']) && $parsedLink['bl/rl/nid4'] == $filter['!bl/rl/nid4'])
-            $ok = false;
-        if (isset($filter['!bl/rl/nid*']) && ($parsedLink['bl/rl/nid1'] == $filter['!bl/rl/nid*']
-                || isset($parsedLink['bl/rl/nid2']) && $parsedLink['bl/rl/nid2'] == $filter['!bl/rl/nid*']
-                || isset($parsedLink['bl/rl/nid3']) && $parsedLink['bl/rl/nid3'] == $filter['!bl/rl/nid*']
-                || isset($parsedLink['bl/rl/nid4']) && $parsedLink['bl/rl/nid4'] == $filter['!bl/rl/nid*']
-            )
-        )
-            $ok = false;
-        if (isset($filter['!bs/rs1/eid']) && $parsedLink['bs/rs1/eid'] == $filter['!bs/rs1/eid'])
-            $ok = false;
-
-        return $ok;
+        foreach ($filter as $n => $f)
+        {
+            $a = $f;
+            if (is_string($f))
+                $a = array($f);
+            foreach ($a as $v)
+            {
+                if (isset($parsedLink[$n]) && $parsedLink[$n] != $v
+                    || $v == '' && !isset($parsedLink[$n])
+                )
+                    return false;
+            }
+        }
+        return true;
     }
 
 
@@ -3385,7 +3347,7 @@ class Node implements nodeInterface
         $filter = array( 'bl/rl/nid4' => $nid4, );
 
         if ($eid != '')
-            $filter['bs/rs1/nid'] = $eid;
+            $filter['bs/rs1/eid'] = $eid;
         if ($chr != '')
             $filter['bl/rc/chr'] = $chr;
         if ($req != '')
