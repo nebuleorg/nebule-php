@@ -12,7 +12,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220118';
+const BOOTSTRAP_VERSION = '020220124';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -1989,6 +1989,7 @@ function lnk_sign(string $bh_bl): string
 
     if ($bh_bl == '')
         return '';
+    log_add('MARK sign BH_BL='.$bh_bl, 'normal', __FUNCTION__, '00000003');
 
     if (!ent_checkIsPublicKey($nebulePublicEntity)) {
         log_add('invalid current entity (public) ' . $nebulePublicEntity, 'error', __FUNCTION__, '70e110d7');
@@ -2174,6 +2175,8 @@ function lnk_getList(string $nid, array &$links, array $filter, bool $withInvali
             $link = lnk_parse($line);
             if (lnk_checkNotSuppressed($link, $lines) && lnk_filterStructure($link, $filter))
                 $links [] = $link;
+if (lnk_checkNotSuppressed($link, $lines) && lnk_filterStructure($link, $filter))
+    log_add('MARK nid='.$nid.' nid1='.$link['bl/rl/nid1'].' nid2='.$link['bl/rl/nid2'].' $nid3='.$link['bl/rl/nid3'], 'normal', __FUNCTION__, '00000002');
         }
     }
 
@@ -2184,6 +2187,7 @@ function lnk_getList(string $nid, array &$links, array $filter, bool $withInvali
     // Social filter.
     if (!$withInvalidLinks)
         lnk_filterBySigners($links, $validSigners);
+log_add('MARK nid='.$nid.' size='.sizeof($links), 'normal', __FUNCTION__, '00000004');
 }
 
 function lnk_checkExist(string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): bool
@@ -2272,6 +2276,27 @@ function lnk_dateCompare(string $mod1, string $chr1, string $mod2, string $chr2)
  */
 function lnk_filterStructure(array $link, array $filter): bool
 {
+log_add('MARK in BL='.$link['bl'], 'normal', __FUNCTION__, '00000006');
+
+    foreach ($filter as $n => $f)
+    {
+        $a = $f;
+        if (is_string($f))
+            $a = array($f);
+        foreach ($a as $v)
+        {
+            if (isset($link[$n]) && $link[$n] != $v
+                || $v == '' && !isset($link[$n])
+            )
+                return false;
+        }
+    }
+    return true;
+
+
+
+
+
     $ok = false;
 
     // Positive filtering
@@ -2325,6 +2350,8 @@ function lnk_filterStructure(array $link, array $filter): bool
     if (isset($filter['!bs/rs1/eid']) && $link['bs/rs1/eid'] == $filter['!bs/rs1/eid'])
         $ok = false;
 
+if ($ok) log_add('MARK out ok=true', 'normal', __FUNCTION__, '00000007');
+else log_add('MARK out ok=false', 'normal', __FUNCTION__, '00000007');
     return $ok;
 }
 
@@ -2962,7 +2989,7 @@ function nod_getFirstName(string $nid): string
     if (isset($nebuleCacheReadEntityFName [$nid]))
         return $nebuleCacheReadEntityFName [$nid];
 
-    $type = nod_getByType($nid, 'nebule/objet/prenom');
+    $type = nod_getByType($nid, obj_getNID('nebule/objet/prenom', lib_getConfiguration('cryptoHashAlgorithm')));
     $text = obj_getAsText1line($type, 128);
 
     if (lib_getConfiguration('permitBufferIO'))
@@ -2983,7 +3010,8 @@ function nod_getName(string $nid): string
     if (isset($nebuleCacheReadEntityName [$nid]))
         return $nebuleCacheReadEntityName [$nid];
 
-    $type = nod_getByType($nid, 'nebule/objet/nom');
+log_add('MARK get name nid='.$nid.' --------------------------------------------------------', 'normal', __FUNCTION__, '00000005');
+    $type = nod_getByType($nid, obj_getNID('nebule/objet/nom', lib_getConfiguration('cryptoHashAlgorithm')));
     $text = obj_getAsText1line($type, 128);
 
     if (lib_getConfiguration('permitBufferIO'))
@@ -3004,7 +3032,7 @@ function nod_getPostName(string $nid): string
     if (isset($nebuleCacheReadEntityPName [$nid]))
         return $nebuleCacheReadEntityPName [$nid];
 
-    $type = nod_getByType($nid, 'nebule/objet/postnom');
+    $type = nod_getByType($nid, obj_getNID('nebule/objet/postnom', lib_getConfiguration('cryptoHashAlgorithm')));
     $text = obj_getAsText1line($type, 128);
 
     if (lib_getConfiguration('permitBufferIO'))
@@ -3016,18 +3044,17 @@ function nod_getPostName(string $nid): string
  * Find OID with content for the type of the NID.
  *
  * @param string $nid
- * @param string $type
+ * @param string $rid
  * @return string
  */
-function nod_getByType(string $nid, string $type): string
+function nod_getByType(string $nid, string $rid): string
 {
     global $nebuleCacheFindObjType;
 
-    if (isset($nebuleCacheFindObjType [$nid] [$type]))
-        return $nebuleCacheFindObjType [$nid] [$type];
+//    if (isset($nebuleCacheFindObjType [$nid] [$rid]))
+//        return $nebuleCacheFindObjType [$nid] [$rid];
 
     $links = array();
-    $rid = obj_getNID($type, lib_getConfiguration('cryptoHashAlgorithm'));
     $filter = array(
         'bl/rl/req' => 'l',
         'bl/rl/nid1' => $nid,
@@ -3037,8 +3064,9 @@ function nod_getByType(string $nid, string $type): string
     lnk_getList($nid, $links, $filter, false);
 
     foreach ($links as $link) {
+log_add('MARK get by type nid1='.$nid.' nid2='.$link['bl/rl/nid2'].' $nid3='.$rid, 'normal', __FUNCTION__, '00000001');
         if (lib_getConfiguration('permitBufferIO'))
-            $nebuleCacheFindObjType [$nid] [$type] = $link['bl/rl/nid2'];
+            $nebuleCacheFindObjType [$nid] [$rid] = $link['bl/rl/nid2'];
         return $link['bl/rl/nid2'];
     }
     return '';
@@ -3469,17 +3497,14 @@ function ent_getFullName(string $nid): string
     $fname = nod_getFirstName($nid);
     $name = nod_getName($nid);
     $pname = nod_getPostName($nid);
-    if ($name == '') {
+    if ($name == '')
         $fullname = "$nid";
-    } else {
+    else
         $fullname = $name;
-    }
-    if ($fname != '') {
+    if ($fname != '')
         $fullname = "$fname $fullname";
-    }
-    if ($pname != '') {
+    if ($pname != '')
         $fullname = "$fullname $pname";
-    }
 
     if (lib_getConfiguration('permitBufferIO'))
         $nebuleCacheReadEntityFullName [$nid] = $fullname;
@@ -6446,11 +6471,13 @@ function bootstrap_firstDisplay9LocaleEntity(): bool
 
         // Generate new password for new local entity.
         $nebulePasswordEntity = '';
-        $genpasswd = openssl_random_pseudo_bytes(LIB_FIRST_GENERATED_PASSWORD_SIZE * 20);
-        $nebulePasswordEntity .= preg_replace('/[^[:print:]]/', '', $genpasswd);
+        $newPasswd = openssl_random_pseudo_bytes(LIB_FIRST_GENERATED_PASSWORD_SIZE * 20);
+        $nebulePasswordEntity .= preg_replace('/[^[:print:]]/', '', $newPasswd);
         $nebulePasswordEntity = (string)substr($nebulePasswordEntity, 0, LIB_FIRST_GENERATED_PASSWORD_SIZE);
-        $genpasswd = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
-        $genpasswd = null;
+        /** @noinspection PhpUnusedLocalVariableInspection */
+        $newPasswd = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
+        /** @noinspection PhpUnusedLocalVariableInspection */
+        $newPasswd = null;
 
         $nebulePublicEntity = '0';
         $nebulePrivateEntity = '0';
@@ -6514,10 +6541,12 @@ function bootstrap_firstDisplay9LocaleEntity(): bool
 
         // Enregistrement du nom.
         obj_setContentAsText($name);
-        $refHashName = obj_getNID('nebule/objet/nom', lib_getConfiguration('cryptoHashAlgorithm'));
-        $hashName = obj_getNID($name, lib_getConfiguration('cryptoHashAlgorithm'));
-        $newlink = lnk_generateSign('', 'l', $nebulePublicEntity, $hashName, $refHashName);
-        lnk_write($newlink);
+        $newLink = lnk_generateSign('',
+            'l',
+            $nebulePublicEntity,
+            obj_getNID($name, lib_getConfiguration('cryptoHashAlgorithm')),
+            obj_getNID('nebule/objet/nom', lib_getConfiguration('cryptoHashAlgorithm')));
+        lnk_write($newLink);
 
         ?>
 
