@@ -3258,6 +3258,7 @@ class Node implements nodeInterface
      */
     public function getLinks(array &$links, array $filter, ?bool $withInvalidLinks = null): void
     {
+$this->_metrology->addLog('MARK -------------------------- id=' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         if ($this->_id == '0'
             || !$this->_io->checkLinkPresent($this->_id)
         )
@@ -3270,6 +3271,7 @@ class Node implements nodeInterface
         if (sizeof($lines) == 0)
             return;
 
+$this->_metrology->addLog('MARK lines count=' . sizeof($lines), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         foreach ($lines as $line)
         {
             $bloc = $this->_cache->newLink($line, Cache::TYPE_LINK);
@@ -3277,6 +3279,7 @@ class Node implements nodeInterface
                 && ( $bloc->getValid() || $withInvalidLinks )
             )
             {
+$this->_metrology->addLog('MARK line=' . substr($line,0,600), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
                 $newLinks = $bloc->getLinks();
                 $this->_filterLinksByStructure($newLinks, $filter);
                 $links = array_merge($links, $newLinks);
@@ -3284,6 +3287,7 @@ class Node implements nodeInterface
             else
                 $this->_cache->unsetCache($line, Cache::TYPE_BLOCLINK);
         }
+$this->_metrology->addLog('MARK links count=' . sizeof($links), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
     }
 
     protected function _filterLinksByStructure(array &$links, array $filter): void
@@ -3318,9 +3322,13 @@ class Node implements nodeInterface
                 if (isset($parsedLink[$n]) && $parsedLink[$n] != $v
                     || $v == '' && !isset($parsedLink[$n])
                 )
+                {
+$this->_metrology->addLog('MARK filter=false v=' . $v, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
                     return false;
+                }
             }
         }
+$this->_metrology->addLog('MARK filter=true v=' . $v, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         return true;
     }
 

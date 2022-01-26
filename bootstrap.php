@@ -12,7 +12,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220125';
+const BOOTSTRAP_VERSION = '020220126';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -1989,7 +1989,6 @@ function lnk_sign(string $bh_bl): string
 
     if ($bh_bl == '')
         return '';
-    log_add('MARK sign BH_BL='.$bh_bl, 'normal', __FUNCTION__, '00000003');
 
     if (!ent_checkIsPublicKey($nebulePublicEntity)) {
         log_add('invalid current entity (public) ' . $nebulePublicEntity, 'error', __FUNCTION__, '70e110d7');
@@ -2175,8 +2174,6 @@ function lnk_getList(string $nid, array &$links, array $filter, bool $withInvali
             $link = lnk_parse($line);
             if (lnk_checkNotSuppressed($link, $lines) && lnk_filterStructure($link, $filter))
                 $links [] = $link;
-if (lnk_checkNotSuppressed($link, $lines) && lnk_filterStructure($link, $filter))
-    log_add('MARK nid='.$nid.' nid1='.$link['bl/rl/nid1'].' nid2='.$link['bl/rl/nid2'].' $nid3='.$link['bl/rl/nid3'], 'normal', __FUNCTION__, '00000002');
         }
     }
 
@@ -2187,7 +2184,6 @@ if (lnk_checkNotSuppressed($link, $lines) && lnk_filterStructure($link, $filter)
     // Social filter.
     if (!$withInvalidLinks)
         lnk_filterBySigners($links, $validSigners);
-log_add('MARK nid='.$nid.' size='.sizeof($links), 'normal', __FUNCTION__, '00000004');
 }
 
 function lnk_checkExist(string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): bool
@@ -2276,8 +2272,6 @@ function lnk_dateCompare(string $mod1, string $chr1, string $mod2, string $chr2)
  */
 function lnk_filterStructure(array $link, array $filter): bool
 {
-log_add('MARK in BL='.$link['bl'], 'normal', __FUNCTION__, '00000006');
-
     foreach ($filter as $n => $f)
     {
         $a = $f;
@@ -2288,13 +2282,9 @@ log_add('MARK in BL='.$link['bl'], 'normal', __FUNCTION__, '00000006');
             if (isset($link[$n]) && $link[$n] != $v
                 || $v == '' && !isset($link[$n])
             )
-            {
-                log_add('MARK out ok=false', 'normal', __FUNCTION__, '00000007');
                 return false;
-            }
         }
     }
-log_add('MARK out ok=true', 'normal', __FUNCTION__, '00000007');
     return true;
 }
 
@@ -2953,7 +2943,6 @@ function nod_getName(string $nid): string
     if (isset($nebuleCacheReadEntityName [$nid]))
         return $nebuleCacheReadEntityName [$nid];
 
-log_add('MARK get name nid='.$nid.' --------------------------------------------------------', 'normal', __FUNCTION__, '00000005');
     $type = nod_getByType($nid, obj_getNID('nebule/objet/nom', lib_getConfiguration('cryptoHashAlgorithm')));
     $text = obj_getAsText1line($type, 128);
 
@@ -3007,7 +2996,6 @@ function nod_getByType(string $nid, string $rid): string
     lnk_getList($nid, $links, $filter, false);
 
     foreach ($links as $link) {
-log_add('MARK get by type nid1='.$nid.' nid2='.$link['bl/rl/nid2'].' $nid3='.$rid, 'normal', __FUNCTION__, '00000001');
         if (lib_getConfiguration('permitBufferIO'))
             $nebuleCacheFindObjType [$nid] [$rid] = $link['bl/rl/nid2'];
         return $link['bl/rl/nid2'];
@@ -4537,7 +4525,6 @@ function bootstrap_getCheckFingerprint(): void
         'bl/rl/nid3' => $codeBranchNID,
         'bl/rl/nid4' => '',
     );
-    log_add('MARK get f>'.LIB_RID_INTERFACE_BOOTSTRAP.'>'.$hash.'>'.$codeBranchNID, 'normal', __FUNCTION__, '00000000');
     lnk_getList($hash, $links, $filter, false);
     lnk_filterBySigners($links, $nebuleLocalAuthorities);
 

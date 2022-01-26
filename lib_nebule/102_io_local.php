@@ -183,8 +183,9 @@ class ioLocal extends io implements ioInterface
     public function checkLinksRead(string $url = ''): bool
     {
         $file = nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . Configuration::OPTIONS_DEFAULT_VALUE['puppetmaster'];
-        $result = false;
 
+        if (!file_exists($file))
+            return false;
         $data = file_get_contents($file, false, null, 0, 16);
         if ($data === false)
             return false;
@@ -199,7 +200,6 @@ class ioLocal extends io implements ioInterface
     public function checkLinksWrite(string $url = ''): bool
     {
         $file = nebule::NEBULE_LOCAL_LINKS_FOLDER . '/0';
-        $resultCreate = false;
         $resultDelete = false;
 
         // Test la création si pas déjà présent.
@@ -227,8 +227,9 @@ class ioLocal extends io implements ioInterface
     public function checkObjectsRead(string $url = ''): bool
     {
         $file = nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Configuration::OPTIONS_DEFAULT_VALUE['puppetmaster'];
-        $result = false;
 
+        if (!file_exists($file))
+            return false;
         $data = file_get_contents($file, false, null, 0, 16);
         if ($data === false)
             return false;
@@ -243,7 +244,6 @@ class ioLocal extends io implements ioInterface
     public function checkObjectsWrite(string $url = ''): bool
     {
         $file = nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/0';
-        $resultCreate = false;
         $resultDelete = false;
 
         // Test la création si pas déjà présent.

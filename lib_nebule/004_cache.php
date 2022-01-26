@@ -376,7 +376,10 @@ class Cache
      */
     public function getCacheObjectSize(): int
     {
-        return sizeof($this->_cache[self::TYPE_NODE]);
+        if (isset($this->_cache[self::TYPE_NODE]))
+            return sizeof($this->_cache[self::TYPE_NODE]);
+        else
+            return 0;
     }
 
     /**
@@ -398,7 +401,10 @@ class Cache
      */
     public function getCacheEntitySize(): int
     {
-        return sizeof($this->_cache[self::TYPE_ENTITY]);
+        if (isset($this->_cache[self::TYPE_ENTITY]))
+            return sizeof($this->_cache[self::TYPE_ENTITY]);
+        else
+            return 0;
     }
 
     /**
@@ -420,7 +426,10 @@ class Cache
      */
     public function getCacheGroupSize(): int
     {
-        return sizeof($this->_cache[self::TYPE_GROUP]);
+        if (isset($this->_cache[self::TYPE_GROUP]))
+            return sizeof($this->_cache[self::TYPE_GROUP]);
+        else
+            return 0;
     }
 
     /**
@@ -441,7 +450,10 @@ class Cache
      */
     public function getCacheConversationSize(): int
     {
-        return sizeof($this->_cache[self::TYPE_CONVERSATION]);
+        if (isset($this->_cache[self::TYPE_CONVERSATION]))
+            return sizeof($this->_cache[self::TYPE_CONVERSATION]);
+        else
+            return 0;
     }
 
     /**
@@ -463,7 +475,10 @@ class Cache
      */
     public function getCacheCurrencySize(): int
     {
-        return sizeof($this->_cache[self::TYPE_CURRENCY]);
+        if (isset($this->_cache[self::TYPE_CURRENCY]))
+            return sizeof($this->_cache[self::TYPE_CURRENCY]);
+        else
+            return 0;
     }
 
     /**
@@ -485,7 +500,10 @@ class Cache
      */
     public function getCacheTokenSize(): int
     {
-        return sizeof($this->_cache[self::TYPE_TOKEN]);
+        if (isset($this->_cache[self::TYPE_TOKEN]))
+            return sizeof($this->_cache[self::TYPE_TOKEN]);
+        else
+            return 0;
     }
 
     /**
@@ -507,7 +525,10 @@ class Cache
      */
     public function getCacheTokenPoolSize(): int
     {
-        return sizeof($this->_cache[self::TYPE_TOKENPOOL]);
+        if (isset($this->_cache[self::TYPE_TOKENPOOL]))
+            return sizeof($this->_cache[self::TYPE_TOKENPOOL]);
+        else
+            return 0;
     }
 
     /**
@@ -529,7 +550,10 @@ class Cache
      */
     public function getCacheWalletSize(): int
     {
-        return sizeof($this->_cache[self::TYPE_WALLET]);
+        if (isset($this->_cache[self::TYPE_WALLET]))
+            return sizeof($this->_cache[self::TYPE_WALLET]);
+        else
+            return 0;
     }
 
 
@@ -593,6 +617,9 @@ class Cache
      */
     public function getCacheLinkSize(): int
     {
-        return sizeof($this->_cache[self::TYPE_LINK]);
+        if (isset($this->_cache[self::TYPE_LINK]))
+            return sizeof($this->_cache[self::TYPE_LINK]);
+        else
+            return 0;
     }
 }

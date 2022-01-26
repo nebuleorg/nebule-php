@@ -26,7 +26,7 @@ class io implements ioInterface
     private $_listMode = array();
     private $_listInstances = array();
     private $_listTypes = array();
-    private $_listModes = '';
+    private $_listModes = array();
 
     /**
      * Instance de la bibliothèque nebule.
