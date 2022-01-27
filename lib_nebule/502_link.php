@@ -202,22 +202,26 @@ class Link implements linkInterface
         if (!$this->_checkREQ($req)) return false;
         $this->_parsedLink['bl/rl/req'] = $req;
 
-        $rl1nid = strtok('/');
+        $rl1nid = strtok('>');
         if (is_bool($rl1nid)) return false;
 
-        $j = 1;
+        $list = array();
+        $j = 0;
         while (!is_bool($rl1nid))
         {
-            if (!Node::checkNID($rl1nid, $j > 0)) return false;
-            $this->_parsedLink['bl/rl/nid'.$j] = $rl1nid;
-
+            $list[$j] = $rl1nid;
             $j++;
             if ($j > $this->_maxRLUID)
             {
                 $this->_metrology->addLog('BL/RL overflow '.substr($rl, 0, 60) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '72920c39');
                 return false;
             }
-            $rl1nid = strtok('/');
+            $rl1nid = strtok('>');
+        }
+        foreach ($list as $j => $nid)
+        {
+            if (!Node::checkNID($nid, $j > 0)) return false;
+            $this->_parsedLink['bl/rl/nid'.$j] = $nid;
         }
 
         $this->_parsedLink['bl/rl'] = $rl;
@@ -368,6 +372,7 @@ class Link implements linkInterface
 
     /**
      * Retourne l'état de vérification et de validité du lien.
+     * Un état transitoire à true existe lors de la vérification initiale du bloc de liens en cours.
      *
      * @return boolean
      */
@@ -375,7 +380,7 @@ class Link implements linkInterface
     {
         $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'e56bcde6');
 
-        return $this->_blocLink->getValid() && $this->_valid;
+        return ( $this->_blocLink->getValid() || !$this->_blocLink->getCheckCompleted() ) && $this->_valid;
     }
 
     /**

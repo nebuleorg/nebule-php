@@ -12,7 +12,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220126';
+const BOOTSTRAP_VERSION = '020220127';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -575,7 +575,7 @@ const LIB_CONFIGURATIONS_DEFAULT = array(
     'modeRescue' => false,
     'cryptoLibrary' => 'openssl',
     'cryptoHashAlgorithm' => 'sha2.256',
-    'cryptoSymmetricAlgorithm' => 'aes-256-ctr',
+    'cryptoSymmetricAlgorithm' => 'aes.256.ctr',
     'cryptoAsymmetricAlgorithm' => 'rsa.2048',
     'socialLibrary' => 'strict',
     'ioLibrary' => 'ioFileSystem',

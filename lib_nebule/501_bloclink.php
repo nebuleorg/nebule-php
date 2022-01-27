@@ -112,6 +112,13 @@ class blocLink implements blocLinkInterface
     protected $_newLinkCount = 0;
 
     /**
+     * Booléen si le lien a été vérifié.
+     *
+     * @var boolean $_checkCompleted
+     */
+    protected $_checkCompleted = false;
+
+    /**
      * Booléen si le lien est vérifié et valide.
      *
      * @var boolean $_valid
@@ -220,19 +227,25 @@ class blocLink implements blocLinkInterface
         $bs = strtok('_');
         if (is_bool($bs)) return false;
 
+$this->_metrology->addLog('MARK parse 1 ' . $bl, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         // Check link overflow
         if (strtok('_') !== false) return false;
 
+$this->_metrology->addLog('MARK parse 2', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         // Check BH, BL and BS.
         //if (!$this->_checkBH($bh)) $this->_metrology->addLog('check link BH failed '.$link, Metrology::LOG_LEVEL_ERROR, __METHOD__, '80cbba4b');
         if (!$this->_checkBH($bh)) return false;
+$this->_metrology->addLog('MARK parse 3', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         //if (!$this->_checkBL($bl)) $this->_metrology->addLog('check link BL failed '.$link, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c5d22fda');
         if (!$this->_checkBL($bl)) return false;
+$this->_metrology->addLog('MARK parse 4', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         //if (!$this->_checkBS($bh, $bl, $bs)) $this->_metrology->addLog('check link BS failed '.$link, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2828e6ae');
         if (!$this->_newLink && !$this->_checkBS($bh, $bl, $bs)) return false;
 
+$this->_metrology->addLog('MARK parse 5', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $this->_parsedLink['link'] = $link;
         $this->_validStructure = true;
+        $this->_checkCompleted = true;
         return true;
     }
 
@@ -289,6 +302,17 @@ class blocLink implements blocLinkInterface
         $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '51d42c1b');
 
         return $this->_parsedLink;
+    }
+
+    /**
+     * Get if the link have been checked entirely.
+     * @return boolean
+     */
+    public function getCheckCompleted(): bool
+    {
+        $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '513a5ba1');
+
+        return $this->_checkCompleted;
     }
 
     /**
@@ -440,27 +464,24 @@ class blocLink implements blocLinkInterface
     {
         if (strlen($bl) > 4096) return false; // TODO à revoir.
 
+$this->_metrology->addLog('MARK checkBL 1', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $rc = strtok($bl, '/');
         if (is_bool($rc)) return false;
+$this->_metrology->addLog('MARK checkBL 2 '.$rc, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         //if (!$this->_checkRC($rc)) $this->_metrology->addLog('check link BL/RC failed '.$bl, Metrology::LOG_LEVEL_ERROR, __METHOD__, '86a58996');
         if (!$this->_checkRC($rc)) return false;
 
+$this->_metrology->addLog('MARK checkBL 3', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        $rc = strtok($bl, '/');
         $rl = strtok('/');
         if (is_bool($rl)) return false;
 
-        $i = 1;
+$this->_metrology->addLog('MARK checkBL 4 '.$rl, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        $list = array();
+        $i = 0;
         while (!is_bool($rl))
         {
-            //if (!$this->_checkRL($rl, (string)$i))) $this->_metrology->addLog('check link BL/RL failed '.$bl, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd865ee87');
-            if (!$this->_checkRL($rl, (string)$i)) return false;
-            if ($this->_linksType == Cache::TYPE_TRANSACTION)
-                $instanceRL = new Transaction($this->_nebuleInstance, $rl, $this);
-            else
-                $instanceRL = new Link($this->_nebuleInstance, $rl, $this);
-            if (!$instanceRL->getValid()) return false;
-
-            $this->_links[] = $instanceRL;
-
+            $list[$i] = $rl;
             $i++;
             if ($i > $this->_maxRL)
             {
@@ -469,7 +490,23 @@ class blocLink implements blocLinkInterface
             }
             $rl = strtok('/');
         }
+        foreach ($list as $i => $rl)
+        {
+            //if (!$this->_checkRL($rl, (string)$i))) $this->_metrology->addLog('check link BL/RL failed '.$bl, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd865ee87');
+            if (!$this->_checkRL($rl, (string)($i+1))) return false;
+$this->_metrology->addLog('MARK checkBL 5', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            if ($this->_linksType == Cache::TYPE_TRANSACTION)
+                $instanceRL = new Transaction($this->_nebuleInstance, $rl, $this);
+            else
+                $instanceRL = new Link($this->_nebuleInstance, $rl, $this);
+$this->_metrology->addLog('MARK checkBL 6', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            if (!$instanceRL->getValid()) return false;
 
+            $this->_links[] = $instanceRL;
+$this->_metrology->addLog('MARK checkBL 7', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        }
+
+$this->_metrology->addLog('MARK checkBL 8', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $this->_parsedLink['bl'] = $bl;
         return true;
     }
@@ -520,25 +557,29 @@ class blocLink implements blocLinkInterface
         if (!$this->_checkREQ($req, (string)$i)) return false;
         $this->_parsedLink["bl/rl$i/req"] = $req;
 
-        $rl1nid = strtok('/');
+        $rl1nid = strtok('>');
         if (is_bool($rl1nid)) return false;
 
-        $j = 1;
+        $list = array();
+        $j = 0;
         while (!is_bool($rl1nid))
         {
-            if (!Node::checkNID($rl1nid, $j > 0)) return false;
-            $this->_parsedLink["bl/rl$i/nid$j"] = $rl1nid;
-
+            $list[$j] = $rl1nid;
             $j++;
             if ($j > $this->_maxRLUID)
             {
-                $this->_metrology->addLog('BL/RL overflow '.substr($rl, 0, 60) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '72920c39');
+                $this->_metrology->addLog('BL/RL overflow '.substr($rl, 0, 60) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd0c9961a');
                 return false;
             }
-            $rl1nid = strtok('/');
+            $rl1nid = strtok('>');
+        }
+        foreach ($list as $j => $nid)
+        {
+            if (!Node::checkNID($nid, $j > 0)) return false;
+            $this->_parsedLink['bl/rl'.$i.'/nid'.$j] = $nid;
         }
 
-        $this->_parsedLink["bl/rl$i"] = $rl;
+        $this->_parsedLink['bl/rl'.$i] = $rl;
         return true;
     }
 
