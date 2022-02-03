@@ -227,22 +227,18 @@ class blocLink implements blocLinkInterface
         $bs = strtok('_');
         if (is_bool($bs)) return false;
 
-$this->_metrology->addLog('MARK parse 1 ' . $bl, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         // Check link overflow
         if (strtok('_') !== false) return false;
 
-$this->_metrology->addLog('MARK parse 2', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         // Check BH, BL and BS.
         //if (!$this->_checkBH($bh)) $this->_metrology->addLog('check link BH failed '.$link, Metrology::LOG_LEVEL_ERROR, __METHOD__, '80cbba4b');
         if (!$this->_checkBH($bh)) return false;
-$this->_metrology->addLog('MARK parse 3', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         //if (!$this->_checkBL($bl)) $this->_metrology->addLog('check link BL failed '.$link, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c5d22fda');
         if (!$this->_checkBL($bl)) return false;
-$this->_metrology->addLog('MARK parse 4', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         //if (!$this->_checkBS($bh, $bl, $bs)) $this->_metrology->addLog('check link BS failed '.$link, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2828e6ae');
-        if (!$this->_newLink && !$this->_checkBS($bh, $bl, $bs)) return false;
+        $bh_bl = $bh . '_' . $bl;
+        if (!$this->_newLink && !$this->_checkBS($bh_bl, $bs)) return false;
 
-$this->_metrology->addLog('MARK parse 5', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $this->_parsedLink['link'] = $link;
         $this->_validStructure = true;
         $this->_checkCompleted = true;
@@ -464,19 +460,15 @@ $this->_metrology->addLog('MARK parse 5', Metrology::LOG_LEVEL_NORMAL, __FUNCTIO
     {
         if (strlen($bl) > 4096) return false; // TODO à revoir.
 
-$this->_metrology->addLog('MARK checkBL 1', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $rc = strtok($bl, '/');
         if (is_bool($rc)) return false;
-$this->_metrology->addLog('MARK checkBL 2 '.$rc, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         //if (!$this->_checkRC($rc)) $this->_metrology->addLog('check link BL/RC failed '.$bl, Metrology::LOG_LEVEL_ERROR, __METHOD__, '86a58996');
         if (!$this->_checkRC($rc)) return false;
 
-$this->_metrology->addLog('MARK checkBL 3', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $rc = strtok($bl, '/');
         $rl = strtok('/');
         if (is_bool($rl)) return false;
 
-$this->_metrology->addLog('MARK checkBL 4 '.$rl, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $list = array();
         $i = 0;
         while (!is_bool($rl))
@@ -494,19 +486,15 @@ $this->_metrology->addLog('MARK checkBL 4 '.$rl, Metrology::LOG_LEVEL_NORMAL, __
         {
             //if (!$this->_checkRL($rl, (string)$i))) $this->_metrology->addLog('check link BL/RL failed '.$bl, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd865ee87');
             if (!$this->_checkRL($rl, (string)($i+1))) return false;
-$this->_metrology->addLog('MARK checkBL 5', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             if ($this->_linksType == Cache::TYPE_TRANSACTION)
                 $instanceRL = new Transaction($this->_nebuleInstance, $rl, $this);
             else
                 $instanceRL = new Link($this->_nebuleInstance, $rl, $this);
-$this->_metrology->addLog('MARK checkBL 6', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             if (!$instanceRL->getValid()) return false;
 
             $this->_links[] = $instanceRL;
-$this->_metrology->addLog('MARK checkBL 7', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         }
 
-$this->_metrology->addLog('MARK checkBL 8', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $this->_parsedLink['bl'] = $bl;
         return true;
     }
@@ -612,12 +600,11 @@ $this->_metrology->addLog('MARK checkBL 8', Metrology::LOG_LEVEL_NORMAL, __FUNCT
      * Check block BS on link.
      * TODO make a loop on many RS avoid attack on link signs fusion.
      *
-     * @param string $bh
-     * @param string $bl
+     * @param string $bh_bl
      * @param string $bs
      * @return bool
      */
-    protected function _checkBS(string &$bh, string &$bl, string &$bs): bool
+    protected function _checkBS(string &$bh_bl, string &$bs): bool
     {
         if (strlen($bs) > 4096) return false; // TODO à revoir.
 
@@ -628,10 +615,10 @@ $this->_metrology->addLog('MARK checkBL 8', Metrology::LOG_LEVEL_NORMAL, __FUNCT
         while (!is_bool($rs))
         {
             //if (!$this->_checkRS($rs, $bh, $bl)) $this->_metrology->addLog('check link BS/RS failed '.$bs, Metrology::LOG_LEVEL_ERROR, __METHOD__, '0690f5ac');
-            if (!$this->_checkRS($rs, $bh, $bl, (string)$i)) return false;
+            if (!$this->_checkRS($rs, $bh_bl, (string)$i)) return false;
 
             $i++;
-            if ($i > $this->_maxRS)
+            if ($i - 1 > $this->_maxRS)
             {
                 $this->_metrology->addLog('BS overflow '.substr($bs, 0, 60) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '9f2e670f');
                 return false;
@@ -647,12 +634,11 @@ $this->_metrology->addLog('MARK checkBL 8', Metrology::LOG_LEVEL_NORMAL, __FUNCT
      * Check block RS on link.
      *
      * @param string $rs
-     * @param string $bh
-     * @param string $bl
+     * @param string $bh_bl
      * @param string $i
      * @return bool
      */
-    protected function _checkRS(string &$rs, string &$bh, string &$bl, string $i): bool
+    protected function _checkRS(string &$rs, string &$bh_bl, string $i): bool
     {
         if (strlen($rs) > 4096) return false; // TODO à revoir.
 
@@ -672,7 +658,7 @@ $this->_metrology->addLog('MARK checkBL 8', Metrology::LOG_LEVEL_NORMAL, __FUNCT
         $this->_parsedLink["bs/rs$i/eid"] = $nid;
 
         //if (!$this->_checkSIG($bh, $bl, $sig, $nid)) $this->_metrology->addLog('check link BS/RS1/SIG failed '.$rs, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e99ec81f');
-        if (!$this->_checkSIG($bh, $bl, $sig, $nid, (string)$i)) return false;
+        if (!$this->_checkSIG($bh_bl, $sig, $nid, (string)$i)) return false;
 
         $this->_parsedLink["bs/rs$i"] = $rs;
         return true;
@@ -681,14 +667,13 @@ $this->_metrology->addLog('MARK checkBL 8', Metrology::LOG_LEVEL_NORMAL, __FUNCT
     /**
      * Check block SIG on link.
      *
-     * @param string $bh
-     * @param string $bl
+     * @param string $bh_bl
      * @param string $sig
      * @param string $nid
      * @param string $i
      * @return boolean
      */
-    protected function _checkSIG(string &$bh, string &$bl, string &$sig, string &$nid, string $i): bool
+    protected function _checkSIG(string &$bh_bl, string &$sig, string &$nid, string $i): bool
     {
         if (strlen($sig) > 4096) return false; // TODO à revoir.
 
@@ -719,8 +704,7 @@ $this->_metrology->addLog('MARK checkBL 8', Metrology::LOG_LEVEL_NORMAL, __FUNCT
 
         if (!$this->_configuration->getOptionAsBoolean('permitCheckSignOnVerify')) return true;
         if ($this->_checkObjectContent($nid)) {
-            $data = $bh . '_' . $bl;
-            $hash = $this->_crypto->hash($data, $algo . '.' . $size);
+            $hash = $this->_crypto->hash($bh_bl, $algo . '.' . $size);
             $publicKey = $this->_io->getObject($nid);
 
             if ($this->_crypto->verify($hash, $sign, $publicKey))
@@ -734,8 +718,11 @@ $this->_metrology->addLog('MARK checkBL 8', Metrology::LOG_LEVEL_NORMAL, __FUNCT
 
     protected function _checkObjectContent($oid): bool
     {
-        // TODO
-        return false;
+        if (!Node::checkNID($oid, false)
+            || !$this->_io->checkObjectPresent($oid)
+        )
+            return false;
+        return true;
     }
 
     /**
@@ -815,7 +802,8 @@ $this->_metrology->addLog('MARK checkBL 8', Metrology::LOG_LEVEL_NORMAL, __FUNCT
             {
                 $bs = $publicKeyID . '>' . $sign;
                 $this->_parsedLink['bs'] = $bs;
-                $this->_checkBS($bh, $bl, $bs);
+                $bh_bl = $bh . '_' . $bl;
+                $this->_checkBS($bh_bl, $bs);
                 $this->_rawBlocLink .= $bs;
                 $this->_parsedLink['link'] = $this->_rawBlocLink;
                 $this->_signed = true;

@@ -221,7 +221,7 @@ class Link implements linkInterface
         foreach ($list as $j => $nid)
         {
             if (!Node::checkNID($nid, $j > 0)) return false;
-            $this->_parsedLink['bl/rl/nid'.$j] = $nid;
+            $this->_parsedLink['bl/rl/nid'.($j+1)] = $nid;
         }
 
         $this->_parsedLink['bl/rl'] = $rl;

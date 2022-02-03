@@ -12,7 +12,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220127';
+const BOOTSTRAP_VERSION = '020220203';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -1927,7 +1927,7 @@ function crypto_asymmetricVerify(string $sign, string $hash, string $nid): bool
 
     // Decode sign with public key.
     if (openssl_public_decrypt($binsign, $bindecrypted, $pubkeyid, OPENSSL_PKCS1_PADDING)) {
-        $decrypted = (substr(bin2hex($bindecrypted), -$hashsize, $hashsize));
+        $decrypted = substr(bin2hex($bindecrypted), -$hashsize, $hashsize);
         //log_add('decrypt RSA ' . $decrypted . '/' . $hash, 'error', __FUNCTION__, 'd4c712ea');
         if ($decrypted == $hash)
             return true;
