@@ -70,20 +70,21 @@ interface blocLinkInterface
 
     /**
      * Get validity state of the link.
-     *
+     * At this state, the link structure and the signs have been checked. The link is fully usable.
      * @return boolean
      */
     public function getValid(): bool;
 
     /**
      * Get validity state of the structure of the link.
-     *
+     * At this state, the link is fully understand but signs are not necessary checked.
      * @return boolean
      */
     public function getValidStructure(): bool;
 
     /**
-     * Retourne si le lien est signé et si la signature est valide.
+     * Get the status of the signs of the link.
+     * If we have many, all signs are not necessary valid but one of them have been checked as valid.
      * @return boolean
      */
     public function getSigned(): bool;
