@@ -9,7 +9,7 @@ $nebuleSurname = 'nebule/library';
 /** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleDescription = 'Library of functions for nebule in php object-oriented.';
 $nebuleAuthor = 'Projet nebule';
-$nebuleLibVersion = '020220203';
+$nebuleLibVersion = '020220205';
 $nebuleLicence = 'GNU GPL 2010-2021';
 $nebuleWebsite = 'www.nebule.org';
 // ----------------------------------------------------------------------------------------

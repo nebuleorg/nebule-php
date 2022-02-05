@@ -3274,7 +3274,7 @@ class Node implements nodeInterface
         {
             $bloc = $this->_cache->newLink($line, Cache::TYPE_LINK);
             if ($bloc->getValidStructure()
-            //    && ( $bloc->getValid() || $withInvalidLinks )
+                && ( $bloc->getValid() || $withInvalidLinks )
             )
             {
                 $newLinks = $bloc->getLinks();

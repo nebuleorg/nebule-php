@@ -209,6 +209,7 @@ class blocLink implements blocLinkInterface
 
     /**
      * Verify and parse links on bloc.
+     * After parsing, a bloc link is valid only if structure and one signe are both valid.
      *
      * @param string $link
      * @return bool
@@ -242,6 +243,7 @@ class blocLink implements blocLinkInterface
         $this->_parsedLink['link'] = $link;
         $this->_validStructure = true;
         $this->_checkCompleted = true;
+        if ($this->_signed) $this->_valid = true;
         return true;
     }
 
@@ -615,7 +617,8 @@ class blocLink implements blocLinkInterface
         while (!is_bool($rs))
         {
             //if (!$this->_checkRS($rs, $bh, $bl)) $this->_metrology->addLog('check link BS/RS failed '.$bs, Metrology::LOG_LEVEL_ERROR, __METHOD__, '0690f5ac');
-            if (!$this->_checkRS($rs, $bh_bl, (string)$i)) return false;
+            //if (!$this->_checkRS($rs, $bh_bl, (string)$i)) return false;
+            $this->_checkRS($rs, $bh_bl, (string)$i); // Do not quit on invalid sign, just need one of them ok.
 
             $i++;
             if ($i - 1 > $this->_maxRS)
@@ -661,6 +664,7 @@ class blocLink implements blocLinkInterface
         if (!$this->_checkSIG($bh_bl, $sig, $nid, (string)$i)) return false;
 
         $this->_parsedLink["bs/rs$i"] = $rs;
+        $this->_signed = true;
         return true;
     }
 
