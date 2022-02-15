@@ -105,7 +105,7 @@ class blocLink implements blocLinkInterface
     protected $_newLink = false;
 
     /**
-     * Nombre de lien ajoutés.
+     * Nombre de liens ajoutés.
      *
      * @var int $_newLinkCount
      */
@@ -193,7 +193,7 @@ class blocLink implements blocLinkInterface
     }
 
     /**
-     * Fonction de réveil de l'instance et de ré-initialisation de certaines variables non sauvegardées.
+     * Fonction de réveil de l'instance et de réinitialisation de certaines variables non sauvegardées.
      *
      * @return void
      */
@@ -544,7 +544,7 @@ class blocLink implements blocLinkInterface
         // Extract items from RL : REQ>NID>NID>NID>NID...
         $req = strtok($rl, '>');
         if (is_bool($req)) return false;
-        if (!$this->_checkREQ($req, (string)$i)) return false;
+        if (!$this->_checkREQ($req, $i)) return false;
         $this->_parsedLink["bl/rl$i/req"] = $req;
 
         $rl1nid = strtok('>');
@@ -661,7 +661,7 @@ class blocLink implements blocLinkInterface
         $this->_parsedLink["bs/rs$i/eid"] = $nid;
 
         //if (!$this->_checkSIG($bh, $bl, $sig, $nid)) $this->_metrology->addLog('check link BS/RS1/SIG failed '.$rs, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e99ec81f');
-        if (!$this->_checkSIG($bh_bl, $sig, $nid, (string)$i)) return false;
+        if (!$this->_checkSIG($bh_bl, $sig, $nid, $i)) return false;
 
         $this->_parsedLink["bs/rs$i"] = $rs;
         $this->_signed = true;
@@ -889,7 +889,7 @@ class blocLink implements blocLinkInterface
 
 
     /**
-     * Affiche la partie menu de la documentation.
+     * Affiche la partie du menu de la documentation.
      *
      * @return void
      */
@@ -995,13 +995,13 @@ class blocLink implements blocLinkInterface
         <h2 id="le">BE / Entête</h2>
         <p>L’entête des liens est constitué du texte <code>nebule/liens/version/1.2</code>. Il est séparé du premier
             lien soit par un caractère espace «&nbsp;», soit par un retour chariot «&nbsp;\n&nbsp;».</p>
-        <p>Il doit être transmit avec les liens, en premier.</p>
+        <p>Il doit être transmis avec les liens, en premier.</p>
 
         <h2 id="lr">BR / Registre</h2>
         <p>Le registre du lien décrit la syntaxe du lien :</p>
         <p style="text-align:center">
             <code>Signature_HashSignataire_TimeStamp_Action_HashSource_HashCible_HashMeta</code></p>
-        <p>Ce registre a un nombre de champs fixe. Chaque champs a une place fixe dans le lien. Les champs ont une
+        <p>Ce registre a un nombre de champs fixe. Chaque champ a une place fixe dans le lien. Les champs ont une
             taille variable. Le séparateur de champs est l’underscore «&nbsp;_&nbsp;». Les champs ne peuvent contenir ni
             l’underscore «&nbsp;_&nbsp;» ni l’espace &nbsp;» &nbsp;» ni le retour chariot «&nbsp;\n&nbsp;».</p>
         <p>Tout lien qui ne respecte pas cette syntaxe est à considérer comme invalide et à supprimer. Tout lien dont la
@@ -1035,7 +1035,7 @@ class blocLink implements blocLinkInterface
         <h3 id="lra">BRA / Le champs <code>Action</code></h3>
         <p>Le champs <code>Action</code> détermine la façon dont le lien doit être utilisé.</p>
         <p>Quand on parle du type d’un lien, on fait référence à son champs <code>Action</code>.</p>
-        <p>L’interprétation de ce champs est limité au premier caractère. Des caractères alpha-numériques supplémentaires
+        <p>L’interprétation de ce champ est limité au premier caractère. Des caractères alpha-numériques supplémentaires
             sont autorisés mais ignorés.</p>
         <p>Cette interprétation est basée sur un vocabulaire particulier. Ce vocabulaire est spécifique à <i>nebule
                 v1.2</i> (et <i>nebule v1.1</i>).</p>
@@ -1066,7 +1066,7 @@ class blocLink implements blocLinkInterface
         <p>L’objet est marqué comme à supprimer d’un ou de tous ses emplacements de stockage.</p>
         <p><code>d</code> comme <i>delete</i>.</p>
         <p>Le champs <code>HashCible</code> <span style="text-decoration: underline;">peut</span> être nuls, c'est-à-dire égal à <code>0</code>.
-            Si non nul, ce champs doit contenir une entité destinataire de <i>l’ordre</i> de
+            Si non nul, ce champ doit contenir une entité destinataire de <i>l’ordre</i> de
             suppression. C’est utilisé pour demander à une entité relaie de supprimer un objet spécifique. Cela peut
             être utilisé pour demander à une entité en règle générale de bien vouloir supprimer l’objet, ce qui n’est
             pas forcément exécuté.</p>
@@ -1087,7 +1087,7 @@ class blocLink implements blocLinkInterface
         <p>Ce lien de dissimulation contient un lien dissimulé sans signature. Il permet d’offusquer des liens entre
             objets et donc d’anonymiser certaines actions de l’entité (cf <a href="#ckl">CKL</a>).</p>
         <p>Le champs <code>HashSource</code> fait référence à l’entité destinataire du lien, celle qui peut le
-            déchiffrer. A part le champs de l’entité signataire, c’est le seul champs qui fait référence à un objet.</p>
+            déchiffrer. A part le champ de l’entité signataire, c’est le seul champ qui fait référence à un objet.</p>
         <p>Le champs <code>HashCible</code> ne contient pas la référence d’un objet mais le lien chiffré et encodé en
             hexadécimal. Le chiffrement est de type symétrique avec la clé de session. Le lien offusqué n’a pas grand
             intérêt en lui-même, c’est le lien déchiffré qui en a.</p>
@@ -1190,19 +1190,19 @@ class blocLink implements blocLinkInterface
             rejeté. Son stockage et sa transmission ont cependant quelques particularités.</p>
         <p>Les champs <code>Signature</code> (cf <a href="#lrsi">BRSI</a>) et <code>HashSignataire</code> (cf <a
                 href="#lrhsi">BRHSI</a>) du registre sont conformes aux autres liens. Ils assurent la protection du
-            lien. Le champs signataire fait office d'émeteur du lien dissimulé.</p>
+            lien. Le champ signataire fait office d'émeteur du lien dissimulé.</p>
         <p>Le champs <code>TimeStamp</code> (cf <a href="#lrt">BRT</a>) du registre est conformes aux autres liens. Il a
             cependant une valeur non significative et sourtout pas liée au <code>TimeStamp</code> du lien dissimulé.</p>
         <p>Le champs <code>Action</code> (cf <a href="#lrt">BRT</a>) du registre est de type <code>c</code> (cf <a
                 href="#lra">BRA</a> et <a href="#lrac">BRAC</a>).</p>
         <p>Le champs <code>HashSource</code> fait référence à l’entité destinataire du lien, celle qui peut le
-            déchiffrer. A part le champs de l’entité signataire, c’est le seul champs qui fait référence à un objet.</p>
+            déchiffrer. A part le champ de l’entité signataire, c’est le seul champ qui fait référence à un objet.</p>
         <p>Le champs <code>HashCible</code> ne contient pas la référence d’un objet mais le lien chiffré et encodé en
             hexadécimal. Le chiffrement est de type symétrique avec la clé de session. Le lien offusqué n’a pas grand
             intérêt en lui-même, c’est le lien déchiffré qui en a.</p>
         <p>Le champs <code>HashMeta</code> ne contient pas la référence d’un objet mais la clé de chiffrement du lien,
             dite clé de session. Cette clé est chiffrée (asymétrique) pour l’entité destinataire et encodée en
-            hexadécimal. Chaque entités destinataires d'un lien de dissimulé doit disposer d'un lien de dissimulation
+            hexadécimal. Chaque entité destinataires d'un lien de dissimulé doit disposer d'un lien de dissimulation
             qui lui est propre.</p>
         <p>Le registre du lien de dissimulation :</p>
         <ul>

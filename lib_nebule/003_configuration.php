@@ -863,7 +863,11 @@ class Configuration
         if (self::OPTIONS_WRITABLE[$name]
             && $result === null
         )
-            $result = $this->_getOptionFromLinks($name);
+        {
+            $value = $this->_getOptionFromLinks($name);
+            if ($value != '')
+                $result = $value;
+        }
 
         if ($result === null
             && isset(self::OPTIONS_DEFAULT_VALUE[$name])

@@ -523,6 +523,7 @@ class Link implements linkInterface
 
         <li><a href="#l">L / Lien</a>
             <ul>
+                <li><a href="#ls">LS / Structure</a></li>
                 <li><a href="#lelpo">LELPO / Liens à Propos d’un Objet</a></li>
                 <li><a href="#lelco">LELCO / Liens Contenu dans un Objet</a></li>
                 <li><a href="#le">LE / Entête</a></li>
@@ -591,17 +592,46 @@ class Link implements linkInterface
         ?>
 
         <h1 id="l">L / Lien</h1>
+        <p>Le lien est la matérialisation dans un graphe d’une relation entre deux nœuds, généralement des objets.
+            Le type de cette relation est définie par un troisième objet, c'est la façon dont on va interpréter
+            la relation entre les deux premiers nœuds.
+            La relation peut être contextualisée avec un quatrième nœud, ou plus.</p>
+        <p>Dans le cas d'un lien à lien à deux ou trois nœuds, nous sommes dans un cas similaire à un
+            <a href="https://fr.wikipedia.org/wiki/Th%C3%A9orie_des_graphes">graphe</a> orienté tel qu'on
+            le trouve dans une base de données de type graphe. Nous retrouvons ce principe dans le Resource
+            Description Framework (<a href="https://fr.wikipedia.org/wiki/Resource_Description_Framework"RDF</p>a>).
+            À une différence près cependant, c'est qu'ici le lien ne contient que des identifiants de nœuds et non des
+            contenus.</p>
+        <p>Dans le cas d'un lien avec plus de 3 nœuds, nous sommes dans un
+            <a href="https://fr.wikipedia.org/wiki/Hypergraphe">hypergraphe</a> orienté. Vu l'usage qu'il est fait des
+            nœuds dans les liens, nous pouvons cependant déjà considérer que nous sommes dans un hypergraphe au-delà
+            de deux nœuds.</p>
+        <p>Le lien ne porte pas son autoprotection. Il est enregistré dans un bloc de liens qui se charge de faire
+            cohabiter et de protéger un ou plusieurs liens.</p>
+
+        <h2 id="ls">LS / Structure</h2>
+        <p>Chaque lien est écrit dans ce que l'on appelle un registre de lien. Ce registre va comprendre plusieurs
+            champs. Le premier champ est dit requête d'action. Il est suivi par les champs contenant les identifiants
+            des nœuds dans l'ordre d'usage (graphe orienté).</p>
+        <p>La requête d'action est obligatoire et est unique pour un registre de lien.</p>
+        <p>Dans le registre, chaque champ est séparé des autres par le caractère «&nbsp;&gt;&nbsp;». Le nombre de champs
+            exploitable, sans compter la requête d'action, est limité par l'option <i>linkMaxRLUID</i>. Si le nombre de
+            champs du registre est supérieur à la valeur limite, le lien est déclaré invalide.</p>
+        <p>la forme du registre de lien :</p>
+        <p align="center"><code>REQ>NID>NID>NID>NID</code></p>
+
+
+
         <p style="color:red;">Cette partie est périmée avec la nouvelle version de liens !</p>
-        <p>Le lien est la matérialisation dans un graphe d’une relation entre deux objets pondéré par un troisième
-            objet.</p>
+
+
 
         <h5 id="lelpo">LELPO / Liens à Propos d’un Objet</h5>
-        <p>Les liens d’un objet sont consultables séquentiellement. Il doivent être perçus comme des méta-données d’un
+        <p>Les liens d’un objet sont consultables séquentiellement. Ils doivent être perçus comme des méta-données d’un
             objet.</p>
         <p>Les liens sont séparés soit par un caractère espace «&nbsp;», soit par un retour chariot «&nbsp;\n&nbsp;». Un
-            lien est donc une suite de caractères ininterrompue, c’est à dire sans espace ou retour à la ligne.</p>
-        <p>La taille du lien dépend de la taille de chaque champs.</p>
-        <p>Chaque localisation contenant des liens doit avoir un entête de version.</p>
+            lien est donc une suite de caractères ininterrompue, c'est-à-dire sans espace ou retour à la ligne.</p>
+        <p>La taille du lien dépend de la taille de chaque champ.</p>
 
         <h5 id="lelco">LELCO / Liens Contenu dans un Objet</h5>
         <p>Certains liens d’un objet peuvent être contenus dans un autre objet.</p>
@@ -609,28 +639,28 @@ class Link implements linkInterface
             peut ainsi profiter du découpage et du chiffrement. Plusieurs liens peuvent être stockés sans être
             nécessairement en rapport avec les mêmes objets.</p>
         <p>Les liens stockés dans un objet ne peuvent pas faire référence à ce même objet.</p>
-        <p>Tout ajout de lien crée implicitement un nouvel objet de mise à jour, c’est à dire lié par un lien de type
+        <p>Tout ajout de lien crée implicitement un nouvel objet de mise à jour, c'est-à-dire lié par un lien de type
             u.</p>
         <p>Chaque fichier contenant des liens doit avoir un entête de version.</p>
         <p>Les objets contenants des liens ne sont pas reconnus et exploités lors de la lecture des liens. Ceux-ci
-            doivent d’abord être extraits et injectés dans les liens des objets concernés. En clair, on ne peux pas s’en
+            doivent d’abord être extraits et injectés dans les liens des objets concernés. En clair, on ne peut pas s’en
             servir facilement pour de l’anonymisation.</p>
 
         <h2 id="le">LE / Entête</h2>
         <p>L’entête des liens est constitué du texte <code>nebule/liens/version/1.2</code>. Il est séparé du premier
             lien soit par un caractère espace «&nbsp;», soit par un retour chariot «&nbsp;\n&nbsp;».</p>
-        <p>Il doit être transmit avec les liens, en premier.</p>
+        <p>Il doit être transmis avec les liens, en premier.</p>
 
         <h2 id="lr">LR / Registre</h2>
         <p>Le registre du lien décrit la syntaxe du lien :</p>
         <p style="text-align:center">
             <code>Signature_HashSignataire_TimeStamp_Action_HashSource_HashCible_HashMeta</code></p>
-        <p>Ce registre a un nombre de champs fixe. Chaque champs a une place fixe dans le lien. Les champs ont une
+        <p>Ce registre a un nombre de champs fixe. Chaque champ a une place fixe dans le lien. Les champs ont une
             taille variable. Le séparateur de champs est l’underscore «&nbsp;_&nbsp;». Les champs ne peuvent contenir ni
             l’underscore «&nbsp;_&nbsp;» ni l’espace &nbsp;» &nbsp;» ni le retour chariot «&nbsp;\n&nbsp;».</p>
         <p>Tout lien qui ne respecte pas cette syntaxe est à considérer comme invalide et à supprimer. Tout lien dont la
             <code>Signature</code> est invalide est à considérer comme invalide et à supprimer. La vérification peut
-            être réalisée en ré-assemblant les champs après nettoyage.</p>
+            être réalisée en réassemblant les champs après nettoyage.</p>
 
         <h4 id="lrsi">LRSI / Le champ <code>Signature</code></h4>
         <p>Le champ <code>Signature</code> est représenté en deux parties séparées par un point «&nbsp;.&nbsp;» . La
