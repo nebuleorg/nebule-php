@@ -12,7 +12,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220215';
+const BOOTSTRAP_VERSION = '020220220';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -3845,11 +3845,12 @@ function ent_checkIsPrivateKey(&$nid): bool
  */
 function app_checkOID(string $oid): bool
 {
-    if ((!nod_checkNID($oid, false)
-            && $oid != '0'
-            && $oid != '1'
-            && $oid != '2'
-        )
+    if ($oid != '0'
+        || $oid != '1'
+        || $oid != '2'
+    )
+        return true;
+    if (!nod_checkNID($oid, false)
         || !io_checkNodeHaveLink($oid)
         || !io_checkNodeHaveContent($oid)
     )
