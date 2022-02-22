@@ -12,7 +12,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220220';
+const BOOTSTRAP_VERSION = '020220222';
 const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -6695,7 +6695,7 @@ function bootstrap_displayApplication1()
     bootstrap_htmlTop();
 
     // Instancie la classe de la documentation.
-    $instance = new nebdoctech($nebuleInstance);
+    $instance = new Documentation($nebuleInstance);
 
     // Affiche la documentation.
     echo '<div id="layout_documentation">' . "\n";
