@@ -118,12 +118,13 @@ class Localisation extends Node implements nodeInterface
     }
 
 
+
     /**
      * Affiche la partie menu de la documentation.
      *
      * @return void
      */
-    public function echoDocumentationTitles()
+    static public function echoDocumentationTitles(): void
     {
         ?>
 
@@ -150,7 +151,7 @@ class Localisation extends Node implements nodeInterface
      *
      * @return void
      */
-    public function echoDocumentationCore()
+    static public function echoDocumentationCore(): void
     {
         ?>
 

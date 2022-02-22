@@ -893,7 +893,7 @@ class blocLink implements blocLinkInterface
      *
      * @return void
      */
-    public function echoDocumentationTitles(): void
+    static public function echoDocumentationTitles(): void
     {
         ?>
 
@@ -962,7 +962,7 @@ class blocLink implements blocLinkInterface
      *
      * @return void
      */
-    public function echoDocumentationCore(): void
+    static public function echoDocumentationCore(): void
     {
         ?>
 

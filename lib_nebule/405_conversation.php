@@ -614,7 +614,7 @@ class Conversation extends Group implements nodeInterface
      *
      * @return void
      */
-    public function echoDocumentationTitles()
+    static public function echoDocumentationTitles(): void
     {
         ?>
 
@@ -645,7 +645,7 @@ class Conversation extends Group implements nodeInterface
      *
      * @return void
      */
-    public function echoDocumentationCore()
+    static public function echoDocumentationCore(): void
     {
         ?>
 

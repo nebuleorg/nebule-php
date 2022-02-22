@@ -1401,7 +1401,7 @@ class Group extends Node implements nodeInterface
      *
      * @return void
      */
-    public function echoDocumentationTitles()
+    static public function echoDocumentationTitles(): void
     {
         ?>
 
@@ -1432,7 +1432,7 @@ class Group extends Node implements nodeInterface
      *
      * @return void
      */
-    public function echoDocumentationCore()
+    static public function echoDocumentationCore(): void
     {
         ?>
 

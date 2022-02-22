@@ -134,4 +134,24 @@ class Wallet extends Entity implements nodeInterface
         // @todo
         return '';
     }
+
+
+
+    /**
+     * Affiche la partie menu de la documentation.
+     *
+     * @return void
+     */
+    static public function echoDocumentationTitles(): void
+    {
+    }
+
+    /**
+     * Affiche la partie texte de la documentation.
+     *
+     * @return void
+     */
+    static public function echoDocumentationCore(): void
+    {
+    }
 }

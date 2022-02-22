@@ -428,4 +428,24 @@ class Token extends TokenPool implements nodeInterface
 
         return $result;
     }
+
+
+
+    /**
+     * Affiche la partie menu de la documentation.
+     *
+     * @return void
+     */
+    static public function echoDocumentationTitles(): void
+    {
+    }
+
+    /**
+     * Affiche la partie texte de la documentation.
+     *
+     * @return void
+     */
+    static public function echoDocumentationCore(): void
+    {
+    }
 }

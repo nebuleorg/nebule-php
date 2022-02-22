@@ -6,6 +6,7 @@ namespace Nebule\Bootstrap;
 // ------------------------------------------------------------------------------------------
 use Nebule\Library\Cache;
 use Nebule\Library\Crypto;
+use Nebule\Library\Documentation;
 use Nebule\Library\nebule;
 use Nebule\Library\Node;
 
@@ -13,7 +14,7 @@ const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
 const BOOTSTRAP_VERSION = '020220222';
-const BOOTSTRAP_LICENCE = 'GNU GPL 02021';
+const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
 

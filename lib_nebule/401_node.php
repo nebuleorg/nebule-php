@@ -4057,7 +4057,7 @@ class Node implements nodeInterface
      *
      * @return void
      */
-    public function echoDocumentationTitles()
+    static public function echoDocumentationTitles()
     {
         ?>
 
@@ -4121,7 +4121,7 @@ class Node implements nodeInterface
      *
      * @return void
      */
-    public function echoDocumentationCore()
+    static public function echoDocumentationCore()
     {
         ?>
 

@@ -517,7 +517,7 @@ class Link implements linkInterface
      *
      * @return void
      */
-    public function echoDocumentationTitles(): void
+    static public function echoDocumentationTitles(): void
     {
         ?>
 
@@ -587,7 +587,7 @@ class Link implements linkInterface
      *
      * @return void
      */
-    public function echoDocumentationCore(): void
+    static public function echoDocumentationCore(): void
     {
         ?>
 
@@ -599,7 +599,7 @@ class Link implements linkInterface
         <p>Dans le cas d'un lien à lien à deux ou trois nœuds, nous sommes dans un cas similaire à un
             <a href="https://fr.wikipedia.org/wiki/Th%C3%A9orie_des_graphes">graphe</a> orienté tel qu'on
             le trouve dans une base de données de type graphe. Nous retrouvons ce principe dans le Resource
-            Description Framework (<a href="https://fr.wikipedia.org/wiki/Resource_Description_Framework"RDF</p>a>).
+            Description Framework (<a href="https://fr.wikipedia.org/wiki/Resource_Description_Framework">RDF</a>).
             À une différence près cependant, c'est qu'ici le lien ne contient que des identifiants de nœuds et non des
             contenus.</p>
         <p>Dans le cas d'un lien avec plus de 3 nœuds, nous sommes dans un

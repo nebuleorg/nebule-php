@@ -1663,7 +1663,7 @@ abstract class Applications
      *
      * @return void
      */
-    public function echoDocumentationTitles()
+    static public function echoDocumentationTitles(): void
     {
         ?>
 
@@ -1724,7 +1724,7 @@ abstract class Applications
      *
      * @return void
      */
-    public function echoDocumentationCore()
+    static public function echoDocumentationCore(): void
     {
         ?>
 
