@@ -54,11 +54,11 @@ class Documentation
         TokenPool::echoDocumentationTitles();
         Token::echoDocumentationTitles();
         Wallet::echoDocumentationTitles();
+        Applications::echoDocumentationTitles();
+        Modules::echoDocumentationTitles();
         blocLink::echoDocumentationTitles();
         Link::echoDocumentationTitles();
         Transaction::echoDocumentationTitles();
-        Applications::echoDocumentationTitles();
-        Modules::echoDocumentationTitles();
     ?>
 
     <li><a href="#c">C / Confiance</a>
@@ -121,7 +121,13 @@ class Documentation
 </ul>
 
 <h1 id="f">F / Fondations</h1>
-<p>Le but du projet nebule, c’est le moteur de gestion des objets. La couche basse qui s’occupe du stockage des objets et liens, et de leur diffusion.</p>
+<p>Le projet nebule est un moteur de gestion d'objets. Il peut être vu comme une
+    <a href="https://en.wikipedia.org/wiki/Graph_database">base de donnée graphe</a> de type
+    <a href="https://en.wikipedia.org/wiki/Hypergraph">hypergraphe</a> ou comme une combinaison de
+    <a hreh="https://en.wikipedia.org/wiki/Distributed_hash_table">DHT</a> et de
+    <a href="https://en.wikipedia.org/wiki/Resource_Description_Framework">RDF</a>. Les objets sont les contenants de
+    tout ce que l'on peut manipuler sous forme numérique. Les objets, tel les sommets d'un graphe, sont liés par des
+    liens, tel les arrêtes du graphe.</p>
 <p>L’interface utilisateur est un programme utilisé pour manipuler ces objets et traduire les liens à l’utilisateur ou les actions de l’utilisateur en liens.</p>
 <p>Le projet nebule se concrétise numériquement par trois piliers de base :</p>
 <ol>
