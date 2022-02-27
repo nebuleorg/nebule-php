@@ -967,11 +967,13 @@ class blocLink implements blocLinkInterface
         ?>
 
         <h1 id="l">B / Bloc de liens</h1>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p style="color:red;">Cette partie est périmée avec la nouvelle version de liens !</p>
         <p>Le lien est la matérialisation dans un graphe d’une relation entre deux objets pondéré par un troisième
             objet.</p>
 
         <h5 id="lelpo">BELPO / Liens à Propos d’un Objet</h5>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Les liens d’un objet sont consultables séquentiellement. Ils doivent être perçus comme des méta-données d’un
             objet.</p>
         <p>Les liens sont séparés soit par un caractère espace «&nbsp;», soit par un retour chariot «&nbsp;\n&nbsp;». Un
@@ -980,6 +982,7 @@ class blocLink implements blocLinkInterface
         <p>Chaque localisation contenant des liens doit avoir un entête de version.</p>
 
         <h5 id="lelco">BELCO / Liens Contenu dans un Objet</h5>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Certains liens d’un objet peuvent être contenus dans un autre objet.</p>
         <p>Cette forme de stockage des liens permet de les transmettre et de les manipuler sous la forme d’un objet. On
             peut ainsi profiter du découpage et du chiffrement. Plusieurs liens peuvent être stockés sans être
@@ -993,11 +996,13 @@ class blocLink implements blocLinkInterface
             servir facilement pour de l’anonymisation.</p>
 
         <h2 id="le">BE / Entête</h2>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L’entête des liens est constitué du texte <code>nebule/liens/version/1.2</code>. Il est séparé du premier
             lien soit par un caractère espace «&nbsp;», soit par un retour chariot «&nbsp;\n&nbsp;».</p>
         <p>Il doit être transmis avec les liens, en premier.</p>
 
         <h2 id="lr">BR / Registre</h2>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le registre du lien décrit la syntaxe du lien :</p>
         <p style="text-align:center">
             <code>Signature_HashSignataire_TimeStamp_Action_HashSource_HashCible_HashMeta</code></p>
@@ -1009,6 +1014,7 @@ class blocLink implements blocLinkInterface
             être réalisée en réassemblant les champs après nettoyage.</p>
 
         <h4 id="lrsi">BRSI / Le champs <code>Signature</code></h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le champs <code>Signature</code> est représenté en deux parties séparées par un point «&nbsp;.&nbsp;» . La
             première partie contient la valeur de la signature. La deuxième partie contient le nom court de la fonction
             de prise d’empreinte utilisée.</p>
@@ -1021,11 +1027,13 @@ class blocLink implements blocLinkInterface
             caractères alpha-numériques en minuscule.</p>
 
         <h5 id="lrusi">BRHSI / Le champs <code>HashSignataire</code></h5>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le champs <code>HashSignataire</code> désigne l’objet de l’entité qui génère le lien et le signe.</p>
         <p>Il ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;» à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;»
             à «&nbsp;f&nbsp;» en minuscule.</p>
 
         <h3 id="lrt">BRT / Le champs <code>TimeStamp</code></h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le champs <code>TimeStamp</code> est une marque de temps qui donne un ordre temporel aux liens. Ce champs peut
             être une date et une heure au format <a class="external text" title="http://fr.wikipedia.org/wiki/ISO_8601"
                                                     href="http://fr.wikipedia.org/wiki/ISO_8601"
@@ -1033,6 +1041,7 @@ class blocLink implements blocLinkInterface
         </p>
 
         <h3 id="lra">BRA / Le champs <code>Action</code></h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le champs <code>Action</code> détermine la façon dont le lien doit être utilisé.</p>
         <p>Quand on parle du type d’un lien, on fait référence à son champs <code>Action</code>.</p>
         <p>L’interprétation de ce champ est limité au premier caractère. Des caractères alpha-numériques supplémentaires
@@ -1043,12 +1052,14 @@ class blocLink implements blocLinkInterface
             <code>d</code>, <code>e</code>, <code>x</code>, <code>k</code> et <code>s</code>, en minuscule.</p>
 
         <h4 id="lral">BRAL / Action <code>l</code> – Lien entre objets</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Met en place une relation entre deux objets. Cette relation a un sens de mise en place et peut être pondérée
             par un objet méta.</p>
         <p>Les liens de type <code>l</code> ne devraient avoir ni <code>HashMeta</code> nul ni <code>HashCible</code>
             nul.</p>
 
         <h4 id="lraf">BRAF / Action <code>f</code> – Dérivé d’objet</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le nouvel objet est considéré comme enfant ou parent suivant le sens du lien.</p>
         <p>Le champs <code>ObjetMeta</code> doit être vu comme le contexte du lien. Par exemple, deux objets contenants
             du texte peuvent être reliés simplement sans contexte, c'est-à-dire reliés de façon simplement hiérarchique.
@@ -1059,10 +1070,12 @@ class blocLink implements blocLinkInterface
         <p><code>f</code> comme <i>fork</i>.</p>
 
         <h4 id="lrau">BRAU / Action <code>u</code> – Mise à jour d’objet</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Mise à jour d’un objet dérivé qui remplace l’objet parent.</p>
         <p><code>u</code> comme <i>update</i>.</p>
 
         <h4 id="lrad">BRAD / Action <code>d</code> – Suppression d’objet</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L’objet est marqué comme à supprimer d’un ou de tous ses emplacements de stockage.</p>
         <p><code>d</code> comme <i>delete</i>.</p>
         <p>Le champs <code>HashCible</code> <span style="text-decoration: underline;">peut</span> être nuls, c'est-à-dire égal à <code>0</code>.
@@ -1081,9 +1094,11 @@ class blocLink implements blocLinkInterface
             pas de lien de suppression.</p>
 
         <h4 id="lrae">BRAE / Action <code>e</code> – Équivalence d’objets</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Définit des objets jugés équivalents, et donc interchangeables par exemple pour une traduction.</p>
 
         <h4 id="lrac">BRAC / Action <code>c</code> – Chiffrement de lien</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Ce lien de dissimulation contient un lien dissimulé sans signature. Il permet d’offusquer des liens entre
             objets et donc d’anonymiser certaines actions de l’entité (cf <a href="#ckl">CKL</a>).</p>
         <p>Le champs <code>HashSource</code> fait référence à l’entité destinataire du lien, celle qui peut le
@@ -1106,11 +1121,13 @@ class blocLink implements blocLinkInterface
             objets. Dans ce cas le lien de type <code>c</code> est rejeté comme invalide avec le code erreur 43.</p>
 
         <h4 id="lrak">BRAK / Action <code>k</code> – Chiffrement d’objet</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Désigne la version chiffrée de l’objet (cf <a href="#cko">CKO</a>).</p>
         <p>L'option <code>permitProtectedObject</code> permet de désactiver la protection (chiffrement) des objets. Dans
             ce cas le lien de type <code>k</code> est rejeté comme invalide avec le code erreur 42.</p>
 
         <h4 id="lras">BRAS / Action <code>s</code> – Subdivision d’objet</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Désigne un fragment de l’objet.</p>
         <p>Ce champs nécessite un objet méta qui précise l'intervalle de contenu de l’objet d’origine. Le contenu de
             l’objet méta doit être de la forme <code>x-y</code> avec :</p>
@@ -1125,6 +1142,7 @@ class blocLink implements blocLinkInterface
         </ul>
 
         <h4 id="lrax">BRAX / Action <code>x</code> – Suppression de lien</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Supprime un ou plusieurs liens précédemment mis en place.</p>
         <p>Les liens concernés par la suppression sont les liens antérieurs de type <code>l</code>, <code>f</code>,
             <code>u</code>, <code>d</code>, <code>e</code>, <code>k</code> et <code>s</code>. Ils sont repérés par les 3
@@ -1135,17 +1153,20 @@ class blocLink implements blocLinkInterface
         <p>C’est la seule action sur les liens et non sur les objets.</p>
 
         <h4 id="lrhs">BRHS / Le champs <code>HashSource</code></h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le champs <code>HashSource</code> désigne l’objet source du lien.</p>
         <p>Le champs <code>signataire</code> ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;»
             à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule.</p>
 
         <h4 id="lrhc">BRHC / Le champs <code>HashCible</code></h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le champs <code>HashCible</code> désigne l’objet destination du lien.</p>
         <p>Le champs <code>signataire</code> ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;»
             à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule.</p>
         <p>Il peut être nuls, c'est-à-dire représentés par la valeur «&nbsp;0&nbsp;» sur un seul caractère.</p>
 
         <h4 id="lrhm">BRHM / Le champs <code>HashMeta</code></h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le champs <code>HashMeta</code> désigne l’objet contenant une caractérisation du lien entre l’objet source et
             l’objet destination.</p>
         <p>Le champs <code>signataire</code> ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;»
@@ -1153,38 +1174,45 @@ class blocLink implements blocLinkInterface
         <p>Il peut être nuls, c'est-à-dire représentés par la valeur «&nbsp;0&nbsp;» sur un seul caractère.</p>
 
         <h2 id="l1">B1 / Lien simple</h2>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le registre du lien simple a ses champs <code>HashCible</code> et <code>HashMeta</code> égaux à «&nbsp;0&nbsp;».
         </p>
         <p>Il ressemble à :</p>
         <p class="pcenter"><code>Signature_HashSignataire_TimeStamp_Action_HashSource_0_0</code></p>
 
         <h2 id="l2">B2 / Lien double</h2>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le registre du lien double a son champs <code>HashMeta</code> égal à «&nbsp;0&nbsp;».</p>
         <p>Il ressemble à :</p>
         <p class="pcenter"><code>Signature_HashSignataire_TimeStamp_Action_HashSource_HashCible_0</code></p>
 
         <h2 id="l3">B3 / Lien triple</h2>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le registre du lien triple est complètement utilisé.</p>
         <p>Il ressemble à :</p>
         <p class="pcenter"><code>Signature_HashSignataire_TimeStamp_Action_HashSource_HashCible_HashMeta</code></p>
 
         <h2 id="ls">BS / Stockage</h2>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Tous les liens sont stockés dans un même emplacement où sont visibles comme étant dans un même emplacement.
             Cet emplacement ne contient pas les contenus des objets (cf <a href="#oos">OOS</a>).</p>
         <p>Le lien dissimulé est stocké dans le même emplacement mais dispose de fichiers de stockages différents du
             fait de la spécificité (cf <a href="#lsds">BSDS</a>).</p>
 
         <h3 id="lsa">BSA / Arborescence</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Sur un système de fichiers, tous les liens sont stockés dans des fichiers contenus dans le dossier <code>pub/l/</code>
             (<code>l</code> comme lien).</p>
         <p>A faire...</p>
 
         <h3 id="lsd">BSD / Dissimulation</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le lien de dissimulation, de type <code>c</code>, contient un lien dissimulé sans signature (cf <a
                 href="#lrac">BRAC</a>). Il permet d’offusquer des liens entre objets et donc d’anonymiser certaines
             actions de l’entité (cf <a href="#ckl">CKL</a>).</p>
 
         <h5 id="lsdrp">BSDRP / Registre public</h5>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le registre du lien de dissimulation, public par nature, est conforme au registre des autres liens (cf <a
                 href="#lr">BR</a>). Si ce lien ne respectait pas cette structure, il serait automatiquement ignoré ou
             rejeté. Son stockage et sa transmission ont cependant quelques particularités.</p>
@@ -1216,6 +1244,7 @@ class blocLink implements blocLinkInterface
         </ul>
 
         <h5 id="lsdrd">BSDRD / Registre dissimulé</h5>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le registre du lien dissimulé est la partie utile du lien qui est protégée dans le lien de dissimulation.</p>
         <p>L'extraction du lien dissimulé se fait depuis le lien de dissimulation :</p>
         <ol>
@@ -1243,6 +1272,7 @@ class blocLink implements blocLinkInterface
         </ul>
 
         <h4 id="lsda">BSDA / Attaque sur la dissimulation</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le fait qu’une entité synchronise des liens dissimulés que d’autres entités partagent et les range dans des
             fichiers transcodés peut révéler l’ID de l’objet transcodé. Et par tâtonnement on peut retourner ainsi le
             transcodage de tous les objets.</p>
@@ -1256,6 +1286,7 @@ class blocLink implements blocLinkInterface
             dissimulés.</p>
 
         <h4 id="lsds">BSDS / Stockage et transcodage</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Les liens dissimulés sont camouflés dans des liens de dissimulation, ils ne sont donc plus utilisables pour
             assurer le transfert entre entités et le tri dans les fichiers de stockage des liens.</p>
         <p>De plus, les liens de dissimulations ne doivent pas être stockés directement dans des fichiers de stockage
@@ -1270,6 +1301,7 @@ class blocLink implements blocLinkInterface
             traitement peut être différencié par rapport à la structure du nom des fichiers.</p>
 
         <h5 id="lsdst">BSDST / Translation de lien</h5>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>La répartition des liens de dissimulation dans des fichiers attachés à l'entité émettrice et l'entité
             destinataire ne permet pas une exmploitation efficace et rapide des liens dissimulés. Il faut trouver un
             moyen d'associer les liens de dissimulations aux objets concernés par les liens dissimulés sans révéler
@@ -1286,18 +1318,19 @@ class blocLink implements blocLinkInterface
         <p>A faire...</p>
 
         <h5 id="lsdsp">BSDSP / Protection de translation</h5>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="lsdt">BSDT / Transfert et partage</h4>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="lsdc">BSDC / Compromission</h4>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h2 id="lt">BT / Transfert</h2>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h2 id="lv">BV / Vérification</h2>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>La signature d’un lien doit être vérifiée lors de la fin de la réception du lien. La signature d’un lien
             devrait être vérifiée avant chaque utilisation de ce lien. Un lien avec une signature invalide doit être
             supprimé. Lors de la suppression d’un lien, les autres liens de cet objet ne sont pas supprimés et l'objet
@@ -1306,6 +1339,7 @@ class blocLink implements blocLinkInterface
         <p>Toute modification de l’un des champs du lien entraîne l’invalidation de tout le lien.</p>
 
         <h2 id="lo">BO / Oubli</h2>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L'oubli vonlontaire de certains liens et objets n'est encore ni théorisé ni implémenté mais deviendra
             indispensable lorsque l'espace viendra à manquer (cf <a href="#cn">CN</a>).</p>
 

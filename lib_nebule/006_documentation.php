@@ -60,6 +60,7 @@ class Documentation
         Crypto::echoDocumentationTitles();
         Social::echoDocumentationTitles();
     ?>
+
 </ul>
 
 <?php
@@ -112,12 +113,13 @@ class Documentation
             Cela peut être vu comme une forme de <a href="https://en.wikipedia.org/wiki/Graph_database">base de donnée
             graphe</a> orienté de type <a href="https://en.wikipedia.org/wiki/Hypergraph">hypergraphe</a>.</p>
         <p>Les objets sont les contenants de tout ce que l'on peut manipuler sous forme numérique.
-            Les objets, tel les sommets d'un graphe, sont liés par des liens, tel les arêtes du graphe.</p>
-        <p>Cette base de données graphe implémente une cryptographie évolutive afin de faire émerger de la confiance
-            dans les objets manipulés.</p>
-        <p>Mais le côté technique n'est pas une fin en soi. La forme des liens permet de faire émerger un côté social,
+            Les objets, tel les sommets d'un graphe, sont liés par des liens, tel les arêtes du graphe.
+            Cette base de données graphe implémente une cryptographie évolutive afin de faire émerger de la confiance
+            dans les objets manipulés.
+            Mais le côté technique n'est pas une fin en soi. La forme des liens permet de faire émerger un côté social,
             c'est-à-dire du relationnel entre les humains, et permet ainsi d'apporter du sens aux objets et aux liens
             qui les relient.</p>
+        <p></p>
 
         <?php
 	}

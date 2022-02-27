@@ -288,12 +288,14 @@ class Crypto implements CryptoInterface
         ?>
 
         <h1 id="c">C / Confiance</h1>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>La confiance n’est pas quelque chose de palpable, même numériquement. Cela tient plus de la façon de concevoir les choses et le fait de faire en sorte que l’ensemble soit solide. L’ensemble doit être cohérent et résistant. On doit pouvoir compter sur ce que l’on a.</p>
         <p>La confiance est donc sous-jacente aux objets et aux liens.</p>
         <p>Les objets et les liens doivent tous être signés. Toute modification devient impossible <span style="font-weight:bold;">si l’on prend le temps de vérifier les signatures</span>.</p>
         <p>En l’absence de nouvelle découverte mathématique majeure, les algorithmes cryptographiques nous permettent aujourd’hui une offuscation forte et une prise d’empreinte fiable. C’est le chiffrement et la signature.</p>
 
         <h3 id="cfo">CFO / Fable des Origines</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p style="text-align:center; margin-bottom:10px;"><span style="font-weight:bold; font-family:monospace;">- 001 -</span><br />Le premier jour, il créa l'<span style="font-weight:bold;">objet</span>, essence de toute chose.<br />Ainsi la matière de l'information naquit du néant de l'éther binaire.</p>
         <p style="text-align:center; margin-bottom:10px;"><span style="font-weight:bold; font-family:monospace;">- 010 -</span><br />Le deuxième jour, il créa le <span style="font-weight:bold;">lien</span>, pour les relier tous.<br />Ainsi apparurent les objets à la lumière, ils pouvaient se voir mutuellement.<br />Ainsi l'univers informationnel naquit des objets et des liens.</p>
         <p style="text-align:center; margin-bottom:10px;"><span style="font-weight:bold; font-family:monospace;">- 011 -</span><br />Le troisième jour, il créa l'<span style="font-weight:bold;">entité</span>.<br />La matière inerte et uniforme devint active et protéiforme.<br />Ainsi la vie naquit de l'univers informationnel.</p>
@@ -304,6 +306,7 @@ class Crypto implements CryptoInterface
         <p style="text-align:center; margin-bottom:10px;"><span style="font-weight:bold; font-family:monospace;">- 8 -</span><br />Le huitième jour, au nom de lui, l'homme créa la religion.<br />Il s'appropria tous les objets et soumit toutes les entités sous une seule.<br />Ainsi disparut l'univers dans un trou noir super-massif.</p>
 
         <h2 id="co">CO / Confiance dans l’Objet</h2>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L’intégrité et la confidentialité des objets est garantie non pas par une <i>méta-donnée</i> mais par les mathématiques qui animent les algorithmes cryptographiques.</p>
         <p>Un objet numérique est identifié par une empreinte ou condensat (hash) numérique. Cette empreinte doit avoir des caractéristiques propres fortes correspondant à des fonctions de prise d’empreinte cryptographiques. C’est à dire :</p>
         <ol>
@@ -319,6 +322,7 @@ class Crypto implements CryptoInterface
         <p>L’empreinte d’un objet doit être vérifiée lors de la fin de la réception de l’objet. L’empreinte d’un objet devrait être vérifiée avant chaque utilisation de cet objet. Un contenu d'objet avec une empreinte qui ne lui correspond pas doit être supprimé. Lors de la suppression d’un objet, les liens de cet objet sont conservés. La vérification de la validité des objets est complètement indépendante de celle des liens, et inversement (cf <a href="#oov">OOV</a> et <a href="#lv">LV</a>).</p>
 
         <h2 id="cl">CL / Confiance dans le Lien</h2>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L’intégrité des liens est garantie non pas par une <i>méta-donnée</i> mais par les fonctions mathématiques utilisées par les algorithmes cryptographiques.</p>
         <p>La signature du lien est obligatoire. La signature doit être réalisée par le signataire. La signature englobe tout le lien à l’exception d’elle-même. Un lien avec une signature invalide ou non vérifiable doit être ignoré et supprimé.</p>
         <p>Toute modification de l’un des champs du lien entraîne l’invalidation de tout le lien.</p>
@@ -326,44 +330,52 @@ class Crypto implements CryptoInterface
         <p>La signature d’un lien doit être vérifiée lors de la fin de la réception du lien. La signature d’un lien devrait être vérifiée avant chaque utilisation de ce lien. Un lien avec une signature invalide doit être supprimé. Lors de la suppression d’un lien, les autres liens de cet objet ne sont pas supprimés et l'objet n'est pas supprimé. La vérification de la validité des objets est complètement indépendante de celle des liens, et inversement (cf <a href="#lv">LV</a> et <a href="#oov">OOV</a>).</p>
 
         <h3 id="coe">COE / Confiance dans l'Objet Entité</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Une entité est un objet contenant une clé cryptographique publique. Cette clé permet de vérifier les liens signés par cette entité.</p>
         <p>A faire...</p>
 
         <h2 id="ca">CA / Autorités</h2>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Les entités autorités, au nombre de 5, permettent de structurer et de gérer la confiance dans le code et l'utilisation du code de la bibliothèque et de toutes les applications.</p>
         <p>Cette restriction à cinq entités est une facilité pour le développement aujourd'hui. Mais ce n'est pas un modèle viable à moyen terme. L'autorité maîtresse pourra être concurrencée par une entité désignée de l'entité de l'instance locale du serveur. Et les autres entités appartiendront à des groupes spécifique dépendants à la fois de l'autorité maîtresse et de l'entité désignée par l'entité de l'instance locale du serveur.</p>
 
         <h3 id="cam">CAM / Autorité Maîtresse</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Autrement appelée entité maîtresse du tout, cette entité est la seule déclarée en dur dans le code de la bibliothèque. Toutes les autres entités sont définies par des liens de cette entité.</p>
         <p>Au besoin elle peut être remplacée par une autre entité via l'option <code>puppetmaster</code> dans le fichier de configuration. Cette option n'est pas utilisable via les liens.</p>
         <p>L'instance actuelle s'appelle <i>puppetmaster</i> et est localisée en <a href="http://puppetmaster.nebule.org">puppetmaster.nebule.org</a>.</p>
         <p>L'identifiant de cette entité est <code>88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea</code>.</p>
 
         <h4 id="cams">CAMS / Autorité Maîtresse de la Sécurité</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Cette entité est dédignée par le puppetmaster par rapport au rôle de maître de la sécurité. Le rôle est définit pas l'objet réservé <code>nebule/objet/entite/maitre/securite</code>. Voir <a href="#oor">OOR</a> et <a href="#oer">OER</a>.</p>
         <p>A faire...</p>
         <p>L'instance actuelle s'appelle <i>cerberus</i> et est localisée en <a href="http://cerberus.nebule.org">cerberus.nebule.org</a>.</p>
         <p>Les enfers n'ayant pas encore ouvert, cette entité n'est pas utilisée.</p>
 
         <h4 id="camc">CAMC / Autorité Maîtresse du code</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Cette entité est dédignée par le puppetmaster par rapport au rôle de maître du code. Le rôle est définit pas l'objet réservé <code>nebule/objet/entite/maitre/code</code>. Voir <a href="#oor">OOR</a> et <a href="#oer">OER</a>.</p>
         <p>A faire...</p>
         <p>L'instance actuelle s'appelle <i>bachue</i> et est localisée en <a href="http://bachue.nebule.org">bachue.nebule.org</a>.</p>
 
         <h4 id="cama">CAMA / Autorité Maîtresse de l'annuaire</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Cette entité est dédignée par le puppetmaster par rapport au rôle de maître de l'annuaire. Le rôle est définit pas l'objet réservé <code>nebule/objet/entite/maitre/annuaire</code>. Voir <a href="#oor">OOR</a> et <a href="#oer">OER</a>.</p>
         <p>A faire...</p>
         <p>L'instance actuelle s'appelle <i>asabiyya</i> et est localisée en <a href="http://asabiyya.nebule.org">asabiyya.nebule.org</a>.</p>
 
         <h4 id="camt">CAMT / Autorité Maîtresse du temps</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Cette entité est dédignée par le puppetmaster par rapport au rôle de maître du temps. Le rôle est définit pas l'objet réservé <code>nebule/objet/entite/maitre/temps</code>. Voir <a href="#oor">OOR</a> et <a href="#oer">OER</a>.</p>
         <p>A faire...</p>
         <p>L'instance actuelle s'appelle <i>kronos</i> et est localisée en <a href="http://kronos.nebule.org">kronos.nebule.org</a>.</p>
 
         <h2 id="cc">CC / Configuration</h2>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="cco">CCO / Options</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Les options permettent de modifier le comportement du code de la bibliothèque et des applications.</p>
         <p>La sensibilité des options est variable. On compte trois niveau de sensibilité :</p>
         <ul>
@@ -412,12 +424,14 @@ class Crypto implements CryptoInterface
         </ul>
 
         <h4 id="ccor">CCOR / Réservation</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Les objets réservés spécifiquement pour les options :</p>
         <ul>
             <li>nebule/option</li>
         </ul>
 
         <h4 id="ccof">CCOF / Options via Fichier</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Dans les deux méthodes pour gérer les options, il y a le fichier des options. Toutes les options inscrites dans ce fichier sont dites forcées et ne peuvent être surchargées par un lien d'option. Les options dites en lecture seule ne peuvent être changée que via le fichier des options.</p>
         <p>Le fichier contenant les options doit s'appeler <code>nebule.env</code>, doit être positionné à côté du fichier <code>index.php</code> utilisé, et doit être lisible de l'utilisateur du service web. Par sécurité, les fichiers <code>nebule.env</code> et <code>index.php</code> doivent être protégés en écriture, c'est à dire en lecture seule, pour l'utilisateur du service web.</p>
         <p>Chaque option est représentée sur une seule ligne commençant par le nom de l'option suivi du caractère <code>=</code> entouré ou non d'espaces. Tout ce qui est après le signe <code>=</code> constitue la valeur de l'option. La valeur ne nécessite par de simple ou double côte de protection.</p>
@@ -454,6 +468,7 @@ foreach ( $options as $option )
 </pre>
 
         <h4 id="ccol">CCOL / Options via Liens</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Dans les deux méthodes pour gérer les options, il y a le lien d'option. Toutes les options, à l'exception de celles dites en lecture seule, peuvent être définies par les liens d'options correspondants.</p>
         <p>Toutes les options définis par des liens sont attachées à des entités. C'est à dire que le lien d'une option doit contenir l'entité à laquelle s'applique le lien. L'utilisation ou non de l'option se fait par l'entité si le lien lui appartient ou si elle est subordonnée à l'entité signataire du lien (voir <a href="#ccos">CCOS</a>). Les liens de l'entité de subordination sont prioritaires sur les liens propres.</p>
         <p>Toutes les options inscrites dans le fichier des options sont dites forcées et ne peuvent être surchargées par un lien d'option.</p>
@@ -480,20 +495,23 @@ foreach ( $options as $option )
             ?>
         </ul>
         <h4 id="ccos">CCOS / Subordination</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Une entité peut définir ses propres options mais peut aussi se voir défini ses options par une autre entité. C'est principalement utilisé afin de piloter des instances sur des serveurs distants.</p>
         <p>La mise en place de ce mécanisme permet de maintenir autant que possible le contrôle sur un serveur que l'on ne maîtrise pas physiquement. Elle est mise en place via l'option <code>subordinationEntity</code> en lecture seule écrite dans le fichier des options. Cela veut dire aussi qu'une entité peut être compromise et pilotée à distance si le fichier des options est modifié par une entité tièrce.</p>
         <p>La subordination peut être faite vers une seule entité, défini par son identifiant, ou pour un groupe d'entités. La gestion du groupe n'est pas encore fonctionnel, seule une entité peut être défini.</p>
         <p>La subordination n'est pas prise en compte par la bibliothèque nebule en PHP procédurale du bootstrap.</p>
 
         <h2 id="ce">CE / Confiance dans les Échanges</h2>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="cems">CEMS / Moyens et Supports</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Il est possible de télécharger des objets et des liens avec différents protocoles. Le plus simple étant le <i>http</i>. Le protocole et le serveur distant doivent être capable de transmettre une requête et de renvoyer en sens inverse une réponse.</p>
         <p>Côté serveur, c’est à dire la machine qui fait office de relais des objets et liens, tout ne peut pas être demandé. Les requêtes doivent être triviales à traiter, ne pas nécessiter de forte puissance de calcul ni d’empreinte mémoire démesurée. Une avalanche de requêtes diverses ne doit pas mettre à plat le serveur.</p>
         <p>A faire...</p>
 
         <h5 id="cecto">CECTO / Comportement au Téléchargement d’Objets</h5>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Comportement global (téléchargement sans localisation précisée) :</p>
         <ol>
             <li>Si l’empreinte de l’objet demandé est 0, on quitte le processus de téléchargement.</li>
@@ -517,29 +535,34 @@ foreach ( $options as $option )
         </ol>
 
         <h5 id="cectl">CECTL / Comportement au Téléchargement de Liens</h5>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h5 id="cecte">CECTE / Comportement au Téléchargement d'Entités</h5>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h2 id="ck">CK / Cryptographie</h2>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="ckl">CKL / Cryptographie du Lien</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le chiffrement permet de dissimuler des liens. Il est optionnel.</p>
         <p>A faire...</p>
         <p>L'option <code>permitObfuscatedLink</code> permet de désactiver la dissimulation (offuscation) des liens des objets. Dans ce cas le lien de type <code>c</code> est aussi rejeté comme invalide (cf <a href="#lrac">LRAC</a>).</p>
 
         <h3 id="cko">CKO / Cryptographie de l'Objet</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le chiffrement permet de cacher le contenu des objets. Il est optionnel.</p>
         <p>Ce chiffrement doit être résistant, c’est à dire correspondre à l’état de l’art en cryptographie appliquée. On doit être en mesure de parfaitement distinguer l’objet en clair de l’objet chiffré, même si le second est dérivé du premier.</p>
         <p>L'option <code>permitProtectedObject</code> permet de désactiver la protection (chiffrement) des objets. Dans ce cas le lien de type <code>k</code> est aussi rejeté comme invalide (cf <a href="#lrak">LRAK</a>).</p>
 
         <h5 id="ckode">CKODE / Cryptographie de l'Objet - Deux Étapes</h5>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Les entités sont des objets contenant le matériel cryptographique nécessaire au chiffrement asymétrique. Cependant, le chiffrement asymétrique est très consommateur en ressources CPU (calcul). On peut l’utiliser directement pour chiffrer les objets avec la clé publique d’un correspondant, mais cela devient rapidement catastrophique en terme de performances et donc en expérience utilisateur. D’un autre côté, le chiffrement symétrique est beaucoup plus performant, mais sa gestion des clés de chiffrement est délicate. Pour améliorer l’ensemble, il faut mixer les deux pour profiter des avantages de chacun.</p>
         <p>Ainsi, on va aborder le chiffrement en deux étapes distinctes.</p>
         <p>Pour la compréhension des schémas, ne pas oublier que les propriétés des objets sont elles-mêmes des objets…</p>
 
         <h6 id="ckoecs">CKOECS / Cryptographie de l'Objet - Étape Chiffrement Symétrique</h6>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le chiffrement d’un objet peut prendre du temps, surtout si il est volumineux. On va donc privilégier le chiffrement symétrique qui est assez rapide. Nous avons besoin pour ce chiffrement de deux valeurs.</p>
         <p>La première valeur est une clé de chiffrement. Elle est dite clé de session. La longueur de celle-ci dépend de l’algorithme de chiffrement utilisé. Par exemple, elle fait 128bits pour l’AES. Elle est générée aléatoirement. C’est cette valeur qui va permettre le déchiffrement de l’objet et doit donc rester secrète. Mais il faut pouvoir la partager avec ses correspondants, c’est ce que l’on verra dans la deuxième étape.</p>
         <p>La seconde valeur est ce que l’on appelle une semence ou vecteur initial (IV = Initial Vector). Elle est utilisée dans la méthode de chiffrement sur plusieurs blocs, c’est à dire lorsque l’on chiffre un objet dont la taille dépasse le bloc, quantité de données que traite l’algorithme de chiffrement. Par exemple, le bloc fait 128bits pour l’AES, tout ce qui fait plus que cette taille doit être traité en plusieurs fois. Comme IV, je propose d’utiliser l’identifiant de l’objet à chiffrer, c’est à dire le hash de cet objet. Cela simplifie la diffusion de cette valeur qui n’a pas à être dissimulée.</p>
@@ -547,22 +570,26 @@ foreach ( $options as $option )
         <p>Sur le schéma ci-dessous, la partie chiffrement symétrique est mise en valeur. On retrouve l’objet source en clair qui est ici une image de type JPEG. En chiffrant cet objet, cela génère un nouvel objet. Le chiffrement est matérialisé par un lien de type K. Ce lien associe aussi un objet contenant la clé de session. Le nouvel objet est de type AES-CTR, par exemple. Cela signifie qu’il est chiffré avec le protocole AES et la gestion des blocs CTR (CounTeR). L’objet contenant la clé de session est de type texte.</p>
 
         <h6 id="ckoeca">CKOECA / Cryptographie de l'Objet - Étape Chiffrement Asymétrique</h6>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Suite à la première étape de chiffrement, nous nous retrouvons avec un objet chiffré et un objet contenant la clé de session. Si le fichier chiffré est bien protégé (en principe) et peut donc être rendu public, l’objet avec la clé de session est au contraire bien embarrassant. C’est là qu’intervient le chiffrement asymétrique et les clés publiques/privées.</p>
         <p>Le système de clés publiques/privées va permettre de chiffrer l’objet contenant la clé de session avec la clé publique d’une entité. Ainsi on permet à cette entité, c’est à dire le destinataire, de récupérer la clé de session avec sa clé privé et donc de lire l’objet source. Et plus encore, en re-chiffrant cette même clé de session avec d’autres clés publiques, ce qui génère autant d’objets de clés chiffrés, nous permettons à autant de nouvelles entités de lire l’objet source.</p>
         <p>Le créateur de l’objet chiffré doit obligatoirement faire partie des entités destinataires si il souhaite pouvoir déchiffrer l’objet source plus tard. Sinon, il passe intégralement sous le contrôle d’une des entités destinataires.</p>
         <p>Sur le schéma ci-dessous, la partie chiffrement asymétrique est mise en valeur. On retrouve l’objet en clair qui est ici la clé des session. En chiffrant cet objet, cela génère un nouvel objet. Le chiffrement est matérialisé par un lien de type K. Ce lien associe aussi un objet contenant la clé publique d’une entité. Le nouvel objet est de type RSA.</p>
 
         <h5 id="ckoep">CKOEP / Cryptographie de l'Objet - Ensemble du Processus</h5>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Évidemment, ce schéma de chiffrement ne ré-invente pas la roue. C’est une façon de faire assez commune, voire un cas d’école. Mais il est ici adapté au fonctionnement particulier de nebule et de ses objets.</p>
         <p>Il y a deux points à vérifier : – Partager l’objet chiffré et permettre à une autre entité de le voir, c’est aussi lui donner accès à la clé de session. Rien n’empêche cette entité de rediffuser ensuite cette clé de session en clair ou re-chiffrée à d’autres entités. Cependant, la clé de session est unique et n’a pas de valeur en dehors de l’objet chiffré qu’elle protège. De même, l’objet source peut toujours être re-chiffré avec une nouvelle clé de session et d’autres clés publiques. On retombe sur un problème commun, insoluble et le même constat : on perd automatiquement le contrôle de toute information que l’on diffuse à autrui. – L’empreinte (hash) de la clé de session est publique. Peut-être que cela affaiblie le chiffrement et donc la solidité de la protection des objets. A voir…</p>
         <p>Par commodité, je pense qu’il serait intéressant de lier explicitement l’entité destinataire et l’objet chiffré.</p>
 
         <h5 id="ckovi">CKOVI / Cryptographie de l'Objet - Vecteur Initial</h5>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Pour la plupart des modes de chiffrements symétriques, un vecteur initial (semence ou IV) est nécessaire. Il est lié à l’objet chiffré pour permettre le déchiffrement de celui-ci. Par défaut, sa valeur est aléatoire.</p>
         <p>Si pas précisé, il est égale à 0.</p>
         <p>Du fait du fonctionnement du mode CTR (CounTeR), l’IV s’incrémente à chaque bloc chiffré.</p>
 
         <h4 id="ckoc">CKOC / Cryptographie de l'Objet - Compression</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Il est préférable d’associer de la compression avec le chiffrement.</p>
         <p>La compression des données déjà chiffrées est impossible, non que l’on ne puisse le faire, mais le gain de compression sera nul. L’entropie détermine la limite théorique maximum vers laquelle un algorithme de compression sans pertes peut espérer compresser des données. Quelque soit l’entropie des données d’origine, une fois chiffrées leur entropie est maximale. Si un algorithme obtient une compression des données chiffrées, il faut sérieusement remettre en question la fiabilité de l’algorithme de chiffrement. CF <a class="external text" title="http://fr.wikipedia.org/wiki/Entropie_de_Shannon" href="http://fr.wikipedia.org/wiki/Entropie_de_Shannon" rel="nofollow">Wikipedia – Entropie de Shannon</a>.</p>
         <p>A cause de l’entropie après chiffrement, si on veut compresser les données il est donc nécessaire de le faire avant le chiffrement.</p>
@@ -572,6 +599,7 @@ foreach ( $options as $option )
         <p>La seule contrainte, c’est l’obligation d’utiliser un algorithme de compression sans perte. L’objet, une fois décompressé doit être vérifiable par sa signature. Il doit donc être strictement identique, aucune modification ou perte n’est tolérée.</p>
 
         <h5 id="ckotm">CKOTM / Cryptographie de l'Objet - Type Mime</h5>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Il n’existe pas de type mime généralistes pour des fichiers chiffrés. Comme les objets chiffrés ne sont liés à aucune application en particulier.</p>
         <p>Il faut aussi un moyen de préciser l’algorithme de chiffrement derrière. Une application aura besoin de connaître cet algorithme pour déchiffrer le <i>flux</i> d’octets. En suivant la <a class="external text" title="http://www.rfc-editor.org/rfc/rfc2046.txt" href="http://www.rfc-editor.org/rfc/rfc2046.txt" rel="nofollow">rfc2046</a>, il reste la possibilité de créer quelque chose en <code>application/x-...</code></p>
         <p>Voici donc comment seront définis les objets chiffrés dans nebule :</p>
@@ -584,19 +612,23 @@ foreach ( $options as $option )
         <p>En fonction de l’algorithme invoqué, on sait si c’est du chiffrement symétrique ou asymétrique, et donc en principe si c’est pour une clé de session ou pas.</p>
 
         <h5 id="ckorc">CKORC / Cryptographie de l'Objet - Résolution de Conflits</h5>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Comment se comporter face à un objet que l’on sait (lien k) chiffré dans un autre objet mais qui est disponible chez d’autres entités ? Si on est destinataire légitime de cet objet, on ne le propage pas en clair. On ne télécharge pas la version en clair. On garde la version chiffrée.</p>
 
         <h3 id="cka">CKA / Aléas cryptographiques</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L'aléa de qualité cryptographique est défini comme une suite de bits reconnue comme aléatoire, c'est à dire lorsque son état futur est parfaitement imprédictible, y compris en disposant de l'intégralité de l'aléa généré par la machine dans le passé. Elle est nécessaire à certains processus cryptographiques.</p>
         <p>L'aléa de qualité cryptographique étant long à générer, il doit être utilisé avec précaution pour ne pas se retrouver épuisée lorsque le besoin est réel.</p>
         <p>Cependant, l'aléa peut être utile dans certaines fonctions sans pour autant nécessiter d'être de bonne qualité. Il faut donc disposer d'un aléa de qualité cryptographique et un aléa généraliste.</p>
         <p>La bibliothèque propose dans son code deux générations d'aléa.</p>
 
         <h2 id="cs">CS / Sociabilité</h2>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Lors de l'exploitation des liens, plusieurs méthodes permettent une analyse pré-définie de la validité dite sociale des liens afin de les trier ou de les filtrer.</p>
         <p>A faire...</p>
 
         <h2 id="cn">CN / Nettoyage, suppression et oubli</h2>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L'oubli vonlontaire de certains liens et objets n'est encore ni théorisé ni implémenté mais deviendra indispensable lorsque l'espace viendra à manquer (cf <a href="#ooo">OOO</a> et <a href="#lo">LO</a>).</p>
 
         <?php

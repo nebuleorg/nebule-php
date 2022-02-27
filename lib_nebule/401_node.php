@@ -4083,9 +4083,6 @@ class Node implements nodeInterface
                         <li><a href="#ooo">OOO / Oubli</a></li>
                     </ul>
                 </li>
-
-                <?php Entity::echoDocumentationTitles(); ?>
-
                 <li><a href="#or">OR / Référence</a>
                     <ul>
                         <li><a href="#orn">ORN / Nommage</a></li>
@@ -4101,15 +4098,6 @@ class Node implements nodeInterface
                         <li><a href="#oro">ORO / Oubli</a></li>
                     </ul>
                 </li>
-                <?php Group::echoDocumentationTitles(); ?>
-
-                <?php Conversation::echoDocumentationTitles(); ?>
-
-                <?php Localisation::echoDocumentationTitles(); ?>
-
-                <?php Applications::echoDocumentationTitles(); /* Inclu les modules. */ ?>
-
-                <?php Currency::echoDocumentationTitles(); /* Inclu les sacs et jetons. */ ?>
 
             </ul>
         </li>
@@ -4126,15 +4114,19 @@ class Node implements nodeInterface
         ?>
 
         <h1 id="o">O / Objet</h1>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
         <p>L'objet est le contenant de toutes les informations.</p>
 
         <h2 id="oo">OO / Objet</h2>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L’objet est un agglomérat de données numériques.</p>
         <p>Un objet numérique est identifié par une empreinte ou condensat (hash) numérique de type cryptographique.
             Cette empreinte est à même d'empêcher la modification du contenu d'un objet, intentionnellement ou non (cf
             <a href="#co">CO</a>).</p>
 
         <h3 id="oon">OON / Nommage</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le nommage à l’affichage du nom des objets repose sur plusieurs propriétés :</p>
         <ol>
             <li>nom</li>
@@ -4156,17 +4148,20 @@ class Node implements nodeInterface
         <p class="pcenter"><code>prénom préfixe/nom.suffixe surnom</code></p>
 
         <h3 id="oop">OOP / Protection</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>La protection d'un objet va permettre de cacher le contenu de l'objet.</p>
         <p>A faire...</p>
 
         <h3 id="ood">OOD / Dissimulation</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>La dissimulation des liens d'un objet va permettre de cacher la présence ou l'usage d'un objet.</p>
         <p>A faire...</p>
 
         <h3 id="ool">OOL / Liens</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="ooc">OOC / Création</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L’objet est identifié par un ID égal à la valeur de son empreinte.</p>
         <p>L’indication de la fonction de prise d’empreinte (hashage) est impératif. Elle est défini par le lien :</p>
         <ul>
@@ -4191,19 +4186,22 @@ class Node implements nodeInterface
         <p>A faire...</p>
 
         <h3 id="oos">OOS / Stockage</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Tous les contenus des objets sont stockés dans un même emplacement ou sont visible comme étant dans un même
             emplacement. Cet emplacement ne contient pas les liens (cf <a href="#ls">LS</a>).</p>
         <p>A faire...</p>
 
         <h3 id="oosa">OOSA / Arborescence</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Sur un système de fichiers, tous les contenus des objets sont stockés dans des fichiers contenus dans le
             dossier <code>pub/o/</code> (<code>o</code> comme objet).</p>
         <p>A faire...</p>
 
         <h3 id="oot">OOT / Transfert</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="oor">OOR / Réservation</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Les différentes objets réservés pour les besoins de la bibliothèque nebule :</p>
         <ul>
             <?php
@@ -4222,12 +4220,13 @@ class Node implements nodeInterface
         </ul>
 
         <h4 id="ooio">OOIO / Implémentation des Options</h4>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="ooia">OOIA / Implémentation des Actions</h4>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="oov">OOV / Vérification</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L’empreinte d’un objet doit être vérifiée lors de la fin de la réception de l’objet. L’empreinte d’un objet
             devrait être vérifiée avant chaque utilisation de cet objet. Un contenu d'objet avec une empreinte qui ne
             lui correspond pas doit être supprimé. Lors de la suppression d’un objet, les liens de cet objet ne sont pas
@@ -4235,58 +4234,50 @@ class Node implements nodeInterface
             inversement (cf <a href="#co">CO</a> et <a href="#lv">LV</a>).</p>
 
         <h3 id="ooo">OOO / Oubli</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L'oubli vonlontaire de certains liens et objets n'est encore ni théorisé ni implémenté mais deviendra
             indispensable lorsque l'espace viendra à manquer (cf <a href="#cn">CN</a>).</p>
 
-        <?php Entity::echoDocumentationCore(); ?>
-
         <h2 id="or">OR / Référence</h2>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="orn">ORN / Nommage</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="orp">ORP / Protection</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="ord">ORD / Dissimulation</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="orl">ORL / Liens</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="orc">ORC / Création</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Liste des liens à générer lors de la création d'une entité.</p>
         <p>A faire...</p>
 
         <h3 id="ors">ORS / Stockage</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Voir <a href="#oos">OOS</a>, pas de particularité de stockage.</p>
 
         <h3 id="ort">ORT/ Transfert</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="orr">ORR / Réservation</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="orio">ORIO / Implémentation des Options</h4>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="oria">ORIA / Implémentation des Actions</h4>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="oro">ORO / Oubli</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L'oubli vonlontaire de certains liens et objets n'est encore ni théorisé ni implémenté mais deviendra
             indispensable lorsque l'espace viendra à manquer (cf <a href="#cn">CN</a>).</p>
-
-        <?php Group::echoDocumentationCore(); ?>
-
-        <?php Conversation::echoDocumentationCore(); ?>
-
-        <?php Localisation::echoDocumentationCore(); ?>
-
-        <?php Applications::echoDocumentationCore(); /* Inclu les modules. */ ?>
-
-        <?php Currency::echoDocumentationCore(); /* Inclu les sacs et jetons. */ ?>
 
         <?php
     }

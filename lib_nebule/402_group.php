@@ -1437,6 +1437,8 @@ class Group extends Node implements nodeInterface
         ?>
 
         <h2 id="og">OG / Groupe</h2>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
         <p>Le groupe est un objet définit comme tel, c’est à dire qu’il doit avoir un type mime <code>nebule/objet/groupe</code>.
         </p>
         <p>Fondamentalement, le groupe est un ensemble de plusieurs objets. C’est à dire, c’est le regroupement d’au
@@ -1451,6 +1453,7 @@ class Group extends Node implements nodeInterface
             groupe, c’est à dire que les sous-groupes sont gérés simplement comme des objets.</p>
 
         <h3 id="ogo">OGO / Objet</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L’objet du groupe peut être de deux natures.</p>
         <p>Soit c’est un objet existant qui est en plus définit comme un groupe. L’objet peut avoir un contenu et a
             sûrement d’autres types mime propres. Dans ce cas l’identifiant de groupe est l’identifiant de l’objet
@@ -1462,6 +1465,7 @@ class Group extends Node implements nodeInterface
             Soit un identifiant complet de la taille de 104 caractères.</p>
 
         <h3 id="ogn">OGN / Nommage</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le nommage à l’affichage du nom des groupes repose sur une seule propriété :</p>
         <ol>
             <li>nom</li>
@@ -1476,11 +1480,13 @@ class Group extends Node implements nodeInterface
         </ul>
 
         <h3 id="ogp">OGP / Protection</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>En tant que tel le groupe ne nécessite pas de protection puisque soit l’objet du groupe n’a pas de contenu
             soit on n’utilise pas son contenu directement.</p>
         <p>La gestion de la protection est désactivée dans une instance de groupe.</p>
 
         <h3 id="ogd">OGD / Dissimulation</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le groupe peut en tant que tel être dissimulé, c’est à dire que l’on dissimule l’existence du groupe, donc sa
             création.</p>
         <p>La dissimulation devrait se faire lors de la création du groupe.</p>
@@ -1491,6 +1497,7 @@ class Group extends Node implements nodeInterface
             lien de suppression.</p>
 
         <h3 id="ogf">OGF / Fermeture</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le groupe va contenir un certain nombre de membres ajouter par différentes entités. Il est possible de
             limiter le nombre des membres à utiliser dans un groupe en restreignant artificiellement les entités
             contributrices du groupe. Ainsi on marque le groupe comme fermé et on filtre sur les membres uniquement
@@ -1515,6 +1522,7 @@ class Group extends Node implements nodeInterface
         </p>
 
         <h4 id="ogpm">OGPM / Protection des membres</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le groupe va contenir un certain nombre de membres ajouter par différentes entités. Il est possible de
             limiter la visibilité du contenu des membres utilisés dans un groupe en restreignant artificiellement les
             entités destinataires qui pourront les consulter.</p>
@@ -1537,6 +1545,7 @@ class Group extends Node implements nodeInterface
         </p>
 
         <h4 id="ogdm">OGDM / Dissimulation des membres</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le groupe va contenir un certain nombre de membres ajouter par différentes entités. Il est possible de
             limiter la visibilité de l’appartenance des membres utilisés dans un groupe en restreignant artificiellement
             les entités destinataires qui pourront les voir.</p>
@@ -1559,6 +1568,7 @@ class Group extends Node implements nodeInterface
             <em>self</em>.</p>
 
         <h3 id="ogl">OGL / Liens</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Une entité doit être déverrouillée pour la création de liens.</p>
         <ul>
             <li>Le lien de définition du groupe :
@@ -1699,6 +1709,7 @@ class Group extends Node implements nodeInterface
         </ul>
 
         <h3 id="ogc">OGC / Création</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Liste des liens à générer lors de la création d'un groupe :</p>
         <ul>
             <li>Le lien de définition du groupe :
@@ -1773,12 +1784,14 @@ class Group extends Node implements nodeInterface
         </ul>
 
         <h3 id="ogs">OGS / Stockage</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Voir <a href="#oos">OOS</a>, pas de particularité de stockage.</p>
 
         <h3 id="ogt">OGT / Transfert</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="ogr">OGR / Réservation</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Les objets réservés spécifiquement pour les groupes :</p>
         <ul>
             <li>nebule/objet/groupe</li>
@@ -1788,6 +1801,7 @@ class Group extends Node implements nodeInterface
         </ul>
 
         <h4 id="ogio">OGIO / Implémentation des Options</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Les options spécifiques aux groupes :</p>
         <ul>
             <li><code>permitWriteGroup</code> : permet toute écriture de groupes.</li>
@@ -1804,6 +1818,7 @@ class Group extends Node implements nodeInterface
             l’objet du groupe ne sera pas créé.</p>
 
         <h4 id="ogia">OGIA / Implémentation des Actions</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Dans les actions, on retrouve les chaînes :</p>
         <ul>
             <li><code>creagrp</code> : Crée un groupe.</li>

@@ -1002,7 +1002,8 @@ class Entity extends Node implements nodeInterface
         ?>
 
         <h2 id="oe">OE / Entité</h2>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
         <p>L’entité est un objet caractéristique. Elle dispose d’une clé publique, par laquelle elle est identifiée, et
             d’une clé privée.</p>
         <p>L’indication de la fonction de prise d’empreinte (hashage) ainsi que le type de bi-clé sont impératifs. Le
@@ -1012,6 +1013,7 @@ class Entity extends Node implements nodeInterface
         <p>Toutes les autres indications sont optionnelles.</p>
 
         <h3 id="oem">OEM / Entités Maîtresses</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>La bibliothèque utilise actuellement plusieurs entités spéciales, dites autorités maîtresses, avec des rôles
             prédéfinis.</p>
         <ol>
@@ -1033,6 +1035,7 @@ class Entity extends Node implements nodeInterface
         </ol>
 
         <h3 id="oen">OEN / Nommage</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le nommage à l’affichage du nom des entités repose sur plusieurs propriétés :</p>
         <ol>
             <li>nom</li>
@@ -1054,15 +1057,16 @@ class Entity extends Node implements nodeInterface
         <p><code>préfixe prénom "surnom" nom suffixe</code></p>
 
         <h3 id="oep">OEP / Protection</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="oed">OED / Dissimulation</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="oel">OEL / Liens</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="oec">OEC / Création</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>La première étape consiste en la génération d’un bi-clé (public/privé) cryptographique. Ce bi-clé peut être
             de type RSA ou équivalent. Aujourd’hui, seul RSA est reconnu.</p>
         <p>On extrait la clé publique du bi-clé. Le calcul de l’empreinte cryptographique de la clé publique donne
@@ -1140,21 +1144,23 @@ class Entity extends Node implements nodeInterface
             lien reliant l’objet de mot de passe à la clé privée de la nouvelle entité.</p>
 
         <h3 id="oes">OES / Stockage</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Voir <a href="#oos">OOS</a>, pas de particularité de stockage.</p>
 
         <h3 id="oet">OET / Transfert</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="oer">OER / Réservation</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="oeio">OEIO / Implémentation des Options</h4>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="oeia">OEIA / Implémentation des Actions</h4>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="oeo">OEO / Oubli</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L'oubli vonlontaire de certains liens et objets n'est encore ni théorisé ni implémenté mais deviendra
             indispensable lorsque l'espace viendra à manquer (cf <a href="#cn">CN</a>).</p>
 

@@ -156,42 +156,45 @@ class Localisation extends Node implements nodeInterface
         ?>
 
         <h2 id="ol">OL / Localisation</h2>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
         <p>Une localisation permet de trouver l’emplacement des objets et liens générés par une entité.</p>
         <p>Un emplacement n’a de sens que pour une entité.</p>
         <p>Une entité peut disposer de plusieurs localisations. Il faut considérer que toute entité qui héberge l’objet
             d’une autre entité devient de fait une localisation valide même si cela n’est pas explicitement définit.</p>
 
         <h3 id="oln">OLN / Nommage</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="olp">OLP / Protection</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="old">OLD / Dissimulation</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="oll">OLL / Liens</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="olc">OLC / Création</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Liste des liens à générer lors de la création d'une localisation.</p>
         <p>A faire...</p>
 
         <h3 id="ols">OLS / Stockage</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Voir <a href="#oos">OOS</a>, pas de particularité de stockage.</p>
 
         <h3 id="olt">OLT / Transfert</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="olr">OLR / Réservation</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="olio">OLIO / Implémentation des Options</h4>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="olia">OLIA / Implémentation des Actions</h4>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <?php
     }
