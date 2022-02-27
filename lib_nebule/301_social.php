@@ -326,4 +326,33 @@ class Social implements SocialInterface
     {
         return array('myself', 'notmyself', 'self', 'notself', 'strict', 'all', 'none', 'onlist', 'offlist', 'reputation', 'unreputation');
     }
+
+    /**
+     * Affiche la partie menu de la documentation.
+     *
+     * @return void
+     */
+    static public function echoDocumentationTitles()
+    {
+        ?>
+
+        <li><a href="#s">S / Social</a></li>
+
+        <?php
+    }
+
+    /**
+     * Affiche la partie texte de la documentation.
+     *
+     * @return void
+     */
+    static public function echoDocumentationCore()
+    {
+        ?>
+
+        <h1 id="s">S / Social</h1>
+        <p>Gestion des relations sociales dans l'exploitation des objets. En cours...</p>
+
+        <?php
+    }
 }
