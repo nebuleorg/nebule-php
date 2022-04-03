@@ -6615,10 +6615,22 @@ function bootstrap_displayApplication0()
     }
     unset($refAppsID, $linksList, $link, $hashTarget, $instanceAppsID);
 
-    // Affiche la page d'interruption.
+    // Display interrupt page.
     echo '<a href="/?b">';
     echo '<div class="apps" style="background:#000000;">';
     echo '<span class="appstitle">Nb</span><br /><span class="appsname">break</span>';
+    echo "</div></a>\n";
+
+    // Display page of technical documentation.
+    echo '<a href="/?a=1">';
+    echo '<div class="apps" style="background:#111111;">';
+    echo '<span class="appstitle">N1</span><br /><span class="appsname">doc tech</span>';
+    echo "</div></a>\n";
+
+    // Display default app page.
+    echo '<a href="/?a=2">';
+    echo '<div class="apps" style="background:#222222;">';
+    echo '<span class="appstitle">N2</span><br /><span class="appsname">defolt</span>';
     echo "</div></a>\n";
 
     // Lister les applications.
