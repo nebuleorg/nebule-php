@@ -6741,7 +6741,7 @@ function bootstrap_displayApplication2()
 
     echo '<div class="layout-main">' . "\n";
     echo ' <div class="layout-content">' . "\n";
-    echo '  <img alt="nebule" id="logo" src="<?php echo LIB_APPLICATION_LOGO_LIGHT; ?>"/>' . "\n";
+    echo '  <img alt="nebule" id="logo" src="' . LIB_APPLICATION_LOGO_LIGHT . '"/>' . "\n";
     echo " </div>\n";
     echo "</div>\n";
 
