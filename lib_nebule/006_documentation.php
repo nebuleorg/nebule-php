@@ -43,6 +43,12 @@ class Documentation
 <ul>
     <?php
         Documentation::echoDocumentationTitles();
+        ?>
+
+    <li><a href="#o">O / Objet</a>
+        <ul>
+
+        <?php
         Node::echoDocumentationTitles();
         Group::echoDocumentationTitles();
         Entity::echoDocumentationTitles();
@@ -54,12 +60,18 @@ class Documentation
         Wallet::echoDocumentationTitles();
         Applications::echoDocumentationTitles();
         Modules::echoDocumentationTitles();
+        ?>
+
+        </ul>
+    </li>
+
+        <?php
         blocLink::echoDocumentationTitles();
         Link::echoDocumentationTitles();
         Transaction::echoDocumentationTitles();
         Crypto::echoDocumentationTitles();
         Social::echoDocumentationTitles();
-    ?>
+        ?>
 
 </ul>
 
@@ -74,11 +86,11 @@ class Documentation
         TokenPool::echoDocumentationCore();
         Token::echoDocumentationCore();
         Wallet::echoDocumentationCore();
+        Applications::echoDocumentationCore();
+        Modules::echoDocumentationCore();
         blocLink::echoDocumentationCore();
         Link::echoDocumentationCore();
         Transaction::echoDocumentationCore();
-        Applications::echoDocumentationCore();
-        Modules::echoDocumentationCore();
         Crypto::echoDocumentationCore();
         Social::echoDocumentationCore();
     }

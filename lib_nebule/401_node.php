@@ -4061,46 +4061,42 @@ class Node implements nodeInterface
     {
         ?>
 
-        <li><a href="#o">O / Objet</a>
+        <li><a href="#oo">OO / Objet</a>
             <ul>
-                <li><a href="#oo">OO / Objet</a>
+                <li><a href="#oon">OON / Nommage</a></li>
+                <li><a href="#oop">OOP / Protection</a></li>
+                <li><a href="#ood">OOD / Dissimulation</a></li>
+                <li><a href="#ool">OOL / Liens</a></li>
+                <li><a href="#ooc">OOC / Création</a></li>
+                <li><a href="#oos">OOS / Stockage</a>
                     <ul>
-                        <li><a href="#oon">OON / Nommage</a></li>
-                        <li><a href="#oop">OOP / Protection</a></li>
-                        <li><a href="#ood">OOD / Dissimulation</a></li>
-                        <li><a href="#ool">OOL / Liens</a></li>
-                        <li><a href="#ooc">OOC / Création</a></li>
-                        <li><a href="#oos">OOS / Stockage</a>
-                            <ul>
-                                <li><a href="#oosa">OOSA / Arborescence</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#oot">OOT / Transfert</a></li>
-                        <li><a href="#oor">OOR / Réservation</a></li>
-                        <li><a href="#ooio">OOIO / Implémentation des Options</a></li>
-                        <li><a href="#ooia">OOIA / Implémentation des Actions</a></li>
-                        <li><a href="#oov">OOV / Vérification</a></li>
-                        <li><a href="#ooo">OOO / Oubli</a></li>
+                        <li><a href="#oosa">OOSA / Arborescence</a></li>
                     </ul>
                 </li>
-                <li><a href="#or">OR / Référence</a>
-                    <ul>
-                        <li><a href="#orn">ORN / Nommage</a></li>
-                        <li><a href="#orp">ORP / Protection</a></li>
-                        <li><a href="#ord">ORD / Dissimulation</a></li>
-                        <li><a href="#orl">ORL / Liens</a></li>
-                        <li><a href="#orc">ORC / Création</a></li>
-                        <li><a href="#ors">ORS / Stockage</a></li>
-                        <li><a href="#ort">ORT / Transfert</a></li>
-                        <li><a href="#orr">ORR / Réservation</a></li>
-                        <li><a href="#orio">ORIO / Implémentation des Options</a></li>
-                        <li><a href="#oria">ORIA / Implémentation des Actions</a></li>
-                        <li><a href="#oro">ORO / Oubli</a></li>
-                    </ul>
-                </li>
-
+                <li><a href="#oot">OOT / Transfert</a></li>
+                <li><a href="#oor">OOR / Réservation</a></li>
+                <li><a href="#ooio">OOIO / Implémentation des Options</a></li>
+                <li><a href="#ooia">OOIA / Implémentation des Actions</a></li>
+                <li><a href="#oov">OOV / Vérification</a></li>
+                <li><a href="#ooo">OOO / Oubli</a></li>
             </ul>
         </li>
+        <li><a href="#or">OR / Référence</a>
+            <ul>
+                <li><a href="#orn">ORN / Nommage</a></li>
+                <li><a href="#orp">ORP / Protection</a></li>
+                <li><a href="#ord">ORD / Dissimulation</a></li>
+                <li><a href="#orl">ORL / Liens</a></li>
+                <li><a href="#orc">ORC / Création</a></li>
+                <li><a href="#ors">ORS / Stockage</a></li>
+                <li><a href="#ort">ORT / Transfert</a></li>
+                <li><a href="#orr">ORR / Réservation</a></li>
+                <li><a href="#orio">ORIO / Implémentation des Options</a></li>
+                <li><a href="#oria">ORIA / Implémentation des Actions</a></li>
+                <li><a href="#oro">ORO / Oubli</a></li>
+            </ul>
+        </li>
+
         <?php
     }
 
