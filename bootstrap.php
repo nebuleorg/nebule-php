@@ -6565,8 +6565,9 @@ function bootstrap_displayApplication0()
 
     echo '<div id="appslist">';
     // Extraire la liste des applications disponibles.
-    $refAppsID = $nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
-    $instanceAppsID = new Node($nebuleInstance, $refAppsID);
+    //$refAppsID = $nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
+    $refAppsID=LIB_RID_INTERFACE_APPLICATIONS;
+    $instanceAppsID = new Node($nebuleInstance, LIB_RID_INTERFACE_APPLICATIONS);
     $applicationsList = array();
     $signersList = array();
     $hashTarget = '';
@@ -6575,30 +6576,32 @@ function bootstrap_displayApplication0()
     $links = array();
     $filter = array(
         'bl/rl/req' => 'f',
-        'bl/rl/nid1' => $refAppsID,
-        'bl/rl/nid3' => $refAppsID,
+        'bl/rl/nid1' => LIB_RID_INTERFACE_APPLICATIONS,
+        'bl/rl/nid3' => '81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288',
     );
-    $instanceAppsID->getLinks($links, $filter, null);
+    $instanceAppsID->getLinks($links, $filter, false);
 
 
+log_add('MARK refAppsID=' . LIB_RID_INTERFACE_APPLICATIONS, 'normal', __FUNCTION__, '00000000'); // FIXME
     $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getPuppetmaster(), // FIXME
-        '', 'f', $refAppsID, '', $refAppsID);
+        '', 'f', LIB_RID_INTERFACE_APPLICATIONS, '', '81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288');
+log_add('MARK size linksList=' . sizeof($linksList), 'normal', __FUNCTION__, '00000000');// FIXME
     $link = null;
     foreach ($linksList as $link) {
-        $hashTarget = $link->getHashTarget();
+        $hashTarget = $link->getParsed('bl/rl/nid2');
         $applicationsList[$hashTarget] = $hashTarget;
-        $signersList[$hashTarget] = $link->getHashSigner();
+        $signersList[$hashTarget] = $link->getParsed('bs/rs1/eid');// FIXME
     }
 
     // Liste les applications reconnues par l'entité instance du serveur, si autorité locale et pas en mode de récupération.
     if ($nebuleInstance->getConfigurationInstance()->getOptionAsBoolean('permitInstanceEntityAsAuthority')
         && !$nebuleInstance->getModeRescue()
     ) {
-        $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getInstanceEntity(), '', 'f', $refAppsID, '', $refAppsID);
+        $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getInstanceEntity(), '', 'f', LIB_RID_INTERFACE_APPLICATIONS, '', '81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288');
         foreach ($linksList as $link) {
-            $hashTarget = $link->getHashTarget();
+            $hashTarget = $link->getParsed('bl/rl/nid2');
             $applicationsList[$hashTarget] = $hashTarget;
-            $signersList[$hashTarget] = $link->getHashSigner();
+            $signersList[$hashTarget] = $link->getParsed('bs/rs1/eid');// FIXME
         }
     }
 
@@ -6606,11 +6609,11 @@ function bootstrap_displayApplication0()
     if ($nebuleInstance->getConfigurationInstance()->getOptionAsBoolean('permitDefaultEntityAsAuthority')
         && !$nebuleInstance->getModeRescue()
     ) {
-        $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getDefaultEntity(), '', 'f', $refAppsID, '', $refAppsID);
+        $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getDefaultEntity(), '', 'f', LIB_RID_INTERFACE_APPLICATIONS, '', '81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288');
         foreach ($linksList as $link) {
-            $hashTarget = $link->getHashTarget();
+            $hashTarget = $link->getParsed('bl/rl/nid2');
             $applicationsList[$hashTarget] = $hashTarget;
-            $signersList[$hashTarget] = $link->getHashSigner();
+            $signersList[$hashTarget] = $link->getParsed('bs/rs1/eid');// FIXME
         }
     }
     unset($refAppsID, $linksList, $link, $hashTarget, $instanceAppsID);
