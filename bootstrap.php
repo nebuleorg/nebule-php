@@ -3881,12 +3881,11 @@ function app_getActivated(string $oid): bool
         return true;
 
     // Check with links.
-    $refActivated = LIB_RID_INTERFACE_APPLICATIONS_ACTIVE;
     $links = array();
     $filter = array(
         'bl/rl/req' => 'f',
         'bl/rl/nid1' => $oid,
-        'bl/rl/nid2' => $refActivated,
+        'bl/rl/nid2' => LIB_RID_INTERFACE_APPLICATIONS_ACTIVE,
         'bl/rl/nid3' => '',
         'bl/rl/nid4' => '',
     );
@@ -3908,7 +3907,8 @@ function app_getActivated(string $oid): bool
  */
 function app_getCodeBranch(): void
 {
-    global $nebuleLocalAuthorities, $codeBranchNID;
+    global $nebuleLocalAuthorities,
+           $codeBranchNID;
 
     if ($codeBranchNID != '')
         return;
@@ -3971,10 +3971,10 @@ function app_getCodeBranch(): void
  * Find a valid application OID from an RID for current code branch.
  * Can be used both for library and application.
  *
- * @param $rid
+ * @param string $rid
  * @return string
  */
-function app_getByRef($rid): string
+function app_getByRef(string $rid): string
 {
     global $nebuleLocalAuthorities,
            $codeBranchNID,
@@ -4007,6 +4007,23 @@ function app_getByRef($rid): string
 
     $lastReferenceSignerID = $resultLink['bs/rs1/eid'];
     return $resultLink['bl/rl/nid2'];
+}
+
+/**
+ * Find a valid application OID from an RID for current code branch.
+ * Can be used both for library and application.
+ *
+ * @param string $rid
+ * @param bool   $activated
+ * @return array
+ */
+function app_getList(string $rid, bool $activated = true): array
+{
+    $list = array();
+
+    // todo
+
+    return $list;
 }
 
 
@@ -4510,7 +4527,8 @@ function bootstrap_getInlineDisplay(): void
 
 function bootstrap_getCheckFingerprint(): void
 {
-    global $nebuleLocalAuthorities, $codeBranchNID;
+    global $nebuleLocalAuthorities,
+           $codeBranchNID;
 
     $data = file_get_contents(BOOTSTRAP_FILE_NAME);
     $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
@@ -6627,7 +6645,7 @@ log_add('MARK size linksList=' . sizeof($linksList), 'normal', __FUNCTION__, '00
     // Display page of technical documentation.
     echo '<a href="/?a=1">';
     echo '<div class="apps" style="background:#111111;">';
-    echo '<span class="appstitle">N1</span><br /><span class="appsname">doc tech</span>';
+    echo '<span class="appstitle">N1</span><br /><span class="appsname">doctec</span>';
     echo "</div></a>\n";
 
     // Display default app page.
