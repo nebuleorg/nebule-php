@@ -6,7 +6,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020220125
+# Version 020220406
 
 export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
@@ -23,6 +23,7 @@ export LIB_RID_CODE_BRANCH='50e1d0348892e7b8a555301983bccdb8a07871843ed8f392d539
 export LIB_RID_INTERFACE_BOOTSTRAP='fc9bb365082ea3a3c8e8e9692815553ad9a70632fe12e9b6d54c8ae5e20959ce94fbb64f.none.288'
 export LIB_RID_INTERFACE_LIBRARY='780c5e2767e15ad2a92d663cf4fb0841f31fd302ea0fa97a53bfd1038a0f1c130010e15c.none.288'
 export LIB_RID_INTERFACE_APPLICATIONS='4046edc20127dfa1d99f645a7a4ca3db42e94feffa151319c406269bd6ede981c32b96e2.none.288'
+export LIB_RID_INTERFACE_APPLICATIONS_ACTIVE='ae2b0dd506026c59b27ae93ef2d1ead7a2c893d2662d360c3937b699428010538b5c0af9.none.288'
 export NID_CODE_BRANCH='81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288'
 
 # Prepare all links specifically for develop and tests.
@@ -356,6 +357,8 @@ EOF
   link="nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_LIBRARY}>${library_hash}>${NID_CODE_BRANCH}"
   sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
   link="nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${sylabe_hash}>${NID_CODE_BRANCH}"
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
+  link="nebule:link/2:0_0>${current_date}/f>${sylabe_hash}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
   sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
 
   sudo chown 1000.33 l/*

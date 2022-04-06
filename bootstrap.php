@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220403';
+const BOOTSTRAP_VERSION = '020220406';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -4019,11 +4019,39 @@ function app_getByRef(string $rid): string
  */
 function app_getList(string $rid, bool $activated = true): array
 {
-    $list = array();
+    global $nebuleLocalAuthorities,
+           $codeBranchNID,
+           $lastReferenceSignerID;
 
-    // todo
+    if ($codeBranchNID == '')
+        app_getCodeBranch();
 
-    return $list;
+    // Get current version of code
+    $links = array();
+    $filter = array(
+        'bl/rl/req' => 'f',
+        'bl/rl/nid1' => $rid,
+        'bl/rl/nid3' => $codeBranchNID,
+        'bl/rl/nid4' => '',
+    );
+    lnk_getList($rid, $links, $filter, false);
+    lnk_filterBySigners($links, $nebuleLocalAuthorities);
+
+    if (sizeof($links) == 0)
+        return $links;
+
+    $resultLinks = array();
+
+    foreach ($links as $link)
+    {
+        if (!isset($link['bl/rl/nid2']) || $link['bl/rl/nid2'] == '')
+            continue;
+        $oid = $link['bl/rl/nid2'];
+        if (!$activated || app_getActivated($oid))
+            $resultLinks[$oid] = $oid;
+    }
+
+    return $resultLinks;
 }
 
 
@@ -6590,51 +6618,9 @@ function bootstrap_displayApplication0()
     $signersList = array();
     $hashTarget = '';
 
-    // Liste les applications reconnues par le maître du code.
-    $links = array();
-    $filter = array(
-        'bl/rl/req' => 'f',
-        'bl/rl/nid1' => LIB_RID_INTERFACE_APPLICATIONS,
-        'bl/rl/nid3' => '81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288',
-    );
-    $instanceAppsID->getLinks($links, $filter, false);
+    $appList = app_getList(LIB_RID_INTERFACE_APPLICATIONS, false);
 
-
-log_add('MARK refAppsID=' . LIB_RID_INTERFACE_APPLICATIONS, 'normal', __FUNCTION__, '00000000'); // FIXME
-    $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getPuppetmaster(), // FIXME
-        '', 'f', LIB_RID_INTERFACE_APPLICATIONS, '', '81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288');
-log_add('MARK size linksList=' . sizeof($linksList), 'normal', __FUNCTION__, '00000000');// FIXME
-    $link = null;
-    foreach ($linksList as $link) {
-        $hashTarget = $link->getParsed('bl/rl/nid2');
-        $applicationsList[$hashTarget] = $hashTarget;
-        $signersList[$hashTarget] = $link->getParsed('bs/rs1/eid');// FIXME
-    }
-
-    // Liste les applications reconnues par l'entité instance du serveur, si autorité locale et pas en mode de récupération.
-    if ($nebuleInstance->getConfigurationInstance()->getOptionAsBoolean('permitInstanceEntityAsAuthority')
-        && !$nebuleInstance->getModeRescue()
-    ) {
-        $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getInstanceEntity(), '', 'f', LIB_RID_INTERFACE_APPLICATIONS, '', '81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288');
-        foreach ($linksList as $link) {
-            $hashTarget = $link->getParsed('bl/rl/nid2');
-            $applicationsList[$hashTarget] = $hashTarget;
-            $signersList[$hashTarget] = $link->getParsed('bs/rs1/eid');// FIXME
-        }
-    }
-
-    // Liste les applications reconnues par l'entité par défaut, si autorité locale et pas en mode de récupération.
-    if ($nebuleInstance->getConfigurationInstance()->getOptionAsBoolean('permitDefaultEntityAsAuthority')
-        && !$nebuleInstance->getModeRescue()
-    ) {
-        $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getDefaultEntity(), '', 'f', LIB_RID_INTERFACE_APPLICATIONS, '', '81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288');
-        foreach ($linksList as $link) {
-            $hashTarget = $link->getParsed('bl/rl/nid2');
-            $applicationsList[$hashTarget] = $hashTarget;
-            $signersList[$hashTarget] = $link->getParsed('bs/rs1/eid');// FIXME
-        }
-    }
-    unset($refAppsID, $linksList, $link, $hashTarget, $instanceAppsID);
+log_add('MARK size appList=' . sizeof($appList), 'normal', __FUNCTION__, '00000000');// FIXME
 
     // Display interrupt page.
     echo '<a href="/?b">';
@@ -6655,34 +6641,9 @@ log_add('MARK size linksList=' . sizeof($linksList), 'normal', __FUNCTION__, '00
     echo "</div></a>\n";
 
     // Lister les applications.
-    $application = '';
-    foreach ($applicationsList as $application) {
+    foreach ($appList as $application) {
         $instance = new Node($nebuleInstance, $application);
-
-        // Recherche si l'application est activée par l'entité instance de serveur.
-        // Ou si l'application est en liste blanche.
-        // Ou si c'est l'application par défaut.
-        $activated = false;
-        foreach (nebule::ACTIVE_APPLICATIONS_WHITELIST as $item) {
-            if ($application == $item)
-                $activated = true;
-        }
-        if ($application == $nebuleInstance->getConfigurationInstance()->getOptionAsString('defaultApplication'))
-            $activated = true;
-        if (!$activated) {
-            $refActivated = $nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE);
-            $linksList = $instance->getLinksOnFields($nebuleInstance->getInstanceEntity(), '', 'f', $application, $refActivated, $application);
-            if (sizeof($linksList) != 0)
-                $activated = true;
-            unset($linksList);
-        }
-
-        // En fonction de l'état d'activation, affiche ou non l'application.
-        if (!$activated)
-            continue;
-
         $color = '#' . substr($application . '000000', 0, 6);
-        //$colorSigner = '#'.substr($signersList[$application].'000000',0,6);
         $title = $instance->getName();
         $shortName = substr($instance->getSurname() . '--', 0, 2);
         $shortName = strtoupper(substr($shortName, 0, 1)) . strtolower(substr($shortName, 1, 1));
@@ -6691,7 +6652,6 @@ log_add('MARK size linksList=' . sizeof($linksList), 'normal', __FUNCTION__, '00
         echo '<span class="appstitle">' . $shortName . '</span><br /><span class="appsname">' . $title . '</span>';
         echo "</div></a>\n";
     }
-    unset($application, $applicationsList, $instance, $color, $title, $shortName);
 
     echo "</div>\n";
     echo '<div id="sync">'."\n";
