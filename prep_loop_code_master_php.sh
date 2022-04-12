@@ -6,7 +6,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020220406
+# Version 020220412
 
 export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
@@ -313,6 +313,10 @@ function work_refresh()
 
   phpOID=$(echo -n 'application/x-httpd-php' | sha256sum | cut -d' ' -f1)'.sha2.256'
   typeRID=$(echo -n 'nebule/objet/type' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  nameOID=$(echo -n 'sylabe' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  nameRID=$(echo -n 'nebule/objet/nom' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  surnameOID=$(echo -n 'Sy' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  surnameRID=$(echo -n 'nebule/objet/surnom' | sha256sum | cut -d' ' -f1)'.sha2.256'
 
   bootstrap_hash=$(sha256sum "${WORKSPACE}/bootstrap.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new bootstrap : ${bootstrap_hash}"
@@ -360,6 +364,15 @@ EOF
   sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
   link="nebule:link/2:0_0>${current_date}/f>${sylabe_hash}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
   sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
+  link="nebule:link/2:0_0>${current_date}/f>${sylabe_hash}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
+  link="nebule:link/2:0_0>${current_date}/l>${sylabe_hash}>${nameOID}>${nameRID}"
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
+  link="nebule:link/2:0_0>${current_date}/l>${sylabe_hash}>${surnameOID}>${surnameRID}"
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
+
+  echo -n "sylabe" > "o/${nameOID}"
+  echo -n "Sy" > "o/${surnameOID}"
 
   sudo chown 1000.33 l/*
   sudo chmod 664 l/*

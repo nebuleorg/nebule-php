@@ -660,9 +660,8 @@ class Node implements nodeInterface
 
         // Trie la liste, pour les liens venants de plusieurs objets.
         $date = array();
-        foreach ($list as $k => $r) {
+        foreach ($list as $k => $r)
             $date[$k] = $r->getDate();
-        }
         array_multisort($date, SORT_STRING, SORT_ASC, $list);
 
         // Fait un tri par pertinence sociale.
@@ -804,14 +803,12 @@ class Node implements nodeInterface
      */
     public function getProperty(string $type, string $socialClass = ''): string
     {
-        if ($type == '') {
+        if ($type == '')
             return '';
-        }
 
         // Si déjà recherché, donne le résultat en cache.
-        if (isset($this->_cacheProperty[$type][$socialClass])) {
+        if (isset($this->_cacheProperty[$type][$socialClass]))
             return $this->_cacheProperty[$type][$socialClass];
-        }
 
         $property = '';
 
@@ -820,9 +817,8 @@ class Node implements nodeInterface
 
         if ($link == ''
             || !is_a($link, 'link')
-        ) {
+        )
             return '';
-        }
 
         // Extrait le contenu de l'objet de propriété.
         $property = $this->_readOneLineOtherObject($link->getHashTarget_disabled());
