@@ -18,10 +18,6 @@ class blocLink implements blocLinkInterface
      * @var array:string
      */
     const SESSION_SAVED_VARS = array(
-        '_fullLink',
-        '_signe',
-        '_signeValue',
-        '_signeAlgo',
         '_signed',
         '_valid',
         '_validStructure',

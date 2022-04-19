@@ -366,6 +366,8 @@ EOF
   sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
   link="nebule:link/2:0_0>${current_date}/f>${sylabe_hash}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
   sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
+
+  echo '   - names'
   link="nebule:link/2:0_0>${current_date}/l>${sylabe_hash}>${nameOID}>${nameRID}"
   sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
   link="nebule:link/2:0_0>${current_date}/l>${sylabe_hash}>${surnameOID}>${surnameRID}"

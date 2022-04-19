@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Sylabe;
+use Nebule\Library\applicationInterface;
 use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
 use Nebule\Library\Actions;
@@ -39,10 +40,10 @@ use const Nebule\Bootstrap\LIB_BOOTSTRAP_ICON;
  * @copyright Projet nebule
  * @link www.nebule.org
  *
- * Le coeur de l'application.
+ * Le cœur de l'application.
  *
  */
-class Application extends Applications
+class Application extends Applications implements applicationInterface
 {
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
@@ -153,7 +154,6 @@ class Application extends Applications
         $this->_nebuleInstance = $nebuleInstance;
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
     }
-
 
     public static function getOption($name)
     {

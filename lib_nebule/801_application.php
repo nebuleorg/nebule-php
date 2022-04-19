@@ -11,7 +11,7 @@ use Nebule\Library\nebule;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-abstract class Applications
+abstract class Applications implements applicationInterface
 {
     const APPLICATION_NAME = 'undef';
     const APPLICATION_SURNAME = 'undef';
@@ -85,6 +85,7 @@ abstract class Applications
     protected $_useModules = false;
 
 
+    
     /**
      * Constructeur.
      *
@@ -102,40 +103,7 @@ abstract class Applications
      *
      * @return void
      */
-    public function initialisation()
-    {
-        global $applicationTraductionInstance, $applicationDisplayInstance, $applicationActionInstance;
-
-        // S'auto-référence pour être capable de se transmettre aux objets.
-        $this->_applicationInstance = $this;
-
-        // Charge l'instance de métrology et de journalisation.
-        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-
-        // Retrouve tout le nécessaire au fonctionnement de l'application sauf les instances.
-        $this->_findEnvironment();
-
-        // Si c'est le téléchargement d'un objet ou de ses liens, on ne fait pas le chargement de l'affichage.
-        if ($this->_findAskDownload()) {
-            return;
-        }
-
-        // Récupère les instances.
-        $this->_traductionInstance = $applicationTraductionInstance;
-        $this->_displayInstance = $applicationDisplayInstance;
-        $this->_actionInstance = $applicationActionInstance;
-
-        // Charge les modules au besoin. Avant les initialisations.
-        $this->_loadModules();
-    }
-
-    /**
-     * Initialisation des variables et instances.
-     * @return void
-     * @todo à optimiser avec __wakeup et __sleep.
-     *
-     */
-    public function initialisation2()
+    public function initialisation(): void
     {
         global $applicationTraductionInstance, $applicationDisplayInstance, $applicationActionInstance;
 
@@ -177,7 +145,7 @@ abstract class Applications
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         global $applicationName;
         return $applicationName;
@@ -190,7 +158,7 @@ abstract class Applications
      *
      * @return array:string
      */
-    public function __sleep()
+    public function __sleep(): array
     {
         return array();
     }
@@ -216,7 +184,7 @@ abstract class Applications
      *
      * @return string
      */
-    public function getClassName()
+    public function getClassName(): string
     {
         global $applicationName;
         return $applicationName;
@@ -228,7 +196,7 @@ abstract class Applications
      *
      * @return nebule
      */
-    public function getNebuleInstance()
+    public function getNebuleInstance(): nebule
     {
         return $this->_nebuleInstance;
     }
@@ -238,7 +206,7 @@ abstract class Applications
      *
      * @return Displays
      */
-    public function getDisplayInstance()
+    public function getDisplayInstance(): Displays
     {
         return $this->_displayInstance;
     }
@@ -248,7 +216,7 @@ abstract class Applications
      *
      * @return Traductions
      */
-    public function getTraductionInstance()
+    public function getTraductionInstance(): Traductions
     {
         return $this->_traductionInstance;
     }
@@ -296,9 +264,9 @@ abstract class Applications
     /**
      * Retourne si les modules sont activé dans l'application.
      *
-     * @return boolean
+     * @return bool
      */
-    public function getUseModules()
+    public function getUseModules(): bool
     {
         return $this->_useModules;
     }
@@ -309,7 +277,7 @@ abstract class Applications
      *
      * @return void
      */
-    protected function _findEnvironment()
+    protected function _findEnvironment(): void
     {
         $this->_findURL();
         $this->_findCurrentEntity();
@@ -351,7 +319,7 @@ abstract class Applications
      *
      * @return void
      */
-    protected function _findURL()
+    protected function _findURL(): void
     {
         /*
 		 *  ------------------------------------------------------------------------------------------
@@ -378,7 +346,7 @@ abstract class Applications
      *
      * @return string
      */
-    public function getUrlProtocol()
+    public function getUrlProtocol(): string
     {
         return $this->_urlProtocol;
     }
@@ -388,7 +356,7 @@ abstract class Applications
      *
      * @return string
      */
-    public function getUrlHost()
+    public function getUrlHost(): string
     {
         return $this->_urlHost;
     }
@@ -398,7 +366,7 @@ abstract class Applications
      *
      * @return string
      */
-    public function getUrlBasename()
+    public function getUrlBasename(): string
     {
         return $this->_urlBasename;
     }
@@ -408,7 +376,7 @@ abstract class Applications
      *
      * @return string
      */
-    public function getUrlPath()
+    public function getUrlPath(): string
     {
         return $this->_urlPath;
     }
@@ -418,7 +386,7 @@ abstract class Applications
      *
      * @return string
      */
-    public function getUrlHostname()
+    public function getUrlHostname(): string
     {
         return $this->_urlHostname;
     }
@@ -1667,7 +1635,7 @@ abstract class Applications
     {
         ?>
 
-        <li><a href="#oi">OA / Application</a>
+        <li><a href="#oa">OA / Application</a>
             <ul>
                 <li><a href="#oaf">OAF / Fonctionnement</a></li>
                 <li><a href="#oan">OAN / Nommage</a></li>
