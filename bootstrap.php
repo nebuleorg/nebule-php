@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220406';
+const BOOTSTRAP_VERSION = '020220420';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 // ------------------------------------------------------------------------------------------
@@ -4020,8 +4020,7 @@ function app_getByRef(string $rid): string
 function app_getList(string $rid, bool $activated = true): array
 {
     global $nebuleLocalAuthorities,
-           $codeBranchNID,
-           $lastReferenceSignerID;
+           $codeBranchNID;
 
     if ($codeBranchNID == '')
         app_getCodeBranch();
