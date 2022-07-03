@@ -49,8 +49,10 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
     const APPLICATION_VERSION = '020211218';
-    const APPLICATION_LICENCE = 'GNU GPL 2013-2021';
+    const APPLICATION_LICENCE = 'GNU GPL 2013-2022';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
+    const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
+    const APPLICATION_CODING = 'application/x-httpd-php';
 
     const APPLICATION_ENVIRONMENT_FILE = 'nebule.env';
     const APPLICATION_DEFAULT_DISPLAY_ONLINE_HELP = true;

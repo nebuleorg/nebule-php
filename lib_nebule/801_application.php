@@ -19,6 +19,8 @@ abstract class Applications implements applicationInterface
     const APPLICATION_VERSION = 'undef';
     const APPLICATION_LICENCE = 'undef';
     const APPLICATION_WEBSITE = 'undef';
+    const APPLICATION_NODE = 'undef';
+    const APPLICATION_CODING = 'application/x-httpd-php';
 
     /* ---------- ---------- ---------- ---------- ----------
 	 * Variables.

@@ -13,9 +13,11 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220420';
+const BOOTSTRAP_VERSION = '020220703';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
+const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
+const BOOTSTRAP_CODING = 'application/x-httpd-php';
 // ------------------------------------------------------------------------------------------
 
 
@@ -171,22 +173,46 @@ $bootstrapFlush = false;
 $bootstrapUpdate = false;
 
 /**
- * ID of the last signer find on a link search by reference.
+ * ID of the last signer find on a link search by reference (app).
  * @noinspection PhpUnusedLocalVariableInspection
  */
-$lastReferenceSignerID = '';
+$lastReferenceSID = '';
 
 /**
- * ID de la bibliothèque mémorisé dans la session PHP.
+ * ID (Intermediate) of the bootstrap.
  * @noinspection PhpUnusedLocalVariableInspection
  */
-$bootstrapLibraryID = '';
+$bootstrapCodeIID = '';
+
+/**
+ * ID of the branch of the bootstrap.
+ * @noinspection PhpUnusedLocalVariableInspection
+ */
+$bootstrapCodeBID = '';
+
+/**
+ * ID of the signer for the bootstrap.
+ * @noinspection PhpUnusedLocalVariableInspection
+ */
+$bootstrapCodeSID = '';
+
+/**
+ * ID (Intermediate) de la bibliothèque mémorisé dans la session PHP.
+ * @noinspection PhpUnusedLocalVariableInspection
+ */
+$bootstrapLibraryIID = '';
+
+/**
+ * ID du code de la bibliothèque mémorisé dans la session PHP.
+ * @noinspection PhpUnusedLocalVariableInspection
+ */
+$bootstrapLibraryOID = '';
 
 /**
  * ID of the signer for the library.
  * @noinspection PhpUnusedLocalVariableInspection
  */
-$bootstrapLibrarySignerID = '';
+$bootstrapLibrarySID = '';
 
 /**
  * Instance non dé-sérialisée de la bibliothèque mémorisée dans la session PHP.
@@ -195,7 +221,7 @@ $bootstrapLibrarySignerID = '';
 $bootstrapLibraryInstanceSleep = '';
 
 /**
- * ID de l'application mémorisé dans la session PHP.
+ * ID (Intermediate) de l'application mémorisé dans la session PHP.
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapApplicationID = '';
@@ -3901,11 +3927,11 @@ function app_getActivated(string $oid): bool
 }
 
 /**
- * Find code branch to find apps codes.
+ * Find current code branch to find apps codes.
  *
  * @return void
  */
-function app_getCodeBranch(): void
+function app_getCurrentBranch(): void
 {
     global $nebuleLocalAuthorities,
            $codeBranchNID;
@@ -3969,6 +3995,7 @@ function app_getCodeBranch(): void
 
 /**
  * Find a valid application OID from an RID for current code branch.
+ * Return a IID (Intermediate ID).
  * Can be used both for library and application.
  *
  * @param string $rid
@@ -3978,18 +4005,20 @@ function app_getByRef(string $rid): string
 {
     global $nebuleLocalAuthorities,
            $codeBranchNID,
-           $lastReferenceSignerID;
+           $lastReferenceSID;
 
     if ($codeBranchNID == '')
-        app_getCodeBranch();
+        app_getCurrentBranch();
+
+    $phpNID = obj_getNID(BOOTSTRAP_CODING, LIB_REF_CODE_ALGO);
 
     // Get current version of code
     $links = array();
     $filter = array(
         'bl/rl/req' => 'f',
         'bl/rl/nid1' => $rid,
-        'bl/rl/nid3' => $codeBranchNID,
-        'bl/rl/nid4' => '',
+        'bl/rl/nid3' => $phpNID,
+        'bl/rl/nid4' => $codeBranchNID,
     );
     lnk_getList($rid, $links, $filter, false);
     lnk_filterBySigners($links, $nebuleLocalAuthorities);
@@ -4005,34 +4034,40 @@ function app_getByRef(string $rid): string
             $resultLink = $link;
     }
 
-    $lastReferenceSignerID = $resultLink['bs/rs1/eid'];
+    $lastReferenceSID = $resultLink['bs/rs1/eid'];
     return $resultLink['bl/rl/nid2'];
 }
 
 /**
- * Find a valid application OID from an RID for current code branch.
+ * Find a list of valid application OID from an RID for current code branch.
+ * Check or not if app is tagged as activated.
+ * Return a list of IID (Intermediate ID).
  * Can be used both for library and application.
  *
  * @param string $rid
  * @param bool   $activated
+ * @param bool   $allBranches
  * @return array
  */
-function app_getList(string $rid, bool $activated = true): array
+function app_getList(string $rid, bool $activated = true, bool $allBranches=false): array
 {
     global $nebuleLocalAuthorities,
            $codeBranchNID;
 
     if ($codeBranchNID == '')
-        app_getCodeBranch();
+        app_getCurrentBranch();
+
+    $phpNID = obj_getNID(BOOTSTRAP_CODING, LIB_REF_CODE_ALGO);
 
     // Get current version of code
     $links = array();
     $filter = array(
         'bl/rl/req' => 'f',
         'bl/rl/nid1' => $rid,
-        'bl/rl/nid3' => $codeBranchNID,
-        'bl/rl/nid4' => '',
+        'bl/rl/nid3' => $phpNID,
     );
+    if (!$allBranches)
+        $filter['bl/rl/nid4'] = $codeBranchNID;
     lnk_getList($rid, $links, $filter, false);
     lnk_filterBySigners($links, $nebuleLocalAuthorities);
 
@@ -4051,6 +4086,52 @@ function app_getList(string $rid, bool $activated = true): array
     }
 
     return $resultLinks;
+}
+
+/**
+ * Find a valid application code from an IID for current code branch.
+ * Return a OID containing the code.
+ * Can be used both for library and application.
+ *
+ * @param string $iid
+ * @return string
+ */
+function app_getCode(string $iid): string
+{
+    global $nebuleLocalAuthorities,
+           $codeBranchNID,
+           $lastReferenceSID;
+
+    if ($codeBranchNID == '')
+        app_getCurrentBranch();
+
+    // Get current version of code
+    $links = array();
+    $filter = array(
+        'bl/rl/req' => 'f',
+        'bl/rl/nid1' => $iid,
+        'bl/rl/nid3' => $codeBranchNID,
+        'bl/rl/nid4' => '',
+    );
+    lnk_getList($iid, $links, $filter, false);
+    lnk_filterBySigners($links, $nebuleLocalAuthorities);
+
+    if (sizeof($links) == 0)
+        return '';
+
+    // Get newest link
+    // TODO inverser la liste
+    $resultLink=$links[0];
+    foreach ($links as $link)
+    {
+        if (obj_checkTypeMime($link['bl/rl/nid2'], BOOTSTRAP_CODING)
+            && lnk_dateCompare($link['bl/rc/mod'],$link['bl/rc/chr'],$resultLink['bl/rc/mod'],$resultLink['bl/rc/chr']) > 0
+        )
+            $resultLink = $link;
+    }
+
+    $lastReferenceSID = $resultLink['bs/rs1/eid'];
+    return $resultLink['bl/rl/nid2'];
 }
 
 
@@ -4167,6 +4248,8 @@ function bootstrap_getSwitchApplication(): void
 
 /**
  * Activate the capability to open PHP code on other file.
+ *
+ * @return void
  */
 function bootstrap_setPermitOpenFileCode()
 {
@@ -4198,41 +4281,60 @@ function bootstrap_setPermitOpenFileCode()
 function bootstrap_findLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
 {
     global $libraryCheckOK,
-           $bootstrapLibraryID,
-           $bootstrapLibrarySignerID,
-           $lastReferenceSignerID;
+           $bootstrapLibraryIID,
+           $bootstrapLibraryOID,
+           $bootstrapLibrarySID,
+           $lastReferenceSID;
 
     if (!$libraryCheckOK)
         return;
 
     // Try to find on session.
     session_start();
-    if (isset($_SESSION['bootstrapLibrariesID'])
-        && nod_checkNID($_SESSION['bootstrapLibrariesID'])
-        && io_checkNodeHaveLink($_SESSION['bootstrapLibrariesID'])
-        && obj_checkContent($_SESSION['bootstrapLibrariesID'])
-        && isset($_SESSION['bootstrapLibrariesInstances'][$_SESSION['bootstrapLibrariesID']])
-        && $_SESSION['bootstrapLibrariesInstances'][$_SESSION['bootstrapLibrariesID']] != ''
+    if (isset($_SESSION['bootstrapLibraryID'])
+        && nod_checkNID($_SESSION['bootstrapLibraryID'])
+        && io_checkNodeHaveLink($_SESSION['bootstrapLibraryID'])
+        && obj_checkContent($_SESSION['bootstrapLibraryID'])
+        && nod_checkNID($_SESSION['bootstrapLibraryCodeID'])
+        && io_checkNodeHaveLink($_SESSION['bootstrapLibraryCodeID'])
+        && obj_checkContent($_SESSION['bootstrapLibraryCodeID'])
+        && isset($_SESSION['bootstrapLibraryInstances'][$_SESSION['bootstrapLibraryID']])
+        && $_SESSION['bootstrapLibraryInstances'][$_SESSION['bootstrapLibraryID']] != ''
     ) {
-        $bootstrapLibraryID = $_SESSION['bootstrapLibrariesID'];
-        $bootstrapLibraryInstanceSleep = $_SESSION['bootstrapLibrariesInstances'][$_SESSION['bootstrapLibrariesID']];
+        $bootstrapLibraryIID = $_SESSION['bootstrapLibraryID'];
+        $bootstrapLibraryOID = $_SESSION['bootstrapLibraryCodeID'];
+        $bootstrapLibraryInstanceSleep = $_SESSION['bootstrapLibraryInstances'][$_SESSION['bootstrapLibraryID']];
     }
     session_abort();
 
     // Try to find with links.
-    if ($bootstrapLibraryID == '') {
-        $bootstrapLibraryID = app_getByRef(LIB_RID_INTERFACE_LIBRARY);
+    if ($bootstrapLibraryIID == ''
+        || $bootstrapLibraryOID == ''
+    ) {
+        $bootstrapLibraryIID = app_getByRef(LIB_RID_INTERFACE_LIBRARY);
 
-        if (!nod_checkNID($bootstrapLibraryID, false)
-            || !io_checkNodeHaveLink($bootstrapLibraryID)
-            || !obj_checkContent($bootstrapLibraryID)
+        if (nod_checkNID($bootstrapLibraryIID, false)
+            && io_checkNodeHaveLink($bootstrapLibraryIID)
         ) {
-            $bootstrapLibraryID = '';
-            $bootstrapLibraryInstanceSleep = '';
-            bootstrap_setBreak('31', 'Finding nebule library error.');
+            $bootstrapLibraryOID = app_getCode($bootstrapLibraryIID);
+
+            if (nod_checkNID($bootstrapLibraryOID, false)
+                && io_checkNodeHaveLink($bootstrapLibraryOID)
+                && obj_checkContent($bootstrapLibraryOID)
+            ) {
+                log_add('find nebule library (' . $bootstrapLibraryIID . ')', 'info', __FUNCTION__, '90ee41fc');
+                $bootstrapLibrarySID = $lastReferenceSID;
+            } else {
+                $bootstrapLibraryIID = '';
+                $bootstrapLibraryOID = '';
+                $bootstrapLibraryInstanceSleep = '';
+                bootstrap_setBreak('32', 'Finding nebule library code error.');
+            }
         } else {
-            log_add('find nebule library (' . $bootstrapLibraryID . ')', 'info', __FUNCTION__, '90ee41fc');
-            $bootstrapLibrarySignerID = $lastReferenceSignerID;
+            $bootstrapLibraryIID = '';
+            $bootstrapLibraryOID = '';
+            $bootstrapLibraryInstanceSleep = '';
+            bootstrap_setBreak('31', 'Finding nebule library ID error.');
         }
     }
 }
@@ -4244,14 +4346,14 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
  */
 function bootstrap_includeLibraryPOO(): void
 {
-    global $bootstrapLibraryID;
+    global $bootstrapLibraryOID;
 
-    if ($bootstrapLibraryID == '')
-        bootstrap_setBreak('41', 'Library nebule find error');
-    elseif (!io_objectInclude($bootstrapLibraryID)) {
+    if ($bootstrapLibraryOID == '')
+        bootstrap_setBreak('41', 'Library nebule find code error');
+    elseif (!io_objectInclude($bootstrapLibraryOID)) {
         log_reopen(BOOTSTRAP_NAME);
-        bootstrap_setBreak('42', 'Library nebule include error');
-        $bootstrapLibraryID = '';
+        bootstrap_setBreak('42', 'Library nebule include code error');
+        $bootstrapLibraryOID = '';
     }
 }
 
@@ -4264,9 +4366,9 @@ function bootstrap_includeLibraryPOO(): void
 function bootstrap_loadLibraryPOO(string $bootstrapLibraryInstanceSleep): void
 {
     global $nebuleInstance,
-           $bootstrapLibraryID;
+           $bootstrapLibraryIID;
 
-    if ($bootstrapLibraryID != '') {
+    if ($bootstrapLibraryIID != '') {
         try {
             if (!class_exists('nebule', false))
             {
@@ -4552,30 +4654,49 @@ function bootstrap_getInlineDisplay(): void
         $bootstrapInlineDisplay = true;
 }
 
-function bootstrap_getCheckFingerprint(): void
+function bootstrap_checkFingerprint(): bool
 {
     global $nebuleLocalAuthorities,
-           $codeBranchNID;
+           $codeBranchNID,
+           $bootstrapCodeIID,
+           $bootstrapCodeBID,
+           $bootstrapCodeSID;
 
     $data = file_get_contents(BOOTSTRAP_FILE_NAME);
     $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
     unset($data);
 
     if ($codeBranchNID == '')
-        app_getCodeBranch();
+        app_getCurrentBranch();
+
+    $bootstrapListIID = app_getList(LIB_RID_INTERFACE_BOOTSTRAP, false, true);
 
     $links = array();
     $filter = array(
         'bl/rl/req' => 'f',
-        'bl/rl/nid1' => LIB_RID_INTERFACE_BOOTSTRAP,
+        //'bl/rl/nid1' => LIB_RID_INTERFACE_BOOTSTRAP,
         'bl/rl/nid2' => $hash,
-        'bl/rl/nid3' => $codeBranchNID,
+        //'bl/rl/nid3' => $codeBranchNID,
         'bl/rl/nid4' => '',
     );
     lnk_getList($hash, $links, $filter, false);
     lnk_filterBySigners($links, $nebuleLocalAuthorities);
 
-    if (sizeof($links) == 0) {
+    $result = false;
+    foreach ($links as $link)
+        if (isset($bootstrapListIID[$link['bl/rl/nid1']]))
+        {
+            $bootstrapCodeIID = $link['bl/rl/nid1'];
+            $bootstrapCodeBID = $link['bl/rl/nid3'];
+            $bootstrapCodeSID = $link['bs/rs1/eid'];
+            $result = true;
+        }
+    return $result;
+}
+
+function bootstrap_getCheckFingerprint(): void
+{
+    if (!bootstrap_checkFingerprint()) {
         log_add('unknown bootstrap hash - critical', 'error', __FUNCTION__, 'e294b7b3');
         bootstrap_setBreak('51', 'Unknown bootstrap hash');
     }
@@ -5204,10 +5325,11 @@ function bootstrap_displayOnBreak(): void
     bootstrap_htmlHeader();
     bootstrap_htmlTop();
     bootstrap_breakDisplay1OnError();
-    bootstrap_breakDisplay2LibraryPP();
-    bootstrap_breakDisplay3LibraryPOO();
-    bootstrap_breakDisplay4Application();
-    bootstrap_breakDisplay5End();
+    bootstrap_breakDisplay2Bootstrap();
+    bootstrap_breakDisplay3LibraryPP();
+    bootstrap_breakDisplay4LibraryPOO();
+    bootstrap_breakDisplay5Application();
+    bootstrap_breakDisplay6End();
     bootstrap_htmlBottom();
 }
 
@@ -5217,8 +5339,8 @@ function bootstrap_breakDisplay1OnError()
            $libraryRescueMode,
            $bootstrapFlush;
 
-    echo '<div class="parts">' . "\n";
-    echo '<span class="partstitle">#1 ' . BOOTSTRAP_NAME . ' break on</span><br/>' . "\n";
+    echo '<div class="parts">' . "\n" . '<span class="partstitle">#1 ' . BOOTSTRAP_NAME . ' break on</span><br/>' . "\n";
+
     ksort($bootstrapBreak);
     foreach ($bootstrapBreak as $number => $message)
         echo '- [' . $number . '] <span class="error">' . $message . '</span>' . "<br />\n";
@@ -5231,10 +5353,38 @@ function bootstrap_breakDisplay1OnError()
         echo "<a href=\"?a=0\">&gt; Return to application 0</a><br />\n";
     $sessionId = session_id();
     echo '<a href="?f">&gt; Flush PHP session</a> (' . substr(crypto_getDataHash($sessionId), 0, 6) . ')' . "\n";
+
     echo '</div>' . "\n";
 }
 
-function bootstrap_breakDisplay2LibraryPP()
+function bootstrap_breakDisplay2Bootstrap()
+{
+    global $bootstrapCodeIID,
+           $bootstrapCodeBID,
+           $bootstrapCodeSID;
+
+    echo '<div class="parts">' . "\n" . '<span class="partstitle">#2 bootstrap</span><br/>' . "\n";
+
+    $data = file_get_contents(BOOTSTRAP_FILE_NAME);
+    $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
+    unset($data);
+
+    bootstrap_echoLineTitle('bootstrap RID');
+    echo LIB_RID_INTERFACE_BOOTSTRAP . "<br />\n";
+    bootstrap_echoLineTitle('bootstrap BID');
+    echo $bootstrapCodeBID . "<br />\n";
+    bootstrap_echoLineTitle('bootstrap IID');
+    echo $bootstrapCodeIID . "<br />\n";
+    bootstrap_echoLineTitle('bootstrap OID');
+    echo $hash . ' ';
+    bootstrap_echoEndLineTest(bootstrap_checkFingerprint());
+    bootstrap_echoLineTitle('bootstrap SID');
+    echo $bootstrapCodeSID . "<br />\n";
+
+    echo '</div>' . "\n";
+}
+
+function bootstrap_breakDisplay3LibraryPP()
 {
     global $nebuleSecurityAuthorities,
            $nebuleCodeAuthorities,
@@ -5244,8 +5394,8 @@ function bootstrap_breakDisplay2LibraryPP()
            $nebuleDefaultEntity,
            $nebulePublicEntity;
 
-    echo '<div class="parts">' . "\n";
-    echo '<span class="partstitle">#2 nebule library PP</span><br/>' . "\n";
+    echo '<div class="parts">' . "\n" . '<span class="partstitle">#3 nebule library PP</span><br/>' . "\n";
+
     bootstrap_echoLineTitle('library version');
     echo BOOTSTRAP_VERSION . "<br/>\n";
 
@@ -5291,15 +5441,16 @@ function bootstrap_breakDisplay2LibraryPP()
     echo '</div>' . "\n";
 }
 
-function bootstrap_breakDisplay3LibraryPOO()
+function bootstrap_breakDisplay4LibraryPOO()
 {
     global $nebuleInstance,
-           $bootstrapLibraryID,
-           $bootstrapLibrarySignerID,
+           $bootstrapLibraryIID,
+           $bootstrapLibraryOID,
+           $bootstrapLibrarySID,
            $nebuleLibVersion,
            $codeBranchNID;
 
-    echo '<div class="parts">' . "\n" . '<span class="partstitle">#3 nebule library POO</span><br/>';
+    echo '<div class="parts">' . "\n" . '<span class="partstitle">#4 nebule library POO</span><br/>';
     flush();
 
     echo "tL=" . lib_getMetrologyTimer('tL') . "<br />\n";
@@ -5307,62 +5458,66 @@ function bootstrap_breakDisplay3LibraryPOO()
     $codeBranchName = lib_getConfiguration('codeBranch');
     if ($codeBranchName == '')
         $codeBranchName = LIB_CONFIGURATIONS_DEFAULT['codeBranch'];
-    bootstrap_echoLineTitle('code branch RID');
+    bootstrap_echoLineTitle('code branch BID');
     echo $codeBranchNID . ' (' . $codeBranchName . ")<br />\n";
     bootstrap_echoLineTitle('library RID');
     echo LIB_RID_INTERFACE_LIBRARY . "<br />\n";
+    bootstrap_echoLineTitle('library IID');
+    echo $bootstrapLibraryIID . "<br />\n";
     bootstrap_echoLineTitle('library OID');
-    echo $bootstrapLibraryID . ' version ' . $nebuleLibVersion . "<br />\n";
+    echo $bootstrapLibraryOID;
+    if ($bootstrapLibraryOID != '')
+        echo ' version ' . $nebuleLibVersion;
+    echo "<br />\n";
 
     if (is_a($nebuleInstance, 'Nebule\Library\nebule')) {
-        bootstrap_echoLineTitle('library signer');
-        echo $bootstrapLibrarySignerID . "<br />\n";
-        bootstrap_breakDisplay31LibraryEntities();
-        bootstrap_breakDisplay32LibraryCryptography();
-        bootstrap_breakDisplay33LibraryIO();
-        bootstrap_breakDisplay34LibrarySocial();
-        bootstrap_breakDisplay35LibraryBootstrap();
-        bootstrap_breakDisplay36LibraryStats();
+        bootstrap_echoLineTitle('library SID');
+        echo $bootstrapLibrarySID . "<br />\n";
+        bootstrap_breakDisplay41LibraryEntities();
+        bootstrap_breakDisplay42LibraryCryptography();
+        bootstrap_breakDisplay43LibraryIO();
+        bootstrap_breakDisplay44LibrarySocial();
+        bootstrap_breakDisplay45LibraryStats();
     } else
         echo "Not loaded.\n";
 
     echo '</div>' . "\n";
 }
 
-function bootstrap_breakDisplay31LibraryEntities()
+function bootstrap_breakDisplay41LibraryEntities()
 {
     global $nebuleInstance;
 
     $nebuleInstanceCheck = $nebuleInstance->checkInstance();
 
-    bootstrap_breakDisplay311DisplayEntity('puppetmaster',
+    bootstrap_breakDisplay411DisplayEntity('puppetmaster',
         array($nebuleInstance->getPuppetmaster() => $nebuleInstance->getPuppetmaster()),
         array($nebuleInstance->getPuppetmaster() => $nebuleInstance->getPuppetmasterInstance()),
         $nebuleInstanceCheck > 10);
 
-    bootstrap_breakDisplay311DisplayEntity('security authority', $nebuleInstance->getSecurityAuthorities(),
+    bootstrap_breakDisplay411DisplayEntity('security authority', $nebuleInstance->getSecurityAuthorities(),
         $nebuleInstance->getSecurityAuthoritiesInstance(), $nebuleInstanceCheck > 20);
 
-    bootstrap_breakDisplay311DisplayEntity('code authority', $nebuleInstance->getCodeAuthorities(),
+    bootstrap_breakDisplay411DisplayEntity('code authority', $nebuleInstance->getCodeAuthorities(),
         $nebuleInstance->getSecurityAuthoritiesInstance(), $nebuleInstanceCheck > 30);
 
-    bootstrap_breakDisplay311DisplayEntity('directory authority', $nebuleInstance->getDirectoryAuthorities(),
+    bootstrap_breakDisplay411DisplayEntity('directory authority', $nebuleInstance->getDirectoryAuthorities(),
         $nebuleInstance->getDirectoryAuthoritiesInstance(), $nebuleInstanceCheck > 40);
 
-    bootstrap_breakDisplay311DisplayEntity('time authority', $nebuleInstance->getTimeAuthorities(),
+    bootstrap_breakDisplay411DisplayEntity('time authority', $nebuleInstance->getTimeAuthorities(),
         $nebuleInstance->getTimeAuthoritiesInstance(), $nebuleInstanceCheck > 50);
 
-    bootstrap_breakDisplay311DisplayEntity('server entity',
+    bootstrap_breakDisplay411DisplayEntity('server entity',
         array($nebuleInstance->getInstanceEntity() => $nebuleInstance->getInstanceEntity()),
         array($nebuleInstance->getInstanceEntity() => $nebuleInstance->getInstanceEntityInstance()),
         $nebuleInstanceCheck > 60);
 
-    bootstrap_breakDisplay311DisplayEntity('default entity',
+    bootstrap_breakDisplay411DisplayEntity('default entity',
         array($nebuleInstance->getDefaultEntity() => $nebuleInstance->getDefaultEntity()),
         array($nebuleInstance->getDefaultEntity() => $nebuleInstance->getDefaultEntityInstance()),
         $nebuleInstanceCheck > 70);
 
-    bootstrap_breakDisplay311DisplayEntity('current entity',
+    bootstrap_breakDisplay411DisplayEntity('current entity',
         array($nebuleInstance->getCurrentEntity() => $nebuleInstance->getCurrentEntity()),
         array($nebuleInstance->getCurrentEntity() => $nebuleInstance->getCurrentEntityInstance()),
         $nebuleInstanceCheck > 70);
@@ -5370,7 +5525,7 @@ function bootstrap_breakDisplay31LibraryEntities()
     $entity = lib_getConfiguration('subordinationEntity');
     if ($entity != '')
         $instance = $nebuleInstance->getCacheInstance()->newNode($entity, Cache::TYPE_ENTITY);
-    bootstrap_breakDisplay311DisplayEntity('subordination',
+    bootstrap_breakDisplay411DisplayEntity('subordination',
         array($entity => $entity),
         array($entity => $instance),
         $nebuleInstanceCheck > 70);
@@ -5382,7 +5537,7 @@ function bootstrap_breakDisplay31LibraryEntities()
     }
 }
 
-function bootstrap_breakDisplay311DisplayEntity(string $title, array $listEID, array $listInstance, bool $ok): void
+function bootstrap_breakDisplay411DisplayEntity(string $title, array $listEID, array $listInstance, bool $ok): void
 {
     global $nebuleInstance;
 
@@ -5405,7 +5560,7 @@ function bootstrap_breakDisplay311DisplayEntity(string $title, array $listEID, a
     }
 }
 
-function bootstrap_breakDisplay32LibraryCryptography()
+function bootstrap_breakDisplay42LibraryCryptography()
 {
     global $nebuleInstance;
 
@@ -5438,7 +5593,7 @@ function bootstrap_breakDisplay32LibraryCryptography()
         bootstrap_echoEndLineTest(false);
 }
 
-function bootstrap_breakDisplay33LibraryIO()
+function bootstrap_breakDisplay43LibraryIO()
 {
     global $nebuleInstance;
 
@@ -5485,7 +5640,7 @@ function bootstrap_breakDisplay33LibraryIO()
         bootstrap_echoEndLineTest(false);
 }
 
-function bootstrap_breakDisplay34LibrarySocial()
+function bootstrap_breakDisplay44LibrarySocial()
 {
     global $nebuleInstance;
 
@@ -5500,20 +5655,7 @@ function bootstrap_breakDisplay34LibrarySocial()
         bootstrap_echoEndLineTest(false);
 }
 
-function bootstrap_breakDisplay35LibraryBootstrap()
-{
-    $data = file_get_contents(BOOTSTRAP_FILE_NAME);
-    $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
-    unset($data);
-    bootstrap_echoLineTitle('bootstrap RID');
-    echo LIB_RID_INTERFACE_BOOTSTRAP . "<br />\n";
-    bootstrap_echoLineTitle('bootstrap OID');
-    echo $hash . ' ';
-    $boostrap_hash = app_getByRef(LIB_RID_INTERFACE_BOOTSTRAP);
-    bootstrap_echoEndLineTest($boostrap_hash == $hash);
-}
-
-function bootstrap_breakDisplay36LibraryStats()
+function bootstrap_breakDisplay45LibraryStats()
 {
     global $nebuleInstance;
 
@@ -5534,13 +5676,13 @@ function bootstrap_breakDisplay36LibraryStats()
     echo 'CW(c)=' . $nebuleInstance->getCacheInstance()->getCacheWalletSize();
 }
 
-function bootstrap_breakDisplay4Application()
+function bootstrap_breakDisplay5Application()
 {
     global $bootstrapApplicationStartID,
            $bootstrapApplicationID;
 
-    echo '<div class="parts">' . "\n";
-    echo '<span class="partstitle">#4 application</span><br/>' . "\n";
+    echo '<div class="parts">' . "\n" . '<span class="partstitle">#5 application</span><br/>' . "\n";
+
     bootstrap_echoLineTitle('application RID');
     echo '<a href="/?' . LIB_ARG_SWITCH_APPLICATION . '=' . $bootstrapApplicationStartID  . '">'
         . $bootstrapApplicationStartID . '</a><br/>' . "\n";
@@ -5549,11 +5691,11 @@ function bootstrap_breakDisplay4Application()
     echo '</div>' . "\n";
 }
 
-function bootstrap_breakDisplay5End()
+function bootstrap_breakDisplay6End()
 {
     lib_setMetrologyTimer('tE');
-    echo '<div class="parts">' . "\n";
-    echo '<span class="partstitle">#5 end ' . BOOTSTRAP_NAME . '</span><br/>' . "\n";
+    echo '<div class="parts">' . "\n" . '<span class="partstitle">#6 end ' . BOOTSTRAP_NAME . '</span><br/>' . "\n";
+
     echo 'tE=' . lib_getMetrologyTimer('tE') . '<br/>' . "\n";
     echo '</div>' . "\n";
 }
@@ -5599,7 +5741,7 @@ function bootstrap_inlineDisplayOnBreak()
 {
     global $bootstrapBreak,
            $libraryRescueMode,
-           $bootstrapLibraryID,
+           $bootstrapLibraryIID,
            $bootstrapApplicationID;
 
     ob_end_flush();
@@ -5614,7 +5756,7 @@ function bootstrap_inlineDisplayOnBreak()
     if ($libraryRescueMode)
         echo "RESCUE<br />\n";
 
-    echo 'nebule loading library : ' . $bootstrapLibraryID . "<br />\n";
+    echo 'nebule loading library : ' . $bootstrapLibraryIID . "<br />\n";
     echo 'Application loading : ' . $bootstrapApplicationID . "<br />\n";
     echo 'tB=' . lib_getMetrologyTimer('tB') . "<br />\n";
     echo "</p></div>\n";
@@ -5651,7 +5793,7 @@ function bootstrap_displayPreloadApplication()
            $applicationDisplayInstance,
            $applicationActionInstance,
            $applicationTraductionInstance,
-           $bootstrapLibraryID,
+           $bootstrapLibraryIID,
            $bootstrapApplicationID,
            $bootstrapApplicationStartID;
 
@@ -5675,7 +5817,7 @@ function bootstrap_displayPreloadApplication()
     ?>
     <img title="bootstrap" style="background:#ababab;" alt="[]" src="<?php echo LIB_BOOTSTRAP_ICON; ?>"/>
     Load nebule library POO<br/>
-    ID=<?php echo $bootstrapLibraryID; ?><br/>
+    ID=<?php echo $bootstrapLibraryIID; ?><br/>
     <?php
     echo 'tL=' . lib_getMetrologyTimer('tL') . "<br />\n";
     echo '</div>' . "\n";
@@ -6260,7 +6402,7 @@ function bootstrap_firstDisplay6SyncObjects(): bool
     ) {
         log_add('need sync reference objects', 'warn', __FUNCTION__, '0f21ad26');
 
-        app_getCodeBranch();
+        app_getCurrentBranch();
         echo "<br />\ncode branch RID &nbsp;&nbsp;: " . $codeBranchNID . ' ';
         lnk_getDistantOnLocations($codeBranchNID, LIB_FIRST_LOCALISATIONS);
 
@@ -6766,7 +6908,8 @@ function bootstrap_displayRouter()
            $bootstrapApplicationStartID,
            $nebuleInstance,
            $bootstrapServerEntityDisplay,
-           $bootstrapLibraryID;
+           $bootstrapLibraryIID,
+           $bootstrapLibraryOID;
 
     // Fin de la bufferisation de la sortie avec effacement du buffer.
     // Ecrit dans le buffer pour test, ne devra jamais apparaître.
@@ -6924,14 +7067,15 @@ function bootstrap_displayRouter()
             $_SESSION['bootstrapApplicationID'] = $bootstrapApplicationID;
             $_SESSION['bootstrapApplicationStartID'] = $bootstrapApplicationStartID;
             $_SESSION['bootstrapApplicationStartsID'][$bootstrapApplicationStartID] = $bootstrapApplicationID;
-            $_SESSION['bootstrapLibrariesID'] = $bootstrapLibraryID;
+            $_SESSION['bootstrapLibraryID'] = $bootstrapLibraryIID;
+            $_SESSION['bootstrapLibraryCodeID'] = $bootstrapLibraryOID;
 
             // Sérialise les instances et les sauve dans la session PHP.
             $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationStartID] = serialize($applicationInstance);
             $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationStartID] = serialize($applicationDisplayInstance);
             $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationStartID] = serialize($applicationActionInstance);
             $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationStartID] = serialize($applicationTraductionInstance);
-            $_SESSION['bootstrapLibrariesInstances'][$bootstrapLibraryID] = serialize($nebuleInstance);
+            $_SESSION['bootstrapLibraryInstances'][$bootstrapLibraryIID] = serialize($nebuleInstance);
 
             // Fermeture de la session avec écriture.
             session_write_close();

@@ -1,12 +1,13 @@
 #!/bin/bash
 # Prepare or restore an environment to develop and test code.
+#   [ NOT CONFIDENTIAL ]
 # !!! Do not use on real world !!!
 
 # Author Projet nebule
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020220412
+# Version 020220703
 
 export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
@@ -22,10 +23,14 @@ export LIB_RID_DIRECTORY_AUTHORITY='0a4c1e7930a65672379616a2637b84542049b416053a
 LIB_RID_CODE_BRANCH=$(grep 'const LIB_RID_CODE_BRANCH' ${WORKSPACE}/bootstrap.php | head -1 | cut -d\' -f2)
 export LIB_RID_CODE_BRANCH
 export LIB_RID_INTERFACE_BOOTSTRAP='fc9bb365082ea3a3c8e8e9692815553ad9a70632fe12e9b6d54c8ae5e20959ce94fbb64f.none.288'
+export IID_INTERFACE_BOOTSTRAP='304f4431cd011211e8fbb57081cd8f1609a25a46ab30476e4b3bffb90d47e73832374176.none.288'
 export LIB_RID_INTERFACE_LIBRARY='780c5e2767e15ad2a92d663cf4fb0841f31fd302ea0fa97a53bfd1038a0f1c130010e15c.none.288'
+export IID_INTERFACE_LIBRARY='21f6396e921e4373a91d70d13895b04a359316fc269a1c0dc9268a71419ecfb41e88d58d.none.288'
 export LIB_RID_INTERFACE_APPLICATIONS='4046edc20127dfa1d99f645a7a4ca3db42e94feffa151319c406269bd6ede981c32b96e2.none.288'
+export IID_INTERFACE_SYLABE='d1341cd3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288'
 export LIB_RID_INTERFACE_APPLICATIONS_ACTIVE='ae2b0dd506026c59b27ae93ef2d1ead7a2c893d2662d360c3937b699428010538b5c0af9.none.288'
 export NID_CODE_BRANCH='81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288'
+export INIT_DATE='020210714'
 
 # Prepare all links specifically for develop and tests.
 # Same password.
@@ -199,15 +204,15 @@ function work_full_reinit()
   nameOID=$(echo -n 'puppetmaster' | sha256sum | cut -d' ' -f1)'.sha2.256'
   localOID=$(echo -n 'http://puppetmaster.nebule.org' | sha256sum | cut -d' ' -f1)'.sha2.256'
   links=(
-    "nebule:link/2:0_0>020210714/l>${puppetmaster_develop_pem_hash}>${pemOID}>${typeRID}"
-    #"nebule:link/2:0_0>020210714/l>${puppetmaster_develop_key_hash}>${pemOID}>${typeRID}"
-    "nebule:link/2:0_0>020210714/l>${puppetmaster_develop_pem_hash}>${nameOID}>${nameRID}"
-    "nebule:link/2:0_0>020210714/l>${puppetmaster_develop_pem_hash}>${localOID}>${localRID}"
-    "nebule:link/2:0_0>020210714/l>${LIB_RID_SECURITY_AUTHORITY}>${security_authority_develop_pem_hash}>${LIB_RID_SECURITY_AUTHORITY}"
-    "nebule:link/2:0_0>020210714/f>${lauthOID}>${security_authority_develop_pem_hash}"
-    "nebule:link/2:0_0>020210714/l>${LIB_RID_CODE_AUTHORITY}>${code_authority_develop_pem_hash}>${LIB_RID_CODE_AUTHORITY}"
-    "nebule:link/2:0_0>020210714/l>${LIB_RID_DIRECTORY_AUTHORITY}>${directory_authority_develop_pem_hash}>${LIB_RID_DIRECTORY_AUTHORITY}"
-    "nebule:link/2:0_0>020210714/l>${LIB_RID_TIME_AUTHORITY}>${time_authority_develop_pem_hash}>${LIB_RID_TIME_AUTHORITY}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${puppetmaster_develop_pem_hash}>${pemOID}>${typeRID}"
+    #"nebule:link/2:0_0>${INIT_DATE}/l>${puppetmaster_develop_key_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${puppetmaster_develop_pem_hash}>${nameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${puppetmaster_develop_pem_hash}>${localOID}>${localRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_SECURITY_AUTHORITY}>${security_authority_develop_pem_hash}>${LIB_RID_SECURITY_AUTHORITY}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${lauthOID}>${security_authority_develop_pem_hash}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_CODE_AUTHORITY}>${code_authority_develop_pem_hash}>${LIB_RID_CODE_AUTHORITY}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_DIRECTORY_AUTHORITY}>${directory_authority_develop_pem_hash}>${LIB_RID_DIRECTORY_AUTHORITY}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_TIME_AUTHORITY}>${time_authority_develop_pem_hash}>${LIB_RID_TIME_AUTHORITY}"
   )
   for link in "${links[@]}"
   do
@@ -218,10 +223,10 @@ function work_full_reinit()
   nameOID=$(echo -n 'cerberus' | sha256sum | cut -d' ' -f1)'.sha2.256'
   localOID=$(echo -n 'http://cerberus.nebule.org' | sha256sum | cut -d' ' -f1)'.sha2.256'
   links=(
-    "nebule:link/2:0_0>020210714/l>${security_authority_develop_pem_hash}>${pemOID}>${typeRID}"
-    #"nebule:link/2:0_0>020210714/l>${security_authority_develop_key_hash}>${pemOID}>${typeRID}"
-    "nebule:link/2:0_0>020210714/l>${security_authority_develop_pem_hash}>${nameOID}>${nameRID}"
-    "nebule:link/2:0_0>020210714/l>${security_authority_develop_pem_hash}>${localOID}>${localRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_pem_hash}>${pemOID}>${typeRID}"
+    #"nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_key_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_pem_hash}>${nameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_pem_hash}>${localOID}>${localRID}"
   )
   for link in "${links[@]}"
   do
@@ -232,10 +237,10 @@ function work_full_reinit()
   nameOID=$(echo -n 'bachue' | sha256sum | cut -d' ' -f1)'.sha2.256'
   localOID=$(echo -n 'http://bachue.nebule.org' | sha256sum | cut -d' ' -f1)'.sha2.256'
   links=(
-    "nebule:link/2:0_0>020210714/l>${code_authority_develop_pem_hash}>${pemOID}>${typeRID}"
-    #"nebule:link/2:0_0>020210714/l>${code_authority_develop_key_hash}>${pemOID}>${typeRID}"
-    "nebule:link/2:0_0>020210714/l>${code_authority_develop_pem_hash}>${nameOID}>${nameRID}"
-    "nebule:link/2:0_0>020210714/l>${code_authority_develop_pem_hash}>${localOID}>${localRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_pem_hash}>${pemOID}>${typeRID}"
+    #"nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_key_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_pem_hash}>${nameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_pem_hash}>${localOID}>${localRID}"
   )
   for link in "${links[@]}"
   do
@@ -246,10 +251,10 @@ function work_full_reinit()
   nameOID=$(echo -n 'kronos' | sha256sum | cut -d' ' -f1)'.sha2.256'
   localOID=$(echo -n 'http://kronos.nebule.org' | sha256sum | cut -d' ' -f1)'.sha2.256'
   links=(
-    "nebule:link/2:0_0>020210714/l>${time_authority_develop_pem_hash}>${pemOID}>${typeRID}"
-    #"nebule:link/2:0_0>020210714/l>${time_authority_develop_key_hash}>${pemOID}>${typeRID}"
-    "nebule:link/2:0_0>020210714/l>${time_authority_develop_pem_hash}>${nameOID}>${nameRID}"
-    "nebule:link/2:0_0>020210714/l>${time_authority_develop_pem_hash}>${localOID}>${localRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_pem_hash}>${pemOID}>${typeRID}"
+    #"nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_key_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_pem_hash}>${nameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_pem_hash}>${localOID}>${localRID}"
   )
   for link in "${links[@]}"
   do
@@ -260,10 +265,10 @@ function work_full_reinit()
   nameOID=$(echo -n 'asabiyya' | sha256sum | cut -d' ' -f1)'.sha2.256'
   localOID=$(echo -n 'http://asabiyya.nebule.org' | sha256sum | cut -d' ' -f1)'.sha2.256'
   links=(
-    "nebule:link/2:0_0>020210714/l>${directory_authority_develop_pem_hash}>${pemOID}>${typeRID}"
-    #"nebule:link/2:0_0>020210714/l>${directory_authority_develop_key_hash}>${pemOID}>${typeRID}"
-    "nebule:link/2:0_0>020210714/l>${directory_authority_develop_pem_hash}>${nameOID}>${nameRID}"
-    "nebule:link/2:0_0>020210714/l>${directory_authority_develop_pem_hash}>${localOID}>${localRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_pem_hash}>${pemOID}>${typeRID}"
+    #"nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_key_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_pem_hash}>${nameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_pem_hash}>${localOID}>${localRID}"
   )
   for link in "${links[@]}"
   do
@@ -313,6 +318,7 @@ function work_refresh()
   echo " > date : ${current_date}"
 
   phpOID=$(echo -n 'application/x-httpd-php' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  textOID=$(echo -n 'text/plain' | sha256sum | cut -d' ' -f1)'.sha2.256'
   typeRID=$(echo -n 'nebule/objet/type' | sha256sum | cut -d' ' -f1)'.sha2.256'
   nameOID=$(echo -n 'sylabe' | sha256sum | cut -d' ' -f1)'.sha2.256'
   nameRID=$(echo -n 'nebule/objet/nom' | sha256sum | cut -d' ' -f1)'.sha2.256'
@@ -348,31 +354,30 @@ EOF
   cp "${WORKSPACE}/sylabe.php" "o/${sylabe_hash}"
 
   echo ' > links'
-  echo '   - type mime = application/x-httpd-php'
-  link="nebule:link/2:0_0>${current_date}/l>${bootstrap_hash}>${phpOID}>${typeRID}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
-  link="nebule:link/2:0_0>${current_date}/l>${library_hash}>${phpOID}>${typeRID}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
-  link="nebule:link/2:0_0>${current_date}/l>${sylabe_hash}>${phpOID}>${typeRID}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
-
-  echo '   - nebule/objet/interface/web/php/bootstrap in develop branch'
-  link="nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_BOOTSTRAP}>${bootstrap_hash}>${NID_CODE_BRANCH}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
-  link="nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_LIBRARY}>${library_hash}>${NID_CODE_BRANCH}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
-  link="nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${sylabe_hash}>${NID_CODE_BRANCH}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
-  link="nebule:link/2:0_0>${current_date}/f>${sylabe_hash}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
-  link="nebule:link/2:0_0>${current_date}/f>${sylabe_hash}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
-
-  echo '   - names'
-  link="nebule:link/2:0_0>${current_date}/l>${sylabe_hash}>${nameOID}>${nameRID}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
-  link="nebule:link/2:0_0>${current_date}/l>${sylabe_hash}>${surnameOID}>${surnameRID}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
+  links=(
+    # nodes
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_BOOTSTRAP}>${IID_INTERFACE_BOOTSTRAP}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_LIBRARY}>${IID_INTERFACE_LIBRARY}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_SYLABE}>${phpOID}>${NID_CODE_BRANCH}"
+    # type mime = application/x-httpd-php
+    "nebule:link/2:0_0>${current_date}/l>${bootstrap_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${library_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${sylabe_hash}>${phpOID}>${typeRID}"
+    # nebule/objet/interface/web/php/bootstrap in develop branch
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_BOOTSTRAP}>${bootstrap_hash}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_LIBRARY}>${library_hash}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_SYLABE}>${sylabe_hash}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_SYLABE}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    # names
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_SYLABE}>${nameOID}>${nameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_SYLABE}>${surnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${nameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${surnameOID}>${textOID}>${typeRID}"
+  )
+  for link in "${links[@]}"
+  do
+    sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
+  done
 
   echo -n "sylabe" > "o/${nameOID}"
   echo -n "Sy" > "o/${surnameOID}"
@@ -397,10 +402,10 @@ function sign_write_link()
   nid2=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f3)
   nid3=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f4)
   nid4=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f5)
-  [ "${nid1}" != '' ] && touch "l/${nid1}" && [ "$(grep '${flink}' l/${nid1})" == '' ] && echo "${flink}" >> "l/${nid1}"
-  [ "${nid2}" != '' ] && touch "l/${nid2}" && [ "$(grep '${flink}' l/${nid2})" == '' ] && echo "${flink}" >> "l/${nid2}"
-  [ "${nid3}" != '' ] && touch "l/${nid3}" && [ "$(grep '${flink}' l/${nid3})" == '' ] && echo "${flink}" >> "l/${nid3}"
-  [ "${nid4}" != '' ] && touch "l/${nid4}" && [ "$(grep '${flink}' l/${nid4})" == '' ] && echo "${flink}" >> "l/${nid4}"
+  [ "${nid1}" != '' ] && touch "l/${nid1}" && [ ' '$(grep "${flink}" "l/${nid1}") == ' ' ] && echo "${flink}" >> "l/${nid1}"
+  [ "${nid2}" != '' ] && touch "l/${nid2}" && [ ' '$(grep "${flink}" "l/${nid2}") == ' ' ] && echo "${flink}" >> "l/${nid2}"
+  [ "${nid3}" != '' ] && touch "l/${nid3}" && [ ' '$(grep "${flink}" "l/${nid3}") == ' ' ] && echo "${flink}" >> "l/${nid3}"
+  [ "${nid4}" != '' ] && touch "l/${nid4}" && [ ' '$(grep "${flink}" "l/${nid4}") == ' ' ] && echo "${flink}" >> "l/${nid4}"
   echo "${flink}" >> "l/h"
 }
 
