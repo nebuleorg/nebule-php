@@ -753,7 +753,7 @@ abstract class Applications implements applicationInterface
      */
     protected function _findModulesRID()
     {
-        global $bootstrapApplicationStartID;
+        global $bootstrapApplicationIID;
 
         // Vérifie si les modules sont activés.
         if (!$this->_useModules) {
@@ -763,9 +763,9 @@ abstract class Applications implements applicationInterface
         $this->getMetrologyInstance()->addLog('Find option modules', Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Extrait les modules référencés.
-        $object = $this->_nebuleInstance->newObject($bootstrapApplicationStartID);
+        $object = $this->_nebuleInstance->newObject($bootstrapApplicationIID);
         $hashRef = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
-        $links = $object->getLinksOnFields('', '', 'f', $bootstrapApplicationStartID, '', $hashRef);
+        $links = $object->getLinksOnFields('', '', 'f', $bootstrapApplicationIID, '', $hashRef);
 
         // Lit les ID des modules.
         foreach ($links as $link) {

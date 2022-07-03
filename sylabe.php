@@ -2516,7 +2516,7 @@ class ModuleManage extends Modules
      */
     private function _actionAddModule()
     {
-        global $bootstrapApplicationStartID;
+        global $bootstrapApplicationIID;
 
         // Vérifie que la création de liens soit authorisée.
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
@@ -2552,7 +2552,7 @@ class ModuleManage extends Modules
             $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
 
             // Crée le lien d'activation dans l'application.
-            $source = $bootstrapApplicationStartID;
+            $source = $bootstrapApplicationIID;
             $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
         }
     }
