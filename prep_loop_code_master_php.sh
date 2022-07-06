@@ -7,7 +7,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020220703
+# Version 020220706
 
 export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
@@ -27,7 +27,12 @@ export IID_INTERFACE_BOOTSTRAP='304f4431cd011211e8fbb57081cd8f1609a25a46ab30476e
 export LIB_RID_INTERFACE_LIBRARY='780c5e2767e15ad2a92d663cf4fb0841f31fd302ea0fa97a53bfd1038a0f1c130010e15c.none.288'
 export IID_INTERFACE_LIBRARY='21f6396e921e4373a91d70d13895b04a359316fc269a1c0dc9268a71419ecfb41e88d58d.none.288'
 export LIB_RID_INTERFACE_APPLICATIONS='4046edc20127dfa1d99f645a7a4ca3db42e94feffa151319c406269bd6ede981c32b96e2.none.288'
-export IID_INTERFACE_SYLABE='d1341cd3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288'
+export IID_INTERFACE_SYLABE='c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288'
+export IID_INTERFACE_KLICTY='d0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288'
+export IID_INTERFACE_MESSAE='2060a0d21853a42093f01d2e4809c2a5e9300b4ec31afbaf18af66ec65586d6c78b2823a.none.288'
+export IID_INTERFACE_QANTION='20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288'
+export IID_INTERFACE_OPTION='555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288'
+export IID_INTERFACE_UPLOAD='6666661d0923f08d50de4d70be7dc3014e73de3325b6c7b16efd1a6f5a12f5957b68336d.none.288'
 export LIB_RID_INTERFACE_APPLICATIONS_DIRECT='f202ca455549a1ddd553251f9c1df49ec6541c3412e52ed5f2ce2adfd772d07d0bfc2d28.none.288'
 export LIB_RID_INTERFACE_APPLICATIONS_ACTIVE='ae2b0dd506026c59b27ae93ef2d1ead7a2c893d2662d360c3937b699428010538b5c0af9.none.288'
 export NID_CODE_BRANCH='81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288'
@@ -202,12 +207,12 @@ function work_full_reinit()
   lauthOID=$(echo -n 'nebule/objet/entite/autorite/locale' | sha256sum | cut -d' ' -f1)'.sha2.256'
 
   echo ' > links puppetmaster'
-  nameOID=$(echo -n 'puppetmaster' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  sylabeNameOID=$(echo -n 'puppetmaster' | sha256sum | cut -d' ' -f1)'.sha2.256'
   localOID=$(echo -n 'http://puppetmaster.nebule.org' | sha256sum | cut -d' ' -f1)'.sha2.256'
   links=(
     "nebule:link/2:0_0>${INIT_DATE}/l>${puppetmaster_develop_pem_hash}>${pemOID}>${typeRID}"
     #"nebule:link/2:0_0>${INIT_DATE}/l>${puppetmaster_develop_key_hash}>${pemOID}>${typeRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${puppetmaster_develop_pem_hash}>${nameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${puppetmaster_develop_pem_hash}>${sylabeNameOID}>${nameRID}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${puppetmaster_develop_pem_hash}>${localOID}>${localRID}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_SECURITY_AUTHORITY}>${security_authority_develop_pem_hash}>${LIB_RID_SECURITY_AUTHORITY}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${lauthOID}>${security_authority_develop_pem_hash}"
@@ -221,12 +226,12 @@ function work_full_reinit()
   done
 
   echo ' > links security authority'
-  nameOID=$(echo -n 'cerberus' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  sylabeNameOID=$(echo -n 'cerberus' | sha256sum | cut -d' ' -f1)'.sha2.256'
   localOID=$(echo -n 'http://cerberus.nebule.org' | sha256sum | cut -d' ' -f1)'.sha2.256'
   links=(
     "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_pem_hash}>${pemOID}>${typeRID}"
     #"nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_key_hash}>${pemOID}>${typeRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_pem_hash}>${nameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_pem_hash}>${sylabeNameOID}>${nameRID}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_pem_hash}>${localOID}>${localRID}"
   )
   for link in "${links[@]}"
@@ -235,12 +240,12 @@ function work_full_reinit()
   done
 
   echo ' > links code authority'
-  nameOID=$(echo -n 'bachue' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  sylabeNameOID=$(echo -n 'bachue' | sha256sum | cut -d' ' -f1)'.sha2.256'
   localOID=$(echo -n 'http://bachue.nebule.org' | sha256sum | cut -d' ' -f1)'.sha2.256'
   links=(
     "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_pem_hash}>${pemOID}>${typeRID}"
     #"nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_key_hash}>${pemOID}>${typeRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_pem_hash}>${nameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_pem_hash}>${sylabeNameOID}>${nameRID}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_pem_hash}>${localOID}>${localRID}"
   )
   for link in "${links[@]}"
@@ -249,12 +254,12 @@ function work_full_reinit()
   done
 
   echo ' > links time authority'
-  nameOID=$(echo -n 'kronos' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  sylabeNameOID=$(echo -n 'kronos' | sha256sum | cut -d' ' -f1)'.sha2.256'
   localOID=$(echo -n 'http://kronos.nebule.org' | sha256sum | cut -d' ' -f1)'.sha2.256'
   links=(
     "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_pem_hash}>${pemOID}>${typeRID}"
     #"nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_key_hash}>${pemOID}>${typeRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_pem_hash}>${nameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_pem_hash}>${sylabeNameOID}>${nameRID}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_pem_hash}>${localOID}>${localRID}"
   )
   for link in "${links[@]}"
@@ -263,12 +268,12 @@ function work_full_reinit()
   done
 
   echo ' > links directory authority'
-  nameOID=$(echo -n 'asabiyya' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  sylabeNameOID=$(echo -n 'asabiyya' | sha256sum | cut -d' ' -f1)'.sha2.256'
   localOID=$(echo -n 'http://asabiyya.nebule.org' | sha256sum | cut -d' ' -f1)'.sha2.256'
   links=(
     "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_pem_hash}>${pemOID}>${typeRID}"
     #"nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_key_hash}>${pemOID}>${typeRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_pem_hash}>${nameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_pem_hash}>${sylabeNameOID}>${nameRID}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_pem_hash}>${localOID}>${localRID}"
   )
   for link in "${links[@]}"
@@ -300,7 +305,7 @@ function work_dev_deploy()
   echo " > RID code branch : ${LIB_RID_CODE_BRANCH}"
   echo " > NID code branch : ${NID_CODE_BRANCH}"
 
-  nameOID=$(echo -n 'develop' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  sylabeNameOID=$(echo -n 'develop' | sha256sum | cut -d' ' -f1)'.sha2.256'
   nameRID=$(echo -n 'nebule/objet/nom' | sha256sum | cut -d' ' -f1)'.sha2.256'
 
   echo ' > links'
@@ -308,7 +313,7 @@ function work_dev_deploy()
   link="nebule:link/2:0_0>${current_date}/l>${LIB_RID_CODE_BRANCH}>${NID_CODE_BRANCH}>${LIB_RID_CODE_BRANCH}"
   sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
   echo '   - name'
-  link="nebule:link/2:0_0>${current_date}/l>${NID_CODE_BRANCH}>${nameOID}>${nameRID}"
+  link="nebule:link/2:0_0>${current_date}/l>${NID_CODE_BRANCH}>${sylabeNameOID}>${nameRID}"
   sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
 }
 
@@ -321,9 +326,19 @@ function work_refresh()
   phpOID=$(echo -n 'application/x-httpd-php' | sha256sum | cut -d' ' -f1)'.sha2.256'
   textOID=$(echo -n 'text/plain' | sha256sum | cut -d' ' -f1)'.sha2.256'
   typeRID=$(echo -n 'nebule/objet/type' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  nameOID=$(echo -n 'sylabe' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  sylabeNameOID=$(echo -n 'sylabe' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  klictyNameOID=$(echo -n 'klicty' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  messaeNameOID=$(echo -n 'messae' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  qantionNameOID=$(echo -n 'qantion' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  optionNameOID=$(echo -n 'option' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  uploadNameOID=$(echo -n 'upload' | sha256sum | cut -d' ' -f1)'.sha2.256'
   nameRID=$(echo -n 'nebule/objet/nom' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  surnameOID=$(echo -n 'Sy' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  sylabeSurnameOID=$(echo -n 'Sy' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  klictySurnameOID=$(echo -n 'Sy' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  messaeSurnameOID=$(echo -n 'Sy' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  qantionSurnameOID=$(echo -n 'Sy' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  optionSurnameOID=$(echo -n 'Sy' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  uploadSurnameOID=$(echo -n 'Sy' | sha256sum | cut -d' ' -f1)'.sha2.256'
   surnameRID=$(echo -n 'nebule/objet/surnom' | sha256sum | cut -d' ' -f1)'.sha2.256'
 
   bootstrap_hash=$(sha256sum "${WORKSPACE}/bootstrap.php" | cut -d' ' -f1)'.sha2.256'
@@ -354,34 +369,104 @@ EOF
   echo " > new sylabe : ${sylabe_hash}"
   cp "${WORKSPACE}/sylabe.php" "o/${sylabe_hash}"
 
+  klicty_hash=$(sha256sum "${WORKSPACE}/klicty.php" | cut -d' ' -f1)'.sha2.256'
+  echo " > new klicty : ${klicty_hash}"
+  cp "${WORKSPACE}/klicty.php" "o/${klicty_hash}"
+
+  messae_hash=$(sha256sum "${WORKSPACE}/messae.php" | cut -d' ' -f1)'.sha2.256'
+  echo " > new messae : ${messae_hash}"
+  cp "${WORKSPACE}/messae.php" "o/${messae_hash}"
+
+  qantion_hash=$(sha256sum "${WORKSPACE}/qantion.php" | cut -d' ' -f1)'.sha2.256'
+  echo " > new qantion : ${qantion_hash}"
+  cp "${WORKSPACE}/qantion.php" "o/${qantion_hash}"
+
+  option_hash=$(sha256sum "${WORKSPACE}/option.php" | cut -d' ' -f1)'.sha2.256'
+  echo " > new option : ${option_hash}"
+  cp "${WORKSPACE}/option.php" "o/${option_hash}"
+
+  upload_hash=$(sha256sum "${WORKSPACE}/upload.php" | cut -d' ' -f1)'.sha2.256'
+  echo " > new upload : ${upload_hash}"
+  cp "${WORKSPACE}/upload.php" "o/${upload_hash}"
+
   echo ' > links'
   links=(
     # nodes
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_BOOTSTRAP}>${IID_INTERFACE_BOOTSTRAP}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_LIBRARY}>${IID_INTERFACE_LIBRARY}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_SYLABE}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_KLICTY}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_MESSAE}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_QANTION}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_OPTION}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_UPLOAD}>${phpOID}>${NID_CODE_BRANCH}"
     # type mime = application/x-httpd-php
     "nebule:link/2:0_0>${current_date}/l>${bootstrap_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${library_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${sylabe_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${klicty_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${messae_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${qantion_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${option_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${upload_hash}>${phpOID}>${typeRID}"
     # nebule/objet/interface/web/php/bootstrap in develop branch
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_BOOTSTRAP}>${bootstrap_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_LIBRARY}>${library_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_SYLABE}>${sylabe_hash}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_KLICTY}>${klicty_hash}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_MESSAE}>${messae_hash}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_QANTION}>${qantion_hash}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_OPTION}>${option_hash}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_UPLOAD}>${upload_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_SYLABE}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_KLICTY}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_MESSAE}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_QANTION}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_OPTION}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_UPLOAD}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     # names
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_SYLABE}>${nameOID}>${nameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_SYLABE}>${surnameOID}>${surnameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${nameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${surnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_SYLABE}>${sylabeNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_SYLABE}>${sylabeSurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_KLICTY}>${klictyNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_KLICTY}>${klictySurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_MESSAE}>${messaeNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_MESSAE}>${messaeSurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_QANTION}>${qantionNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_QANTION}>${qantionSurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_OPTION}>${optionNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_OPTION}>${optionSurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_UPLOAD}>${uploadNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_UPLOAD}>${uploadSurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${sylabeNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${sylabeSurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${klictyNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${klictySurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${messaeNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${messaeSurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${qantionNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${qantionSurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${optionNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${optionSurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${uploadNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${uploadSurnameOID}>${textOID}>${typeRID}"
   )
   for link in "${links[@]}"
   do
     sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
   done
 
-  echo -n "sylabe" > "o/${nameOID}"
-  echo -n "Sy" > "o/${surnameOID}"
+  echo -n "sylabe" > "o/${sylabeNameOID}"
+  echo -n "Sy" > "o/${sylabeSurnameOID}"
+  echo -n "klicty" > "o/${klictyNameOID}"
+  echo -n "Kl" > "o/${klictySurnameOID}"
+  echo -n "messae" > "o/${messaeNameOID}"
+  echo -n "Me" > "o/${messaeSurnameOID}"
+  echo -n "Qantion" > "o/${qantionNameOID}"
+  echo -n "Qa" > "o/${qantionSurnameOID}"
+  echo -n "option" > "o/${optionNameOID}"
+  echo -n "Op" > "o/${optionSurnameOID}"
+  echo -n "upload" > "o/${uploadNameOID}"
+  echo -n "Up" > "o/${uploadSurnameOID}"
 
   sudo chown 1000.33 l/*
   sudo chmod 664 l/*

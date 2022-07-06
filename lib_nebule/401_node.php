@@ -816,7 +816,7 @@ class Node implements nodeInterface
         $link = $this->getPropertyLink($type, $socialClass);
 
         if ($link == ''
-            || !is_a($link, 'link')
+            || !is_a($link, 'blocLink')
         )
             return '';
 
