@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220703';
+const BOOTSTRAP_VERSION = '020220731';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -4454,6 +4454,9 @@ function bootstrap_saveLibraryPOO(): void
            $bootstrapLibraryOID,
            $bootstrapLibrarySID;
 
+    if (! is_a($nebuleInstance, 'nebule'))
+        return;
+
     session_start();
     $_SESSION['bootstrapLibraryIID'] = $bootstrapLibraryIID;
     $_SESSION['bootstrapLibraryOID'] = $bootstrapLibraryOID;
@@ -4513,8 +4516,7 @@ function bootstrap_findApplication(): void
     // Check ask to switch of application.
     if ($bootstrapSwitchApplication != ''
         && $bootstrapSwitchApplication != $bootstrapApplicationIID
-    )
-    {
+    ) {
         log_add('ask switch application ' . $bootstrapSwitchApplication, 'info', __FUNCTION__, '0cbacda8');
         if ($bootstrapApplicationIID == '0'
             || $bootstrapApplicationIID == '1'
@@ -4522,10 +4524,11 @@ function bootstrap_findApplication(): void
             || lnk_checkExist('f', LIB_RID_INTERFACE_APPLICATIONS, $bootstrapSwitchApplication, LIB_RID_INTERFACE_APPLICATIONS, '')
         )
             $bootstrapApplicationIID = $bootstrapSwitchApplication;
+            $bootstrapApplicationOID = $bootstrapSwitchApplication;
     }
 
     // Check for update.
-    if ($bootstrapApplicationOID == ''
+    if ($bootstrapApplicationOID == '0'
         && $bootstrapApplicationIID != ''
         && $bootstrapUpdate
     ) {
@@ -4534,7 +4537,7 @@ function bootstrap_findApplication(): void
 
     // If existed, get application from session.
     session_start();
-    if ($bootstrapApplicationOID == ''
+    if ($bootstrapApplicationOID == '0'
         && isset($_SESSION['bootstrapApplicationIID'][$bootstrapApplicationOID])
         && nod_checkNID($_SESSION['bootstrapApplicationIID'][$bootstrapApplicationOID])
         && io_checkNodeHaveLink($_SESSION['bootstrapApplicationIID'][$bootstrapApplicationOID])
@@ -4565,7 +4568,7 @@ function bootstrap_findApplication(): void
 
     // Si pas d'application trouvée, recherche l'application par défaut
     //   ou charge l'application '0' de sélection d'application.
-    if ($bootstrapApplicationOID == '') {
+    if ($bootstrapApplicationOID == '0') {
         $defaultApplicationID = lib_getConfiguration('defaultApplication');
         if ($defaultApplicationID == 0) {
             $bootstrapApplicationIID = '0';
@@ -4744,6 +4747,9 @@ function bootstrap_saveApplication(): void
            $bootstrapApplicationIID,
            $bootstrapApplicationOID,
            $bootstrapApplicationSID;
+
+    if (! is_a($applicationInstance, 'Applications'))
+        return;
 
     session_start();
     $_SESSION['bootstrapApplicationOID'] = $bootstrapApplicationOID;
@@ -5501,9 +5507,9 @@ function bootstrap_breakDisplay1OnError()
     if ($bootstrapFlush)
         echo "FLUSH<br />\n";
     if (sizeof($bootstrapBreak) != 0 && isset($bootstrapBreak[12]))
-        echo "<a href=\"?a=0\">&gt; Return to application 0</a><br />\n";
+        echo "<a href=\"?a=0\">? Return to application 0</a><br />\n";
     $sessionId = session_id();
-    echo '<a href="?f">&gt; Flush PHP session</a> (' . substr(crypto_getDataHash($sessionId), 0, 6) . ')' . "\n";
+    echo '<a href="?f">? Flush PHP session</a> (' . substr(crypto_getDataHash($sessionId), 0, 6) . ')' . "\n";
 
     echo '</div>' . "\n";
 }
@@ -6150,7 +6156,7 @@ function bootstrap_displayApplicationFirst(): void
         echo '&nbsp;&nbsp;OK finished!' . "\n";
     else
         echo '&gt; <span class="error">ERROR!</span>' . "\n";
-    echo '<br />&gt; <span id="reload"><a href="">When ready, reload</a></span></div>' . "\n";
+    echo '<br />? <span id="reload"><a href="">When ready, reload</a></span></div>' . "\n";
 
     bootstrap_htmlBottom();
 }
@@ -7063,9 +7069,9 @@ function bootstrap_displayRouter()
            $libraryRescueMode,
            $needFirstSynchronization,
            $bootstrapInlineDisplay,
+           $bootstrapApplicationIID,
            $bootstrapApplicationOID,
            $bootstrapApplicationNoPreload,
-           $bootstrapApplicationIID,
            $nebuleInstance,
            $bootstrapServerEntityDisplay,
            $bootstrapLibraryIID,
@@ -7101,15 +7107,13 @@ function bootstrap_displayRouter()
 
         log_add('load application ' . $bootstrapApplicationOID, 'info', __FUNCTION__, 'aab236ff');
 
-        if ($bootstrapApplicationOID == '0')
+        if ($bootstrapApplicationIID == '0' || $bootstrapApplicationOID = '0')
             bootstrap_displayApplication0();
-        elseif ($bootstrapApplicationOID == '1')
+        elseif ($bootstrapApplicationIID == '1')
             bootstrap_displayApplication1();
-        elseif ($bootstrapApplicationOID == '2')
+        elseif ($bootstrapApplicationIID == '2')
             bootstrap_displayApplication2();
-        else {
-            // Si tout est déjà préchargé, on déserialise.
-            if (isset($bootstrapApplicationInstanceSleep)
+        elseif (isset($bootstrapApplicationInstanceSleep)
                 && $bootstrapApplicationInstanceSleep != ''
                 && isset($bootstrapApplicationDisplayInstanceSleep)
                 && $bootstrapApplicationDisplayInstanceSleep != ''
@@ -7117,113 +7121,125 @@ function bootstrap_displayRouter()
                 && $bootstrapApplicationActionInstanceSleep != ''
                 && isset($bootstrapApplicationTraductionInstanceSleep)
                 && $bootstrapApplicationTraductionInstanceSleep != ''
-            ) {
-                bootstrap_includeApplication();
+        ) {
+            bootstrap_includeApplication();
 
-                $applicationName = Application::APPLICATION_NAME;
+            $applicationName = Application::APPLICATION_NAME;
 
-                // Change les logs au nom de l'application.
-                log_reopen($applicationName);
+            // Change les logs au nom de l'application.
+            log_reopen($applicationName);
 
-                // Désérialise les instances.
-                try {
-                    $applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
-                } catch (\Error $e) {
-                    log_reopen(BOOTSTRAP_NAME);
-                    log_add('Application unserialize error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'de82bc8b');
-                }
-                try {
-                    $applicationDisplayInstance = unserialize($bootstrapApplicationDisplayInstanceSleep);
-                } catch (\Error $e) {
-                    log_reopen(BOOTSTRAP_NAME);
-                    log_add('Application traduction unserialize error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '8e344763');
-                }
-                try {
-                    $applicationActionInstance = unserialize($bootstrapApplicationActionInstanceSleep);
-                } catch (\Error $e) {
-                    log_reopen(BOOTSTRAP_NAME);
-                    log_add('Application display unserialize error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'b15fd5d3');
-                }
-                try {
-                    $applicationTraductionInstance = unserialize($bootstrapApplicationTraductionInstanceSleep);
-                } catch (\Error $e) {
-                    log_reopen(BOOTSTRAP_NAME);
-                    log_add('Application action unserialize error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '972ddf39');
-                }
+            // Désérialise les instances.
+            try {
+                $applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
+            } catch (\Error $e) {
+                log_reopen(BOOTSTRAP_NAME);
+                log_add('Application unserialize error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'de82bc8b');
+            }
+            try {
+                $applicationDisplayInstance = unserialize($bootstrapApplicationDisplayInstanceSleep);
+            } catch (\Error $e) {
+                log_reopen(BOOTSTRAP_NAME);
+                log_add('Application traduction unserialize error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '8e344763');
+            }
+            try {
+                $applicationActionInstance = unserialize($bootstrapApplicationActionInstanceSleep);
+            } catch (\Error $e) {
+                log_reopen(BOOTSTRAP_NAME);
+                log_add('Application display unserialize error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'b15fd5d3');
+            }
+            try {
+                $applicationTraductionInstance = unserialize($bootstrapApplicationTraductionInstanceSleep);
+            } catch (\Error $e) {
+                log_reopen(BOOTSTRAP_NAME);
+                log_add('Application action unserialize error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '972ddf39');
+            }
 
-                // Initialisation de réveil de l'instance de l'application.
-                $applicationInstance->initialisation2();
+            // Check
+            if (! is_a($applicationInstance, 'Applications'))
+                return;
 
-                // Si la requête web est un téléchargement d'objet ou de lien, des accélérations peuvent être prévues dans ce cas.
-                if (!$applicationInstance->askDownload()) {
-                    // Initialisation de réveil des instances.
-                    $applicationTraductionInstance->initialisation2();
-                    $applicationDisplayInstance->initialisation2();
-                    $applicationActionInstance->initialisation2();
+            // Initialisation de réveil de l'instance de l'application.
+            $applicationInstance->initialisation();
 
-                    // Réalise les tests de sécurité.
-                    $applicationInstance->checkSecurity();
-                }
-
-                // Appel de l'application.
-                $applicationInstance->router();
-            } elseif ($bootstrapApplicationNoPreload) {
-                // Si l'application ne doit être préchargée,
-                //   réalise maintenant le préchargement de façon transparente et lance l'application.
-                // Ainsi, le préchargement n'est pas fait sur une page web à part.
-
-                log_add('load application without preload ' . $bootstrapApplicationOID, 'info', __FUNCTION__, 'e01ea813');
-
-                bootstrap_includeApplication();
-
-                $applicationName = Application::APPLICATION_NAME;
-
-                // Change les logs au nom de l'application.
-                log_reopen($applicationName);
-
-                try {
-                    $applicationInstance = new Application($nebuleInstance);
-                } catch (\Error $e) {
-                    log_reopen(BOOTSTRAP_NAME);
-                    log_add('Application load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '202824cb');
-                }
-                try {
-                    $applicationTraductionInstance = new Traduction($applicationInstance);
-                } catch (\Error $e) {
-                    log_reopen(BOOTSTRAP_NAME);
-                    log_add('Application traduction load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '585648a2');
-                }
-                try {
-                    $applicationDisplayInstance = new Display($applicationInstance);
-                } catch (\Error $e) {
-                    log_reopen(BOOTSTRAP_NAME);
-                    log_add('Application display load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '4c7da4e2');
-                }
-                try {
-                    $applicationActionInstance = new Action($applicationInstance);
-                } catch (\Error $e) {
-                    log_reopen(BOOTSTRAP_NAME);
-                    log_add('Application action load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '3c042de3');
-                }
-
-                // Initialisation des instances.
-                $applicationInstance->initialisation();
+            // Si la requête web est un téléchargement d'objet ou de lien, des accélérations peuvent être prévues dans ce cas.
+            if (!$applicationInstance->askDownload()) {
+                // Initialisation de réveil des instances.
                 $applicationTraductionInstance->initialisation();
                 $applicationDisplayInstance->initialisation();
                 $applicationActionInstance->initialisation();
 
                 // Réalise les tests de sécurité.
                 $applicationInstance->checkSecurity();
+            }
 
-                // Appel de l'application.
-                $applicationInstance->router();
-            } else
-                bootstrap_displayPreloadApplication();
+            // Appel de l'application.
+            $applicationInstance->router();
 
             // Sérialise les instances et les sauve dans la session PHP.
             bootstrap_saveLibraryPOO();
             bootstrap_saveApplication();
-        }
+        } elseif ($bootstrapApplicationNoPreload) {
+            // Si l'application ne doit être préchargée,
+            //   réalise maintenant le préchargement de façon transparente et lance l'application.
+            // Ainsi, le préchargement n'est pas fait sur une page web à part.
+
+            log_add('load application without preload ' . $bootstrapApplicationOID, 'info', __FUNCTION__, 'e01ea813');
+
+            bootstrap_includeApplication();
+
+            $applicationName = Application::APPLICATION_NAME;
+
+            // Change les logs au nom de l'application.
+            log_reopen($applicationName);
+
+            try {
+                $applicationInstance = new Application($nebuleInstance);
+            } catch (\Error $e) {
+                log_reopen(BOOTSTRAP_NAME);
+                log_add('Application load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '202824cb');
+            }
+            try {
+                $applicationTraductionInstance = new Traduction($applicationInstance);
+            } catch (\Error $e) {
+                log_reopen(BOOTSTRAP_NAME);
+                log_add('Application traduction load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '585648a2');
+            }
+            try {
+                $applicationDisplayInstance = new Display($applicationInstance);
+            } catch (\Error $e) {
+                log_reopen(BOOTSTRAP_NAME);
+                log_add('Application display load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '4c7da4e2');
+            }
+            try {
+                $applicationActionInstance = new Action($applicationInstance);
+            } catch (\Error $e) {
+                log_reopen(BOOTSTRAP_NAME);
+                log_add('Application action load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '3c042de3');
+            }
+
+            // Check
+            if (! is_a($applicationInstance, 'Applications'))
+                return;
+
+            // Initialisation des instances.
+            $applicationInstance->initialisation();
+            $applicationTraductionInstance->initialisation();
+            $applicationDisplayInstance->initialisation();
+            $applicationActionInstance->initialisation();
+
+            // Réalise les tests de sécurité.
+            $applicationInstance->checkSecurity();
+
+            // Appel de l'application.
+            $applicationInstance->router();
+
+            // Sérialise les instances et les sauve dans la session PHP.
+            bootstrap_saveLibraryPOO();
+            bootstrap_saveApplication();
+        } else
+            bootstrap_displayPreloadApplication();
+
     }
 
     log_reopen(BOOTSTRAP_NAME);
