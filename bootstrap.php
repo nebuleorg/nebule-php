@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220804';
+const BOOTSTRAP_VERSION = '020220806';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -153,12 +153,6 @@ $bootstrapBreak = array();
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapInlineDisplay = false;
-
-/**
- * Variable de détection d'affichage de l'ID de l'entité instance du serveur.
- * @noinspection PhpUnusedLocalVariableInspection
- */
-$bootstrapServerEntityDisplay = false;
 
 /**
  * Activation d'un nettoyage de session général.
@@ -4733,35 +4727,45 @@ function bootstrap_loadApplication(): void
                 . $e->getTraceAsString(), 'error', __FUNCTION__, '959c188b');
             bootstrap_setBreak('43', 'Library nebule load error');
         }
+    }
+}
 
+/**
+ * Save nebule Library POO code on session.
+ *
+ * @return void
+ */
+function bootstrap_initApplication(): void
+{
+    global $applicationInstance,
+           $applicationDisplayInstance,
+           $applicationActionInstance,
+           $applicationTraductionInstance;
 
+    // Check
+    if (! is_a($applicationInstance, 'Applications'))
+        return;
 
-        // Check
-        if (! is_a($applicationInstance, 'Applications'))
-            return;
+    // Initialisation de réveil de l'instance de l'application.
+    $applicationInstance->initialisation();
 
-        // Initialisation de réveil de l'instance de l'application.
-        $applicationInstance->initialisation();
+    // Si la requête web est un téléchargement d'objet ou de lien, des accélérations peuvent être prévues dans ce cas.
+    if (!$applicationInstance->askDownload()) {
+        // Initialisation de réveil des instances.
+        $applicationTraductionInstance->initialisation();
+        $applicationDisplayInstance->initialisation();
+        $applicationActionInstance->initialisation();
 
-        // Si la requête web est un téléchargement d'objet ou de lien, des accélérations peuvent être prévues dans ce cas.
-        if (!$applicationInstance->askDownload()) {
-            // Initialisation de réveil des instances.
-            $applicationTraductionInstance->initialisation();
-            $applicationDisplayInstance->initialisation();
-            $applicationActionInstance->initialisation();
-
-            // Réalise les tests de sécurité.
-            $applicationInstance->checkSecurity();
-        }
-
-        // Appel de l'application.
-        $applicationInstance->router();
-
-        // Sérialise les instances et les sauve dans la session PHP.
-        bootstrap_saveLibraryPOO();
-        bootstrap_saveApplication();
+        // Réalise les tests de sécurité.
+        $applicationInstance->checkSecurity();
     }
 
+    // Appel de l'application.
+    $applicationInstance->router();
+
+    // Sérialise les instances et les sauve dans la session PHP.
+    bootstrap_saveLibraryPOO(); // FIXME à supprimer ?
+    bootstrap_saveApplication();
 }
 
 /**
@@ -4890,20 +4894,6 @@ function bootstrap_getCheckFingerprint(): void
     }
 }
 
-
-
-// ------------------------------------------------------------------------------------------
-function bootstrap_getDisplayServerEntity()
-{
-    global $bootstrapServerEntityDisplay;
-
-    if (filter_has_var(INPUT_GET, LIB_LOCAL_ENTITY_FILE)
-        || filter_has_var(INPUT_POST, LIB_LOCAL_ENTITY_FILE)
-    ) {
-        bootstrap_setBreak('52', 'Ask server instance');
-        $bootstrapServerEntityDisplay = true;
-    }
-}
 
 
 // ------------------------------------------------------------------------------------------
@@ -5975,10 +5965,33 @@ function bootstrap_inlineDisplayOnBreak()
  */
 
 /**
- * La fonction affiche temporairement l'écran du bootstrap
- *   le temps de charger les instances de la bibliothèque, de l'application et de ses classes annexes.
- * Un certain nombre de variables globalles sont initialisées au chargement des applications,
- *   elles doivent être présentes ici.
+ * Load and run application already preloaded.
+ *
+ * @return void
+ */
+function bootstrap_displaySleepingApplication()
+{
+    bootstrap_includeApplication();
+    bootstrap_loadApplication();
+    bootstrap_initApplication();
+}
+
+/**
+ * Load and run application without preload.
+ *
+ * @return void
+ */
+function bootstrap_displayNoPreloadApplication()
+{
+    global $bootstrapApplicationOID;
+    log_add('load application without preload ' . $bootstrapApplicationOID, 'info', __FUNCTION__, 'e01ea813');
+    bootstrap_includeApplication();
+    bootstrap_loadApplication();
+    bootstrap_initApplication();
+}
+
+/**
+ * Load and run preload of an application.
  *
  * @return void
  */
@@ -6030,7 +6043,7 @@ function bootstrap_displayPreloadApplication()
     flush();
 
     log_reopen('preload');
-    log_add('Loading application ' . $bootstrapApplicationOID, 'info', __FUNCTION__, '202824cb');
+    log_add('Loading application ' . $bootstrapApplicationOID, 'info', __FUNCTION__, '8d24b491');
 
     try {
         // Charge l'objet de l'application. TODO faire via les i/o.
@@ -6933,6 +6946,15 @@ chmod 644 <?php echo LIB_LOCAL_ENTITY_FILE; ?>
  ------------------------------------------------------------------------------------------
  */
 
+function bootstrap_displayLocalEntity()
+{
+    if (file_exists(LIB_LOCAL_ENTITY_FILE))
+        echo '1';
+//        echo file_get_contents(LIB_LOCAL_ENTITY_FILE, false, null, 0, lib_getConfiguration('ioReadMaxData')); FIXME memory overflow!
+    else
+        echo '0';
+}
+
 function bootstrap_displayApplication0()
 {
     global $nebuleInstance;
@@ -7097,71 +7119,61 @@ function bootstrap_displayApplication2()
 function bootstrap_displayRouter()
 {
     global $bootstrapBreak,
-           $libraryRescueMode,
            $needFirstSynchronization,
            $bootstrapInlineDisplay,
            $bootstrapApplicationIID,
            $bootstrapApplicationOID,
            $bootstrapApplicationNoPreload,
-           $nebuleInstance,
-           $bootstrapServerEntityDisplay,
-           $bootstrapLibraryIID,
-           $bootstrapLibraryOID;
+           $bootstrapApplicationInstanceSleep;
 
-    // Fin de la bufferisation de la sortie avec effacement du buffer.
-    // Ecrit dans le buffer pour test, ne devra jamais apparaître.
-    echo 'CHK';
-    // Tout ce qui aurait éventuellement essayé d'être affiché est perdu.
+    // End of Web page buffering with a buffer erase before display important things.
+    echo 'Display test of of erased buffer - must not be prompted!';
     ob_end_clean();
 
-    if (sizeof($bootstrapBreak) > 0) {
-        if ($needFirstSynchronization && !$bootstrapInlineDisplay) {
-            log_add('load first', 'info', __FUNCTION__, '63d9bc00');
-            bootstrap_displayApplicationFirst();
-        } elseif ($bootstrapServerEntityDisplay) {
-            if (file_exists(LIB_LOCAL_ENTITY_FILE))
-                echo file_get_contents(LIB_LOCAL_ENTITY_FILE, false, null, -1, lib_getConfiguration('ioReadMaxData'));
-            else
-                echo '0';
-        } else {
-            log_add('load break', 'info', __FUNCTION__, '4abf554b');
-            if ($bootstrapInlineDisplay)
-                bootstrap_inlineDisplayOnBreak();
-            else
-                bootstrap_displayOnBreak();
-        }
-    } else {
-        unset($bootstrapBreak, $libraryRescueMode, $bootstrapInlineDisplay);
-
-        // Ferme les I/O de la bibliothèque PHP PP.
-        io_close();
-
-        log_add('load application ' . $bootstrapApplicationOID, 'info', __FUNCTION__, 'aab236ff');
-
-        if ($bootstrapApplicationIID == '0' || $bootstrapApplicationOID = '0')
-            bootstrap_displayApplication0();
-        elseif ($bootstrapApplicationIID == '1')
-            bootstrap_displayApplication1();
-        elseif ($bootstrapApplicationIID == '2')
-            bootstrap_displayApplication2();
-        elseif (isset($bootstrapApplicationInstanceSleep)
-                && $bootstrapApplicationInstanceSleep != ''
-        ) {
-            bootstrap_includeApplication();
-            bootstrap_loadApplication();
-        } elseif ($bootstrapApplicationNoPreload) {
-            // Si l'application ne doit être préchargée,
-            //   réalise maintenant le préchargement de façon transparente et lance l'application.
-            // Ainsi, le préchargement n'est pas fait sur une page web à part.
-
-            log_add('load application without preload ' . $bootstrapApplicationOID, 'info', __FUNCTION__, 'e01ea813');
-
-            bootstrap_includeApplication();
-            bootstrap_loadApplication();
-        } else
-            bootstrap_displayPreloadApplication();
-
+    // Break on first run, many things to do before continue.
+    if ($needFirstSynchronization && !$bootstrapInlineDisplay) {
+        log_add('load first', 'info', __FUNCTION__, '63d9bc00');
+        bootstrap_displayApplicationFirst();
+        return;
     }
+
+    // Break on problems on bootstrap load or on user query.
+    if (sizeof($bootstrapBreak) > 0) {
+        log_add('load break', 'info', __FUNCTION__, '4abf554b');
+        if ($bootstrapInlineDisplay)
+            bootstrap_inlineDisplayOnBreak();
+        else
+            bootstrap_displayOnBreak();
+        return;
+    }
+
+    // Close I/O of PHP PP library.
+    io_close();
+
+    // Display only server entity if asked.
+    // For compatibility and interoperability.
+    if (filter_has_var(INPUT_GET, LIB_LOCAL_ENTITY_FILE)
+        || filter_has_var(INPUT_POST, LIB_LOCAL_ENTITY_FILE)
+    )
+    {
+        bootstrap_displayLocalEntity();
+        return;
+    }
+
+    log_add('load application ' . $bootstrapApplicationOID, 'info', __FUNCTION__, 'aab236ff');
+
+    if ($bootstrapApplicationIID == '0' || $bootstrapApplicationOID = '0')
+        bootstrap_displayApplication0();
+    elseif ($bootstrapApplicationIID == '1')
+        bootstrap_displayApplication1();
+    elseif ($bootstrapApplicationIID == '2')
+        bootstrap_displayApplication2();
+    elseif (isset($bootstrapApplicationInstanceSleep) && $bootstrapApplicationInstanceSleep != '')
+        bootstrap_displaySleepingApplication();
+    elseif ($bootstrapApplicationNoPreload)
+        bootstrap_displayNoPreloadApplication();
+    else
+        bootstrap_displayPreloadApplication();
 
     log_reopen(BOOTSTRAP_NAME);
 }
@@ -7215,7 +7227,6 @@ function main()
     bootstrap_getUserBreak();
     bootstrap_getInlineDisplay();
     bootstrap_getCheckFingerprint();
-    bootstrap_getDisplayServerEntity();
     bootstrap_getFlushSession();
     bootstrap_getUpdate();
     bootstrap_getSwitchApplication();
