@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220806';
+const BOOTSTRAP_VERSION = '020220807';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -218,13 +218,13 @@ $bootstrapLibraryInstanceSleep = '';
  * ID (Intermediate) de l'application mémorisé dans la session PHP.
  * @noinspection PhpUnusedLocalVariableInspection
  */
-$bootstrapApplicationIID = '';
+$bootstrapApplicationIID = '0';
 
 /**
  * ID de l'application mémorisé dans la session PHP.
  * @noinspection PhpUnusedLocalVariableInspection
  */
-$bootstrapApplicationOID = '';
+$bootstrapApplicationOID = '0';
 
 /**
  * ID of the signer of the application.
@@ -239,10 +239,10 @@ $bootstrapApplicationSID = '';
 $bootstrapApplicationInstanceSleep = '';
 
 /**
- * Instance non dé-sérialisée de l'affichage de l'application mémorisée dans la session PHP.
+ * Is the application have already been preloaded and on PHP session.
  * @noinspection PhpUnusedLocalVariableInspection
  */
-$bootstrapApplicationDisplayInstanceSleep = '';
+$bootstrapApplicationInstancePreloaded = false;
 
 /**
  * Instance non dé-sérialisée des actions de l'application mémorisée dans la session PHP.
@@ -1073,7 +1073,10 @@ function lib_getMetrologyTimer(string $type): string
  */
 function lib_init(): bool
 {
-    global $nebuleLocalAuthorities, $libraryCheckOK, $libraryRescueMode;
+    global $nebuleLocalAuthorities,
+           $libraryCheckOK,
+           $libraryRescueMode,
+           $needFirstSynchronization;
 
     // Initialize i/o.
     if (!io_open()) {
@@ -1088,6 +1091,7 @@ function lib_init(): bool
     $puppetmaster = lib_getConfiguration('puppetmaster');
     if (!ent_checkPuppetmaster($puppetmaster)) {
         bootstrap_setBreak('82', 'lib init : puppetmaster error');
+        $needFirstSynchronization = true;
         return false;
     }
     $nebuleLocalAuthorities = array($puppetmaster);
@@ -1098,6 +1102,7 @@ function lib_init(): bool
         $nebuleSecurityAuthorities = ent_getSecurityAuthorities(true);
         if (!ent_checkSecurityAuthorities($nebuleSecurityAuthorities)) {
             bootstrap_setBreak('83', 'lib init : security authority error');
+            $needFirstSynchronization = true;
             return false;
         }
     }
@@ -1109,6 +1114,7 @@ function lib_init(): bool
         $nebuleCodeAuthorities = ent_getCodeAuthorities(true);
         if (!ent_checkCodeAuthorities($nebuleCodeAuthorities)) {
             bootstrap_setBreak('84', 'lib init : code authority error');
+            $needFirstSynchronization = true;
             return false;
         }
     }
@@ -1120,6 +1126,7 @@ function lib_init(): bool
         $nebuleTimeAuthorities = ent_getTimeAuthorities(true);
         if (!ent_checkTimeAuthorities($nebuleTimeAuthorities)) {
             bootstrap_setBreak('85', 'lib init : time authority error');
+            $needFirstSynchronization = true;
             return false;
         }
     }
@@ -1129,6 +1136,7 @@ function lib_init(): bool
         $nebuleDirectoryAuthorities = ent_getDirectoryAuthorities(true);
         if (!ent_checkDirectoryAuthorities($nebuleDirectoryAuthorities)) {
             bootstrap_setBreak('86', 'lib init : directory authority error');
+            $needFirstSynchronization = true;
             return false;
         }
     }
@@ -1154,7 +1162,9 @@ function lib_init(): bool
  */
 function lib_setServerEntity(bool $rescueMode): void
 {
-    global $nebuleServerEntity, $nebuleLocalAuthorities, $needFirstSynchronization;
+    global $nebuleServerEntity,
+           $nebuleLocalAuthorities,
+           $needFirstSynchronization;
 
     if (file_exists(LIB_LOCAL_ENTITY_FILE) && is_file(LIB_LOCAL_ENTITY_FILE))
     {
@@ -1186,7 +1196,8 @@ function lib_setServerEntity(bool $rescueMode): void
  */
 function lib_setDefaultEntity(bool $rescueMode): void
 {
-    global $nebuleDefaultEntity, $nebuleLocalAuthorities;
+    global $nebuleDefaultEntity,
+           $nebuleLocalAuthorities;
     $nebuleDefaultEntity = lib_getConfiguration('defaultCurrentEntity');
     if (!ent_checkIsPublicKey($nebuleDefaultEntity))
         $nebuleDefaultEntity = lib_getConfiguration('puppetmaster');
@@ -1202,7 +1213,8 @@ function lib_setDefaultEntity(bool $rescueMode): void
  */
 function lib_setPublicEntity(): void
 {
-    global $nebulePublicEntity, $nebuleDefaultEntity;
+    global $nebulePublicEntity,
+           $nebuleDefaultEntity;
     if (!ent_checkIsPublicKey($nebulePublicEntity))
         $nebulePublicEntity = $nebuleDefaultEntity;
 }
@@ -3937,10 +3949,7 @@ function app_getPreload(string $oid): bool
     global $nebuleLocalAuthorities;
 
     // Check for defaults app.
-    if ($oid == '0'
-        || $oid == '1'
-        || $oid == '2'
-    )
+    if (strlen($oid) < 2)
         return false;
 
     // Check with links.
@@ -4223,6 +4232,23 @@ function bootstrap_getFlushSession(bool $forceFlush = false): void
         $_SESSION['OKsession'] = true;
 
     session_write_close();
+
+    // Désactivation des envois liés à la session après le premier usage. Evite tout un tas de logs inutiles.
+    session_cache_limiter('');
+    ini_set('session.use_cookies', '0');
+    ini_set('session.use_only_cookies', '0');
+    ini_set('session.use_trans_sid', '0');
+}
+
+/**
+ * Write the user session track on logs.
+ *
+ * @return void
+ */
+function bootstrap_logUserSession()
+{
+    $sessionId = session_id();
+    log_add('session hash id ' . crypto_getDataHash($sessionId), 'info', __FUNCTION__, '36ebd66b');
 }
 
 /**
@@ -4260,7 +4286,8 @@ function bootstrap_getUpdate(): void
  */
 function bootstrap_getSwitchApplication(): void
 {
-    global $bootstrapFlush, $bootstrapSwitchApplication, $nebuleServerEntity;
+    global $bootstrapFlush,
+           $bootstrapSwitchApplication;
 
     if ($bootstrapFlush)
         return;
@@ -4474,124 +4501,126 @@ function bootstrap_saveLibraryPOO(): void
  ------------------------------------------------------------------------------------------
  */
 
+/**
+ * Find app ID and code ID to use.
+ *
+ * @return void
+ */
 function bootstrap_findApplication(): void
 {
-    global $nebuleInstance,
-           $libraryCheckOK,
-           $bootstrapSwitchApplication,
-           $bootstrapUpdate,
-           $bootstrapApplicationInstanceSleep,
-           $bootstrapApplicationDisplayInstanceSleep,
-           $bootstrapApplicationActionInstanceSleep,
-           $bootstrapApplicationTraductionInstanceSleep,
+    global $libraryCheckOK,
            $bootstrapApplicationIID,
            $bootstrapApplicationOID,
-           $bootstrapApplicationSID;
+           $bootstrapUpdate,
+           $bootstrapApplicationNoPreload;
+
+    $bootstrapApplicationIID = '';
+    $bootstrapApplicationOID = '';
 
     if (!$libraryCheckOK)
         return;
 
-    $bootstrapApplicationIID = $nebuleInstance->getConfigurationInstance()->getOptionAsString('defaultApplication');
-    $bootstrapApplicationOID = '0';
-    $bootstrapApplicationSID = '';
+    // Get ID of app.
+    bootstrap_findApplicationAsk($bootstrapApplicationIID);
+    if ($bootstrapApplicationIID == '')
+        bootstrap_findApplicationSession($bootstrapApplicationIID);
+    if ($bootstrapApplicationIID == '')
+        bootstrap_findApplicationDefault($bootstrapApplicationIID);
 
-    // Enregistre l'identifiant de session pour le suivi d'un utilisateur.
-    $sessionId = session_id();
-    log_add('session hash id ' . crypto_getDataHash($sessionId), 'info', __FUNCTION__, '36ebd66b');
+    // Set code ID for internal bootstrap apps.
+    session_start();
+    if (strlen($bootstrapApplicationIID) < 2)
+        $bootstrapApplicationOID = $bootstrapApplicationIID;
+    elseif (!$bootstrapUpdate
+        && $bootstrapApplicationNoPreload
+        && isset($_SESSION['bootstrapApplicationOID'])
+    )
+        $bootstrapApplicationOID = $_SESSION['bootstrapApplicationOID'];
+    else
+        $bootstrapApplicationOID = app_getCode($bootstrapApplicationIID);
+    session_abort();
 
-    // Vérifie l'ID de départ de l'application mémorisé.
+    // If running bad, use default app.
+    if ($bootstrapApplicationOID == '') {
+        $bootstrapApplicationIID = '2';
+        $bootstrapApplicationOID = '2';
+    }
+
+    log_add('find application IID=' . $bootstrapApplicationIID . ' OID=' . $bootstrapApplicationOID, 'info', __FUNCTION__, '5bb68dab');
+}
+
+/**
+ * Check if app ID asked by user.
+ *
+ * @param string $bootstrapApplicationIID
+ * @return void
+ */
+function bootstrap_findApplicationAsk(string &$bootstrapApplicationIID): void
+{
+    global $bootstrapSwitchApplication,
+           $codeBranchNID;
+
+    $phpNID = obj_getNID(BOOTSTRAP_CODING, LIB_REF_CODE_ALGO);
+
+    if ($bootstrapSwitchApplication != ''
+        && $bootstrapSwitchApplication != $bootstrapApplicationIID
+    ) {
+        log_add('ask switch application IID=' . $bootstrapSwitchApplication, 'info', __FUNCTION__, '0cbacda8');
+        if ($bootstrapSwitchApplication == '0'
+            || $bootstrapSwitchApplication == '1'
+            || $bootstrapSwitchApplication == '2'
+            || lnk_checkExist('f', LIB_RID_INTERFACE_APPLICATIONS, $bootstrapSwitchApplication, $phpNID, $codeBranchNID)
+        )
+            $bootstrapApplicationIID = $bootstrapSwitchApplication;
+    }
+}
+
+/**
+ * If no app asked, get the app ID on session.
+ *
+ * @param string $bootstrapApplicationIID
+ * @return void
+ */
+function bootstrap_findApplicationSession(string &$bootstrapApplicationIID): void
+{
     session_start();
     if (isset($_SESSION['bootstrapApplicationIID'])
         && nod_checkNID($_SESSION['bootstrapApplicationIID'])
     )
         $bootstrapApplicationIID = $_SESSION['bootstrapApplicationIID'];
     session_abort();
+}
 
-    // Check ask to switch of application.
-    if ($bootstrapSwitchApplication != ''
-        && $bootstrapSwitchApplication != $bootstrapApplicationIID
-    ) {
-        log_add('ask switch application ' . $bootstrapSwitchApplication, 'info', __FUNCTION__, '0cbacda8');
-        if ($bootstrapApplicationIID == '0'
-            || $bootstrapApplicationIID == '1'
-            || $bootstrapApplicationIID == '2'
-            || lnk_checkExist('f', LIB_RID_INTERFACE_APPLICATIONS, $bootstrapSwitchApplication, LIB_RID_INTERFACE_APPLICATIONS, '')
-        )
-            $bootstrapApplicationIID = $bootstrapSwitchApplication;
-            $bootstrapApplicationOID = $bootstrapSwitchApplication;
-    }
+/**
+ * If no app found, get the default app ID.
+ *
+ * @param string $bootstrapApplicationIID
+ * @return void
+ */
+function bootstrap_findApplicationDefault(string &$bootstrapApplicationIID): void
+{
+    global $nebuleInstance;
 
-    // Check for update.
-    if ($bootstrapApplicationOID == '0'
-        && $bootstrapApplicationIID != ''
-        && $bootstrapUpdate
-    ) {
-        $bootstrapApplicationOID = app_getByRef($bootstrapApplicationIID);
-    }
+    //$defaultApplicationID = lib_getConfiguration('defaultApplication');
+    $defaultApplicationID = $nebuleInstance->getConfigurationInstance()->getOptionAsString('defaultApplication');
+    if ($defaultApplicationID == '0'
+        || $defaultApplicationID == '1'
+        || $defaultApplicationID == '2'
+    )
+        $bootstrapApplicationIID = $defaultApplicationID;
+    elseif (nod_checkNID($defaultApplicationID)
+        && io_checkNodeHaveLink($defaultApplicationID)
+    )
+        $bootstrapApplicationIID = $defaultApplicationID;
+    else
+        $bootstrapApplicationIID = '2';
 
-    // If existed, get application from session.
-    session_start();
-    if ($bootstrapApplicationOID == '0'
-        && isset($_SESSION['bootstrapApplicationIID'][$bootstrapApplicationOID])
-        && nod_checkNID($_SESSION['bootstrapApplicationIID'][$bootstrapApplicationOID])
-        && io_checkNodeHaveLink($_SESSION['bootstrapApplicationIID'][$bootstrapApplicationOID])
-        && obj_checkContent($_SESSION['bootstrapApplicationIID'][$bootstrapApplicationOID]) // TODO à vérifier si utile
-        && isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID])
-        && $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID] != ''
-        && isset($_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationOID])
-        && $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationOID] != ''
-        && isset($_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationOID])
-        && $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationOID] != ''
-        && isset($_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationOID])
-        && $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationOID] != ''
-    ) {
-        // Mémorise l'instance non dé-sérialisée de l'application en cours et de ses composants.
-        $bootstrapApplicationOID = $_SESSION['bootstrapApplicationIID'][$bootstrapApplicationOID]; // TODO vérifier le bon remplissage
-        $bootstrapApplicationInstanceSleep = $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID];
-        $bootstrapApplicationDisplayInstanceSleep = $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationOID];
-        $bootstrapApplicationActionInstanceSleep = $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationOID];
-        $bootstrapApplicationTraductionInstanceSleep = $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationOID];
-    }
-    session_abort();
-
-    // Désactivation des envois liés à la session après le premier usage. Evite tout un tas de logs inutiles.
-    session_cache_limiter('');
-    ini_set('session.use_cookies', '0');
-    ini_set('session.use_only_cookies', '0');
-    ini_set('session.use_trans_sid', '0');
-
-    // Si pas d'application trouvée, recherche l'application par défaut
-    //   ou charge l'application '0' de sélection d'application.
-    if ($bootstrapApplicationOID == '0') {
-        $defaultApplicationID = lib_getConfiguration('defaultApplication');
-        if ($defaultApplicationID == '0') {
-            $bootstrapApplicationIID = '0';
-            $bootstrapApplicationOID = '0';
-        } elseif ($defaultApplicationID == '1') {
-            $bootstrapApplicationIID = '1';
-            $bootstrapApplicationOID = '1';
-        } elseif ($defaultApplicationID == '2') {
-            $bootstrapApplicationIID = '2';
-            $bootstrapApplicationOID = '2';
-        } elseif (nod_checkNID($defaultApplicationID)
-            && io_checkNodeHaveLink($defaultApplicationID)
-        ) {
-            $bootstrapApplicationIID = $defaultApplicationID;
-            $bootstrapApplicationOID = app_getByRef($bootstrapApplicationIID);
-        }
-        log_add('find default application ' . $bootstrapApplicationOID, 'info', __FUNCTION__, '423ae49b');
-    }
-
-    if ($bootstrapApplicationOID == '') {
-        $bootstrapApplicationIID = '0';
-        $bootstrapApplicationOID = '0';
-    }
+    log_add('use default application IID=' . $bootstrapApplicationIID, 'info', __FUNCTION__, '423ae49b');
 }
 
 function bootstrap_getApplicationPreload(): void
 {
     global $bootstrapApplicationIID,
-           $bootstrapApplicationInstanceSleep,
            $bootstrapApplicationNoPreload,
            $libraryCheckOK;
 
@@ -4599,16 +4628,16 @@ function bootstrap_getApplicationPreload(): void
         return;
 
     // Recherche si l'application doit être préchargée.
-    if ($bootstrapApplicationIID != '0'
-        && $bootstrapApplicationIID != '1'
-        && $bootstrapApplicationIID != '2'
-        && $bootstrapApplicationInstanceSleep == ''
-    ) {
+    if (strlen($bootstrapApplicationIID) < 2)
+        $bootstrapApplicationNoPreload = true;
+    elseif (!$bootstrapApplicationNoPreload) {
         $bootstrapApplicationNoPreload = app_getPreload($bootstrapApplicationIID);
 
         if ($bootstrapApplicationNoPreload)
             log_add('do not preload application', 'info', __FUNCTION__, '0ac7d800');
     }
+    else
+        $bootstrapApplicationNoPreload = true;
 }
 
 /**
@@ -4624,7 +4653,7 @@ function bootstrap_includeApplication(): void
     if (!$libraryCheckOK)
         return;
 
-    if ($bootstrapApplicationOID == '') {
+    if ($bootstrapApplicationOID == '' || $bootstrapApplicationOID == '0') {
         log_reopen(BOOTSTRAP_NAME);
         log_add('error find application code ' . $bootstrapApplicationOID, 'error', __FUNCTION__, 'd0c1d720');
         bootstrap_setBreak('44', 'Application find code error');
@@ -4632,7 +4661,7 @@ function bootstrap_includeApplication(): void
         log_reopen(BOOTSTRAP_NAME);
         log_add('error include application code ' . $bootstrapApplicationOID, 'error', __FUNCTION__, '6fa5eb2b');
         bootstrap_setBreak('45', 'Application include code error');
-        $bootstrapApplicationOID = '';
+        $bootstrapApplicationOID = '0';
     }
 }
 
@@ -4649,93 +4678,89 @@ function bootstrap_loadApplication(): void
            $applicationDisplayInstance,
            $applicationActionInstance,
            $applicationTraductionInstance,
-           $applicationName,
-           $bootstrapApplicationInstanceSleep,
-           $bootstrapApplicationDisplayInstanceSleep,
-           $bootstrapApplicationActionInstanceSleep,
-           $bootstrapApplicationTraductionInstanceSleep,
            $bootstrapApplicationOID;
 
-    if ($bootstrapApplicationOID != ''
-        && $libraryCheckOK
-        && !class_exists('Application', false)
-    ) {
-        $applicationName = Application::APPLICATION_NAME;
+    if ($bootstrapApplicationOID == ''
+        || $bootstrapApplicationOID == '0'
+        || !$libraryCheckOK
+        || class_exists('Application', false)
+    )
+        return;
 
-        log_reopen($applicationName);
+    log_reopen(Application::APPLICATION_NAME);
 
-        try {
-                if ($bootstrapApplicationInstanceSleep == '')
-                    $applicationInstance = new Application($nebuleInstance);
-                else
-                    $nebuleInstance = unserialize($bootstrapApplicationInstanceSleep);
-        } catch (\Error $e) {
-            log_reopen(BOOTSTRAP_NAME);
-            log_add('Application load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '202824cb');
-            bootstrap_setBreak('46', 'Application load error');
-        }
+    // Get app instances from session if exist.
+    $bootstrapApplicationInstanceSleep = '';
+    $bootstrapApplicationDisplayInstanceSleep = '';
+    $bootstrapApplicationActionInstanceSleep = '';
+    $bootstrapApplicationTraductionInstanceSleep = '';
+    session_start();
+    if (isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID])
+        && $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID] != '')
+        $bootstrapApplicationInstanceSleep = $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID];
+    if (isset($_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationOID])
+        && $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationOID] != '')
+        $bootstrapApplicationDisplayInstanceSleep = $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationOID];
+    if (isset($_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationOID])
+        && $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationOID] != '')
+        $bootstrapApplicationActionInstanceSleep = $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationOID];
+    if (isset($_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationOID])
+        && $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationOID] != '')
+        $bootstrapApplicationTraductionInstanceSleep = $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationOID];
+    session_abort();
 
-        try {
-                if ($bootstrapApplicationTraductionInstanceSleep == '')
-                    $applicationTraductionInstance = new Traduction($applicationInstance);
-                else
-                    $nebuleInstance = unserialize($bootstrapApplicationTraductionInstanceSleep);
-        } catch (\Error $e) {
-            log_reopen(BOOTSTRAP_NAME);
-            log_add('Application traduction load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '585648a2');
-            bootstrap_setBreak('46', 'Application load error');
-        }
+    try {
+            if ($bootstrapApplicationInstanceSleep == '')
+                $applicationInstance = new Application($nebuleInstance);
+            else
+                $applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
+    } catch (\Error $e) {
+        log_reopen(BOOTSTRAP_NAME);
+        log_add('Application load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '202824cb');
+        bootstrap_setBreak('46', 'Application load error');
+    }
 
-        try {
-                if ($bootstrapApplicationDisplayInstanceSleep == '')
-                    $applicationDisplayInstance = new Display($applicationInstance);
-                else
-                    $nebuleInstance = unserialize($bootstrapApplicationDisplayInstanceSleep);
-        } catch (\Error $e) {
-            log_reopen(BOOTSTRAP_NAME);
-            log_add('Application display load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '4c7da4e2');
-            bootstrap_setBreak('46', 'Application load error');
-        }
+    try {
+            if ($bootstrapApplicationDisplayInstanceSleep == '')
+                $applicationDisplayInstance = new Display($applicationInstance);
+            else
+                $applicationDisplayInstance = unserialize($bootstrapApplicationDisplayInstanceSleep);
+    } catch (\Error $e) {
+        log_reopen(BOOTSTRAP_NAME);
+        log_add('Application display load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '4c7da4e2');
+        bootstrap_setBreak('46', 'Application load error');
+    }
 
-        try {
-                if ($bootstrapApplicationActionInstanceSleep == '')
-                    $applicationActionInstance = new Action($applicationInstance);
-                else
-                    $nebuleInstance = unserialize($bootstrapApplicationActionInstanceSleep);
-        } catch (\Error $e) {
-            log_reopen(BOOTSTRAP_NAME);
-            log_add('Application action load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '3c042de3');
-            bootstrap_setBreak('46', 'Application load error');
-        }
+    try {
+            if ($bootstrapApplicationActionInstanceSleep == '')
+                $applicationActionInstance = new Action($applicationInstance);
+            else
+                $applicationActionInstance = unserialize($bootstrapApplicationActionInstanceSleep);
+    } catch (\Error $e) {
+        log_reopen(BOOTSTRAP_NAME);
+        log_add('Application action load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '3c042de3');
+        bootstrap_setBreak('46', 'Application load error');
+    }
 
-
-
-
-        try {
-            if (!class_exists('Application', false))
-            {
-                if ($bootstrapApplicationInstanceSleep == '')
-                    $nebuleInstance = new nebule();
-                else
-                    $nebuleInstance = unserialize($bootstrapApplicationInstanceSleep);
-                log_reopen(BOOTSTRAP_NAME);
-            }
-        } catch (\Error $e) {
-            log_reopen(BOOTSTRAP_NAME);
-            log_add('Library nebule load error ('  . $e->getCode() . ') : ' . $e->getFile()
-                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                . $e->getTraceAsString(), 'error', __FUNCTION__, '959c188b');
-            bootstrap_setBreak('43', 'Library nebule load error');
-        }
+    try {
+        if ($bootstrapApplicationTraductionInstanceSleep == '')
+            $applicationTraductionInstance = new Traduction($applicationInstance);
+        else
+            $applicationTraductionInstance = unserialize($bootstrapApplicationTraductionInstanceSleep);
+    } catch (\Error $e) {
+        log_reopen(BOOTSTRAP_NAME);
+        log_add('Application traduction load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '585648a2');
+        bootstrap_setBreak('46', 'Application load error');
     }
 }
 
 /**
  * Save nebule Library POO code on session.
  *
+ * @param bool $run
  * @return void
  */
-function bootstrap_initApplication(): void
+function bootstrap_initApplication(bool $run): void
 {
     global $applicationInstance,
            $applicationDisplayInstance,
@@ -4761,7 +4786,8 @@ function bootstrap_initApplication(): void
     }
 
     // Appel de l'application.
-    $applicationInstance->router();
+    if ($run)
+        $applicationInstance->router();
 
     // Sérialise les instances et les sauve dans la session PHP.
     bootstrap_saveLibraryPOO(); // FIXME à supprimer ?
@@ -5487,6 +5513,7 @@ function bootstrap_htmlBottom()
 }
 
 
+
 // ------------------------------------------------------------------------------------------
 /**
  * bootstrapNormalDisplayOnBreak()
@@ -5509,6 +5536,39 @@ function bootstrap_displayOnBreak(): void
     bootstrap_breakDisplay5Application();
     bootstrap_breakDisplay6End();
     bootstrap_htmlBottom();
+}
+
+/**
+ * Cette fonction affiche l'écran du bootstrap en cas d'interruption.
+ * L'interruption peut être appelée par l'utilisateur ou provoqué par une erreur lors des
+ * vérifications de bon fonctionnement. Les vérifications ont lieu à chaque chargement de
+ * page. L'affichage est minimum, il est destiné à apparaître dans une page web déjà ouverte.
+ *
+ * @return void
+ */
+function bootstrap_inlineDisplayOnBreak()
+{
+    global $bootstrapBreak,
+           $libraryRescueMode,
+           $bootstrapLibraryIID,
+           $bootstrapApplicationOID;
+
+    ob_end_flush();
+
+    echo "<div class=\"bootstrapErrorDiv\"><p>\n";
+    echo '&gt; ' . BOOTSTRAP_NAME . ' ' . BOOTSTRAP_VERSION . "<br />\n";
+
+    ksort($bootstrapBreak);
+    echo 'Bootstrap break on : ';
+    foreach ($bootstrapBreak as $number => $message)
+        echo '- [' . $number . '] ' . $message . "<br />\n";
+    if ($libraryRescueMode)
+        echo "RESCUE<br />\n";
+
+    echo 'nebule loading library : ' . $bootstrapLibraryIID . "<br />\n";
+    echo 'Application loading : ' . $bootstrapApplicationOID . "<br />\n";
+    echo 'tB=' . lib_getMetrologyTimer('tB') . "<br />\n";
+    echo "</p></div>\n";
 }
 
 function bootstrap_breakDisplay1OnError()
@@ -5888,14 +5948,12 @@ function bootstrap_breakDisplay6End()
 
 function bootstrap_echoLineTitle(string $title): void
 {
-    $maxSize = 21;
+    $maxSize = 20;
     $title = trim($title);
     if (strlen($title) > $maxSize)
         $title = substr($title, 0, $maxSize);
-    else
-        $title .= ' ';
     $c = strlen($title);
-    while ($c < $maxSize)
+    while ($c <= $maxSize)
     {
         $title .= '&nbsp;';
         $c++;
@@ -5911,42 +5969,6 @@ function bootstrap_echoEndLineTest(bool $test, string $suffix = ''): void
         echo ' <span class="error">ERROR!</span>';
 
     echo "<br />\n";
-}
-
-
-
-// ------------------------------------------------------------------------------------------
-/**
- * Cette fonction affiche l'écran du bootstrap en cas d'interruption.
- * L'interruption peut être appelée par l'utilisateur ou provoqué par une erreur lors des
- * vérifications de bon fonctionnement. Les vérifications ont lieu à chaque chargement de
- * page. L'affichage est minimum, il est destiné à apparaître dans une page web déjà ouverte.
- *
- * @return void
- */
-function bootstrap_inlineDisplayOnBreak()
-{
-    global $bootstrapBreak,
-           $libraryRescueMode,
-           $bootstrapLibraryIID,
-           $bootstrapApplicationOID;
-
-    ob_end_flush();
-
-    echo "<div class=\"bootstrapErrorDiv\"><p>\n";
-    echo '&gt; ' . BOOTSTRAP_NAME . ' ' . BOOTSTRAP_VERSION . "<br />\n";
-
-    ksort($bootstrapBreak);
-    echo 'Bootstrap break on : ';
-    foreach ($bootstrapBreak as $number => $message)
-        echo '- [' . $number . '] ' . $message . "<br />\n";
-    if ($libraryRescueMode)
-        echo "RESCUE<br />\n";
-
-    echo 'nebule loading library : ' . $bootstrapLibraryIID . "<br />\n";
-    echo 'Application loading : ' . $bootstrapApplicationOID . "<br />\n";
-    echo 'tB=' . lib_getMetrologyTimer('tB') . "<br />\n";
-    echo "</p></div>\n";
 }
 
 
@@ -5973,7 +5995,7 @@ function bootstrap_displaySleepingApplication()
 {
     bootstrap_includeApplication();
     bootstrap_loadApplication();
-    bootstrap_initApplication();
+    bootstrap_initApplication(true);
 }
 
 /**
@@ -5987,7 +6009,7 @@ function bootstrap_displayNoPreloadApplication()
     log_add('load application without preload ' . $bootstrapApplicationOID, 'info', __FUNCTION__, 'e01ea813');
     bootstrap_includeApplication();
     bootstrap_loadApplication();
-    bootstrap_initApplication();
+    bootstrap_initApplication(true);
 }
 
 /**
@@ -5998,11 +6020,8 @@ function bootstrap_displayNoPreloadApplication()
 function bootstrap_displayPreloadApplication()
 {
     global $nebuleInstance,
-           $metrologyStartTime,
            $applicationInstance,
            $applicationDisplayInstance,
-           $applicationActionInstance,
-           $applicationTraductionInstance,
            $bootstrapLibraryIID,
            $bootstrapApplicationOID,
            $bootstrapApplicationIID;
@@ -6010,9 +6029,6 @@ function bootstrap_displayPreloadApplication()
     // Initialisation des logs
     log_reopen('preload');
     log_add('Loading library POO', 'info', __FUNCTION__, 'ce5879b0');
-
-    echo 'CHK';
-    ob_end_clean();
 
     bootstrap_htmlHeader();
     bootstrap_htmlTop();
@@ -6024,71 +6040,45 @@ function bootstrap_displayPreloadApplication()
     flush();
 
     echo '<div class="preload">' . "\n";
-    ?>
-    <img title="bootstrap" style="background:#ababab;" alt="[]" src="<?php echo LIB_BOOTSTRAP_ICON; ?>"/>
-    Load nebule library POO<br/>
-    ID=<?php echo $bootstrapLibraryIID; ?><br/>
-    <?php
+    echo '<img title="bootstrap" style="background:#ababab;" alt="[]" src="' . LIB_BOOTSTRAP_ICON . '"/>' . "\n";
+    echo 'Load nebule library POO<br/>' . "\n";
+    echo 'ID=' . $bootstrapLibraryIID . "\n";
     echo 'tL=' . lib_getMetrologyTimer('tL') . "<br />\n";
     echo '</div>' . "\n";
     flush();
 
     echo '<div class="preload">' . "\n";
-    ?>
-    <img title="bootstrap" style="background:#<?php echo substr($bootstrapApplicationIID . '000000', 0, 6); ?>;"
-         alt="[]" src="<?php echo LIB_BOOTSTRAP_ICON; ?>"/>
-    Load application<br/>
-    ID=<?php echo $bootstrapApplicationOID; ?><br/>
-    <?php
+    echo '<img title="bootstrap" style="background:#' . substr($bootstrapApplicationIID . '000000', 0, 6) . ';"' . "\n";
+    echo 'alt="[]" src="' . LIB_BOOTSTRAP_ICON . '"/>' . "\n";
+    echo 'Load application<br/>' . "\n";
+    echo 'IID=' . $bootstrapApplicationIID . "\n";
+    echo 'OID=' . $bootstrapApplicationOID;
+    if ($bootstrapApplicationOID == '0')
+        echo ' <span class="error">ERROR!</span>';
+    echo '<br/>' . "\n";
     flush();
 
-    log_reopen('preload');
-    log_add('Loading application ' . $bootstrapApplicationOID, 'info', __FUNCTION__, '8d24b491');
 
-    try {
-        // Charge l'objet de l'application. TODO faire via les i/o.
-        include(LIB_LOCAL_OBJECTS_FOLDER . '/' . $bootstrapApplicationOID);
-    } catch (\Error $e) {
-        log_reopen(BOOTSTRAP_NAME);
-        log_add('Application include error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '8101a6fa');
-    }
+    // Check FIXME
+    if ($bootstrapApplicationOID == '0')
+        return;
 
-    try {
-        $applicationInstance = new Application($nebuleInstance);
-    } catch (\Error $e) {
-        log_reopen(BOOTSTRAP_NAME);
-        log_add('Application load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'a6901e43');
-    }
-    try {
-        $applicationTraductionInstance = new Traduction($applicationInstance);
-    } catch (\Error $e) {
-        log_reopen(BOOTSTRAP_NAME);
-        log_add('Application traduction load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '17c889d7');
-    }
-    try {
-        $applicationDisplayInstance = new Display($applicationInstance);
-    } catch (\Error $e) {
-        log_reopen(BOOTSTRAP_NAME);
-        log_add('Application display load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, 'e61c0842');
-    }
-    try {
-        $applicationActionInstance = new Action($applicationInstance);
-    } catch (\Error $e) {
-        log_reopen(BOOTSTRAP_NAME);
-        log_add('Application action load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '18adef64');
-    }
 
-    // Initialisation des instances.
-    $applicationInstance->initialisation();
-    $applicationTraductionInstance->initialisation();
-    $applicationDisplayInstance->initialisation();
-    $applicationActionInstance->initialisation();
-    ?>
+    log_add('preload application ' . $bootstrapApplicationOID, 'info', __FUNCTION__, '8d24b491');
+    bootstrap_includeApplication();
+    bootstrap_loadApplication();
+    bootstrap_initApplication(false);
 
-    Name=<?php echo $applicationInstance->getClassName(); ?><br/>
-    sync<span class="preloadsync">
-    <?php
+
+    // Check FIXME
+    if (! is_a($applicationInstance, 'Applications'))
+        return;
+
+
+    echo 'Name=' . $applicationInstance->getClassName() . "<br/>\n";
+
     // Récupération des éléments annexes nécessaires à l'affichage de l'application.
+    echo 'sync<span class="preloadsync">' . "\n";
     $items = $applicationDisplayInstance->getNeededObjectsList();
     $nb = 0;
     foreach ($items as $item) {
@@ -6100,14 +6090,9 @@ function bootstrap_displayPreloadApplication()
             $nb++;
         }
     }
-    unset($items);
-
     if ($nb == 0)
         echo '-';
-    ?>
-
-    </span><br/>
-    <?php
+    echo '</span><br/>' . "\n";
     lib_setMetrologyTimer('tP');
     echo 'tP=' . lib_getMetrologyTimer('tP') . "<br />\n";
     echo '</div>' . "\n";
@@ -6207,7 +6192,8 @@ function bootstrap_displayApplicationFirst(): void
 
 function bootstrap_firstInitEnv()
 {
-    global $configurationList, $nebuleCacheIsPublicKey;
+    global $configurationList,
+           $nebuleCacheIsPublicKey;
 
     $configurationList['permitWrite'] = true;
     $configurationList['permitWriteObject'] = true;
@@ -6231,10 +6217,11 @@ function bootstrap_firstInitEnv()
  */
 function bootstrap_firstDisplay1Breaks(): void
 {
-    global $bootstrapBreak, $libraryRescueMode;
+    global $bootstrapBreak,
+           $libraryRescueMode;
 
     echo '<div class="parts">' . "\n";
-    echo '<span class="partstitle">#1 ' . BOOTSTRAP_NAME . ' break on</span><br/>' . "\n";
+    echo '<span class="partstitle">#1 ' . BOOTSTRAP_NAME . ' break on (need first init)</span><br/>' . "\n";
     ksort($bootstrapBreak);
     foreach ($bootstrapBreak as $number => $message)
         echo '- [' . $number . '] <span class="error">' . $message . '</span>' . "<br />\n";
@@ -6448,7 +6435,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
 
     $puppetmaster = lib_getConfiguration('puppetmaster');
 
-    echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+    bootstrap_echoLineTitle('puppetmaster');
     if (!ent_checkPuppetmaster($puppetmaster)) {
         echo 'sync... ';
         ent_syncPuppetmaster($puppetmaster);
@@ -6482,7 +6469,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
     $timeAuthorities = ent_getTimeAuthorities(true);
     $directoryAuthorities = ent_getDirectoryAuthorities(true);
 
-    echo 'security authorities &nbsp;: ';
+    bootstrap_echoLineTitle('security authorities');
     if (sizeof($securityAuthorities) != 0) {
         if (!ent_checkSecurityAuthorities($securityAuthorities)) {
             echo 'sync... ';
@@ -6503,7 +6490,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
     echo "<br/>\n";
     flush();
 
-    echo 'code authorities &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+    bootstrap_echoLineTitle('code authorities');
     if (sizeof($codeAuthorities) != 0) {
         if (!ent_checkCodeAuthorities($codeAuthorities)) {
             echo 'sync... ';
@@ -6524,7 +6511,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
     echo "<br/>\n";
     flush();
 
-    echo 'time authorities &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+    bootstrap_echoLineTitle('time authorities');
     if (sizeof($timeAuthorities) != 0) {
         if (!ent_checkTimeAuthorities($timeAuthorities)) {
             echo 'sync... ';
@@ -6545,7 +6532,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool
     echo "<br/>\n";
     flush();
 
-    echo 'directory authorities : ';
+    bootstrap_echoLineTitle('directory authorities');
     if (sizeof($directoryAuthorities) != 0) {
         if (!ent_checkDirectoryAuthorities($directoryAuthorities)) {
             echo 'sync... ';
@@ -6592,7 +6579,7 @@ function bootstrap_firstDisplay6SyncObjects(): bool
     echo '<span class="partstitle">#6 synchronizing objets</span><br/>' . "\n";
 
     // Write locations objects content
-    echo 'objects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ';
+    bootstrap_echoLineTitle('objects');
     foreach (LIB_FIRST_LOCALISATIONS as $data) {
         obj_setContent($data);
         echo '.';
@@ -6705,7 +6692,8 @@ function bootstrap_firstDisplay7Subordination(): bool
         }
     } else {
         $firstSubordinationEID = lib_getConfiguration('subordinationEntity');
-        echo 'subordination to ' . $firstSubordinationEID . "\n";
+        bootstrap_echoLineTitle('subordination to');
+        echo $firstSubordinationEID . "\n";
     }
 
     echo "</div>\n";
@@ -6891,16 +6879,18 @@ function bootstrap_firstDisplay9LocaleEntity(): bool
             obj_getNID('nebule/objet/nom', lib_getConfiguration('cryptoHashAlgorithm')));
         lnk_write($newLink);
 
-        ?>
+        bootstrap_echoLineTitle('public ID');
+        echo $nebulePublicEntity . '<br/>' . "\n";
+        bootstrap_echoLineTitle('private ID');
+        echo $nebulePrivateEntity . "\n";
 
-        public ID &nbsp;: <?php echo $nebulePublicEntity; ?><br/>
-        private ID : <?php echo $nebulePrivateEntity; ?>
+        ?>
 
         <div class="important">
             name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $name; ?><br/>
             public ID : <?php echo $nebulePublicEntity; ?><br/>
             password &nbsp;: <?php echo htmlspecialchars($nebulePasswordEntity); ?><br/>
-            Please keep and save securely thoses private informations!
+            Please keep and save securely theses private information!
         </div>
         <?php
     } else {
@@ -6949,7 +6939,7 @@ chmod 644 <?php echo LIB_LOCAL_ENTITY_FILE; ?>
 function bootstrap_displayLocalEntity()
 {
     if (file_exists(LIB_LOCAL_ENTITY_FILE))
-        echo '1';
+        echo 'FIXME';
 //        echo file_get_contents(LIB_LOCAL_ENTITY_FILE, false, null, 0, lib_getConfiguration('ioReadMaxData')); FIXME memory overflow!
     else
         echo '0';
@@ -7123,8 +7113,8 @@ function bootstrap_displayRouter()
            $bootstrapInlineDisplay,
            $bootstrapApplicationIID,
            $bootstrapApplicationOID,
-           $bootstrapApplicationNoPreload,
-           $bootstrapApplicationInstanceSleep;
+           //$bootstrapApplicationInstanceSleep,
+           $bootstrapApplicationNoPreload;
 
     // End of Web page buffering with a buffer erase before display important things.
     echo 'Display test of of erased buffer - must not be prompted!';
@@ -7154,22 +7144,21 @@ function bootstrap_displayRouter()
     // For compatibility and interoperability.
     if (filter_has_var(INPUT_GET, LIB_LOCAL_ENTITY_FILE)
         || filter_has_var(INPUT_POST, LIB_LOCAL_ENTITY_FILE)
-    )
-    {
+    ) {
         bootstrap_displayLocalEntity();
         return;
     }
 
-    log_add('load application ' . $bootstrapApplicationOID, 'info', __FUNCTION__, 'aab236ff');
+    log_add('load application code OID=' . $bootstrapApplicationOID, 'info', __FUNCTION__, 'aab236ff');
 
     if ($bootstrapApplicationIID == '0' || $bootstrapApplicationOID = '0')
         bootstrap_displayApplication0();
     elseif ($bootstrapApplicationIID == '1')
         bootstrap_displayApplication1();
-    elseif ($bootstrapApplicationIID == '2')
+    elseif (strlen($bootstrapApplicationIID) < 2)
         bootstrap_displayApplication2();
-    elseif (isset($bootstrapApplicationInstanceSleep) && $bootstrapApplicationInstanceSleep != '')
-        bootstrap_displaySleepingApplication();
+//    elseif (isset($bootstrapApplicationInstanceSleep) && $bootstrapApplicationInstanceSleep != '')
+//        bootstrap_displaySleepingApplication();
     elseif ($bootstrapApplicationNoPreload)
         bootstrap_displayNoPreloadApplication();
     else
@@ -7189,7 +7178,7 @@ function bootstrap_logMetrology()
         $timers .= " $i=$v";
 
     // Metrology on logs.
-    if (is_a($nebuleInstance, 'nebule')) {
+    if (is_a($nebuleInstance, 'nebule'))
         log_add('Mp=' . $memory . 'Mb'
             . $timers
             . ' Lr=' . lib_getMetrology('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead()
@@ -7205,7 +7194,7 @@ function bootstrap_logMetrology()
             'info',
             __FUNCTION__,
             '0d99ad8b');
-    } else {
+    else
         log_add('Mp=' . $memory . 'Mb'
             . $timers
             . ' Lr=' . lib_getMetrology('lr')
@@ -7216,7 +7205,6 @@ function bootstrap_logMetrology()
             'info',
             __FUNCTION__,
             '52d76692');
-    }
 }
 
 function main()
@@ -7228,6 +7216,7 @@ function main()
     bootstrap_getInlineDisplay();
     bootstrap_getCheckFingerprint();
     bootstrap_getFlushSession();
+    bootstrap_logUserSession();
     bootstrap_getUpdate();
     bootstrap_getSwitchApplication();
     bootstrap_setPermitOpenFileCode();
