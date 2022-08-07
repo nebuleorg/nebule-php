@@ -1696,6 +1696,7 @@ function io_objectInclude(string $nid): bool
 
     $result = true;
     try {
+        //log_add('include code NID=' . $nid, 'info', __FUNCTION__, 'ec10ca1d');
         include_once(LIB_LOCAL_OBJECTS_FOLDER . '/' . $nid);
     } catch (\Error $e) {
         log_add('error include code NID=' . $nid .' ('  . $e->getCode() . ') : ' . $e->getFile()
@@ -4653,6 +4654,7 @@ function bootstrap_includeApplication(): void
     if (!$libraryCheckOK)
         return;
 
+    //log_add('include application code OID=' . $bootstrapApplicationOID, 'info', __FUNCTION__, '8683e195');
     if ($bootstrapApplicationOID == '' || $bootstrapApplicationOID == '0') {
         log_reopen(BOOTSTRAP_NAME);
         log_add('error find application code ' . $bootstrapApplicationOID, 'error', __FUNCTION__, 'd0c1d720');
@@ -4680,14 +4682,23 @@ function bootstrap_loadApplication(): void
            $applicationTraductionInstance,
            $bootstrapApplicationOID;
 
+    $nameSpace = 'Nebule\\Application\\Sylabe'; // FIXME
+    $nameSpaceApplication = $nameSpace.'\\Application';
+    $nameSpaceDisplay = $nameSpace.'\\Display';
+    $nameSpaceAction = $nameSpace.'\\Action';
+    $nameSpaceTraduction = $nameSpace.'\\Traduction';
+
     if ($bootstrapApplicationOID == ''
         || $bootstrapApplicationOID == '0'
         || !$libraryCheckOK
-        || class_exists('Application', false)
-    )
+        //|| !class_exists('Application', false)
+        || !class_exists($nameSpaceApplication, false)
+    ) {
+        log_add('cannot find class Application on code NID=' . $bootstrapApplicationOID, 'error', __FUNCTION__, 'ec10ca1d');
         return;
+    }
 
-    log_reopen(Application::APPLICATION_NAME);
+    log_reopen($nameSpace); // . '\\' . Application::APPLICATION_NAME);
 
     // Get app instances from session if exist.
     $bootstrapApplicationInstanceSleep = '';
@@ -4711,7 +4722,7 @@ function bootstrap_loadApplication(): void
 
     try {
             if ($bootstrapApplicationInstanceSleep == '')
-                $applicationInstance = new Application($nebuleInstance);
+                $applicationInstance = new $nameSpaceApplication($nebuleInstance);
             else
                 $applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
     } catch (\Error $e) {
@@ -4722,7 +4733,7 @@ function bootstrap_loadApplication(): void
 
     try {
             if ($bootstrapApplicationDisplayInstanceSleep == '')
-                $applicationDisplayInstance = new Display($applicationInstance);
+                $applicationDisplayInstance = new $nameSpaceDisplay($applicationInstance);
             else
                 $applicationDisplayInstance = unserialize($bootstrapApplicationDisplayInstanceSleep);
     } catch (\Error $e) {
@@ -4733,7 +4744,7 @@ function bootstrap_loadApplication(): void
 
     try {
             if ($bootstrapApplicationActionInstanceSleep == '')
-                $applicationActionInstance = new Action($applicationInstance);
+                $applicationActionInstance = new $nameSpaceAction($applicationInstance);
             else
                 $applicationActionInstance = unserialize($bootstrapApplicationActionInstanceSleep);
     } catch (\Error $e) {
@@ -4744,7 +4755,7 @@ function bootstrap_loadApplication(): void
 
     try {
         if ($bootstrapApplicationTraductionInstanceSleep == '')
-            $applicationTraductionInstance = new Traduction($applicationInstance);
+            $applicationTraductionInstance = new $nameSpaceTraduction($applicationInstance);
         else
             $applicationTraductionInstance = unserialize($bootstrapApplicationTraductionInstanceSleep);
     } catch (\Error $e) {
@@ -4768,8 +4779,10 @@ function bootstrap_initApplication(bool $run): void
            $applicationTraductionInstance;
 
     // Check
-    if (! is_a($applicationInstance, 'Applications'))
+    if (! is_a($applicationInstance, 'Applications')) {
+        log_add('error init application', 'error', __FUNCTION__, '41ba02a9');
         return;
+    }
 
     // Initialisation de réveil de l'instance de l'application.
     $applicationInstance->initialisation();
@@ -6028,7 +6041,7 @@ function bootstrap_displayPreloadApplication()
 
     // Initialisation des logs
     log_reopen('preload');
-    log_add('Loading library POO', 'info', __FUNCTION__, 'ce5879b0');
+    //log_add('Loading library POO', 'info', __FUNCTION__, 'ce5879b0');
 
     bootstrap_htmlHeader();
     bootstrap_htmlTop();
@@ -6058,22 +6071,16 @@ function bootstrap_displayPreloadApplication()
     echo '<br/>' . "\n";
     flush();
 
-
-    // Check FIXME
-    if ($bootstrapApplicationOID == '0')
-        return;
-
-
-    log_add('preload application ' . $bootstrapApplicationOID, 'info', __FUNCTION__, '8d24b491');
+    log_add('preload application code OID=' . $bootstrapApplicationOID, 'info', __FUNCTION__, '8d24b491');
     bootstrap_includeApplication();
     bootstrap_loadApplication();
     bootstrap_initApplication(false);
 
-
     // Check FIXME
-    if (! is_a($applicationInstance, 'Applications'))
+    /*if (! is_a($applicationInstance, 'Applications')) {
+        log_add('error preload application code OID=' . $bootstrapApplicationOID, 'error', __FUNCTION__, '2e87a827');
         return;
-
+    }*/
 
     echo 'Name=' . $applicationInstance->getClassName() . "<br/>\n";
 
@@ -7151,7 +7158,7 @@ function bootstrap_displayRouter()
 
     log_add('load application code OID=' . $bootstrapApplicationOID, 'info', __FUNCTION__, 'aab236ff');
 
-    if ($bootstrapApplicationIID == '0' || $bootstrapApplicationOID = '0')
+    if ($bootstrapApplicationIID == '0' || $bootstrapApplicationOID == '0')
         bootstrap_displayApplication0();
     elseif ($bootstrapApplicationIID == '1')
         bootstrap_displayApplication1();

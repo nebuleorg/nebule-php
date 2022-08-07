@@ -171,10 +171,10 @@ abstract class Actions
     /**
      * Constructeur.
      *
-     * @param Application $applicationInstance
+     * @param Applications $applicationInstance
      * @return void
      */
-    public function __construct(Application $applicationInstance)
+    public function __construct(Applications $applicationInstance)
     {
         $this->_applicationInstance = $applicationInstance;
         $this->_configuration = $applicationInstance->getNebuleInstance()->getConfigurationInstance();

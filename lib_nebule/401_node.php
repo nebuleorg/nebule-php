@@ -821,7 +821,7 @@ class Node implements nodeInterface
             return '';
 
         // Extrait le contenu de l'objet de propriété.
-        $property = $this->_readOneLineOtherObject($link->getHashTarget_disabled());
+        $property = $this->_readOneLineOtherObject($link->getParsed()['bl/rl/nid2']);
         unset($link);
 
         // Mémorise le résultat dans le cache.
