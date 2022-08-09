@@ -647,13 +647,18 @@ class Node implements nodeInterface
         if ($type == '')
             return array();
 
-        // Si déjà recherché, donne le résultat en cache.
-        if (isset($this->_cachePropertiesLinks[$type][$socialClass]))
-            return $this->_cachePropertiesLinks[$type][$socialClass];
+        if (!$this->checkNID($type))
+            $type = $this->_nebuleInstance->getNIDfromData($type);
 
+        // Si déjà recherché, donne le résultat en cache.
+//        if (isset($this->_cachePropertiesLinks[$type][$socialClass]))
+//            return $this->_cachePropertiesLinks[$type][$socialClass];
+
+$this->_metrology->addLog('MARK type=' . $type, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         // Liste les liens à la recherche de la propriété.
         $list = array();
         $this->_getLinksByNID3($list, $type);
+$this->_metrology->addLog('MARK links=' . sizeof($list), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         if (sizeof($list) == 0)
             return array();
@@ -685,6 +690,7 @@ class Node implements nodeInterface
      */
     public function getPropertyLink(string $type, string $socialClass = ''): ?linkInterface
     {
+$this->_metrology->addLog('MARK type=' . $type, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         if ($type == '')
             return null;
 
@@ -694,6 +700,7 @@ class Node implements nodeInterface
 
         // Liste les liens à la recherche de la propriété.
         $list = $this->getPropertiesLinks($type, $socialClass);
+$this->_metrology->addLog('MARK links=' . sizeof($list), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         if (sizeof($list) == 0)
             return null;
@@ -777,7 +784,7 @@ class Node implements nodeInterface
             return array();
         }
 
-        // Fait un tri par pertinance sociale.
+        // Fait un tri par pertinence sociale.
         $this->_social->arraySocialFilter($list, $socialClass);
 
         // Extrait les ID des objets de propriété.
@@ -803,6 +810,7 @@ class Node implements nodeInterface
      */
     public function getProperty(string $type, string $socialClass = ''): string
     {
+$this->_metrology->addLog('MARK type=' . $type, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         if ($type == '')
             return '';
 
@@ -815,6 +823,7 @@ class Node implements nodeInterface
         // Liste les liens à la recherche de la propriété.
         $link = $this->getPropertyLink($type, $socialClass);
 
+$this->_metrology->addLog('MARK link=' . $link, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         if ($link == ''
             || !is_a($link, 'blocLink')
         )
@@ -919,8 +928,6 @@ class Node implements nodeInterface
             $type = $this->_nebuleInstance->getNIDfromData($type, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
         }
 
-        $signers = array();
-
         // Extraction des entités signataires.
         $links = $this->getPropertiesLinks(nebule::REFERENCE_NEBULE_OBJET_TYPE, 'all');
 
@@ -963,9 +970,7 @@ class Node implements nodeInterface
 
         foreach ($links as $link) {
             if ($type == ''
-                || ($type != ''
-                    && $link->getHashTarget() == $type
-                )
+                || $link->getHashTarget() == $type
             ) {
                 if ($link->getHashSigner() == $entity) {
                     return true;
@@ -1126,10 +1131,9 @@ class Node implements nodeInterface
     public function getName(string $socialClass = ''): string
     {
         $name = $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_NOM, $socialClass);
-        if ($name == '') {
-            // Si le nom n'est pas trouvé, retourne l'ID.
+$this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+        if ($name == '')
             $name = $this->_id;
-        }
         return $name;
     }
 

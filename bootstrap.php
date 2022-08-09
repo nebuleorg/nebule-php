@@ -7001,7 +7001,7 @@ log_add('MARK size appList=' . sizeof($appList), 'normal', __FUNCTION__, '000000
     foreach ($appList as $application) {
         $instance = new Node($nebuleInstance, $application);
         $color = '#' . substr($application . '000000', 0, 6);
-        $title = $instance->getName();
+        $title = $instance->getName('all');
         $shortName = substr($instance->getSurname() . '--', 0, 2);
         $shortName = strtoupper(substr($shortName, 0, 1)) . strtolower(substr($shortName, 1, 1));
         echo '<a href="/?' . LIB_ARG_SWITCH_APPLICATION . '=' . $application . '">';
