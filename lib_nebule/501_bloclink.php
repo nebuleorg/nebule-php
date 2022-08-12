@@ -366,7 +366,11 @@ class blocLink implements blocLinkInterface
     {
         $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'e76bbadb');
 
-        return $this->_parsedLink['bl/rc/chr'];
+        $result = $this->_parsedLink['bl/rc/chr'];
+        if (is_null($result))
+            $result = '';
+
+        return $result;
     }
 
 

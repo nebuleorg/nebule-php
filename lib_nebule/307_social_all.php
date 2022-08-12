@@ -60,8 +60,8 @@ class SocialAll implements SocialInterface
      */
     public function linkSocialScore(Link &$link, $socialClass = ''): float
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=all score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=all score 1 for ' . $link->getSigners(), Metrology::LOG_LEVEL_DEBUG);
+// FIXME        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=all score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
+// FIXME        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=all score 1 for ' . $link->getSigners(), Metrology::LOG_LEVEL_DEBUG);
 
         return 1;
     }
