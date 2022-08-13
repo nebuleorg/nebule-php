@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
-use Nebule\Library\nebule;
 
 /**
  * Classe Actions communes.
@@ -129,7 +128,7 @@ abstract class Actions
     /**
      * Instance sylabe.
      *
-     * @var sylabe
+     * @var Applications
      */
     protected $_applicationInstance;
 
@@ -278,9 +277,8 @@ abstract class Actions
         $this->_metrology->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Vérifie que l'entité est déverrouillée.
-        if (!$this->_unlocked) {
+        if (!$this->_unlocked)
             return;
-        }
 
         // Extrait les actions.
         $this->_extractActionObfuscateLink();
@@ -325,133 +323,98 @@ abstract class Actions
         if ($this->_actionObfuscateLinkInstance != ''
             && is_a($this->_actionObfuscateLinkInstance, 'Link')
             && $this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
-        ) {
+        )
             $this->_actionObfuscateLink();
-        }
 
         // Gère la suppression d'un objet.
         if ($this->_actionDeleteObject
             && is_a($this->_actionDeleteObjectInstance, 'Node')
-        ) {
+        )
             $this->_actionDeleteObject();
-        }
 
         // Gère la protection/déprotection d'un objet.
         if ($this->_actionProtectObjectInstance != ''
             && is_a($this->_actionProtectObjectInstance, 'Node')
-        ) {
+        )
             $this->_actionProtectObject();
-        }
         if ($this->_actionUnprotectObjectInstance != ''
             && is_a($this->_actionUnprotectObjectInstance, 'Node')
-        ) {
+        )
             $this->_actionUnprotectObject();
-        }
-        if ($this->_actionShareProtectObjectToEntity != '') {
+        if ($this->_actionShareProtectObjectToEntity != '')
             $this->_actionShareProtectObjectToEntity();
-        }
-        if ($this->_actionShareProtectObjectToGroupOpened != '') {
+        if ($this->_actionShareProtectObjectToGroupOpened != '')
             $this->_actionShareProtectObjectToGroupOpened();
-        }
-        if ($this->_actionShareProtectObjectToGroupClosed != '') {
+        if ($this->_actionShareProtectObjectToGroupClosed != '')
             $this->_actionShareProtectObjectToGroupClosed();
-        }
-        if ($this->_actionCancelShareProtectObjectToEntity != '') {
+        if ($this->_actionCancelShareProtectObjectToEntity != '')
             $this->_actionCancelShareProtectObjectToEntity();
-        }
 
         // Gère les synchronisations (toujours les objets avant les liens).
-        if ($this->_actionSynchronizeObjectInstance != '') {
+        if ($this->_actionSynchronizeObjectInstance != '')
             $this->_actionSynchronizeObject();
-        }
-        if ($this->_actionSynchronizeEntityInstance != '') {
+        if ($this->_actionSynchronizeEntityInstance != '')
             $this->_actionSynchronizeEntity();
-        }
-        if ($this->_actionSynchronizeObjectLinksInstance != '') {
+        if ($this->_actionSynchronizeObjectLinksInstance != '')
             $this->_actionSynchronizeObjectLinks();
-        }
-        if ($this->_actionSynchronizeApplicationInstance != '') {
+        if ($this->_actionSynchronizeApplicationInstance != '')
             $this->_actionSynchronizeApplication();
-        }
-        if ($this->_actionSynchronizeNewEntityID != '') {
+        if ($this->_actionSynchronizeNewEntityID != '')
             $this->_actionSynchronizeNewEntity();
-        }
 
         // Gère les marques des objets.
-        if ($this->_actionMarkObject != '') {
+        if ($this->_actionMarkObject != '')
             $this->_actionMarkObject();
-        }
-        if ($this->_actionUnmarkObject != '') {
+        if ($this->_actionUnmarkObject != '')
             $this->_actionUnmarkObject();
-        }
-        if ($this->_actionUnmarkAllObjects) {
+        if ($this->_actionUnmarkAllObjects)
             $this->_actionUnmarkAllObjects();
-        }
 
         // Gère les téléchargements.
-        if ($this->_actionUploadFile) {
+        if ($this->_actionUploadFile)
             $this->_actionUploadFile();
-        }
-        if ($this->_actionUploadText) {
+        if ($this->_actionUploadText)
             $this->_actionUploadText();
-        }
 
         // Gère les groupes.
-        if ($this->_actionCreateGroup) {
+        if ($this->_actionCreateGroup)
             $this->_actionCreateGroup();
-        }
-        if ($this->_actionDeleteGroup) {
+        if ($this->_actionDeleteGroup)
             $this->_actionDeleteGroup();
-        }
-        if ($this->_actionAddToGroup != '') {
+        if ($this->_actionAddToGroup != '')
             $this->_actionAddToGroup();
-        }
-        if ($this->_actionRemoveFromGroup != '') {
+        if ($this->_actionRemoveFromGroup != '')
             $this->_actionRemoveFromGroup();
-        }
-        if ($this->_actionAddItemToGroup != '') {
+        if ($this->_actionAddItemToGroup != '')
             $this->_actionAddItemToGroup();
-        }
-        if ($this->_actionRemoveItemFromGroup != '') {
+        if ($this->_actionRemoveItemFromGroup != '')
             $this->_actionRemoveItemFromGroup();
-        }
 
         // Gère les conversations et messages.
-        if ($this->_actionCreateConversation) {
+        if ($this->_actionCreateConversation)
             $this->_actionCreateConversation();
-        }
-        if ($this->_actionDeleteConversation) {
+        if ($this->_actionDeleteConversation)
             $this->_actionDeleteConversation();
-        }
-        if ($this->_actionAddMessageOnConversation != '') {
+        if ($this->_actionAddMessageOnConversation != '')
             $this->_actionAddMessageOnConversation();
-        }
-        if ($this->_actionRemoveMessageOnConversation != '') {
+        if ($this->_actionRemoveMessageOnConversation != '')
             $this->_actionRemoveMessageOnConversation();
-        }
-        if ($this->_actionAddMemberOnConversation != '') {
+        if ($this->_actionAddMemberOnConversation != '')
             $this->_actionAddMemberOnConversation();
-        }
-        if ($this->_actionRemoveMemberOnConversation != '') {
+        if ($this->_actionRemoveMemberOnConversation != '')
             $this->_actionRemoveMemberOnConversation();
-        }
-        if ($this->_actionCreateMessage) {
+        if ($this->_actionCreateMessage)
             $this->_actionCreateMessage();
-        }
-        if ($this->_actionAddProperty != '') {
+        if ($this->_actionAddProperty != '')
             $this->_actionAddProperty();
-        }
 
         // Gère les monnaies.
-        if ($this->_actionCreateCurrency) {
+        if ($this->_actionCreateCurrency)
             $this->_actionCreateCurrency();
-        }
-        if ($this->_actionCreateTokenPool) {
+        if ($this->_actionCreateTokenPool)
             $this->_actionCreateTokenPool();
-        }
-        if ($this->_actionCreateTokens) {
+        if ($this->_actionCreateTokens)
             $this->_actionCreateTokens();
-        }
 
         $this->_metrology->addLog('Generic actions end', Metrology::LOG_LEVEL_DEBUG); // Log
     }
@@ -477,9 +440,8 @@ abstract class Actions
         // Vérifie que l'action de création d'entité soit permise entité verrouillée.
         if ($this->_unlocked
             || $this->_configuration->getOptionAsBoolean('permitPublicCreateEntity')
-        ) {
+        )
             $this->_extractActionCreateEntity();
-        }
 
         // Vérifie que l'action de chargement de lien soit permise.
         if ($this->_configuration->getOptionAsBoolean('permitUploadLink')
@@ -496,9 +458,8 @@ abstract class Actions
         $this->_metrology->addLog('Router generic actions', Metrology::LOG_LEVEL_DEBUG); // Log
 
         // Si l'action de création d'entité est validée.
-        if ($this->_actionCreateEntity) {
+        if ($this->_actionCreateEntity)
             $this->_actionCreateEntity();
-        }
 
         // Si l'action de chargement de lien est permise y compris entité verrouillée.
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
@@ -514,39 +475,34 @@ abstract class Actions
                 && $this->_configuration->getOptionAsBoolean('permitCreateLink')
                 && $this->_actionSignLinkInstance1 != ''
                 && is_a($this->_actionSignLinkInstance1, 'Link')
-            ) {
+            )
                 $this->_actionSignLink($this->_actionSignLinkInstance1, $this->_actionSignLinkInstance1Obfuscate);
-            }
 
             // Lien à signer 2.
             if ($this->_unlocked
                 && $this->_configuration->getOptionAsBoolean('permitCreateLink')
                 && $this->_actionSignLinkInstance2 != ''
                 && is_a($this->_actionSignLinkInstance2, 'Link')
-            ) {
+            )
                 $this->_actionSignLink($this->_actionSignLinkInstance2, $this->_actionSignLinkInstance2Obfuscate);
-            }
 
             // Lien à signer 3.
             if ($this->_unlocked
                 && $this->_configuration->getOptionAsBoolean('permitCreateLink')
                 && $this->_actionSignLinkInstance3 != ''
                 && is_a($this->_actionSignLinkInstance3, 'Link')
-            ) {
+            )
                 $this->_actionSignLink($this->_actionSignLinkInstance3, $this->_actionSignLinkInstance3Obfuscate);
-            }
 
             // Liens pré-signés.
             if ($this->_actionUploadLinkInstance != null
                 && is_a($this->_actionUploadLinkInstance, 'Link')
-            ) {
+            )
                 $this->_actionUploadLink($this->_actionUploadLinkInstance);
-            }
 
             // Fichier de liens pré-signés.
-            if ($this->_actionUploadFileLinks) {
+            if ($this->_actionUploadFileLinks)
                 $this->_actionUploadFileLinks();
-            }
         }
 
         $this->_metrology->addLog('Special actions end', Metrology::LOG_LEVEL_DEBUG); // Log
@@ -566,28 +522,17 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action sign link 1', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-			 *  ------------------------------------------------------------------------------------------
-			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-			 *  ------------------------------------------------------------------------------------------
-			 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
             $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1_OBFUSCATE);
-
-            // Si le champs est vide, extrait le contenu de la variable POST.
-            if ($arg == '') {
+            if ($arg == '')
                 $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            }
 
-            // Extraction du lien et stockage pour traitement.
             if ($arg != ''
                 && strlen($arg) != 0
             ) {
                 $this->_actionSignLinkInstance1 = $this->flatLinkExtractAsInstance_disabled($arg);
                 $this->_actionSignLinkInstance1Obfuscate = $argObfuscate;
             }
-            unset($arg);
         }
     }
 
@@ -607,28 +552,17 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action sign link 2', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-			 *  ------------------------------------------------------------------------------------------
-			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-			 *  ------------------------------------------------------------------------------------------
-			 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
             $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2_OBFUSCATE);
-
-            // Si le champs est vide, extrait le contenu de la variable POST.
-            if ($arg == '') {
+            if ($arg == '')
                 $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            }
 
-            // Extraction du lien et stockage pour traitement.
             if ($arg != ''
                 && strlen($arg) != 0
             ) {
                 $this->_actionSignLinkInstance2 = $this->flatLinkExtractAsInstance_disabled($arg);
                 $this->_actionSignLinkInstance2Obfuscate = $argObfuscate;
             }
-            unset($arg);
         }
     }
 
@@ -648,28 +582,17 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action sign link 3', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-			 *  ------------------------------------------------------------------------------------------
-			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-			 *  ------------------------------------------------------------------------------------------
-			 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
             $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3_OBFUSCATE);
-
-            // Si le champs est vide, extrait le contenu de la variable POST.
-            if ($arg == '') {
+            if ($arg == '')
                 $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            }
 
-            // Extraction du lien et stockage pour traitement.
             if ($arg != ''
                 && strlen($arg) != 0
             ) {
                 $this->_actionSignLinkInstance3 = $this->flatLinkExtractAsInstance_disabled($arg);
                 $this->_actionSignLinkInstance3Obfuscate = $argObfuscate;
             }
-            unset($arg);
         }
     }
 
@@ -709,26 +632,16 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action upload signed link', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-			 *  ------------------------------------------------------------------------------------------
-			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-			 *  ------------------------------------------------------------------------------------------
-			 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UPLOAD_SIGNED_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-
-            // Si le champs est vide, extrait le contenu de la variable POST.
-            if ($arg == '') {
+            if ($arg == '')
                 $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_SIGNED_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            }
 
             // Vérifie si restriction des liens au maître du code. Non par défaut.
             $permitNotCodeMaster = false;
             if ($this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_unlocked
-            ) {
+            )
                 $permitNotCodeMaster = true;
-            }
 
             // Extraction du lien et stockage pour traitement.
             if ($arg != ''
@@ -740,12 +653,10 @@ abstract class Actions
                     && ($instance->getSigners() == $this->_nebuleInstance->getCodeAuthorities()
                         || $permitNotCodeMaster
                     )
-                ) {
+                )
                     $this->_actionUploadLinkInstance = $instance;
-                }
                 unset($instance);
             }
-            unset($arg);
         }
     }
 
@@ -763,24 +674,12 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action obfuscate link', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-			 *  ------------------------------------------------------------------------------------------
-			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-			 *  ------------------------------------------------------------------------------------------
-			 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_OBFUSCATE_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-
-            // Si le champs est vide, extrait le contenu de la variable POST.
-            if ($arg == '') {
+            if ($arg == '')
                 $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_OBFUSCATE_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            }
 
-            // Extraction du lien et stockage pour traitement.
-            if (strlen($arg) != 0) {
+            if (strlen($arg) != 0)
                 $this->_actionObfuscateLinkInstance = $this->flatLinkExtractAsInstance_disabled($arg);
-            }
-            unset($arg);
         }
     }
 
@@ -816,37 +715,26 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action delete object', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-			 *  ------------------------------------------------------------------------------------------
-			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-			 *  ------------------------------------------------------------------------------------------
-			 */
-            // Lit et nettoye le contenu de la variable GET.
             $argObject = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
             $argForce = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT_FORCE);
             $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT_OBFUSCATE);
 
             // Extraction de l'objet à supprimer.
-            if ($argObject != ''
-                && strlen($argObject) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($argObject)
-            ) {
+            if (Node::checkNID($argObject)) {
                 $this->_actionDeleteObjectID = $argObject;
                 $this->_actionDeleteObjectInstance = $this->_nebuleInstance->newObject($argObject);
                 $this->_actionDeleteObject = true;
             }
+
             // Extraction si la suppression doit être forcée.
-            if ($argForce) {
+            if ($argForce)
                 $this->_actionDeleteObjectForce = true;
-            }
+
             // Extraction si la suppression doit être cachée.
             if ($argObfuscate
                 && $this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
-            ) {
+            )
                 $this->_actionDeleteObjectObfuscate = true;
-            }
-
-            unset($argObject, $argForce, $argObfuscate);
         }
     }
 
@@ -870,22 +758,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action protect object', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-			 *  ------------------------------------------------------------------------------------------
-			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-			 *  ------------------------------------------------------------------------------------------
-			 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction du lien et stockage pour traitement.
-            if ($arg != ''
-                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($arg)
-            ) {
+            if (Node::checkNID($arg))
                 $this->_actionProtectObjectInstance = $this->_nebuleInstance->newObject($arg);
-            }
-            unset($arg);
         }
     }
 
@@ -905,22 +781,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action unprotect object', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-			 *  ------------------------------------------------------------------------------------------
-			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-			 *  ------------------------------------------------------------------------------------------
-			 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction du lien et stockage pour traitement.
-            if ($arg != ''
-                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($arg)
-            ) {
+            if (Node::checkNID($arg))
                 $this->_actionUnprotectObjectInstance = $this->_nebuleInstance->newObject($arg);
-            }
-            unset($arg);
         }
     }
 
@@ -940,22 +804,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action share protect object to entity', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-			 *  ------------------------------------------------------------------------------------------
-			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-			 *  ------------------------------------------------------------------------------------------
-			 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction du lien et stockage pour traitement.
-            if ($arg != ''
-                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($arg)
-            ) {
+            if (Node::checkNID($arg))
                 $this->_actionShareProtectObjectToEntity = $arg;
-            }
-            unset($arg);
         }
     }
 
@@ -975,22 +827,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action share protect object to opened group', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-			 *  ------------------------------------------------------------------------------------------
-			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-			 *  ------------------------------------------------------------------------------------------
-			 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction du lien et stockage pour traitement.
-            if ($arg != ''
-                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($arg)
-            ) {
+            if (Node::checkNID($arg))
                 $this->_actionShareProtectObjectToGroupOpened = $arg;
-            }
-            unset($arg);
         }
     }
 
@@ -1010,22 +850,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action share protect object to closed group', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-			 *  ------------------------------------------------------------------------------------------
-			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-			 *  ------------------------------------------------------------------------------------------
-			 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction du lien et stockage pour traitement.
-            if ($arg != ''
-                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($arg)
-            ) {
+            if (Node::checkNID($arg))
                 $this->_actionShareProtectObjectToGroupClosed = $arg;
-            }
-            unset($arg);
         }
     }
 
@@ -1045,22 +873,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action cancel share protect object to entity', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-			 *  ------------------------------------------------------------------------------------------
-			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-			 *  ------------------------------------------------------------------------------------------
-			 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction du lien et stockage pour traitement.
-            if ($arg != ''
-                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($arg)
-            ) {
+            if (Node::checkNID($arg))
                 $this->_actionCancelShareProtectObjectToEntity = $arg;
-            }
-            unset($arg);
         }
     }
 
@@ -1087,22 +903,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action synchronize object', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-			 *  ------------------------------------------------------------------------------------------
-			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-			 *  ------------------------------------------------------------------------------------------
-			 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction de l'id et stockage pour traitement.
-            if ($arg != ''
-                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($arg)
-            ) {
+            if (Node::checkNID($arg))
                 $this->_actionSynchronizeObjectInstance = $this->_nebuleInstance->newObject($arg);
-            }
-            unset($arg);
         }
     }
 
@@ -1129,22 +933,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action synchronize entity', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-			 *  ------------------------------------------------------------------------------------------
-			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-			 *  ------------------------------------------------------------------------------------------
-			 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction de l'id et stockage pour traitement.
-            if ($arg != ''
-                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($arg)
-            ) {
+            if (Node::checkNID($arg))
                 $this->_actionSynchronizeEntityInstance = $this->_nebuleInstance->newEntity_DEPRECATED($arg);
-            }
-            unset($arg);
         }
     }
 
@@ -1171,22 +963,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action synchronize object links', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-			 *  ------------------------------------------------------------------------------------------
-			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-			 *  ------------------------------------------------------------------------------------------
-			 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_LINKS, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction de l'id et stockage pour traitement.
-            if ($arg != ''
-                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($arg)
-            ) {
+            if (Node::checkNID($arg))
                 $this->_actionSynchronizeObjectLinksInstance = $this->_nebuleInstance->newObject($arg);
-            }
-            unset($arg);
         }
     }
 
@@ -1220,22 +1000,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action synchronize entity', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-			 *  ------------------------------------------------------------------------------------------
-			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-			 *  ------------------------------------------------------------------------------------------
-			 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction de l'id et stockage pour traitement.
-            if ($arg != ''
-                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($arg)
-            ) {
+            if (Node::checkNID($arg))
                 $this->_actionSynchronizeApplicationInstance = $this->_nebuleInstance->newObject($arg);
-            }
-            unset($arg);
         }
     }
 
@@ -1264,12 +1032,6 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action synchronize new entity', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-			 *  ------------------------------------------------------------------------------------------
-			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-			 *  ------------------------------------------------------------------------------------------
-			 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_NEW_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
             // Extraction de l'URL et stockage pour traitement.
@@ -1284,9 +1046,9 @@ abstract class Actions
                     && ($parseURL['scheme'] == 'http'
                         || $parseURL['scheme'] == 'https'
                     )
-                ) {
+                )
                     $scheme = $parseURL['scheme'];
-                } else {
+                else {
                     // Il manque le protocol, suppose que c'est http.
                     $scheme = 'http';
                     $parseURL = parse_url($scheme . '://' . $arg);
@@ -1301,7 +1063,7 @@ abstract class Actions
                     $this->_metrology->addLog('Extract action synchronize new entity - ID=' . $id, Metrology::LOG_LEVEL_DEBUG); // Log
                     // Vérifie l'ID.
                     if (!$this->_io->checkObjectPresent($id)
-                        && ctype_xdigit($id)
+                        && Node::checkNID($id)
                     ) {
                         // Si c'est bon on prépare pour la synchronisation.
                         $this->_actionSynchronizeNewEntityID = $id;
@@ -1314,7 +1076,6 @@ abstract class Actions
                     }
                 }
             }
-            unset($arg);
         }
     }
 
@@ -1330,22 +1091,10 @@ abstract class Actions
     {
         $this->_metrology->addLog('Extract action mark object', Metrology::LOG_LEVEL_DEBUG); // Log
 
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-		 *  ------------------------------------------------------------------------------------------
-		 */
-        // Lit et nettoye le contenu de la variable GET.
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_MARK_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-        // Extraction du lien et stockage pour traitement.
-        if ($arg != ''
-            && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-            && ctype_xdigit($arg)
-        ) {
+        if (Node::checkNID($arg))
             $this->_actionMarkObject = $arg;
-        }
-        unset($arg);
     }
 
     protected $_actionMarkObject = '';
@@ -1358,22 +1107,10 @@ abstract class Actions
     {
         $this->_metrology->addLog('Extract action unmark object', Metrology::LOG_LEVEL_DEBUG); // Log
 
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-		 *  ------------------------------------------------------------------------------------------
-		 */
-        // Lit et nettoye le contenu de la variable GET.
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-        // Extraction du lien et stockage pour traitement.
-        if ($arg != ''
-            && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-            && ctype_xdigit($arg)
-        ) {
+        if (Node::checkNID($arg))
             $this->_actionUnmarkObject = $arg;
-        }
-        unset($arg);
     }
 
     protected $_actionUnmarkObject = '';
@@ -1388,19 +1125,10 @@ abstract class Actions
     {
         $this->_metrology->addLog('Extract action unmark all objects', Metrology::LOG_LEVEL_DEBUG); // Log
 
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-		 *  ------------------------------------------------------------------------------------------
-		 */
-        // Lit et nettoye le contenu de la variable GET.
         $arg = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNMARK_ALL_OBJECT);
 
-        // Extraction du lien et stockage pour traitement.
-        if ($arg !== false) {
+        if ($arg !== false)
             $this->_actionUnmarkAllObjects = true;
-        }
-        unset($arg);
     }
 
     protected $_actionUnmarkAllObjects = false;
@@ -1482,11 +1210,6 @@ abstract class Actions
                 && $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LINKS]['error'] == UPLOAD_ERR_OK
                 && trim($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LINKS]['name']) != ''
             ) {
-                /*
-				 *  ------------------------------------------------------------------------------------------
-				 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-				 *  ------------------------------------------------------------------------------------------
-				 */
                 // Extraction des méta données du fichier.
                 $upname = mb_convert_encoding(strtok(trim(filter_var($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LINKS]['name'], FILTER_SANITIZE_STRING)), "\n"), 'UTF-8');
                 $upsize = $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LINKS]['size'];
@@ -1511,7 +1234,6 @@ abstract class Actions
                     $this->_actionUploadFileLinksError = true;
                     $this->_actionUploadFileLinksErrorMessage = 'File upload error';
                 }
-                unset($upname, $upsize, $uppath);
             }
         }
     }
@@ -1588,15 +1310,9 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action upload file', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
             $uploadArgName = self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE;
-            if (!isset($_FILES[$uploadArgName])) {
+            if (!isset($_FILES[$uploadArgName]))
                 return;
-            }
             $uploadRawName = $_FILES[$uploadArgName]['name'];
             $uploadError = $_FILES[$uploadArgName]['error'];
 
@@ -1789,12 +1505,6 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action upload text', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit si la variable POST existe.
             $arg = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT);
 
             // Extraction du lien et stockage pour traitement.
@@ -1812,22 +1522,17 @@ abstract class Actions
                     $this->_actionUploadText = true;
                     $this->_actionUploadTextContent = $argText;
                     $this->_actionUploadTextName = $argName;
-                    if ($argType != '') {
+                    if ($argType != '')
                         $this->_actionUploadTextType = $argType;
-                    } else {
+                    else
                         $this->_actionUploadTextType = nebule::REFERENCE_OBJECT_TEXT;
-                    }
 
-                    if ($this->_configuration->getOptionAsBoolean('permitProtectedObject')) {
+                    if ($this->_configuration->getOptionAsBoolean('permitProtectedObject'))
                         $this->_actionUploadTextProtect = $argPrt;
-                    }
-                    if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+                    if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink'))
                         $this->_actionUploadTextObfuscateLinks = $argObf;
-                    }
                 }
-                unset($argText, $argName, $argPrt, $argObf);
             }
-            unset($arg);
         }
     }
 
@@ -1909,19 +1614,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action create entity', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit et nettoye le contenu de la variable GET.
             $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY);
 
-            // Extraction du lien et stockage pour traitement.
-            if ($argCreate !== false) {
+            if ($argCreate !== false)
                 $this->_actionCreateEntity = true;
-            }
-            unset($argCreate);
 
             // Si on crée une nouvelle entité.
             if ($this->_actionCreateEntity) {
@@ -1944,25 +1640,21 @@ abstract class Actions
                 $this->_actionCreateEntityFirstname = $argFstnam;
                 $this->_actionCreateEntityNikename = $argNiknam;
                 $this->_actionCreateEntityName = $argName;
-                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink'))
                     $this->_actionCreateEntityObfuscateLinks = $argObf;
-                }
 
-                if ($argPasswd1 == $argPasswd2) {
+                if ($argPasswd1 == $argPasswd2)
                     $this->_actionCreateEntityPassword = $argPasswd1;
-                } else {
+                else {
                     $this->_metrology->addLog('Action _extractActionCreateEntity passwords not match', Metrology::LOG_LEVEL_ERROR); // Log
                     $this->_actionCreateEntityError = true;
                     $this->_actionCreateEntityErrorMessage = 'Les mots de passes ne sont pas identiques.';
                 }
 
-                if ($argType == 'human'
-                    || $argType == 'robot'
-                ) {
+                if ($argType == 'human' || $argType == 'robot')
                     $this->_actionCreateEntityType = $argType;
-                } else {
+                else
                     $this->_actionCreateEntityType = '';
-                }
 
                 unset($argPrefix, $argSuffix, $argFstnam, $argNiknam, $argName, $argPasswd1, $argPasswd2, $argType);
             }
@@ -2028,19 +1720,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action create group', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit et nettoye le contenu de la variable GET.
             $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP);
 
-            // Extraction du lien et stockage pour traitement.
-            if ($argCreate !== false) {
+            if ($argCreate !== false)
                 $this->_actionCreateGroup = true;
-            }
-            unset($argCreate);
 
             // Si on crée une nouvelle entité.
             if ($this->_actionCreateGroup) {
@@ -2054,11 +1737,8 @@ abstract class Actions
                 // Sauvegarde les valeurs.
                 $this->_actionCreateGroupName = $argName;
                 $this->_actionCreateGroupClosed = $argCld;
-                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink'))
                     $this->_actionCreateGroupObfuscateLinks = $argObf;
-                }
-
-                unset($argName);
             }
         } else {
             $this->_metrology->addLog('Action _extractActionCreateGroup not autorized', Metrology::LOG_LEVEL_ERROR); // Log
@@ -2122,23 +1802,15 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action delete group', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit et nettoye le contenu de la variable GET.
             $argDelete = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction du lien et stockage pour traitement.
             if ($argDelete !== ''
                 && strlen($argDelete) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($argDelete)
+                && Node::checkNID($argDelete)
             ) {
                 $this->_actionDeleteGroup = true;
                 $this->_actionDeleteGroupID = $argDelete;
             }
-            unset($argDelete);
         } else {
             $this->_metrology->addLog('Action _extractActionDeleteGroup not autorized', Metrology::LOG_LEVEL_ERROR); // Log
             $this->_actionDeleteGroupError = true;
@@ -2173,22 +1845,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action add to group', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_TO_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction du lien et stockage pour traitement.
-            if ($arg !== ''
-                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($arg)
-            ) {
+            if (Node::checkNID($arg))
                 $this->_actionAddToGroup = $arg;
-            }
-            unset($arg);
         }
     }
 
@@ -2216,22 +1876,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action remove from group', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_FROM_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction du lien et stockage pour traitement.
-            if ($arg !== ''
-                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($arg)
-            ) {
+            if (Node::checkNID($arg))
                 $this->_actionRemoveFromGroup = $arg;
-            }
-            unset($arg);
         }
     }
 
@@ -2259,22 +1907,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action add item to group', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_ITEM_TO_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction du lien et stockage pour traitement.
-            if ($arg !== ''
-                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($arg)
-            ) {
+            if (Node::checkNID($arg))
                 $this->_actionAddItemToGroup = $arg;
-            }
-            unset($arg);
         }
     }
 
@@ -2302,22 +1938,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action remove item from group', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction du lien et stockage pour traitement.
-            if ($arg !== ''
-                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($arg)
-            ) {
+            if (Node::checkNID($arg))
                 $this->_actionRemoveItemFromGroup = $arg;
-            }
-            unset($arg);
         }
     }
 
@@ -2378,19 +2002,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action create group', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit et nettoye le contenu de la variable GET.
             $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION);
 
-            // Extraction du lien et stockage pour traitement.
-            if ($argCreate !== false) {
+            if ($argCreate !== false)
                 $this->_actionCreateConversation = true;
-            }
-            unset($argCreate);
 
             // Si on crée une nouvelle conversation.
             if ($this->_actionCreateConversation) {
@@ -2405,14 +2020,10 @@ abstract class Actions
                 // Sauvegarde les valeurs.
                 $this->_actionCreateConversationName = $argName;
                 $this->_actionCreateConversationClosed = $argCld;
-                if ($this->_configuration->getOptionAsBoolean('permitProtectedObject')) {
+                if ($this->_configuration->getOptionAsBoolean('permitProtectedObject'))
                     $this->_actionCreateConversationProtected = $argPrt;
-                }
-                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink'))
                     $this->_actionCreateConversationObfuscateLinks = $argObf;
-                }
-
-                unset($argName);
             }
         } else {
             $this->_metrology->addLog('Action _extractActionCreateConversation not autorized', Metrology::LOG_LEVEL_ERROR); // Log
@@ -2477,23 +2088,15 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action delete conversation', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit et nettoye le contenu de la variable GET.
             $argDelete = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction du lien et stockage pour traitement.
             if ($argDelete !== ''
                 && strlen($argDelete) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($argDelete)
+                && Node::checkNID($argDelete)
             ) {
                 $this->_actionDeleteConversation = true;
                 $this->_actionDeleteConversationID = $argDelete;
             }
-            unset($argDelete);
         } else {
             $this->_metrology->addLog('Action _extractActionDeleteConversation not autorized', Metrology::LOG_LEVEL_ERROR); // Log
             $this->_actionDeleteConversationError = true;
@@ -2528,22 +2131,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action add to conversation', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_TO_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction du lien et stockage pour traitement.
-            if ($arg !== ''
-                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($arg)
-            ) {
+            if (Node::checkNID($arg))
                 $this->_actionAddMessageOnConversation = $arg;
-            }
-            unset($arg);
         }
     }
 
@@ -2571,22 +2162,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action remove from conversation', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_FROM_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction du lien et stockage pour traitement.
-            if ($arg !== ''
-                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($arg)
-            ) {
+            if (Node::checkNID($arg))
                 $this->_actionRemoveMessageOnConversation = $arg;
-            }
-            unset($arg);
         }
     }
 
@@ -2614,22 +2193,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action add item to conversation', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_ITEM_TO_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction du lien et stockage pour traitement.
-            if ($arg !== ''
-                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($arg)
-            ) {
+            if (Node::checkNID($arg))
                 $this->_actionAddMemberOnConversation = $arg;
-            }
-            unset($arg);
         }
     }
 
@@ -2657,22 +2224,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action remove item from conversation', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction du lien et stockage pour traitement.
-            if ($arg !== ''
-                && strlen($arg) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($arg)
-            ) {
+            if (Node::checkNID($arg))
                 $this->_actionRemoveMemberOnConversation = $arg;
-            }
-            unset($arg);
         }
     }
 
@@ -2694,35 +2249,23 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action create message', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit et nettoye le contenu de la variable GET.
             $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_MESSAGE);
 
-            // Extraction du lien et stockage pour traitement.
             if ($argCreate !== false)
                 $this->_actionCreateMessage = true;
-            unset($argCreate);
 
             // Si on crée un nouveau message.
             if ($this->_actionCreateMessage) {
                 // Extrait les options de téléchargement.
                 // !!! Utilise les constantes de upload de texte pour que la protection et la dissimulation soient bien pris en compte.
-                //$argPrt	= filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_MESSAGE_PROTECTED);
                 $argPrt = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_PROTECT);
-                //$argObf	= filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_MESSAGE_OBFUSCATE_LINKS);
                 $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_OBFUSCATE_LINKS);
 
                 // Sauvegarde les valeurs.
-                if ($this->_configuration->getOptionAsBoolean('permitProtectedObject')) {
+                if ($this->_configuration->getOptionAsBoolean('permitProtectedObject'))
                     $this->_actionCreateMessageProtected = $argPrt;
-                }
-                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink'))
                     $this->_actionCreateMessageObfuscateLinks = $argObf;
-                }
             }
 
             // Le reste des valeurs est récupéré par la partie création d'un texte.
@@ -2772,18 +2315,10 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action add property', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit et nettoye le contenu de la variable GET.
             $argAdd = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Extraction du lien et stockage pour traitement.
             if ($argAdd != '')
                 $this->_actionAddProperty = $argAdd;
-            unset($argAdd);
 
             // Si on crée une nouvelle propriété.
             if ($this->_actionAddProperty != '') {
@@ -2795,24 +2330,20 @@ abstract class Actions
 
                 // Sauvegarde les valeurs.
                 if ($argVal != '') {
-                    if ($argObj == '') {
+                    if ($argObj == '')
                         $this->_actionAddPropertyObject = $this->_nebuleInstance->getCurrentObject();
-                    } else {
+                    else
                         $this->_actionAddPropertyObject = $argObj;
-                    }
                     $this->_actionAddPropertyValue = $argVal;
-                    if ($this->_configuration->getOptionAsBoolean('permitProtectedObject')) {
+                    if ($this->_configuration->getOptionAsBoolean('permitProtectedObject'))
                         $this->_actionAddPropertyProtected = $argPrt;
-                    }
-                    if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+                    if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink'))
                         $this->_actionAddPropertyObfuscateLinks = $argObf;
-                    }
                 } else {
                     $this->_metrology->addLog('Action _extractActionAddProperty null value', Metrology::LOG_LEVEL_ERROR); // Log
                     $this->_actionAddPropertyError = true;
                     $this->_actionAddPropertyErrorMessage = 'Valeur vide.';
                 }
-                unset($argObj, $argVal, $argPrt, $argObf);
             }
         } else {
             $this->_metrology->addLog('Action _extractActionAddProperty not autorized', Metrology::LOG_LEVEL_ERROR); // Log
@@ -2924,21 +2455,11 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action create currency', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit et nettoye le contenu de la variable GET.
             $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_CURRENCY);
 
-            // Extraction du lien et stockage pour traitement.
-            if ($argCreate !== false) {
+            if ($argCreate !== false)
                 $this->_actionCreateCurrency = true;
-            }
-            unset($argCreate);
 
-            // Si on crée une nouvelle monnaie.
             if ($this->_actionCreateCurrency) {
                 // Récupère la liste des propriétés.
                 $instance = $this->_nebuleInstance->getCurrentCurrencyInstance();
@@ -2950,22 +2471,19 @@ abstract class Actions
                     if (isset($property['checkbox'])) {
                         $value = '';
                         $valueArray = filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
-                        foreach ($valueArray as $item) {
+                        foreach ($valueArray as $item)
                             $value .= ' ' . trim($item);
-                        }
                         $this->_actionCreateCurrencyParam[$name] = trim($value);
                         unset($value, $valueArray);
-                    } else {
+                    } else
                         $this->_actionCreateCurrencyParam[$name] = trim(filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                    }
                     $this->_metrology->addLog('Extract action create currency - _' . $property['shortname'] . ':' . $this->_actionCreateCurrencyParam[$name], Metrology::LOG_LEVEL_DEVELOP); // Log
 
                     // Extrait si forcé.
                     if (isset($property['forceable'])) {
                         $this->_actionCreateCurrencyParam['Force' . $name] = filter_has_var(INPUT_POST, 'f' . $property['shortname']);
-                        if ($this->_actionCreateCurrencyParam['Force' . $name]) {
+                        if ($this->_actionCreateCurrencyParam['Force' . $name])
                             $this->_metrology->addLog('Extract action create currency - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_DEBUG); // Log
-                        }
                     }
                 }
             }
@@ -3061,21 +2579,11 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action create token pool', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit et nettoye le contenu de la variable GET.
             $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_TOKEN_POOL);
 
-            // Extraction du lien et stockage pour traitement.
-            if ($argCreate !== false) {
+            if ($argCreate !== false)
                 $this->_actionCreateTokenPool = true;
-            }
-            unset($argCreate);
 
-            // Si on crée un nouveau sac de jetons.
             if ($this->_actionCreateTokenPool) {
                 // Récupère la liste des propriétés.
                 $instance = $this->_nebuleInstance->getCurrentTokenPoolInstance();
@@ -3087,22 +2595,19 @@ abstract class Actions
                     if (isset($property['checkbox'])) {
                         $value = '';
                         $valueArray = filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
-                        foreach ($valueArray as $item) {
+                        foreach ($valueArray as $item)
                             $value .= ' ' . trim($item);
-                        }
                         $this->_actionCreateTokenPoolParam[$name] = trim($value);
                         unset($value, $valueArray);
-                    } else {
+                    } else
                         $this->_actionCreateTokenPoolParam[$name] = trim(filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                    }
                     $this->_metrology->addLog('Extract action create token pool - p' . $property['key'] . ':' . $this->_actionCreateTokenPoolParam[$name], Metrology::LOG_LEVEL_DEBUG); // Log
 
                     // Extrait si forcé.
                     if (isset($property['forceable'])) {
                         $this->_actionCreateTokenPoolParam['Force' . $name] = filter_has_var(INPUT_POST, 'f' . $property['shortname']);
-                        if ($this->_actionCreateTokenPoolParam['Force' . $name]) {
+                        if ($this->_actionCreateTokenPoolParam['Force' . $name])
                             $this->_metrology->addLog('Extract action create token pool - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_DEBUG); // Log
-                        }
                     }
                 }
             }
@@ -3198,21 +2703,11 @@ abstract class Actions
         ) {
             $this->_metrology->addLog('Extract action create tokens', Metrology::LOG_LEVEL_DEBUG); // Log
 
-            /*
-    		 *  ------------------------------------------------------------------------------------------
-    		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-    		 *  ------------------------------------------------------------------------------------------
-    		 */
-            // Lit et nettoye le contenu de la variable GET.
             $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_TOKENS);
 
-            // Extraction du lien et stockage pour traitement.
-            if ($argCreate !== false) {
+            if ($argCreate !== false)
                 $this->_actionCreateTokens = true;
-            }
-            unset($argCreate);
 
-            // Si on crée un nouveau sac de jetons.
             if ($this->_actionCreateTokens) {
                 // Récupère la liste des propriétés.
                 $instance = $this->_nebuleInstance->getCurrentTokenInstance();
@@ -3224,22 +2719,19 @@ abstract class Actions
                     if (isset($property['checkbox'])) {
                         $value = '';
                         $valueArray = filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
-                        foreach ($valueArray as $item) {
+                        foreach ($valueArray as $item)
                             $value .= ' ' . trim($item);
-                        }
                         $this->_actionCreateTokensParam[$name] = trim($value);
                         unset($value, $valueArray);
-                    } else {
+                    } else
                         $this->_actionCreateTokensParam[$name] = trim(filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                    }
                     $this->_metrology->addLog('Extract action create tokens - t' . $property['key'] . ':' . $this->_actionCreateTokensParam[$name], Metrology::LOG_LEVEL_DEBUG); // Log
 
                     // Extrait si forcé.
                     if (isset($property['forceable'])) {
                         $this->_actionCreateTokensParam['Force' . $name] = filter_has_var(INPUT_POST, 'f' . $property['shortname']);
-                        if ($this->_actionCreateTokensParam['Force' . $name]) {
+                        if ($this->_actionCreateTokensParam['Force' . $name])
                             $this->_metrology->addLog('Extract action create tokens - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_DEBUG); // Log
-                        }
                     }
                 }
 
@@ -3282,9 +2774,8 @@ abstract class Actions
                 // On cache le lien ?
                 if ($obfuscate !== false
                     && $obfuscate !== true
-                ) {
+                )
                     $obfuscate = $this->_configuration->getOptionUntyped('defaultObfuscateLinks');
-                }
                 //...
 
                 // Signature du lien.
@@ -3298,9 +2789,8 @@ abstract class Actions
                 echo $this->_display->convertInlineIconFace('DEFAULT_ICON_ADDLNK') . $this->_display->convertInlineLinkFace($link);
 
                 // Si signé, écriture du lien.
-                if ($link->getSigned()) {
+                if ($link->getSigned())
                     $link->write();
-                }
             }
             // Affichage des actions.
             $this->_display->displayInlineAllActions();

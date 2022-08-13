@@ -229,8 +229,7 @@ class Currency extends Node implements nodeInterface
     private function _loadCurrency(string $id)
     {
         // Vérifie que c'est bien un objet.
-        if ($id == ''
-            || !ctype_xdigit($id)
+        if (!Node::checkNID($id)
             || !$this->_io->checkLinkPresent($id)
             || !$this->_configuration->getOptionAsBoolean('permitCurrency')
         ) {
@@ -485,7 +484,7 @@ class Currency extends Node implements nodeInterface
                                     $valueArray = explode(' ', $value);
                                     $value = '';
                                     foreach ($valueArray as $item) {
-                                        if (ctype_xdigit($item)) {
+                                        if (Node::checkNID($item)) {
                                             $value .= ' ' . $item;
                                         }
                                     }
@@ -500,7 +499,7 @@ class Currency extends Node implements nodeInterface
                                     }
                                 } else {
                                     $this->_metrology->addLog(get_class($this) . ' - Normalize hex ' . $key . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
-                                    if (!ctype_xdigit($value)) {
+                                    if (!Node::checkNID($value)) {
                                         // Si pas un hexa, supprime la valeur.
                                         $param[$name] = null;
                                     }
@@ -639,7 +638,6 @@ class Currency extends Node implements nodeInterface
         $sid = '';
         if (isset($param['CurrencySerialID'])
             && is_string($param['CurrencySerialID'])
-            && $param['CurrencySerialID'] != ''
             && ctype_xdigit($param['CurrencySerialID'])
         ) {
             $sid = $this->_stringFilter($param['CurrencySerialID']);
@@ -1426,8 +1424,7 @@ class Currency extends Node implements nodeInterface
 
         // Vérifie l'ID.
         if (is_string($id)
-            && $id != ''
-            && ctype_xdigit($id)
+            && Node::checkNID($id)
             && $this->_io->checkObjectPresent($id)
 //				&& $this->_io->checkLinkPresent($id)
         ) {
@@ -1451,17 +1448,15 @@ class Currency extends Node implements nodeInterface
         if (get_class($this) == 'Currency') {
             //$id = $this->_getParam('FID', (int)$this->_propertiesList['currency']['CurrencyForgeID']['limit']);
             $id = '';
-        } elseif (get_class($this) == 'TokenPool') {
+        } elseif (get_class($this) == 'TokenPool')
             $id = $this->_getParam('FID', (int)$this->_propertiesList['tokenpool']['PoolForgeID']['limit']);
-        } elseif (get_class($this) == 'Token') {
+        elseif (get_class($this) == 'Token')
             $id = $this->_getParam('FID', (int)$this->_propertiesList['token']['TokenForgeID']['limit']);
-        }
         $this->_metrology->addLog('set FID by param', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         // Vérifie l'ID.
         if (is_string($id)
-            && $id != ''
-            && ctype_xdigit($id)
+            && Node::checkNID($id)
             && $this->_io->checkObjectPresent($id)
 //				&& $this->_io->checkLinkPresent($id)
         ) {
@@ -1476,9 +1471,16 @@ class Currency extends Node implements nodeInterface
     /**
      * Crée un lien.
      *
+     * @param      $signer
+     * @param      $date
+     * @param      $action
+     * @param      $source
+     * @param      $target
+     * @param      $meta
+     * @param bool $obfuscate
      * @return boolean
      */
-    protected function _createLink($signer, $date, $action, $source, $target, $meta, $obfuscate = false): bool
+    protected function _createLink($signer, $date, $action, $source, $target, $meta, bool $obfuscate = false): bool
     {
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new BlocLink($this->_nebuleInstance, $link);
@@ -1489,12 +1491,12 @@ class Currency extends Node implements nodeInterface
         // Si besoin, obfuscation du lien.
         if ($obfuscate
             && $this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
-        ) {
+        )
             $newLink->setObfuscate();
-        }
 
         // Ecrit le lien.
-        return $newLink->write();
+// TODO        return $newLink->write();
+        return false;
     }
 
     /**

@@ -2441,15 +2441,10 @@ class ModuleManage extends Modules
                 $this->_actionAddModuleName = $arg_name;
                 $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module NAME:' . $arg_name, Metrology::LOG_LEVEL_NORMAL); // Log
             }
-            if ($arg_rid != ''
-                && ctype_xdigit($arg_rid)
-                && strlen($arg_rid) >= 6
-            ) {
+            if (Node::checkNID($arg_rid)) {
                 $this->_actionAddModuleRID = $arg_rid;
                 $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module RID:' . $arg_rid, Metrology::LOG_LEVEL_NORMAL); // Log
             }
-
-            unset($arg_name, $arg_rid);
 
             // Vérification du minimum pour la création.
             if ($this->_actionAddModuleName != ''
@@ -2481,33 +2476,26 @@ class ModuleManage extends Modules
             $arg_rid = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_RIDC, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
             $arg_id = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            if ($arg_rid != ''
-                && ctype_xdigit($arg_rid)
-            ) {
+            if (Node::checkNID($arg_rid)) {
                 $this->_actionAddModuleRID = $arg_rid;
                 $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module RID:' . $arg_id, Metrology::LOG_LEVEL_NORMAL); // Log
             }
-            if ($arg_id != ''
-                && ctype_xdigit($arg_id)
+            if (Node::checkNID($arg_id)
                 && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($arg_id)
                 && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($arg_id)
                 && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($arg_id)
                 && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($arg_id)
-                && strlen($arg_id) >= 6
                 && $arg_id != $arg_rid
             ) {
                 $this->_actionAddModuleID = $arg_id;
                 $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module ID:' . $arg_id, Metrology::LOG_LEVEL_NORMAL); // Log
             }
 
-            unset($arg_rid, $arg_id);
-
             // Vérification du minimum pour la création.
             if ($this->_actionAddModuleRID != ''
                 && $this->_actionAddModuleID != ''
-            ) {
+            )
                 $this->_actionAddModuleCode = true;
-            }
         }
     }
 
@@ -3146,9 +3134,7 @@ class ModuleManage extends Modules
 
         // Extrait le RID si nouveau module créé.
         $arg_rid = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_RID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        if ($arg_rid != ''
-            && ctype_xdigit($arg_rid)
-        ) {
+        if (Node::checkNID($arg_rid)) {
             $rid = $arg_rid;
             $newCode = true;
         } else {
@@ -4532,9 +4518,7 @@ class ModuleEntities extends Modules
             $this->_searchEntityURL = $arg_url;
 
         $arg_id = trim(filter_input(INPUT_GET, 'srchid', FILTER_SANITIZE_URL, FILTER_FLAG_ENCODE_LOW)); // Lit et nettoye le contenu de la variable GET.
-        if ($arg_id != ''
-            && strlen($arg_id) >= nebule::NEBULE_MINIMUM_ID_SIZE
-            && ctype_xdigit($arg_id)
+        if (Node::checkNID($arg_id)
             && $arg_url != 'http://localhost'
             && $arg_url != 'http://127.0.0.1'
             && $arg_url != 'http://localhost/'

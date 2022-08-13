@@ -4060,9 +4060,7 @@ echo $this->getDisplayInformation('::HelpRecoveryEntity', $param);
         if (is_a($item['entity'], 'entity')) {
             $entity = $item['entity'];
             $entityID = $entity->getID();
-        } elseif ($item['entity'] != ''
-            && $item['entity'] != '0'
-            && ctype_xdigit($item['entity'])
+        } elseif (Node::checkNID($item['entity'])
             && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($item['entity'])
             && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($item['entity'])
         ) {

@@ -91,8 +91,7 @@ class TokenPool extends Currency implements nodeInterface
     private function _loadTokenPool(string $id)
     {
         // Vérifie que c'est bien un objet.
-        if ($id == ''
-            || !ctype_xdigit($id)
+        if (!Node::checkNID($id)
             || !$this->_io->checkLinkPresent($id)
             || !$this->_configuration->getOptionAsBoolean('permitCurrency')
         ) {
@@ -215,7 +214,6 @@ class TokenPool extends Currency implements nodeInterface
         $sid = '';
         if (isset($param['PoolSerialID'])
             && is_string($param['PoolSerialID'])
-            && $param['PoolSerialID'] != ''
             && ctype_xdigit($param['PoolSerialID'])
         ) {
             $sid = $this->_stringFilter($param['PoolSerialID']);

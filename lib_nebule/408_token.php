@@ -91,8 +91,7 @@ class Token extends TokenPool implements nodeInterface
     private function _loadToken(string $id)
     {
         // Vérifie que c'est bien un objet.
-        if ($id == ''
-            || !ctype_xdigit($id)
+        if (!Node::checkNID($id)
             || !$this->_io->checkLinkPresent($id)
             || !$this->_configuration->getOptionAsBoolean('permitCurrency')
         ) {

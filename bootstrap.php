@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220812';
+const BOOTSTRAP_VERSION = '020220813';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -129,6 +129,8 @@ function log_add(string $message, string $level = 'msg', string $function = '', 
 // Initialize logs.
 log_init(BOOTSTRAP_NAME);
 syslog(LOG_INFO, 'LogT=0 LogT0=' . $metrologyStartTime . ' LogL=B LogM="start ' . BOOTSTRAP_NAME . '"');
+
+
 
 // ------------------------------------------------------------------------------------------
 // Name of bootstrap file used by web server.
@@ -3815,7 +3817,6 @@ function ent_checkIsPublicKey(string $nid): bool
 {
     global $nebuleCacheIsPublicKey;
 
-    $result = false;
     if (isset($nebuleCacheIsPublicKey[$nid]))
         return $nebuleCacheIsPublicKey[$nid];
 
@@ -3837,7 +3838,10 @@ function ent_checkIsPublicKey(string $nid): bool
     if (strstr($line, 'BEGIN PUBLIC KEY') !== false)
         $result = true;
     else
+    {
+        $result = false;
         log_add('NID do not provide a public key', 'warn', __FUNCTION__, '25743bf3');
+    }
 
     if (lib_getConfiguration('permitBufferIO'))
         $nebuleCacheIsPublicKey[$nid] = $result;

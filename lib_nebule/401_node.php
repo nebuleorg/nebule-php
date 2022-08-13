@@ -294,7 +294,7 @@ class Node implements nodeInterface
 
         // ID processing.
         $id = trim(strtolower($id));
-        if (self::checkNID($id, false)
+        if (self::checkNID($id, false, false)
         ) {
             $this->_id = $id;
             $this->_metrology->addLog('New instance ' . get_class($this) . ' ' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '7fb8f6e3');
@@ -515,17 +515,16 @@ class Node implements nodeInterface
      * Object - Verify name structure of the node : hash.algo.size
      * There's a specific treatment for NID empty or '0'.
      *
-     * @param string  $nid
-     * @param boolean $permitNull
+     * @param string $nid
+     * @param bool   $permitEmpty permit NID=''
+     * @param bool   $permitZero  permit NID='0'
      * @return boolean
      */
-    static public function checkNID(string &$nid, bool $permitNull = false): bool
+    static public function checkNID(string &$nid, bool $permitEmpty = false, bool $permitZero = false): bool
     {
-        // May be null in some case.
-        if ($permitNull
-            && ($nid == '' || $nid == '0')
-        )
-            return true;
+        // May be empty or zero in some case.
+        if ($permitEmpty && $nid == '') return true;
+        if ($permitZero && $nid == '0') return true;
 
         // Check hash value.
         $hash = strtok($nid, '.');
@@ -1326,9 +1325,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
     public function getIsEntity(string $socialClass = 'myself'): bool
     {
         // Si déjà marqué, donne le résultat tout de suite.
-        if ($this->_isEntity) {
+        if ($this->_isEntity)
             return true;
-        }
 
         $type = $this->getType($socialClass);
         $objHead = $this->readOneLineAsText(Entity::ENTITY_MAX_SIZE);

@@ -25,6 +25,21 @@ class Cache
     const TYPE_LINK = 'link';
     const TYPE_TRANSACTION = 'transaction';
 
+    const KNOWN_TYPE = array(
+        self::TYPE_NODE,
+        self::TYPE_GROUP,
+        self::TYPE_ENTITY,
+        self::TYPE_LOCATION,
+        self::TYPE_CONVERSATION,
+        self::TYPE_CURRENCY,
+        self::TYPE_TOKENPOOL,
+        self::TYPE_TOKEN,
+        self::TYPE_WALLET,
+        self::TYPE_BLOCLINK,
+        self::TYPE_LINK,
+        self::TYPE_TRANSACTION,
+    );
+
     /**
      * Instance de la librairie en cours.
      *
@@ -262,19 +277,42 @@ class Cache
             $this->_cleanCacheOverflow($size - $limit);
     }
 
+    private function _checkKnownNodeType(string &$type): bool
+    {
+        foreach (self::KNOWN_TYPE as $known) {
+            if ($type == $known)
+                return true;
+        }
+        return false;
+    }
+
     private function _filterNodeType(string &$type): void
     {
-        if ($type != self::TYPE_NODE
-            && $type != self::TYPE_GROUP
-            && $type != self::TYPE_ENTITY
-            && $type != self::TYPE_LOCATION
-            && $type != self::TYPE_CONVERSATION
-            && $type != self::TYPE_CURRENCY
-            && $type != self::TYPE_TOKENPOOL
-            && $type != self::TYPE_TOKEN
-            && $type != self::TYPE_WALLET
-        )
+        if (!$this->_checkKnownNodeType($type))
             $type = self::TYPE_NODE;
+    }
+
+    /**
+     * Check if an object is already present on cache.
+     *
+     * @param string $nid
+     * @param string $type
+     * @return bool
+     */
+    public function getIsOnCache(string $nid, string $type = ''): bool
+    {
+        if ($nid == '' || $nid == '0') return false;
+
+        if ($type == '') {
+            foreach (self::KNOWN_TYPE as $known) {
+                if (isset($this->_cache[$known][$nid])) return true;
+            }
+        } else {
+            $this->_filterNodeType($type);
+            if (isset($this->_cache[$type][$nid])) return true;
+        }
+
+        return false;
     }
 
     /**

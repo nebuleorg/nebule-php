@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
-use Nebule\Library\nebule;
 
 /**
  * L'interface SocialInterface.
@@ -14,6 +13,7 @@ use Nebule\Library\nebule;
 interface SocialInterface
 {
     public function arraySocialFilter(array &$links, string $socialClass = ''): void;
-
     public function linkSocialScore(Link &$link, string $socialClass = ''): float;
+    public function setList(array $listID): bool;
+    public function unsetList(): bool;
 }

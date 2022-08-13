@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
-use Nebule\Library\nebule;
 
 /**
  * Classe de gestion du côté social des liens, supprime tout.
@@ -13,37 +12,16 @@ use Nebule\Library\nebule;
  *
  * Retourne toujours un score de 0.
  */
-class SocialNone implements SocialInterface
+class SocialNone extends SocialMySelf implements SocialInterface
 {
-    /** Instance nebule en cours. */
-    private $_nebuleInstance;
-
-    /**
-     * Constructeur.
-     */
-    public function __construct(nebule $nebuleInstance)
-    {
-        $this->_nebuleInstance = $nebuleInstance;
-    }
-
-    public function __sleep()
-    {
-        return array();
-    }
-
-    public function __wakeup()
-    {
-        global $nebuleInstance;
-        $this->_nebuleInstance = $nebuleInstance;
-    }
-
     /**
      * Gère le classement social des liens.
      *
-     * @param array &$links table des liens.
+     * @param array &$links
+     * @param string $socialClass
      * @return void
      */
-    public function arraySocialFilter(array &$links, $socialClass = ''): void
+    public function arraySocialFilter(array &$links, string $socialClass = ''): void
     {
         $links = array();
     }
@@ -51,37 +29,16 @@ class SocialNone implements SocialInterface
     /**
      * Calcul le score social d'un lien.
      *
-     * @param Link &$link lien à calculer.
+     * @param Link  &$link
+     * @param string $socialClass
      * @return float
      */
-    public function linkSocialScore(Link &$link, $socialClass = ''): float
+    public function linkSocialScore(Link &$link, string $socialClass = ''): float
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=none score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=none score 0 for ' . $link->getSigners(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=none score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG);
+        foreach ($link->getSigners() as $signer)
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=none score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
 
         return 0;
-    }
-
-    /**
-     * Permet d'injecter une liste pour le calcul/filtrage social.
-     *
-     * La liste doit contenir des ID d'objet et non des objets.
-     *
-     * @param array:string $listID
-     * @return boolean
-     */
-    public function setList(&$listID)
-    {
-        return true;
-    }
-
-    /**
-     * Permet de vider la liste pour le calcul/filtrage social.
-     *
-     * @return boolean
-     */
-    public function unsetList()
-    {
-        return true;
     }
 }

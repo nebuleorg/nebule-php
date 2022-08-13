@@ -19,6 +19,9 @@ class nebule
     const NEBULE_ENVIRONMENT_FILE = 'c';
     const NEBULE_BOOTSTRAP_FILE = 'index.php';
     const NEBULE_MINIMUM_ID_SIZE = 6;
+    const NEBULE_MAXIMUM_ID_SIZE = 8192;
+    const NEBULE_MINIMUM_ALGO_SIZE = 2;
+    const NEBULE_MAXIMUM_ALGO_SIZE = 12;
     const NEBULE_LOCAL_ENTITY_FILE = 'e';
     const NEBULE_LOCAL_OBJECTS_FOLDER = 'o';
     const NEBULE_LOCAL_LINKS_FOLDER = 'l';
@@ -888,9 +891,7 @@ class nebule
         $arg_obj = trim(' ' . filter_input(INPUT_GET, self::COMMAND_SELECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
         // Si la variable est un objet avec ou sans liens.
-        if ($arg_obj != ''
-            && strlen($arg_obj) >= self::NEBULE_MINIMUM_ID_SIZE
-            && ctype_xdigit($arg_obj)
+        if (Node::checkNID($arg_obj, false, true)
             && ($this->getIoInstance()->checkObjectPresent($arg_obj)
                 || $this->getIoInstance()->checkLinkPresent($arg_obj)
             )
@@ -995,9 +996,7 @@ class nebule
                 $id = filter_var(trim(strtok(file_get_contents(self::NEBULE_LOCAL_ENTITY_FILE), "\n")), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
             }
 
-            if ($id != ''
-                && strlen($id) >= self::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($id)
+            if (Node::checkNID($id, false, false)
                 && $this->_ioInstance->checkObjectPresent($id)
                 && $this->_ioInstance->checkLinkPresent($id)
             ) {
@@ -1089,9 +1088,7 @@ class nebule
             // C'est définit comme une option.
             $id = $this->_configurationInstance->getOptionUntyped('defaultCurrentEntity');
 
-            if ($id != ''
-                && strlen($id) >= self::NEBULE_MINIMUM_ID_SIZE
-                && ctype_xdigit($id)
+            if (Node::checkNID($id, false, false)
                 && $this->_ioInstance->checkObjectPresent($id)
                 && $this->_ioInstance->checkLinkPresent($id)
             ) {
@@ -1189,9 +1186,7 @@ class nebule
 
         // Si la variable est une entité avec ou sans liens.
         if ($arg_switch
-            && $arg_ent != ''
-            && strlen($arg_ent) >= self::NEBULE_MINIMUM_ID_SIZE
-            && ctype_xdigit($arg_ent)
+            && Node::checkNID($arg_ent, false, false)
             && $this->_ioInstance->checkObjectPresent($arg_ent)
             && $this->_ioInstance->checkLinkPresent($arg_ent)
         ) {
@@ -1236,9 +1231,7 @@ class nebule
             {
                 $itc_ent = '';
                 $ext_ent = $this->_configurationInstance->getOptionUntyped('defaultCurrentEntity');
-                if ($ext_ent != ''
-                    && strlen($ext_ent) >= self::NEBULE_MINIMUM_ID_SIZE
-                    && ctype_xdigit($ext_ent)
+                if (Node::checkNID($ext_ent, false, false)
                     && $this->_ioInstance->checkObjectPresent($ext_ent)
                     && $this->_ioInstance->checkLinkPresent($ext_ent)) {
                     $itc_ent = $this->newObject($ext_ent);
@@ -1622,11 +1615,7 @@ class nebule
         }
 
         // Si la variable est un objet avec ou sans liens.
-        if ($arg_grp != ''
-            && (strlen($arg_grp) >= self::NEBULE_MINIMUM_ID_SIZE
-                || $arg_grp == '0'
-            )
-            && ctype_xdigit($arg_grp)
+        if (Node::checkNID($arg_grp, false, true)
             && ($this->getIoInstance()->checkObjectPresent($arg_grp)
                 || $this->getIoInstance()->checkLinkPresent($arg_grp)
                 || $arg_grp == '0'
@@ -1724,11 +1713,7 @@ class nebule
         }
 
         // Si la variable est un objet avec ou sans liens.
-        if ($arg_cvt != ''
-            && (strlen($arg_cvt) >= self::NEBULE_MINIMUM_ID_SIZE
-                || $arg_cvt == '0'
-            )
-            && ctype_xdigit($arg_cvt)
+        if (Node::checkNID($arg_cvt, false, true)
             && ($this->getIoInstance()->checkObjectPresent($arg_cvt)
                 || $this->getIoInstance()->checkLinkPresent($arg_cvt)
                 || $arg_cvt == '0'
@@ -1835,11 +1820,7 @@ class nebule
         }
 
         // Si la variable est un objet avec ou sans liens.
-        if ($arg != ''
-            && (strlen($arg) >= self::NEBULE_MINIMUM_ID_SIZE
-                || $arg == '0'
-            )
-            && ctype_xdigit($arg)
+        if (Node::checkNID($arg, false, true)
             && ($this->getIoInstance()->checkObjectPresent($arg)
                 || $this->getIoInstance()->checkLinkPresent($arg)
                 || $arg == '0'
@@ -1946,11 +1927,7 @@ class nebule
         }
 
         // Si la variable est un objet avec ou sans liens.
-        if ($arg != ''
-            && (strlen($arg) >= self::NEBULE_MINIMUM_ID_SIZE
-                || $arg == '0'
-            )
-            && ctype_xdigit($arg)
+        if (Node::checkNID($arg, false, true)
             && ($this->getIoInstance()->checkObjectPresent($arg)
                 || $this->getIoInstance()->checkLinkPresent($arg)
                 || $arg == '0'
@@ -2057,11 +2034,7 @@ class nebule
         }
 
         // Si la variable est un objet avec ou sans liens.
-        if ($arg != ''
-            && (strlen($arg) >= self::NEBULE_MINIMUM_ID_SIZE
-                || $arg == '0'
-            )
-            && ctype_xdigit($arg)
+        if (Node::checkNID($arg, false, true)
             && ($this->getIoInstance()->checkObjectPresent($arg)
                 || $this->getIoInstance()->checkLinkPresent($arg)
                 || $arg == '0'
@@ -3154,13 +3127,11 @@ class nebule
 
         /**
          * Empreinte du type d'objet à rechercher.
-         * @var string $hashType
          */
         $hashType = '';
 
         /**
          * Empreinte de l'entité pour la recherche.
-         * @var string $hashEntity
          */
         $hashEntity = '';
 
@@ -3168,8 +3139,8 @@ class nebule
         if (is_a($type, 'Node')) {
             $hashType = $type->getID();
         } else {
-            // Si le type est un ID (héxadécimal), l'utilise directement. Sinon calcul l'empreinte du type.
-            if (ctype_xdigit($type))
+            // Si le type est un ID, l'utilise directement. Sinon calcul l'empreinte du type.
+            if (Node::checkNID($type))
                 $hashType = $type;
             else
                 $hashType = $this->getNIDfromData($type, self::REFERENCE_CRYPTO_HASH_ALGORITHM);
@@ -3186,8 +3157,8 @@ class nebule
         if (is_a($entity, 'Node')) {
             $hashEntity = $entity->getID();
         } else {
-            // Si l'entité est un ID (héxadécimal), l'utilise directement. Sinon calcul l'empreinte de l'entité.
-            if (ctype_xdigit($entity)
+            // Si l'entité est un ID, l'utilise directement. Sinon calcul l'empreinte de l'entité.
+            if (Node::checkNID($entity)
                 && $this->getIoInstance()->checkLinkPresent($entity)
                 && $this->getIoInstance()->checkObjectPresent($entity)
             )
@@ -3266,18 +3237,17 @@ class nebule
 
     /**
      * Extrait la liste des liens définissant les conversations.
-     *
      * Précalcul le hash de l'objet définissant une conversation.
      * Extrait l'ID de l'entité, si demandé.
      * Liste les liens définissants les différentes conversations.
      * Retourne la liste.
-     *
      * $entity : Permet de ne sélectionner que les conversations générés par une entité.
      *
      * @param string|entity $entity
+     * @param string        $socialClass
      * @return array
      */
-    public function getListConversationsLinks($entity = '', $socialClass = ''): array
+    public function getListConversationsLinks($entity = '', string $socialClass = ''): array
     {
         return $this->getListLinksByType(self::REFERENCE_NEBULE_OBJET_CONVERSATION, $entity, $socialClass);
     }
@@ -3307,24 +3277,15 @@ class nebule
      */
     public function getDisplayNextObject(): string
     {
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-		 *  ------------------------------------------------------------------------------------------
-		 */
         $this->_metrologyInstance->addLog('Extract display next object', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
-        // Lit et nettoye le contenu de la variable GET.
         $arg = trim(' ' . filter_input(INPUT_GET, Displays::DEFAULT_NEXT_COMMAND, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-        // Extraction du lien et stockage pour traitement.
-        if ($arg != ''
-            && strlen($arg) >= self::NEBULE_MINIMUM_ID_SIZE
-            && ctype_xdigit($arg)
-        )
+        if (Node::checkNID($arg))
             return $arg;
         return '';
     }
+
 
 
     /**

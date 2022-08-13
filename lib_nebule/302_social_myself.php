@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
-use Nebule\Library\nebule;
 
 /**
  * Classe de gestion du côté social des liens limités à l'entité en cours.
@@ -17,11 +16,9 @@ use Nebule\Library\nebule;
 class SocialMySelf implements SocialInterface
 {
     /** Instance nebule en cours. */
-    private $_nebuleInstance;
+    protected $_nebuleInstance;
 
-    /**
-     * Constructeur.
-     */
+    /** Constructeur.*/
     public function __construct(nebule $nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
@@ -41,7 +38,8 @@ class SocialMySelf implements SocialInterface
     /**
      * Gère le classement social des liens.
      *
-     * @param array &$links table des liens.
+     * @param array &$links
+     * @param string $socialClass
      * @return void
      */
     public function arraySocialFilter(array &$links, string $socialClass = ''): void
@@ -56,34 +54,57 @@ class SocialMySelf implements SocialInterface
     /**
      * Calcul le score social d'un lien.
      *
-     * @param Link &$link lien à calculer.
+     * @param Link  &$link
+     * @param string $socialClass
      * @return float
      */
     public function linkSocialScore(Link &$link, string $socialClass = ''): float
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=myself score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=myself score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG);
 
         // Si l'entité signataire du lien est une des entités courante, retourne la valeur sociale 1.
-        if ($link->getSigners() == $this->_nebuleInstance->getCurrentEntity()) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=myself score 1 for ' . $link->getSigners(), Metrology::LOG_LEVEL_DEBUG);
-            return 1;
+        foreach ($link->getSigners() as $signer) {
+            if ($signer == $this->_nebuleInstance->getCurrentEntity()) {
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=myself score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
+                return 1;
+            }
         }
 
         // Sinon par défaut retourne la valeur sociale 0.
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=myself score 0 for ' . $link->getSigners(), Metrology::LOG_LEVEL_DEBUG);
+        foreach ($link->getSigners() as $signer)
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=myself score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
         return 0;
     }
 
+
+
+    /**
+     * Liste pour le calcul/filtrage social.
+     * @var array:string
+     */
+    protected $_list = array();
+
     /**
      * Permet d'injecter une liste pour le calcul/filtrage social.
-     *
-     * La liste doit contenir des ID d'objet et non des objets.
+     * La liste doit contenir de préférence des ID d'objet et non des objets.
+     * N'est utile que pour certains types de calculs sociaux.
      *
      * @param array:string $listID
      * @return boolean
      */
-    public function setList(&$listID)
+    public function setList(array $listID): bool
     {
+        foreach ($listID as $nid) {
+            if (is_string($nid)
+                && Node::checkNID($nid)
+            )
+                $this->_list[$nid] = $nid;
+            elseif (is_a($nid, 'Entity'))
+                $this->_list[$nid] = $nid->getID();
+        }
+
+        if (sizeof($this->_list) == 0)
+            return false;
         return true;
     }
 
@@ -92,8 +113,9 @@ class SocialMySelf implements SocialInterface
      *
      * @return boolean
      */
-    public function unsetList()
+    public function unsetList(): bool
     {
+        $this->_list = array();
         return true;
     }
 }

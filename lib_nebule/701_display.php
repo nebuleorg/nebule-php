@@ -4804,7 +4804,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($param['enableDisplayFlagProtection']) {
             if (!isset($param['flagProtectionIcon'])
                 || $param['flagProtectionIcon'] == ''
-                || !ctype_xdigit($param['flagProtectionIcon'])
+                || !Node::checkNID($param['flagProtectionIcon'])
                 || !$this->_ioInstance->checkLinkPresent($param['flagProtectionIcon'])
             ) {
                 $param['flagProtectionIcon'] = self::DEFAULT_ICON_LK;
@@ -4839,7 +4839,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($param['enableDisplayFlagObfuscate']) {
             if (!isset($param['flagObfuscateIcon'])
                 || $param['flagObfuscateIcon'] == ''
-                || !ctype_xdigit($param['flagObfuscateIcon'])
+                || !Node::checkNID($param['flagObfuscateIcon'])
                 || !$this->_ioInstance->checkLinkPresent($param['flagObfuscateIcon'])
             ) {
                 $param['flagObfuscateIcon'] = self::DEFAULT_ICON_LC;
@@ -4886,7 +4886,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($param['enableDisplayFlagUnlocked']) {
             if (!isset($param['flagUnlockedIcon'])
                 || $param['flagUnlockedIcon'] == ''
-                || !ctype_xdigit($param['flagUnlockedIcon'])
+                || !Node::checkNID($param['flagUnlockedIcon'])
                 || !$this->_ioInstance->checkLinkPresent($param['flagUnlockedIcon'])
             ) {
                 $param['flagUnlockedIcon'] = self::DEFAULT_ICON_KEY;
@@ -4989,7 +4989,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $param['flagTargetObject'] = null; // Par défaut vide.
         } else {
             $param['flagTargetObject'] = trim(filter_var($param['flagTargetObject'], FILTER_SANITIZE_STRING));
-            if (!ctype_xdigit($param['flagTargetObject'])) {
+            if (!Node::checkNID($param['flagTargetObject'])) {
                 $param['flagTargetObject'] = null;
             }
         }
@@ -6246,7 +6246,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
             if (!isset($param['flagProtectionIcon'])
                 || $param['flagProtectionIcon'] == ''
-                || !ctype_xdigit($param['flagProtectionIcon'])
+                || !Node::checkNID($param['flagProtectionIcon'])
                 || !$this->_ioInstance->checkLinkPresent($param['flagProtectionIcon'])
             ) {
                 $param['flagProtectionIcon'] = self::DEFAULT_ICON_LK;
@@ -6283,7 +6283,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
             if (!isset($param['flagObfuscateIcon'])
                 || $param['flagObfuscateIcon'] == ''
-                || !ctype_xdigit($param['flagObfuscateIcon'])
+                || !Node::checkNID($param['flagObfuscateIcon'])
                 || !$this->_ioInstance->checkLinkPresent($param['flagObfuscateIcon'])
             ) {
                 $param['flagObfuscateIcon'] = self::DEFAULT_ICON_LC;
@@ -8813,7 +8813,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertInlineIconFace($iconName)
     {
         $iconID = '';
-        if (ctype_xdigit($iconName) && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($iconName)) {
+        if (Node::checkNID($iconName) && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($iconName)) {
             $iconID = $iconName;
         } elseif (strstr($iconName, ':') !== false) {
             $iconID = constant($iconName);
@@ -9178,12 +9178,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if (is_a($item['entity'], 'entity')) {
             $entity = $item['entity'];
             $entityID = $entity->getID();
-        } elseif ($item['entity'] != ''
-            && $item['entity'] != '0'
-            && ctype_xdigit($item['entity'])
-            && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($item['entity'])
-            && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($item['entity'])
-        ) {
+        } elseif (Node::checkNID($item['entity'], false, false)) {
             $entity = $this->_nebuleInstance->newEntity_DEPRECATED($item['entity']);
             $entityID = $entity->getID();
         }

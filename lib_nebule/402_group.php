@@ -145,11 +145,7 @@ class Group extends Node implements nodeInterface
     {
         $entityInstance = null;
         if (is_string($entity)) {
-            if ($entity == ''
-                || $entity == '0'
-                || !ctype_xdigit($entity)
-                || !$this->_io->checkLinkPresent($entity)
-            ) {
+            if (!Node::checkNID($entity, false, false)) {
                 $id = '';
             } else {
                 $id = $entity;
@@ -157,24 +153,20 @@ class Group extends Node implements nodeInterface
             }
         } elseif (is_a($entity, 'Node')) {
             $id = $entity->getID();
-            if ($id == '0') {
+            if ($id == '0')
                 $id = '';
-            } else {
+            else
                 $entityInstance = $entity;
-            }
-        } else {
+        } else
             $id = '';
-        }
 
-        if ($id == '0') {
+        if ($id == '0')
             $id = '';
-        }
 
         if ($id != ''
             && !$entityInstance->getIsEntity('all')
-        ) {
+        )
             $id = '';
-        }
         unset($entityInstance);
 
         return $id;
@@ -189,27 +181,19 @@ class Group extends Node implements nodeInterface
     private function _checkExtractObjectID($object): string
     {
         if (is_string($object)) {
-            if ($object == ''
-                || $object == '0'
-                || !ctype_xdigit($object)
-                || !$this->_io->checkLinkPresent($object)
-            ) {
+            if (!Node::checkNID($object))
                 $id = '';
-            } else {
+            else
                 $id = $object;
-            }
         } elseif (is_a($object, 'Node')) {
             $id = $object->getID();
-            if ($id == '0') {
+            if ($id == '0')
                 $id = '';
-            }
-        } else {
+        } else
             $id = '';
-        }
 
-        if ($id == '0') {
+        if ($id == '0')
             $id = '';
-        }
 
         return $id;
     }
@@ -1233,11 +1217,8 @@ class Group extends Node implements nodeInterface
     protected function _getListFollowersLinks(string $reference, string $socialClass = '', array $socialListID = array()): array
     {
         // Vérifie la référence.
-        if (!is_string($reference)
-            && !ctype_xdigit($reference)
-        ) {
+        if (!Node::checkNID($reference))
             $reference = $this->_crypto->hash($reference);
-        }
 
         // Liste tous les liens des entités à l'écoutes du groupe.
         $links = $this->getLinksOnFields(

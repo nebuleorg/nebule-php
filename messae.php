@@ -6,6 +6,7 @@ use Nebule\Library\Actions;
 use Nebule\Library\Applications;
 use Nebule\Library\Displays;
 use Nebule\Library\Modules;
+use Nebule\Library\Node;
 use Nebule\Library\Traductions;
 use const Nebule\Bootstrap\BOOTSTRAP_NAME;
 
@@ -3729,9 +3730,7 @@ class ModuleEntities extends Modules
             $this->_searchEntityURL = $arg_url;
 
         $arg_id = trim(filter_input(INPUT_GET, 'srchid', FILTER_SANITIZE_URL, FILTER_FLAG_ENCODE_LOW)); // Lit et nettoye le contenu de la variable GET.
-        if ($arg_id != ''
-            && strlen($arg_id) >= nebule::NEBULE_MINIMUM_ID_SIZE
-            && ctype_xdigit($arg_id)
+        if (Node::checkNID($arg_id)
             && $arg_url != 'http://localhost'
             && $arg_url != 'http://127.0.0.1'
             && $arg_url != 'http://localhost/'

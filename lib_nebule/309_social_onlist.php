@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
-use Nebule\Library\nebule;
 
 /**
  * Classe de gestion du côté social des liens par rapport à une liste d'ID.
@@ -17,37 +16,16 @@ use Nebule\Library\nebule;
  * Si le signataire du lien est une des entités de la liste, retourne un score de 1.
  * Sinon retourne un score de 0.
  */
-class SocialOnList implements SocialInterface
+class SocialOnList extends SocialMySelf implements SocialInterface
 {
-    /** Instance nebule en cours. */
-    private $_nebuleInstance;
-
-    /**
-     * Constructeur.
-     */
-    public function __construct(nebule $nebuleInstance)
-    {
-        $this->_nebuleInstance = $nebuleInstance;
-    }
-
-    public function __sleep()
-    {
-        return array();
-    }
-
-    public function __wakeup()
-    {
-        global $nebuleInstance;
-        $this->_nebuleInstance = $nebuleInstance;
-    }
-
     /**
      * Gère le classement social des liens.
      *
-     * @param array &$links table des liens.
+     * @param array &$links
+     * @param string $socialClass
      * @return void
      */
-    public function arraySocialFilter(array &$links, $socialClass = ''): void
+    public function arraySocialFilter(array &$links, string $socialClass = ''): void
     {
         foreach ($links as $i => $link) {
             if ($this->linkSocialScore($link) != 1) {
@@ -59,12 +37,13 @@ class SocialOnList implements SocialInterface
     /**
      * Calcul le score social d'un lien.
      *
-     * @param Link &$link lien à calculer.
+     * @param Link  &$link
+     * @param string $socialClass
      * @return float
      */
-    public function linkSocialScore(Link &$link, $socialClass = ''): float
+    public function linkSocialScore(Link &$link, string $socialClass = ''): float
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=onlist score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=onlist score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG);
 
         if (sizeof($this->_list) == 0) {
             return 0;
@@ -72,60 +51,17 @@ class SocialOnList implements SocialInterface
 
         // Si l'entité signataire du lien est une des entités autorités, retourne la valeur sociale 1.
         foreach ($this->_list as $id) {
-            if ($link->getSigners() == $id) {
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=onlist score 1 for ' . $link->getSigners(), Metrology::LOG_LEVEL_DEBUG);
-                return 1;
+            foreach ($link->getSigners() as $signer) {
+                if ($signer == $id) {
+                    $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=onlist score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
+                    return 1;
+                }
             }
         }
 
         // Sinon par défaut retourne la valeur sociale 0.
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=onlist score 0 for ' . $link->getSigners(), Metrology::LOG_LEVEL_DEBUG);
+        foreach ($link->getSigners() as $signer)
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=onlist score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
         return 0;
-    }
-
-    /**
-     * Liste pour le calcul/filtrage social.
-     * @var array:string
-     */
-    private $_list = array();
-
-    /**
-     * Permet d'injecter une liste pour le calcul/filtrage social.
-     *
-     * La liste doit contenir des ID d'objet et non des objets.
-     *
-     * @param array:string $listID
-     * @return boolean
-     */
-    public function setList(&$listID)
-    {
-        if (!is_array($listID)) {
-            return false;
-        }
-
-        foreach ($listID as $id) {
-            if (is_string($id)
-                && $id != ''
-                && $id != '0'
-                && ctype_xdigit($id)
-            ) {
-                $this->_list[$id] = $id;
-            } else {
-                $this->_list = array();
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Permet de vider la liste pour le calcul/filtrage social.
-     *
-     * @return boolean
-     */
-    public function unsetList()
-    {
-        $this->_list = array();
-        return true;
     }
 }

@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
-use Nebule\Library\nebule;
 
 // TODO à refaire plus flexible
 
@@ -15,19 +14,6 @@ use Nebule\Library\nebule;
  */
 class Social implements SocialInterface
 {
-    /**
-     * Instance de la bibliothèque nebule.
-     * @var nebule
-     */
-    private $_nebuleInstance;
-
-    /**
-     * Instance de gestion de la configuration et des options.
-     *
-     * @var Configuration
-     */
-    private $_configuration;
-
     private $_instanceSocialMySelf;
     private $_instanceSocialNotMySelf;
     private $_instanceSocialSelf;
@@ -53,8 +39,6 @@ class Social implements SocialInterface
 
     private function _initialisation(nebule $nebuleInstance): void
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_instanceSocialMySelf = new SocialMySelf($nebuleInstance);
         $this->_instanceSocialNotMySelf = new SocialNotMySelf($nebuleInstance);
         $this->_instanceSocialSelf = new SocialSelf($nebuleInstance);
@@ -68,7 +52,7 @@ class Social implements SocialInterface
         $this->_instanceSocialUnreputation = new SocialUnreputation($nebuleInstance);
 
         // Détermine le traitement social par défaut.
-        switch ($this->_configuration->getOptionAsString('socialLibrary')) {
+        switch ($nebuleInstance->getConfigurationInstance()->getOptionAsString('socialLibrary')) {
             case 'myself':
                 $this->_instanceSocialDefault = $this->_instanceSocialMySelf;
                 break;
@@ -166,8 +150,6 @@ class Social implements SocialInterface
      */
     public function linkSocialScore(Link &$link, string $socialClass = ''): float
     {
-        $result = 0;
-
         switch ($socialClass) {
             case 'myself':
                 $result = $this->_instanceSocialMySelf->linkSocialScore($link, '');
@@ -219,46 +201,44 @@ class Social implements SocialInterface
      * @param string $socialClass
      * @return boolean
      */
-    public function setList(array &$list, string $socialClass = ''): bool
+    public function setList(array $listID, string $socialClass = ''): bool
     {
-        $result = false;
-
         switch ($socialClass) {
             case 'myself':
-                $result = $this->_instanceSocialMySelf->setList($list);
+                $result = $this->_instanceSocialMySelf->setList($listID);
                 break;
             case 'notmyself':
-                $result = $this->_instanceSocialNotMySelf->setList($list);
+                $result = $this->_instanceSocialNotMySelf->setList($listID);
                 break;
             case 'self':
-                $result = $this->_instanceSocialSelf->setList($list);
+                $result = $this->_instanceSocialSelf->setList($listID);
                 break;
             case 'notself':
-                $result = $this->_instanceSocialNotself->setList($list);
+                $result = $this->_instanceSocialNotself->setList($listID);
                 break;
             case 'strict':
-                $result = $this->_instanceSocialStrict->setList($list);
+                $result = $this->_instanceSocialStrict->setList($listID);
                 break;
             case 'all':
-                $result = $this->_instanceSocialAll->setList($list);
+                $result = $this->_instanceSocialAll->setList($listID);
                 break;
             case 'none':
-                $result = $this->_instanceSocialNone->setList($list);
+                $result = $this->_instanceSocialNone->setList($listID);
                 break;
             case 'onlist':
-                $result = $this->_instanceSocialOnList->setList($list);
+                $result = $this->_instanceSocialOnList->setList($listID);
                 break;
             case 'offlist':
-                $result = $this->_instanceSocialOffList->setList($list);
+                $result = $this->_instanceSocialOffList->setList($listID);
                 break;
             case 'reputation':
-                $result = $this->_instanceSocialReputation->setList($list);
+                $result = $this->_instanceSocialReputation->setList($listID);
                 break;
             case 'unreputation':
-                $result = $this->_instanceSocialUnreputation->setList($list);
+                $result = $this->_instanceSocialUnreputation->setList($listID);
                 break;
             default:
-                $result = $this->_instanceSocialDefault->setList($list);
+                $result = $this->_instanceSocialDefault->setList($listID);
                 break;
         }
 
@@ -273,8 +253,6 @@ class Social implements SocialInterface
      */
     public function unsetList(string $socialClass = ''): bool
     {
-        $result = false;
-
         switch ($socialClass) {
             case 'myself':
                 $result = $this->_instanceSocialMySelf->unsetList();
@@ -332,7 +310,7 @@ class Social implements SocialInterface
      *
      * @return void
      */
-    static public function echoDocumentationTitles()
+    static public function echoDocumentationTitles(): void
     {
         ?>
 
@@ -346,7 +324,7 @@ class Social implements SocialInterface
      *
      * @return void
      */
-    static public function echoDocumentationCore()
+    static public function echoDocumentationCore(): void
     {
         ?>
 

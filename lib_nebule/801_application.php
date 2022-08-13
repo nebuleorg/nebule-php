@@ -408,9 +408,7 @@ abstract class Applications implements applicationInterface
  		 *  ------------------------------------------------------------------------------------------
 		 */
         $arg_ent = trim(filter_input(INPUT_GET, nebule::COMMAND_SELECT_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW)); // Lit et nettoye le contenu de la variable GET.
-        if ($arg_ent != ''
-            && strlen($arg_ent) >= nebule::NEBULE_MINIMUM_ID_SIZE
-            && ctype_xdigit($arg_ent)
+        if (Node::checkNID($arg_ent)
             && ($this->_nebuleInstance->getIoInstance()->checkObjectPresent($arg_ent)
                 || $this->_nebuleInstance->getIoInstance()->checkLinkPresent($arg_ent)
             )
@@ -487,43 +485,17 @@ abstract class Applications implements applicationInterface
      */
     protected function _findAskDownload()
     {
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-		 *  ------------------------------------------------------------------------------------------
-		 */
-        // Pre-initialisation de variable $_askDownloadObject.
-        // Lit et nettoye le contenu de la variable GET.
-        $arg_dwlobj = filter_input(INPUT_GET, nebule::NEBULE_LOCAL_OBJECTS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-        if (strlen($arg_dwlobj) > 0) {
-            // Si la variable a une valeur correcte.
-            if (trim($arg_dwlobj) != ''
-                && ctype_xdigit($arg_dwlobj)
-                && strlen(trim($arg_dwlobj)) > 0
-            ) {
-                $this->_askDownload = true;
-                // Ecrit l'objet dans la variable.
-                $this->_askDownloadObject = trim($arg_dwlobj);
-                // Log
-                $this->_metrologyInstance->addLog('Ask for download object ' . $arg_dwlobj, Metrology::LOG_LEVEL_NORMAL);
-            }
+        $arg_dwlobj = trim(filter_input(INPUT_GET, nebule::NEBULE_LOCAL_OBJECTS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        if (Node::checkNID($arg_dwlobj)) {
+            $this->_askDownload = true;
+            $this->_askDownloadObject = trim($arg_dwlobj);
+            $this->_metrologyInstance->addLog('Ask for download object ' . $arg_dwlobj, Metrology::LOG_LEVEL_NORMAL);
         }
-        unset($arg_dwlobj);
-        // Pre-initialisation de variable $_askDownloadLinks.
-        // Lit et nettoye le contenu de la variable GET.
-        $arg_dwllnk = filter_input(INPUT_GET, nebule::NEBULE_LOCAL_LINKS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-        if (strlen($arg_dwllnk) > 0) {
-            // Si la variable a une valeur correcte.
-            if (trim($arg_dwllnk) != ''
-                && ctype_xdigit($arg_dwllnk)
-                && strlen(trim($arg_dwllnk)) > 0
-            ) {
-                $this->_askDownload = true;
-                // Ecrit l'objet dans la variable.
-                $this->_askDownloadLinks = trim($arg_dwllnk);
-                // Log
-                $this->_metrologyInstance->addLog('Ask for download links ' . $arg_dwllnk, Metrology::LOG_LEVEL_NORMAL);
-            }
+        $arg_dwllnk = trim(filter_input(INPUT_GET, nebule::NEBULE_LOCAL_LINKS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        if (Node::checkNID($arg_dwllnk)) {
+            $this->_askDownload = true;
+            $this->_askDownloadLinks = trim($arg_dwllnk);
+            $this->_metrologyInstance->addLog('Ask for download links ' . $arg_dwllnk, Metrology::LOG_LEVEL_NORMAL);
         }
         return $this->_askDownload;
     }

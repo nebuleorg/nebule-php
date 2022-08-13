@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
-use Nebule\Library\nebule;
 
 /**
  * Classe de gestion du côté social stricte des liens.
@@ -14,34 +13,12 @@ use Nebule\Library\nebule;
  * Si le signataire du lien est une des entités autorités locales, retourne un score de 1.
  * Sinon retourne un score de 0.
  */
-class SocialStrict implements SocialInterface
+class SocialStrict extends SocialMySelf implements SocialInterface
 {
-    /** Instance nebule en cours. */
-    private $_nebuleInstance;
-
-    /**
-     * Constructeur.
-     */
-    public function __construct(nebule $nebuleInstance)
-    {
-        $this->_nebuleInstance = $nebuleInstance;
-    }
-
-    public function __sleep()
-    {
-        return array();
-    }
-
-    public function __wakeup()
-    {
-        global $nebuleInstance;
-        $this->_nebuleInstance = $nebuleInstance;
-    }
-
     /**
      * Gère le classement social des liens.
      *
-     * @param array  $links
+     * @param array  &$links
      * @param string $socialClass
      * @return void
      */
@@ -57,47 +34,27 @@ class SocialStrict implements SocialInterface
     /**
      * Calcul le score social d'un lien.
      *
-     * @param Link   $link
+     * @param Link   &$link
      * @param string $socialClass
      * @return float
      */
     public function linkSocialScore(Link &$link, string $socialClass = ''): float
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=strict score for ' . $link->getSigneValue_disabled(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=strict score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG);
 
         // Si l'entité signataire du lien est une des entités autorités, retourne la valeur sociale 1.
         foreach ($this->_nebuleInstance->getLocalAuthorities() as $autority) {
-            if ($link->getSigners() == $autority) {
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=strict score 1 for ' . $link->getSigners(), Metrology::LOG_LEVEL_DEBUG);
-                return 1;
+            foreach ($link->getSigners() as $signer) {
+                if ($signer == $autority) {
+                    $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=strict score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
+                    return 1;
+                }
             }
         }
 
         // Sinon par défaut retourne la valeur sociale 0.
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=strict score 0 for ' . $link->getSigners(), Metrology::LOG_LEVEL_DEBUG);
+        foreach ($link->getSigners() as $signer)
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=strict score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
         return 0;
-    }
-
-    /**
-     * Permet d'injecter une liste pour le calcul/filtrage social.
-     *
-     * La liste doit contenir des ID d'objet et non des objets.
-     *
-     * @param array:string $listID
-     * @return boolean
-     */
-    public function setList(array &$listID): bool
-    {
-        return true;
-    }
-
-    /**
-     * Permet de vider la liste pour le calcul/filtrage social.
-     *
-     * @return boolean
-     */
-    public function unsetList(): bool
-    {
-        return true;
     }
 }
