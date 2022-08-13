@@ -294,6 +294,11 @@ $applicationActionInstance = null;
  */
 $applicationTraductionInstance = null;
 
+/**
+ * Name space of the application.
+ * @noinspection PhpUnusedLocalVariableInspection
+ */
+$applicationNameSpace = '';
 
 
 /*
@@ -4684,10 +4689,12 @@ function bootstrap_loadApplication(): void
            $applicationDisplayInstance,
            $applicationActionInstance,
            $applicationTraductionInstance,
+           $applicationNameSpace,
            $bootstrapApplicationOID;
 
     $nameSpace = 'Nebule\\Application\\Sylabe'; // FIXME
     $nameSpaceApplication = $nameSpace.'\\Application';
+    $applicationNameSpace = $nameSpaceApplication;
     $nameSpaceDisplay = $nameSpace.'\\Display';
     $nameSpaceAction = $nameSpace.'\\Action';
     $nameSpaceTraduction = $nameSpace.'\\Traduction';
@@ -6039,6 +6046,7 @@ function bootstrap_displayPreloadApplication()
     global $nebuleInstance,
            $applicationInstance,
            $applicationDisplayInstance,
+           $applicationNameSpace,
            $bootstrapLibraryIID,
            $bootstrapApplicationOID,
            $bootstrapApplicationIID;
@@ -6081,10 +6089,10 @@ function bootstrap_displayPreloadApplication()
     bootstrap_initApplication(false);
 
     // Check FIXME
-    /*if (! is_a($applicationInstance, 'Applications')) {
-        log_add('error preload application code OID=' . $bootstrapApplicationOID, 'error', __FUNCTION__, '2e87a827');
+    if (! is_a($applicationInstance, $applicationNameSpace)) {
+        log_add('error preload application code OID=' . $bootstrapApplicationOID . ' classe=' . get_class($applicationInstance), 'error', __FUNCTION__, '2e87a827');
         return;
-    }*/
+    }
 
     echo 'Name=' . $applicationInstance->getClassName() . "<br/>\n";
 
