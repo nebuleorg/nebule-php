@@ -308,7 +308,6 @@ class ioLocal extends io implements ioInterface
 
         /**
          * Table des liens lus.
-         * @var array $linkList
          */
         $linkList = array();
 

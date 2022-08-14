@@ -4676,6 +4676,29 @@ function bootstrap_includeApplication(): void
     }
 }
 
+function bootstrap_getApplicationNamespace(string $oid): string
+{
+    $value = '';
+
+    $content = io_objectRead($oid, 10000);
+    foreach (preg_split("/((\r?\n)|(\r\n?))/", $content) as $line) {
+        $l = trim($line);
+
+        if (substr($l, 0, 1) == "#")
+            continue;
+
+        $fname = trim(filter_var(strtok($l, ' '), FILTER_SANITIZE_STRING));
+        $fvalue = trim(substr_replace(filter_var(strtok(' '), FILTER_SANITIZE_STRING), '', -1));
+        if ($fname == 'namespace') {
+            $value = $fvalue;
+            break;
+        }
+    }
+    unset($file);
+
+    return $value;
+}
+
 /**
  * Load the application code.
  *
@@ -4692,7 +4715,7 @@ function bootstrap_loadApplication(): void
            $applicationNameSpace,
            $bootstrapApplicationOID;
 
-    $nameSpace = 'Nebule\\Application\\Sylabe'; // FIXME
+    $nameSpace = bootstrap_getApplicationNamespace($bootstrapApplicationOID);
     $nameSpaceApplication = $nameSpace.'\\Application';
     $applicationNameSpace = $nameSpaceApplication;
     $nameSpaceDisplay = $nameSpace.'\\Display';
@@ -4705,7 +4728,7 @@ function bootstrap_loadApplication(): void
         //|| !class_exists('Application', false)
         || !class_exists($nameSpaceApplication, false)
     ) {
-        log_add('cannot find class Application on code NID=' . $bootstrapApplicationOID, 'error', __FUNCTION__, 'ec10ca1d');
+        log_add('cannot find class Application on code NID=' . $bootstrapApplicationOID . ' NS=' . $nameSpace, 'error', __FUNCTION__, 'ec10ca1d');
         return;
     }
 
@@ -6088,7 +6111,11 @@ function bootstrap_displayPreloadApplication()
     bootstrap_loadApplication();
     bootstrap_initApplication(false);
 
-    if (! is_a($applicationInstance, $applicationNameSpace)) {
+    if ($applicationInstance === null) {
+        log_add('error preload application code OID=' . $bootstrapApplicationOID . ' null', 'error', __FUNCTION__, '9c685c75');
+        return;
+    }
+    if (!is_a($applicationInstance, $applicationNameSpace)) {
         log_add('error preload application code OID=' . $bootstrapApplicationOID . ' classe=' . get_class($applicationInstance), 'error', __FUNCTION__, '2e87a827');
         return;
     }
