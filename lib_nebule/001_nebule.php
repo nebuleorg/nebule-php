@@ -18,10 +18,6 @@ class nebule
     const NEBULE_LICENCE_DATE = '2010-2020';
     const NEBULE_ENVIRONMENT_FILE = 'c';
     const NEBULE_BOOTSTRAP_FILE = 'index.php';
-    const NEBULE_MINIMUM_ID_SIZE = 6;
-    const NEBULE_MAXIMUM_ID_SIZE = 8192;
-    const NEBULE_MINIMUM_ALGO_SIZE = 2;
-    const NEBULE_MAXIMUM_ALGO_SIZE = 12;
     const NEBULE_LOCAL_ENTITY_FILE = 'e';
     const NEBULE_LOCAL_OBJECTS_FOLDER = 'o';
     const NEBULE_LOCAL_LINKS_FOLDER = 'l';

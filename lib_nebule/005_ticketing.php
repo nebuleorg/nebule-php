@@ -11,7 +11,9 @@ namespace Nebule\Library;
  * @link www.nebule.org
  */
 class Ticketing
-{    
+{
+    const TICKET_SIZE = 256; // Octet
+
     /**
      * Instance de la librairie en cours.
      *
@@ -74,12 +76,12 @@ class Ticketing
 
         // Vérifie les variables.
         if ($arg_get != ''
-            && strlen($arg_get) >= nebule::NEBULE_MINIMUM_ID_SIZE
+            && strlen($arg_get) >= self::TICKET_SIZE
             && ctype_xdigit($arg_get)
         ) {
             $ticket = $arg_get;
         } elseif ($arg_post != ''
-            && strlen($arg_post) >= nebule::NEBULE_MINIMUM_ID_SIZE
+            && strlen($arg_post) >= self::TICKET_SIZE
             && ctype_xdigit($arg_post)
         ) {
             $ticket = $arg_post;
@@ -151,7 +153,7 @@ class Ticketing
      */
     public function getActionTicketValue(): string
     {
-        $data = $this->_nebuleInstance->getCryptoInstance()->getRandom(2048, Crypto::RANDOM_PSEUDO);
+        $data = $this->_nebuleInstance->getCryptoInstance()->getRandom(self::TICKET_SIZE, Crypto::RANDOM_PSEUDO);
         $ticket = $this->_nebuleInstance->getCryptoInstance()->hash($data);
         session_start();
         $_SESSION['Tickets'][$ticket] = true;

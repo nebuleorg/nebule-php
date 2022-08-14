@@ -187,7 +187,7 @@ abstract class Actions
     public function initialisation()
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Load actions', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Load actions', Metrology::LOG_LEVEL_DEBUG);
         $this->_traduction = $this->_applicationInstance->getTraductionInstance();
         $this->_display = $this->_applicationInstance->getDisplayInstance();
         $this->_metrology = $this->_applicationInstance->getMetrologyInstance();
@@ -252,7 +252,7 @@ abstract class Actions
     public function initialisation2()
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Load actions', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Load actions', Metrology::LOG_LEVEL_DEBUG);
         $this->_traduction = $this->_applicationInstance->getTraductionInstance();
         $this->_display = $this->_applicationInstance->getDisplayInstance();
         $this->_metrology = $this->_applicationInstance->getMetrologyInstance();
@@ -274,7 +274,7 @@ abstract class Actions
      */
     public function genericActions()
     {
-        $this->_metrology->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG);
 
         // Vérifie que l'entité est déverrouillée.
         if (!$this->_unlocked)
@@ -317,7 +317,7 @@ abstract class Actions
         $this->_extractActionCreateTokens();
         $this->_extractActionAddProperty();
 
-        $this->_metrology->addLog('Router generic actions', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Router generic actions', Metrology::LOG_LEVEL_DEBUG);
 
         // Gère la dissimulation d'un lien.
         if ($this->_actionObfuscateLinkInstance != ''
@@ -416,8 +416,73 @@ abstract class Actions
         if ($this->_actionCreateTokens)
             $this->_actionCreateTokens();
 
-        $this->_metrology->addLog('Generic actions end', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Generic actions end', Metrology::LOG_LEVEL_DEBUG);
     }
+
+    protected function _getOptionAsBoolean(string $name): bool
+    {
+        return $this->_configuration->getOptionAsBoolean($name);
+    }
+
+    protected function _checkBooleanOptions(array $list): bool
+    {
+        return $this->_configuration->checkBooleanOptions($list);
+    }
+
+    const ACTIONS_PERMIT = array(
+        'DeleteObject' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'ProtectObject' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'UnprotectObject' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'ShareProtectObjectToEntity' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'ShareProtectObjectToGroupOpened' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'ShareProtectObjectToGroupClosed' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'CancelShareProtectObjectToEntity' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'SynchronizeObject' => ['permitWrite','permitWriteObject'],
+        'SynchronizeEntity' => ['permitWrite','permitWriteObject'],
+        'SynchronizeObjectLinks' => ['permitWrite','permitWriteLink'],
+        'SynchronizeApplication' => ['permitWrite','permitWriteLink','permitWriteObject','permitSynchronizeObject','permitSynchronizeLink','permitSynchronizeApplication'],
+        'SynchronizeNewEntity' => ['permitWrite','permitWriteObject','permitSynchronizeObject','permitSynchronizeLink'],
+        'UploadFileLinks' => ['permitWrite','permitWriteLink','permitUploadLink'],
+        'UploadFile' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'UploadText' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'CreateEntity' => ['permitWrite','permitWriteLink','permitWriteObject','permitWriteEntity'],
+        'CreateGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitWriteGroup'],
+        'SignLink' => ['unlocked','permitWrite','permitWriteLink','permitCreateLink'],
+        'UploadLink' => ['permitWrite','permitWriteLink','permitUploadLink'],
+        'ObfuscateLink' => ['unlocked','permitWrite','permitWriteLink','permitObfuscatedLink'],
+        'DeleteGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
+        'AddToGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
+        'RemoveFromGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
+        'AddItemToGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
+        'RemoveItemFromGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
+        'CreateConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitWriteConversation'],
+        'DeleteConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
+        'AddMessageOnConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
+        'RemoveMessageOnConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
+        'AddMemberOnConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
+        'RemoveMemberOnConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
+        'CreateMessage' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitWriteConversation'],
+        'AddProperty' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'CreateCurrency' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitCurrency','permitWriteCurrency','permitCreateCurrency'],
+        'CreateTokenPool' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitCurrency','permitWriteCurrency','permitCreateCurrency'],
+        'CreateTokens' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitCurrency','permitWriteCurrency','permitCreateCurrency'],
+    );
+
+    protected function _checkPermitAction($name): bool
+    {
+        if (!isset(self::ACTIONS_PERMIT[$name]))
+        {
+            $this->_metrology->addLog('unknown action ' . $name, Metrology::LOG_LEVEL_ERROR, __FUNCTION__,'5edb0ddf');
+            return false;
+        }
+        if (!$this->_configuration->checkBooleanOptions(self::ACTIONS_PERMIT[$name]))
+        {
+            $this->_metrology->addLog('insuffisant permission for action=' . $name, Metrology::LOG_LEVEL_ERROR, __FUNCTION__,'a5f2e385');
+            return false;
+        }
+        return true;
+    }
+
 
 
     /**
@@ -435,16 +500,16 @@ abstract class Actions
      */
     public function specialActions()
     {
-        $this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG);
 
         // Vérifie que l'action de création d'entité soit permise entité verrouillée.
-        if ($this->_unlocked
-            || $this->_configuration->getOptionAsBoolean('permitPublicCreateEntity')
+        if ($this->_checkBooleanOptions(array('permitPublicCreateEntity'))
+            || $this->_unlocked
         )
             $this->_extractActionCreateEntity();
 
         // Vérifie que l'action de chargement de lien soit permise.
-        if ($this->_configuration->getOptionAsBoolean('permitUploadLink')
+        if ($this->_checkBooleanOptions(array('permitWrite','permitWriteLink','permitUploadLink'))
             || $this->_unlocked
         ) {
             // Extrait les actions.
@@ -455,47 +520,39 @@ abstract class Actions
             $this->_extractActionUploadFileLinks();
         }
 
-        $this->_metrology->addLog('Router generic actions', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Router generic actions', Metrology::LOG_LEVEL_DEBUG);
 
         // Si l'action de création d'entité est validée.
         if ($this->_actionCreateEntity)
             $this->_actionCreateEntity();
 
         // Si l'action de chargement de lien est permise y compris entité verrouillée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitUploadLink')
-            && ($this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
-                || $this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
+        if ($this->_checkBooleanOptions(array('permitWrite','permitWriteLink','permitUploadLink'))
+            && ($this->_getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+                || $this->_getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_unlocked
             )
         ) {
             // Lien à signer 1.
-            if ($this->_unlocked
-                && $this->_configuration->getOptionAsBoolean('permitCreateLink')
-                && $this->_actionSignLinkInstance1 != ''
+            if ($this->_checkBooleanOptions(array('unlocked','permitCreateLink'))
                 && is_a($this->_actionSignLinkInstance1, 'Link')
             )
                 $this->_actionSignLink($this->_actionSignLinkInstance1, $this->_actionSignLinkInstance1Obfuscate);
 
             // Lien à signer 2.
-            if ($this->_unlocked
-                && $this->_configuration->getOptionAsBoolean('permitCreateLink')
-                && $this->_actionSignLinkInstance2 != ''
+            if ($this->_checkBooleanOptions(array('unlocked','permitCreateLink'))
                 && is_a($this->_actionSignLinkInstance2, 'Link')
             )
                 $this->_actionSignLink($this->_actionSignLinkInstance2, $this->_actionSignLinkInstance2Obfuscate);
 
             // Lien à signer 3.
-            if ($this->_unlocked
-                && $this->_configuration->getOptionAsBoolean('permitCreateLink')
-                && $this->_actionSignLinkInstance3 != ''
+            if ($this->_checkBooleanOptions(array('unlocked','permitCreateLink'))
                 && is_a($this->_actionSignLinkInstance3, 'Link')
             )
                 $this->_actionSignLink($this->_actionSignLinkInstance3, $this->_actionSignLinkInstance3Obfuscate);
 
             // Liens pré-signés.
-            if ($this->_actionUploadLinkInstance != null
+            if ($this->_actionUploadLinkInstance !== null
                 && is_a($this->_actionUploadLinkInstance, 'Link')
             )
                 $this->_actionUploadLink($this->_actionUploadLinkInstance);
@@ -505,7 +562,7 @@ abstract class Actions
                 $this->_actionUploadFileLinks();
         }
 
-        $this->_metrology->addLog('Special actions end', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Special actions end', Metrology::LOG_LEVEL_DEBUG);
     }
 
 
@@ -514,29 +571,25 @@ abstract class Actions
      */
     protected function _extractActionSignLink1()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitCreateLink')
-            && $this->_unlocked
+        if (!$this->_checkPermitAction('SignLink'))
+            return;
+
+        $this->_metrology->addLog('Extract action sign link 1', Metrology::LOG_LEVEL_DEBUG);
+
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1_OBFUSCATE);
+        if ($arg == '')
+            $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if ($arg != ''
+            && strlen($arg) != 0
         ) {
-            $this->_metrology->addLog('Extract action sign link 1', Metrology::LOG_LEVEL_DEBUG); // Log
-
-            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1_OBFUSCATE);
-            if ($arg == '')
-                $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-
-            if ($arg != ''
-                && strlen($arg) != 0
-            ) {
-                $this->_actionSignLinkInstance1 = $this->flatLinkExtractAsInstance_disabled($arg);
-                $this->_actionSignLinkInstance1Obfuscate = $argObfuscate;
-            }
+            $this->_actionSignLinkInstance1 = $this->flatLinkExtractAsInstance_disabled($arg);
+            $this->_actionSignLinkInstance1Obfuscate = $argObfuscate;
         }
     }
 
-    protected $_actionSignLinkInstance1 = '';
+    protected $_actionSignLinkInstance1 = null;
     protected $_actionSignLinkInstance1Obfuscate = false;
 
     /**
@@ -544,29 +597,25 @@ abstract class Actions
      */
     protected function _extractActionSignLink2()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitCreateLink')
-            && $this->_unlocked
+        if (!$this->_checkPermitAction('SignLink'))
+            return;
+
+        $this->_metrology->addLog('Extract action sign link 2', Metrology::LOG_LEVEL_DEBUG);
+
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2_OBFUSCATE);
+        if ($arg == '')
+            $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if ($arg != ''
+            && strlen($arg) != 0
         ) {
-            $this->_metrology->addLog('Extract action sign link 2', Metrology::LOG_LEVEL_DEBUG); // Log
-
-            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2_OBFUSCATE);
-            if ($arg == '')
-                $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-
-            if ($arg != ''
-                && strlen($arg) != 0
-            ) {
-                $this->_actionSignLinkInstance2 = $this->flatLinkExtractAsInstance_disabled($arg);
-                $this->_actionSignLinkInstance2Obfuscate = $argObfuscate;
-            }
+            $this->_actionSignLinkInstance2 = $this->flatLinkExtractAsInstance_disabled($arg);
+            $this->_actionSignLinkInstance2Obfuscate = $argObfuscate;
         }
     }
 
-    protected $_actionSignLinkInstance2 = '';
+    protected $_actionSignLinkInstance2 = null;
     protected $_actionSignLinkInstance2Obfuscate = false;
 
     /**
@@ -574,29 +623,25 @@ abstract class Actions
      */
     protected function _extractActionSignLink3()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitCreateLink')
-            && $this->_unlocked
+        if (!$this->_checkPermitAction('SignLink'))
+            return;
+
+        $this->_metrology->addLog('Extract action sign link 3', Metrology::LOG_LEVEL_DEBUG);
+
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3_OBFUSCATE);
+        if ($arg == '')
+            $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if ($arg != ''
+            && strlen($arg) != 0
         ) {
-            $this->_metrology->addLog('Extract action sign link 3', Metrology::LOG_LEVEL_DEBUG); // Log
-
-            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3_OBFUSCATE);
-            if ($arg == '')
-                $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-
-            if ($arg != ''
-                && strlen($arg) != 0
-            ) {
-                $this->_actionSignLinkInstance3 = $this->flatLinkExtractAsInstance_disabled($arg);
-                $this->_actionSignLinkInstance3Obfuscate = $argObfuscate;
-            }
+            $this->_actionSignLinkInstance3 = $this->flatLinkExtractAsInstance_disabled($arg);
+            $this->_actionSignLinkInstance3Obfuscate = $argObfuscate;
         }
     }
 
-    protected $_actionSignLinkInstance3 = '';
+    protected $_actionSignLinkInstance3 = null;
     protected $_actionSignLinkInstance3Obfuscate = false;
 
 
@@ -621,16 +666,13 @@ abstract class Actions
      */
     protected function _extractActionUploadLink()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitUploadLink')
-            && ($this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
-                || $this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+        if ($this->_checkPermitAction('UploadLink')
+            && ($this->_getOptionAsBoolean('permitPublicUploadLink')
+                || $this->_getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                 || $this->_unlocked
             )
         ) {
-            $this->_metrology->addLog('Extract action upload signed link', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('Extract action upload signed link', Metrology::LOG_LEVEL_DEBUG);
 
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UPLOAD_SIGNED_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
             if ($arg == '')
@@ -638,7 +680,7 @@ abstract class Actions
 
             // Vérifie si restriction des liens au maître du code. Non par défaut.
             $permitNotCodeMaster = false;
-            if ($this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
+            if ($this->_getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_unlocked
             )
                 $permitNotCodeMaster = true;
@@ -666,21 +708,17 @@ abstract class Actions
      */
     protected function _extractActionObfuscateLink()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action obfuscate link', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('ObfuscateLink'))
+            return;
 
-            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_OBFUSCATE_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            if ($arg == '')
-                $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_OBFUSCATE_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action obfuscate link', Metrology::LOG_LEVEL_DEBUG);
 
-            if (strlen($arg) != 0)
-                $this->_actionObfuscateLinkInstance = $this->flatLinkExtractAsInstance_disabled($arg);
-        }
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_OBFUSCATE_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        if ($arg == '')
+            $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_OBFUSCATE_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (strlen($arg) != 0)
+            $this->_actionObfuscateLinkInstance = $this->flatLinkExtractAsInstance_disabled($arg);
     }
 
     protected $_actionObfuscateLinkInstance = '';
@@ -689,7 +727,7 @@ abstract class Actions
     /**
      * Renvoie si l'action de suppression d'objet est validée.
      */
-    public function getDeleteObject()
+    public function getDeleteObject(): bool
     {
         return $this->_actionDeleteObject;
     }
@@ -697,7 +735,7 @@ abstract class Actions
     /**
      * Renvoie l'ID de l'objet supprimé.
      */
-    public function getDeleteObjectID()
+    public function getDeleteObjectID(): string
     {
         return $this->_actionDeleteObjectID;
     }
@@ -707,35 +745,31 @@ abstract class Actions
      */
     protected function _extractActionDeleteObject()
     {
-        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action delete object', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('DeleteObject'))
+            return;
 
-            $argObject = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            $argForce = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT_FORCE);
-            $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT_OBFUSCATE);
+        $this->_metrology->addLog('Extract action delete object', Metrology::LOG_LEVEL_DEBUG);
 
-            // Extraction de l'objet à supprimer.
-            if (Node::checkNID($argObject)) {
-                $this->_actionDeleteObjectID = $argObject;
-                $this->_actionDeleteObjectInstance = $this->_nebuleInstance->newObject($argObject);
-                $this->_actionDeleteObject = true;
-            }
+        $argObject = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $argForce = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT_FORCE);
+        $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT_OBFUSCATE);
 
-            // Extraction si la suppression doit être forcée.
-            if ($argForce)
-                $this->_actionDeleteObjectForce = true;
-
-            // Extraction si la suppression doit être cachée.
-            if ($argObfuscate
-                && $this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
-            )
-                $this->_actionDeleteObjectObfuscate = true;
+        // Extraction de l'objet à supprimer.
+        if (Node::checkNID($argObject)) {
+            $this->_actionDeleteObjectID = $argObject;
+            $this->_actionDeleteObjectInstance = $this->_nebuleInstance->newObject($argObject);
+            $this->_actionDeleteObject = true;
         }
+
+        // Extraction si la suppression doit être forcée.
+        if ($argForce)
+            $this->_actionDeleteObjectForce = true;
+
+        // Extraction si la suppression doit être cachée.
+        if ($argObfuscate
+            && $this->_getOptionAsBoolean('permitObfuscatedLink')
+        )
+            $this->_actionDeleteObjectObfuscate = true;
     }
 
     protected $_actionDeleteObject = false;
@@ -750,19 +784,15 @@ abstract class Actions
      */
     protected function _extractActionProtectObject()
     {
-        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action protect object', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('ProtectObject'))
+            return;
 
-            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action protect object', Metrology::LOG_LEVEL_DEBUG);
 
-            if (Node::checkNID($arg))
-                $this->_actionProtectObjectInstance = $this->_nebuleInstance->newObject($arg);
-        }
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg))
+            $this->_actionProtectObjectInstance = $this->_nebuleInstance->newObject($arg);
     }
 
     protected $_actionProtectObjectInstance = '';
@@ -773,19 +803,15 @@ abstract class Actions
      */
     protected function _extractActionUnprotectObject()
     {
-        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action unprotect object', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('UnprotectObject'))
+            return;
 
-            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action unprotect object', Metrology::LOG_LEVEL_DEBUG);
 
-            if (Node::checkNID($arg))
-                $this->_actionUnprotectObjectInstance = $this->_nebuleInstance->newObject($arg);
-        }
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg))
+            $this->_actionUnprotectObjectInstance = $this->_nebuleInstance->newObject($arg);
     }
 
     protected $_actionUnprotectObjectInstance = '';
@@ -796,19 +822,15 @@ abstract class Actions
      */
     protected function _extractActionShareProtectObjectToEntity()
     {
-        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action share protect object to entity', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('ShareProtectObjectToEntity'))
+            return;
 
-            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action share protect object to entity', Metrology::LOG_LEVEL_DEBUG);
 
-            if (Node::checkNID($arg))
-                $this->_actionShareProtectObjectToEntity = $arg;
-        }
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg))
+            $this->_actionShareProtectObjectToEntity = $arg;
     }
 
     protected $_actionShareProtectObjectToEntity = '';
@@ -819,19 +841,15 @@ abstract class Actions
      */
     protected function _extractActionShareProtectObjectToGroupOpened()
     {
-        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action share protect object to opened group', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('ShareProtectObjectToGroupOpened'))
+            return;
 
-            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action share protect object to opened group', Metrology::LOG_LEVEL_DEBUG);
 
-            if (Node::checkNID($arg))
-                $this->_actionShareProtectObjectToGroupOpened = $arg;
-        }
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg))
+            $this->_actionShareProtectObjectToGroupOpened = $arg;
     }
 
     protected $_actionShareProtectObjectToGroupOpened = '';
@@ -842,19 +860,15 @@ abstract class Actions
      */
     protected function _extractActionShareProtectObjectToGroupClosed()
     {
-        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action share protect object to closed group', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('ShareProtectObjectToGroupClosed'))
+            return;
 
-            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action share protect object to closed group', Metrology::LOG_LEVEL_DEBUG);
 
-            if (Node::checkNID($arg))
-                $this->_actionShareProtectObjectToGroupClosed = $arg;
-        }
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg))
+            $this->_actionShareProtectObjectToGroupClosed = $arg;
     }
 
     protected $_actionShareProtectObjectToGroupClosed = '';
@@ -865,19 +879,15 @@ abstract class Actions
      */
     protected function _extractActionCancelShareProtectObjectToEntity()
     {
-        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action cancel share protect object to entity', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('CancelShareProtectObjectToEntity'))
+            return;
 
-            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action cancel share protect object to entity', Metrology::LOG_LEVEL_DEBUG);
 
-            if (Node::checkNID($arg))
-                $this->_actionCancelShareProtectObjectToEntity = $arg;
-        }
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg))
+            $this->_actionCancelShareProtectObjectToEntity = $arg;
     }
 
     protected $_actionCancelShareProtectObjectToEntity = '';
@@ -897,17 +907,15 @@ abstract class Actions
      */
     protected function _extractActionSynchronizeObject()
     {
-        // Vérifie que l'écriture d'objets soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-        ) {
-            $this->_metrology->addLog('Extract action synchronize object', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('SynchronizeObject'))
+            return;
 
-            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action synchronize object', Metrology::LOG_LEVEL_DEBUG);
 
-            if (Node::checkNID($arg))
-                $this->_actionSynchronizeObjectInstance = $this->_nebuleInstance->newObject($arg);
-        }
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg))
+            $this->_actionSynchronizeObjectInstance = $this->_nebuleInstance->newObject($arg);
     }
 
     protected $_actionSynchronizeObjectInstance = '';
@@ -915,9 +923,10 @@ abstract class Actions
 
     /**
      * Retourne l'entité synchronisée.
-     * @return string|entity
+     *
+     * @return string
      */
-    public function getSynchronizeEntityInstance()
+    public function getSynchronizeEntityInstance(): string
     {
         return $this->_actionSynchronizeEntityInstance;
     }
@@ -927,17 +936,15 @@ abstract class Actions
      */
     protected function _extractActionSynchronizeEntity()
     {
-        // Vérifie que l'écriture d'objets soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-        ) {
-            $this->_metrology->addLog('Extract action synchronize entity', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('SynchronizeEntity'))
+            return;
 
-            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action synchronize entity', Metrology::LOG_LEVEL_DEBUG);
 
-            if (Node::checkNID($arg))
-                $this->_actionSynchronizeEntityInstance = $this->_nebuleInstance->newEntity_DEPRECATED($arg);
-        }
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg))
+            $this->_actionSynchronizeEntityInstance = $this->_nebuleInstance->newEntity_DEPRECATED($arg);
     }
 
     protected $_actionSynchronizeEntityInstance = '';
@@ -957,17 +964,15 @@ abstract class Actions
      */
     protected function _extractActionSynchronizeObjectLinks()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-        ) {
-            $this->_metrology->addLog('Extract action synchronize object links', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('SynchronizeObjectLinks'))
+            return;
 
-            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_LINKS, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action synchronize object links', Metrology::LOG_LEVEL_DEBUG);
 
-            if (Node::checkNID($arg))
-                $this->_actionSynchronizeObjectLinksInstance = $this->_nebuleInstance->newObject($arg);
-        }
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_LINKS, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg))
+            $this->_actionSynchronizeObjectLinksInstance = $this->_nebuleInstance->newObject($arg);
     }
 
     protected $_actionSynchronizeObjectLinksInstance = '';
@@ -987,18 +992,12 @@ abstract class Actions
      */
     protected function _extractActionSynchronizeApplication()
     {
-        // Vérifie que l'écriture d'objets soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeApplication')
-            && ($this->_configuration->getOptionAsBoolean('permitPublicSynchronizeApplication')
+        if ($this->_checkPermitAction('SynchronizeApplication')
+            && ($this->_getOptionAsBoolean('permitPublicSynchronizeApplication')
                 || $this->_unlocked
             )
         ) {
-            $this->_metrology->addLog('Extract action synchronize entity', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('Extract action synchronize entity', Metrology::LOG_LEVEL_DEBUG);
 
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1012,9 +1011,10 @@ abstract class Actions
 
     /**
      * Retourne l'entité synchronisée depuis une URL.
-     * @return string|entity
+     *
+     * @return string
      */
-    public function getSynchronizeNewEntityInstance()
+    public function getSynchronizeNewEntityInstance(): string
     {
         return $this->_actionSynchronizeNewEntityInstance;
     }
@@ -1024,56 +1024,52 @@ abstract class Actions
      */
     protected function _extractActionSynchronizeNewEntity()
     {
-        // Vérifie que l'écriture d'objets soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
+        if (!$this->_checkPermitAction('SynchronizeNewEntity'))
+            return;
+
+        $this->_metrology->addLog('Extract action synchronize new entity', Metrology::LOG_LEVEL_DEBUG);
+
+        $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_NEW_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        // Extraction de l'URL et stockage pour traitement.
+        if ($arg != ''
+            && strlen($arg) >= 9
+            && ctype_print($arg)
         ) {
-            $this->_metrology->addLog('Extract action synchronize new entity', Metrology::LOG_LEVEL_DEBUG); // Log
-
-            $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_NEW_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-
-            // Extraction de l'URL et stockage pour traitement.
-            if ($arg != ''
-                && strlen($arg) >= 9
-                && ctype_print($arg)
-            ) {
-                // Décompose l'URL.
-                $parseURL = parse_url($arg);
-                // Extrait le protocol.
-                if (isset($parseURL['scheme'])
-                    && ($parseURL['scheme'] == 'http'
-                        || $parseURL['scheme'] == 'https'
-                    )
+            // Décompose l'URL.
+            $parseURL = parse_url($arg);
+            // Extrait le protocol.
+            if (isset($parseURL['scheme'])
+                && ($parseURL['scheme'] == 'http'
+                    || $parseURL['scheme'] == 'https'
                 )
-                    $scheme = $parseURL['scheme'];
-                else {
-                    // Il manque le protocol, suppose que c'est http.
-                    $scheme = 'http';
-                    $parseURL = parse_url($scheme . '://' . $arg);
-                }
-                // Vérifie les champs de l'URL.
-                if ($parseURL['host'] != ''
-                    && $parseURL['path'] != ''
-                    && substr($parseURL['path'], 0, 3) == '/o/'
+            )
+                $scheme = $parseURL['scheme'];
+            else {
+                // Il manque le protocol, suppose que c'est http.
+                $scheme = 'http';
+                $parseURL = parse_url($scheme . '://' . $arg);
+            }
+            // Vérifie les champs de l'URL.
+            if ($parseURL['host'] != ''
+                && $parseURL['path'] != ''
+                && substr($parseURL['path'], 0, 3) == '/o/'
+            ) {
+                // Extrait l'ID de l'objet de l'entité à synchroniser.
+                $id = substr($parseURL['path'], 3);
+                $this->_metrology->addLog('Extract action synchronize new entity - ID=' . $id, Metrology::LOG_LEVEL_DEBUG);
+                // Vérifie l'ID.
+                if (!$this->_io->checkObjectPresent($id)
+                    && Node::checkNID($id)
                 ) {
-                    // Extrait l'ID de l'objet de l'entité à synchroniser.
-                    $id = substr($parseURL['path'], 3);
-                    $this->_metrology->addLog('Extract action synchronize new entity - ID=' . $id, Metrology::LOG_LEVEL_DEBUG); // Log
-                    // Vérifie l'ID.
-                    if (!$this->_io->checkObjectPresent($id)
-                        && Node::checkNID($id)
-                    ) {
-                        // Si c'est bon on prépare pour la synchronisation.
-                        $this->_actionSynchronizeNewEntityID = $id;
-                        $this->_actionSynchronizeNewEntityURL = $scheme . '://' . $parseURL['host'];
-                        if (isset($parseURL['port'])) {
-                            $port = $parseURL['port'];
-                            $this->_actionSynchronizeNewEntityURL .= ':' . $port;
-                        }
-                        $this->_metrology->addLog('Extract action synchronize new entity - URL=' . $this->_actionSynchronizeNewEntityURL, Metrology::LOG_LEVEL_DEBUG); // Log
+                    // Si c'est bon on prépare pour la synchronisation.
+                    $this->_actionSynchronizeNewEntityID = $id;
+                    $this->_actionSynchronizeNewEntityURL = $scheme . '://' . $parseURL['host'];
+                    if (isset($parseURL['port'])) {
+                        $port = $parseURL['port'];
+                        $this->_actionSynchronizeNewEntityURL .= ':' . $port;
                     }
+                    $this->_metrology->addLog('Extract action synchronize new entity - URL=' . $this->_actionSynchronizeNewEntityURL, Metrology::LOG_LEVEL_DEBUG);
                 }
             }
         }
@@ -1089,7 +1085,7 @@ abstract class Actions
      */
     protected function _extractActionMarkObject()
     {
-        $this->_metrology->addLog('Extract action mark object', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Extract action mark object', Metrology::LOG_LEVEL_DEBUG);
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_MARK_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1105,7 +1101,7 @@ abstract class Actions
      */
     protected function _extractActionUnmarkObject()
     {
-        $this->_metrology->addLog('Extract action unmark object', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Extract action unmark object', Metrology::LOG_LEVEL_DEBUG);
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1123,7 +1119,7 @@ abstract class Actions
      */
     protected function _extractActionUnmarkAllObjects()
     {
-        $this->_metrology->addLog('Extract action unmark all objects', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Extract action unmark all objects', Metrology::LOG_LEVEL_DEBUG);
 
         $arg = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNMARK_ALL_OBJECT);
 
@@ -1176,7 +1172,7 @@ abstract class Actions
      *
      * @return boolean
      */
-    public function getUploadFileSignedLinks()
+    public function getUploadFileSignedLinks(): bool
     {
         return $this->_actionUploadFileLinks;
     }
@@ -1194,16 +1190,13 @@ abstract class Actions
      */
     protected function _extractActionUploadFileLinks()
     {
-        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitUploadLink')
-            && ($this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
-                || $this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+        if ($this->_checkPermitAction('UploadFileLinks')
+            && ($this->_getOptionAsBoolean('permitPublicUploadLink')
+                || $this->_getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                 || $this->_unlocked
             )
         ) {
-            $this->_metrology->addLog('Extract action upload file of signed links', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('Extract action upload file of signed links', Metrology::LOG_LEVEL_DEBUG);
 
             // Lit le contenu de la variable _FILE si un fichier est téléchargé.
             if (isset($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LINKS]['error'])
@@ -1225,12 +1218,12 @@ abstract class Actions
                         $this->_actionUploadFileLinksSize = $upsize;
                         $this->_actionUploadFileLinksPath = $uppath;
                     } else {
-                        $this->_metrology->addLog('Action _extractActionUploadFileLinks File size too big', Metrology::LOG_LEVEL_ERROR); // Log
+                        $this->_metrology->addLog('Action _extractActionUploadFileLinks File size too big', Metrology::LOG_LEVEL_ERROR);
                         $this->_actionUploadFileLinksError = true;
                         $this->_actionUploadFileLinksErrorMessage = 'File size too big';
                     }
                 } else {
-                    $this->_metrology->addLog('Action _extractActionUploadFileLinks File upload error', Metrology::LOG_LEVEL_ERROR); // Log
+                    $this->_metrology->addLog('Action _extractActionUploadFileLinks File upload error', Metrology::LOG_LEVEL_ERROR);
                     $this->_actionUploadFileLinksError = true;
                     $this->_actionUploadFileLinksErrorMessage = 'File upload error';
                 }
@@ -1260,7 +1253,7 @@ abstract class Actions
      *
      * @return boolean
      */
-    public function getUploadObject()
+    public function getUploadObject(): bool
     {
         return $this->_actionUploadFile;
     }
@@ -1270,7 +1263,7 @@ abstract class Actions
      *
      * @return string
      */
-    public function getUploadObjectID()
+    public function getUploadObjectID(): string
     {
         return $this->_actionUploadFileID;
     }
@@ -1280,7 +1273,7 @@ abstract class Actions
      *
      * @return boolean
      */
-    public function getUploadObjectError()
+    public function getUploadObjectError(): bool
     {
         return $this->_actionUploadFileError;
     }
@@ -1290,7 +1283,7 @@ abstract class Actions
      *
      * @return string
      */
-    public function getUploadObjectErrorMessage()
+    public function getUploadObjectErrorMessage(): string
     {
         return $this->_actionUploadFileErrorMessage;
     }
@@ -1302,109 +1295,105 @@ abstract class Actions
      */
     protected function _extractActionUploadFile()
     {
-        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action upload file', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('UploadFile'))
+            return;
 
-            $uploadArgName = self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE;
-            if (!isset($_FILES[$uploadArgName]))
-                return;
-            $uploadRawName = $_FILES[$uploadArgName]['name'];
-            $uploadError = $_FILES[$uploadArgName]['error'];
+        $this->_metrology->addLog('Extract action upload file', Metrology::LOG_LEVEL_DEBUG);
 
-            switch ($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['error']) {
-                case UPLOAD_ERR_OK:
-                    // Extraction des méta données du fichier.
-                    $upfname = mb_convert_encoding(strtok(trim(filter_var($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['name'], FILTER_SANITIZE_STRING)), "\n"), 'UTF-8');
-                    $upinfo = pathinfo($upfname);
-                    $upext = $upinfo['extension'];
-                    $upname = basename($upfname, '.' . $upext);
-                    $upsize = $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['size'];
-                    $uppath = $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['tmp_name'];
-                    $uptype = '';
-                    // Si le fichier est bien téléchargé.
-                    if (file_exists($uppath)) {
-                        // Si le fichier n'est pas trop gros.
-                        if ($upsize <= $this->_configuration->getOptionUntyped('ioReadMaxData')) {
-                            // Lit le type mime.
-                            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-                            $uptype = finfo_file($finfo, $uppath);
-                            finfo_close($finfo);
-                            if ($uptype == 'application/octet-stream') {
-                                $uptype = $this->_getFilenameTypeMime("$upname.$upext");
-                            }
+        $uploadArgName = self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE;
+        if (!isset($_FILES[$uploadArgName]))
+            return;
+        $uploadRawName = $_FILES[$uploadArgName]['name'];
+        $uploadError = $_FILES[$uploadArgName]['error'];
 
-                            // Extrait les options de téléchargement.
-                            $argUpd = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_UPDATE);
-                            $argPrt = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_PROTECT);
-                            $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_OBFUSCATE_LINKS);
+        switch ($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['error']) {
+            case UPLOAD_ERR_OK:
+                // Extraction des méta données du fichier.
+                $upfname = mb_convert_encoding(strtok(trim(filter_var($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['name'], FILTER_SANITIZE_STRING)), "\n"), 'UTF-8');
+                $upinfo = pathinfo($upfname);
+                $upext = $upinfo['extension'];
+                $upname = basename($upfname, '.' . $upext);
+                $upsize = $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['size'];
+                $uppath = $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['tmp_name'];
+                $uptype = '';
+                // Si le fichier est bien téléchargé.
+                if (file_exists($uppath)) {
+                    // Si le fichier n'est pas trop gros.
+                    if ($upsize <= $this->_configuration->getOptionUntyped('ioReadMaxData')) {
+                        // Lit le type mime.
+                        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                        $uptype = finfo_file($finfo, $uppath);
+                        finfo_close($finfo);
+                        if ($uptype == 'application/octet-stream') {
+                            $uptype = $this->_getFilenameTypeMime("$upname.$upext");
+                        }
 
-                            // Ecriture des variables.
-                            $this->_actionUploadFile = true;
-                            $this->_actionUploadFileName = $upname;
-                            $this->_actionUploadFileExtension = $upext;
-                            $this->_actionUploadFileType = $uptype;
-                            $this->_actionUploadFileSize = $upsize;
-                            $this->_actionUploadFilePath = $uppath;
-                            $this->_actionUploadFileUpdate = $argUpd;
-                            if ($this->_configuration->getOptionAsBoolean('permitProtectedObject')) {
-                                $this->_actionUploadFileProtect = $argPrt;
-                            }
-                            if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
-                                $this->_actionUploadFileObfuscateLinks = $argObf;
-                            }
-                        } else {
-                            $this->_metrology->addLog('Action _extractActionUploadFile ioReadMaxData exeeded', Metrology::LOG_LEVEL_ERROR);
-                            $this->_actionUploadFileError = true;
-                            $this->_actionUploadFileErrorMessage = 'Le fichier dépasse la taille limite de transfert.';
+                        // Extrait les options de téléchargement.
+                        $argUpd = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_UPDATE);
+                        $argPrt = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_PROTECT);
+                        $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_OBFUSCATE_LINKS);
+
+                        // Ecriture des variables.
+                        $this->_actionUploadFile = true;
+                        $this->_actionUploadFileName = $upname;
+                        $this->_actionUploadFileExtension = $upext;
+                        $this->_actionUploadFileType = $uptype;
+                        $this->_actionUploadFileSize = $upsize;
+                        $this->_actionUploadFilePath = $uppath;
+                        $this->_actionUploadFileUpdate = $argUpd;
+                        if ($this->_getOptionAsBoolean('permitProtectedObject')) {
+                            $this->_actionUploadFileProtect = $argPrt;
+                        }
+                        if ($this->_getOptionAsBoolean('permitObfuscatedLink')) {
+                            $this->_actionUploadFileObfuscateLinks = $argObf;
                         }
                     } else {
-                        $this->_metrology->addLog('Action _extractActionUploadFile upload error', Metrology::LOG_LEVEL_ERROR);
+                        $this->_metrology->addLog('Action _extractActionUploadFile ioReadMaxData exeeded', Metrology::LOG_LEVEL_ERROR);
                         $this->_actionUploadFileError = true;
-                        $this->_actionUploadFileErrorMessage = "No uploaded file.";
+                        $this->_actionUploadFileErrorMessage = 'Le fichier dépasse la taille limite de transfert.';
                     }
-                    unset($upfname, $upinfo, $upext, $upname, $upsize, $uppath, $uptype);
-                    break;
-                case UPLOAD_ERR_INI_SIZE:
-                    $this->_metrology->addLog('Action _extractActionUploadFile upload PHP error UPLOAD_ERR_INI_SIZE', Metrology::LOG_LEVEL_ERROR);
+                } else {
+                    $this->_metrology->addLog('Action _extractActionUploadFile upload error', Metrology::LOG_LEVEL_ERROR);
                     $this->_actionUploadFileError = true;
-                    $this->_actionUploadFileErrorMessage = "The uploaded file exceeds the upload_max_filesize directive in php.ini.";
-                    break;
-                case UPLOAD_ERR_FORM_SIZE:
-                    $this->_metrology->addLog('Action _extractActionUploadFile upload PHP error UPLOAD_ERR_FORM_SIZE', Metrology::LOG_LEVEL_ERROR);
-                    $this->_actionUploadFileError = true;
-                    $this->_actionUploadFileErrorMessage = "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.";
-                    break;
-                case UPLOAD_ERR_PARTIAL:
-                    $this->_metrology->addLog('Action _extractActionUploadFile upload PHP error UPLOAD_ERR_PARTIAL', Metrology::LOG_LEVEL_ERROR);
-                    $this->_actionUploadFileError = true;
-                    $this->_actionUploadFileErrorMessage = "The uploaded file was only partially uploaded.";
-                    break;
-                case UPLOAD_ERR_NO_FILE:
-                    $this->_metrology->addLog('Action _extractActionUploadFile upload PHP error UPLOAD_ERR_NO_FILE', Metrology::LOG_LEVEL_ERROR);
-                    $this->_actionUploadFileError = true;
-                    $this->_actionUploadFileErrorMessage = "No file was uploaded.";
-                    break;
-                case UPLOAD_ERR_NO_TMP_DIR:
-                    $this->_metrology->addLog('Action _extractActionUploadFile upload PHP error UPLOAD_ERR_NO_TMP_DIR', Metrology::LOG_LEVEL_ERROR);
-                    $this->_actionUploadFileError = true;
-                    $this->_actionUploadFileErrorMessage = "Missing a temporary folder.";
-                    break;
-                case UPLOAD_ERR_CANT_WRITE:
-                    $this->_metrology->addLog('Action _extractActionUploadFile upload PHP error UPLOAD_ERR_CANT_WRITE', Metrology::LOG_LEVEL_ERROR);
-                    $this->_actionUploadFileError = true;
-                    $this->_actionUploadFileErrorMessage = "Failed to write file to disk.";
-                    break;
-                case UPLOAD_ERR_EXTENSION:
-                    $this->_metrology->addLog('Action _extractActionUploadFile upload PHP error UPLOAD_ERR_EXTENSION', Metrology::LOG_LEVEL_ERROR);
-                    $this->_actionUploadFileError = true;
-                    $this->_actionUploadFileErrorMessage = "A PHP extension stopped the file upload. PHP does not provide a way to ascertain which extension caused the file upload to stop.";
-                    break;
-            }
+                    $this->_actionUploadFileErrorMessage = "No uploaded file.";
+                }
+                unset($upfname, $upinfo, $upext, $upname, $upsize, $uppath, $uptype);
+                break;
+            case UPLOAD_ERR_INI_SIZE:
+                $this->_metrology->addLog('Action _extractActionUploadFile upload PHP error UPLOAD_ERR_INI_SIZE', Metrology::LOG_LEVEL_ERROR);
+                $this->_actionUploadFileError = true;
+                $this->_actionUploadFileErrorMessage = "The uploaded file exceeds the upload_max_filesize directive in php.ini.";
+                break;
+            case UPLOAD_ERR_FORM_SIZE:
+                $this->_metrology->addLog('Action _extractActionUploadFile upload PHP error UPLOAD_ERR_FORM_SIZE', Metrology::LOG_LEVEL_ERROR);
+                $this->_actionUploadFileError = true;
+                $this->_actionUploadFileErrorMessage = "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.";
+                break;
+            case UPLOAD_ERR_PARTIAL:
+                $this->_metrology->addLog('Action _extractActionUploadFile upload PHP error UPLOAD_ERR_PARTIAL', Metrology::LOG_LEVEL_ERROR);
+                $this->_actionUploadFileError = true;
+                $this->_actionUploadFileErrorMessage = "The uploaded file was only partially uploaded.";
+                break;
+            case UPLOAD_ERR_NO_FILE:
+                $this->_metrology->addLog('Action _extractActionUploadFile upload PHP error UPLOAD_ERR_NO_FILE', Metrology::LOG_LEVEL_ERROR);
+                $this->_actionUploadFileError = true;
+                $this->_actionUploadFileErrorMessage = "No file was uploaded.";
+                break;
+            case UPLOAD_ERR_NO_TMP_DIR:
+                $this->_metrology->addLog('Action _extractActionUploadFile upload PHP error UPLOAD_ERR_NO_TMP_DIR', Metrology::LOG_LEVEL_ERROR);
+                $this->_actionUploadFileError = true;
+                $this->_actionUploadFileErrorMessage = "Missing a temporary folder.";
+                break;
+            case UPLOAD_ERR_CANT_WRITE:
+                $this->_metrology->addLog('Action _extractActionUploadFile upload PHP error UPLOAD_ERR_CANT_WRITE', Metrology::LOG_LEVEL_ERROR);
+                $this->_actionUploadFileError = true;
+                $this->_actionUploadFileErrorMessage = "Failed to write file to disk.";
+                break;
+            case UPLOAD_ERR_EXTENSION:
+                $this->_metrology->addLog('Action _extractActionUploadFile upload PHP error UPLOAD_ERR_EXTENSION', Metrology::LOG_LEVEL_ERROR);
+                $this->_actionUploadFileError = true;
+                $this->_actionUploadFileErrorMessage = "A PHP extension stopped the file upload. PHP does not provide a way to ascertain which extension caused the file upload to stop.";
+                break;
         }
     }
 
@@ -1414,23 +1403,20 @@ abstract class Actions
      * @param string $f
      * @return string
      */
-    protected function _getFilenameTypeMime($f)
+    protected function _getFilenameTypeMime(string $f): string
     {
         $m = '/etc/mime.types'; // Chemin du fichier pour trouver le type mime.
         $e = substr(strrchr($f, '.'), 1);
-        if (empty($e)) {
+        if (empty($e))
             return 'application/octet-stream';
-        }
         $r = "/^([\w\+\-\.\/]+)\s+(\w+\s)*($e\s)/i";
         $ls = file($m);
         foreach ($ls as $l) {
-            if (substr($l, 0, 1) == '#') {
+            if (substr($l, 0, 1) == '#')
                 continue;
-            }
             $l = rtrim($l) . ' ';
-            if (!preg_match($r, $l, $m)) {
+            if (!preg_match($r, $l, $m))
                 continue;
-            }
             return $m[1];
         }
         return 'application/octet-stream';
@@ -1455,7 +1441,7 @@ abstract class Actions
      *
      * @return boolean
      */
-    public function getUploadText()
+    public function getUploadText(): bool
     {
         return $this->_actionUploadText;
     }
@@ -1463,7 +1449,7 @@ abstract class Actions
     /**
      * Renvoie le nom du texte téléchargé vers le serveur.
      */
-    public function getUploadTextName()
+    public function getUploadTextName(): string
     {
         return $this->_actionUploadTextName;
     }
@@ -1471,7 +1457,7 @@ abstract class Actions
     /**
      * Renvoie l'ID du texte téléchargé vers le serveur.
      */
-    public function getUploadTextID()
+    public function getUploadTextID(): string
     {
         return $this->_actionUploadTextID;
     }
@@ -1479,7 +1465,7 @@ abstract class Actions
     /**
      * Renvoie le code erreur.
      */
-    public function getUploadTextError()
+    public function getUploadTextError(): bool
     {
         return $this->_actionUploadTextError;
     }
@@ -1487,7 +1473,7 @@ abstract class Actions
     /**
      * Renvoie le message d'erreur.
      */
-    public function getUploadTextErrorMessage()
+    public function getUploadTextErrorMessage(): string
     {
         return $this->_actionUploadTextErrorMessage;
     }
@@ -1497,41 +1483,37 @@ abstract class Actions
      */
     protected function _extractActionUploadText()
     {
-        // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action upload text', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('UploadText'))
+            return;
 
-            $arg = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT);
+        $this->_metrology->addLog('Extract action upload text', Metrology::LOG_LEVEL_DEBUG);
 
-            // Extraction du lien et stockage pour traitement.
-            if ($arg !== false) {
-                // Lit et nettoye le contenu des variables POST.
-                $argText = filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-                $argName = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                $argType = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_TYPE, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $arg = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT);
 
-                // Extrait les options de téléchargement.
-                $argPrt = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_PROTECT);
-                $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_OBFUSCATE_LINKS);
+        // Extraction du lien et stockage pour traitement.
+        if ($arg !== false) {
+            // Lit et nettoye le contenu des variables POST.
+            $argText = filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $argName = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+            $argType = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_TYPE, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
 
-                if (strlen($argText) != 0) {
-                    $this->_actionUploadText = true;
-                    $this->_actionUploadTextContent = $argText;
-                    $this->_actionUploadTextName = $argName;
-                    if ($argType != '')
-                        $this->_actionUploadTextType = $argType;
-                    else
-                        $this->_actionUploadTextType = nebule::REFERENCE_OBJECT_TEXT;
+            // Extrait les options de téléchargement.
+            $argPrt = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_PROTECT);
+            $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_OBFUSCATE_LINKS);
 
-                    if ($this->_configuration->getOptionAsBoolean('permitProtectedObject'))
-                        $this->_actionUploadTextProtect = $argPrt;
-                    if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink'))
-                        $this->_actionUploadTextObfuscateLinks = $argObf;
-                }
+            if (strlen($argText) != 0) {
+                $this->_actionUploadText = true;
+                $this->_actionUploadTextContent = $argText;
+                $this->_actionUploadTextName = $argName;
+                if ($argType != '')
+                    $this->_actionUploadTextType = $argType;
+                else
+                    $this->_actionUploadTextType = nebule::REFERENCE_OBJECT_TEXT;
+
+                if ($this->_getOptionAsBoolean('permitProtectedObject'))
+                    $this->_actionUploadTextProtect = $argPrt;
+                if ($this->_getOptionAsBoolean('permitObfuscatedLink'))
+                    $this->_actionUploadTextObfuscateLinks = $argObf;
             }
         }
     }
@@ -1559,7 +1541,7 @@ abstract class Actions
      *
      * @return boolean
      */
-    public function getCreateEntity()
+    public function getCreateEntity(): bool
     {
         return $this->_actionCreateEntity;
     }
@@ -1567,7 +1549,7 @@ abstract class Actions
     /**
      * Revoie l'ID de la nouvelle entité.
      */
-    public function getCreateEntityID()
+    public function getCreateEntityID(): string
     {
         return $this->_actionCreateEntityID;
     }
@@ -1575,7 +1557,7 @@ abstract class Actions
     /**
      * Revoie l'instance de la nouvelle entité.
      */
-    public function getCreateEntityInstance()
+    public function getCreateEntityInstance(): string
     {
         return $this->_actionCreateEntityInstance;
     }
@@ -1585,7 +1567,7 @@ abstract class Actions
      *
      * @return boolean
      */
-    public function getCreateEntityError()
+    public function getCreateEntityError(): bool
     {
         return $this->_actionCreateEntityError;
     }
@@ -1593,7 +1575,7 @@ abstract class Actions
     /**
      * Revoie le message d'erreur de création de la nouvelle entité.
      */
-    public function getCreateEntityErrorMessage()
+    public function getCreateEntityErrorMessage(): string
     {
         return $this->_actionCreateEntityErrorMessage;
     }
@@ -1603,65 +1585,56 @@ abstract class Actions
      */
     protected function _extractActionCreateEntity()
     {
-        // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteEntity')
-            && ($this->_unlocked
-                || $this->_configuration->getOptionAsBoolean('permitPublicCreateEntity')
-            )
-        ) {
-            $this->_metrology->addLog('Extract action create entity', Metrology::LOG_LEVEL_DEBUG); // Log
+        if ((!$this->_unlocked && !$this->_getOptionAsBoolean('permitPublicCreateEntity'))
+            || !$this->_checkPermitAction('CreateEntity')
+        )
+            return;
 
-            $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY);
+        $this->_metrology->addLog('Extract action create entity', Metrology::LOG_LEVEL_DEBUG);
 
-            if ($argCreate !== false)
-                $this->_actionCreateEntity = true;
+        $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY);
 
-            // Si on crée une nouvelle entité.
-            if ($this->_actionCreateEntity) {
-                // Lit et nettoye le contenu des variables GET.
-                $argPrefix = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PREFIX, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                $argSuffix = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_SUFFIX, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                $argFstnam = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                $argNiknam = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NIKENAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                $argName = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                $argPasswd1 = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                $argPasswd2 = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                $argType = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_TYPE, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        if ($argCreate !== false)
+            $this->_actionCreateEntity = true;
 
-                // Extrait les options de téléchargement.
-                $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_OBFUSCATE_LINKS);
+        // Si on crée une nouvelle entité.
+        if ($this->_actionCreateEntity) {
+            // Lit et nettoye le contenu des variables GET.
+            $argPrefix = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PREFIX, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+            $argSuffix = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_SUFFIX, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+            $argFstnam = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+            $argNiknam = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NIKENAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+            $argName = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+            $argPasswd1 = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+            $argPasswd2 = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+            $argType = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_TYPE, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-                // Sauvegarde les valeurs.
-                $this->_actionCreateEntityPrefix = $argPrefix;
-                $this->_actionCreateEntitySuffix = $argSuffix;
-                $this->_actionCreateEntityFirstname = $argFstnam;
-                $this->_actionCreateEntityNikename = $argNiknam;
-                $this->_actionCreateEntityName = $argName;
-                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink'))
-                    $this->_actionCreateEntityObfuscateLinks = $argObf;
+            // Extrait les options de téléchargement.
+            $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_OBFUSCATE_LINKS);
 
-                if ($argPasswd1 == $argPasswd2)
-                    $this->_actionCreateEntityPassword = $argPasswd1;
-                else {
-                    $this->_metrology->addLog('Action _extractActionCreateEntity passwords not match', Metrology::LOG_LEVEL_ERROR); // Log
-                    $this->_actionCreateEntityError = true;
-                    $this->_actionCreateEntityErrorMessage = 'Les mots de passes ne sont pas identiques.';
-                }
+            // Sauvegarde les valeurs.
+            $this->_actionCreateEntityPrefix = $argPrefix;
+            $this->_actionCreateEntitySuffix = $argSuffix;
+            $this->_actionCreateEntityFirstname = $argFstnam;
+            $this->_actionCreateEntityNikename = $argNiknam;
+            $this->_actionCreateEntityName = $argName;
+            if ($this->_getOptionAsBoolean('permitObfuscatedLink'))
+                $this->_actionCreateEntityObfuscateLinks = $argObf;
 
-                if ($argType == 'human' || $argType == 'robot')
-                    $this->_actionCreateEntityType = $argType;
-                else
-                    $this->_actionCreateEntityType = '';
-
-                unset($argPrefix, $argSuffix, $argFstnam, $argNiknam, $argName, $argPasswd1, $argPasswd2, $argType);
+            if ($argPasswd1 == $argPasswd2)
+                $this->_actionCreateEntityPassword = $argPasswd1;
+            else {
+                $this->_metrology->addLog('Action _extractActionCreateEntity passwords not match', Metrology::LOG_LEVEL_ERROR);
+                $this->_actionCreateEntityError = true;
+                $this->_actionCreateEntityErrorMessage = 'Les mots de passes ne sont pas identiques.';
             }
-        } else {
-            $this->_metrology->addLog('Action _extractActionCreateEntity not autorized', Metrology::LOG_LEVEL_ERROR); // Log
-            $this->_actionCreateEntityError = true;
-            $this->_actionCreateEntityErrorMessage = 'Non autorisé.';
+
+            if ($argType == 'human' || $argType == 'robot')
+                $this->_actionCreateEntityType = $argType;
+            else
+                $this->_actionCreateEntityType = '';
+
+            unset($argPrefix, $argSuffix, $argFstnam, $argNiknam, $argName, $argPasswd1, $argPasswd2, $argType);
         }
     }
 
@@ -1669,7 +1642,7 @@ abstract class Actions
     /**
      * Renvoie si l'action de création du groupe a été faite.
      */
-    public function getCreateGroup()
+    public function getCreateGroup(): bool
     {
         return $this->_actionCreateGroup;
     }
@@ -1677,7 +1650,7 @@ abstract class Actions
     /**
      * Revoie l'ID du nouveau groupe.
      */
-    public function getCreateGroupID()
+    public function getCreateGroupID(): string
     {
         return $this->_actionCreateGroupID;
     }
@@ -1685,7 +1658,7 @@ abstract class Actions
     /**
      * Revoie l'instance du nouveau groupe.
      */
-    public function getCreateGroupInstance()
+    public function getCreateGroupInstance(): string
     {
         return $this->_actionCreateGroupInstance;
     }
@@ -1693,7 +1666,7 @@ abstract class Actions
     /**
      * Revoie le code erreur de création du nouveau groupe.
      */
-    public function getCreateGroupError()
+    public function getCreateGroupError(): bool
     {
         return $this->_actionCreateGroupError;
     }
@@ -1701,7 +1674,7 @@ abstract class Actions
     /**
      * Revoie le message d'erreur de création du nouveau groupe.
      */
-    public function getCreateGroupErrorMessage()
+    public function getCreateGroupErrorMessage(): string
     {
         return $this->_actionCreateGroupErrorMessage;
     }
@@ -1711,39 +1684,30 @@ abstract class Actions
      */
     protected function _extractActionCreateGroup()
     {
-        // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action create group', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('CreateGroup'))
+            return;
 
-            $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP);
+        $this->_metrology->addLog('Extract action create group', Metrology::LOG_LEVEL_DEBUG);
 
-            if ($argCreate !== false)
-                $this->_actionCreateGroup = true;
+        $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP);
 
-            // Si on crée une nouvelle entité.
-            if ($this->_actionCreateGroup) {
-                // Lit et nettoye le contenu des variables GET.
-                $argName = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        if ($argCreate !== false)
+            $this->_actionCreateGroup = true;
 
-                // Extrait les options de téléchargement.
-                $argCld = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP_CLOSED);
-                $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP_OBFUSCATE_LINKS);
+        // Si on crée une nouvelle entité.
+        if ($this->_actionCreateGroup) {
+            // Lit et nettoye le contenu des variables GET.
+            $argName = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
 
-                // Sauvegarde les valeurs.
-                $this->_actionCreateGroupName = $argName;
-                $this->_actionCreateGroupClosed = $argCld;
-                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink'))
-                    $this->_actionCreateGroupObfuscateLinks = $argObf;
-            }
-        } else {
-            $this->_metrology->addLog('Action _extractActionCreateGroup not autorized', Metrology::LOG_LEVEL_ERROR); // Log
-            $this->_actionCreateGroupError = true;
-            $this->_actionCreateGroupErrorMessage = 'Non autorisé.';
+            // Extrait les options de téléchargement.
+            $argCld = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP_CLOSED);
+            $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP_OBFUSCATE_LINKS);
+
+            // Sauvegarde les valeurs.
+            $this->_actionCreateGroupName = $argName;
+            $this->_actionCreateGroupClosed = $argCld;
+            if ($this->_getOptionAsBoolean('permitObfuscatedLink'))
+                $this->_actionCreateGroupObfuscateLinks = $argObf;
         }
     }
 
@@ -1760,7 +1724,7 @@ abstract class Actions
     /**
      * Renvoie si l'action de suppression du groupe a été faite.
      */
-    public function getDeleteGroup()
+    public function getDeleteGroup(): bool
     {
         return $this->_actionDeleteGroup;
     }
@@ -1768,7 +1732,7 @@ abstract class Actions
     /**
      * Revoie l'ID du groupe.
      */
-    public function getDeleteGroupID()
+    public function getDeleteGroupID(): string
     {
         return $this->_actionDeleteGroupID;
     }
@@ -1776,7 +1740,7 @@ abstract class Actions
     /**
      * Revoie le code erreur de suppression du groupe.
      */
-    public function getDeleteGroupError()
+    public function getDeleteGroupError(): bool
     {
         return $this->_actionDeleteGroupError;
     }
@@ -1784,7 +1748,7 @@ abstract class Actions
     /**
      * Revoie le message d'erreur de suppression du groupe.
      */
-    public function getDeleteGroupErrorMessage()
+    public function getDeleteGroupErrorMessage(): string
     {
         return $this->_actionDeleteGroupErrorMessage;
     }
@@ -1794,27 +1758,19 @@ abstract class Actions
      */
     protected function _extractActionDeleteGroup()
     {
-        // Vérifie que la suppression de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
-            && $this->_unlocked
+        if (!$this->_checkPermitAction('DeleteGroup'))
+            return;
+
+        $this->_metrology->addLog('Extract action delete group', Metrology::LOG_LEVEL_DEBUG);
+
+        $argDelete = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if ($argDelete !== ''
+            && strlen($argDelete) >= blocLink::NID_MIN_HASH_SIZE
+            && Node::checkNID($argDelete)
         ) {
-            $this->_metrology->addLog('Extract action delete group', Metrology::LOG_LEVEL_DEBUG); // Log
-
-            $argDelete = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-
-            if ($argDelete !== ''
-                && strlen($argDelete) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && Node::checkNID($argDelete)
-            ) {
-                $this->_actionDeleteGroup = true;
-                $this->_actionDeleteGroupID = $argDelete;
-            }
-        } else {
-            $this->_metrology->addLog('Action _extractActionDeleteGroup not autorized', Metrology::LOG_LEVEL_ERROR); // Log
-            $this->_actionDeleteGroupError = true;
-            $this->_actionDeleteGroupErrorMessage = 'Non autorisé.';
+            $this->_actionDeleteGroup = true;
+            $this->_actionDeleteGroupID = $argDelete;
         }
     }
 
@@ -1827,7 +1783,7 @@ abstract class Actions
     /**
      * Renvoie si l'action d'ajout de objet courant au groupe a été faite.
      */
-    public function getAddToGroup()
+    public function getAddToGroup(): string
     {
         return $this->_actionAddToGroup;
     }
@@ -1837,19 +1793,15 @@ abstract class Actions
      */
     protected function _extractActionAddToGroup()
     {
-        // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action add to group', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('AddToGroup'))
+            return;
 
-            $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_TO_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action add to group', Metrology::LOG_LEVEL_DEBUG);
 
-            if (Node::checkNID($arg))
-                $this->_actionAddToGroup = $arg;
-        }
+        $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_TO_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg))
+            $this->_actionAddToGroup = $arg;
     }
 
     protected $_actionAddToGroup = '';
@@ -1858,7 +1810,7 @@ abstract class Actions
     /**
      * Renvoie si l'action de suppression de l'objet courant du groupe a été faite.
      */
-    public function getRemoveFromGroup()
+    public function getRemoveFromGroup(): string
     {
         return $this->_actionRemoveFromGroup;
     }
@@ -1868,19 +1820,15 @@ abstract class Actions
      */
     protected function _extractActionRemoveFromGroup()
     {
-        // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action remove from group', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('RemoveFromGroup'))
+            return;
 
-            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_FROM_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action remove from group', Metrology::LOG_LEVEL_DEBUG);
 
-            if (Node::checkNID($arg))
-                $this->_actionRemoveFromGroup = $arg;
-        }
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_FROM_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg))
+            $this->_actionRemoveFromGroup = $arg;
     }
 
     protected $_actionRemoveFromGroup = '';
@@ -1889,7 +1837,7 @@ abstract class Actions
     /**
      * Renvoie si l'action d'ajout d'un objet au groupe courant a été faite.
      */
-    public function getAddItemToGroup()
+    public function getAddItemToGroup(): string
     {
         return $this->_actionAddItemToGroup;
     }
@@ -1899,19 +1847,15 @@ abstract class Actions
      */
     protected function _extractActionAddItemToGroup()
     {
-        // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action add item to group', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('AddItemToGroup'))
+            return;
 
-            $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_ITEM_TO_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action add item to group', Metrology::LOG_LEVEL_DEBUG);
 
-            if (Node::checkNID($arg))
-                $this->_actionAddItemToGroup = $arg;
-        }
+        $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_ITEM_TO_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg))
+            $this->_actionAddItemToGroup = $arg;
     }
 
     protected $_actionAddItemToGroup = '';
@@ -1920,7 +1864,7 @@ abstract class Actions
     /**
      * Renvoie si l'action de retrait du groupe a été faite.
      */
-    public function getRemoveItemFromGroup()
+    public function getRemoveItemFromGroup(): string
     {
         return $this->_actionRemoveItemFromGroup;
     }
@@ -1930,19 +1874,15 @@ abstract class Actions
      */
     protected function _extractActionRemoveItemFromGroup()
     {
-        // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action remove item from group', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('RemoveItemFromGroup'))
+            return;
 
-            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action remove item from group', Metrology::LOG_LEVEL_DEBUG);
 
-            if (Node::checkNID($arg))
-                $this->_actionRemoveItemFromGroup = $arg;
-        }
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg))
+            $this->_actionRemoveItemFromGroup = $arg;
     }
 
     protected $_actionRemoveItemFromGroup = '';
@@ -1951,7 +1891,7 @@ abstract class Actions
     /**
      * Renvoie si l'action de création de la conversation a été faite.
      */
-    public function getCreateConversation()
+    public function getCreateConversation(): bool
     {
         return $this->_actionCreateConversation;
     }
@@ -1959,7 +1899,7 @@ abstract class Actions
     /**
      * Revoie l'ID de la nouvelle conversation.
      */
-    public function getCreateConversationID()
+    public function getCreateConversationID(): string
     {
         return $this->_actionCreateConversationID;
     }
@@ -1967,7 +1907,7 @@ abstract class Actions
     /**
      * Revoie l'instance de la nouvelle conversation.
      */
-    public function getCreateConversationInstance()
+    public function getCreateConversationInstance(): string
     {
         return $this->_actionCreateConversationInstance;
     }
@@ -1975,7 +1915,7 @@ abstract class Actions
     /**
      * Revoie le code erreur de création de la nouvelle conversation.
      */
-    public function getCreateConversationError()
+    public function getCreateConversationError(): bool
     {
         return $this->_actionCreateConversationError;
     }
@@ -1983,7 +1923,7 @@ abstract class Actions
     /**
      * Revoie le message d'erreur de création de la nouvelle conversation.
      */
-    public function getCreateConversationErrorMessage()
+    public function getCreateConversationErrorMessage(): string
     {
         return $this->_actionCreateConversationErrorMessage;
     }
@@ -1993,42 +1933,33 @@ abstract class Actions
      */
     protected function _extractActionCreateConversation()
     {
-        // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action create group', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('CreateConversation'))
+            return;
 
-            $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION);
+        $this->_metrology->addLog('Extract action create group', Metrology::LOG_LEVEL_DEBUG);
 
-            if ($argCreate !== false)
-                $this->_actionCreateConversation = true;
+        $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION);
 
-            // Si on crée une nouvelle conversation.
-            if ($this->_actionCreateConversation) {
-                // Lit et nettoye le contenu des variables GET.
-                $argName = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        if ($argCreate !== false)
+            $this->_actionCreateConversation = true;
 
-                // Extrait les options de téléchargement.
-                $argCld = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION_CLOSED);
-                $argPrt = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION_PROTECTED);
-                $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION_OBFUSCATE_LINKS);
+        // Si on crée une nouvelle conversation.
+        if ($this->_actionCreateConversation) {
+            // Lit et nettoye le contenu des variables GET.
+            $argName = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
 
-                // Sauvegarde les valeurs.
-                $this->_actionCreateConversationName = $argName;
-                $this->_actionCreateConversationClosed = $argCld;
-                if ($this->_configuration->getOptionAsBoolean('permitProtectedObject'))
-                    $this->_actionCreateConversationProtected = $argPrt;
-                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink'))
-                    $this->_actionCreateConversationObfuscateLinks = $argObf;
-            }
-        } else {
-            $this->_metrology->addLog('Action _extractActionCreateConversation not autorized', Metrology::LOG_LEVEL_ERROR); // Log
-            $this->_actionCreateConversationError = true;
-            $this->_actionCreateConversationErrorMessage = 'Non autorisé.';
+            // Extrait les options de téléchargement.
+            $argCld = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION_CLOSED);
+            $argPrt = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION_PROTECTED);
+            $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION_OBFUSCATE_LINKS);
+
+            // Sauvegarde les valeurs.
+            $this->_actionCreateConversationName = $argName;
+            $this->_actionCreateConversationClosed = $argCld;
+            if ($this->_getOptionAsBoolean('permitProtectedObject'))
+                $this->_actionCreateConversationProtected = $argPrt;
+            if ($this->_getOptionAsBoolean('permitObfuscatedLink'))
+                $this->_actionCreateConversationObfuscateLinks = $argObf;
         }
     }
 
@@ -2046,7 +1977,7 @@ abstract class Actions
     /**
      * Renvoie si l'action de suppression de la conversation a été faite.
      */
-    public function getDeleteConversation()
+    public function getDeleteConversation(): bool
     {
         return $this->_actionDeleteConversation;
     }
@@ -2054,7 +1985,7 @@ abstract class Actions
     /**
      * Revoie l'ID de la conversation.
      */
-    public function getDeleteConversationID()
+    public function getDeleteConversationID(): string
     {
         return $this->_actionDeleteConversationID;
     }
@@ -2062,7 +1993,7 @@ abstract class Actions
     /**
      * Revoie le code erreur de suppression de la conversation.
      */
-    public function getDeleteConversationError()
+    public function getDeleteConversationError(): bool
     {
         return $this->_actionDeleteConversationError;
     }
@@ -2070,7 +2001,7 @@ abstract class Actions
     /**
      * Revoie le message d'erreur de suppression de la conversation.
      */
-    public function getDeleteConversationErrorMessage()
+    public function getDeleteConversationErrorMessage(): string
     {
         return $this->_actionDeleteConversationErrorMessage;
     }
@@ -2080,27 +2011,19 @@ abstract class Actions
      */
     protected function _extractActionDeleteConversation()
     {
-        // Vérifie que la suppression de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
-            && $this->_unlocked
+        if (!$this->_checkPermitAction('DeleteConversation'))
+            return;
+
+        $this->_metrology->addLog('Extract action delete conversation', Metrology::LOG_LEVEL_DEBUG);
+
+        $argDelete = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if ($argDelete !== ''
+            && strlen($argDelete) >= blocLink::NID_MIN_HASH_SIZE
+            && Node::checkNID($argDelete)
         ) {
-            $this->_metrology->addLog('Extract action delete conversation', Metrology::LOG_LEVEL_DEBUG); // Log
-
-            $argDelete = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-
-            if ($argDelete !== ''
-                && strlen($argDelete) >= nebule::NEBULE_MINIMUM_ID_SIZE
-                && Node::checkNID($argDelete)
-            ) {
-                $this->_actionDeleteConversation = true;
-                $this->_actionDeleteConversationID = $argDelete;
-            }
-        } else {
-            $this->_metrology->addLog('Action _extractActionDeleteConversation not autorized', Metrology::LOG_LEVEL_ERROR); // Log
-            $this->_actionDeleteConversationError = true;
-            $this->_actionDeleteConversationErrorMessage = 'Non autorisé.';
+            $this->_actionDeleteConversation = true;
+            $this->_actionDeleteConversationID = $argDelete;
         }
     }
 
@@ -2113,7 +2036,7 @@ abstract class Actions
     /**
      * Renvoie si l'action d'ajout de objet courant à la conversation a été faite.
      */
-    public function getAddMessageOnConversation()
+    public function getAddMessageOnConversation(): string
     {
         return $this->_actionAddMessageOnConversation;
     }
@@ -2123,19 +2046,15 @@ abstract class Actions
      */
     protected function _extractActionAddMessageOnConversation()
     {
-        // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action add to conversation', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('AddMessageOnConversation'))
+            return;
 
-            $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_TO_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action add to conversation', Metrology::LOG_LEVEL_DEBUG);
 
-            if (Node::checkNID($arg))
-                $this->_actionAddMessageOnConversation = $arg;
-        }
+        $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_TO_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg))
+            $this->_actionAddMessageOnConversation = $arg;
     }
 
     protected $_actionAddMessageOnConversation = '';
@@ -2144,7 +2063,7 @@ abstract class Actions
     /**
      * Renvoie si l'action de suppression de l'objet courant de la conversation a été faite.
      */
-    public function getRemoveMessageOnConversation()
+    public function getRemoveMessageOnConversation(): string
     {
         return $this->_actionRemoveMessageOnConversation;
     }
@@ -2154,19 +2073,15 @@ abstract class Actions
      */
     protected function _extractActionRemoveMessageOnConversation()
     {
-        // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action remove from conversation', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('RemoveMessageOnConversation'))
+            return;
 
-            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_FROM_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action remove from conversation', Metrology::LOG_LEVEL_DEBUG);
 
-            if (Node::checkNID($arg))
-                $this->_actionRemoveMessageOnConversation = $arg;
-        }
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_FROM_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg))
+            $this->_actionRemoveMessageOnConversation = $arg;
     }
 
     protected $_actionRemoveMessageOnConversation = '';
@@ -2175,7 +2090,7 @@ abstract class Actions
     /**
      * Renvoie si l'action d'ajout d'un objet à la conversation courant a été faite.
      */
-    public function getAddMemberOnConversation()
+    public function getAddMemberOnConversation(): string
     {
         return $this->_actionAddMemberOnConversation;
     }
@@ -2185,19 +2100,15 @@ abstract class Actions
      */
     protected function _extractActionAddMemberOnConversation()
     {
-        // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action add item to conversation', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('AddMemberOnConversation'))
+            return;
 
-            $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_ITEM_TO_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action add item to conversation', Metrology::LOG_LEVEL_DEBUG);
 
-            if (Node::checkNID($arg))
-                $this->_actionAddMemberOnConversation = $arg;
-        }
+        $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_ITEM_TO_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg))
+            $this->_actionAddMemberOnConversation = $arg;
     }
 
     protected $_actionAddMemberOnConversation = '';
@@ -2206,7 +2117,7 @@ abstract class Actions
     /**
      * Renvoie si l'action de retrait de la conversation a été faite.
      */
-    public function getRemoveMemberOnConversation()
+    public function getRemoveMemberOnConversation(): string
     {
         return $this->_actionRemoveMemberOnConversation;
     }
@@ -2216,19 +2127,15 @@ abstract class Actions
      */
     protected function _extractActionRemoveMemberOnConversation()
     {
-        // Vérifie que l'ajout de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action remove item from conversation', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('RemoveMemberOnConversation'))
+            return;
 
-            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action remove item from conversation', Metrology::LOG_LEVEL_DEBUG);
 
-            if (Node::checkNID($arg))
-                $this->_actionRemoveMemberOnConversation = $arg;
-        }
+        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg))
+            $this->_actionRemoveMemberOnConversation = $arg;
     }
 
     protected $_actionRemoveMemberOnConversation = '';
@@ -2240,40 +2147,30 @@ abstract class Actions
      */
     protected function _extractActionCreateMessage()
     {
-        // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action create message', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('CreateMessage'))
+            return;
 
-            $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_MESSAGE);
+        $this->_metrology->addLog('Extract action create message', Metrology::LOG_LEVEL_DEBUG);
 
-            if ($argCreate !== false)
-                $this->_actionCreateMessage = true;
+        $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_MESSAGE);
 
-            // Si on crée un nouveau message.
-            if ($this->_actionCreateMessage) {
-                // Extrait les options de téléchargement.
-                // !!! Utilise les constantes de upload de texte pour que la protection et la dissimulation soient bien pris en compte.
-                $argPrt = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_PROTECT);
-                $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_OBFUSCATE_LINKS);
+        if ($argCreate !== false)
+            $this->_actionCreateMessage = true;
 
-                // Sauvegarde les valeurs.
-                if ($this->_configuration->getOptionAsBoolean('permitProtectedObject'))
-                    $this->_actionCreateMessageProtected = $argPrt;
-                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink'))
-                    $this->_actionCreateMessageObfuscateLinks = $argObf;
-            }
+        // Si on crée un nouveau message.
+        if ($this->_actionCreateMessage) {
+            // Extrait les options de téléchargement.
+            $argPrt = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_PROTECT);
+            $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_OBFUSCATE_LINKS);
 
-            // Le reste des valeurs est récupéré par la partie création d'un texte.
-        } else {
-            $this->_metrology->addLog('Action _extractActionCreateMessage not autorized', Metrology::LOG_LEVEL_ERROR); // Log
-            $this->_actionCreateMessageError = true;
-            $this->_actionCreateMessageErrorMessage = 'Non autorisé.';
+            // Sauvegarde les valeurs.
+            if ($this->_getOptionAsBoolean('permitProtectedObject'))
+                $this->_actionCreateMessageProtected = $argPrt;
+            if ($this->_getOptionAsBoolean('permitObfuscatedLink'))
+                $this->_actionCreateMessageObfuscateLinks = $argObf;
         }
+
+        // Le reste des valeurs est récupéré par la partie création d'un texte.
     }
 
     protected $_actionCreateMessage = false,
@@ -2287,7 +2184,7 @@ abstract class Actions
     /**
      * Revoie le code erreur d'ajout de propriété.
      */
-    public function getAddPropertyError()
+    public function getAddPropertyError(): bool
     {
         return $this->_actionAddPropertyError;
     }
@@ -2295,7 +2192,7 @@ abstract class Actions
     /**
      * Revoie le message d'erreur d'ajout de propriété.
      */
-    public function getAddPropertyErrorMessage()
+    public function getAddPropertyErrorMessage(): string
     {
         return $this->_actionAddPropertyErrorMessage;
     }
@@ -2307,48 +2204,40 @@ abstract class Actions
      */
     protected function _extractActionAddProperty()
     {
-        // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action add property', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('AddProperty'))
+            return;
 
-            $argAdd = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrology->addLog('Extract action add property', Metrology::LOG_LEVEL_DEBUG);
 
-            if ($argAdd != '')
-                $this->_actionAddProperty = $argAdd;
+        $argAdd = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Si on crée une nouvelle propriété.
-            if ($this->_actionAddProperty != '') {
-                // Extrait les autres variables.
-                $argObj = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-                $argVal = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY_VALUE, FILTER_SANITIZE_STRING));
-                $argPrt = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY_PROTECTED);
-                $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY_OBFUSCATE_LINKS);
+        if ($argAdd != '')
+            $this->_actionAddProperty = $argAdd;
 
-                // Sauvegarde les valeurs.
-                if ($argVal != '') {
-                    if ($argObj == '')
-                        $this->_actionAddPropertyObject = $this->_nebuleInstance->getCurrentObject();
-                    else
-                        $this->_actionAddPropertyObject = $argObj;
-                    $this->_actionAddPropertyValue = $argVal;
-                    if ($this->_configuration->getOptionAsBoolean('permitProtectedObject'))
-                        $this->_actionAddPropertyProtected = $argPrt;
-                    if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink'))
-                        $this->_actionAddPropertyObfuscateLinks = $argObf;
-                } else {
-                    $this->_metrology->addLog('Action _extractActionAddProperty null value', Metrology::LOG_LEVEL_ERROR); // Log
-                    $this->_actionAddPropertyError = true;
-                    $this->_actionAddPropertyErrorMessage = 'Valeur vide.';
-                }
+        // Si on crée une nouvelle propriété.
+        if ($this->_actionAddProperty != '') {
+            // Extrait les autres variables.
+            $argObj = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $argVal = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY_VALUE, FILTER_SANITIZE_STRING));
+            $argPrt = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY_PROTECTED);
+            $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY_OBFUSCATE_LINKS);
+
+            // Sauvegarde les valeurs.
+            if ($argVal != '') {
+                if ($argObj == '')
+                    $this->_actionAddPropertyObject = $this->_nebuleInstance->getCurrentObject();
+                else
+                    $this->_actionAddPropertyObject = $argObj;
+                $this->_actionAddPropertyValue = $argVal;
+                if ($this->_getOptionAsBoolean('permitProtectedObject'))
+                    $this->_actionAddPropertyProtected = $argPrt;
+                if ($this->_getOptionAsBoolean('permitObfuscatedLink'))
+                    $this->_actionAddPropertyObfuscateLinks = $argObf;
+            } else {
+                $this->_metrology->addLog('Action _extractActionAddProperty null value', Metrology::LOG_LEVEL_ERROR);
+                $this->_actionAddPropertyError = true;
+                $this->_actionAddPropertyErrorMessage = 'Valeur vide.';
             }
-        } else {
-            $this->_metrology->addLog('Action _extractActionAddProperty not autorized', Metrology::LOG_LEVEL_ERROR); // Log
-            $this->_actionAddPropertyError = true;
-            $this->_actionAddPropertyErrorMessage = 'Non autorisé.';
         }
     }
 
@@ -2366,7 +2255,7 @@ abstract class Actions
      *
      * @return boolean
      */
-    public function getCreateCurrency()
+    public function getCreateCurrency(): bool
     {
         return $this->_actionCreateCurrency;
     }
@@ -2376,7 +2265,7 @@ abstract class Actions
      *
      * @return string
      */
-    public function getCreateCurrencyID()
+    public function getCreateCurrencyID(): string
     {
         return $this->_actionCreateCurrencyID;
     }
@@ -2386,7 +2275,7 @@ abstract class Actions
      *
      * @return Currency
      */
-    public function getCreateCurrencyInstance()
+    public function getCreateCurrencyInstance(): Currency
     {
         return $this->_actionCreateCurrencyInstance;
     }
@@ -2396,7 +2285,7 @@ abstract class Actions
      *
      * @return array
      */
-    public function getCreateCurrencyParam()
+    public function getCreateCurrencyParam(): array
     {
         return $this->_actionCreateCurrencyParam;
     }
@@ -2406,7 +2295,7 @@ abstract class Actions
      *
      * @return boolean
      */
-    public function getCreateCurrencyError()
+    public function getCreateCurrencyError(): bool
     {
         return $this->_actionCreateCurrencyError;
     }
@@ -2416,7 +2305,7 @@ abstract class Actions
      *
      * @return string
      */
-    public function getCreateCurrencyErrorMessage()
+    public function getCreateCurrencyErrorMessage(): string
     {
         return $this->_actionCreateCurrencyErrorMessage;
     }
@@ -2444,52 +2333,42 @@ abstract class Actions
      */
     protected function _extractActionCreateCurrency()
     {
-        // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitCurrency')
-            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
-            && $this->_configuration->getOptionAsBoolean('permitCreateCurrency')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action create currency', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('CreateCurrency'))
+            return;
 
-            $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_CURRENCY);
+        $this->_metrology->addLog('Extract action create currency', Metrology::LOG_LEVEL_DEBUG);
 
-            if ($argCreate !== false)
-                $this->_actionCreateCurrency = true;
+        $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_CURRENCY);
 
-            if ($this->_actionCreateCurrency) {
-                // Récupère la liste des propriétés.
-                $instance = $this->_nebuleInstance->getCurrentCurrencyInstance();
-                $propertiesList = $instance->getPropertiesList();
-                unset($instance);
+        if ($argCreate !== false)
+            $this->_actionCreateCurrency = true;
 
-                foreach ($propertiesList['currency'] as $name => $property) {
-                    // Extrait une valeur.
-                    if (isset($property['checkbox'])) {
-                        $value = '';
-                        $valueArray = filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
-                        foreach ($valueArray as $item)
-                            $value .= ' ' . trim($item);
-                        $this->_actionCreateCurrencyParam[$name] = trim($value);
-                        unset($value, $valueArray);
-                    } else
-                        $this->_actionCreateCurrencyParam[$name] = trim(filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                    $this->_metrology->addLog('Extract action create currency - _' . $property['shortname'] . ':' . $this->_actionCreateCurrencyParam[$name], Metrology::LOG_LEVEL_DEVELOP); // Log
+        if ($this->_actionCreateCurrency) {
+            // Récupère la liste des propriétés.
+            $instance = $this->_nebuleInstance->getCurrentCurrencyInstance();
+            $propertiesList = $instance->getPropertiesList();
+            unset($instance);
 
-                    // Extrait si forcé.
-                    if (isset($property['forceable'])) {
-                        $this->_actionCreateCurrencyParam['Force' . $name] = filter_has_var(INPUT_POST, 'f' . $property['shortname']);
-                        if ($this->_actionCreateCurrencyParam['Force' . $name])
-                            $this->_metrology->addLog('Extract action create currency - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_DEBUG); // Log
-                    }
+            foreach ($propertiesList['currency'] as $name => $property) {
+                // Extrait une valeur.
+                if (isset($property['checkbox'])) {
+                    $value = '';
+                    $valueArray = filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
+                    foreach ($valueArray as $item)
+                        $value .= ' ' . trim($item);
+                    $this->_actionCreateCurrencyParam[$name] = trim($value);
+                    unset($value, $valueArray);
+                } else
+                    $this->_actionCreateCurrencyParam[$name] = trim(filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+                $this->_metrology->addLog('Extract action create currency - _' . $property['shortname'] . ':' . $this->_actionCreateCurrencyParam[$name], Metrology::LOG_LEVEL_DEVELOP);
+
+                // Extrait si forcé.
+                if (isset($property['forceable'])) {
+                    $this->_actionCreateCurrencyParam['Force' . $name] = filter_has_var(INPUT_POST, 'f' . $property['shortname']);
+                    if ($this->_actionCreateCurrencyParam['Force' . $name])
+                        $this->_metrology->addLog('Extract action create currency - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_DEBUG);
                 }
             }
-        } else {
-//			$this->_actionCreateCurrencyError = true;
-            $this->_actionCreateCurrencyErrorMessage = 'Non autorisé.';
         }
     }
 
@@ -2506,7 +2385,7 @@ abstract class Actions
      *
      * @return boolean
      */
-    public function getCreateTokenPool()
+    public function getCreateTokenPool(): bool
     {
         return $this->_actionCreateTokenPool;
     }
@@ -2516,7 +2395,7 @@ abstract class Actions
      *
      * @return string
      */
-    public function getCreateTokenPoolID()
+    public function getCreateTokenPoolID(): string
     {
         return $this->_actionCreateTokenPoolID;
     }
@@ -2526,7 +2405,7 @@ abstract class Actions
      *
      * @return TokenPool
      */
-    public function getCreateTokenPoolInstance()
+    public function getCreateTokenPoolInstance(): TokenPool
     {
         return $this->_actionCreateTokenPoolInstance;
     }
@@ -2536,7 +2415,7 @@ abstract class Actions
      *
      * @return array
      */
-    public function getCreateTokenPoolParam()
+    public function getCreateTokenPoolParam(): array
     {
         return $this->_actionCreateTokenPoolParam;
     }
@@ -2546,7 +2425,7 @@ abstract class Actions
      *
      * @return boolean
      */
-    public function getCreateTokenPoolError()
+    public function getCreateTokenPoolError(): bool
     {
         return $this->_actionCreateTokenPoolError;
     }
@@ -2556,7 +2435,7 @@ abstract class Actions
      *
      * @return string
      */
-    public function getCreateTokenPoolErrorMessage()
+    public function getCreateTokenPoolErrorMessage(): string
     {
         return $this->_actionCreateTokenPoolErrorMessage;
     }
@@ -2568,52 +2447,42 @@ abstract class Actions
      */
     protected function _extractActionCreateTokenPool()
     {
-        // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitCurrency')
-            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
-            && $this->_configuration->getOptionAsBoolean('permitCreateCurrency')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action create token pool', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('CreateTokenPool'))
+            return;
 
-            $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_TOKEN_POOL);
+        $this->_metrology->addLog('Extract action create token pool', Metrology::LOG_LEVEL_DEBUG);
 
-            if ($argCreate !== false)
-                $this->_actionCreateTokenPool = true;
+        $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_TOKEN_POOL);
 
-            if ($this->_actionCreateTokenPool) {
-                // Récupère la liste des propriétés.
-                $instance = $this->_nebuleInstance->getCurrentTokenPoolInstance();
-                $propertiesList = $instance->getPropertiesList();
-                unset($instance);
+        if ($argCreate !== false)
+            $this->_actionCreateTokenPool = true;
 
-                foreach ($propertiesList['tokenpool'] as $name => $property) {
-                    // Extrait une valeur.
-                    if (isset($property['checkbox'])) {
-                        $value = '';
-                        $valueArray = filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
-                        foreach ($valueArray as $item)
-                            $value .= ' ' . trim($item);
-                        $this->_actionCreateTokenPoolParam[$name] = trim($value);
-                        unset($value, $valueArray);
-                    } else
-                        $this->_actionCreateTokenPoolParam[$name] = trim(filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                    $this->_metrology->addLog('Extract action create token pool - p' . $property['key'] . ':' . $this->_actionCreateTokenPoolParam[$name], Metrology::LOG_LEVEL_DEBUG); // Log
+        if ($this->_actionCreateTokenPool) {
+            // Récupère la liste des propriétés.
+            $instance = $this->_nebuleInstance->getCurrentTokenPoolInstance();
+            $propertiesList = $instance->getPropertiesList();
+            unset($instance);
 
-                    // Extrait si forcé.
-                    if (isset($property['forceable'])) {
-                        $this->_actionCreateTokenPoolParam['Force' . $name] = filter_has_var(INPUT_POST, 'f' . $property['shortname']);
-                        if ($this->_actionCreateTokenPoolParam['Force' . $name])
-                            $this->_metrology->addLog('Extract action create token pool - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_DEBUG); // Log
-                    }
+            foreach ($propertiesList['tokenpool'] as $name => $property) {
+                // Extrait une valeur.
+                if (isset($property['checkbox'])) {
+                    $value = '';
+                    $valueArray = filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
+                    foreach ($valueArray as $item)
+                        $value .= ' ' . trim($item);
+                    $this->_actionCreateTokenPoolParam[$name] = trim($value);
+                    unset($value, $valueArray);
+                } else
+                    $this->_actionCreateTokenPoolParam[$name] = trim(filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+                $this->_metrology->addLog('Extract action create token pool - p' . $property['key'] . ':' . $this->_actionCreateTokenPoolParam[$name], Metrology::LOG_LEVEL_DEBUG);
+
+                // Extrait si forcé.
+                if (isset($property['forceable'])) {
+                    $this->_actionCreateTokenPoolParam['Force' . $name] = filter_has_var(INPUT_POST, 'f' . $property['shortname']);
+                    if ($this->_actionCreateTokenPoolParam['Force' . $name])
+                        $this->_metrology->addLog('Extract action create token pool - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_DEBUG);
                 }
             }
-        } else {
-//			$this->_actionCreateTokenPoolError = true;
-            $this->_actionCreateTokenPoolErrorMessage = 'Non autorisé.';
         }
     }
 
@@ -2630,7 +2499,7 @@ abstract class Actions
      *
      * @return boolean
      */
-    public function getCreateTokens()
+    public function getCreateTokens(): bool
     {
         return $this->_actionCreateTokens;
     }
@@ -2640,7 +2509,7 @@ abstract class Actions
      *
      * @return array:string
      */
-    public function getCreateTokensID()
+    public function getCreateTokensID(): array
     {
         return $this->_actionCreateTokensID;
     }
@@ -2650,7 +2519,7 @@ abstract class Actions
      *
      * @return array:Token
      */
-    public function getCreateTokensInstance()
+    public function getCreateTokensInstance(): array
     {
         return $this->_actionCreateTokensInstance;
     }
@@ -2660,7 +2529,7 @@ abstract class Actions
      *
      * @return array
      */
-    public function getCreateTokensParam()
+    public function getCreateTokensParam(): array
     {
         return $this->_actionCreateTokensParam;
     }
@@ -2670,7 +2539,7 @@ abstract class Actions
      *
      * @return boolean
      */
-    public function getCreateTokensError()
+    public function getCreateTokensError(): bool
     {
         return $this->_actionCreateTokensError;
     }
@@ -2680,7 +2549,7 @@ abstract class Actions
      *
      * @return string
      */
-    public function getCreateTokensErrorMessage()
+    public function getCreateTokensErrorMessage(): string
     {
         return $this->_actionCreateTokensErrorMessage;
     }
@@ -2692,55 +2561,45 @@ abstract class Actions
      */
     protected function _extractActionCreateTokens()
     {
-        // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitCurrency')
-            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
-            && $this->_configuration->getOptionAsBoolean('permitCreateCurrency')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Extract action create tokens', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_checkPermitAction('CreateTokens'))
+            return;
 
-            $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_TOKENS);
+        $this->_metrology->addLog('Extract action create tokens', Metrology::LOG_LEVEL_DEBUG);
 
-            if ($argCreate !== false)
-                $this->_actionCreateTokens = true;
+        $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_TOKENS);
 
-            if ($this->_actionCreateTokens) {
-                // Récupère la liste des propriétés.
-                $instance = $this->_nebuleInstance->getCurrentTokenInstance();
-                $propertiesList = $instance->getPropertiesList();
-                unset($instance);
+        if ($argCreate !== false)
+            $this->_actionCreateTokens = true;
 
-                foreach ($propertiesList['token'] as $name => $property) {
-                    // Extrait une valeur.
-                    if (isset($property['checkbox'])) {
-                        $value = '';
-                        $valueArray = filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
-                        foreach ($valueArray as $item)
-                            $value .= ' ' . trim($item);
-                        $this->_actionCreateTokensParam[$name] = trim($value);
-                        unset($value, $valueArray);
-                    } else
-                        $this->_actionCreateTokensParam[$name] = trim(filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                    $this->_metrology->addLog('Extract action create tokens - t' . $property['key'] . ':' . $this->_actionCreateTokensParam[$name], Metrology::LOG_LEVEL_DEBUG); // Log
+        if ($this->_actionCreateTokens) {
+            // Récupère la liste des propriétés.
+            $instance = $this->_nebuleInstance->getCurrentTokenInstance();
+            $propertiesList = $instance->getPropertiesList();
+            unset($instance);
 
-                    // Extrait si forcé.
-                    if (isset($property['forceable'])) {
-                        $this->_actionCreateTokensParam['Force' . $name] = filter_has_var(INPUT_POST, 'f' . $property['shortname']);
-                        if ($this->_actionCreateTokensParam['Force' . $name])
-                            $this->_metrology->addLog('Extract action create tokens - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_DEBUG); // Log
-                    }
+            foreach ($propertiesList['token'] as $name => $property) {
+                // Extrait une valeur.
+                if (isset($property['checkbox'])) {
+                    $value = '';
+                    $valueArray = filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
+                    foreach ($valueArray as $item)
+                        $value .= ' ' . trim($item);
+                    $this->_actionCreateTokensParam[$name] = trim($value);
+                    unset($value, $valueArray);
+                } else
+                    $this->_actionCreateTokensParam[$name] = trim(filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+                $this->_metrology->addLog('Extract action create tokens - t' . $property['key'] . ':' . $this->_actionCreateTokensParam[$name], Metrology::LOG_LEVEL_DEBUG);
+
+                // Extrait si forcé.
+                if (isset($property['forceable'])) {
+                    $this->_actionCreateTokensParam['Force' . $name] = filter_has_var(INPUT_POST, 'f' . $property['shortname']);
+                    if ($this->_actionCreateTokensParam['Force' . $name])
+                        $this->_metrology->addLog('Extract action create tokens - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_DEBUG);
                 }
-
-                // Extrait le nombre de jetons à générer.
-                $this->_actionCreateTokensCount = (int)trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_TOKENS_COUNT, FILTER_SANITIZE_NUMBER_INT));
             }
-        } else {
-//			$this->_actionCreateTokensError = true;
-            $this->_actionCreateTokensErrorMessage = 'Non autorisé.';
+
+            // Extrait le nombre de jetons à générer.
+            $this->_actionCreateTokensCount = (int)trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_TOKENS_COUNT, FILTER_SANITIZE_NUMBER_INT));
         }
     }
 
@@ -2755,46 +2614,40 @@ abstract class Actions
 
     /**
      * Signe un lien.
-     * @param Link $link
+     * @param ?Link $link
      * @param boolean $obfuscate
      * @return void
-     * @todo
+     * FIXME
      *
      */
-    protected function _actionSignLink(Link $link, $obfuscate = 'default')
+    protected function _actionSignLink(?Link $link, $obfuscate = 'default')
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitUploadLink')
+        if ($this->_unlocked) {
+            $this->_metrology->addLog('Action sign link', Metrology::LOG_LEVEL_DEBUG);
+
+            // On cache le lien ?
+            if ($obfuscate !== false
+                && $obfuscate !== true
+            )
+                $obfuscate = $this->_configuration->getOptionUntyped('defaultObfuscateLinks');
+            //...
+
+            // Signature du lien.
+            $link->signWrite();
+        } elseif ($this->_getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+            || $this->_getOptionAsBoolean('permitPublicUploadLink')
         ) {
-            if ($this->_unlocked) {
-                $this->_metrology->addLog('Action sign link', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('Action sign link', Metrology::LOG_LEVEL_DEBUG);
 
-                // On cache le lien ?
-                if ($obfuscate !== false
-                    && $obfuscate !== true
-                )
-                    $obfuscate = $this->_configuration->getOptionUntyped('defaultObfuscateLinks');
-                //...
+            // Affichage du lien.
+            echo $this->_display->convertInlineIconFace('DEFAULT_ICON_ADDLNK') . $this->_display->convertInlineLinkFace($link);
 
-                // Signature du lien.
-                $link->signWrite();
-            } elseif ($this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
-                || $this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
-            ) {
-                $this->_metrology->addLog('Action sign link', Metrology::LOG_LEVEL_DEBUG); // Log
-
-                // Affichage du lien.
-                echo $this->_display->convertInlineIconFace('DEFAULT_ICON_ADDLNK') . $this->_display->convertInlineLinkFace($link);
-
-                // Si signé, écriture du lien.
-                if ($link->getSigned())
-                    $link->write();
-            }
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
+            // Si signé, écriture du lien.
+            if ($link->getSigned())
+                $link->write();
         }
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -2832,46 +2685,40 @@ abstract class Actions
      */
     protected function _actionUploadLink(Link $link)
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitUploadLink')
-            && ($this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
-                || $this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
+        if (!is_a($link, 'Link')
+            || !$link->getValid()
+            || true // FIXME
+        )
+            return;
+        
+        $this->_metrology->addLog('Action upload link', Metrology::LOG_LEVEL_DEBUG);
+
+        if ($link->getSigned()
+            && (($link->getSigners() == $this->_nebuleInstance->getCodeAuthorities()
+                    && $this->_getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+                )
+                || $this->_getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_unlocked
             )
-            && is_a($link, 'Link')
-            && $link->getValid()
         ) {
-            $this->_metrology->addLog('Action upload link', Metrology::LOG_LEVEL_DEBUG); // Log
-
-            if ($link->getSigned()
-                && (($link->getSigners() == $this->_nebuleInstance->getCodeAuthorities()
-                        && $this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
-                    )
-                    || $this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
-                    || $this->_unlocked
-                )
-            ) {
-                $link->write();
-                $this->_metrology->addLog('Action upload link - signed link ' . $link->getRaw(), Metrology::LOG_LEVEL_NORMAL); // Log
-            } elseif ($this->_unlocked) {
-                $link = $this->_nebuleInstance->newLink_DEPRECATED(
-                    '0_'
-                    . $this->_nebuleInstance->getCurrentEntity() . '_'
-                    . $link->getDate() . '_'
-                    . $link->getAction() . '_'
-                    . $link->getHashSource_disabled() . '_'
-                    . $link->getHashTarget_disabled() . '_'
-                    . $link->getHashMeta_disabled()
-                );
-                $link->signWrite();
-                $this->_metrology->addLog('Action upload link - unsigned link ' . $link->getRaw(), Metrology::LOG_LEVEL_NORMAL); // Log
-            }
-
-            // Affichage des actions.
-            $this->_display->displayInlineLastAction();
+            $link->write();
+            $this->_metrology->addLog('Action upload link - signed link ' . $link->getRaw(), Metrology::LOG_LEVEL_NORMAL);
+        } elseif ($this->_unlocked) {
+            $link = $this->_nebuleInstance->newLink_DEPRECATED(
+                '0_'
+                . $this->_nebuleInstance->getCurrentEntity() . '_'
+                . $link->getDate() . '_'
+                . $link->getAction() . '_'
+                . $link->getHashSource_disabled() . '_'
+                . $link->getHashTarget_disabled() . '_'
+                . $link->getHashMeta_disabled()
+            );
+            $link->signWrite();
+            $this->_metrology->addLog('Action upload link - unsigned link ' . $link->getRaw(), Metrology::LOG_LEVEL_NORMAL);
         }
+
+        // Affichage des actions.
+        $this->_display->displayInlineLastAction();
     }
 
 
@@ -2882,27 +2729,18 @@ abstract class Actions
      */
     protected function _actionObfuscateLink()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && ($this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
-                || $this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
-                || ($this->_configuration->getOptionAsBoolean('permitUploadLink')
-                    && $this->_unlocked
-                )
-            )
-            && $this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
-            && $this->_actionObfuscateLinkInstance->getValid()
-            && $this->_actionObfuscateLinkInstance->getSigned()
-        ) {
-            $this->_metrology->addLog('Action obfuscate link', Metrology::LOG_LEVEL_DEBUG); // Log
+        if (!$this->_actionObfuscateLinkInstance->getValid()
+            || !$this->_actionObfuscateLinkInstance->getSigned() // FIXME
+        )
+            return;
 
-            // On dissimule le lien.
-            $this->_actionObfuscateLinkInstance->obfuscateWrite();
+        $this->_metrology->addLog('Action obfuscate link', Metrology::LOG_LEVEL_DEBUG);
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        }
+        // On dissimule le lien.
+        $this->_actionObfuscateLinkInstance->obfuscateWrite();
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -2911,23 +2749,16 @@ abstract class Actions
      */
     protected function _actionDeleteObject()
     {
-        // Vérifie que la création de liens et l'écriture d'objets soient authorisés.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Action delete object', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action delete object', Metrology::LOG_LEVEL_DEBUG);
 
-            // Suppression de l'objet.
-            if ($this->_actionDeleteObjectForce)
-                $this->_actionDeleteObjectInstance->deleteForceObject();
-            else
-                $this->_actionDeleteObjectInstance->deleteObject();
+        // Suppression de l'objet.
+        if ($this->_actionDeleteObjectForce)
+            $this->_actionDeleteObjectInstance->deleteForceObject();
+        else
+            $this->_actionDeleteObjectInstance->deleteObject();
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        }
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -2936,20 +2767,13 @@ abstract class Actions
      */
     protected function _actionProtectObject()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Action protect object', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action protect object', Metrology::LOG_LEVEL_DEBUG);
 
-            // Demande de protection de l'objet.
-            $this->_actionProtectObjectInstance->setProtected();
+        // Demande de protection de l'objet.
+        $this->_actionProtectObjectInstance->setProtected();
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        }
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -2958,20 +2782,13 @@ abstract class Actions
      */
     protected function _actionUnprotectObject()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Action unprotect object', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action unprotect object', Metrology::LOG_LEVEL_DEBUG);
 
-            // Demande de protection de l'objet.
-            $this->_actionUnprotectObjectInstance->setUnprotected();
+        // Demande de protection de l'objet.
+        $this->_actionUnprotectObjectInstance->setUnprotected();
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        }
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
     /**
@@ -2979,20 +2796,13 @@ abstract class Actions
      */
     protected function _actionShareProtectObjectToEntity()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Action share protect object to entity ' . $this->_actionShareProtectObjectToEntity, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action share protect object to entity ' . $this->_actionShareProtectObjectToEntity, Metrology::LOG_LEVEL_DEBUG);
 
-            // Demande de protection de l'objet.
-            $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($this->_actionShareProtectObjectToEntity);
+        // Demande de protection de l'objet.
+        $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($this->_actionShareProtectObjectToEntity);
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        }
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
     /**
@@ -3000,24 +2810,17 @@ abstract class Actions
      */
     protected function _actionShareProtectObjectToGroupOpened()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Action share protect object to opened group', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action share protect object to opened group', Metrology::LOG_LEVEL_DEBUG);
 
-            // Demande de protection de l'objet.
-            $group = $this->_nebuleInstance->newGroup_DEPRECATED($this->_actionShareProtectObjectToGroupOpened);
-            foreach ($group->getListMembersID('myself', null) as $id) {
-                $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($id);
-            }
-            unset($group, $id);
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
+        // Demande de protection de l'objet.
+        $group = $this->_nebuleInstance->newGroup_DEPRECATED($this->_actionShareProtectObjectToGroupOpened);
+        foreach ($group->getListMembersID('myself', null) as $id) {
+            $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($id);
         }
+        unset($group, $id);
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
     /**
@@ -3025,24 +2828,17 @@ abstract class Actions
      */
     protected function _actionShareProtectObjectToGroupClosed()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Action share protect object to closed group', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action share protect object to closed group', Metrology::LOG_LEVEL_DEBUG);
 
-            // Demande de protection de l'objet.
-            $group = $this->_nebuleInstance->newGroup_DEPRECATED($this->_actionShareProtectObjectToGroupClosed);
-            foreach ($group->getListMembersID('myself', null) as $id) {
-                $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($id);
-            }
-            unset($group, $id);
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
+        // Demande de protection de l'objet.
+        $group = $this->_nebuleInstance->newGroup_DEPRECATED($this->_actionShareProtectObjectToGroupClosed);
+        foreach ($group->getListMembersID('myself', null) as $id) {
+            $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($id);
         }
+        unset($group, $id);
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
     /**
@@ -3050,20 +2846,13 @@ abstract class Actions
      */
     protected function _actionCancelShareProtectObjectToEntity()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Action cancel share protect object to entity', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action cancel share protect object to entity', Metrology::LOG_LEVEL_DEBUG);
 
-            // Demande d'annulation de protection de l'objet.
-            $this->_nebuleInstance->getCurrentObjectInstance()->cancelShareProtectionTo($this->_actionCancelShareProtectObjectToEntity);
+        // Demande d'annulation de protection de l'objet.
+        $this->_nebuleInstance->getCurrentObjectInstance()->cancelShareProtectionTo($this->_actionCancelShareProtectObjectToEntity);
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        }
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -3072,21 +2861,15 @@ abstract class Actions
      */
     protected function _actionSynchronizeObject()
     {
-        // Vérifie que la création d'objet soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
-        ) {
-            $this->_metrology->addLog('Action synchronize object', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action synchronize object', Metrology::LOG_LEVEL_DEBUG);
 
-            echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNOBJ') . $this->_display->convertInlineObjectColor($this->_actionSynchronizeObjectInstance);
+        echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNOBJ') . $this->_display->convertInlineObjectColor($this->_actionSynchronizeObjectInstance);
 
-            // Synchronisation.
-            $this->_actionSynchronizeObjectInstance->syncObject();
+        // Synchronisation.
+        $this->_actionSynchronizeObjectInstance->syncObject();
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        }
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -3095,47 +2878,39 @@ abstract class Actions
      */
     protected function _actionSynchronizeEntity()
     {
-        // Vérifie que la création d'objet soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
-        ) {
-            $this->_metrology->addLog('Action synchronize entity', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action synchronize entity', Metrology::LOG_LEVEL_DEBUG);
 
-            echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNENT') . $this->_display->convertInlineObjectColor($this->_actionSynchronizeEntityInstance);
+        echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNENT') . $this->_display->convertInlineObjectColor($this->_actionSynchronizeEntityInstance);
 
-            // Synchronisation des liens (l'objet est forcément présent).
-            $this->_actionSynchronizeEntityInstance->syncLinks();
+        // Synchronisation des liens (l'objet est forcément présent).
+        $this->_actionSynchronizeEntityInstance->syncLinks();
 
-            // Liste des liens l pour l'entité en source.
-            $links = $this->_actionSynchronizeEntityInstance->readLinksFilterFull('', '', 'l', $this->_actionSynchronizeEntityInstance->getID(), '', '');
-            // Synchronise l'objet cible.
-            $object = null;
-            foreach ($links as $link) {
-                $object = $this->_nebuleInstance->newObject($link->getHashTarget());
-                // Synchronise les liens (avant).
-                $object->syncLinks();
-                // Synchronise l'objet.
-                $object->syncObject();
-            }
-            // Liste des liens l pour l'entité en cible.
-            $links = $this->_actionSynchronizeEntityInstance->readLinksFilterFull('', '', 'l', '', $this->_actionSynchronizeEntityInstance->getID(), '');
-            // Synchronise l'objet source.
-            $object = null;
-            foreach ($links as $link) {
-                $object = $this->_nebuleInstance->newObject($link->getHashSource());
-                // Synchronise les liens (avant).
-                $object->syncLinks();
-                // Synchronise l'objet.
-                $object->syncObject();
-            }
-            unset($links, $link, $object);
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
+        // Liste des liens l pour l'entité en source.
+        $links = $this->_actionSynchronizeEntityInstance->readLinksFilterFull('', '', 'l', $this->_actionSynchronizeEntityInstance->getID(), '', '');
+        // Synchronise l'objet cible.
+        $object = null;
+        foreach ($links as $link) {
+            $object = $this->_nebuleInstance->newObject($link->getHashTarget());
+            // Synchronise les liens (avant).
+            $object->syncLinks();
+            // Synchronise l'objet.
+            $object->syncObject();
         }
+        // Liste des liens l pour l'entité en cible.
+        $links = $this->_actionSynchronizeEntityInstance->readLinksFilterFull('', '', 'l', '', $this->_actionSynchronizeEntityInstance->getID(), '');
+        // Synchronise l'objet source.
+        $object = null;
+        foreach ($links as $link) {
+            $object = $this->_nebuleInstance->newObject($link->getHashSource());
+            // Synchronise les liens (avant).
+            $object->syncLinks();
+            // Synchronise l'objet.
+            $object->syncObject();
+        }
+        unset($links, $link, $object);
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -3144,150 +2919,124 @@ abstract class Actions
      */
     protected function _actionSynchronizeObjectLinks()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
-        ) {
-            $this->_metrology->addLog('Action synchronize object links', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action synchronize object links', Metrology::LOG_LEVEL_DEBUG);
 
-            echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNLNK') . $this->_display->convertInlineObjectColor($this->_actionSynchronizeObjectLinksInstance);
+        echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNLNK') . $this->_display->convertInlineObjectColor($this->_actionSynchronizeObjectLinksInstance);
 
-            // Synchronisation.
-            $this->_actionSynchronizeObjectLinksInstance->syncLinks();
+        // Synchronisation.
+        $this->_actionSynchronizeObjectLinksInstance->syncLinks();
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        }
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
     /**
-     * Synchronise l'application. A revoir complètement ce qui est sync @todo
+     * Synchronise l'application. A revoir complètement ce qui est sync TODO
      */
-    protected function _actionSynchronizeApplication()
+    protected function _actionSynchronizeApplication(): void
     {
-        // Vérifie que la création d'objet soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeApplication')
-            && ($this->_configuration->getOptionAsBoolean('permitPublicSynchronizeApplication')
-                || $this->_unlocked()
-            )
-        ) {
-            $this->_metrology->addLog('Action synchronize application', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action synchronize application', Metrology::LOG_LEVEL_DEBUG);
 
-            echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNOBJ') . $this->_display->convertInlineObjectColor($this->_actionSynchronizeApplicationInstance);
+        echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNOBJ') . $this->_display->convertInlineObjectColor($this->_actionSynchronizeApplicationInstance);
 
-            // Synchronisation des liens (l'objet est forcément présent).
-            $this->_actionSynchronizeApplicationInstance->syncLinks();
+        // Synchronisation des liens (l'objet est forcément présent).
+        $this->_actionSynchronizeApplicationInstance->syncLinks();
 
-            // Liste des liens l pour l'entité en source.
-            $links = $this->_actionSynchronizeApplicationInstance->readLinksFilterFull('', '', 'l', $this->_actionSynchronizeApplicationInstance->getID(), '', '');
-            // Synchronise l'objet cible.
-            $object = null;
-            foreach ($links as $link) {
-                $object = $this->_nebuleInstance->newObject($link->getHashTarget());
-                // Synchronise les liens (avant).
-                $object->syncLinks();
-                // Synchronise l'objet.
-                $object->syncObject();
-            }
-            // Liste des liens l pour l'entité en cible.
-            $links = $this->_actionSynchronizeApplicationInstance->readLinksFilterFull('', '', 'l', '', $this->_actionSynchronizeApplicationInstance->getID(), '');
-            // Synchronise l'objet source.
-            $object = null;
-            foreach ($links as $link) {
-                $object = $this->_nebuleInstance->newObject($link->getHashSource());
-                // Synchronise les liens (avant).
-                $object->syncLinks();
-                // Synchronise l'objet.
-                $object->syncObject();
-            }
-            unset($links, $link, $object);
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
+        // Liste des liens l pour l'entité en source.
+        $links = $this->_actionSynchronizeApplicationInstance->readLinksFilterFull('', '', 'l', $this->_actionSynchronizeApplicationInstance->getID(), '', '');
+        // Synchronise l'objet cible.
+        $object = null;
+        foreach ($links as $link) {
+            $object = $this->_nebuleInstance->newObject($link->getHashTarget());
+            // Synchronise les liens (avant).
+            $object->syncLinks();
+            // Synchronise l'objet.
+            $object->syncObject();
         }
+        // Liste des liens l pour l'entité en cible.
+        $links = $this->_actionSynchronizeApplicationInstance->readLinksFilterFull('', '', 'l', '', $this->_actionSynchronizeApplicationInstance->getID(), '');
+        // Synchronise l'objet source.
+        $object = null;
+        foreach ($links as $link) {
+            $object = $this->_nebuleInstance->newObject($link->getHashSource());
+            // Synchronise les liens (avant).
+            $object->syncLinks();
+            // Synchronise l'objet.
+            $object->syncObject();
+        }
+        unset($links, $link, $object);
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
     /**
      * Synchronise une entité externe depuis une URL.
      */
-    protected function _actionSynchronizeNewEntity()
+    protected function _actionSynchronizeNewEntity(): void
     {
-        // Vérifie que la création d'objet soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
-        ) {
-            $this->_metrology->addLog('Action synchronize new entity', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action synchronize new entity', Metrology::LOG_LEVEL_DEBUG);
 
-            // Vérifie si l'objet est déjà présent.
-            $present = $this->_io->checkObjectPresent($this->_actionSynchronizeNewEntityID);
-            // Lecture de l'objet.
-            $data = $this->_io->getObject($this->_actionSynchronizeNewEntityID, Entity::ENTITY_MAX_SIZE, $this->_actionSynchronizeNewEntityURL);
-            // Calcul de l'empreinte.
-            $hash = $this->_nebuleInstance->getCryptoInstance()->hash($data);
-            if ($hash != $this->_actionSynchronizeNewEntityID) {
-                $this->_metrology->addLog('Action synchronize new entity - Hash error', Metrology::LOG_LEVEL_DEBUG); // Log
-                unset($data);
-                echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNENT') .
-                    $this->_display->convertInlineObjectColor($this->_actionSynchronizeNewEntityID) .
-                    $this->_display->convertInlineIconFace('DEFAULT_ICON_IERR');
-                $this->_actionSynchronizeNewEntityID = '';
-                $this->_actionSynchronizeNewEntityURL = '';
-                return false;
-            }
-            // Ecriture de l'objet.
-            $this->_io->setObject($this->_actionSynchronizeNewEntityID, $data);
-
-            $this->_actionSynchronizeNewEntityInstance = $this->_nebuleInstance->newEntity_DEPRECATED($this->_actionSynchronizeNewEntityID);
-
-            if (!$this->_actionSynchronizeNewEntityInstance->getTypeVerify()) {
-                $this->_metrology->addLog('Action synchronize new entity - Not entity', Metrology::LOG_LEVEL_DEBUG); // Log
-                if (!$present)
-                    $this->_actionSynchronizeNewEntityInstance->deleteObject();
-            }
-
-            echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNENT') . $this->_display->convertInlineObjectColor($this->_actionSynchronizeNewEntityInstance);
-
-            // Synchronisation des liens.
-            $this->_actionSynchronizeNewEntityInstance->syncLinks();
-
-            // Liste des liens l pour l'entité en source.
-            $links = $this->_actionSynchronizeNewEntityInstance->getLinksOnFields('', '', 'l', $hash, '', '');
-            // Synchronise l'objet cible.
-            $object = null;
-            foreach ($links as $link) {
-                $object = $this->_nebuleInstance->newObject($link->getHashTarget());
-                // Synchronise les liens (avant).
-                $object->syncLinks();
-                // Synchronise l'objet.
-                $object->syncObject();
-            }
-            // Liste des liens l pour l'entité en cible.
-            $links = $this->_actionSynchronizeNewEntityInstance->getLinksOnFields('', '', 'l', '', $hash, '');
-            // Synchronise l'objet source.
-            $object = null;
-            foreach ($links as $link) {
-                $object = $this->_nebuleInstance->newObject($link->getHashSource());
-                // Synchronise les liens (avant).
-                $object->syncLinks();
-                // Synchronise l'objet.
-                $object->syncObject();
-            }
-            unset($links, $link, $object);
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
+        // Vérifie si l'objet est déjà présent.
+        $present = $this->_io->checkObjectPresent($this->_actionSynchronizeNewEntityID);
+        // Lecture de l'objet.
+        $data = $this->_io->getObject($this->_actionSynchronizeNewEntityID, Entity::ENTITY_MAX_SIZE, $this->_actionSynchronizeNewEntityURL);
+        // Calcul de l'empreinte.
+        $hash = $this->_nebuleInstance->getCryptoInstance()->hash($data);
+        if ($hash != $this->_actionSynchronizeNewEntityID) {
+            $this->_metrology->addLog('Action synchronize new entity - Hash error', Metrology::LOG_LEVEL_DEBUG);
+            unset($data);
+            echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNENT') .
+                $this->_display->convertInlineObjectColor($this->_actionSynchronizeNewEntityID) .
+                $this->_display->convertInlineIconFace('DEFAULT_ICON_IERR');
+            $this->_actionSynchronizeNewEntityID = '';
+            $this->_actionSynchronizeNewEntityURL = '';
+            return;
         }
+        // Ecriture de l'objet.
+        $this->_io->setObject($this->_actionSynchronizeNewEntityID, $data);
+
+        $this->_actionSynchronizeNewEntityInstance = $this->_nebuleInstance->newEntity_DEPRECATED($this->_actionSynchronizeNewEntityID);
+
+        if (!$this->_actionSynchronizeNewEntityInstance->getTypeVerify()) {
+            $this->_metrology->addLog('Action synchronize new entity - Not entity', Metrology::LOG_LEVEL_DEBUG);
+            if (!$present)
+                $this->_actionSynchronizeNewEntityInstance->deleteObject();
+        }
+
+        echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNENT') . $this->_display->convertInlineObjectColor($this->_actionSynchronizeNewEntityInstance);
+
+        // Synchronisation des liens.
+        $this->_actionSynchronizeNewEntityInstance->syncLinks();
+
+        // Liste des liens l pour l'entité en source.
+        $links = $this->_actionSynchronizeNewEntityInstance->getLinksOnFields('', '', 'l', $hash, '', '');
+        // Synchronise l'objet cible.
+        $object = null;
+        foreach ($links as $link) {
+            $object = $this->_nebuleInstance->newObject($link->getHashTarget());
+            // Synchronise les liens (avant).
+            $object->syncLinks();
+            // Synchronise l'objet.
+            $object->syncObject();
+        }
+        // Liste des liens l pour l'entité en cible.
+        $links = $this->_actionSynchronizeNewEntityInstance->getLinksOnFields('', '', 'l', '', $hash, '');
+        // Synchronise l'objet source.
+        $object = null;
+        foreach ($links as $link) {
+            $object = $this->_nebuleInstance->newObject($link->getHashSource());
+            // Synchronise les liens (avant).
+            $object->syncLinks();
+            // Synchronise l'objet.
+            $object->syncObject();
+        }
+        unset($links, $link, $object);
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -3296,7 +3045,7 @@ abstract class Actions
      */
     protected function _actionMarkObject()
     {
-        $this->_metrology->addLog('Action mark object', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action mark object', Metrology::LOG_LEVEL_DEBUG);
 
         $this->_applicationInstance->setMarkObject($this->_actionMarkObject);
 
@@ -3310,7 +3059,7 @@ abstract class Actions
      */
     protected function _actionUnmarkObject()
     {
-        $this->_metrology->addLog('Action unmark object', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action unmark object', Metrology::LOG_LEVEL_DEBUG);
 
         $this->_applicationInstance->setUnmarkObject($this->_actionUnmarkObject);
 
@@ -3324,7 +3073,7 @@ abstract class Actions
      */
     protected function _actionUnmarkAllObjects()
     {
-        $this->_metrology->addLog('Action unmark all objects', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action unmark all objects', Metrology::LOG_LEVEL_DEBUG);
 
         $this->_applicationInstance->setUnmarkAllObjects();
 
@@ -3338,120 +3087,106 @@ abstract class Actions
      *
      * @return void
      */
-    protected function _actionUploadFile()
+    protected function _actionUploadFile(): void
     {
-        // Vérifie que la création d'objet soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Action upload file', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action upload file', Metrology::LOG_LEVEL_DEBUG);
 
-            // Lit le contenu du fichier.
-            $data = file_get_contents($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['tmp_name']);
+        // Lit le contenu du fichier.
+        $data = file_get_contents($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['tmp_name']);
 
-            // Ecrit le contenu dans l'objet.
-            $instance = new Node($this->_nebuleInstance, '0', $data, $this->_actionUploadFileProtect);
-            if ($instance === false) {
-                $this->_metrology->addLog('Action _actionUploadFile cant create object instance', Metrology::LOG_LEVEL_ERROR); // Log
-                $this->_actionUploadFileError = true;
-                $this->_actionUploadFileErrorMessage = "L'instance de l'objet n'a pas pu être créée.";
-                return false;
-            }
-
-            // Lit l'ID.
-            $id = $instance->getID();
-            unset($data);
-            if ($id == '0') {
-                $this->_metrology->addLog('Action _actionUploadFile cant create object', Metrology::LOG_LEVEL_ERROR); // Log
-                $this->_actionUploadFileError = true;
-                $this->_actionUploadFileErrorMessage = "L'objet n'a pas pu être créé.";
-                return false;
-            }
-            $this->_actionUploadFileID = $id;
-
-            // Définition de la date et le signataire.
-            $date = date(DATE_ATOM);
-            $signer = $this->_nebuleInstance->getCurrentEntity();
-
-            // Création du type mime.
-            $instance->setType($this->_actionUploadFileType);
-
-            // Crée l'objet du nom.
-            $instance->setName($this->_actionUploadFileName);
-
-            // Crée l'objet de l'extension.
-            $instance->setSuffix($this->_actionUploadFileExtension);
-
-            // Si mise à jour de l'objet en cours.
-            if ($this->_actionUploadFileUpdate) {
-                // Crée le lien.
-                $action = 'u';
-                $source = $this->_applicationInstance->getCurrentObject();
-                $target = $id;
-                $meta = '0';
-                $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
-            }
-
-            unset($date, $signer, $source, $target, $meta, $link, $newLink, $textID, $instance);
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
+        // Ecrit le contenu dans l'objet.
+        $instance = new Node($this->_nebuleInstance, '0', $data, $this->_actionUploadFileProtect);
+        if ($instance === false) {
+            $this->_metrology->addLog('Action _actionUploadFile cant create object instance', Metrology::LOG_LEVEL_ERROR);
+            $this->_actionUploadFileError = true;
+            $this->_actionUploadFileErrorMessage = "L'instance de l'objet n'a pas pu être créée.";
+            return;
         }
+
+        // Lit l'ID.
+        $id = $instance->getID();
+        unset($data);
+        if ($id == '0') {
+            $this->_metrology->addLog('Action _actionUploadFile cant create object', Metrology::LOG_LEVEL_ERROR);
+            $this->_actionUploadFileError = true;
+            $this->_actionUploadFileErrorMessage = "L'objet n'a pas pu être créé.";
+            return;
+        }
+        $this->_actionUploadFileID = $id;
+
+        // Définition de la date et le signataire.
+        $date = date(DATE_ATOM);
+        $signer = $this->_nebuleInstance->getCurrentEntity();
+
+        // Création du type mime.
+        $instance->setType($this->_actionUploadFileType);
+
+        // Crée l'objet du nom.
+        $instance->setName($this->_actionUploadFileName);
+
+        // Crée l'objet de l'extension.
+        $instance->setSuffix($this->_actionUploadFileExtension);
+
+        // Si mise à jour de l'objet en cours.
+        if ($this->_actionUploadFileUpdate) {
+            // Crée le lien.
+            $action = 'u';
+            $source = $this->_applicationInstance->getCurrentObject();
+            $target = $id;
+            $meta = '0';
+            $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+        }
+
+        unset($date, $signer, $source, $target, $meta, $link, $newLink, $textID, $instance);
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
     /**
      * Transfert un texte et le nebulise.
      */
-    protected function _actionUploadText()
+    protected function _actionUploadText(): void
     {
-        // Vérifie que la création d'objet soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Action upload text', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action upload text', Metrology::LOG_LEVEL_DEBUG);
 
-            // Crée l'instance de l'objet.
-            $instance = new Node($this->_nebuleInstance, '0', $this->_actionUploadTextContent, $this->_actionUploadTextProtect);
-            if ($instance === false) {
-                $this->_metrology->addLog('Action _actionUploadText cant create object instance', Metrology::LOG_LEVEL_ERROR); // Log
-                $this->_actionUploadFileError = true;
-                $this->_actionUploadFileErrorMessage = "L'instance de l'objet n'a pas pu être créée.";
-                return false;
-            }
-
-            // Lit l'ID.
-            $id = $instance->getID();
-            if ($id == '0') {
-                $this->_metrology->addLog('Action _actionUploadText cant create object', Metrology::LOG_LEVEL_ERROR); // Log
-                $this->_actionUploadFileError = true;
-                $this->_actionUploadFileErrorMessage = "L'objet n'a pas pu être créé.";
-                return false;
-            }
-            $this->_actionUploadTextID = $id;
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-
-            // Définition de la date et du signataire.
-            //$signer	= $this->_nebuleInstance->getCurrentEntity();
-            //$date = date(DATE_ATOM);
-
-            // Création du type mime.
-            $instance->setType($this->_actionUploadTextType);
-
-            // Crée l'objet du nom.
-            $instance->setName($this->_actionUploadTextName);
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-
-            unset($id, $instance);
+        // Crée l'instance de l'objet.
+        $instance = new Node($this->_nebuleInstance, '0', $this->_actionUploadTextContent, $this->_actionUploadTextProtect);
+        if ($instance === false) {
+            $this->_metrology->addLog('Action _actionUploadText cant create object instance', Metrology::LOG_LEVEL_ERROR);
+            $this->_actionUploadFileError = true;
+            $this->_actionUploadFileErrorMessage = "L'instance de l'objet n'a pas pu être créée.";
+            return;
         }
+
+        // Lit l'ID.
+        $id = $instance->getID();
+        if ($id == '0') {
+            $this->_metrology->addLog('Action _actionUploadText cant create object', Metrology::LOG_LEVEL_ERROR);
+            $this->_actionUploadFileError = true;
+            $this->_actionUploadFileErrorMessage = "L'objet n'a pas pu être créé.";
+            return;
+        }
+        $this->_actionUploadTextID = $id;
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
+
+        // Définition de la date et du signataire.
+        //$signer	= $this->_nebuleInstance->getCurrentEntity();
+        //$date = date(DATE_ATOM);
+
+        // Création du type mime.
+        $instance->setType($this->_actionUploadTextType);
+
+        // Crée l'objet du nom.
+        $instance->setName($this->_actionUploadTextName);
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
+
+        unset($id, $instance);
     }
 
 
@@ -3488,59 +3223,49 @@ abstract class Actions
      */
     protected function _actionUploadFileLinks()
     {
-        // Vérifie que la création d'objet soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitUploadLink')
-            && ($this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
-                || $this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
-                || $this->_unlocked
-            )
-        ) {
-            $this->_metrology->addLog('Action upload file signed links', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action upload file signed links', Metrology::LOG_LEVEL_DEBUG);
 
-            // Ecrit les liens correctement signés.
-            $updata = file($this->_actionUploadFileLinksPath);
-            $nbLinks = 0;
-            $nbLines = 0;
-            foreach ($updata as $line) {
-                if (substr($line, 0, 21) != 'nebule/liens/version/') {
-                    $nbLines++;
-                    $instance = $this->_nebuleInstance->newLink_DEPRECATED($line);
-                    if ($instance->getValid()) {
-                        if ($instance->getSigned()
-                            && (($instance->getSigners() == $this->_nebuleInstance->getCodeAuthorities()
-                                    && $this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
-                                )
-                                || $this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
-                                || $this->_unlocked
+        // Ecrit les liens correctement signés.
+        $updata = file($this->_actionUploadFileLinksPath);
+        $nbLinks = 0;
+        $nbLines = 0;
+        foreach ($updata as $line) {
+            if (substr($line, 0, 21) != 'nebule/liens/version/') {
+                $nbLines++;
+                $instance = $this->_nebuleInstance->newLink_DEPRECATED($line);
+                if ($instance->getValid()) {
+                    if ($instance->getSigned()
+                        && (($instance->getSigners() == $this->_nebuleInstance->getCodeAuthorities()
+                                && $this->_getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                             )
-                        ) {
-                            $instance->write();
-                            $nbLinks++;
-                            $this->_metrology->addLog('Action upload file links - signed link ' . $instance->getRaw(), Metrology::LOG_LEVEL_NORMAL); // Log
-                        } elseif ($this->_unlocked) {
-                            $instance = $this->_nebuleInstance->newLink_DEPRECATED(
-                                '0_'
-                                . $this->_nebuleInstance->getCurrentEntity() . '_'
-                                . $instance->getDate() . '_'
-                                . $instance->getAction() . '_'
-                                . $instance->getHashSource_disabled() . '_'
-                                . $instance->getHashTarget_disabled() . '_'
-                                . $instance->getHashMeta_disabled()
-                            );
-                            $instance->signWrite();
-                            $nbLinks++;
-                            $this->_metrology->addLog('Action upload file links - unsigned link ' . $instance->getRaw(), Metrology::LOG_LEVEL_NORMAL); // Log
-                        }
+                            || $this->_getOptionAsBoolean('permitPublicUploadLink')
+                            || $this->_unlocked
+                        )
+                    ) {
+                        $instance->write();
+                        $nbLinks++;
+                        $this->_metrology->addLog('Action upload file links - signed link ' . $instance->getRaw(), Metrology::LOG_LEVEL_NORMAL);
+                    } elseif ($this->_unlocked) {
+                        $instance = $this->_nebuleInstance->newLink_DEPRECATED(
+                            '0_'
+                            . $this->_nebuleInstance->getCurrentEntity() . '_'
+                            . $instance->getDate() . '_'
+                            . $instance->getAction() . '_'
+                            . $instance->getHashSource_disabled() . '_'
+                            . $instance->getHashTarget_disabled() . '_'
+                            . $instance->getHashMeta_disabled()
+                        );
+                        $instance->signWrite();
+                        $nbLinks++;
+                        $this->_metrology->addLog('Action upload file links - unsigned link ' . $instance->getRaw(), Metrology::LOG_LEVEL_NORMAL);
                     }
                 }
             }
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-            echo "\n<br />\nRead=$nbLines Valid=$nbLinks\n";
         }
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
+        echo "\n<br />\nRead=$nbLines Valid=$nbLinks\n";
     }
 
 
@@ -3551,156 +3276,140 @@ abstract class Actions
      */
     protected function _actionCreateEntity()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteEntity')
-            && ($this->_unlocked
-                || $this->_configuration->getOptionAsBoolean('permitPublicCreateEntity')
-            )
-            && $this->_actionCreateEntity
-            && !$this->_actionCreateEntityError
-        ) {
-            $this->_metrology->addLog('Action create entity', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action create entity', Metrology::LOG_LEVEL_DEBUG);
 
-            // Création de la nouvelle entité nebule.
-            $instance = new Entity($this->_nebuleInstance, 'new');
+        // Création de la nouvelle entité nebule.
+        $instance = new Entity($this->_nebuleInstance, 'new');
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
+
+        if (is_a($instance, 'Entity') && $instance->getID() != '0') {
+            $this->_actionCreateEntityError = false;
+
+            // Enregistre l'instance créée.
+            $this->_actionCreateEntityInstance = $instance;
+            $this->_actionCreateEntityID = $instance->getID();
+            unset($instance);
+
+            // Modifie le mot de passe de clé privée.
+            $this->_actionCreateEntityInstance->changePrivateKeyPassword($this->_actionCreateEntityPassword);
 
             // Affichage des actions.
             $this->_display->displayInlineAllActions();
 
-            if (is_a($instance, 'Entity') && $instance->getID() != '0') {
-                $this->_actionCreateEntityError = false;
+            // Bascule temporairement sur la nouvelle entité.
+            $this->_nebuleInstance->setTempCurrentEntity($this->_actionCreateEntityInstance);
+            $this->_nebuleInstance->getCurrentEntityInstance()->setPrivateKeyPassword($this->_actionCreateEntityPassword);
 
-                // Enregistre l'instance créée.
-                $this->_actionCreateEntityInstance = $instance;
-                $this->_actionCreateEntityID = $instance->getID();
-                unset($instance);
+            // Définition de la date et du signataire.
+            $date = date(DATE_ATOM);
+            $signer = $this->_actionCreateEntityID;
 
-                // Modifie le mot de passe de clé privée.
-                $this->_actionCreateEntityInstance->changePrivateKeyPassword($this->_actionCreateEntityPassword);
+            // Si prénom et pas de nom, le prénom devient le nom.
+            if ($this->_actionCreateEntityName == '' && $this->_actionCreateEntityFirstname != '') {
+                $this->_actionCreateEntityName = $this->_actionCreateEntityFirstname;
+                $this->_actionCreateEntityFirstname = '';
+            }
 
-                // Affichage des actions.
-                $this->_display->displayInlineAllActions();
-
-                // Bascule temporairement sur la nouvelle entité.
-                $this->_nebuleInstance->setTempCurrentEntity($this->_actionCreateEntityInstance);
-                $this->_nebuleInstance->getCurrentEntityInstance()->setPrivateKeyPassword($this->_actionCreateEntityPassword);
-
-                // Définition de la date et du signataire.
-                $date = date(DATE_ATOM);
-                $signer = $this->_actionCreateEntityID;
-
-                // Si prénom et pas de nom, le prénom devient le nom.
-                if ($this->_actionCreateEntityName == '' && $this->_actionCreateEntityFirstname != '') {
-                    $this->_actionCreateEntityName = $this->_actionCreateEntityFirstname;
-                    $this->_actionCreateEntityFirstname = '';
+            // Nomme l'entité.
+            if ($this->_actionCreateEntityName != '') {
+                // Crée l'objet avec le texte.
+                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityName); // Est fait avec l'entité courante, pas la nouvelle !!!
+                if ($textID !== false) {
+                    // Crée le lien.
+                    $action = 'l';
+                    $source = $this->_actionCreateEntityID;
+                    $target = $textID;
+                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/nom');
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
                 }
-
-                // Nomme l'entité.
-                if ($this->_actionCreateEntityName != '') {
-                    // Crée l'objet avec le texte.
-                    $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityName); // Est fait avec l'entité courante, pas la nouvelle !!!
-                    if ($textID !== false) {
-                        // Crée le lien.
-                        $action = 'l';
-                        $source = $this->_actionCreateEntityID;
-                        $target = $textID;
-                        $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/nom');
-                        $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
-                    }
+            }
+            if ($this->_actionCreateEntityFirstname != '') {
+                // Crée l'objet avec le texte.
+                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityFirstname);
+                if ($textID !== false) {
+                    // Crée le lien.
+                    $action = 'l';
+                    $source = $this->_actionCreateEntityID;
+                    $target = $textID;
+                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/prenom');
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
                 }
-                if ($this->_actionCreateEntityFirstname != '') {
-                    // Crée l'objet avec le texte.
-                    $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityFirstname);
-                    if ($textID !== false) {
-                        // Crée le lien.
-                        $action = 'l';
-                        $source = $this->_actionCreateEntityID;
-                        $target = $textID;
-                        $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/prenom');
-                        $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
-                    }
+            }
+            if ($this->_actionCreateEntityNikename != '') {
+                // Crée l'objet avec le texte.
+                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityNikename);
+                if ($textID !== false) {
+                    // Crée le lien.
+                    $action = 'l';
+                    $source = $this->_actionCreateEntityID;
+                    $target = $textID;
+                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/surnom');
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
                 }
-                if ($this->_actionCreateEntityNikename != '') {
-                    // Crée l'objet avec le texte.
-                    $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityNikename);
-                    if ($textID !== false) {
-                        // Crée le lien.
-                        $action = 'l';
-                        $source = $this->_actionCreateEntityID;
-                        $target = $textID;
-                        $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/surnom');
-                        $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
-                    }
-                }
-
-                // Affichage des actions.
-                $this->_display->displayInlineAllActions();
-
-                if ($this->_actionCreateEntityPrefix != '') {
-                    // Crée l'objet avec le texte.
-                    $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityPrefix);
-                    if ($textID !== false) {
-                        // Crée le lien.
-                        $action = 'l';
-                        $source = $this->_actionCreateEntityID;
-                        $target = $textID;
-                        $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/prefix');
-                        $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
-                    }
-                }
-                if ($this->_actionCreateEntitySuffix != '') {
-                    // Crée l'objet avec le texte.
-                    $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntitySuffix);
-                    if ($textID !== false) {
-                        // Crée le lien.
-                        $action = 'l';
-                        $source = $this->_actionCreateEntityID;
-                        $target = $textID;
-                        $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/suffix');
-                        $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
-                    }
-                }
-                if ($this->_actionCreateEntityType != '') {
-                    // Crée l'objet avec le texte.
-                    $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityType);
-                    if ($textID !== false) {
-                        // Crée le lien.
-                        $action = 'l';
-                        $source = $this->_actionCreateEntityID;
-                        $target = $textID;
-                        $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/entite/type');
-                        $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
-                    }
-                }
-
-                unset($date, $source, $target, $meta, $link, $newLink, $textID);
-
-                // Restaure l'entité d'origine.
-                $this->_nebuleInstance->unsetTempCurrentEntity();
-
-                // Efface le cache pour recharger l'entité.
-                $this->_nebuleInstance->unsetCacheEntity($this->_actionCreateEntityID);
-
-                // Recrée l'instance de l'objet.
-                $this->_actionCreateEntityInstance = $this->_nebuleInstance->newEntity_DEPRECATED($this->_actionCreateEntityID);
-            } else {
-                // Si ce n'est pas bon.
-                $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
-                $this->_metrology->addLog('Action _actionCreateEntity cant generate', Metrology::LOG_LEVEL_ERROR); // Log
-                $this->_actionCreateEntityError = true;
-                $this->_actionCreateEntityErrorMessage = 'Echec de la génération.';
             }
 
             // Affichage des actions.
             $this->_display->displayInlineAllActions();
+
+            if ($this->_actionCreateEntityPrefix != '') {
+                // Crée l'objet avec le texte.
+                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityPrefix);
+                if ($textID !== false) {
+                    // Crée le lien.
+                    $action = 'l';
+                    $source = $this->_actionCreateEntityID;
+                    $target = $textID;
+                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/prefix');
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
+                }
+            }
+            if ($this->_actionCreateEntitySuffix != '') {
+                // Crée l'objet avec le texte.
+                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntitySuffix);
+                if ($textID !== false) {
+                    // Crée le lien.
+                    $action = 'l';
+                    $source = $this->_actionCreateEntityID;
+                    $target = $textID;
+                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/suffix');
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
+                }
+            }
+            if ($this->_actionCreateEntityType != '') {
+                // Crée l'objet avec le texte.
+                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityType);
+                if ($textID !== false) {
+                    // Crée le lien.
+                    $action = 'l';
+                    $source = $this->_actionCreateEntityID;
+                    $target = $textID;
+                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/entite/type');
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
+                }
+            }
+
+            unset($date, $source, $target, $meta, $link, $newLink, $textID);
+
+            // Restaure l'entité d'origine.
+            $this->_nebuleInstance->unsetTempCurrentEntity();
+
+            // Efface le cache pour recharger l'entité.
+            $this->_nebuleInstance->unsetCacheEntity($this->_actionCreateEntityID);
+
+            // Recrée l'instance de l'objet.
+            $this->_actionCreateEntityInstance = $this->_nebuleInstance->newEntity_DEPRECATED($this->_actionCreateEntityID);
         } else {
-            $this->_metrology->addLog('Action _actionCreateEntity not autorized', Metrology::LOG_LEVEL_ERROR); // Log
+            // Si ce n'est pas bon.
+            $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
+            $this->_metrology->addLog('Action _actionCreateEntity cant generate', Metrology::LOG_LEVEL_ERROR);
             $this->_actionCreateEntityError = true;
-            $this->_actionCreateEntityErrorMessage = 'Non autorisé.';
+            $this->_actionCreateEntityErrorMessage = 'Echec de la génération.';
         }
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -3709,43 +3418,30 @@ abstract class Actions
      */
     protected function _actionCreateGroup()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
-            && $this->_unlocked
-            && !$this->_actionCreateGroupError
-        ) {
-            $this->_metrology->addLog('Action create group', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action create group', Metrology::LOG_LEVEL_DEBUG);
 
-            // Création du nouveau groupe.
-            $instance = new Group($this->_nebuleInstance, 'new', $this->_actionCreateGroupClosed);
+        // Création du nouveau groupe.
+        $instance = new Group($this->_nebuleInstance, 'new', $this->_actionCreateGroupClosed);
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
 
-            if (is_a($instance, 'Group') && $instance->getID() != '0') {
-                $this->_actionCreateGroupError = false;
-                $instance->setName($this->_actionCreateGroupName);
+        if (is_a($instance, 'Group') && $instance->getID() != '0') {
+            $this->_actionCreateGroupError = false;
+            $instance->setName($this->_actionCreateGroupName);
 
-                $this->_actionCreateGroupInstance = $instance;
-                $this->_actionCreateGroupID = $instance->getID();
-            } else {
-                // Si ce n'est pas bon.
-                $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
-                $this->_metrology->addLog('Action _actionCreateGroup cant generate', Metrology::LOG_LEVEL_ERROR); // Log
-                $this->_actionCreateGroupError = true;
-                $this->_actionCreateGroupErrorMessage = 'Echec de la génération.';
-            }
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
+            $this->_actionCreateGroupInstance = $instance;
+            $this->_actionCreateGroupID = $instance->getID();
         } else {
-            $this->_metrology->addLog('Action _actionCreateGroup not autorized', Metrology::LOG_LEVEL_ERROR); // Log
+            // Si ce n'est pas bon.
+            $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
+            $this->_metrology->addLog('Action _actionCreateGroup cant generate', Metrology::LOG_LEVEL_ERROR);
             $this->_actionCreateGroupError = true;
-            $this->_actionCreateGroupErrorMessage = 'Non autorisé.';
+            $this->_actionCreateGroupErrorMessage = 'Echec de la génération.';
         }
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -3754,54 +3450,42 @@ abstract class Actions
      */
     protected function _actionDeleteGroup()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
-            && $this->_unlocked
-            && !$this->_actionDeleteGroupError
+        $this->_metrology->addLog('Action delete group ' . $this->_actionDeleteGroupID, Metrology::LOG_LEVEL_DEBUG);
+
+        /**
+         * Instance du groupe.
+         * @var Group $instance
+         */
+        $instance = $this->_nebuleInstance->newGroup_DEPRECATED($this->_actionDeleteGroupID);
+
+        // Vérification.
+        if ($instance->getID() == '0'
+            || !$instance->getIsGroup('all')
         ) {
-            $this->_metrology->addLog('Action delete group ' . $this->_actionDeleteGroupID, Metrology::LOG_LEVEL_DEBUG); // Log
-
-            /**
-             * Instance du groupe.
-             * @var Group $instance
-             */
-            $instance = $this->_nebuleInstance->newGroup_DEPRECATED($this->_actionDeleteGroupID);
-
-            // Vérification.
-            if ($instance->getID() == '0'
-                || !$instance->getIsGroup('all')
-            ) {
-                $this->_actionDeleteGroupError = false;
-                $this->_actionDeleteGroupErrorMessage = 'Pas un groupe.';
-                $this->_metrology->addLog('Action delete not a group', Metrology::LOG_LEVEL_DEBUG); // Log
-                return;
-            }
-
-            // Suppression.
-            if ($instance->getMarkClosed()) {
-                $this->_metrology->addLog('Action delete group closed', Metrology::LOG_LEVEL_DEBUG); // Log
-                $instance->unsetMarkClosed();
-            }
-            $instance->unsetGroup();
-
-            // Vérification.
-            if ($instance->getIsGroup('myself')) {
-                // Si ce n'est pas bon.
-                $this->_metrology->addLog('Action _actionDeleteGroup cant generate', Metrology::LOG_LEVEL_ERROR); // Log
-                $this->_actionDeleteGroupError = true;
-                $this->_actionDeleteGroupErrorMessage = 'Echec de la génération.';
-            }
-            unset($instance);
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        } else {
-            $this->_metrology->addLog('Action _actionDeleteGroup not autorized', Metrology::LOG_LEVEL_ERROR); // Log
-            $this->_actionDeleteGroupError = true;
-            $this->_actionDeleteGroupErrorMessage = 'Non autorisé.';
+            $this->_actionDeleteGroupError = false;
+            $this->_actionDeleteGroupErrorMessage = 'Pas un groupe.';
+            $this->_metrology->addLog('Action delete not a group', Metrology::LOG_LEVEL_DEBUG);
+            return;
         }
+
+        // Suppression.
+        if ($instance->getMarkClosed()) {
+            $this->_metrology->addLog('Action delete group closed', Metrology::LOG_LEVEL_DEBUG);
+            $instance->unsetMarkClosed();
+        }
+        $instance->unsetGroup();
+
+        // Vérification.
+        if ($instance->getIsGroup('myself')) {
+            // Si ce n'est pas bon.
+            $this->_metrology->addLog('Action _actionDeleteGroup cant generate', Metrology::LOG_LEVEL_ERROR);
+            $this->_actionDeleteGroupError = true;
+            $this->_actionDeleteGroupErrorMessage = 'Echec de la génération.';
+        }
+        unset($instance);
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -3812,20 +3496,13 @@ abstract class Actions
      */
     protected function _actionAddToGroup()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Action add to group ' . $this->_actionAddToGroup, Metrology::LOG_LEVEL_DEBUG); // Log
-            $instanceGroupe = $this->_nebuleInstance->newGroup_DEPRECATED($this->_actionAddToGroup);
-            $instanceGroupe->setMember($this->_nebuleInstance->getCurrentObjectInstance());
-            unset($instanceGroupe);
+        $this->_metrology->addLog('Action add to group ' . $this->_actionAddToGroup, Metrology::LOG_LEVEL_DEBUG);
+        $instanceGroupe = $this->_nebuleInstance->newGroup_DEPRECATED($this->_actionAddToGroup);
+        $instanceGroupe->setMember($this->_nebuleInstance->getCurrentObjectInstance());
+        unset($instanceGroupe);
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        }
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -3836,20 +3513,13 @@ abstract class Actions
      */
     protected function _actionRemoveFromGroup()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Action remove from group ' . $this->_actionRemoveFromGroup, Metrology::LOG_LEVEL_DEBUG); // Log
-            $instanceGroupe = $this->_nebuleInstance->newGroup_DEPRECATED($this->_actionRemoveFromGroup);
-            $instanceGroupe->unsetMember($this->_nebuleInstance->getCurrentObjectInstance());
-            unset($instanceGroupe);
+        $this->_metrology->addLog('Action remove from group ' . $this->_actionRemoveFromGroup, Metrology::LOG_LEVEL_DEBUG);
+        $instanceGroupe = $this->_nebuleInstance->newGroup_DEPRECATED($this->_actionRemoveFromGroup);
+        $instanceGroupe->unsetMember($this->_nebuleInstance->getCurrentObjectInstance());
+        unset($instanceGroupe);
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        }
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -3858,18 +3528,11 @@ abstract class Actions
      */
     protected function _actionAddItemToGroup()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Action add item to group ' . $this->_actionAddItemToGroup, Metrology::LOG_LEVEL_DEBUG); // Log
-            $this->_nebuleInstance->getCurrentGroupInstance()->setMember($this->_actionAddItemToGroup);
+        $this->_metrology->addLog('Action add item to group ' . $this->_actionAddItemToGroup, Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getCurrentGroupInstance()->setMember($this->_actionAddItemToGroup);
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        }
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -3878,18 +3541,11 @@ abstract class Actions
      */
     protected function _actionRemoveItemFromGroup()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Action remove item from group ' . $this->_actionRemoveItemFromGroup, Metrology::LOG_LEVEL_DEBUG); // Log
-            $this->_nebuleInstance->getCurrentGroupInstance()->unsetMember($this->_actionRemoveItemFromGroup);
+        $this->_metrology->addLog('Action remove item from group ' . $this->_actionRemoveItemFromGroup, Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getCurrentGroupInstance()->unsetMember($this->_actionRemoveItemFromGroup);
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        }
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -3898,50 +3554,37 @@ abstract class Actions
      */
     protected function _actionCreateConversation()
     {
-        // Vérifie que la création de conversation soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
-            && $this->_unlocked
-            && !$this->_actionCreateConversationError
+        $this->_metrology->addLog('Action create conversation', Metrology::LOG_LEVEL_DEBUG);
+
+        // Création de la nouvelle conversation.
+        $instance = new Conversation(
+            $this->_nebuleInstance,
+            'new',
+            $this->_actionCreateConversationClosed,
+            $this->_actionCreateConversationProtected,
+            $this->_actionCreateConversationObfuscateLinks);
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
+
+        if (is_a($instance, 'Conversation')
+            && $instance->getID() != '0'
         ) {
-            $this->_metrology->addLog('Action create conversation', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_actionCreateConversationError = false;
+            $instance->setName($this->_actionCreateConversationName);
 
-            // Création de la nouvelle conversation.
-            $instance = new Conversation(
-                $this->_nebuleInstance,
-                'new',
-                $this->_actionCreateConversationClosed,
-                $this->_actionCreateConversationProtected,
-                $this->_actionCreateConversationObfuscateLinks);
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-
-            if (is_a($instance, 'Conversation')
-                && $instance->getID() != '0'
-            ) {
-                $this->_actionCreateConversationError = false;
-                $instance->setName($this->_actionCreateConversationName);
-
-                $this->_actionCreateConversationInstance = $instance;
-                $this->_actionCreateConversationID = $instance->getID();
-            } else {
-                // Si ce n'est pas bon.
-                $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
-                $this->_metrology->addLog('Action _actionCreateConversation cant generate', Metrology::LOG_LEVEL_ERROR); // Log
-                $this->_actionCreateConversationError = true;
-                $this->_actionCreateConversationErrorMessage = 'Echec de la génération.';
-            }
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
+            $this->_actionCreateConversationInstance = $instance;
+            $this->_actionCreateConversationID = $instance->getID();
         } else {
-            $this->_metrology->addLog('Action _actionCreateConversation not autorized', Metrology::LOG_LEVEL_ERROR); // Log
+            // Si ce n'est pas bon.
+            $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
+            $this->_metrology->addLog('Action _actionCreateConversation cant generate', Metrology::LOG_LEVEL_ERROR);
             $this->_actionCreateConversationError = true;
-            $this->_actionCreateConversationErrorMessage = 'Non autorisé.';
+            $this->_actionCreateConversationErrorMessage = 'Echec de la génération.';
         }
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -3953,52 +3596,40 @@ abstract class Actions
      */
     protected function _actionDeleteConversation()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
-            && $this->_unlocked
-            && !$this->_actionDeleteConversationError
+        $this->_metrology->addLog('Action delete conversation ' . $this->_actionDeleteConversationID, Metrology::LOG_LEVEL_DEBUG);
+
+        // Suppression.
+        $instance = $this->_nebuleInstance->newConversation_DEPRECATED($this->_actionDeleteConversationID);
+        if (!is_a($instance, 'Conversation')
+            || $instance->getID() == '0'
+            || !$instance->getIsConversation('myself')
         ) {
-            $this->_metrology->addLog('Action delete conversation ' . $this->_actionDeleteConversationID, Metrology::LOG_LEVEL_DEBUG); // Log
-
-            // Suppression.
-            $instance = $this->_nebuleInstance->newConversation_DEPRECATED($this->_actionDeleteConversationID);
-            if (!is_a($instance, 'Conversation')
-                || $instance->getID() == '0'
-                || !$instance->getIsConversation('myself')
-            ) {
-                $this->_actionDeleteConversationError = false;
-                $this->_actionDeleteConversationErrorMessage = 'Pas un conversation.';
-                $this->_metrology->addLog('Action delete not a group', Metrology::LOG_LEVEL_DEBUG); // Log
-                return;
-            }
-            if ($instance->getIsConversationClosed()) {
-                $this->_metrology->addLog('Action delete conversation closed', Metrology::LOG_LEVEL_DEBUG); // Log
-                $instance->setUnmarkConversationClosed();
-                $test = $instance->getIsConversationClosed();
-            } else {
-                $this->_metrology->addLog('Action delete conversation', Metrology::LOG_LEVEL_DEBUG); // Log
-                $instance->setUnmarkConversationOpened();
-                $test = $instance->getIsConversationOpened();
-            }
-
-            // Vérification.
-            if ($test) {
-                // Si ce n'est pas bon.
-                $this->_metrology->addLog('Action _actionDeleteConversation cant generate', Metrology::LOG_LEVEL_ERROR); // Log
-                $this->_actionDeleteConversationError = true;
-                $this->_actionDeleteConversationErrorMessage = 'Echec de la génération.';
-            }
-            unset($instance, $test);
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        } else {
-            $this->_metrology->addLog('Action _actionDeleteConversation not autorized', Metrology::LOG_LEVEL_ERROR); // Log
-            $this->_actionDeleteConversationError = true;
-            $this->_actionDeleteConversationErrorMessage = 'Non autorisé.';
+            $this->_actionDeleteConversationError = false;
+            $this->_actionDeleteConversationErrorMessage = 'Pas un conversation.';
+            $this->_metrology->addLog('Action delete not a group', Metrology::LOG_LEVEL_DEBUG);
+            return;
         }
+        if ($instance->getIsConversationClosed()) {
+            $this->_metrology->addLog('Action delete conversation closed', Metrology::LOG_LEVEL_DEBUG);
+            $instance->setUnmarkConversationClosed();
+            $test = $instance->getIsConversationClosed();
+        } else {
+            $this->_metrology->addLog('Action delete conversation', Metrology::LOG_LEVEL_DEBUG);
+            $instance->setUnmarkConversationOpened();
+            $test = $instance->getIsConversationOpened();
+        }
+
+        // Vérification.
+        if ($test) {
+            // Si ce n'est pas bon.
+            $this->_metrology->addLog('Action _actionDeleteConversation cant generate', Metrology::LOG_LEVEL_ERROR);
+            $this->_actionDeleteConversationError = true;
+            $this->_actionDeleteConversationErrorMessage = 'Echec de la génération.';
+        }
+        unset($instance, $test);
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -4007,21 +3638,14 @@ abstract class Actions
      */
     protected function _actionAddMessageOnConversation()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Action add message to conversation ' . $this->_actionAddMessageOnConversation, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action add message to conversation ' . $this->_actionAddMessageOnConversation, Metrology::LOG_LEVEL_DEBUG);
 
-            $instanceConversation = $this->_nebuleInstance->newConversation_DEPRECATED($this->_actionAddMessageOnConversation);
-            $instanceConversation->setMember($this->_nebuleInstance->getCurrentObject(), false);
-            unset($instanceConversation);
+        $instanceConversation = $this->_nebuleInstance->newConversation_DEPRECATED($this->_actionAddMessageOnConversation);
+        $instanceConversation->setMember($this->_nebuleInstance->getCurrentObject(), false);
+        unset($instanceConversation);
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        }
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -4030,21 +3654,14 @@ abstract class Actions
      */
     protected function _actionRemoveMessageOnConversation()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Action remove message to conversation ' . $this->_actionRemoveMessageOnConversation, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action remove message to conversation ' . $this->_actionRemoveMessageOnConversation, Metrology::LOG_LEVEL_DEBUG);
 
-            $instanceConversation = $this->_nebuleInstance->newConversation_DEPRECATED($this->_actionRemoveMessageOnConversation);
-            $instanceConversation->unsetMember($this->_nebuleInstance->getCurrentObject());
-            unset($instanceConversation);
+        $instanceConversation = $this->_nebuleInstance->newConversation_DEPRECATED($this->_actionRemoveMessageOnConversation);
+        $instanceConversation->unsetMember($this->_nebuleInstance->getCurrentObject());
+        unset($instanceConversation);
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        }
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -4053,21 +3670,14 @@ abstract class Actions
      */
     protected function _actionAddMemberOnConversation()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Action add member to conversation ' . $this->_actionAddMemberOnConversation, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action add member to conversation ' . $this->_actionAddMemberOnConversation, Metrology::LOG_LEVEL_DEBUG);
 
-            $instanceConversation = $this->_nebuleInstance->newConversation_DEPRECATED($this->_actionAddMemberOnConversation);
-            $instanceConversation->setFollower($this->_nebuleInstance->getCurrentObject());
-            unset($instanceConversation);
+        $instanceConversation = $this->_nebuleInstance->newConversation_DEPRECATED($this->_actionAddMemberOnConversation);
+        $instanceConversation->setFollower($this->_nebuleInstance->getCurrentObject());
+        unset($instanceConversation);
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        }
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -4076,21 +3686,14 @@ abstract class Actions
      */
     protected function _actionRemoveMemberOnConversation()
     {
-        // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
-            && $this->_unlocked
-        ) {
-            $this->_metrology->addLog('Action remove member to conversation ' . $this->_actionRemoveMemberOnConversation, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action remove member to conversation ' . $this->_actionRemoveMemberOnConversation, Metrology::LOG_LEVEL_DEBUG);
 
-            $instanceConversation = $this->_nebuleInstance->newConversation_DEPRECATED($this->_actionRemoveMemberOnConversation);
-            $instanceConversation->unsetFollower($this->_nebuleInstance->getCurrentObject());
-            unset($instanceConversation);
+        $instanceConversation = $this->_nebuleInstance->newConversation_DEPRECATED($this->_actionRemoveMemberOnConversation);
+        $instanceConversation->unsetFollower($this->_nebuleInstance->getCurrentObject());
+        unset($instanceConversation);
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        }
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -4100,56 +3703,42 @@ abstract class Actions
      */
     protected function _actionCreateMessage()
     {
-        // Vérifie que la création de message soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteConversation')
-            && $this->_unlocked
-            && !$this->_actionCreateMessageError
-            && !$this->_actionUploadTextError
-        ) {
-            $id = $this->_actionUploadTextID;
-            $this->_metrology->addLog('Action create message ' . $id, Metrology::LOG_LEVEL_DEBUG); // Log
-            if ($this->_actionCreateMessageProtected) {
-                $this->_metrology->addLog('Action create message protected', Metrology::LOG_LEVEL_DEBUG); // Log
-            }
-            if ($this->_actionCreateMessageObfuscateLinks) {
-                $this->_metrology->addLog('Action create message with obfuscated links', Metrology::LOG_LEVEL_DEBUG); // Log
-            }
-
-            // Création de l'instance du message.
-            $instanceMessage = $this->_nebuleInstance->newObject($id);
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-
-            if (is_a($instanceMessage, 'Node')
-                && $instanceMessage->getID() != '0'
-            ) {
-                $this->_actionCreateConversationError = false;
-
-                $instanceConversation = $this->_nebuleInstance->getCurrentConversationInstance();
-                $instanceConversation->setMember($id, $this->_actionCreateMessageObfuscateLinks);
-
-                unset($instanceConversation);
-
-                $this->_actionCreateMessageID = $id;
-            } else {
-                // Si ce n'est pas bon.
-                $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
-                $this->_metrology->addLog('Action _actionCreateMessage cant generate', Metrology::LOG_LEVEL_ERROR); // Log
-                $this->_actionCreateMessageError = true;
-                $this->_actionCreateMessageErrorMessage = 'Echec de la génération.';
-            }
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        } else {
-            $this->_metrology->addLog('Action _actionCreateMessage not autorized', Metrology::LOG_LEVEL_ERROR); // Log
-            $this->_actionCreateMessageError = true;
-            $this->_actionCreateMessageErrorMessage = 'Non autorisé.';
+        $id = $this->_actionUploadTextID;
+        $this->_metrology->addLog('Action create message ' . $id, Metrology::LOG_LEVEL_DEBUG);
+        if ($this->_actionCreateMessageProtected) {
+            $this->_metrology->addLog('Action create message protected', Metrology::LOG_LEVEL_DEBUG);
         }
+        if ($this->_actionCreateMessageObfuscateLinks) {
+            $this->_metrology->addLog('Action create message with obfuscated links', Metrology::LOG_LEVEL_DEBUG);
+        }
+
+        // Création de l'instance du message.
+        $instanceMessage = $this->_nebuleInstance->newObject($id);
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
+
+        if (is_a($instanceMessage, 'Node')
+            && $instanceMessage->getID() != '0'
+        ) {
+            $this->_actionCreateConversationError = false;
+
+            $instanceConversation = $this->_nebuleInstance->getCurrentConversationInstance();
+            $instanceConversation->setMember($id, $this->_actionCreateMessageObfuscateLinks);
+
+            unset($instanceConversation);
+
+            $this->_actionCreateMessageID = $id;
+        } else {
+            // Si ce n'est pas bon.
+            $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
+            $this->_metrology->addLog('Action _actionCreateMessage cant generate', Metrology::LOG_LEVEL_ERROR);
+            $this->_actionCreateMessageError = true;
+            $this->_actionCreateMessageErrorMessage = 'Echec de la génération.';
+        }
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -4158,53 +3747,41 @@ abstract class Actions
      */
     protected function _actionAddProperty()
     {
-        // Vérifie que la création d'objet soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_unlocked
-            && !$this->_actionAddPropertyError
-        ) {
-            $prop = $this->_actionAddProperty;
-            $propID = $this->_nebuleInstance->getCryptoInstance()->hash($prop);
-            $this->_metrology->addLog('Action add property ' . $prop, Metrology::LOG_LEVEL_DEBUG); // Log
-            $objectID = $this->_actionAddPropertyObject;
-            $this->_metrology->addLog('Action add property for ' . $objectID, Metrology::LOG_LEVEL_DEBUG); // Log
-            $value = $this->_actionAddPropertyValue;
-            $valueID = $this->_nebuleInstance->getCryptoInstance()->hash($value);
-            $this->_metrology->addLog('Action add property value : ' . $value, Metrology::LOG_LEVEL_DEBUG); // Log
-            $protected = $this->_actionAddPropertyProtected;
-            if ($protected) {
-                $this->_metrology->addLog('Action add property protected', Metrology::LOG_LEVEL_DEBUG); // Log
-            }
-            if ($this->_actionAddPropertyObfuscateLinks) {
-                $this->_metrology->addLog('Action add property with obfuscated links', Metrology::LOG_LEVEL_DEBUG); // Log
-            }
-
-            // Création des objets si besoin.
-            if (!$this->_nebuleInstance->getIoInstance()->checkObjectPresent($propID)) {
-                $this->_nebuleInstance->createTextAsObject($prop);
-            }
-            if (!$this->_nebuleInstance->getIoInstance()->checkObjectPresent($valueID)) {
-                $this->_nebuleInstance->createTextAsObject($value, $protected, $this->_actionAddPropertyObfuscateLinks);
-            }
-
-            // Création du lien.
-            $date = date(DATE_ATOM);
-            $signer = $this->_nebuleInstance->getCurrentEntity();
-            $action = 'l';
-            $source = $objectID;
-            $target = $valueID;
-            $meta = $propID;
-            $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionAddPropertyObfuscateLinks);
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        } else {
-            $this->_metrology->addLog('Action _actionAddProperty not autorized', Metrology::LOG_LEVEL_ERROR); // Log
-            $this->_actionAddPropertyError = true;
-            $this->_actionAddPropertyErrorMessage = 'Non autorisé.';
+        $prop = $this->_actionAddProperty;
+        $propID = $this->_nebuleInstance->getCryptoInstance()->hash($prop);
+        $this->_metrology->addLog('Action add property ' . $prop, Metrology::LOG_LEVEL_DEBUG);
+        $objectID = $this->_actionAddPropertyObject;
+        $this->_metrology->addLog('Action add property for ' . $objectID, Metrology::LOG_LEVEL_DEBUG);
+        $value = $this->_actionAddPropertyValue;
+        $valueID = $this->_nebuleInstance->getCryptoInstance()->hash($value);
+        $this->_metrology->addLog('Action add property value : ' . $value, Metrology::LOG_LEVEL_DEBUG);
+        $protected = $this->_actionAddPropertyProtected;
+        if ($protected) {
+            $this->_metrology->addLog('Action add property protected', Metrology::LOG_LEVEL_DEBUG);
         }
+        if ($this->_actionAddPropertyObfuscateLinks) {
+            $this->_metrology->addLog('Action add property with obfuscated links', Metrology::LOG_LEVEL_DEBUG);
+        }
+
+        // Création des objets si besoin.
+        if (!$this->_nebuleInstance->getIoInstance()->checkObjectPresent($propID)) {
+            $this->_nebuleInstance->createTextAsObject($prop);
+        }
+        if (!$this->_nebuleInstance->getIoInstance()->checkObjectPresent($valueID)) {
+            $this->_nebuleInstance->createTextAsObject($value, $protected, $this->_actionAddPropertyObfuscateLinks);
+        }
+
+        // Création du lien.
+        $date = date(DATE_ATOM);
+        $signer = $this->_nebuleInstance->getCurrentEntity();
+        $action = 'l';
+        $source = $objectID;
+        $target = $valueID;
+        $meta = $propID;
+        $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionAddPropertyObfuscateLinks);
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -4213,47 +3790,33 @@ abstract class Actions
      */
     protected function _actionCreateCurrency()
     {
-        // Vérifie que la création de monnaie soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
-            && $this->_configuration->getOptionAsBoolean('permitCreateCurrency')
-            && $this->_unlocked
-            && !$this->_actionCreateCurrencyError
+        $this->_metrology->addLog('Action create currency', Metrology::LOG_LEVEL_DEBUG);
+
+        // Création de la nouvelle monnaie.
+        $instance = new Currency($this->_nebuleInstance, 'new', $this->_actionCreateCurrencyParam, false, false);
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
+
+        if (is_a($instance, 'Currency')
+            && $instance->getID() != '0'
         ) {
-            $this->_metrology->addLog('Action create currency', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_actionCreateCurrencyError = false;
 
-            // Création de la nouvelle monnaie.
-            $instance = new Currency($this->_nebuleInstance, 'new', $this->_actionCreateCurrencyParam, false, false);
+            $this->_actionCreateCurrencyInstance = $instance;
+            $this->_actionCreateCurrencyID = $instance->getID();
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-
-            if (is_a($instance, 'Currency')
-                && $instance->getID() != '0'
-            ) {
-                $this->_actionCreateCurrencyError = false;
-
-                $this->_actionCreateCurrencyInstance = $instance;
-                $this->_actionCreateCurrencyID = $instance->getID();
-
-                $this->_metrology->addLog('Action _actionCreateCurrency generated ID=' . $instance->getID(), Metrology::LOG_LEVEL_DEBUG); // Log
-            } else {
-                // Si ce n'est pas bon.
-                $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
-                $this->_metrology->addLog('Action _actionCreateCurrency cant generate', Metrology::LOG_LEVEL_ERROR); // Log
-                $this->_actionCreateCurrencyError = true;
-                $this->_actionCreateCurrencyErrorMessage = 'Echec de la génération.';
-            }
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
+            $this->_metrology->addLog('Action _actionCreateCurrency generated ID=' . $instance->getID(), Metrology::LOG_LEVEL_DEBUG);
         } else {
-            $this->_metrology->addLog('Action _actionCreateCurrency not autorized', Metrology::LOG_LEVEL_ERROR); // Log
+            // Si ce n'est pas bon.
+            $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
+            $this->_metrology->addLog('Action _actionCreateCurrency cant generate', Metrology::LOG_LEVEL_ERROR);
             $this->_actionCreateCurrencyError = true;
-            $this->_actionCreateCurrencyErrorMessage = 'Non autorisé.';
+            $this->_actionCreateCurrencyErrorMessage = 'Echec de la génération.';
         }
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -4262,47 +3825,33 @@ abstract class Actions
      */
     protected function _actionCreateTokenPool()
     {
-        // Vérifie que la création de sac de jetons soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
-            && $this->_configuration->getOptionAsBoolean('permitCreateCurrency')
-            && $this->_unlocked
-            && !$this->_actionCreateTokenPoolError
+        $this->_metrology->addLog('Action create token pool', Metrology::LOG_LEVEL_DEBUG);
+
+        // Création du nouveau sac de jetons.
+        $instance = new TokenPool($this->_nebuleInstance, 'new', $this->_actionCreateTokenPoolParam, false, false);
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
+
+        if (is_a($instance, 'TokenPool')
+            && $instance->getID() != '0'
         ) {
-            $this->_metrology->addLog('Action create token pool', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_actionCreateTokenPoolError = false;
 
-            // Création du nouveau sac de jetons.
-            $instance = new TokenPool($this->_nebuleInstance, 'new', $this->_actionCreateTokenPoolParam, false, false);
+            $this->_actionCreateTokenPoolInstance = $instance;
+            $this->_actionCreateTokenPoolID = $instance->getID();
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-
-            if (is_a($instance, 'TokenPool')
-                && $instance->getID() != '0'
-            ) {
-                $this->_actionCreateTokenPoolError = false;
-
-                $this->_actionCreateTokenPoolInstance = $instance;
-                $this->_actionCreateTokenPoolID = $instance->getID();
-
-                $this->_metrology->addLog('Action _actionCreateTokenPool generated ID=' . $instance->getID(), Metrology::LOG_LEVEL_DEBUG); // Log
-            } else {
-                // Si ce n'est pas bon.
-                $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
-                $this->_metrology->addLog('Action _actionCreateTokenPool cant generate', Metrology::LOG_LEVEL_ERROR); // Log
-                $this->_actionCreateTokenPoolError = true;
-                $this->_actionCreateTokenPoolErrorMessage = 'Echec de la génération.';
-            }
-
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
+            $this->_metrology->addLog('Action _actionCreateTokenPool generated ID=' . $instance->getID(), Metrology::LOG_LEVEL_DEBUG);
         } else {
-            $this->_metrology->addLog('Action _actionCreateTokenPool not autorized', Metrology::LOG_LEVEL_ERROR); // Log
+            // Si ce n'est pas bon.
+            $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
+            $this->_metrology->addLog('Action _actionCreateTokenPool cant generate', Metrology::LOG_LEVEL_ERROR);
             $this->_actionCreateTokenPoolError = true;
-            $this->_actionCreateTokenPoolErrorMessage = 'Non autorisé.';
+            $this->_actionCreateTokenPoolErrorMessage = 'Echec de la génération.';
         }
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
@@ -4311,66 +3860,60 @@ abstract class Actions
      */
     protected function _actionCreateTokens()
     {
-        // Vérifie que la création de sac de jetons soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
-            && $this->_configuration->getOptionAsBoolean('permitCreateCurrency')
-            && $this->_unlocked
-            && !$this->_actionCreateTokensError
-            && $this->_actionCreateTokensCount > 0
-        ) {
-            $this->_metrology->addLog('Action create tokens', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Action create tokens', Metrology::LOG_LEVEL_DEBUG);
 
-            $instance = $this->_nebuleInstance->getCurrentTokenInstance();
-            for ($i = 0; $i < $this->_actionCreateTokensCount; $i++) {
-                // Si pas le premier jeton, supprime le SID demandé de façon à ce qu'il soit généré aléatoirement.
-                if ($i > 0) {
-                    $this->_actionCreateTokensParam['TokenSerialID'] = '';
-                }
-
-                // Création du nouveau sac de jetons.
-                $instance = new Token($this->_nebuleInstance, 'new', $this->_actionCreateTokensParam, false, false);
-
-                if (is_a($instance, 'Token')
-                    && $instance->getID() != '0'
-                ) {
-                    $this->_actionCreateTokensError = false;
-
-                    $this->_actionCreateTokensInstance[$i] = $instance;
-                    $this->_actionCreateTokensID[$i] = $instance->getID();
-
-                    $this->_metrology->addLog('Action _actionCreateTokens generated ID=' . $instance->getID(), Metrology::LOG_LEVEL_DEBUG); // Log
-                } else {
-                    // Si ce n'est pas bon.
-                    $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
-                    $this->_metrology->addLog('Action _actionCreateTokens cant generate', Metrology::LOG_LEVEL_ERROR); // Log
-                    $this->_actionCreateTokensError = true;
-                    $this->_actionCreateTokensErrorMessage = 'Echec de la génération.';
-
-                    // Quitte le processus de génération.
-                    break;
-                }
+        $instance = $this->_nebuleInstance->getCurrentTokenInstance();
+        for ($i = 0; $i < $this->_actionCreateTokensCount; $i++) {
+            // Si pas le premier jeton, supprime le SID demandé de façon à ce qu'il soit généré aléatoirement.
+            if ($i > 0) {
+                $this->_actionCreateTokensParam['TokenSerialID'] = '';
             }
 
-            // Affichage des actions.
-            $this->_display->displayInlineAllActions();
-        } else {
-            $this->_metrology->addLog('Action _actionCreateTokens not autorized', Metrology::LOG_LEVEL_ERROR); // Log
-            $this->_actionCreateTokensError = true;
-            $this->_actionCreateTokensErrorMessage = 'Non autorisé.';
+            // Création du nouveau sac de jetons.
+            $instance = new Token($this->_nebuleInstance, 'new', $this->_actionCreateTokensParam, false, false);
+
+            if (is_a($instance, 'Token')
+                && $instance->getID() != '0'
+            ) {
+                $this->_actionCreateTokensError = false;
+
+                $this->_actionCreateTokensInstance[$i] = $instance;
+                $this->_actionCreateTokensID[$i] = $instance->getID();
+
+                $this->_metrology->addLog('Action _actionCreateTokens generated ID=' . $instance->getID(), Metrology::LOG_LEVEL_DEBUG);
+            } else {
+                // Si ce n'est pas bon.
+                $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
+                $this->_metrology->addLog('Action _actionCreateTokens cant generate', Metrology::LOG_LEVEL_ERROR);
+                $this->_actionCreateTokensError = true;
+                $this->_actionCreateTokensErrorMessage = 'Echec de la génération.';
+
+                // Quitte le processus de génération.
+                break;
+            }
         }
+
+        // Affichage des actions.
+        $this->_display->displayInlineAllActions();
     }
 
 
     /**
      * Crée un lien.
      *
+     * @param      $signer
+     * @param      $date
+     * @param      $action
+     * @param      $source
+     * @param      $target
+     * @param      $meta
+     * @param bool $obfuscate
      * @return boolean
      */
-    protected function _createLink($signer, $date, $action, $source, $target, $meta, $obfuscate = false)
+    protected function _createLink($signer, $date, $action, $source, $target, $meta, $obfuscate = false): bool
     {
+        return false; // FIXME
+
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new Link($this->_nebuleInstance, $link);
 
@@ -4379,7 +3922,7 @@ abstract class Actions
 
         // Si besoin, obfuscation du lien.
         if ($obfuscate
-            && $this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
+            && $this->_getOptionAsBoolean('permitObfuscatedLink')
         ) {
             $newLink->setObfuscate();
         }
@@ -4457,8 +4000,8 @@ abstract class Actions
      * Extrait et analyse un lien.
      *
      * @param string $link : lien à extraire.
-     * @return Link : une instance de lien.
-     * @todo
+     * @return ?Link : une instance de lien.
+     *
      * Accepte une chaine de caractère représentant un lien.
      * En fonction du nombre de champs, c'est interprété :
      * 2 champs : 0_0_0_action_source_0_0
@@ -4470,8 +4013,9 @@ abstract class Actions
      * Sinon    : 0_0_0_0_0_0_0
      * Retourne une instance du lien.
      */
-    public function flatLinkExtractAsInstance_disabled(string $link): Link
+    public function flatLinkExtractAsInstance_disabled(string $link): ?Link
     {
+        return null; // FIXME
         // Vérifier compatibilité avec liens incomplets...
 
         // Extrait le lien.

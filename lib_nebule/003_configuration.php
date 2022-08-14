@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
-use Nebule\Library\nebule;
 
 /**
  * Configuration class for the nebule library.
@@ -1338,4 +1337,26 @@ class Configuration
         }
     }
 
+    /**
+     * Check a list of boolean options if one is false.
+     * Prend "unlocked" comme une pseudo-option et vérifie l'état de connexion d'une entité.
+     * @param array $list
+     * @return bool
+     */
+    public function checkBooleanOptions(array $list): bool
+    {
+        foreach ($list as $name)
+        {
+            if (($name == 'unlocked' && !$this->_nebuleInstance->getCurrentEntityUnlocked())
+                || !isset(self::OPTIONS_LIST[$name])
+                || self::OPTIONS_TYPE[$name] != 'boolean'
+                || !$this->getOptionAsBoolean($name)
+            )
+            {
+                $this->_metrology->addLog('not permitted with option=' . $name, Metrology::LOG_LEVEL_ERROR, __FUNCTION__,'8318122c');
+                return false;
+            }
+        }
+        return true;
+    }
 }
