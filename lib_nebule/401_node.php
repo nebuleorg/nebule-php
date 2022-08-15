@@ -1001,19 +1001,13 @@ $this->_metrology->addLog('MARK link=' . $link, Metrology::LOG_LEVEL_DEBUG, __FU
         $this->_io->setObject($propertyOID, $property);
 
         // Création lien de propriété.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
-        $date = date(DATE_ATOM);
-        $action = 'l';
-        $source = $this->_id;
-        $target = $propertyOID;
-        $meta = $this->_nebuleInstance->getNIDfromData($type, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
-        $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
-        $newLink->sign();
-        if ($obfuscated) {
-            $newLink->setObfuscate();
-        }
-        $newLink->write();
+        $propertyRID = $this->_nebuleInstance->getNIDfromData($type);
+        $link = 'l>' . $this->_id . '>' . $propertyOID . '>' . $propertyRID;
+        $newBlockLink = new blocLink($this->_nebuleInstance, 'new');
+        $newLink = new Link($this->_nebuleInstance, $link, $newBlockLink);
+        if ($obfuscated && !$newLink->setObfuscate())
+            return false;
+        $newBlockLink->signwrite($this->_nebuleInstance->getCurrentEntity());
 
         // Supprime le résultat dans le cache.
         /*		if ( isset($this->_cacheProperty[$type]) )
