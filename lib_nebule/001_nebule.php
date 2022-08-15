@@ -3023,56 +3023,46 @@ class nebule
      * @param string  $text
      * @param boolean $protect
      * @param bool    $obfuscate
-     * @return false|string
+     * @return string
      */
-    public function createTextAsObject(string &$text, bool $protect = false, bool $obfuscate = false)
+    public function createTextAsObject(string &$text, bool $protect = false, bool $obfuscate = false): string
     {
-        // Vérifie que l'écriture est autorisée.
-        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            && $this->_currentEntityUnlocked
-            && strlen($text) != 0
-        ) {
-            // Calcule l'ID de l'objet à créer.
-            $id = $this->getNIDfromData($text);
+        if (!$this->_configurationInstance->checkBooleanOptions(array('unlocked','permitWrite','permitWriteObject','permitWriteLink'))
+            || strlen($text) == 0
+        )
+            return '';
 
-            // Vérifie si l'ID n'existe pas déjà.
-            if ($this->_ioInstance->checkObjectPresent($id))
-                return $id;
+        $textOID = $this->getNIDfromData($text);
 
-            // Ecrit l'objet.
-            $instance = new Node($this, '0', $text, $protect, $obfuscate);
-            $id = $instance->getID();
-            if ($id == '0')
-                return false;
+        if ($this->_ioInstance->checkObjectPresent($textOID))
+            return $textOID;
 
-            // Définition de la date.
-            $date = date(DATE_ATOM);
-            $signer = $this->_currentEntity;
+        $this->_ioInstance->setObject($textOID, $text);
 
-            // Crée le lien de type d'objet.
-            $action = 'l';
-            $source = $id;
-            $target = $this->getNIDfromData('text/plain');
-            $meta = $this->getNIDfromData(self::REFERENCE_NEBULE_OBJET_TYPE);
-            $link = '_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-            $newLink = new Link($this->_nebuleInstance, $link);
+        // Définition de la date.
+        $date = date(DATE_ATOM);
+        $signer = $this->_currentEntity;
 
-            // Signe le lien.
-            $newLink->sign();
+        // Crée le lien de type d'objet.
+        $action = 'l';
+        $source = $textOID;
+        $target = $this->getNIDfromData('text/plain');
+        $meta = $this->getNIDfromData(self::REFERENCE_NEBULE_OBJET_TYPE);
+        $link = '_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
+        $newLink = new Link($this->_nebuleInstance, $link); // FIXME
 
-            // Si besoin, obfuscation du lien.
-            if ($obfuscate)
-                $newLink->setObfuscate();
-            // Ecrit le lien.
-            $newLink->write();
+        // Signe le lien.
+        $newLink->sign();
 
-            unset($signer, $date, $action, $source, $target, $meta, $link, $newLink);
+        // Si besoin, obfuscation du lien.
+        if ($obfuscate)
+            $newLink->setObfuscate();
+        // Ecrit le lien.
+        $newLink->write();
 
-            return $id;
-        } else
-            return false;
+        unset($signer, $date, $action, $source, $target, $meta, $link, $newLink);
+
+        return $textOID;
     }
 
 

@@ -13,11 +13,11 @@ namespace Nebule\Library;
  *
  * Attend à la création :
  * - l'instance nebule utilisé ;
- * - un texte contenant l'ID d'un objet, ou '0' si c'est un objet nebule à créer ;
- * - un texte contenant les données, si c'est un objet nebule à créer ;
- * - l'option de protection par défaut de l'objet à créer (booléen).
+ * - un texte contenant l'ID d'un objet, ou '0' si c'est un objet nebule à créer.
  *
- * L'ID d'un objet est forcément un texte en hexadécimal.
+ * To create a new object with content :
+ * - Create instance with NID=0
+ * - Push content with $instance->setContent('content', ...)
  * ------------------------------------------------------------------------------------------
  */
 class Node implements nodeInterface
@@ -281,21 +281,24 @@ class Node implements nodeInterface
      * If $id is invalid, the instance return getID = '0', even if new but not initialised.
      *
      * @param nebule  $nebuleInstance
-     * @param string  $id
+     * @param string  $nid
      */
-    public function __construct(nebule $nebuleInstance, string $id)
+    public function __construct(nebule $nebuleInstance, string $nid)
     {
         // Common initialisation.
         $this->_initialisation($nebuleInstance);
 
         // ID processing.
-        $id = trim(strtolower($id));
+        $id = trim(strtolower($nid));
         if (self::checkNID($id, false, false)
         ) {
             $this->_id = $id;
-            $this->_metrology->addLog('New instance ' . get_class($this) . ' ' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '7fb8f6e3');
-        } elseif ($id == 'new')
+            $this->_metrology->addLog('New instance ' . get_class($this) . ' nid=' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '7fb8f6e3');
+        } elseif ($id == '0')
+        {
+            $this->_id = '0';
             $this->_isNew = true;
+        }
 
         // Load specific code for node derivative.
         $this->_localConstruct();
@@ -364,7 +367,7 @@ class Node implements nodeInterface
     }
 
     /**
-     * On new node (ID='n'), add content and recalculate ID.
+     * On new node (ID='0'), add content and recalculate ID.
      *
      * @param string $data
      * @param bool   $protect
@@ -374,6 +377,7 @@ class Node implements nodeInterface
     public function setContent(string &$data, bool $protect = false, bool $obfuscated = false): bool
     {
         if (!$this->_isNew
+            || $this->_id != '0'
             || strlen($data) == 0
             || ( get_class($this) != 'Node'
                 && get_class($this) != 'Nebule\Library\Node'
@@ -989,25 +993,19 @@ $this->_metrology->addLog('MARK link=' . $link, Metrology::LOG_LEVEL_DEBUG, __FU
      */
     public function setProperty(string $type, string $property, bool $protect = false, bool $obfuscated = false): bool
     {
-        if ($type == '') {
+        if ($type == '' || $property == '')
             return false;
-        }
-        if ($property == '') {
-            return false;
-        }
 
         // Prépare l'objet de la propriété.
-        $id = $this->_nebuleInstance->createTextAsObject($property, $protect, $obfuscated);
-        if ($id === false) {
-            return false;
-        }
+        $propertyOID = $this->_nebuleInstance->getNIDfromData($property);
+        $this->_io->setObject($propertyOID, $property);
 
         // Création lien de propriété.
         $signer = $this->_nebuleInstance->getCurrentEntity();
         $date = date(DATE_ATOM);
         $action = 'l';
         $source = $this->_id;
-        $target = $id;
+        $target = $propertyOID;
         $meta = $this->_nebuleInstance->getNIDfromData($type, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new Link($this->_nebuleInstance, $link);
@@ -2111,7 +2109,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             }
 
             // Ecrit le contenu chiffré.
-            $codeInstance = new Node($this->_nebuleInstance, '0', $code, false);
+            $codeInstance = new Node($this->_nebuleInstance, '0');
+            $codeInstance->setContent($code, false);
             $codeID = $codeInstance->getID();
             $this->_metrology->addLog('Protect object, code : ' . $codeID, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
@@ -2121,7 +2120,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             }
 
             // Ecrit la clé de session chiffrée.
-            $codeKeyInstance = new Node($this->_nebuleInstance, '0', $codeKey, false);
+            $codeKeyInstance = new Node($this->_nebuleInstance, '0');
+            $codeKeyInstance->setContent($codeKey, false);
             $codeKeyID = $codeKeyInstance->getID();
             $this->_metrology->addLog('Protect object, code key : ' . $codeKeyID, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
@@ -2145,7 +2145,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             // Création du type mime des données chiffrées.
             $text = 'application/x-encrypted/' . $this->_configuration->getOptionAsString('cryptoSymmetricAlgorithm');
             $textID = $this->_nebuleInstance->createTextAsObject($text);
-            if ($textID !== false) {
+            if ($textID != '') {
                 // Crée le lien de type d'empreinte.
                 $action = 'l';
                 $source = $codeID;
@@ -2163,7 +2163,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             // Création du type mime de la clé chiffrée.
             $text = 'application/x-encrypted/' . $this->_configuration->getOptionAsString('cryptoAsymmetricAlgorithm');
             $textID = $this->_nebuleInstance->createTextAsObject($text);
-            if ($textID !== false) {
+            if ($textID != '') {
                 // Crée le lien de type d'empreinte.
                 $action = 'l';
                 $source = $codeKeyID;
@@ -2268,7 +2268,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
                         }
 
                         // Ecrit la clé de session chiffrée.
-                        $codeKeyInstance = new Node($this->_nebuleInstance, '0', $codeKey, false);
+                        $codeKeyInstance = new Node($this->_nebuleInstance, '0');
+                        $codeKeyInstance->setContent($codeKey, false);
                         $codeKeyID = $codeKeyInstance->getID();
                         $this->_metrology->addLog('Protect object, code key : ' . $codeKeyID, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
@@ -2281,7 +2282,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
                         // Création du type mime de la clé chiffrée.
                         $text = 'application/x-encrypted/' . $this->_configuration->getOptionAsString('cryptoAsymmetricAlgorithm');
                         $textID = $this->_nebuleInstance->createTextAsObject($text);
-                        if ($textID !== false) {
+                        if ($textID != '') {
                             // Crée le lien de type d'empreinte.
                             $action = 'l';
                             $source = $codeKeyID;
@@ -2411,19 +2412,18 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
         $codeKey = $this->_crypto->encryptTo($key, $entity->getPublicKey());
 
         // Vérification de bon chiffrement.
-        if ($codeKey === false) {
+        if ($codeKey == '')
             return false;
-        }
 
         // Ecrit la clé chiffrée.
-        $codeKeyInstance = new Node($this->_nebuleInstance, '0', $codeKey, false);
+        $codeKeyInstance = new Node($this->_nebuleInstance, '0');
+        $codeKeyInstance->setContent($codeKey, false);
         $codeKeyID = $codeKeyInstance->getID();
         $this->_metrology->addLog('Protect object, code key : ' . $codeKeyID, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
 
         // Vérification de bonne écriture.
-        if ($codeKeyID == '0') {
+        if ($codeKeyID == '0')
             return false;
-        }
 
         $signer = $this->_nebuleInstance->getCurrentEntity();
         $date = date(DATE_ATOM);
@@ -2431,7 +2431,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
         // Création du type mime de la clé chiffrée.
         $text = 'application/x-encrypted/' . $this->_configuration->getOptionAsString('cryptoAsymmetricAlgorithm');
         $textID = $this->_nebuleInstance->createTextAsObject($text);
-        if ($textID !== false) {
+        if ($textID != '') {
             // Crée le lien de type d'empreinte.
             $action = 'l';
             $source = $codeKeyID;

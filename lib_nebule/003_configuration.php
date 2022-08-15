@@ -1227,7 +1227,7 @@ class Configuration
         $this->_metrologyInstance->addLog('Set option value = ' . $writeValue, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'aa699a23'); // Log
 
         // Crée l'instance de l'objet de la valeur.
-        $instance = new Node($this->_nebuleInstance, '0', $writeValue);
+        $instance = new Node($this->_nebuleInstance, 'new'); // $writeValue
         $id = $instance->getID();
         if ($id == '0') {
             $this->_metrologyInstance->addLog("L'objet n'a pas pu être créé.", Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'e064cd5c'); // Log
@@ -1353,7 +1353,7 @@ class Configuration
                 || !$this->getOptionAsBoolean($name)
             )
             {
-                $this->_metrology->addLog('not permitted with option=' . $name, Metrology::LOG_LEVEL_ERROR, __FUNCTION__,'8318122c');
+                $this->_metrologyInstance->addLog('not permitted with option=' . $name, Metrology::LOG_LEVEL_ERROR, __FUNCTION__,'8318122c');
                 return false;
             }
         }

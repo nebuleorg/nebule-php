@@ -214,7 +214,7 @@ interface ioInterface
     public function setLink(string $oid, string &$link, string $url = ''): bool;
 
     /**
-     * Ecrit des données dans un objet. Retourne l'empreinte de l'objet écrit ou false si erreur.
+     * Write data to an object.
      *
      * @param string $oid
      * @param string $data

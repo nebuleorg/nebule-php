@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220814';
+const BOOTSTRAP_VERSION = '020220815';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -128,7 +128,7 @@ function log_add(string $message, string $level = 'msg', string $function = '', 
 
 // Initialize logs.
 log_init(BOOTSTRAP_NAME);
-syslog(LOG_INFO, 'LogT=0 LogT0=' . $metrologyStartTime . ' LogL=B LogM="start ' . BOOTSTRAP_NAME . '"');
+syslog(LOG_INFO, 'LogT=0 LogT0=' . $metrologyStartTime . ' LogL="info" LogI="00000001" LogM="start ' . BOOTSTRAP_NAME . '"');
 
 
 
@@ -4676,6 +4676,11 @@ function bootstrap_includeApplication(): void
     }
 }
 
+/**
+ * Find the application namespace.
+ * @param string $oid
+ * @return string
+ */
 function bootstrap_getApplicationNamespace(string $oid): string
 {
     $value = '';
