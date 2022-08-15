@@ -334,11 +334,11 @@ function work_refresh()
   uploadNameOID=$(echo -n 'upload' | sha256sum | cut -d' ' -f1)'.sha2.256'
   nameRID=$(echo -n 'nebule/objet/nom' | sha256sum | cut -d' ' -f1)'.sha2.256'
   sylabeSurnameOID=$(echo -n 'Sy' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  klictySurnameOID=$(echo -n 'Sy' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  messaeSurnameOID=$(echo -n 'Sy' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  qantionSurnameOID=$(echo -n 'Sy' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  optionSurnameOID=$(echo -n 'Sy' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  uploadSurnameOID=$(echo -n 'Sy' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  klictySurnameOID=$(echo -n 'Kl' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  messaeSurnameOID=$(echo -n 'Me' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  qantionSurnameOID=$(echo -n 'Qa' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  optionSurnameOID=$(echo -n 'Op' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  uploadSurnameOID=$(echo -n 'Up' | sha256sum | cut -d' ' -f1)'.sha2.256'
   surnameRID=$(echo -n 'nebule/objet/surnom' | sha256sum | cut -d' ' -f1)'.sha2.256'
 
   bootstrap_hash=$(sha256sum "${WORKSPACE}/bootstrap.php" | cut -d' ' -f1)'.sha2.256'
@@ -461,7 +461,7 @@ EOF
   echo -n "Kl" > "o/${klictySurnameOID}"
   echo -n "messae" > "o/${messaeNameOID}"
   echo -n "Me" > "o/${messaeSurnameOID}"
-  echo -n "Qantion" > "o/${qantionNameOID}"
+  echo -n "qantion" > "o/${qantionNameOID}"
   echo -n "Qa" > "o/${qantionSurnameOID}"
   echo -n "option" > "o/${optionNameOID}"
   echo -n "Op" > "o/${optionSurnameOID}"

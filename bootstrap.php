@@ -623,7 +623,7 @@ const LIB_CONFIGURATIONS_DEFAULT = array(
     'forceDisplayEntityOnTitle' => false,
     'linkMaxFollowedUpdates' => 100,
     'linkMaxRL' => 1,
-    'linkMaxRLUID' => 3,
+    'linkMaxRLUID' => 4,
     'linkMaxRS' => 1,
     'permitSessionOptions' => true,
     'permitSessionBuffer' => true,
@@ -896,6 +896,8 @@ $nebuleCacheReadEntityFName = array();
 $nebuleCacheReadEntityName = array();
 /** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheReadEntityPName = array();
+/** @noinspection PhpUnusedLocalVariableInspection */
+$nebuleCacheReadEntitySName = array();
 /** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheReadEntityFullName = array();
 /** @noinspection PhpUnusedLocalVariableInspection */
@@ -2962,7 +2964,7 @@ function nod_findByReference(string $nid, string $rid): string
  * @param string $nid
  * @return string
  */
-function nod_getFirstName(string $nid): string
+function nod_getFirstname(string $nid): string
 {
     global $nebuleCacheReadEntityFName;
 
@@ -3016,6 +3018,27 @@ function nod_getPostName(string $nid): string
 
     if (lib_getConfiguration('permitBufferIO'))
         $nebuleCacheReadEntityPName [$nid] = $text;
+    return $text;
+}
+
+/**
+ * Find surname to the NID.
+ *
+ * @param string $nid
+ * @return string
+ */
+function nod_getSurname(string $nid): string
+{
+    global $nebuleCacheReadEntitySName;
+
+    if (isset($nebuleCacheReadEntitySName[$nid]))
+        return $nebuleCacheReadEntitySName[$nid];
+
+    $type = nod_getByType($nid, obj_getNID('nebule/objet/surnom', lib_getConfiguration('cryptoHashAlgorithm')));
+    $text = obj_getAsText1line($type, 128);
+
+    if (lib_getConfiguration('permitBufferIO'))
+        $nebuleCacheReadEntitySName[$nid] = $text;
     return $text;
 }
 
@@ -3472,7 +3495,7 @@ function ent_getFullName(string $nid): string
     if (isset($nebuleCacheReadEntityFullName [$nid]))
         return $nebuleCacheReadEntityFullName [$nid];
 
-    $fname = nod_getFirstName($nid);
+    $fname = nod_getFirstname($nid);
     $name = nod_getName($nid);
     $pname = nod_getPostName($nid);
     if ($name == '')
@@ -7012,11 +7035,11 @@ function bootstrap_displayApplication0()
     echo '<div id="appslist">';
     // Extraire la liste des applications disponibles.
     //$refAppsID = $nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
-    $refAppsID=LIB_RID_INTERFACE_APPLICATIONS;
-    $instanceAppsID = new Node($nebuleInstance, LIB_RID_INTERFACE_APPLICATIONS);
-    $applicationsList = array();
-    $signersList = array();
-    $hashTarget = '';
+    //$refAppsID=LIB_RID_INTERFACE_APPLICATIONS;
+    //$instanceAppsID = new Node($nebuleInstance, LIB_RID_INTERFACE_APPLICATIONS);
+    //$applicationsList = array();
+    //$signersList = array();
+    //$hashTarget = '';
 
     $appList = app_getList(LIB_RID_INTERFACE_APPLICATIONS, false);
 
@@ -7045,7 +7068,10 @@ log_add('MARK size appList=' . sizeof($appList), 'normal', __FUNCTION__, '000000
         $instance = new Node($nebuleInstance, $application);
         $color = '#' . substr($application . '000000', 0, 6);
         $title = $instance->getName('all');
-        $shortName = substr($instance->getSurname() . '--', 0, 2);
+        //$title = nod_getName($application);
+        //$shortName = substr($instance->getSurname('all') . '--', 0, 2);
+        $shortName = substr(nod_getSurname($application) . '--', 0, 2);
+        log_add('app=' . $application . ' name=' . $title . ' sname=' . $shortName, 'normal', __FUNCTION__, '9715d88e'); //FIXME
         $shortName = strtoupper(substr($shortName, 0, 1)) . strtolower(substr($shortName, 1, 1));
         echo '<a href="/?' . LIB_ARG_SWITCH_APPLICATION . '=' . $application . '">';
         echo '<div class="apps" style="background:' . $color . ';">';

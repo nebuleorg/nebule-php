@@ -596,13 +596,11 @@ class ioLocal extends io implements ioInterface
     {
         /**
          * Indice du champs lu, de 1 à 7.
-         * @var integer $j
          */
         $j = 1;
 
         /**
          * Action detectée.
-         * @var string $action
          */
         $action = '';
 

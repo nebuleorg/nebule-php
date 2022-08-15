@@ -612,10 +612,10 @@ class Node implements nodeInterface
      * Typiquement utilisé pour une recherche de propriétés d'un objet.
      * Fait une recherche sur de multiples algorithmes de hash au besoin.
      *
-     * @param array  $list
+     * @param array  $links
      * @param string $nid3
      */
-    private function _getLinksByNID3(array &$list, string $nid3)
+    private function _getLinksByNID3(array &$links, string $nid3): void
     {
         $filter = array(
             'bl/rl/req' => 'l',
@@ -623,14 +623,7 @@ class Node implements nodeInterface
             'bl/rl/nid3' => $nid3,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($list, $filter, null);
-
-        // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
-        if (sizeof($list) == 0
-            && $this->_configuration->getOptionAsBoolean('permitListOtherHash')
-        ) {
-            // TODO
-        }
+        $this->getLinks($links, $filter, false);
     }
 
     /**
@@ -653,29 +646,31 @@ class Node implements nodeInterface
 //        if (isset($this->_cachePropertiesLinks[$type][$socialClass]))
 //            return $this->_cachePropertiesLinks[$type][$socialClass];
 
-$this->_metrology->addLog('MARK type=' . $type, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+$this->_metrology->addLog('MARK type=' . $type, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         // Liste les liens à la recherche de la propriété.
-        $list = array();
-        $this->_getLinksByNID3($list, $type);
-$this->_metrology->addLog('MARK links=' . sizeof($list), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+        $links = array();
+        $this->_getLinksByNID3($links, $type);
+$this->_metrology->addLog('MARK links=' . sizeof($links), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
-        if (sizeof($list) == 0)
+        if (sizeof($links) == 0)
             return array();
+foreach ($links as $i => $v)
+$this->_metrology->addLog('MARK3 link i=' . $i . ' v=' . $v, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         // Trie la liste, pour les liens venants de plusieurs objets.
         $date = array();
-        foreach ($list as $k => $r)
+        foreach ($links as $k => $r)
             $date[$k] = $r->getDate();
-        array_multisort($date, SORT_STRING, SORT_ASC, $list);
+        array_multisort($date, SORT_STRING, SORT_ASC, $links);
 
         // Fait un tri par pertinence sociale.
-        $this->_social->arraySocialFilter($list, $socialClass);
+        $this->_social->arraySocialFilter($links, $socialClass);
 
         // Mémorise le résultat dans le cache.
-        $this->_cachePropertiesLinks[$type][$socialClass] = $list;
+        $this->_cachePropertiesLinks[$type][$socialClass] = $links;
 
         // Résultat.
-        return $list;
+        return $links;
     }
 
     /**
@@ -689,7 +684,7 @@ $this->_metrology->addLog('MARK links=' . sizeof($list), Metrology::LOG_LEVEL_DE
      */
     public function getPropertyLink(string $type, string $socialClass = ''): ?linkInterface
     {
-$this->_metrology->addLog('MARK type=' . $type, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+$this->_metrology->addLog('MARK type=' . $type, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         if ($type == '')
             return null;
 
@@ -698,21 +693,26 @@ $this->_metrology->addLog('MARK type=' . $type, Metrology::LOG_LEVEL_DEBUG, __FU
             return $this->_cachePropertyLink[$type][$socialClass];
 
         // Liste les liens à la recherche de la propriété.
-        $list = $this->getPropertiesLinks($type, $socialClass);
-$this->_metrology->addLog('MARK links=' . sizeof($list), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+        $links = $this->getPropertiesLinks($type, $socialClass);
+$this->_metrology->addLog('MARK1 links=' . sizeof($links), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
-        if (sizeof($list) == 0)
+        if (sizeof($links) == 0)
             return null;
+$this->_metrology->addLog('MARK2 links=' . sizeof($links), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+foreach ($links as $i => $v)
+$this->_metrology->addLog('MARK3 link i=' . $i . ' v=' . $v, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         // Extrait le dernier de la liste.
-        $propertyLink = end($list);
-        unset($list);
+        //$link = end($links);
+        //$link = $links[count($links)-1];
+        $link = $links[0];
+$this->_metrology->addLog('MARK link=' . $link, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         // Mémorise le résultat dans le cache.
-        $this->_cachePropertyLink[$type][$socialClass] = $propertyLink;
+        $this->_cachePropertyLink[$type][$socialClass] = $link;
 
         // Résultat.
-        return $propertyLink;
+        return $link;
     }
 
     /**
@@ -809,7 +809,7 @@ $this->_metrology->addLog('MARK links=' . sizeof($list), Metrology::LOG_LEVEL_DE
      */
     public function getProperty(string $type, string $socialClass = ''): string
     {
-$this->_metrology->addLog('MARK type=' . $type, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+$this->_metrology->addLog('MARK type=' . $type, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         if ($type == '')
             return '';
 
@@ -822,7 +822,7 @@ $this->_metrology->addLog('MARK type=' . $type, Metrology::LOG_LEVEL_DEBUG, __FU
         // Liste les liens à la recherche de la propriété.
         $link = $this->getPropertyLink($type, $socialClass);
 
-$this->_metrology->addLog('MARK link=' . $link, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+$this->_metrology->addLog('MARK link=' . $link, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         if ($link == ''
             || !is_a($link, 'blocLink')
         )
@@ -983,24 +983,23 @@ $this->_metrology->addLog('MARK link=' . $link, Metrology::LOG_LEVEL_DEBUG, __FU
 
     /**
      * Ecrit la propriété de l'objet correspondant au type.
+     * TODO protection et vidage cache
      * @param string $type
      * @param string $property
      * @param boolean $protect
      * @param boolean $obfuscated
      * @return boolean
-     * @todo
-     *
      */
     public function setProperty(string $type, string $property, bool $protect = false, bool $obfuscated = false): bool
     {
-        if ($type == '' || $property == '')
+        if ($type == ''
+            || $property == ''
+            || $protect // TODO
+        )
             return false;
 
-        // Prépare l'objet de la propriété.
         $propertyOID = $this->_nebuleInstance->getNIDfromData($property);
         $this->_io->setObject($propertyOID, $property);
-
-        // Création lien de propriété.
         $propertyRID = $this->_nebuleInstance->getNIDfromData($type);
         $link = 'l>' . $this->_id . '>' . $propertyOID . '>' . $propertyRID;
         $newBlockLink = new blocLink($this->_nebuleInstance, 'new');
@@ -1024,11 +1023,10 @@ $this->_metrology->addLog('MARK link=' . $link, Metrology::LOG_LEVEL_DEBUG, __FU
 				unset($this->_cacheProperties[$type][$i]);
 			}
 		}*/
-        // @todo   ------------------------------------------------------------------------------- A revoir...
+        // TODO ------------------------------------------------------------------------------- A revoir...
         $this->_cacheProperty = array();
         $this->_cacheProperties = array();
 
-        // Résultat.
         return true;
     }
 
@@ -1118,7 +1116,7 @@ $this->_metrology->addLog('MARK link=' . $link, Metrology::LOG_LEVEL_DEBUG, __FU
     public function getName(string $socialClass = ''): string
     {
         $name = $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_NOM, $socialClass);
-$this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+$this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         if ($name == '')
             $name = $this->_id;
         return $name;
@@ -1363,7 +1361,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             'bl/rl/nid3' => $this->_id,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($links, $filter, null);
+        $this->getLinks($links, $filter, false);
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
@@ -1400,7 +1398,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             'bl/rl/nid3' => $this->_id,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($links, $filter, null);
+        $this->getLinks($links, $filter, false);
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
@@ -1463,7 +1461,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             'bl/rl/nid3' => $this->_id,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($links, $filter, null);
+        $this->getLinks($links, $filter, false);
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
@@ -1501,7 +1499,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             'bl/rl/nid3' => $this->_id,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($links, $filter, null);
+        $this->getLinks($links, $filter, false);
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
@@ -1645,7 +1643,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             'bl/rl/nid2' => $this->_id,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($list, $filter, null);
+        $this->getLinks($list, $filter, false);
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($list) == 0
@@ -1716,7 +1714,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             'bl/rl/nid2' => $this->_id,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($list, $filter, null);
+        $this->getLinks($list, $filter, false);
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($list) == 0
@@ -1801,14 +1799,14 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             'bl/rl/nid1' => $this->_id,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($listS, $filter, null);
+        $this->getLinks($listS, $filter, false);
         $listT = array();
         $filter = array(
             'bl/rl/req' => 'k',
             'bl/rl/nid2' => $this->_id,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($listT, $filter, null);
+        $this->getLinks($listT, $filter, false);
 
         // Si pas marqué, résultat négatif.
         if (sizeof($listS) == 0
@@ -1873,14 +1871,14 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             'bl/rl/nid1' => $this->_id,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($listS, $filter, null);
+        $this->getLinks($listS, $filter, false);
         $listT = array();
         $filter = array(
             'bl/rl/req' => 'k',
             'bl/rl/nid2' => $this->_id,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($listT, $filter, null);
+        $this->getLinks($listT, $filter, false);
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($listS) == 0
@@ -1924,7 +1922,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
                     // Lit l'objet de clé de chiffrement symétrique et ses liens.
                     $instanceSym = $this->_nebuleInstance->newObject($linkSym->getHashMeta());
                     $linksAsym = array();
-                    $this->getLinks($linksAsym, array(), null);
+                    $this->getLinks($linksAsym, array(), false);
                     unset($instanceSym);
                     foreach ($linksAsym as $linkAsym) {
                         // Si lien de chiffrement.
@@ -1962,7 +1960,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
                     // Lit l'objet de clé de chiffrement symétrique et ses liens.
                     $instanceSym = $this->_nebuleInstance->newObject($linkSym->getHashMeta());
                     $linksAsym = array();
-                    $this->getLinks($linksAsym, array(), null);
+                    $this->getLinks($linksAsym, array(), false);
                     unset($instanceSym);
                     foreach ($linksAsym as $linkAsym) {
                         $targetA = $linkAsym->getHashTarget();
@@ -2216,7 +2214,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
 
             // Lit les liens.
             $links = array();
-            $this->getLinks($links, array(), null);
+            $this->getLinks($links, array(), false);
             $entity = $this->_nebuleInstance->getCurrentEntity();
             foreach ($links as $link) {
                 // Vérifie si l'entité signataire du lien est l'entité courante.
@@ -2508,7 +2506,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             'bl/rl/nid3' => $entity->getID(),
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($links, $filter, null);
+        $this->getLinks($links, $filter, false);
 
         if (sizeof($links) == 0) {
             return true;
@@ -2536,7 +2534,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
                 $object = $this->_nebuleInstance->newObject($idProtectedKey);
                 //$object->deleteObject();
                 $signerLinks = array();
-                $this->getLinks($signerLinks, array(), null);
+                $this->getLinks($signerLinks, array(), false);
                 $delete = true;
                 foreach ($signerLinks as $itemSigner) {
                     // Si un lien a été généré par une autre entité, c'est que l'objet est encore utilisé.
@@ -2631,7 +2629,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             'bl/rl/nid3' => $context,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($list, $filter, null);
+        $this->getLinks($list, $filter, false);
 
         // Nettoyage.
         foreach ($list as $i => $link) {
@@ -2840,7 +2838,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             'bl/rl/nid1' => $this->_idUnprotected,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($linksSym, $filter, null);
+        $this->getLinks($linksSym, $filter, false);
         foreach ($linksSym as $linkSym) {
             // Si lien de chiffrement.
             if ($linkSym->getHashMeta() != '0') {
@@ -2852,7 +2850,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
                     'bl/rl/nid1' => $linkSym->getHashMeta(),
                     'bl/rl/nid4' => '',
                 );
-                $this->getLinks($linksAsym, $filter, null);
+                $this->getLinks($linksAsym, $filter, false);
                 unset($instanceSym);
                 foreach ($linksAsym as $linkAsym) {
                     // Si lien de chiffrement.
@@ -3241,10 +3239,10 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
      *
      * @param array  $links
      * @param array  $filter
-     * @param ?bool  $withInvalidLinks
+     * @param bool   $withInvalidLinks
      * @return void
      */
-    public function getLinks(array &$links, array $filter, ?bool $withInvalidLinks = null): void
+    public function getLinks(array &$links, array $filter, bool $withInvalidLinks = false): void
     {
         if ($this->_id == '0'
             || !$this->_io->checkLinkPresent($this->_id)
@@ -3260,14 +3258,19 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
 
         foreach ($lines as $line)
         {
+$this->_metrology->addLog('MARK line=' . $line, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             $bloc = $this->_cache->newLink($line, Cache::TYPE_LINK);
             if ($bloc->getValidStructure()
                 && ( $bloc->getValid() || $withInvalidLinks )
             )
             {
                 $newLinks = $bloc->getLinks();
+foreach ($newLinks as $i => $v)
+$this->_metrology->addLog('MARK3 link i=' . $i . ' v=' . (string)$v, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
                 $this->_filterLinksByStructure($newLinks, $filter);
                 $links = array_merge($links, $newLinks);
+foreach ($links as $i => $v)
+$this->_metrology->addLog('MARK3 link i=' . $i . ' v=' . (string)$v, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             }
             else
                 $this->_cache->unsetCache($line, Cache::TYPE_BLOCLINK);
@@ -3345,7 +3348,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
         if ($nid3 != '')
             $filter['bl/rl/nid3'] = $nid3;
 
-        $this->getLinks($links, $filter, null);
+        $this->getLinks($links, $filter, false);
         return $links;
     }
 
@@ -3393,7 +3396,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
                 'bl/rl/nid3' => '',
                 'bl/rl/nid4' => '',
             );
-            $this->getLinks($links, $filter, null);
+            $this->getLinks($links, $filter, false);
             $this->_social->arraySocialFilter($links, $social);
             $this->_arrayDateSort($links);
         }
@@ -3445,7 +3448,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             'bl/rl/nid3' => $reference,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($list, $filter, null);
+        $this->getLinks($list, $filter, false);
 
         // Liste les liens à la recherche de la propriété.
         $list = array();
@@ -3455,7 +3458,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             'bl/rl/nid3' => $reference,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($list, $filter, null);
+        $this->getLinks($list, $filter, false);
 
         return $list;
     }
@@ -3485,7 +3488,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             'bl/rl/nid3' => $reference,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($list, $filter, null);
+        $this->getLinks($list, $filter, false);
 
         return $list;
     }
@@ -3719,7 +3722,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             'bl/rl/nid3' =>  $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION),
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($links, $filter, null);
+        $this->getLinks($links, $filter, false);
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($links) == 0
@@ -3779,7 +3782,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
             'bl/rl/nid3' => $this->_nebuleInstance->getNIDfromData('nebule/objet/entite/localisation'),
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($links, $filter, null);
+        $this->getLinks($links, $filter, false);
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($links) == 0
@@ -3845,7 +3848,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
 
         // Lit les liens.
         $links = array();
-        $this->getLinks($links, array(), null);
+        $this->getLinks($links, array(), false);
         $entity = $this->_nebuleInstance->getCurrentEntity();
         foreach ($links as $link) {
             // Vérifie si l'entité signataire du lien est l'entité courante.
@@ -3880,7 +3883,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
 
             // Lit les liens.
             $links = array();
-            $this->getLinks($links, array(), null);
+            $this->getLinks($links, array(), false);
             $entity = $this->_nebuleInstance->getCurrentEntity();
             foreach ($links as $link) {
                 // Vérifie si l'entité signataire du lien est l'entité courante.
@@ -3923,7 +3926,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_DEBUG, __FU
 
         // Lit les liens.
         $links = array();
-        $this->getLinks($links, array(), null);
+        $this->getLinks($links, array(), false);
         $entity = $this->_nebuleInstance->getCurrentEntity();
         foreach ($links as $link) {
             // Vérifie si l'entité signataire du lien est l'entité courante.

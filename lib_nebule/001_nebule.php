@@ -2257,7 +2257,7 @@ class nebule
             'bl/rl/nid3' => $rid,
             'bs/rs1/eid' => $this->_puppetmaster,
             );
-        $instance->getLinks($list, $filter, null);
+        $instance->getLinks($list, $filter, false);
 
         if (sizeof($list) == 0)
         {
@@ -2515,7 +2515,7 @@ class nebule
                 'bl/rl/nid4' => '',
                 'bs/rs1/eid' => $this->_instanceEntity,
             );
-            $this->_instanceEntityInstance->getLinks($list, $filter, null);
+            $this->_instanceEntityInstance->getLinks($list, $filter, false);
         }
 
         // Liste les liens de l'entité par défaut.
@@ -2528,7 +2528,7 @@ class nebule
                 'bl/rl/nid4' => '',
                 'bs/rs1/eid' => $this->_defaultEntity,
             );
-            $this->_instanceEntityInstance->getLinks($list, $filter, null);
+            $this->_instanceEntityInstance->getLinks($list, $filter, false);
         }
 
         foreach ($list as $link) {
@@ -3018,7 +3018,7 @@ class nebule
 
     /**
      * Crée et écrit un objet avec du texte.
-     * FIXME
+     * TODO protection
      *
      * @param string  $text
      * @param boolean $protect
@@ -3029,19 +3029,13 @@ class nebule
     {
         if (!$this->_configurationInstance->checkBooleanOptions(array('unlocked','permitWrite','permitWriteObject','permitWriteLink'))
             || strlen($text) == 0
+            || $protect // TODO
         )
             return '';
 
         $textOID = $this->getNIDfromData($text);
-
-        if ($this->_ioInstance->checkObjectPresent($textOID))
-            return $textOID;
-
         $this->_ioInstance->setObject($textOID, $text);
-
-
         $propertyOID = $this->_nebuleInstance->getNIDfromData('text/plain');
-
         $propertyRID = $this->_nebuleInstance->getNIDfromData(self::REFERENCE_NEBULE_OBJET_TYPE);
         $link = 'l>' . $textOID . '>' . $propertyOID . '>' . $propertyRID;
         $newBlockLink = new blocLink($this, 'new');

@@ -436,7 +436,7 @@ class Configuration
         'forceDisplayEntityOnTitle' => 'false',
         'linkMaxFollowedUpdates' => '100',
         'linkMaxRL' => '1',
-        'linkMaxRLUID' => '3',
+        'linkMaxRLUID' => '4',
         'linkMaxRS' => '1',
         'permitSessionOptions' => 'true',
         'permitSessionBuffer' => 'true',
