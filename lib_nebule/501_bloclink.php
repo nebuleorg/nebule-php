@@ -498,6 +498,8 @@ $this->_metrology->addLog('MARK rl=' . (string)$rl, Metrology::LOG_LEVEL_NORMAL,
                 $instanceRL = new Link($this->_nebuleInstance, $rl, $this); // FIXME ne fonctionne pas correctement !
             if (!$instanceRL->getValid()) return false;
 $this->_metrology->addLog('MARK instanceRL=' . (string)$instanceRL->getRaw(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+foreach ($instanceRL->getParsed() as $i => $v)
+$this->_metrology->addLog('MARK4 i=' . $i . ' v=' . $v, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
             $this->_links[] = $instanceRL;
         }

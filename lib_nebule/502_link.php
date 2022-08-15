@@ -174,6 +174,7 @@ class Link implements linkInterface
         $this->_permitObfuscated = $this->_configuration->getOptionAsBoolean('permitObfuscatedLink');
         $this->_blocLink = $blocLink;
         $this->_maxRLUID = $this->_configuration->getOptionAsInteger('linkMaxRLUID');
+        $this->_rawLink = $rl;
 
         $this->_validStructure = $this->_checkRL($rl);
 
