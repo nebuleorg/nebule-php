@@ -743,9 +743,9 @@ abstract class Applications implements applicationInterface
         foreach ($links as $link) {
             // Filtre sur le signataire.
             $ok = false;
-            $module = $link->getHashTarget();
+            $module = $link->getParsed()['bl/rl/nid2'];
             foreach ($this->_nebuleInstance->getLocalAuthorities() as $autority) {
-                if ($link->getHashSigner() == $autority
+                if ($link->getParsed()['bs/rs1/eid'] == $autority
                     && $module != '0'
                     && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($module)
                 ) {
@@ -756,7 +756,7 @@ abstract class Applications implements applicationInterface
             if ($ok) {
                 $this->getMetrologyInstance()->addLog('Find modules ' . $module, Metrology::LOG_LEVEL_DEBUG); // Log
                 $this->_listModulesInitRID[$module] = $module;
-                $this->_listModulesSignerRID[$module] = $link->getHashSigner();
+                $this->_listModulesSignerRID[$module] = $link->getParsed()['bs/rs1/eid'];
             }
         }
     }
@@ -955,7 +955,7 @@ abstract class Applications implements applicationInterface
         $link = null;
         foreach ($linksList as $link) {
             // Vérifie que le signataire est une entité locale.
-            if ($this->_nebuleInstance->getIsLocalAuthority($link->getHashSigner())) {
+            if ($this->_nebuleInstance->getIsLocalAuthority($link->getParsed()['bs/rs1/eid'])) {
                 return true;
             }
         }
@@ -1289,7 +1289,7 @@ abstract class Applications implements applicationInterface
         $ok = false;
         foreach ($links as $link) {
             foreach ($this->_nebuleInstance->getLocalAuthorities() as $autority) {
-                if ($link->getHashSigner() == $autority) {
+                if ($link->getParsed()['bs/rs1/eid'] == $autority) {
                     $ok = true;
                     break 2;
                 }

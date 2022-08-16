@@ -3492,8 +3492,8 @@ function ent_getFullName(string $nid): string
 {
     global $nebuleCacheReadEntityFullName;
 
-    if (isset($nebuleCacheReadEntityFullName [$nid]))
-        return $nebuleCacheReadEntityFullName [$nid];
+    if (isset($nebuleCacheReadEntityFullName[$nid]))
+        return $nebuleCacheReadEntityFullName[$nid];
 
     $fname = nod_getFirstname($nid);
     $name = nod_getName($nid);
@@ -3508,7 +3508,7 @@ function ent_getFullName(string $nid): string
         $fullname = "$fullname $pname";
 
     if (lib_getConfiguration('permitBufferIO'))
-        $nebuleCacheReadEntityFullName [$nid] = $fullname;
+        $nebuleCacheReadEntityFullName[$nid] = $fullname;
     return $fullname;
 }
 
@@ -7022,7 +7022,6 @@ function bootstrap_displayApplication0()
 {
     global $nebuleInstance;
 
-    // Initialisation des logs
     log_reopen('app0');
     log_add('Loading', 'info', __FUNCTION__, '314e6e9b');
 
@@ -7033,17 +7032,8 @@ function bootstrap_displayApplication0()
     bootstrap_htmlTop();
 
     echo '<div id="appslist">';
-    // Extraire la liste des applications disponibles.
-    //$refAppsID = $nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
-    //$refAppsID=LIB_RID_INTERFACE_APPLICATIONS;
-    //$instanceAppsID = new Node($nebuleInstance, LIB_RID_INTERFACE_APPLICATIONS);
-    //$applicationsList = array();
-    //$signersList = array();
-    //$hashTarget = '';
 
     $appList = app_getList(LIB_RID_INTERFACE_APPLICATIONS, false);
-
-log_add('MARK size appList=' . sizeof($appList), 'normal', __FUNCTION__, '00000000');// FIXME
 
     // Display interrupt page.
     echo '<a href="/?b">';
@@ -7063,7 +7053,7 @@ log_add('MARK size appList=' . sizeof($appList), 'normal', __FUNCTION__, '000000
     echo '<span class="appstitle">N2</span><br /><span class="appsname">defolt</span>';
     echo "</div></a>\n";
 
-    // Lister les applications.
+    // List all applications.
     foreach ($appList as $application) {
         $instance = new Node($nebuleInstance, $application);
         $color = '#' . substr($application . '000000', 0, 6);
@@ -7080,8 +7070,8 @@ log_add('MARK size appList=' . sizeof($appList), 'normal', __FUNCTION__, '000000
         if ($shortName == '')
             $shortName = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_SURNOM,'all');
         $shortName = substr($shortName . '--', 0, 2);
-        log_add('app=' . $application . ' name=' . $title . ' sname=' . $shortName, 'debug', __FUNCTION__, '9715d88e');
         $subName = strtoupper(substr($shortName, 0, 1)) . strtolower(substr($shortName, 1, 1));
+        log_add('app=' . $application . ' name=' . $title . ' sname=' . $shortName, 'debug', __FUNCTION__, '9715d88e');
         echo '<a href="/?' . LIB_ARG_SWITCH_APPLICATION . '=' . $application . '">';
         echo '<div class="apps" style="background:' . $color . ';">';
         echo '<span class="appstitle">' . $subName . '</span><br /><span class="appsname">' . $title . '</span>';

@@ -387,17 +387,11 @@ class Node implements nodeInterface
         if (!$this->_isNew
             || $this->_id != '0'
             || strlen($data) == 0
-            || ( get_class($this) != 'Node'
-                && get_class($this) != 'Nebule\Library\Node'
-            )
+            || get_class($this) != 'Nebule\Library\Node'
         )
             return false;
 
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_nebuleInstance->getCurrentEntityUnlocked()
-        ) {
+        if ($this->_configuration->checkBooleanOptions(array('unlocked','permitWrite','permitWriteObject','permitWriteLink'))) {
             // calcul l'ID.
             $this->_id = $this->_nebuleInstance->getNIDfromData($data);
             if ($protect)
@@ -408,31 +402,17 @@ class Node implements nodeInterface
             // Mémorise les données.
             $this->_data = $data;
             $this->_haveData = true;
-            $data = null;
 
             // Création lien de hash.
-            $signer = $this->_nebuleInstance->getCurrentEntity();
-            $date = date(DATE_ATOM);
-
-            // Création lien de hash.
-            $date2 = $date;
+            $date = '';
             if ($obfuscated)
-                $date2 = '0';
-            $action = 'l';
+                $date = '0';
             $target = $this->_nebuleInstance->getNIDfromData($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
             $meta = $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_HASH);
-            $link = '0_' . $signer . '_' . $date2 . '_' . $action . '_' . $this->_id . '_' . $target . '_' . $meta;
-            $newLink = new BlocLink($this->_nebuleInstance, $link, Cache::TYPE_LINK);
-            $newLink->signWrite();
+            $this->_writeLink('l>' . $this->_id . '>' . $target . '>' . $meta, $obfuscated, $date);
 
             // Création du lien d'annulation de suppression.
-            $action = 'x';
-            $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $this->_id . '_0_0';
-            $newLink = new BlocLink($this->_nebuleInstance, $link, Cache::TYPE_LINK);
-            $newLink->sign();
-            if ($obfuscated)
-                $newLink->setObfuscate();
-            $newLink->write();
+            $this->_writeLink('x>' . $this->_id, $obfuscated);
 
             // Si l'objet doit être protégé.
             if ($protect)
@@ -441,68 +421,6 @@ class Node implements nodeInterface
                 $this->write();
         } else {
             $this->_metrology->addLog('Create object error no authorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '83a27d1e');
-            $this->_id = '0';
-            return false;
-        }
-        return true;
-    }
-
-    protected function _createNewObject_DEPRECATED(string $data, bool $protect, bool $obfuscated): bool
-    {
-        $this->_markProtectedChecked = false;
-
-        // Vérifie que l'on puisse créer un objet.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_nebuleInstance->getCurrentEntityUnlocked()
-        ) {
-            // calcul l'ID.
-            $this->_id = $this->_nebuleInstance->getNIDfromData($data);
-            if ($protect)
-                $this->_metrology->addLog('Create protected object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
-            else
-                $this->_metrology->addLog('Create object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
-
-            // Mémorise les données.
-            $this->_data = $data;
-            $this->_haveData = true;
-            $data = null;
-
-            // Création lien de hash.
-            $signer = $this->_nebuleInstance->getCurrentEntity();
-            $date = date(DATE_ATOM);
-
-            // Création lien de hash.
-            $date2 = $date;
-            if ($obfuscated)
-                $date2 = '0';
-            $action = 'l';
-            $target = $this->_nebuleInstance->getNIDfromData($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
-            $meta = $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_HASH);
-            $link = '0_' . $signer . '_' . $date2 . '_' . $action . '_' . $this->_id . '_' . $target . '_' . $meta;
-            $newLink = new Link($this->_nebuleInstance, $link);
-            $newLink->signWrite();
-
-            // Création du lien d'annulation de suppression.
-            $action = 'x';
-            $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $this->_id . '_0_0';
-            $newLink = new Link($this->_nebuleInstance, $link);
-            $newLink->sign();
-            if ($obfuscated) {
-                $newLink->setObfuscate();
-            }
-            $newLink->write();
-
-            // Si l'objet doit être protégé.
-            if ($protect) {
-                $this->setProtected($obfuscated);
-            } else {
-                // Sinon écrit l'objet directement.
-                $this->write();
-            }
-        } else {
-            $this->_metrology->addLog('Create object error no authorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
             $this->_id = '0';
             return false;
         }
@@ -651,7 +569,7 @@ class Node implements nodeInterface
             $type = $this->_nebuleInstance->getNIDfromData($type);
 
         // Si déjà recherché, donne le résultat en cache.
-//        if ($this->_permitBuffer && isset($this->_cachePropertiesLinks[$type][$socialClass]))
+//        if (isset($this->_cachePropertiesLinks[$type][$socialClass]))
 //            return $this->_cachePropertiesLinks[$type][$socialClass];
 
         // Liste les liens à la recherche de la propriété.
@@ -693,7 +611,7 @@ class Node implements nodeInterface
             return null;
 
         // Si déjà recherché, donne le résultat en cache.
-        if ($this->_permitBuffer && isset($this->_cachePropertyLink[$type][$socialClass]))
+        if (isset($this->_cachePropertyLink[$type][$socialClass]))
             return $this->_cachePropertyLink[$type][$socialClass];
 
         // Liste les liens à la recherche de la propriété.
@@ -708,8 +626,8 @@ class Node implements nodeInterface
         $link = $links[0];
 
         // Mémorise le résultat dans le cache.
-        if ($this->_permitBuffer)
-            $this->_cachePropertyLink[$type][$socialClass] = $link;
+        //if ($this->_permitBuffer)
+        //    $this->_cachePropertyLink[$type][$socialClass] = $link;
 
         // Résultat.
         return $link;
@@ -729,7 +647,7 @@ class Node implements nodeInterface
             return '';
 
         // Si déjà recherché, donne le résultat en cache.
-        if ($this->_permitBuffer && isset($this->_cachePropertyID[$type][$socialClass]))
+        if (isset($this->_cachePropertyID[$type][$socialClass]))
             return $this->_cachePropertyID[$type][$socialClass];
 
         $property = '';
@@ -745,8 +663,8 @@ class Node implements nodeInterface
         unset($link);
 
         // Mémorise le résultat dans le cache.
-        if ($this->_permitBuffer)
-            $this->_cachePropertyID[$type][$socialClass] = $property;
+        //if ($this->_permitBuffer)
+        //    $this->_cachePropertyID[$type][$socialClass] = $property;
 
         // Résultat.
         return $property;
@@ -766,7 +684,7 @@ class Node implements nodeInterface
             return array();
 
         // Si déjà recherché, donne le résultat en cache.
-        if ($this->_permitBuffer && isset($this->_cachePropertiesID[$type][$socialClass]))
+        if (isset($this->_cachePropertiesID[$type][$socialClass]))
             return $this->_cachePropertiesID[$type][$socialClass];
 
         $properties = array();
@@ -787,8 +705,8 @@ class Node implements nodeInterface
         unset($list);
 
         // Mémorise le résultat dans le cache.
-        if ($this->_permitBuffer)
-            $this->_cachePropertiesID[$type][$socialClass] = $properties;
+        //if ($this->_permitBuffer)
+        //    $this->_cachePropertiesID[$type][$socialClass] = $properties;
 
         // Résultat.
         return $properties;
@@ -808,33 +726,21 @@ class Node implements nodeInterface
             return '';
 
         // Si déjà recherché, donne le résultat en cache.
-        if ($this->_permitBuffer && isset($this->_cacheProperty[$type][$socialClass]))
+        if (isset($this->_cacheProperty[$type][$socialClass]))
             return $this->_cacheProperty[$type][$socialClass];
-
-        $property = '';
 
         // Liste les liens à la recherche de la propriété.
         $link = $this->getPropertyLink($type, $socialClass);
 
-        if ($link === null)
-            return '';
-
-$this->_metrology->addLog('MARK link=' . $link, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-$this->_metrology->addLog('MARK class=' . get_class($link), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-        if ($link == ''
-            || (!is_a($link, 'link') && !is_a($link, 'Nebule\Library\Link') && get_class($link) != 'Nebule\Library\Link')
-        )
-        //if (get_class($link) != 'Nebule\\Library\\Link')
+        if ($link == '' || !is_a($link, 'Nebule\Library\Link'))
             return '';
 
         // Extrait le contenu de l'objet de propriété.
         $property = $this->_readOneLineOtherObject($link->getParsed()['bl/rl/nid2']);
-$this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2'], Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-        unset($link);
 
         // Mémorise le résultat dans le cache.
-        if ($this->_permitBuffer)
-            $this->_cacheProperty[$type][$socialClass] = $property;
+        //if ($this->_permitBuffer)
+        //    $this->_cacheProperty[$type][$socialClass] = $property;
 
         // Résultat.
         return $property;
@@ -854,7 +760,7 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
             return array();
 
         // Si déjà recherché, donne le résultat en cache.
-        if ($this->_permitBuffer && isset($this->_cacheProperties[$type][$socialClass]))
+        if (isset($this->_cacheProperties[$type][$socialClass]))
             return $this->_cacheProperties[$type][$socialClass];
 
         $properties = array();
@@ -866,17 +772,17 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
         if (sizeof($links) == 0)
             return array();
 
-        // Fait un tri par pertinance sociale.
+        // Fait un tri par pertinence sociale.
         $this->_social->arraySocialFilter($links, $socialClass);
 
         // Extrait le contenu des objets de propriété.
         foreach ($links as $i => $l)
-            $properties[$i] = $this->_readOneLineOtherObject($l->getHashTarget());
+            $properties[$i] = $this->_readOneLineOtherObject($l->getParsed()['bl/rl/nid2']);
         unset($links);
 
         // Mémorise le résultat dans le cache.
-        if ($this->_permitBuffer && sizeof($properties) != 0 && false) // @todo la mise en cache ne fonctionne pas !!!
-            $this->_cacheProperties[$type][$socialClass] = $properties;
+        //if ($this->_permitBuffer)
+        //    $this->_cacheProperties[$type][$socialClass] = $properties;
 
         // Résultat.
         return $properties;
@@ -926,10 +832,10 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
         foreach ($links as $link) {
             if ($type == ''
                 || ($type != ''
-                    && $link->getHashTarget() == $type
+                    && $link->getParsed()['bl/rl/nid2'] == $type
                 )
             )
-                $signers[$link->getHashSigner()] = $link->getHashSigner();
+                $signers[$link->getParsed()['bs/rs1/eid']] = $link->getParsed()['bs/rs1/eid'];
         }
         unset($links);
 
@@ -959,9 +865,9 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
 
         foreach ($links as $link) {
             if ($type == ''
-                || $link->getHashTarget() == $type
+                || $link->getParsed()['bl/rl/nid2'] == $type
             ) {
-                if ($link->getHashSigner() == $entity)
+                if ($link->getParsed()['bs/rs1/eid'] == $entity)
                     return true;
             }
         }
@@ -1346,7 +1252,7 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
-            if ($link->getHashSource() != $link->getHashMeta())
+            if ($link->getParsed()['bl/rl/nid1'] != $link->getParsed()['bl/rl/nid3'])
                 unset($links[$i]);
         }
 
@@ -1355,7 +1261,7 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newGroup_DEPRECATED($link->getHashSource());
+            $instance = $this->_nebuleInstance->newGroup_DEPRECATED($link->getParsed()['bl/rl/nid1']);
             if (!$instance->getIsGroup('all'))
                 unset($links[$i]);
         }
@@ -1381,7 +1287,7 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
-            if ($link->getHashSource() != $link->getHashMeta())
+            if ($link->getParsed()['bl/rl/nid1'] != $link->getParsed()['bl/rl/nid3'])
                 unset($links[$i]);
         }
 
@@ -1390,9 +1296,9 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newGroup_DEPRECATED($link->getHashSource());
+            $instance = $this->_nebuleInstance->newGroup_DEPRECATED($link->getParsed()['bl/rl/nid1']);
             if ($instance->getIsGroup('all'))
-                $list[$link->getHashSource()] = $link->getHashSource();
+                $list[$link->getParsed()['bl/rl/nid1']] = $link->getParsed()['bl/rl/nid1'];
         }
 
         return $list;
@@ -1441,7 +1347,7 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
-            if ($link->getHashSource() != $link->getHashMeta())
+            if ($link->getParsed()['bl/rl/nid1'] != $link->getParsed()['bl/rl/nid3'])
                 unset($links[$i]);
         }
 
@@ -1450,7 +1356,7 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newConversation_DEPRECATED($link->getHashSource());
+            $instance = $this->_nebuleInstance->newConversation_DEPRECATED($link->getParsed()['bl/rl/nid1']);
             if (!$instance->getIsConversation('all'))
                 unset($links[$i]);
         }
@@ -1477,7 +1383,7 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
-            if ($link->getHashSource() != $link->getHashMeta())
+            if ($link->getParsed()['bl/rl/nid1'] != $link->getParsed()['bl/rl/nid3'])
                 unset($links[$i]);
         }
 
@@ -1486,9 +1392,9 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newConversation_DEPRECATED($link->getHashSource());
+            $instance = $this->_nebuleInstance->newConversation_DEPRECATED($link->getParsed()['bl/rl/nid1']);
             if ($instance->getIsConversation('all'))
-                $list[$link->getHashSource()] = $link->getHashSource();
+                $list[$link->getParsed()['bl/rl/nid1']] = $link->getParsed()['bl/rl/nid1'];
         }
 
         return $list;
@@ -1645,15 +1551,8 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
             return true;
 
         // Création lien de groupe.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
-        $date = date(DATE_ATOM);
-        $action = 'l';
-        $source = $this->_id;
         $target = $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_DANGER);
-        $meta = '';
-        $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
-        $newLink->signWrite();
+        $this->_writeLink('l>' . $this->_id . '>' . $target);
 
         $this->_cacheMarkDanger = true;
         return true;
@@ -1713,15 +1612,8 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
             return true;
 
         // Création lien de groupe.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
-        $date = date(DATE_ATOM);
-        $action = 'l';
-        $source = $this->_id;
         $target = $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_WARNING);
-        $meta = '';
-        $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
-        $newLink->signWrite();
+        $this->_writeLink('l>' . $this->_id . '>' . $target);
 
         $this->_cacheMarkWarning = true;
         return true;
@@ -1878,25 +1770,25 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
             foreach ($listT as $linkSym) {
                 // Si lien de chiffrement et l'objet source est l'objet en cours non protégé.
                 if ($linkSym->getAction() == 'k'
-                    && $linkSym->getHashTarget() == $this->_idProtected
+                    && $linkSym->getParsed()['bl/rl/nid2'] == $this->_idProtected
                 ) {
                     // Lit l'objet de clé de chiffrement symétrique et ses liens.
-                    $instanceSym = $this->_nebuleInstance->newObject($linkSym->getHashMeta());
+                    $instanceSym = $this->_nebuleInstance->newObject($linkSym->getParsed()['bl/rl/nid3']);
                     $linksAsym = array();
                     $this->getLinks($linksAsym, array(), false);
                     unset($instanceSym);
                     foreach ($linksAsym as $linkAsym) {
                         // Si lien de chiffrement.
-                        $targetA = $linkAsym->getHashTarget();
+                        $targetA = $linkAsym->getParsed()['bl/rl/nid2'];
                         if ($linkAsym->getAction() == 'k'
-                            && $linkAsym->getHashTarget() != $this->_idProtected
+                            && $linkAsym->getParsed()['bl/rl/nid2'] != $this->_idProtected
                             && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($targetA)
                         ) {
                             $result = true;
-                            $this->_idUnprotected = $linkSym->getHashSource();
+                            $this->_idUnprotected = $linkSym->getParsed()['bl/rl/nid1'];
                             $this->_metrology->addLog('Object protected - id unprotected = ' . $this->_idUnprotected, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
-                            $this->_idUnprotectedKey = $linkAsym->getHashSource();
-                            if ($linkAsym->getHashMeta() == $this->_nebuleInstance->getCurrentEntity()) {
+                            $this->_idUnprotectedKey = $linkAsym->getParsed()['bl/rl/nid1'];
+                            if ($linkAsym->getParsed()['bl/rl/nid3'] == $this->_nebuleInstance->getCurrentEntity()) {
                                 $this->_idProtectedKey = $targetA;
                                 break 2;
                             }
@@ -1912,30 +1804,30 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
 
             // Recherche la clé utilisée pour l'entité en cours.
             foreach ($listS as $linkSym) {
-                $targetS = $linkSym->getHashTarget();
+                $targetS = $linkSym->getParsed()['bl/rl/nid2'];
                 // Si lien de chiffrement et l'objet source est l'objet en cours non protégé.
                 if ($linkSym->getAction() == 'k'
-                    && $linkSym->getHashSource() == $this->_idUnprotected
+                    && $linkSym->getParsed()['bl/rl/nid1'] == $this->_idUnprotected
                     && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($targetS)
                 ) {
                     // Lit l'objet de clé de chiffrement symétrique et ses liens.
-                    $instanceSym = $this->_nebuleInstance->newObject($linkSym->getHashMeta());
+                    $instanceSym = $this->_nebuleInstance->newObject($linkSym->getParsed()['bl/rl/nid3']);
                     $linksAsym = array();
                     $this->getLinks($linksAsym, array(), false);
                     unset($instanceSym);
                     foreach ($linksAsym as $linkAsym) {
-                        $targetA = $linkAsym->getHashTarget();
+                        $targetA = $linkAsym->getParsed()['bl/rl/nid2'];
                         // Si lien de chiffrement.
                         if ($linkAsym->getAction() == 'k'
-                            && $linkAsym->getHashSource() != $this->_idUnprotected
-                            && $linkAsym->getHashMeta() == $this->_nebuleInstance->getCurrentEntity()
+                            && $linkAsym->getParsed()['bl/rl/nid1'] != $this->_idUnprotected
+                            && $linkAsym->getParsed()['bl/rl/nid3'] == $this->_nebuleInstance->getCurrentEntity()
                             && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($targetA)
                         ) {
                             $result = true;
                             $this->_idProtected = $targetS;
                             $this->_metrology->addLog('Object protected - id protected = ' . $this->_idProtected, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
-                            $this->_idUnprotectedKey = $linkAsym->getHashSource();
-                            if ($linkAsym->getHashMeta() == $this->_nebuleInstance->getCurrentEntity()) {
+                            $this->_idUnprotectedKey = $linkAsym->getParsed()['bl/rl/nid1'];
+                            if ($linkAsym->getParsed()['bl/rl/nid3'] == $this->_nebuleInstance->getCurrentEntity()) {
                                 $this->_idProtectedKey = $targetA;
                                 break 2;
                             }
@@ -2001,11 +1893,7 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
         $this->_metrology->addLog('Ask protect object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         // Vérifie que l'écriture d'objets et de liens est permise.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_nebuleInstance->getCurrentEntityUnlocked()
-        ) {
+        if ($this->_configuration->checkBooleanOptions(array('unlocked','permitWrite','permitWriteObject','permitWriteLink'))) {
             // Génération de la clé de chiffrement.
             // Doit être au maximum de la taille de la clé de l'entité cible (exprimé en bits) moins 11 octets.
             // CF : http://php.net/manual/fr/function.openssl-public-encrypt.php
@@ -2082,33 +1970,19 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
                 return false;
 
             $signer = $this->_nebuleInstance->getCurrentEntity();
-            $date = date(DATE_ATOM);
 
             // Crée le lien de type d'empreinte de la clé.
-            $action = 'l';
-            $source = $keyID;
             $target = $this->_nebuleInstance->getNIDfromData($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
             $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/hash');
-            $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-            $newLink = new Link($this->_nebuleInstance, $link);
-            $newLink->signWrite();
+            $this->_writeLink('l>' . $keyID . '>' . $target . '>' . $meta);
 
             // Création du type mime des données chiffrées.
             $text = 'application/x-encrypted/' . $this->_configuration->getOptionAsString('cryptoSymmetricAlgorithm');
             $textID = $this->_nebuleInstance->createTextAsObject($text);
             if ($textID != '') {
                 // Crée le lien de type d'empreinte.
-                $action = 'l';
-                $source = $codeID;
-                $target = $textID;
                 $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
-                $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-                $newLink = new Link($this->_nebuleInstance, $link);
-                $newLink->sign();
-                if ($obfuscated) {
-                    $newLink->setObfuscate();
-                }
-                $newLink->write();
+                $this->_writeLink('l>' . $codeID . '>' . $textID . '>' . $meta, $obfuscated);
             }
 
             // Création du type mime de la clé chiffrée.
@@ -2116,58 +1990,22 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
             $textID = $this->_nebuleInstance->createTextAsObject($text);
             if ($textID != '') {
                 // Crée le lien de type d'empreinte.
-                $action = 'l';
-                $source = $codeKeyID;
-                $target = $textID;
                 $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
-                $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-                $newLink = new Link($this->_nebuleInstance, $link);
-                $newLink->sign();
-                if ($obfuscated) {
-                    $newLink->setObfuscate();
-                }
-                $newLink->write();
+                $this->_writeLink('l>' . $codeKeyID . '>' . $textID . '>' . $meta, $obfuscated);
             }
 
             // Création du lien de chiffrement symétrique.
-            $action = 'k';
-            $source = $this->_id;
-            $target = $codeID;
-            $meta = $keyID;
-            $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-            $newLink = new Link($this->_nebuleInstance, $link);
-            $newLink->sign();
-            if ($obfuscated) {
-                $newLink->setObfuscate();
-            }
-            $newLink->write();
+            $this->_writeLink('k>' . $this->_id . '>' . $codeID . '>' . $keyID, $obfuscated);
 
             // Création du lien de chiffrement asymétrique.
-            $action = 'k';
-            $source = $keyID;
-            $target = $codeKeyID;
-            $meta = $signer;
-            $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-            $newLink = new Link($this->_nebuleInstance, $link);
-            $newLink->sign();
-            if ($obfuscated)
-                $newLink->setObfuscate();
-            $newLink->write();
+            $this->_writeLink('k>' . $keyID . '>' . $codekeyID . '>' . $signer, $obfuscated);
 
             // Supprime l'objet qui a été marqué protégé.
             $this->_metrology->addLog('Delete unprotected object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             $deleteObject = true;
 
             // Création lien.
-            $signer = $this->_nebuleInstance->getCurrentEntity();
-            $date = date(DATE_ATOM);
-            $source = $this->_id;
-            $link = '0_' . $signer . '_' . $date . '_d_' . $source . '_0_0';
-            $newLink = new Link($this->_nebuleInstance, $link);
-            $newLink->sign();
-            if ($obfuscated)
-                $newLink->setObfuscate();
-            $newLink->write();
+            $this->_writeLink('d>' . $this->_id);
 
             // Lit les liens.
             $links = array();
@@ -2175,7 +2013,7 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
             $entity = $this->_nebuleInstance->getCurrentEntity();
             foreach ($links as $link) {
                 // Vérifie si l'entité signataire du lien est l'entité courante.
-                if ($link->getHashSigner() != $entity) {
+                if ($link->getParsed()['bs/rs1/eid'] != $entity) {
                     // Si ce n'est pas l'entité courante, quitte.
                     $this->_metrology->addAction('delobj', $this->_id, false);
                     $deleteObject = false;
@@ -2233,35 +2071,17 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
                         $textID = $this->_nebuleInstance->createTextAsObject($text);
                         if ($textID != '') {
                             // Crée le lien de type d'empreinte.
-                            $action = 'l';
-                            $source = $codeKeyID;
-                            $target = $textID;
                             $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
-                            $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-                            $newLink = new Link($this->_nebuleInstance, $link);
-                            $newLink->sign();
-                            if ($obfuscated)
-                                $newLink->setObfuscate();
-                            $newLink->write();
+                            $this->_writeLink('l>' . $codeKeyID . '>' . $textID . '>' . $meta, $obfuscated);
                         }
 
                         // Création du lien de chiffrement asymétrique.
-                        $action = 'k';
-                        $source = $keyID;
-                        $target = $codeKeyID;
-                        $meta = $entity->getID();
-                        $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-                        $newLink = new Link($this->_nebuleInstance, $link);
-                        $newLink->sign();
-                        if ($obfuscated)
-                            $newLink->setObfuscate();
-                        $newLink->write();
+                        $this->_writeLink('k>' . $keyID . '>' . $codekeyID . '>' . $entity->getID(), $obfuscated);
 
                         $this->_metrology->addLog('Set protection shared to recovery ' . $entity->getID(), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                     }
                 }
             }
-            unset($links, $entity, $link, $deleteObject, $newLink, $signer, $date, $source);
 
             return true;
         }
@@ -2463,8 +2283,8 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
             return true;
 
         foreach ($links as $item) {
-            $idKey = $item->getHashSource();
-            $idProtectedKey = $item->getHashTarget();
+            $idKey = $item->getParsed()['bl/rl/nid1'];
+            $idProtectedKey = $item->getParsed()['bl/rl/nid2'];
             if ($idKey != '0' && $idProtectedKey != '0') {
                 // Création du lien d'annulation de chiffrement asymétrique.
                 $signer = $this->_nebuleInstance->getCurrentEntity();
@@ -2488,8 +2308,8 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
                 $delete = true;
                 foreach ($signerLinks as $itemSigner) {
                     // Si un lien a été généré par une autre entité, c'est que l'objet est encore utilisé.
-                    if ($itemSigner->getHashSigner() != $signer
-                        && $itemSigner->getHashSigner() != $this->_nebuleInstance->getCurrentEntity()
+                    if ($itemSigner->getParsed()['bs/rs1/eid'] != $signer
+                        && $itemSigner->getParsed()['bs/rs1/eid'] != $this->_nebuleInstance->getCurrentEntity()
                     )
                         $delete = false;
                 }
@@ -2580,7 +2400,7 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
         // Nettoyage.
         foreach ($list as $i => $link) {
             // Si méta à 0, supprime le lien.
-            if ($link->getHashMeta() == '0')
+            if ($link->getParsed()['bl/rl/nid3'] == '0')
                 unset($list[$i]);
         }
         unset($link);
@@ -2783,21 +2603,21 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
         $this->getLinks($linksSym, $filter, false);
         foreach ($linksSym as $linkSym) {
             // Si lien de chiffrement.
-            if ($linkSym->getHashMeta() != '0') {
+            if ($linkSym->getParsed()['bl/rl/nid3'] != '0') {
                 // Lit l'objet de clé de chiffrement symétrique et ses liens.
-                $instanceSym = $this->_nebuleInstance->newObject($linkSym->getHashMeta());
+                $instanceSym = $this->_nebuleInstance->newObject($linkSym->getParsed()['bl/rl/nid3']);
                 $linksAsym = array();
                 $filter = array(
                     'bl/rl/req' => 'k',
-                    'bl/rl/nid1' => $linkSym->getHashMeta(),
+                    'bl/rl/nid1' => $linkSym->getParsed()['bl/rl/nid3'],
                     'bl/rl/nid4' => '',
                 );
                 $this->getLinks($linksAsym, $filter, false);
                 unset($instanceSym);
                 foreach ($linksAsym as $linkAsym) {
                     // Si lien de chiffrement.
-                    if ($linkAsym->getHashMeta() != '0')
-                        $result[] = $linkAsym->getHashMeta();
+                    if ($linkAsym->getParsed()['bl/rl/nid3'] != '0')
+                        $result[] = $linkAsym->getParsed()['bl/rl/nid3'];
                 }
                 unset($linksAsym, $linkAsym);
             }
@@ -3453,7 +3273,7 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
         if (!is_a($link, 'link'))
             return $this->_id;
 
-        return $link->getHashTarget();
+        return $link->getParsed()['bl/rl/nid2'];
     }
 
     /**
@@ -3487,7 +3307,7 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
         if (!is_a($link, 'link'))
             return '0';
 
-        return $link->getHashSigner();
+        return $link->getParsed()['bs/rs1/eid'];
     }
 
     /**
@@ -3515,9 +3335,9 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
         // Extrait les signataires de la liste.
         $listOK = array();
         foreach ($links as $link) {
-            if (!isset($listOK[$link->getHashSigner()])) {
-                $list[] = $link->getHashSigner();
-                $listOK[$link->getHashSigner()] = true;
+            if (!isset($listOK[$link->getParsed()['bs/rs1/eid']])) {
+                $list[] = $link->getParsed()['bs/rs1/eid'];
+                $listOK[$link->getParsed()['bs/rs1/eid']] = true;
             }
         }
         unset($links, $listOK);
@@ -3618,7 +3438,7 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
         if (!is_a($link, 'link'))
             return $this->_id;
 
-        return $link->getHashSource();
+        return $link->getParsed()['bl/rl/nid1'];
     }
 
 
@@ -3631,22 +3451,16 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
      */
     public function syncObject(bool $hardSync = false): bool
     {
-        if ($hardSync !== true) {
+        if ($hardSync !== true)
             $hardSync = false;
-        }
 
         // Vérifie que l'objet ne soit pas déjà présent.
-        if ($this->_io->checkObjectPresent($this->_id)) {
+        if ($this->_io->checkObjectPresent($this->_id))
             return true;
-        }
 
         // Vérifie si autorisé.
-        if (!$this->_configuration->getOptionAsBoolean('permitWriteObject')) {
+        if (!$this->_configuration->checkBooleanOptions(array('permitWriteObject','permitSynchronizeObject')))
             return false;
-        }
-        if (!$this->_configuration->getOptionAsBoolean('permitSynchronizeObject')) {
-            return false;
-        }
 
         // Liste les liens à la recherche de la propriété de localisation.
         $links = array();
@@ -3663,16 +3477,15 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
         ) {
             // A faire...
         }
-        if (sizeof($links) == 0) {
+        if (sizeof($links) == 0)
             return false;
-        }
 
         // Fait un tri par pertinance sociale.
         // A faire...
 
         // Extrait le contenu des objets de propriété.
         foreach ($links as $i => $l) {
-            $localisations[$i] = $this->_readOneLineOtherObject($l->getHashTarget());
+            $localisations[$i] = $this->_readOneLineOtherObject($l->getParsed()['bl/rl/nid2']);
         }
 
         // Synchronisation
@@ -3696,17 +3509,12 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
      */
     public function syncLinks(bool $hardSync = false): bool
     {
-        if ($hardSync !== true) {
+        if ($hardSync !== true)
             $hardSync = false;
-        }
 
         // Vérifie si autorisé.
-        if (!$this->_configuration->getOptionAsBoolean('permitWriteLink')) {
+        if (!$this->_configuration->checkBooleanOptions(array('permitWriteLink','permitSynchronizeLink')))
             return false;
-        }
-        if (!$this->_configuration->getOptionAsBoolean('permitSynchronizeLink')) {
-            return false;
-        }
 
         // Liste les liens à la recherche de la propriété de localisation.
         $links = array();
@@ -3723,17 +3531,15 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
         ) {
             // A faire...
         }
-        if (sizeof($links) == 0) {
+        if (sizeof($links) == 0)
             return false;
-        }
 
         // Fait un tri par pertinance sociale.
         // A faire...
 
         // Extrait le contenu des objets de propriété.
-        foreach ($links as $i => $l) {
-            $localisations[$i] = $this->_readOneLineOtherObject($l->getHashTarget());
-        }
+        foreach ($links as $i => $l)
+            $localisations[$i] = $this->_readOneLineOtherObject($l->getParsed()['bl/rl/nid2']);
 
         // Synchronisation
         $link = null;
@@ -3765,19 +3571,12 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
         // Détecte si l'objet est protégé.
         $this->_getMarkProtected();
         $protected = ($this->_markProtectedChecked && $this->_cacheMarkProtected);
-        if ($protected) {
+        if ($protected)
             $id = $this->_idUnprotected;
-        } else {
+        else
             $id = $this->_id;
-        }
 
-        // Création lien.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
-        $date = date(DATE_ATOM);
-        $source = $id;
-        $link = '0_' . $signer . '_' . $date . '_d_' . $source . '_0_0';
-        $newLink = new Link($this->_nebuleInstance, $link);
-        $newLink->signWrite();
+        $this->_writeLink('d>' . $this->_id);
 
         // Lit les liens.
         $links = array();
@@ -3785,7 +3584,7 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
         $entity = $this->_nebuleInstance->getCurrentEntity();
         foreach ($links as $link) {
             // Vérifie si l'entité signataire du lien est l'entité courante.
-            if ($link->getHashSigner() != $entity) {
+            if ($link->getParsed()['bs/rs1/eid'] != $entity) {
                 // Si ce n'est pas l'entité courante, quitte.
                 $this->_metrology->addAction('delobj', $id, false);
                 $deleteObject = false;
@@ -3806,13 +3605,7 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
             $this->_metrology->addLog('Delete protected object ' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             $id = $this->_idProtected;
 
-            // Création lien.
-            $signer = $this->_nebuleInstance->getCurrentEntity();
-            $date = date(DATE_ATOM);
-            $source = $id;
-            $link = '0_' . $signer . '_' . $date . '_d_' . $source . '_0_0';
-            $newLink = new Link($this->_nebuleInstance, $link);
-            $newLink->signWrite();
+            $this->_writeLink('d>' . $this->_id);
 
             // Lit les liens.
             $links = array();
@@ -3820,7 +3613,7 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
             $entity = $this->_nebuleInstance->getCurrentEntity();
             foreach ($links as $link) {
                 // Vérifie si l'entité signataire du lien est l'entité courante.
-                if ($link->getHashSigner() != $entity) {
+                if ($link->getParsed()['bs/rs1/eid'] != $entity) {
                     // Si ce n'est pas l'entité courante, quitte.
                     $this->_metrology->addAction('delobj', $id, false);
                     $deleteObject = false;
@@ -3849,13 +3642,7 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
      */
     public function deleteObjectLinks(): bool
     {
-        // Création lien.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
-        $date = date(DATE_ATOM);
-        $source = $this->_id;
-        $link = '0_' . $signer . '_' . $date . '_d_' . $source . '_0_0';
-        $newLink = new Link($this->_nebuleInstance, $link);
-        $newLink->signWrite();
+        $this->_writeLink('d>' . $this->_id);
 
         // Lit les liens.
         $links = array();
@@ -3863,7 +3650,7 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
         $entity = $this->_nebuleInstance->getCurrentEntity();
         foreach ($links as $link) {
             // Vérifie si l'entité signataire du lien est l'entité courante.
-            if ($link->getHashSigner() != $entity) {
+            if ($link->getParsed()['bs/rs1/eid'] != $entity) {
                 // Si ce n'est pas l'entité courante, quitte.
                 unset($links, $entity, $link);
                 return false;
@@ -3892,18 +3679,10 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
      */
     public function deleteForceObject(): bool
     {
-        // Création lien.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
-        $date = date(DATE_ATOM);
-        $source = $this->_id;
-        $link = '0_' . $signer . '_' . $date . '_d_' . $source . '_0_0';
-        $newLink = new Link($this->_nebuleInstance, $link);
-        $newLink->signWrite();
+        $this->_writeLink('d>' . $this->_id);
 
-        // Supprime l'objet.
         $r = $this->_io->unsetObject($this->_id);
 
-        // Métrologie.
         $this->_metrology->addAction('delobj', $this->_id, $r);
 
         return $r;
@@ -3973,6 +3752,18 @@ $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2']
         $this->_metrology->addLog('OK write objet ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         return $ok;
+    }
+
+    protected function _writeLink(string $rl, bool $obfuscated = false, string $date = ''): bool
+    {
+        if ($rl == '')
+            return false;
+        $newBlockLink = new blocLink($this->_nebuleInstance, 'new');
+        $newLink = new Link($this->_nebuleInstance, $rl, $newBlockLink);
+        if ($obfuscated && !$newLink->setObfuscate())
+            return false;
+        $newBlockLink->signwrite($this->_nebuleInstance->getCurrentEntity(), $date);
+        return true;
     }
 
 

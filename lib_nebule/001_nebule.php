@@ -2533,7 +2533,7 @@ class nebule
 
         foreach ($list as $link) {
             $nid = $link->getParsed()['bl/rl/nid1'];
-            $instance = $this->newEntity_DEPRECATED($nid);
+            $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_ENTITY);
             $this->_localAuthorities[$nid] = $nid;
             $this->_localAuthoritiesInstances[$nid] = $instance;
             $this->_specialEntities[$nid] = $nid;
@@ -2748,11 +2748,11 @@ class nebule
         }
 
         foreach ($list as $link) {
-            $target = $link->getHashTarget();
-            $instance = $this->newEntity_DEPRECATED($target);
+            $target = $link->getParsed()['bl/rl/nid2'];
+            $instance = $this->_cacheInstance->newNode($target, Cache::TYPE_ENTITY);
             $this->_recoveryEntities[$target] = $target;
             $this->_recoveryEntitiesInstances[$target] = $instance;
-            $this->_recoveryEntitiesSigners[$target] = $link->getHashSigner();
+            $this->_recoveryEntitiesSigners[$target] = $link->getParsed()['bs/rs1/eid'];
         }
 
         // Liste les liens de l'entité instance du serveur..
@@ -2769,11 +2769,11 @@ class nebule
         }
 
         foreach ($list as $link) {
-            $target = $link->getHashTarget();
-            $instance = $this->newEntity_DEPRECATED($target);
+            $target = $link->getParsed()['bl/rl/nid2'];
+            $instance = $this->_cacheInstance->newNode($target, Cache::TYPE_ENTITY);
             $this->_recoveryEntities[$target] = $target;
             $this->_recoveryEntitiesInstances[$target] = $instance;
-            $this->_recoveryEntitiesSigners[$target] = $link->getHashSigner();
+            $this->_recoveryEntitiesSigners[$target] = $link->getParsed()['bs/rs1/eid'];
         }
         unset($list);
     }
@@ -2850,8 +2850,8 @@ class nebule
         $id = '';
         $instance = null;
         foreach ($links as $link) {
-            $id = $link->getHashSource();
-            $instance = $this->newEntity_DEPRECATED($id);
+            $id = $link->getParsed()['bl/rl/nid1'];
+            $instance = $this->_cacheInstance->newNode($id, Cache::TYPE_ENTITY);
             if ($instance->getIsPublicKey())
                 $result[$id] = $instance;
         }
@@ -3171,7 +3171,7 @@ class nebule
 
         // Extrait les ID.
         foreach ($result as $i => $l)
-            $result[$i] = $l->getHashSource();
+            $result[$i] = $l->getParsed()['bl/rl/nid1'];
 
         // retourne le résultat.
         return $result;

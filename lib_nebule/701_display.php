@@ -6188,7 +6188,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $result = '';
 
         // Prépare l'objet.
-        $messageInstance = $this->_nebuleInstance->convertIdToTypedObjectInstance($link->getHashTarget_disabled());
+        $messageInstance = $this->_nebuleInstance->convertIdToTypedObjectInstance($link->getParsed()['bl/rl/nid2']);
         $signerInstance = $this->_nebuleInstance->convertIdToTypedObjectInstance($link->getSigners());
 
         // Prépare les paramètres d'activation de contenus.
@@ -8414,17 +8414,17 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $contantDisplayAction .= 'alt="[' . $instance->getAction() . ']" ';
             $contantDisplayAction .= 'src="o/' . $this->_getImageByReference($icon) . '" />';
 
-            $object = $this->_nebuleInstance->newObject($instance->getHashSource_disabled());
+            $object = $this->_nebuleInstance->newObject($instance->getParsed()['bl/rl/nid1']);
             $contantDisplaySource .= '<img title="' . $object->getFullName();
             $contantDisplaySource .= '" style="background:#' . $object->getPrimaryColor();
             $contantDisplaySource .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
 
-            $object = $this->_nebuleInstance->newObject($instance->getHashTarget_disabled());
+            $object = $this->_nebuleInstance->newObject($instance->getParsed()['bl/rl/nid2']);
             $contantDisplayTarget .= '<img title="' . $object->getFullName();
             $contantDisplayTarget .= '" style="background:#' . $object->getPrimaryColor();
             $contantDisplayTarget .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
 
-            $object = $this->_nebuleInstance->newObject($instance->getHashMeta_disabled());
+            $object = $this->_nebuleInstance->newObject($instance->getParsed()['bl/rl/nid3']);
             $contantDisplayMeta .= '<img title="' . $object->getFullName();
             $contantDisplayMeta .= '" style="background:#' . $object->getPrimaryColor();
             $contantDisplayMeta .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
@@ -8798,9 +8798,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $return = $this->convertInlineObjectColor($link->getSigners());
         $return .= $colorDate;
         $return .= $icon;
-        $return .= $this->convertInlineObjectColor($link->getHashSource_disabled());
-        $return .= $this->convertInlineObjectColor($link->getHashTarget_disabled());
-        $return .= $this->convertInlineObjectColor($link->getHashMeta_disabled());
+        $return .= $this->convertInlineObjectColor($link->getParsed()['bl/rl/nid1']);
+        $return .= $this->convertInlineObjectColor($link->getParsed()['bl/rl/nid2']);
+        $return .= $this->convertInlineObjectColor($link->getParsed()['bl/rl/nid3']);
 
         return $return;
     }

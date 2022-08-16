@@ -2709,9 +2709,9 @@ abstract class Actions
                 . $this->_nebuleInstance->getCurrentEntity() . '_'
                 . $link->getDate() . '_'
                 . $link->getAction() . '_'
-                . $link->getHashSource_disabled() . '_'
-                . $link->getHashTarget_disabled() . '_'
-                . $link->getHashMeta_disabled()
+                . $link->getParsed()['bl/rl/nid1'] . '_'
+                . $link->getParsed()['bl/rl/nid2'] . '_'
+                . $link->getParsed()['bl/rl/nid3']
             );
             $link->signWrite();
             $this->_metrology->addLog('Action upload link - unsigned link ' . $link->getRaw(), Metrology::LOG_LEVEL_NORMAL);
@@ -2890,7 +2890,7 @@ abstract class Actions
         // Synchronise l'objet cible.
         $object = null;
         foreach ($links as $link) {
-            $object = $this->_nebuleInstance->newObject($link->getHashTarget());
+            $object = $this->_nebuleInstance->newObject($link->getParsed()['bl/rl/nid2']);
             // Synchronise les liens (avant).
             $object->syncLinks();
             // Synchronise l'objet.
@@ -2901,7 +2901,7 @@ abstract class Actions
         // Synchronise l'objet source.
         $object = null;
         foreach ($links as $link) {
-            $object = $this->_nebuleInstance->newObject($link->getHashSource());
+            $object = $this->_nebuleInstance->newObject($link->getParsed()['bl/rl/nid1']);
             // Synchronise les liens (avant).
             $object->syncLinks();
             // Synchronise l'objet.
@@ -2948,7 +2948,7 @@ abstract class Actions
         // Synchronise l'objet cible.
         $object = null;
         foreach ($links as $link) {
-            $object = $this->_nebuleInstance->newObject($link->getHashTarget());
+            $object = $this->_nebuleInstance->newObject($link->getParsed()['bl/rl/nid2']);
             // Synchronise les liens (avant).
             $object->syncLinks();
             // Synchronise l'objet.
@@ -2959,7 +2959,7 @@ abstract class Actions
         // Synchronise l'objet source.
         $object = null;
         foreach ($links as $link) {
-            $object = $this->_nebuleInstance->newObject($link->getHashSource());
+            $object = $this->_nebuleInstance->newObject($link->getParsed()['bl/rl/nid1']);
             // Synchronise les liens (avant).
             $object->syncLinks();
             // Synchronise l'objet.
@@ -3016,7 +3016,7 @@ abstract class Actions
         // Synchronise l'objet cible.
         $object = null;
         foreach ($links as $link) {
-            $object = $this->_nebuleInstance->newObject($link->getHashTarget());
+            $object = $this->_nebuleInstance->newObject($link->getParsed()['bl/rl/nid2']);
             // Synchronise les liens (avant).
             $object->syncLinks();
             // Synchronise l'objet.
@@ -3027,7 +3027,7 @@ abstract class Actions
         // Synchronise l'objet source.
         $object = null;
         foreach ($links as $link) {
-            $object = $this->_nebuleInstance->newObject($link->getHashSource());
+            $object = $this->_nebuleInstance->newObject($link->getParsed()['bl/rl/nid1']);
             // Synchronise les liens (avant).
             $object->syncLinks();
             // Synchronise l'objet.
@@ -3251,9 +3251,9 @@ abstract class Actions
                             . $this->_nebuleInstance->getCurrentEntity() . '_'
                             . $instance->getDate() . '_'
                             . $instance->getAction() . '_'
-                            . $instance->getHashSource_disabled() . '_'
-                            . $instance->getHashTarget_disabled() . '_'
-                            . $instance->getHashMeta_disabled()
+                            . $instance->getParsed()['bl/rl/nid1'] . '_'
+                            . $instance->getParsed()['bl/rl/nid2'] . '_'
+                            . $instance->getParsed()['bl/rl/nid3']
                         );
                         $instance->signWrite();
                         $nbLinks++;

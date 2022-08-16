@@ -874,18 +874,18 @@ class Currency extends Node implements nodeInterface
 
         // Filtrage type recherché. @todo faire filtrage sur MID.
         foreach ($links1 as $i => $link) {
-            $instance = $this->_nebuleInstance->newObject($link->getHashSource());
+            $instance = $this->_nebuleInstance->newObject($link->getParsed()['bl/rl/nid1']);
             $links2 = $instance->getLinksOnFields(
-                $link->getHashSigner(),
+                $link->getParsed()['bs/rs1/eid'],
                 '',
                 'l',
-                $link->getHashSource(),
+                $link->getParsed()['bl/rl/nid1'],
                 $target,
                 $meta
             );
 
             if (sizeof($links2) != 0) {
-                $list[$link->getHashSource()] = $link->getHashSource();
+                $list[$link->getParsed()['bl/rl/nid1']] = $link->getParsed()['bl/rl/nid1'];
             }
         }
 

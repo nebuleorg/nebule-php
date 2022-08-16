@@ -460,7 +460,6 @@ class blocLink implements blocLinkInterface
      */
     protected function _checkBL(string &$bl): bool
     {
-$this->_metrology->addLog('MARK bl=' . $bl, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         if (strlen($bl) > 4096) return false; // TODO à revoir.
 
         $rc = strtok($bl, '/');
@@ -485,11 +484,8 @@ $this->_metrology->addLog('MARK bl=' . $bl, Metrology::LOG_LEVEL_NORMAL, __FUNCT
             }
             $rl = strtok('/');
         }
-foreach ($list as $i => $v)
-$this->_metrology->addLog('MARK3 link i=' . $i . ' v=' . (string)$v, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         foreach ($list as $i => $rl)
         {
-$this->_metrology->addLog('MARK rl=' . (string)$rl, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             //if (!$this->_checkRL($rl, (string)$i))) $this->_metrology->addLog('check link BL/RL failed '.$bl, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd865ee87');
             if (!$this->_checkRL($rl, (string)($i+1))) return false;
             if ($this->_linksType == Cache::TYPE_TRANSACTION)
@@ -497,14 +493,10 @@ $this->_metrology->addLog('MARK rl=' . (string)$rl, Metrology::LOG_LEVEL_NORMAL,
             else
                 $instanceRL = new Link($this->_nebuleInstance, $rl, $this); // FIXME ne fonctionne pas correctement !
             if (!$instanceRL->getValid()) return false;
-$this->_metrology->addLog('MARK instanceRL=' . (string)$instanceRL->getRaw(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-foreach ($instanceRL->getParsed() as $i => $v)
-$this->_metrology->addLog('MARK4 i=' . $i . ' v=' . $v, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
             $this->_links[] = $instanceRL;
         }
 
-$this->_metrology->addLog('MARK OK bl', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $this->_parsedLink['bl'] = $bl;
         return true;
     }
@@ -771,9 +763,10 @@ $this->_metrology->addLog('MARK OK bl', Metrology::LOG_LEVEL_NORMAL, __FUNCTION_
      * {@inheritDoc}
      * @see blocLinkInterface::sign()
      * @param string $publicKey
+     * @param string $date
      * @return boolean
      */
-    public function sign(string $publicKey = '0'): bool
+    public function sign(string $publicKey = '0', string $date = ''): bool
     {
         $this->_metrology->addLog('sign ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'b6e89674');
 
@@ -785,12 +778,34 @@ $this->_metrology->addLog('MARK OK bl', Metrology::LOG_LEVEL_NORMAL, __FUNCTION_
             return false;
         }
 
+        // TODO vérifier que la table des RL est > 0
+
         // Prepare new link to sign.
         $this->_rawBlocLink .= '_';
         $this->_parse($this->_rawBlocLink);
         $this->_newLink = false;
-        $bh = $this->_parsedLink['bh'];
-        $bl = $this->_parsedLink['bl'];
+
+        if ($date == '')
+            $date = '0' . date(DATE_ATOM);
+
+        $bh = 'nebule:link/2:0';
+        $this->_parsedLink['bh'] = $bh;
+        $this->_parsedLink['bh/rf'] = 'nebule:link';
+        $this->_parsedLink['bh/rf/app'] = 'nebule';
+        $this->_parsedLink['bh/rf/typ'] = 'nebule';
+        $this->_parsedLink['bh/rv'] = '2:0';
+        $this->_parsedLink['bh/rv/ver'] = '2';
+        $this->_parsedLink['bh/rv/sub'] = '0';
+
+        $bl = '0>' . $date . '/'; // FIXME
+        $this->_parsedLink['bl'] = $bl;
+        $this->_parsedLink['bl/rc'] = '0>' . $date;
+        $this->_parsedLink['bl/rc/mod'] = '0';
+        $this->_parsedLink['bl/rc/chr'] = $date;
+
+        return false; // FIXME continuer !
+
+
 
         if ($this->_validStructure) {
             if ($publicKey == '0') {
@@ -886,13 +901,14 @@ $this->_metrology->addLog('MARK OK bl', Metrology::LOG_LEVEL_NORMAL, __FUNCTION_
      * {@inheritDoc}
      * @see blocLinkInterface::signWrite()
      * @param string $publicKey
+     * @param string $date
      * @return boolean
      */
-    public function signWrite(string $publicKey = '0'): bool
+    public function signWrite(string $publicKey = '0', string $date = ''): bool
     {
         $this->_metrology->addLog('sign write ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '51a338d4');
 
-        if ($this->sign($publicKey))
+        if ($this->sign($publicKey, $date))
             return $this->write();
         return false;
     }

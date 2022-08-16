@@ -1360,9 +1360,9 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             // Liste les applications reconnues par le maître du code.
             $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getCodeMaster(), '', 'f', $refAppsID, '', $refAppsID);
             foreach ($linksList as $link) {
-                $hashTarget = $link->getHashTarget();
+                $hashTarget = $link->getParsed()['bl/rl/nid2'];
                 $applicationsList[$hashTarget] = $hashTarget;
-                $signersList[$hashTarget] = $link->getHashSigner();
+                $signersList[$hashTarget] = $link->getParsed()['bs/rs1/eid'];
             }
 
             // Liste les applications reconnues par l'entité instance du serveur, si autorité locale et pas en mode de récupération.
@@ -1371,9 +1371,9 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             ) {
                 $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getInstanceEntity(), '', 'f', $refAppsID, '', $refAppsID);
                 foreach ($linksList as $link) {
-                    $hashTarget = $link->getHashTarget();
+                    $hashTarget = $link->getParsed()['bl/rl/nid2'];
                     $applicationsList[$hashTarget] = $hashTarget;
-                    $signersList[$hashTarget] = $link->getHashSigner();
+                    $signersList[$hashTarget] = $link->getParsed()['bs/rs1/eid'];
                 }
             }
 
@@ -1383,9 +1383,9 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             ) {
                 $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getDefaultEntity(), '', 'f', $refAppsID, '', $refAppsID);
                 foreach ($linksList as $link) {
-                    $hashTarget = $link->getHashTarget();
+                    $hashTarget = $link->getParsed()['bl/rl/nid2'];
                     $applicationsList[$hashTarget] = $hashTarget;
-                    $signersList[$hashTarget] = $link->getHashSigner();
+                    $signersList[$hashTarget] = $link->getParsed()['bs/rs1/eid'];
                 }
             }
             unset($linksList);
@@ -1410,7 +1410,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     $signer = '';
                     $authority = '';
                     foreach ($linksList as $link) {
-                        $signer = $link->getHashSigner();
+                        $signer = $link->getParsed()['bs/rs1/eid'];
                         foreach ($nebuleInstance->getLocalAuthorities() as $authority) {
                             if ($signer == $authority) {
                                 // Si le lien est valide, active le chargement direct de l'application.
@@ -1477,7 +1477,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                 // Prend le dernier.
                 if (sizeof($linksResult) > 0) {
                     $link = end($linksResult);
-                    $updater = $link->getHashSigner();
+                    $updater = $link->getParsed()['bs/rs1/eid'];
                 }
                 unset($linksResult);
                 ?>

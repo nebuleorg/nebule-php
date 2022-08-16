@@ -485,7 +485,7 @@ class Conversation extends Group implements nodeInterface
         // Extraction des ID cibles.
         $list = array();
         foreach ($links as $link) {
-            $list[$link->getHashSource()] = $link->getHashSource();
+            $list[$link->getParsed()['bl/rl/nid1']] = $link->getParsed()['bl/rl/nid1'];
         }
 
         return $list;
@@ -519,8 +519,8 @@ class Conversation extends Group implements nodeInterface
         // Extraction des ID cibles.
         $list = array();
         foreach ($links as $link) {
-            if ($link->getHashSource() == $entity) {
-                $list[$link->getHashSigner()] = $link->getHashSigner();
+            if ($link->getParsed()['bl/rl/nid1'] == $entity) {
+                $list[$link->getParsed()['bs/rs1/eid']] = $link->getParsed()['bs/rs1/eid'];
             }
         }
 

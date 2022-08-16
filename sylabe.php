@@ -4907,9 +4907,9 @@ class ModuleEntities extends Modules
 
                     if ($action == 'c') {
                         // Extrait nom et ID pour affichage.
-                        $signer = $link->getHashSigner();
+                        $signer = $link->getParsed()['bs/rs1/eid'];
                         $date = $link->getDate();
-                        $object = $link->getHashTarget();
+                        $object = $link->getParsed()['bl/rl/nid2'];
                         $objectInstance = new Node($this->_nebuleInstance, $object);
                         ?>
 
@@ -4933,9 +4933,9 @@ class ModuleEntities extends Modules
                         unset($signer, $date, $object, $objectInstance);
                     } elseif ($action == 'k') {
                         // Extrait nom et ID pour affichage.
-                        $signer = $link->getHashSigner();
+                        $signer = $link->getParsed()['bs/rs1/eid'];
                         $date = $link->getDate();
-                        $object = $link->getHashTarget();
+                        $object = $link->getParsed()['bl/rl/nid2'];
                         $objectInstance = new Node($this->_nebuleInstance, $object);
                         ?>
 
@@ -4959,9 +4959,9 @@ class ModuleEntities extends Modules
                         unset($signer, $date, $object, $objectInstance);
                     } elseif ($action == 'f') {
                         // Extrait nom et ID pour affichage.
-                        $signer = $link->getHashSigner();
+                        $signer = $link->getParsed()['bs/rs1/eid'];
                         $date = $link->getDate();
-                        $object = $link->getHashTarget();
+                        $object = $link->getParsed()['bl/rl/nid2'];
                         $objectInstance = new Node($this->_nebuleInstance, $object);
                         ?>
 
@@ -4969,7 +4969,7 @@ class ModuleEntities extends Modules
                             <?php $this->_display->displayObjectColorIcon(
                                 $objectInstance, Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
-                                . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $link->getHashTarget()); ?>
+                                . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $link->getParsed()['bl/rl/nid2']); ?>
                         </div>
                         <div>
                             <p class="sylabeModuleEntityActionDate">
@@ -5076,9 +5076,9 @@ class ModuleEntities extends Modules
             // Pour chaque lien.
             foreach ($links as $link) {
                 // Extrait nom et ID pour affichage.
-                $source = $link->getHashSource();
+                $source = $link->getParsed()['bl/rl/nid1'];
                 $date = $link->getDate();
-                $object = $link->getHashTarget();
+                $object = $link->getParsed()['bl/rl/nid2'];
                 $objectInstance = $this->_nebuleInstance->newObject($object);
 
                 ?>
@@ -5209,8 +5209,8 @@ class ModuleEntities extends Modules
         $list = array();
         $i = 0;
         foreach ($links as $link) {
-            $instance = $this->_nebuleInstance->newEntity_DEPRECATED($link->getHashTarget());
-            if (!isset($listOkEntities[$link->getHashTarget()])
+            $instance = $this->_nebuleInstance->newEntity_DEPRECATED($link->getParsed()['bl/rl/nid2']);
+            if (!isset($listOkEntities[$link->getParsed()['bl/rl/nid2']])
                 && $instance->getType('all') == Entity::ENTITY_TYPE
                 && $instance->getIsPublicKey()
             ) {
@@ -5235,7 +5235,7 @@ class ModuleEntities extends Modules
                 );
 
                 // Marque comme vu.
-                $listOkEntities[$link->getHashTarget()] = true;
+                $listOkEntities[$link->getParsed()['bl/rl/nid2']] = true;
                 $i++;
             }
         }
@@ -5278,8 +5278,8 @@ class ModuleEntities extends Modules
         $list = array();
         $i = 0;
         foreach ($links as $link) {
-            $instance = $this->_nebuleInstance->newEntity_DEPRECATED($link->getHashTarget());
-            if (!isset($listOkEntities[$link->getHashTarget()])
+            $instance = $this->_nebuleInstance->newEntity_DEPRECATED($link->getParsed()['bl/rl/nid2']);
+            if (!isset($listOkEntities[$link->getParsed()['bl/rl/nid2']])
                 && $instance->getType('all') == Entity::ENTITY_TYPE
                 && $instance->getIsPublicKey()
             ) {
@@ -5304,7 +5304,7 @@ class ModuleEntities extends Modules
                 );
 
                 // Marque comme vu.
-                $listOkEntities[$link->getHashTarget()] = true;
+                $listOkEntities[$link->getParsed()['bl/rl/nid2']] = true;
                 $i++;
             }
         }
@@ -5344,7 +5344,7 @@ class ModuleEntities extends Modules
             '');
         if (sizeof($links) != 0) {
             foreach ($links as $link) {
-                $listOkEntities[$link->getHashTarget()] = true;
+                $listOkEntities[$link->getParsed()['bl/rl/nid2']] = true;
             }
         }
 
@@ -5360,7 +5360,7 @@ class ModuleEntities extends Modules
         // Prépare l'affichage.
         if (sizeof($links) != 0) {
             foreach ($links as $link) {
-                $listOkEntities[$link->getHashSource()] = true;
+                $listOkEntities[$link->getParsed()['bl/rl/nid1']] = true;
             }
         }
 
@@ -5378,7 +5378,7 @@ class ModuleEntities extends Modules
             $list = array();
             $i = 0;
             foreach ($links as $link) {
-                $id = $link->getHashSource();
+                $id = $link->getParsed()['bl/rl/nid1'];
                 $instance = $this->_nebuleInstance->newEntity_DEPRECATED($id);
                 if (!isset($listOkEntities[$id])
                     && $instance->getType('all') == Entity::ENTITY_TYPE
@@ -5926,10 +5926,10 @@ class ModuleEntities extends Modules
                     $action = $link->getAction();
                     $showAttrib = false;
                     $showEmotion = false;
-                    $hashAttrib = $link->getHashMeta();
+                    $hashAttrib = $link->getParsed()['bl/rl/nid3'];
                     $attribName = '';
                     $attribTraduction = '';
-                    $hashValue = $link->getHashTarget();
+                    $hashValue = $link->getParsed()['bl/rl/nid2'];
                     $value = '';
                     $attribValue = '';
                     $emotion = '';
@@ -6004,7 +6004,7 @@ class ModuleEntities extends Modules
                             ?>
 
                             <div class="sylabeModuleEntityDescDate"><?php $this->_display->displayDate($link->getDate()); ?></div>
-                            <div class="sylabeModuleEntityDescSigner"><?php $this->_display->displayInlineObjectColorIconName($link->getHashSigner()); ?></div>
+                            <div class="sylabeModuleEntityDescSigner"><?php $this->_display->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleEntityDescContent">
                                 <span class="sylabeModuleEntityDescAttrib"><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction($attribName); ?></span>
                                 =
@@ -6034,7 +6034,7 @@ class ModuleEntities extends Modules
                             ?>
 
                             <div class="sylabeModuleEntityDescDate"><?php $this->_display->displayDate($link->getDate()); ?></div>
-                            <div class="sylabeModuleEntityDescSigner"><?php $this->_display->displayInlineObjectColorIconName($link->getHashSigner()); ?></div>
+                            <div class="sylabeModuleEntityDescSigner"><?php $this->_display->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleEntityDescContent">
 		<span class="sylabeModuleEntityDescEmotion">
 			<?php $this->_display->displayReferenceImage($emotionsIcons[$emotion], $emotionsList[$hashValue]); ?>
@@ -6067,7 +6067,7 @@ class ModuleEntities extends Modules
                             ?>
 
                             <div class="sylabeModuleEntityDescDate"><?php $this->_display->displayDate($link->getDate()); ?></div>
-                            <div class="sylabeModuleEntityDescSigner"><?php $this->_display->displayInlineObjectColorIconName($link->getHashSigner()); ?></div>
+                            <div class="sylabeModuleEntityDescSigner"><?php $this->_display->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleEntityDescContent">
                                 <span class="sylabeModuleEntityDescAttrib"><?php $this->_echoTraduction('::sylabe:module:entities:AttribNotDisplayable'); ?></span>
                             </div>
@@ -6914,10 +6914,10 @@ class ModuleGroups extends Modules
 			$i=0;
 			foreach ( $links as $i => $link )
 			{
-				if ( $link->getHashSigner() != $this->_nebuleInstance->getCurrentEntity() )
+				if ( $link->getParsed()['bs/rs1/eid'] != $this->_nebuleInstance->getCurrentEntity() )
 				{
-					$instance = $this->_nebuleInstance->newObject($link->getHashSource());   erreur de fonction !!!
-					$instanceEntity = $this->_nebuleInstance->newEntity($link->getHashSigner());
+					$instance = $this->_nebuleInstance->newObject($link->getParsed()['bl/rl/nid1']);   erreur de fonction !!!
+					$instanceEntity = $this->_nebuleInstance->newEntity($link->getParsed()['bs/rs1/eid']);
 					$closed = '::GroupeOuvert';
 					if ( $instance->getMarkClosed() )
 						$closed = '::GroupeFerme';
@@ -6934,20 +6934,20 @@ class ModuleGroups extends Modules
 						$list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
 						$list[$i]['actions'][0]['htlink'] = '?'.Display::DEFAULT_DISPLAY_COMMAND_MODE.'='.$this->MODULE_COMMAND_NAME
 							.'&'.Display::DEFAULT_DISPLAY_COMMAND_VIEW.'='.$this->MODULE_REGISTERED_VIEWS[3]
-							.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$link->getHashSource();
+							.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$link->getParsed()['bl/rl/nid1'];
 						// Utiliser comme groupe ouvert.
 						$list[$i]['actions'][1]['name'] = '::sylabe:module:groups:display:useAsGroupOpened';
 						$list[$i]['actions'][1]['icon'] = Display::DEFAULT_ICON_LL;
 						$list[$i]['actions'][1]['htlink'] = '?'.Display::DEFAULT_DISPLAY_COMMAND_MODE.'='.$this->MODULE_COMMAND_NAME
 							.'&'.Display::DEFAULT_DISPLAY_COMMAND_VIEW.'='.$this->MODULE_REGISTERED_VIEWS[1]
-							.'&'.Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1.'=f_'.$this->_hashGroup.'_'.$link->getHashSource().'_0'
+							.'&'.Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1.'=f_'.$this->_hashGroup.'_'.$link->getParsed()['bl/rl/nid1'].'_0'
 							.$this->_nebuleInstance->getTicketingInstance()->getActionTicket();
 						// Utiliser comme groupe fermé.
 						$list[$i]['actions'][2]['name'] = '::sylabe:module:groups:display:useAsGroupClosed';
 						$list[$i]['actions'][2]['icon'] = Display::DEFAULT_ICON_LLL;
 						$list[$i]['actions'][2]['htlink'] = '?'.Display::DEFAULT_DISPLAY_COMMAND_MODE.'='.$this->MODULE_COMMAND_NAME
 							.'&'.Display::DEFAULT_DISPLAY_COMMAND_VIEW.'='.$this->MODULE_REGISTERED_VIEWS[1]
-							.'&'.Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1.'=f_'.$this->_hashGroupClosed.'_'.$link->getHashSource().'_0'
+							.'&'.Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1.'=f_'.$this->_hashGroupClosed.'_'.$link->getParsed()['bl/rl/nid1'].'_0'
 							.$this->_nebuleInstance->getTicketingInstance()->getActionTicket();
 					}
 					$i++;
@@ -7208,13 +7208,13 @@ class ModuleGroups extends Modules
                     foreach ($groupListLinks as $item) {
                         // Vérifie si le couple membre/signataire n'est pas déjà pris en compte.
                         // Vérifie si le signataire n'est pas l'entité en cours.
-                        if (!isset($listOkItems[$item->getHashSource() . $item->getHashSigner()])
-                            && $item->getHashSigner() != $this->_applicationInstance->getCurrentEntity()
+                        if (!isset($listOkItems[$item->getParsed()['bl/rl/nid1'] . $item->getParsed()['bs/rs1/eid']])
+                            && $item->getParsed()['bs/rs1/eid'] != $this->_applicationInstance->getCurrentEntity()
                         ) {
-                            $instance = $this->_nebuleInstance->convertIdToTypedObjectInstance($item->getHashSource());
-                            $instanceSigner = $this->_nebuleInstance->newEntity_DEPRECATED($item->getHashSigner());
+                            $instance = $this->_nebuleInstance->convertIdToTypedObjectInstance($item->getParsed()['bl/rl/nid1']);
+                            $instanceSigner = $this->_nebuleInstance->newEntity_DEPRECATED($item->getParsed()['bs/rs1/eid']);
                             $closed = '::GroupeOuvert';
-                            if ($item->getHashMeta() == $hashGroupPriv)
+                            if ($item->getParsed()['bl/rl/nid3'] == $hashGroupPriv)
                                 $closed = '::GroupeFerme';
 
                             $list[$i]['object'] = $instance;
@@ -7235,12 +7235,12 @@ class ModuleGroups extends Modules
                                 $list[$i]['actions'][0]['htlink'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                     . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_DEFAULT_VIEW
                                     . '&' . nebule::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroup()
-                                    . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item->getHashSource()
+                                    . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item->getParsed()['bl/rl/nid1']
                                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                             }
 
                             // Marque comme vu.
-                            $listOkItems[$item->getHashSource() . $item->getHashSigner()] = true;
+                            $listOkItems[$item->getParsed()['bl/rl/nid1'] . $item->getParsed()['bs/rs1/eid']] = true;
                             $i++;
                         }
                     }
@@ -7274,11 +7274,11 @@ class ModuleGroups extends Modules
                 $i = 0;
                 foreach ($groupListLinks as $item) {
                     // Vérifie si le couple membre/signataire n'est pas déjà pris en compte.
-                    if (!isset($listOkItems[$item->getHashSource() . $item->getHashSigner()])) {
-                        $instance = $this->_nebuleInstance->convertIdToTypedObjectInstance($item->getHashSource());
-                        $instanceSigner = $this->_nebuleInstance->newEntity_DEPRECATED($item->getHashSigner());
+                    if (!isset($listOkItems[$item->getParsed()['bl/rl/nid1'] . $item->getParsed()['bs/rs1/eid']])) {
+                        $instance = $this->_nebuleInstance->convertIdToTypedObjectInstance($item->getParsed()['bl/rl/nid1']);
+                        $instanceSigner = $this->_nebuleInstance->newEntity_DEPRECATED($item->getParsed()['bs/rs1/eid']);
                         $closed = '::GroupeOuvert';
-                        if ($item->getHashMeta() == $hashGroupPriv)
+                        if ($item->getParsed()['bl/rl/nid3'] == $hashGroupPriv)
                             $closed = '::GroupeFerme';
 
                         $list[$i]['object'] = $instance;
@@ -7298,12 +7298,12 @@ class ModuleGroups extends Modules
                             $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
                             $list[$i]['actions'][0]['htlink'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroup()
-                                . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item->getHashSource()
+                                . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item->getParsed()['bl/rl/nid1']
                                 . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
                         }
 
                         // Marque comme vu.
-                        $listOkItems[$item->getHashSource() . $item->getHashSigner()] = true;
+                        $listOkItems[$item->getParsed()['bl/rl/nid1'] . $item->getParsed()['bs/rs1/eid']] = true;
                         $i++;
                     }
                 }
@@ -8031,10 +8031,10 @@ class ModuleObjects extends Modules
                     $action = $link->getAction();
                     $showAttrib = false;
                     $showEmotion = false;
-                    $hashAttrib = $link->getHashMeta();
+                    $hashAttrib = $link->getParsed()['bl/rl/nid3'];
                     $attribName = '';
                     $attribTraduction = '';
-                    $hashValue = $link->getHashTarget();
+                    $hashValue = $link->getParsed()['bl/rl/nid2'];
                     $value = '';
                     $attribValue = '';
                     $emotion = '';
@@ -8115,7 +8115,7 @@ class ModuleObjects extends Modules
                             ?>
 
                             <div class="sylabeModuleObjectsDescDate"><?php $display->displayDate($link->getDate()); ?></div>
-                            <div class="sylabeModuleObjectsDescSigner"><?php $display->displayInlineObjectColorIconName($link->getHashSigner()); ?></div>
+                            <div class="sylabeModuleObjectsDescSigner"><?php $display->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleObjectsDescContent">
                                 <span class="sylabeModuleObjectsDescAttrib"><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction($attribName); ?></span>
                                 =
@@ -8145,7 +8145,7 @@ class ModuleObjects extends Modules
                             ?>
 
                             <div class="sylabeModuleObjectsDescDate"><?php $display->displayDate($link->getDate()); ?></div>
-                            <div class="sylabeModuleObjectsDescSigner"><?php $display->displayInlineObjectColorIconName($link->getHashSigner()); ?></div>
+                            <div class="sylabeModuleObjectsDescSigner"><?php $display->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleObjectsDescContent">
 		<span class="sylabeModuleObjectsDescEmotion">
 			<?php $display->displayReferenceImage($emotionsIcons[$emotion], $emotionsList[$hashValue]); ?>
@@ -8178,7 +8178,7 @@ class ModuleObjects extends Modules
                             ?>
 
                             <div class="sylabeModuleObjectsDescDate"><?php $display->displayDate($link->getDate()); ?></div>
-                            <div class="sylabeModuleObjectsDescSigner"><?php $display->displayInlineObjectColorIconName($link->getHashSigner()); ?></div>
+                            <div class="sylabeModuleObjectsDescSigner"><?php $display->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleObjectsDescContent">
                                 <span class="sylabeModuleObjectsDescAttrib"><?php $this->_echoTraduction('::sylabe:module:objects:AttribNotDisplayable'); ?></span>
                             </div>
@@ -8747,9 +8747,9 @@ class ModuleObjects extends Modules
             $typeEntity = false;
             $link = null;
             foreach ($links as $link) {
-                $instance = $this->_nebuleInstance->newEntity_DEPRECATED($link->getHashSource());
+                $instance = $this->_nebuleInstance->newEntity_DEPRECATED($link->getParsed()['bl/rl/nid1']);
                 $typeEntity = $instance->getIsEntity('all');
-                if (!isset($listOkEntities[$link->getHashSource()])
+                if (!isset($listOkEntities[$link->getParsed()['bl/rl/nid1']])
                     && $typeEntity
                 ) {
                     $list[$i]['object'] = $instance;
@@ -8782,12 +8782,12 @@ class ModuleObjects extends Modules
                     $list[$i]['param']['selfHookList'][0]['icon'] = $this->MODULE_REGISTERED_ICONS[4];
                     $list[$i]['param']['selfHookList'][0]['link'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[4]
-                        . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY . '=' . $link->getHashSource()
+                        . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY . '=' . $link->getParsed()['bl/rl/nid1']
                         . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
 
                     // Marque comme vu.
-                    $listOkEntities[$link->getHashSource()] = true;
+                    $listOkEntities[$link->getParsed()['bl/rl/nid1']] = true;
                     $i++;
                 }
             }

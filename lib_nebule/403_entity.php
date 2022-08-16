@@ -314,12 +314,12 @@ class Entity extends Node implements nodeInterface
         }
         // Boucle de recherche d'une clé privée.
         foreach ($list as $link) {
-            $hashSource = $link->getHashSource();
+            $hashSource = $link->getParsed()['bl/rl/nid1'];
             // Vérifie le lien et la présence de l'objet source.
-            if ($link->getHashSigner() == $this->_id
+            if ($link->getParsed()['bs/rs1/eid'] == $this->_id
                 && $link->getAction() == 'f'
-                && $link->getHashTarget() == $this->_id
-                && $link->getHashMeta() == '0'
+                && $link->getParsed()['bl/rl/nid2'] == $this->_id
+                && $link->getParsed()['bl/rl/nid3'] == '0'
                 && $this->_io->checkObjectPresent($hashSource)
             ) {
                 // Extrait le contenu de l'objet source. @todo remplacer par Object::getContent ...
@@ -634,7 +634,7 @@ class Entity extends Node implements nodeInterface
         //_l_fnd($this->_id, $links, 'f', $this->_id, '', '0');				// @todo Vérifier le bon fonctionnement.
         $links = $this->getLinksOnFields('', '', 'f', $this->_id, '', '0');
         foreach ($links as $link) {
-            $instance6 = $this->_nebuleInstance->newObject($link->getHashTarget());
+            $instance6 = $this->_nebuleInstance->newObject($link->getParsed()['bl/rl/nid2']);
             $type = $instance6->getType('all');
             if (($type == 'image/png'
                     || $type == 'image/jpeg')
@@ -681,7 +681,7 @@ class Entity extends Node implements nodeInterface
             //_l_fnd($this->_id, $uplinks, 'f', '', $this->_id, '0');							// @todo Vérifier le bon fonctionnement.
             $uplinks = $this->getLinksOnFields('', '', 'f', '', $this->_id, '0');
             foreach ($uplinks as $uplink) {
-                $instance5 = $this->_nebuleInstance->newObject($uplink->getHashSource());
+                $instance5 = $this->_nebuleInstance->newObject($uplink->getParsed()['bl/rl/nid1']);
                 $type = $instance5->getType('all');
                 if (($type == 'image/png' || $type == 'image/jpeg') && $instance5->checkPresent()) {
                     $list = array();
@@ -689,7 +689,7 @@ class Entity extends Node implements nodeInterface
                     //_l_fnd($instance5->getID(), $links, 'f', $instance5->getID(), '', '0');          // @todo Vérifier le bon fonctionnement.
                     $links = $instance5->getLinksOnFields('', '', 'f', $instance5->getID(), '', '0');
                     foreach ($links as $link) {
-                        $instance6 = $this->_nebuleInstance->newObject($link->getHashTarget());
+                        $instance6 = $this->_nebuleInstance->newObject($link->getParsed()['bl/rl/nid2']);
                         $type = $instance6->getType('all');
                         if ($type == 'image/png'
                             || $type == 'image/jpeg'
@@ -861,7 +861,7 @@ class Entity extends Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newGroup_DEPRECATED($link->getHashTarget());
+            $instance = $this->_nebuleInstance->newGroup_DEPRECATED($link->getParsed()['bl/rl/nid2']);
             if (!$instance->getIsGroup('all')) {
                 unset($links[$i]);
             }
@@ -895,9 +895,9 @@ class Entity extends Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newGroup_DEPRECATED($link->getHashTarget());
+            $instance = $this->_nebuleInstance->newGroup_DEPRECATED($link->getParsed()['bl/rl/nid2']);
             if ($instance->getIsGroup('all')) {
-                $list[$link->getHashTarget()] = $link->getHashTarget();
+                $list[$link->getParsed()['bl/rl/nid2']] = $link->getParsed()['bl/rl/nid2'];
             }
         }
 
@@ -928,7 +928,7 @@ class Entity extends Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newConversation_DEPRECATED($link->getHashTarget());
+            $instance = $this->_nebuleInstance->newConversation_DEPRECATED($link->getParsed()['bl/rl/nid2']);
             if (!$instance->getIsConversation('all')) {
                 unset($links[$i]);
             }
@@ -953,9 +953,9 @@ class Entity extends Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newConversation_DEPRECATED($link->getHashTarget());
+            $instance = $this->_nebuleInstance->newConversation_DEPRECATED($link->getParsed()['bl/rl/nid2']);
             if ($instance->getIsConversation('all')) {
-                $list[$link->getHashTarget()] = $link->getHashTarget();
+                $list[$link->getParsed()['bl/rl/nid2']] = $link->getParsed()['bl/rl/nid2'];
             }
         }
 

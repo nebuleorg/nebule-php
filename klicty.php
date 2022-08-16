@@ -1856,7 +1856,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         // Fait un pré-tri.
         foreach ($list as $i => $item) {
-            $id2 = $item->getHashSource();
+            $id2 = $item->getParsed()['bl/rl/nid1'];
             $instance = $this->_nebuleInstance->newObject($id2);
             $lifetimeExpired = $this->_applicationInstance->getObjectLifetimeExpired($instance);
             if ($lifetimeExpired) {
@@ -1866,8 +1866,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         // Liste tous les objets.
         foreach ($list as $item) {
-            $id = $item->getHashSource();
-            $entity = $item->getHashSigner();
+            $id = $item->getParsed()['bl/rl/nid1'];
+            $entity = $item->getParsed()['bs/rs1/eid'];
             $instance = $this->_nebuleInstance->newObject($id);
             $id = $instance->getID();
             $present = $this->_nebuleInstance->getIoInstance()->checkObjectPresent($id);
@@ -1924,10 +1924,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             if (sizeof($listK) != 0) {
                 foreach ($listK as $i => $item) {
                     // Vérifie le signataire.
-                    $signer = $item->getHashSigner();
+                    $signer = $item->getParsed()['bs/rs1/eid'];
                     if ($signer != $id) {
                         // Recherche du lien de chiffrement des objets.
-                        $source = $item->getHashSource();
+                        $source = $item->getParsed()['bl/rl/nid1'];
                         $instance = $this->_nebuleInstance->newObject($source);
                         $list2 = $instance->getLinksOnFields(
                             '',
@@ -1940,7 +1940,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                         // Extrait l'objet protégé.
                         if (sizeof($list2) != 0) {
-                            $source = $list2[0]->getHashSource();
+                            $source = $list2[0]->getParsed()['bl/rl/nid1'];
                             $instance = $this->_nebuleInstance->newObject($source);
                             $lifetimeExpired = $this->_applicationInstance->getObjectLifetimeExpired($instance);
                             $haveLifetime = $this->_applicationInstance->getObjectHaveLifetime($instance);
@@ -2057,7 +2057,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         // Affiche les entités.
         foreach ($links as $link) {
-            $id = $link->getHashSource();
+            $id = $link->getParsed()['bl/rl/nid1'];
             $instance = $this->_nebuleInstance->newEntity_DEPRECATED($id);
             if (!isset($listOkEntities[$id])
                 && $instance->getType('all') == Entity::ENTITY_TYPE
@@ -2461,9 +2461,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     // Renouveler le bail de durée de vie.
                     $link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
                     if (is_a($link, 'Link')) {
-                        $source = $link->getHashSource();
-                        $target = $link->getHashTarget();
-                        $meta = $link->getHashMeta();
+                        $source = $link->getParsed()['bl/rl/nid1'];
+                        $target = $link->getParsed()['bl/rl/nid2'];
+                        $meta = $link->getParsed()['bl/rl/nid3'];
                         unset($link);
                         $actionList[3]['name'] = '::RenewLiveTimeFile';
                         $actionList[3]['icon'] = self::DEFAULT_ICON_SYNLNK;
@@ -2657,7 +2657,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $links = $object->getPropertiesLinks(Application::APPLICATION_EXPIRATION_DATE, 'all');
                 $signers = array();
                 foreach ($links as $link) {
-                    $signers[$link->getHashSigner()] = $link->getHashSigner();
+                    $signers[$link->getParsed()['bs/rs1/eid']] = $link->getParsed()['bs/rs1/eid'];
                 }
                 unset($links, $link);
                 $f = false;
@@ -3312,14 +3312,14 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             //Prépare l'affichage des entités.
             if (sizeof($links) != 0) {
                 foreach ($links as $link) {
-                    $instance = $this->_nebuleInstance->newEntity_DEPRECATED($link->getHashSource());
+                    $instance = $this->_nebuleInstance->newEntity_DEPRECATED($link->getParsed()['bl/rl/nid1']);
                     $type = $instance->getIsEntity('all');
-                    if (!isset($listOkEntities[$link->getHashSource()]) && $type) {
+                    if (!isset($listOkEntities[$link->getParsed()['bl/rl/nid1']]) && $type) {
                         $list[$i]['object'] = $instance;
                         $list[$i]['entity'] = '';
                         $list[$i]['icon'] = '';
                         $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $link->getHashSource();
+                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $link->getParsed()['bl/rl/nid1'];
                         $list[$i]['desc'] = '';
                         $list[$i]['actions'] = array();
 
@@ -3327,12 +3327,12 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['actions'][0]['name'] = '::ShareProtectObject';
                         $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LL;
                         $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
-                            . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY . '=' . $link->getHashSource()
+                            . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY . '=' . $link->getParsed()['bl/rl/nid1']
                             . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
 
                         // Marque comme vu.
-                        $listOkEntities[$link->getHashSource()] = true;
+                        $listOkEntities[$link->getParsed()['bl/rl/nid1']] = true;
                         $i++;
                     }
                 }
