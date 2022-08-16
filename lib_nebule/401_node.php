@@ -822,15 +822,25 @@ $this->_metrology->addLog('MARK type=' . $type, Metrology::LOG_LEVEL_NORMAL, __F
         // Liste les liens à la recherche de la propriété.
         $link = $this->getPropertyLink($type, $socialClass);
 
+        if ($link === null)
+        {
+$this->_metrology->addLog('MARK link=null', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            return '';
+        }
+
 $this->_metrology->addLog('MARK link=' . $link, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-        if ($link == ''
-            || !is_a($link, 'blocLink')
-        )
+$this->_metrology->addLog('MARK class=' . get_class($link), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        /*if ($link == ''
+            || (!is_a($link, 'link') && !is_a($link, 'Nebule\Library\Link') && get_class($link) != 'Nebule\Library\Link')
+        )*/
+        if (get_class($link) != 'Nebule\\Library\\Link')
             return '';
 
         // Extrait le contenu de l'objet de propriété.
         $property = $this->_readOneLineOtherObject($link->getParsed()['bl/rl/nid2']);
+$this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2'], Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         unset($link);
+$this->_metrology->addLog('MARK property=' . $property, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         // Mémorise le résultat dans le cache.
         $this->_cacheProperty[$type][$socialClass] = $property;
@@ -2965,9 +2975,9 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         if ($this->_haveData)
             return $this->_data;
 
-        if ($this->_getMarkProtected())
+        /*if ($this->_getMarkProtected())
             return $this->_getProtectedContent($limit);
-        else
+        else*/
             return $this->_getUnprotectedContent($limit);
     }
 
@@ -3085,6 +3095,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
      */
     protected function _getProtectedContent(int $limit = 0): ?string
     {
+        return null; // FIXME disabled!
+
         if ($this->_haveData) {
             return $this->_data;
         }
@@ -3180,7 +3192,12 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         }
 
         $instance = $this->_nebuleInstance->newObject($id);
-        $text = mb_convert_encoding(substr(trim(strtok(filter_var($instance->getContent(0), FILTER_SANITIZE_STRING), "\n")), 0, 1024), 'UTF-8');
+        $text = substr(trim(strtok(filter_var($instance->getContent(0), FILTER_SANITIZE_STRING), "\n")), 0, 1024);
+        if (extension_loaded('mbstring'))
+            $text = mb_convert_encoding($text, 'UTF-8');
+        else
+            $this->_metrology->addLog('mbstring extension not installed or activated!', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'c2becfad');
+
         unset($instance);
         return $text;
     }
@@ -3204,7 +3221,12 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
             $limit = 4;
         }
 
-        $text = mb_convert_encoding(trim(strtok(filter_var($this->getContent($limit), FILTER_SANITIZE_STRING), "\n")), 'UTF-8');
+        $text = trim(strtok(filter_var($this->getContent($limit), FILTER_SANITIZE_STRING), "\n"));
+        if (extension_loaded('mbstring'))
+            $text = mb_convert_encoding($text, 'UTF-8');
+        else
+            $this->_metrology->addLog('mbstring extension not installed or activated!', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'c2becfad');
+
         if (strlen($text) > $limit) {
             $text = substr($text, 0, ($limit - 3)) . '...';
         }
@@ -3227,7 +3249,12 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
             $limit = 4;
         }
 
-        $text = mb_convert_encoding(trim(filter_var($this->getContent($limit + 4), FILTER_SANITIZE_STRING)), 'UTF-8');
+        $text = trim(filter_var($this->getContent($limit + 4), FILTER_SANITIZE_STRING));
+        if (extension_loaded('mbstring'))
+            $text = mb_convert_encoding($text, 'UTF-8');
+        else
+            $this->_metrology->addLog('mbstring extension not installed or activated!', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'c2becfad');
+
         if (strlen($text) > $limit) {
             $text = substr($text, 0, ($limit - 3)) . '...';
         }
@@ -3260,6 +3287,10 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         {
 $this->_metrology->addLog('MARK line=' . $line, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             $bloc = $this->_cache->newLink($line, Cache::TYPE_LINK);
+if (!$bloc->getValidStructure())
+$this->_metrology->addLog('MARK ValidStructure NOK', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+if (!$bloc->getValid())
+$this->_metrology->addLog('MARK Valid NOK', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             if ($bloc->getValidStructure()
                 && ( $bloc->getValid() || $withInvalidLinks )
             )

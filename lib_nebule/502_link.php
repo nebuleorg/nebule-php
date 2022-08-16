@@ -180,7 +180,7 @@ class Link implements linkInterface
 
         // Détecte si c'est un lien dissimulé.
         $this->_obfuscated = false;
-        if ($this->_action == 'c')
+        if ($this->_permitObfuscated && $this->_action == 'c')
             $this->_extractObfuscated();
 
         // Actions supplémentaires pour les dérivés de liens.
@@ -214,7 +214,7 @@ class Link implements linkInterface
             $j++;
             if ($j > $this->_maxRLUID)
             {
-                $this->_metrology->addLog('BL/RL overflow '.substr($rl, 0, 60) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '72920c39');
+                $this->_metrology->addLog('BL/RL overflow '.substr($rl, 0, 60) . '+ maxRLUID=' . $this->_maxRLUID, Metrology::LOG_LEVEL_ERROR, __METHOD__, '72920c39');
                 return false;
             }
             $rl1nid = strtok('>');

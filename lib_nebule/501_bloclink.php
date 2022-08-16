@@ -480,7 +480,7 @@ $this->_metrology->addLog('MARK bl=' . $bl, Metrology::LOG_LEVEL_NORMAL, __FUNCT
             $i++;
             if ($i > $this->_maxRL)
             {
-                $this->_metrology->addLog('BL overflow '.substr($bl, 0, 60) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '6a777706');
+                $this->_metrology->addLog('BL overflow '.substr($bl, 0, 60) . '+ maxRL=' . $this->_maxRL, Metrology::LOG_LEVEL_ERROR, __METHOD__, '6a777706');
                 return false;
             }
             $rl = strtok('/');
