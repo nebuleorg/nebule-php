@@ -590,9 +590,9 @@ class ioLocal extends io implements ioInterface
      *
      * @param string $oid
      * @param string $link
-     * @return number|boolean
+     * @return boolean
      */
-    private function _checkFileLink(string &$oid, string &$link)
+    private function _checkFileLink(string &$oid, string &$link): bool
     {
         /**
          * Indice du champs lu, de 1 à 7.
@@ -656,7 +656,7 @@ class ioLocal extends io implements ioInterface
             }
         }
 
-        // Si on arrive là c'est que c'estbon.
+        // Si on arrive là c'est que c'est bon.
         return true;
     }
 

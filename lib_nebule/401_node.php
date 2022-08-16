@@ -107,6 +107,13 @@ class Node implements nodeInterface
     protected $_social;
 
     /**
+     * if buffering content is permitted.
+     *
+     * @var boolean $_permitBuffer
+     */
+    protected $_permitBuffer;
+
+    /**
      * Identifiant de l'objet.
      * Si à 0, l'objet est invalide.
      *
@@ -355,6 +362,7 @@ class Node implements nodeInterface
         $this->_io = $nebuleInstance->getIoInstance();
         $this->_crypto = $nebuleInstance->getCryptoInstance();
         $this->_social = $nebuleInstance->getSocialInstance();
+        $this->_permitBuffer = $this->_configuration->getOptionAsBoolean('permitBufferIO');
     }
 
     /**
@@ -494,7 +502,7 @@ class Node implements nodeInterface
                 $this->write();
             }
         } else {
-            $this->_metrology->addLog('Create object error no authorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Create object error no authorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
             $this->_id = '0';
             return false;
         }
@@ -573,7 +581,7 @@ class Node implements nodeInterface
     public function getHashAlgo(): string
     {
         $algo = $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_HASH, 'all');
-        $this->_metrology->addLog('Object ' . $this->_id . ' hash = ' . $algo, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrology->addLog('Object ' . $this->_id . ' hash = ' . $algo, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         if ($algo != '')
             return $algo;
@@ -590,9 +598,9 @@ class Node implements nodeInterface
         if ($this->_id == '0')
             return false;
 
-        if ($this->_getMarkProtected())
+        /*if ($this->_getMarkProtected())
             $result = $this->_nebuleInstance->getIoInstance()->checkObjectPresent($this->_idProtected);
-        else
+        else*/
             $result = $this->_nebuleInstance->getIoInstance()->checkObjectPresent($this->_id);
         return $result;
     }
@@ -643,19 +651,15 @@ class Node implements nodeInterface
             $type = $this->_nebuleInstance->getNIDfromData($type);
 
         // Si déjà recherché, donne le résultat en cache.
-//        if (isset($this->_cachePropertiesLinks[$type][$socialClass]))
+//        if ($this->_permitBuffer && isset($this->_cachePropertiesLinks[$type][$socialClass]))
 //            return $this->_cachePropertiesLinks[$type][$socialClass];
 
-$this->_metrology->addLog('MARK type=' . $type, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         // Liste les liens à la recherche de la propriété.
         $links = array();
         $this->_getLinksByNID3($links, $type);
-$this->_metrology->addLog('MARK links=' . sizeof($links), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         if (sizeof($links) == 0)
             return array();
-foreach ($links as $i => $v)
-$this->_metrology->addLog('MARK3 link i=' . $i . ' v=' . $v, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         // Trie la liste, pour les liens venants de plusieurs objets.
         $date = array();
@@ -667,7 +671,8 @@ $this->_metrology->addLog('MARK3 link i=' . $i . ' v=' . $v, Metrology::LOG_LEVE
         $this->_social->arraySocialFilter($links, $socialClass);
 
         // Mémorise le résultat dans le cache.
-        $this->_cachePropertiesLinks[$type][$socialClass] = $links;
+        //if ($this->_permitBuffer)
+        //    $this->_cachePropertiesLinks[$type][$socialClass] = $links;
 
         // Résultat.
         return $links;
@@ -684,32 +689,27 @@ $this->_metrology->addLog('MARK3 link i=' . $i . ' v=' . $v, Metrology::LOG_LEVE
      */
     public function getPropertyLink(string $type, string $socialClass = ''): ?linkInterface
     {
-$this->_metrology->addLog('MARK type=' . $type, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         if ($type == '')
             return null;
 
         // Si déjà recherché, donne le résultat en cache.
-        if (isset($this->_cachePropertyLink[$type][$socialClass]))
+        if ($this->_permitBuffer && isset($this->_cachePropertyLink[$type][$socialClass]))
             return $this->_cachePropertyLink[$type][$socialClass];
 
         // Liste les liens à la recherche de la propriété.
         $links = $this->getPropertiesLinks($type, $socialClass);
-$this->_metrology->addLog('MARK1 links=' . sizeof($links), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         if (sizeof($links) == 0)
             return null;
-$this->_metrology->addLog('MARK2 links=' . sizeof($links), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-foreach ($links as $i => $v)
-$this->_metrology->addLog('MARK3 link i=' . $i . ' v=' . $v, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         // Extrait le dernier de la liste.
         //$link = end($links);
         //$link = $links[count($links)-1];
         $link = $links[0];
-$this->_metrology->addLog('MARK link=' . $link, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         // Mémorise le résultat dans le cache.
-        $this->_cachePropertyLink[$type][$socialClass] = $link;
+        if ($this->_permitBuffer)
+            $this->_cachePropertyLink[$type][$socialClass] = $link;
 
         // Résultat.
         return $link;
@@ -725,30 +725,28 @@ $this->_metrology->addLog('MARK link=' . $link, Metrology::LOG_LEVEL_NORMAL, __F
      */
     public function getPropertyID(string $type, string $socialClass = ''): string
     {
-        if ($type == '') {
+        if ($type == '')
             return '';
-        }
 
         // Si déjà recherché, donne le résultat en cache.
-        if (isset($this->_cachePropertyID[$type][$socialClass])) {
+        if ($this->_permitBuffer && isset($this->_cachePropertyID[$type][$socialClass]))
             return $this->_cachePropertyID[$type][$socialClass];
-        }
 
         $property = '';
 
         // Liste les liens à la recherche de la propriété.
         $link = $this->getPropertyLink($type, $socialClass);
 
-        if (!is_a($link, 'link')) {
+        if (!is_a($link, 'Link'))
             return '';
-        }
 
         // Extrait l'ID de l'objet de propriété.
-        $property = $link->getHashTarget_disabled();
+        $property = $link->getParsed()['bl/rl/nid2'];
         unset($link);
 
         // Mémorise le résultat dans le cache.
-        $this->_cachePropertyID[$type][$socialClass] = $property;
+        if ($this->_permitBuffer)
+            $this->_cachePropertyID[$type][$socialClass] = $property;
 
         // Résultat.
         return $property;
@@ -764,14 +762,12 @@ $this->_metrology->addLog('MARK link=' . $link, Metrology::LOG_LEVEL_NORMAL, __F
      */
     public function getPropertiesID(string $type, string $socialClass = ''): array
     {
-        if ($type == '') {
+        if ($type == '')
             return array();
-        }
 
         // Si déjà recherché, donne le résultat en cache.
-        if (isset($this->_cachePropertiesID[$type][$socialClass])) {
+        if ($this->_permitBuffer && isset($this->_cachePropertiesID[$type][$socialClass]))
             return $this->_cachePropertiesID[$type][$socialClass];
-        }
 
         $properties = array();
 
@@ -779,21 +775,20 @@ $this->_metrology->addLog('MARK link=' . $link, Metrology::LOG_LEVEL_NORMAL, __F
         $list = array();
         $this->_getLinksByNID3($list, $type);
 
-        if (sizeof($list) == 0) {
+        if (sizeof($list) == 0)
             return array();
-        }
 
         // Fait un tri par pertinence sociale.
         $this->_social->arraySocialFilter($list, $socialClass);
 
         // Extrait les ID des objets de propriété.
-        foreach ($list as $i => $l) {
-            $properties[$i] = $l->getHashTarget();
-        }
+        foreach ($list as $i => $l)
+            $properties[$i] = $l->getParsed()['bl/rl/nid2'];
         unset($list);
 
         // Mémorise le résultat dans le cache.
-        $this->_cachePropertiesID[$type][$socialClass] = $properties;
+        if ($this->_permitBuffer)
+            $this->_cachePropertiesID[$type][$socialClass] = $properties;
 
         // Résultat.
         return $properties;
@@ -809,12 +804,11 @@ $this->_metrology->addLog('MARK link=' . $link, Metrology::LOG_LEVEL_NORMAL, __F
      */
     public function getProperty(string $type, string $socialClass = ''): string
     {
-$this->_metrology->addLog('MARK type=' . $type, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         if ($type == '')
             return '';
 
         // Si déjà recherché, donne le résultat en cache.
-        if (isset($this->_cacheProperty[$type][$socialClass]))
+        if ($this->_permitBuffer && isset($this->_cacheProperty[$type][$socialClass]))
             return $this->_cacheProperty[$type][$socialClass];
 
         $property = '';
@@ -823,27 +817,24 @@ $this->_metrology->addLog('MARK type=' . $type, Metrology::LOG_LEVEL_NORMAL, __F
         $link = $this->getPropertyLink($type, $socialClass);
 
         if ($link === null)
-        {
-$this->_metrology->addLog('MARK link=null', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             return '';
-        }
 
 $this->_metrology->addLog('MARK link=' . $link, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 $this->_metrology->addLog('MARK class=' . get_class($link), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-        /*if ($link == ''
+        if ($link == ''
             || (!is_a($link, 'link') && !is_a($link, 'Nebule\Library\Link') && get_class($link) != 'Nebule\Library\Link')
-        )*/
-        if (get_class($link) != 'Nebule\\Library\\Link')
+        )
+        //if (get_class($link) != 'Nebule\\Library\\Link')
             return '';
 
         // Extrait le contenu de l'objet de propriété.
         $property = $this->_readOneLineOtherObject($link->getParsed()['bl/rl/nid2']);
 $this->_metrology->addLog('MARK propertyUID=' . $link->getParsed()['bl/rl/nid2'], Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         unset($link);
-$this->_metrology->addLog('MARK property=' . $property, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         // Mémorise le résultat dans le cache.
-        $this->_cacheProperty[$type][$socialClass] = $property;
+        if ($this->_permitBuffer)
+            $this->_cacheProperty[$type][$socialClass] = $property;
 
         // Résultat.
         return $property;
@@ -859,14 +850,12 @@ $this->_metrology->addLog('MARK property=' . $property, Metrology::LOG_LEVEL_NOR
      */
     public function getProperties(string $type, string $socialClass = ''): array
     {
-        if ($type == '') {
+        if ($type == '')
             return array();
-        }
 
         // Si déjà recherché, donne le résultat en cache.
-        if (isset($this->_cacheProperties[$type][$socialClass])) {
+        if ($this->_permitBuffer && isset($this->_cacheProperties[$type][$socialClass]))
             return $this->_cacheProperties[$type][$socialClass];
-        }
 
         $properties = array();
 
@@ -874,24 +863,20 @@ $this->_metrology->addLog('MARK property=' . $property, Metrology::LOG_LEVEL_NOR
         $links = array();
         $this->_getLinksByNID3($links, $type);
 
-        if (sizeof($links) == 0) {
+        if (sizeof($links) == 0)
             return array();
-        }
 
         // Fait un tri par pertinance sociale.
         $this->_social->arraySocialFilter($links, $socialClass);
 
         // Extrait le contenu des objets de propriété.
-        foreach ($links as $i => $l) {
+        foreach ($links as $i => $l)
             $properties[$i] = $this->_readOneLineOtherObject($l->getHashTarget());
-        }
         unset($links);
 
         // Mémorise le résultat dans le cache.
-        if (sizeof($properties) != 0 && false) // @todo la mise en cache ne fonctionne pas !!!
-        {
+        if ($this->_permitBuffer && sizeof($properties) != 0 && false) // @todo la mise en cache ne fonctionne pas !!!
             $this->_cacheProperties[$type][$socialClass] = $properties;
-        }
 
         // Résultat.
         return $properties;
@@ -912,9 +897,8 @@ $this->_metrology->addLog('MARK property=' . $property, Metrology::LOG_LEVEL_NOR
 
         // Cherche dans la liste la propriété de groupe.
         foreach ($list as $item) {
-            if ($item == $property) {
+            if ($item == $property)
                 return true;
-            }
         }
 
         // Si la propriété n'est pas trouvée.
@@ -933,9 +917,8 @@ $this->_metrology->addLog('MARK property=' . $property, Metrology::LOG_LEVEL_NOR
         $signers = array();
 
         // Si le type de l'objet est précisé, le converti en ID.
-        if ($type != '') {
+        if ($type != '')
             $type = $this->_nebuleInstance->getNIDfromData($type, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
-        }
 
         // Extraction des entités signataires.
         $links = $this->getPropertiesLinks(nebule::REFERENCE_NEBULE_OBJET_TYPE, 'all');
@@ -945,9 +928,8 @@ $this->_metrology->addLog('MARK property=' . $property, Metrology::LOG_LEVEL_NOR
                 || ($type != ''
                     && $link->getHashTarget() == $type
                 )
-            ) {
+            )
                 $signers[$link->getHashSigner()] = $link->getHashSigner();
-            }
         }
         unset($links);
 
@@ -965,14 +947,12 @@ $this->_metrology->addLog('MARK property=' . $property, Metrology::LOG_LEVEL_NOR
     public function getPropertySignedBy(string $entity, string $type = ''): bool
     {
         // Si le type de l'objet est précisé, le converti en ID.
-        if ($type != '') {
+        if ($type != '')
             $type = $this->_nebuleInstance->getNIDfromData($type, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
-        }
 
         // extrait l'ID de l'entité si c'est un objet.
-        if (is_a($entity, 'Node')) {
+        if (is_a($entity, 'Node'))
             $entity = $entity->getID();
-        }
 
         // Extraction des entités signataires.
         $links = $this->getPropertiesLinks(nebule::REFERENCE_NEBULE_OBJET_TYPE, 'all');
@@ -981,9 +961,8 @@ $this->_metrology->addLog('MARK property=' . $property, Metrology::LOG_LEVEL_NOR
             if ($type == ''
                 || $link->getHashTarget() == $type
             ) {
-                if ($link->getHashSigner() == $entity) {
+                if ($link->getHashSigner() == $entity)
                     return true;
-                }
             }
         }
         unset($links);
@@ -1070,7 +1049,7 @@ $this->_metrology->addLog('MARK property=' . $property, Metrology::LOG_LEVEL_NOR
      */
     public function setType(string $type): bool
     {
-        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000'); // Log
+        $this->_metrology->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
 
         return $this->setProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, $type);
     }
@@ -1126,7 +1105,6 @@ $this->_metrology->addLog('MARK property=' . $property, Metrology::LOG_LEVEL_NOR
     public function getName(string $socialClass = ''): string
     {
         $name = $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_NOM, $socialClass);
-$this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         if ($name == '')
             $name = $this->_id;
         return $name;
@@ -1241,34 +1219,28 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
     {
         if (isset($this->_fullname)
             && trim($this->_fullname) != ''
-        ) {
+        )
             return $this->_fullname;
-        }
 
-        // Recherche des éléments.
-        $name = $this->getName($socialClass);
+        $fullname = $this->getName($socialClass);
+
         $prefix = $this->getPrefixName($socialClass);
-        $firstname = $this->getFirstname($socialClass);
-        $suffix = $this->getSuffixName($socialClass);
-        $surname = $this->getSurname($socialClass);
-
-        // Reconstitution du nom complet : prénom préfixe/nom.suffixe surnom
-        $fullname = $name;
-        if ($prefix != '') {
+        if ($prefix != '')
             $fullname = $prefix . '/' . $fullname;
-        }
-        if ($suffix != '') {
-            $fullname = $fullname . '.' . $suffix;
-        }
-        if ($firstname != '') {
-            $fullname = $firstname . ' ' . $fullname;
-        }
-        if ($surname != '') {
-            $fullname = $fullname . ' ' . $surname;
-        }
-        $this->_fullname = $fullname;
 
-        // Resultat.
+        $suffix = $this->getSuffixName($socialClass);
+        if ($suffix != '')
+            $fullname = $fullname . '.' . $suffix;
+
+        $firstname = $this->getFirstname($socialClass);
+        if ($firstname != '')
+            $fullname = $firstname . ' ' . $fullname;
+
+        $surname = $this->getSurname($socialClass);
+        if ($surname != '')
+            $fullname = $fullname . ' ' . $surname;
+
+        $this->_fullname = $fullname;
         return $fullname;
     }
 
@@ -1348,9 +1320,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
     public function getIsGroup(string $socialClass = 'myself'): bool
     {
         // Si déjà marqué, donne le résultat tout de suite.
-        if ($this->_isGroup) {
+        if ($this->_isGroup)
             return true;
-        }
 
         $this->_isGroup = $this->getHaveProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, nebule::REFERENCE_NEBULE_OBJET_GROUPE, $socialClass);
 
@@ -1375,9 +1346,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
-            if ($link->getHashSource() != $link->getHashMeta()) {
+            if ($link->getHashSource() != $link->getHashMeta())
                 unset($links[$i]);
-            }
         }
 
         // Fait un tri par pertinance sociale.
@@ -1386,9 +1356,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
             $instance = $this->_nebuleInstance->newGroup_DEPRECATED($link->getHashSource());
-            if (!$instance->getIsGroup('all')) {
+            if (!$instance->getIsGroup('all'))
                 unset($links[$i]);
-            }
         }
 
         return $links;
@@ -1412,9 +1381,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
-            if ($link->getHashSource() != $link->getHashMeta()) {
+            if ($link->getHashSource() != $link->getHashMeta())
                 unset($links[$i]);
-            }
         }
 
         // Fait un tri par pertinance sociale.
@@ -1423,9 +1391,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
             $instance = $this->_nebuleInstance->newGroup_DEPRECATED($link->getHashSource());
-            if ($instance->getIsGroup('all')) {
+            if ($instance->getIsGroup('all'))
                 $list[$link->getHashSource()] = $link->getHashSource();
-            }
         }
 
         return $list;
@@ -1447,9 +1414,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
     public function getIsConversation(string $socialClass = 'myself'): bool
     {
         // Si déjà marqué, donne le résultat tout de suite.
-        if ($this->_isConversation) {
+        if ($this->_isConversation)
             return true;
-        }
 
         $this->_isConversation = $this->getHaveProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, nebule::REFERENCE_NEBULE_OBJET_CONVERSATION, $socialClass);
 
@@ -1475,9 +1441,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
-            if ($link->getHashSource() != $link->getHashMeta()) {
+            if ($link->getHashSource() != $link->getHashMeta())
                 unset($links[$i]);
-            }
         }
 
         // Fait un tri par pertinance sociale.
@@ -1486,9 +1451,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
             $instance = $this->_nebuleInstance->newConversation_DEPRECATED($link->getHashSource());
-            if (!$instance->getIsConversation('all')) {
+            if (!$instance->getIsConversation('all'))
                 unset($links[$i]);
-            }
         }
 
         return $links;
@@ -1513,9 +1477,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
-            if ($link->getHashSource() != $link->getHashMeta()) {
+            if ($link->getHashSource() != $link->getHashMeta())
                 unset($links[$i]);
-            }
         }
 
         // Fait un tri par pertinance sociale.
@@ -1524,9 +1487,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
             $instance = $this->_nebuleInstance->newConversation_DEPRECATED($link->getHashSource());
-            if ($instance->getIsConversation('all')) {
+            if ($instance->getIsConversation('all'))
                 $list[$link->getHashSource()] = $link->getHashSource();
-            }
         }
 
         return $list;
@@ -1548,9 +1510,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
     public function getIsCurrency(string $socialClass = 'myself'): bool
     {
         // Si déjà marqué, donne le résultat tout de suite.
-        if ($this->_isCurrency) {
+        if ($this->_isCurrency)
             return true;
-        }
 
         $this->_isCurrency = $this->getHaveProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, nebule::REFERENCE_NEBULE_OBJET_MONNAIE, $socialClass);
 
@@ -1573,9 +1534,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
     public function getIsTokenPool(string $socialClass = 'myself'): bool
     {
         // Si déjà marqué, donne le résultat tout de suite.
-        if ($this->_isTokenPool) {
+        if ($this->_isTokenPool)
             return true;
-        }
 
         $this->_isTokenPool = $this->getHaveProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, nebule::REFERENCE_NEBULE_OBJET_MONNAIE_SAC, $socialClass);
 
@@ -1598,9 +1558,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
     public function getIsToken(string $socialClass = 'myself'): bool
     {
         // Si déjà marqué, donne le résultat tout de suite.
-        if ($this->_isToken) {
+        if ($this->_isToken)
             return true;
-        }
 
         $this->_isToken = $this->getHaveProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, nebule::REFERENCE_NEBULE_OBJET_MONNAIE_JETON, $socialClass);
 
@@ -1623,9 +1582,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
     public function getIsWallet(string $socialClass = 'myself'): bool
     {
         // Si déjà marqué, donne le résultat tout de suite.
-        if ($this->_isWallet) {
+        if ($this->_isWallet)
             return true;
-        }
 
         $this->_isWallet = $this->getHaveProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, nebule::REFERENCE_NEBULE_OBJET_MONNAIE_PORTEFEUILLE, $socialClass);
 
@@ -1642,9 +1600,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
     public function getMarkDanger(): bool
     {
         // Si déjà marqué, donne le résultat tout de suite.
-        if ($this->_cacheMarkDanger) {
+        if ($this->_cacheMarkDanger)
             return true;
-        }
 
         $list = array();
         $filter = array(
@@ -1666,9 +1623,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         $this->_social->arraySocialFilter($list);
 
         // Si pas marqué, tout va bien. Résultat négatif.
-        if (sizeof($list) == 0) {
+        if (sizeof($list) == 0)
             return false;
-        }
 
         // Sinon.
         // Mémorise le résultat dans le cache.
@@ -1685,9 +1641,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
     public function setMarkDanger(): bool
     {
         // Si déjà marqué, donne le résultat tout de suite.
-        if ($this->_cacheMarkDanger) {
+        if ($this->_cacheMarkDanger)
             return true;
-        }
 
         // Création lien de groupe.
         $signer = $this->_nebuleInstance->getCurrentEntity();
@@ -1713,9 +1668,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
     public function getMarkWarning(): bool
     {
         // Si déjà marqué, donne le résultat tout de suite.
-        if ($this->_cacheMarkWarning) {
+        if ($this->_cacheMarkWarning)
             return true;
-        }
 
         $list = array();
         $filter = array(
@@ -1737,9 +1691,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         $this->_social->arraySocialFilter($list);
 
         // Si pas marqué, tout va bien. Résultat négatif.
-        if (sizeof($list) == 0) {
+        if (sizeof($list) == 0)
             return false;
-        }
 
         // Sinon.
         // Mémorise le résultat dans le cache.
@@ -1756,9 +1709,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
     public function setMarkWarning(): bool
     {
         // Si déjà marqué, donne le résultat tout de suite.
-        if ($this->_cacheMarkWarning) {
+        if ($this->_cacheMarkWarning)
             return true;
-        }
 
         // Création lien de groupe.
         $signer = $this->_nebuleInstance->getCurrentEntity();
@@ -1794,13 +1746,11 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
      */
     public function getMarkProtectedFast(): bool
     {
-        if ($this->_markProtectedChecked === true) {
+        if ($this->_markProtectedChecked === true)
             return $this->_cacheMarkProtected;
-        }
 
-        if ($this->_id == '0') {
+        if ($this->_id == '0')
             return false;
-        }
 
         // Liste les liens à la recherche de la propriété.
         $listS = array();
@@ -1821,9 +1771,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         // Si pas marqué, résultat négatif.
         if (sizeof($listS) == 0
             && sizeof($listT) == 0
-        ) {
+        )
             return false;
-        }
         return true;
     }
 
@@ -1856,13 +1805,15 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
      */
     protected function _getMarkProtected(): bool
     {
+        return false; // FIXME disabled!
+
         if ($this->_markProtectedChecked === true
             && $this->_cacheCurrentEntityUnlocked === $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             if ($this->_cacheMarkProtected === true) {
-                $this->_metrology->addLog('Object protected - cache - protected', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+                $this->_metrology->addLog('Object protected - cache - protected', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             } else {
-                $this->_metrology->addLog('Object protected - cache - not protected', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+                $this->_metrology->addLog('Object protected - cache - not protected', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             }
             return $this->_cacheMarkProtected;
         }
@@ -1911,7 +1862,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
             $this->_idUnprotected = $this->_id;
             $this->_idProtectedKey = '0';
             $this->_idUnprotectedKey = '0';
-            $this->_metrology->addLog('Object protected - not protected', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Object protected - not protected', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             return false;
         }
 
@@ -1920,7 +1871,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         $result = false;
 
         if (sizeof($listS) == 0) {
-            $this->_metrology->addLog('Object protected - id protected = ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Object protected - id protected = ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             $this->_idProtected = $this->_id;
 
             // Recherche la clé utilisée pour l'entité en cours.
@@ -1943,7 +1894,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
                         ) {
                             $result = true;
                             $this->_idUnprotected = $linkSym->getHashSource();
-                            $this->_metrology->addLog('Object protected - id unprotected = ' . $this->_idUnprotected, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+                            $this->_metrology->addLog('Object protected - id unprotected = ' . $this->_idUnprotected, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                             $this->_idUnprotectedKey = $linkAsym->getHashSource();
                             if ($linkAsym->getHashMeta() == $this->_nebuleInstance->getCurrentEntity()) {
                                 $this->_idProtectedKey = $targetA;
@@ -1956,7 +1907,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
             }
             unset($listT, $linkSym);
         } else {
-            $this->_metrology->addLog('Object protected - id unprotected = ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Object protected - id unprotected = ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             $this->_idUnprotected = $this->_id;
 
             // Recherche la clé utilisée pour l'entité en cours.
@@ -1982,7 +1933,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
                         ) {
                             $result = true;
                             $this->_idProtected = $targetS;
-                            $this->_metrology->addLog('Object protected - id protected = ' . $this->_idProtected, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+                            $this->_metrology->addLog('Object protected - id protected = ' . $this->_idProtected, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                             $this->_idUnprotectedKey = $linkAsym->getHashSource();
                             if ($linkAsym->getHashMeta() == $this->_nebuleInstance->getCurrentEntity()) {
                                 $this->_idProtectedKey = $targetA;
@@ -2008,6 +1959,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
      */
     public function getProtectedID(): string
     {
+        return ''; // FIXME disabled!
+
         $this->_getMarkProtected();
         return $this->_idProtected;
     }
@@ -2018,6 +1971,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
      */
     public function getUnprotectedID(): string
     {
+        return ''; // FIXME disabled!
+
         $this->_getMarkProtected();
         return $this->_idUnprotected;
     }
@@ -2030,19 +1985,18 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
      */
     public function setProtected(bool $obfuscated = false): bool
     {
-        if ($this->_id == '0') {
+        return false; // FIXME disabled!
+
+        if ($this->_id == '0')
             return false;
-        }
         if (!$this->_io->checkObjectPresent($this->_id)
             && !$this->_haveData
-        ) {
+        )
             return false;
-        }
 
         // Vérifie si pas déjà protégé.
-        if ($this->_getMarkProtected()) {
+        if ($this->_getMarkProtected())
             return true;
-        }
 
         $this->_metrology->addLog('Ask protect object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
@@ -2058,16 +2012,15 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
             // @todo à faire pour le cas général.
             $keySize = self::CRYPTO_SESSION_KEY_SIZE; // En octets.
             $key = $this->_crypto->getRandom($keySize, Crypto::RANDOM_STRONG);
-            if (strlen($key) != $keySize) {
+            if (strlen($key) != $keySize)
                 return false;
-            }
             $keyID = $this->_nebuleInstance->getNIDfromData($key);
             $this->_metrology->addLog('Protect object, key : ' . $keyID, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
             // Si des donnnées sont disponibles, on les lit.
-            if ($this->_haveData) {
+            if ($this->_haveData)
                 $data = $this->_data;
-            } else {
+            else {
                 // Sinon, on lit le contenu de l'objet. @todo à remplacer par getContent...
                 $limit = $this->_configuration->getOptionAsInteger('ioReadMaxData');
                 $data = $this->_nebuleInstance->getIoInstance()->getObject($this->_id, $limit);
@@ -2098,17 +2051,15 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
             unset($data, $keySize);
 
             // Vérification de bon chiffrement.
-            if ($code == '') {
+            if ($code == '')
                 return false;
-            }
 
             // Chiffrement (asymétrique) de la clé de chiffrement du contenu.
             $codeKey = $this->_crypto->encryptTo($key, $this->_nebuleInstance->getCurrentEntityInstance()->getPublicKey());
 
             // Vérification de bon chiffrement.
-            if ($codeKey === false) {
+            if ($codeKey === false)
                 return false;
-            }
 
             // Ecrit le contenu chiffré.
             $codeInstance = new Node($this->_nebuleInstance, '0');
@@ -2117,9 +2068,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
             $this->_metrology->addLog('Protect object, code : ' . $codeID, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
             // Vérification de bonne écriture.
-            if ($codeID == '0') {
+            if ($codeID == '0')
                 return false;
-            }
 
             // Ecrit la clé de session chiffrée.
             $codeKeyInstance = new Node($this->_nebuleInstance, '0');
@@ -2128,9 +2078,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
             $this->_metrology->addLog('Protect object, code key : ' . $codeKeyID, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
             // Vérification de bonne écriture.
-            if ($codeKeyID == '0') {
+            if ($codeKeyID == '0')
                 return false;
-            }
 
             $signer = $this->_nebuleInstance->getCurrentEntity();
             $date = date(DATE_ATOM);
@@ -2201,13 +2150,12 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
             $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
             $newLink = new Link($this->_nebuleInstance, $link);
             $newLink->sign();
-            if ($obfuscated) {
+            if ($obfuscated)
                 $newLink->setObfuscate();
-            }
             $newLink->write();
 
             // Supprime l'objet qui a été marqué protégé.
-            $this->_metrology->addLog('Delete unprotected object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Delete unprotected object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             $deleteObject = true;
 
             // Création lien.
@@ -2217,9 +2165,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
             $link = '0_' . $signer . '_' . $date . '_d_' . $source . '_0_0';
             $newLink = new Link($this->_nebuleInstance, $link);
             $newLink->sign();
-            if ($obfuscated) {
+            if ($obfuscated)
                 $newLink->setObfuscate();
-            }
             $newLink->write();
 
             // Lit les liens.
@@ -2265,7 +2212,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
 
                         // Vérification de bon chiffrement.
                         if ($codeKey === false) {
-                            $this->_metrology->addLog('Error (1) share protection to recovery ' . $entity->getID(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
+                            $this->_metrology->addLog('Error (1) share protection to recovery ' . $entity->getID(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
                             continue;
                         }
 
@@ -2277,7 +2224,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
 
                         // Vérification de bonne écriture.
                         if ($codeKeyID == '0') {
-                            $this->_metrology->addLog('Error (2) share protection to recovery ' . $entity->getID(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
+                            $this->_metrology->addLog('Error (2) share protection to recovery ' . $entity->getID(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
                             continue;
                         }
 
@@ -2293,9 +2240,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
                             $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
                             $newLink = new Link($this->_nebuleInstance, $link);
                             $newLink->sign();
-                            if ($obfuscated) {
+                            if ($obfuscated)
                                 $newLink->setObfuscate();
-                            }
                             $newLink->write();
                         }
 
@@ -2307,12 +2253,11 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
                         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
                         $newLink = new Link($this->_nebuleInstance, $link);
                         $newLink->sign();
-                        if ($obfuscated) {
+                        if ($obfuscated)
                             $newLink->setObfuscate();
-                        }
                         $newLink->write();
 
-                        $this->_metrology->addLog('Set protection shared to recovery ' . $entity->getID(), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+                        $this->_metrology->addLog('Set protection shared to recovery ' . $entity->getID(), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                     }
                 }
             }
@@ -2329,6 +2274,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
      */
     public function setUnprotected(): bool
     {
+        return false; // FIXME disabled!
+
         // Vérifie que l'objet est protégé et que l'on peut y acceder.
         if (!$this->_getMarkProtected()
             || $this->_idProtected == '0'
@@ -2338,7 +2285,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         )
             return false;
 
-        $this->_metrology->addLog('Set unprotected ' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+        $this->_metrology->addLog('Set unprotected ' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         // TODO
 
@@ -2355,6 +2302,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
      */
     public function setProtectedTo(string $entity): bool
     {
+        return false; // FIXME disabled!
+
         // TODO
         return false;
     }
@@ -2367,15 +2316,15 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
      */
     public function shareProtectionTo($entity): bool
     {
+        return false; // FIXME disabled!
+
         if (is_string($entity)) {
             $entity = $this->_nebuleInstance->newEntity_DEPRECATED($entity);
         }
-        if (!is_a($entity, 'entity')) {
+        if (!is_a($entity, 'entity'))
             $entity = $this->_nebuleInstance->newEntity_DEPRECATED($entity->getID());
-        }
-        if (!$entity->getIsEntity('all')) {
+        if (!$entity->getIsEntity('all'))
             return false;
-        }
 
         // Vérifie que l'objet est protégé et que l'on peut y acceder.
         if (!$this->_getMarkProtected()
@@ -2383,11 +2332,10 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
             || $this->_idUnprotected == '0'
             || $this->_idProtectedKey == '0'
             || $this->_idUnprotectedKey == '0'
-        ) {
+        )
             return false;
-        }
 
-        $this->_metrology->addLog('Set protected to ' . $entity->getID(), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrology->addLog('Set protected to ' . $entity->getID(), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         // Lit la clé chiffrée. @todo à remplacer par getContent ...
         $limit = $this->_configuration->getOptionUntyped('ioReadMaxData');
@@ -2395,8 +2343,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         // Calcul l'empreinte de la clé chiffrée.
         $hash = $this->_nebuleInstance->getNIDfromData($codeKey);
         if ($hash != $this->_idProtectedKey) {
-            $this->_metrology->addLog('Error get protected key content : ' . $this->_idProtectedKey, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
-            $this->_metrology->addLog('Protected key content hash : ' . $hash, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Error get protected key content : ' . $this->_idProtectedKey, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            $this->_metrology->addLog('Protected key content hash : ' . $hash, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             return false;
         }
 
@@ -2405,8 +2353,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         // Calcul l'empreinte de la clé.
         $hash = $this->_nebuleInstance->getNIDfromData($key);
         if ($hash != $this->_idUnprotectedKey) {
-            $this->_metrology->addLog('Error get unprotected key content : ' . $this->_idUnprotectedKey, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
-            $this->_metrology->addLog('Unprotected key content hash : ' . $hash, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Error get unprotected key content : ' . $this->_idUnprotectedKey, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            $this->_metrology->addLog('Unprotected key content hash : ' . $hash, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             return false;
         }
 
@@ -2421,7 +2369,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         $codeKeyInstance = new Node($this->_nebuleInstance, '0');
         $codeKeyInstance->setContent($codeKey, false);
         $codeKeyID = $codeKeyInstance->getID();
-        $this->_metrology->addLog('Protect object, code key : ' . $codeKeyID, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+        $this->_metrology->addLog('Protect object, code key : ' . $codeKeyID, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         // Vérification de bonne écriture.
         if ($codeKeyID == '0')
@@ -2472,41 +2420,34 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
      */
     public function cancelShareProtectionTo($entity): bool
     {
-        if (is_string($entity)) {
+        return false; // FIXME disabled!
+
+        if (is_string($entity))
             $entity = $this->_nebuleInstance->newEntity_DEPRECATED($entity);
-        }
-        if (!is_a($entity, 'entity')) {
+        if (!is_a($entity, 'entity'))
             $entity = $this->_nebuleInstance->newEntity_DEPRECATED($entity->getID());
-        }
-        if (!$entity->getIsEntity('all')) {
+        if (!$entity->getIsEntity('all'))
             return false;
-        }
 
         // Vérifie que l'objet est protégé et que l'on peut y acceder.
-        if (!$this->_getMarkProtected()) {
+        if (!$this->_getMarkProtected())
             return false;
-        }
-        if ($this->_idProtected == '0') {
+        if ($this->_idProtected == '0')
             return false;
-        }
-        if ($this->_idUnprotected == '0') {
+        if ($this->_idUnprotected == '0')
             return false;
-        }
-        if ($this->_idProtectedKey == '0') {
+        if ($this->_idProtectedKey == '0')
             return false;
-        }
-        if ($this->_idUnprotectedKey == '0') {
+        if ($this->_idUnprotectedKey == '0')
             return false;
-        }
 
         // Vérifie que la protection n'est pas partagée à une entité de recouvrement.
         if (!$this->_configuration->getOptionAsBoolean('permitRecoveryRemoveEntity')
             && $this->_nebuleInstance->getIsRecoveryEntity($entity->getID())
-        ) {
+        )
             return false;
-        }
 
-        $this->_metrology->addLog('Cancel share protection to ' . $entity->getID(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+        $this->_metrology->addLog('Cancel share protection to ' . $entity->getID(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         // Recherche l'objet de clé de chiffrement pour l'entité.
         $links = array();
@@ -2518,9 +2459,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         );
         $this->getLinks($links, $filter, false);
 
-        if (sizeof($links) == 0) {
+        if (sizeof($links) == 0)
             return true;
-        }
 
         foreach ($links as $item) {
             $idKey = $item->getHashSource();
@@ -2548,13 +2488,13 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
                 $delete = true;
                 foreach ($signerLinks as $itemSigner) {
                     // Si un lien a été généré par une autre entité, c'est que l'objet est encore utilisé.
-                    if ($itemSigner->getHashSigner() != $signer && $itemSigner->getHashSigner() != $this->_nebuleInstance->getCurrentEntity()) {
+                    if ($itemSigner->getHashSigner() != $signer
+                        && $itemSigner->getHashSigner() != $this->_nebuleInstance->getCurrentEntity()
+                    )
                         $delete = false;
-                    }
                 }
-                if ($delete) {
+                if ($delete)
                     $this->_io->unsetObject($idProtectedKey);
-                }
                 unset($object, $signerLinks, $itemSigner, $delete);
             }
         }
@@ -2579,9 +2519,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
      */
     public function getMarkEmotion(string $emotion, string $socialClass = '', string $context = ''): bool
     {
-        if ($this->getMarkEmotionSize($emotion, $socialClass, $context) == 0) {
+        if ($this->getMarkEmotionSize($emotion, $socialClass, $context) == 0)
             return false;
-        }
         return true;
     }
 
@@ -2605,15 +2544,13 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
             || is_a($context, 'Node')
             || is_a($context, 'group')
             || is_a($context, 'conversation')
-        ) {
+        )
             $context = $context->getID();
-        }
         if (!is_string($context)
             || $context == '0'
             || !ctype_xdigit($context)
-        ) {
+        )
             $context = '';
-        }
 
         // Vérifie que l'émotion existe.
         if ($emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE
@@ -2624,9 +2561,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
             && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT
             && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE
             && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET
-        ) {
+        )
             return $list;
-        }
 
         $hashEmotion = $this->_nebuleInstance->getNIDfromData($emotion);
 
@@ -2644,9 +2580,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         // Nettoyage.
         foreach ($list as $i => $link) {
             // Si méta à 0, supprime le lien.
-            if ($link->getHashMeta() == '0') {
+            if ($link->getHashMeta() == '0')
                 unset($list[$i]);
-            }
         }
         unset($link);
 
@@ -2761,9 +2696,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new Link($this->_nebuleInstance, $link);
         $newLink->sign();
-        if ($obfuscate) {
+        if ($obfuscate)
             $newLink->setObfuscate();
-        }
         $newLink->write();
 
         return true;
@@ -2790,25 +2724,22 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
             && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT
             && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE
             && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET
-        ) {
+        )
             return false;
-        }
 
         // Nettoyage de l'entité demandé.
         if (is_a($entity, 'entity')
             || is_a($entity, 'Node')
             || is_a($entity, 'group')
             || is_a($entity, 'conversation')
-        ) {
+        )
             $entity = $entity->getID();
-        }
         if (!is_string($entity)
             || $entity == '0'
             || $entity == ''
             || !ctype_xdigit($entity)
-        ) {
+        )
             $entity = $this->_nebuleInstance->getCurrentEntity();
-        }
 
         // Création du lien.
         $signer = $this->_nebuleInstance->getCurrentEntity();
@@ -2820,9 +2751,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new Link($this->_nebuleInstance, $link);
         $newLink->sign();
-        if ($obfuscate) {
+        if ($obfuscate)
             $newLink->setObfuscate();
-        }
         $newLink->write();
 
         return true;
@@ -2836,6 +2766,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
      */
     public function getProtectedTo(): array
     {
+        return array(); // FIXME disabled!
+
         $result = array();
         if (!$this->_getMarkProtected()) {
             return $result;
@@ -2864,9 +2796,8 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
                 unset($instanceSym);
                 foreach ($linksAsym as $linkAsym) {
                     // Si lien de chiffrement.
-                    if ($linkAsym->getHashMeta() != '0') {
+                    if ($linkAsym->getHashMeta() != '0')
                         $result[] = $linkAsym->getHashMeta();
-                    }
                 }
                 unset($linksAsym, $linkAsym);
             }
@@ -2901,38 +2832,32 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
             return false;
 
         // Si c'est l'objet 0, le supprime.
-        if ($this->_id == '0') {
+        if ($this->_id == '0' || !$this->checkNID($this->_id)) {
             $this->_data = null;
-            $this->_metrology->addLog('Delete object 0', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Delete object 0', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             $nid = '0';
             $this->_io->unsetObject($nid);
             return false;
         }
 
-        // Détermine l'algorithme de hash.
-        $hashAlgo = $this->getHashAlgo();
-        if (!$this->_crypto->checkHashAlgorithm($hashAlgo)
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
-        )
+        if ($this->_configuration->getOptionAsBoolean('permitSynchronizeLink'))
             $this->syncLinks(false);
-        $hashAlgo = $this->getHashAlgo();
-        if (!$this->_crypto->checkHashAlgorithm($hashAlgo)) {
-            if ($this->_configuration->getOptionAsBoolean('permitDeleteObjectOnUnknownHash'))
-                $hashAlgo = $this->_configuration->getOptionAsString('cryptoHashAlgorithm');
-            else
-                return false;
-        }
+
+        if ($this->_configuration->getOptionAsBoolean('permitDeleteObjectOnUnknownHash'))
+            $hashAlgo = $this->_configuration->getOptionAsString('cryptoHashAlgorithm');
+        else
+            return false;
 
         // Extrait le contenu de l'objet, si possible.
         $this->_metrology->addObjectRead(); // Metrologie.
         $this->_data = $this->_io->getObject($this->_id);
         if ($this->_data === false) {
-            $this->_metrology->addLog('Cant read object ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Cant read object ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
             $this->_data = null;
             return false;
         }
         $limit = $this->_configuration->getOptionUntyped('DEFAULT_IO_READ_MAX_DATA');
-        $this->_metrology->addLog('Object size ' . $this->_id . ' ' . strlen($this->_data) . '/' . $limit, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrology->addLog('Object size ' . $this->_id . ' ' . strlen($this->_data) . '/' . $limit, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         // Vérifie la taille.
         if (strlen($this->_data) > $limit) {
@@ -2951,14 +2876,14 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
 
         // Si la vérification est désactivée, quitte.
         if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash')) {
-            $this->_metrology->addLog('Warning - Invalid object hash ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Warning - Invalid object hash ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
             $this->_haveData = true;
             return true;
         }
 
         // Sinon l'objet est présent mais invalide, le supprime.
         $this->_data = null;
-        $this->_metrology->addLog('Delete unconsistency object ' . $this->_id . ' ' . $hashAlgo . ':' . $hash, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+        $this->_metrology->addLog('Delete unconsistency object ' . $this->_id . ' ' . $hashAlgo . ':' . $hash, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $this->_io->unsetObject($this->_id);
         return false;
     }
@@ -3001,58 +2926,45 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
      */
     protected function _getUnprotectedContent(int $limit = 0): ?string
     {
-        if ($this->_haveData) {
+        if ($this->_haveData)
             return $this->_data;
-        }
 
-        if (!$this->_io->checkObjectPresent($this->_id)) {
+        if (!$this->_io->checkObjectPresent($this->_id))
             return null;
-        }
 
         // Si c'est l'objet 0, le supprime.
-        if ($this->_id == '0') {
+        if ($this->_id == '0' || !$this->checkNID($this->_id)) {
             $this->_data = null;
-            $this->_metrology->addLog('Delete object 0', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Delete object 0', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'f8873320');
             $nid = '0';
             $this->_io->unsetObject($nid);
             return null;
         }
 
-        // Détermine l'algorithme de hash.
-        $hashAlgo = $this->getHashAlgo();
-        if (!$this->_crypto->checkHashAlgorithm($hashAlgo)
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
-        ) {
-            // Essaie une synchronisation rapide des liens.
+        if ($this->_configuration->getOptionAsBoolean('permitSynchronizeLink'))
             $this->syncLinks(false);
-        }
-        $hashAlgo = $this->getHashAlgo();
-        if (!$this->_crypto->checkHashAlgorithm($hashAlgo)) {
-            if ($this->_configuration->getOptionAsBoolean('permitDeleteObjectOnUnknownHash')) {
-                // Si pas trouvé d'algorithme valide, utilise celui par défaut.
-                $hashAlgo = $this->_configuration->getOptionAsString('cryptoHashAlgorithm');
-            } else {
-                return null;
-            }
-        }
+
+        if ($this->_configuration->getOptionAsBoolean('permitDeleteObjectOnUnknownHash'))
+            $hashAlgo = $this->_configuration->getOptionAsString('cryptoHashAlgorithm');
+        else
+            return null;
 
         // Prépare la limite de lecture.
         $maxLimit = $this->_configuration->getOptionUntyped('ioReadMaxData');
         if ($limit == 0
             || $limit > $maxLimit
-        ) {
+        )
             $limit = $maxLimit;
-        }
 
         // Extrait le contenu de l'objet, si possible.
         $this->_metrology->addObjectRead(); // Metrologie.
         $this->_data = $this->_io->getObject($this->_id, $limit);
         if ($this->_data === false) {
-            $this->_metrology->addLog('Cant read object ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Cant read object ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
             $this->_data = null;
             return null;
         }
-        $this->_metrology->addLog('Object read size ' . $this->_id . ' ' . strlen($this->_data) . '/' . $maxLimit, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrology->addLog('Object read size ' . $this->_id . ' ' . strlen($this->_data) . '/' . $maxLimit, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         // Vérifie la taille. Si trop grand mais qu'une limite est imposé, quitte sans vérifier l'empreinte.
         if (strlen($this->_data) >= $limit
@@ -3073,14 +2985,14 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
 
         // Si la vérification est désactivée, quitte.
         if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash')) {
-            $this->_metrology->addLog('Warning - Invalid object hash ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Warning - Invalid object hash ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
             $this->_haveData = true;
             return $this->_data;
         }
 
         // Sinon l'objet est présent mais invalide, le supprime.
         $this->_data = null;
-        $this->_metrology->addLog('Delete unconsistency object ' . $this->_id . ' ' . $hashAlgo . ':' . $hash, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+        $this->_metrology->addLog('Delete unconsistency object ' . $this->_id . ' ' . $hashAlgo . ':' . $hash, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $this->_io->unsetObject($this->_id);
         return null;
     }
@@ -3089,7 +3001,6 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
      * Lit et déchiffre un contenu protégé.
      *
      * @param integer $limit          limite de lecture du contenu de l'objet.
-     * @param boolean $permitTroncate permet de faire une lecture partiel des gros objets, donc non vérifié.
      * @return string|null
      * @todo à revoir en entier !
      */
@@ -3116,7 +3027,7 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
 
         $permitTroncate = false; // @todo à retirer.
 
-        $this->_metrology->addLog('Get protected content : ' . $this->_idUnprotected, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrology->addLog('Get protected content : ' . $this->_idUnprotected, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         // Lit la clé chiffrée.
         $codeKey = $this->_io->getObject($this->_idProtectedKey, 0);
@@ -3285,23 +3196,14 @@ $this->_metrology->addLog('MARK name=' . $name, Metrology::LOG_LEVEL_NORMAL, __F
 
         foreach ($lines as $line)
         {
-$this->_metrology->addLog('MARK line=' . $line, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             $bloc = $this->_cache->newLink($line, Cache::TYPE_LINK);
-if (!$bloc->getValidStructure())
-$this->_metrology->addLog('MARK ValidStructure NOK', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-if (!$bloc->getValid())
-$this->_metrology->addLog('MARK Valid NOK', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             if ($bloc->getValidStructure()
                 && ( $bloc->getValid() || $withInvalidLinks )
             )
             {
                 $newLinks = $bloc->getLinks();
-foreach ($newLinks as $i => $v)
-$this->_metrology->addLog('MARK3 link i=' . $i . ' v=' . (string)$v, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
                 $this->_filterLinksByStructure($newLinks, $filter);
                 $links = array_merge($links, $newLinks);
-foreach ($links as $i => $v)
-$this->_metrology->addLog('MARK3 link i=' . $i . ' v=' . (string)$v, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             }
             else
                 $this->_cache->unsetCache($line, Cache::TYPE_BLOCLINK);
@@ -3838,7 +3740,7 @@ $this->_metrology->addLog('MARK3 link i=' . $i . ' v=' . (string)$v, Metrology::
         $linkInstance = null;
         foreach ($localisations as $localisation) {
             $links = $this->_io->getLinks($this->_id, $localisation);
-            $this->_metrology->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
             foreach ($links as $link) {
                 $linkInstance = $this->_nebuleInstance->newLink_DEPRECATED($link);
@@ -3901,7 +3803,7 @@ $this->_metrology->addLog('MARK3 link i=' . $i . ' v=' . (string)$v, Metrology::
 
         // Si protégé.
         if ($protected) {
-            $this->_metrology->addLog('Delete protected object ' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Delete protected object ' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             $id = $this->_idProtected;
 
             // Création lien.

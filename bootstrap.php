@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220815';
+const BOOTSTRAP_VERSION = '020220816';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -7067,15 +7067,24 @@ log_add('MARK size appList=' . sizeof($appList), 'normal', __FUNCTION__, '000000
     foreach ($appList as $application) {
         $instance = new Node($nebuleInstance, $application);
         $color = '#' . substr($application . '000000', 0, 6);
-        $title = $instance->getName('all');
-        //$title = nod_getName($application);
-        //$shortName = substr($instance->getSurname('all') . '--', 0, 2);
-        $shortName = substr(nod_getSurname($application) . '--', 0, 2);
-        log_add('app=' . $application . ' name=' . $title . ' sname=' . $shortName, 'normal', __FUNCTION__, '9715d88e'); //FIXME
-        $shortName = strtoupper(substr($shortName, 0, 1)) . strtolower(substr($shortName, 1, 1));
+        $title = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_NOM,'strict');
+        if ($title == '')
+            $title = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_NOM,'self');
+        if ($title == '')
+            $title = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_NOM,'all');
+        if ($title == '')
+            $title = $instance->getID();
+        $shortName = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_SURNOM,'strict');
+        if ($shortName == '')
+            $shortName = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_SURNOM,'self');
+        if ($shortName == '')
+            $shortName = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_SURNOM,'all');
+        $shortName = substr($shortName . '--', 0, 2);
+        log_add('app=' . $application . ' name=' . $title . ' sname=' . $shortName, 'debug', __FUNCTION__, '9715d88e');
+        $subName = strtoupper(substr($shortName, 0, 1)) . strtolower(substr($shortName, 1, 1));
         echo '<a href="/?' . LIB_ARG_SWITCH_APPLICATION . '=' . $application . '">';
         echo '<div class="apps" style="background:' . $color . ';">';
-        echo '<span class="appstitle">' . $shortName . '</span><br /><span class="appsname">' . $title . '</span>';
+        echo '<span class="appstitle">' . $subName . '</span><br /><span class="appsname">' . $title . '</span>';
         echo "</div></a>\n";
     }
 
