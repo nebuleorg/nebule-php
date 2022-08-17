@@ -251,7 +251,7 @@ class Metrology
      */
     public function addTime(): void
     {
-        $time = microtime(true);
+        $time = sprintf('%01.6f', microtime(true));
         $this->_timeArray[$this->_timeCount] = $time - $this->_timeTemp;
         $this->_timeTemp = $time;
         $this->_timeCount++;
@@ -335,7 +335,7 @@ class Metrology
         }
 
         if ($this->_permitLogs && $this->_logsLevel > self::LOG_LEVEL_ERROR)
-            syslog(LOG_INFO, 'LogT=' . (microtime(true) - $this->_timeStart) . ' LogLset="' . $this->_logsLevel . '(' . $level . ')"');
+            syslog(LOG_INFO, 'LogT=' . sprintf('%01.6f', (float)microtime(true) - $this->_timeStart) . ' LogLset="' . $this->_logsLevel . '(' . $level . ')"');
     }
 
     /**
@@ -364,7 +364,7 @@ class Metrology
 
         // Si le niveau de log est suffisant, écrit le message.
         if ($logLevel <= $this->_logsLevel) {
-            $message = 'LogT=' . (microtime(true) - $this->_timeStart) . ' LogL="' . $logLevel . '" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"';
+            $message = 'LogT=' . sprintf('%01.6f', (float)microtime(true) - $this->_timeStart) . ' LogL="' . $logLevel . '" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"';
 
             if ($logLevel == self::LOG_LEVEL_DEBUG)
                 $message = $message . ' LogMem="' . memory_get_usage() . '"';

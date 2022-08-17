@@ -9,7 +9,7 @@ $nebuleSurname = 'nebule/library';
 /** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleDescription = 'Library of functions for nebule in php object-oriented.';
 $nebuleAuthor = 'Projet nebule';
-$nebuleLibVersion = '020220816';
+$nebuleLibVersion = '020220817';
 $nebuleLicence = 'GNU GPL 2010-2022';
 $nebuleWebsite = 'www.nebule.org';
 // ----------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ if (!isset($loggerSessionID))
 if (!isset($metrologyStartTime))
     $metrologyStartTime = 0;
 openlog($nebuleName . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
-syslog(LOG_INFO, 'LogT=' . (microtime(true) - $metrologyStartTime) . ' LogL="info" LogI="a77c98f7" LogF="include nebule library" LogM="Reading nebule library"');
+syslog(LOG_INFO, 'LogT=' . sprintf('%01.6f',microtime(true) - $metrologyStartTime) . ' LogL="info" LogI="a77c98f7" LogF="include nebule library" LogM="Reading nebule library"');
 
 
 

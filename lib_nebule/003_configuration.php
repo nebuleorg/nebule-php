@@ -1353,7 +1353,7 @@ class Configuration
                 || !$this->getOptionAsBoolean($name)
             )
             {
-                $this->_metrologyInstance->addLog('not permitted with option=' . $name, Metrology::LOG_LEVEL_ERROR, __FUNCTION__,'8318122c');
+                $this->_metrologyInstance->addLog('not permitted with option=' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__,'8318122c');
                 return false;
             }
         }

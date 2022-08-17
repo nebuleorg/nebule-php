@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220816';
+const BOOTSTRAP_VERSION = '020220817';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -123,7 +123,7 @@ function log_reopen(string $name): void
 function log_add(string $message, string $level = 'msg', string $function = '', string $id = '00000000'): void
 {
     global $metrologyStartTime;
-    syslog(LOG_INFO, 'LogT=' . (microtime(true) - $metrologyStartTime) . ' LogL="' . $level . '" LogI="' . $id . '" LogF="' . $function . '" LogM="' . $message . '"');
+    syslog(LOG_INFO, 'LogT=' . sprintf('%01.6f', microtime(true) - $metrologyStartTime) . ' LogL="' . $level . '" LogI="' . $id . '" LogF="' . $function . '" LogM="' . $message . '"');
 }
 
 // Initialize logs.
@@ -2074,18 +2074,11 @@ function lnk_sign(string $bh_bl): string
  */
 function lnk_generateSign(string $rc, string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): string
 {
-    global $nebulePublicEntity;
-
     $bh_bl = lnk_generate($rc, $req, $nid1, $nid2, $nid3, $nid4);
     if ($bh_bl == '')
         return '';
 
-    $sign = lnk_sign($bh_bl);
-    if ($sign == '')
-        return '';
-
-    $bs = $nebulePublicEntity . '>' . $sign . lib_getConfiguration('cryptoHashAlgorithm');
-    return $bh_bl . '_' . $bs;
+    return lnk_sign($bh_bl);
 }
 
 /**
@@ -2989,14 +2982,14 @@ function nod_getName(string $nid): string
 {
     global $nebuleCacheReadEntityName;
 
-    if (isset($nebuleCacheReadEntityName [$nid]))
-        return $nebuleCacheReadEntityName [$nid];
+    if (isset($nebuleCacheReadEntityName[$nid]))
+        return $nebuleCacheReadEntityName[$nid];
 
-    $type = nod_getByType($nid, obj_getNID('nebule/objet/nom', lib_getConfiguration('cryptoHashAlgorithm')));
+    $type = nod_getByType($nid, obj_getNID('nebule/objet/nom'));
     $text = obj_getAsText1line($type, 128);
 
     if (lib_getConfiguration('permitBufferIO'))
-        $nebuleCacheReadEntityName [$nid] = $text;
+        $nebuleCacheReadEntityName[$nid] = $text;
     return $text;
 }
 
@@ -3189,7 +3182,7 @@ function nod_checkBanned_FIXME(&$nid): bool
  * @param integer $maxData
  * @return string
  */
-function obj_getAsText1line(string &$oid, int $maxData = 128): string
+function obj_getAsText1line(string &$oid, int $maxData = 0): string
 {
     global $nebuleCacheReadObjText1line;
 
@@ -3886,8 +3879,8 @@ function ent_checkIsPrivateKey(&$nid): bool
 {
     global $nebuleCacheIsPrivateKey;
 
-    if (isset($nebuleCacheIsPrivateKey [$nid]))
-        return $nebuleCacheIsPrivateKey [$nid];
+    if (isset($nebuleCacheIsPrivateKey[$nid]))
+        return $nebuleCacheIsPrivateKey[$nid];
 
     if ($nid == '0'
         || strlen($nid) < LIB_NID_MIN_HASH_SIZE
@@ -3897,8 +3890,8 @@ function ent_checkIsPrivateKey(&$nid): bool
     )
         return false;
 
-    if (!obj_checkTypeMime($nid, 'application/x-pem-file'))
-        return false;
+    //if (!obj_checkTypeMime($nid, 'application/x-pem-file'))
+    //    return false;
 
     $line = obj_getAsText($nid, 10000);
     $result = false;
@@ -3920,6 +3913,7 @@ function app_checkOID(string $oid): bool
     if ($oid != '0'
         || $oid != '1'
         || $oid != '2'
+        || $oid != '9'
     )
         return true;
     if (!nod_checkNID($oid, false)
@@ -3947,6 +3941,7 @@ function app_getActivate(string $oid): bool
     if ($oid == '0'
         || $oid == '1'
         || $oid == '2'
+        || $oid == '9'
         || $oid == lib_getConfiguration('defaultApplication')
     )
         return true;
@@ -4508,7 +4503,7 @@ function bootstrap_saveLibraryPOO(): void
            $bootstrapLibraryOID,
            $bootstrapLibrarySID;
 
-    if (! is_a($nebuleInstance, 'nebule'))
+    if (! is_a($nebuleInstance, 'Nebule\Library\nebule'))
         return;
 
     session_start();
@@ -4602,6 +4597,7 @@ function bootstrap_findApplicationAsk(string &$bootstrapApplicationIID): void
         if ($bootstrapSwitchApplication == '0'
             || $bootstrapSwitchApplication == '1'
             || $bootstrapSwitchApplication == '2'
+            || $bootstrapSwitchApplication == '9'
             || lnk_checkExist('f', LIB_RID_INTERFACE_APPLICATIONS, $bootstrapSwitchApplication, $phpNID, $codeBranchNID)
         )
             $bootstrapApplicationIID = $bootstrapSwitchApplication;
@@ -4639,6 +4635,7 @@ function bootstrap_findApplicationDefault(string &$bootstrapApplicationIID): voi
     if ($defaultApplicationID == '0'
         || $defaultApplicationID == '1'
         || $defaultApplicationID == '2'
+        || $defaultApplicationID == '9'
     )
         $bootstrapApplicationIID = $defaultApplicationID;
     elseif (nod_checkNID($defaultApplicationID)
@@ -4841,7 +4838,7 @@ function bootstrap_initApplication(bool $run): void
            $applicationTraductionInstance;
 
     // Check
-    if (! is_a($applicationInstance, 'Applications')) {
+    if (! is_a($applicationInstance, 'Nebule\Library\Applications')) {
         log_add('error init application', 'error', __FUNCTION__, '41ba02a9');
         return;
     }
@@ -4884,7 +4881,7 @@ function bootstrap_saveApplication(): void
            $bootstrapApplicationOID,
            $bootstrapApplicationSID;
 
-    if (! is_a($applicationInstance, 'Applications'))
+    if (! is_a($applicationInstance, 'Nebule\Library\Applications'))
         return;
 
     session_start();
@@ -6948,8 +6945,9 @@ function bootstrap_firstDisplay9LocaleEntity(): bool
         $newLink = lnk_generateSign('',
             'l',
             $nebulePublicEntity,
-            obj_getNID($name, lib_getConfiguration('cryptoHashAlgorithm')),
-            obj_getNID('nebule/objet/nom', lib_getConfiguration('cryptoHashAlgorithm')));
+            obj_getNID($name),
+            obj_getNID('nebule/objet/nom')
+        );
         lnk_write($newLink);
 
         bootstrap_echoLineTitle('public ID');
@@ -6963,7 +6961,7 @@ function bootstrap_firstDisplay9LocaleEntity(): bool
             name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $name; ?><br/>
             public ID : <?php echo $nebulePublicEntity; ?><br/>
             password &nbsp;: <?php echo htmlspecialchars($nebulePasswordEntity); ?><br/>
-            Please keep and save securely theses private information!
+            Please keep and save securely these private information!
         </div>
         <?php
     } else {
@@ -7166,6 +7164,35 @@ function bootstrap_displayApplication2()
     bootstrap_htmlBottom();
 }
 
+    /**
+     * Debug app.
+     * @return void
+     */
+function bootstrap_displayApplication9()
+{
+    // Initialisation des logs
+    log_reopen('app2');
+    log_add('Loading', 'info', __FUNCTION__, '3a5c4178');
+
+    echo 'CHK';
+    ob_end_clean();
+
+    bootstrap_htmlHeader();
+    bootstrap_htmlTop();
+
+    echo '<div class="layout-main">' . "\n";
+    echo ' <div class="layout-content">' . "\n";
+
+    session_start();
+    var_dump($_SESSION);
+    session_abort();
+
+    echo " </div>\n";
+    echo "</div>\n";
+
+    bootstrap_htmlBottom();
+}
+
 
 
 /*
@@ -7230,6 +7257,8 @@ function bootstrap_displayRouter()
         bootstrap_displayApplication0();
     elseif ($bootstrapApplicationIID == '1')
         bootstrap_displayApplication1();
+    elseif ($bootstrapApplicationIID == '9')
+        bootstrap_displayApplication9();
     elseif (strlen($bootstrapApplicationIID) < 2)
         bootstrap_displayApplication2();
 //    elseif (isset($bootstrapApplicationInstanceSleep) && $bootstrapApplicationInstanceSleep != '')
@@ -7253,7 +7282,7 @@ function bootstrap_logMetrology()
         $timers .= " $i=$v";
 
     // Metrology on logs.
-    if (is_a($nebuleInstance, 'nebule'))
+    if (is_a($nebuleInstance, 'Nebule\Library\nebule'))
         log_add('Mp=' . $memory . 'Mb'
             . $timers
             . ' Lr=' . lib_getMetrology('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead()
