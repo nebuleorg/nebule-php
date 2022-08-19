@@ -331,15 +331,9 @@ class nebule
 
     public function __sleep()
     {
-        // TODO
-        /*return array(
-            // '_flushCache',
-            //	'_optionCheckedWriteableIO',
-            //	'_referenceObjectConversation',
-            //	'_referenceObjectConversationClosed',
-            //	'_referenceObjectConversationProtected',
-            //	'_referenceObjectConversationObfuscated',
-        );*/
+        return array(
+            '_flushCache',
+        );
     }
 
     private function _initialisation()

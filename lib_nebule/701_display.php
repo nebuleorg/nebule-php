@@ -469,7 +469,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Instance sylabe.
      *
-     * @var sylabe
+     * @var Applications
      */
     protected $_applicationInstance;
 
@@ -689,9 +689,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * Récupère l'instance de la librairie nebule et de l'application.
      *
-     * @return null
+     * @return void
      */
-    public function __wakeup()
+    public function __wakeup(): void
     {
         global $applicationInstance;
 
@@ -840,7 +840,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($this->_applicationInstance->getUseModules()) {
             $list_mods = $this->_applicationInstance->getModulesListInstances();
             // Extrait les noms de commandes des modes.
-            $list_mods_names = array(0 => Display::DEFAULT_DISPLAY_MODE);
+            $list_mods_names = array(0 => Displays::DEFAULT_DISPLAY_MODE);
             $module = null;
             foreach ($list_mods as $module) {
                 if ($module->getCommandName() != ''
@@ -879,8 +879,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $this->_currentDisplayMode = $cache;
             } else // Sinon active le mode par defaut.
             {
-                $this->_currentDisplayMode = Display::DEFAULT_DISPLAY_MODE;
-                $this->_nebuleInstance->setSessionStore($applicationName . 'DisplayMode', Display::DEFAULT_DISPLAY_MODE);
+                $this->_currentDisplayMode = Displays::DEFAULT_DISPLAY_MODE;
+                $this->_nebuleInstance->setSessionStore($applicationName . 'DisplayMode', Displays::DEFAULT_DISPLAY_MODE);
             }
             unset($cache);
         }
@@ -889,7 +889,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Récupère l'instance du module en cours.
         if ($this->_applicationInstance->getUseModules()) {
             // Par défaut on récupère la constante.
-            $moduleName = Display::DEFAULT_DISPLAY_MODE;
+            $moduleName = Displays::DEFAULT_DISPLAY_MODE;
 
             foreach ($list_mods as $module) {
                 if ($module->getCommandName() == $this->_currentDisplayMode
@@ -950,15 +950,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Vérifie que la liste des vues ne soit pas vide ou que l'on utilise les modules.
         if (sizeof($this->_listDisplayViews) == 0
             && !$this->_applicationInstance->getUseModules()
-        ) {
+        )
             return;
-        }
         // Vérifie la liste des modules si activé.
         if ($this->_applicationInstance->getUseModules()
             && sizeof($this->_applicationInstance->getModulesListInstances()) == 0
-        ) {
+        )
             return;
-        }
 
         /*
 		 *  ------------------------------------------------------------------------------------------
@@ -966,7 +964,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
  		 *  ------------------------------------------------------------------------------------------
 		 */
         // Lit et nettoye le contenu de la variable GET.
-        $arg_view = filter_input(INPUT_GET, Display::DEFAULT_DISPLAY_COMMAND_VIEW, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $arg_view = filter_input(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 
         $list_views_names = array();
 
@@ -975,25 +973,21 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             // Lit les vues déclarées.
             $list_views_names = $this->_currentModuleInstance->getRegisteredViews();
             // Si demande la vue par défaut.
-            if ($arg_view == 'default') {
+            if ($arg_view == 'default')
                 $arg_view = $this->_currentModuleInstance->getDefaultView();
-            }
         } else {
-            foreach ($this->_listDisplayViews as $view) {
+            foreach ($this->_listDisplayViews as $view)
                 $list_views_names[$view] = $view;
-            }
         }
 
         // Recherche une vue connue.
         $ok_view = false;
         foreach ($list_views_names as $name) {
-            if ($arg_view == $name) {
+            if ($arg_view == $name)
                 $ok_view = true;
-            }
         }
-        if ($arg_view == 'menu') {
+        if ($arg_view == 'menu')
             $ok_view = true;
-        }
 
         if ($ok_view) // Si la vue est connue.
         {
@@ -1006,16 +1000,15 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             // Si il existe une variable de session pour la vue, la lit.
             if ($cache !== false
                 && $cache != ''
-            ) {
+            )
                 $this->_currentDisplayView = $cache;
-            } else // Sinon active la vue par defaut.
+            else // Sinon active la vue par defaut.
             {
                 // Si activé, extrait les modes.
-                if ($this->_applicationInstance->getUseModules()) {
+                if ($this->_applicationInstance->getUseModules())
                     $this->_currentDisplayView = $this->_currentModuleInstance->getDefaultView();
-                } else {
+                else
                     $this->_currentDisplayView = self::DEFAULT_DISPLAY_VIEW;
-                }
                 // Ecrit dans le cache.
                 $this->_nebuleInstance->setSessionStore($applicationName . 'DisplayView', $this->_currentDisplayView);
             }
@@ -1118,7 +1111,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         echo "<script language=\"javascript\" type=\"text/javascript\">\n<!--\n";
         $url = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_currentDisplayMode
-            . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_currentDisplayView;
+            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_currentDisplayView;
         foreach ($this->_inlineContentIndex as $id) {
             $option = '';
             if (isset($this->_inlineContentOptions[$id])
@@ -2138,13 +2131,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 }
             }
 
-            function display_show_block(menuid) {
+            function display_show_block(menuid)
                 document.getElementById(menuid).style.display = "block";
-            }
 
-            function display_hide(menuid) {
+            function display_hide(menuid)
                 document.getElementById(menuid).style.display = "none";
-            }
 
             //-->
         </script>
@@ -2166,11 +2157,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function display()
     {
         // Lit si la variable GET existe.
-        if (filter_has_var(INPUT_GET, self::DEFAULT_INLINE_COMMAND)) {
+        if (filter_has_var(INPUT_GET, self::DEFAULT_INLINE_COMMAND))
             $this->_displayInline();
-        } else {
+        else
             $this->_displayFull();
-        }
     }
 
     /**
@@ -2201,8 +2191,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         <body>
         <div class="layout-header">
             <div class="header-left">
-                <a href="/?<?php echo Display::DEFAULT_BOOTSTRAP_LOGO_LINK; ?>">
-                    <img title="App switch" alt="[]" src="<?php echo Display::DEFAULT_APPLICATION_LOGO; ?>"/>
+                <a href="/?<?php echo Displays::DEFAULT_BOOTSTRAP_LOGO_LINK; ?>">
+                    <img title="App switch" alt="[]" src="<?php echo Displays::DEFAULT_APPLICATION_LOGO; ?>"/>
                 </a>
             </div>
             <div class="header-right">
@@ -2212,11 +2202,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 <p>
                     <?php
                     $name = $this->_nebuleInstance->getInstanceEntityInstance()->getFullName();
-                    if ($name != $this->_nebuleInstance->getInstanceEntity()) {
+                    if ($name != $this->_nebuleInstance->getInstanceEntity())
                         echo $name;
-                    } else {
+                    else
                         echo '/';
-                    }
                     echo '<br />' . $this->_nebuleInstance->getInstanceEntity();
                     ?>
                 </p>
@@ -2354,7 +2343,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 	 * -------------------------------------------------------------------------------- */
     /**
      * Prépare à afficher un message pré-formaté en fonction du type de message.
-     *
      * Les types possibles : information, ok, warning, error.
      * Par défaut, le type correspond à un message d'information.
      *
@@ -2365,8 +2353,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string $arg3
      * @param string $arg4
      * @param string $arg5
+     * @return string
      */
-    public function convertLineMessage($text, $type = 'information', $arg1 = null, $arg2 = null, $arg3 = null, $arg4 = null, $arg5 = null)
+    public function convertLineMessage(string $text, $type = 'information', string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): string
     {
         $iconCssClass = 'iconemoyenpuce';
 
@@ -2397,19 +2386,19 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     /**
      * Affiche un message pré-formaté en fonction du type de message.
-     *
      * Les types possibles : information, ok, warning, error.
      * Par défaut, le type correspond à un message d'information.
      *
-     * @param string $text
-     * @param string $type [information|ok|warning|error]
-     * @param string $arg1
-     * @param string $arg2
-     * @param string $arg3
-     * @param string $arg4
-     * @param string $arg5
+     * @param string      $text
+     * @param string      $type [information|ok|warning|error]
+     * @param string|null $arg1
+     * @param string|null $arg2
+     * @param string|null $arg3
+     * @param string|null $arg4
+     * @param string|null $arg5
+     * @return void
      */
-    public function displayLineMessage($text, $type = 'information', $arg1 = null, $arg2 = null, $arg3 = null, $arg4 = null, $arg5 = null)
+    public function displayLineMessage(string $text, string $type = 'information', string $arg1 = null, string $arg2 = null, string $arg3 = null, string $arg4 = null, string $arg5 = null): void
     {
         echo $this->convertLineMessage($text, $type, $arg1, $arg2, $arg3, $arg4, $arg5);
     }
@@ -2419,8 +2408,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @param string $text
      * @param string $arg1
+     * @return string
      */
-    public function convertMessageInformation($text, $arg1 = null)
+    public function convertMessageInformation(string $text, string $arg1 = ''): string
     {
         return $this->convertLineMessage($text, 'information', $arg1);
     }
@@ -2430,8 +2420,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @param string $text
      * @param string $arg1
+     * @return void
      */
-    public function displayMessageInformation($text, $arg1 = null)
+    public function displayMessageInformation(string $text, string $arg1 = ''): void
     {
         echo $this->convertLineMessage($text, 'information', $arg1);
     }
@@ -2441,8 +2432,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @param string $text
      * @param string $arg1
+     * @return string
      */
-    public function convertMessageOk($text, $arg1 = null)
+    public function convertMessageOk(string $text, string $arg1 = ''): string
     {
         return $this->convertLineMessage($text, 'ok', $arg1);
     }
@@ -2452,8 +2444,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @param string $text
      * @param string $arg1
+     * @return void
      */
-    public function displayMessageOk($text, $arg1 = null)
+    public function displayMessageOk(string $text, string $arg1 = ''): void
     {
         echo $this->convertLineMessage($text, 'ok', $arg1);
     }
@@ -2463,8 +2456,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @param string $text
      * @param string $arg1
+     * @return string
      */
-    public function convertMessageWarning($text, $arg1 = null)
+    public function convertMessageWarning(string $text, string $arg1 = ''): string
     {
         return $this->convertLineMessage($text, 'warning', $arg1);
     }
@@ -2474,8 +2468,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @param string $text
      * @param string $arg1
+     * @return void
      */
-    public function displayMessageWarning($text, $arg1 = null)
+    public function displayMessageWarning(string $text, string $arg1 = ''): void
     {
         echo $this->convertLineMessage($text, 'warning', $arg1);
     }
@@ -2485,8 +2480,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @param string $text
      * @param string $arg1
+     * @return string
      */
-    public function convertMessageError($text, $arg1 = null)
+    public function convertMessageError(string $text, string $arg1 = ''): string
     {
         return $this->convertLineMessage($text, 'error', $arg1);
     }
@@ -2494,10 +2490,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche un message d'erreur pré-formaté.
      *
-     * @param string $text
-     * @param string $arg1
+     * @param string      $text
+     * @param string|null $arg1
+     * @return void
      */
-    public function displayMessageError($text, $arg1 = null)
+    public function displayMessageError(string $text, string $arg1 = ''): void
     {
         echo $this->convertLineMessage($text, 'error', $arg1);
     }
@@ -2511,19 +2508,19 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare à afficher le contenu d'un objet suivant sont type.
      *
      * @param string|Node $object
-     * @param string $size [full|half|small]
+     * @param string      $size [full|half|small]
+     * @param bool        $permitWarnProtected
      * @return string
      */
-    public function convertObjectContentSized($object, $size = 'half', $permitWarnProtected = true)
+    public function convertObjectContentSized($object, string $size = 'half', bool $permitWarnProtected = true): string
     {
         $result = '';
         $unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         if ($size != 'full'
             && $size != 'half'
             && $size != 'small'
-        ) {
+        )
             $size = 'half';
-        }
         // Vérifie que c'est un objet.
         if (!is_a($object, 'Node')
             && !is_a($object, 'Group')
@@ -2534,9 +2531,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             && !is_a($object, 'Token')
             && !is_a($object, 'Transaction')
             && !is_a($object, 'Wallet')
-        ) {
+        )
             $object = $this->_nebuleInstance->newObject($object);
-        }
 
         // Détermine si c'est un groupe.
         $isGroup = $object->getIsGroup('all');
@@ -2583,47 +2579,40 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     }
                     $result .= "</div>\n";
                 }
-            } else {
+            } else
                 $result = $result . $this->convertLineMessage(':::display:content:errorNotAvailable', 'error');
-            }
         } elseif ($isGroup) {
-            if (!is_a($object, 'Group')) {
+            if (!is_a($object, 'Group'))
                 $object = $this->_nebuleInstance->newGroup_DEPRECATED($object->getID());
-            }
             $isClosed = $object->getMarkClosed();
 
             $result = '<div class="text">' . "\n\t<p>"
                 . sprintf($this->_traductionInstance->getTraduction('::UniqueID'),
                     $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
-            if ($isClosed) {
+            if ($isClosed)
                 $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::GroupeFerme') . ".\n";
-            } else {
+            else
                 $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::GroupeOuvert') . ".\n";
-            }
             $result .= "\t</p>\n</div>\n";
 
             unset($isOpened, $isClosed);
         } elseif ($isConversation) {
-            if (!is_a($object, 'Conversation')) {
+            if (!is_a($object, 'Conversation'))
                 $object = $this->_nebuleInstance->newConversation_DEPRECATED($object->getID());
-            }
             $isClosed = $object->getMarkClosed();
 
             $result = '<div class="text">' . "\n\t<p>"
                 . sprintf($this->_traductionInstance->getTraduction('::UniqueID'),
                     $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
-            if ($isClosed) {
+            if ($isClosed)
                 $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::ConversationFermee') . ".\n";
-            } else {
+            else
                 $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::ConversationOuverte') . ".\n";
-            }
             $result .= "\t</p>\n</div>\n";
 
             unset($isClosed);
-        } else {
-            // C'est un objet.
+        } else
             $result = $this->convertAsObjectContentSized($object, $size, $permitWarnProtected);
-        }
 
         return $result;
     }
@@ -2632,9 +2621,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare à afficher le contenu d'un objet suivant sont type. Version full.
      *
      * @param string|Node $object
+     * @param bool        $permitWarnProtected
      * @return string
      */
-    public function convertObjectContentFull($object, $permitWarnProtected = true)
+    public function convertObjectContentFull($object, bool $permitWarnProtected = true): string
     {
         return $this->convertObjectContentSized($object, 'full', $permitWarnProtected);
     }
@@ -2643,9 +2633,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Afficher le contenu d'un objet suivant sont type. Version full.
      *
      * @param string|Node $object
-     * @return string
+     * @param bool        $permitWarnProtected
+     * @return void
      */
-    public function displayObjectContentFull($object, $permitWarnProtected = true)
+    public function displayObjectContentFull($object, $permitWarnProtected = true): void
     {
         echo $this->convertObjectContentSized($object, 'full', $permitWarnProtected);
     }
@@ -2654,9 +2645,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare à afficher le contenu d'un objet suivant sont type. Version half.
      *
      * @param string|Node $object
+     * @param bool        $permitWarnProtected
      * @return string
      */
-    public function convertObjectContentHalf($object, $permitWarnProtected = true)
+    public function convertObjectContentHalf($object, bool $permitWarnProtected = true): string
     {
         return $this->convertObjectContentSized($object, 'half', $permitWarnProtected);
     }
@@ -2665,9 +2657,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Afficher le contenu d'un objet suivant sont type. Version half.
      *
      * @param string|Node $object
-     * @return string
+     * @param bool        $permitWarnProtected
+     * @return void
      */
-    public function displayObjectContentHalf($object, $permitWarnProtected = true)
+    public function displayObjectContentHalf($object, bool $permitWarnProtected = true): void
     {
         echo $this->convertObjectContentSized($object, 'half', $permitWarnProtected);
     }
@@ -2676,9 +2669,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare à afficher le contenu d'un objet suivant sont type. Version small.
      *
      * @param string|Node $object
+     * @param bool        $permitWarnProtected
      * @return string
      */
-    public function convertObjectContentSmall($object, $permitWarnProtected = true)
+    public function convertObjectContentSmall($object, bool $permitWarnProtected = true): string
     {
         return $this->convertObjectContentSized($object, 'small', $permitWarnProtected);
     }
@@ -2687,9 +2681,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Afficher le contenu d'un objet suivant sont type. Version small.
      *
      * @param string|Node $object
-     * @return string
+     * @param bool        $permitWarnProtected
+     * @return void
      */
-    public function displayObjectContentSmall($object, $permitWarnProtected = true)
+    public function displayObjectContentSmall($object, bool $permitWarnProtected = true): void
     {
         echo $this->convertObjectContentSized($object, 'small', $permitWarnProtected);
     }
@@ -2697,24 +2692,23 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     /**
      * Prépare à afficher le contenu d'un objet comme objet pur.
-     *
      * Affiche un objet sans tenir compte de son type nebule (Entity|Group|Conversation).
      * Mais affiche l'objet en fonction de son type mime déclaré.
      *
      * @param string|Node $object
-     * @param string $size [full|half|small]
+     * @param string      $size [full|half|small]
+     * @param bool        $permitWarnProtected
      * @return string
      */
-    public function convertAsObjectContentSized($object, $size = 'half', $permitWarnProtected = true)
+    public function convertAsObjectContentSized($object, string $size = 'half', bool $permitWarnProtected = true): string
     {
         $result = '';
         $unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         if ($size != 'full'
             && $size != 'half'
             && $size != 'small'
-        ) {
+        )
             $size = 'half';
-        }
         // Vérifie que c'est un objet.
         if (!is_a($object, 'Node')
             && !is_a($object, 'Group')
@@ -2725,9 +2719,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             && !is_a($object, 'Token')
             && !is_a($object, 'Transaction')
             && !is_a($object, 'Wallet')
-        ) {
+        )
             $object = $this->_nebuleInstance->newObject($object);
-        }
         $id = $object->getID();
 
         // Vérifie si il est protégé
@@ -2742,12 +2735,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $type = $this->_traductionInstance->getTraduction($typemime);
 
         // Affichage du contenu.
-        if ($danger) {
+        if ($danger)
             $result = $result . $this->convertLineMessage(
                     $this->_traductionInstance->getTraduction(':::display:content:errorBan')
                     . $this->_traductionInstance->getTraduction(':::display:content:errorNotAvailable'),
                     'error');
-        } elseif ($protected
+        elseif ($protected
             && $id == $object->getProtectedID()
         ) {
             $result = $result . $this->convertLineMessage(
@@ -2769,46 +2762,42 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $result .= "</div>\n";
             unset($unprotectedObject, $unprotectedName, $unprotectedTypemime, $htlink);
         } elseif ($ispresent) {
-            if ($warning) {
+            if ($warning)
                 $result = $result . $this->convertLineMessage(
                         $this->_traductionInstance->getTraduction(':::display:content:warningTaggedWarning'),
                         'warning');
-            }
             if ($protected
                 && $unlocked
                 && $permitWarnProtected
-            ) {
+            )
                 $result = $result . $this->convertLineMessage(
                         $this->_traductionInstance->getTraduction(':::display:content:warningObjectProctected'),
                         'warning');
-            }
             $divOpen = "<div class=\"textcontent" . $size . "\">\n\t";
             $divClose = "\n</div>\n";
             switch ($typemime) {
                 case nebule::REFERENCE_OBJECT_PNG :
                 case nebule::REFERENCE_OBJECT_JPEG :
                     $content = $object->getContent(0);
-                    if ($content != null) {
+                    if ($content != null)
                         $result = $result . $divOpen . '<img src="?o=' . $id
                             . '" alt="Image ' . $id . '">' . $divClose;
-                    } else {
-                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash')) {
+                    else {
+                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash'))
                             $result = $result . $this->convertLineMessage(':::display:content:warningTooBig', 'warning');
-                        } else {
+                        else
                             $result = $result . $this->convertLineMessage(':::display:content:errorNotDisplayable', 'error');
-                        }
                     }
                     break;
                 case nebule::REFERENCE_OBJECT_TEXT :
                     $content = htmlspecialchars($object->getContent(0));
-                    if ($content != null) {
+                    if ($content != null)
                         $result = $result . $divOpen . '<p>' . $content . '</p>' . $divClose;
-                    } else {
-                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash')) {
+                    else {
+                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash'))
                             $result = $result . $this->convertLineMessage(':::display:content:warningTooBig', 'warning');
-                        } else {
+                        else
                             $result = $result . $this->convertLineMessage(':::display:content:errorNotDisplayable', 'error');
-                        }
                     }
                     unset($content);
                     break;
@@ -2818,39 +2807,36 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 case nebule::REFERENCE_OBJECT_APP_PHP :
                 case nebule::REFERENCE_OBJECT_PHP :
                     $content = htmlspecialchars($object->getContent(0));
-                    if ($content != null) {
+                    if ($content != null)
                         $result = $result . $divOpen . '<pre>' . $content . '</pre>' . $divClose;
-                    } else {
-                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash')) {
+                    else {
+                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash'))
                             $result = $result . $this->convertLineMessage(':::display:content:warningTooBig', 'warning');
-                        } else {
+                        else
                             $result = $result . $this->convertLineMessage(':::display:content:errorNotDisplayable', 'error');
-                        }
                     }
                     unset($content);
                     break;
                 case nebule::REFERENCE_OBJECT_MP3 :
                     $content = $object->getContent(0);
-                    if ($content != null) {
+                    if ($content != null)
                         $result = $result . $divOpen . '<br /><audio controls><source src="?o=' . $id . '" type="audio/mp3" />' . $this->_traductionInstance->getTraduction(':::warn_NoAudioTagSupport') . '</audio><br />' . $divClose;
-                    } else {
-                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash')) {
+                    else {
+                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash'))
                             $result = $result . $this->convertLineMessage(':::display:content:warningTooBig', 'warning');
-                        } else {
+                        else
                             $result = $result . $this->convertLineMessage(':::display:content:errorNotDisplayable', 'error');
-                        }
                     }
                     break;
                 case nebule::REFERENCE_OBJECT_OGG :
                     $content = $object->getContent(0);
-                    if ($content != null) {
+                    if ($content != null)
                         $result = $result . $divOpen . '<br /><audio controls><source src="?o=' . $id . '" type="audio/ogg" />' . $this->_traductionInstance->getTraduction(':::warn_NoAudioTagSupport') . '</audio><br />' . $divClose;
-                    } else {
-                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash')) {
+                    else {
+                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash'))
                             $result = $result . $this->convertLineMessage(':::display:content:warningTooBig', 'warning');
-                        } else {
+                        else
                             $result = $result . $this->convertLineMessage(':::display:content:errorNotDisplayable', 'error');
-                        }
                     }
                     break;
                 case nebule::REFERENCE_OBJECT_CRYPT_RSA :
@@ -2860,9 +2846,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     $result = $result . $this->convertLineMessage('Non affichable.', 'warning');
                     break;
             }
-        } else {
+        } else
             $result = $result . $this->convertLineMessage(':::display:content:errorNotAvailable', 'error');
-        }
 
         return $result;
     }
@@ -2871,9 +2856,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare à afficher le contenu d'un objet comme objet pur. Version full.
      *
      * @param string|Node $object
+     * @param bool        $permitWarnProtected
      * @return string
      */
-    public function convertAsObjectContentFull($object, $permitWarnProtected = true)
+    public function convertAsObjectContentFull($object, bool $permitWarnProtected = true): string
     {
         return $this->convertAsObjectContentSized($object, 'full', $permitWarnProtected);
     }
@@ -2882,9 +2868,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Afficher le contenu d'un objet comme objet pur. Version full.
      *
      * @param string|Node $object
-     * @return string
+     * @param bool        $permitWarnProtected
+     * @return void
      */
-    public function displayAsObjectContentFull($object, $permitWarnProtected = true)
+    public function displayAsObjectContentFull($object, bool $permitWarnProtected = true): void
     {
         echo $this->convertAsObjectContentSized($object, 'full', $permitWarnProtected);
     }
@@ -2893,9 +2880,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare à afficher le contenu d'un objet comme objet pur. Version half.
      *
      * @param string|Node $object
+     * @param bool        $permitWarnProtected
      * @return string
      */
-    public function convertAsObjectContentHalf($object, $permitWarnProtected = true)
+    public function convertAsObjectContentHalf($object, bool $permitWarnProtected = true): string
     {
         return $this->convertAsObjectContentSized($object, 'half', $permitWarnProtected);
     }
@@ -2904,9 +2892,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Afficher le contenu d'un objet comme objet pur. Version half.
      *
      * @param string|Node $object
-     * @return string
+     * @param bool        $permitWarnProtected
+     * @return void
      */
-    public function displayAsObjectContentHalf($object, $permitWarnProtected = true)
+    public function displayAsObjectContentHalf($object, bool $permitWarnProtected = true): void
     {
         echo $this->convertAsObjectContentSized($object, 'half', $permitWarnProtected);
     }
@@ -2915,9 +2904,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare à afficher le contenu d'un objet comme objet pur. Version small.
      *
      * @param string|Node $object
+     * @param bool        $permitWarnProtected
      * @return string
      */
-    public function convertAsObjectContentSmall($object, $permitWarnProtected = true)
+    public function convertAsObjectContentSmall($object, bool $permitWarnProtected = true): string
     {
         return $this->convertAsObjectContentSized($object, 'small', $permitWarnProtected);
     }
@@ -2926,9 +2916,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Afficher le contenu d'un objet comme objet pur. Version small.
      *
      * @param string|Node $object
-     * @return string
+     * @param bool        $permitWarnProtected
+     * @return void
      */
-    public function displayAsObjectContentSmall($object, $permitWarnProtected = true)
+    public function displayAsObjectContentSmall($object, bool $permitWarnProtected = true): void
     {
         echo $this->convertAsObjectContentSized($object, 'small', $permitWarnProtected);
     }
@@ -2937,45 +2928,36 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare à afficher un objet comme image avec éventuellement un texte et un identifiant CSS.
      *
      * @param Node|string $object
-     * @param string $alt
-     * @param string $class
-     * @param string $id
-     * @param string $args
+     * @param string      $alt
+     * @param string      $class
+     * @param string      $id
+     * @param string      $args
      * @return string
      */
-    public function convertImage($object, $alt = '', $class = '', $id = '', $args = '')
+    public function convertImage($object, string $alt = '', string $class = '', string $id = '', string $args = ''): string
     {
         // Récupère une instance de l'objet.
-        if (!is_a($object, 'Node')) {
+        if (!is_a($object, 'Node'))
             $object = $this->_nebuleInstance->newObject($object);
-        }
 
-        if ($object->getID() == '0') {
+        if ($object->getID() == '0')
             return '';
-        }
 
-        /**
-         * @var string $result
-         */
         $result = '<img src="/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object->getID() . '"';
 
-        if ($alt == '') {
+        if ($alt == '')
             $alt = $object->getID();
-        }
         $alt = $this->_traductionInstance->getTraduction($alt);
         $result .= ' alt="' . $alt . '" title="' . $alt . '"';
 
-        if ($class != '') {
+        if ($class != '')
             $result .= ' class="' . $class . '"';
-        }
 
-        if ($id != '') {
+        if ($id != '')
             $result .= ' id="' . $id . '"';
-        }
 
-        if ($args != '') {
+        if ($args != '')
             $result .= ' ' . $args;
-        }
 
         $result .= ' />';
         return $result;
@@ -2984,19 +2966,17 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare à afficher un objet comme image avec éventuellement un texte et un identifiant CSS.
      *
-     * @param Node|Node $object
+     * @param Node|string $object
      * @return string
      */
-    public function convertImageURL($object)
+    public function convertImageURL($object): string
     {
         // Récupère une instance de l'objet.
-        if (!is_a($object, 'Node')) {
+        if (!is_a($object, 'Node'))
             $object = $this->_nebuleInstance->newObject($object);
-        }
 
-        if ($object->getID() == '0') {
+        if ($object->getID() == '0')
             return '';
-        }
 
         $obj = $object->getID();
         return nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $obj;
@@ -3005,14 +2985,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche un objet comme image avec éventuellement un texte et un identifiant CSS.
      *
-     * @param Node|Node $object
-     * @param string $alt
-     * @param string $class
-     * @param string $id
-     * @param string $args
-     * @return string
+     * @param Node $object
+     * @param string    $alt
+     * @param string    $class
+     * @param string    $id
+     * @param string    $args
+     * @return void
      */
-    public function displayImage($object, $alt = '', $class = '', $id = '', $args = '')
+    public function displayImage(Node $object, string $alt = '', string $class = '', string $id = '', string $args = ''): void
     {
         echo $this->convertImage($object, $alt, $class, $id, $args);
     }
@@ -3020,41 +3000,35 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare à un objet comme image avec éventuellement un texte et un identifiant CSS.
      * Une recherche préalable est faite pour trouver la mise à jour la plus récente de l'objet.
-     *
      * Si l'objet commence par data: c'est une image encodée en base64.
      * Retourne dans ce cas un affichage d'image.
      *
      * @param string|Node $object
-     * @param string $alt
-     * @param string $class
-     * @param string $id
-     * @param string $args
+     * @param string      $alt
+     * @param string      $class
+     * @param string      $id
+     * @param string      $args
      * @return string
      */
-    public function convertUpdateImage($object, $alt = '', $class = '', $id = '', $args = '')
+    public function convertUpdateImage($object, string $alt = '', string $class = '', string $id = '', string $args = ''): string
     {
-        // Retourne un résulat tout de suite si l'objet est une image encodée.
-        if (substr($object, 0, 5) == 'data:') {
-            // @todo alt class id args...
+        // Retourne un résultat tout de suite si l'objet est une image encodée.
+        if (substr($object, 0, 5) == 'data:')
             return '<img src="' . $object . '" />';
-        }
 
         // Récupère une instance de l'objet.
-        if (!is_a($object, 'Node')) {
+        if (!is_a($object, 'Node'))
             $object = $this->_nebuleInstance->newObject($object);
-        }
 
-        if ($object->getID() == '0') {
+        if ($object->getID() == '0')
             return '';
-        }
 
         $newobj = $this->_getImageUpdate($object);
 
-        if ($newobj == $object->getID()) {
+        if ($newobj == $object->getID())
             $newObjectInstance = $object;
-        } else {
+        else
             $newObjectInstance = $this->_nebuleInstance->newObject($newobj);
-        }
 
         return $this->convertImage($newObjectInstance, $alt, $class, $id, $args);
     }
@@ -5804,24 +5778,24 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
         );
         $listEmotions0 = array(
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Display::REFERENCE_ICON_EMOTION_JOIE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Display::REFERENCE_ICON_EMOTION_CONFIANCE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Display::REFERENCE_ICON_EMOTION_PEUR0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Display::REFERENCE_ICON_EMOTION_SURPRISE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Display::REFERENCE_ICON_EMOTION_TRISTESSE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Display::REFERENCE_ICON_EMOTION_DEGOUT0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Display::REFERENCE_ICON_EMOTION_COLERE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Display::REFERENCE_ICON_EMOTION_INTERET0,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE0,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE0,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR0,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE0,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE0,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT0,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE0,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET0,
         );
         $listEmotions1 = array(
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Display::REFERENCE_ICON_EMOTION_JOIE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Display::REFERENCE_ICON_EMOTION_CONFIANCE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Display::REFERENCE_ICON_EMOTION_PEUR1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Display::REFERENCE_ICON_EMOTION_SURPRISE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Display::REFERENCE_ICON_EMOTION_TRISTESSE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Display::REFERENCE_ICON_EMOTION_DEGOUT1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Display::REFERENCE_ICON_EMOTION_COLERE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Display::REFERENCE_ICON_EMOTION_INTERET1,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE1,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE1,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR1,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE1,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE1,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT1,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE1,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET1,
         );
 
         foreach ($listEmotions as $emotion) {
@@ -8376,10 +8350,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $contantDisplayValid .= '/>';
             }
 
-            $object = $this->_nebuleInstance->newObject($instance->getSigners());
-            $contantDisplaySigner .= '<img title="' . $object->getFullName();
-            $contantDisplaySigner .= '" style="background:#' . $object->getPrimaryColor();
-            $contantDisplaySigner .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
+            foreach ($instance->getSigners() as $signer)
+            {
+                $object = $this->_nebuleInstance->newObject($signer);
+                $contantDisplaySigner .= '<img title="' . $object->getFullName();
+                $contantDisplaySigner .= '" style="background:#' . $object->getPrimaryColor();
+                $contantDisplaySigner .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
+            }
 
             $contantDisplayDate = '';
 
@@ -8459,10 +8436,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Affiche l'image du carré de couleur de l'objet ou de l'entité, lien vers l'objet.
      *
      * @param string|Node|entity $object
-     * @param string $htlink
-     * @return null
+     * @param string             $htlink
+     * @return void
      */
-    public function displayObjectColor($object, $htlink = '')
+    public function displayObjectColor($object, string $htlink = ''): void
     {
         echo $this->convertObjectColor($object, $htlink);
     }
@@ -8471,10 +8448,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare l'image du carré de couleur de l'objet ou de l'entité, lien vers l'objet.
      *
      * @param string|Node|entity $object
-     * @param string $htlink
+     * @param string             $htlink
      * @return string
      */
-    public function convertObjectColor($object, $htlink = '')
+    public function convertObjectColor($object, string $htlink = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
@@ -8486,9 +8463,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Affiche l'image du carré de couleur de l'objet ou de l'entité, mais pas de lien vers l'objet.
      *
      * @param string $object
-     * @return null
+     * @return void
      */
-    public function displayInlineObjectColorNolink($object)
+    public function displayInlineObjectColorNolink(string $object): void
     {
         echo $this->convertInlineObjectColorNolink($object);
     }
@@ -8497,9 +8474,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare l'image du carré de couleur de l'objet ou de l'entité, mais pas de lien vers l'objet.
      *
      * @param string $object
-     * @return null
+     * @return string
      */
-    public function convertInlineObjectColorNolink($object)
+    public function convertInlineObjectColorNolink(string $object): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $color = $this->_prepareObjectColor($object, 'iconInlineDisplay');
@@ -8510,10 +8487,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Affiche l'image de l'icône de l'objet ou de l'entité, lien vers l'objet.
      *
      * @param string|Node|entity $object
-     * @param string $htlink
-     * @return null
+     * @param string             $htlink
+     * @param string             $icon
+     * @return void
      */
-    public function displayObjectIcon($object, $htlink = '', $icon = '')
+    public function displayObjectIcon($object, string $htlink = '', string $icon = ''): void
     {
         echo $this->convertObjectIcon($object, $htlink, $icon);
     }
@@ -8522,18 +8500,18 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare l'image de l'icône de l'objet ou de l'entité, lien vers l'objet.
      *
      * @param string|Node|entity $object
-     * @param string $htlink
+     * @param string             $htlink
+     * @param string             $icon
      * @return string
      */
-    public function convertObjectIcon($object, $htlink = '', $icon = '')
+    public function convertObjectIcon($object, string $htlink = '', string $icon = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
-        if ($icon != '') {
+        if ($icon != '')
             $icon = $this->_prepareObjectIcon($object, $icon, 'iconNormalDisplay');
-        } else {
+        else
             $icon = $this->_prepareObjectFace($object, 'iconNormalDisplay');
-        }
         return $this->convertHypertextLink($icon, $htlink);
     }
 
@@ -8541,10 +8519,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Affiche l'image du carré de couleur et l'icône de l'objet ou de l'entité, lien vers l'objet.
      *
      * @param string|Node|entity $object
-     * @param string $htlink
-     * @return null
+     * @param string             $htlink
+     * @param string             $icon
+     * @return void
      */
-    public function displayObjectColorIcon($object, $htlink = '', $icon = '')
+    public function displayObjectColorIcon($object, string $htlink = '', string $icon = ''): void
     {
         echo $this->convertObjectColorIcon($object, $htlink, $icon);
     }
@@ -8553,19 +8532,19 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare l'image du carré de couleur et l'icône de l'objet ou de l'entité, lien vers l'objet.
      *
      * @param string|Node|entity $object
-     * @param string $htlink
+     * @param string             $htlink
+     * @param string             $icon
      * @return string
      */
-    public function convertObjectColorIcon($object, $htlink = '', $icon = '')
+    public function convertObjectColorIcon($object, string $htlink = '', string $icon = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
         $color = $this->_prepareObjectColor($object, 'iconNormalDisplay');
-        if ($icon != '') {
+        if ($icon != '')
             $icon = $this->_prepareObjectIcon($object, $icon, 'iconNormalDisplay');
-        } else {
+        else
             $icon = $this->_prepareObjectFace($object, 'iconNormalDisplay');
-        }
         return $this->convertHypertextLink($color . $icon, $htlink);
     }
 
@@ -8573,10 +8552,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare en version inserré au texte l'image du carré de couleur de l'objet ou de l'entité, lien vers l'objet.
      *
      * @param string|Node|entity $object
-     * @param string $htlink
+     * @param string             $htlink
      * @return string
      */
-    public function prepareInlineObjectColor($object, $htlink = '')
+    public function prepareInlineObjectColor($object, string $htlink = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
@@ -8589,9 +8568,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @param string $object
      * @param string $htlink
-     * @return null
+     * @return void
      */
-    public function displayInlineObjectColor($object, $htlink = '')
+    public function displayInlineObjectColor(string $object, string $htlink = ''): void
     {
         echo $this->convertInlineObjectColor($object, $htlink);
     }
@@ -8603,7 +8582,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string $htlink
      * @return string
      */
-    public function convertInlineObjectColor($object, $htlink = '')
+    public function convertInlineObjectColor(string $object, string $htlink = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
@@ -8617,9 +8596,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string $object
      * @param string $text
      * @param string $htlink
-     * @return null
+     * @return void
      */
-    public function displayInlineObjectColorText($object, $text = '', $htlink = '')
+    public function displayInlineObjectColorText(string $object, string $text = '', string $htlink = ''): void
     {
         echo $this->convertInlineObjectColorText($object, $text, $htlink);
     }
@@ -8632,12 +8611,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string $htlink
      * @return string
      */
-    public function convertInlineObjectColorText($object, $text = '', $htlink = '')
+    public function convertInlineObjectColorText(string $object, string $text = '', string $htlink = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
-        if ($text == '') {
+        if ($text == '')
             $text = $object->getFullName('all');
-        }
         $text = $this->_truncateName($text, 0);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
         $color = $this->_prepareObjectColor($object, 'iconInlineDisplay');
@@ -8649,9 +8627,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @param string $object
      * @param string $htlink
-     * @return null
+     * @return void
      */
-    public function displayInlineObjectColorName($object, $htlink = '')
+    public function displayInlineObjectColorName(string $object, string $htlink = ''): void
     {
         echo $this->convertInlineObjectColorName($object, $htlink);
     }
@@ -8663,7 +8641,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string $htlink
      * @return string
      */
-    public function convertInlineObjectColorName($object, $htlink = '')
+    public function convertInlineObjectColorName(string $object, string $htlink = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
@@ -8677,14 +8655,19 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @param string $object
      * @param string $htlink
-     * @return null
+     * @return void
      */
-    public function displayInlineObjectColorIcon($object, $htlink = '')
+    public function displayInlineObjectColorIcon(string $object, string $htlink = ''): void
     {
         echo $this->convertInlineObjectColorIcon($object, $htlink);
     }
 
-    public function convertInlineObjectColorIcon($object, $htlink = '')
+    /**
+     * @param Node|string $object
+     * @param string $htlink
+     * @return string
+     */
+    public function convertInlineObjectColorIcon($object, string $htlink = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
@@ -8698,9 +8681,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @param string $object
      * @param string $htlink
-     * @return null
+     * @return void
      */
-    public function displayInlineObjectColorIconName($object, $htlink = '')
+    public function displayInlineObjectColorIconName(string $object, string $htlink = ''): void
     {
         echo $this->convertInlineObjectColorIconName($object, $htlink);
     }
@@ -8719,9 +8702,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Affiche en version inserré au texte l'icône couleur, l'image et un texte ou le nom de l'objet ou de l'entité, mais pas de lien vers l'objet.
      *
      * @param string $object
-     * @return null
+     * @return void
      */
-    public function displayInlineObjectColorIconNameNolink($object)
+    public function displayInlineObjectColorIconNameNolink(string $object): void
     {
         echo $this->convertInlineObjectColorIconNameNolink($object);
     }
@@ -8730,9 +8713,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare en version inserré au texte l'icône couleur, l'image et un texte ou le nom de l'objet ou de l'entité, mais pas de lien vers l'objet.
      *
      * @param string $object
-     * @return null
+     * @return string
      */
-    public function convertInlineObjectColorIconNameNolink($object)
+    public function convertInlineObjectColorIconNameNolink(string $object): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $name = $this->_truncateName($object->getFullName('all'), 0);
@@ -8745,22 +8728,19 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /* --------------------------------------------------------------------------------
 	 *  Affichage des liens.
 	 * -------------------------------------------------------------------------------- */
-    public function displayInlineLinkFace($link)
+    public function displayInlineLinkFace($link): void
     {
         echo $this->convertInlineLinkFace($link);
     }
 
-    public function convertInlineLinkFace($link)
+    public function convertInlineLinkFace($link): string
     {
-        if ($link == '') {
+        if ($link == '')
             return '';
-        }
-        if (!is_a($link, 'Link')) {
+        if (!is_a($link, 'Link'))
             $link = $this->_nebuleInstance->newLink_DEPRECATED($link);
-        }
-        if (!$link->getValid()) {
+        if (!$link->getValid())
             return '';
-        }
 
         switch ($link->getAction()) {
             case 'f':
@@ -8805,61 +8785,59 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         return $return;
     }
 
-    public function displayInlineIconFace($iconName)
+    public function displayInlineIconFace($iconName): void
     {
         echo $this->convertInlineIconFace($iconName);
     }
 
-    public function convertInlineIconFace($iconName)
+    public function convertInlineIconFace($iconName): string
     {
         $iconID = '';
-        if (Node::checkNID($iconName) && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($iconName)) {
+        if (Node::checkNID($iconName) && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($iconName))
             $iconID = $iconName;
-        } elseif (strstr($iconName, ':') !== false) {
+        elseif (strstr($iconName, ':') !== false)
             $iconID = constant($iconName);
-        } else {
+        else
             $iconID = constant('self::' . $iconName);
-        }
 
         $instance = $this->_nebuleInstance->newObject($iconID);
-        if ($instance->getID() == '0') {
+        if ($instance->getID() == '0')
             return '';
-        }
 
         return $this->convertUpdateImage($instance, $this->_traductionInstance->getTraduction($instance->getName('all')), 'iconInlineDisplay');
     }
 
-    public function displayInlineInfoFace()
+    public function displayInlineInfoFace(): void
     {
         echo $this->convertInlineInfoFace();
     }
 
-    public function convertInlineInfoFace()
+    public function convertInlineInfoFace(): string
     {
         return $this->convertUpdateImage(self::DEFAULT_ICON_IINFO, $this->_traductionInstance->getTraduction('::::INFO'), 'iconInlineDisplay');
     }
 
-    public function displayInlineOKFace()
+    public function displayInlineOKFace(): void
     {
         echo $this->convertInlineOKFace();
     }
 
-    public function convertInlineOKFace()
+    public function convertInlineOKFace(): string
     {
         return $this->convertUpdateImage(self::DEFAULT_ICON_IOK, $this->_traductionInstance->getTraduction('::::OK'), 'iconInlineDisplay');
     }
 
-    public function displayInlineWarningFace()
+    public function displayInlineWarningFace(): void
     {
         echo $this->convertInlineWarningFace();
     }
 
-    public function convertInlineWarningFace()
+    public function convertInlineWarningFace(): string
     {
         return $this->convertUpdateImage(self::DEFAULT_ICON_IWARN, $this->_traductionInstance->getTraduction('::::WARN'), 'iconInlineDisplay');
     }
 
-    public function displayInlineErrorFace()
+    public function displayInlineErrorFace(): void
     {
         echo $this->convertInlineErrorFace();
     }
@@ -8869,44 +8847,40 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         return $this->convertUpdateImage(self::DEFAULT_ICON_IERR, $this->_traductionInstance->getTraduction('::::ERROR'), 'iconInlineDisplay');
     }
 
-    public function displayInlineLastAction()
+    public function displayInlineLastAction(): void
     {
         $array = $this->_metrologyInstance->getLastAction();
         switch ($array['type']) {
             case 'addlnk' :
                 $this->displayInlineIconFace('DEFAULT_ICON_ADDLNK');
-                if ($array['result']) {
+                if ($array['result'])
                     $this->displayInlineOKFace();
-                } else {
+                else
                     $this->displayInlineErrorFace();
-                }
                 $this->displayInlineLinkFace($array['action']);
                 break;
             case 'addobj' :
                 $this->displayInlineIconFace('DEFAULT_ICON_ADDOBJ');
-                if ($array['result']) {
+                if ($array['result'])
                     $this->displayInlineOKFace();
-                } else {
+                else
                     $this->displayInlineErrorFace();
-                }
                 $this->displayInlineObjectColor($array['action']);
                 break;
             case 'delobj' :
                 $this->displayInlineIconFace('DEFAULT_ICON_LD');
-                if ($array['result']) {
+                if ($array['result'])
                     $this->displayInlineOKFace();
-                } else {
+                else
                     $this->displayInlineErrorFace();
-                }
                 $this->displayInlineObjectColor($array['action']);
                 break;
             case 'addent' :
                 $this->displayInlineIconFace('DEFAULT_ICON_ADDENT');
-                if ($array['result']) {
+                if ($array['result'])
                     $this->displayInlineOKFace();
-                } else {
+                else
                     $this->displayInlineErrorFace();
-                }
                 $this->displayInlineObjectColorIcon($array['action']);
                 break;
         }
@@ -8914,51 +8888,46 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         unset($array);
     }
 
-    public function displayInlineAllActions()
+    public function displayInlineAllActions(): void
     {
         $count = 0;
         while ($array = $this->_metrologyInstance->getFirstAction()) {
-            if ($count > 0) {
+            if ($count > 0)
                 echo "- \n";
-            }
             switch ($array['type']) {
                 case 'addlnk' :
                     $this->displayInlineIconFace('DEFAULT_ICON_ADDLNK');
-                    if ($array['result']) {
+                    if ($array['result'])
                         $this->displayInlineOKFace();
-                    } else {
+                    else
                         $this->displayInlineErrorFace();
-                    }
                     $this->displayInlineLinkFace($array['action']);
                     $count++;
                     break;
                 case 'addobj' :
                     $this->displayInlineIconFace('DEFAULT_ICON_ADDOBJ');
-                    if ($array['result']) {
+                    if ($array['result'])
                         $this->displayInlineOKFace();
-                    } else {
+                    else
                         $this->displayInlineErrorFace();
-                    }
                     $this->displayInlineObjectColor($array['action']);
                     $count++;
                     break;
                 case 'delobj' :
                     $this->displayInlineIconFace('DEFAULT_ICON_LD');
-                    if ($array['result']) {
+                    if ($array['result'])
                         $this->displayInlineOKFace();
-                    } else {
+                    else
                         $this->displayInlineErrorFace();
-                    }
                     $this->displayInlineObjectColor($array['action']);
                     $count++;
                     break;
                 case 'addent' :
                     $this->displayInlineIconFace('DEFAULT_ICON_ADDENT');
-                    if ($array['result']) {
+                    if ($array['result'])
                         $this->displayInlineOKFace();
-                    } else {
+                    else
                         $this->displayInlineErrorFace();
-                    }
                     $this->displayInlineObjectColorIcon($array['action']);
                     $count++;
                     break;
@@ -8977,9 +8946,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Affiche en version inserré au texte les icônes des émotions de l'objet.
      *
      * @param string $object
-     * @return null
+     * @return void
      */
-    public function displayInlineEmotions($object)
+    public function displayInlineEmotions(string $object): void
     {
         echo $this->convertInlineEmotions($object);
     }
@@ -8990,12 +8959,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string $object
      * @return string
      */
-    public function convertInlineEmotions($object)
+    public function convertInlineEmotions(string $object): string
     {
         // Vérifie si les émotions doivent être affichées.
-        if (!$this->_configuration->getOptionUntyped('displayEmotions')) {
+        if (!$this->_configuration->getOptionUntyped('displayEmotions'))
             return '';
-        }
 
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
 
@@ -9013,24 +8981,24 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
         );
         $listEmotions0 = array(
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Display::REFERENCE_ICON_EMOTION_JOIE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Display::REFERENCE_ICON_EMOTION_CONFIANCE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Display::REFERENCE_ICON_EMOTION_PEUR0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Display::REFERENCE_ICON_EMOTION_SURPRISE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Display::REFERENCE_ICON_EMOTION_TRISTESSE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Display::REFERENCE_ICON_EMOTION_DEGOUT0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Display::REFERENCE_ICON_EMOTION_COLERE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Display::REFERENCE_ICON_EMOTION_INTERET0,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE0,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE0,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR0,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE0,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE0,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT0,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE0,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET0,
         );
         $listEmotions1 = array(
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Display::REFERENCE_ICON_EMOTION_JOIE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Display::REFERENCE_ICON_EMOTION_CONFIANCE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Display::REFERENCE_ICON_EMOTION_PEUR1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Display::REFERENCE_ICON_EMOTION_SURPRISE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Display::REFERENCE_ICON_EMOTION_TRISTESSE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Display::REFERENCE_ICON_EMOTION_DEGOUT1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Display::REFERENCE_ICON_EMOTION_COLERE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Display::REFERENCE_ICON_EMOTION_INTERET1,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE1,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE1,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR1,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE1,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE1,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT1,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE1,
+            nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET1,
         );
 
         foreach ($listEmotions as $emotion) {
@@ -9070,17 +9038,15 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if ($this->_unlocked
                 && $this->_configuration->getOptionAsBoolean('permitWrite')
                 && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            ) {
+            )
                 $result .= $this->convertHypertextLink($icon, $htlink);
-            } else {
+            else
                 $result .= $icon;
-            }
 
             // Détermine le nombre d'entités qui ont marqué cette émotion.
             $count = $object->getMarkEmotionSize($emotion, 'all');
-            if ($count > 0) {
+            if ($count > 0)
                 $result .= $count . ' ';
-            }
         }
 
         // Fermeture de la DIV.
@@ -9098,17 +9064,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string $text
      * @return boolean
      */
-    public function displayButtonNextObject($ref, $url, $text)
+    public function displayButtonNextObject(string $ref, string $url, string $text): bool
     {
-        if ($ref == '') {
+        if ($ref == '')
             return false;
-        }
-        if ($url == '') {
+        if ($url == '')
             return false;
-        }
-        if ($text == '') {
+        if ($text == '')
             return false;
-        }
 
         echo "<div class=\"inlinecontent\" id=\"$ref\">\n";
         echo "<p class=\"inlinecontentnext\" onclick=\"replaceNextContentFromURL('$ref', '$url')\">$text</p>\n";
@@ -9123,20 +9086,18 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param array $list
      * @return void
      */
-    public function displayItemList($list)
+    public function displayItemList(array $list): void
     {
-        if (sizeof($list) == 0) {
+        if (sizeof($list) == 0)
             return;
-        }
         ?>
 
         <div class="textAction">
             <?php
             foreach ($list as $item) {
                 // Affichage.
-                if (is_a($item['object'], 'Node')) {
+                if (is_a($item['object'], 'Node'))
                     $this->_displayArboItem($item);
-                }
             }
             unset($name, $icon, $desc, $link);
             ?>
@@ -9152,11 +9113,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param array $item
      * @return void
      */
-    private function _displayArboItem($item)
+    private function _displayArboItem(array $item): void
     {
-        if (sizeof($item) == 0) {
+        if (sizeof($item) == 0)
             return;
-        }
         if (!is_a($item['object'], 'Node')
             && !is_a($item['object'], 'Entity')
             && !is_a($item['object'], 'Group')
@@ -9166,9 +9126,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             && !is_a($item['object'], 'Token')
             && !is_a($item['object'], 'Transaction')
             && !is_a($item['object'], 'Wallet')
-        ) {
+        )
             return;
-        }
 
         // Extraction.
         $object = $item['object'];
@@ -9184,32 +9143,27 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         }
 
         $htlink = '';
-        if (isset($item['link'])) {
+        if (isset($item['link']))
             $htlink = $item['link'];
-        }
 
         $desc = '';
-        if (isset($item['desc'])) {
+        if (isset($item['desc']))
             $desc = $this->_traductionInstance->getTraduction($item['desc']);
-        }
 
         $icon = '';
-        if (isset($item['icon'])) {
+        if (isset($item['icon']))
             $icon = $item['icon'];
-        }
 
         $type = $object->getType('all');
         // Extrait un nom d'objet à afficher de façon correcte.
         $entityName = '';
-        if ($entityID != '0') {
+        if ($entityID != '0')
             $entityName = $entity->getFullName('all');
-        }
 
-        if ($object->getIsEntity('all')) {
+        if ($object->getIsEntity('all'))
             $name = $object->getFullName('all');
-        } else {
+        else
             $name = $object->getName('all');
-        }
         $namesize = 21;
         $shortname = $name;
 
@@ -9218,11 +9172,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         ?>
 
         <div class="oneActionItem" id="<?php
-        if ($entityID == $this->_applicationInstance->getCurrentEntity()) {
+        if ($entityID == $this->_applicationInstance->getCurrentEntity())
             echo 'selfEntity';
-        } else {
+        else
             echo 'otherEntity';
-        }
         ?>">
             <div class="oneActionItem-top">
                 <div class="oneAction-icon">

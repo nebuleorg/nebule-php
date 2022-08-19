@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220817';
+const BOOTSTRAP_VERSION = '020220819';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -3938,10 +3938,7 @@ function app_getActivate(string $oid): bool
     global $nebuleLocalAuthorities;
 
     // Check for defaults app.
-    if ($oid == '0'
-        || $oid == '1'
-        || $oid == '2'
-        || $oid == '9'
+    if (strlen($oid) == '1'
         || $oid == lib_getConfiguration('defaultApplication')
     )
         return true;
@@ -4561,9 +4558,9 @@ function bootstrap_findApplication(): void
         $bootstrapApplicationOID = $bootstrapApplicationIID;
     elseif (!$bootstrapUpdate
         && $bootstrapApplicationNoPreload
-        && isset($_SESSION['bootstrapApplicationOID'])
+        && isset($_SESSION['bootstrapApplicationOID'][0])
     )
-        $bootstrapApplicationOID = $_SESSION['bootstrapApplicationOID'];
+        $bootstrapApplicationOID = $_SESSION['bootstrapApplicationOID'][0];
     else
         $bootstrapApplicationOID = app_getCode($bootstrapApplicationIID);
     session_abort();
@@ -4613,10 +4610,15 @@ function bootstrap_findApplicationAsk(string &$bootstrapApplicationIID): void
 function bootstrap_findApplicationSession(string &$bootstrapApplicationIID): void
 {
     session_start();
-    if (isset($_SESSION['bootstrapApplicationIID'])
-        && nod_checkNID($_SESSION['bootstrapApplicationIID'])
+    if (isset($_SESSION['bootstrapApplicationIID'][0])
+        && (nod_checkNID($_SESSION['bootstrapApplicationIID'][0])
+            || strlen($_SESSION['bootstrapApplicationIID'][0]) == 1
+        )
     )
-        $bootstrapApplicationIID = $_SESSION['bootstrapApplicationIID'];
+    {
+        $bootstrapApplicationIID = $_SESSION['bootstrapApplicationIID'][0];
+        log_add('application on session IID=' . $bootstrapApplicationIID, 'debug', __FUNCTION__, '14e62960');
+    }
     session_abort();
 }
 
@@ -4645,7 +4647,7 @@ function bootstrap_findApplicationDefault(string &$bootstrapApplicationIID): voi
     else
         $bootstrapApplicationIID = '2';
 
-    log_add('use default application IID=' . $bootstrapApplicationIID, 'info', __FUNCTION__, '423ae49b');
+    log_add('use default application IID=' . $bootstrapApplicationIID, 'debug', __FUNCTION__, '423ae49b');
 }
 
 function bootstrap_getApplicationPreload(): void
@@ -4862,8 +4864,8 @@ function bootstrap_initApplication(bool $run): void
         $applicationInstance->router();
 
     // Sérialise les instances et les sauve dans la session PHP.
-    bootstrap_saveLibraryPOO(); // FIXME à supprimer ?
-    bootstrap_saveApplication();
+    //bootstrap_saveLibraryPOO(); // FIXME à supprimer ?
+    //bootstrap_saveApplication();
 }
 
 /**
@@ -4881,18 +4883,17 @@ function bootstrap_saveApplication(): void
            $bootstrapApplicationOID,
            $bootstrapApplicationSID;
 
-    if (! is_a($applicationInstance, 'Nebule\Library\Applications'))
-        return;
-
     session_start();
-    $_SESSION['bootstrapApplicationOID'] = $bootstrapApplicationOID;
-    $_SESSION['bootstrapApplicationIID'] = $bootstrapApplicationIID;
-    $_SESSION['bootstrapApplicationSID'] = $bootstrapApplicationSID;
+    $_SESSION['bootstrapApplicationOID'][0] = $bootstrapApplicationOID;
+    $_SESSION['bootstrapApplicationIID'][0] = $bootstrapApplicationIID;
+    $_SESSION['bootstrapApplicationSID'][0] = $bootstrapApplicationSID;
     $_SESSION['bootstrapApplicationIID'][$bootstrapApplicationOID] = $bootstrapApplicationOID;
-    $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID] = serialize($applicationInstance);
-    $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationOID] = serialize($applicationDisplayInstance);
-    $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationOID] = serialize($applicationActionInstance);
-    $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationOID] = serialize($applicationTraductionInstance);
+    if (is_a($applicationInstance, 'Nebule\Library\Applications')) {
+        $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID] = serialize($applicationInstance);
+        $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationOID] = serialize($applicationDisplayInstance);
+        $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationOID] = serialize($applicationActionInstance);
+        $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationOID] = serialize($applicationTraductionInstance);
+    }
     session_write_close();
 }
 
@@ -7269,6 +7270,10 @@ function bootstrap_displayRouter()
         bootstrap_displayPreloadApplication();
 
     log_reopen(BOOTSTRAP_NAME);
+
+    // Sérialise les instances et les sauve dans la session PHP.
+    bootstrap_saveLibraryPOO(); // FIXME à supprimer ?
+    bootstrap_saveApplication();
 }
 
 function bootstrap_logMetrology()
