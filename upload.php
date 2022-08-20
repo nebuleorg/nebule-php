@@ -76,7 +76,7 @@ class Display extends Displays
     /**
      * Affichage de la page.
      */
-    public function display()
+    public function display(): void
     {
         global $applicationVersion, $applicationLevel, $applicationLicence, $applicationWebsite, $applicationName, $applicationSurname, $applicationAuthor;
 

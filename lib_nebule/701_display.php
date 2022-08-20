@@ -597,7 +597,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @return void
      */
-    public function initialisation()
+    public function initialisation(): void
     {
         global $applicationName;
 
@@ -656,8 +656,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     /**
      * Fonction de suppression de l'instance.
-     *
-     * @return boolean
      */
     public function __destruct()
     {
@@ -669,7 +667,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return 'Display';
     }
@@ -705,7 +703,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @todo à optimiser avec __wakeup et __sleep.
      *
      */
-    public function initialisation2()
+    public function initialisation2(): void
     {
         global $applicationName;
 
@@ -769,7 +767,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @return array:string
      */
-    public function getNeededObjectsList()
+    public function getNeededObjectsList(): array
     {
         return $this->_neededObjectsList;
     }
@@ -809,22 +807,20 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @return void
      */
-    protected function _findCurrentDisplayMode()
+    protected function _findCurrentDisplayMode(): void
     {
         global $applicationName;
 
         // Vérifie que la liste des modes ne soit pas vide ou que l'on utilise les modules.
         if (sizeof($this->_listDisplayModes) == 0
             && !$this->_applicationInstance->getUseModules()
-        ) {
+        )
             return;
-        }
         // Vérifie la liste des modules si activé.
         if ($this->_applicationInstance->getUseModules()
             && sizeof($this->_applicationInstance->getModulesListInstances()) == 0
-        ) {
+        )
             return;
-        }
 
         /*
 		 *  ------------------------------------------------------------------------------------------
@@ -852,17 +848,15 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
             unset($module, $commandName);
         } else {
-            foreach ($this->_listDisplayModes as $mode) {
+            foreach ($this->_listDisplayModes as $mode)
                 $list_mods_names[$mode] = $mode;
-            }
         }
 
         // Recherche un mode connu.
         $ok_mod = false;
         foreach ($list_mods_names as $name) {
-            if ($arg_mod == $name) {
+            if ($arg_mod == $name)
                 $ok_mod = true;
-            }
         }
         if ($ok_mod) // Si le mode est connu.
         {
@@ -875,9 +869,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             // Si il existe une variable de session pour le mode d'affichage, la lit.
             if ($cache !== false
                 && $cache != ''
-            ) {
+            )
                 $this->_currentDisplayMode = $cache;
-            } else // Sinon active le mode par defaut.
+            else // Sinon active le mode par defaut.
             {
                 $this->_currentDisplayMode = Displays::DEFAULT_DISPLAY_MODE;
                 $this->_nebuleInstance->setSessionStore($applicationName . 'DisplayMode', Displays::DEFAULT_DISPLAY_MODE);
@@ -894,9 +888,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             foreach ($list_mods as $module) {
                 if ($module->getCommandName() == $this->_currentDisplayMode
                     && $module->getType() == 'application'
-                ) {
+                )
                     $moduleName = $module->getClassName();
-                }
             }
             $this->_currentModuleInstance = $this->_applicationInstance->getModulesListInstances()[$moduleName];
         }
@@ -909,7 +902,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @return string
      */
-    public function getCurrentDisplayMode()
+    public function getCurrentDisplayMode(): string
     {
         return $this->_currentDisplayMode;
     }
@@ -943,7 +936,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @return void
      */
-    protected function _findCurrentDisplayView()
+    protected function _findCurrentDisplayView(): void
     {
         global $applicationName;
 
@@ -1024,7 +1017,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @return string
      */
-    public function getCurrentDisplayView()
+    public function getCurrentDisplayView(): string
     {
         return $this->_currentDisplayView;
     }
@@ -1033,21 +1026,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Recherche l'ID de contenu online à afficher.
      */
-    protected function _findInlineContentID()
+    protected function _findInlineContentID(): void
     {
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-		 *  ------------------------------------------------------------------------------------------
-		 */
-        // extrait l'ID de contenu.
-        $arg_id = trim(filter_input(INPUT_GET, self::DEFAULT_INLINE_CONTENT_COMMAND, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW)); // Lit et nettoye le contenu de la variable GET.
-        if ($arg_id != '') {
-            $this->_inlineContentID = $arg_id; // Ecrit l'objet dans la variable.
-        }
-        unset($arg_id);
+        $arg_id = trim(' ' . filter_input(INPUT_GET, self::DEFAULT_INLINE_CONTENT_COMMAND, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        if ($arg_id != '')
+            $this->_inlineContentID = $arg_id;
 
-        // Log
         $this->_metrologyInstance->addLog('Find sub display : ' . $this->_inlineContentID, Metrology::LOG_LEVEL_DEBUG);
     }
 
@@ -1062,27 +1046,25 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @return string
      */
-    public function getInlineContentID()
+    public function getInlineContentID(): string
     {
         return $this->_inlineContentID;
     }
 
     /**
      * Enregistre un ID de contenu html à remplacer.
-     *
      * La variable options permet de passer des paramètres supplémentaires.
      *
      * @param string $id
      * @param string $options
      * @return boolean
      */
-    public function registerInlineContentID($id, $options = '')
+    public function registerInlineContentID(string $id, string $options = ''): bool
     {
         if ($id == ''
             || $id == '0'
-        ) {
+        )
             return false;
-        }
 
         $this->_inlineContentIndex[$id] = $id;
         $this->_inlineContentOptions[$id] = $options;
@@ -1103,11 +1085,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @return boolean
      */
-    protected function _displayInlineContentID()
+    protected function _displayInlineContentID(): bool
     {
-        if (sizeof($this->_inlineContentIndex) == 0) {
+        if (sizeof($this->_inlineContentIndex) == 0)
             return true;
-        }
 
         echo "<script language=\"javascript\" type=\"text/javascript\">\n<!--\n";
         $url = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_currentDisplayMode
@@ -1116,9 +1097,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $option = '';
             if (isset($this->_inlineContentOptions[$id])
                 && $this->_inlineContentOptions[$id] != ''
-            ) {
+            )
                 $option = '&' . $this->_inlineContentOptions[$id];
-            }
             echo "setTimeout(replaceInlineContentFromURL('" . $id . "', '" . $url
                 . '&' . self::DEFAULT_INLINE_COMMAND . '&' . self::DEFAULT_INLINE_CONTENT_COMMAND . '=' . $id
                 . $option . "'), 20);\n";
@@ -1136,7 +1116,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affichage du style CSS commun.
      */
-    public function commonCSS()
+    public function commonCSS(): void
     {
         ?>
 
@@ -1968,7 +1948,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affichage du style CSS de l'application.
      */
-    public function displayCSS()
+    public function displayCSS(): void
     {
         // Cette fonction doit être surchargée par l'application avec ses styles propres.
     }
@@ -1980,7 +1960,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @return void
      */
-    public function commonScripts()
+    public function commonScripts(): void
     {
         if (!$this->_configuration->getOptionAsBoolean('permitJavaScript')) {
             return;
@@ -2073,7 +2053,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
             function move(e) {
                 if (i && j) {
-                    if (navigator.appName != "Microsoft Internet Explorer") {
+                    if (navigator.appName !== "Microsoft Internet Explorer") {
                         GetId("curseur").style.left = e.pageX - 720 + "px";
                         GetId("curseur").style.top = e.pageY + 10 + "px";
                     } else {
@@ -2090,7 +2070,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
 
             function montre(text) {
-                if (i == false) {
+                if (i === false) {
                     GetId("curseur").style.visibility = "visible";
                     GetId("curseur").innerHTML = text;
                     i = true;
@@ -2098,7 +2078,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
 
             function cache() {
-                if (i == true) {
+                if (i === true) {
                     GetId("curseur").style.visibility = "hidden";
                     i = false;
                     j = true;
@@ -2124,18 +2104,20 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
             function display_menu(menuid) {
                 var test = document.getElementById(menuid).style.display;
-                if (test == "block") {
+                if (test === "block") {
                     document.getElementById(menuid).style.display = "none";
                 } else {
                     document.getElementById(menuid).style.display = "block";
                 }
             }
 
-            function display_show_block(menuid)
+            function display_show_block(menuid) {
                 document.getElementById(menuid).style.display = "block";
+            }
 
-            function display_hide(menuid)
+            function display_hide(menuid) {
                 document.getElementById(menuid).style.display = "none";
+            }
 
             //-->
         </script>
@@ -2145,7 +2127,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affichage des scripts JS.
      */
-    private function _displayScripts()
+    private function _displayScripts(): void
     {
         // Cette fonction doit être surchargée par l'application avec ses scripts JS propres.
     }
@@ -2154,7 +2136,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affichage de la page par défaut.
      */
-    public function display()
+    public function display(): void
     {
         // Lit si la variable GET existe.
         if (filter_has_var(INPUT_GET, self::DEFAULT_INLINE_COMMAND))
@@ -2166,7 +2148,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affichage de la page complète.
      */
-    private function _displayFull()
+    private function _displayFull(): void
     {
         global $applicationVersion, $applicationLicence, $applicationWebsite, $applicationName, $applicationSurname, $applicationAuthor;
         ?>
@@ -2235,24 +2217,24 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affichage de la partie de page en ligne.
      */
-    private function _displayInline()
+    private function _displayInline(): void
     {
         // Cette fonction doit être surchargée par l'application.
     }
 
 
     // Emulation des fonctions de traduction.
-    public function getLanguageList()
+    public function getLanguageList(): array
     {
         return array('none');
     }
 
-    public function getLanguageInstanceList()
+    public function getLanguageInstanceList(): array
     {
         return array(null);
     }
 
-    public function getCurrentLanguage()
+    public function getCurrentLanguage(): array
     {
         return array('none');
     }
@@ -2262,7 +2244,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         return null;
     }
 
-    public function getDefaultLanguage()
+    public function getDefaultLanguage(): array
     {
         return array('none');
     }
@@ -2272,57 +2254,59 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         return null;
     }
 
-    public function getTraduction($text)
+    public function getTraduction(string $text): string
     {
         return $this->_traductionInstance->getTraduction($text);
     }
 
-    public function setHtlinkObjectPrefix($htlink)
+    public function setHtlinkObjectPrefix(string $htlink): void
     {
         $this->_htlinkObjectPrefix = $htlink;
     }
 
-    public function setHtlinkGroupPrefix($htlink)
+    public function setHtlinkGroupPrefix(string $htlink): void
     {
         $this->_htlinkGroupPrefix = $htlink;
     }
 
-    public function setHtlinkConversationPrefix($htlink)
+    public function setHtlinkConversationPrefix(string $htlink): void
     {
         $this->_htlinkConversationPrefix = $htlink;
     }
 
-    public function setHtlinkEntityPrefix($htlink)
+    public function setHtlinkEntityPrefix(string $htlink): void
     {
         $this->_htlinkEntityPrefix = $htlink;
     }
 
-    public function setHtlinkCurrencyPrefix($htlink)
+    public function setHtlinkCurrencyPrefix(string $htlink): void
     {
         $this->_htlinkCurrencyPrefix = $htlink;
     }
 
-    public function setHtlinkTokenPoolPrefix($htlink)
+    public function setHtlinkTokenPoolPrefix(string $htlink): void
     {
         $this->_htlinkTokenPoolPrefix = $htlink;
     }
 
-    public function setHtlinkTokenPrefix($htlink)
+    public function setHtlinkTokenPrefix(string $htlink): void
     {
         $this->_htlinkTokenPrefix = $htlink;
     }
 
-    public function setHtlinkTransactionPrefix($htlink)
+    public function setHtlinkTransactionPrefix(string $htlink): void
     {
         $this->_htlinkTransactionPrefix = $htlink;
     }
 
-    public function setHtlinkWalletPrefix($htlink)
+    public function setHtlinkWalletPrefix(string $htlink): void
     {
         $this->_htlinkWalletPrefix = $htlink;
     }
 
-    public function echoTraduction($text, $color = '', $arg1 = null, $arg2 = null, $arg3 = null, $arg4 = null, $arg5 = null, $arg6 = null, $arg7 = null, $arg8 = null, $arg9 = null)
+    public function echoTraduction(string $text, string $color = '', string $arg1 = '', string $arg2 = '',
+                                   string $arg3 = '', string $arg4 = '', string $arg5 = '', string $arg6 = '',
+                                   string $arg7 = '', string $arg8 = '', string $arg9 = ''): void
     {
         if ($color != '') echo "<font color=\"$color\">";
         echo sprintf(($this->getTraduction($text)), $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9);
@@ -2355,7 +2339,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string $arg5
      * @return string
      */
-    public function convertLineMessage(string $text, $type = 'information', string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): string
+    public function convertLineMessage(string $text, string $type = 'information', string $arg1 = '', string $arg2 = '',
+                                       string $arg3 = '', string $arg4 = '', string $arg5 = ''): string
     {
         $iconCssClass = 'iconemoyenpuce';
 
@@ -2389,16 +2374,17 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Les types possibles : information, ok, warning, error.
      * Par défaut, le type correspond à un message d'information.
      *
-     * @param string      $text
-     * @param string      $type [information|ok|warning|error]
-     * @param string|null $arg1
-     * @param string|null $arg2
-     * @param string|null $arg3
-     * @param string|null $arg4
-     * @param string|null $arg5
+     * @param string $text
+     * @param string $type [information|ok|warning|error]
+     * @param string $arg1
+     * @param string $arg2
+     * @param string $arg3
+     * @param string $arg4
+     * @param string $arg5
      * @return void
      */
-    public function displayLineMessage(string $text, string $type = 'information', string $arg1 = null, string $arg2 = null, string $arg3 = null, string $arg4 = null, string $arg5 = null): void
+    public function displayLineMessage(string $text, string $type = 'information', string $arg1 = '', string $arg2 = '',
+                                       string $arg3 = '', string $arg4 = '', string $arg5 = ''): void
     {
         echo $this->convertLineMessage($text, $type, $arg1, $arg2, $arg3, $arg4, $arg5);
     }
@@ -2522,7 +2508,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         )
             $size = 'half';
         // Vérifie que c'est un objet.
-        if (!is_a($object, 'Node')
+        if (!is_a($object, 'Node') // TODO simplify!
             && !is_a($object, 'Group')
             && !is_a($object, 'Entity')
             && !is_a($object, 'Conversation')
@@ -2636,7 +2622,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param bool        $permitWarnProtected
      * @return void
      */
-    public function displayObjectContentFull($object, $permitWarnProtected = true): void
+    public function displayObjectContentFull($object, bool $permitWarnProtected = true): void
     {
         echo $this->convertObjectContentSized($object, 'full', $permitWarnProtected);
     }
@@ -2985,14 +2971,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche un objet comme image avec éventuellement un texte et un identifiant CSS.
      *
-     * @param Node $object
-     * @param string    $alt
-     * @param string    $class
-     * @param string    $id
-     * @param string    $args
+     * @param string|Node $object
+     * @param string      $alt
+     * @param string      $class
+     * @param string      $id
+     * @param string      $args
      * @return void
      */
-    public function displayImage(Node $object, string $alt = '', string $class = '', string $id = '', string $args = ''): void
+    public function displayImage($object, string $alt = '', string $class = '', string $id = '', string $args = ''): void
     {
         echo $this->convertImage($object, $alt, $class, $id, $args);
     }
@@ -3038,12 +3024,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Une recherche préalable est faite pour trouver la mise à jour la plus récente de l'objet.
      *
      * @param string|Node $object
-     * @param string $alt
-     * @param string $id
-     * @param string $args
-     * @return string
+     * @param string      $alt
+     * @param string      $class
+     * @param string      $id
+     * @param string      $args
+     * @return void
      */
-    public function displayUpdateImage($object, $alt = '', $class = '', $id = '', $args = '')
+    public function displayUpdateImage($object, string $alt = '', string $class = '', string $id = '', string $args = ''): void
     {
         echo $this->convertUpdateImage($object, $alt, $class, $id, $args);
     }
@@ -3051,33 +3038,30 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare à un objet comme image avec éventuellement un texte et un identifiant CSS.
      * L'objet est un objet virtuel qui permet juste d'adresser l'image attendu.
+     *
      * @param string|Node $object
-     * @param string $alt
-     * @param string $class
-     * @param string $id
-     * @param string $args
+     * @param string      $alt
+     * @param string      $class
+     * @param string      $id
+     * @param string      $args
      * @return string
      * @todo
-     *
      */
-    public function convertReferenceImage($object, $alt = '', $class = '', $id = '', $args = '')
+    public function convertReferenceImage($object, string $alt = '', string $class = '', string $id = '', string $args = ''): string
     {
         // Récupère une instance de l'objet.
-        if (!is_a($object, 'Node')) {
+        if (!is_a($object, 'Node'))
             $object = $this->_nebuleInstance->newObject($object);
-        }
 
-        if ($object->getID() == '0') {
+        if ($object->getID() == '0')
             return '';
-        }
 
         $newobj = $this->_getImageByReference($object);
 
-        if ($newobj == $object->getID()) {
+        if ($newobj == $object->getID())
             $newObjectInstance = $object;
-        } else {
+        else
             $newObjectInstance = $this->_nebuleInstance->newObject($newobj);
-        }
 
         return $this->convertImage($newObjectInstance, $alt, $class, $id, $args);
     }
@@ -3087,13 +3071,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * L'objet est un objet virtuel qui permet juste d'adresser l'image attendu.
      *
      * @param string|Node $object
-     * @param string $alt
-     * @param string $class
-     * @param string $id
-     * @param string $args
-     * @return string
+     * @param string      $alt
+     * @param string      $class
+     * @param string      $id
+     * @param string      $args
+     * @return void
      */
-    public function displayReferenceImage($object, $alt = '', $class = '', $id = '', $args = '')
+    public function displayReferenceImage($object, string $alt = '', string $class = '', string $id = '', string $args = ''): void
     {
         echo $this->convertReferenceImage($object, $alt, $class, $id, $args);
     }
@@ -3107,10 +3091,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Retourne le nom tronqué d'une entité.
      *
      * @param string $name
-     * @param int $maxsize
+     * @param int    $maxsize
      * @return string
      */
-    public function truncateName($name, $maxsize)
+    public function truncateName(string $name, int $maxsize): string
     {
         return $this->_truncateName($name, $maxsize);
     }
@@ -3119,10 +3103,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Retourne le nom tronqué d'une entité.
      *
      * @param string $name
-     * @param int $maxsize
+     * @param int    $maxsize
      * @return string
      */
-    private function _truncateName($name, $maxsize)
+    private function _truncateName(string $name, int $maxsize): string
     {
         if ($maxsize == 0 || $maxsize > $this->_configuration->getOptionUntyped('displayNameSize'))
             $maxsize = $this->_configuration->getOptionUntyped('displayNameSize');
@@ -3137,10 +3121,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare un lien par défaut pour un objet ou un groupe ou une conversation ou une entité si aucun lien hypertexte n'est donné.
      *
      * @param Node|Entity|Group|Conversation $object
-     * @param string $htlink
+     * @param string                         $htlink
      * @return string
      */
-    public function prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink = '')
+    public function prepareDefaultObjectOrGroupOrEntityHtlink($object, string $htlink = ''): string
     {
         return $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
     }
@@ -3149,31 +3133,29 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare un lien par défaut pour un objet ou un groupe ou une conversation ou une entité si aucun lien hypertexte n'est donné.
      *
      * @param Node|Entity|Group|Conversation $object
-     * @param string $htlink
+     * @param string                         $htlink
      * @return string
      */
-    private function _prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink = '')
+    private function _prepareDefaultObjectOrGroupOrEntityHtlink($object, string $htlink = ''): string
     {
-        if ($htlink != '') {
+        if ($htlink != '')
             return $htlink;
-        }
-        if (is_a($object, 'Entity')) {
+        if (is_a($object, 'Entity')) // TODO switch !
             return $this->_htlinkEntityPrefix . $object->getID();
-        } elseif (is_a($object, 'Conversation')) {
+        elseif (is_a($object, 'Conversation'))
             return $this->_htlinkConversationPrefix . $object->getID();
-        } elseif (is_a($object, 'Group')) {
+        elseif (is_a($object, 'Group'))
             return $this->_htlinkGroupPrefix . $object->getID();
-        } elseif (is_a($object, 'Wallet')) {
+        elseif (is_a($object, 'Wallet'))
             return $this->_htlinkWalletPrefix . $object->getID();
-        } elseif (is_a($object, 'Transaction')) {
+        elseif (is_a($object, 'Transaction'))
             return $this->_htlinkTransactionPrefix . $object->getID();
-        } elseif (is_a($object, 'Token')) {
+        elseif (is_a($object, 'Token'))
             return $this->_htlinkTokenPrefix . $object->getID();
-        } elseif (is_a($object, 'TokenPool')) {
+        elseif (is_a($object, 'TokenPool'))
             return $this->_htlinkTokenPoolPrefix . $object->getID();
-        } elseif (is_a($object, 'Currency')) {
+        elseif (is_a($object, 'Currency'))
             return $this->_htlinkCurrencyPrefix . $object->getID();
-        }
         return $this->_htlinkObjectPrefix . $object->getID();
     }
 
@@ -3187,13 +3169,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string $htlink
      * @return string
      * @todo
-     *
      */
-    public function convertHypertextShortLink($htlink)
+    public function convertHypertextShortLink(string $htlink): string
     {
-        if ($htlink == '') {
+        if ($htlink == '')
             return '';
-        }
         return $htlink;
     }
 
@@ -3207,27 +3187,22 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string $id
      * @return string
      */
-    public function convertHypertextLink($text, $htlink, $color = '', $class = '', $id = '')
+    public function convertHypertextLink(string $text, string $htlink, string $color = '', string $class = '', string $id = ''): string
     {
-        if ($text == '') {
+        if ($text == '')
             return '';
-        }
 
-        if ($htlink == '') {
+        if ($htlink == '')
             return $text;
-        }
 
-        if ($color != '') {
+        if ($color != '')
             $color = ' style="background:' . $color . ';"';
-        }
 
-        if ($class != '') {
+        if ($class != '')
             $class = ' class="' . $class . '"';
-        }
 
-        if ($id != '') {
+        if ($id != '')
             $id = ' id="' . $id . '"';
-        }
 
         $text = $this->_traductionInstance->getTraduction($text);
         return '<a href="' . $htlink . '"' . $color . $class . $id . '>' . $text . '</a>';
@@ -3241,9 +3216,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string $color
      * @param string $class
      * @param string $id
-     * @return string
+     * @return void
      */
-    public function displayHypertextLink($text, $htlink, $color = '', $class = '', $id = '')
+    public function displayHypertextLink(string $text, string $htlink, string $color = '', string $class = '', string $id = ''): void
     {
         echo $this->convertHypertextLink($text, $htlink, $color, $class, $id);
     }
@@ -3254,15 +3229,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string $date
      * @return string
      */
-    public function convertDate($date)
+    public function convertDate(string $date): string
     {
-        if (substr($date, 10, 1) == 'T') {
+        if (substr($date, 10, 1) == 'T')
             $ret = substr($date, 8, 2) . '/' . substr($date, 5, 2) . '/' . substr($date, 0, 4) . ' ' . substr($date, 11, 2) . 'h' . substr($date, 14, 2) . "'<sub>" . substr($date, 17, 2) . "''</sub>";
-        } elseif (substr($date, 4, 1) == '-') {
+        elseif (substr($date, 4, 1) == '-')
             $ret = substr($date, 8, 2) . '/' . substr($date, 5, 2) . '/' . substr($date, 0, 4);
-        } else {
+        else
             $ret = substr($date, 6, 2) . '/' . substr($date, 4, 2) . '/' . substr($date, 0, 4) . ' ' . substr($date, 8, 2) . 'h' . substr($date, 10, 2) . "'<sub>" . substr($date, 12, 2) . "''</sub>";
-        }
         return $ret;
     }
 
@@ -3270,8 +3244,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Affiche une date standard en une date facile à lire.
      *
      * @param string $date
+     * @return void
      */
-    public function displayDate($date)
+    public function displayDate(string $date): void
     {
         echo $this->convertDate($date);
     }
@@ -3297,34 +3272,29 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param boolean $useBuffer
      * @return string
      */
-    private function _getImageUpdate($object, $useBuffer = true)
+    private function _getImageUpdate($object, bool $useBuffer = true): string
     {
-        if (!$this->_configuration->getOptionAsBoolean('permitSessionBuffer')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitSessionBuffer'))
             $useBuffer = false;
-        }
 
         // Récupère une instance de l'objet.
-        if (!is_a($object, 'Node')) {
+        if (!is_a($object, 'Node'))
             $object = $this->_nebuleInstance->newObject($object);
-        }
 
-        if ($object->getID() == '0') {
+        if ($object->getID() == '0')
             return '';
-        }
 
         // Si présent dans le cache, utilise la valeur stockée.
         if ($useBuffer
             && isset($this->_cacheIconUpdate[$object->getID()])
-        ) {
+        )
             return $this->_cacheIconUpdate[$object->getID()];
-        }
 
         $update = $object->getUpdateNID(true, false);
 
         // Mémorise le résultat.
-        if ($useBuffer) {
+        if ($useBuffer)
             $this->_cacheIconUpdate[$object->getID()] = $update;
-        }
 
         return $update;
     }
@@ -3338,64 +3308,55 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     /**
      * Recherche par référence une image.
-     *
      * Fait une mise en cache du résultat.
      *
      * @param string|Node $reference
-     * @param boolean $useBuffer
+     * @param boolean     $useBuffer
      * @return string
      */
-    private function _getImageByReference($reference, $useBuffer = true)
+    private function _getImageByReference($reference, bool $useBuffer = true): string
     {
-        if (!$this->_configuration->getOptionAsBoolean('permitSessionBuffer')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitSessionBuffer'))
             $useBuffer = false;
-        }
 
         // Récupère une instance de l'objet.
-        if (!is_a($reference, 'Node')) {
+        if (!is_a($reference, 'Node'))
             $reference = $this->_nebuleInstance->newObject($reference);
-        }
 
-        if ($reference->getID() == '0') {
+        if ($reference->getID() == '0')
             return '';
-        }
 
         // Si présent dans le cache, utilise la valeur stockée.
         if ($useBuffer
             && isset($this->_cacheIconByReference[$reference->getID()])
-        ) {
+        )
             return $this->_cacheIconByReference[$reference->getID()];
-        }
 
         // Sinon, lit l'id de l'objet référencé.
         $update = $reference->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'myself');
-        if ($update == $reference->getID()) {
+        if ($update == $reference->getID())
             $update = $reference->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'strict');
-        }
 
         // Mémorise le résultat.
-        if ($useBuffer) {
+        if ($useBuffer)
             $this->_cacheIconByReference[$reference->getID()] = $update;
-        }
 
         return $update;
     }
 
     /**
      * Prépare l'image de l'icône sans lien hypertexte ni encapsulation html img.
-     *
      * Cette fonction est dédiée aux icônes de l'interface dont les objets sont par défaut disponibles.
      * Mais les mises à jours de ces objets ne le sont pas forcément.
      *
      * @param string $icon
      * @return string
      */
-    public function prepareIcon($icon)
+    public function prepareIcon(string $icon): string
     {
         $updateIcon = $this->_getImageUpdate($icon);
-        if ($updateIcon == $icon) {
+        if ($updateIcon == $icon)
             return nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $icon;
-        }
         return '?' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '=' . $updateIcon;
     }
 
@@ -3403,10 +3364,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Affiche l'image d'une icône sans lien hypertexte et avec encapsulation html img.
      *
      * @param string $icon
+     * @param string $title
      * @param string $class
-     * @return null
+     * @return void
      */
-    public function displayIcon($icon, $title = '', $class = '')
+    public function displayIcon(string $icon, string $title = '', string $class = ''): void
     {
         echo $this->convertIcon($icon, $title, $class);
     }
@@ -3415,18 +3377,17 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare l'image d'une icône sans lien hypertexte et avec encapsulation html img.
      *
      * @param string $icon
+     * @param string $title
      * @param string $class
      * @return string
      */
-    public function convertIcon($icon, $title = '', $class = '')
+    public function convertIcon(string $icon, string $title = '', string $class = ''): string
     {
         $image = $this->prepareIcon($icon);
-        if ($title != '') {
+        if ($title != '')
             $title = 'title="' . $title . '" ';
-        }
-        if ($class != '') {
+        if ($class != '')
             $class = 'class="' . $class . '" ';
-        }
         return '<img ' . $title . 'alt="[]" src="' . $image . '" ' . $class . '/>';
     }
 
@@ -3438,14 +3399,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string $class
      * @return string
      */
-    private function _prepareObjectIcon($object, $icon, $class = '')
+    private function _prepareObjectIcon($object, string $icon, string $class = ''): string
     {
         $color = $object->getPrimaryColor();
         $title = $object->getFullName('all');
         $image = $this->prepareIcon($icon);
-        if ($class != '') {
+        if ($class != '')
             $class = 'class="' . $class . '" ';
-        }
         return '<img title="' . $title . '" style="background:#' . $color . ';" alt="[]" src="' . $image . '" ' . $class . '/>';
     }
 
@@ -3457,15 +3417,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string $title
      * @return string
      */
-    private function _prepareObjectColor($object, $class = '', $title = '')
+    private function _prepareObjectColor($object, string $class = '', string $title = ''): string
     {
         $color = $object->getPrimaryColor();
-        if ($title == '') {
+        if ($title == '')
             $title = $object->getFullName('all');
-        }
-        if ($class != '') {
+        if ($class != '')
             $class = 'class="' . $class . '" ';
-        }
         return '<img title="' . $title . '" style="background:#' . $color . ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" ' . $class . '/>';
     }
 
@@ -3476,28 +3434,25 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string $class
      * @return string
      */
-    private function _prepareObjectFace($object, $class = '')
+    private function _prepareObjectFace($object, string $class = ''): string
     {
         $color = $object->getPrimaryColor();
         $title = $object->getFullName('all');
         if (is_a($object, 'Entity')) {
             $faceID = $object->getFaceID(64);
-            if ($faceID != '0') {
+            if ($faceID != '0')
                 $image = '?o=' . $faceID;
-            } else {
+            else
                 $image = 'o/' . $this->_getImageUpdate(self::DEFAULT_ICON_USER);
-            }
             unset($faceID);
-        } elseif (is_a($object, 'Conversation')) {
+        } elseif (is_a($object, 'Conversation'))
             $image = 'o/' . $this->_getImageUpdate(self::DEFAULT_ICON_CVTOBJ);
-        } elseif (is_a($object, 'Group')) {
+        elseif (is_a($object, 'Group'))
             $image = 'o/' . $this->_getImageUpdate(self::DEFAULT_ICON_GRPOBJ);
-        } else {
+        else
             $image = 'o/' . $this->_getImageUpdate(self::DEFAULT_ICON_LO);
-        }
-        if ($class != '') {
+        if ($class != '')
             $class = 'class="' . $class . '" ';
-        }
         return '<img title="' . $title . '" style="background:#' . $color . ';" alt="[]" src="' . $image . '" ' . $class . '/>';
     }
 
@@ -3505,9 +3460,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Le CSS de la fonction getDisplayObject().
      *
-     * @return null
+     * @return void
      */
-    private function _getDisplayObjectCSS()
+    private function _getDisplayObjectCSS(): void
     {
         ?>
 
@@ -4559,7 +4514,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param array $param
      * @return string
      */
-    public function getDisplayObject($object, array $param)
+    public function getDisplayObject($object, array $param): string
     {
         $result = '';
 
@@ -4569,147 +4524,124 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Prépare les paramètres d'activation de contenus.
         if (!isset($param['enableDisplayColor'])
             || $param['enableDisplayColor'] !== false
-        ) {
+        )
             $param['enableDisplayColor'] = true; // Par défaut à true.
-        }
 
         if (!isset($param['enableDisplayIcon'])
             || $param['enableDisplayIcon'] !== false
-        ) {
+        )
             $param['enableDisplayIcon'] = true; // Par défaut à true.
-        }
 
         if (!isset($param['enableDisplayIconApp'])
             || $param['enableDisplayIconApp'] !== true
-        ) {
+        )
             $param['enableDisplayIconApp'] = false; // Par défaut à false.
-        }
 
         if (!isset($param['enableDisplayRefs'])
             || $param['enableDisplayRefs'] !== true
-        ) {
+        )
             $param['enableDisplayRefs'] = false; // Par défaut à false.
-        }
 
         if (!isset($param['enableDisplayName'])
             || $param['enableDisplayName'] !== false
-        ) {
+        )
             $param['enableDisplayName'] = true; // Par défaut à true.
-        }
 
         if (!isset($param['enableDisplayID'])
             || $param['enableDisplayID'] !== true
-        ) {
+        )
             $param['enableDisplayID'] = false; // Par défaut à false.
-        }
 
         if (!isset($param['enableDisplayFlags'])
             || $param['enableDisplayFlags'] !== true
-        ) {
+        )
             $param['enableDisplayFlags'] = false; // Par défaut à false.
-        }
 
         if (!isset($param['enableDisplayFlagEmotions'])
             || $param['enableDisplayFlagEmotions'] !== true
-        ) {
+        )
             $param['enableDisplayFlagEmotions'] = false; // Par défaut à false.
-        }
 
         if (!isset($param['enableDisplayFlagProtection'])
             || $param['enableDisplayFlagProtection'] !== true
             || !$this->_configuration->getOptionAsBoolean('permitProtectedObject')
-        ) {
+        )
             $param['enableDisplayFlagProtection'] = false; // Par défaut à false.
-        }
 
         if (!isset($param['enableDisplayFlagObfuscate'])
             || $param['enableDisplayFlagObfuscate'] !== true
             || !$this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
-        ) {
+        )
             $param['enableDisplayFlagObfuscate'] = false; // Par défaut à false.
-        }
 
         if (!isset($param['enableDisplayFlagUnlocked'])
             || $param['enableDisplayFlagUnlocked'] !== true
-        ) {
+        )
             $param['enableDisplayFlagUnlocked'] = false; // Par défaut à false.
-        }
 
         if (!isset($param['enableDisplayFlagActivated'])
             || $param['enableDisplayFlagActivated'] !== true
-        ) {
+        )
             $param['enableDisplayFlagActivated'] = false; // Par défaut à false.
-        }
 
         if (!isset($param['enableDisplayFlagState'])
             || $param['enableDisplayFlagState'] !== true
-        ) {
+        )
             $param['enableDisplayFlagState'] = false; // Par défaut à false.
-        }
 
         if (!isset($param['enableDisplayStatus'])
             || $param['enableDisplayStatus'] !== true
-        ) {
+        )
             $param['enableDisplayStatus'] = false; // Par défaut à false.
-        }
 
         if (!isset($param['enableDisplayContent'])
             || $param['enableDisplayContent'] !== true
-        ) {
+        )
             $param['enableDisplayContent'] = false; // Par défaut à false.
-        }
 
         if (!isset($param['enableDisplayObjectActions'])
             || $param['enableDisplayObjectActions'] !== false
-        ) {
+        )
             $param['enableDisplayObjectActions'] = true; // Par défaut à true.
-        }
 
         if (!isset($param['enableDisplayLink2Object'])
             || $param['enableDisplayLink2Object'] !== false
-        ) {
+        )
             $param['enableDisplayLink2Object'] = true; // Par défaut à true.
-        }
 
         if (!isset($param['enableDisplayLink2Refs'])
             || $param['enableDisplayLink2Refs'] !== false
-        ) {
+        )
             $param['enableDisplayLink2Refs'] = true; // Par défaut à true.
-        }
 
         if (!isset($param['enableDisplayJS'])
             || $param['enableDisplayJS'] !== false
-        ) {
+        )
             $param['enableDisplayJS'] = true; // Par défaut à true.
-        }
-        if (!$this->_configuration->getOptionAsBoolean('permitJavaScript')) {
+        if (!$this->_configuration->getOptionAsBoolean('permitJavaScript'))
             $param['enableDisplayJS'] = false; // A false si l'option globale est à false.
-        }
 
         if (!isset($param['enableDisplaySelfHook'])
             || $param['enableDisplaySelfHook'] !== false
-        ) {
+        )
             $param['enableDisplaySelfHook'] = true; // Par défaut à true.
-        }
 
         if (!isset($param['enableDisplayTypeHook'])) {
-            if ($param['enableDisplayJS']) {
+            if ($param['enableDisplayJS'])
                 $param['enableDisplayTypeHook'] = true; // Par défaut à true si enableDisplayJS.
-            } else {
+            else
                 $param['enableDisplayTypeHook'] = false; // Par défaut à false si pas enableDisplayJS.
-            }
         }
-        if ($param['enableDisplayTypeHook'] !== false) {
+        if ($param['enableDisplayTypeHook'] !== false)
             $param['enableDisplayTypeHook'] = true;
-        }
 
         // Prépare les paramètres de définition de contenus.
         if (!isset($param['social'])
             || !is_string($param['social'])
             || $param['social'] == ''
-        ) {
+        )
             $param['social'] = 'all'; // Par défaut vide.
-        } else {
+        else {
             $socialList = $this->_nebuleInstance->getSocialInstance()->getList();
             $ok = false;
             foreach ($socialList as $s) {
@@ -4719,125 +4651,105 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 }
             }
             unset($socialList);
-            if (!$ok) {
+            if (!$ok)
                 $param['social'] = 'all'; // Par défaut all.
-            }
         }
 
         if (!isset($param['objectType'])
             || $param['objectType'] == null
-        ) {
+        )
             $param['objectType'] = $object->getType($param['social']); // Par défaut extrait le type de l'objet.
-        }
 
         /**
          * Le nom complet de l'objet à afficher.
          * Si c'est une application, c'est le nom simple qui est affiché.
-         * @var string $contentDisplayName
          */
         $contentDisplayName = '';
-        if (($param['enableDisplayName'])
-            ||  ($param['enableDisplayIconApp'])
+        if ($param['enableDisplayName']
+            || $param['enableDisplayIconApp']
         ) {
             if (!isset($param['objectName'])
                 || $param['objectName'] == null
             ) {
-                if ($param['enableDisplayIconApp']) {
+                if ($param['enableDisplayIconApp'])
                     $param['objectName'] = $object->getName($param['social']); // Par défaut extrait le nom simple de l'objet (application).
-                } else {
+                else
                     $param['objectName'] = $object->getFullName($param['social']); // Par défaut extrait le nom complet de l'objet.
-                }
             }
             $contentDisplayName = trim(filter_var($param['objectName'], FILTER_SANITIZE_STRING));
-        } else {
+        } else
             $param['objectName'] = '';
-        }
 
         /**
          * Le nom court d'une application.
-         * @var string $contentDisplayAppShortName
          */
         $contentDisplayAppShortName = '';
         if ($param['enableDisplayIconApp']) {
             if (!isset($param['objectAppShortName'])
                 || $param['objectAppShortName'] == null
-            ) {
+            )
                 $param['objectAppShortName'] = $object->getSurname($param['social']); // Par défaut extrait le surnom de l'objet (application).
-            }
             $contentDisplayAppShortName = trim(filter_var($param['objectAppShortName'], FILTER_SANITIZE_STRING));
-        } else {
+        } else
             $param['objectAppShortName'] = '';
-        }
 
 
         if (!isset($param['flagProtection'])
             || $param['flagProtection'] !== true
-        ) {
+        )
             $param['flagProtection'] = false; // Par défaut à false.
-        }
         if ($param['enableDisplayFlagProtection']) {
             if (!isset($param['flagProtectionIcon'])
                 || $param['flagProtectionIcon'] == ''
                 || !Node::checkNID($param['flagProtectionIcon'])
                 || !$this->_ioInstance->checkLinkPresent($param['flagProtectionIcon'])
-            ) {
+            )
                 $param['flagProtectionIcon'] = self::DEFAULT_ICON_LK;
-            }
-            if (isset($param['flagProtectionText'])) {
+            if (isset($param['flagProtectionText']))
                 $param['flagProtectionText'] = trim(filter_var($param['flagProtectionText'], FILTER_SANITIZE_STRING));
-            }
             if (!isset($param['flagProtectionText'])
                 || trim($param['flagProtectionText']) == ''
             ) {
-                if ($param['flagProtection']) {
+                if ($param['flagProtection'])
                     $param['flagProtectionText'] = ':::display:object:flag:protected';
-                } else {
+                else
                     $param['flagProtectionText'] = ':::display:object:flag:unprotected';
-                }
             }
-            if (isset($param['flagProtectionLink'])) {
+            if (isset($param['flagProtectionLink']))
                 $param['flagProtectionLink'] = trim(filter_var($param['flagProtectionLink'], FILTER_SANITIZE_URL));
-            }
             if (!isset($param['flagProtectionLink'])
                 || trim($param['flagProtectionLink']) == ''
-            ) {
+            )
                 $param['flagProtectionLink'] = null;
-            }
         }
 
         if (!isset($param['flagObfuscate'])
             || $param['flagObfuscate'] !== true
-        ) {
+        )
             $param['flagObfuscate'] = false; // Par défaut à false.
-        }
         if ($param['enableDisplayFlagObfuscate']) {
             if (!isset($param['flagObfuscateIcon'])
                 || $param['flagObfuscateIcon'] == ''
                 || !Node::checkNID($param['flagObfuscateIcon'])
                 || !$this->_ioInstance->checkLinkPresent($param['flagObfuscateIcon'])
-            ) {
+            )
                 $param['flagObfuscateIcon'] = self::DEFAULT_ICON_LC;
-            }
-            if (isset($param['flagObfuscateText'])) {
+            if (isset($param['flagObfuscateText']))
                 $param['flagObfuscateText'] = trim(filter_var($param['flagObfuscateText'], FILTER_SANITIZE_STRING));
-            }
             if (!isset($param['flagObfuscateText'])
                 || trim($param['flagObfuscateText']) == ''
             ) {
-                if ($param['flagObfuscate']) {
+                if ($param['flagObfuscate'])
                     $param['flagObfuscateText'] = ':::display:object:flag:obfuscated';
-                } else {
+                else
                     $param['flagObfuscateText'] = ':::display:object:flag:unobfuscated';
-                }
             }
-            if (isset($param['flagObfuscateLink'])) {
+            if (isset($param['flagObfuscateLink']))
                 $param['flagObfuscateLink'] = trim(filter_var($param['flagObfuscateLink'], FILTER_SANITIZE_URL));
-            }
             if (!isset($param['flagObfuscateLink'])
                 || trim($param['flagObfuscateLink']) == ''
-            ) {
+            )
                 $param['flagObfuscateLink'] = null;
-            }
         }
 
         if (!isset($param['flagUnlocked'])) {
@@ -4848,9 +4760,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 // Vérifie si c'est l'entité courante.
                 if ($object->getID() == $this->_nebuleInstance->getCurrentEntity()
                     && $this->_unlocked
-                ) {
+                )
                     $param['flagUnlocked'] = true;
-                }
             }
         }
         // Lisse la valeur binaire.
@@ -4862,49 +4773,41 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 || $param['flagUnlockedIcon'] == ''
                 || !Node::checkNID($param['flagUnlockedIcon'])
                 || !$this->_ioInstance->checkLinkPresent($param['flagUnlockedIcon'])
-            ) {
+            )
                 $param['flagUnlockedIcon'] = self::DEFAULT_ICON_KEY;
-            }
-            if (isset($param['flagUnlockedText'])) {
+            if (isset($param['flagUnlockedText']))
                 $param['flagUnlockedText'] = trim(filter_var($param['flagUnlockedText'], FILTER_SANITIZE_STRING));
-            }
             if (!isset($param['flagUnlockedText'])
                 || trim($param['flagUnlockedText']) == ''
             ) {
-                if ($param['flagUnlocked']) {
+                if ($param['flagUnlocked'])
                     $param['flagUnlockedText'] = ':::display:object:flag:locked';
-                } else {
+                else
                     $param['flagUnlockedText'] = ':::display:object:flag:unlocked';
-                }
             }
-            if (isset($param['flagUnlockedLink'])) {
+            if (isset($param['flagUnlockedLink']))
                 $param['flagUnlockedLink'] = trim(filter_var($param['flagUnlockedLink'], FILTER_SANITIZE_URL));
-            }
             if (!isset($param['flagUnlockedLink'])
                 || trim($param['flagUnlockedLink']) == ''
-            ) {
+            )
                 $param['flagUnlockedLink'] = null;
-            }
         }
 
         if (!isset($param['flagActivated'])
             || $param['flagActivated'] !== true
-        ) {
+        )
             $param['flagActivated'] = false; // Par défaut à false.
-        }
 
         if ($param['enableDisplayFlagActivated']) {
             if (!isset($param['flagActivatedDesc'])
                 || strlen(trim($param['flagActivatedDesc'])) == 0
             ) {
-                if ($param['flagActivated']) {
+                if ($param['flagActivated'])
                     $param['flagActivatedDesc'] = ':::display:content:Activated';
-                } else {
+                else
                     $param['flagActivatedDesc'] = ':::display:content:NotActivated';
-                }
-            } else {
+            } else
                 $param['flagActivatedDesc'] = trim($param['flagActivatedDesc']);
-            }
         }
 
         $flagStateContentIcon = '';
@@ -4913,15 +4816,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if (!isset($param['flagState'])
                 || strlen(trim($param['flagState'])) == 0
             ) {
-                if ($object->getMarkDanger()) {
+                if ($object->getMarkDanger())
                     $param['flagState'] = 'e';
-                } elseif ($object->getMarkWarning()) {
+                elseif ($object->getMarkWarning())
                     $param['flagState'] = 'w';
-                } elseif ($object->checkPresent()) {
+                elseif ($object->checkPresent())
                     $param['flagState'] = 'o';
-                } else {
+                else
                     $param['flagState'] = 'n';
-                }
             }
             if ($param['flagState'] == 'e') {
                 $flagStateContentIcon = self::DEFAULT_ICON_IERR;
@@ -4939,9 +4841,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
             if (isset($param['flagStateDesc'])
                 && strlen(trim($param['flagStateDesc'])) != 0
-            ) {
+            )
                 $flagStateContentDesc = trim(filter_var($param['flagStateDesc'], FILTER_SANITIZE_STRING));
-            }
         } else {
             $param['flagState'] = 'n';
             $param['flagStateDesc'] = '';
@@ -4951,17 +4852,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         if (!isset($param['flagMessage'])
             || trim($param['flagMessage']) == ''
-        ) {
+        )
             $param['flagMessage'] = null; // Par défaut vide.
-        } else {
+        else
             $param['flagMessage'] = trim(filter_var($param['flagMessage'], FILTER_SANITIZE_STRING));
-        }
 
         if (!isset($param['flagTargetObject'])
             || trim($param['flagTargetObject']) == ''
-        ) {
+        )
             $param['flagTargetObject'] = null; // Par défaut vide.
-        } else {
+        else {
             $param['flagTargetObject'] = trim(filter_var($param['flagTargetObject'], FILTER_SANITIZE_STRING));
             if (!Node::checkNID($param['flagTargetObject'])) {
                 $param['flagTargetObject'] = null;
@@ -5013,72 +4913,64 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         }
 
         if ($param['enableDisplaySelfHook']) {
-            if (isset($param['selfHookName'])) {
+            if (isset($param['selfHookName']))
                 $param['selfHookName'] = trim(filter_var($param['selfHookName'], FILTER_SANITIZE_STRING));
-            } else {
+            else
                 $param['selfHookName'] = '';
-            }
             if ($param['selfHookName'] == '') {
-                if (is_a($object, 'Entity')) {
+                if (is_a($object, 'Entity'))
                     $param['selfHookName'] = 'selfMenuEntity';
-                } elseif (is_a($object, 'Conversation')) {
+                elseif (is_a($object, 'Conversation'))
                     $param['selfHookName'] = 'selfMenuConversation';
-                } elseif (is_a($object, 'Group')) {
+                elseif (is_a($object, 'Group'))
                     $param['selfHookName'] = 'selfMenuGroup';
-                } elseif (is_a($object, 'Transaction')) {
+                elseif (is_a($object, 'Transaction'))
                     $param['selfHookName'] = 'selfMenuTransaction';
-                } elseif (is_a($object, 'Wallet')) {
+                elseif (is_a($object, 'Wallet'))
                     $param['selfHookName'] = 'selfMenuWallet';
-                } elseif (is_a($object, 'Token')) {
+                elseif (is_a($object, 'Token'))
                     $param['selfHookName'] = 'selfMenuToken';
-                } elseif (is_a($object, 'TokenPool')) {
+                elseif (is_a($object, 'TokenPool'))
                     $param['selfHookName'] = 'selfMenuTokenPool';
-                } elseif (is_a($object, 'Currency')) {
+                elseif (is_a($object, 'Currency'))
                     $param['selfHookName'] = 'selfMenuCurrency';
-                } else {
+                else
                     $param['selfHookName'] = 'selfMenuObject';
-                }
             }
-        } else {
+        } else
             $param['selfHookName'] = '';
-        }
 
         if ($param['enableDisplayTypeHook']) {
-            if (isset($param['typeHookName'])) {
-                $param['typeHookName'] = trim(filter_var($param['typeHookName'], FILTER_SANITIZE_STRING));
-            } else {
+            if (isset($param['typeHookName']))
+                $param['typeHookName'] = trim(filter_var($param['typeHookName'], FILTER_SANITIZE_STRING));else
                 $param['typeHookName'] = '';
-            }
             if ($param['typeHookName'] == '') {
-                if (is_a($object, 'Entity')) {
+                if (is_a($object, 'Entity'))
                     $param['typeHookName'] = 'typeMenuEntity';
-                } elseif (is_a($object, 'Conversation')) {
+                elseif (is_a($object, 'Conversation'))
                     $param['typeHookName'] = 'typeMenuConversation';
-                } elseif (is_a($object, 'Group')) {
+                elseif (is_a($object, 'Group'))
                     $param['typeHookName'] = 'typeMenuGroup';
-                } elseif (is_a($object, 'Transaction')) {
+                elseif (is_a($object, 'Transaction'))
                     $param['typeHookName'] = 'typeMenuTransaction';
-                } elseif (is_a($object, 'Wallet')) {
+                elseif (is_a($object, 'Wallet'))
                     $param['typeHookName'] = 'typeMenuWallet';
-                } elseif (is_a($object, 'Token')) {
+                elseif (is_a($object, 'Token'))
                     $param['typeHookName'] = 'typeMenuToken';
-                } elseif (is_a($object, 'TokenPool')) {
+                elseif (is_a($object, 'TokenPool'))
                     $param['typeHookName'] = 'typeMenuTokenPool';
-                } elseif (is_a($object, 'Currency')) {
+                elseif (is_a($object, 'Currency'))
                     $param['typeHookName'] = 'typeMenuCurrency';
-                } else {
+                else
                     $param['typeHookName'] = 'typeMenuObject';
-                }
             }
-        } else {
+        } else
             $param['typeHookName'] = '';
-        }
 
         if (!isset($param['selfHookList'])
             || !is_array($param['selfHookList'])
-        ) {
+        )
             $param['selfHookList'] = array();
-        }
 
         // Résoud les conflits.
         if ($param['displaySize'] == 'tiny') {
@@ -5110,9 +5002,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if (!$param['enableDisplayColor']
             && !$param['enableDisplayIcon']
             && !$param['enableDisplayIconApp']
-        ) {
+        )
             $param['enableDisplayObjectActions'] = false;
-        }
 
         if (!$param['enableDisplayName']) {
             $param['enableDisplayRefs'] = false;
@@ -5120,17 +5011,15 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $param['enableDisplayStatus'] = false;
         }
 
-        if (!$this->_configuration->getOptionUntyped('displayEmotions')) {
+        if (!$this->_configuration->getOptionUntyped('displayEmotions'))
             $param['enableDisplayFlagEmotions'] = false;
-        }
 
         if ($param['displaySize'] == 'tiny'
             || $param['displaySize'] == 'small'
             || ($param['displaySize'] == 'medium' && $param['enableDisplayFlags'])
             || !$param['enableDisplayName']
-        ) {
+        )
             $param['enableDisplayID'] = false;
-        }
 
         //if ( $param['displaySize'] == 'large' ) $param['enableDisplayID'] == true;
 
@@ -5139,9 +5028,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $ObjectActionsID = '0';
         if ($param['enableDisplayObjectActions']
             && $param['enableDisplayJS']
-        ) {
+        )
             $ObjectActionsID = bin2hex($this->_nebuleInstance->getCryptoInstance()->getRandom(8, Crypto::RANDOM_PSEUDO));
-        }
         $contentDisplayColor = '';
         if ($param['enableDisplayColor']) {
             $contentDisplayColor = '<img title="' . $contentDisplayName;
@@ -5149,9 +5037,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $contentDisplayColor .= ';" alt="[C]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" ';
             if ($param['enableDisplayObjectActions']
                 && $param['enableDisplayJS']
-            ) {
+            )
                 $contentDisplayColor .= "onclick=\"display_menu('objectTitleMenu-" . $ObjectActionsID . "');\" ";
-            }
             $contentDisplayColor .= '/>';
         }
 
@@ -5159,17 +5046,15 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($param['enableDisplayIcon']) {
             if (!isset($param['objectIcon'])
                 || $param['objectIcon'] == null
-            ) {
+            )
                 $param['objectIcon'] = '';
-            }
             $contentDisplayIcon = '<img title="' . $contentDisplayName;
             $contentDisplayIcon .= '" style="background:#' . $objectColor;
             $contentDisplayIcon .= ';" alt="[I]" src="' . $this->_getDisplayObjectIcon($object, $param['objectIcon']) . '" ';
             if ($param['enableDisplayObjectActions']
                 && $param['enableDisplayJS']
-            ) {
+            )
                 $contentDisplayIcon .= "onclick=\"display_menu('objectTitleMenu-" . $ObjectActionsID . "');\" ";
-            }
             $contentDisplayIcon .= '/>';
         }
 
@@ -5189,20 +5074,18 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             ) {
                 if (isset($param['link2Object'])
                     && $param['link2Object'] != null
-                ) {
+                )
                     $titleLinkOpenName = '<a href="' . $param['link2Object'] . '">';
-                } else {
+                else
                     $titleLinkOpenName = '<a href="' . $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object) . '">';
-                }
                 $titleLinkCloseName = '</a>';
             } else {
                 if (isset($param['link2Object'])
                     && $param['link2Object'] != null
-                ) {
+                )
                     $titleLinkOpenImg = '<a href="' . $param['link2Object'] . '">' . "\n";
-                } else {
+                else
                     $titleLinkOpenImg = '<a href="' . $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object) . '">';
-                }
                 $titleLinkOpenName = $titleLinkOpenImg;
                 $titleLinkCloseImg = '</a>';
                 $titleLinkCloseName = $titleLinkCloseImg;
@@ -5214,12 +5097,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             && isset($param['status'])
         ) {
             $status = trim(filter_var($param['status'], FILTER_SANITIZE_STRING));
-            if ($status == '') {
+            if ($status == '')
                 $status = $this->getTraduction($param['objectType']);
-            }
-            if ($status == '') {
+            if ($status == '')
                 $param['enableDisplayStatus'] = false;
-            }
         }
 
         // Prépare le menu si besoin.
@@ -5244,15 +5125,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if ($param['enableDisplayFlags']) {
                 if ($param['enableDisplayFlagState']) {
                     $menuContent .= '   <div class="objectMenuContentMsg objectMenuContentMsg';
-                    if ($param['flagState'] == 'e') {
+                    if ($param['flagState'] == 'e')
                         $menuContent .= 'Error';
-                    } elseif ($param['flagState'] == 'w') {
+                    elseif ($param['flagState'] == 'w')
                         $menuContent .= 'Warn';
-                    } elseif ($param['flagState'] == 'n') {
+                    elseif ($param['flagState'] == 'n')
                         $menuContent .= 'Error';
-                    } else {
+                    else
                         $menuContent .= 'OK';
-                    }
                     $menuContent .= '">';
                     $menuContent .= $this->_getDisplayObjectFlag(
                         false,
@@ -5263,15 +5143,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     $menuContent .= '</div>' . "\n";
                 }
                 if ($param['enableDisplayFlagProtection']) {
-                    if ($param['flagProtectionLink'] != '') {
+                    if ($param['flagProtectionLink'] != '')
                         $menuContent .= '<a href="' . $param['flagProtectionLink'] . '">';
-                    }
                     $menuContent .= '   <div class="objectMenuContentMsg objectMenuContentMsg';
-                    if ($param['flagProtection']) {
+                    if ($param['flagProtection'])
                         $menuContent .= 'OK';
-                    } else {
+                    else
                         $menuContent .= 'Info';
-                    }
                     $menuContent .= '">';
                     $menuContent .= $this->_getDisplayObjectFlag(
                         $param['flagProtection'],
@@ -5280,20 +5158,17 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $param['flagProtectionText']);
                     $menuContent .= $this->_traductionInstance->getTraduction($param['flagProtectionText']);
                     $menuContent .= '</div>' . "\n";
-                    if ($param['flagProtectionLink'] != '') {
+                    if ($param['flagProtectionLink'] != '')
                         $menuContent .= '</a>';
-                    }
                 }
                 if ($param['enableDisplayFlagObfuscate']) {
-                    if ($param['flagObfuscateLink'] != '') {
+                    if ($param['flagObfuscateLink'] != '')
                         $menuContent .= '<a href="' . $param['flagObfuscateLink'] . '">';
-                    }
                     $menuContent .= '   <div class="objectMenuContentMsg objectMenuContentMsg';
-                    if ($param['flagObfuscate']) {
+                    if ($param['flagObfuscate'])
                         $menuContent .= 'OK';
-                    } else {
+                    else
                         $menuContent .= 'Info';
-                    }
                     $menuContent .= '">';
                     $menuContent .= $this->_getDisplayObjectFlag(
                         $param['flagObfuscate'],
@@ -5302,20 +5177,17 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $param['flagObfuscateText']);
                     $menuContent .= $this->_traductionInstance->getTraduction($param['flagObfuscateText']);
                     $menuContent .= '</div>' . "\n";
-                    if ($param['flagObfuscateLink'] != '') {
+                    if ($param['flagObfuscateLink'] != '')
                         $menuContent .= '</a>';
-                    }
                 }
                 if ($param['enableDisplayFlagUnlocked']) {
-                    if ($param['flagUnlockedLink'] != '') {
+                    if ($param['flagUnlockedLink'] != '')
                         $menuContent .= '<a href="' . $param['flagUnlockedLink'] . '">';
-                    }
                     $menuContent .= '   <div class="objectMenuContentMsg objectMenuContentMsg';
-                    if ($param['flagUnlocked']) {
+                    if ($param['flagUnlocked'])
                         $menuContent .= 'OK';
-                    } else {
+                    else
                         $menuContent .= 'Info';
-                    }
                     $menuContent .= '">';
                     $menuContent .= $this->_getDisplayObjectFlag(
                         $param['flagUnlocked'],
@@ -5324,28 +5196,25 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $param['flagUnlockedText']);
                     $menuContent .= $this->_traductionInstance->getTraduction($param['flagUnlockedText']);
                     $menuContent .= '</div>' . "\n";
-                    if ($param['flagUnlockedLink'] != '') {
+                    if ($param['flagUnlockedLink'] != '')
                         $menuContent .= '</a>';
-                    }
                 }
                 if ($param['enableDisplayFlagActivated']) {
                     $menuContent .= '   <div class="objectMenuContentMsg objectMenuContentMsg';
-                    if ($param['flagActivated']) {
+                    if ($param['flagActivated'])
                         $menuContent .= 'OK';
-                    } else {
+                    else
                         $menuContent .= 'Info';
-                    }
                     $menuContent .= '">';
                     $menuContent .= $this->_getDisplayObjectFlag(
                         $param['flagActivated'],
                         self::DEFAULT_ICON_LL,
                         ':::display:object:flag:unactivated',
                         ':::display:object:flag:activated');
-                    if ($param['flagActivated']) {
+                    if ($param['flagActivated'])
                         $menuContent .= $this->_traductionInstance->getTraduction(':::display:object:flag:activated');
-                    } else {
+                    else
                         $menuContent .= $this->_traductionInstance->getTraduction(':::display:object:flag:unactivated');
-                    }
                     $menuContent .= '</div>' . "\n";
                 }
                 if ($param['flagMessage'] != null) {
@@ -5456,9 +5325,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $divObjectOpen = '';
         $divObjectClose = '';
         $objectContent = '';
-        if ($param['displaySize'] == 'tiny') {
+        if ($param['displaySize'] == 'tiny')
             $result = $titleLinkOpenName . '<span style="font-size:1em" class="objectTitleIconsInline">' . $contentDisplayColor . $contentDisplayIcon . '</span>' . $contentDisplayName . $titleLinkCloseName;
-        } else {
+        else {
             $divDisplayOpen = '<div class="layoutObject">' . "\n";
             $divDisplayClose = '</div>' . "\n";
             $divTitleOpen = ' <div class="objectTitle objectDisplay' . $sizeCSS . ' objectTitle' . $sizeCSS . ' objectDisplay' . $sizeCSS . $ratioCSS . '">' . "\n";
@@ -5468,20 +5337,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if ($param['enableDisplayColor']
                 || $param['enableDisplayIcon']
                 || $param['enableDisplayIconApp']
-            ) {
+            )
                 $titleIconsContent = $contentDisplayColor . $contentDisplayIcon;
-            }
             if ($param['enableDisplayName']) {
                 $padding = 0;
-                if ($param['enableDisplayColor']) {
+                if ($param['enableDisplayColor'])
                     $padding += 1;
-                }
-                if ($param['enableDisplayIcon']) {
+                if ($param['enableDisplayIcon'])
                     $padding += 1;
-                }
-                if ($param['enableDisplayIconApp']) {
+                if ($param['enableDisplayIconApp'])
                     $padding += 1;
-                }
                 $divTitleTextOpen = '  <div class="objectTitleText objectTitle' . $sizeCSS . 'Text objectTitleText' . $padding . '">' . "\n";
                 $divTitleTextClose = '  </div>' . "\n";
                 $divTitleRefsOpen = '   <div class="objectTitleRefs objectTitle' . $sizeCSS . 'Refs">';
@@ -5492,9 +5357,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $divTitleFlagsClose = '   </div>' . "\n";
                 $divTitleStatusOpen = '    <div class="objectTitleStatus">';
                 $divTitleStatusClose = '</div>' . "\n";
-                if ($param['enableDisplayRefs']) {
+                if ($param['enableDisplayRefs'])
                     $titleRefsContent = $this->_getDisplayObjectRefs($param['objectRefs']);
-                }
                 if ($param['enableDisplayID']) {
                     $divTitleIdOpen = '    <div class="objectTitleID">';
                     $divTitleIdClose = '</div>' . "\n";
@@ -5518,35 +5382,30 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                             $param['flagProtectionIcon'],
                             $param['flagProtectionText'],
                             $param['flagProtectionText']);
-                        if ($param['flagProtectionLink'] != '') {
+                        if ($param['flagProtectionLink'] != '')
                             $titleFlagsContent .= '</a>';
-                        }
                     }
                     if ($param['enableDisplayFlagObfuscate']) {
-                        if ($param['flagObfuscateLink'] != '') {
+                        if ($param['flagObfuscateLink'] != '')
                             $titleFlagsContent .= '<a href="' . $param['flagObfuscateLink'] . '">';
-                        }
                         $titleFlagsContent .= $this->_getDisplayObjectFlag(
                             $param['flagObfuscate'],
                             $param['flagObfuscateIcon'],
                             $param['flagObfuscateText'],
                             $param['flagObfuscateText']);
-                        if ($param['flagObfuscateLink'] != '') {
+                        if ($param['flagObfuscateLink'] != '')
                             $titleFlagsContent .= '</a>';
-                        }
                     }
                     if ($param['enableDisplayFlagUnlocked']) {
-                        if ($param['flagUnlockedLink'] != '') {
+                        if ($param['flagUnlockedLink'] != '')
                             $titleFlagsContent .= '<a href="' . $param['flagUnlockedLink'] . '">';
-                        }
                         $titleFlagsContent .= $this->_getDisplayObjectFlag(
                             $param['flagUnlocked'],
                             $param['flagUnlockedIcon'],
                             $param['flagUnlockedText'],
                             $param['flagUnlockedText']);
-                        if ($param['flagUnlockedLink'] != '') {
+                        if ($param['flagUnlockedLink'] != '')
                             $titleFlagsContent .= '</a>';
-                        }
                     }
                     if ($param['enableDisplayFlagActivated']) {
                         $titleFlagsContent .= $this->_getDisplayObjectFlag(
@@ -5555,13 +5414,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                             ':::display:object:flag:unactivated',
                             ':::display:object:flag:activated');
                     }
-                    if ($param['enableDisplayFlagEmotions']) {
+                    if ($param['enableDisplayFlagEmotions'])
                         $titleFlagsContent .= $this->_getDisplayObjectFlagEmotions($object, false);
-                    }
                 }
-                if ($param['enableDisplayStatus']) {
+                if ($param['enableDisplayStatus'])
                     $titleStatusContent = $status;
-                }
             }
             $titleContent = $titleLinkOpenImg . "\n" . $divTitleIconsOpen . $titleIconsContent . $divTitleIconsClose . $titleLinkCloseImg . "\n";
             $titleContent .= $divTitleTextOpen;
@@ -5592,9 +5449,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $titleContent .= $divTitleMenuClose;
             }
 
-            if ($param['enableDisplayContent']) {
+            if ($param['enableDisplayContent'])
                 $objectContent = $this->getDisplayObjectContent($object, $param['displaySize'], $param['displayRatio']);
-            }
 
             // Prépare le résultat à afficher.
             $result = $divDisplayOpen;
@@ -5615,44 +5471,41 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Pour la fonction getDisplayObject().
      * Prépare l'icône de l'objet.
-     *
      * Si une icône est imposée, elle est utilisée.
      * Sinon fait une recherche par référence en fonction du type de l'objet.
      * Une mise à jour éventuelle de l'icône est recherchée.
      * Si l'objet de l'icône est présent, génère un chemin direct pour améliorer les performances.
      *
-     * @param Node $object
+     * @param Node   $object
      * @param string $icon
      * @return string
      */
-    private function _getDisplayObjectIcon($object, $icon)
+    private function _getDisplayObjectIcon(Node $object, string $icon): string
     {
         if ($icon != ''
             && $this->_ioInstance->checkLinkPresent($icon)
         ) {
-            if (!is_a($icon, 'Node')) {
+            if (!is_a($icon, 'Node'))
                 $icon = $this->_nebuleInstance->newObject($icon);
-            }
         } else {
-            if (is_a($object, 'Entity')) {
+            if (is_a($object, 'Entity'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_ENTITY);
-            } elseif (is_a($object, 'Conversation')) {
+            elseif (is_a($object, 'Conversation'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_CONVERSATION);
-            } elseif (is_a($object, 'Group')) {
+            elseif (is_a($object, 'Group'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_GROUP);
-            } elseif (is_a($object, 'Wallet')) {
+            elseif (is_a($object, 'Wallet'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // @todo
-            } elseif (is_a($object, 'Transaction')) {
+            elseif (is_a($object, 'Transaction'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // @todo
-            } elseif (is_a($object, 'Token')) {
+            elseif (is_a($object, 'Token'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // @todo
-            } elseif (is_a($object, 'TokenPool')) {
+            elseif (is_a($object, 'TokenPool'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // @todo
-            } elseif (is_a($object, 'Currency')) {
+            elseif (is_a($object, 'Currency'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // @todo
-            } else {
+            else
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT);
-            }
             $icon = $this->_nebuleInstance->newObject($icon);
         }
 
@@ -5660,9 +5513,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $updateIcon = $this->_getImageUpdate($icon);
 
         // Retourne un chemin direct si l'objet est présent.
-        if ($this->_ioInstance->checkObjectPresent($updateIcon)) {
+        if ($this->_ioInstance->checkObjectPresent($updateIcon))
             return nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $updateIcon;
-        }
         return '?' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '=' . $updateIcon;
     }
 
@@ -5675,22 +5527,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param array:Object $list
      * @return string
      */
-    private function _getDisplayObjectRefs($list)
+    private function _getDisplayObjectRefs(array $list): string
     {
         $result = '';
 
-        if (is_string($list)
-            && strlen($list) != 0
-        ) {
-            $result = trim(filter_var($list, FILTER_SANITIZE_STRING));
-            return $result;
-        }
-
-        if (!is_array($list)
-            || sizeof($list) == 0
-        ) {
+        if (sizeof($list) == 0)
             return '';
-        }
 
         $size = sizeof($list);
         $count = 0;
@@ -5700,17 +5542,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object);
             $color = $this->_prepareObjectColor($object);
             $icon = '';
-            if ($size < 11) {
+            if ($size < 11)
                 $icon = $this->_prepareObjectFace($object);
-            }
             $name = '';
-            if ($size < 3) {
+            if ($size < 3)
                 $name = $this->_truncateName($object->getFullName('all'), 0);
-            }
             $result .= $this->convertHypertextLink($color . $icon . $name, $htlink);
-            if ($size < 11) {
+            if ($size < 11)
                 $result .= ' ';
-            }
 
             $count++;
             if ($count > 30) {
@@ -5727,25 +5566,23 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare les icônes des indicateurs (flags).
      *
      * @param boolean $on
-     * @param string $image
-     * @param string $descOff
-     * @param string $descOn
+     * @param string  $image
+     * @param string  $descOff
+     * @param string  $descOn
      * @return string
      */
-    private function _getDisplayObjectFlag($on, $image, $descOff, $descOn)
+    private function _getDisplayObjectFlag(bool $on, string $image, string $descOff, string $descOn): string
     {
         $result = '';
 
         $image = $this->prepareIcon($image);
-        if ($on) {
+        if ($on)
             $desc = $this->_traductionInstance->getTraduction($descOn);
-        } else {
+        else
             $desc = $this->_traductionInstance->getTraduction($descOff);
-        }
         $result .= '<img title="' . $desc . '" ';
-        if ($on) {
+        if ($on)
             $result .= 'class="objectFlagOn" ';
-        }
         $result .= 'alt="[C]" src="' . $image . '" />';
 
         return $result;
@@ -5755,16 +5592,15 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Pour les fonctions getDisplayObject() et getDisplayMessage().
      * Prépare les icônes des émotions avec ou sans les compteurs ($counts).
      *
-     * @param Node $object
+     * @param Node    $object
      * @param boolean $counts
      * @return string
      */
-    private function _getDisplayObjectFlagEmotions($object, $counts = false)
+    private function _getDisplayObjectFlagEmotions(Node $object, bool $counts = false): string
     {
         // Vérifie si les émotions doivent être affichées.
-        if (!$this->_configuration->getOptionUntyped('displayEmotions')) {
+        if (!$this->_configuration->getOptionUntyped('displayEmotions'))
             return '';
-        }
         $result = '';
 
         $listEmotions = array(
@@ -5835,18 +5671,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if ($this->_unlocked
                 && $this->_configuration->getOptionAsBoolean('permitWrite')
                 && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            ) {
+            )
                 $result .= $this->convertHypertextLink($icon, $htlink);
-            } else {
+            else
                 $result .= $icon;
-            }
 
             // Détermine le nombre d'entités qui ont marqué cette émotion.
             if ($counts) {
                 $count = $object->getMarkEmotionSize($emotion, 'all');
-                if ($count > 0) {
+                if ($count > 0)
                     $result .= $count . ' ';
-                }
             }
         }
 
@@ -5856,9 +5690,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Le CSS de la fonction getDisplayMessage().
      *
-     * @return null
+     * @return void
      */
-    private function _getDisplayMessageCSS()
+    private function _getDisplayMessageCSS(): void
     {
         ?>
 
@@ -6157,134 +5991,115 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param array $param
      * @return string
      */
-    public function getDisplayMessage(Link $link, array $param)
+    public function getDisplayMessage(Link $link, array $param): string
     {
         $result = '';
 
         // Prépare l'objet.
         $messageInstance = $this->_nebuleInstance->convertIdToTypedObjectInstance($link->getParsed()['bl/rl/nid2']);
-        $signerInstance = $this->_nebuleInstance->convertIdToTypedObjectInstance($link->getSigners());
+        $signerInstance = $this->_nebuleInstance->convertIdToTypedObjectInstance($link->getSigners()[0]); // FIXME [0] correction sauvage !
 
         // Prépare les paramètres d'activation de contenus.
         if (!isset($param['enableDisplayColor'])
             || $param['enableDisplayColor'] !== false
-        ) {
+        )
             $param['enableDisplayColor'] = true; // Par défaut à true.
-        }
 
         if (!isset($param['enableDisplayIcon'])
             || $param['enableDisplayIcon'] !== false
-        ) {
+        )
             $param['enableDisplayIcon'] = true; // Par défaut à true.
-        }
 
         if (!isset($param['enableDisplayRefs'])
             || $param['enableDisplayRefs'] !== false
-        ) {
+        )
             $param['enableDisplayRefs'] = true; // Par défaut à true.
-        }
 
         if (!isset($param['objectRefs'])
             || sizeof($param['objectRefs']) == 0
-        ) {
+        )
             $param['objectRefs'] = array($signerInstance);
-        }
 
         if (!isset($param['enableDisplayFlagProtection'])
             || $param['enableDisplayFlagProtection'] !== true
             || !$this->_configuration->getOptionAsBoolean('permitProtectedObject')
-        ) {
+        )
             $param['enableDisplayFlagProtection'] = false; // Par défaut à false.
-        }
 
         if (!isset($param['enableDisplayFlagObfuscate'])
             || $param['enableDisplayFlagObfuscate'] !== true
             || !$this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
-        ) {
+        )
             $param['enableDisplayFlagObfuscate'] = false; // Par défaut à false.
-        }
 
         if (!isset($param['enableDisplayFlagState'])
             || $param['enableDisplayFlagState'] !== false
-        ) {
+        )
             $param['enableDisplayFlagState'] = true; // Par défaut à true.
-        }
 
 
         if ($param['enableDisplayFlagProtection']) {
             if (!isset($param['flagProtection'])
                 || !is_bool($param['flagProtection'])
-            ) {
+            )
                 $param['flagProtection'] = $messageInstance->getMarkProtected();
-            }
 
             if (!isset($param['flagProtectionIcon'])
                 || $param['flagProtectionIcon'] == ''
                 || !Node::checkNID($param['flagProtectionIcon'])
                 || !$this->_ioInstance->checkLinkPresent($param['flagProtectionIcon'])
-            ) {
+            )
                 $param['flagProtectionIcon'] = self::DEFAULT_ICON_LK;
-            }
-            if (isset($param['flagProtectionText'])) {
+            if (isset($param['flagProtectionText']))
                 $param['flagProtectionText'] = trim(filter_var($param['flagProtectionText'], FILTER_SANITIZE_STRING));
-            }
             if (!isset($param['flagProtectionText'])
                 || trim($param['flagProtectionText']) == ''
             ) {
-                if ($param['flagProtection']) {
+                if ($param['flagProtection'])
                     $param['flagProtectionText'] = ':::display:object:flag:protected';
-                } else {
+                else
                     $param['flagProtectionText'] = ':::display:object:flag:unprotected';
-                }
             }
-            if (isset($param['flagProtectionLink'])) {
+            if (isset($param['flagProtectionLink']))
                 $param['flagProtectionLink'] = trim(filter_var($param['flagProtectionLink'], FILTER_SANITIZE_URL));
-            }
             if (!isset($param['flagProtectionLink'])
                 || trim($param['flagProtectionLink']) == ''
-            ) {
+            )
                 $param['flagProtectionLink'] = null;
-            }
         }
 
 
         if ($param['enableDisplayFlagObfuscate']) {
             if (!isset($param['flagObfuscate'])
                 || !is_bool($param['flagObfuscate'])
-            ) {
+            )
                 $param['flagObfuscate'] = $link->getObfuscated();
-            }
 
             if (!isset($param['flagObfuscateIcon'])
                 || $param['flagObfuscateIcon'] == ''
                 || !Node::checkNID($param['flagObfuscateIcon'])
                 || !$this->_ioInstance->checkLinkPresent($param['flagObfuscateIcon'])
-            ) {
+            )
                 $param['flagObfuscateIcon'] = self::DEFAULT_ICON_LC;
-            }
             if (isset($param['flagObfuscateText'])) {
                 $param['flagObfuscateText'] = trim(filter_var($param['flagObfuscateText'], FILTER_SANITIZE_STRING));
             }
             if (!isset($param['flagObfuscateText'])
                 || trim($param['flagObfuscateText']) == ''
             ) {
-                if ($param['flagObfuscate']) {
+                if ($param['flagObfuscate'])
                     $param['flagObfuscateText'] = ':::display:object:flag:obfuscated';
-                } else {
+                else
                     $param['flagObfuscateText'] = ':::display:object:flag:unobfuscated';
-                }
             }
-            if (isset($param['flagObfuscateLink'])) {
+            if (isset($param['flagObfuscateLink']))
                 $param['flagObfuscateLink'] = trim(filter_var($param['flagObfuscateLink'], FILTER_SANITIZE_URL));
-            }
             if (!isset($param['flagObfuscateLink'])
                 || trim($param['flagObfuscateLink']) == ''
-            ) {
+            )
                 $param['flagObfuscateLink'] = null;
-            }
-        } else {
+        } else
             $param['flagObfuscate'] = false;
-        }
 
 
         $sizeCSS = 'Medium';
@@ -6489,9 +6304,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 'informationType' => 'warn',
             );
             $objectContent = $this->getDisplayInformation(':::display:content:ObjectProctected', $paramInfo);
-        } else {
+        } else
             $objectContent = $this->getDisplayObjectContent($messageInstance, $param['displaySize'], $param['displayRatio'], false);
-        }
 
         // Prépare le résultat à afficher.
         $result = $divDisplayOpen;
@@ -6507,33 +6321,30 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Pour la fonction getDisplayMessage().
      * Prépare les icônes des drapeaux.
      *
-     * @param Node $messageInstance
-     * @param Link $link
-     * @param array $param
+     * @param Node   $messageInstance
+     * @param Link   $link
+     * @param array  $param
      * @param string $cssCode
      * @return string
      */
-    private function _getDisplayMessageFlags($messageInstance, $link, array $param, $cssCode)
+    private function _getDisplayMessageFlags(Node $messageInstance, Link $link, array $param, string $cssCode): string
     {
         $result = '<span class="message' . $cssCode . 'FlagsObj">';
         // Ajoute le lien.
         if (isset($param['link2Object'])
             && $param['link2Object'] != null
-        ) {
+        )
             $result .= '<a href="' . $param['link2Object'] . '">';
-        } else {
+        else
             $result .= '<a href="' . $this->_prepareDefaultObjectOrGroupOrEntityHtlink($messageInstance) . '">';
-        }
 
         // Ajoute la couleur de l'objet.
-        if (isset($param['enableDisplayColor'])) {
+        if (isset($param['enableDisplayColor']))
             $result .= $this->_prepareObjectColor($messageInstance);
-        }
 
         // Ajoute l'image de l'objet.
-        if (isset($param['enableDisplayIcon'])) {
+        if (isset($param['enableDisplayIcon']))
             $result .= $this->_prepareObjectIcon($messageInstance, self::DEFAULT_ICON_CVTOBJ);
-        }
         $result .= '</a></span>';
 
         // Prépare les flags.
@@ -6544,11 +6355,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 if (!isset($param['flagState'])
                     || strlen(trim($param['flagState'])) == 0
                 ) {
-                    if ($link->getValid()) {
+                    if ($link->getValid())
                         $param['flagState'] = 'o';
-                    } else {
+                    else
                         $param['flagState'] = 'e';
-                    }
                 }
 
                 if ($param['flagState'] == 'o') {
@@ -6567,30 +6377,26 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
 
             if ($param['enableDisplayFlagProtection']) {
-                if ($param['flagProtectionLink'] != '') {
+                if ($param['flagProtectionLink'] != '')
                     $result .= '<a href="' . $param['flagProtectionLink'] . '">';
-                }
                 $result .= $this->_getDisplayObjectFlag(
                     $param['flagProtection'],
                     $param['flagProtectionIcon'],
                     $param['flagProtectionText'],
                     $param['flagProtectionText']);
-                if ($param['flagProtectionLink'] != '') {
+                if ($param['flagProtectionLink'] != '')
                     $result .= '</a>';
-                }
             }
             if ($param['enableDisplayFlagObfuscate']) {
-                if ($param['flagObfuscateLink'] != '') {
+                if ($param['flagObfuscateLink'] != '')
                     $result .= '<a href="' . $param['flagObfuscateLink'] . '">';
-                }
                 $result .= $this->_getDisplayObjectFlag(
                     $param['flagObfuscate'],
                     $param['flagObfuscateIcon'],
                     $param['flagObfuscateText'],
                     $param['flagObfuscateText']);
-                if ($param['flagObfuscateLink'] != '') {
+                if ($param['flagObfuscateLink'] != '')
                     $result .= '</a>';
-                }
             }
             $result .= '</span>' . "\n";
         }
@@ -6603,15 +6409,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare les actions définies par un point d'ancrage pour un objet.
      * Le point d'ancrage permet aux modules d'ajouter des actions.
      *
-     * @param string $selfHookName
-     * @param string $typeHookName
-     * @param Node $object
+     * @param string  $selfHookName
+     * @param string  $typeHookName
+     * @param Node    $object
      * @param boolean $enableDisplayJS
-     * @param string $size
-     * @param array $appHookList
+     * @param string  $size
+     * @param array   $appHookList
      * @return string
      */
-    private function _getDisplayObjectHookList($selfHookName, $typeHookName, $object, $enableDisplayJS, $size, $appHookList = array())
+    private function _getDisplayObjectHookList(string $selfHookName, string $typeHookName, Node $object,
+                                               bool $enableDisplayJS, string $size, array $appHookList = array()): string
     {
         $result = '';
         $dispHookList = array();
@@ -6619,9 +6426,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $modules = $this->_applicationInstance->getModulesListInstances();
 
         $iconNoJS = 'NoJS';
-        if ($enableDisplayJS) {
+        if ($enableDisplayJS)
             $iconNoJS = '';
-        }
 
         // Ajoute les actions demandées spécifiquement et individuellement.
         $i = 0;
@@ -6631,18 +6437,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     $dispHookList[$i]['moduleName'] = '&nbsp;';
                     $dispHookList[$i]['name'] = $this->getTraduction($appHook['name']);
                     $dispHookList[$i]['icon'] = $appHook['icon'];
-                    if ($dispHookList[$i]['icon'] == '') {
+                    if ($dispHookList[$i]['icon'] == '')
                         $dispHookList[$i]['icon'] = self::DEFAULT_ICON_LSTOBJ;
-                    }
                     $dispHookList[$i]['desc'] = $this->getTraduction($appHook['desc']);
                     $dispHookList[$i]['link'] = $appHook['link'];
                     if (isset($appHook['css'])
                         && $appHook['css'] != ''
-                    ) {
+                    )
                         $dispHookList[$i]['cssid'] = 'id="' . $appHook['css'] . '"';
-                    } else {
+                    else
                         $dispHookList[$i]['cssid'] = 'id="' . $selfHookName . '"';
-                    }
                     $dispHookList[$i]['hookType'] = 'Self';
                     $i++;
                 }
@@ -6655,11 +6459,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 // Liste les points d'encrages à afficher.
                 if (substr($module->getInterface(), 0, 1) == '1'
                     || substr($module->getInterface(), 0, 1) == '2'
-                ) {
+                )
                     $appHookList = $module->getHookList($selfHookName);
-                } else {
+                else
                     $appHookList = $module->getHookList($selfHookName, $object);
-                }
 
                 if (sizeof($appHookList) != 0) {
                     foreach ($appHookList as $appHook) {
@@ -6667,18 +6470,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                             $dispHookList[$i]['moduleName'] = $module->getTraduction($module->getName());
                             $dispHookList[$i]['name'] = $module->getTraduction($appHook['name']);
                             $dispHookList[$i]['icon'] = $appHook['icon'];
-                            if ($dispHookList[$i]['icon'] == '') {
+                            if ($dispHookList[$i]['icon'] == '')
                                 $dispHookList[$i]['icon'] = self::DEFAULT_ICON_LSTOBJ;
-                            }
                             $dispHookList[$i]['desc'] = $module->getTraduction($appHook['desc']);
                             $dispHookList[$i]['link'] = $appHook['link'];
                             if (isset($appHook['css'])
                                 && $appHook['css'] != ''
-                            ) {
+                            )
                                 $dispHookList[$i]['cssid'] = 'id="' . $appHook['css'] . '"';
-                            } else {
+                            else
                                 $dispHookList[$i]['cssid'] = 'id="' . $selfHookName . $i . '"';
-                            }
                             $dispHookList[$i]['hookType'] = 'Self';
                             $i++;
                         }
@@ -6693,11 +6494,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 // Liste les points d'encrages à afficher.
                 if (substr($module->getInterface(), 0, 1) == '1'
                     || substr($module->getInterface(), 0, 1) == '2'
-                ) {
+                )
                     $appHookList = $module->getHookList($selfHookName);
-                } else {
+                else
                     $appHookList = $module->getHookList($selfHookName, $object);
-                }
 
                 if (sizeof($appHookList) != 0) {
                     foreach ($appHookList as $appHook) {
@@ -6705,18 +6505,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                             $dispHookList[$i]['moduleName'] = $module->getTraduction($module->getName());
                             $dispHookList[$i]['name'] = $this->getTraduction($appHook['name']);
                             $dispHookList[$i]['icon'] = $appHook['icon'];
-                            if ($dispHookList[$i]['icon'] == '') {
+                            if ($dispHookList[$i]['icon'] == '')
                                 $dispHookList[$i]['icon'] = self::DEFAULT_ICON_LSTOBJ;
-                            }
                             $dispHookList[$i]['desc'] = $this->getTraduction($appHook['desc']);
                             $dispHookList[$i]['link'] = $appHook['link'];
                             if (isset($appHook['css'])
                                 && $appHook['css'] != ''
-                            ) {
+                            )
                                 $dispHookList[$i]['cssid'] = 'id="' . $appHook['css'] . '"';
-                            } else {
+                            else
                                 $dispHookList[$i]['cssid'] = 'id="' . $selfHookName . $i . '"';
-                            }
                             $dispHookList[$i]['hookType'] = 'Self';
                             $i++;
                         }
@@ -6729,29 +6527,26 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $i = 0;
         foreach ($modules as $module) {
             // Liste les points d'encrages à afficher.
-            if ($module->getInterface() == '3.0') {
+            if ($module->getInterface() == '3.0')
                 $appHookList = $module->getHookList($typeHookName, $object);
-            } else {
+            else
                 $appHookList = $module->getHookList($typeHookName);
-            }
             if (sizeof($appHookList) != 0) {
                 foreach ($appHookList as $appHook) {
                     if ($appHook['name'] != '') {
                         $dispHookListT[$i]['moduleName'] = $module->getTraduction($module->getName());
                         $dispHookListT[$i]['name'] = $module->getTraduction($appHook['name']);
                         $dispHookListT[$i]['icon'] = $appHook['icon'];
-                        if ($dispHookListT[$i]['icon'] == '') {
+                        if ($dispHookListT[$i]['icon'] == '')
                             $dispHookListT[$i]['icon'] = self::DEFAULT_ICON_LSTOBJ;
-                        }
                         $dispHookListT[$i]['desc'] = $module->getTraduction($appHook['desc']);
                         $dispHookListT[$i]['link'] = $appHook['link'];
                         if (isset($appHook['css'])
                             && $appHook['css'] != ''
-                        ) {
+                        )
                             $dispHookListT[$i]['cssid'] = 'id="' . $appHook['css'] . '"';
-                        } else {
+                        else
                             $dispHookListT[$i]['cssid'] = 'id="' . $typeHookName . $i . '"';
-                        }
                         $dispHookListT[$i]['hookType'] = 'Type';
                         $i++;
                     }
@@ -6822,64 +6617,51 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche un bouton des actions définies par un point d'ancrage pour un objet.
      *
-     * @param array $dispHook
-     * @param bool $enableDisplayJS
+     * @param array  $dispHook
+     * @param bool   $enableDisplayJS
      * @param string $size
      * @return string
      */
-    public function getDisplayHookAction(array $dispHook, bool $enableDisplayJS, $size)
+    public function getDisplayHookAction(array $dispHook, bool $enableDisplayJS, string $size): string
     {
-        if (!is_array($dispHook)) {
-            return '';
-        }
-
         return $this->_getDisplayHookAction($dispHook, $enableDisplayJS, $size);
     }
 
     /**
      * Affiche un bouton des actions définies par un point d'ancrage pour un objet.
      * Le point d'ancrage permet aux modules d'ajouter des actions.
-     *
      * Fonction interne.
      * Pour la fonction _getDisplayObjectHookList
      *
-     * @param array $dispHook
-     * @param bool $enableDisplayJS
-     * @param unknown $size
+     * @param array  $dispHook
+     * @param bool   $enableDisplayJS
+     * @param string $size
      * @return string
      */
-    private function _getDisplayHookAction($dispHook, $enableDisplayJS, $size)
+    private function _getDisplayHookAction(array $dispHook, bool $enableDisplayJS, string $size): string
     {
         $result = '';
 
         $iconNoJS = 'NoJS';
-        if ($enableDisplayJS) {
+        if ($enableDisplayJS)
             $iconNoJS = '';
-        }
 
         // Verifications
-        if (!isset($dispHook['link'])) {
+        if (!isset($dispHook['link']))
             $dispHook['link'] = '';
-        }
-        if (!isset($dispHook['hookType'])) {
+        if (!isset($dispHook['hookType']))
             $dispHook['hookType'] = '';
-        }
-        if (!isset($dispHook['icon'])) {
+        if (!isset($dispHook['icon']))
             $dispHook['icon'] = '';
-        }
-        if (!isset($dispHook['name'])) {
+        if (!isset($dispHook['name']))
             $dispHook['name'] = '';
-        }
-        if (!isset($dispHook['moduleName'])) {
+        if (!isset($dispHook['moduleName']))
             $dispHook['moduleName'] = '';
-        }
-        if (!isset($dispHook['desc'])) {
+        if (!isset($dispHook['desc']))
             $dispHook['desc'] = '';
-        }
 
-        if ($dispHook['link'] != '') {
+        if ($dispHook['link'] != '')
             $result .= ' <a href="' . $dispHook['link'] . '">' . "\n";
-        }
         $result .= '  <div class="objectMenuContentAction' . $iconNoJS . ' objectMenuContentAction' . $size . ' objectMenuContentAction' . $dispHook['hookType'] . '" ' . $dispHook['link'] . '>' . "\n";
         $result .= '   <div class="objectMenuContentAction-icon' . $iconNoJS . '">';
         $result .= $this->convertUpdateImage($dispHook['icon'], $dispHook['name']);
@@ -6893,14 +6675,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $result .= '   <div class="objectMenuContentAction-text">';
         if ($enableDisplayJS
             && $dispHook['desc'] != ''
-        ) {
+        )
             $result .= '<p>' . $dispHook['desc'] . '&nbsp;</p>';
-        }
         $result .= '</div>' . "\n";
         $result .= '  </div>' . "\n";
-        if ($dispHook['link'] != '') {
+        if ($dispHook['link'] != '')
             $result .= ' </a>' . "\n";
-        }
 
         return $result;
     }
@@ -6909,9 +6689,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Le CSS des fonctions getDisplayObjectContent() et getDisplayAsObjectContent().
      *
-     * @return null
+     * @return void
      */
-    private function _getDisplayObjectContentCSS()
+    private function _getDisplayObjectContentCSS(): void
     {
         ?>
 
@@ -6973,11 +6753,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare à afficher le contenu d'un objet suivant sont type.
      *
      * @param string|Node $object
-     * @param string $sizeCSS [tiny|small|medium|large|full]
-     * @param string $ratioCSS [short|long]
+     * @param string      $sizeCSS  [tiny|small|medium|large|full]
+     * @param string      $ratioCSS [short|long]
+     * @param bool        $permitWarnProtected
      * @return string
      */
-    public function getDisplayObjectContent($object, $sizeCSS = 'medium', $ratioCSS = '', $permitWarnProtected = true)
+    public function getDisplayObjectContent($object, string $sizeCSS = 'medium', string $ratioCSS = '', bool $permitWarnProtected = true): string
     {
         $result = '';
 
@@ -6986,15 +6767,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             && $sizeCSS != 'medium'
             && $sizeCSS != 'small'
             && $sizeCSS != 'tiny'
-        ) {
+        )
             $sizeCSS = 'medium';
-        }
 
         if ($ratioCSS != 'short'
             && $ratioCSS != 'long'
-        ) {
+        )
             $ratioCSS = 'short';
-        }
 
         // Vérifie que c'est un objet.
         if (!is_a($object, 'Node')
@@ -7011,13 +6790,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $id = $object->getID();
             if ($object->getType('all') == nebule::REFERENCE_OBJECT_ENTITY
                 && strpos($object->readOneLineAsText(Entity::ENTITY_MAX_SIZE), nebule::REFERENCE_ENTITY_HEADER) !== false
-            ) {
+            )
                 $object = $this->_nebuleInstance->newEntity_DEPRECATED($id);
-            } elseif ($object->getIsGroup('all')) {
+            elseif ($object->getIsGroup('all'))
                 $object = $this->_nebuleInstance->newGroup_DEPRECATED($id);
-            } elseif ($object->getIsConversation('all')) {
+            elseif ($object->getIsConversation('all'))
                 $object = $this->_nebuleInstance->newConversation_DEPRECATED($id);
-            }
         }
 
         $type = $object->getType('all');
@@ -7052,33 +6830,28 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     }
                     $result .= "</div>\n";
                 }
-            } else {
+            } else
                 $result .= $this->convertLineMessage(':::display:content:errorNotAvailable', 'error');
-            }
         } elseif (is_a($object, 'Group')) {
             $result .= '<div class="objectContentGroup">' . "\n\t<p>"
                 . sprintf($this->_traductionInstance->getTraduction('::UniqueID'),
                     $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
-            if ($object->getMarkClosed()) {
+            if ($object->getMarkClosed())
                 $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::GroupeFerme') . ".\n";
-            } else {
+            else
                 $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::GroupeOuvert') . ".\n";
-            }
             $result .= "\t</p>\n</div>\n";
         } elseif (is_a($object, 'Conversation')) {
             $result .= '<div class="objectContentConversation">' . "\n\t<p>"
                 . sprintf($this->_traductionInstance->getTraduction('::UniqueID'),
                     $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
-            if ($object->getMarkClosed()) {
+            if ($object->getMarkClosed())
                 $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::ConversationFermee') . ".\n";
-            } else {
+            else
                 $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::ConversationOuverte') . ".\n";
-            }
             $result .= "\t</p>\n</div>\n";
-        } else {
-            // C'est un objet.
+        } else
             $result .= $this->getDisplayAsObjectContent($object, $sizeCSS, $ratioCSS, $permitWarnProtected);
-        }
 
         $result .= "</div>\n";
 
@@ -7087,16 +6860,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     /**
      * Prépare à afficher le contenu d'un objet comme objet pur.
-     *
      * Affiche un objet sans tenir compte de son type nebule (Entity|Group|Conversation).
      * Mais affiche l'objet en fonction de son type mime déclaré.
      *
      * @param string|Node $object
-     * @param string $sizeCSS [tiny|small|medium|large|full]
-     * @param string $ratioCSS [short|long]
+     * @param string      $sizeCSS  [tiny|small|medium|large|full]
+     * @param string      $ratioCSS [short|long]
+     * @param bool        $permitWarnProtected
      * @return string
      */
-    public function getDisplayAsObjectContent($object, $sizeCSS = 'medium', $ratioCSS = '', $permitWarnProtected = true)
+    public function getDisplayAsObjectContent($object, string $sizeCSS = 'medium', string $ratioCSS = '', bool $permitWarnProtected = true): string
     {
         $result = '';
 
@@ -7105,24 +6878,21 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             && $sizeCSS != 'medium'
             && $sizeCSS != 'small'
             && $sizeCSS != 'tiny'
-        ) {
+        )
             $sizeCSS = 'medium';
-        }
 
         if ($ratioCSS != 'short'
             && $ratioCSS != 'long'
-        ) {
+        )
             $ratioCSS = 'short';
-        }
 
         // Vérifie que c'est un objet.
         if (!is_a($object, 'Node')
             && !is_a($object, 'Group')
             && !is_a($object, 'Entity')
             && !is_a($object, 'Conversation')
-        ) {
+        )
             $object = $this->_nebuleInstance->newObject($object);
-        }
         $id = $object->getID();
 
         // Vérifie si il est protégé
@@ -7200,9 +6970,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 case nebule::REFERENCE_NEBULE_OBJET_MONNAIE_SAC :
                 case nebule::REFERENCE_NEBULE_OBJET_MONNAIE_JETON :
                     $content = htmlspecialchars($object->getContent(0));
-                    if ($content != null) {
+                    if ($content != null)
                         $result .= '<div class="objectContentObject objectContentCode"><pre>' . $content . '</pre></div>' . "\n";
-                    } else {
+                    else {
                         $param['informationType'] = 'error';
                         $result .= $this->getDisplayInformation(':::display:content:errorNotDisplayable', $param);
                     }
@@ -7210,18 +6980,18 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     break;
                 case nebule::REFERENCE_OBJECT_MP3 :
                     $content = $object->getContent(0);
-                    if ($content != null) {
+                    if ($content != null)
                         $result .= '<div class="objectContentObject objectContentAudio"><audio controls><source src="?o=' . $id . '" type="audio/mp3" />' . $this->_traductionInstance->getTraduction(':::warn_NoAudioTagSupport') . '</audio></div>' . "\n";
-                    } else {
+                    else {
                         $param['informationType'] = 'error';
                         $result .= $this->getDisplayInformation(':::display:content:errorNotDisplayable', $param);
                     }
                     break;
                 case nebule::REFERENCE_OBJECT_OGG :
                     $content = $object->getContent(0);
-                    if ($content != null) {
+                    if ($content != null)
                         $result .= '<div class="objectContentObject objectContentAudio"><audio controls><source src="?o=' . $id . '" type="audio/ogg" />' . $this->_traductionInstance->getTraduction(':::warn_NoAudioTagSupport') . '</audio></div>' . "\n";
-                    } else {
+                    else {
                         $param['informationType'] = 'error';
                         $result .= $this->getDisplayInformation(':::display:content:errorNotDisplayable', $param);
                     }
@@ -7271,9 +7041,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Le CSS de la fonction getDisplayObjectsList().
      *
-     * @return null
+     * @return void
      */
-    private function _getDisplayObjectsListCSS()
+    private function _getDisplayObjectsListCSS(): void
     {
         ?>
 
@@ -7308,28 +7078,22 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     /**
      * Affiche une liste l'objets avec leurs paramètres propres ou des messages imbriqués.
-     *
      * Se base sur la fonction getDisplayObject() pour l'affichage des objets.
      * Se base sur la fonction getDisplayInformation() pour l'affichage des messages.
-     *
      * Si 'information' est défini et que les paramètres contiennent 'informationType',
      *   alors on affiche un message et non un objet.
      * Si 'object' n'est défini pour aucun des éléments du tableau,
      *   alors affiche un message générique pour dire que la liste est vide.
      *   Sauf si on demande explicitement de ne pas afficher le message.
      *
-     * @param array $list
-     * @param string $size
+     * @param array   $list
+     * @param string  $size
      * @param boolean $displayNoObject
      * @return string
      */
-    public function getDisplayObjectsList($list, $size = 'medium', $displayNoObject = false)
+    public function getDisplayObjectsList(array $list, string $size = 'medium', bool $displayNoObject = false): string
     {
         $result = '';
-
-        if (!is_array($list)) {
-            return '';
-        }
 
         $result .= '<div class="layoutObjectsList">' . "\n";
         $result .= '<div class="objectsListContent">' . "\n";
@@ -7340,9 +7104,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if (isset($item['object'])
                 || isset($item['information'])
                 || isset($item['link'])
-            ) {
+            )
                 $noObject = false;
-            }
         }
         if ($noObject
             && !$displayNoObject
@@ -7363,19 +7126,18 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 && (is_a($item['object'], 'Node')
                     || $item['object'] != ''
                 )
-            ) {
+            )
                 $result .= $this->getDisplayObject($item['object'], $param);
-            } elseif (isset($param['informationType'])
+            elseif (isset($param['informationType'])
                 && isset($item['information'])
                 && $param['informationType'] != ''
                 && $item['information'] != ''
-            ) {
+            )
                 $result .= $this->getDisplayInformation($item['information'], $param);
-            } elseif (isset($item['link'])
+            elseif (isset($item['link'])
                 && is_a($item['link'], 'Link')
-            ) {
+            )
                 $result .= $this->getDisplayMessage($item['link'], $param);
-            }
             // Sinon n'affiche rien.
         }
         unset($param, $item);
@@ -7390,9 +7152,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Le CSS de la fonction getDisplayMenuList().
      *
-     * @return null
+     * @return void
      */
-    private function _getDisplayMenuListCSS()
+    private function _getDisplayMenuListCSS(): void
     {
         ?>
 
@@ -7481,7 +7243,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche un menu constitué d'une liste d'entrées avec icône, titre et lien html.
      * Peut éventuellement afficher une description par entrée.
-     *
      * La liste $list est un tableau de listes, chacunes contenant :
      * - icon : la référence de l'îcone, obligatoire ;
      * - title : le titre de l'entrée, obligatoire ;
@@ -7495,51 +7256,44 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * - Large
      * Par défaut la taille est Medium.
      *
-     * @param array $list
+     * @param array  $list
      * @param string $size
      * @return string
      */
-    public function getDisplayMenuList($list, $size = 'Medium')
+    public function getDisplayMenuList(array $list, string $size = 'Medium'): string
     {
         $result = '';
 
-        if (sizeof($list) == 0) {
+        if (sizeof($list) == 0)
             return '';
-        }
 
         foreach ($list as $i => $item) {
             if (!isset($item['icon']) || $item['icon'] == ''
                 || !isset($item['title']) || $item['title'] == ''
                 || !isset($item['htlink']) || $item['htlink'] == ''
-            ) {
+            )
                 unset($list[$i]);
-            }
-            if (!isset($item['class'])) {
+            if (!isset($item['class']))
                 $list[$i]['class'] = '';
-            }
             if (!isset($item['ref'])
                 || $item['ref'] == ''
-            ) {
+            )
                 $list[$i]['ref'] = '&nbsp;';
-            }
             if (!isset($item['desc'])
                 || $item['desc'] == ''
-            ) {
+            )
                 $list[$i]['desc'] = '&nbsp;';
-            }
         }
 
-        if (sizeof($list) == 0) {
+        if (sizeof($list) == 0)
             return '';
-        }
 
         // Vérification de $size.
         if ($size != 'Small'
             && $size != 'Medium'
             && $size != 'Large'
-        ) {
+        )
             $size = 'Medium';
-        }
 
         $result .= '<div class="layoutMenuList">' . "\n";
         $result .= '<div class="menuListContent">' . "\n";
@@ -7549,9 +7303,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $result .= '<a href="' . $item['htlink'] . '">' . "\n";
 
             $result .= ' <div class="menuListContentAction menuListContentAction' . $size . "\n";
-            if (isset($item['class'])) {
+            if (isset($item['class']))
                 $result .= ' ' . $item['class'];
-            }
             $result .= '">' . "\n";
             $result .= '  <div class="menuListContentAction-icon">';
             $result .= $this->convertUpdateImage($item['icon'], $item['title']);
@@ -7576,7 +7329,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche la liste de menu en fonction d'un point d'ancrage.
      * Utilise la fonction getDisplayMenuList().
-     *
      * Le point d'enrage $hook est un texte qui sert de référence.
      * les modules sont interrogés pour avoir les entrées correspondantes à cette référence.
      * La taille peut être :
@@ -7586,12 +7338,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Par défaut la taille est Medium.
      * Lors de la consultation des points d'encrage, il est possible de passer un objet à utiliser.
      *
-     * @param array $hook
+     * @param array  $hook
      * @param string $size
      * @param string $object
      * @return string
      */
-    public function getDisplayHookMenuList($hook, $size = 'Medium', $object = 'none')
+    public function getDisplayHookMenuList(array $hook, string $size = 'Medium', string $object = 'none'): string
     {
         $list = array();
         $i = 0;
@@ -7607,18 +7359,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     $list[$i]['ref'] = $module->getTraduction($module->getName());
                     $list[$i]['title'] = $module->getTraduction($appHook['name']);
                     $list[$i]['icon'] = $appHook['icon'];
-                    if ($list[$i]['icon'] == '') {
+                    if ($list[$i]['icon'] == '')
                         $list[$i]['icon'] = self::DEFAULT_ICON_LSTOBJ;
-                    }
                     $list[$i]['desc'] = $module->getTraduction($appHook['desc']);
                     $list[$i]['htlink'] = $appHook['link'];
                     if (isset($appHook['css'])
                         && $appHook['css'] != ''
-                    ) {
+                    )
                         $list[$i]['class'] = $appHook['css'];
-                    } else {
+                    else
                         $list[$i]['class'] = $hook;
-                    }
                     $i++;
                 }
             }
@@ -7631,12 +7381,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
     /**
-     * @param list $hook
+     * @param array $hook
      * @return void
      * @todo Fonction périmée remplacée par getDisplayHookMenuList().
      *
      */
-    public function displayHookList($hook)
+    public function displayHookList(array $hook): void
     {
         echo $this->getDisplayHookMenuList($hook, 'Medium');
     }
@@ -7645,9 +7395,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Le CSS de la fonction getDisplayTitle().
      *
-     * @return null
+     * @return void
      */
-    private function _getDisplayTitleCSS()
+    private function _getDisplayTitleCSS(): void
     {
         ?>
 
@@ -7705,25 +7455,22 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     /**
      * Affiche un titre de paragraphe.
-     *
      * La variable $displayEntity et l'option 'forceDisplayEntityOnTitle' forcent l'affichage de l'entité en cours.
      *
-     * @param string $title
-     * @param string $icon
+     * @param string  $title
+     * @param string  $icon
      * @param boolean $displayEntity
      * @return string
      */
-    public function getDisplayTitle($title, $icon = '', $displayEntity = false)
+    public function getDisplayTitle(string $title, string $icon = '', bool $displayEntity = false): string
     {
         $result = '';
 
-        if (trim($title) == '') {
+        if (trim($title) == '')
             return '';
-        }
 
-        if ($displayEntity !== true) {
+        if ($displayEntity !== true)
             $displayEntity = false;
-        }
 
         $result .= '<div class="layoutTitle">' . "\n";
         $result .= ' <div class="titleContent">' . "\n";
@@ -7772,9 +7519,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * Le style CSS est hérité de celui utilisé pour la fonction getDisplayObject() et adapté.
      *
-     * @return null
+     * @return void
      */
-    private function _getDisplayInformationCSS()
+    private function _getDisplayInformationCSS(): void
     {
         ?>
 
@@ -7946,12 +7693,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     /**
      * Affiche un message d'information avec un style en fonction du type de message.
-     *
      * Le message peut contenir 5 arguments remplacés dans le texte après la traduction.
      * Dans le texte, chaque chaine %s est remplacée successivement avec les arguments à concurence de 5.
-     *
      * Le style CSS est hérité de celui utilisé pour la fonction getDisplayObject() et adapté.
-     *
      * Les paramètres d'activation de contenus :
      * - enableDisplayIcon : Affiche le carré avec l'image attaché à l'objet ou l'icône de son type.
      *     Par défaut true : affiche le carré de l'image/icône.
@@ -7959,7 +7703,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * - enableDisplayAlone : Affiche le message dans une position identique à un titre. C'est utilisé pour un message isolé.
      *     Par défaut false : n'affiche pas en isolé.
      *     Boolean
-     *
      * Les paramètres de définition de contenus :
      * - informationType : Détermine le type de message.
      *     Les types disponibles :
@@ -7995,9 +7738,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *     Par défaut vide : l'icône est sélectionnée automatiquement.
      *     enableDisplayIcon doit être à true.
      *     String
-     *
      * Exemple de table de paramètres avec les valeurs par défaut :
-     *
      * $param = array(
      * 'enableDisplayIcon' => true,
      * 'enableDisplayAlone' => false,
@@ -8009,7 +7750,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * );
      *
      * @param string $message
-     * @param array $param
+     * @param array  $param
      * @param string $arg1
      * @param string $arg2
      * @param string $arg3
@@ -8017,16 +7758,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string $arg5
      * @return string
      */
-    public function getDisplayInformation($message, $param, $arg1 = '', $arg2 = '', $arg3 = '', $arg4 = '', $arg5 = '')
+    public function getDisplayInformation(string $message, array $param, string $arg1 = '', string $arg2 = '',
+                                          string $arg3 = '', string $arg4 = '', string $arg5 = ''): string
     {
         $result = '';
 
         // Prépare les paramètres d'activation de contenus.
         if (!isset($param['enableDisplayIcon'])
             || $param['enableDisplayIcon'] !== false
-        ) {
+        )
             $param['enableDisplayIcon'] = true; // Par défaut à true.
-        }
 
         $message = sprintf($this->_traductionInstance->getTraduction($message), $arg1, $arg2, $arg3, $arg4, $arg5);
         if (!is_string($param['informationType'])
@@ -8037,13 +7778,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             // @todo faire un filtre pour le type message...
         }
         $contentDisplayMessage = trim($message);
-        if ($contentDisplayMessage == '') {
+        if ($contentDisplayMessage == '')
             return '';
-        }
 
-        if (!isset($param['enableDisplayAlone'])) {
+        if (!isset($param['enableDisplayAlone']))
             $param['enableDisplayAlone'] = false;
-        }
         if ($param['enableDisplayAlone'] === true) {
             $result .= '<div class="layoutAloneItem">' . "\n";
             $result .= ' <div class="aloneItemContent">' . "\n";
@@ -8080,9 +7819,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $messageIcon = '';
         if (isset($param['icon'])
             && $param['icon'] !== ''
-        ) {
+        )
             $messageIcon = $param['icon'];
-        } else {
+        else {
             switch ($messageType) {
                 case 'Information':
                 case 'Message':
@@ -8105,9 +7844,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         }
         if (isset($param['informationTypeName'])
             && $param['informationTypeName'] != ''
-        ) {
+        )
             $messageTextIcon = $param['informationTypeName'];
-        }
 
         $sizeCSS = 'Medium';
         if (!isset($param['displaySize'])) {
@@ -8177,9 +7915,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $divTitleNameOpen = '';
         $divTitleNameClose = '';
         $titleNameContent = '';
-        if ($param['displaySize'] == 'tiny') {
+        if ($param['displaySize'] == 'tiny')
             $result = '<span style="font-size:1em" class="objectTitleIconsInline">' . $contentDisplayIcon . '</span>' . $contentDisplayMessage;
-        } else {
+        else {
             $divDisplayOpen = '<div class="layoutObject layoutInformation">' . "\n";
             $divDisplayClose = '</div>' . "\n";
             $divTitleOpen = ' <div class="objectTitle objectDisplay' . $sizeCSS . $ratioCSS . ' informationDisplay informationDisplay' . $sizeCSS . ' informationDisplay' . $messageType . '">' . "\n";
@@ -8224,9 +7962,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Le CSS de la fonction getDisplayLink().
      *
-     * @return null
+     * @return void
      */
-    private function _getDisplayLinkCSS()
+    private function _getDisplayLinkCSS(): void
     {
         ?>
 
@@ -8277,33 +8015,29 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param array $param
      * @return string
      */
-    public function getDisplayLink($link, array $param)
+    public function getDisplayLink($link, array $param): string
     {
         /**
          * Résultat à retourner pour affichage.
-         * @var string $result
          */
         $result = '';
 
         /**
          * Instance du lien à afficher.
-         * @var Link $instance
          */
         $instance = null;
 
         // Prépare le lien.
-        if (is_a($link, 'Link')) {
+        if (is_a($link, 'Link'))
             $instance = $link;
-        } elseif (is_string($link)) {
+        elseif (is_string($link))
             $instance = $this->_nebuleInstance->newLink_DEPRECATED($link);
-        }
 
         // Teste la validité du lien.
         if ($instance == null
             || !is_a($instance, 'Link')
-        ) {
+        )
             return '';
-        }
 
         $sizeCSS = 'Medium';
         if (!isset($param['displaySize'])) {
@@ -8479,8 +8213,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertInlineObjectColorNolink(string $object): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
-        $color = $this->_prepareObjectColor($object, 'iconInlineDisplay');
-        return $color;
+        return $this->_prepareObjectColor($object, 'iconInlineDisplay');
     }
 
     /**
@@ -8688,7 +8421,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         echo $this->convertInlineObjectColorIconName($object, $htlink);
     }
 
-    public function convertInlineObjectColorIconName($object, $htlink = '')
+    public function convertInlineObjectColorIconName($object, string $htlink = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
@@ -8728,7 +8461,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /* --------------------------------------------------------------------------------
 	 *  Affichage des liens.
 	 * -------------------------------------------------------------------------------- */
-    public function displayInlineLinkFace($link): void
+    public function displayInlineLinkFace(string $link): void
     {
         echo $this->convertInlineLinkFace($link);
     }
@@ -8775,7 +8508,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $colorDate = $this->convertUpdateImage(self::DEFAULT_ICON_IMLOG, $link->getDate(), 'iconInlineDisplay');
 
         // Prépare le contenu à afficher.
-        $return = $this->convertInlineObjectColor($link->getSigners());
+        $return = '';
+        foreach ($link->getSigners() as $signer)
+            $return .= $this->convertInlineObjectColor($signer);
         $return .= $colorDate;
         $return .= $icon;
         $return .= $this->convertInlineObjectColor($link->getParsed()['bl/rl/nid1']);
@@ -8785,12 +8520,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         return $return;
     }
 
-    public function displayInlineIconFace($iconName): void
+    public function displayInlineIconFace(string $iconName): void
     {
         echo $this->convertInlineIconFace($iconName);
     }
 
-    public function convertInlineIconFace($iconName): string
+    public function convertInlineIconFace(string $iconName): string
     {
         $iconID = '';
         if (Node::checkNID($iconName) && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($iconName))
@@ -8842,7 +8577,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         echo $this->convertInlineErrorFace();
     }
 
-    public function convertInlineErrorFace()
+    public function convertInlineErrorFace(): string
     {
         return $this->convertUpdateImage(self::DEFAULT_ICON_IERR, $this->_traductionInstance->getTraduction('::::ERROR'), 'iconInlineDisplay');
     }
@@ -9186,7 +8921,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     ?>
 
                     <div class="oneAction-entityname">
-                        <p><?php $this->_applicationInstance->getDisplayInstance()->displayInlineObjectColorIconName($entity); ?></p>
+                        <p><?php $this->_applicationInstance->getDisplayInstance()->displayInlineObjectColorIconName($entityID); ?></p>
                     </div>
                     <?php
                 }
