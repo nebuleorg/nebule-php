@@ -30,22 +30,19 @@ use Nebule\Library\Traductions;
 
 
 /**
- * Classe Application
+ * Class Application for klicty
  *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
- *
- * Le coeur de l'application.
- *
  */
 class Application extends Applications
 {
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020211218';
+    const APPLICATION_VERSION = '020220821';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2022';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -667,7 +664,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL); // Log
+        $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
         $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
@@ -723,7 +720,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL); // Log
+        $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
         $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
@@ -879,7 +876,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         global $applicationName, $applicationSurname, $applicationLicence, $applicationAuthor,
                $applicationWebsite;
 
-        $this->_metrologyInstance->addLog('Display full', Metrology::LOG_LEVEL_NORMAL); // Log
+        $this->_metrologyInstance->addLog('Display full', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
 
         // Récupère l'instance de la classe 'Actions' des actions génériques, celle-ci est instanciée après celle de 'Display'.
         //$this->_actionInstance = $this->_applicationInstance->getActionInstance();
@@ -897,24 +894,24 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             <meta name="author" content="<?php echo $applicationAuthor . ' - ' . $applicationWebsite; ?>"/>
             <meta name="licence" content="<?php echo $applicationLicence; ?>"/>
             <?php
-            $this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
             $this->commonCSS();
             $this->displayCSS();
 
-            $this->_metrologyInstance->addLog('Display vbs', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrologyInstance->addLog('Display vbs', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
             $this->_displayScripts();
             ?>
 
         </head>
         <body>
         <?php
-        $this->_metrologyInstance->addLog('Display actions', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Display actions', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
         $this->_displayActions();
 
-        $this->_metrologyInstance->addLog('Display header', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Display header', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
         $this->_displayHeader();
 
-        $this->_metrologyInstance->addLog('Display menu apps', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Display menu apps', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
         $this->_displayMenuApplications();
         ?>
         <div class="layout-main">
@@ -923,13 +920,13 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 <div id="curseur" class="infobulle"></div>
                 <div class="content">
                     <?php
-                    $this->_metrologyInstance->addLog('Display checks', Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_metrologyInstance->addLog('Display checks', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
                     $this->_displayChecks();
 
-                    $this->_metrologyInstance->addLog('Display content', Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_metrologyInstance->addLog('Display content', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
                     $this->_displayContent();
 
-                    $this->_metrologyInstance->addLog('Display metrology', Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_metrologyInstance->addLog('Display metrology', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
                     $this->_displayMetrology();
                     ?>
 
@@ -937,7 +934,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             </div>
         </div>
         <?php
-        $this->_metrologyInstance->addLog('Display footer', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Display footer', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
         $this->_displayFooter();
     }
 
@@ -946,7 +943,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
      */
     protected function _displayInline(): void
     {
-        $this->_metrologyInstance->addLog('Display inline', Metrology::LOG_LEVEL_NORMAL); // Log
+        $this->_metrologyInstance->addLog('Display inline', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
         $this->_displayInlineContent();
     }
 
@@ -2141,8 +2138,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     $param['selfHookList'][0]['icon'] = self::DEFAULT_ICON_LX;
                     $param['selfHookList'][0]['link'] = '?'
                         . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_GROUP_LIST_COMMAND
-                        . '&' . Action::DEFAULT_COMMAND_ACTION_DELETE_GROUP . '=' . $id
-                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
+                        . '&' . Actions::DEFAULT_COMMAND_ACTION_DELETE_GROUP . '=' . $id
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 }
 
                 echo $this->getDisplayObject($instance, $param);
@@ -2234,17 +2231,17 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                     <form method="post"
                           action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_GROUP_ENTITY_ADD_COMMAND .
-                              '&' . Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP
-                              . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(); ?>">
+                              '&' . Actions::DEFAULT_COMMAND_ACTION_CREATE_GROUP
+                              . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                         <div class="floatRight textAlignRight">
                             <input type="checkbox"
-                                   name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP_CLOSED; ?>"
+                                   name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_GROUP_CLOSED; ?>"
                                    value="y" checked>
                             <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::GroupeFerme'); ?>
                         </div>
                         <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Nom'); ?>
                         <input type="text"
-                               name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP_NAME; ?>"
+                               name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_GROUP_NAME; ?>"
                                size="20" value="" class="klictyModuleEntityInput"><br/>
                         <input type="submit"
                                value="<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::CreateTheGroup'); ?>"
@@ -2349,8 +2346,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[0]['link'] = '?'
                     . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
                     . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObject()
-                    . '&' . Action::DEFAULT_COMMAND_ACTION_DELETE_GROUP . '=' . $this->_applicationInstance->getCurrentObject()
-                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
+                    . '&' . Actions::DEFAULT_COMMAND_ACTION_DELETE_GROUP . '=' . $this->_applicationInstance->getCurrentObject()
+                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
             }
         }
         if ($isEntity) {
@@ -2373,8 +2370,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[2]['link'] = '?'
                     . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
                     . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                    . '&' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY . '=' . $id
-                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
+                    . '&' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY . '=' . $id
+                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
             }
 
             if ($this->_unlocked && $id == $this->_nebuleInstance->getCurrentEntity()) {
@@ -2437,9 +2434,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     $actionList[2]['css'] = 'oneAction-bg-warn';
                     $actionList[2]['link'] = '?'
                         . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-                        . '&' . Action::DEFAULT_COMMAND_ACTION_DELETE_OBJECT . '=' . $this->_applicationInstance->getCurrentObject()
+                        . '&' . Actions::DEFAULT_COMMAND_ACTION_DELETE_OBJECT . '=' . $this->_applicationInstance->getCurrentObject()
                         . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
 
                     // Renouveler le bail de durée de vie.
                     $link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
@@ -2454,8 +2451,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $actionList[3]['link'] = '?'
                             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
                             . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObject()
-                            . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $source . '_' . $target . '_' . $meta
-                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
+                            . '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $source . '_' . $target . '_' . $meta
+                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                     }
                 }
             }
@@ -2484,12 +2481,12 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     <form method="post"
                           action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
                               . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object
-                              . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(); ?>">
+                              . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                         <input type="submit"
                                value="<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::AddToGroup'); ?>"
                                class="klictyModuleEntityInput">
                         <select
-                                name="<?php echo Action::DEFAULT_COMMAND_ACTION_ADD_TO_GROUP; ?>"
+                                name="<?php echo Actions::DEFAULT_COMMAND_ACTION_ADD_TO_GROUP; ?>"
                                 class="klictyModuleEntityInput">
                             <?php
                             foreach ($listGroupsMember as $group) {
@@ -2533,8 +2530,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
                                 $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
                                     . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObject()
-                                    . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_FROM_GROUP . '=' . $group
-                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
+                                    . '&' . Actions::DEFAULT_COMMAND_ACTION_REMOVE_FROM_GROUP . '=' . $group
+                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                             }
                         }
 
@@ -2588,8 +2585,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
                             $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObject()
-                                . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item
-                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
+                                . '&' . Actions::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         }
 
                         // Marque comme vu.
@@ -2752,21 +2749,21 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             <div class="text">
                 <form enctype="multipart/form-data" method="post"
                       action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_OBJECT_ADD_COMMAND
-                          . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(); ?>">
+                          . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                     <input type="hidden"
                            name="MAX_FILE_SIZE"
                            value="<?php echo $this->_configuration->getOptionUntyped('klictyIOReadMaxDataPHP'); ?>"/>
                     <input type="file"
-                           name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_FILE; ?>"/><br/>
+                           name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_FILE; ?>"/><br/>
                     <div class="floatRight textAlignRight">
                         <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::SubmitProtectFile'); ?>
                         <input type="checkbox"
-                               name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_PROTECT; ?>"
+                               name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_PROTECT; ?>"
                                value="y"><br/>
                         <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::SubmitLiveTimeFile'); ?>
                         :
                         <select
-                                name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LIFETIME; ?>"
+                                name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LIFETIME; ?>"
                                 class="klictyInput">
                             <option value="1h">
                                 <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::1h'); ?>
@@ -2801,7 +2798,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         </select><?php /* <br />
 					<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::SubmitShowTimeFile'); ?> :
 <?php					<select
-						name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_SHOWTIME; ?>"
+						name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_SHOWTIME; ?>"
 						class="klictyInput">
 						<option value="0" selected>
 							<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Unlimited'); ?>
@@ -2912,8 +2909,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                     <form method="post"
                           action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_ADD_COMMAND
-                              . '&' . Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY
-                              . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(); ?>">
+                              . '&' . Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY
+                              . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                         <table>
                             <tr>
                                 <td></td>
@@ -2925,10 +2922,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     <b><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Nommage'); ?></b>
                                 </td>
                                 <td><input type="text"
-                                           name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME; ?>"
+                                           name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME; ?>"
                                            size="10" value="" class="klictyModuleEntityInput"></td>
                                 <td><input type="text"
-                                           name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME; ?>"
+                                           name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME; ?>"
                                            size="20" value="" class="klictyModuleEntityInput"></td>
                             </tr>
                             <tr>
@@ -2939,7 +2936,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     <b><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Password'); ?></b>
                                 </td>
                                 <td colspan=2><input type="password"
-                                                     name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1; ?>"
+                                                     name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1; ?>"
                                                      size="30" value="" class="klictyModuleEntityInput"></td>
                             </tr>
                             <tr>
@@ -2947,7 +2944,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     <b><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Confirmation'); ?></b>
                                 </td>
                                 <td colspan=2><input type="password"
-                                                     name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2; ?>"
+                                                     name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2; ?>"
                                                      size="30" value="" class="klictyModuleEntityInput"></td>
                             </tr>
                             <tr>
@@ -2998,7 +2995,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                 <form method="post"
                       action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_SYNC_COMMAND
-                          . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(); ?>">
+                          . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                     <table>
                         <tr>
                             <td></td>
@@ -3009,7 +3006,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 <b><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::URL'); ?> </b>
                             </td>
                             <td><input type="text"
-                                       name="<?php echo Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_NEW_ENTITY; ?>"
+                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_NEW_ENTITY; ?>"
                                        size="40" value="" class="klictyModuleEntityInput"></td>
                         </tr>
                         <tr>
@@ -3147,9 +3144,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 $list[$i]['actions'][0]['name'] = '::UnprotectObject';
                                 $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LK;
                                 $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
-                                    . '&' . Action::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT . '=' . $id
+                                    . '&' . Actions::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT . '=' . $id
                                     . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
+                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                             } elseif (!$this->_nebuleInstance->getIsRecoveryEntity($entity)
                                 || $this->_configuration->getOptionAsBoolean('permitRecoveryRemoveEntity')
                             ) {
@@ -3157,9 +3154,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 $list[$i]['actions'][0]['name'] = '::RemoveShareProtect';
                                 $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
                                 $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
-                                    . '&' . Action::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY . '=' . $entity
+                                    . '&' . Actions::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY . '=' . $entity
                                     . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
+                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                             }
                         }
 
@@ -3192,9 +3189,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[0]['icon'] = self::DEFAULT_ICON_LK;
                 $actionList[0]['desc'] = '';
                 $actionList[0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
-                    . '&' . Action::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT . '=' . $id
+                    . '&' . Actions::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT . '=' . $id
                     . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
+                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 $this->displayActionList($actionList);
                 unset($actionList);
 
@@ -3250,14 +3247,14 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LL;
                         if ($typeClosed)
                             $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
-                                . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED . '=' . $group
+                                . '&' . Actions::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED . '=' . $group
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         else
                             $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
-                                . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED . '=' . $group
+                                . '&' . Actions::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED . '=' . $group
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
+                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
 
                         // Marque comme vu.
                         $listOkGroups[$group] = true;
@@ -3310,9 +3307,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['actions'][0]['name'] = '::ShareProtectObject';
                         $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LL;
                         $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
-                            . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY . '=' . $link->getParsed()['bl/rl/nid1']
+                            . '&' . Actions::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY . '=' . $link->getParsed()['bl/rl/nid1']
                             . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicket();
+                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
 
                         // Marque comme vu.
                         $listOkEntities[$link->getParsed()['bl/rl/nid1']] = true;
@@ -4675,7 +4672,7 @@ class Action extends Actions
             && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
-            $this->_metrology->addLog('Extract action upload file', Metrology::LOG_LEVEL_NORMAL); // Log
+            $this->_metrology->addLog('Extract action upload file', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
 
             /*
 			 *  ------------------------------------------------------------------------------------------
@@ -4763,7 +4760,7 @@ class Action extends Actions
             && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
-            $this->_metrology->addLog('Action upload file', Metrology::LOG_LEVEL_NORMAL); // Log
+            $this->_metrology->addLog('Action upload file', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
 
             // Lit le contenu du fichier.
             $data = file_get_contents($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['tmp_name']);

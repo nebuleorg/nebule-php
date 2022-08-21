@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Option;
+use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
 use Nebule\Library\Actions;
 use Nebule\Library\Applications;
@@ -26,22 +27,19 @@ use Nebule\Library\Traductions;
 
 
 /**
- * Classe Application
+ * Class Application for option
  *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
- *
- * Le coeur de l'application.
- *
  */
 class Application extends Applications
 {
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020211218';
+    const APPLICATION_VERSION = '020220821';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2022';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -125,7 +123,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
         $linkApplicationWebsite = $applicationWebsite;
         if (strpos($applicationWebsite, '://') === false)
-            $linkApplicationWebsite = 'http://' . $applicationWebsite;
+            $linkApplicationWebsite = 'http' . '://' . $applicationWebsite;
 
         $nebuleInstance = $this->_nebuleInstance;
 
@@ -609,7 +607,9 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         <form method="post"
                               action="?<?php echo nebule::COMMAND_SELECT_ENTITY . '=' . $nebuleInstance->getInstanceEntity() . '&' . nebule::COMMAND_SWITCH_TO_ENTITY; ?>">
                             <input type="hidden" name="id" value="<?php echo $nebuleInstance->getInstanceEntity(); ?>">
-                            <input type="password" name="pwd">
+                            <label>
+                                <input type="password" name="pwd">
+                            </label>
                             <input type="submit" value="Unlock">
                         </form>
                         <?php
@@ -760,50 +760,58 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         );
 
         $list = array();
+        $i = 0;
 
         // Puppetmaster
-        $list[0]['object'] = $nebuleInstance->getPuppetmasterInstance();
-        $list[0]['param'] = $param;
-        $list[0]['param']['flagProtection'] = true;
+        $list[$i]['object'] = $nebuleInstance->getPuppetmasterInstance();
+        $list[$i]['param'] = $param;
+        $list[$i]['param']['flagProtection'] = true;
         if ($nebuleInstance->getPuppetmaster() == $nebuleInstance->getInstanceEntity()) {
-            $list[0]['param']['flagMessage'] = 'Instance entity';
+            $list[$i]['param']['flagMessage'] = 'Instance entity';
         }
         if ($nebuleInstance->getPuppetmaster() == $nebuleInstance->getDefaultEntity()) {
-            if ($list[0]['param']['flagMessage'] != '') {
-                $list[0]['param']['flagMessage'] .= ', ';
+            if ($list[$i]['param']['flagMessage'] != '') {
+                $list[$i]['param']['flagMessage'] .= ', ';
             }
-            $list[0]['param']['flagMessage'] .= 'Default entity';
+            $list[$i]['param']['flagMessage'] .= 'Default entity';
         }
 
         // Security master
-        $list[1]['object'] = $nebuleInstance->getSecurityMasterInstance();
-        $list[1]['param'] = $param;
-        $list[1]['param']['enableDisplayRefs'] = true;
-        $list[1]['param']['objectRefs'][0] = $nebuleInstance->getPuppetmasterInstance();
-        if ($nebuleInstance->getSecurityMaster() == $nebuleInstance->getInstanceEntity()) {
-            $list[1]['param']['flagMessage'] = 'Instance entity';
-        }
-        if ($nebuleInstance->getSecurityMaster() == $nebuleInstance->getDefaultEntity()) {
-            if ($list[1]['param']['flagMessage'] != '') {
-                $list[1]['param']['flagMessage'] .= ', ';
+        foreach ($nebuleInstance->getSecurityAuthoritiesInstance() as $instance)
+        {
+            $i++;
+            $list[$i]['object'] = $instance;
+            $list[$i]['param'] = $param;
+            $list[$i]['param']['enableDisplayRefs'] = true;
+            $list[$i]['param']['objectRefs'][0] = $nebuleInstance->getPuppetmasterInstance();
+            if ($instance->getID() == $nebuleInstance->getInstanceEntity())
+                $list[$i]['param']['flagMessage'] = 'Instance entity';
+            if ($instance->getID() == $nebuleInstance->getDefaultEntity()) {
+                if ($list[$i]['param']['flagMessage'] != '') {
+                    $list[$i]['param']['flagMessage'] .= ', ';
+                }
+                $list[$i]['param']['flagMessage'] .= 'Default entity';
             }
-            $list[1]['param']['flagMessage'] .= 'Default entity';
         }
 
         // Code master
-        $list[2]['object'] = $nebuleInstance->getCodeMasterInstance();
-        $list[2]['param'] = $param;
-        $list[2]['param']['enableDisplayRefs'] = true;
-        $list[2]['param']['objectRefs'][0] = $nebuleInstance->getPuppetmasterInstance();
-        if ($nebuleInstance->getCodeMaster() == $nebuleInstance->getInstanceEntity()) {
-            $list[2]['param']['flagMessage'] = 'Instance entity';
-        }
-        if ($nebuleInstance->getCodeMaster() == $nebuleInstance->getDefaultEntity()) {
-            if ($list[2]['param']['flagMessage'] != '') {
-                $list[2]['param']['flagMessage'] .= ', ';
+        foreach ($nebuleInstance->getCodeAuthoritiesInstance() as $instance)
+        {
+            $i++;
+            $list[$i]['object'] = $instance;
+            $list[$i]['param'] = $param;
+            $list[$i]['param']['enableDisplayRefs'] = true;
+            $list[$i]['param']['objectRefs'][0] = $nebuleInstance->getPuppetmasterInstance();
+            if ($instance->getID() == $nebuleInstance->getInstanceEntity())
+                $list[$i]['param']['flagMessage'] = 'Instance entity';
+            if ($instance->getID() == $nebuleInstance->getDefaultEntity()) {
+                if ($list[$i]['param']['flagMessage'] != '') {
+                    $list[$i]['param']['flagMessage'] .= ', ';
+                }
+                $list[$i]['param']['flagMessage'] .= 'Default entity';
             }
-            $list[2]['param']['flagMessage'] .= 'Default entity';
         }
+
 
 
         echo $this->getDisplayObjectsList($list, 'medium');
@@ -965,7 +973,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         $list[$i]['param']['selfHookList'][0]['icon'] = Display::DEFAULT_ICON_LX;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
                             . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refAuthority
-                            . $nebuleInstance->getTicketingInstance()->getActionTicket();
+                            . $nebuleInstance->getTicketingInstance()->getActionTicketValue();
                     }
 
                     // Marque comme vu.
@@ -1061,7 +1069,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         $list[$i]['param']['selfHookList'][0]['icon'] = Display::DEFAULT_ICON_LL;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
                             . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refAuthority
-                            . $nebuleInstance->getTicketingInstance()->getActionTicket();
+                            . $nebuleInstance->getTicketingInstance()->getActionTicketValue();
                     }
 
                     // Marque comme vu.
@@ -1506,13 +1514,13 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                                     $this->displayHypertextLink(
                                         $this->convertInlineIconFace(Display::DEFAULT_ICON_LX) . 'Disable',
                                         '/?' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $application . '_' . $refActivated . '_' . $application
-                                        . $nebuleInstance->getTicketingInstance()->getActionTicket()
+                                        . $nebuleInstance->getTicketingInstance()->getActionTicketValue()
                                     );
                                 } else {
                                     $this->displayHypertextLink(
                                         $this->convertInlineIconFace(Display::DEFAULT_ICON_LL) . 'Enable',
                                         '/?' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $application . '_' . $refActivated . '_' . $application
-                                        . $nebuleInstance->getTicketingInstance()->getActionTicket()
+                                        . $nebuleInstance->getTicketingInstance()->getActionTicketValue()
                                     );
                                 }
                                 echo "<br />\n";
@@ -1531,7 +1539,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                                 $this->displayHypertextLink(
                                     $this->convertInlineIconFace(Display::DEFAULT_ICON_SYNOBJ) . 'Synchronize',
                                     '/?' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=' . $application
-                                    . $nebuleInstance->getTicketingInstance()->getActionTicket()
+                                    . $nebuleInstance->getTicketingInstance()->getActionTicketValue()
                                 );
                             }
                             ?>
@@ -1595,7 +1603,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     $this->displayHypertextLink(
                         $this->convertInlineIconFace(Display::DEFAULT_ICON_SYNOBJ) . 'Synchronize all applications',
                         '/?' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=0'
-                        . $nebuleInstance->getTicketingInstance()->getActionTicket()
+                        . $nebuleInstance->getTicketingInstance()->getActionTicketValue()
                     );
                     ?>
 
@@ -1729,7 +1737,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         $list[$i]['param']['selfHookList'][0]['icon'] = Display::DEFAULT_ICON_LX;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
                             . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refRecovery
-                            . $nebuleInstance->getTicketingInstance()->getActionTicket();
+                            . $nebuleInstance->getTicketingInstance()->getActionTicketValue();
                     }
 
                     // Marque comme vu.
@@ -1821,7 +1829,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         $list[$i]['param']['selfHookList'][0]['icon'] = Display::DEFAULT_ICON_LL;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
                             . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refRecovery
-                            . $nebuleInstance->getTicketingInstance()->getActionTicket();
+                            . $nebuleInstance->getTicketingInstance()->getActionTicketValue();
                     }
 
                     // Marque comme vu.
@@ -1957,7 +1965,7 @@ class Action extends Actions
      */
     public function genericActions()
     {
-        $this->_metrology->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         // Vérifie que l'entité instance locale du serveur est déverrouillée et que le ticket est valide.
         if ($this->_unlocked
@@ -1988,7 +1996,7 @@ class Action extends Actions
             }
         }
 
-        $this->_metrology->addLog('Generic actions end', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Generic actions end', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
 
@@ -1997,7 +2005,7 @@ class Action extends Actions
      */
     public function specialActions()
     {
-        $this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         // Vérifie que le ticket est valide.
         if ($this->_nebuleInstance->getTicketingInstance()->checkActionTicket()) {
@@ -2009,7 +2017,7 @@ class Action extends Actions
             }
         }
 
-        $this->_metrology->addLog('Special actions end', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Special actions end', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
 
@@ -2038,7 +2046,7 @@ class Action extends Actions
             && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
-            $this->_metrology->addLog('Extract action change option', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('Extract action change option', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
             /*
 			 *  ------------------------------------------------------------------------------------------
@@ -2085,7 +2093,7 @@ class Action extends Actions
             && $this->_actionOptionName != ''
             && $this->_unlocked
         ) {
-            $this->_metrology->addLog('Action change option ' . $this->_actionOptionName . ' = ' . $this->_actionOptionValue, Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('Action change option ' . $this->_actionOptionName . ' = ' . $this->_actionOptionValue, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
             // Vérifie que l'option est du bon type.
             $listOptionsType = $this->_configuration->getListOptionsType();
@@ -2121,7 +2129,7 @@ class Action extends Actions
                 // Affichage des actions.
                 $this->_display->displayInlineAllActions();
 
-                $this->_metrology->addLog('Action change option ok', Metrology::LOG_LEVEL_DEBUG); // Log
+                $this->_metrology->addLog('Action change option ok', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
             }
 
             // Affichage des actions.

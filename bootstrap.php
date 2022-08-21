@@ -4648,25 +4648,23 @@ function bootstrap_findApplicationDefault(string &$bootstrapApplicationIID): voi
     log_add('use default application IID=' . $bootstrapApplicationIID, 'debug', __FUNCTION__, '423ae49b');
 }
 
+/**
+ * Get if app need to be preloaded.
+ *
+ * @return void
+ */
 function bootstrap_getApplicationPreload(): void
 {
     global $bootstrapApplicationIID,
+           $bootstrapApplicationOID,
            $bootstrapApplicationNoPreload,
-           $libraryCheckOK,
-           $bootstrapSwitchApplication;
+           $libraryCheckOK;
 
     if (!$libraryCheckOK)
         return;
 
-    // Recherche si l'application doit être préchargée.
-    if (isset($_SESSION['bootstrapApplicationIID'][0])
-        && $bootstrapSwitchApplication == $_SESSION['bootstrapApplicationIID'][0]
-    )
-        $bootstrapApplicationNoPreload = false;
-    elseif (isset($_SESSION['bootstrapApplicationIID'][0])
-        && $bootstrapSwitchApplication == ''
-    )
-        $bootstrapApplicationNoPreload = false;
+    if (isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID]))
+        $bootstrapApplicationNoPreload = true;
     elseif (strlen($bootstrapApplicationIID) < 2)
         $bootstrapApplicationNoPreload = true;
     elseif (!$bootstrapApplicationNoPreload) {
@@ -4676,7 +4674,7 @@ function bootstrap_getApplicationPreload(): void
             log_add('do not preload application', 'info', __FUNCTION__, '0ac7d800');
     }
     else
-        $bootstrapApplicationNoPreload = true;
+        $bootstrapApplicationNoPreload = false;
 }
 
 /**

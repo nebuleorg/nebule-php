@@ -1218,7 +1218,7 @@ abstract class Applications implements applicationInterface
             || $this->_checkSecurityURL == 'WARN'
         ) {
             $this->_checkSecurityAll = 'WARN';
-            $this->_metrologyInstance->addLog('General WARN', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('general security WARN', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'bb110e27');
         }
 
         if ($this->_checkSecurityBootstrap == 'ERROR'
@@ -1229,7 +1229,7 @@ abstract class Applications implements applicationInterface
             || $this->_checkSecurityURL == 'ERROR'
         ) {
             $this->_checkSecurityAll = 'ERROR';
-            $this->_metrologyInstance->addLog('General ERROR', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('general security ERROR', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '7f72506b');
         }
     }
 
@@ -1299,7 +1299,7 @@ abstract class Applications implements applicationInterface
         if ($ok) {
             $this->_checkSecurityBootstrap = 'OK';
             $this->_checkSecurityBootstrapMessage = "OK";
-            $this->_metrologyInstance->addLog('SECURITY OK Bootstrap', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('SECURITY OK Bootstrap', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'a8578fbf');
         }
         // Modification pour le mode rescue afin de permettre un déverrouillage sur un boostrap inconnu. Le mode rescue est dangereux. @todo bof...
         /*		if ( $this->_nebuleInstance->getModeRescue()
@@ -1358,11 +1358,11 @@ abstract class Applications implements applicationInterface
         if (true || $this->_nebuleInstance->getCryptoInstance()->checkHashFunction()) { // TODO
             $this->_checkSecurityCryptoHash = 'OK';
             $this->_checkSecurityCryptoHashMessage = 'OK';
-            $this->_metrologyInstance->addLog('SECURITY OK Hash Crypto', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('SECURITY OK Hash Crypto', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '46f04cd0');
         } else {
             $this->_checkSecurityCryptoHash = 'ERROR';
             $this->_checkSecurityCryptoHashMessage = ':::act_chk_errCryptHash';
-            $this->_metrologyInstance->addLog('SECURITY ERROR Hash Crypto', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('SECURITY ERROR Hash Crypto', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '3b3440f7');
         }
     }
 
@@ -1412,11 +1412,11 @@ abstract class Applications implements applicationInterface
         if (true || $this->_nebuleInstance->getCryptoInstance()->checkSymmetricFunction()) { // TODO
             $this->_checkSecurityCryptoSym = 'OK';
             $this->_checkSecurityCryptoSymMessage = 'OK';
-            $this->_metrologyInstance->addLog('SECURITY OK Sym Crypto', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('SECURITY OK Sym Crypto', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'acc2b1c1');
         } else {
             $this->_checkSecurityCryptoSym = 'ERROR';
             $this->_checkSecurityCryptoSymMessage = ':::act_chk_errCryptSym';
-            $this->_metrologyInstance->addLog('SECURITY ERROR Sym Crypto', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('SECURITY ERROR Sym Crypto', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '50a09db3');
         }
     }
 
@@ -1466,11 +1466,11 @@ abstract class Applications implements applicationInterface
         if (true || $this->_nebuleInstance->getCryptoInstance()->checkAsymmetricFunction()) { // TODO
             $this->_checkSecurityCryptoAsym = 'OK';
             $this->_checkSecurityCryptoAsymMessage = 'OK';
-            $this->_metrologyInstance->addLog('SECURITY OK Asym Crypto', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('SECURITY OK Asym Crypto', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '0af33bed');
         } else {
             $this->_checkSecurityCryptoAsym = 'ERROR';
             $this->_checkSecurityCryptoAsymMessage = ':::act_chk_errCryptAsym';
-            $this->_metrologyInstance->addLog('SECURITY ERROR Asym Crypto', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('SECURITY ERROR Asym Crypto', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '12ba7b66');
         }
     }
 
@@ -1531,11 +1531,11 @@ abstract class Applications implements applicationInterface
             ) {
                 $this->_checkSecuritySign = 'ERROR';
                 $this->_checkSecuritySignMessage = ':::act_chk_errSigns';
-                $this->_metrologyInstance->addLog('SECURITY ERROR Sign', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+                $this->_metrologyInstance->addLog('SECURITY ERROR Sign', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '70b97981');
             } else {
                 $this->_checkSecuritySign = 'OK';
                 $this->_checkSecuritySignMessage = 'OK';
-                $this->_metrologyInstance->addLog('SECURITY OK Sign', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                $this->_metrologyInstance->addLog('SECURITY OK Sign', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '148b111d');
             }
             unset($validLink, $instanceValidLink, $invalidLink, $instanceInvalidLink);
         }

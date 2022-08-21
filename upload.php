@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Upload;
+use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
 use Nebule\Library\Actions;
 use Nebule\Library\Applications;
@@ -26,22 +27,19 @@ use Nebule\Library\Traductions;
 
 
 /**
- * Classe Application
+ * Class Application for upload
  *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
- *
- * Le coeur de l'application.
- *
  */
 class Application extends Applications
 {
     const APPLICATION_NAME = 'upload';
     const APPLICATION_SURNAME = 'nebule/upload';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020211218';
+    const APPLICATION_VERSION = '020220821';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2022';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -232,7 +230,7 @@ class Display extends Displays
                     && $this->_configuration->getOptionAsBoolean('permitWriteLink')
                     && $this->_configuration->getOptionAsBoolean('permitUploadLink')
                     && ($this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
-                        || $this->_configuration->getOptionAsBoolean('permitPublicUploadCodeMasterLink')
+                        || $this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                         || $this->_unlocked
                     )
                 ) {
@@ -256,7 +254,7 @@ class Display extends Displays
                         <h1>One link upload</h1>
                         <div>
                             <form enctype="multipart/form-data" method="post"
-                                  action="<?php echo '?' . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(); ?>">
+                                  action="<?php echo '?' . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                                 <input type="text" class="newlink"
                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_SIGNED_LINK; ?>"
                                        value=""/><br/>
@@ -269,7 +267,7 @@ class Display extends Displays
                         <h1>Link's file upload</h1>
                         <div>
                             <form enctype="multipart/form-data" method="post"
-                                  action="<?php echo '?' . $this->_nebuleInstance->getTicketingInstance()->getActionTicket(); ?>">
+                                  action="<?php echo '?' . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                                 <input type="hidden"
                                        name="MAX_FILE_SIZE"
                                        value="<?php echo $this->_configuration->getOptionUntyped('ioReadMaxData'); ?>"/>
@@ -328,11 +326,11 @@ class Action extends Actions
      */
     public function genericActions()
     {
-        $this->_metrology->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         // Rien.
 
-        $this->_metrology->addLog('Generic actions end', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Generic actions end', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 
 
@@ -346,13 +344,13 @@ class Action extends Actions
      */
     public function specialActions()
     {
-        $this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
         // Vérifie que l'action de chargement de lien soit permise.
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
             && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_configuration->getOptionAsBoolean('permitUploadLink')
-            && ($this->_configuration->getOptionAsBoolean('permitPublicUploadCodeMasterLink')
+            && ($this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                 || $this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_unlocked
             )
@@ -361,7 +359,7 @@ class Action extends Actions
             $this->_extractActionUploadLink();
             $this->_extractActionUploadFileLinks();
 
-            $this->_metrology->addLog('Router Special actions', Metrology::LOG_LEVEL_DEBUG); // Log
+            $this->_metrology->addLog('Router Special actions', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
 
             // Liens pré-signés.
             if ($this->_actionUploadLinkInstance != ''
@@ -378,7 +376,7 @@ class Action extends Actions
             }
         }
 
-        $this->_metrology->addLog('Special actions end', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrology->addLog('Special actions end', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
     }
 }
 
