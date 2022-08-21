@@ -11,7 +11,7 @@ use Nebule\Library\nebule;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-abstract class Modules
+abstract class Modules implements moduleInterface
 {
     /* ---------- ---------- ---------- ---------- ----------
 	 * Constantes.
@@ -44,7 +44,7 @@ abstract class Modules
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = 'Description';
     protected $MODULE_VERSION = '020160925';
-    protected $MODULE_DEVELOPPER = 'Projet nebule';
+    protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 sylabe 2013-2016';
     protected $MODULE_LOGO = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c';
     protected $MODULE_HELP = 'Help';
@@ -133,7 +133,7 @@ abstract class Modules
      *
      * @return void
      */
-    public function initialisation()
+    public function initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_display = $this->_applicationInstance->getDisplayInstance();
@@ -158,98 +158,98 @@ abstract class Modules
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->MODULE_NAME;
     }
 
-    public function getClassName()
+    public function getClassName(): string
     {
         return static::class;
     }
 
-    public function getType()
+    public function getType(): string
     {
         return strtolower($this->MODULE_TYPE);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->MODULE_NAME;
     }
 
-    public function getMenuName()
+    public function getMenuName(): string
     {
         return $this->MODULE_MENU_NAME;
     }
 
-    public function getRegisteredViews()
+    public function getRegisteredViews(): array
     {
         return $this->MODULE_REGISTERED_VIEWS;
     }
 
-    public function getCommandName()
+    public function getCommandName(): string
     {
         return $this->MODULE_COMMAND_NAME;
     }
 
-    public function getDefaultView()
+    public function getDefaultView(): string
     {
         return $this->MODULE_DEFAULT_VIEW;
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->MODULE_DESCRIPTION;
     }
 
-    public function getVersion()
+    public function getVersion(): string
     {
         return $this->MODULE_VERSION;
     }
 
-    public function getDevelopper()
+    public function getAuthor(): string
     {
-        return $this->MODULE_DEVELOPPER;
+        return $this->MODULE_AUTHOR;
     }
 
-    public function getLicence()
+    public function getLicence(): string
     {
         return $this->MODULE_LICENCE;
     }
 
-    public function getLogo()
+    public function getLogo(): string
     {
         return $this->MODULE_LOGO;
     }
 
-    public function getHelp()
+    public function getHelp(): string
     {
         return $this->MODULE_HELP;
     }
 
-    public function getInterface()
+    public function getInterface(): string
     {
         return $this->MODULE_INTERFACE;
     }
 
     // Gestion de la présence dans le menu des applications.
-    public function getAppTitleList()
+    public function getAppTitleList(): array
     {
         return $this->MODULE_APP_TITLE_LIST;
     }
 
-    public function getAppIconList()
+    public function getAppIconList(): array
     {
         return $this->MODULE_APP_ICON_LIST;
     }
 
-    public function getAppDescList()
+    public function getAppDescList(): array
     {
         return $this->MODULE_APP_DESC_LIST;
     }
 
-    public function getAppViewList()
+    public function getAppViewList(): array
     {
         return $this->MODULE_APP_VIEW_LIST;
     }
@@ -259,21 +259,33 @@ abstract class Modules
      * Ajout de fonctionnalités à des points d'ancrage.
      *
      * @param string $hookName
+     * @param string $object
      * @return array
      */
-    public function getHookList($hookName, $object = 'none')
+    public function getHookList(string $hookName, string $object = 'none'): array
     {
-        $hookArray = array();
-        return $hookArray;
+        return array();
     }
 
+
+    /**
+     * Affichage de la page par défaut.
+     */
+    public function display(): void
+    {
+        // Lit si la variable GET existe.
+        if (filter_has_var(INPUT_GET, self::DEFAULT_INLINE_COMMAND))
+            $this->_displayInline();
+        else
+            $this->_displayFull();
+    }
 
     /**
      * Affichage principale.
      *
      * @return void
      */
-    public function display()
+    protected function _displayFull(): void
     {
         // N'affiche rien par défaut.
     }
@@ -283,7 +295,7 @@ abstract class Modules
      *
      * @return void
      */
-    public function displayInline()
+    public function displayInline(): void
     {
         // N'affiche rien par défaut.
     }

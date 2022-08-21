@@ -426,7 +426,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     /**
      * Affichage de la page.
      */
-    public function display()
+    public function display(): void
     {
         /*
 		 *  ------------------------------------------------------------------------------------------
@@ -2003,7 +2003,7 @@ class ModuleHelp extends Modules
     protected $MODULE_DEFAULT_VIEW = '1st';
     protected $MODULE_DESCRIPTION = '::qantion:module:help:ModuleDescription';
     protected $MODULE_VERSION = '020200202';
-    protected $MODULE_DEVELOPPER = 'Projet nebule';
+    protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2019-2020';
     protected $MODULE_LOGO = '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d';
     protected $MODULE_HELP = '::qantion:module:help:ModuleHelp';
@@ -2039,7 +2039,7 @@ class ModuleHelp extends Modules
     /**
      * Ajout de fonctionnalités à des points d'ancrage.
      */
-    public function getHookList($hookName, $object = 'none')
+    public function getHookList(string $hookName, string $object = 'none')
     {
         if ($object == 'none') {
             $object = $this->_applicationInstance->getCurrentObject();
@@ -2093,7 +2093,7 @@ class ModuleHelp extends Modules
     /**
      * Affichage principale.
      */
-    public function display()
+    protected function _displayFull(): void
     {
         $this->_displayHlpHeader();
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
@@ -2497,7 +2497,7 @@ class ModuleAdmin extends Modules
     protected $MODULE_DEFAULT_VIEW = 'options';
     protected $MODULE_DESCRIPTION = '::qantion:module:admin:ModuleDescription';
     protected $MODULE_VERSION = '020200202';
-    protected $MODULE_DEVELOPPER = 'Projet nebule';
+    protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2019-2020';
     protected $MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3';
     protected $MODULE_HELP = '::qantion:module:admin:ModuleHelp';
@@ -2529,7 +2529,7 @@ class ModuleAdmin extends Modules
     /**
      * Ajout de fonctionnalités à des points d'ancrage.
      */
-    public function getHookList($hookName, $object = 'none')
+    public function getHookList(string $hookName, string $object = 'none')
     {
         if ($object == 'none') {
             $object = $this->_applicationInstance->getCurrentObject();
@@ -2574,7 +2574,7 @@ class ModuleAdmin extends Modules
     /**
      * Affichage principale.
      */
-    public function display()
+    protected function _displayFull(): void
     {
         $this->_displayHeader();
 
@@ -3024,7 +3024,7 @@ class ModuleEntities extends Modules
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
     protected $MODULE_VERSION = '020200202';
-    protected $MODULE_DEVELOPPER = 'Projet nebule';
+    protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2020';
     protected $MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60';
     protected $MODULE_HELP = '::sylabe:module:entities:ModuleHelp';
@@ -3116,10 +3116,10 @@ class ModuleEntities extends Modules
      * Ajout de fonctionnalités à des points d'ancrage.
      *
      * @param string $hookName
-     * @param string|Node $object
+     * @param string $object
      * @return array
      */
-    public function getHookList($hookName, $object = 'none')
+    public function getHookList(string $hookName, string $object = 'none')
     {
         $hookArray = array();
         if ($object == 'none') {
@@ -3333,7 +3333,7 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    public function display()
+    protected function _displayFull(): void
     {
         switch ($this->_display->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -5610,7 +5610,7 @@ class ModuleGroups extends Modules
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:groups:ModuleDescription';
     protected $MODULE_VERSION = '020200202';
-    protected $MODULE_DEVELOPPER = 'Projet nebule';
+    protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2020';
     protected $MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2';
     protected $MODULE_HELP = '::sylabe:module:groups:ModuleHelp';
@@ -5653,10 +5653,10 @@ class ModuleGroups extends Modules
      * Ajout de fonctionnalités à des points d'ancrage.
      *
      * @param string $hookName
-     * @param string|Node $object
+     * @param string $object
      * @return array
      */
-    public function getHookList($hookName, $object = 'none')
+    public function getHookList(string $hookName, string $object = 'none')
     {
         $hookArray = array();
         if ($object == 'none') {
@@ -5858,7 +5858,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    public function display()
+    protected function _displayFull(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -6667,7 +6667,7 @@ class ModuleObjects extends Modules
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
     protected $MODULE_VERSION = '020200202';
-    protected $MODULE_DEVELOPPER = 'Projet nebule';
+    protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2020';
     protected $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee';
     protected $MODULE_HELP = '::sylabe:module:objects:ModuleHelp';
@@ -6708,10 +6708,10 @@ class ModuleObjects extends Modules
      * Ajout de fonctionnalités à des points d'ancrage.
      *
      * @param string $hookName
-     * @param string|Node $object
+     * @param string $object
      * @return array
      */
-    public function getHookList($hookName, $object = 'none')
+    public function getHookList(string $hookName, string $object = 'none')
     {
         $hookArray = array();
         if ($object == 'none') {
@@ -7038,7 +7038,7 @@ class ModuleObjects extends Modules
      *
      * @return void
      */
-    public function display()
+    protected function _displayFull(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -8191,7 +8191,7 @@ class Moduleqantion extends Modules
     protected $MODULE_DEFAULT_VIEW = 'lcur';
     protected $MODULE_DESCRIPTION = '::sylabe:module:qantion:ModuleDescription';
     protected $MODULE_VERSION = '020200314';
-    protected $MODULE_DEVELOPPER = 'Projet nebule';
+    protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2019-2020';
     protected $MODULE_LOGO = 'fd7715facdc9491f81de5b6cbe5cc3aee8f690a6feb36734bf185885d92bdbb7';
     protected $MODULE_HELP = '::sylabe:module:qantion:ModuleHelp';
@@ -8270,10 +8270,10 @@ class Moduleqantion extends Modules
      * Ajout de fonctionnalités à des points d'ancrage.
      *
      * @param string $hookName
-     * @param string|Node $object
+     * @param string $object
      * @return array
      */
-    public function getHookList($hookName, $object = 'none')
+    public function getHookList(string $hookName, string $object = 'none')
     {
         if ($object == 'none') {
             $object = $this->_applicationInstance->getCurrentObject();
@@ -8635,7 +8635,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    public function display()
+    protected function _displayFull(): void
     {
         $this->_displayHeader();
 
@@ -11159,7 +11159,7 @@ class ModuleTranslateFRFR extends Modules
     protected $MODULE_DEFAULT_VIEW = '';
     protected $MODULE_DESCRIPTION = '::translateModule:fr-fr:ModuleDescription';
     protected $MODULE_VERSION = '020200202';
-    protected $MODULE_DEVELOPPER = 'Projet nebule';
+    protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2020';
     protected $MODULE_LOGO = 'b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac';
     protected $MODULE_HELP = '::translateModule:fr-fr:ModuleHelp';
@@ -11178,7 +11178,7 @@ class ModuleTranslateFRFR extends Modules
      *
      * @return void
      */
-    public function initialisation()
+    public function initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_initTable();
@@ -11189,10 +11189,10 @@ class ModuleTranslateFRFR extends Modules
      * Ajout de fonctionnalités à des points d'ancrage.
      *
      * @param string $hookName
-     * @param string|Node $object
+     * @param string $object
      * @return array
      */
-    public function getHookList($hookName, $object = 'none')
+    public function getHookList(string $hookName, string $object = 'none')
     {
         if ($object == 'none') {
             $object = $this->_applicationInstance->getCurrentObject();
@@ -11898,7 +11898,7 @@ class ModuleTranslateENEN extends Modules
     protected $MODULE_DEFAULT_VIEW = '';
     protected $MODULE_DESCRIPTION = '::translateModule:en-en:ModuleDescription';
     protected $MODULE_VERSION = '020200202';
-    protected $MODULE_DEVELOPPER = 'Projet nebule';
+    protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2020';
     protected $MODULE_LOGO = '7796077f1b865951946dd40ab852f6f4d21e702e7c4f47bd5fa6cb9ce94a4c5f';
     protected $MODULE_HELP = '::translateModule:en-en:ModuleHelp';
@@ -11928,10 +11928,10 @@ class ModuleTranslateENEN extends Modules
      * Ajout de fonctionnalités à des points d'ancrage.
      *
      * @param string $hookName
-     * @param string|Node $object
+     * @param string $object
      * @return array
      */
-    public function getHookList($hookName, $object = 'none')
+    public function getHookList(string $hookName, string $object = 'none')
     {
         if ($object == 'none') {
             $object = $this->_applicationInstance->getCurrentObject();

@@ -662,7 +662,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
      *
      * @return void
      */
-    public function initialisation()
+    public function initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
@@ -718,7 +718,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
      *
      * @return void
      */
-    public function initialisation2()
+    public function initialisation2(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
@@ -870,28 +870,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     }
 
 
-    /**
-     * Affichage de la page.
-     */
-    public function display()
-    {
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
- 		 *  ------------------------------------------------------------------------------------------
-		 */
-        // Lit si la variable GET existe.
-        if (filter_has_var(INPUT_GET, self::DEFAULT_INLINE_COMMAND)) {
-            $this->_displayInline();
-        } else {
-            $this->_displayFull();
-        }
-    }
 
     /**
      * Affichage de la page complète.
      */
-    private function _displayFull()
+    protected function _displayFull(): void
     {
         global $applicationName, $applicationSurname, $applicationLicence, $applicationAuthor,
                $applicationWebsite;
@@ -961,7 +944,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     /**
      * Affichage de la partie de page en ligne.
      */
-    private function _displayInline()
+    protected function _displayInline(): void
     {
         $this->_metrologyInstance->addLog('Display inline', Metrology::LOG_LEVEL_NORMAL); // Log
         $this->_displayInlineContent();
@@ -970,7 +953,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     /**
      * Affichage du style CSS.
      */
-    public function displayCSS()
+    public function displayCSS(): void
     {
         // Recherche l'image de fond.
         $bgobj = $this->_nebuleInstance->newObject(self::DEFAULT_CSS_BACKGROUND);
@@ -4113,7 +4096,7 @@ echo $this->getDisplayInformation('::HelpRecoveryEntity', $param);
                     ?>
 
                     <div class="oneAction-entityname">
-                        <p><?php $this->displayInlineObjectColorIconName($entity); ?></p>
+                        <p><?php $this->displayInlineObjectColorIconName($entityID); ?></p>
                     </div>
                     <?php
                 }
@@ -4772,7 +4755,7 @@ class Action extends Actions
     /**
      * Transfert un fichier et le nebulise.
      */
-    protected function _actionUploadFile()
+    protected function _actionUploadFile(): void
     {
         // Vérifie que la création d'objet soit authorisée.
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
@@ -4790,7 +4773,7 @@ class Action extends Actions
             if ($instance === false) {
                 $this->_actionUploadFileError = true;
                 $this->_actionUploadFileErrorMessage = "L'instance de l'objet n'a pas pu être créée.";
-                return false;
+                return;
             }
 
             // Lit l'ID.
@@ -4799,7 +4782,7 @@ class Action extends Actions
             if ($id == '0') {
                 $this->_actionUploadFileError = true;
                 $this->_actionUploadFileErrorMessage = "L'objet n'a pas pu être créé.";
-                return false;
+                return;
             }
             $this->_actionUploadFileID = $id;
 

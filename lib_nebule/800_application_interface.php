@@ -4,7 +4,7 @@ namespace Nebule\Library;
 use Nebule\Library\nebule;
 
 /**
- * L'interface nodeApplication
+ * L'interface applicationInterface
  *
  * @author Projet nebule
  * @license GNU GPLv3

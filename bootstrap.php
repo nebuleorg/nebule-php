@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220820';
+const BOOTSTRAP_VERSION = '020220821';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -4536,8 +4536,7 @@ function bootstrap_findApplication(): void
     global $libraryCheckOK,
            $bootstrapApplicationIID,
            $bootstrapApplicationOID,
-           $bootstrapUpdate,
-           $bootstrapApplicationNoPreload;
+           $bootstrapUpdate;
 
     $bootstrapApplicationIID = '';
     $bootstrapApplicationOID = '';
@@ -4557,7 +4556,6 @@ function bootstrap_findApplication(): void
     if (strlen($bootstrapApplicationIID) < 2)
         $bootstrapApplicationOID = $bootstrapApplicationIID;
     elseif (!$bootstrapUpdate
-        && $bootstrapApplicationNoPreload
         && isset($_SESSION['bootstrapApplicationOID'][0])
     )
         $bootstrapApplicationOID = $_SESSION['bootstrapApplicationOID'][0];
@@ -4654,13 +4652,22 @@ function bootstrap_getApplicationPreload(): void
 {
     global $bootstrapApplicationIID,
            $bootstrapApplicationNoPreload,
-           $libraryCheckOK;
+           $libraryCheckOK,
+           $bootstrapSwitchApplication;
 
     if (!$libraryCheckOK)
         return;
 
     // Recherche si l'application doit être préchargée.
-    if (strlen($bootstrapApplicationIID) < 2)
+    if (isset($_SESSION['bootstrapApplicationIID'][0])
+        && $bootstrapSwitchApplication == $_SESSION['bootstrapApplicationIID'][0]
+    )
+        $bootstrapApplicationNoPreload = false;
+    elseif (isset($_SESSION['bootstrapApplicationIID'][0])
+        && $bootstrapSwitchApplication == ''
+    )
+        $bootstrapApplicationNoPreload = false;
+    elseif (strlen($bootstrapApplicationIID) < 2)
         $bootstrapApplicationNoPreload = true;
     elseif (!$bootstrapApplicationNoPreload) {
         $bootstrapApplicationNoPreload = app_getPreload($bootstrapApplicationIID);
@@ -7280,17 +7287,12 @@ function bootstrap_logMetrology()
 {
     global $nebuleInstance, $nebuleMetrologyTimers;
 
-    $memory = sprintf('%01.3f', memory_get_peak_usage() / 1024 / 1024);
-
     $timers = '';
     foreach ($nebuleMetrologyTimers as $i => $v)
         $timers .= " $i=$v";
 
-    // Metrology on logs.
     if (is_a($nebuleInstance, 'Nebule\Library\nebule'))
-        log_add('Mp=' . $memory . 'Mb'
-            . $timers
-            . ' Lr=' . lib_getMetrology('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead()
+        $caches = ' Lr=' . lib_getMetrology('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead()
             . ' Lv=' . lib_getMetrology('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify()
             . ' Or=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead()
             . ' Ov=' . lib_getMetrology('ov') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify()
@@ -7299,21 +7301,18 @@ function bootstrap_logMetrology()
             . ' OC=' . $nebuleInstance->getCacheInstance()->getCacheObjectSize()
             . ' EC=' . $nebuleInstance->getCacheInstance()->getCacheEntitySize()
             . ' GC=' . $nebuleInstance->getCacheInstance()->getCacheGroupSize()
-            . ' CC=' . $nebuleInstance->getCacheInstance()->getCacheConversationSize(),
-            'info',
-            __FUNCTION__,
-            '0d99ad8b');
+            . ' CC=' . $nebuleInstance->getCacheInstance()->getCacheConversationSize();
     else
-        log_add('Mp=' . $memory . 'Mb'
-            . $timers
-            . ' Lr=' . lib_getMetrology('lr')
-            . ' Lv=' . lib_getMetrology('lv')
-            . ' Or=' . lib_getMetrology('or')
-            . ' Ov=' . lib_getMetrology('ov')
-            . ' (PP)',
-            'info',
-            __FUNCTION__,
-            '52d76692');
+        $caches = ' Lr=' . lib_getMetrology('lr') . ' Lv=' . lib_getMetrology('lv')
+            . ' Or=' . lib_getMetrology('or') . ' Ov=' . lib_getMetrology('ov') . ' (PP)';
+
+    log_add('end bootstrap Mp='
+        . sprintf('%01.3f', memory_get_peak_usage() / 1024 / 1024) . 'Mb'
+        . $timers
+        . $caches,
+        'info',
+        __FUNCTION__,
+        '52d76692');
 }
 
 function main()

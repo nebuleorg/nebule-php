@@ -2148,7 +2148,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affichage de la page complète.
      */
-    private function _displayFull(): void
+    protected function _displayFull(): void
     {
         global $applicationVersion, $applicationLicence, $applicationWebsite, $applicationName, $applicationSurname, $applicationAuthor;
         ?>
@@ -2217,7 +2217,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affichage de la partie de page en ligne.
      */
-    private function _displayInline(): void
+    protected function _displayInline(): void
     {
         // Cette fonction doit être surchargée par l'application.
     }
@@ -8284,8 +8284,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare en version inserré au texte l'image du carré de couleur de l'objet ou de l'entité, lien vers l'objet.
      *
-     * @param string|Node|entity $object
-     * @param string             $htlink
+     * @param string|Node $object
+     * @param string      $htlink
      * @return string
      */
     public function prepareInlineObjectColor($object, string $htlink = ''): string
@@ -8299,11 +8299,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche en version inserré au texte l'image de l'objet ou de l'entité, lien vers l'objet.
      *
-     * @param string $object
+     * @param string|Node $object
      * @param string $htlink
      * @return void
      */
-    public function displayInlineObjectColor(string $object, string $htlink = ''): void
+    public function displayInlineObjectColor($object, string $htlink = ''): void
     {
         echo $this->convertInlineObjectColor($object, $htlink);
     }
@@ -8311,11 +8311,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare en version inserré au texte l'image de l'objet ou de l'entité, lien vers l'objet.
      *
-     * @param string $object
+     * @param string|Node $object
      * @param string $htlink
      * @return string
      */
-    public function convertInlineObjectColor(string $object, string $htlink = ''): string
+    public function convertInlineObjectColor($object, string $htlink = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
@@ -8326,12 +8326,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche en version inserré au texte l'image de l'objet ou de l'entité et le nom ou un texte, lien vers l'objet.
      *
-     * @param string $object
+     * @param string|Node $object
      * @param string $text
      * @param string $htlink
      * @return void
      */
-    public function displayInlineObjectColorText(string $object, string $text = '', string $htlink = ''): void
+    public function displayInlineObjectColorText($object, string $text = '', string $htlink = ''): void
     {
         echo $this->convertInlineObjectColorText($object, $text, $htlink);
     }
@@ -8339,12 +8339,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare en version inserré au texte l'image de l'objet ou de l'entité et le nom ou un texte, lien vers l'objet.
      *
-     * @param string $object
+     * @param string|Node $object
      * @param string $text
      * @param string $htlink
      * @return string
      */
-    public function convertInlineObjectColorText(string $object, string $text = '', string $htlink = ''): string
+    public function convertInlineObjectColorText($object, string $text = '', string $htlink = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         if ($text == '')
@@ -8358,11 +8358,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche en version inserré au texte l'image de l'objet ou de l'entité et le nom, lien vers l'objet.
      *
-     * @param string $object
+     * @param string|Node $object
      * @param string $htlink
      * @return void
      */
-    public function displayInlineObjectColorName(string $object, string $htlink = ''): void
+    public function displayInlineObjectColorName($object, string $htlink = ''): void
     {
         echo $this->convertInlineObjectColorName($object, $htlink);
     }
@@ -8370,11 +8370,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare en version inserré au texte l'image de l'objet ou de l'entité et le nom, lien vers l'objet.
      *
-     * @param string $object
+     * @param string|Node $object
      * @param string $htlink
      * @return string
      */
-    public function convertInlineObjectColorName(string $object, string $htlink = ''): string
+    public function convertInlineObjectColorName($object, string $htlink = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
@@ -8386,11 +8386,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche en version inserré au texte l'icône couleur, l'image et un texte ou le nom de l'objet ou de l'entité, lien vers l'objet.
      *
-     * @param string $object
+     * @param string|Node $object
      * @param string $htlink
      * @return void
      */
-    public function displayInlineObjectColorIcon(string $object, string $htlink = ''): void
+    public function displayInlineObjectColorIcon($object, string $htlink = ''): void
     {
         echo $this->convertInlineObjectColorIcon($object, $htlink);
     }
@@ -8412,11 +8412,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche en version inserré au texte l'icône couleur, l'image et un texte ou le nom de l'objet ou de l'entité, lien vers l'objet.
      *
-     * @param string $object
+     * @param string|Node $object
      * @param string $htlink
      * @return void
      */
-    public function displayInlineObjectColorIconName(string $object, string $htlink = ''): void
+    public function displayInlineObjectColorIconName($object, string $htlink = ''): void
     {
         echo $this->convertInlineObjectColorIconName($object, $htlink);
     }
@@ -8434,10 +8434,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche en version inserré au texte l'icône couleur, l'image et un texte ou le nom de l'objet ou de l'entité, mais pas de lien vers l'objet.
      *
-     * @param string $object
+     * @param string|Node $object
      * @return void
      */
-    public function displayInlineObjectColorIconNameNolink(string $object): void
+    public function displayInlineObjectColorIconNameNolink($object): void
     {
         echo $this->convertInlineObjectColorIconNameNolink($object);
     }
@@ -8445,10 +8445,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare en version inserré au texte l'icône couleur, l'image et un texte ou le nom de l'objet ou de l'entité, mais pas de lien vers l'objet.
      *
-     * @param string $object
+     * @param string|Node $object
      * @return string
      */
-    public function convertInlineObjectColorIconNameNolink(string $object): string
+    public function convertInlineObjectColorIconNameNolink($object): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $name = $this->_truncateName($object->getFullName('all'), 0);

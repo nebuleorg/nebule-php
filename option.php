@@ -118,15 +118,14 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
     /**
      * Affichage de la page.
      */
-    public function display(): void
+    protected function _displayFull(): void
     {
         global $applicationVersion, $applicationLevel, $applicationLicence, $applicationWebsite,
                $applicationName, $applicationSurname, $applicationAuthor;
 
         $linkApplicationWebsite = $applicationWebsite;
-        if (strpos($applicationWebsite, '://') === false) {
+        if (strpos($applicationWebsite, '://') === false)
             $linkApplicationWebsite = 'http://' . $applicationWebsite;
-        }
 
         $nebuleInstance = $this->_nebuleInstance;
 
