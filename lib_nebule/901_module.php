@@ -23,7 +23,7 @@ abstract class Modules implements moduleInterface
 	 */
     /**
      * Le type de module.
-     * None : Le module est chargé mais n'est pas utilisé après.
+     * None : Le module est chargé, mais n'est pas utilisé après.
      * Application : Le module est chargé puis appelé aux emplacements dédiés aux applications.
      *     Il est aussi utilisé pour les traductions qui le concerne.
      * Traduction : Le module est chargé puis utilisé pour toute traduction.
@@ -125,7 +125,7 @@ abstract class Modules implements moduleInterface
     public function __construct(Applications $applicationInstance)
     {
         $this->_applicationInstance = $applicationInstance;
-        $this->_configuration = $applicationInstance->nebuleInstance()->getConfigurationInstance();
+        $this->_configuration = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
     }
 
     /**
@@ -274,7 +274,7 @@ abstract class Modules implements moduleInterface
     public function display(): void
     {
         // Lit si la variable GET existe.
-        if (filter_has_var(INPUT_GET, self::DEFAULT_INLINE_COMMAND))
+        if (filter_has_var(INPUT_GET, Displays::DEFAULT_INLINE_COMMAND))
             $this->_displayInline();
         else
             $this->_displayFull();
@@ -301,6 +301,16 @@ abstract class Modules implements moduleInterface
     }
 
     /**
+     * Affichage en ligne comme élément inseré dans une page web.
+     *
+     * @return void
+     */
+    /*protected function _displayInline(): void
+    {
+        // N'affiche rien par défaut.
+    }*/
+
+    /**
      * Cache de la lecture de la commande d'action d'affichage du module.
      *
      * @var string
@@ -310,21 +320,15 @@ abstract class Modules implements moduleInterface
     /**
      * Extrait en vue d'un affichage dans le module un texte/objet à afficher.
      *
-     * @return void
+     * @return string
      */
-    public function getExtractCommandDisplayModule()
+    public function getExtractCommandDisplayModule(): string
     {
         $return = '';
 
-        if ($this->_commandActionDisplayModuleCache != null) {
+        if ($this->_commandActionDisplayModuleCache != null)
             return $this->_commandActionDisplayModuleCache;
-        }
 
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-		 *  ------------------------------------------------------------------------------------------
-		 */
         // Vérifie que l'on est en vue affichage de module.
         if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]) {
             // Lit et nettoye le contenu de la variable GET.
@@ -349,7 +353,7 @@ abstract class Modules implements moduleInterface
      *
      * @return void
      */
-    public function getCSS()
+    public function getCSS(): void
     {
         echo '<style type="text/css">' . "\n";
         $this->headerStyle();
@@ -363,7 +367,7 @@ abstract class Modules implements moduleInterface
      *
      * @return void
      */
-    public function headerStyle()
+    public function headerStyle(): void
     {
         // N'affiche rien par défaut.
     }
@@ -373,7 +377,7 @@ abstract class Modules implements moduleInterface
      *
      * @return void
      */
-    public function headerScript()
+    public function headerScript(): void
     {
         // N'affiche rien par défaut.
     }
@@ -383,23 +387,21 @@ abstract class Modules implements moduleInterface
      *
      * @return void
      */
-    public function action()
+    public function action(): void
     {
         // Ne fait rien par défaut.
     }
 
     /**
      * Traduction.
-     *
      * Si besoin, extrait la langue de destination.
-     *
      * Si aucune traduction n'est trouvée dans la langue demandée, retourne le texte d'origine.
      *
      * @param string $text
      * @param string $lang
      * @return string
      */
-    public function getTraduction($text, $lang = '')
+    public function getTraduction(string $text, string $lang = ''): string
     {
         $result = $text;
         if ($this->_traduction == null) {
@@ -420,9 +422,10 @@ abstract class Modules implements moduleInterface
      * Traduction interne à la classe.
      *
      * @param string $text
+     * @param string $lang
      * @return string
      */
-    protected function _traduction($text, $lang = '')
+    protected function _traduction(string $text, string $lang = ''): string
     {
         return $this->_traduction->getTraduction($text, $lang);
     }
@@ -433,7 +436,7 @@ abstract class Modules implements moduleInterface
      * @param string $text
      * @return void
      */
-    protected function _echoTraduction($text)
+    protected function _echoTraduction(string $text): void
     {
         $this->_traduction->echoTraduction($text);
     }
@@ -442,16 +445,16 @@ abstract class Modules implements moduleInterface
     /**
      * Créer un lien.
      *
-     * @param string $signer
-     * @param string $date
-     * @param string $action
-     * @param string $source
-     * @param string $target
-     * @param string $meta
+     * @param string  $signer
+     * @param string  $date
+     * @param string  $action
+     * @param string  $source
+     * @param string  $target
+     * @param string  $meta
      * @param boolean $obfuscate
      * @return void
      */
-    protected function _createLink($signer, $date, $action, $source, $target, $meta, $obfuscate = false)
+    protected function _createLink_DEPRECATED(string $signer, string $date, string $action, string $source, string $target, string $meta, bool $obfuscate = false): void
     {
         // Génère le lien.
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
@@ -475,7 +478,7 @@ abstract class Modules implements moduleInterface
      *
      * @return void
      */
-    protected function _initTable()
+    protected function _initTable(): void
     {
         $this->_table['fr-fr']['::nebule:modules::ModuleName'] = 'Module des modules';
         $this->_table['en-en']['::nebule:modules::ModuleName'] = 'Module of modules';

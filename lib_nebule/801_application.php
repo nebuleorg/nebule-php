@@ -170,7 +170,7 @@ abstract class Applications implements applicationInterface
      *
      * Récupère l'instance de la librairie nebule.
      *
-     * @return null
+     * @return void
      */
     public function __wakeup()
     {
@@ -188,9 +188,18 @@ abstract class Applications implements applicationInterface
      */
     public function getClassName(): string
     {
-        global $applicationName;
-        return $applicationName;
-        //return static::class;
+        //global $applicationName;
+        //return $applicationName;
+        return static::class;
+    }
+
+    /**
+     * Get the app name.
+     * @return string
+     */
+    public function getName(): string
+    {
+        return self::APPLICATION_NAME;
     }
 
     /**
@@ -264,7 +273,7 @@ abstract class Applications implements applicationInterface
     }
 
     /**
-     * Retourne si les modules sont activé dans l'application.
+     * Retourne si les modules sont activés dans l'application.
      *
      * @return bool
      */
@@ -323,18 +332,12 @@ abstract class Applications implements applicationInterface
      */
     protected function _findURL(): void
     {
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
- 		 *  ------------------------------------------------------------------------------------------
-		 */
         if (isset($_SERVER['HTTPS'])
             && $_SERVER['HTTPS']
-        ) {
+        )
             $this->_urlProtocol = 'https';
-        } else {
+        else
             $this->_urlProtocol = 'http';
-        }
         //$this->_urlHost	= $_SERVER['HTTP_HOST'];
         $this->_urlHost = $this->_configuration->getOptionUntyped('hostURL');
         $explodeBaseName = explode('/', $_SERVER['REQUEST_URI']);
@@ -399,7 +402,7 @@ abstract class Applications implements applicationInterface
     /**
      * Recherche l'entité en cours d'utilisation.
      */
-    protected function _findCurrentEntity()
+    protected function _findCurrentEntity(): void
     {
         $this->_metrologyInstance->addLog('Find current entity', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         
@@ -436,12 +439,12 @@ abstract class Applications implements applicationInterface
         unset($arg_ent);
     }
 
-    public function getCurrentEntity()
+    public function getCurrentEntity(): string
     {
         return $this->_currentEntity;
     }
 
-    public function getCurrentEntityInstance()
+    public function getCurrentEntityInstance(): Node
     {
         return $this->_currentEntityInstance;
     }
@@ -472,7 +475,7 @@ abstract class Applications implements applicationInterface
      *
      * @return boolean
      */
-    public function askDownload()
+    public function askDownload(): bool
     {
         return $this->_askDownload;
     }
@@ -482,7 +485,7 @@ abstract class Applications implements applicationInterface
      *
      * @return boolean
      */
-    protected function _findAskDownload()
+    protected function _findAskDownload(): bool
     {
         $arg_dwlobj = trim((string)filter_input(INPUT_GET, nebule::NEBULE_LOCAL_OBJECTS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         if (Node::checkNID($arg_dwlobj)) {
@@ -507,7 +510,7 @@ abstract class Applications implements applicationInterface
      *
      * @return void
      */
-    protected function _download()
+    protected function _download(): void
     {
         $err404 = false;
         if ($this->_askDownloadLinks != '') // Détermine si c'est un lien à télécharger.
@@ -668,7 +671,7 @@ abstract class Applications implements applicationInterface
      *
      * @return void
      */
-    protected function _loadModules()
+    protected function _loadModules(): void
     {
         if ($this->_loadModulesOK) {
             return;
@@ -693,7 +696,7 @@ abstract class Applications implements applicationInterface
      *
      * @return void
      */
-    protected function _loadDefaultModules()
+    protected function _loadDefaultModules(): void
     {
         // Vérifie si les modules sont activés.
         if (!$this->_useModules) {
@@ -722,7 +725,7 @@ abstract class Applications implements applicationInterface
      *
      * @return void
      */
-    protected function _findModulesRID()
+    protected function _findModulesRID(): void
     {
         global $bootstrapApplicationIID;
 
@@ -761,17 +764,15 @@ abstract class Applications implements applicationInterface
     }
 
     /**
-     * Recherche les mises à jours des modules à partir des ID de référence.
+     * Recherche les mises à jour des modules à partir des ID de référence.
      * @return void
      * @todo
      *
      */
-    protected function _findModulesUpdateID()
+    protected function _findModulesUpdateID(): void
     {
-        // Vérifie si les modules sont activés.
-        if (!$this->_useModules) {
+        if (!$this->_useModules)
             return;
-        }
 
         $this->getMetrologyInstance()->addLog('Find modules updates', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
@@ -883,19 +884,15 @@ abstract class Applications implements applicationInterface
      * Recherche le nom de la classe dans un objet.
      *
      * @param string $id
-     * @return boolean|string
+     * @return null|string
      */
-    protected function _getObjectClassName($id)
+    protected function _getObjectClassName(string $id): ?string
     {
-        $name = false;
         $readValue = $this->_nebuleInstance->getIoInstance()->getObject($id);
         $startValue = strpos($readValue, 'class');
         $trimLine = substr($readValue, $startValue, 128);
         $arrayValue = explode(' ', $trimLine);
-        if ($arrayValue[1] != null) {
-            $name = $arrayValue[1];
-        }
-        return $name;
+        return $arrayValue[1];
     }
 
     /**
@@ -903,12 +900,10 @@ abstract class Applications implements applicationInterface
      *
      * @return void
      */
-    protected function _initModules()
+    protected function _initModules(): void
     {
-        // Vérifie si les modules sont activés.
-        if (!$this->_useModules) {
+        if (!$this->_useModules)
             return;
-        }
 
         $this->getMetrologyInstance()->addLog('Load option modules', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
@@ -940,16 +935,16 @@ abstract class Applications implements applicationInterface
 
     /**
      * Lit si le module est activé.
-     * Ne pend en charge que les modules activables, c'est à dire non intégrés à l'application.
+     * Ne pend en charge que les modules activables, c'est-à-dire non intégrés à l'application.
      *
      * @param Node $module
      * @return boolean
      */
-    public function getIsModuleActivated($module)
+    public function getIsModuleActivated(Node $module): bool
     {
         $hashActivation = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MOD_ACTIVE);
 
-        // Liste les modules reconnues par une entité locale.
+        // Liste les modules reconnue par une entité locale.
         $linksList = $module->getLinksOnFields('', '', 'f', $module->getID(), $hashActivation, $module->getID());
         $link = null;
         foreach ($linksList as $link) {
@@ -966,7 +961,7 @@ abstract class Applications implements applicationInterface
      *
      * @return array of string
      */
-    public function getModulesListNames()
+    public function getModulesListNames(): array
     {
         return $this->_listModulesName;
     }
@@ -976,7 +971,7 @@ abstract class Applications implements applicationInterface
      *
      * @return array of Modules
      */
-    public function getModulesListInstances()
+    public function getModulesListInstances(): array
     {
         return $this->_listModulesInstance;
     }
@@ -986,7 +981,7 @@ abstract class Applications implements applicationInterface
      *
      * @return array of string
      */
-    public function getModulesListID()
+    public function getModulesListID(): array
     {
         return $this->_listModulesID;
     }
@@ -996,7 +991,7 @@ abstract class Applications implements applicationInterface
      *
      * @return array of string
      */
-    public function getModulesListRID()
+    public function getModulesListRID(): array
     {
         return $this->_listModulesRID;
     }
@@ -1006,7 +1001,7 @@ abstract class Applications implements applicationInterface
      *
      * @return array of string
      */
-    public function getModulesListSignersRID()
+    public function getModulesListSignersRID(): array
     {
         return $this->_listModulesSignerRID;
     }
@@ -1016,7 +1011,7 @@ abstract class Applications implements applicationInterface
      *
      * @return array of string
      */
-    public function getModulesListValid()
+    public function getModulesListValid(): array
     {
         return $this->_listModulesValid;
     }
@@ -1026,41 +1021,33 @@ abstract class Applications implements applicationInterface
      *
      * @return array of string
      */
-    public function getModulesListEnabled()
+    public function getModulesListEnabled(): array
     {
         return $this->_listModulesEnabled;
     }
 
     /**
      * Vérifie si le module est chargé. Le module est recherché sur le nom de sa classe.
-     * Si non truvé, retourne false.
+     * Si non trouvé, retourne false.
      *
      * @param string $name
      * @return boolean
      */
-    public function isModuleLoaded($name)
+    public function isModuleLoaded(string $name): bool
     {
-        // Vérifie si les modules sont activés.
-        if (!$this->_useModules) {
-            return;
-        }
+        if (!$this->_useModules)
+            return false;
 
-        // Vérifie que c'est un module demandé.
         if ($name == ''
             || substr($name, 0, 6) != 'Module'
             || $name == 'Modules'
-        ) {
+        )
             return false;
-        }
 
-        // Extrait la liste des classes.
         $classes = get_declared_classes();
 
-        foreach ($classes as $class) {
-            if ($name == $class) {
-                return true;
-            }
-        }
+        if (in_array($name, $classes))
+            return true;
         return false;
     }
 
@@ -1068,23 +1055,19 @@ abstract class Applications implements applicationInterface
      * Retourne le module en cours d'utilisation.
      * Si les modules ne sont pas utilisés, retourne false.
      *
-     * @return Modules|boolean
+     * @return Modules|null
      */
-    public function getCurrentModuleInstance()
+    public function getCurrentModuleInstance(): ?Modules
     {
-        // Vérifie si les modules sont activés.
-        if (!$this->_useModules) {
-            return false;
-        }
+        if (!$this->_useModules)
+            return null;
 
-        // Vérifie si pas déjà recherché.
         if ($this->_currentModuleInstance != null
             && is_a($this->_currentModuleInstance, 'Modules')
-        ) {
+        )
             return $this->_currentModuleInstance;
-        }
 
-        $result = false;
+        $result = null;
         foreach ($this->_listModulesInstance as $module) {
             if ($module->getCommandName() == $this->_displayInstance->getCurrentDisplayMode()) {
                 $result = $module;
@@ -1099,33 +1082,24 @@ abstract class Applications implements applicationInterface
      * Si non trouvé, retourne false.
      *
      * @param string $name
-     * @return Modules|boolean
+     * @return Modules|null
      */
-    public function getModule($name)
+    public function getModule(string $name): ?Modules
     {
-        // Vérifie si les modules sont activés.
-        if (!$this->_useModules) {
-            return false;
-        }
+        if (!$this->_useModules)
+            return null;
 
-        $result = false;
-        // Vérifie que c'est un module demandé.
         if ($name == ''
             || substr($name, 0, 6) != 'Module'
             || $name == 'Modules'
-        ) {
-            return false;
-        }
+        )
+            return null;
 
-        // Extrait la liste des classes.
         $classes = get_declared_classes();
 
-        foreach ($classes as $class) {
-            if ($name == $class) {
-                $result = $this->_listModulesInstance[$name];
-                break;
-            }
-        }
+        $result = null;
+        if (in_array($name, $classes))
+            $result = $this->_listModulesInstance[$name];
         return $result;
     }
 
@@ -1133,7 +1107,7 @@ abstract class Applications implements applicationInterface
     /**
      * Routage.
      */
-    public function router()
+    public function router(): void
     {
         global $applicationTraductionInstance, $applicationDisplayInstance, $applicationActionInstance;
 
@@ -1175,7 +1149,7 @@ abstract class Applications implements applicationInterface
      *
      * @return string
      */
-    public function getCheckSecurityAll()
+    public function getCheckSecurityAll(): string
     {
         return $this->_checkSecurityAll;
     }
@@ -1187,7 +1161,7 @@ abstract class Applications implements applicationInterface
      *
      * @return void
      */
-    public function checkSecurity()
+    public function checkSecurity(): void
     {
         $this->_checkSecurity();
     }
@@ -1199,7 +1173,7 @@ abstract class Applications implements applicationInterface
      *
      * @return void
      */
-    protected function _checkSecurity()
+    protected function _checkSecurity(): void
     {
         $this->_checkSecurityBootstrap();
         $this->_checkSecurityCryptoHash();
@@ -1332,7 +1306,7 @@ abstract class Applications implements applicationInterface
      *
      * @return string
      */
-    public function getCheckSecurityCryptoHash()
+    public function getCheckSecurityCryptoHash(): string
     {
         return $this->_checkSecurityCryptoHash;
     }
@@ -1342,7 +1316,7 @@ abstract class Applications implements applicationInterface
      *
      * @return string
      */
-    public function getCheckSecurityCryptoHashMessage()
+    public function getCheckSecurityCryptoHashMessage(): string
     {
         return $this->_checkSecurityCryptoHashMessage;
     }
@@ -1352,9 +1326,8 @@ abstract class Applications implements applicationInterface
      *
      * @return void
      */
-    protected function _checkSecurityCryptoHash()
+    protected function _checkSecurityCryptoHash(): void
     {
-        $this->_checkSecurityCryptoHash = 'WARN';
         if (true || $this->_nebuleInstance->getCryptoInstance()->checkHashFunction()) { // TODO
             $this->_checkSecurityCryptoHash = 'OK';
             $this->_checkSecurityCryptoHashMessage = 'OK';
@@ -1386,7 +1359,7 @@ abstract class Applications implements applicationInterface
      *
      * @return string
      */
-    public function getCheckSecurityCryptoSym()
+    public function getCheckSecurityCryptoSym(): string
     {
         return $this->_checkSecurityCryptoSym;
     }
@@ -1396,7 +1369,7 @@ abstract class Applications implements applicationInterface
      *
      * @return string
      */
-    public function getCheckSecurityCryptoSymMessage()
+    public function getCheckSecurityCryptoSymMessage(): string
     {
         return $this->_checkSecurityCryptoSymMessage;
     }
@@ -1406,9 +1379,8 @@ abstract class Applications implements applicationInterface
      *
      * @return void
      */
-    protected function _checkSecurityCryptoSym()
+    protected function _checkSecurityCryptoSym(): void
     {
-        $this->_checkSecurityCryptoSym = 'WARN';
         if (true || $this->_nebuleInstance->getCryptoInstance()->checkSymmetricFunction()) { // TODO
             $this->_checkSecurityCryptoSym = 'OK';
             $this->_checkSecurityCryptoSymMessage = 'OK';
@@ -1440,7 +1412,7 @@ abstract class Applications implements applicationInterface
      *
      * @return string
      */
-    public function getCheckSecurityCryptoAsym()
+    public function getCheckSecurityCryptoAsym(): string
     {
         return $this->_checkSecurityCryptoAsym;
     }
@@ -1450,7 +1422,7 @@ abstract class Applications implements applicationInterface
      *
      * @return string
      */
-    public function getCheckSecurityCryptoAsymMessage()
+    public function getCheckSecurityCryptoAsymMessage(): string
     {
         return $this->_checkSecurityCryptoAsymMessage;
     }
@@ -1460,9 +1432,8 @@ abstract class Applications implements applicationInterface
      *
      * @return void
      */
-    protected function _checkSecurityCryptoAsym()
+    protected function _checkSecurityCryptoAsym(): void
     {
-        $this->_checkSecurityCryptoAsym = 'WARN';
         if (true || $this->_nebuleInstance->getCryptoInstance()->checkAsymmetricFunction()) { // TODO
             $this->_checkSecurityCryptoAsym = 'OK';
             $this->_checkSecurityCryptoAsymMessage = 'OK';
@@ -1494,7 +1465,7 @@ abstract class Applications implements applicationInterface
      *
      * @return string
      */
-    public function getCheckSecuritySign()
+    public function getCheckSecuritySign(): string
     {
         return $this->_checkSecuritySign;
     }
@@ -1504,7 +1475,7 @@ abstract class Applications implements applicationInterface
      *
      * @return string
      */
-    public function getCheckSecuritySignMessage()
+    public function getCheckSecuritySignMessage(): string
     {
         return $this->_checkSecuritySignMessage;
     }
@@ -1514,7 +1485,7 @@ abstract class Applications implements applicationInterface
      *
      * @return void
      */
-    protected function _checkSecuritySign()
+    protected function _checkSecuritySign(): void
     {
         $this->_checkSecuritySign = 'WARN';
         if (!$this->_configuration->getOptionAsBoolean('permitCheckSignOnVerify')) {
@@ -1561,7 +1532,7 @@ abstract class Applications implements applicationInterface
      *
      * @return string
      */
-    public function getCheckSecurityURL()
+    public function getCheckSecurityURL(): string
     {
         return $this->_checkSecurityURL;
     }
@@ -1571,7 +1542,7 @@ abstract class Applications implements applicationInterface
      *
      * @return string
      */
-    public function getCheckSecurityURLMessage()
+    public function getCheckSecurityURLMessage(): string
     {
         return $this->_checkSecurityURLMessage;
     }
@@ -1581,7 +1552,7 @@ abstract class Applications implements applicationInterface
      *
      * @return void
      */
-    protected function _checkSecurityURL()
+    protected function _checkSecurityURL(): void
     {
         $this->_checkSecurityURL = 'OK';
         if ($this->_urlProtocol == 'http'
@@ -1740,7 +1711,7 @@ abstract class Applications implements applicationInterface
 
         <h3 id="oai">OAI / Interface</h3>
         <p>Une interface est un programme dédié aux interactions entre deux milieux différents.</p>
-        <p>Une interface permet à une entité, c'est à dire un utilisateur ou un robot, d'interagir avec une application.
+        <p>Une interface permet à une entité, c'est-à-dire un utilisateur ou un robot, d'interagir avec une application.
             Cela peut être vu comme une extension de l'application.</p>
         <p>A faire...</p>
 

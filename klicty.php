@@ -2763,7 +2763,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::SubmitLiveTimeFile'); ?>
                         :
                         <select
-                                name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LIFETIME; ?>"
+                                name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LIFETIME; ?>"
                                 class="klictyInput">
                             <option value="1h">
                                 <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::1h'); ?>

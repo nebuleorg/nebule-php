@@ -2115,7 +2115,7 @@ class ModuleHelp extends Modules
     /**
      * Affichage en ligne comme élément inseré dans une page web.
      */
-    public function displayInline(): void
+    protected function _displayInline(): void
     {
         // Rien à faire.
     }
@@ -2594,7 +2594,7 @@ class ModuleAdmin extends Modules
     /**
      * Affichage en ligne comme élément inseré dans une page web.
      */
-    public function displayInline(): void
+    protected function _displayInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[1]:
@@ -3379,7 +3379,7 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    public function displayInline(): void
+    protected function _displayInline(): void
     {
         switch ($this->_display->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -5887,7 +5887,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    public function displayInline(): void
+    protected function _displayInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -7063,7 +7063,7 @@ class ModuleObjects extends Modules
      *
      * @return void
      */
-    public function displayInline(): void
+    protected function _displayInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[1]:
@@ -8790,7 +8790,7 @@ class ModuleMessenger extends Modules
      *
      * @return void
      */
-    public function displayInline(): void
+    protected function _displayInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:

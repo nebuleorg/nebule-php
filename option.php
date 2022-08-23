@@ -1343,9 +1343,6 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
     private function _displayApplications()
     {
-        /**
-         * @var nebule $nebuleInstance
-         */
         $nebuleInstance = $this->_nebuleInstance;
 
         // Titre
@@ -1397,7 +1394,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             // Lister les applications.
             $application = '';
             foreach ($applicationsList as $application) {
-                bootstrapLogger('add application ' . $application);
+                log_add('add application ' . $application); // FIXME
 
                 $color = '#' . substr($application . '000000', 0, 6);
                 //$colorSigner = '#'.substr($signersList[$application].'000000',0,6);
