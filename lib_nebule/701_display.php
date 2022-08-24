@@ -7338,12 +7338,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Par défaut la taille est Medium.
      * Lors de la consultation des points d'encrage, il est possible de passer un objet à utiliser.
      *
-     * @param array  $hook
+     * @param string $hook
      * @param string $size
      * @param string $object
      * @return string
      */
-    public function getDisplayHookMenuList(array $hook, string $size = 'Medium', string $object = 'none'): string
+    public function getDisplayHookMenuList(string $hook, string $size = 'Medium', string $object = 'none'): string
     {
         $list = array();
         $i = 0;

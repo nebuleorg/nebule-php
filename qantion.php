@@ -2124,7 +2124,7 @@ class ModuleHelp extends Modules
     /**
      * Affichage de surcharges CSS.
      */
-    public function headerStyle()
+    public function headerStyle(): void
     {
         ?>
 
@@ -2136,7 +2136,7 @@ class ModuleHelp extends Modules
     /**
      * Affichage de l'entête des pages.
      */
-    private function _displayHlpHeader()
+    private function _displayHlpHeader(): void
     {
     }
 
@@ -2144,7 +2144,7 @@ class ModuleHelp extends Modules
     /**
      * Affichage de la page par défaut.
      */
-    private function _displayHlpFirst()
+    private function _displayHlpFirst(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle($this->_applicationInstance->getTraductionInstance()->getTraduction('::SelectUser'), $this->MODULE_REGISTERED_ICONS[4]);
@@ -2152,7 +2152,7 @@ class ModuleHelp extends Modules
         // Liste des entités déjà affichées.
         $listOkEntities = $this->_nebuleInstance->getSpecialEntities();
 
-        // Liste les entités que j'ai marqué comme connues.
+        // Liste les entités marquées comme connu.
         $links = $this->_applicationInstance->getCurrentEntityInstance()->readLinksFilterFull(
             $this->_applicationInstance->getCurrentEntity(),
             '',
@@ -2207,7 +2207,7 @@ class ModuleHelp extends Modules
     /**
      * Affichage de la page de choix de la langue.
      */
-    private function _displayHlpLang()
+    private function _displayHlpLang(): void
     {
         $module = $this->_applicationInstance->getTraductionInstance()->getCurrentLanguageInstance();
 
@@ -2248,7 +2248,7 @@ class ModuleHelp extends Modules
     /**
      * Affichage de la page à propos.
      */
-    private function _displayHlpAbout()
+    private function _displayHlpAbout(): void
     {
         global $applicationName, $applicationVersion, $applicationLicence, $applicationAuthor, $applicationWebsite;
 
@@ -2312,7 +2312,7 @@ class ModuleHelp extends Modules
     /**
      * Initialisation de la table de traduction.
      */
-    protected function _initTable()
+    protected function _initTable(): void
     {
         $this->_table['fr-fr']['::qantion:module:help:ModuleName'] = "Module d'aide";
         $this->_table['en-en']['::qantion:module:help:ModuleName'] = 'Help module';
@@ -2670,14 +2670,14 @@ class ModuleAdmin extends Modules
         'qantionLogLockEntity' => '::qantion:module:admin:option:help:qantionLogLockEntity',
         'qantionLoadModules' => '::qantion:module:admin:option:help:qantionLoadModules');
 
-    private function _displayHeader()
+    private function _displayHeader(): void
     {
     }
 
     /**
      * Affiche les groupes de l'entité en cours de visualisation.
      */
-    private function _displayOptions()
+    private function _displayOptions(): void
     {
         // Affiche le titre.
         $this->_applicationInstance->getDisplayInstance()->displayDivTextTitle(
@@ -2753,7 +2753,7 @@ class ModuleAdmin extends Modules
         }
     }
 
-    private function _displayAdmins()
+    private function _displayAdmins(): void
     {
         // Affiche le titre.
         $this->_applicationInstance->getDisplayInstance()->displayDivTextTitle(
@@ -2765,7 +2765,7 @@ class ModuleAdmin extends Modules
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('adminlist');
     }
 
-    private function _displayInlineAdmins()
+    private function _displayInlineAdmins(): void
     {
         if ($this->_unlocked) {
             // Liste les entités que j'ai marqué comme connues.
@@ -2803,7 +2803,7 @@ class ModuleAdmin extends Modules
         }
     }
 
-    private function _displayRecoveryEntities()
+    private function _displayRecoveryEntities(): void
     {
         // Affiche le titre.
         $this->_applicationInstance->getDisplayInstance()->displayDivTextTitle(
@@ -2815,7 +2815,7 @@ class ModuleAdmin extends Modules
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('recoverylist');
     }
 
-    private function _displayInlineRecoveryEntities()
+    private function _displayInlineRecoveryEntities(): void
     {
         // Liste les entités marquées comme entités de recouvrement.
         $listEntities = $this->_nebuleInstance->getRecoveryEntitiesInstance();
@@ -2852,7 +2852,7 @@ class ModuleAdmin extends Modules
 
 
     // Initialisation de la table de traduction.
-    protected function _initTable()
+    protected function _initTable(): void
     {
         $this->_table['fr-fr']['::qantion:module:admin:ModuleName'] = "Module d'administration";
         $this->_table['en-en']['::qantion:module:admin:ModuleName'] = 'Administration module';
@@ -3415,7 +3415,7 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    public function getCSS()
+    public function getCSS(): void
     {
         ?>
 
@@ -3614,7 +3614,7 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    public function headerStyle()
+    public function headerStyle(): void
     {
     }
 
@@ -3623,7 +3623,7 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    public function action()
+    public function action(): void
     {
         $this->_findSynchronizeEntity();
         $this->_actionSynchronizeEntity();
@@ -3638,7 +3638,7 @@ class ModuleEntities extends Modules
      * Recherche l'entité en cours d'utilisation.
      * Utilisé par le constructeur et non comme action.
      */
-    private function _findDisplayEntity()
+    private function _findDisplayEntity(): void
     {
         $this->_displayEntity = $this->_applicationInstance->getCurrentEntity();
         $this->_displayEntityInstance = $this->_applicationInstance->getCurrentEntityInstance();
@@ -3654,9 +3654,9 @@ class ModuleEntities extends Modules
     /**
      * Détermine si l'entité doit être synchronisée.
      *
-     * @return null
+     * @return void
      */
-    private function _findSynchronizeEntity()
+    private function _findSynchronizeEntity(): void
     {
         /*
 		 *  ------------------------------------------------------------------------------------------
@@ -3682,11 +3682,11 @@ class ModuleEntities extends Modules
 
     /**
      * Réalise la synchronisation de l'entité.
-     * @return null
+     * @return void
      * @todo
      *
      */
-    private function _actionSynchronizeEntity()
+    private function _actionSynchronizeEntity(): void
     {
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
             && $this->_configuration->getOptionAsBoolean('permitWriteObject')
@@ -3719,9 +3719,9 @@ class ModuleEntities extends Modules
     /**
      * Recherche une entité sur ID connu et/ou URL connue.
      *
-     * @return null
+     * @return void
      */
-    private function _findSearchEntity()
+    private function _findSearchEntity(): void
     {
         $arg_url = trim(filter_input(INPUT_GET, 'srchurl', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW)); // Lit et nettoye le contenu de la variable GET.
         if ($arg_url != ''
@@ -3743,7 +3743,7 @@ class ModuleEntities extends Modules
             $this->_searchEntityID = $arg_id;
     }
 
-    private function _actionSearchEntity()
+    private function _actionSearchEntity(): void
     {
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
             && $this->_configuration->getOptionAsBoolean('permitWriteObject')
@@ -3794,7 +3794,7 @@ class ModuleEntities extends Modules
 
     private $_createEntityErrorMessage = '';
 
-    private function _findCreateEntity()
+    private function _findCreateEntity(): void
     {
         // Regarde si une entité a été créée lors des actions.
         $this->_createEntityAction = $this->_applicationInstance->getActionInstance()->getCreateEntity();
@@ -3804,7 +3804,7 @@ class ModuleEntities extends Modules
         $this->_createEntityErrorMessage = $this->_applicationInstance->getActionInstance()->getCreateEntityErrorMessage();
     }
 
-    private function _actionCreateEntity()
+    private function _actionCreateEntity(): void
     {
         $this->_createEntityAction = $this->_applicationInstance->getActionInstance()->getCreateEntity();
         $this->_createEntityID = $this->_applicationInstance->getActionInstance()->getCreateEntityID();
@@ -3817,7 +3817,7 @@ class ModuleEntities extends Modules
     /**
      * Affiche les caractéristiques de l'entité.
      */
-    private function _displayEntityDisp()
+    private function _displayEntityDisp(): void
     {
         echo '<div class="layout-list">' . "\n";
         echo '<div class="textListObjects">' . "\n";
@@ -3850,7 +3850,7 @@ class ModuleEntities extends Modules
     /**
      * Affiche l'authentification pour une entité.
      */
-    private function _displayEntityAuth()
+    private function _displayEntityAuth(): void
     {
         echo '<div class="layoutAloneItem">' . "\n";
         echo '<div class="aloneItemContent">' . "\n";
@@ -4011,7 +4011,7 @@ class ModuleEntities extends Modules
     /**
      * Affiche les activités vers l'entité.
      */
-    private function _displayEntityLogs()
+    private function _displayEntityLogs(): void
     {
         // Entité en cours.
         if ($this->_nebuleInstance->getCurrentEntity() != $this->_applicationInstance->getCurrentEntity()) {
@@ -4220,7 +4220,7 @@ class ModuleEntities extends Modules
     /**
      * Affiche les activités depuis l'entité.
      */
-    private function _displayEntityActs()
+    private function _displayEntityActs(): void
     {
         // Entité en cours.
         if ($this->_nebuleInstance->getCurrentEntity() != $this->_applicationInstance->getCurrentEntity()) {
@@ -4334,7 +4334,7 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    private function _displayMyEntitiesList()
+    private function _displayMyEntitiesList(): void
     {
         echo $this->_display->getDisplayTitle('::sylabe:module:entities:MyEntities', $this->MODULE_REGISTERED_ICONS[4], true);
 
@@ -4346,7 +4346,7 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    private function _display_InlineMyEntitiesList()
+    private function _display_InlineMyEntitiesList(): void
     {
         $list = array();
         $i = 0;
@@ -4396,14 +4396,14 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    private function _displayKnownEntitiesList()
+    private function _displayKnownEntitiesList(): void
     {
         echo $this->_display->getDisplayTitle('::sylabe:module:entities:KnownEntities', $this->MODULE_REGISTERED_ICONS[4], true);
 
         $this->_display->registerInlineContentID('knownentities');
     }
 
-    private function _display_InlineKnownEntitiesList()
+    private function _display_InlineKnownEntitiesList(): void
     {
         // Liste des entités déjà affichées.
         $listOkEntities = $this->_nebuleInstance->getSpecialEntities();
@@ -4465,14 +4465,14 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    private function _displayKnownByEntitiesList()
+    private function _displayKnownByEntitiesList(): void
     {
         echo $this->_display->getDisplayTitle('::sylabe:module:entities:KnownByEntities', $this->MODULE_REGISTERED_ICONS[4], true);
 
         $this->_display->registerInlineContentID('knownentities');
     }
 
-    private function _display_InlineKnownByEntitiesList()
+    private function _display_InlineKnownByEntitiesList(): void
     {
         // Liste des entités déjà affichées.
         $listOkEntities = $this->_nebuleInstance->getSpecialEntities();
@@ -4534,14 +4534,14 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    private function _displayUnknownEntitiesList()
+    private function _displayUnknownEntitiesList(): void
     {
         echo $this->_display->getDisplayTitle('::sylabe:module:entities:UnknownEntities', $this->MODULE_REGISTERED_ICONS[4], true);
 
         $this->_display->registerInlineContentID('unknownentities');
     }
 
-    private function _display_InlineUnknownEntitiesList()
+    private function _display_InlineUnknownEntitiesList(): void
     {
         // Liste des entités déjà affichées.
         $listOkEntities = $this->_nebuleInstance->getSpecialEntities();
@@ -4641,14 +4641,14 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    private function _displaySpecialEntitiesList()
+    private function _displaySpecialEntitiesList(): void
     {
         echo $this->_display->getDisplayTitle('::sylabe:module:entities:SpecialEntities', $this->MODULE_REGISTERED_ICONS[4]);
 
         $this->_display->registerInlineContentID('specialentities');
     }
 
-    private function _display_InlineSpecialEntitiesList()
+    private function _display_InlineSpecialEntitiesList(): void
     {
         // Liste des entités.
         $entities = array(
@@ -4709,7 +4709,7 @@ class ModuleEntities extends Modules
     /**
      * Affiche la création d'une entité.
      */
-    private function _displayEntityCreate()
+    private function _displayEntityCreate(): void
     {
         // Si une nouvelle entité vient d'être créée par l'instance des actions.
         if ($this->_createEntityAction) {
@@ -4970,7 +4970,7 @@ class ModuleEntities extends Modules
     /**
      * Affiche la recherche d'une entité.
      */
-    private function _displayEntitySearch()
+    private function _displayEntitySearch(): void
     {
         // Affiche la création d'une entité.
         $this->_display->displayDivTextTitleH2(
@@ -5043,7 +5043,7 @@ class ModuleEntities extends Modules
     }
 
 
-    private function _display_InlineEntitySearch()
+    private function _display_InlineEntitySearch(): void
     {
     }
 
@@ -5051,7 +5051,7 @@ class ModuleEntities extends Modules
     /**
      * Affiche les propriétés de l'entité.
      */
-    private function _displayEntityProp()
+    private function _displayEntityProp(): void
     {
         echo $this->_display->getDisplayTitle('::sylabe:module:entities:Desc:AttribsTitle', $this->MODULE_REGISTERED_ICONS[3]);
 
@@ -5059,7 +5059,7 @@ class ModuleEntities extends Modules
         $this->_display->registerInlineContentID('properties');
     }
 
-    private function _display_InlineEntityProp()
+    private function _display_InlineEntityProp(): void
     {
         // Préparation de la gestion de l'affichage par parties.
         $startLinkSigne = $this->_nebuleInstance->getDisplayNextObject();
@@ -5323,7 +5323,7 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    protected function _initTable()
+    protected function _initTable(): void
     {
         $this->_table['fr-fr']['::sylabe:module:entities:ModuleName'] = 'Module des entités';
         $this->_table['en-en']['::sylabe:module:entities:ModuleName'] = 'Entities module';
@@ -5913,7 +5913,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    private function _displayGroups()
+    private function _displayGroups(): void
     {
         // Si un groupe a été créé.
         if ($this->_applicationInstance->getActionInstance()->getCreateGroup()) {
@@ -5993,7 +5993,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    private function _display_InlineGroups()
+    private function _display_InlineGroups(): void
     {
         // Liste tous les groupes.
         $listGroups = $this->_nebuleInstance->getListGroupsID($this->_applicationInstance->getCurrentEntity(), '');
@@ -6049,7 +6049,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    private function _displayAllGroups()
+    private function _displayAllGroups(): void
     {
         // Titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:otherGroups', $this->MODULE_LOGO);
@@ -6065,7 +6065,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    private function _display_InlineAllGroups()
+    private function _display_InlineAllGroups(): void
     {
         // Liste tous les groupes.
         $listGroups = $this->_nebuleInstance->getListGroupsID('', '');
@@ -6186,7 +6186,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    private function _displayAllGroupsOld()
+    private function _displayAllGroupsOld(): void
     {
         // Affiche le titre.
         $this->_applicationInstance->getDisplayInstance()->displayObjectDivHeaderH1($this->_applicationInstance->getCurrentObjectInstance(), 'test');
@@ -6242,7 +6242,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    private function _displayCreateGroup()
+    private function _displayCreateGroup(): void
     {
         // Titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:createGroup', $this->MODULE_REGISTERED_ICONS[1]);
@@ -6285,7 +6285,7 @@ class ModuleGroups extends Modules
         }
     }
 
-    private function _displayRemoveGroup()
+    private function _displayRemoveGroup(): void
     {
         // Affichage de l'entête.
         $this->_applicationInstance->getDisplayInstance()->displayObjectDivHeaderH1($this->_applicationInstance->getCurrentObjectInstance());
@@ -6305,7 +6305,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    private function _displayAddMarkedObjects()
+    private function _displayAddMarkedObjects(): void
     {
     }
 
@@ -6314,7 +6314,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    private function _display_InlineAddMarkedObjects()
+    private function _display_InlineAddMarkedObjects(): void
     {
     }
 
@@ -6324,7 +6324,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    private function _displayGroup()
+    private function _displayGroup(): void
     {
         $instance = $this->_nebuleInstance->getCurrentGroupInstance();
 
@@ -6360,7 +6360,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    private function _display_InlineGroup()
+    private function _display_InlineGroup(): void
     {
         // Détermine si c'est un groupe fermé.
         if ($this->_nebuleInstance->getCurrentGroupInstance()->getMarkClosed()) {
@@ -6537,7 +6537,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    protected function _initTable()
+    protected function _initTable(): void
     {
         $this->_table['fr-fr']['::sylabe:module:groups:ModuleName'] = 'Module des groupes';
         $this->_table['en-en']['::sylabe:module:groups:ModuleName'] = 'Groups module';
@@ -7089,7 +7089,7 @@ class ModuleObjects extends Modules
      *
      * @return void
      */
-    public function headerStyle()
+    public function headerStyle(): void
     {
         ?>
 
@@ -7112,7 +7112,7 @@ class ModuleObjects extends Modules
     /**
      * Affichage de la vue disp.
      */
-    private function _displayObjectContent()
+    private function _displayObjectContent(): void
     {
         $param = array(
             'enableDisplayColor' => true,
@@ -7141,7 +7141,7 @@ class ModuleObjects extends Modules
     /**
      * Affichage de la vue desc.
      */
-    private function _displayObjectDescription()
+    private function _displayObjectDescription(): void
     {
         $param = array(
             'enableDisplayColor' => true,
@@ -7172,7 +7172,7 @@ class ModuleObjects extends Modules
     /**
      * Affichage de la vue desc en ligne.
      */
-    private function _display_InlineObjectDescription()
+    private function _display_InlineObjectDescription(): void
     {
         /**
          * @var Display $display
@@ -7432,7 +7432,7 @@ class ModuleObjects extends Modules
     /**
      * Affichage de la vue nav.
      */
-    private function _displayObjectRelations()
+    private function _displayObjectRelations(): void
     {
         $param = array(
             'enableDisplayColor' => true,
@@ -7463,7 +7463,7 @@ class ModuleObjects extends Modules
     /**
      * Affichage de la vue nav en ligne.
      */
-    private function _display_InlineObjectRelations()
+    private function _display_InlineObjectRelations(): void
     {
         ?>
         <div class="text">
@@ -7479,7 +7479,7 @@ class ModuleObjects extends Modules
     /**
      * Affichage de la vue de protection.
      */
-    private function _displayObjectProtection()
+    private function _displayObjectProtection(): void
     {
         $object = $this->_applicationInstance->getCurrentObjectInstance();
 
@@ -7620,7 +7620,7 @@ class ModuleObjects extends Modules
      *
      * @return void
      */
-    private function _display_InlineObjectProtection()
+    private function _display_InlineObjectProtection(): void
     {
         $object = $this->_applicationInstance->getCurrentObjectInstance();
 
@@ -7776,7 +7776,7 @@ class ModuleObjects extends Modules
     /**
      * Affichage de la vue de protection.
      */
-    private function _displayObjectProtectionShare()
+    private function _displayObjectProtectionShare(): void
     {
         $object = $this->_applicationInstance->getCurrentObjectInstance();
 
@@ -7829,7 +7829,7 @@ class ModuleObjects extends Modules
      *
      * @return void
      */
-    private function _display_InlineObjectProtectionShare()
+    private function _display_InlineObjectProtectionShare(): void
     {
         $object = $this->_applicationInstance->getCurrentObjectInstance();
         $id = $this->_applicationInstance->getCurrentObject();
@@ -8018,7 +8018,7 @@ class ModuleObjects extends Modules
      *
      * @return void
      */
-    protected function _initTable()
+    protected function _initTable(): void
     {
         $this->_table['fr-fr']['::sylabe:module:objects:ModuleName'] = 'Module des objets';
         $this->_table['en-en']['::sylabe:module:objects:ModuleName'] = 'Objects module';
@@ -8768,7 +8768,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    public function headerStyle()
+    public function headerStyle(): void
     {
     }
 
@@ -8778,14 +8778,8 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    public function action()
+    public function action(): void
     {
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-		 *  ------------------------------------------------------------------------------------------
-		 */
-
     }
 
 
@@ -8797,7 +8791,7 @@ class Moduleqantion extends Modules
      * @desc 020200308
      * @return void
      */
-    private function _displayHeader()
+    private function _displayHeader(): void
     {
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
             && $this->_configuration->getOptionAsBoolean('permitWriteLink')
@@ -9013,7 +9007,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayList()
+    private function _displayList(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:qantion:MyList', $this->MODULE_LOGO, false);
@@ -9026,7 +9020,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _display_InlineList()
+    private function _display_InlineList(): void
     {
         // Lit les liens vers les monnaies.
         $links = $this->_getCurrencies('myself');
@@ -9042,7 +9036,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayCommonInlineList($links)
+    private function _displayCommonInlineList($links): void
     {
         $list = array();
         $i = 0;
@@ -9104,7 +9098,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayListAll()
+    private function _displayListAll(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:qantion:ListAll', $this->MODULE_LOGO, false);
@@ -9117,7 +9111,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _display_InlineListAll()
+    private function _display_InlineListAll(): void
     {
         // Lit les liens vers les monnaies.
         $links = $this->_getCurrencies('');
@@ -9133,7 +9127,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayFindCurrency()
+    private function _displayFindCurrency(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Find', $this->MODULE_LOGO, false);
@@ -9146,7 +9140,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _display_InlineFindCurrency()
+    private function _display_InlineFindCurrency(): void
     {
         // @todo
         $param = array(
@@ -9164,7 +9158,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayCreateCurrency()
+    private function _displayCreateCurrency(): void
     {
         $this->_displayCreateCommonItem('currency');
     }
@@ -9174,7 +9168,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayCreatePool()
+    private function _displayCreatePool(): void
     {
         $this->_displayCreateCommonItem('pool');
     }
@@ -9189,7 +9183,7 @@ class Moduleqantion extends Modules
      *
      * @desc 020200308
      */
-    private function _displayCreateCommonItem($type, $update = false)
+    private function _displayCreateCommonItem($type, $update = false): void
     {
         $hashType = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/type');
         $hashEntity = $this->_nebuleInstance->getCryptoInstance()->hash('application/x-pem-file');
@@ -9487,7 +9481,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayAdminCurrency()
+    private function _displayAdminCurrency(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Admin', $this->MODULE_LOGO, false);
@@ -9500,7 +9494,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _display_InlineAdminCurrency()
+    private function _display_InlineAdminCurrency(): void
     {
         // @todo
         $param = array(
@@ -9518,7 +9512,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayAdminPool()
+    private function _displayAdminPool(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Admin', $this->MODULE_LOGO, false);
@@ -9549,7 +9543,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayAdminToken()
+    private function _displayAdminToken(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Admin', $this->MODULE_LOGO, false);
@@ -9562,7 +9556,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _display_InlineAdminToken()
+    private function _display_InlineAdminToken(): void
     {
         // @todo
         $param = array(
@@ -9580,7 +9574,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayListPools()
+    private function _displayListPools(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:qantion:AllPools', $this->MODULE_LOGO, false);
@@ -9593,7 +9587,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _display_InlineListPools()
+    private function _display_InlineListPools(): void
     {
         // Lit les liens vers les monnaies.
         $links = $this->_getPools('myself');
@@ -9654,7 +9648,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayDispCurrency()
+    private function _displayDispCurrency(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Currency', $this->MODULE_REGISTERED_ICONS[3], false);
@@ -9672,7 +9666,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _display_InlineDispCurrency()
+    private function _display_InlineDispCurrency(): void
     {
         $value = $this->_applicationInstance->getDisplayInstance()->getInlineContentID();
 
@@ -9709,7 +9703,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayDispPool()
+    private function _displayDispPool(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:qantion:DisplayPool', $this->MODULE_REGISTERED_ICONS[4], false);
@@ -9727,7 +9721,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _display_InlineDispPool()
+    private function _display_InlineDispPool(): void
     {
         $value = $this->_applicationInstance->getDisplayInstance()->getInlineContentID();
 
@@ -9767,7 +9761,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayDispToken()
+    private function _displayDispToken(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:qantion:DisplayToken', $this->MODULE_REGISTERED_ICONS[5], false);
@@ -9785,7 +9779,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _display_InlineDispToken()
+    private function _display_InlineDispToken(): void
     {
         $value = $this->_applicationInstance->getDisplayInstance()->getInlineContentID();
 
@@ -9825,7 +9819,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayDescCurrency()
+    private function _displayDescCurrency(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Currency', $this->MODULE_REGISTERED_ICONS[3], false);
@@ -9841,7 +9835,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _display_InlineDescCurrency()
+    private function _display_InlineDescCurrency(): void
     {
         $value = $this->_applicationInstance->getDisplayInstance()->getInlineContentID();
 
@@ -9879,7 +9873,7 @@ class Moduleqantion extends Modules
      * @param $instance Currency|TokenPool|Token
      * @return void
      */
-    private function _display_InlineDescCommonDisp($instance, $enableDisplayJS = true)
+    private function _display_InlineDescCommonDisp($instance, $enableDisplayJS = true): void
     {
         // Détermine le type.
         $type1 = '';
@@ -10004,7 +9998,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _display_InlineDescCommonDesc($instance)
+    private function _display_InlineDescCommonDesc($instance): void
     {
         // Détermine le type.
         $type1 = '';
@@ -10142,7 +10136,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _display_InlineDescCommonValue($instance)
+    private function _display_InlineDescCommonValue($instance): void
     {
         $list = array();
 
@@ -10172,7 +10166,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayDescPool()
+    private function _displayDescPool(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:qantion:DisplayPool', $this->MODULE_REGISTERED_ICONS[4], false);
@@ -10192,7 +10186,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _display_InlineDescPool()
+    private function _display_InlineDescPool(): void
     {
         $value = $this->_applicationInstance->getDisplayInstance()->getInlineContentID();
 
@@ -10231,7 +10225,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayDescToken()
+    private function _displayDescToken(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:qantion:DisplayToken', $this->MODULE_REGISTERED_ICONS[5], false);
@@ -10247,7 +10241,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _display_InlineDescToken()
+    private function _display_InlineDescToken(): void
     {
         $value = $this->_applicationInstance->getDisplayInstance()->getInlineContentID();
 
@@ -10287,7 +10281,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayDeleteCurrency()
+    private function _displayDeleteCurrency(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Delete', $this->MODULE_REGISTERED_ICONS[3], false);
@@ -10372,7 +10366,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayDeletePool()
+    private function _displayDeletePool(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Delete', $this->MODULE_REGISTERED_ICONS[4], false);
@@ -10461,7 +10455,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayDeleteToken()
+    private function _displayDeleteToken(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Delete', $this->MODULE_REGISTERED_ICONS[5], false);
@@ -10553,7 +10547,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayItemsCurrency()
+    private function _displayItemsCurrency(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Currency', $this->MODULE_REGISTERED_ICONS[3], false);
@@ -10572,7 +10566,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _display_InlineItemsCurrency()
+    private function _display_InlineItemsCurrency(): void
     {
         $value = $this->_applicationInstance->getDisplayInstance()->getInlineContentID();
 
@@ -10612,7 +10606,7 @@ class Moduleqantion extends Modules
      * @param $instance Currency|TokenPool
      * @return void
      */
-    private function _display_InlineDescCommonItems($instance)
+    private function _display_InlineDescCommonItems($instance): void
     {
         // Détermine le type.
         $type1 = '';
@@ -10692,7 +10686,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _displayItemsPool()
+    private function _displayItemsPool(): void
     {
         // Affiche le titre.
         echo $this->_display->getDisplayTitle('::sylabe:module:qantion:DisplayPool', $this->MODULE_REGISTERED_ICONS[4], false);
@@ -10711,7 +10705,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    private function _display_InlineItemsPool()
+    private function _display_InlineItemsPool(): void
     {
         $value = $this->_applicationInstance->getDisplayInstance()->getInlineContentID();
 
@@ -10751,7 +10745,7 @@ class Moduleqantion extends Modules
      * @param Node|string $entity
      * @return array
      */
-    private function _getCurrencies($entity = '')
+    private function _getCurrencies($entity = ''): array
     {
         $result = array();
 
@@ -10788,7 +10782,7 @@ class Moduleqantion extends Modules
      * @param Node|string $entity
      * @return boolean
      */
-    private function _isCurrency($object, $entity = '')
+    private function _isCurrency($object, $entity = ''): bool
     {
         // Prépare l'objet.
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
@@ -10825,7 +10819,7 @@ class Moduleqantion extends Modules
      * @param Node|string $object
      * @return array
      */
-    private function _getByIsCurrency($object)
+    private function _getByIsCurrency($object): array
     {
         $result = array();
         $okEntity = array();
@@ -10864,7 +10858,7 @@ class Moduleqantion extends Modules
      * @param Node|string $entity
      * @return array
      */
-    private function _getPools($entity = '')
+    private function _getPools($entity = ''): array
     {
         $result = array();
 
@@ -10901,7 +10895,7 @@ class Moduleqantion extends Modules
      * @param Node|string $entity
      * @return boolean
      */
-    private function _isPool($object, $entity = '')
+    private function _isPool($object, $entity = ''): bool
     {
         // Prépare l'objet.
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
@@ -10938,7 +10932,7 @@ class Moduleqantion extends Modules
      * @param Node|string $object
      * @return array
      */
-    private function _getByIsPool($object)
+    private function _getByIsPool($object): array
     {
         $result = array();
         $okEntity = array();
@@ -10977,7 +10971,7 @@ class Moduleqantion extends Modules
      * @param string $value
      * @return string
      */
-    private function _stringFilter($value, $limit = 1024)
+    private function _stringFilter($value, $limit = 1024): string
     {
         if ($value == '') {
             return '';
@@ -11003,7 +10997,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    protected function _initTable()
+    protected function _initTable(): void
     {
         $this->_table['fr-fr']['::sylabe:module:qantion:ModuleName'] = 'Module de gestion de qantion';
         $this->_table['en-en']['::sylabe:module:qantion:ModuleName'] = 'qantion manage module';
@@ -11217,7 +11211,7 @@ class ModuleTranslateFRFR extends Modules
      *
      * @return void
      */
-    protected function _initTable()
+    protected function _initTable(): void
     {
         $this->_table['fr-fr']['::translateModule:fr-fr:ModuleName'] = 'Français (France)';
         $this->_table['en-en']['::translateModule:fr-fr:ModuleName'] = 'French (France)';
@@ -11956,7 +11950,7 @@ class ModuleTranslateENEN extends Modules
      *
      * @return void
      */
-    protected function _initTable()
+    protected function _initTable(): void
     {
         $this->_table['fr-fr']['::translateModule:en-en:ModuleName'] = 'Anglais (Angleterre)';
         $this->_table['en-en']['::translateModule:en-en:ModuleName'] = 'English (England)';

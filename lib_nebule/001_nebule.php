@@ -539,7 +539,7 @@ class nebule
      * Si l'option n'est pas renseignée, retourne false.
      *
      * @param string $name
-     * @return int|string|bool|null
+     * @return int|string|bool|null|array
      */
     public function getSessionStore(string $name)
     {
@@ -564,7 +564,7 @@ class nebule
      * Ecrit la valeur d'une option dans la session php.
      *
      * @param string $name
-     * @param int|string|bool|null $content
+     * @param int|string|bool|null|array $content
      * @return boolean
      */
     public function setSessionStore(string $name, $content): bool
