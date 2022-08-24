@@ -45,7 +45,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020220821';
+    const APPLICATION_VERSION = '020220824';
     const APPLICATION_LICENCE = 'GNU GPL 2013-2022';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -150,8 +150,7 @@ class Application extends Applications implements applicationInterface
      */
     public function __construct(nebule $nebuleInstance)
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
+        parent::__construct($nebuleInstance);
     }
 
     public static function getOption($name)
@@ -2121,7 +2120,7 @@ class Action extends Actions
 class Traduction extends Traductions
 {
     /**
-     * langue par défaut.
+     * Langue par défaut.
      *
      * @var string
      */
@@ -2136,7 +2135,7 @@ class Traduction extends Traductions
      */
     public function __construct(Application $applicationInstance)
     {
-        $this->_applicationInstance = $applicationInstance;
+        parent::__construct($applicationInstance);
     }
 
     // Tout par défaut.
@@ -2162,7 +2161,7 @@ class ModuleManage extends Modules
     protected $MODULE_COMMAND_NAME = 'modmanager';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:manage:ModuleDescription';
-    protected $MODULE_VERSION = '020200202';
+    protected $MODULE_VERSION = '020220824';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2020';
     protected $MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4';
@@ -3321,7 +3320,7 @@ class ModuleHelp extends Modules
     protected $MODULE_COMMAND_NAME = 'hlp';
     protected $MODULE_DEFAULT_VIEW = '1st';
     protected $MODULE_DESCRIPTION = '::sylabe:module:help:ModuleDescription';
-    protected $MODULE_VERSION = '020200202';
+    protected $MODULE_VERSION = '020220824';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2020';
     protected $MODULE_LOGO = '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d';
@@ -3795,7 +3794,7 @@ class ModuleEntities extends Modules
     protected $MODULE_COMMAND_NAME = 'ent';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
-    protected $MODULE_VERSION = '020200202';
+    protected $MODULE_VERSION = '020220824';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2020';
     protected $MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60';
@@ -6381,7 +6380,7 @@ class ModuleGroups extends Modules
     protected $MODULE_COMMAND_NAME = 'grp';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:groups:ModuleDescription';
-    protected $MODULE_VERSION = '020200202';
+    protected $MODULE_VERSION = '020220824';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2020';
     protected $MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2';
@@ -7438,7 +7437,7 @@ class ModuleObjects extends Modules
     protected $MODULE_COMMAND_NAME = 'obj';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    protected $MODULE_VERSION = '020200202';
+    protected $MODULE_VERSION = '020220824';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2020';
     protected $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee';
@@ -8962,7 +8961,7 @@ class ModuleAdmin extends Modules
     protected $MODULE_COMMAND_NAME = 'adm';
     protected $MODULE_DEFAULT_VIEW = 'options';
     protected $MODULE_DESCRIPTION = '::sylabe:module:admin:ModuleDescription';
-    protected $MODULE_VERSION = '020200202';
+    protected $MODULE_VERSION = '020220824';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2020';
     protected $MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3';
@@ -9596,7 +9595,7 @@ class ModuleTranslateFRFR extends Modules
     protected $MODULE_COMMAND_NAME = 'fr-fr';
     protected $MODULE_DEFAULT_VIEW = '';
     protected $MODULE_DESCRIPTION = '::translateModule:fr-fr:ModuleDescription';
-    protected $MODULE_VERSION = '020200202';
+    protected $MODULE_VERSION = '020220824';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2020';
     protected $MODULE_LOGO = 'b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac';

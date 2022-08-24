@@ -39,7 +39,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020220821';
+    const APPLICATION_VERSION = '020220824';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2022';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -53,8 +53,7 @@ class Application extends Applications
      */
     public function __construct(nebule $nebuleInstance)
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
+        parent::__construct($nebuleInstance);
     }
 
     // Tout par défaut.
@@ -2154,7 +2153,7 @@ class Traduction extends Traductions
      */
     public function __construct(Application $applicationInstance)
     {
-        $this->_applicationInstance = $applicationInstance;
+        parent::__construct($applicationInstance);
     }
 
 

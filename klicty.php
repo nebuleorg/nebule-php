@@ -42,7 +42,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020220821';
+    const APPLICATION_VERSION = '020220824';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2022';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -91,8 +91,7 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
      */
     public function __construct(nebule $nebuleInstance)
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
+        parent::__construct($nebuleInstance);
     }
 
     public static function getOption($name)
@@ -4889,7 +4888,7 @@ class Action extends Actions
 class Traduction extends Traductions
 {
     /**
-     * langue par défaut.
+     * Langue par défaut.
      *
      * @var string
      */
@@ -4921,7 +4920,7 @@ class Traduction extends Traductions
      */
     public function __construct(Application $applicationInstance)
     {
-        $this->_applicationInstance = $applicationInstance;
+        parent::__construct($applicationInstance);
     }
 
 

@@ -40,7 +40,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'qantion';
     const APPLICATION_SURNAME = 'nebule/qantion';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020220821';
+    const APPLICATION_VERSION = '020220824';
     const APPLICATION_LICENCE = 'GNU GPL 2019-2022';
     const APPLICATION_WEBSITE = 'www.qantion.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -95,8 +95,7 @@ class Application extends Applications
      */
     public function __construct(nebule $nebuleInstance)
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
+        parent::__construct($nebuleInstance);
     }
 
 
@@ -1962,7 +1961,7 @@ class Action extends Actions
 class Traduction extends Traductions
 {
     /**
-     * langue par défaut.
+     * Langue par défaut.
      *
      * @var string
      */
@@ -1977,7 +1976,7 @@ class Traduction extends Traductions
      */
     public function __construct(Application $applicationInstance)
     {
-        $this->_applicationInstance = $applicationInstance;
+        parent::__construct($applicationInstance);
     }
 
     // Tout par défaut.
@@ -2000,7 +1999,7 @@ class ModuleHelp extends Modules
     protected $MODULE_COMMAND_NAME = 'hlp';
     protected $MODULE_DEFAULT_VIEW = '1st';
     protected $MODULE_DESCRIPTION = '::qantion:module:help:ModuleDescription';
-    protected $MODULE_VERSION = '020200202';
+    protected $MODULE_VERSION = '020220824';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2019-2020';
     protected $MODULE_LOGO = '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d';
@@ -2494,7 +2493,7 @@ class ModuleAdmin extends Modules
     protected $MODULE_COMMAND_NAME = 'adm';
     protected $MODULE_DEFAULT_VIEW = 'options';
     protected $MODULE_DESCRIPTION = '::qantion:module:admin:ModuleDescription';
-    protected $MODULE_VERSION = '020200202';
+    protected $MODULE_VERSION = '020220824';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2019-2020';
     protected $MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3';
@@ -3021,7 +3020,7 @@ class ModuleEntities extends Modules
     protected $MODULE_COMMAND_NAME = 'ent';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
-    protected $MODULE_VERSION = '020200202';
+    protected $MODULE_VERSION = '020220824';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2020';
     protected $MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60';
@@ -5607,7 +5606,7 @@ class ModuleGroups extends Modules
     protected $MODULE_COMMAND_NAME = 'grp';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:groups:ModuleDescription';
-    protected $MODULE_VERSION = '020200202';
+    protected $MODULE_VERSION = '020220824';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2020';
     protected $MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2';
@@ -6664,7 +6663,7 @@ class ModuleObjects extends Modules
     protected $MODULE_COMMAND_NAME = 'obj';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    protected $MODULE_VERSION = '020200202';
+    protected $MODULE_VERSION = '020220824';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2020';
     protected $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee';
@@ -8188,7 +8187,7 @@ class Moduleqantion extends Modules
     protected $MODULE_COMMAND_NAME = 'qan';
     protected $MODULE_DEFAULT_VIEW = 'lcur';
     protected $MODULE_DESCRIPTION = '::sylabe:module:qantion:ModuleDescription';
-    protected $MODULE_VERSION = '020200314';
+    protected $MODULE_VERSION = '020220824';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2019-2020';
     protected $MODULE_LOGO = 'fd7715facdc9491f81de5b6cbe5cc3aee8f690a6feb36734bf185885d92bdbb7';
@@ -11150,7 +11149,7 @@ class ModuleTranslateFRFR extends Modules
     protected $MODULE_COMMAND_NAME = 'fr-fr';
     protected $MODULE_DEFAULT_VIEW = '';
     protected $MODULE_DESCRIPTION = '::translateModule:fr-fr:ModuleDescription';
-    protected $MODULE_VERSION = '020200202';
+    protected $MODULE_VERSION = '020220824';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2020';
     protected $MODULE_LOGO = 'b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac';
@@ -11889,7 +11888,7 @@ class ModuleTranslateENEN extends Modules
     protected $MODULE_COMMAND_NAME = 'en-en';
     protected $MODULE_DEFAULT_VIEW = '';
     protected $MODULE_DESCRIPTION = '::translateModule:en-en:ModuleDescription';
-    protected $MODULE_VERSION = '020200202';
+    protected $MODULE_VERSION = '020220824';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2020';
     protected $MODULE_LOGO = '7796077f1b865951946dd40ab852f6f4d21e702e7c4f47bd5fa6cb9ce94a4c5f';

@@ -109,7 +109,7 @@ abstract class Applications implements applicationInterface
     {
         global $applicationTraductionInstance, $applicationDisplayInstance, $applicationActionInstance;
 
-        // S'auto-référence pour être capable de se transmettre aux objets.
+        // S'autoréférence pour être capable de se transmettre aux objets.
         $this->_applicationInstance = $this;
 
         // Charge l'instance de métrology et de journalisation.
