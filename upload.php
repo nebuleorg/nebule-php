@@ -6,7 +6,6 @@ use Nebule\Library\nebule;
 use Nebule\Library\Actions;
 use Nebule\Library\Applications;
 use Nebule\Library\Displays;
-//use Nebule\Library\Modules;
 use Nebule\Library\Traductions;
 
 /*
@@ -126,8 +125,8 @@ class Display extends Displays
         <body>
         <div class="layout-header">
             <div class="header-left">
-                <a href="/?<?php echo Display::DEFAULT_BOOTSTRAP_LOGO_LINK; ?>">
-                    <img title="App switch" alt="[]" src="<?php echo Display::DEFAULT_APPLICATION_LOGO; ?>"/>
+                <a href="/?<?php echo Displays::DEFAULT_BOOTSTRAP_LOGO_LINK; ?>">
+                    <img title="App switch" alt="[]" src="<?php echo Displays::DEFAULT_APPLICATION_LOGO; ?>"/>
                 </a>
             </div>
             <div class="header-right">
@@ -233,7 +232,7 @@ class Display extends Displays
                         || $this->_unlocked
                     )
                 ) {
-                    // Vérifie si tous les liens pré-signés peuvent être chargés. Sinon par défaut c'est juste ceux du maître du code.
+                    // Vérifie si tous les liens pré-signés peuvent être chargés. Sinon par défaut, c'est juste ceux du maître du code.
                     if (!$this->_unlocked) {
                         $param = array(
                             'enableDisplayAlone' => true,
@@ -393,10 +392,10 @@ class Traduction extends Traductions
     /**
      * Constructeur.
      *
-     * @param Application $applicationInstance
+     * @param Applications $applicationInstance
      * @return void
      */
-    public function __construct(Application $applicationInstance)
+    public function __construct(Applications $applicationInstance)
     {
         parent::__construct($applicationInstance);
     }
