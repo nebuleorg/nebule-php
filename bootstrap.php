@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220824';
+const BOOTSTRAP_VERSION = '020220825';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -4560,7 +4560,7 @@ function bootstrap_findApplication(): void
     )
         $bootstrapApplicationOID = $_SESSION['bootstrapApplicationOID'][0];
     else
-        $bootstrapApplicationOID = app_getCode($bootstrapApplicationIID);
+        $bootstrapApplicationOID = app_getCode($bootstrapApplicationIID); // FIXME ERROR
     session_abort();
 
     // If running bad, use default app.
