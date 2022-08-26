@@ -4563,7 +4563,10 @@ function bootstrap_findApplication(): void
     if (strlen($bootstrapApplicationIID) < 2)
         $bootstrapApplicationOID = $bootstrapApplicationIID;
     elseif (!$bootstrapUpdate
-        && isset($_SESSION['bootstrapApplicationOID'][0]) // FIXME ERROR
+        && isset($_SESSION['bootstrapApplicationIID'][0])
+        && $_SESSION['bootstrapApplicationIID'][0] == $bootstrapApplicationIID
+        && nod_checkNID($_SESSION['bootstrapApplicationIID'][0])
+        && isset($_SESSION['bootstrapApplicationOID'][0])
     )
         $bootstrapApplicationOID = $_SESSION['bootstrapApplicationOID'][0];
     else
