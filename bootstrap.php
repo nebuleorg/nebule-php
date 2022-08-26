@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220825';
+const BOOTSTRAP_VERSION = '020220826';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -4107,7 +4107,7 @@ function app_getByRef(string $rid): string
 }
 
 /**
- * Find a list of valid application OID from an RID for current code branch.
+ * Find a list of valid application IID from an RID for current code branch.
  * Check or not if app is tagged as activated.
  * Return a list of IID (Intermediate ID).
  * Can be used both for library and application.
@@ -4156,6 +4156,25 @@ function app_getList(string $rid, bool $activated = true, bool $allBranches=fals
     return $resultLinks;
 }
 
+function app_getCodeList(string $iid, array &$links): void
+{
+    global $nebuleLocalAuthorities,
+           $codeBranchNID;
+
+    if ($codeBranchNID == '')
+        app_getCurrentBranch();
+
+// Get current version of code
+    $filter = array(
+        'bl/rl/req' => 'f',
+        'bl/rl/nid1' => $iid,
+        'bl/rl/nid3' => $codeBranchNID,
+        'bl/rl/nid4' => '',
+    );
+    lnk_getList($iid, $links, $filter, false);
+    lnk_filterBySigners($links, $nebuleLocalAuthorities);
+}
+
 /**
  * Find a valid application code from an IID for current code branch.
  * Return a OID containing the code.
@@ -4166,23 +4185,11 @@ function app_getList(string $rid, bool $activated = true, bool $allBranches=fals
  */
 function app_getCode(string $iid): string
 {
-    global $nebuleLocalAuthorities,
-           $codeBranchNID,
-           $lastReferenceSID;
+    global $lastReferenceSID;
 
-    if ($codeBranchNID == '')
-        app_getCurrentBranch();
-
-    // Get current version of code
+    // Get list of codes objects for the app IID.
     $links = array();
-    $filter = array(
-        'bl/rl/req' => 'f',
-        'bl/rl/nid1' => $iid,
-        'bl/rl/nid3' => $codeBranchNID,
-        'bl/rl/nid4' => '',
-    );
-    lnk_getList($iid, $links, $filter, false);
-    lnk_filterBySigners($links, $nebuleLocalAuthorities);
+    app_getCodeList($iid, $links);
 
     if (sizeof($links) == 0)
         return '';
@@ -4556,11 +4563,11 @@ function bootstrap_findApplication(): void
     if (strlen($bootstrapApplicationIID) < 2)
         $bootstrapApplicationOID = $bootstrapApplicationIID;
     elseif (!$bootstrapUpdate
-        && isset($_SESSION['bootstrapApplicationOID'][0])
+        && isset($_SESSION['bootstrapApplicationOID'][0]) // FIXME ERROR
     )
         $bootstrapApplicationOID = $_SESSION['bootstrapApplicationOID'][0];
     else
-        $bootstrapApplicationOID = app_getCode($bootstrapApplicationIID); // FIXME ERROR
+        $bootstrapApplicationOID = app_getCode($bootstrapApplicationIID);
     session_abort();
 
     // If running bad, use default app.
@@ -7013,7 +7020,7 @@ chmod 644 <?php echo LIB_LOCAL_ENTITY_FILE; ?>
  ------------------------------------------------------------------------------------------
  */
 
-function bootstrap_displayLocalEntity()
+function bootstrap_displayLocalEntity(): void
 {
     if (file_exists(LIB_LOCAL_ENTITY_FILE))
         echo 'FIXME';
@@ -7022,7 +7029,7 @@ function bootstrap_displayLocalEntity()
         echo '0';
 }
 
-function bootstrap_displayApplication0()
+function bootstrap_displayApplication0(): void
 {
     global $nebuleInstance;
 
@@ -7103,7 +7110,7 @@ function bootstrap_displayApplication0()
  ------------------------------------------------------------------------------------------
  */
 
-function bootstrap_displayApplication1()
+function bootstrap_displayApplication1(): void
 {
     global $nebuleInstance, $nebuleLibLevel, $nebuleLibVersion, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
 
@@ -7149,7 +7156,7 @@ function bootstrap_displayApplication1()
  ------------------------------------------------------------------------------------------
  */
 
-function bootstrap_displayApplication2()
+function bootstrap_displayApplication2(): void
 {
     // Initialisation des logs
     log_reopen('app2');
@@ -7174,8 +7181,9 @@ function bootstrap_displayApplication2()
      * Debug app.
      * @return void
      */
-function bootstrap_displayApplication9()
-{
+function bootstrap_displayApplication9(): void
+{global $lastReferenceSID;
+
     // Initialisation des logs
     log_reopen('app2');
     log_add('Loading', 'info', __FUNCTION__, '3a5c4178');
@@ -7189,9 +7197,45 @@ function bootstrap_displayApplication9()
     echo '<div class="layout-main">' . "\n";
     echo ' <div class="layout-content">' . "\n";
 
-    session_start();
+    echo "RID=" . LIB_RID_INTERFACE_LIBRARY . "<br />\n";
+    $appList = app_getList(LIB_RID_INTERFACE_LIBRARY, false);
+    foreach ($appList as $iid) {
+        echo "&gt;&nbsp;IID=$iid<br />\n";
+        $links = array();
+        app_getCodeList($iid, $links);
+        foreach ($links as $link)
+        {
+            $oid = $link['bl/rl/nid2'];
+            $eid = $link['bs/rs1/eid'];
+            $date = $link['bl/rc'];
+            echo "&nbsp;-&nbsp;$date&nbsp;EID=$eid&nbsp;OID=$oid<br />\n";
+        }
+        $oid = app_getCode($iid);
+        echo "&nbsp;+&nbsp;EID=$lastReferenceSID&nbsp;OID=$oid<br />\n";
+        echo "<br />\n";
+    }
+
+    echo "RID=" . LIB_RID_INTERFACE_APPLICATIONS . "<br />\n";
+    $appList = app_getList(LIB_RID_INTERFACE_APPLICATIONS, false);
+    foreach ($appList as $iid) {
+        echo "&gt;&nbsp;IID=$iid<br />\n";
+        $links = array();
+        app_getCodeList($iid, $links);
+        foreach ($links as $link)
+        {
+            $oid = $link['bl/rl/nid2'];
+            $eid = $link['bs/rs1/eid'];
+            $date = $link['bl/rc'];
+            echo "&nbsp;-&nbsp;$date&nbsp;EID=$eid&nbsp;OID=$oid<br />\n";
+        }
+        $oid = app_getCode($iid);
+        echo "&nbsp;+&nbsp;EID=$lastReferenceSID&nbsp;OID=$oid<br />\n";
+        echo "<br />\n";
+    }
+
+    /*session_start();
     var_dump($_SESSION);
-    session_abort();
+    session_abort();*/
 
     echo " </div>\n";
     echo "</div>\n";
@@ -7214,7 +7258,7 @@ function bootstrap_displayApplication9()
  ------------------------------------------------------------------------------------------
  */
 
-function bootstrap_displayRouter()
+function bootstrap_displayRouter(): void
 {
     global $bootstrapBreak,
            $needFirstSynchronization,
@@ -7281,7 +7325,7 @@ function bootstrap_displayRouter()
     bootstrap_saveApplication();
 }
 
-function bootstrap_logMetrology()
+function bootstrap_logMetrology(): void
 {
     global $nebuleInstance, $nebuleMetrologyTimers;
 
@@ -7313,7 +7357,7 @@ function bootstrap_logMetrology()
         '52d76692');
 }
 
-function main()
+function main(): void
 {
     if (!lib_init())
         bootstrap_setBreak('21', 'Library init error');
