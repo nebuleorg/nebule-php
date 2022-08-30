@@ -126,10 +126,10 @@ abstract class Traductions
     /**
      * Constructeur.
      *
-     * @param Application $applicationInstance
+     * @param Applications $applicationInstance
      * @return void
      */
-    public function __construct(Application $applicationInstance)
+    public function __construct(Applications $applicationInstance)
     {
         $this->_applicationInstance = $applicationInstance;
     }

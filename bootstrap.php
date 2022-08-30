@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220826';
+const BOOTSTRAP_VERSION = '020220830';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -4857,6 +4857,18 @@ function bootstrap_initApplication(bool $run): void
     // Check
     if (! is_a($applicationInstance, 'Nebule\Library\Applications')) {
         log_add('error init application', 'error', __FUNCTION__, '41ba02a9');
+        return;
+    }
+    if (! is_a($applicationTraductionInstance, 'Nebule\Library\Traductions')) {
+        log_add('error init traductions', 'error', __FUNCTION__, 'd121af4c');
+        return;
+    }
+    if (! is_a($applicationDisplayInstance, 'Nebule\Library\Displays')) {
+        log_add('error init displays', 'error', __FUNCTION__, '4bb6af65');
+        return;
+    }
+    if (! is_a($applicationActionInstance, 'Nebule\Library\Actions')) {
+        log_add('error init actions', 'error', __FUNCTION__, '308b8a96');
         return;
     }
 

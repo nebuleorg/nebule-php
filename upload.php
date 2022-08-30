@@ -50,10 +50,10 @@ class Application extends Applications
      * @param nebule $nebuleInstance
      * @return void
      */
-    public function __construct(nebule $nebuleInstance)
+    /*public function __construct(nebule $nebuleInstance)
     {
         parent::__construct($nebuleInstance);
-    }
+    }*/
 
     // Tout par défaut.
 }
@@ -395,10 +395,10 @@ class Traduction extends Traductions
      * @param Applications $applicationInstance
      * @return void
      */
-    public function __construct(Applications $applicationInstance)
+    /*public function __construct(Applications $applicationInstance)
     {
         parent::__construct($applicationInstance);
-    }
+    }*/
 
 
     /**
