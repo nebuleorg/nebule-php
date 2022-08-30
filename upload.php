@@ -43,19 +43,6 @@ class Application extends Applications
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
     const APPLICATION_CODING = 'application/x-httpd-php';
-
-    /**
-     * Constructeur.
-     *
-     * @param nebule $nebuleInstance
-     * @return void
-     */
-    /*public function __construct(nebule $nebuleInstance)
-    {
-        parent::__construct($nebuleInstance);
-    }*/
-
-    // Tout par défaut.
 }
 
 
@@ -389,18 +376,6 @@ class Action extends Actions
  */
 class Traduction extends Traductions
 {
-    /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    /*public function __construct(Applications $applicationInstance)
-    {
-        parent::__construct($applicationInstance);
-    }*/
-
-
     /**
      * La langue d'affichage de l'interface.
      *
