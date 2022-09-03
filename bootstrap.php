@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220830';
+const BOOTSTRAP_VERSION = '020220901';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -124,6 +124,12 @@ function log_add(string $message, string $level = 'msg', string $function = '', 
 {
     global $metrologyStartTime;
     syslog(LOG_INFO, 'LogT=' . sprintf('%01.6f', microtime(true) - $metrologyStartTime) . ' LogL="' . $level . '" LogI="' . $id . '" LogF="' . $function . '" LogM="' . $message . '"');
+}
+
+function log_addDisp(string $message, string $level = 'msg', string $function = '', string $id = '00000000'): void
+{
+    log_add($message, $level, $function, $id);
+    echo "$level($function) : $id : $message";
 }
 
 // Initialize logs.
@@ -6085,18 +6091,6 @@ function bootstrap_echoEndLineTest(bool $test, string $suffix = ''): void
  TODO.
  ------------------------------------------------------------------------------------------
  */
-
-/**
- * Load and run application already preloaded.
- *
- * @return void
- */
-function bootstrap_displaySleepingApplication()
-{
-    bootstrap_includeApplication();
-    bootstrap_loadApplication();
-    bootstrap_initApplication(true);
-}
 
 /**
  * Load and run application without preload.
