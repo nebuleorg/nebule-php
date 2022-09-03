@@ -39,24 +39,13 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020220824';
+    const APPLICATION_VERSION = '020220903';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2022';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
     const APPLICATION_CODING = 'application/x-httpd-php';
 
-    /**
-     * Constructeur.
-     *
-     * @param nebule $nebuleInstance
-     * @return void
-     */
-    public function __construct(nebule $nebuleInstance)
-    {
-        parent::__construct($nebuleInstance);
-    }
-
-    // Tout par défaut.
+    // All default.
 }
 
 
@@ -574,12 +563,12 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             if ($nebuleInstance->getCurrentEntity() != $nebuleInstance->getInstanceEntity()) echo 'other';
         } ?>">
             <div class="header-left">
-                <a href="/?<?php echo Display::DEFAULT_BOOTSTRAP_LOGO_LINK; ?>">
-                    <img title="App switch" alt="[]" src="<?php echo Display::DEFAULT_APPLICATION_LOGO; ?>"/>
+                <a href="/?<?php echo Displays::DEFAULT_BOOTSTRAP_LOGO_LINK; ?>">
+                    <img title="App switch" alt="[]" src="<?php echo Displays::DEFAULT_APPLICATION_LOGO; ?>"/>
                 </a>
             </div>
             <div class="header-left">
-                <a href="/?<?php echo Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_MENU; ?>">
+                <a href="/?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_MENU; ?>">
                     <img title="Menu" alt="[]" src="<?php echo self::DEFAULT_LOGO_MENU; ?>"/>
                 </a>
             </div>
@@ -623,11 +612,11 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         } ?>">
             <div class="footer-center">
                 <p>
-                    <?php echo $applicationName; ?><br/>
-                    <?php echo $applicationVersion . ' ' . $applicationLevel; ?><br/>
-                    (c) <?php echo $applicationLicence . ' ' . $applicationAuthor; ?> - <a
-                            href="<?php echo $linkApplicationWebsite; ?>" target="_blank"
-                            style="text-decoration:none;"><?php echo $applicationWebsite; ?></a>
+                    <?php echo Application::APPLICATION_NAME; ?><br/>
+                    <?php echo Application::APPLICATION_VERSION . ' ' . $this->_configuration->getOptionAsString('codeBranch'); ?><br/>
+                    (c) <?php echo Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR; ?> - <a
+                            href="<?php echo Application::APPLICATION_WEBSITE; ?>" target="_blank"
+                            style="text-decoration:none;"><?php echo Application::APPLICATION_WEBSITE; ?></a>
                 </p>
             </div>
         </div>
@@ -685,19 +674,19 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         $list = array();
         $list[0]['icon'] = Display::DEFAULT_ICON_LL;
         $list[0]['title'] = 'Options';
-        $list[0]['htlink'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_OPTIONS;
+        $list[0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_OPTIONS;
         $list[1]['icon'] = Display::DEFAULT_ICON_LF;
         $list[1]['title'] = 'Global authorities';
-        $list[1]['htlink'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_GLOBAL_AUTHORITIES;
+        $list[1]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_GLOBAL_AUTHORITIES;
         $list[2]['icon'] = Display::DEFAULT_ICON_LF;
         $list[2]['title'] = 'Local authorities';
-        $list[2]['htlink'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_LOCAL_AUTHORITIES;
+        $list[2]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_LOCAL_AUTHORITIES;
         $list[4]['icon'] = Display::DEFAULT_ICON_LS;
         $list[4]['title'] = 'Applications';
-        $list[4]['htlink'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_APPLICATIONS;
+        $list[4]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_APPLICATIONS;
         $list[5]['icon'] = Display::DEFAULT_ICON_LK;
         $list[5]['title'] = 'Local recovery';
-        $list[5]['htlink'] = '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_RECOVERY;
+        $list[5]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_RECOVERY;
         ?>
 
         <div id="menuSelect">
@@ -1546,8 +1535,8 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         <div class="appSigner">Declared by <?php $this->displayInlineObjectColorIconName(
                                 $signersList[$application],
                                 '?' . nebule::COMMAND_SWITCH_APPLICATION . '=' . self::REFERENCE_DISPLAY_APPLICATION
-                                . '&' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . nebule::COMMAND_SELECT_ENTITY
-                                . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=default'
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . nebule::COMMAND_SELECT_ENTITY
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=default'
                                 . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $signersList[$application]); ?>
                             <?php
                             if ($updater != $signersList[$application]) {
@@ -1555,8 +1544,8 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                                 and updated by <?php $this->displayInlineObjectColorIconName(
                                     $updater,
                                     '?' . nebule::COMMAND_SWITCH_APPLICATION . '=' . self::REFERENCE_DISPLAY_APPLICATION
-                                    . '&' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . nebule::COMMAND_SELECT_ENTITY
-                                    . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=default'
+                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . nebule::COMMAND_SELECT_ENTITY
+                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=default'
                                     . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $updater); ?>
                                 <?php
                             }
@@ -1570,8 +1559,8 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                             <div class="appNoPreload">No preload by <?php $this->displayInlineObjectColorIconName(
                                     $noPreloadSigner,
                                     '?' . nebule::COMMAND_SWITCH_APPLICATION . '=' . self::REFERENCE_DISPLAY_APPLICATION
-                                    . '&' . Display::DEFAULT_DISPLAY_COMMAND_MODE . '=' . nebule::COMMAND_SELECT_ENTITY
-                                    . '&' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=default'
+                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . nebule::COMMAND_SELECT_ENTITY
+                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=default'
                                     . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $noPreloadSigner); ?>.
                             </div>
                             <?php

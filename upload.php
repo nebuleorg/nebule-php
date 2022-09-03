@@ -38,11 +38,13 @@ class Application extends Applications
     const APPLICATION_NAME = 'upload';
     const APPLICATION_SURNAME = 'nebule/upload';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020220824';
+    const APPLICATION_VERSION = '020220903';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2022';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
     const APPLICATION_CODING = 'application/x-httpd-php';
+
+    // All default.
 }
 
 
@@ -61,7 +63,13 @@ class Display extends Displays
      */
     public function _displayFull(): void
     {
-        global $applicationVersion, $applicationLevel, $applicationLicence, $applicationWebsite, $applicationName, $applicationSurname, $applicationAuthor;
+        global $applicationVersion,
+               $applicationLevel,
+               $applicationLicence,
+               $applicationWebsite,
+               $applicationName,
+               $applicationSurname,
+               $applicationAuthor;
 
         $linkApplicationWebsite = $applicationWebsite;
         if (strpos($applicationWebsite, '://') === false) {
@@ -123,11 +131,10 @@ class Display extends Displays
                 <p>
                     <?php
                     $name = $this->_nebuleInstance->getInstanceEntityInstance()->getFullName();
-                    if ($name != $this->_nebuleInstance->getInstanceEntity()) {
+                    if ($name != $this->_nebuleInstance->getInstanceEntity())
                         echo $name;
-                    } else {
+                    else
                         echo '/';
-                    }
                     echo '<br />' . $this->_nebuleInstance->getInstanceEntity();
                     ?>
                 </p>
@@ -136,11 +143,11 @@ class Display extends Displays
         <div class="layout-footer">
             <div class="footer-center">
                 <p>
-                    <?php echo $applicationName; ?><br/>
-                    <?php echo $applicationVersion . ' ' . $applicationLevel; ?><br/>
-                    (c) <?php echo $applicationLicence . ' ' . $applicationAuthor; ?> - <a
-                            href="<?php echo $linkApplicationWebsite; ?>" target="_blank"
-                            style="text-decoration:none;"><?php echo $applicationWebsite; ?></a>
+                    <?php echo Application::APPLICATION_NAME; ?><br/>
+                    <?php echo Application::APPLICATION_VERSION . ' ' . $this->_configuration->getOptionAsString('codeBranch'); ?><br/>
+                    (c) <?php echo Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR; ?> - <a
+                            href="<?php echo Application::APPLICATION_WEBSITE; ?>" target="_blank"
+                            style="text-decoration:none;"><?php echo Application::APPLICATION_WEBSITE; ?></a>
                 </p>
             </div>
         </div>

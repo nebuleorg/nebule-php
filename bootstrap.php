@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220901';
+const BOOTSTRAP_VERSION = '020220903';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -477,6 +477,42 @@ const LIB_ARG_FIRST_PUPPETMASTER_EID = 'bootstrapfirstpuppetmastereid';
 const LIB_ARG_FIRST_PUPPETMASTER_LOC = 'bootstrapfirstpuppetmasterlocation';
 const LIB_ARG_FIRST_SUBORD_EID = 'bootstrapfirstsubordinationeid';
 const LIB_ARG_FIRST_SUBORD_LOC = 'bootstrapfirstsubordinationlocation';
+
+const BREAK_DESCRIPTIONS = array(
+    '00' => 'unknown buggy interrupt reason',
+    '11' => 'user interrupt',
+    '21' => 'library init error',
+    '22' => "library i/o : link's folder error",
+    '23' => "library i/o : link's folder error",
+    '24' => "library i/o : object's folder error",
+    '25' => "library i/o : object's folder error",
+    '31' => 'library load : finding library IID error.',
+    '32' => 'library load : finding library OID error.',
+    '41' => 'library load : find code error',
+    '42' => 'library load : include code error',
+    '43' => 'library load : load error',
+    '44' => 'application : find code error',
+    '45' => 'application : include code error',
+    '46' => 'application : load error',
+    '51' => 'unknown bootstrap hash',
+    '61' => 'no local server entity',
+    '62' => 'local server entity error',
+    '71' => 'need sync puppetmaster',
+    '72' => 'need sync authorities of security',
+    '73' => 'need sync authorities of security',
+    '74' => 'need sync authorities of code',
+    '75' => 'need sync authorities of code',
+    '76' => 'need sync authorities of time',
+    '77' => 'need sync authorities of time',
+    '78' => 'need sync authorities of directory',
+    '79' => 'need sync authorities of directory',
+    '81' => 'library init : I/O open error',
+    '82' => 'library init : puppetmaster error',
+    '83' => 'library init : security authority error',
+    '84' => 'library init : code authority error',
+    '85' => 'library init : time authority error',
+    '86' => 'library init : directory authority error',
+);
 
 /**
  * List of options types.
@@ -1095,7 +1131,7 @@ function lib_init(): bool
 
     // Initialize i/o.
     if (!io_open()) {
-        bootstrap_setBreak('81', 'lib init : I/O open error');
+        bootstrap_setBreak('81', __FUNCTION__);
         return false;
     }
 
@@ -1105,7 +1141,7 @@ function lib_init(): bool
     //   dans la recherche par référence nebFindByRef.
     $puppetmaster = lib_getConfiguration('puppetmaster');
     if (!ent_checkPuppetmaster($puppetmaster)) {
-        bootstrap_setBreak('82', 'lib init : puppetmaster error');
+        bootstrap_setBreak('82', __FUNCTION__);
         $needFirstSynchronization = true;
         return false;
     }
@@ -1116,7 +1152,7 @@ function lib_init(): bool
     if (!ent_checkSecurityAuthorities($nebuleSecurityAuthorities)) {
         $nebuleSecurityAuthorities = ent_getSecurityAuthorities(true);
         if (!ent_checkSecurityAuthorities($nebuleSecurityAuthorities)) {
-            bootstrap_setBreak('83', 'lib init : security authority error');
+            bootstrap_setBreak('83', __FUNCTION__);
             $needFirstSynchronization = true;
             return false;
         }
@@ -1128,7 +1164,7 @@ function lib_init(): bool
     if (!ent_checkCodeAuthorities($nebuleCodeAuthorities)) {
         $nebuleCodeAuthorities = ent_getCodeAuthorities(true);
         if (!ent_checkCodeAuthorities($nebuleCodeAuthorities)) {
-            bootstrap_setBreak('84', 'lib init : code authority error');
+            bootstrap_setBreak('84', __FUNCTION__);
             $needFirstSynchronization = true;
             return false;
         }
@@ -1140,7 +1176,7 @@ function lib_init(): bool
     if (!ent_checkTimeAuthorities($nebuleTimeAuthorities)) {
         $nebuleTimeAuthorities = ent_getTimeAuthorities(true);
         if (!ent_checkTimeAuthorities($nebuleTimeAuthorities)) {
-            bootstrap_setBreak('85', 'lib init : time authority error');
+            bootstrap_setBreak('85', __FUNCTION__);
             $needFirstSynchronization = true;
             return false;
         }
@@ -1150,7 +1186,7 @@ function lib_init(): bool
     if (!ent_checkDirectoryAuthorities($nebuleDirectoryAuthorities)) {
         $nebuleDirectoryAuthorities = ent_getDirectoryAuthorities(true);
         if (!ent_checkDirectoryAuthorities($nebuleDirectoryAuthorities)) {
-            bootstrap_setBreak('86', 'lib init : directory authority error');
+            bootstrap_setBreak('86', __FUNCTION__);
             $needFirstSynchronization = true;
             return false;
         }
@@ -1186,12 +1222,12 @@ function lib_setServerEntity(bool $rescueMode): void
         $nebuleServerEntity = filter_var(strtok(trim(file_get_contents(LIB_LOCAL_ENTITY_FILE, false, null, 0, LIB_NID_MAX_HASH_SIZE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         if (!ent_checkIsPublicKey($nebuleServerEntity))
         {
-            bootstrap_setBreak('62', 'Local server entity error');
+            bootstrap_setBreak('62', __FUNCTION__);
             $nebuleServerEntity = '';
             $needFirstSynchronization = true;
         }
     } else {
-        bootstrap_setBreak('61', 'No local server entity');
+        bootstrap_setBreak('61', __FUNCTION__);
         $nebuleServerEntity = '';
         $needFirstSynchronization = true;
     }
@@ -1281,8 +1317,7 @@ function io_checkLinkFolder(): bool
     if (!file_exists(LIB_LOCAL_LINKS_FOLDER))
         io_createLinkFolder();
     if (!file_exists(LIB_LOCAL_LINKS_FOLDER) || !is_dir(LIB_LOCAL_LINKS_FOLDER)) {
-        log_add('I/O no folder for links.', 'error', __FUNCTION__, '5306de5f');
-        bootstrap_setBreak('22', "Library i/o link's folder error");
+        bootstrap_setBreak('22', __FUNCTION__);
         return false;
     }
 
@@ -1291,24 +1326,20 @@ function io_checkLinkFolder(): bool
         $data = crypto_getPseudoRandom(2048);
         $name = LIB_LOCAL_LINKS_FOLDER . '/writest' . bin2hex(crypto_getPseudoRandom(8));
         if (file_put_contents($name, $data) === false) {
-            log_add('I/O error on folder for links.', 'error', __FUNCTION__, 'f72e3a86');
-            bootstrap_setBreak('23', "Library i/o link's folder error");
+            bootstrap_setBreak('23', __FUNCTION__);
             return false;
         }
         if (!file_exists($name) || !is_file($name)) {
-            log_add('I/O error on folder for links.', 'error', __FUNCTION__, '6f012d85');
-            bootstrap_setBreak('23', "Library i/o link's folder error");
+            bootstrap_setBreak('23', __FUNCTION__);
             return false;
         }
         $read = file_get_contents($name, false, null, 0, 2400);
         if ($data != $read) {
-            log_add('I/O error on folder for links.', 'error', __FUNCTION__, 'fd499fcb');
-            bootstrap_setBreak('23', "Library i/o link's folder error");
+            bootstrap_setBreak('23', __FUNCTION__);
             return false;
         }
         if (!unlink($name)) {
-            log_add('I/O error on folder for links.', 'error', __FUNCTION__, '8e0caa66');
-            bootstrap_setBreak('23', "Library i/o link's folder error");
+            bootstrap_setBreak('23', __FUNCTION__);
             return false;
         }
     }
@@ -1327,8 +1358,7 @@ function io_checkObjectFolder(): bool
     if (!file_exists(LIB_LOCAL_OBJECTS_FOLDER))
         io_createObjectFolder();
     if (!file_exists(LIB_LOCAL_OBJECTS_FOLDER) || !is_dir(LIB_LOCAL_OBJECTS_FOLDER)) {
-        log_add('I/O no folder for objects.', 'error', __FUNCTION__, 'b0cdeafe');
-        bootstrap_setBreak('24', "Library i/o object's folder error");
+        bootstrap_setBreak('24', __FUNCTION__);
         return false;
     }
 
@@ -1337,24 +1367,20 @@ function io_checkObjectFolder(): bool
         $data = crypto_getPseudoRandom(2048);
         $name = LIB_LOCAL_OBJECTS_FOLDER . '/writest' . bin2hex(crypto_getPseudoRandom(8));
         if (file_put_contents($name, $data) === false) {
-            log_add('I/O error on folder for objects.', 'error', __FUNCTION__, '1327da69');
-            bootstrap_setBreak('25', "Library i/o object's folder error");
+            bootstrap_setBreak('25', __FUNCTION__);
             return false;
         }
         if (!file_exists($name) || !is_file($name)) {
-            log_add('I/O error on folder for objects.', 'error', __FUNCTION__, '2b451a2a');
-            bootstrap_setBreak('25', "Library i/o object's folder error");
+            bootstrap_setBreak('25', __FUNCTION__);
             return false;
         }
         $read = file_get_contents($name, false, null, 0, 2400);
         if ($data != $read) {
-            log_add('I/O error on folder for objects.', 'error', __FUNCTION__, '634072e5');
-            bootstrap_setBreak('25', "Library i/o object's folder error");
+            bootstrap_setBreak('25', __FUNCTION__);
             return false;
         }
         if (!unlink($name)) {
-            log_add('I/O error on folder for objects.', 'error', __FUNCTION__, '2b397869');
-            bootstrap_setBreak('25', "Library i/o object's folder error");
+            bootstrap_setBreak('25', __FUNCTION__);
             return false;
         }
     }
@@ -3685,8 +3711,7 @@ function ent_getDirectoryAuthorities(bool $synchronize = false): array
 function ent_checkPuppetmaster(string $oid): bool
 {
     if (!ent_checkIsPublicKey($oid)) {
-        log_add('need sync puppetmaster', 'warn', __FUNCTION__, '6995b7fd');
-        bootstrap_setBreak('71', 'Need sync puppetmaster');
+        bootstrap_setBreak('71', __FUNCTION__);
         return false;
     }
     return true;
@@ -3701,14 +3726,12 @@ function ent_checkPuppetmaster(string $oid): bool
 function ent_checkSecurityAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0) {
-        log_add('need sync authorities of security', 'warn', __FUNCTION__, 'a767699e');
-        bootstrap_setBreak('72', 'Need sync authorities of security');
+        bootstrap_setBreak('72', __FUNCTION__);
         return false;
     }
     foreach ($oidList as $nid) {
         if (!ent_checkIsPublicKey($nid)) {
-            log_add('need sync authorities of security ' . $nid, 'warn', __FUNCTION__, '5626b8f');
-            bootstrap_setBreak('73', 'Need sync authorities of security');
+            bootstrap_setBreak('73', __FUNCTION__);
             return false;
         }
     }
@@ -3724,14 +3747,12 @@ function ent_checkSecurityAuthorities(array $oidList): bool
 function ent_checkCodeAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0) {
-        log_add('need sync authorities of code', 'warn', __FUNCTION__, '8543b436');
-        bootstrap_setBreak('74', 'Need sync authorities of code');
+        bootstrap_setBreak('74', __FUNCTION__);
         return false;
     }
     foreach ($oidList as $nid) {
         if (!ent_checkIsPublicKey($nid)) {
-            log_add('need sync authorities of code ' . $nid, 'warn', __FUNCTION__, '0ff4516d');
-            bootstrap_setBreak('75', 'Need sync authorities of code');
+            bootstrap_setBreak('75', __FUNCTION__);
             return false;
         }
     }
@@ -3747,14 +3768,12 @@ function ent_checkCodeAuthorities(array $oidList): bool
 function ent_checkTimeAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0) {
-        log_add('need sync authorities of time', 'warn', __FUNCTION__, '0c6f1ef1');
-        bootstrap_setBreak('76', 'Need sync authorities of time');
+        bootstrap_setBreak('76', __FUNCTION__);
         return false;
     }
     foreach ($oidList as $nid) {
         if (!ent_checkIsPublicKey($nid)) {
-            log_add('need sync authorities of time ' . $nid, 'warn', __FUNCTION__, '01f5f9b5');
-            bootstrap_setBreak('77', 'Need sync authorities of time');
+            bootstrap_setBreak('77', __FUNCTION__);
             return false;
         }
     }
@@ -3770,14 +3789,12 @@ function ent_checkTimeAuthorities(array $oidList): bool
 function ent_checkDirectoryAuthorities(array $oidList): bool
 {
     if (sizeof($oidList) == 0) {
-        log_add('need sync authorities of directory', 'warn', __FUNCTION__, 'e47e9e04');
-        bootstrap_setBreak('78', 'Need sync authorities of directory');
+        bootstrap_setBreak('78', __FUNCTION__);
         return false;
     }
     foreach ($oidList as $nid) {
         if (!ent_checkIsPublicKey($nid)) {
-            log_add('need sync authorities of directory ' . $nid, 'warn', __FUNCTION__, '8b12fe09');
-            bootstrap_setBreak('79', 'Need sync authorities of directory');
+            bootstrap_setBreak('79', __FUNCTION__);
             return false;
         }
     }
@@ -4429,14 +4446,14 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
                 $bootstrapLibraryOID = '';
                 $bootstrapLibrarySID = '';
                 $bootstrapLibraryInstanceSleep = '';
-                bootstrap_setBreak('32', 'Finding nebule library code error.');
+                bootstrap_setBreak('32', __FUNCTION__);
             }
         } else {
             $bootstrapLibraryIID = '';
             $bootstrapLibraryOID = '';
             $bootstrapLibrarySID = '';
             $bootstrapLibraryInstanceSleep = '';
-            bootstrap_setBreak('31', 'Finding nebule library ID error.');
+            bootstrap_setBreak('31', __FUNCTION__);
         }
     }
 }
@@ -4456,12 +4473,10 @@ function bootstrap_includeLibraryPOO(): void
 
     if ($bootstrapLibraryOID == '') {
         log_reopen(BOOTSTRAP_NAME);
-        log_add('error include library code ' . $bootstrapLibraryOID, 'error', __FUNCTION__, '30103d14');
-        bootstrap_setBreak('41', 'Library nebule find code error');
+        bootstrap_setBreak('41', __FUNCTION__);
     } elseif (!io_objectInclude($bootstrapLibraryOID)) {
         log_reopen(BOOTSTRAP_NAME);
-        log_add('error include library code ' . $bootstrapLibraryOID, 'error', __FUNCTION__, '8d8271fc');
-        bootstrap_setBreak('42', 'Library nebule include code error');
+        bootstrap_setBreak('42', __FUNCTION__);
         $bootstrapLibraryOID = '';
     }
 }
@@ -4496,7 +4511,7 @@ function bootstrap_loadLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
             log_add('Library nebule load error ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), 'error', __FUNCTION__, '959c188b');
-            bootstrap_setBreak('43', 'Library nebule load error');
+            bootstrap_setBreak('43', __FUNCTION__);
         }
     }
 }
@@ -4709,12 +4724,10 @@ function bootstrap_includeApplication(): void
     //log_add('include application code OID=' . $bootstrapApplicationOID, 'info', __FUNCTION__, '8683e195');
     if ($bootstrapApplicationOID == '' || $bootstrapApplicationOID == '0') {
         log_reopen(BOOTSTRAP_NAME);
-        log_add('error find application code ' . $bootstrapApplicationOID, 'error', __FUNCTION__, 'd0c1d720');
-        bootstrap_setBreak('44', 'Application find code error');
+        bootstrap_setBreak('44', __FUNCTION__);
     } elseif (!io_objectInclude($bootstrapApplicationOID)) {
         log_reopen(BOOTSTRAP_NAME);
-        log_add('error include application code ' . $bootstrapApplicationOID, 'error', __FUNCTION__, '6fa5eb2b');
-        bootstrap_setBreak('45', 'Application include code error');
+        bootstrap_setBreak('45', __FUNCTION__);
         $bootstrapApplicationOID = '0';
     }
 }
@@ -4810,7 +4823,7 @@ function bootstrap_loadApplication(): void
     } catch (\Error $e) {
         log_reopen(BOOTSTRAP_NAME);
         log_add('Application load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '202824cb');
-        bootstrap_setBreak('46', 'Application load error');
+        bootstrap_setBreak('46', __FUNCTION__);
     }
 
     try {
@@ -4821,7 +4834,7 @@ function bootstrap_loadApplication(): void
     } catch (\Error $e) {
         log_reopen(BOOTSTRAP_NAME);
         log_add('Application display load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '4c7da4e2');
-        bootstrap_setBreak('46', 'Application load error');
+        bootstrap_setBreak('46', __FUNCTION__);
     }
 
     try {
@@ -4832,7 +4845,7 @@ function bootstrap_loadApplication(): void
     } catch (\Error $e) {
         log_reopen(BOOTSTRAP_NAME);
         log_add('Application action load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '3c042de3');
-        bootstrap_setBreak('46', 'Application load error');
+        bootstrap_setBreak('46', __FUNCTION__);
     }
 
     try {
@@ -4843,7 +4856,7 @@ function bootstrap_loadApplication(): void
     } catch (\Error $e) {
         log_reopen(BOOTSTRAP_NAME);
         log_add('Application traduction load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '585648a2');
-        bootstrap_setBreak('46', 'Application load error');
+        bootstrap_setBreak('46', __FUNCTION__);
     }
 }
 
@@ -4862,19 +4875,19 @@ function bootstrap_initApplication(bool $run): void
 
     // Check
     if (! is_a($applicationInstance, 'Nebule\Library\Applications')) {
-        log_add('error init application', 'error', __FUNCTION__, '41ba02a9');
+        log_addDisp('error init application', 'error', __FUNCTION__, '41ba02a9');
         return;
     }
     if (! is_a($applicationTraductionInstance, 'Nebule\Library\Traductions')) {
-        log_add('error init traductions', 'error', __FUNCTION__, 'd121af4c');
+        log_addDisp('error init traductions', 'error', __FUNCTION__, 'd121af4c');
         return;
     }
     if (! is_a($applicationDisplayInstance, 'Nebule\Library\Displays')) {
-        log_add('error init displays', 'error', __FUNCTION__, '4bb6af65');
+        log_addDisp('error init displays', 'error', __FUNCTION__, '4bb6af65');
         return;
     }
     if (! is_a($applicationActionInstance, 'Nebule\Library\Actions')) {
-        log_add('error init actions', 'error', __FUNCTION__, '308b8a96');
+        log_addDisp('error init actions', 'error', __FUNCTION__, '308b8a96');
         return;
     }
 
@@ -4950,14 +4963,18 @@ function bootstrap_saveApplication(): void
  * In the end, this stop the loading of any application code and show the bootstrap break page.
  *
  * @param string $errorCode
- * @param string $errorDesc
+ * @param string $function
  */
-function bootstrap_setBreak(string $errorCode, string $errorDesc): void
+function bootstrap_setBreak(string $errorCode, string $function): void
 {
     global $bootstrapBreak;
 
+    if (isset(BREAK_DESCRIPTIONS[$errorCode]))
+        $errorDesc = BREAK_DESCRIPTIONS[$errorCode];
+    else
+        $errorDesc = BREAK_DESCRIPTIONS['00'];
     $bootstrapBreak[$errorCode] = $errorDesc;
-    log_add('bootstrap break code=' . $errorCode . ' : ' . $errorDesc, 'info', __FUNCTION__, '100000' . $errorDesc);
+    log_add('bootstrap break code=' . $errorCode . ' : ' . $errorDesc, 'error', $function, '100000' . $errorCode);
 }
 
 function bootstrap_getUserBreak(): void
@@ -4965,7 +4982,7 @@ function bootstrap_getUserBreak(): void
     if (filter_has_var(INPUT_GET, LIB_ARG_BOOTSTRAP_BREAK)
         || filter_has_var(INPUT_POST, LIB_ARG_BOOTSTRAP_BREAK)
     )
-        bootstrap_setBreak('11', 'User interrupt.');
+        bootstrap_setBreak('11', __FUNCTION__);
 }
 
 function bootstrap_getInlineDisplay(): void
@@ -5020,10 +5037,8 @@ function bootstrap_checkFingerprint(): bool
 
 function bootstrap_getCheckFingerprint(): void
 {
-    if (!bootstrap_checkFingerprint()) {
-        log_add('unknown bootstrap hash - critical', 'error', __FUNCTION__, 'e294b7b3');
-        bootstrap_setBreak('51', 'Unknown bootstrap hash');
-    }
+    if (!bootstrap_checkFingerprint())
+        bootstrap_setBreak('51', __FUNCTION__);
 }
 
 
@@ -7369,7 +7384,7 @@ function bootstrap_logMetrology(): void
 function main(): void
 {
     if (!lib_init())
-        bootstrap_setBreak('21', 'Library init error');
+        bootstrap_setBreak('21', __FUNCTION__);
 
     bootstrap_getUserBreak();
     bootstrap_getInlineDisplay();
