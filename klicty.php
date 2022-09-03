@@ -42,7 +42,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020220824';
+    const APPLICATION_VERSION = '020220903';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2022';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -872,9 +872,6 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
      */
     protected function _displayFull(): void
     {
-        global $applicationName, $applicationSurname, $applicationLicence, $applicationAuthor,
-               $applicationWebsite;
-
         $this->_metrologyInstance->addLog('Display full', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
 
         // Récupère l'instance de la classe 'Actions' des actions génériques, celle-ci est instanciée après celle de 'Display'.
@@ -885,13 +882,13 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         <html lang="<?php echo $this->_currentDisplayLanguage; ?>">
         <head>
             <meta charset="utf-8"/>
-            <title><?php echo $applicationName . ' - ' . $this->_nebuleInstance->getCurrentEntityInstance()->getFullName('all'); ?></title>
+            <title><?php echo Application::APPLICATION_NAME . ' - ' . $this->_nebuleInstance->getCurrentEntityInstance()->getFullName('all'); ?></title>
             <link rel="icon" type="image/png" href="favicon.png"/>
-            <meta name="keywords" content="<?php echo $applicationSurname; ?>"/>
-            <meta name="description" content="<?php echo $applicationName . ' - ';
+            <meta name="keywords" content="<?php echo Application::APPLICATION_SURNAME; ?>"/>
+            <meta name="description" content="<?php echo Application::APPLICATION_NAME . ' - ';
             $this->_traductionInstance->echoTraduction('::::HtmlHeadDescription'); ?>"/>
-            <meta name="author" content="<?php echo $applicationAuthor . ' - ' . $applicationWebsite; ?>"/>
-            <meta name="licence" content="<?php echo $applicationLicence; ?>"/>
+            <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
+            <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
             <?php
             $this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
             $this->commonCSS();
@@ -1541,22 +1538,19 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
      */
     private function _displayMenuApplications()
     {
-        global $applicationName, $applicationVersion, $applicationLicence, $applicationAuthor, $applicationWebsite, $applicationLevel;
-
-        $linkApplicationWebsite = $applicationWebsite;
-        if (strpos($applicationWebsite, '://') === false) {
-            $linkApplicationWebsite = 'http://' . $applicationWebsite;
-        }
+        $linkApplicationWebsite = Application::APPLICATION_WEBSITE;
+        if (strpos(Application::APPLICATION_WEBSITE, '://') === false)
+            $linkApplicationWebsite = 'http://' . Application::APPLICATION_WEBSITE;
         ?>
 
         <div class="layout-menu-applications" id="layout-menu-applications">
             <div class="menu-applications-sign">
-                <img alt="<?php echo $applicationName; ?>" src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>"/><br/>
-                <?php echo $applicationName; ?><br/>
-                (c) <?php echo $applicationLicence . ' ' . $applicationAuthor; ?><br/>
+                <img alt="<?php echo Application::APPLICATION_NAME; ?>" src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>"/><br/>
+                <?php echo Application::APPLICATION_NAME; ?><br/>
+                (c) <?php echo Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR; ?><br/>
                 <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Version');
-                echo ' : ' . $applicationVersion . ' ' . $applicationLevel; ?><br/>
-                <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo $applicationWebsite; ?></a>
+                echo ' : ' . Application::APPLICATION_VERSION . ' ' . $this->_configuration->getOptionAsString('codeBranch'); ?><br/>
+                <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo Application::APPLICATION_WEBSITE; ?></a>
             </div>
             <div class="menu-applications-logo">
                 <img src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>" alt="[M]"
@@ -3501,14 +3495,14 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
 private function _displayContentAbout()
 {
-    global $applicationName, $applicationSurname, $applicationWebsite,
-           $applicationVersion, $applicationLevel, $nebuleSurname, $nebuleWebsite;
+    global $nebuleSurname,
+           $nebuleWebsite;
     ?>
 
     <div class="textcenter" id="welcome">
         <p>
             <img alt="klicty" src="<?php echo $this->_logoApplicationWelcome; ?>"/><br/>
-            <?php echo $applicationName; ?>
+            <?php echo Application::APPLICATION_NAME; ?>
         </p>
     </div>
     <div id="about"></div>
@@ -3536,6 +3530,7 @@ private function _displayContentAbout()
             );
             echo $this->getDisplayInformation('::Welcome', $param);
 
+            $applicationLevel = $this->_configuration->getOptionAsString('codeBranch');
             if ($applicationLevel == 'Experimental'
                 || $applicationLevel == 'Developpement'
             ) {
@@ -3543,7 +3538,7 @@ private function _displayContentAbout()
                 echo $this->getDisplayInformation('::::' . $applicationLevel, $param);
             }
             $param['informationType'] = 'information';
-            echo $this->getDisplayInformation($this->_traductionInstance->getTraduction('::Version') . ' : ' . $applicationVersion, $param);
+            echo $this->getDisplayInformation($this->_traductionInstance->getTraduction('::Version') . ' : ' . Application::APPLICATION_VERSION, $param);
             ?>
         </div>
     </div>
@@ -3603,16 +3598,26 @@ $param = array(
     'displayRatio' => 'long',
 );
 echo $this->getDisplayInformation('::HelpRecoveryEntity', $param);
+
+$linkApplicationWebsite = Application::APPLICATION_WEBSITE;
+if (strpos(Application::APPLICATION_WEBSITE, '://') === false)
+    $linkApplicationWebsite = 'http://' . Application::APPLICATION_WEBSITE;
+
+$linkNebuleWebsite = $nebuleWebsite;
+if (strpos($nebuleWebsite, '://') === false)
+    $linkNebuleWebsite = 'http://' . $nebuleWebsite;
+
 ?>
 
     <div id="welcomeFooter">
         <p><?php $this->_traductionInstance->echoTraduction('::Citation'); ?></p>
         <p>
-            <a href="http://<?php echo $applicationWebsite; ?>" target="_blank"><?php echo $applicationSurname; ?> <img
-                        alt="<?php echo $applicationSurname; ?>"
+            <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo Application::APPLICATION_SURNAME; ?> <img
+                        alt="<?php echo Application::APPLICATION_SURNAME; ?>"
                         src="<?php echo Application::APPLICATION_LICENCE_LOGO; ?>"/></a>&nbsp;&nbsp;&nbsp;
-            <a href="http://<?php echo $nebuleWebsite; ?>" target="_blank"><img alt="<?php echo $nebuleSurname; ?>"
-                                                                                src="<?php echo Application::NEBULE_LICENCE_LOGO; ?>"/> <?php echo $nebuleSurname; ?>
+            <a href="<?php echo $linkNebuleWebsite; ?>" target="_blank">
+                <img alt="<?php echo $nebuleSurname; ?>"
+                    src="<?php echo Application::NEBULE_LICENCE_LOGO; ?>"/> <?php echo $nebuleSurname; ?>
             </a>
         </p>
     </div>
@@ -3644,9 +3649,8 @@ echo $this->getDisplayInformation('::HelpRecoveryEntity', $param);
             );
             if ($listSigners[$id] != '0'
                 && $listSigners[$id] != ''
-            ) {
+            )
                 $list[$i]['param']['objectRefs'][0] = $listSigners[$id];
-            }
             $i++;
         }
         unset($listEntities, $listSigners, $instance, $id);

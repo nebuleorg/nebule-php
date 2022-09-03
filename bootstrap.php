@@ -4969,10 +4969,10 @@ function bootstrap_setBreak(string $errorCode, string $function): void
 {
     global $bootstrapBreak;
 
+    $errorDesc = BREAK_DESCRIPTIONS['00'];
     if (isset(BREAK_DESCRIPTIONS[$errorCode]))
         $errorDesc = BREAK_DESCRIPTIONS[$errorCode];
-    else
-        $errorDesc = BREAK_DESCRIPTIONS['00'];
+
     $bootstrapBreak[$errorCode] = $errorDesc;
     log_add('bootstrap break code=' . $errorCode . ' : ' . $errorDesc, 'error', $function, '100000' . $errorCode);
 }

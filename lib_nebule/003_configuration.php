@@ -63,6 +63,7 @@ class Configuration
         'permitOnlineRescue',
         'permitLogs',
         'permitJavaScript',
+        'codeBranch',
         'logsLevel',
         'modeRescue',
         'cryptoLibrary',
@@ -166,6 +167,7 @@ class Configuration
         'permitOnlineRescue' => 'Global',
         'permitLogs' => 'Logs',
         'permitJavaScript' => 'Display',
+        'codeBranch' => 'Global',
         'logsLevel' => 'Logs',
         'modeRescue' => 'Global',
         'cryptoLibrary' => 'Cryptography',
@@ -253,6 +255,7 @@ class Configuration
         'permitOnlineRescue' => 'boolean',
         'permitLogs' => 'boolean',
         'permitJavaScript' => 'boolean',
+        'codeBranch' => 'string',
         'logsLevel' => 'string',
         'modeRescue' => 'boolean',
         'cryptoLibrary' => 'string',
@@ -336,6 +339,7 @@ class Configuration
         'permitOnlineRescue' => true,
         'permitLogs' => false,
         'permitJavaScript' => false,
+        'codeBranch' => false,
         'logsLevel' => false,
         'modeRescue' => false,
         'cryptoLibrary' => true,
@@ -418,6 +422,7 @@ class Configuration
         'permitOnlineRescue' => 'false',
         'permitLogs' => 'true',
         'permitJavaScript' => 'true',
+        'codeBranch' => 'develop',
         'logsLevel' => 'NORMAL',
         'modeRescue' => 'false',
         'cryptoLibrary' => 'openssl',
@@ -500,6 +505,7 @@ class Configuration
         'permitOnlineRescue' => 'careful',
         'permitLogs' => 'useful',
         'permitJavaScript' => 'careful',
+        'codeBranch' => 'careful',
         'logsLevel' => 'useful',
         'modeRescue' => 'critical',
         'cryptoLibrary' => 'careful',
@@ -582,6 +588,7 @@ class Configuration
         'permitOnlineRescue' => 'Todo description...',
         'permitLogs' => 'Activate more logs (syslog) on internal process.',
         'permitJavaScript' => 'Activate by default JavaScript (JS) on web pages.',
+        'codeBranch' => 'Level quality of used code.',
         'logsLevel' => 'Select verbosity of logs. Select on NORMAL, ERROR, FUNCTION and DEBUG.',
         'modeRescue' => 'Activate the rescue mode. Follow only links from globals authorities for applications detection.',
         'cryptoLibrary' => 'Define the default cryptographic library used.',
@@ -859,8 +866,9 @@ class Configuration
                 $result = $value;
         }
 
-        if (self::OPTIONS_WRITABLE[$name]
-            && $result === null
+        if ($result === null
+            && isset(self::OPTIONS_WRITABLE[$name])
+            && self::OPTIONS_WRITABLE[$name]
         )
         {
             $value = $this->_getOptionFromLinks($name);

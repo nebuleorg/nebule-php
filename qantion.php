@@ -40,7 +40,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'qantion';
     const APPLICATION_SURNAME = 'nebule/qantion';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020220824';
+    const APPLICATION_VERSION = '020220903';
     const APPLICATION_LICENCE = 'GNU GPL 2019-2022';
     const APPLICATION_WEBSITE = 'www.qantion.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -403,9 +403,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
      */
     private function _findLogoApplicationName()
     {
-        global $applicationName;
-
-        $this->_logoApplicationName = $applicationName;
+        $this->_logoApplicationName = Application::APPLICATION_NAME;
         // @todo
     }
 
@@ -500,21 +498,19 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
      */
     protected function _displayFull(): void
     {
-        global $applicationName, $applicationSurname, $applicationLicence, $applicationAuthor, $applicationWebsite;
-
         $this->_metrologyInstance->addLog('Display full', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
         ?>
         <!DOCTYPE html>
         <html lang="<?php echo $this->_currentDisplayLanguage; ?>">
         <head>
             <meta charset="utf-8"/>
-            <title><?php echo $applicationName . ' - ' . $this->_nebuleInstance->getCurrentEntityInstance()->getFullName('all'); ?></title>
+            <title><?php echo Application::APPLICATION_NAME . ' - ' . $this->_nebuleInstance->getCurrentEntityInstance()->getFullName('all'); ?></title>
             <link rel="icon" type="image/png" href="favicon.png"/>
-            <meta name="keywords" content="<?php echo $applicationSurname; ?>"/>
-            <meta name="description" content="<?php echo $applicationName . ' - ';
+            <meta name="keywords" content="<?php echo Application::APPLICATION_SURNAME; ?>"/>
+            <meta name="description" content="<?php echo Application::APPLICATION_NAME . ' - ';
             $this->_traductionInstance->echoTraduction('::::HtmlHeadDescription'); ?>"/>
-            <meta name="author" content="<?php echo $applicationAuthor . ' - ' . $applicationWebsite; ?>"/>
-            <meta name="licence" content="<?php echo $applicationLicence; ?>"/>
+            <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
+            <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
             <?php
             $this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
             $this->commonCSS();
@@ -1316,22 +1312,20 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
      */
     private function _displayMenuApplications()
     {
-        global $applicationName, $applicationVersion, $applicationLicence, $applicationAuthor, $applicationWebsite;
-
-        $linkApplicationWebsite = $applicationWebsite;
-        if (strpos($applicationWebsite, '://') === false) {
-            $linkApplicationWebsite = 'http://' . $applicationWebsite;
+        $linkApplicationWebsite = Application::APPLICATION_WEBSITE;
+        if (strpos(Application::APPLICATION_WEBSITE, '://') === false) {
+            $linkApplicationWebsite = 'http://' . Application::APPLICATION_WEBSITE;
         }
         ?>
 
         <div class="layout-menu-applications" id="layout-menu-applications">
             <div class="menu-applications-sign">
-                <img alt="<?php echo $applicationName; ?>" src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>"/><br/>
-                <?php echo $applicationName; ?><br/>
-                (c) <?php echo $applicationLicence . ' ' . $applicationAuthor; ?><br/>
+                <img alt="<?php echo Application::APPLICATION_NAME; ?>" src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>"/><br/>
+                <?php echo Application::APPLICATION_NAME; ?><br/>
+                (c) <?php echo Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR; ?><br/>
                 <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Version');
-                echo ' : ' . $applicationVersion; ?><br/>
-                <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo $applicationWebsite; ?></a>
+                echo ' : ' . Application::APPLICATION_VERSION; ?><br/>
+                <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo Application::APPLICATION_WEBSITE; ?></a>
             </div>
             <div class="menu-applications-logo">
                 <img src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>" alt="[M]"
@@ -1353,8 +1347,6 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
      */
     private function _displayInternalMenuApplications()
     {
-        global $applicationName;
-
         $modules = $this->_applicationInstance->getModulesListInstances();
         $list = array();
         $j = 0;
@@ -1376,7 +1368,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                     $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module->getCommandName()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=menu';
                     $list[$j]['desc'] = $this->_applicationInstance->getTraductionInstance()->getTraduction('::menuDesc', $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
-                    $list[$j]['ref'] = $applicationName;
+                    $list[$j]['ref'] = Application::APPLICATION_NAME;
                     $list[$j]['class'] = 'qantionMenuListContentActionModules';
                     $j++;
                 }
@@ -2249,7 +2241,9 @@ class ModuleHelp extends Modules
      */
     private function _displayHlpAbout(): void
     {
-        global $applicationName, $applicationVersion, $applicationLicence, $applicationAuthor, $applicationWebsite;
+        $linkApplicationWebsite = Application::APPLICATION_WEBSITE;
+        if (strpos(Application::APPLICATION_WEBSITE, '://') === false)
+            $linkApplicationWebsite = 'http://' . Application::APPLICATION_WEBSITE;
 
         // Affiche les informations de l'application.
         $param = array(
@@ -2260,15 +2254,15 @@ class ModuleHelp extends Modules
             'displayRatio' => 'short',
         );
         $list = array();
-        $list[0]['information'] = $applicationName;
+        $list[0]['information'] = Application::APPLICATION_NAME;
         $list[0]['param'] = $param;
         $list[0]['param']['icon'] = Display::DEFAULT_APPLICATION_LOGO;
         $list[0]['object'] = '1';
-        $list[1]['information'] = $this->_applicationInstance->getTraductionInstance()->getTraduction('::Version') . ' : ' . $applicationVersion;
+        $list[1]['information'] = $this->_applicationInstance->getTraductionInstance()->getTraduction('::Version') . ' : ' . Application::APPLICATION_VERSION;
         $list[1]['param'] = $param;
-        $list[2]['information'] = $applicationLicence . ' ' . $applicationAuthor;
+        $list[2]['information'] = Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR;
         $list[2]['param'] = $param;
-        $list[3]['information'] = '<a href="http://' . $applicationWebsite . '" target="_blank">' . $applicationWebsite . '</a>';
+        $list[3]['information'] = '<a href="' . $linkApplicationWebsite . '" target="_blank">' . Application::APPLICATION_WEBSITE . '</a>';
         $list[3]['param'] = $param;
         echo $this->_display->getDisplayObjectsList($list, 'Medium');
 

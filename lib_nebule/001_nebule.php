@@ -15,13 +15,13 @@ class nebule
     // Définition des constantes.
     const NEBULE_LICENCE_NAME = 'nebule';
     const NEBULE_LICENCE_LINK = 'http://www.nebule.org/';
-    const NEBULE_LICENCE_DATE = '2010-2020';
-    const NEBULE_ENVIRONMENT_FILE = 'c';
-    const NEBULE_BOOTSTRAP_FILE = 'index.php';
-    const NEBULE_LOCAL_ENTITY_FILE = 'e';
-    const NEBULE_LOCAL_OBJECTS_FOLDER = 'o';
-    const NEBULE_LOCAL_LINKS_FOLDER = 'l';
-    const NEBULE_LOCAL_HISTORY_FILE = 'f';    // Dans le dossier /l/
+    const NEBULE_LICENCE_DATE = '2010-2022';
+    const NEBULE_ENVIRONMENT_FILE = 'c'; // Into folder /
+    const NEBULE_BOOTSTRAP_FILE = 'index.php'; // Into folder /
+    const NEBULE_LOCAL_ENTITY_FILE = 'e'; // Into folder /
+    const NEBULE_LOCAL_OBJECTS_FOLDER = 'o'; // Into folder /
+    const NEBULE_LOCAL_LINKS_FOLDER = 'l'; // Into folder /
+    const NEBULE_LOCAL_HISTORY_FILE = 'f'; // Into folder /l/
     const PUPPETMASTER_URL = 'http://puppetmaster.nebule.org';
     const SECURITY_MASTER_URL = 'http://security.master.nebule.org';
     const CODE_MASTER_URL = 'http://code.master.nebule.org';
@@ -1163,11 +1163,6 @@ class nebule
     {
         $itc_ent = null;
 
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-		 *  ------------------------------------------------------------------------------------------
-		 */
         // Regarde si demande de changement d'entité, si la variable GET ou POST existe (true/false).
         $arg_switch = (filter_has_var(INPUT_GET, self::COMMAND_SWITCH_TO_ENTITY)
             || filter_has_var(INPUT_POST, self::COMMAND_SWITCH_TO_ENTITY));
@@ -1179,9 +1174,8 @@ class nebule
             && Node::checkNID($arg_ent, false, false)
             && $this->_ioInstance->checkObjectPresent($arg_ent)
             && $this->_ioInstance->checkLinkPresent($arg_ent)
-        ) {
+        )
             $itc_ent = $this->newObject($arg_ent);
-        }
 
         if ($arg_switch
             && is_a($itc_ent, 'Node')
@@ -1208,7 +1202,7 @@ class nebule
             $sInstance = $this->getSessionStore('nebulePublicEntityInstance');
             if ($sInstance !== false)
                 $tInstance = unserialize($sInstance);
-            // Si il existe une variable de session pour l'entité, la lit.
+            // S'il existe une variable de session pour l'entité, la lit.
             if ($tID !== false
                 && $tID != ''
                 && $tInstance !== false
@@ -1259,7 +1253,7 @@ class nebule
 
     private function _findCurrentEntityPrivateKey()
     {
-        // Si il existe une variable de session pour l'entite, la lit
+        // S'il existe une variable de session pour l'entite, la lit
         if ($this->getSessionStore('nebulePrivateEntity') !== false
             && $this->getSessionStore('nebulePrivateEntity') != ''
         ) {
@@ -1292,11 +1286,6 @@ class nebule
     {
         $arg_pwd = '';
 
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-		 *  ------------------------------------------------------------------------------------------
-		 */
         // Regarde si demande de changement fermeture d'entité, si la variable GET ou POST existe (true/false).
         $arg_logout = (filter_has_var(INPUT_GET, self::COMMAND_LOGOUT_ENTITY)
             || filter_has_var(INPUT_POST, self::COMMAND_LOGOUT_ENTITY));
@@ -1305,15 +1294,13 @@ class nebule
         $arg_post_pwd = filter_input(INPUT_POST, self::COMMAND_SELECT_PASSWORD, FILTER_SANITIZE_STRING);
 
         // Extrait un des mots de passes.
-        if ($arg_get_pwd != '' && $arg_post_pwd == '') {
+        if ($arg_get_pwd != '' && $arg_post_pwd == '')
             $arg_pwd = $arg_get_pwd;
-        }
 
-        if ($arg_post_pwd != '') {
+        if ($arg_post_pwd != '')
             $arg_pwd = $arg_post_pwd;
-        }
 
-        // Supprime le mdp et ferme la session si l'argment logout est présent.
+        // Supprime le mdp et ferme la session si l'argument logout est présent.
         // Si c'est une demande de fermeture d'entité.
         if ($arg_logout) {
             // Supprime le mot de passe de l'entité en cours.
@@ -1328,11 +1315,10 @@ class nebule
             $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
             // Test si le mot de passe est bon.
             $this->_currentEntityUnlocked = $this->_currentEntityInstance->checkPrivateKeyPassword();
-            if ($this->_currentEntityUnlocked) {
+            if ($this->_currentEntityUnlocked)
                 $this->_metrologyInstance->addLog('Login password ' . $this->_currentEntity . ' OK', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
-            } else {
+            else
                 $this->_metrologyInstance->addLog('Login password ' . $this->_currentEntity . ' NOK', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000'); // Log
-            }
         }
         unset($arg_logout, $arg_pwd, $arg_get_pwd, $arg_post_pwd);
     }

@@ -106,12 +106,9 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
      */
     protected function _displayFull(): void
     {
-        global $applicationVersion, $applicationLevel, $applicationLicence, $applicationWebsite,
-               $applicationName, $applicationSurname, $applicationAuthor;
-
-        $linkApplicationWebsite = $applicationWebsite;
-        if (strpos($applicationWebsite, '://') === false)
-            $linkApplicationWebsite = 'http' . '://' . $applicationWebsite;
+        $linkApplicationWebsite = Application::APPLICATION_WEBSITE;
+        if (strpos(Application::APPLICATION_WEBSITE, '://') === false)
+            $linkApplicationWebsite = 'http' . '://' . Application::APPLICATION_WEBSITE;
 
         $nebuleInstance = $this->_nebuleInstance;
 
@@ -128,12 +125,12 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         <html>
         <head>
             <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-            <title><?php echo $applicationName; ?></title>
+            <title><?php echo Application::APPLICATION_NAME; ?></title>
             <link rel="icon" type="image/png" href="favicon.png"/>
-            <meta name="keywords" content="<?php echo $applicationSurname; ?>"/>
-            <meta name="description" content="<?php echo $applicationName; ?>"/>
-            <meta name="author" content="<?php echo $applicationAuthor . ' - ' . $applicationWebsite; ?>"/>
-            <meta name="licence" content="<?php echo $applicationLicence; ?>"/>
+            <meta name="keywords" content="<?php echo Application::APPLICATION_SURNAME; ?>"/>
+            <meta name="description" content="<?php echo Application::APPLICATION_NAME; ?>"/>
+            <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
+            <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
             <?php $this->commonCSS(); ?>
             <style type="text/css">
                 .layout-content {
@@ -615,7 +612,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     <?php echo Application::APPLICATION_NAME; ?><br/>
                     <?php echo Application::APPLICATION_VERSION . ' ' . $this->_configuration->getOptionAsString('codeBranch'); ?><br/>
                     (c) <?php echo Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR; ?> - <a
-                            href="<?php echo Application::APPLICATION_WEBSITE; ?>" target="_blank"
+                            href="<?php echo $linkApplicationWebsite; ?>" target="_blank"
                             style="text-decoration:none;"><?php echo Application::APPLICATION_WEBSITE; ?></a>
                 </p>
             </div>
