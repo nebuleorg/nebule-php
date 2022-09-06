@@ -396,20 +396,18 @@ class Entity extends Node implements nodeInterface
         return true;
     }
 
-    public function checkPrivateKeyPassword(): bool
+    public function issetPrivateKeyPassword(): bool
     {
         return $this->_issetPrivateKeyPassword;
     }
 
     public function changePrivateKeyPassword(string $newPasswd): bool
     {
-        if ($this->_id == '0') {
+        if ($this->_id == '0')
             return false;
-        }
         // Vérifie que le mot de passe actuel est présent.
-        if (!$this->_issetPrivateKeyPassword) {
+        if (!$this->_issetPrivateKeyPassword)
             return false;
-        }
 
         $this->_metrology->addLog('Change entity password - old ' . $this->_privateKeyID, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $oldPrivateKeyID = $this->_privateKeyID;

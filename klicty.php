@@ -3348,7 +3348,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         echo '</div>' . "\n";
         echo '</div>' . "\n";
 
-        if ($this->_applicationInstance->getCurrentEntityInstance()->checkPrivateKeyPassword()
+        if ($this->_applicationInstance->getCurrentEntityInstance()->issetPrivateKeyPassword()
             || ($this->_applicationInstance->getCurrentEntity() == $this->_nebuleInstance->getCurrentEntity()
                 && $this->_unlocked
             )
@@ -3407,7 +3407,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         // Affiche le champs de mot de passe.
         if ($idCheck != 'Error') {
-            if ($this->_applicationInstance->getCurrentEntityInstance()->checkPrivateKeyPassword()
+            if ($this->_applicationInstance->getCurrentEntityInstance()->issetPrivateKeyPassword()
                 || ($this->_applicationInstance->getCurrentEntity() == $this->_nebuleInstance->getCurrentEntity()
                     && $this->_unlocked
                 )
@@ -3465,7 +3465,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 echo '</div>' . "\n";
             }
         } else {
-            if ($this->_applicationInstance->getCurrentEntityInstance()->checkPrivateKeyPassword()
+            if ($this->_applicationInstance->getCurrentEntityInstance()->issetPrivateKeyPassword()
                 || ($this->_applicationInstance->getCurrentEntity() == $this->_nebuleInstance->getCurrentEntity()
                     && $this->_unlocked
                 )

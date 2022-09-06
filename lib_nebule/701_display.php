@@ -4756,7 +4756,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $param['flagUnlocked'] = false; // Par défaut à false.
             if (is_a($object, 'Entity')) {
                 // Extrait l'état de verrouillage de l'objet entité.
-                $param['flagUnlocked'] = $object->checkPrivateKeyPassword();
+                $param['flagUnlocked'] = $object->issetPrivateKeyPassword();
                 // Vérifie si c'est l'entité courante.
                 if ($object->getID() == $this->_nebuleInstance->getCurrentEntity()
                     && $this->_unlocked
