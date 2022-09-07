@@ -2538,7 +2538,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if ($object->checkPresent()) {
                 if ($size = 'half' || $size = 'full') {
                     if (!is_a($object, 'Entity')) {
-                        $object = $this->_nebuleInstance->newEntity_DEPRECATED($object->getID());
+                        $object = $this->_nebuleInstance->newEntity($object->getID());
                     }
 
                     $result = '<div class="text">' . "\n\t<p>"
@@ -2569,7 +2569,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $result = $result . $this->convertLineMessage(':::display:content:errorNotAvailable', 'error');
         } elseif ($isGroup) {
             if (!is_a($object, 'Group'))
-                $object = $this->_nebuleInstance->newGroup_DEPRECATED($object->getID());
+                $object = $this->_nebuleInstance->newGroup($object->getID());
             $isClosed = $object->getMarkClosed();
 
             $result = '<div class="text">' . "\n\t<p>"
@@ -2584,7 +2584,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             unset($isOpened, $isClosed);
         } elseif ($isConversation) {
             if (!is_a($object, 'Conversation'))
-                $object = $this->_nebuleInstance->newConversation_DEPRECATED($object->getID());
+                $object = $this->_nebuleInstance->newConversation($object->getID());
             $isClosed = $object->getMarkClosed();
 
             $result = '<div class="text">' . "\n\t<p>"
@@ -6791,11 +6791,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if ($object->getType('all') == nebule::REFERENCE_OBJECT_ENTITY
                 && strpos($object->readOneLineAsText(Entity::ENTITY_MAX_SIZE), nebule::REFERENCE_ENTITY_HEADER) !== false
             )
-                $object = $this->_nebuleInstance->newEntity_DEPRECATED($id);
+                $object = $this->_nebuleInstance->newEntity($id);
             elseif ($object->getIsGroup('all'))
-                $object = $this->_nebuleInstance->newGroup_DEPRECATED($id);
+                $object = $this->_nebuleInstance->newGroup($id);
             elseif ($object->getIsConversation('all'))
-                $object = $this->_nebuleInstance->newConversation_DEPRECATED($id);
+                $object = $this->_nebuleInstance->newConversation($id);
         }
 
         $type = $object->getType('all');
@@ -8031,7 +8031,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if (is_a($link, 'Link'))
             $instance = $link;
         elseif (is_string($link))
-            $instance = $this->_nebuleInstance->newLink_DEPRECATED($link);
+            $instance = $this->_nebuleInstance->newLink($link);
 
         // Teste la validité du lien.
         if ($instance == null
@@ -8471,7 +8471,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($link == '')
             return '';
         if (!is_a($link, 'Link'))
-            $link = $this->_nebuleInstance->newLink_DEPRECATED($link);
+            $link = $this->_nebuleInstance->newLink($link);
         if (!$link->getValid())
             return '';
 
@@ -8873,7 +8873,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $entity = $item['entity'];
             $entityID = $entity->getID();
         } elseif (Node::checkNID($item['entity'], false, false)) {
-            $entity = $this->_nebuleInstance->newEntity_DEPRECATED($item['entity']);
+            $entity = $this->_nebuleInstance->newEntity($item['entity']);
             $entityID = $entity->getID();
         }
 

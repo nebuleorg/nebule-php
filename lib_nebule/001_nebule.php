@@ -711,7 +711,7 @@ class nebule
      * @param string $nid
      * @return Entity|nodeInterface
      */
-    public function newEntity_DEPRECATED(string $nid): Entity
+    public function newEntity(string $nid): Entity
     {
         return $this->_cacheInstance->newNode($nid, Cache::TYPE_ENTITY);
     }
@@ -722,7 +722,7 @@ class nebule
      * @param string $nid
      * @return Group|nodeInterface
      */
-    public function newGroup_DEPRECATED(string $nid): Group
+    public function newGroup(string $nid): Group
     {
         return $this->_cacheInstance->newNode($nid, Cache::TYPE_GROUP);
     }
@@ -733,7 +733,7 @@ class nebule
      * @param string $nid
      * @return Conversation|nodeInterface
      */
-    public function newConversation_DEPRECATED(string $nid): Conversation
+    public function newConversation(string $nid): Conversation
     {
         return $this->_cacheInstance->newNode($nid, Cache::TYPE_CONVERSATION);
     }
@@ -744,7 +744,7 @@ class nebule
      * @param string $nid
      * @return Currency|nodeInterface
      */
-    public function newCurrency_DEPRECATED(string $nid): Currency
+    public function newCurrency(string $nid): Currency
     {
         return $this->_cacheInstance->newNode($nid, Cache::TYPE_CURRENCY);
     }
@@ -755,7 +755,7 @@ class nebule
      * @param string $nid
      * @return Token|nodeInterface
      */
-    public function newToken_DEPRECATED(string $nid): Token
+    public function newToken(string $nid): Token
     {
         return $this->_cacheInstance->newNode($nid, Cache::TYPE_TOKEN);
     }
@@ -766,7 +766,7 @@ class nebule
      * @param string $nid
      * @return TokenPool|nodeInterface
      */
-    public function newTokenPool_DEPRECATED(string $nid): TokenPool
+    public function newTokenPool(string $nid): TokenPool
     {
         return $this->_cacheInstance->newNode($nid, Cache::TYPE_TOKENPOOL);
     }
@@ -777,7 +777,7 @@ class nebule
      * @param string $nid
      * @return Wallet|nodeInterface
      */
-    public function newWallet_DEPRECATED(string $nid): Wallet
+    public function newWallet(string $nid): Wallet
     {
         return $this->_cacheInstance->newNode($nid, Cache::TYPE_WALLET);
     }
@@ -788,7 +788,7 @@ class nebule
      * @param string $link
      * @return BlocLink
      */
-    public function newLink_DEPRECATED(string $link): BlocLink
+    public function newLink(string $link): BlocLink
     {
         return $this->_cacheInstance->newLink($link, Cache::TYPE_LINK);
     }
@@ -800,7 +800,7 @@ class nebule
      * @param string $link
      * @return BlocLink
      */
-    public function newTransaction_DEPRECATED(string $link): BlocLink
+    public function newTransaction(string $link): BlocLink
     {
         return $this->_cacheInstance->newLink($link, Cache::TYPE_TRANSACTION);
     }
@@ -872,11 +872,6 @@ class nebule
      */
     private function _findCurrentObjet()
     {
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
- 		 *  ------------------------------------------------------------------------------------------
-		 */
         // Lit et nettoye le contenu de la variable GET.
         $arg_obj = trim(' ' . filter_input(INPUT_GET, self::COMMAND_SELECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1573,11 +1568,6 @@ class nebule
      */
     private function _findCurrentGroup()
     {
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
- 		 *  ------------------------------------------------------------------------------------------
-		 */
         // Lit et nettoye le contenu de la variable GET.
         if (filter_has_var(INPUT_GET, self::COMMAND_SELECT_GROUP)) {
             $arg_grp = trim(' ' . filter_input(INPUT_GET, self::COMMAND_SELECT_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
@@ -1594,7 +1584,7 @@ class nebule
         ) {
             // Ecrit le groupe dans la variable.
             $this->_currentGroup = $arg_grp;
-            $this->_currentGroupInstance = $this->newGroup_DEPRECATED($arg_grp);
+            $this->_currentGroupInstance = $this->newGroup($arg_grp);
             // Ecrit le groupe dans la session.
             $this->setSessionStore('nebuleSelectedGroup', $arg_grp);
         } else {
@@ -1605,11 +1595,11 @@ class nebule
                 && $cache != ''
             ) {
                 $this->_currentGroup = $cache;
-                $this->_currentGroupInstance = $this->newGroup_DEPRECATED($cache);
+                $this->_currentGroupInstance = $this->newGroup($cache);
             } else // Sinon désactive le cache.
             {
                 $this->_currentGroup = '0'; // $this->_currentObject;
-                $this->_currentGroupInstance = $this->newGroup_DEPRECATED('0'); // $this->_currentObjectInstance;
+                $this->_currentGroupInstance = $this->newGroup('0'); // $this->_currentObjectInstance;
                 // Ecrit le groupe dans la session.
                 $this->setSessionStore('nebuleSelectedGroup', $this->_currentGroup);
             }
@@ -1671,11 +1661,6 @@ class nebule
      */
     private function _findCurrentConversation()
     {
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
- 		 *  ------------------------------------------------------------------------------------------
-		 */
         // Lit et nettoye le contenu de la variable GET.
         if (filter_has_var(INPUT_GET, self::COMMAND_SELECT_CONVERSATION)) {
             $arg_cvt = trim(' ' . filter_input(INPUT_GET, self::COMMAND_SELECT_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
@@ -1692,7 +1677,7 @@ class nebule
         ) {
             // Ecrit la conversation dans la variable.
             $this->_currentConversation = $arg_cvt;
-            $this->_currentConversationInstance = $this->newConversation_DEPRECATED($arg_cvt);
+            $this->_currentConversationInstance = $this->newConversation($arg_cvt);
             // Ecrit la conversation dans la session.
             $this->setSessionStore('nebuleSelectedConversation', $arg_cvt);
         } else {
@@ -1703,11 +1688,11 @@ class nebule
                 && $cache != ''
             ) {
                 $this->_currentConversation = $cache;
-                $this->_currentConversationInstance = $this->newConversation_DEPRECATED($cache);
+                $this->_currentConversationInstance = $this->newConversation($cache);
             } else // Sinon désactive le cache.
             {
                 $this->_currentConversation = '0'; // $this->_currentObject;
-                $this->_currentConversationInstance = $this->newConversation_DEPRECATED('0'); // $this->_currentObjectInstance;
+                $this->_currentConversationInstance = $this->newConversation('0'); // $this->_currentObjectInstance;
                 // Ecrit la conversation dans la session.
                 $this->setSessionStore('nebuleSelectedConversation', $this->_currentConversation);
             }
@@ -1772,17 +1757,12 @@ class nebule
         // Si pas autorisé, retourne ID=0.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentCurrency = '0';
-            $this->_currentCurrencyInstance = $this->newCurrency_DEPRECATED('0');
+            $this->_currentCurrencyInstance = $this->newCurrency('0');
             // Ecrit la monnaie dans la session.
             $this->setSessionStore('nebuleSelectedCurrency', $this->_currentCurrency);
             return;
         }
 
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
- 		 *  ------------------------------------------------------------------------------------------
-		 */
         // Lit et nettoye le contenu de la variable GET.
         if (filter_has_var(INPUT_GET, self::COMMAND_SELECT_CURRENCY)) {
             $arg = trim(' ' . filter_input(INPUT_GET, self::COMMAND_SELECT_CURRENCY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
@@ -1799,7 +1779,7 @@ class nebule
         ) {
             // Ecrit la monnaie dans la variable.
             $this->_currentCurrency = $arg;
-            $this->_currentCurrencyInstance = $this->newCurrency_DEPRECATED($arg);
+            $this->_currentCurrencyInstance = $this->newCurrency($arg);
             // Ecrit la monnaie dans la session.
             $this->setSessionStore('nebuleSelectedCurrency', $arg);
         } else {
@@ -1810,11 +1790,11 @@ class nebule
                 && $cache != ''
             ) {
                 $this->_currentCurrency = $cache;
-                $this->_currentCurrencyInstance = $this->newCurrency_DEPRECATED($cache);
+                $this->_currentCurrencyInstance = $this->newCurrency($cache);
             } else // Sinon désactive le cache.
             {
                 $this->_currentCurrency = '0';
-                $this->_currentCurrencyInstance = $this->newCurrency_DEPRECATED('0');
+                $this->_currentCurrencyInstance = $this->newCurrency('0');
                 // Ecrit la monnaie dans la session.
                 $this->setSessionStore('nebuleSelectedCurrency', $this->_currentCurrency);
             }
@@ -1879,17 +1859,12 @@ class nebule
         // Si pas autorisé, retourne ID=0.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentTokenPool = '0';
-            $this->_currentTokenPoolInstance = $this->newTokenPool_DEPRECATED('0');
+            $this->_currentTokenPoolInstance = $this->newTokenPool('0');
             // Ecrit le sac de jetons dans la session.
             $this->setSessionStore('nebuleSelectedTokenPool', $this->_currentTokenPool);
             return;
         }
 
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
- 		 *  ------------------------------------------------------------------------------------------
-		 */
         // Lit et nettoye le contenu de la variable GET.
         if (filter_has_var(INPUT_GET, self::COMMAND_SELECT_TOKENPOOL)) {
             $arg = trim(' ' . filter_input(INPUT_GET, self::COMMAND_SELECT_TOKENPOOL, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
@@ -1906,7 +1881,7 @@ class nebule
         ) {
             // Ecrit le sac de jetons dans la variable.
             $this->_currentTokenPool = $arg;
-            $this->_currentTokenPoolInstance = $this->newTokenPool_DEPRECATED($arg);
+            $this->_currentTokenPoolInstance = $this->newTokenPool($arg);
             // Ecrit le sac de jetons dans la session.
             $this->setSessionStore('nebuleSelectedTokenPool', $arg);
         } else {
@@ -1917,11 +1892,11 @@ class nebule
                 && $cache != ''
             ) {
                 $this->_currentTokenPool = $cache;
-                $this->_currentTokenPoolInstance = $this->newTokenPool_DEPRECATED($cache);
+                $this->_currentTokenPoolInstance = $this->newTokenPool($cache);
             } else // Sinon désactive le cache.
             {
                 $this->_currentTokenPool = '0';
-                $this->_currentTokenPoolInstance = $this->newTokenPool_DEPRECATED('0');
+                $this->_currentTokenPoolInstance = $this->newTokenPool('0');
                 // Ecrit le sac de jetons dans la session.
                 $this->setSessionStore('nebuleSelectedTokenPool', $this->_currentTokenPool);
             }
@@ -1986,17 +1961,12 @@ class nebule
         // Si pas autorisé, retourne ID=0.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentToken = '0';
-            $this->_currentTokenInstance = $this->newToken_DEPRECATED('0');
+            $this->_currentTokenInstance = $this->newToken('0');
             // Ecrit le jeton dans la session.
             $this->setSessionStore('nebuleSelectedToken', $this->_currentToken);
             return;
         }
 
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
- 		 *  ------------------------------------------------------------------------------------------
-		 */
         // Lit et nettoye le contenu de la variable GET.
         if (filter_has_var(INPUT_GET, self::COMMAND_SELECT_TOKEN)) {
             $arg = trim(' ' . filter_input(INPUT_GET, self::COMMAND_SELECT_TOKEN, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
@@ -2013,7 +1983,7 @@ class nebule
         ) {
             // Ecrit le jeton dans la variable.
             $this->_currentToken = $arg;
-            $this->_currentTokenInstance = $this->newToken_DEPRECATED($arg);
+            $this->_currentTokenInstance = $this->newToken($arg);
             // Ecrit le jeton dans la session.
             $this->setSessionStore('nebuleSelectedToken', $arg);
         } else {
@@ -2024,11 +1994,11 @@ class nebule
                 && $cache != ''
             ) {
                 $this->_currentToken = $cache;
-                $this->_currentTokenInstance = $this->newToken_DEPRECATED($cache);
+                $this->_currentTokenInstance = $this->newToken($cache);
             } else // Sinon désactive le cache.
             {
                 $this->_currentToken = '0';
-                $this->_currentTokenInstance = $this->newToken_DEPRECATED('0');
+                $this->_currentTokenInstance = $this->newToken('0');
                 // Ecrit le jeton dans la session.
                 $this->setSessionStore('nebuleSelectedToken', $this->_currentToken);
             }
@@ -2224,15 +2194,19 @@ class nebule
      */
     private function _findEntityByType(string $rid, array &$listEID, array &$listInstances, string $name): void
     {
+$this->_metrologyInstance->addLog('MARK RID=' . $rid, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+$this->_metrologyInstance->addLog('MARK puppetmaster=' . $this->_puppetmaster, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $instance = $this->getCacheInstance()->newNode($rid, Cache::TYPE_NODE);
         $list = array();
         $filter = array(
             'bl/rl/req' => 'l',
             'bl/rl/nid1' => $rid,
             'bl/rl/nid3' => $rid,
-            'bs/rs1/eid' => $this->_puppetmaster,
+            'bl/rl/nid4' => '',
+            //'bs/rs1/eid' => $this->_puppetmaster,
             );
         $instance->getLinks($list, $filter, false);
+$this->_metrologyInstance->addLog('MARK array size ' . sizeof($list), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         if (sizeof($list) == 0)
         {

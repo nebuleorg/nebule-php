@@ -944,7 +944,7 @@ abstract class Actions
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
         if (Node::checkNID($arg))
-            $this->_actionSynchronizeEntityInstance = $this->_nebuleInstance->newEntity_DEPRECATED($arg);
+            $this->_actionSynchronizeEntityInstance = $this->_nebuleInstance->newEntity($arg);
     }
 
     protected $_actionSynchronizeEntityInstance = '';
@@ -2704,7 +2704,7 @@ abstract class Actions
             $link->write();
             $this->_metrology->addLog('Action upload link - signed link ' . $link->getRaw(), Metrology::LOG_LEVEL_NORMAL);
         } elseif ($this->_unlocked) {
-            $link = $this->_nebuleInstance->newLink_DEPRECATED(
+            $link = $this->_nebuleInstance->newLink(
                 '0_'
                 . $this->_nebuleInstance->getCurrentEntity() . '_'
                 . $link->getDate() . '_'
@@ -2813,7 +2813,7 @@ abstract class Actions
         $this->_metrology->addLog('Action share protect object to opened group', Metrology::LOG_LEVEL_DEBUG);
 
         // Demande de protection de l'objet.
-        $group = $this->_nebuleInstance->newGroup_DEPRECATED($this->_actionShareProtectObjectToGroupOpened);
+        $group = $this->_nebuleInstance->newGroup($this->_actionShareProtectObjectToGroupOpened);
         foreach ($group->getListMembersID('myself', null) as $id) {
             $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($id);
         }
@@ -2831,7 +2831,7 @@ abstract class Actions
         $this->_metrology->addLog('Action share protect object to closed group', Metrology::LOG_LEVEL_DEBUG);
 
         // Demande de protection de l'objet.
-        $group = $this->_nebuleInstance->newGroup_DEPRECATED($this->_actionShareProtectObjectToGroupClosed);
+        $group = $this->_nebuleInstance->newGroup($this->_actionShareProtectObjectToGroupClosed);
         foreach ($group->getListMembersID('myself', null) as $id) {
             $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($id);
         }
@@ -2998,7 +2998,7 @@ abstract class Actions
         // Ecriture de l'objet.
         $this->_io->setObject($this->_actionSynchronizeNewEntityID, $data);
 
-        $this->_actionSynchronizeNewEntityInstance = $this->_nebuleInstance->newEntity_DEPRECATED($this->_actionSynchronizeNewEntityID);
+        $this->_actionSynchronizeNewEntityInstance = $this->_nebuleInstance->newEntity($this->_actionSynchronizeNewEntityID);
 
         if (!$this->_actionSynchronizeNewEntityInstance->getTypeVerify()) {
             $this->_metrology->addLog('Action synchronize new entity - Not entity', Metrology::LOG_LEVEL_DEBUG);
@@ -3232,7 +3232,7 @@ abstract class Actions
         foreach ($updata as $line) {
             if (substr($line, 0, 21) != 'nebule/liens/version/') {
                 $nbLines++;
-                $instance = $this->_nebuleInstance->newLink_DEPRECATED($line);
+                $instance = $this->_nebuleInstance->newLink($line);
                 if ($instance->getValid()) {
                     if ($instance->getSigned()
                         && (($instance->getSigners() == $this->_nebuleInstance->getCodeAuthorities()
@@ -3246,7 +3246,7 @@ abstract class Actions
                         $nbLinks++;
                         $this->_metrology->addLog('Action upload file links - signed link ' . $instance->getRaw(), Metrology::LOG_LEVEL_NORMAL);
                     } elseif ($this->_unlocked) {
-                        $instance = $this->_nebuleInstance->newLink_DEPRECATED(
+                        $instance = $this->_nebuleInstance->newLink(
                             '0_'
                             . $this->_nebuleInstance->getCurrentEntity() . '_'
                             . $instance->getDate() . '_'
@@ -3399,7 +3399,7 @@ abstract class Actions
             $this->_nebuleInstance->unsetCacheEntity($this->_actionCreateEntityID);
 
             // Recrée l'instance de l'objet.
-            $this->_actionCreateEntityInstance = $this->_nebuleInstance->newEntity_DEPRECATED($this->_actionCreateEntityID);
+            $this->_actionCreateEntityInstance = $this->_nebuleInstance->newEntity($this->_actionCreateEntityID);
         } else {
             // Si ce n'est pas bon.
             $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
@@ -3456,7 +3456,7 @@ abstract class Actions
          * Instance du groupe.
          * @var Group $instance
          */
-        $instance = $this->_nebuleInstance->newGroup_DEPRECATED($this->_actionDeleteGroupID);
+        $instance = $this->_nebuleInstance->newGroup($this->_actionDeleteGroupID);
 
         // Vérification.
         if ($instance->getID() == '0'
@@ -3497,7 +3497,7 @@ abstract class Actions
     protected function _actionAddToGroup()
     {
         $this->_metrology->addLog('Action add to group ' . $this->_actionAddToGroup, Metrology::LOG_LEVEL_DEBUG);
-        $instanceGroupe = $this->_nebuleInstance->newGroup_DEPRECATED($this->_actionAddToGroup);
+        $instanceGroupe = $this->_nebuleInstance->newGroup($this->_actionAddToGroup);
         $instanceGroupe->setMember($this->_nebuleInstance->getCurrentObjectInstance());
         unset($instanceGroupe);
 
@@ -3514,7 +3514,7 @@ abstract class Actions
     protected function _actionRemoveFromGroup()
     {
         $this->_metrology->addLog('Action remove from group ' . $this->_actionRemoveFromGroup, Metrology::LOG_LEVEL_DEBUG);
-        $instanceGroupe = $this->_nebuleInstance->newGroup_DEPRECATED($this->_actionRemoveFromGroup);
+        $instanceGroupe = $this->_nebuleInstance->newGroup($this->_actionRemoveFromGroup);
         $instanceGroupe->unsetMember($this->_nebuleInstance->getCurrentObjectInstance());
         unset($instanceGroupe);
 
@@ -3599,7 +3599,7 @@ abstract class Actions
         $this->_metrology->addLog('Action delete conversation ' . $this->_actionDeleteConversationID, Metrology::LOG_LEVEL_DEBUG);
 
         // Suppression.
-        $instance = $this->_nebuleInstance->newConversation_DEPRECATED($this->_actionDeleteConversationID);
+        $instance = $this->_nebuleInstance->newConversation($this->_actionDeleteConversationID);
         if (!is_a($instance, 'Conversation')
             || $instance->getID() == '0'
             || !$instance->getIsConversation('myself')
@@ -3640,7 +3640,7 @@ abstract class Actions
     {
         $this->_metrology->addLog('Action add message to conversation ' . $this->_actionAddMessageOnConversation, Metrology::LOG_LEVEL_DEBUG);
 
-        $instanceConversation = $this->_nebuleInstance->newConversation_DEPRECATED($this->_actionAddMessageOnConversation);
+        $instanceConversation = $this->_nebuleInstance->newConversation($this->_actionAddMessageOnConversation);
         $instanceConversation->setMember($this->_nebuleInstance->getCurrentObject(), false);
         unset($instanceConversation);
 
@@ -3656,7 +3656,7 @@ abstract class Actions
     {
         $this->_metrology->addLog('Action remove message to conversation ' . $this->_actionRemoveMessageOnConversation, Metrology::LOG_LEVEL_DEBUG);
 
-        $instanceConversation = $this->_nebuleInstance->newConversation_DEPRECATED($this->_actionRemoveMessageOnConversation);
+        $instanceConversation = $this->_nebuleInstance->newConversation($this->_actionRemoveMessageOnConversation);
         $instanceConversation->unsetMember($this->_nebuleInstance->getCurrentObject());
         unset($instanceConversation);
 
@@ -3672,7 +3672,7 @@ abstract class Actions
     {
         $this->_metrology->addLog('Action add member to conversation ' . $this->_actionAddMemberOnConversation, Metrology::LOG_LEVEL_DEBUG);
 
-        $instanceConversation = $this->_nebuleInstance->newConversation_DEPRECATED($this->_actionAddMemberOnConversation);
+        $instanceConversation = $this->_nebuleInstance->newConversation($this->_actionAddMemberOnConversation);
         $instanceConversation->setFollower($this->_nebuleInstance->getCurrentObject());
         unset($instanceConversation);
 
@@ -3688,7 +3688,7 @@ abstract class Actions
     {
         $this->_metrology->addLog('Action remove member to conversation ' . $this->_actionRemoveMemberOnConversation, Metrology::LOG_LEVEL_DEBUG);
 
-        $instanceConversation = $this->_nebuleInstance->newConversation_DEPRECATED($this->_actionRemoveMemberOnConversation);
+        $instanceConversation = $this->_nebuleInstance->newConversation($this->_actionRemoveMemberOnConversation);
         $instanceConversation->unsetFollower($this->_nebuleInstance->getCurrentObject());
         unset($instanceConversation);
 

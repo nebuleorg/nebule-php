@@ -1261,7 +1261,7 @@ class Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newGroup_DEPRECATED($link->getParsed()['bl/rl/nid1']);
+            $instance = $this->_nebuleInstance->newGroup($link->getParsed()['bl/rl/nid1']);
             if (!$instance->getIsGroup('all'))
                 unset($links[$i]);
         }
@@ -1296,7 +1296,7 @@ class Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newGroup_DEPRECATED($link->getParsed()['bl/rl/nid1']);
+            $instance = $this->_nebuleInstance->newGroup($link->getParsed()['bl/rl/nid1']);
             if ($instance->getIsGroup('all'))
                 $list[$link->getParsed()['bl/rl/nid1']] = $link->getParsed()['bl/rl/nid1'];
         }
@@ -1356,7 +1356,7 @@ class Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newConversation_DEPRECATED($link->getParsed()['bl/rl/nid1']);
+            $instance = $this->_nebuleInstance->newConversation($link->getParsed()['bl/rl/nid1']);
             if (!$instance->getIsConversation('all'))
                 unset($links[$i]);
         }
@@ -1392,7 +1392,7 @@ class Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newConversation_DEPRECATED($link->getParsed()['bl/rl/nid1']);
+            $instance = $this->_nebuleInstance->newConversation($link->getParsed()['bl/rl/nid1']);
             if ($instance->getIsConversation('all'))
                 $list[$link->getParsed()['bl/rl/nid1']] = $link->getParsed()['bl/rl/nid1'];
         }
@@ -2139,10 +2139,10 @@ class Node implements nodeInterface
         return false; // FIXME disabled!
 
         if (is_string($entity)) {
-            $entity = $this->_nebuleInstance->newEntity_DEPRECATED($entity);
+            $entity = $this->_nebuleInstance->newEntity($entity);
         }
         if (!is_a($entity, 'entity'))
-            $entity = $this->_nebuleInstance->newEntity_DEPRECATED($entity->getID());
+            $entity = $this->_nebuleInstance->newEntity($entity->getID());
         if (!$entity->getIsEntity('all'))
             return false;
 
@@ -2243,9 +2243,9 @@ class Node implements nodeInterface
         return false; // FIXME disabled!
 
         if (is_string($entity))
-            $entity = $this->_nebuleInstance->newEntity_DEPRECATED($entity);
+            $entity = $this->_nebuleInstance->newEntity($entity);
         if (!is_a($entity, 'entity'))
-            $entity = $this->_nebuleInstance->newEntity_DEPRECATED($entity->getID());
+            $entity = $this->_nebuleInstance->newEntity($entity->getID());
         if (!$entity->getIsEntity('all'))
             return false;
 
@@ -3549,7 +3549,7 @@ class Node implements nodeInterface
             $this->_metrology->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
             foreach ($links as $link) {
-                $linkInstance = $this->_nebuleInstance->newLink_DEPRECATED($link);
+                $linkInstance = $this->_nebuleInstance->newLink($link);
                 $linkInstance->write();
             }
         }

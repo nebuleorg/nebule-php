@@ -859,7 +859,7 @@ class Entity extends Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newGroup_DEPRECATED($link->getParsed()['bl/rl/nid2']);
+            $instance = $this->_nebuleInstance->newGroup($link->getParsed()['bl/rl/nid2']);
             if (!$instance->getIsGroup('all')) {
                 unset($links[$i]);
             }
@@ -893,7 +893,7 @@ class Entity extends Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newGroup_DEPRECATED($link->getParsed()['bl/rl/nid2']);
+            $instance = $this->_nebuleInstance->newGroup($link->getParsed()['bl/rl/nid2']);
             if ($instance->getIsGroup('all')) {
                 $list[$link->getParsed()['bl/rl/nid2']] = $link->getParsed()['bl/rl/nid2'];
             }
@@ -926,7 +926,7 @@ class Entity extends Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newConversation_DEPRECATED($link->getParsed()['bl/rl/nid2']);
+            $instance = $this->_nebuleInstance->newConversation($link->getParsed()['bl/rl/nid2']);
             if (!$instance->getIsConversation('all')) {
                 unset($links[$i]);
             }
@@ -951,7 +951,7 @@ class Entity extends Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newConversation_DEPRECATED($link->getParsed()['bl/rl/nid2']);
+            $instance = $this->_nebuleInstance->newConversation($link->getParsed()['bl/rl/nid2']);
             if ($instance->getIsConversation('all')) {
                 $list[$link->getParsed()['bl/rl/nid2']] = $link->getParsed()['bl/rl/nid2'];
             }
