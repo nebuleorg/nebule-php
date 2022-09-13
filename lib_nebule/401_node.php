@@ -3006,6 +3006,7 @@ class Node implements nodeInterface
             || !$this->_io->checkLinkPresent($this->_id)
         )
             return;
+$this->_nebuleInstance->getMetrologyInstance->addLog('MARK2 UID=' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         if (!$this->_configuration->getOptionAsBoolean('permitListInvalidLinks'))
             $withInvalidLinks = false;
