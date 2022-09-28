@@ -2194,19 +2194,16 @@ class nebule
      */
     private function _findEntityByType(string $rid, array &$listEID, array &$listInstances, string $name): void
     {
-$this->_metrologyInstance->addLog('MARK RID=' . $rid, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-$this->_metrologyInstance->addLog('MARK puppetmaster=' . $this->_puppetmaster, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $instance = $this->getCacheInstance()->newNode($rid, Cache::TYPE_NODE);
         $list = array();
         $filter = array(
             'bl/rl/req' => 'l',
             'bl/rl/nid1' => $rid,
             'bl/rl/nid3' => $rid,
-            'bl/rl/nid4' => '',
+            //'bl/rl/nid4' => '',
             //'bs/rs1/eid' => $this->_puppetmaster,
             );
         $instance->getLinks($list, $filter, false);
-$this->_metrologyInstance->addLog('MARK array size ' . sizeof($list), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         if (sizeof($list) == 0)
         {

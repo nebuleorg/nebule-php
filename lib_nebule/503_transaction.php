@@ -115,7 +115,7 @@ class Transaction extends Link implements linkInterface
      */
     private function _extractByMode_disabled()
     {
-        // Si transaction en mode mode LNS.
+        // Si transaction en mode LNS.
         $hashLNS = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_TRANSACTION);
         if ($this->_hashMeta == $hashLNS) {
             $this->_extractModeLNS_disabled();

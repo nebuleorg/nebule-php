@@ -16,9 +16,17 @@ class blocLink implements blocLinkInterface
      * @var array:string
      */
     const SESSION_SAVED_VARS = array(
+        '_rawBlocLink',
+        '_linksType',
+        '_links',
+        '_parsedLink',
         '_signed',
+        '_checkCompleted',
         '_valid',
         '_validStructure',
+        '_maxRL',
+        '_maxRLUID',
+        '_maxRS',
     );
 
     const LINK_VERSION = '2:0';
@@ -30,35 +38,35 @@ class blocLink implements blocLinkInterface
     /**
      * Instance nebule en cours.
      *
-     * @var nebule
+     * @var nebule $_nebuleInstance
      */
     protected $_nebuleInstance;
 
     /**
      * Instance métrologie en cours.
      *
-     * @var Metrology
+     * @var Metrology $_metrology
      */
     protected $_metrology;
 
     /**
      * Instance de gestion de la configuration et des options.
      *
-     * @var Configuration
+     * @var Configuration $_configuration
      */
     protected $_configuration;
 
     /**
      * Instance de gestion du cache.
      *
-     * @var Cache
+     * @var Cache $_cache
      */
     protected $_cache;
 
     /**
      * Instance io en cours.
      *
-     * @var io
+     * @var io $_io
      */
     protected $_io;
 
@@ -75,7 +83,7 @@ class blocLink implements blocLinkInterface
     protected $_rawBlocLink = '';
 
     /**
-     * @var string
+     * @var string $_linksType
      */
     protected $_linksType = '';
 
@@ -199,6 +207,10 @@ class blocLink implements blocLinkInterface
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_io = $nebuleInstance->getIoInstance();
         $this->_crypto = $nebuleInstance->getCryptoInstance();
+
+        // Reload current bloclink on links.
+        foreach ($this->_links as $link)
+            $link->setBlocInstance($this);
     }
 
     /**

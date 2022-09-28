@@ -28,8 +28,10 @@ class Link implements linkInterface
         '_valid',
         '_validStructure',
         '_signed',
-        '_verifyNumError',
-        '_verifyTextError',
+        '_permitObfuscated',
+        '_maxRLUID',
+        //'_verifyNumError',
+        //'_verifyTextError',
     );
 
     /**
@@ -70,15 +72,14 @@ class Link implements linkInterface
     /**
      * Bloc of links where is this one.
      *
-     * @TODO peut être dans plusieurs blocs !
-     * @var blocLink
+     * @var blocLink $_blocLink
      */
     protected $_blocLink;
 
     /**
      * Texte lien complet.
      *
-     * @var string
+     * @var string $_rawLink
      */
     protected $_rawLink = '';
 
@@ -297,6 +298,20 @@ class Link implements linkInterface
     protected function _initialisation(): void
     {
         // Nothing to do here.
+    }
+
+    /**
+     * Force bloc instance if not defined.
+     * Should be only use on link's instance wakeup.
+     *
+     * @param blocLink $instance
+     * @return void
+     */
+    public function setBlocInstance(blocLink $instance)
+    {
+        if (!is_null($this->_blocLink))
+            return;
+        $this->_blocLink = $instance;
     }
 
     /**
