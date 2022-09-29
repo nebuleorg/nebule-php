@@ -30,8 +30,6 @@ class Link implements linkInterface
         '_signed',
         '_permitObfuscated',
         '_maxRLUID',
-        //'_verifyNumError',
-        //'_verifyTextError',
     );
 
     /**

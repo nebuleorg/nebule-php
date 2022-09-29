@@ -93,8 +93,8 @@ class Transaction extends Link implements linkInterface
         '_valid',
         '_validStructure',
         '_signed',
-        '_verifyNumError',
-        '_verifyTextError',
+        '_permitObfuscated',
+        '_maxRLUID',
         '_isTransaction',
     );
 

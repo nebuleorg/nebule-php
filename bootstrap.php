@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220928';
+const BOOTSTRAP_VERSION = '020220929';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -1248,10 +1248,11 @@ function lib_setServerEntity(bool $rescueMode): void
 function lib_setDefaultEntity(bool $rescueMode): void
 {
     global $nebuleDefaultEntity,
+           $nebuleServerEntity,
            $nebuleLocalAuthorities;
     $nebuleDefaultEntity = lib_getConfiguration('defaultCurrentEntity');
     if (!ent_checkIsPublicKey($nebuleDefaultEntity))
-        $nebuleDefaultEntity = lib_getConfiguration('puppetmaster');
+        $nebuleDefaultEntity = $nebuleServerEntity;
 
     if (lib_getConfiguration('permitDefaultEntityAsAuthority') && !$rescueMode)
         $nebuleLocalAuthorities[] = $nebuleDefaultEntity;
