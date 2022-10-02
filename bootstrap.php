@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020220929';
+const BOOTSTRAP_VERSION = '020221002';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -3937,6 +3937,7 @@ function app_checkOID(string $oid): bool
     if ($oid != '0'
         || $oid != '1'
         || $oid != '2'
+        || $oid != '3'
         || $oid != '9'
     )
         return true;
@@ -4624,6 +4625,7 @@ function bootstrap_findApplicationAsk(string &$bootstrapApplicationIID): void
         if ($bootstrapSwitchApplication == '0'
             || $bootstrapSwitchApplication == '1'
             || $bootstrapSwitchApplication == '2'
+            || $bootstrapSwitchApplication == '3'
             || $bootstrapSwitchApplication == '9'
             || lnk_checkExist('f', LIB_RID_INTERFACE_APPLICATIONS, $bootstrapSwitchApplication, $phpNID, $codeBranchNID)
         )
@@ -4667,6 +4669,7 @@ function bootstrap_findApplicationDefault(string &$bootstrapApplicationIID): voi
     if ($defaultApplicationID == '0'
         || $defaultApplicationID == '1'
         || $defaultApplicationID == '2'
+        || $defaultApplicationID == '3'
         || $defaultApplicationID == '9'
     )
         $bootstrapApplicationIID = $defaultApplicationID;
@@ -5912,7 +5915,9 @@ function bootstrap_breakDisplay411DisplayEntity(string $title, array $listEID, a
 
         if ($ok)
         {
-            echo '<a href="o/' . $eid . '">' . $name . '</a> OK';
+            bootstrap_echoLinkNID($eid, $name);
+            //echo '<a href="o/' . $eid . '">' . $name . '</a> OK';
+            echo ' OK';
             if ($nebuleInstance->getIsLocalAuthority($listInstance[$eid]))
                 echo ' (local authority)';
         } else
@@ -6091,6 +6096,13 @@ function bootstrap_echoEndLineTest(bool $test, string $suffix = ''): void
         echo ' <span class="error">ERROR!</span>';
 
     echo "<br />\n";
+}
+
+function bootstrap_echoLinkNID(string $nid, string $name = ''): void
+{
+    if ($name == '')
+        $name = $nid;
+    echo '<a href="?a=3&l=' . $nid . '">' . $name . '</a>';
 }
 
 
@@ -7202,6 +7214,78 @@ function bootstrap_displayApplication2(): void
     bootstrap_htmlBottom();
 }
 
+    function bootstrap_displayApplication3(): void
+    {
+        // Initialisation des logs
+        log_reopen('app3');
+        log_add('Loading', 'info', __FUNCTION__, 'a1613ff2');
+
+        echo 'CHK';
+        ob_end_clean();
+
+        bootstrap_htmlHeader();
+        bootstrap_htmlTop();
+
+        echo '<div class="layout-main">' . "\n";
+        echo ' <div class="layout-content">' . "\n";
+
+        $nid = '';
+        $arg = '';
+        if (filter_has_var(INPUT_GET, LIB_LOCAL_LINKS_FOLDER))
+            $arg = trim(filter_input(INPUT_GET, LIB_LOCAL_LINKS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        if (nod_checkNID($arg))
+            $nid = $arg;
+
+        if ($nid == '')
+            echo 'invalid NID' . "\n";
+        else {
+            echo 'NID=<a href="o/' . $nid . '">' . $nid . '</a><br /><br />' . "\n";
+
+            $blocLinks = array();
+            io_linksRead($nid, $blocLinks);
+            if (sizeof($blocLinks) == 0)
+                echo 'not link for NID ' . $nid . "\n";
+            else {
+                foreach ($blocLinks as $bloc) {
+                    if (strlen($bloc) == 0)
+                        continue;
+                    $parsedBloc = lnk_parse($bloc);
+
+                    echo 'BH / RF=' . $parsedBloc['bh/rf'] . ' RV=' . $parsedBloc['bh/rv'] . "<br />\n";
+                    echo 'BL / RC=' . $parsedBloc['bl/rc'] . '<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RL=' . $parsedBloc['bl/rl/req'] . '>';
+                    bootstrap_echoLinkNID($parsedBloc['bl/rl/nid1'], substr($parsedBloc['bl/rl/nid1'], 0, 16));
+                    if ($parsedBloc['bl/rl/nid2'] != '') {
+                        echo '>';
+                        bootstrap_echoLinkNID($parsedBloc['bl/rl/nid2'], substr($parsedBloc['bl/rl/nid2'], 0, 16));
+                    }
+                    if ($parsedBloc['bl/rl/nid3'] != '') {
+                        echo '>';
+                        bootstrap_echoLinkNID($parsedBloc['bl/rl/nid3'], substr($parsedBloc['bl/rl/nid3'], 0, 16));
+                    }
+                    if ($parsedBloc['bl/rl/nid4'] != '') {
+                        echo '>';
+                        bootstrap_echoLinkNID($parsedBloc['bl/rl/nid4'], substr($parsedBloc['bl/rl/nid4'], 0, 16));
+                    }
+                    echo "<br />\n";
+                    echo 'BS / EID=';
+                    bootstrap_echoLinkNID($parsedBloc['bs/rs1/eid'], substr($parsedBloc['bs/rs1/eid'], 0, 16));
+                    echo ' SIG=' . substr($parsedBloc['bs/rs1/sig'], 0, 16) . ' ';
+                    if (lnk_verify($bloc))
+                        echo 'OK';
+                    else
+                        echo 'NOK';
+                    echo "<br /><br />\n";
+                }
+            }
+        }
+
+
+        echo " </div>\n";
+        echo "</div>\n";
+
+        bootstrap_htmlBottom();
+    }
+
     /**
      * Debug app.
      * @return void
@@ -7211,7 +7295,7 @@ function bootstrap_displayApplication9(): void
 
     // Initialisation des logs
     log_reopen('app2');
-    log_add('Loading', 'info', __FUNCTION__, '3a5c4178');
+    log_add('Loading', 'info', __FUNCTION__, 'df3680d3');
 
     echo 'CHK';
     ob_end_clean();
@@ -7222,40 +7306,30 @@ function bootstrap_displayApplication9(): void
     echo '<div class="layout-main">' . "\n";
     echo ' <div class="layout-content">' . "\n";
 
-    echo "RID=" . LIB_RID_INTERFACE_LIBRARY . "<br />\n";
-    $appList = app_getList(LIB_RID_INTERFACE_LIBRARY, false);
-    foreach ($appList as $iid) {
-        echo "&gt;&nbsp;IID=$iid<br />\n";
-        $links = array();
-        app_getCodeList($iid, $links);
-        foreach ($links as $link)
-        {
-            $oid = $link['bl/rl/nid2'];
-            $eid = $link['bs/rs1/eid'];
-            $date = $link['bl/rc'];
-            echo "&nbsp;-&nbsp;$date&nbsp;EID=$eid&nbsp;OID=$oid<br />\n";
-        }
-        $oid = app_getCode($iid);
-        echo "&nbsp;+&nbsp;EID=$lastReferenceSID&nbsp;OID=$oid<br />\n";
-        echo "<br />\n";
-    }
+    $ridList = array(
+        LIB_RID_INTERFACE_BOOTSTRAP,
+        LIB_RID_INTERFACE_LIBRARY,
+        LIB_RID_INTERFACE_APPLICATIONS);
 
-    echo "RID=" . LIB_RID_INTERFACE_APPLICATIONS . "<br />\n";
-    $appList = app_getList(LIB_RID_INTERFACE_APPLICATIONS, false);
-    foreach ($appList as $iid) {
-        echo "&gt;&nbsp;IID=$iid<br />\n";
-        $links = array();
-        app_getCodeList($iid, $links);
-        foreach ($links as $link)
-        {
-            $oid = $link['bl/rl/nid2'];
-            $eid = $link['bs/rs1/eid'];
-            $date = $link['bl/rc'];
-            echo "&nbsp;-&nbsp;$date&nbsp;EID=$eid&nbsp;OID=$oid<br />\n";
+    foreach ($ridList as $rid)
+    {
+        echo "RID=" . $rid . "<br />\n";
+        $appList = app_getList($rid, false);
+        foreach ($appList as $iid) {
+            echo "&gt;&nbsp;IID=$iid<br />\n";
+            $links = array();
+            app_getCodeList($iid, $links);
+            foreach ($links as $link)
+            {
+                $oid = $link['bl/rl/nid2'];
+                $eid = $link['bs/rs1/eid'];
+                $date = $link['bl/rc'];
+                echo "&nbsp;-&nbsp;$date&nbsp;EID=$eid&nbsp;OID=$oid<br />\n";
+            }
+            $oid = app_getCode($iid);
+            echo "&nbsp;+&nbsp;EID=$lastReferenceSID&nbsp;OID=$oid<br />\n";
+            echo "<br />\n";
         }
-        $oid = app_getCode($iid);
-        echo "&nbsp;+&nbsp;EID=$lastReferenceSID&nbsp;OID=$oid<br />\n";
-        echo "<br />\n";
     }
 
     /*session_start();
@@ -7332,6 +7406,8 @@ function bootstrap_displayRouter(): void
         bootstrap_displayApplication0();
     elseif ($bootstrapApplicationIID == '1')
         bootstrap_displayApplication1();
+    elseif ($bootstrapApplicationIID == '3')
+        bootstrap_displayApplication3();
     elseif ($bootstrapApplicationIID == '9')
         bootstrap_displayApplication9();
     elseif (strlen($bootstrapApplicationIID) < 2)
