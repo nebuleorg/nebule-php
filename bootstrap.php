@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020221002';
+const BOOTSTRAP_VERSION = '020221003';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -5733,16 +5733,24 @@ function bootstrap_breakDisplay2Bootstrap()
     unset($data);
 
     bootstrap_echoLineTitle('bootstrap RID');
-    echo LIB_RID_INTERFACE_BOOTSTRAP . "<br />\n";
-    bootstrap_echoLineTitle('bootstrap code branch');
-    echo $bootstrapCodeBID . "<br />\n";
+    bootstrap_echoLinkNID(LIB_RID_INTERFACE_BOOTSTRAP);
+    echo "<br />\n";
+    bootstrap_echoLineTitle('bootstrap BID');
+    bootstrap_echoLinkNID($bootstrapCodeBID);
+    echo "<br />\n";
+    bootstrap_echoLineTitle('bootstrap CID');
+    bootstrap_echoLinkNID(obj_getNID(BOOTSTRAP_CODING, LIB_REF_CODE_ALGO));
+    echo "<br />\n";
     bootstrap_echoLineTitle('bootstrap IID');
-    echo $bootstrapCodeIID . "<br />\n";
+    bootstrap_echoLinkNID($bootstrapCodeIID);
+    echo "<br />\n";
     bootstrap_echoLineTitle('bootstrap OID');
-    echo $hash . ' ';
+    bootstrap_echoLinkNID($hash);
+    echo ' ';
     bootstrap_echoEndLineTest(bootstrap_checkFingerprint());
     bootstrap_echoLineTitle('bootstrap SID');
-    echo $bootstrapCodeSID . "<br />\n";
+    bootstrap_echoLinkNID($bootstrapCodeSID);
+    echo "<br />\n";
 
     echo '</div>' . "\n";
 }
@@ -5764,46 +5772,55 @@ function bootstrap_breakDisplay3LibraryPP()
     echo BOOTSTRAP_VERSION . "<br/>\n";
 
     bootstrap_echoLineTitle('puppetmaster');
-    echo lib_getConfiguration('puppetmaster'). "<br/>\n";
+    bootstrap_echoLinkNID(lib_getConfiguration('puppetmaster'));
+    echo "<br/>\n";
 
     foreach ($nebuleSecurityAuthorities as $m)
     {
         bootstrap_echoLineTitle('security authority');
-        echo $m . "<br/>\n";
+        bootstrap_echoLinkNID($m);
+        echo "<br/>\n";
     }
 
     foreach ($nebuleCodeAuthorities as $m)
     {
         bootstrap_echoLineTitle('code authority');
-        echo $m . "<br/>\n";
+        bootstrap_echoLinkNID($m);
+        echo "<br/>\n";
     }
 
     foreach ($nebuleDirectoryAuthorities as $m)
     {
         bootstrap_echoLineTitle('directory authority');
-        echo $m . "<br/>\n";
+        bootstrap_echoLinkNID($m);
+        echo "<br/>\n";
     }
 
     foreach ($nebuleTimeAuthorities as $m)
     {
         bootstrap_echoLineTitle('time authority');
-        echo $m . "<br/>\n";
+        bootstrap_echoLinkNID($m);
+        echo "<br/>\n";
     }
 
     bootstrap_echoLineTitle('server entity');
-    echo $nebuleServerEntity. "<br/>\n";
+    bootstrap_echoLinkNID($nebuleServerEntity);
+    echo "<br/>\n";
 
     bootstrap_echoLineTitle('default entity');
-    echo $nebuleDefaultEntity. "<br/>\n";
+    bootstrap_echoLinkNID($nebuleDefaultEntity);
+    echo "<br/>\n";
 
     bootstrap_echoLineTitle('current entity');
-    echo $nebulePublicEntity. "<br/>\n";
+    bootstrap_echoLinkNID($nebulePublicEntity);
+    echo "<br/>\n";
 
     $codeBranchName = lib_getConfiguration('codeBranch');
     if ($codeBranchName == '')
         $codeBranchName = LIB_CONFIGURATIONS_DEFAULT['codeBranch'];
     bootstrap_echoLineTitle('code branch');
-    echo $codeBranchNID . ' (' . $codeBranchName . ")<br />\n";
+    bootstrap_echoLinkNID($codeBranchNID);
+    echo ' (' . $codeBranchName . ")<br />\n";
 
     bootstrap_echoLineTitle('php version');
     echo 'found ' . phpversion() . ', need >= ' . PHP_VERSION_MINIMUM;
@@ -5825,18 +5842,21 @@ function bootstrap_breakDisplay4LibraryPOO()
     echo "tL=" . lib_getMetrologyTimer('tL') . "<br />\n";
 
     bootstrap_echoLineTitle('library RID');
-    echo LIB_RID_INTERFACE_LIBRARY . "<br />\n";
+    bootstrap_echoLinkNID(LIB_RID_INTERFACE_LIBRARY);
+    echo "<br />\n";
     bootstrap_echoLineTitle('library IID');
-    echo $bootstrapLibraryIID . "<br />\n";
+    bootstrap_echoLinkNID($bootstrapLibraryIID);
+    echo "<br />\n";
     bootstrap_echoLineTitle('library OID');
-    echo $bootstrapLibraryOID;
+    bootstrap_echoLinkNID($bootstrapLibraryOID);
     if ($bootstrapLibraryOID != '')
         echo ' version ' . $nebuleLibVersion;
     echo "<br />\n";
 
     if (is_a($nebuleInstance, 'Nebule\Library\nebule')) {
         bootstrap_echoLineTitle('library SID');
-        echo $bootstrapLibrarySID . "<br />\n";
+        bootstrap_echoLinkNID($bootstrapLibrarySID);
+        echo "<br />\n";
         bootstrap_breakDisplay41LibraryEntities();
         bootstrap_breakDisplay42LibraryCryptography();
         bootstrap_breakDisplay43LibraryIO();
@@ -6051,14 +6071,17 @@ function bootstrap_breakDisplay5Application()
     echo '<div class="parts">' . "\n" . '<span class="partstitle">#5 application</span><br/>' . "\n";
 
     bootstrap_echoLineTitle('application RID');
-    echo LIB_RID_INTERFACE_APPLICATIONS . "<br />\n";
+    bootstrap_echoLinkNID(LIB_RID_INTERFACE_APPLICATIONS);
+    echo "<br />\n";
     bootstrap_echoLineTitle('application IID');
-    echo '<a href="/?' . LIB_ARG_SWITCH_APPLICATION . '=' . $bootstrapApplicationIID  . '">'
-        . $bootstrapApplicationIID . '</a><br/>' . "\n";
+    bootstrap_echoLinkNID($bootstrapApplicationIID);
+    echo ' <a href="/?' . LIB_ARG_SWITCH_APPLICATION . '=' . $bootstrapApplicationIID  . '">load</a><br/>' . "\n";
     bootstrap_echoLineTitle('application OID');
-    echo $bootstrapApplicationOID . "<br />\n";
+    bootstrap_echoLinkNID($bootstrapApplicationOID);
+    echo "<br />\n";
     bootstrap_echoLineTitle('application SID');
-    echo $bootstrapApplicationSID . "\n";
+    bootstrap_echoLinkNID($bootstrapApplicationSID);
+    echo "\n";
 
     echo '</div>' . "\n";
 }
@@ -6102,7 +6125,10 @@ function bootstrap_echoLinkNID(string $nid, string $name = ''): void
 {
     if ($name == '')
         $name = $nid;
-    echo '<a href="?a=3&l=' . $nid . '">' . $name . '</a>';
+    if (nod_checkNID($nid))
+        echo '<a href="?a=3&l=' . $nid . '">' . $name . '</a>';
+    else
+        echo $name;
 }
 
 
