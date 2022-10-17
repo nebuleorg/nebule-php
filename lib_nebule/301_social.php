@@ -37,6 +37,11 @@ class Social implements SocialInterface
         $this->_initialisation($nebuleInstance);
     }
 
+    public function __toString(): string
+    {
+        return '';
+    }
+
     private function _initialisation(nebule $nebuleInstance): void
     {
         $this->_instanceSocialMySelf = new SocialMySelf($nebuleInstance);
@@ -300,9 +305,26 @@ class Social implements SocialInterface
      *
      * @return array
      */
-    public function getList(): array
+    public function getSocialNames(): array
     {
         return array('myself', 'notmyself', 'self', 'notself', 'strict', 'all', 'none', 'onlist', 'offlist', 'reputation', 'unreputation');
+    }
+
+    public function getSocialInstances(): array
+    {
+        return array(
+            $this->_instanceSocialMySelf,
+            $this->_instanceSocialNotMySelf,
+            $this->_instanceSocialSelf,
+            $this->_instanceSocialNotself,
+            $this->_instanceSocialStrict,
+            $this->_instanceSocialAll,
+            $this->_instanceSocialNone,
+            $this->_instanceSocialOnList,
+            $this->_instanceSocialOffList,
+            $this->_instanceSocialReputation,
+            $this->_instanceSocialUnreputation,
+        );
     }
 
     /**

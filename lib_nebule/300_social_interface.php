@@ -12,6 +12,7 @@ namespace Nebule\Library;
  */
 interface SocialInterface
 {
+    public function __toString();
     public function arraySocialFilter(array &$links, string $socialClass = ''): void;
     public function linkSocialScore(Link &$link, string $socialClass = ''): float;
     public function setList(array $listID): bool;

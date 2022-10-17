@@ -17,6 +17,11 @@ use Nebule\Library\nebule;
  */
 class SocialUnreputation extends SocialMySelf implements SocialInterface
 {
+    public function __toString(): string
+    {
+        return 'unreputation';
+    }
+
     /**
      * Gère le classement social des liens.
      *

@@ -14,6 +14,11 @@ namespace Nebule\Library;
  */
 class SocialNone extends SocialMySelf implements SocialInterface
 {
+    public function __toString(): string
+    {
+        return 'none';
+    }
+
     /**
      * Gère le classement social des liens.
      *

@@ -4642,7 +4642,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         )
             $param['social'] = 'all'; // Par défaut vide.
         else {
-            $socialList = $this->_nebuleInstance->getSocialInstance()->getList();
+            $socialList = $this->_nebuleInstance->getSocialInstance()->getSocialNames();
             $ok = false;
             foreach ($socialList as $s) {
                 if ($param['social'] == $s) {

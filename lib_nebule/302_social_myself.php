@@ -35,6 +35,11 @@ class SocialMySelf implements SocialInterface
         $this->_nebuleInstance = $nebuleInstance;
     }
 
+    public function __toString(): string
+    {
+        return 'myself';
+    }
+
     /**
      * Gère le classement social des liens.
      *

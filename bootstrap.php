@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020221003';
+const BOOTSTRAP_VERSION = '020221017';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -6031,10 +6031,10 @@ function bootstrap_breakDisplay44LibrarySocial()
     global $nebuleInstance;
 
     if (is_object($nebuleInstance->getSocialInstance())) {
-        foreach ($nebuleInstance->getSocialInstance()->getList() as $moduleName)
+        foreach ($nebuleInstance->getSocialInstance()->getSocialInstances() as $moduleInstance)
         {
             bootstrap_echoLineTitle('social');
-            echo $moduleName;
+            echo $moduleInstance->__toString() . ' (' . get_class($moduleInstance) . ')';
             bootstrap_echoEndLineTest(true);
         }
     } else

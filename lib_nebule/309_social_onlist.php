@@ -18,6 +18,11 @@ namespace Nebule\Library;
  */
 class SocialOnList extends SocialMySelf implements SocialInterface
 {
+    public function __toString(): string
+    {
+        return 'onlist';
+    }
+
     /**
      * Gère le classement social des liens.
      *
