@@ -15,10 +15,7 @@ namespace Nebule\Library;
  */
 class SocialStrict extends SocialMySelf implements SocialInterface
 {
-    public function __toString(): string
-    {
-        return 'strict';
-    }
+    const SOCIAL_CLASS='strict';
 
     /**
      * Gère le classement social des liens.

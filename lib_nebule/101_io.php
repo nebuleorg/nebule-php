@@ -36,6 +36,13 @@ class io implements ioInterface
     protected $_nebuleInstance;
 
     /**
+     * Instance métrologie en cours.
+     *
+     * @var Metrology
+     */
+    protected $_metrology;
+
+    /**
      * Instance de gestion de la configuration et des options.
      *
      * @var Configuration
@@ -48,6 +55,15 @@ class io implements ioInterface
      * @param nebule $nebuleInstance
      */
     public function __construct(nebule $nebuleInstance)
+    {
+        $this->_nebuleInstance = $nebuleInstance;
+        $this->_metrology = $nebuleInstance->getMetrologyInstance();
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
+
+        $this->_initialisation($nebuleInstance);
+    }
+
+    protected function _initialisation(nebule $nebuleInstance): void
     {
         // Liste toutes les classes io* et les charges une à une.
         $myClass = get_class($this);

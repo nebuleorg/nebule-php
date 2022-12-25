@@ -238,51 +238,51 @@ class nebule
     /**
      * Instance de gestion de la métrologie, des journaux et des statistiques internes.
      *
-     * @var Metrology
+     * @var ?Metrology
      */
-    private $_metrologyInstance;
+    private $_metrologyInstance = null;
 
     /**
      * Instance de gestion de la configuration et des options.
      *
-     * @var Configuration
+     * @var ?Configuration
      */
-    private $_configurationInstance;
+    private $_configurationInstance = null;
 
     /**
      * Instance de gestion du cache.
      *
-     * @var Cache
+     * @var ?Cache
      */
-    private $_cacheInstance;
+    private $_cacheInstance = null;
 
     /**
      * Instance de gestion des tickets.
      *
-     * @var Ticketing
+     * @var ?Ticketing
      */
-    private $_ticketingInstance;
+    private $_ticketingInstance = null;
 
     /**
      * Instance des entrées/sorties.
      *
-     * @var ioInterface
+     * @var ?ioInterface
      */
-    private $_ioInstance;
+    private $_ioInstance = null;
 
     /**
      * Instance de gestion de la cryptographie.
      *
-     * @var CryptoInterface
+     * @var ?CryptoInterface
      */
-    private $_cryptoInstance;
+    private $_cryptoInstance = null;
 
     /**
      * Instance de gestion des relations sociales des liens.
      *
-     * @var SocialInterface
+     * @var ?SocialInterface
      */
-    private $_socialInstance;
+    private $_socialInstance = null;
 
     private $_flushCache = false;
 
@@ -398,9 +398,9 @@ class nebule
     /**
      * Export l'objet de la métrologie.
      *
-     * @return Metrology
+     * @return ?Metrology
      */
-    public function getMetrologyInstance(): Metrology
+    public function getMetrologyInstance(): ?Metrology
     {
         return $this->_metrologyInstance;
     }
@@ -408,9 +408,9 @@ class nebule
     /**
      * Export l'objet de la configuration.
      *
-     * @return Configuration
+     * @return ?Configuration
      */
-    public function getConfigurationInstance(): Configuration
+    public function getConfigurationInstance(): ?Configuration
     {
         return $this->_configurationInstance;
     }
@@ -418,9 +418,9 @@ class nebule
     /**
      * Export l'objet de la métrologie.
      *
-     * @return Cache
+     * @return ?Cache
      */
-    public function getCacheInstance(): Cache
+    public function getCacheInstance(): ?Cache
     {
         return $this->_cacheInstance;
     }
@@ -428,9 +428,9 @@ class nebule
     /**
      * Export l'objet de la gestion des tickets.
      *
-     * @return Ticketing
+     * @return ?Ticketing
      */
-    public function getTicketingInstance(): Ticketing
+    public function getTicketingInstance(): ?Ticketing
     {
         return $this->_ticketingInstance;
     }
@@ -438,9 +438,9 @@ class nebule
     /**
      * Export l'objet des entrées/sorties.
      *
-     * @return io
+     * @return ?io
      */
-    public function getIoInstance(): ioInterface
+    public function getIoInstance(): ?ioInterface
     {
         return $this->_ioInstance;
     }
@@ -448,9 +448,9 @@ class nebule
     /**
      * Export l'objet de la crypto.
      *
-     * @return CryptoInterface
+     * @return ?CryptoInterface
      */
-    public function getCryptoInstance(): CryptoInterface
+    public function getCryptoInstance(): ?CryptoInterface
     {
         return $this->_cryptoInstance;
     }
@@ -458,9 +458,9 @@ class nebule
     /**
      * Export l'objet du calcul social.
      *
-     * @return SocialInterface
+     * @return ?SocialInterface
      */
-    public function getSocialInstance(): SocialInterface
+    public function getSocialInstance(): ?SocialInterface
     {
         return $this->_socialInstance;
     }

@@ -14,10 +14,7 @@ namespace Nebule\Library;
  */
 class SocialAll extends SocialMySelf implements SocialInterface
 {
-    public function __toString(): string
-    {
-        return 'all';
-    }
+    const SOCIAL_CLASS='all';
 
     /**
      * Gère le classement social des liens.

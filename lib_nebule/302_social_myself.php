@@ -13,31 +13,13 @@ namespace Nebule\Library;
  * Si le signataire du lien est l'entité en cours, retourne un score de 1.
  * Sinon retourne un score de 0.
  */
-class SocialMySelf implements SocialInterface
+class SocialMySelf extends Social implements SocialInterface
 {
-    /** Instance nebule en cours. */
-    protected $_nebuleInstance;
+    const SOCIAL_CLASS='myself';
 
-    /** Constructeur.*/
-    public function __construct(nebule $nebuleInstance)
+    protected function _initialisation(nebule $nebuleInstance): void
     {
-        $this->_nebuleInstance = $nebuleInstance;
-    }
-
-    public function __sleep()
-    {
-        return array();
-    }
-
-    public function __wakeup()
-    {
-        global $nebuleInstance;
-        $this->_nebuleInstance = $nebuleInstance;
-    }
-
-    public function __toString(): string
-    {
-        return 'myself';
+        // Nothing to do.
     }
 
     /**
@@ -94,10 +76,11 @@ class SocialMySelf implements SocialInterface
      * La liste doit contenir de préférence des ID d'objet et non des objets.
      * N'est utile que pour certains types de calculs sociaux.
      *
-     * @param array:string $listID
+     * @param array $listID
+     * @param string $socialClass
      * @return boolean
      */
-    public function setList(array $listID): bool
+    public function setList(array $listID, string $socialClass = ''): bool
     {
         foreach ($listID as $nid) {
             if (is_string($nid)
@@ -116,9 +99,10 @@ class SocialMySelf implements SocialInterface
     /**
      * Permet de vider la liste pour le calcul/filtrage social.
      *
+     * @param string $socialClass
      * @return boolean
      */
-    public function unsetList(): bool
+    public function unsetList(string $socialClass = ''): bool
     {
         $this->_list = array();
         return true;

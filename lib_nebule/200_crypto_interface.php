@@ -11,6 +11,20 @@ namespace Nebule\Library;
 interface CryptoInterface
 {
     /**
+     * Return default crypto instance.
+     *
+     * @return CryptoInterface
+     */
+    public function getCryptoInstance(): CryptoInterface;
+
+    /**
+     * Return default crypto class name.
+     *
+     * @return string
+     */
+    public function getCryptoInstanceName(): string;
+
+    /**
      * Check if the cryptographique function have correct return value.
      *
      * @param string $algo
@@ -41,6 +55,14 @@ interface CryptoInterface
      * @return string
      */
     public function getRandom(int $size = 32, int $quality = Crypto::RANDOM_PSEUDO): string;
+
+    /**
+     * Get a value of the data entropy.
+     *
+     * @param string $data
+     * @return float
+     */
+    public function getEntropy(string &$data): float;
 
     // --------------------------------------------------------------------------------
 

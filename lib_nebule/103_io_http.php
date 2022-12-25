@@ -48,17 +48,10 @@ class ioHTTP extends io implements ioInterface
      */
     private $_filesTrancodeKey = '0';
 
-    /**
-     * Constructeur.
-     *
-     * @param nebule $nebuleInstance
-     */
-    public function __construct(nebule $nebuleInstance)
+    protected function _initialisation(nebule $nebuleInstance): void
     {
         global $nebuleLibVersion;
 
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_maxLink = $this->_configuration->getOptionUntyped('ioReadMaxLinks');
         $this->_maxData = $this->_configuration->getOptionUntyped('ioReadMaxData');
         // Détermination de l'URL par défaut.

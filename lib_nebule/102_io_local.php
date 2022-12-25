@@ -49,20 +49,13 @@ class ioLocal extends io implements ioInterface
      */
     private $_filesTrancodeKey = '';
 
-    /**
-     * Constructeur.
-     *
-     * @param nebule $nebuleInstance
-     */
-    public function __construct(nebule $nebuleInstance)
+    protected function _initialisation(nebule $nebuleInstance): void
     {
         if (!file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER))
             mkdir(nebule::NEBULE_LOCAL_LINKS_FOLDER);
         if (!file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER))
             mkdir(nebule::NEBULE_LOCAL_OBJECTS_FOLDER);
 
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_maxLink = $this->_configuration->getOptionUntyped('ioReadMaxLinks');
         $this->_maxData = $this->_configuration->getOptionUntyped('ioReadMaxData');
     }

@@ -8,7 +8,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class CryptoOpenssl implements CryptoInterface
+class CryptoOpenssl extends Crypto implements CryptoInterface
 {
     const HASH_ALGORITHM = array(
         'sha1.128',
@@ -57,26 +57,12 @@ class CryptoOpenssl implements CryptoInterface
         'rsa.2048',
         'rsa.4096',
     );
-    /*const TRANSLATE_ASYMMETRIC_ALGORITHM = array(
+    const TRANSLATE_ASYMMETRIC_ALGORITHM = array(
         'rsa.1024' => 'rsa1024',
         'rsa.2048' => 'rsa2048',
         'rsa.4096' => 'rsa4096',
         '' => '',
-    );*/
-
-    /**
-     * Instance métrologie en cours.
-     *
-     * @var Metrology
-     */
-    protected $_metrology;
-
-    /**
-     * Instance de gestion de la configuration et des options.
-     *
-     * @var Configuration
-     */
-    private $_configuration;
+    );
 
     /**
      * Instance de gestion du cache.
@@ -85,11 +71,27 @@ class CryptoOpenssl implements CryptoInterface
      */
     protected $_cache;
 
-    public function __construct(nebule $nebuleInstance)
+    protected function _initialisation(nebule $nebuleInstance): void
     {
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_cache = $nebuleInstance->getCacheInstance();
+        // Nothing to do.
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::getCryptoInstance()
+     */
+    public function getCryptoInstance(): CryptoInterface
+    {
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::getCryptoInstanceName()
+     */
+    public function getCryptoInstanceName(): string
+    {
+        return get_class($this);
     }
 
     /**
@@ -174,6 +176,15 @@ class CryptoOpenssl implements CryptoInterface
         return $data;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::getEntropy()
+     */
+    public function getEntropy(string &$data): float
+    {
+        return CryptoSoftware::getEntropyStatic($data);
+    }
+
     // --------------------------------------------------------------------------------
 
     /**
@@ -201,7 +212,7 @@ class CryptoOpenssl implements CryptoInterface
 
     private function _checkHashAlgorithm(string $algo): bool
     {
-        if (isset(self::HASH_ALGORITHM[$algo]))
+        if (isset(self::TRANSLATE_HASH_ALGORITHM[$algo]))
             return true;
         $this->_metrology->addLog('Unsupported ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, '965d71cf');
         return false;
@@ -277,7 +288,7 @@ class CryptoOpenssl implements CryptoInterface
 
     private function _checkSymmetricAlgorithm(string $algo): bool
     {
-        if (isset(self::SYMMETRIC_ALGORITHM[$algo]))
+        if (isset(self::TRANSLATE_SYMMETRIC_ALGORITHM[$algo]))
             return true;
         $this->_metrology->addLog('Unsupported ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, '13fab565');
         return false;
@@ -530,7 +541,7 @@ EOD;
 
     private function _checkAsymmetricAlgorithm(string $algo): bool
     {
-        if (isset(self::ASYMMETRIC_ALGORITHM[$algo]))
+        if (isset(self::TRANSLATE_ASYMMETRIC_ALGORITHM[$algo]))
             return true;
         $this->_metrology->addLog('Unsupported ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2a04d29d');
         return false;

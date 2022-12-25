@@ -17,6 +17,13 @@ class Crypto implements CryptoInterface
     const TYPE_ASYMMETRIC = 3;
 
     /**
+     * Instance de la bibliothèque nebule.
+     *
+     * @var nebule
+     */
+    protected $_nebuleInstance;
+
+    /**
      * Instance métrologie en cours.
      *
      * @var Metrology
@@ -28,7 +35,7 @@ class Crypto implements CryptoInterface
      *
      * @var Configuration
      */
-    private $_configuration;
+    protected $_configuration;
 
     /**
      * Instance de gestion du cache.
@@ -47,10 +54,16 @@ class Crypto implements CryptoInterface
 
     public function __construct(nebule $nebuleInstance)
     {
+        $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_cache = $nebuleInstance->getCacheInstance();
 
+        $this->_initialisation($nebuleInstance);
+    }
+
+    protected function _initialisation(nebule $nebuleInstance): void
+    {
         $this->_opensslInstance = new CryptoOpenssl($nebuleInstance);
         $this->_softwareInstance = new CryptoSoftware($nebuleInstance);
 
@@ -58,6 +71,24 @@ class Crypto implements CryptoInterface
             $this->_defaultCryptoLibraryInstance = $this->_softwareInstance;
         else
             $this->_defaultCryptoLibraryInstance = $this->_opensslInstance;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::getCryptoInstance()
+     */
+    public function getCryptoInstance(): CryptoInterface
+    {
+        return $this->_defaultCryptoLibraryInstance;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::getCryptoInstanceName()
+     */
+    public function getCryptoInstanceName(): string
+    {
+        return get_class($this->_defaultCryptoLibraryInstance);
     }
 
     /**
@@ -93,10 +124,8 @@ class Crypto implements CryptoInterface
     }
 
     /**
-     * Get a value of the data entropy.
-     *
-     * @param string $data
-     * @return float
+     * {@inheritDoc}
+     * @see CryptoInterface::getEntropy()
      */
     public function getEntropy(string &$data): float
     {

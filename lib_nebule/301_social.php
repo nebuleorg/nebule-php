@@ -14,6 +14,8 @@ namespace Nebule\Library;
  */
 class Social implements SocialInterface
 {
+    const SOCIAL_CLASS='';
+
     private $_instanceSocialMySelf;
     private $_instanceSocialNotMySelf;
     private $_instanceSocialSelf;
@@ -28,21 +30,52 @@ class Social implements SocialInterface
     private $_instanceSocialDefault;
 
     /**
+     * Instance de la bibliothèque nebule.
+     *
+     * @var nebule
+     */
+    protected $_nebuleInstance;
+
+    /**
+     * Instance métrologie en cours.
+     *
+     * @var Metrology
+     */
+    protected $_metrology;
+
+    /**
+     * Instance de gestion de la configuration et des options.
+     *
+     * @var Configuration
+     */
+    protected $_configuration;
+
+    /**
      * Constructeur.
      *
      * @param nebule $nebuleInstance
      */
     public function __construct(nebule $nebuleInstance)
     {
+        $this->_nebuleInstance = $nebuleInstance;
+        $this->_metrology = $nebuleInstance->getMetrologyInstance();
+        $this->_configuration = $nebuleInstance->getConfigurationInstance();
+
         $this->_initialisation($nebuleInstance);
     }
 
     public function __toString(): string
     {
-        return '';
+        return self::SOCIAL_CLASS;
     }
 
-    private function _initialisation(nebule $nebuleInstance): void
+    public function __wakeup()
+    {
+        global $nebuleInstance;
+        $this->_nebuleInstance = $nebuleInstance;
+    }
+
+    protected function _initialisation(nebule $nebuleInstance): void
     {
         $this->_instanceSocialMySelf = new SocialMySelf($nebuleInstance);
         $this->_instanceSocialNotMySelf = new SocialNotMySelf($nebuleInstance);
@@ -202,7 +235,7 @@ class Social implements SocialInterface
      * Nécessaire à certains filtrages sociaux, ignoré par d'autres.
      * La liste doit contenir des ID d'objet et non des objets.
      *
-     * @param array:string $listID
+     * @param array  $listID
      * @param string $socialClass
      * @return boolean
      */

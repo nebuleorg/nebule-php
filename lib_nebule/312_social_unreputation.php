@@ -17,10 +17,7 @@ use Nebule\Library\nebule;
  */
 class SocialUnreputation extends SocialMySelf implements SocialInterface
 {
-    public function __toString(): string
-    {
-        return 'unreputation';
-    }
+    const SOCIAL_CLASS='unreputation';
 
     /**
      * Gère le classement social des liens.

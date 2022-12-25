@@ -11,22 +11,8 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class CryptoSoftware implements CryptoInterface
+class CryptoSoftware extends Crypto implements CryptoInterface
 {
-    /**
-     * Instance de la bibliothèque nebule.
-     *
-     * @var nebule
-     */
-    private $_nebuleInstance;
-
-    /**
-     * Instance métrologie en cours.
-     *
-     * @var Metrology
-     */
-    protected $_metrology;
-
     /**
      * Instance de gestion du cache.
      *
@@ -34,11 +20,27 @@ class CryptoSoftware implements CryptoInterface
      */
     protected $_cache;
 
-    public function __construct(nebule $nebuleInstance)
+    protected function _initialisation(nebule $nebuleInstance): void
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_cache = $nebuleInstance->getCacheInstance();
+        // Nothing to do.
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::getCryptoInstance()
+     */
+    public function getCryptoInstance(): CryptoInterface
+    {
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::getCryptoInstanceName()
+     */
+    public function getCryptoInstanceName(): string
+    {
+        return get_class($this);
     }
 
     /**
@@ -148,12 +150,18 @@ class CryptoSoftware implements CryptoInterface
     }
 
     /**
-     * Get a value of the data entropy.
-     *
-     * @param string $data
-     * @return float
+     * {@inheritDoc}
+     * @see CryptoInterface::getEntropy()
      */
     public function getEntropy(string &$data): float
+    {
+        return self::getEntropyStatic($data);
+    }
+
+    /**
+     * @see CryptoInterface::getEntropy()
+     */
+    static public function getEntropyStatic(string &$data): float
     {
         $h = 0;
         $s = strlen($data);

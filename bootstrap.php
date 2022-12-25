@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020221017';
+const BOOTSTRAP_VERSION = '020221224';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -5907,12 +5907,17 @@ function bootstrap_breakDisplay41LibraryEntities()
         $nebuleInstanceCheck > 70);
 
     $entity = lib_getConfiguration('subordinationEntity');
-    if ($entity != '')
+    if ($entity != '') {
         $instance = $nebuleInstance->getCacheInstance()->newNode($entity, Cache::TYPE_ENTITY);
-    bootstrap_breakDisplay411DisplayEntity('subordination',
-        array($entity => $entity),
-        array($entity => $instance),
-        $nebuleInstanceCheck > 70);
+        bootstrap_breakDisplay411DisplayEntity('subordination',
+            array($entity => $entity),
+            array($entity => $instance),
+            $nebuleInstanceCheck > 70);
+    } else {
+        bootstrap_echoLineTitle('subordination');
+        echo "none<br />\n";
+    }
+
 
     if ($nebuleInstanceCheck != 128)
     {
@@ -5955,8 +5960,7 @@ function bootstrap_breakDisplay42LibraryCryptography()
 
     bootstrap_echoLineTitle('cryptography class');
     if (is_object($_cryptoInstance)) {
-        echo get_class($_cryptoInstance);
-        echo "<br />\n";
+        echo $_cryptoInstance->getCryptoInstanceName() . "<br />\n";
 
         bootstrap_echoLineTitle('cryptography');
         echo 'hash ' . $_configurationInstance->getOptionAsString('cryptoHashAlgorithm') . ' ';
@@ -5971,9 +5975,9 @@ function bootstrap_breakDisplay42LibraryCryptography()
         bootstrap_echoEndLineTest($_cryptoInstance->checkFunction($_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm'), Crypto::TYPE_ASYMMETRIC));
 
         $random = $_cryptoInstance->getRandom(2048, Crypto::RANDOM_PSEUDO);
-        $entropy = $_cryptoInstance->getEntropy($random);
+        $entropy = (string)$_cryptoInstance->getEntropy($random);
         bootstrap_echoLineTitle('cryptography');
-        echo 'pseudo-random entropy ' . $entropy . ' ';
+        echo 'pseudo-random entropy ' . $entropy . '/8 ';
         bootstrap_echoEndLineTest($entropy > 7.85);
     } else
         bootstrap_echoEndLineTest(false);
