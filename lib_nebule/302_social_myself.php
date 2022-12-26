@@ -15,7 +15,7 @@ namespace Nebule\Library;
  */
 class SocialMySelf extends Social implements SocialInterface
 {
-    const SOCIAL_CLASS='myself';
+    const TYPE='myself';
 
     protected function _initialisation(nebule $nebuleInstance): void
     {

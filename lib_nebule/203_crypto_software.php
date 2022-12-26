@@ -14,6 +14,13 @@ namespace Nebule\Library;
 class CryptoSoftware extends Crypto implements CryptoInterface
 {
     /**
+     * Crypto library type supported.
+     *
+     * @var string
+     */
+    const TYPE = 'Software';
+
+    /**
      * Instance de gestion du cache.
      *
      * @var Cache

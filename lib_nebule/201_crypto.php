@@ -10,11 +10,29 @@ namespace Nebule\Library;
  */
 class Crypto implements CryptoInterface
 {
+    const DEFAULT_CLASS = 'Openssl';
+
+    /**
+     * Crypto library type supported.
+     *
+     * @var string
+     */
+    const TYPE = '';
+
     const RANDOM_PSEUDO = 1;
     const RANDOM_STRONG = 2;
     const TYPE_HASH = 1;
     const TYPE_SYMMETRIC = 2;
     const TYPE_ASYMMETRIC = 3;
+
+    /**
+     * @var ?CryptoInterface
+     */
+    private $_defaultInstance = null;
+    private $_ready = false;
+    private $_listClasses = array();
+    private $_listInstances = array();
+    private $_listTypes = array();
 
     /**
      * Instance de la bibliothèque nebule.
@@ -44,14 +62,6 @@ class Crypto implements CryptoInterface
      */
     protected $_cache;
 
-    private $_opensslInstance;
-    private $_softwareInstance;
-
-    /**
-     * @var CryptoInterface
-     */
-    private $_defaultCryptoLibraryInstance;
-
     public function __construct(nebule $nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
@@ -62,15 +72,86 @@ class Crypto implements CryptoInterface
         $this->_initialisation($nebuleInstance);
     }
 
+    public function __toString(): string
+    {
+        return self::TYPE;
+    }
+
+    /**
+     * Load all classes on theme.
+     *
+     * @param nebule $nebuleInstance
+     * @return void
+     */
     protected function _initialisation(nebule $nebuleInstance): void
     {
-        $this->_opensslInstance = new CryptoOpenssl($nebuleInstance);
-        $this->_softwareInstance = new CryptoSoftware($nebuleInstance);
+        $myClass = get_class($this);
+        $size = strlen($myClass);
+        $list = get_declared_classes();
+        foreach ($list as $class) {
+            if (substr($class, 0, $size) == $myClass && $class != $myClass)
+                $this->_initSubClass($class, $nebuleInstance);
+        }
 
-        if ($this->_configuration->getOptionAsString('cryptoLibrary') == 'software')
-            $this->_defaultCryptoLibraryInstance = $this->_softwareInstance;
-        else
-            $this->_defaultCryptoLibraryInstance = $this->_opensslInstance;
+        $this->_initDefault('cryptoLibrary');
+    }
+
+    /**
+     * Init instance for a module class.
+     *
+     * @param string $class
+     * @param nebule $nebuleInstance
+     * @return void
+     */
+    protected function _initSubClass(string $class, nebule $nebuleInstance): void
+    {
+        $instance = new $class($nebuleInstance);
+        $type = $instance->getType();
+
+        $this->_listClasses[$class] = $class;
+        $this->_listTypes[$class] = $type;
+        $this->_listInstances[$type] = $instance;
+    }
+
+    /**
+     * Select default instance and set ready.
+     *
+     * @param string $name
+     * @return void
+     */
+    protected function _initDefault(string $name): void
+    {
+        $option = $this->_configuration->getOptionAsString($name);
+        if (isset($this->_listClasses[get_class($this) . $option]))
+        {
+            $this->_defaultInstance = $this->_listInstances[$option];
+            $this->_ready = true;
+        }
+        elseif (isset($this->_listClasses[get_class($this) . self::DEFAULT_CLASS]))
+        {
+            $this->_defaultInstance = $this->_listInstances[self::DEFAULT_CLASS];
+            $this->_ready = true;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::getType()
+     */
+    public function getType(): string
+    {
+        if (get_class($this)::TYPE == '' && ! is_null($this->_defaultInstance))
+            return $this->_defaultInstance->getType();
+        return get_class($this)::TYPE;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::getReady()
+     */
+    public function getReady(): bool
+    {
+        return $this->_ready;
     }
 
     /**
@@ -79,7 +160,7 @@ class Crypto implements CryptoInterface
      */
     public function getCryptoInstance(): CryptoInterface
     {
-        return $this->_defaultCryptoLibraryInstance;
+        return $this->_defaultInstance;
     }
 
     /**
@@ -88,7 +169,7 @@ class Crypto implements CryptoInterface
      */
     public function getCryptoInstanceName(): string
     {
-        return get_class($this->_defaultCryptoLibraryInstance);
+        return get_class($this->_defaultInstance);
     }
 
     /**
@@ -97,7 +178,7 @@ class Crypto implements CryptoInterface
      */
     public function checkFunction(string $algo, int $type): bool
     {
-        return $this->_defaultCryptoLibraryInstance->checkFunction($algo, $type);
+        return $this->_defaultInstance->checkFunction($algo, $type);
     }
 
     /**
@@ -106,7 +187,7 @@ class Crypto implements CryptoInterface
      */
     public function checkValidAlgorithm(string $algo, int $type): bool
     {
-        return $this->_defaultCryptoLibraryInstance->checkValidAlgorithm($algo, $type);
+        return $this->_defaultInstance->checkValidAlgorithm($algo, $type);
     }
 
     // --------------------------------------------------------------------------------
@@ -117,10 +198,11 @@ class Crypto implements CryptoInterface
      */
     public function getRandom(int $size = 32, int $quality = Crypto::RANDOM_PSEUDO): string
     {
+        // FIXME refaire un sélecteur plus propre !
         if ($quality == Crypto::RANDOM_STRONG)
-            return $this->_opensslInstance->getRandom($size);
+            return $this->_listInstances['Openssl']->getRandom($size);
         else
-            return $this->_softwareInstance->getRandom($size);
+            return $this->_listInstances['Software']->getRandom($size);
     }
 
     /**
@@ -129,7 +211,7 @@ class Crypto implements CryptoInterface
      */
     public function getEntropy(string &$data): float
     {
-        return $this->_softwareInstance->getEntropy($data);
+        return $this->_listInstances['Software']->getEntropy($data);
     }
 
     // --------------------------------------------------------------------------------
@@ -140,7 +222,7 @@ class Crypto implements CryptoInterface
      */
     public function hash(string $data, string $algo = ''): string
     {
-        return $this->_opensslInstance->hash($data, $algo);
+        return $this->_defaultInstance->hash($data, $algo);
     }
 
     // --------------------------------------------------------------------------------
@@ -151,7 +233,7 @@ class Crypto implements CryptoInterface
      */
     public function encrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
     {
-        return $this->_opensslInstance->encrypt($data, $hexKey, $hexIV);
+        return $this->_defaultInstance->encrypt($data, $hexKey, $hexIV);
     }
 
     /**
@@ -160,7 +242,7 @@ class Crypto implements CryptoInterface
      */
     public function decrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
     {
-        return $this->_opensslInstance->decrypt($data, $hexKey, $hexIV);
+        return $this->_defaultInstance->decrypt($data, $hexKey, $hexIV);
     }
 
     // --------------------------------------------------------------------------------
@@ -171,7 +253,7 @@ class Crypto implements CryptoInterface
      */
     public function sign(string $data, string $privateKey, string $privatePassword): string
     {
-        return $this->_opensslInstance->sign($data, $privateKey, $privatePassword);
+        return $this->_defaultInstance->sign($data, $privateKey, $privatePassword);
     }
 
     /**
@@ -180,7 +262,7 @@ class Crypto implements CryptoInterface
      */
     public function verify(string $data, string $sign, string $publicKey): bool
     {
-        return $this->_opensslInstance->verify($data, $sign, $publicKey);
+        return $this->_defaultInstance->verify($data, $sign, $publicKey);
     }
 
     /**
@@ -189,7 +271,7 @@ class Crypto implements CryptoInterface
      */
     public function encryptTo(string $data, string $publicKey): string
     {
-        return $this->_opensslInstance->encryptTo($data, $publicKey);
+        return $this->_defaultInstance->encryptTo($data, $publicKey);
     }
 
     /**
@@ -198,7 +280,7 @@ class Crypto implements CryptoInterface
      */
     public function decryptTo(string $code, string $privateKey, string $password): string
     {
-        return $this->_opensslInstance->decryptTo($code, $privateKey, $password);
+        return $this->_defaultInstance->decryptTo($code, $privateKey, $password);
     }
 
     /**
@@ -207,7 +289,7 @@ class Crypto implements CryptoInterface
      */
     public function newAsymmetricKeys(string $password = ''): array
     {
-        return $this->_opensslInstance->newAsymmetricKeys($password);
+        return $this->_defaultInstance->newAsymmetricKeys($password);
     }
 
     /**
@@ -216,7 +298,7 @@ class Crypto implements CryptoInterface
      */
     public function checkPrivateKeyPassword(string $privateKey, string $password): bool
     {
-        return $this->_opensslInstance->checkPrivateKeyPassword($privateKey, $password);
+        return $this->_defaultInstance->checkPrivateKeyPassword($privateKey, $password);
     }
 
     /**
@@ -225,7 +307,7 @@ class Crypto implements CryptoInterface
      */
     public function changePrivateKeyPassword(string $privateKey, string $oldPassword, string $newPassword): string
     {
-        return $this->_opensslInstance->changePrivateKeyPassword($privateKey, $oldPassword, $newPassword);
+        return $this->_defaultInstance->changePrivateKeyPassword($privateKey, $oldPassword, $newPassword);
     }
 
     /**

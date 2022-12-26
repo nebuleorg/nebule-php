@@ -14,7 +14,23 @@ namespace Nebule\Library;
  */
 class Social implements SocialInterface
 {
-    const SOCIAL_CLASS='';
+    const DEFAULT_CLASS = 'Strict';
+
+    /**
+     * Social type supported.
+     *
+     * @var string
+     */
+    const TYPE = '';
+
+    /**
+     * @var ?SocialInterface
+     */
+    private $_defaultInstance = null;
+    private $_ready = false;
+    private $_listClasses = array();
+    private $_listInstances = array();
+    private $_listTypes = array();
 
     private $_instanceSocialMySelf;
     private $_instanceSocialNotMySelf;
@@ -51,6 +67,13 @@ class Social implements SocialInterface
     protected $_configuration;
 
     /**
+     * Instance de gestion du cache.
+     *
+     * @var Cache
+     */
+    protected $_cache;
+
+    /**
      * Constructeur.
      *
      * @param nebule $nebuleInstance
@@ -60,23 +83,38 @@ class Social implements SocialInterface
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
+        $this->_cache = $nebuleInstance->getCacheInstance();
 
         $this->_initialisation($nebuleInstance);
     }
 
     public function __toString(): string
     {
-        return self::SOCIAL_CLASS;
+        return self::TYPE;
     }
 
-    public function __wakeup()
-    {
-        global $nebuleInstance;
-        $this->_nebuleInstance = $nebuleInstance;
-    }
-
+    /**
+     * Load all classes on theme.
+     *
+     * @param nebule $nebuleInstance
+     * @return void
+     */
     protected function _initialisation(nebule $nebuleInstance): void
     {
+        $myClass = get_class($this);
+        $size = strlen($myClass);
+        $list = get_declared_classes();
+        foreach ($list as $class) {
+            if (substr($class, 0, $size) == $myClass && $class != $myClass)
+                $this->_initSubClass($class, $nebuleInstance);
+        }
+
+        $this->_initDefault('socialLibrary');
+
+
+
+
+/*
         $this->_instanceSocialMySelf = new SocialMySelf($nebuleInstance);
         $this->_instanceSocialNotMySelf = new SocialNotMySelf($nebuleInstance);
         $this->_instanceSocialSelf = new SocialSelf($nebuleInstance);
@@ -127,7 +165,65 @@ class Social implements SocialInterface
             default:
                 $this->_instanceSocialDefault = $this->_instanceSocialStrict;
                 break;
+        }*/
+    }
+
+    /**
+     * Init instance for a module class.
+     *
+     * @param string $class
+     * @param nebule $nebuleInstance
+     * @return void
+     */
+    protected function _initSubClass(string $class, nebule $nebuleInstance): void
+    {
+        $instance = new $class($nebuleInstance);
+        $type = $instance->getType();
+
+        $this->_listClasses[$class] = $class;
+        $this->_listTypes[$class] = $type;
+        $this->_listInstances[$type] = $instance;
+    }
+
+    /**
+     * Select default instance and set ready.
+     *
+     * @param string $name
+     * @return void
+     */
+    protected function _initDefault(string $name): void
+    {
+        $option = $this->_configuration->getOptionAsString($name);
+        if (isset($this->_listClasses[get_class($this) . $option]))
+        {
+            $this->_defaultInstance = $this->_listInstances[$this->_listTypes[get_class($this) . $option]];
+            $this->_ready = true;
         }
+        elseif (isset($this->_listClasses[get_class($this) . self::DEFAULT_CLASS]))
+        {
+            $this->_defaultInstance = $this->_listInstances[$this->_listTypes[get_class($this) . self::DEFAULT_CLASS]];
+            $this->_ready = true;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see SocialInterface::getType()
+     */
+    public function getType(): string
+    {
+        if (get_class($this)::TYPE == '' && ! is_null($this->_defaultInstance))
+            return $this->_defaultInstance->getType();
+        return get_class($this)::TYPE;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see SocialInterface::getReady()
+     */
+    public function getReady(): bool
+    {
+        return $this->_ready;
     }
 
     /**
@@ -139,7 +235,13 @@ class Social implements SocialInterface
      */
     public function arraySocialFilter(array &$links, string $socialClass = ''): void
     {
-        switch ($socialClass) {
+        if ($socialClass != '')
+            $this->_listInstances[get_class($this) . $this->_listTypes[$socialClass]]->arraySocialFilter($links, '');
+        else
+            $this->_defaultInstance->arraySocialFilter($links, '');
+
+
+ /*       switch ($socialClass) {
             case 'myself':
                 $this->_instanceSocialMySelf->arraySocialFilter($links, '');
                 break;
@@ -176,7 +278,7 @@ class Social implements SocialInterface
             default:
                 $this->_instanceSocialDefault->arraySocialFilter($links, '');
                 break;
-        }
+        }*/
     }
 
     /**
@@ -188,7 +290,12 @@ class Social implements SocialInterface
      */
     public function linkSocialScore(Link &$link, string $socialClass = ''): float
     {
-        switch ($socialClass) {
+        if ($socialClass != '')
+            $result = $this->_listInstances[get_class($this) . $this->_listTypes[$socialClass]]->linkSocialScore($link, '');
+        else
+            $result = $this->_defaultInstance->linkSocialScore($link, '');
+
+   /*     switch ($socialClass) {
             case 'myself':
                 $result = $this->_instanceSocialMySelf->linkSocialScore($link, '');
                 break;
@@ -225,7 +332,7 @@ class Social implements SocialInterface
             default:
                 $result = $this->_instanceSocialDefault->linkSocialScore($link, '');
                 break;
-        }
+        }*/
 
         return $result;
     }
@@ -241,7 +348,12 @@ class Social implements SocialInterface
      */
     public function setList(array $listID, string $socialClass = ''): bool
     {
-        switch ($socialClass) {
+        if ($socialClass != '')
+            $result = $this->_listInstances[get_class($this) . $this->_listTypes[$socialClass]]->setList($listID);
+        else
+            $result = $this->_defaultInstance->setList($listID);
+
+  /*      switch ($socialClass) {
             case 'myself':
                 $result = $this->_instanceSocialMySelf->setList($listID);
                 break;
@@ -278,7 +390,7 @@ class Social implements SocialInterface
             default:
                 $result = $this->_instanceSocialDefault->setList($listID);
                 break;
-        }
+        }*/
 
         return $result;
     }
@@ -291,7 +403,12 @@ class Social implements SocialInterface
      */
     public function unsetList(string $socialClass = ''): bool
     {
-        switch ($socialClass) {
+        if ($socialClass != '')
+            $result = $this->_listInstances[get_class($this) . $this->_listTypes[$socialClass]]->unsetList();
+        else
+            $result = $this->_defaultInstance->unsetList();
+
+     /*   switch ($socialClass) {
             case 'myself':
                 $result = $this->_instanceSocialMySelf->unsetList();
                 break;
@@ -328,7 +445,7 @@ class Social implements SocialInterface
             default:
                 $result = $this->_instanceSocialDefault->unsetList();
                 break;
-        }
+        }*/
 
         return $result;
     }
@@ -340,12 +457,15 @@ class Social implements SocialInterface
      */
     public function getSocialNames(): array
     {
-        return array('myself', 'notmyself', 'self', 'notself', 'strict', 'all', 'none', 'onlist', 'offlist', 'reputation', 'unreputation');
+        return $this->_listTypes;
+        //return array('myself', 'notmyself', 'self', 'notself', 'strict', 'all', 'none', 'onlist', 'offlist', 'reputation', 'unreputation');
     }
 
     public function getSocialInstances(): array
     {
-        return array(
+        return $this->_listClasses;
+
+   /*     return array(
             $this->_instanceSocialMySelf,
             $this->_instanceSocialNotMySelf,
             $this->_instanceSocialSelf,
@@ -357,7 +477,7 @@ class Social implements SocialInterface
             $this->_instanceSocialOffList,
             $this->_instanceSocialReputation,
             $this->_instanceSocialUnreputation,
-        );
+        );*/
     }
 
     /**

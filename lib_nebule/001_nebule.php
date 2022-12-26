@@ -2237,7 +2237,7 @@ class nebule
      *
      * @return Entity
      */
-    public function getPuppetmasterInstance(): Entity
+    public function getPuppetmasterInstance(): ?Entity
     {
         return $this->_puppetmasterInstance;
     }

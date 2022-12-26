@@ -18,14 +18,39 @@ use Nebule\Library\nebule;
  */
 class io implements ioInterface
 {
-    private $_defaultIO;
+    const DEFAULT_CLASS = 'Local';
+
+    /**
+     * I/O type supported.
+     *
+     * @var string
+     */
+    private const TYPE = '';
+
+    /**
+     * I/O filter supported.
+     *
+     * @var string
+     */
+    private const FILTER = '';
+
+    /**
+     * Default localisation for this I/O module.
+     *
+     * @var string
+     */
+    private const LOCALISATION = '';
+
+    /**
+     * @var ?ioInterface
+     */
+    private $_defaultInstance = null;
+    private $_ready = false;
     private $_listClasses = array();
-    private $_listType = array();
-    private $_listLocalisations = array();
-    private $_listFilterStrings = array();
-    private $_listMode = array();
     private $_listInstances = array();
     private $_listTypes = array();
+    private $_listLocalisations = array();
+    private $_listFilterStrings = array();
     private $_listModes = array();
 
     /**
@@ -50,6 +75,13 @@ class io implements ioInterface
     protected $_configuration;
 
     /**
+     * Instance de gestion du cache.
+     *
+     * @var Cache
+     */
+    protected $_cache;
+
+    /**
      * Constructeur.
      *
      * @param nebule $nebuleInstance
@@ -59,58 +91,121 @@ class io implements ioInterface
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrology = $nebuleInstance->getMetrologyInstance();
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
+        $this->_cache = $nebuleInstance->getCacheInstance();
+
+        //$this->_metrology->addLog('MARK1 class=' . get_class($this), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         $this->_initialisation($nebuleInstance);
     }
 
+    public function __toString(): string
+    {
+        return self::TYPE;
+    }
+
+    /**
+     * Load all classes on theme.
+     *
+     * @param nebule $nebuleInstance
+     * @return void
+     */
     protected function _initialisation(nebule $nebuleInstance): void
     {
-        // Liste toutes les classes io* et les charges une à une.
         $myClass = get_class($this);
         $size = strlen($myClass);
         $list = get_declared_classes();
-        foreach ($list as $i => $class) {
-            if (substr($class, 0, $size) == $myClass && $class != $myClass) {
-                $instance = new $class($nebuleInstance);
-                $type = $instance->getType();
-                $filterString = $instance->getFilterString();
-                $url = $instance->getDefaultLocalisation();
-                $mode = $instance->getMode();
-                // Renseigne les tableaux de suivi.
-                $this->_listClasses[$i] = $class;
-                $this->_listTypes[$i] = $type;
-                $this->_listLocalisations[$url] = $instance;
-                $this->_listFilterStrings[$type] = $filterString;
-                $this->_listModes[$type] = $mode;
-                $this->_listInstances[$type] = $instance;
-            }
+        foreach ($list as $class) {
+            if (substr($class, 0, $size) == $myClass && $class != $myClass)
+                $this->_initSubClass($class, $nebuleInstance);
         }
 
-        $this->_defaultIO = new ioLocal($nebuleInstance);
+        $this->_initDefault('ioLibrary');
     }
 
-    public function __sleep()
+    /**
+     * Init instance for a module class.
+     *
+     * @param string $class
+     * @param nebule $nebuleInstance
+     * @return void
+     */
+    protected function _initSubClass(string $class, nebule $nebuleInstance): void
     {
-        return array('_defaultIO', '_listClasses');
+        $instance = new $class($nebuleInstance);
+        $type = $instance->getType();
+        $filterString = $instance->getFilterString();
+        $url = $instance->getLocalisation();
+        $mode = $instance->getMode();
+
+        $this->_listClasses[$class] = $class;
+        $this->_listTypes[$class] = $type;
+        $this->_listInstances[$type] = $instance;
+        $this->_listLocalisations[$url] = $instance;
+        $this->_listFilterStrings[$type] = $filterString;
+        $this->_listModes[$type] = $mode;
     }
 
-    public function __wakeup()
+    /**
+     * Select default instance and set ready.
+     *
+     * @param string $name
+     * @return void
+     */
+    protected function _initDefault(string $name): void
     {
-        global $nebuleInstance;
-
-        $list = $this->_listClasses;
-        foreach ($list as $i => $class) {
-            $instance = new $class($nebuleInstance);
-            $type = $instance->getType();
-            $filterString = $instance->getFilterString();
-            $mode = $instance->getMode();
-            // Renseigne les tableaux de suivi.
-            $this->_listClasses[$i] = $class;
-            $this->_listTypes[$i] = $type;
-            $this->_listFilterStrings[$type] = $filterString;
-            $this->_listModes[$type] = $mode;
-            $this->_listInstances[$type] = $instance;
+        $option = $this->_configuration->getOptionAsString($name);
+        if (isset($this->_listClasses[get_class($this) . $option]))
+        {
+            $this->_defaultInstance = $this->_listInstances[$option];
+            $this->_ready = true;
         }
+        elseif (isset($this->_listClasses[get_class($this) . self::DEFAULT_CLASS]))
+        {
+            $this->_defaultInstance = $this->_listInstances[self::DEFAULT_CLASS];
+            $this->_ready = true;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see ioInterface::getType()
+     */
+    public function getType(): string
+    {
+        //if (self::TYPE == '' && ! is_null($this->_defaultInstance))
+        //    return $this->_defaultInstance->getType();
+        return get_class($this)::TYPE;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see ioInterface::getReady()
+     */
+    public function getReady(): bool
+    {
+        return $this->_ready;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see ioInterface::getFilterString()
+     */
+    public function getFilterString(): string
+    {
+        //if (self::FILTER == '' && ! is_null($this->_defaultInstance))
+        //    return $this->_defaultInstance->getFilterString();
+        return get_class($this)::FILTER;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see ioInterface::getLocalisation()
+     */
+    public function getLocalisation(): string
+    {
+        if (get_class($this)::LOCALISATION == '' && ! is_null($this->_defaultInstance))
+            return $this->_defaultInstance->getLocalisation();
+        return get_class($this)::LOCALISATION;
     }
 
     /**
@@ -119,21 +214,21 @@ class io implements ioInterface
      * @param string $url
      * @return ioInterface
      */
-    private function _findType(string $url)
+    private function _findType(string $url): ioInterface
     {
         if ($url == '')
-            return $this->_defaultIO;
+            return $this->_defaultInstance;
 
         // Fait le tour des modules IO et de leurs filtres pour déterminer le protocole.
         foreach ($this->_listFilterStrings as $type => $pattern) {
             if (preg_match($pattern, $url))
                 return $this->_listInstances[$type];
         }
-        return $this->_defaultIO;
+        return $this->_defaultInstance;
     }
 
     /**
-     * Liste les modules IO disponibles. Les noms sont ceux générés par getType().
+     * List modules names sorted by getType().
      *
      * @return array:string
      */
@@ -143,36 +238,18 @@ class io implements ioInterface
     }
 
     /**
-     * Recherche l'instance d'un module IO par rapport à son type de protocole, celui généré par getType().
+     * List modules instances sorted by getType().
      *
      * @param string $type
      * @return ioInterface
      */
-    public function getModule(string $type)
+    public function getModule(string $type): ioInterface
     {
         if ($type != ''
             && isset($this->_listInstances[$type])
         )
             return $this->_listInstances[$type];
-        return $this->_defaultIO;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see ioInterface::getType()
-     */
-    public function getType(): string
-    {
-        return $this->_defaultIO->getType();
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see ioInterface::getFilterString()
-     */
-    public function getFilterString(): string
-    {
-        return $this->_defaultIO->getFilterString();
+        return $this->_defaultInstance;
     }
 
     /**
@@ -181,7 +258,7 @@ class io implements ioInterface
      */
     public function getMode(): string
     {
-        return $this->_defaultIO->getMode();
+        return $this->_defaultInstance->getMode();
     }
 
     /**
@@ -212,16 +289,7 @@ class io implements ioInterface
      */
     public function getInstanceEntityID(string $url = ''): string
     {
-        return $this->_defaultIO->getInstanceEntityID($url);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see ioInterface::getDefaultLocalisation()
-     */
-    public function getDefaultLocalisation(): string
-    {
-        return $this->_defaultIO->getDefaultLocalisation();
+        return $this->_defaultInstance->getInstanceEntityID($url);
     }
 
     /**

@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020221224';
+const BOOTSTRAP_VERSION = '020221226';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -126,6 +126,15 @@ function log_add(string $message, string $level = 'msg', string $function = '', 
     syslog(LOG_INFO, 'LogT=' . sprintf('%01.6f', microtime(true) - $metrologyStartTime) . ' LogL="' . $level . '" LogI="' . $id . '" LogF="' . $function . '" LogM="' . $message . '"');
 }
 
+/**
+ * Add message to logs and display it.
+ *
+ * @param string $message
+ * @param string $level
+ * @param string $function
+ * @param string $id
+ * @return void
+ */
 function log_addDisp(string $message, string $level = 'msg', string $function = '', string $id = '00000000'): void
 {
     log_add($message, $level, $function, $id);
@@ -5702,6 +5711,7 @@ function bootstrap_breakDisplay1OnError()
            $libraryRescueMode,
            $bootstrapFlush;
 
+    log_add('1: on error', 'info', __FUNCTION__, 'df175c8c');
     echo '<div class="parts">' . "\n" . '<span class="partstitle">#1 ' . BOOTSTRAP_NAME . ' break on</span><br/>' . "\n";
 
     ksort($bootstrapBreak);
@@ -5726,6 +5736,7 @@ function bootstrap_breakDisplay2Bootstrap()
            $bootstrapCodeBID,
            $bootstrapCodeSID;
 
+    log_add('2: bootstrap', 'info', __FUNCTION__, 'a844ce2c');
     echo '<div class="parts">' . "\n" . '<span class="partstitle">#2 bootstrap</span><br/>' . "\n";
 
     $data = file_get_contents(BOOTSTRAP_FILE_NAME);
@@ -5766,6 +5777,7 @@ function bootstrap_breakDisplay3LibraryPP()
            $nebulePublicEntity,
            $codeBranchNID;
 
+    log_add('3: library PP', 'info', __FUNCTION__, '76c10058');
     echo '<div class="parts">' . "\n" . '<span class="partstitle">#3 nebule library PP</span><br/>' . "\n";
 
     bootstrap_echoLineTitle('library version');
@@ -5836,6 +5848,7 @@ function bootstrap_breakDisplay4LibraryPOO()
            $bootstrapLibrarySID,
            $nebuleLibVersion;
 
+    log_add('4: library POO', 'info', __FUNCTION__, '811b1513');
     echo '<div class="parts">' . "\n" . '<span class="partstitle">#4 nebule library POO</span><br/>';
     flush();
 
@@ -5998,7 +6011,7 @@ function bootstrap_breakDisplay43LibraryIO()
         foreach ($list as $class) {
             $module = $nebuleInstance->getIoInstance()->getModule($class);
             bootstrap_echoLineTitle('i/o');
-            echo $class . ' (' . $module->getMode() . ') ' . $module->getDefaultLocalisation() . ', links ';
+            echo $class . ' (' . $module->getMode() . ') ' . $module->getLocalisation() . ', links ';
             if (!$module->checkLinksDirectory())
                 echo 'directory <span class="error">ERROR!</span>';
             else {
@@ -6072,6 +6085,7 @@ function bootstrap_breakDisplay5Application()
            $bootstrapApplicationOID,
            $bootstrapApplicationSID;
 
+    log_add('5: application', 'info', __FUNCTION__, '7f1941a1');
     echo '<div class="parts">' . "\n" . '<span class="partstitle">#5 application</span><br/>' . "\n";
 
     bootstrap_echoLineTitle('application RID');
@@ -6093,6 +6107,8 @@ function bootstrap_breakDisplay5Application()
 function bootstrap_breakDisplay6End()
 {
     lib_setMetrologyTimer('tE');
+
+    log_add('6: end', 'info', __FUNCTION__, '03a39126');
     echo '<div class="parts">' . "\n" . '<span class="partstitle">#6 end ' . BOOTSTRAP_NAME . '</span><br/>' . "\n";
 
     echo 'tE=' . lib_getMetrologyTimer('tE') . '<br/>' . "\n";

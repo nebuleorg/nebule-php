@@ -10,6 +10,13 @@ namespace Nebule\Library;
  */
 class CryptoOpenssl extends Crypto implements CryptoInterface
 {
+    /**
+     * Crypto library type supported.
+     *
+     * @var string
+     */
+    const TYPE = 'Openssl';
+
     const HASH_ALGORITHM = array(
         'sha1.128',
         'sha2.224',

@@ -13,6 +13,21 @@ namespace Nebule\Library;
 interface SocialInterface
 {
     public function __toString();
+
+    /**
+     * Retourne le type de système de fichiers.
+     *
+     * @return string
+     */
+    public function getType(): string;
+
+    /**
+     * Retourne l'état de préparation'.
+     *
+     * @return bool
+     */
+    public function getReady(): bool;
+
     public function arraySocialFilter(array &$links, string $socialClass = ''): void;
     public function linkSocialScore(Link &$link, string $socialClass = ''): float;
     public function setList(array $listID): bool;

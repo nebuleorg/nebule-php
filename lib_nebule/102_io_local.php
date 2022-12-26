@@ -14,11 +14,25 @@ use Nebule\Library\nebule;
 class ioLocal extends io implements ioInterface
 {
     /**
-     * Localisation par défaut de ce module I/O.
+     * I/O type supported.
      *
      * @var string
      */
-    const DEFAULT_LOCALISATION = 'file://';
+    const TYPE = 'Local';
+
+    /**
+     * I/O filter supported.
+     *
+     * @var string
+     */
+    const FILTER = '/^\//';
+
+    /**
+     * Default localisation for this I/O module.
+     *
+     * @var string
+     */
+    const LOCALISATION = 'file://';
 
     /**
      * Nombre maximum de liens à lire.
@@ -47,7 +61,7 @@ class ioLocal extends io implements ioInterface
      *
      * @var string
      */
-    private $_filesTrancodeKey = '';
+    private $_filesTranscodeKey = '';
 
     protected function _initialisation(nebule $nebuleInstance): void
     {
@@ -63,26 +77,8 @@ class ioLocal extends io implements ioInterface
     public function __sleep()
     {
         /** @noinspection PhpFieldImmediatelyRewrittenInspection */
-        $this->_filesTrancodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
-        $this->_filesTrancodeKey = '';
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see ioInterface::getType()
-     */
-    public function getType(): string
-    {
-        return 'FileSystem';
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see ioInterface::getFilterString()
-     */
-    public function getFilterString(): string
-    {
-        return '/^\//';
+        $this->_filesTranscodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
+        $this->_filesTranscodeKey = '';
     }
 
     /**
@@ -107,7 +103,7 @@ class ioLocal extends io implements ioInterface
      */
     public function setFilesTranscodeKey(string &$key): void
     {
-        $this->_filesTrancodeKey = $key;
+        $this->_filesTranscodeKey = $key;
     }
 
     /**
@@ -117,17 +113,17 @@ class ioLocal extends io implements ioInterface
     public function unsetFilesTranscodeKey(): void
     {
         /** @noinspection PhpFieldImmediatelyRewrittenInspection */
-        $this->_filesTrancodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
-        $this->_filesTrancodeKey = '';
+        $this->_filesTranscodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
+        $this->_filesTranscodeKey = '';
     }
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::getDefaultLocalisation()
+     * @see ioInterface::getLocalisation()
      */
-    public function getDefaultLocalisation(): string
+    public function getLocalisation(): string
     {
-        return self::DEFAULT_LOCALISATION;
+        return self::LOCALISATION;
     }
 
     /**
@@ -337,7 +333,7 @@ class ioLocal extends io implements ioInterface
         $linksList = array();
 
         // Vérifie la présence d'une clé de transcodage des noms des fichiers.
-        if ($this->_filesTrancodeKey == '')
+        if ($this->_filesTranscodeKey == '')
             return $linksList;
 
         // Vérifie l'entité destinataire des liens dissimulés.
@@ -571,7 +567,7 @@ class ioLocal extends io implements ioInterface
      */
     private function _getTranlateID(string $id): string
     {
-        return $this->_nebuleInstance->getCryptoInstance()->hash($id . $this->_nebuleInstance->getCurrentEntity() . $this->_filesTrancodeKey);
+        return $this->_nebuleInstance->getCryptoInstance()->hash($id . $this->_nebuleInstance->getCurrentEntity() . $this->_filesTranscodeKey);
     }
 
     /**
@@ -660,7 +656,7 @@ class ioLocal extends io implements ioInterface
     public function __destruct()
     {
         /** @noinspection PhpFieldImmediatelyRewrittenInspection */
-        $this->_filesTrancodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
-        $this->_filesTrancodeKey = '';
+        $this->_filesTranscodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
+        $this->_filesTranscodeKey = '';
     }
 }

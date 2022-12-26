@@ -15,7 +15,7 @@ namespace Nebule\Library;
  */
 class SocialStrict extends SocialMySelf implements SocialInterface
 {
-    const SOCIAL_CLASS='strict';
+    const TYPE='strict';
 
     /**
      * Gère le classement social des liens.

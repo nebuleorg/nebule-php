@@ -25,6 +25,20 @@ interface CryptoInterface
     public function getCryptoInstanceName(): string;
 
     /**
+     * Retourne le type de lib crypto.
+     *
+     * @return string
+     */
+    public function getType(): string;
+
+    /**
+     * Retourne l'état de préparation'.
+     *
+     * @return bool
+     */
+    public function getReady(): bool;
+
+    /**
      * Check if the cryptographique function have correct return value.
      *
      * @param string $algo

@@ -15,7 +15,7 @@ namespace Nebule\Library;
  */
 class SocialNotMyself extends SocialMySelf implements SocialInterface
 {
-    const SOCIAL_CLASS='notmyself';
+    const TYPE='notmyself';
 
     /**
      * Gère le classement social des liens.

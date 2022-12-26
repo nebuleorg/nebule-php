@@ -14,11 +14,25 @@ use Nebule\Library\nebule;
 class ioHTTP extends io implements ioInterface
 {
     /**
-     * Localisation par défaut de ce module I/O.
+     * I/O type supported.
      *
      * @var string
      */
-    const DEFAULT_LOCALISATION = 'http://localhost';
+    const TYPE = 'HTTP';
+
+    /**
+     * I/O filter supported.
+     *
+     * @var string
+     */
+    const FILTER = '/^http:/i';
+
+    /**
+     * Default localisation for this I/O module.
+     *
+     * @var string
+     */
+    const LOCALISATION = 'http://localhost';
 
     /**
      * Nombre maximum de liens à lire.
@@ -55,7 +69,7 @@ class ioHTTP extends io implements ioInterface
         $this->_maxLink = $this->_configuration->getOptionUntyped('ioReadMaxLinks');
         $this->_maxData = $this->_configuration->getOptionUntyped('ioReadMaxData');
         // Détermination de l'URL par défaut.
-        $this->_defaultLocalisation = self::DEFAULT_LOCALISATION;
+        $this->_defaultLocalisation = self::LOCALISATION;
         // Environnement PHP.
         ini_set('allow_url_fopen', 'true');
         ini_set('allow_url_include', 'true');
@@ -68,24 +82,6 @@ class ioHTTP extends io implements ioInterface
         /** @noinspection PhpFieldImmediatelyRewrittenInspection */
         $this->_filesTrancodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
         $this->_filesTrancodeKey = '';
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see ioInterface::getType()
-     */
-    public function getType(): string
-    {
-        return 'HTTP';
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see ioInterface::getFilterString()
-     */
-    public function getFilterString(): string
-    {
-        return '/^http:/i';
     }
 
     /**
@@ -119,11 +115,11 @@ class ioHTTP extends io implements ioInterface
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::getDefaultLocalisation()
+     * @see ioInterface::getLocalisation()
      */
-    public function getDefaultLocalisation(): string
+    public function getLocalisation(): string
     {
-        return self::DEFAULT_LOCALISATION;
+        return self::LOCALISATION;
     }
 
     /**

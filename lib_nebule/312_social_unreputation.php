@@ -17,7 +17,7 @@ use Nebule\Library\nebule;
  */
 class SocialUnreputation extends SocialMySelf implements SocialInterface
 {
-    const SOCIAL_CLASS='unreputation';
+    const TYPE='unreputation';
 
     /**
      * Gère le classement social des liens.

@@ -84,7 +84,7 @@ class Entity extends Node implements nodeInterface
     /**
      * Chargement d'une entité existante.
      *
-     * @param string $id
+     * @param $id string
      * @return void
      */
     private function _loadEntity(string $id): void

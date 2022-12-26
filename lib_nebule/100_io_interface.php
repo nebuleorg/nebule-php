@@ -42,6 +42,13 @@ interface ioInterface
     public function getType(): string;
 
     /**
+     * Retourne l'état de préparation'.
+     *
+     * @return bool
+     */
+    public function getReady(): bool;
+
+    /**
      * Retourne la chaine de filtre de ce type de FS.
      *
      * @return string
@@ -60,7 +67,7 @@ interface ioInterface
      *
      * @return string
      */
-    public function getDefaultLocalisation(): string;
+    public function getLocalisation(): string;
 
     /**
      * Initialise la clé de transcodage des fichiers de liens dissimulés.

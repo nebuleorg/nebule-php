@@ -14,7 +14,7 @@ namespace Nebule\Library;
  */
 class SocialAll extends SocialMySelf implements SocialInterface
 {
-    const SOCIAL_CLASS='all';
+    const TYPE='all';
 
     /**
      * Gère le classement social des liens.
