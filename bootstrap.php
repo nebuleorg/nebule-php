@@ -13,8 +13,8 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020221226';
-const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2022';
+const BOOTSTRAP_VERSION = '020230104';
+const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2023';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -6000,14 +6000,14 @@ function bootstrap_breakDisplay43LibraryIO()
 {
     global $nebuleInstance;
 
-    $_ioInstance = $nebuleInstance->getIoInstance();
+    $ioInstance = $nebuleInstance->getIoInstance();
 
     bootstrap_echoLineTitle('i/o class');
-    if (is_object($_ioInstance)) {
-        echo get_class($_ioInstance);
+    if (is_object($ioInstance)) {
+        echo get_class($ioInstance);
         echo "<br />\n";
 
-        $list = $_ioInstance->getModulesList();
+        $list = $ioInstance->getModulesList();
         foreach ($list as $class) {
             $module = $nebuleInstance->getIoInstance()->getModule($class);
             bootstrap_echoLineTitle('i/o');
@@ -6047,12 +6047,22 @@ function bootstrap_breakDisplay44LibrarySocial()
 {
     global $nebuleInstance;
 
-    if (is_object($nebuleInstance->getSocialInstance())) {
-        foreach ($nebuleInstance->getSocialInstance()->getSocialInstances() as $moduleInstance)
+    $socialInstance = $nebuleInstance->getSocialInstance();
+
+    bootstrap_echoLineTitle('social class');
+    if (is_object($socialInstance)) {
+        echo get_class($socialInstance);
+        echo "<br />\n";
+
+        foreach ($socialInstance->getSocialInstances() as $moduleInstance)
         {
             bootstrap_echoLineTitle('social');
-            echo $moduleInstance->__toString() . ' (' . get_class($moduleInstance) . ')';
-            bootstrap_echoEndLineTest(true);
+            if (is_subclass_of($moduleInstance, 'Nebule\Library\Social', false))
+            {
+                echo get_class($moduleInstance);
+                bootstrap_echoEndLineTest(true);
+            } else
+                bootstrap_echoEndLineTest(false);
         }
     } else
         bootstrap_echoEndLineTest(false);
@@ -6063,20 +6073,20 @@ function bootstrap_breakDisplay45LibraryStats()
     global $nebuleInstance;
 
     bootstrap_echoLineTitle('metrology inputs');
-    echo 'L(r)=' . lib_getMetrology('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead() . ' ';
-    echo 'L(v)=' . lib_getMetrology('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify() . ' ';
-    echo 'O(r)=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead() . ' ';
-    echo 'O(v)=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
+    echo 'Lr=' . lib_getMetrology('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead() . ' ';
+    echo 'Lv=' . lib_getMetrology('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify() . ' ';
+    echo 'Or=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead() . ' ';
+    echo 'Ov=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
     bootstrap_echoLineTitle('metrology buffers');
-    echo 'L(c)=' . $nebuleInstance->getCacheInstance()->getCacheLinkSize() . ' ';
-    echo 'O(c)=' . $nebuleInstance->getCacheInstance()->getCacheObjectSize() . ' ';
-    echo 'E(c)=' . $nebuleInstance->getCacheInstance()->getCacheEntitySize() . ' ';
-    echo 'G(c)=' . $nebuleInstance->getCacheInstance()->getCacheGroupSize() . ' ';
-    echo 'C(c)=' . $nebuleInstance->getCacheInstance()->getCacheConversationSize() . ' ';
-    echo 'CU(c)=' . $nebuleInstance->getCacheInstance()->getCacheCurrencySize() . ' ';
-    echo 'CP(c)=' . $nebuleInstance->getCacheInstance()->getCacheTokenPoolSize() . ' ';
-    echo 'CT(c)=' . $nebuleInstance->getCacheInstance()->getCacheTokenSize() . ' ';
-    echo 'CW(c)=' . $nebuleInstance->getCacheInstance()->getCacheWalletSize();
+    echo 'Lc=' . $nebuleInstance->getCacheInstance()->getCacheLinkSize() . ' ';
+    echo 'Oc=' . $nebuleInstance->getCacheInstance()->getCacheObjectSize() . ' ';
+    echo 'Ec=' . $nebuleInstance->getCacheInstance()->getCacheEntitySize() . ' ';
+    echo 'Gc=' . $nebuleInstance->getCacheInstance()->getCacheGroupSize() . ' ';
+    echo 'Cc=' . $nebuleInstance->getCacheInstance()->getCacheConversationSize() . ' ';
+    echo 'CUc=' . $nebuleInstance->getCacheInstance()->getCacheCurrencySize() . ' ';
+    echo 'CPc=' . $nebuleInstance->getCacheInstance()->getCacheTokenPoolSize() . ' ';
+    echo 'CTc=' . $nebuleInstance->getCacheInstance()->getCacheTokenSize() . ' ';
+    echo 'CWc=' . $nebuleInstance->getCacheInstance()->getCacheWalletSize();
 }
 
 function bootstrap_breakDisplay5Application()

@@ -463,7 +463,7 @@ class Social implements SocialInterface
 
     public function getSocialInstances(): array
     {
-        return $this->_listClasses;
+        return $this->_listInstances;
 
    /*     return array(
             $this->_instanceSocialMySelf,
