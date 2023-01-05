@@ -662,7 +662,7 @@ const LIB_CONFIGURATIONS_DEFAULT = array(
     'cryptoHashAlgorithm' => 'sha2.256',
     'cryptoSymmetricAlgorithm' => 'aes.256.ctr',
     'cryptoAsymmetricAlgorithm' => 'rsa.2048',
-    'socialLibrary' => 'strict',
+    'socialLibrary' => 'authority',
     'ioLibrary' => 'ioFileSystem',
     'ioReadMaxLinks' => 2000,
     'ioReadMaxData' => 10000,
@@ -7165,14 +7165,14 @@ function bootstrap_displayApplication0(): void
     foreach ($appList as $application) {
         $instance = new Node($nebuleInstance, $application);
         $color = '#' . substr($application . '000000', 0, 6);
-        $title = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_NOM,'strict');
+        $title = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_NOM,'authority');
         if ($title == '')
             $title = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_NOM,'self');
         if ($title == '')
             $title = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_NOM,'all');
         if ($title == '')
             $title = $instance->getID();
-        $shortName = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_SURNOM,'strict');
+        $shortName = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_SURNOM,'authority');
         if ($shortName == '')
             $shortName = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_SURNOM,'self');
         if ($shortName == '')

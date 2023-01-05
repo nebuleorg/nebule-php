@@ -429,7 +429,7 @@ class Configuration
         'cryptoHashAlgorithm' => 'sha2.256',
         'cryptoSymmetricAlgorithm' => 'aes.256.ctr',
         'cryptoAsymmetricAlgorithm' => 'rsa.2048',
-        'socialLibrary' => 'strict',
+        'socialLibrary' => 'authority',
         'ioLibrary' => 'Local',
         'ioReadMaxLinks' => '2000',
         'ioReadMaxData' => '10000',

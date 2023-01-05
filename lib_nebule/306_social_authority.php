@@ -13,9 +13,9 @@ namespace Nebule\Library;
  * Si le signataire du lien est une des entités autorités locales, retourne un score de 1.
  * Sinon retourne un score de 0.
  */
-class SocialStrict extends SocialMySelf implements SocialInterface
+class SocialAuthority extends SocialMySelf implements SocialInterface
 {
-    const TYPE='strict';
+    const TYPE='authority';
 
     /**
      * Gère le classement social des liens.

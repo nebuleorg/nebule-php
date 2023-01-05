@@ -3335,7 +3335,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Sinon, lit l'id de l'objet référencé.
         $update = $reference->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'myself');
         if ($update == $reference->getID())
-            $update = $reference->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'strict');
+            $update = $reference->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
 
         // Mémorise le résultat.
         if ($useBuffer)

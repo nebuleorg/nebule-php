@@ -807,14 +807,14 @@ abstract class Applications implements applicationInterface
             // Cherche une mise à jour.
             $updateModule = $moduleID;
             if ($okNotListed) {
-                $updateModule = $instanceModule->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES, 'strict');
-                $updateSigner = $instanceModule->getReferencedSignerID(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES, 'strict');
+                $updateModule = $instanceModule->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES, 'authority');
+                $updateSigner = $instanceModule->getReferencedSignerID(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES, 'authority');
             }
             if ($updateModule != $moduleID
                 && $updateModule != '0'
             ) {
                 $instanceModule = $this->_nebuleInstance->newObject($updateModule);
-                if ($instanceModule->getType('strict') == 'application/x-php'
+                if ($instanceModule->getType('authority') == 'application/x-php'
                     && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($updateModule)
                 ) {
                     $this->getMetrologyInstance()->addLog('Find module update ' . $updateModule, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');

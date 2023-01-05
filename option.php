@@ -1384,8 +1384,8 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                 $color = '#' . substr($application . '000000', 0, 6);
                 //$colorSigner = '#'.substr($signersList[$application].'000000',0,6);
                 $instance = new Node($nebuleInstance, $application);
-                $title = $instance->getName('strict');
-                $shortName = substr($instance->getSurname('strict') . '--', 0, 2);
+                $title = $instance->getName('authority');
+                $shortName = substr($instance->getSurname('authority') . '--', 0, 2);
                 $shortName = strtoupper(substr($shortName, 0, 1)) . strtolower(substr($shortName, 1, 1));
 
                 // Recherche si l'application ne doit pas être pré-chargée.
@@ -1527,7 +1527,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                             ?>
 
                         </div>
-                        <div class="appName"><?php echo $instance->getName('strict'); ?></div>
+                        <div class="appName"><?php echo $instance->getName('authority'); ?></div>
                         <div class="appRef"><?php echo $instance->getID(); ?></div>
                         <div class="appSigner">Declared by <?php $this->displayInlineObjectColorIconName(
                                 $signersList[$application],

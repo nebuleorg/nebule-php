@@ -12,7 +12,7 @@ namespace Nebule\Library;
  */
 class Social implements SocialInterface
 {
-    const DEFAULT_CLASS = 'Strict';
+    const DEFAULT_CLASS = 'authority';
 
     /**
      * Social type supported.
@@ -109,7 +109,7 @@ class Social implements SocialInterface
         $instance = new $class($nebuleInstance);
         $type = $instance->getType();
 
-        $this->_listClasses[$class] = $class;
+        $this->_listClasses[$type] = $class;
         $this->_listTypes[$class] = $type;
         $this->_listInstances[$type] = $instance;
     }
@@ -123,14 +123,14 @@ class Social implements SocialInterface
     protected function _initDefault(string $name): void
     {
         $option = $this->_configuration->getOptionAsString($name);
-        if (isset($this->_listClasses[get_class($this) . $option]))
+        if (isset($this->_listInstances[$option]))
         {
-            $this->_defaultInstance = $this->_listInstances[$this->_listTypes[get_class($this) . $option]];
+            $this->_defaultInstance = $this->_listInstances[$option];
             $this->_ready = true;
         }
-        elseif (isset($this->_listClasses[get_class($this) . self::DEFAULT_CLASS]))
+        elseif (isset($this->_listInstances[self::DEFAULT_CLASS]))
         {
-            $this->_defaultInstance = $this->_listInstances[$this->_listTypes[get_class($this) . self::DEFAULT_CLASS]];
+            $this->_defaultInstance = $this->_listInstances[self::DEFAULT_CLASS];
             $this->_ready = true;
         }
     }
@@ -164,10 +164,20 @@ class Social implements SocialInterface
      */
     public function arraySocialFilter(array &$links, string $socialClass = ''): void
     {
-        if ($socialClass != '')
-            $this->_listInstances[get_class($this) . $this->_listTypes[$socialClass]]->arraySocialFilter($links, '');
-        else
+        $this->_metrology->addLog('MARK1 class=' . get_class($this) . ' socialClass=' . $socialClass, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        if ($socialClass == ''
+            || !isset($this->_listClasses[$socialClass])
+            || !isset($this->_listInstances[$socialClass])
+//            || $this->_listInstances[$socialClass] === null
+//            || !is_a($this->_listInstances[$socialClass], get_class($this))
+        )
+        {
             $this->_defaultInstance->arraySocialFilter($links, '');
+            return;
+        }
+
+        $this->_metrology->addLog('MARK2 class=' . get_class($this) . ' class=' . get_class($this->_listInstances[$socialClass]), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        $this->_listInstances[$socialClass]->arraySocialFilter($links, '');
     }
 
     /**
