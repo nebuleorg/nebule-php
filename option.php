@@ -610,7 +610,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             <div class="footer-center">
                 <p>
                     <?php echo Application::APPLICATION_NAME; ?><br/>
-                    <?php echo Application::APPLICATION_VERSION . ' ' . $this->_configuration->getOptionAsString('codeBranch'); ?><br/>
+                    <?php echo Application::APPLICATION_VERSION . ' ' . $this->_configurationInstance->getOptionAsString('codeBranch'); ?><br/>
                     (c) <?php echo Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR; ?> - <a
                             href="<?php echo $linkApplicationWebsite; ?>" target="_blank"
                             style="text-decoration:none;"><?php echo Application::APPLICATION_WEBSITE; ?></a>
@@ -875,13 +875,13 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                 );
 
                 if ($id == $nebuleInstance->getInstanceEntity()
-                    && $this->_configuration->getOptionAsBoolean('permitInstanceEntityAsAuthority')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
                 ) {
                     $list[$i]['param']['flagMessage'] = 'Instance entity';
                     $list[$i]['param']['flagProtection'] = true;
                 }
                 if ($id == $nebuleInstance->getDefaultEntity()
-                    && $this->_configuration->getOptionAsBoolean('permitDefaultEntityAsAuthority')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                 ) {
                     if ($list[$i]['param']['flagMessage'] != '') {
                         $list[$i]['param']['flagMessage'] .= ', ';
@@ -904,7 +904,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         // Titre des entités secondaires.
         echo $this->getDisplayTitle('Secondary local authorities');
 
-        if ($this->_configuration->getOptionAsBoolean('permitLocalSecondaryAuthorities')) {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities')) {
             // Liste les entités marquées comme entités de recouvrement.
             $listEntities = $nebuleInstance->getLocalAuthoritiesInstance();
             $listSigners = $nebuleInstance->getLocalAuthoritiesSigners();
@@ -944,14 +944,14 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
                     if ($this->_unlocked
                         && $listSigners[$id] == $nebuleInstance->getCurrentEntity()
-                        && $this->_configuration->getOptionAsBoolean('permitWrite') == true
-                        && $this->_configuration->getOptionAsBoolean('permitWriteLink') == true
-                        && $this->_configuration->getOptionAsBoolean('permitUploadLink') == true
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWrite') == true
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink') == true
+                        && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink') == true
                         && ($id != $nebuleInstance->getInstanceEntity()
-                            || !$this->_configuration->getOptionAsBoolean('permitInstanceEntityAsAuthority')
+                            || !$this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
                         )
                         && ($id != $nebuleInstance->getDefaultEntity()
-                            || !$this->_configuration->getOptionAsBoolean('permitDefaultEntityAsAuthority')
+                            || !$this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                         )
                     ) {
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Remove';
@@ -989,19 +989,19 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
         // Affiche les entités à ajouter.
         if ($this->_unlocked
-            && $this->_configuration->getOptionAsBoolean('permitLocalSecondaryAuthorities')
+            && $this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities')
             && (
                 ($nebuleInstance->getCurrentEntity() == $nebuleInstance->getInstanceEntity()
-                    && $this->_configuration->getOptionAsBoolean('permitInstanceEntityAsAuthority')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
                 )
                 ||
                 ($nebuleInstance->getCurrentEntity() == $nebuleInstance->getDefaultEntity()
-                    && $this->_configuration->getOptionAsBoolean('permitDefaultEntityAsAuthority')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                 )
             )
-            && $this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitUploadLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink')
             //&& $this->_configuration->getOption('permitRecoveryEntities')
         ) {
 
@@ -1046,9 +1046,9 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     );
 
                     if ($this->_unlocked
-                        && $this->_configuration->getOptionAsBoolean('permitWrite') == true
-                        && $this->_configuration->getOptionAsBoolean('permitWriteLink') == true
-                        && $this->_configuration->getOptionAsBoolean('permitUploadLink') == true
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWrite') == true
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink') == true
+                        && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink') == true
                     ) {
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Add';
                         $list[$i]['param']['selfHookList'][0]['icon'] = Display::DEFAULT_ICON_LL;
@@ -1133,7 +1133,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     }
 
                     // Extrait les propriétés de l'option.
-                    $optionValue = $this->_configuration->getOptionUntyped($optionName);
+                    $optionValue = $this->_configurationInstance->getOptionUntyped($optionName);
                     $optionID = $nebuleInstance->getCryptoInstance()->hash($optionName);
                     $optionValueDisplay = (string)$optionValue;
                     $optionType = $listOptionsType[$optionName];
@@ -1143,7 +1143,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     $optionDefaultDisplay = (string)$optionDefaultValue;
                     $optionCriticality = $listOptionsCriticality[$optionName];
                     $optionDescription = $listOptionsDescription[$optionName];
-                    $optionLocked = ($this->_configuration->getOptionFromEnvironmentUntyped($optionName) !== null);
+                    $optionLocked = ($this->_configurationInstance->getOptionFromEnvironmentUntyped($optionName) !== null);
 
                     // Prépare l'affichage du status de verrouillage ou de lecture seule.
                     if ($optionLocked) {
@@ -1221,7 +1221,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
                                     &nbsp;
                                     <?php
-                                } elseif (!$this->_configuration->getOptionAsBoolean('permitWrite')) {
+                                } elseif (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')) {
                                     ?>
 
                                     Global write lock.
@@ -1352,7 +1352,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             }
 
             // Liste les applications reconnues par l'entité instance du serveur, si autorité locale et pas en mode de récupération.
-            if ($this->_configuration->getOptionAsBoolean('permitInstanceEntityAsAuthority')
+            if ($this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
                 && !$nebuleInstance->getModeRescue()
             ) {
                 $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getInstanceEntity(), '', 'f', $refAppsID, '', $refAppsID);
@@ -1364,7 +1364,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             }
 
             // Liste les applications reconnues par l'entité par défaut, si autorité locale et pas en mode de récupération.
-            if ($this->_configuration->getOptionAsBoolean('permitDefaultEntityAsAuthority')
+            if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                 && !$nebuleInstance->getModeRescue()
             ) {
                 $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getDefaultEntity(), '', 'f', $refAppsID, '', $refAppsID);
@@ -1419,7 +1419,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         $activable = false;
                     }
                 }
-                if ($application == $this->_configuration->getOptionUntyped('defaultApplication')) {
+                if ($application == $this->_configurationInstance->getOptionUntyped('defaultApplication')) {
                     $activated = true;
                 }
                 if (!$activated) {
@@ -1434,7 +1434,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                 $updater = $signersList[$application];
                 $linksResult = $instance->readLinksFilterFull($nebuleInstance->getCodeMaster(), '', 'f', $application, '', $refAppsID);
                 $linksList = array();
-                if ($this->_configuration->getOptionAsBoolean('permitInstanceEntityAsAuthority')
+                if ($this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
                     && !$nebuleInstance->getModeRescue()
                 ) {
                     $linksList = $instance->readLinksFilterFull($nebuleInstance->getInstanceEntity(), '', 'f', $application, '', $refAppsID);
@@ -1442,7 +1442,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         $linksResult[] = $link;
                     }
                 }
-                if ($this->_configuration->getOptionAsBoolean('permitDefaultEntityAsAuthority')
+                if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                     && !$nebuleInstance->getModeRescue()
                 ) {
                     $linksList = $instance->readLinksFilterFull($nebuleInstance->getDefaultEntity(), '', 'f', $application, '', $refAppsID);
@@ -1487,8 +1487,8 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                             echo "<br />\n";
 
                             if ($activable
-                                && $this->_configuration->getOptionAsBoolean('permitWrite')
-                                && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+                                && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                                 && $nebuleInstance->getCurrentEntityUnlocked()
                                 && $nebuleInstance->getCurrentEntity() == $nebuleInstance->getInstanceEntity()
                             ) {
@@ -1508,13 +1508,13 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                                 echo "<br />\n";
                             }
 
-                            if ($this->_configuration->getOptionAsBoolean('permitWrite')
-                                && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-                                && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                                && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
-                                && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
-                                && $this->_configuration->getOptionAsBoolean('permitSynchronizeApplication')
-                                && ($this->_configuration->getOptionAsBoolean('permitPublicSynchronizeApplication')
+                            if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                                && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+                                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                                && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeObject')
+                                && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink')
+                                && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeApplication')
+                                && ($this->_configurationInstance->getOptionAsBoolean('permitPublicSynchronizeApplication')
                                     || $nebuleInstance->getCurrentEntityUnlocked()
                                 )
                             ) {
@@ -1568,13 +1568,13 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                 </div>
                 <?php
             }
-            if ($this->_configuration->getOptionAsBoolean('permitWrite')
-                && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-                && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
-                && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
-                && $this->_configuration->getOptionAsBoolean('permitSynchronizeApplication')
-                && ($this->_configuration->getOptionAsBoolean('permitPublicSynchronizeApplication')
+            if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeObject')
+                && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink')
+                && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeApplication')
+                && ($this->_configurationInstance->getOptionAsBoolean('permitPublicSynchronizeApplication')
                     || $nebuleInstance->getCurrentEntityUnlocked()
                 )
             ) {
@@ -1653,7 +1653,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         $listSigners = $nebuleInstance->getRecoveryEntitiesSigners();
 
         // Affiche les entités de recouvrement.
-        if ($this->_configuration->getOptionAsBoolean('permitRecoveryEntities')) {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities')) {
             $refRecovery = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
             $list = array();
             $i = 0;
@@ -1688,13 +1688,13 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     );
 
                     if ($id == $nebuleInstance->getInstanceEntity()
-                        && $this->_configuration->getOptionAsBoolean('permitInstanceEntityAsRecovery')
+                        && $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsRecovery')
                     ) {
                         $list[$i]['param']['flagMessage'] = 'Instance entity';
                         $list[$i]['param']['flagProtection'] = true;
                     }
                     if ($id == $nebuleInstance->getDefaultEntity()
-                        && $this->_configuration->getOptionAsBoolean('permitDefaultEntityAsRecovery')
+                        && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsRecovery')
                     ) {
                         if ($list[$i]['param']['flagMessage'] != '') {
                             $list[$i]['param']['flagMessage'] .= ', ';
@@ -1705,14 +1705,14 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
                     if ($this->_unlocked
                         && $listSigners[$id] == $nebuleInstance->getCurrentEntity()
-                        && $this->_configuration->getOptionAsBoolean('permitWrite') == true
-                        && $this->_configuration->getOptionAsBoolean('permitWriteLink') == true
-                        && $this->_configuration->getOptionAsBoolean('permitUploadLink') == true
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWrite') == true
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink') == true
+                        && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink') == true
                         && ($id != $nebuleInstance->getInstanceEntity()
-                            || !$this->_configuration->getOptionAsBoolean('permitInstanceEntityAsRecovery')
+                            || !$this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsRecovery')
                         )
                         && ($id != $nebuleInstance->getDefaultEntity()
-                            || !$this->_configuration->getOptionAsBoolean('permitDefaultEntityAsRecovery')
+                            || !$this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsRecovery')
                         )
                     ) {
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Remove';
@@ -1752,17 +1752,17 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         if ($this->_unlocked
             && (
                 ($nebuleInstance->getCurrentEntity() == $nebuleInstance->getInstanceEntity()
-                    && $this->_configuration->getOptionAsBoolean('permitInstanceEntityAsAuthority')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
                 )
                 ||
                 ($nebuleInstance->getCurrentEntity() == $nebuleInstance->getDefaultEntity()
-                    && $this->_configuration->getOptionAsBoolean('permitDefaultEntityAsAuthority')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                 )
             )
-            && $this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitUploadLink')
-            && $this->_configuration->getOptionAsBoolean('permitRecoveryEntities')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities')
         ) {
             // Titre
             echo $this->getDisplayTitle('Add entities as recovery');
@@ -1803,9 +1803,9 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     );
 
                     if ($this->_unlocked
-                        && $this->_configuration->getOptionAsBoolean('permitWrite') == true
-                        && $this->_configuration->getOptionAsBoolean('permitWriteLink') == true
-                        && $this->_configuration->getOptionAsBoolean('permitUploadLink') == true
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWrite') == true
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink') == true
+                        && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink') == true
                     ) {
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Add';
                         $list[$i]['param']['selfHookList'][0]['icon'] = Display::DEFAULT_ICON_LL;
@@ -1895,7 +1895,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             if ($this->_applicationInstance->getCheckSecurityURL() == 'WARN') {
                 $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityURLMessage());
             }
-            if (!$this->_configuration->getOptionAsBoolean('permitWrite')) {
+            if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')) {
                 $this->displayMessageWarning(':::warn_ServNotPermitWrite');
             }
             if ($this->_nebuleInstance->getFlushCache()) {

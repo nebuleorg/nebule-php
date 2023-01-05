@@ -74,63 +74,63 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     // Les icônes.
     // Icône transparente.
-    const DEFAULT_ICON_ALPHA_COLOR = '87b260416aa0f50736d3ca51bcb6aae3eff373bf471d5662883b8b6797e73e85';
+    const DEFAULT_ICON_ALPHA_COLOR = '87b260416aa0f50736d3ca51bcb6aae3eff373bf471d5662883b8b6797e73e85.sha2.256';
     // Icônes des liens.
-    const DEFAULT_ICON_LC = 'e60a32f1430b2dc6660dcd7da13fed39885451c3069e6db0daba3708f69b8b6e';
-    const DEFAULT_ICON_LD = '232fd0ece47c1ff450927d0153886e9eec64fcf9e16ed396825c33564954f409';
-    const DEFAULT_ICON_LE = '700ce9b827d9170303c01541eeba364b2616fabeaf6a9998868753c8feffe3dd';
-    const DEFAULT_ICON_LF = '06cac4acb887cff2c7ba6653f865d800276a4e9d493a3be4e1b05d107f5ecbaf';
-    const DEFAULT_ICON_LK = '6d1d397afbc0d2f6866acd1a30ac88abce6a6c4c2d495179504c2dcb09d707c1';
-    const DEFAULT_ICON_LL = '42e46987d36e7ae291fafc889d6ff2718db4ab277bf433491606a4c63dbc32d9';
-    const DEFAULT_ICON_LLL = 'acda8f3efd9ded574efa9913e75d548968fd5790afe3bdeaedcb4c07776a4161';
-    const DEFAULT_ICON_LO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee';
-    const DEFAULT_ICON_LS = 'f6ae2aefb4249267c51ecf9e02c9aefd7f9312e1d22f793d35972d55ee1fb85a';
-    const DEFAULT_ICON_LU = '7e9726b5aec1b2ab45c70f882f56ea0687c27d0739022e907c50feb87dfaf37d';
-    const DEFAULT_ICON_LX = '72e8483f1e76c9c5ddc61fe014f0eb8a97a20fec5d3f1004085157cff6776f81';
+    const DEFAULT_ICON_LC = 'e60a32f1430b2dc6660dcd7da13fed39885451c3069e6db0daba3708f69b8b6e.sha2.256';
+    const DEFAULT_ICON_LD = '232fd0ece47c1ff450927d0153886e9eec64fcf9e16ed396825c33564954f409.sha2.256';
+    const DEFAULT_ICON_LE = '700ce9b827d9170303c01541eeba364b2616fabeaf6a9998868753c8feffe3dd.sha2.256';
+    const DEFAULT_ICON_LF = '06cac4acb887cff2c7ba6653f865d800276a4e9d493a3be4e1b05d107f5ecbaf.sha2.256';
+    const DEFAULT_ICON_LK = '6d1d397afbc0d2f6866acd1a30ac88abce6a6c4c2d495179504c2dcb09d707c1.sha2.256';
+    const DEFAULT_ICON_LL = '42e46987d36e7ae291fafc889d6ff2718db4ab277bf433491606a4c63dbc32d9.sha2.256';
+    const DEFAULT_ICON_LLL = 'acda8f3efd9ded574efa9913e75d548968fd5790afe3bdeaedcb4c07776a4161.sha2.256';
+    const DEFAULT_ICON_LO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
+    const DEFAULT_ICON_LS = 'f6ae2aefb4249267c51ecf9e02c9aefd7f9312e1d22f793d35972d55ee1fb85a.sha2.256';
+    const DEFAULT_ICON_LU = '7e9726b5aec1b2ab45c70f882f56ea0687c27d0739022e907c50feb87dfaf37d.sha2.256';
+    const DEFAULT_ICON_LX = '72e8483f1e76c9c5ddc61fe014f0eb8a97a20fec5d3f1004085157cff6776f81.sha2.256';
     // Icônes de signalisation.
-    const DEFAULT_ICON_IOK = '5931cd5d9d77d3f923cd69d306dfbb869723d1b132f0a64916e78b1bb6adb5e2';
-    const DEFAULT_ICON_IWARN = 'bca818062c4548d7957b949707c5160a3606c83027c1e855fa6d189768b60a47';
-    const DEFAULT_ICON_IERR = '25a0ea1b1d88d7a659ff0fa3d1b70d0cf7ae788023f897da845b1ce8d1cc7e00';
-    const DEFAULT_ICON_IINFO = '77c14d86041ded85f77b1cc3395c55ffe8f9c5eb1bda9dc6dfc650eeecb86980';
-    const DEFAULT_ICON_IMLOG = 'd7f68db0a1d0977fb8e521fd038b18cd601946aa0e26071ff8c02c160549633b';
-    const DEFAULT_ICON_IMODIFY = '8481a8f5b0172db714caa5ea98a924ff40672e66e563b9b628bbf4c5044cfdad';
-    const DEFAULT_ICON_IDOWNLOAD = '3cd50162b66b62d582110858a6167794d7afc7f83a918aa4f2339f00b66ac620';
-    const DEFAULT_ICON_HELP = '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d';
-    const DEFAULT_ICON_FLUSH = '3fd49fd8e5e86d65f3c6983d12a585467a6304e0e8b137609a8592937aab0dd7';
+    const DEFAULT_ICON_IOK = '5931cd5d9d77d3f923cd69d306dfbb869723d1b132f0a64916e78b1bb6adb5e2.sha2.256';
+    const DEFAULT_ICON_IWARN = 'bca818062c4548d7957b949707c5160a3606c83027c1e855fa6d189768b60a47.sha2.256';
+    const DEFAULT_ICON_IERR = '25a0ea1b1d88d7a659ff0fa3d1b70d0cf7ae788023f897da845b1ce8d1cc7e00.sha2.256';
+    const DEFAULT_ICON_IINFO = '77c14d86041ded85f77b1cc3395c55ffe8f9c5eb1bda9dc6dfc650eeecb86980.sha2.256';
+    const DEFAULT_ICON_IMLOG = 'd7f68db0a1d0977fb8e521fd038b18cd601946aa0e26071ff8c02c160549633b.sha2.256';
+    const DEFAULT_ICON_IMODIFY = '8481a8f5b0172db714caa5ea98a924ff40672e66e563b9b628bbf4c5044cfdad.sha2.256';
+    const DEFAULT_ICON_IDOWNLOAD = '3cd50162b66b62d582110858a6167794d7afc7f83a918aa4f2339f00b66ac620.sha2.256';
+    const DEFAULT_ICON_HELP = '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d.sha2.256';
+    const DEFAULT_ICON_FLUSH = '3fd49fd8e5e86d65f3c6983d12a585467a6304e0e8b137609a8592937aab0dd7.sha2.256';
     // Icônes des synchronisations.
-    const DEFAULT_ICON_SYNOBJ = '5fc6d664c592591eedea906e493a94ba916ce0a4e2eaed9f0a53d664f5c98eae';
-    const DEFAULT_ICON_SYNLNK = '94c3308da0169f91c875fbd802334ec42883b978248e82bebf3e52f3cc80b4cf';
-    const DEFAULT_ICON_SYNENT = '468f2e420371343c58dcdb49c4db9f00b81cce029a5ee1de627b9486994ee199';
+    const DEFAULT_ICON_SYNOBJ = '5fc6d664c592591eedea906e493a94ba916ce0a4e2eaed9f0a53d664f5c98eae.sha2.256';
+    const DEFAULT_ICON_SYNLNK = '94c3308da0169f91c875fbd802334ec42883b978248e82bebf3e52f3cc80b4cf.sha2.256';
+    const DEFAULT_ICON_SYNENT = '468f2e420371343c58dcdb49c4db9f00b81cce029a5ee1de627b9486994ee199.sha2.256';
     // Icônes des ajouts.
-    const DEFAULT_ICON_ADD = 'da27aba584a1058642780169fea2fa9e072d22d1df515a84f5310608b1f31266';
-    const DEFAULT_ICON_ADDOBJ = '37be5ba2a53e9835dbb0ff67a0ece1cc349c311660e4779680ee2daa4ac45636';
-    const DEFAULT_ICON_ADDLNK = '4be77eff5da4ca093f43af7c71371431b30195aee0587d92e4c012923efc7b8a';
-    const DEFAULT_ICON_ADDENT = 'cba3712128bbdd5243af372884eb647595103bb4c1f1b4d2e2bf62f0eba3d6e6';
+    const DEFAULT_ICON_ADD = 'da27aba584a1058642780169fea2fa9e072d22d1df515a84f5310608b1f31266.sha2.256';
+    const DEFAULT_ICON_ADDOBJ = '37be5ba2a53e9835dbb0ff67a0ece1cc349c311660e4779680ee2daa4ac45636.sha2.256';
+    const DEFAULT_ICON_ADDLNK = '4be77eff5da4ca093f43af7c71371431b30195aee0587d92e4c012923efc7b8a.sha2.256';
+    const DEFAULT_ICON_ADDENT = 'cba3712128bbdd5243af372884eb647595103bb4c1f1b4d2e2bf62f0eba3d6e6.sha2.256';
     // Icônes des groupes.
-    const DEFAULT_ICON_GRPENT = 'e0dcd8716dbca0ef984dec7bee459bb64c4c03bbc659d23c09c4681358e15b2c';
-    const DEFAULT_ICON_GRPOBJ = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2';
-    const DEFAULT_ICON_GRPENTADD = '672bc011bd1a59857603bbe68ad63511b2d47030b7d1d2987e796d796f2928ab';
-    const DEFAULT_ICON_GRPOBJADD = '819babe3072d50f126a90c982722568a7ce2ddd2b294235f40679f9d220e8a0a';
+    const DEFAULT_ICON_GRPENT = 'e0dcd8716dbca0ef984dec7bee459bb64c4c03bbc659d23c09c4681358e15b2c.sha2.256';
+    const DEFAULT_ICON_GRPOBJ = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
+    const DEFAULT_ICON_GRPENTADD = '672bc011bd1a59857603bbe68ad63511b2d47030b7d1d2987e796d796f2928ab.sha2.256';
+    const DEFAULT_ICON_GRPOBJADD = '819babe3072d50f126a90c982722568a7ce2ddd2b294235f40679f9d220e8a0a.sha2.256';
     // Icônes des conversations.
-    const DEFAULT_ICON_CVT = '836e7786bbfc0f360d9c85908920b6dcaee34d46ca8e9c1de3a8462d95388b49';
-    const DEFAULT_ICON_CVTENT = 'fdc7745129235ee0952a3276a862c0f36c070005f677889543ce8120c79c5e76';
-    const DEFAULT_ICON_CVTOBJ = '77a2eaeedd706b8d62c6e7f39f4f42d4dcf3d78d2145bcd0e6d9d7b4d6852e8f';
-    const DEFAULT_ICON_CVTENTADD = '9a7ff374f5de2b18975f2965339fb5b25915d1e64a5034354ca1607deaade057';
-    const DEFAULT_ICON_CVTOBJADD = 'ff3fb6c1cfee8d9199e298afcf9e283c5db1b91696dc2677e110a026991aeea6';
+    const DEFAULT_ICON_CVT = '836e7786bbfc0f360d9c85908920b6dcaee34d46ca8e9c1de3a8462d95388b49.sha2.256';
+    const DEFAULT_ICON_CVTENT = 'fdc7745129235ee0952a3276a862c0f36c070005f677889543ce8120c79c5e76.sha2.256';
+    const DEFAULT_ICON_CVTOBJ = '77a2eaeedd706b8d62c6e7f39f4f42d4dcf3d78d2145bcd0e6d9d7b4d6852e8f.sha2.256';
+    const DEFAULT_ICON_CVTENTADD = '9a7ff374f5de2b18975f2965339fb5b25915d1e64a5034354ca1607deaade057.sha2.256';
+    const DEFAULT_ICON_CVTOBJADD = 'ff3fb6c1cfee8d9199e298afcf9e283c5db1b91696dc2677e110a026991aeea6.sha2.256';
     // Icônes des entités.
-    const DEFAULT_ICON_USER = '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0';
-    const DEFAULT_ICON_ENT = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60';
-    const DEFAULT_ICON_OBJECT = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee';
-    const DEFAULT_ICON_ENTITY_LOCK = 'de62640d07ac4cb2f50169fa361e062ed3595be1e973c55eb3ef623ed5661947';
-    const DEFAULT_ICON_KEY = '1c6db1c9b3b52a9b68d19c936d08697b42595bec2f0adf16e8d9223df3a4e7c5';
+    const DEFAULT_ICON_USER = '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256';
+    const DEFAULT_ICON_ENT = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
+    const DEFAULT_ICON_OBJECT = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
+    const DEFAULT_ICON_ENTITY_LOCK = 'de62640d07ac4cb2f50169fa361e062ed3595be1e973c55eb3ef623ed5661947.sha2.256';
+    const DEFAULT_ICON_KEY = '1c6db1c9b3b52a9b68d19c936d08697b42595bec2f0adf16e8d9223df3a4e7c5.sha2.256';
     // Icônes des listes.
-    const DEFAULT_ICON_LSTOBJ = 'cc2a24b13d8e03a5de238a79a8adda1a9744507b8870d59448a23b8c8eeb5588';
-    const DEFAULT_ICON_LSTLNK = '06cac4acb887cff2c7ba6653f865d800276a4e9d493a3be4e1b05d107f5ecbaf';
-    const DEFAULT_ICON_LSTENT = '3edf52669e7284e4cefbdbb00a8b015460271765e97a0d6ce6496b11fe530ce1';
+    const DEFAULT_ICON_LSTOBJ = 'cc2a24b13d8e03a5de238a79a8adda1a9744507b8870d59448a23b8c8eeb5588.sha2.256';
+    const DEFAULT_ICON_LSTLNK = '06cac4acb887cff2c7ba6653f865d800276a4e9d493a3be4e1b05d107f5ecbaf.sha2.256';
+    const DEFAULT_ICON_LSTENT = '3edf52669e7284e4cefbdbb00a8b015460271765e97a0d6ce6496b11fe530ce1.sha2.256';
     // Icônes diverses.
-    const DEFAULT_ICON_WORLD = '3638230cde600865159d5b5f7993d8a3310deb35aa1f6f8f57429b16472e03d6';
-    const DEFAULT_ICON_TIME = '108033240730a0b19e96c82d85802f53c348e446441525696744f7102070b0ed';
-    const DEFAULT_ICON_APPLICATION = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c';
+    const DEFAULT_ICON_WORLD = '3638230cde600865159d5b5f7993d8a3310deb35aa1f6f8f57429b16472e03d6.sha2.256';
+    const DEFAULT_ICON_TIME = '108033240730a0b19e96c82d85802f53c348e446441525696744f7102070b0ed.sha2.256';
+    const DEFAULT_ICON_APPLICATION = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c.sha2.256';
 
 
     // Références des icônes des liens.
@@ -464,7 +464,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @var Configuration
      */
-    protected $_configuration;
+    protected $_configurationInstance;
 
     /**
      * Instance sylabe.
@@ -589,7 +589,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function __construct(Applications $applicationInstance)
     {
         $this->_applicationInstance = $applicationInstance;
-        $this->_configuration = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
+        $this->_configurationInstance = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
     }
 
     /**
@@ -694,7 +694,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         global $applicationInstance;
 
         $this->_applicationInstance = $applicationInstance;
-        $this->_configuration = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
+        $this->_configurationInstance = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
     }
 
     /**
@@ -1962,7 +1962,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function commonScripts(): void
     {
-        if (!$this->_configuration->getOptionAsBoolean('permitJavaScript')) {
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitJavaScript')) {
             return;
         }
         ?>
@@ -2769,7 +2769,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $result = $result . $divOpen . '<img src="?o=' . $id
                             . '" alt="Image ' . $id . '">' . $divClose;
                     else {
-                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash'))
+                        if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash'))
                             $result = $result . $this->convertLineMessage(':::display:content:warningTooBig', 'warning');
                         else
                             $result = $result . $this->convertLineMessage(':::display:content:errorNotDisplayable', 'error');
@@ -2780,7 +2780,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     if ($content != null)
                         $result = $result . $divOpen . '<p>' . $content . '</p>' . $divClose;
                     else {
-                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash'))
+                        if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash'))
                             $result = $result . $this->convertLineMessage(':::display:content:warningTooBig', 'warning');
                         else
                             $result = $result . $this->convertLineMessage(':::display:content:errorNotDisplayable', 'error');
@@ -2796,7 +2796,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     if ($content != null)
                         $result = $result . $divOpen . '<pre>' . $content . '</pre>' . $divClose;
                     else {
-                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash'))
+                        if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash'))
                             $result = $result . $this->convertLineMessage(':::display:content:warningTooBig', 'warning');
                         else
                             $result = $result . $this->convertLineMessage(':::display:content:errorNotDisplayable', 'error');
@@ -2808,7 +2808,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     if ($content != null)
                         $result = $result . $divOpen . '<br /><audio controls><source src="?o=' . $id . '" type="audio/mp3" />' . $this->_traductionInstance->getTraduction(':::warn_NoAudioTagSupport') . '</audio><br />' . $divClose;
                     else {
-                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash'))
+                        if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash'))
                             $result = $result . $this->convertLineMessage(':::display:content:warningTooBig', 'warning');
                         else
                             $result = $result . $this->convertLineMessage(':::display:content:errorNotDisplayable', 'error');
@@ -2819,7 +2819,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     if ($content != null)
                         $result = $result . $divOpen . '<br /><audio controls><source src="?o=' . $id . '" type="audio/ogg" />' . $this->_traductionInstance->getTraduction(':::warn_NoAudioTagSupport') . '</audio><br />' . $divClose;
                     else {
-                        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash'))
+                        if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash'))
                             $result = $result . $this->convertLineMessage(':::display:content:warningTooBig', 'warning');
                         else
                             $result = $result . $this->convertLineMessage(':::display:content:errorNotDisplayable', 'error');
@@ -3108,8 +3108,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     private function _truncateName(string $name, int $maxsize): string
     {
-        if ($maxsize == 0 || $maxsize > $this->_configuration->getOptionUntyped('displayNameSize'))
-            $maxsize = $this->_configuration->getOptionUntyped('displayNameSize');
+        if ($maxsize == 0 || $maxsize > $this->_configurationInstance->getOptionUntyped('displayNameSize'))
+            $maxsize = $this->_configurationInstance->getOptionUntyped('displayNameSize');
         if ($maxsize < 4)
             $maxsize = 4;
         if (strlen($name) > $maxsize)
@@ -3274,7 +3274,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     private function _getImageUpdate($object, bool $useBuffer = true): string
     {
-        if (!$this->_configuration->getOptionAsBoolean('permitSessionBuffer'))
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer'))
             $useBuffer = false;
 
         // Récupère une instance de l'objet.
@@ -3316,7 +3316,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     private function _getImageByReference($reference, bool $useBuffer = true): string
     {
-        if (!$this->_configuration->getOptionAsBoolean('permitSessionBuffer'))
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer'))
             $useBuffer = false;
 
         // Récupère une instance de l'objet.
@@ -4564,13 +4564,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         if (!isset($param['enableDisplayFlagProtection'])
             || $param['enableDisplayFlagProtection'] !== true
-            || !$this->_configuration->getOptionAsBoolean('permitProtectedObject')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitProtectedObject')
         )
             $param['enableDisplayFlagProtection'] = false; // Par défaut à false.
 
         if (!isset($param['enableDisplayFlagObfuscate'])
             || $param['enableDisplayFlagObfuscate'] !== true
-            || !$this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')
         )
             $param['enableDisplayFlagObfuscate'] = false; // Par défaut à false.
 
@@ -4618,7 +4618,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             || $param['enableDisplayJS'] !== false
         )
             $param['enableDisplayJS'] = true; // Par défaut à true.
-        if (!$this->_configuration->getOptionAsBoolean('permitJavaScript'))
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitJavaScript'))
             $param['enableDisplayJS'] = false; // A false si l'option globale est à false.
 
         if (!isset($param['enableDisplaySelfHook'])
@@ -5011,7 +5011,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $param['enableDisplayStatus'] = false;
         }
 
-        if (!$this->_configuration->getOptionUntyped('displayEmotions'))
+        if (!$this->_configurationInstance->getOptionUntyped('displayEmotions'))
             $param['enableDisplayFlagEmotions'] = false;
 
         if ($param['displaySize'] == 'tiny'
@@ -5599,7 +5599,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     private function _getDisplayObjectFlagEmotions(Node $object, bool $counts = false): string
     {
         // Vérifie si les émotions doivent être affichées.
-        if (!$this->_configuration->getOptionUntyped('displayEmotions'))
+        if (!$this->_configurationInstance->getOptionUntyped('displayEmotions'))
             return '';
         $result = '';
 
@@ -5669,8 +5669,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
             // Si connecté, l'icône est active.
             if ($this->_unlocked
-                && $this->_configuration->getOptionAsBoolean('permitWrite')
-                && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             )
                 $result .= $this->convertHypertextLink($icon, $htlink);
             else
@@ -6022,13 +6022,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         if (!isset($param['enableDisplayFlagProtection'])
             || $param['enableDisplayFlagProtection'] !== true
-            || !$this->_configuration->getOptionAsBoolean('permitProtectedObject')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitProtectedObject')
         )
             $param['enableDisplayFlagProtection'] = false; // Par défaut à false.
 
         if (!isset($param['enableDisplayFlagObfuscate'])
             || $param['enableDisplayFlagObfuscate'] !== true
-            || !$this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')
         )
             $param['enableDisplayFlagObfuscate'] = false; // Par défaut à false.
 
@@ -6245,8 +6245,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 'enableDisplayID' => false,
                 'enableDisplayFlags' => false,
                 'enableDisplayFlagEmotions' => $param['enableDisplayFlagEmotions'],
-                'enableDisplayFlagProtection' => $this->_configuration->getOptionAsBoolean('permitProtectedObject'),
-                'enableDisplayFlagObfuscate' => $this->_configuration->getOptionAsBoolean('permitObfuscatedLink'),
+                'enableDisplayFlagProtection' => $this->_configurationInstance->getOptionAsBoolean('permitProtectedObject'),
+                'enableDisplayFlagObfuscate' => $this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'),
                 'enableDisplayFlagUnlocked' => false,
                 'enableDisplayFlagActivated' => false,
                 'enableDisplayFlagState' => false,
@@ -7485,7 +7485,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $result .= "  </div>\n";
 
         if ($this->_applicationInstance->getCurrentEntity() != $this->_nebuleInstance->getCurrentEntity()
-            || $this->_configuration->getOptionUntyped('forceDisplayEntityOnTitle')
+            || $this->_configurationInstance->getOptionUntyped('forceDisplayEntityOnTitle')
             || $displayEntity
         ) {
             $result .= '  <div class="titleContentEntity">' . "\n";
@@ -8697,7 +8697,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertInlineEmotions(string $object): string
     {
         // Vérifie si les émotions doivent être affichées.
-        if (!$this->_configuration->getOptionUntyped('displayEmotions'))
+        if (!$this->_configurationInstance->getOptionUntyped('displayEmotions'))
             return '';
 
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
@@ -8771,8 +8771,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
             // Si connecté, l'icône est active.
             if ($this->_unlocked
-                && $this->_configuration->getOptionAsBoolean('permitWrite')
-                && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             )
                 $result .= $this->convertHypertextLink($icon, $htlink);
             else

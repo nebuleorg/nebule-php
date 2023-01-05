@@ -135,7 +135,7 @@ class Display extends Displays
             <div class="footer-center">
                 <p>
                     <?php echo Application::APPLICATION_NAME; ?><br/>
-                    <?php echo Application::APPLICATION_VERSION . ' ' . $this->_configuration->getOptionAsString('codeBranch'); ?><br/>
+                    <?php echo Application::APPLICATION_VERSION . ' ' . $this->_configurationInstance->getOptionAsString('codeBranch'); ?><br/>
                     (c) <?php echo Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR; ?> - <a
                             href="<?php echo $linkApplicationWebsite; ?>" target="_blank"
                             style="text-decoration:none;"><?php echo Application::APPLICATION_WEBSITE; ?></a>
@@ -199,7 +199,7 @@ class Display extends Displays
                     $param['informationType'] = 'warn';
                     echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityURLMessage(), $param);
                 }
-                if (!$this->_configuration->getOptionAsBoolean('permitWrite')) {
+                if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')) {
                     $param['informationType'] = 'warn';
                     echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::warn_ServNotPermitWrite', $param);
                 }
@@ -209,11 +209,11 @@ class Display extends Displays
                 }
 
                 // Vérifie que la création et le chargement de liens soit autorisé.
-                if ($this->_configuration->getOptionAsBoolean('permitWrite')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                    && $this->_configuration->getOptionAsBoolean('permitUploadLink')
-                    && ($this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
-                        || $this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+                if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink')
+                    && ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
+                        || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                         || $this->_unlocked
                     )
                 ) {
@@ -225,7 +225,7 @@ class Display extends Displays
                             'informationType' => 'warn',
                             'displayRatio' => 'short',
                         );
-                        if ($this->_configuration->getOptionAsBoolean('permitPublicUploadLink')) {
+                        if ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')) {
                             echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::info_OnlySignedLinks', $param);
                         } else {
                             echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::info_OnlyLinksFromCodeMaster', $param);
@@ -253,7 +253,7 @@ class Display extends Displays
                                   action="<?php echo '?' . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                                 <input type="hidden"
                                        name="MAX_FILE_SIZE"
-                                       value="<?php echo $this->_configuration->getOptionUntyped('ioReadMaxData'); ?>"/>
+                                       value="<?php echo $this->_configurationInstance->getOptionUntyped('ioReadMaxData'); ?>"/>
                                 <input type="file"
                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LINKS; ?>"/><br/>
                                 <input type="submit"

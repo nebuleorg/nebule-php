@@ -47,7 +47,7 @@ abstract class Applications implements applicationInterface
      *
      * @var Configuration
      */
-    protected $_configuration;
+    protected $_configurationInstance;
 
     /**
      * Instance de la métrologie.
@@ -97,7 +97,7 @@ abstract class Applications implements applicationInterface
     public function __construct(nebule $nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
+        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
     }
 
     /**
@@ -112,16 +112,15 @@ abstract class Applications implements applicationInterface
         // S'autoréférence pour être capable de se transmettre aux objets.
         $this->_applicationInstance = $this;
 
-        // Charge l'instance de métrology et de journalisation.
+        // Charge l'instance de métrologie et de journalisation.
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
 
         // Retrouve tout le nécessaire au fonctionnement de l'application sauf les instances.
         $this->_findEnvironment();
 
         // Si c'est le téléchargement d'un objet ou de ses liens, on ne fait pas le chargement de l'affichage.
-        if ($this->_findAskDownload()) {
+        if ($this->_findAskDownload())
             return;
-        }
 
         // Récupère les instances.
         $this->_traductionInstance = $applicationTraductionInstance;
@@ -177,7 +176,7 @@ abstract class Applications implements applicationInterface
         global $nebuleInstance;
 
         $this->_nebuleInstance = $nebuleInstance;
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
+        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
     }
 
 
@@ -339,7 +338,7 @@ abstract class Applications implements applicationInterface
         else
             $this->_urlProtocol = 'http';
         //$this->_urlHost	= $_SERVER['HTTP_HOST'];
-        $this->_urlHost = $this->_configuration->getOptionUntyped('hostURL');
+        $this->_urlHost = $this->_configurationInstance->getOptionUntyped('hostURL');
         $explodeBaseName = explode('/', $_SERVER['REQUEST_URI']);
         $this->_urlBasename = end($explodeBaseName);
         $this->_urlPath = substr($_SERVER['REQUEST_URI'], 0, strlen($_SERVER['REQUEST_URI']) - strlen($this->_urlBasename) - 1);
@@ -1488,7 +1487,7 @@ abstract class Applications implements applicationInterface
     protected function _checkSecuritySign(): void
     {
         $this->_checkSecuritySign = 'WARN';
-        if (!$this->_configuration->getOptionAsBoolean('permitCheckSignOnVerify')) {
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckSignOnVerify')) {
             $this->_checkSecuritySign = 'WARN';
             $this->_checkSecuritySignMessage = ':::act_chk_warnSigns';
         } else {
@@ -1556,7 +1555,7 @@ abstract class Applications implements applicationInterface
     {
         $this->_checkSecurityURL = 'OK';
         if ($this->_urlProtocol == 'http'
-            && $this->_configuration->getOptionUntyped('displayUnsecureURL')
+            && $this->_configurationInstance->getOptionUntyped('displayUnsecureURL')
         ) {
             $this->_checkSecurityURL = 'WARN';
             $this->_checkSecurityURLMessage = $this->_traductionInstance->getTraduction('Connexion non sécurisée')

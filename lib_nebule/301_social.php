@@ -168,8 +168,6 @@ class Social implements SocialInterface
         if ($socialClass == ''
             || !isset($this->_listClasses[$socialClass])
             || !isset($this->_listInstances[$socialClass])
-//            || $this->_listInstances[$socialClass] === null
-//            || !is_a($this->_listInstances[$socialClass], get_class($this))
         )
         {
             $this->_defaultInstance->arraySocialFilter($links, '');
