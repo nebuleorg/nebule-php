@@ -4,21 +4,21 @@ namespace Nebule\Library;
 use Nebule\Library\nebule;
 
 /**
- * La classe ioUnixFileSystem.
+ * La classe ioDisk.
  *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ioLocal extends io implements ioInterface
+class ioDisk extends io implements ioInterface
 {
     /**
      * I/O type supported.
      *
      * @var string
      */
-    const TYPE = 'Local';
+    const TYPE = 'Disk';
 
     /**
      * I/O filter supported.
@@ -171,7 +171,7 @@ class ioLocal extends io implements ioInterface
      */
     public function checkLinksRead(string $url = ''): bool
     {
-        $file = nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . Configuration::OPTIONS_DEFAULT_VALUE['puppetmaster'];
+        $file = nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $this->_configuration->getOptionAsString('puppetmaster');
 
         if (!file_exists($file))
             return false;
@@ -215,7 +215,7 @@ class ioLocal extends io implements ioInterface
      */
     public function checkObjectsRead(string $url = ''): bool
     {
-        $file = nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Configuration::OPTIONS_DEFAULT_VALUE['puppetmaster'];
+        $file = nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $this->_configuration->getOptionAsString('puppetmaster');
 
         if (!file_exists($file))
             return false;

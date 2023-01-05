@@ -13,7 +13,7 @@ use Nebule\Library\Node;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020230104';
+const BOOTSTRAP_VERSION = '020230105';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2023';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -6009,19 +6009,21 @@ function bootstrap_breakDisplay43LibraryIO()
 
         $list = $ioInstance->getModulesList();
         foreach ($list as $class) {
-            $module = $nebuleInstance->getIoInstance()->getModule($class);
+            $module = $ioInstance->getModule($class);
             bootstrap_echoLineTitle('i/o');
-            echo $class . ' (' . $module->getMode() . ') ' . $module->getLocalisation() . ', links ';
+            echo get_class($module) . ' (' . $module->getMode() . ') ' . $module->getLocalisation() . ', links ';
             if (!$module->checkLinksDirectory())
                 echo 'directory <span class="error">ERROR!</span>';
             else {
                 if (!$module->checkLinksRead())
                     echo 'read <span class="error">ERROR!</span>';
                 else {
-                    if (!$module->checkLinksWrite() && $module->getMode() == 'RW' )
+                    if ($module->getMode() == 'RO')
                         echo 'OK no write.';
-                    else
+                    elseif ($module->checkLinksWrite())
                         echo 'OK';
+                    else
+                        echo 'write <span class="error">ERROR!</span>';
                 }
             }
             echo ', objects ';
@@ -6031,10 +6033,12 @@ function bootstrap_breakDisplay43LibraryIO()
                 if (!$module->checkObjectsRead())
                     echo 'read <span class="error">ERROR!</span>';
                 else {
-                    if (!$module->checkObjectsWrite() && $module->getMode() == 'RW' )
+                    if ($module->getMode() == 'RO' )
                         echo 'OK no write.';
-                    else
+                    elseif ($module->checkObjectsWrite())
                         echo 'OK';
+                    else
+                        echo 'write <span class="error">ERROR!</span>';
                 }
             }
             echo "<br />\n";

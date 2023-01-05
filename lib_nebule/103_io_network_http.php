@@ -4,14 +4,14 @@ namespace Nebule\Library;
 use Nebule\Library\nebule;
 
 /**
- * La classe ioHTTP.
+ * La classe ioNetworkHTTP.
  *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ioHTTP extends io implements ioInterface
+class ioNetworkHTTP extends io implements ioInterface
 {
     /**
      * I/O type supported.
@@ -69,7 +69,8 @@ class ioHTTP extends io implements ioInterface
         $this->_maxLink = $this->_configuration->getOptionUntyped('ioReadMaxLinks');
         $this->_maxData = $this->_configuration->getOptionUntyped('ioReadMaxData');
         // Détermination de l'URL par défaut.
-        $this->_defaultLocalisation = self::LOCALISATION;
+        //$this->_defaultLocalisation = self::LOCALISATION;
+        $this->_defaultLocalisation = 'http' . '://' . $_SERVER['SERVER_NAME'];
         // Environnement PHP.
         ini_set('allow_url_fopen', 'true');
         ini_set('allow_url_include', 'true');
@@ -119,7 +120,8 @@ class ioHTTP extends io implements ioInterface
      */
     public function getLocalisation(): string
     {
-        return self::LOCALISATION;
+        //return self::LOCALISATION;
+        return $this->_defaultLocalisation;
     }
 
     /**
@@ -168,7 +170,7 @@ class ioHTTP extends io implements ioInterface
     {
         if ($url == '')
             $url = $this->_defaultLocalisation;
-        $url = $url . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . Configuration::OPTIONS_DEFAULT_VALUE['puppetmaster'];
+        $url = $url . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $this->_configuration->getOptionAsString('puppetmaster');
         return $this->_checkExistOverHTTP($url);
     }
 
@@ -189,7 +191,7 @@ class ioHTTP extends io implements ioInterface
     {
         if ($url == '')
             $url = $this->_defaultLocalisation;
-        $url = $url . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Configuration::OPTIONS_DEFAULT_VALUE['puppetmaster'];
+        $url = $url . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $this->_configuration->getOptionAsString('puppetmaster');
         return $this->_checkExistOverHTTP($url);
     }
 

@@ -18,7 +18,7 @@ use Nebule\Library\nebule;
  */
 class io implements ioInterface
 {
-    const DEFAULT_CLASS = 'Local';
+    const DEFAULT_CLASS = 'Disk';
 
     /**
      * I/O type supported.

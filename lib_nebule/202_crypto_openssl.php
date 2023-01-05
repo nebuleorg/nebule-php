@@ -250,7 +250,8 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         $binIV = $this->_getBinIV($hexIV, $algo);
         $binKey = pack("H*", $hexKey);
 
-        return openssl_encrypt($data, $this->_translateSymmetricAlgorithm($algo), $binKey, OPENSSL_RAW_DATA, pack("H*", $binIV));
+        return openssl_encrypt($data, $this->_translateSymmetricAlgorithm($algo), $binKey, OPENSSL_RAW_DATA, $binIV);
+        //return openssl_encrypt($data, $this->_translateSymmetricAlgorithm($algo), $binKey, OPENSSL_RAW_DATA, pack("H*", $binIV));
     }
 
     /**
@@ -268,7 +269,8 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         $binIV = $this->_getBinIV($hexIV, $algo);
         $binKey = pack("H*", $hexKey);
 
-        return openssl_decrypt($data, $this->_translateSymmetricAlgorithm($algo), $binKey, OPENSSL_RAW_DATA, pack("H*", $binIV));
+        return openssl_decrypt($data, $this->_translateSymmetricAlgorithm($algo), $binKey, OPENSSL_RAW_DATA, $binIV);
+        //return openssl_decrypt($data, $this->_translateSymmetricAlgorithm($algo), $binKey, OPENSSL_RAW_DATA, pack("H*", $binIV));
     }
 
     private function _checkSymmetricFunction(string $algo): bool
