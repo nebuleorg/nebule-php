@@ -2508,15 +2508,15 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         )
             $size = 'half';
         // Vérifie que c'est un objet.
-        if (!is_a($object, 'Node') // TODO simplify!
-            && !is_a($object, 'Group')
-            && !is_a($object, 'Entity')
-            && !is_a($object, 'Conversation')
-            && !is_a($object, 'Currency')
-            && !is_a($object, 'TokenPool')
-            && !is_a($object, 'Token')
-            && !is_a($object, 'Transaction')
-            && !is_a($object, 'Wallet')
+        if (!is_a($object, 'Nebule\Library\Node') // TODO simplify!
+            && !is_a($object, 'Nebule\Library\Group')
+            && !is_a($object, 'Nebule\Library\Entity')
+            && !is_a($object, 'Nebule\Library\Conversation')
+            && !is_a($object, 'Nebule\Library\Currency')
+            && !is_a($object, 'Nebule\Library\TokenPool')
+            && !is_a($object, 'Nebule\Library\Token')
+            && !is_a($object, 'Nebule\Library\Transaction')
+            && !is_a($object, 'Nebule\Library\Wallet')
         )
             $object = $this->_nebuleInstance->newObject($object);
 
@@ -2537,7 +2537,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($isEntity) {
             if ($object->checkPresent()) {
                 if ($size = 'half' || $size = 'full') {
-                    if (!is_a($object, 'Entity')) {
+                    if (!is_a($object, 'Nebule\Library\Entity')) {
                         $object = $this->_nebuleInstance->newEntity($object->getID());
                     }
 
@@ -2696,15 +2696,15 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         )
             $size = 'half';
         // Vérifie que c'est un objet.
-        if (!is_a($object, 'Node')
-            && !is_a($object, 'Group')
-            && !is_a($object, 'Entity')
-            && !is_a($object, 'Conversation')
-            && !is_a($object, 'Currency')
-            && !is_a($object, 'TokenPool')
-            && !is_a($object, 'Token')
-            && !is_a($object, 'Transaction')
-            && !is_a($object, 'Wallet')
+        if (!is_a($object, 'Nebule\Library\Node')
+            && !is_a($object, 'Nebule\Library\Group')
+            && !is_a($object, 'Nebule\Library\Entity')
+            && !is_a($object, 'Nebule\Library\Conversation')
+            && !is_a($object, 'Nebule\Library\Currency')
+            && !is_a($object, 'Nebule\Library\TokenPool')
+            && !is_a($object, 'Nebule\Library\Token')
+            && !is_a($object, 'Nebule\Library\Transaction')
+            && !is_a($object, 'Nebule\Library\Wallet')
         )
             $object = $this->_nebuleInstance->newObject($object);
         $id = $object->getID();
@@ -2923,7 +2923,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertImage($object, string $alt = '', string $class = '', string $id = '', string $args = ''): string
     {
         // Récupère une instance de l'objet.
-        if (!is_a($object, 'Node'))
+        if (!is_a($object, 'Nebule\Library\Node'))
             $object = $this->_nebuleInstance->newObject($object);
 
         if ($object->getID() == '0')
@@ -2958,7 +2958,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertImageURL($object): string
     {
         // Récupère une instance de l'objet.
-        if (!is_a($object, 'Node'))
+        if (!is_a($object, 'Nebule\Library\Node'))
             $object = $this->_nebuleInstance->newObject($object);
 
         if ($object->getID() == '0')
@@ -3003,7 +3003,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             return '<img src="' . $object . '" />';
 
         // Récupère une instance de l'objet.
-        if (!is_a($object, 'Node'))
+        if (!is_a($object, 'Nebule\Library\Node'))
             $object = $this->_nebuleInstance->newObject($object);
 
         if ($object->getID() == '0')
@@ -3050,7 +3050,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertReferenceImage($object, string $alt = '', string $class = '', string $id = '', string $args = ''): string
     {
         // Récupère une instance de l'objet.
-        if (!is_a($object, 'Node'))
+        if (!is_a($object, 'Nebule\Library\Node'))
             $object = $this->_nebuleInstance->newObject($object);
 
         if ($object->getID() == '0')
@@ -3140,21 +3140,21 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         if ($htlink != '')
             return $htlink;
-        if (is_a($object, 'Entity')) // TODO switch !
+        if (is_a($object, 'Nebule\Library\Entity')) // TODO switch !
             return $this->_htlinkEntityPrefix . $object->getID();
-        elseif (is_a($object, 'Conversation'))
+        elseif (is_a($object, 'Nebule\Library\Conversation'))
             return $this->_htlinkConversationPrefix . $object->getID();
-        elseif (is_a($object, 'Group'))
+        elseif (is_a($object, 'Nebule\Library\Group'))
             return $this->_htlinkGroupPrefix . $object->getID();
-        elseif (is_a($object, 'Wallet'))
+        elseif (is_a($object, 'Nebule\Library\Wallet'))
             return $this->_htlinkWalletPrefix . $object->getID();
-        elseif (is_a($object, 'Transaction'))
+        elseif (is_a($object, 'Nebule\Library\Transaction'))
             return $this->_htlinkTransactionPrefix . $object->getID();
-        elseif (is_a($object, 'Token'))
+        elseif (is_a($object, 'Nebule\Library\Token'))
             return $this->_htlinkTokenPrefix . $object->getID();
-        elseif (is_a($object, 'TokenPool'))
+        elseif (is_a($object, 'Nebule\Library\TokenPool'))
             return $this->_htlinkTokenPoolPrefix . $object->getID();
-        elseif (is_a($object, 'Currency'))
+        elseif (is_a($object, 'Nebule\Library\Currency'))
             return $this->_htlinkCurrencyPrefix . $object->getID();
         return $this->_htlinkObjectPrefix . $object->getID();
     }
@@ -3278,7 +3278,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $useBuffer = false;
 
         // Récupère une instance de l'objet.
-        if (!is_a($object, 'Node'))
+        if (!is_a($object, 'Nebule\Library\Node'))
             $object = $this->_nebuleInstance->newObject($object);
 
         if ($object->getID() == '0')
@@ -3320,7 +3320,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $useBuffer = false;
 
         // Récupère une instance de l'objet.
-        if (!is_a($reference, 'Node'))
+        if (!is_a($reference, 'Nebule\Library\Node'))
             $reference = $this->_nebuleInstance->newObject($reference);
 
         if ($reference->getID() == '0')
@@ -3438,16 +3438,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         $color = $object->getPrimaryColor();
         $title = $object->getFullName('all');
-        if (is_a($object, 'Entity')) {
+        if (is_a($object, 'Nebule\Library\Entity')) {
             $faceID = $object->getFaceID(64);
             if ($faceID != '0')
                 $image = '?o=' . $faceID;
             else
                 $image = 'o/' . $this->_getImageUpdate(self::DEFAULT_ICON_USER);
             unset($faceID);
-        } elseif (is_a($object, 'Conversation'))
+        } elseif (is_a($object, 'Nebule\Library\Conversation'))
             $image = 'o/' . $this->_getImageUpdate(self::DEFAULT_ICON_CVTOBJ);
-        elseif (is_a($object, 'Group'))
+        elseif (is_a($object, 'Nebule\Library\Group'))
             $image = 'o/' . $this->_getImageUpdate(self::DEFAULT_ICON_GRPOBJ);
         else
             $image = 'o/' . $this->_getImageUpdate(self::DEFAULT_ICON_LO);
@@ -4754,7 +4754,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         if (!isset($param['flagUnlocked'])) {
             $param['flagUnlocked'] = false; // Par défaut à false.
-            if (is_a($object, 'Entity')) {
+            if (is_a($object, 'Nebule\Library\Entity')) {
                 // Extrait l'état de verrouillage de l'objet entité.
                 $param['flagUnlocked'] = $object->issetPrivateKeyPassword();
                 // Vérifie si c'est l'entité courante.
@@ -4918,21 +4918,21 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             else
                 $param['selfHookName'] = '';
             if ($param['selfHookName'] == '') {
-                if (is_a($object, 'Entity'))
+                if (is_a($object, 'Nebule\Library\Entity'))
                     $param['selfHookName'] = 'selfMenuEntity';
-                elseif (is_a($object, 'Conversation'))
+                elseif (is_a($object, 'Nebule\Library\Conversation'))
                     $param['selfHookName'] = 'selfMenuConversation';
-                elseif (is_a($object, 'Group'))
+                elseif (is_a($object, 'Nebule\Library\Group'))
                     $param['selfHookName'] = 'selfMenuGroup';
-                elseif (is_a($object, 'Transaction'))
+                elseif (is_a($object, 'Nebule\Library\Transaction'))
                     $param['selfHookName'] = 'selfMenuTransaction';
-                elseif (is_a($object, 'Wallet'))
+                elseif (is_a($object, 'Nebule\Library\Wallet'))
                     $param['selfHookName'] = 'selfMenuWallet';
-                elseif (is_a($object, 'Token'))
+                elseif (is_a($object, 'Nebule\Library\Token'))
                     $param['selfHookName'] = 'selfMenuToken';
-                elseif (is_a($object, 'TokenPool'))
+                elseif (is_a($object, 'Nebule\Library\TokenPool'))
                     $param['selfHookName'] = 'selfMenuTokenPool';
-                elseif (is_a($object, 'Currency'))
+                elseif (is_a($object, 'Nebule\Library\Currency'))
                     $param['selfHookName'] = 'selfMenuCurrency';
                 else
                     $param['selfHookName'] = 'selfMenuObject';
@@ -4945,21 +4945,21 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $param['typeHookName'] = trim(filter_var($param['typeHookName'], FILTER_SANITIZE_STRING));else
                 $param['typeHookName'] = '';
             if ($param['typeHookName'] == '') {
-                if (is_a($object, 'Entity'))
+                if (is_a($object, 'Nebule\Library\Entity'))
                     $param['typeHookName'] = 'typeMenuEntity';
-                elseif (is_a($object, 'Conversation'))
+                elseif (is_a($object, 'Nebule\Library\Conversation'))
                     $param['typeHookName'] = 'typeMenuConversation';
-                elseif (is_a($object, 'Group'))
+                elseif (is_a($object, 'Nebule\Library\Group'))
                     $param['typeHookName'] = 'typeMenuGroup';
-                elseif (is_a($object, 'Transaction'))
+                elseif (is_a($object, 'Nebule\Library\Transaction'))
                     $param['typeHookName'] = 'typeMenuTransaction';
-                elseif (is_a($object, 'Wallet'))
+                elseif (is_a($object, 'Nebule\Library\Wallet'))
                     $param['typeHookName'] = 'typeMenuWallet';
-                elseif (is_a($object, 'Token'))
+                elseif (is_a($object, 'Nebule\Library\Token'))
                     $param['typeHookName'] = 'typeMenuToken';
-                elseif (is_a($object, 'TokenPool'))
+                elseif (is_a($object, 'Nebule\Library\TokenPool'))
                     $param['typeHookName'] = 'typeMenuTokenPool';
-                elseif (is_a($object, 'Currency'))
+                elseif (is_a($object, 'Nebule\Library\Currency'))
                     $param['typeHookName'] = 'typeMenuCurrency';
                 else
                     $param['typeHookName'] = 'typeMenuObject';
@@ -5485,24 +5485,24 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($icon != ''
             && $this->_ioInstance->checkLinkPresent($icon)
         ) {
-            if (!is_a($icon, 'Node'))
+            if (!is_a($icon, 'Nebule\Library\Node'))
                 $icon = $this->_nebuleInstance->newObject($icon);
         } else {
-            if (is_a($object, 'Entity'))
+            if (is_a($object, 'Nebule\Library\Entity'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_ENTITY);
-            elseif (is_a($object, 'Conversation'))
+            elseif (is_a($object, 'Nebule\Library\Conversation'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_CONVERSATION);
-            elseif (is_a($object, 'Group'))
+            elseif (is_a($object, 'Nebule\Library\Group'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_GROUP);
-            elseif (is_a($object, 'Wallet'))
+            elseif (is_a($object, 'Nebule\Library\Wallet'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // @todo
-            elseif (is_a($object, 'Transaction'))
+            elseif (is_a($object, 'Nebule\Library\Transaction'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // @todo
-            elseif (is_a($object, 'Token'))
+            elseif (is_a($object, 'Nebule\Library\Token'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // @todo
-            elseif (is_a($object, 'TokenPool'))
+            elseif (is_a($object, 'Nebule\Library\TokenPool'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // @todo
-            elseif (is_a($object, 'Currency'))
+            elseif (is_a($object, 'Nebule\Library\Currency'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // @todo
             else
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT);
@@ -6776,15 +6776,15 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $ratioCSS = 'short';
 
         // Vérifie que c'est un objet.
-        if (!is_a($object, 'Node')
-            && !is_a($object, 'Group')
-            && !is_a($object, 'Entity')
-            && !is_a($object, 'Conversation')
-            && !is_a($object, 'Currency')
-            && !is_a($object, 'TokenPool')
-            && !is_a($object, 'Token')
-            && !is_a($object, 'Transaction')
-            && !is_a($object, 'Wallet')
+        if (!is_a($object, 'Nebule\Library\Node')
+            && !is_a($object, 'Nebule\Library\Group')
+            && !is_a($object, 'Nebule\Library\Entity')
+            && !is_a($object, 'Nebule\Library\Conversation')
+            && !is_a($object, 'Nebule\Library\Currency')
+            && !is_a($object, 'Nebule\Library\TokenPool')
+            && !is_a($object, 'Nebule\Library\Token')
+            && !is_a($object, 'Nebule\Library\Transaction')
+            && !is_a($object, 'Nebule\Library\Wallet')
         ) {
             $object = $this->_nebuleInstance->newObject($object);
             $id = $object->getID();
@@ -6803,7 +6803,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $result .= '<div class="objectContent">' . "\n";
 
         // Affiche l'objet suivant son type.
-        if (is_a($object, 'Entity')) {
+        if (is_a($object, 'Nebule\Library\Entity')) {
             if ($object->checkPresent()) {
                 if ($sizeCSS = 'medium' || $sizeCSS = 'full') {
                     $result .= '<div class="objectContentEntity">' . "\n<p>";
@@ -6832,7 +6832,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 }
             } else
                 $result .= $this->convertLineMessage(':::display:content:errorNotAvailable', 'error');
-        } elseif (is_a($object, 'Group')) {
+        } elseif (is_a($object, 'Nebule\Library\Group')) {
             $result .= '<div class="objectContentGroup">' . "\n\t<p>"
                 . sprintf($this->_traductionInstance->getTraduction('::UniqueID'),
                     $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
@@ -6841,7 +6841,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             else
                 $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::GroupeOuvert') . ".\n";
             $result .= "\t</p>\n</div>\n";
-        } elseif (is_a($object, 'Conversation')) {
+        } elseif (is_a($object, 'Nebule\Library\Conversation')) {
             $result .= '<div class="objectContentConversation">' . "\n\t<p>"
                 . sprintf($this->_traductionInstance->getTraduction('::UniqueID'),
                     $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
@@ -6887,10 +6887,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $ratioCSS = 'short';
 
         // Vérifie que c'est un objet.
-        if (!is_a($object, 'Node')
-            && !is_a($object, 'Group')
-            && !is_a($object, 'Entity')
-            && !is_a($object, 'Conversation')
+        if (!is_a($object, 'Nebule\Library\Node')
+            && !is_a($object, 'Nebule\Library\Group')
+            && !is_a($object, 'Nebule\Library\Entity')
+            && !is_a($object, 'Nebule\Library\Conversation')
         )
             $object = $this->_nebuleInstance->newObject($object);
         $id = $object->getID();
@@ -7123,7 +7123,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
             // Détermine si c'est un objet ou un message à afficher.
             if (isset($item['object'])
-                && (is_a($item['object'], 'Node')
+                && (is_a($item['object'], 'Nebule\Library\Node')
                     || $item['object'] != ''
                 )
             )
@@ -7135,7 +7135,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             )
                 $result .= $this->getDisplayInformation($item['information'], $param);
             elseif (isset($item['link'])
-                && is_a($item['link'], 'Link')
+                && is_a($item['link'], 'Nebule\Library\Link')
             )
                 $result .= $this->getDisplayMessage($item['link'], $param);
             // Sinon n'affiche rien.
@@ -8028,14 +8028,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $instance = null;
 
         // Prépare le lien.
-        if (is_a($link, 'Link'))
+        if (is_a($link, 'Nebule\Library\Link'))
             $instance = $link;
         elseif (is_string($link))
             $instance = $this->_nebuleInstance->newLink($link);
 
         // Teste la validité du lien.
         if ($instance == null
-            || !is_a($instance, 'Link')
+            || !is_a($instance, 'Nebule\Library\Link')
         )
             return '';
 
@@ -8470,7 +8470,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         if ($link == '')
             return '';
-        if (!is_a($link, 'Link'))
+        if (!is_a($link, 'Nebule\Library\Link'))
             $link = $this->_nebuleInstance->newLink($link);
         if (!$link->getValid())
             return '';
@@ -8831,7 +8831,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             <?php
             foreach ($list as $item) {
                 // Affichage.
-                if (is_a($item['object'], 'Node'))
+                if (is_a($item['object'], 'Nebule\Library\Node'))
                     $this->_displayArboItem($item);
             }
             unset($name, $icon, $desc, $link);
@@ -8852,15 +8852,15 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         if (sizeof($item) == 0)
             return;
-        if (!is_a($item['object'], 'Node')
-            && !is_a($item['object'], 'Entity')
-            && !is_a($item['object'], 'Group')
-            && !is_a($item['object'], 'Conversation')
-            && !is_a($item['object'], 'Currency')
-            && !is_a($item['object'], 'TokenPool')
-            && !is_a($item['object'], 'Token')
-            && !is_a($item['object'], 'Transaction')
-            && !is_a($item['object'], 'Wallet')
+        if (!is_a($item['object'], 'Nebule\Library\Node')
+            && !is_a($item['object'], 'Nebule\Library\Entity')
+            && !is_a($item['object'], 'Nebule\Library\Group')
+            && !is_a($item['object'], 'Nebule\Library\Conversation')
+            && !is_a($item['object'], 'Nebule\Library\Currency')
+            && !is_a($item['object'], 'Nebule\Library\TokenPool')
+            && !is_a($item['object'], 'Nebule\Library\Token')
+            && !is_a($item['object'], 'Nebule\Library\Transaction')
+            && !is_a($item['object'], 'Nebule\Library\Wallet')
         )
             return;
 
@@ -8869,7 +8869,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         $entity = null;
         $entityID = '0';
-        if (is_a($item['entity'], 'entity')) {
+        if (is_a($item['entity'], 'Nebule\Library\Entity')) {
             $entity = $item['entity'];
             $entityID = $entity->getID();
         } elseif (Node::checkNID($item['entity'], false, false)) {

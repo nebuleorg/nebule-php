@@ -920,7 +920,7 @@ abstract class Applications implements applicationInterface
                 $this->_listModulesEnabled[$class] = false; // @todo à revoir...
 
                 // Vérifie si c'est une dépendance de la classe Modules.
-                if (is_a($instance, 'Modules')) {
+                if (is_a($instance, 'Nebule\Library\Modules')) {
                     $this->getMetrologyInstance()->addLog('Class ' . $class . ' is child of Modules', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                     $instance->initialisation();
                     $this->_listModulesInstance[$class] = $instance;
@@ -1062,7 +1062,7 @@ abstract class Applications implements applicationInterface
             return null;
 
         if ($this->_currentModuleInstance != null
-            && is_a($this->_currentModuleInstance, 'Modules')
+            && is_a($this->_currentModuleInstance, 'Nebule\Library\Modules')
         )
             return $this->_currentModuleInstance;
 

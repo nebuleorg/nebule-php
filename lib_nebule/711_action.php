@@ -321,24 +321,24 @@ abstract class Actions
 
         // Gère la dissimulation d'un lien.
         if ($this->_actionObfuscateLinkInstance != ''
-            && is_a($this->_actionObfuscateLinkInstance, 'Link')
+            && is_a($this->_actionObfuscateLinkInstance, 'Nebule\Library\Link')
             && $this->_configuration->getOptionAsBoolean('permitObfuscatedLink')
         )
             $this->_actionObfuscateLink();
 
         // Gère la suppression d'un objet.
         if ($this->_actionDeleteObject
-            && is_a($this->_actionDeleteObjectInstance, 'Node')
+            && is_a($this->_actionDeleteObjectInstance, 'Nebule\Library\Node')
         )
             $this->_actionDeleteObject();
 
         // Gère la protection/déprotection d'un objet.
         if ($this->_actionProtectObjectInstance != ''
-            && is_a($this->_actionProtectObjectInstance, 'Node')
+            && is_a($this->_actionProtectObjectInstance, 'Nebule\Library\Node')
         )
             $this->_actionProtectObject();
         if ($this->_actionUnprotectObjectInstance != ''
-            && is_a($this->_actionUnprotectObjectInstance, 'Node')
+            && is_a($this->_actionUnprotectObjectInstance, 'Nebule\Library\Node')
         )
             $this->_actionUnprotectObject();
         if ($this->_actionShareProtectObjectToEntity != '')
@@ -535,25 +535,25 @@ abstract class Actions
         ) {
             // Lien à signer 1.
             if ($this->_checkBooleanOptions(array('unlocked','permitCreateLink'))
-                && is_a($this->_actionSignLinkInstance1, 'Link')
+                && is_a($this->_actionSignLinkInstance1, 'Nebule\Library\Link')
             )
                 $this->_actionSignLink($this->_actionSignLinkInstance1, $this->_actionSignLinkInstance1Obfuscate);
 
             // Lien à signer 2.
             if ($this->_checkBooleanOptions(array('unlocked','permitCreateLink'))
-                && is_a($this->_actionSignLinkInstance2, 'Link')
+                && is_a($this->_actionSignLinkInstance2, 'Nebule\Library\Link')
             )
                 $this->_actionSignLink($this->_actionSignLinkInstance2, $this->_actionSignLinkInstance2Obfuscate);
 
             // Lien à signer 3.
             if ($this->_checkBooleanOptions(array('unlocked','permitCreateLink'))
-                && is_a($this->_actionSignLinkInstance3, 'Link')
+                && is_a($this->_actionSignLinkInstance3, 'Nebule\Library\Link')
             )
                 $this->_actionSignLink($this->_actionSignLinkInstance3, $this->_actionSignLinkInstance3Obfuscate);
 
             // Liens pré-signés.
             if ($this->_actionUploadLinkInstance !== null
-                && is_a($this->_actionUploadLinkInstance, 'Link')
+                && is_a($this->_actionUploadLinkInstance, 'Nebule\Library\Link')
             )
                 $this->_actionUploadLink($this->_actionUploadLinkInstance);
 
@@ -2685,7 +2685,7 @@ abstract class Actions
      */
     protected function _actionUploadLink(Link $link)
     {
-        if (!is_a($link, 'Link')
+        if (!is_a($link, 'Nebule\Library\Link')
             || !$link->getValid()
             || true // FIXME
         )
@@ -3284,7 +3284,7 @@ abstract class Actions
         // Affichage des actions.
         $this->_display->displayInlineAllActions();
 
-        if (is_a($instance, 'Entity') && $instance->getID() != '0') {
+        if (is_a($instance, 'Nebule\Library\Entity') && $instance->getID() != '0') {
             $this->_actionCreateEntityError = false;
 
             // Enregistre l'instance créée.
@@ -3426,7 +3426,7 @@ abstract class Actions
         // Affichage des actions.
         $this->_display->displayInlineAllActions();
 
-        if (is_a($instance, 'Group') && $instance->getID() != '0') {
+        if (is_a($instance, 'Nebule\Library\Group') && $instance->getID() != '0') {
             $this->_actionCreateGroupError = false;
             $instance->setName($this->_actionCreateGroupName);
 
@@ -3567,7 +3567,7 @@ abstract class Actions
         // Affichage des actions.
         $this->_display->displayInlineAllActions();
 
-        if (is_a($instance, 'Conversation')
+        if (is_a($instance, 'Nebule\Library\Conversation')
             && $instance->getID() != '0'
         ) {
             $this->_actionCreateConversationError = false;
@@ -3600,7 +3600,7 @@ abstract class Actions
 
         // Suppression.
         $instance = $this->_nebuleInstance->newConversation($this->_actionDeleteConversationID);
-        if (!is_a($instance, 'Conversation')
+        if (!is_a($instance, 'Nebule\Library\Conversation')
             || $instance->getID() == '0'
             || !$instance->getIsConversation('myself')
         ) {
@@ -3718,7 +3718,7 @@ abstract class Actions
         // Affichage des actions.
         $this->_display->displayInlineAllActions();
 
-        if (is_a($instanceMessage, 'Node')
+        if (is_a($instanceMessage, 'Nebule\Library\Node')
             && $instanceMessage->getID() != '0'
         ) {
             $this->_actionCreateConversationError = false;
@@ -3798,7 +3798,7 @@ abstract class Actions
         // Affichage des actions.
         $this->_display->displayInlineAllActions();
 
-        if (is_a($instance, 'Currency')
+        if (is_a($instance, 'Nebule\Library\Currency')
             && $instance->getID() != '0'
         ) {
             $this->_actionCreateCurrencyError = false;
@@ -3833,7 +3833,7 @@ abstract class Actions
         // Affichage des actions.
         $this->_display->displayInlineAllActions();
 
-        if (is_a($instance, 'TokenPool')
+        if (is_a($instance, 'Nebule\Library\TokenPool')
             && $instance->getID() != '0'
         ) {
             $this->_actionCreateTokenPoolError = false;
@@ -3872,7 +3872,7 @@ abstract class Actions
             // Création du nouveau sac de jetons.
             $instance = new Token($this->_nebuleInstance, 'new', $this->_actionCreateTokensParam, false, false);
 
-            if (is_a($instance, 'Token')
+            if (is_a($instance, 'Nebule\Library\Token')
                 && $instance->getID() != '0'
             ) {
                 $this->_actionCreateTokensError = false;
