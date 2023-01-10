@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Option;
+use Nebule\Library\Configuration;
 use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
 use Nebule\Library\Actions;
@@ -1099,9 +1100,6 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
      */
     private function _displayOptions()
     {
-        /**
-         * @var nebule $nebuleInstance
-         */
         $nebuleInstance = $this->_nebuleInstance;
 
         // Titre
@@ -1110,14 +1108,14 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
         <div id="options">
             <?php
-            $listOptions = nebule::getListOptions();
-            $listCategoriesOptions = nebule::getListCategoriesOptions();
-            $listOptionsCategory = nebule::getListOptionsCategory();
-            $listOptionsType = nebule::getListOptionsType();
-            $listOptionsWritable = nebule::getListOptionsWritable();
-            $listOptionsDefaultValue = nebule::getListOptionsDefaultValue();
-            $listOptionsCriticality = nebule::getListOptionsCriticality();
-            $listOptionsDescription = nebule::getListOptionsDescription();
+            $listOptions = Configuration::getListOptions();
+            $listCategoriesOptions = Configuration::getListCategoriesOptions();
+            $listOptionsCategory = Configuration::getListOptionsCategory();
+            $listOptionsType = Configuration::getListOptionsType();
+            $listOptionsWritable = Configuration::getListOptionsWritable();
+            $listOptionsDefaultValue = Configuration::getListOptionsDefaultValue();
+            $listOptionsCriticality = Configuration::getListOptionsCriticality();
+            $listOptionsDescription = Configuration::getListOptionsDescription();
 
             // Liste toutes les catégories.
             foreach ($listCategoriesOptions as $optionCategory) {

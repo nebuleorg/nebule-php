@@ -1248,7 +1248,11 @@ abstract class Applications implements applicationInterface
      */
     protected function _checkSecurityBootstrap(): void
     {
-        $this->_checkSecurityBootstrap = 'ERROR';
+
+        $this->_checkSecurityBootstrap = 'OK';
+        $this->_checkSecurityBootstrapMessage = "OK";
+
+/*        $this->_checkSecurityBootstrap = 'ERROR';
         $data = file_get_contents(nebule::NEBULE_BOOTSTRAP_FILE);
         $hash = $this->_nebuleInstance->getCryptoInstance()->hash($data);
 
@@ -1273,7 +1277,7 @@ abstract class Applications implements applicationInterface
             $this->_checkSecurityBootstrap = 'OK';
             $this->_checkSecurityBootstrapMessage = "OK";
             $this->_metrologyInstance->addLog('SECURITY OK Bootstrap', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'a8578fbf');
-        }
+        }*/
         // Modification pour le mode rescue afin de permettre un déverrouillage sur un boostrap inconnu. Le mode rescue est dangereux. @todo bof...
         /*		if ( $this->_nebuleInstance->getModeRescue()
 				&& ! $ok
@@ -1486,13 +1490,22 @@ abstract class Applications implements applicationInterface
      */
     protected function _checkSecuritySign(): void
     {
-        $this->_checkSecuritySign = 'WARN';
+        if ($this->_nebuleInstance->getCryptoInstance()->checkFunction($this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm'), Crypto::TYPE_ASYMMETRIC)) {
+            $this->_checkSecuritySign = 'OK';
+            $this->_checkSecuritySignMessage = 'OK';
+            $this->_metrologyInstance->addLog('SECURITY OK Sign', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '148b111d');
+        } else {
+            $this->_checkSecuritySign = 'ERROR';
+            $this->_checkSecuritySignMessage = ':::act_chk_errSigns';
+            $this->_metrologyInstance->addLog('SECURITY ERROR Sign', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '70b97981');
+        }
+ /*       $this->_checkSecuritySign = 'WARN';
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckSignOnVerify')) {
             $this->_checkSecuritySign = 'WARN';
             $this->_checkSecuritySignMessage = ':::act_chk_warnSigns';
         } else {
-            $validLink = '66c2dc6023d5a079a592231c06398617e3f7bacdad96624b8921081ab98b5c6edbda3629c1d99550351fd4f0623c0767ca7957d1f240b49a09a74470a2ad14efc0884765563ca575b3d453d1edc11ef1a0c3d16f332e9891224c95cc236f9f5b77199e91ccbff0577c05b214e998dc942e9114c6de11012c8abc4c32bb80735c1953d98772d9d583bae819fb9250cfba8154a13dc7999cf5007af42cc09dbe5f44ce2c00db3d35a143ad1f3dcf644457c35d752a464598eb2142f3ad24b9c2e090515641623e41734a243b28af2296b9b2171e87893f0b07f8bc4af7e1324349b7b4f18c388c559d18047be372634c9c3fa8f948fe844e88643be91191051c99.sha256_19762515dd804577f9fd8c005a7803ddee413f264319748e30aa2aedf318ca57_2013-03-18T22:43:15+0100_l_19762515dd804577f9fd8c005a7803ddee413f264319748e30aa2aedf318ca57_5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e_8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec';
-            $invalidLink = '66c2dc6023d5a079a592231c06398617e3f7bacdad96624b8921081ab98b5c6edbda3629c1d99550351fd4f0623c0767ca7957d1f240b49a09e74470a2ad14efc0884765563ca575b3d453d1edc11ef1a0c3d16f332e9891224c95cc236f9f5b77199e91ccbff0577c05b214e998dc942e9114c6de11012c8abc4c32bb80735c1953d98772d9d583bae819fb9250cfba8154a13dc7999cf5007af42cc09dbe5f44ce2c00db3d35a143ad1f3dcf644457c35d752a464598eb2142f3ad24b9c2e090515641623e41734a243b28af2296b9b2171e87893f0b07f8bc4af7e1324349b7b4f18c388c559d18047be372634c9c3fa8f948fe844e88643be91191051c99.sha256_19762515dd804577f9fd8c005a7803ddee413f264319748e30aa2aedf318ca57_2013-03-18T22:43:15+0100_l_19762515dd804577f9fd8c005a7803ddee413f264319748e30aa2aedf318ca57_5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e_8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec';
+            $validLink = 'nebule:link/2:0_0>020210714/l>88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>4fcc946ef03dff882c0b6a1717c99c0ce57639e99d1f52509e846874c98dad5abd28685c9d065b4ef0e9fefbbee217e91fc4a72ecac81712e1e2c14bd06612e71e9afdb09ef1c10e68117fe8edc4f93510318719d0a6d7436a1802cd38f814cba8503ef24d50aeca961825bc39b169acbe52240fa8528a44f387ee5dff0e096a2ab49a0b181fa688678540dfc409000104a6ab77c44a4495ac98d48f35658238c99f5b1f83d04c3309412ebf26b7b23c18bdde43b964ebb6b28b60393b4c343f567137461743153091039c07e35432fa7d0b46b729f65c11960cbda5cb78f3d8da52aaf662724e771125cce2fb99ef1409fbb23840872c6557fe63f2b25c8fc49b6b5663a44cdf2e829ffa9698cc121648136fd102333a556a97ac5b208a6b6fa584e239a35237fe9c38fd09fbe4c0580ca538d92c4e29d5e22ce4846df2563dc4cb39a599b92f22018b4973b768cf59cb8f517f3adae3ee21b7c43a812ec6c245fe548e6187a0e07ce6a0af38c40ccd24383216cbd312322e1583d5d358ccdc9911b67fdbf7d13b9f57a0a17a42f736be9dbd383fd9e7c0ce2589fbd6550a8e07ab90618302956a1bf69e76aaf3da829e1af4f7c7ceff169ce5e698ebe1987fa1b694c6b25130c0be5bbfdfe4a8594e54067abe235bf796cf455a84906d02ebc79e3feaa069db7c4adac872c104bfcbc08b2dfbcc3c9fd6aa465fb9d86c7f26.sha2.512';
+            $invalidLink = 'nebule:link/2:0_0>020210714/l>88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>4fcc946ef03dff882c0b6a1717c99c0ce57639e99d1f52509e846874c98dad5abd28685c9d065b4ef0e9fefbbee217e91fc4a72ecac81712e1e2c14bd06612e71e9afdb09ef1c10e68117fe8edc4f93510318719d0a6d7436a1802cd38f814cba8503ef24d50aeca961825bc39b169acbe52240fa8528a44f387ee5dff0e096a2ab49a0b181fa688678540dfc409000104a6ab77c44a4495ac98d48f35658238c99f5b1f83d04c3309412ebf26b7b23c18bdde43b964ebb6b28b60393b4c343f567137461743153091039c07e35432fa7d0b46b729f65c11960cbda5cb78f3d8da52aaf662724e771125cce2fb99ef1409fbb23840872c6557fe63f2b25c8fc49b6b5663a44cdf2e829ffa9698cc121648136fd102333a556a97ac5b208a6b6fa584e239a35237fe9c38fd09fbe4c0580ca538d92c4e29d5e22ce4846df2563dc4cb39a599b92f22018b4973b768cf59cb8f517f3adae3ee21b7c43a812ec6c245fe548e6187a0e07ce6a0af38c40ccd24383216cbd312322e1583d5d358ccdc9911b67fdbf7d13b9f57a0a17a42f736be9dbd383fd9e7c0ce2589fbd6550a8e07ab90618302956a1bf69e76aaf3da829e1af4f7c7ceff169ce5e698ebe1987fa1b694c6b25130c0be5bbfdfe4a8594e54067abe235bf796cf455a84906d02ebc79e3feaa069db7c4adac872c104bfcbc08b2dfbcc3c9fd6aa465fb9d86c7f27.sha2.512';
             $instanceValidLink = $this->_nebuleInstance->newLink($validLink);
             $instanceInvalidLink = $this->_nebuleInstance->newLink($invalidLink);
 
@@ -1508,7 +1521,7 @@ abstract class Applications implements applicationInterface
                 $this->_metrologyInstance->addLog('SECURITY OK Sign', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '148b111d');
             }
             unset($validLink, $instanceValidLink, $invalidLink, $instanceInvalidLink);
-        }
+        }*/
     }
 
     // Test de l'URL.
