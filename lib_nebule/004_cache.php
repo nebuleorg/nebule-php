@@ -364,7 +364,7 @@ class Cache
                     $instance = new Wallet($this->_nebuleInstance, $nid);
                     break;
                 default:
-                    $instance = new Node($this->_nebuleInstance, $nid, '');
+                    $instance = new Node($this->_nebuleInstance, $nid);
             }
 
             if ($this->_configuration->getOptionAsBoolean('permitSessionBuffer')

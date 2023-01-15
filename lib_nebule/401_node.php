@@ -284,7 +284,7 @@ class Node implements nodeInterface
     /**
      * Create instance of a node or derivative.
      * Always give a valid nebule instance.
-     * For new node, set $id as 'new'. This is mandatory to add data (or other) after with dedicated function.
+     * For new node, set $id as '0'. This is mandatory to add data (or other) after with dedicated function.
      * If $id is invalid, the instance return getID = '0', even if new but not initialised.
      *
      * @param nebule  $nebuleInstance
