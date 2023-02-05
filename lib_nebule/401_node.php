@@ -11,13 +11,16 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  *
- * Attend à la création :
- * - l'instance nebule utilisé ;
- * - un texte contenant l'ID d'un objet, ou '0' si c'est un objet nebule à créer.
+ *          To open a node as object, create instance with :
+ *          - nebule instance;
+ *          - node ID.
  *
- * To create a new object with content :
- * - Create instance with NID=0
- * - Push content with $instance->setContent('content', ...)
+ *          To create a new object with specific content, create a instance with :
+ *          - nebule instance;
+ *          - node ID = '0'
+ *          On the node instance, call setContent() with :
+ *          - data of the object.
+ *          Don't forget to call write() if you want a persistant object on database /o.
  * ------------------------------------------------------------------------------------------
  */
 class Node implements nodeInterface
@@ -378,11 +381,45 @@ class Node implements nodeInterface
      * On new node (ID='0'), add content and recalculate ID.
      *
      * @param string $data
-     * @param bool   $protect
-     * @param bool   $obfuscated
      * @return bool
      */
-    public function setContent(string &$data, bool $protect = false, bool $obfuscated = false): bool
+    public function setContent(string &$data): bool
+    {
+        if (!$this->_isNew
+            || $this->_id != '0'
+            || strlen($data) == 0
+            || $this->_haveData
+            || get_class($this) != 'Nebule\Library\Node'
+        )
+            return false;
+
+        if (!$this->_configuration->checkBooleanOptions(array('permitCreateObject'))) {
+            $this->_metrology->addLog('Create object no authorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '83a27d1e');
+            $this->_id = '0';
+            return false;
+        }
+
+        $this->_id = $this->_nebuleInstance->getNIDfromData($data);
+        $this->_data = $data;
+        $this->_haveData = true;
+        return true;
+    }
+
+    public function setWriteContent(string &$data, bool $protect = false, bool $obfuscated = false): bool
+    {
+        if (!$this->setContent($data))
+            return false;
+
+        // @FIXME
+        if ($protect)
+            $this->setProtected($obfuscated);
+        else
+            $this->write();
+
+        return true;
+    }
+
+    /*public function setContentOld(string &$data, bool $protect = false, bool $obfuscated = false): bool
     {
         if (!$this->_isNew
             || $this->_id != '0'
@@ -425,7 +462,7 @@ class Node implements nodeInterface
             return false;
         }
         return true;
-    }
+    }*/
 
     /**
      * Retourne l'ID de l'objet.
@@ -3725,6 +3762,11 @@ class Node implements nodeInterface
      */
     public function write(): bool
     {
+        if (!$this->_configuration->checkBooleanOptions(array('permitWrite','permitWriteObject'))) {
+            $this->_metrology->addLog('Write object no authorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+            return false;
+        } // @TODO
+
         // Si protégé.
         if ($this->_cacheMarkProtected) {
             $this->_metrology->addAction('addobj', $this->_id, false);
@@ -3756,6 +3798,11 @@ class Node implements nodeInterface
 
     protected function _writeLink(string $rl, bool $obfuscated = false, string $date = ''): bool
     {
+        if (!$this->_configuration->checkBooleanOptions(array('unlocked','permitWrite','permitWriteLink'))) {
+            $this->_metrology->addLog('Write link no authorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+            return false;
+        }
+
         if ($rl == '')
             return false;
         $newBlockLink = new blocLink($this->_nebuleInstance, 'new');

@@ -9,11 +9,12 @@ use Nebule\Library\Crypto;
 use Nebule\Library\Documentation;
 use Nebule\Library\nebule;
 use Nebule\Library\Node;
+use Nebule\Library\References;
 
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020230115';
+const BOOTSTRAP_VERSION = '020230205';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2023';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -6484,6 +6485,8 @@ chmod 755 <?php echo LIB_LOCAL_OBJECTS_FOLDER; ?></pre>
  */
 function bootstrap_firstDisplay3Objects(): bool
 {
+    global $nebuleInstance;
+
     $ok = true;
 
     echo '<div class="parts">' . "\n";
@@ -6511,6 +6514,9 @@ function bootstrap_firstDisplay3Objects(): bool
             }
         }
     }
+
+    if (!References::installation($nebuleInstance))
+        $ok = false;
 
     if ($ok) {
         log_add('ok objects', 'info', __FUNCTION__, '5c7be016');
