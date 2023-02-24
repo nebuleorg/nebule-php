@@ -1294,7 +1294,7 @@ class Configuration
      */
     public function lockCache(): void
     {
-        $this->_metrologyInstance->addLog('Cache lock', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'a65d3e7e'); // Log
+        $this->_metrologyInstance->addLog('Cache lock', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'a65d3e7e');
         $this->_writeOptionCacheLock = true;
     }
 
@@ -1339,7 +1339,7 @@ class Configuration
                     }
                     if (is_int($value))
                         $value = (string)$value;
-                    $this->_metrologyInstance->addLog('Warning:critical_option ' . $option . '=' . $value, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '319eab8f'); // Log
+                    $this->_metrologyInstance->addLog('Warning:critical_option ' . $option . '=' . $value, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '319eab8f');
                 }
             }
         }
@@ -1356,12 +1356,12 @@ class Configuration
         foreach ($list as $name)
         {
             if (($name == 'unlocked' && !$this->_nebuleInstance->getCurrentEntityUnlocked())
-                || !isset(self::OPTIONS_LIST[$name])
+                || !isset(self::OPTIONS_TYPE[$name])
                 || self::OPTIONS_TYPE[$name] != 'boolean'
                 || !$this->getOptionAsBoolean($name)
             )
             {
-                $this->_metrologyInstance->addLog('not permitted with option=' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__,'8318122c');
+                $this->_metrologyInstance->addLog('not permitted with option=' . $name, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__,'8318122c');
                 return false;
             }
         }
