@@ -8169,8 +8169,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche l'image du carré de couleur de l'objet ou de l'entité, lien vers l'objet.
      *
-     * @param string|Node|entity $object
-     * @param string             $htlink
+     * @param string|Node $object
+     * @param string      $htlink
      * @return void
      */
     public function displayObjectColor($object, string $htlink = ''): void
@@ -8181,8 +8181,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare l'image du carré de couleur de l'objet ou de l'entité, lien vers l'objet.
      *
-     * @param string|Node|entity $object
-     * @param string             $htlink
+     * @param string|Node $object
+     * @param string      $htlink
      * @return string
      */
     public function convertObjectColor($object, string $htlink = ''): string

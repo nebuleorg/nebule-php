@@ -40,7 +40,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020230224';
+    const APPLICATION_VERSION = '020230225';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2023';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -1132,7 +1132,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
                     // Extrait les propriétés de l'option.
                     $optionValue = $this->_configurationInstance->getOptionUntyped($optionName);
-                    $optionID = $nebuleInstance->getCryptoInstance()->hash($optionName);
+                    $optionID = $nebuleInstance->getCryptoInstance()->hash($optionName, 'sha2.256') . '.sha2.256';
                     $optionValueDisplay = (string)$optionValue;
                     $optionType = $listOptionsType[$optionName];
                     $optionWritable = $listOptionsWritable[$optionName];

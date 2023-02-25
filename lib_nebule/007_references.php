@@ -1789,7 +1789,8 @@ N98+3M2PiAQ8lJMzXblyZWRycnLASJ8KqdVq3n///Ut79+49M1RxH3UCdA8VCAgPD/eIiYmZ8dprrzkO
         foreach ( self::OBJ_IMG as $name => $content)
         {
             $instance = new Node($nebuleInstance, '0');
-            if (!$instance->setContent($content, false, false)) // TODO undo base64 before write...
+            $decoded = (string)base64_decode($content, false);
+            if (!$instance->setContent($decoded)) // TODO undo base64 before write...
                 $ok = false;
             if (!$instance->write())
                 $ok = false;
