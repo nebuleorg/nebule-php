@@ -82,7 +82,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     const DEFAULT_ICON_LF = '06cac4acb887cff2c7ba6653f865d800276a4e9d493a3be4e1b05d107f5ecbaf.sha2.256';
     const DEFAULT_ICON_LK = '6d1d397afbc0d2f6866acd1a30ac88abce6a6c4c2d495179504c2dcb09d707c1.sha2.256';
     const DEFAULT_ICON_LL = '42e46987d36e7ae291fafc889d6ff2718db4ab277bf433491606a4c63dbc32d9.sha2.256';
-    const DEFAULT_ICON_LLL = 'acda8f3efd9ded574efa9913e75d548968fd5790afe3bdeaedcb4c07776a4161.sha2.256';
     const DEFAULT_ICON_LO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
     const DEFAULT_ICON_LS = 'f6ae2aefb4249267c51ecf9e02c9aefd7f9312e1d22f793d35972d55ee1fb85a.sha2.256';
     const DEFAULT_ICON_LU = '7e9726b5aec1b2ab45c70f882f56ea0687c27d0739022e907c50feb87dfaf37d.sha2.256';
@@ -132,284 +131,42 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     const DEFAULT_ICON_TIME = '108033240730a0b19e96c82d85802f53c348e446441525696744f7102070b0ed.sha2.256';
     const DEFAULT_ICON_APPLICATION = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c.sha2.256';
 
-
     // Références des icônes des liens.
-    /**
-     * Référence pour l'icône c.
-     * ref link : _f_6e6562756c652f6c69656e2f6c630000000000000000000000000000000000000000_e60a32f1430b2dc6660dcd7da13fed39885451c3069e6db0daba3708f69b8b6e_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_LINK_LC = '6e6562756c652f6c69656e2f6c630000000000000000000000000000000000000000';
-
-    /**
-     * Référence pour l'icône d.
-     * ref link : _f_6e6562756c652f6c69656e2f6c640000000000000000000000000000000000000000_232fd0ece47c1ff450927d0153886e9eec64fcf9e16ed396825c33564954f409_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_LINK_LD = '6e6562756c652f6c69656e2f6c640000000000000000000000000000000000000000';
-
-    /**
-     * Référence pour l'icône e.
-     * ref link : _f_6e6562756c652f6c69656e2f6c650000000000000000000000000000000000000000_700ce9b827d9170303c01541eeba364b2616fabeaf6a9998868753c8feffe3dd_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_LINK_LE = '6e6562756c652f6c69656e2f6c650000000000000000000000000000000000000000';
-
-    /**
-     * Référence pour l'icône f.
-     * ref link : _f_6e6562756c652f6c69656e2f6c660000000000000000000000000000000000000000_06cac4acb887cff2c7ba6653f865d800276a4e9d493a3be4e1b05d107f5ecbaf_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_LINK_LF = '6e6562756c652f6c69656e2f6c660000000000000000000000000000000000000000';
-
-    /**
-     * Référence pour l'icône k.
-     * ref link : _f_6e6562756c652f6c69656e2f6c6b0000000000000000000000000000000000000000_6d1d397afbc0d2f6866acd1a30ac88abce6a6c4c2d495179504c2dcb09d707c1_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_LINK_LK = '6e6562756c652f6c69656e2f6c6b0000000000000000000000000000000000000000';
-
-    /**
-     * Référence pour l'icône l.
-     * ref link : _f_6e6562756c652f6c69656e2f6c6c0000000000000000000000000000000000000000_42e46987d36e7ae291fafc889d6ff2718db4ab277bf433491606a4c63dbc32d9_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_LINK_LL = '6e6562756c652f6c69656e2f6c6c0000000000000000000000000000000000000000';
-
-    /**
-     * Référence pour l'icône o.
-     * ref link : _f_6e6562756c652f6c69656e2f6c6f0000000000000000000000000000000000000000_26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_LINK_LO = '6e6562756c652f6c69656e2f6c6f0000000000000000000000000000000000000000';
-
-    /**
-     * Référence pour l'icône s.
-     * ref link : _f_6e6562756c652f6c69656e2f6c730000000000000000000000000000000000000000_f6ae2aefb4249267c51ecf9e02c9aefd7f9312e1d22f793d35972d55ee1fb85a_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_LINK_LS = '6e6562756c652f6c69656e2f6c730000000000000000000000000000000000000000';
-
-    /**
-     * Référence pour l'icône u.
-     * ref link : _f_6e6562756c652f6c69656e2f6c750000000000000000000000000000000000000000_7e9726b5aec1b2ab45c70f882f56ea0687c27d0739022e907c50feb87dfaf37d_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_LINK_LU = '6e6562756c652f6c69656e2f6c750000000000000000000000000000000000000000';
-
-    /**
-     * Référence pour l'icône x.
-     * ref link : _f_6e6562756c652f6c69656e2f6c780000000000000000000000000000000000000000_72e8483f1e76c9c5ddc61fe014f0eb8a97a20fec5d3f1004085157cff6776f81_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_LINK_LX = '6e6562756c652f6c69656e2f6c780000000000000000000000000000000000000000';
-
-
-    // Références des icônes des type d'objets.
-    /**
-     * Référence pour l'icône d'un objet.
-     * ref link : _f_6e6562756c652f6f626a657400000000000000000000000000000000000000000000_26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_OBJECT = '6e6562756c652f6f626a657400000000000000000000000000000000000000000000';
-
-    /**
-     * Référence pour l'icône d'une entité.
-     * ref link : _f_6e6562756c652f6f626a65742f656e74697465000000000000000000000000000000_94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_ENTITY = '6e6562756c652f6f626a65742f656e74697465000000000000000000000000000000';
-
-    /**
-     * Référence pour l'icône d'un groupe.
-     * ref link : _f_6e6562756c652f6f626a65742f67726f757065000000000000000000000000000000_0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_GROUP = '6e6562756c652f6f626a65742f67726f757065000000000000000000000000000000';
-
-    /**
-     * Référence pour l'icône d'une conversation.
-     * ref link : _f_6e6562756c652f6f626a65742f636f6e766572736174696f6e000000000000000000_836e7786bbfc0f360d9c85908920b6dcaee34d46ca8e9c1de3a8462d95388b49_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_CONVERSATION = '6e6562756c652f6f626a65742f636f6e766572736174696f6e000000000000000000';
-
-
-    /**
-     * Référence pour l'icône d'une conversation.
-     * ref link : _f_69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000_77c14d86041ded85f77b1cc3395c55ffe8f9c5eb1bda9dc6dfc650eeecb86980_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_INFORMATION = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000';
-
-    /**
-     * Référence pour l'icône d'une conversation.
-     * ref link : _f_69636f6e206f6b000000000000000000000000000000000000000000000000000000_5931cd5d9d77d3f923cd69d306dfbb869723d1b132f0a64916e78b1bb6adb5e2_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_OK = '69636f6e206f6b000000000000000000000000000000000000000000000000000000';
-
-    /**
-     * Référence pour l'icône d'une conversation.
-     * ref link : _f_69636f6e207761726e696e6700000000000000000000000000000000000000000000_bca818062c4548d7957b949707c5160a3606c83027c1e855fa6d189768b60a47_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_WARNING = '69636f6e207761726e696e6700000000000000000000000000000000000000000000';
-
-    /**
-     * Référence pour l'icône d'une conversation.
-     * ref link : _f_69636f6e206572726f72000000000000000000000000000000000000000000000000_25a0ea1b1d88d7a659ff0fa3d1b70d0cf7ae788023f897da845b1ce8d1cc7e00_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_ERROR = '69636f6e206572726f72000000000000000000000000000000000000000000000000';
-
+    const REFERENCE_ICON_LINK_LC = '6e6562756c652f6c69656e2f6c630000000000000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_LINK_LD = '6e6562756c652f6c69656e2f6c640000000000000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_LINK_LE = '6e6562756c652f6c69656e2f6c650000000000000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_LINK_LF = '6e6562756c652f6c69656e2f6c660000000000000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_LINK_LK = '6e6562756c652f6c69656e2f6c6b0000000000000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_LINK_LL = '6e6562756c652f6c69656e2f6c6c0000000000000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_LINK_LS = '6e6562756c652f6c69656e2f6c730000000000000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_LINK_LU = '6e6562756c652f6c69656e2f6c750000000000000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_LINK_LX = '6e6562756c652f6c69656e2f6c780000000000000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_OBJECT = '6e6562756c652f6f626a657400000000000000000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_ENTITY = '6e6562756c652f6f626a65742f656e74697465000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_GROUP = '6e6562756c652f6f626a65742f67726f757065000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_CONVERSATION = '6e6562756c652f6f626a65742f636f6e766572736174696f6e000000000000000000.none.272';
+    const REFERENCE_ICON_INFORMATION = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_OK = '69636f6e206f6b000000000000000000000000000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_WARNING = '69636f6e207761726e696e6700000000000000000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_ERROR = '69636f6e206572726f72000000000000000000000000000000000000000000000000.none.272';
 
     // Références des icônes des émotions.
-    /**
-     * Référence pour l'icône de l'émotion joie.
-     * ref link : _f_6f6a6569656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000000000000_6e433d723e5e46d3ba7403220c522f1eb96ec54b4edcd09af6ba37c2fc9b18d7_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_EMOTION_JOIE0 = '6f6a6569656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000000000000';
-
-    /**
-     * Référence pour l'icône de l'émotion confiance.
-     * ref link : _f_6f63666e6169636e65656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000_9eceb029ea8795cf493bf79312b8bb940d4c5bd9ea6c7de8c401d53cc2c0672f_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_EMOTION_CONFIANCE0 = '6f63666e6169636e65656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000';
-
-    /**
-     * Référence pour l'icône de l'émotion peur.
-     * ref link : _f_65707275656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000000000000_d21566c3107f5f10d3cc12a4f42029d34159976083b1df9bc8204399a70ef87e_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_EMOTION_PEUR0 = '65707275656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000000000000';
-
-    /**
-     * Référence pour l'icône de l'émotion surprise.
-     * ref link : _f_7573707269726573656e7562656c6f2f6a627465652f6f6d69746e6f0a2f00000000_794e5af096cda83c2fd9ccbf52a52103d55fd81ebcc36719ebf8ebd5659c35a6_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_EMOTION_SURPRISE0 = '7573707269726573656e7562656c6f2f6a627465652f6f6d69746e6f0a2f00000000';
-
-    /**
-     * Référence pour l'icône de l'émotion tristesse.
-     * ref link : _f_727473696574737365656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000_3a8a6832bef55c2441d310f569f98f806ae9c7e0d468945849f754204dd33205_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_EMOTION_TRISTESSE0 = '727473696574737365656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000';
-
-    /**
-     * Référence pour l'icône de l'émotion dégoût.
-     * ref link : _f_65646f677475656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000000000_43aea1f04796d518fe35d2d970670df0833e74b35f6423726cbedcd904636925_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_EMOTION_DEGOUT0 = '65646f677475656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000000000';
-
-    /**
-     * Référence pour l'icône de l'émotion colère.
-     * ref link : _f_6f63656c6572656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000000000_1c2a08af667e4d2187758b4c5a8ab9bf0b7a03bca72b2b162f05a4ee07cacef1_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_EMOTION_COLERE0 = '6f63656c6572656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000000000';
-
-    /**
-     * Référence pour l'icône de l'émotion intérêt.
-     * ref link : _f_6e696574657274656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000000_26fc1b54530a72c103a00b6d4aa8443ebd892d5ebfb34ef7e7f64294d6ae310e_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_EMOTION_INTERET0 = '6e696574657274656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000000';
-
-    /**
-     * Référence pour l'icône de l'émotion joie activée.
-     * ref link : _f_6f6a6569656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000000000001_9c93b9fe47817c6cbecceb4cf20140db7c73bcaf0842b3e780b819658d737432_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_EMOTION_JOIE1 = '6f6a6569656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000000000001';
-
-    /**
-     * Référence pour l'icône de l'émotion confiance activée.
-     * ref link : _f_6f63666e6169636e65656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000001_c74e9142292f7c26a4afc13a791ad745919691476c86a4824f30a1f92c89a37c_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_EMOTION_CONFIANCE1 = '6f63666e6169636e65656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000001';
-
-    /**
-     * Référence pour l'icône de l'émotion peur activée.
-     * ref link : _f_65707275656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000000000001_feee2486efb2b81ba9c371f7c2c4ed0add300d4b7de602cc8deb3f5940c7fc45_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_EMOTION_PEUR1 = '65707275656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000000000001';
-
-    /**
-     * Référence pour l'icône de l'émotion surprise activée.
-     * ref link : _f_7573707269726573656e7562656c6f2f6a627465652f6f6d69746e6f0a2f00000001_f72a1920797a95d814a792e4b09c295e8863ed88b788a8a0a0e18ebc1c10b099_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_EMOTION_SURPRISE1 = '7573707269726573656e7562656c6f2f6a627465652f6f6d69746e6f0a2f00000001';
-
-    /**
-     * Référence pour l'icône de l'émotion tristesse activée.
-     * ref link : _f_727473696574737365656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000001_54238c7d3feac2fc6a8fceaefbc2b5be402840d4aeb3a68f665d248a7b0d00d4_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_EMOTION_TRISTESSE1 = '727473696574737365656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000001';
-
-    /**
-     * Référence pour l'icône de l'émotion dégoût activée.
-     * ref link : _f_65646f677475656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000000001_b8424a4eb643c38ae8aebe7efcc6245c1b5a8d3035ed9c18107484b5bbdbfad2_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_EMOTION_DEGOUT1 = '65646f677475656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000000001';
-
-    /**
-     * Référence pour l'icône de l'émotion colère activée.
-     * ref link : _f_6f63656c6572656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000000001_f4a0be239d4080d711edebb724624044c4da1f3f656714337ebc20514f600dc1_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_EMOTION_COLERE1 = '6f63656c6572656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000000001';
-
-    /**
-     * Référence pour l'icône de l'émotion intérêt activée.
-     * ref link : _f_6e696574657274656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000001_b68f319917545cc58cf49f916276ec5025b471c51dacb632600bdb24c312960b_1ca96e517fc6ccca45080244c594dd777dc5d3bde0f872f961c28a4e9749ba82
-     *
-     * @var string
-     */
-    const REFERENCE_ICON_EMOTION_INTERET1 = '6e696574657274656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000001';
+    const REFERENCE_ICON_EMOTION_JOIE0 = '6f6a6569656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000000000000.none.272';
+    const REFERENCE_ICON_EMOTION_CONFIANCE0 = '6f63666e6169636e65656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000.none.272';
+    const REFERENCE_ICON_EMOTION_PEUR0 = '65707275656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000000000000.none.272';
+    const REFERENCE_ICON_EMOTION_SURPRISE0 = '7573707269726573656e7562656c6f2f6a627465652f6f6d69746e6f0a2f00000000.none.272';
+    const REFERENCE_ICON_EMOTION_TRISTESSE0 = '727473696574737365656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000.none.272';
+    const REFERENCE_ICON_EMOTION_DEGOUT0 = '65646f677475656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000000000.none.272';
+    const REFERENCE_ICON_EMOTION_COLERE0 = '6f63656c6572656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000000000.none.272';
+    const REFERENCE_ICON_EMOTION_INTERET0 = '6e696574657274656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000000.none.272';
+    const REFERENCE_ICON_EMOTION_JOIE1 = '6f6a6569656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000000000001.none.272';
+    const REFERENCE_ICON_EMOTION_CONFIANCE1 = '6f63666e6169636e65656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000001.none.272';
+    const REFERENCE_ICON_EMOTION_PEUR1 = '65707275656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000000000001.none.272';
+    const REFERENCE_ICON_EMOTION_SURPRISE1 = '7573707269726573656e7562656c6f2f6a627465652f6f6d69746e6f0a2f00000001.none.272';
+    const REFERENCE_ICON_EMOTION_TRISTESSE1 = '727473696574737365656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000001.none.272';
+    const REFERENCE_ICON_EMOTION_DEGOUT1 = '65646f677475656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000000001.none.272';
+    const REFERENCE_ICON_EMOTION_COLERE1 = '6f63656c6572656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000000001.none.272';
+    const REFERENCE_ICON_EMOTION_INTERET1 = '6e696574657274656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000001.none.272';
 
 
     /**
@@ -434,7 +191,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         self::DEFAULT_ICON_LF,
         self::DEFAULT_ICON_LK,
         self::DEFAULT_ICON_LL,
-        self::DEFAULT_ICON_LLL,
         self::DEFAULT_ICON_LO,
         self::DEFAULT_ICON_LS,
         self::DEFAULT_ICON_LU,
@@ -4525,112 +4281,112 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if (!isset($param['enableDisplayColor'])
             || $param['enableDisplayColor'] !== false
         )
-            $param['enableDisplayColor'] = true; // Par défaut à true.
+            $param['enableDisplayColor'] = true;
 
         if (!isset($param['enableDisplayIcon'])
             || $param['enableDisplayIcon'] !== false
         )
-            $param['enableDisplayIcon'] = true; // Par défaut à true.
+            $param['enableDisplayIcon'] = true;
 
         if (!isset($param['enableDisplayIconApp'])
             || $param['enableDisplayIconApp'] !== true
         )
-            $param['enableDisplayIconApp'] = false; // Par défaut à false.
+            $param['enableDisplayIconApp'] = false;
 
         if (!isset($param['enableDisplayRefs'])
             || $param['enableDisplayRefs'] !== true
         )
-            $param['enableDisplayRefs'] = false; // Par défaut à false.
+            $param['enableDisplayRefs'] = false;
 
         if (!isset($param['enableDisplayName'])
             || $param['enableDisplayName'] !== false
         )
-            $param['enableDisplayName'] = true; // Par défaut à true.
+            $param['enableDisplayName'] = true;
 
         if (!isset($param['enableDisplayID'])
             || $param['enableDisplayID'] !== true
         )
-            $param['enableDisplayID'] = false; // Par défaut à false.
+            $param['enableDisplayID'] = false;
 
         if (!isset($param['enableDisplayFlags'])
             || $param['enableDisplayFlags'] !== true
         )
-            $param['enableDisplayFlags'] = false; // Par défaut à false.
+            $param['enableDisplayFlags'] = false;
 
         if (!isset($param['enableDisplayFlagEmotions'])
             || $param['enableDisplayFlagEmotions'] !== true
         )
-            $param['enableDisplayFlagEmotions'] = false; // Par défaut à false.
+            $param['enableDisplayFlagEmotions'] = false;
 
         if (!isset($param['enableDisplayFlagProtection'])
             || $param['enableDisplayFlagProtection'] !== true
             || !$this->_configurationInstance->getOptionAsBoolean('permitProtectedObject')
         )
-            $param['enableDisplayFlagProtection'] = false; // Par défaut à false.
+            $param['enableDisplayFlagProtection'] = false;
 
         if (!isset($param['enableDisplayFlagObfuscate'])
             || $param['enableDisplayFlagObfuscate'] !== true
             || !$this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')
         )
-            $param['enableDisplayFlagObfuscate'] = false; // Par défaut à false.
+            $param['enableDisplayFlagObfuscate'] = false;
 
         if (!isset($param['enableDisplayFlagUnlocked'])
             || $param['enableDisplayFlagUnlocked'] !== true
         )
-            $param['enableDisplayFlagUnlocked'] = false; // Par défaut à false.
+            $param['enableDisplayFlagUnlocked'] = false;
 
         if (!isset($param['enableDisplayFlagActivated'])
             || $param['enableDisplayFlagActivated'] !== true
         )
-            $param['enableDisplayFlagActivated'] = false; // Par défaut à false.
+            $param['enableDisplayFlagActivated'] = false;
 
         if (!isset($param['enableDisplayFlagState'])
             || $param['enableDisplayFlagState'] !== true
         )
-            $param['enableDisplayFlagState'] = false; // Par défaut à false.
+            $param['enableDisplayFlagState'] = false;
 
         if (!isset($param['enableDisplayStatus'])
             || $param['enableDisplayStatus'] !== true
         )
-            $param['enableDisplayStatus'] = false; // Par défaut à false.
+            $param['enableDisplayStatus'] = false;
 
         if (!isset($param['enableDisplayContent'])
             || $param['enableDisplayContent'] !== true
         )
-            $param['enableDisplayContent'] = false; // Par défaut à false.
+            $param['enableDisplayContent'] = false;
 
         if (!isset($param['enableDisplayObjectActions'])
             || $param['enableDisplayObjectActions'] !== false
         )
-            $param['enableDisplayObjectActions'] = true; // Par défaut à true.
+            $param['enableDisplayObjectActions'] = true;
 
         if (!isset($param['enableDisplayLink2Object'])
             || $param['enableDisplayLink2Object'] !== false
         )
-            $param['enableDisplayLink2Object'] = true; // Par défaut à true.
+            $param['enableDisplayLink2Object'] = true;
 
         if (!isset($param['enableDisplayLink2Refs'])
             || $param['enableDisplayLink2Refs'] !== false
         )
-            $param['enableDisplayLink2Refs'] = true; // Par défaut à true.
+            $param['enableDisplayLink2Refs'] = true;
 
         if (!isset($param['enableDisplayJS'])
             || $param['enableDisplayJS'] !== false
         )
-            $param['enableDisplayJS'] = true; // Par défaut à true.
+            $param['enableDisplayJS'] = true;
         if (!$this->_configurationInstance->getOptionAsBoolean('permitJavaScript'))
-            $param['enableDisplayJS'] = false; // A false si l'option globale est à false.
+            $param['enableDisplayJS'] = false;
 
         if (!isset($param['enableDisplaySelfHook'])
             || $param['enableDisplaySelfHook'] !== false
         )
-            $param['enableDisplaySelfHook'] = true; // Par défaut à true.
+            $param['enableDisplaySelfHook'] = true;
 
         if (!isset($param['enableDisplayTypeHook'])) {
             if ($param['enableDisplayJS'])
-                $param['enableDisplayTypeHook'] = true; // Par défaut à true si enableDisplayJS.
+                $param['enableDisplayTypeHook'] = true;
             else
-                $param['enableDisplayTypeHook'] = false; // Par défaut à false si pas enableDisplayJS.
+                $param['enableDisplayTypeHook'] = false;
         }
         if ($param['enableDisplayTypeHook'] !== false)
             $param['enableDisplayTypeHook'] = true;
@@ -4846,8 +4602,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         } else {
             $param['flagState'] = 'n';
             $param['flagStateDesc'] = '';
-            $flagStateContentIcon = '';
-            $flagStateContentDesc = '';
         }
 
         if (!isset($param['flagMessage'])
@@ -4868,7 +4622,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
         }
 
-        $sizeCSS = 'Medium';
         if (!isset($param['displaySize'])) {
             $param['displaySize'] = 'medium';
             $sizeCSS = 'Medium';
@@ -4893,7 +4646,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
         }
 
-        $ratioCSS = 'short';
         if (!isset($param['displayRatio'])) {
             $param['displayRatio'] = 'short';
             $ratioCSS = 'Short';
@@ -7468,9 +7220,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         if (trim($title) == '')
             return '';
-
-        if ($displayEntity !== true)
-            $displayEntity = false;
 
         $result .= '<div class="layoutTitle">' . "\n";
         $result .= ' <div class="titleContent">' . "\n";

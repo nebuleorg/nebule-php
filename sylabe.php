@@ -370,7 +370,6 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         self::DEFAULT_ICON_LF,
         self::DEFAULT_ICON_LK,
         self::DEFAULT_ICON_LL,
-        self::DEFAULT_ICON_LLL,
         self::DEFAULT_ICON_LO,
         self::DEFAULT_ICON_LS,
         self::DEFAULT_ICON_LU,
@@ -6918,7 +6917,7 @@ class ModuleGroups extends Modules
 							.$this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
 						// Utiliser comme groupe fermé.
 						$list[$i]['actions'][2]['name'] = '::sylabe:module:groups:display:useAsGroupClosed';
-						$list[$i]['actions'][2]['icon'] = Display::DEFAULT_ICON_LLL;
+						$list[$i]['actions'][2]['icon'] = Display::DEFAULT_ICON_LL;
 						$list[$i]['actions'][2]['htlink'] = '?'.Displays::DEFAULT_DISPLAY_COMMAND_MODE.'='.$this->MODULE_COMMAND_NAME
 							.'&'.Displays::DEFAULT_DISPLAY_COMMAND_VIEW.'='.$this->MODULE_REGISTERED_VIEWS[1]
 							.'&'.Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1.'=f_'.$this->_hashGroupClosed.'_'.$link->getParsed()['bl/rl/nid1'].'_0'

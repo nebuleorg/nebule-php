@@ -940,36 +940,6 @@ DrKDa+vv7gef5Kzf6PM9jwTMMs4IrompqcrRRHtCQ5GgulzvzeDyLuPa5ubkrEQ+sVivMzc2VI2exXEF
 K9XE6nZBOpxsaF6xWK6TT6YoVYi6X65XcqlHZd4LBYPCgXFA8XyIFQYBEIlHXbbNOp4NEIgGCIGCXuv8HvWqqRW9KZeGmWPp6l8srzgtks9lTs9n8plJcaPB
 SuGg2m9/U8oSmHQDGazHi/fv3X1+8ePFXT09PTq/Xf9cM4AzDrDx+/PjPeDx+XOu3bh5Nwc2zuca/Hb52DydbSW4eT193Av4FocJ84kx3/MUAAAAASUVORK5
 CYII=',
-        'lll' => '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',
         'll' => 'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAF4ElEQVR42uWaXWwSaRSGzwzgiq0DFXBbW9LByMYYStdolA7ibtKItph
 Ivd1eVOlFd4PRJt50sxu32bqJiRGT0kST1p9IbxfS2h8habJRZ0yzTZOGNcZeQEOtrDCF0iqmDMtekTQ402LROgzvHecb+PI+nDnfOQMIAPwGPBHDML+KRCI
 0N15eXt7z9u3b9OfYEwUeKZlMJtniWq12x+fak1cAotFonC1OEISyJACEQqE3HACqSwLAzMzMAltcp9PVlAQAiqLCbHEcx6tKAgBJkjRbHMMwrCQABAKBJMM
@@ -1782,6 +1752,80 @@ N98+3M2PiAQ8lJMzXblyZWRycnLASJ8KqdVq3n///Ut79+49M1RxH3UCdA8VCAgPD/eIiYmZ8dprrzkO
 6+vb68fJv3wK3Y+TRUVFNXl5eRUlJSUVjY2N/8wfJ/9J+P+fp//tBPwvm/8kqv3nNKsAAAAASUVORK5CYII=',
     );
 
+    const REF_IMG = array(
+        'addent' => '',
+        'addlnk' => '',
+        'addobjmark' => '',
+        'addobj' => '',
+        'add' => '',
+        'addtxt' => '',
+        'admin' => '',
+        'cvtaddent' => '',
+        'cvtaddmsg' => '',
+        'cvtadd' => '',
+        'cvtent' => '',
+        'cvtobj' => '6e6562756c652f6f626a65742f636f6e766572736174696f6e000000000000000000.none.272',
+        'cvt' => '',
+        'en-en' => '',
+        'entlock' => '',
+        'err' => '69636f6e206572726f72000000000000000000000000000000000000000000000000.none.272',
+        'es-co' => '',
+        'flush' => '',
+        'fr-fr' => '',
+        'grpentadd' => '',
+        'grpent' => '',
+        'grpobjadd' => '',
+        'grpobj' => '6e6562756c652f6f626a65742f67726f757065000000000000000000000000000000.none.272',
+        'idownload' => '',
+        'ihlp' => '',
+        'imenu545454' => '',
+        'imenu' => '',
+        'imetrolog' => '',
+        'imodify' => '',
+        'info' => '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272',
+        'key' => '',
+        'klicty' => '',
+        'lc' => '6e6562756c652f6c69656e2f6c630000000000000000000000000000000000000000.none.272',
+        'ld' => '6e6562756c652f6c69656e2f6c640000000000000000000000000000000000000000.none.272',
+        'le' => '6e6562756c652f6c69656e2f6c650000000000000000000000000000000000000000.none.272',
+        'lf' => '6e6562756c652f6c69656e2f6c660000000000000000000000000000000000000000.none.272',
+        'lk' => '6e6562756c652f6c69656e2f6c6b0000000000000000000000000000000000000000.none.272',
+        'll' => '6e6562756c652f6c69656e2f6c6c0000000000000000000000000000000000000000.none.272',
+        'lo' => '6e6562756c652f6f626a657400000000000000000000000000000000000000000000.none.272',
+        'ls' => '6e6562756c652f6c69656e2f6c730000000000000000000000000000000000000000.none.272',
+        'lstent' => '',
+        'lstobj' => '',
+        'lu' => '6e6562756c652f6c69656e2f6c750000000000000000000000000000000000000000.none.272',
+        'lx' => '6e6562756c652f6c69656e2f6c780000000000000000000000000000000000000000.none.272',
+        'mark' => '',
+        'mchr' => '',
+        'ment' => '',
+        'mmsg' => '',
+        'mobj' => '',
+        'module2' => '',
+        'modulegray' => '',
+        'module' => '',
+        'msglist' => '',
+        'msgsent' => '',
+        'msgtrans' => '',
+        'nebfs' => '',
+        'nebulegray' => '',
+        'null256' => '',
+        'null' => '',
+        'oent' => '6e6562756c652f6f626a65742f656e74697465000000000000000000000000000000.none.272',
+        'ok' => '69636f6e206f6b000000000000000000000000000000000000000000000000000000.none.272',
+        'reference' => '',
+        'synent' => '',
+        'synlnk' => '',
+        'synobjgray' => '',
+        'synobj' => '',
+        'time' => '',
+        'unmarkall' => '',
+        'unmark' => '',
+        'warn' => '69636f6e207761726e696e6700000000000000000000000000000000000000000000.none.272',
+        'world' => '',
+    );
+
     static public function installation($nebuleInstance): bool
     {
         $ok = true;
@@ -1790,11 +1834,16 @@ N98+3M2PiAQ8lJMzXblyZWRycnLASJ8KqdVq3n///Ut79+49M1RxH3UCdA8VCAgPD/eIiYmZ8dprrzkO
         {
             $instance = new Node($nebuleInstance, '0');
             $decoded = (string)base64_decode($content, false);
-            if (!$instance->setContent($decoded)) // TODO undo base64 before write...
+            if (!$instance->setContent($decoded))
                 $ok = false;
             if (!$instance->write())
                 $ok = false;
             $nebuleInstance->getMetrologyInstance()->addLog('MARK ' . $instance->getID(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+
+            if (self::REF_IMG[$name] != '') {
+                $nebuleInstance->getMetrologyInstance()->addLog('MARK ' . 'f>' . self::REF_IMG[$name] . '>' . $instance->getID(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+                $instance->writeLink('f>' . self::REF_IMG[$name] . '>' . $instance->getID());
+            }
         }
         return $ok;
     }

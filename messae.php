@@ -229,7 +229,6 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         self::DEFAULT_ICON_LF,
         self::DEFAULT_ICON_LK,
         self::DEFAULT_ICON_LL,
-        self::DEFAULT_ICON_LLL,
         self::DEFAULT_ICON_LO,
         self::DEFAULT_ICON_LS,
         self::DEFAULT_ICON_LU,
@@ -6115,7 +6114,7 @@ class ModuleGroups extends Modules
 							.$this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
 						// Utiliser comme groupe fermé.
 						$list[$i]['actions'][2]['name'] = '::sylabe:module:groups:display:useAsGroupClosed';
-						$list[$i]['actions'][2]['icon'] = Displays::DEFAULT_ICON_LLL;
+						$list[$i]['actions'][2]['icon'] = Displays::DEFAULT_ICON_LL;
 						$list[$i]['actions'][2]['htlink'] = '?'.Display::DEFAULT_DISPLAY_COMMAND_MODE.'='.$this->MODULE_COMMAND_NAME
 							.'&'.Display::DEFAULT_DISPLAY_COMMAND_VIEW.'='.$this->MODULE_REGISTERED_VIEWS[1]
 							.'&'.Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1.'=f_'.$this->_hashGroupClosed.'_'.$link->getParsed()['bl/rl/nid1'].'_0'
@@ -8731,8 +8730,8 @@ class ModuleMessenger extends Modules
     public function headerStyle(): void
     {
         ?>
-        #sylabeModuleMessagerieBoutonSubmitMessage { cursor: pointer; background:url(<?php echo $this->_applicationInstance->getDisplayInstance()->prepareIcon(display::DEFAULT_ICON_LL); ?>) no-repeat; margin-right:5px; margin-top:0; float:left; }
-        #sylabeModuleMessagerieBoutonSubmitMessage:hover { background:url(<?php echo $this->_applicationInstance->getDisplayInstance()->prepareIcon(display::DEFAULT_ICON_LLL); ?>) no-repeat; }
+        #sylabeModuleMessagerieBoutonSubmitMessage { cursor: pointer; background:url(<?php echo $this->_applicationInstance->getDisplayInstance()->prepareIcon(Displays::DEFAULT_ICON_LL); ?>) no-repeat; margin-right:5px; margin-top:0; float:left; }
+        #sylabeModuleMessagerieBoutonSubmitMessage:hover { background:url(<?php echo $this->_applicationInstance->getDisplayInstance()->prepareIcon(Displays::DEFAULT_ICON_LL); ?>) no-repeat; }
 
         <?php
     }
@@ -9730,7 +9729,7 @@ class ModuleMessenger extends Modules
                                     <?php
                                     // Répondre au message.
                                     $display->displayHypertextLink(
-                                        $display->convertInlineIconFace('DEFAULT_ICON_LLL') . ' ' . $this->_traduction('::sylabe:module:messenger:replyMessage'),
+                                        $display->convertInlineIconFace('DEFAULT_ICON_LL') . ' ' . $this->_traduction('::sylabe:module:messenger:replyMessage'),
                                         '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $display->getCurrentDisplayView()
                                         . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntity()

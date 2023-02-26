@@ -8,6 +8,7 @@ use Nebule\Library\Actions;
 use Nebule\Library\Applications;
 use Nebule\Library\Displays;
 //use Nebule\Library\Modules;
+use Nebule\Library\Node;
 use Nebule\Library\Traductions;
 
 /*
@@ -40,7 +41,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020230225';
+    const APPLICATION_VERSION = '020230226';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2023';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -629,23 +630,28 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
             $this->_displayActions();
 
-            if ($this->getCurrentDisplayView() == self::VIEW_GLOBAL_AUTHORITIES) {
-                $this->_displayGlobalAutorities();
-            } elseif ($this->getCurrentDisplayView() == self::VIEW_LOCAL_AUTHORITIES) {
-                $this->_displayLocalAutorities();
-            } elseif ($this->getCurrentDisplayView() == self::VIEW_OPTIONS) {
-                $this->_displayOptions();
-            } elseif ($this->getCurrentDisplayView() == self::VIEW_APPLICATIONS) {
-                $this->_displayApplications();
-            } elseif ($this->getCurrentDisplayView() == self::VIEW_RECOVERY) {
-                $this->_displayRecovery();
-            } else {
-                $this->_displayMenu();
+            switch ($this->getCurrentDisplayView()) {
+                case self::VIEW_GLOBAL_AUTHORITIES:
+                    $this->_displayGlobalAuthorities();
+                    break;
+                case self::VIEW_LOCAL_AUTHORITIES:
+                    $this->_displayLocalAuthorities();
+                    break;
+                case self::VIEW_OPTIONS:
+                    $this->_displayOptions();
+                    break;
+                case self::VIEW_APPLICATIONS:
+                    $this->_displayApplications();
+                    break;
+                case self::VIEW_RECOVERY:
+                    $this->_displayRecovery();
+                    break;
+                default:
+                    $this->_displayMenu();
             }
             $this->_displayEnd();
-        } else {
+        } else
             $this->_displayChecks();
-        }
         $this->_htmlEnd();
     }
 
@@ -670,19 +676,19 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
     private function _displayMenu()
     {
         $list = array();
-        $list[0]['icon'] = Display::DEFAULT_ICON_LL;
+        $list[0]['icon'] = Displays::DEFAULT_ICON_LL;
         $list[0]['title'] = 'Options';
         $list[0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_OPTIONS;
-        $list[1]['icon'] = Display::DEFAULT_ICON_LF;
+        $list[1]['icon'] = Displays::DEFAULT_ICON_LF;
         $list[1]['title'] = 'Global authorities';
         $list[1]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_GLOBAL_AUTHORITIES;
-        $list[2]['icon'] = Display::DEFAULT_ICON_LF;
+        $list[2]['icon'] = Displays::DEFAULT_ICON_LF;
         $list[2]['title'] = 'Local authorities';
         $list[2]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_LOCAL_AUTHORITIES;
-        $list[4]['icon'] = Display::DEFAULT_ICON_LS;
+        $list[4]['icon'] = Displays::DEFAULT_ICON_LS;
         $list[4]['title'] = 'Applications';
         $list[4]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_APPLICATIONS;
-        $list[5]['icon'] = Display::DEFAULT_ICON_LK;
+        $list[5]['icon'] = Displays::DEFAULT_ICON_LK;
         $list[5]['title'] = 'Local recovery';
         $list[5]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_RECOVERY;
         ?>
@@ -713,11 +719,8 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
      *
      * @return void
      */
-    private function _displayGlobalAutorities()
+    private function _displayGlobalAuthorities()
     {
-        /**
-         * @var nebule $nebuleInstance
-         */
         $nebuleInstance = $this->_nebuleInstance;
 
         // Titre
@@ -752,18 +755,16 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         $list[$i]['object'] = $nebuleInstance->getPuppetmasterInstance();
         $list[$i]['param'] = $param;
         $list[$i]['param']['flagProtection'] = true;
-        if ($nebuleInstance->getPuppetmaster() == $nebuleInstance->getInstanceEntity()) {
+        if ($nebuleInstance->getPuppetmaster() == $nebuleInstance->getInstanceEntity())
             $list[$i]['param']['flagMessage'] = 'Instance entity';
-        }
         if ($nebuleInstance->getPuppetmaster() == $nebuleInstance->getDefaultEntity()) {
-            if ($list[$i]['param']['flagMessage'] != '') {
+            if ($list[$i]['param']['flagMessage'] != '')
                 $list[$i]['param']['flagMessage'] .= ', ';
-            }
             $list[$i]['param']['flagMessage'] .= 'Default entity';
         }
 
-        // Security master
-        foreach ($nebuleInstance->getSecurityAuthoritiesInstance() as $instance)
+        // Security and code masters
+        foreach (array_merge($nebuleInstance->getSecurityAuthoritiesInstance(), $nebuleInstance->getCodeAuthoritiesInstance()) as $instance)
         {
             $i++;
             $list[$i]['object'] = $instance;
@@ -773,15 +774,14 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             if ($instance->getID() == $nebuleInstance->getInstanceEntity())
                 $list[$i]['param']['flagMessage'] = 'Instance entity';
             if ($instance->getID() == $nebuleInstance->getDefaultEntity()) {
-                if ($list[$i]['param']['flagMessage'] != '') {
+                if ($list[$i]['param']['flagMessage'] != '')
                     $list[$i]['param']['flagMessage'] .= ', ';
-                }
                 $list[$i]['param']['flagMessage'] .= 'Default entity';
             }
         }
 
         // Code master
-        foreach ($nebuleInstance->getCodeAuthoritiesInstance() as $instance)
+        /*foreach ($nebuleInstance->getCodeAuthoritiesInstance() as $instance)
         {
             $i++;
             $list[$i]['object'] = $instance;
@@ -791,12 +791,11 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             if ($instance->getID() == $nebuleInstance->getInstanceEntity())
                 $list[$i]['param']['flagMessage'] = 'Instance entity';
             if ($instance->getID() == $nebuleInstance->getDefaultEntity()) {
-                if ($list[$i]['param']['flagMessage'] != '') {
+                if ($list[$i]['param']['flagMessage'] != '')
                     $list[$i]['param']['flagMessage'] .= ', ';
-                }
                 $list[$i]['param']['flagMessage'] .= 'Default entity';
             }
-        }
+        }*/
 
 
 
@@ -821,11 +820,8 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
      *
      * @return void
      */
-    private function _displayLocalAutorities()
+    private function _displayLocalAuthorities()
     {
-        /**
-         * @var nebule $nebuleInstance
-         */
         $nebuleInstance = $this->_nebuleInstance;
 
         $refAuthority = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
@@ -945,9 +941,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
                     if ($this->_unlocked
                         && $listSigners[$id] == $nebuleInstance->getCurrentEntity()
-                        && $this->_configurationInstance->getOptionAsBoolean('permitWrite') == true
-                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink') == true
-                        && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink') == true
+                        && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitUploadLink'))
                         && ($id != $nebuleInstance->getInstanceEntity()
                             || !$this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
                         )
@@ -956,9 +950,9 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         )
                     ) {
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Remove';
-                        $list[$i]['param']['selfHookList'][0]['icon'] = Display::DEFAULT_ICON_LX;
+                        $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LX;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
-                            . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refAuthority
+                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refAuthority
                             . $nebuleInstance->getTicketingInstance()->getActionTicketValue();
                     }
 
@@ -1000,9 +994,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                 )
             )
-            && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink')
+            && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitUploadLink'))
             //&& $this->_configuration->getOption('permitRecoveryEntities')
         ) {
 
@@ -1047,14 +1039,12 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     );
 
                     if ($this->_unlocked
-                        && $this->_configurationInstance->getOptionAsBoolean('permitWrite') == true
-                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink') == true
-                        && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink') == true
+                        && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitUploadLink'))
                     ) {
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Add';
-                        $list[$i]['param']['selfHookList'][0]['icon'] = Display::DEFAULT_ICON_LL;
+                        $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LL;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
-                            . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refAuthority
+                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refAuthority
                             . $nebuleInstance->getTicketingInstance()->getActionTicketValue();
                     }
 
@@ -1126,9 +1116,8 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                 // Liste toutes lies options de la catégorie.
                 foreach ($listOptions as $optionName) {
                     // Vérifie que l'option est dans la catégorie en cours.
-                    if ($listOptionsCategory[$optionName] != $optionCategory) {
+                    if ($listOptionsCategory[$optionName] != $optionCategory)
                         continue;
-                    }
 
                     // Extrait les propriétés de l'option.
                     $optionValue = $this->_configurationInstance->getOptionUntyped($optionName);
@@ -1144,32 +1133,27 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     $optionLocked = ($this->_configurationInstance->getOptionFromEnvironmentUntyped($optionName) !== null);
 
                     // Prépare l'affichage du status de verrouillage ou de lecture seule.
-                    if ($optionLocked) {
+                    if ($optionLocked)
                         $optionWritableDisplay = 'forced';
-                    } elseif (!$optionWritable) {
+                    elseif (!$optionWritable)
                         $optionWritableDisplay = 'locked';
-                    }
 
                     // Prépare l'affichage des booléens.
                     if ($optionType == 'boolean') {
-                        if ($optionValue) {
+                        $optionValueDisplay = 'false';
+                        if ($optionValue)
                             $optionValueDisplay = 'true';
-                        } else {
-                            $optionValueDisplay = 'false';
-                        }
-                        if ($optionDefaultValue) {
+                        $optionDefaultDisplay = 'false';
+                        if ($optionDefaultValue)
                             $optionDefaultDisplay = 'true';
-                        } else {
-                            $optionDefaultDisplay = 'false';
-                        }
                     }
 
                     // Prépare la couleur du status de l'option.
-                    if ($optionCriticality == 'critical') {
+                    if ($optionCriticality == 'critical')
                         $optionColorOnChange = self::CRITICAL_ICON_COLOR;
-                    } elseif ($optionCriticality == 'careful') {
+                    elseif ($optionCriticality == 'careful')
                         $optionColorOnChange = self::CAREFUL_ICON_COLOR;
-                    } else // $optionCriticity == 'useful'
+                    else // $optionCriticity == 'useful'
                     {
                         $optionColorOnChange = self::USEFUL_ICON_COLOR;
                         $optionCriticality = 'useful';
@@ -1177,9 +1161,8 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
                     // Détermine si l'option a sa valeur par défaut.
                     $isDefault = true;
-                    if ($optionValue != $optionDefaultValue) {
+                    if ($optionValue != $optionDefaultValue)
                         $isDefault = false;
-                    }
                     ?>
 
                     <div class="optionItem">
@@ -1377,7 +1360,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             // Lister les applications.
             $application = '';
             foreach ($applicationsList as $application) {
-                log_add('add application ' . $application); // FIXME
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('add application ' . $application, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'de6e59f5');
 
                 $color = '#' . substr($application . '000000', 0, 6);
                 //$colorSigner = '#'.substr($signersList[$application].'000000',0,6);
@@ -1389,7 +1372,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                 // Recherche si l'application ne doit pas être pré-chargée.
                 $noPreloadSigner = '';
                 $refNoPreload = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT);
-                $linksList = $instance->readLinksFilterFull('', '', 'f', $application, $refNoPreload, $application);
+                $linksList = $instance->readLinksFilterFull('', '', 'f', $application, $refNoPreload, $application); // FIXME error !!!
                 if (sizeof($linksList) != 0) {
                     $signer = '';
                     $authority = '';
@@ -1417,15 +1400,13 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         $activable = false;
                     }
                 }
-                if ($application == $this->_configurationInstance->getOptionUntyped('defaultApplication')) {
+                if ($application == $this->_configurationInstance->getOptionUntyped('defaultApplication'))
                     $activated = true;
-                }
                 if (!$activated) {
                     $refActivated = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE);
                     $linksList = $instance->readLinksFilterFull($nebuleInstance->getInstanceEntity(), '', 'f', $application, $refActivated, $application);
-                    if (sizeof($linksList) != 0) {
+                    if (sizeof($linksList) != 0)
                         $activated = true;
-                    }
                 }
 
                 // Recherche de la dernière mise à jours.
@@ -1436,25 +1417,22 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     && !$nebuleInstance->getModeRescue()
                 ) {
                     $linksList = $instance->readLinksFilterFull($nebuleInstance->getInstanceEntity(), '', 'f', $application, '', $refAppsID);
-                    foreach ($linksList as $link) {
+                    foreach ($linksList as $link)
                         $linksResult[] = $link;
-                    }
                 }
                 if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                     && !$nebuleInstance->getModeRescue()
                 ) {
                     $linksList = $instance->readLinksFilterFull($nebuleInstance->getDefaultEntity(), '', 'f', $application, '', $refAppsID);
-                    foreach ($linksList as $link) {
+                    foreach ($linksList as $link)
                         $linksResult[] = $link;
-                    }
                 }
                 unset($linksList);
                 // Trie les liens par date.
                 if (sizeof($linksResult) != 0) {
                     $linkdate = array();
-                    foreach ($linksResult as $n => $t) {
+                    foreach ($linksResult as $n => $t)
                         $linkdate[$n] = $t->getDate();
-                    }
                     array_multisort($linkdate, SORT_STRING, SORT_ASC, $linksResult);
                     unset($linkdate, $n, $t);
                 }
@@ -1476,49 +1454,42 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     <div class="appInfos">
                         <div class="appActions">
                             <?php
-                            if ($activated) {
-                                echo $this->convertInlineIconFace(Display::DEFAULT_ICON_IOK) . 'Enabled';
-                            } else {
-                                echo $this->convertInlineIconFace(Display::DEFAULT_ICON_IERR) . 'Disabled';
-                            }
+                            if ($activated)
+                                echo $this->convertInlineIconFace(Displays::DEFAULT_ICON_IOK) . 'Enabled';
+                            else
+                                echo $this->convertInlineIconFace(Displays::DEFAULT_ICON_IERR) . 'Disabled';
 
                             echo "<br />\n";
 
                             if ($activable
-                                && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
-                                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                                && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink'))
                                 && $nebuleInstance->getCurrentEntityUnlocked()
                                 && $nebuleInstance->getCurrentEntity() == $nebuleInstance->getInstanceEntity()
                             ) {
                                 if ($activated) {
                                     $this->displayHypertextLink(
-                                        $this->convertInlineIconFace(Display::DEFAULT_ICON_LX) . 'Disable',
-                                        '/?' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $application . '_' . $refActivated . '_' . $application
+                                        $this->convertInlineIconFace(Displays::DEFAULT_ICON_LX) . 'Disable',
+                                        '/?' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $application . '_' . $refActivated . '_' . $application
                                         . $nebuleInstance->getTicketingInstance()->getActionTicketValue()
                                     );
                                 } else {
                                     $this->displayHypertextLink(
-                                        $this->convertInlineIconFace(Display::DEFAULT_ICON_LL) . 'Enable',
-                                        '/?' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $application . '_' . $refActivated . '_' . $application
+                                        $this->convertInlineIconFace(Displays::DEFAULT_ICON_LL) . 'Enable',
+                                        '/?' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $application . '_' . $refActivated . '_' . $application
                                         . $nebuleInstance->getTicketingInstance()->getActionTicketValue()
                                     );
                                 }
                                 echo "<br />\n";
                             }
 
-                            if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
-                                && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-                                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-                                && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeObject')
-                                && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink')
-                                && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeApplication')
-                                && ($this->_configurationInstance->getOptionAsBoolean('permitPublicSynchronizeApplication')
+                            if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject',
+                                        'permitWriteLink', 'permitSynchronizeObject', 'permitSynchronizeLink',
+                                        'permitSynchronizeApplication', 'permitPublicSynchronizeApplication'))
                                     || $nebuleInstance->getCurrentEntityUnlocked()
-                                )
                             ) {
                                 $this->displayHypertextLink(
-                                    $this->convertInlineIconFace(Display::DEFAULT_ICON_SYNOBJ) . 'Synchronize',
-                                    '/?' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=' . $application
+                                    $this->convertInlineIconFace(Displays::DEFAULT_ICON_SYNOBJ) . 'Synchronize',
+                                    '/?' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=' . $application
                                     . $nebuleInstance->getTicketingInstance()->getActionTicketValue()
                                 );
                             }
@@ -1566,23 +1537,18 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                 </div>
                 <?php
             }
-            if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
-                && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-                && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeObject')
-                && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink')
-                && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeApplication')
-                && ($this->_configurationInstance->getOptionAsBoolean('permitPublicSynchronizeApplication')
+            if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject',
+                        'permitWriteLink', 'permitSynchronizeObject', 'permitSynchronizeLink',
+                        'permitSynchronizeApplication', 'permitPublicSynchronizeApplication'))
                     || $nebuleInstance->getCurrentEntityUnlocked()
-                )
             ) {
                 ?>
 
                 <div id="syncallapps">
                     <?php
                     $this->displayHypertextLink(
-                        $this->convertInlineIconFace(Display::DEFAULT_ICON_SYNOBJ) . 'Synchronize all applications',
-                        '/?' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=0'
+                        $this->convertInlineIconFace(Displays::DEFAULT_ICON_SYNOBJ) . 'Synchronize all applications',
+                        '/?' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=0'
                         . $nebuleInstance->getTicketingInstance()->getActionTicketValue()
                     );
                     ?>
@@ -1601,15 +1567,15 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             At any time you can switch to another application and come back later to the first one without losing work
             in progress or authentication.<br/>
             <br/>
-            An application can be <?php echo $this->convertInlineIconFace(Display::DEFAULT_ICON_IOK) . 'enabled'; ?>
-            or <?php echo $this->convertInlineIconFace(Display::DEFAULT_ICON_IERR) . 'disabled'; ?>.<br/>
+            An application can be <?php echo $this->convertInlineIconFace(Displays::DEFAULT_ICON_IOK) . 'enabled'; ?>
+            or <?php echo $this->convertInlineIconFace(Displays::DEFAULT_ICON_IERR) . 'disabled'; ?>.<br/>
             To be usable, each application have to be enabled on the list here. Without activation, the bootstrap refuse
             to load an application.<br/>
             To be enabled, an application have to be activated with a link generated by a local authority.<br/>
             By default, the application 'option' is automaticaly enabled and can't be disabled.<br/>
             <br/>
             All applications can
-            be <?php echo $this->convertInlineIconFace(Display::DEFAULT_ICON_SYNOBJ) . 'synchronized'; ?> to get last
+            be <?php echo $this->convertInlineIconFace(Displays::DEFAULT_ICON_SYNOBJ) . 'synchronized'; ?> to get last
             updates.<br/>
             Synchronization must be enabled with the option <i>permitSynchronizeApplication</i> and if needed with the
             option <i>permitPublicSynchronizeApplication</i>.<br/>
@@ -1630,9 +1596,6 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
      */
     private function _displayRecovery()
     {
-        /**
-         * @var nebule $nebuleInstance
-         */
         $nebuleInstance = $this->_nebuleInstance;
 
         // Titre
@@ -1703,9 +1666,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
                     if ($this->_unlocked
                         && $listSigners[$id] == $nebuleInstance->getCurrentEntity()
-                        && $this->_configurationInstance->getOptionAsBoolean('permitWrite') == true
-                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink') == true
-                        && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink') == true
+                        && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitUploadLink'))
                         && ($id != $nebuleInstance->getInstanceEntity()
                             || !$this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsRecovery')
                         )
@@ -1714,9 +1675,9 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         )
                     ) {
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Remove';
-                        $list[$i]['param']['selfHookList'][0]['icon'] = Display::DEFAULT_ICON_LX;
+                        $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LX;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
-                            . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refRecovery
+                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refRecovery
                             . $nebuleInstance->getTicketingInstance()->getActionTicketValue();
                     }
 
@@ -1757,10 +1718,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                 )
             )
-            && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink')
-            && $this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities')
+            && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitUploadLink', 'permitRecoveryEntities'))
         ) {
             // Titre
             echo $this->getDisplayTitle('Add entities as recovery');
@@ -1801,14 +1759,12 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     );
 
                     if ($this->_unlocked
-                        && $this->_configurationInstance->getOptionAsBoolean('permitWrite') == true
-                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink') == true
-                        && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink') == true
+                        && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitUploadLink'))
                     ) {
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Add';
-                        $list[$i]['param']['selfHookList'][0]['icon'] = Display::DEFAULT_ICON_LL;
+                        $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LL;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
-                            . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refRecovery
+                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refRecovery
                             . $nebuleInstance->getTicketingInstance()->getActionTicketValue();
                     }
 
@@ -1860,45 +1816,32 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
         <div id="check">
             <?php
-            if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'WARN') {
+            if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'WARN')
                 $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
-            }
-            if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'ERROR') {
+            if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'ERROR')
                 $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
-            }
-            if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'WARN') {
+            if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'WARN')
                 $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
-            }
-            if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'ERROR') {
+            if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'ERROR')
                 $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
-            }
-            if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'WARN') {
+            if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'WARN')
                 $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
-            }
-            if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'ERROR') {
+            if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'ERROR')
                 $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
-            }
-            if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'ERROR') {
+            if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'ERROR')
                 $this->displayMessageError($this->_applicationInstance->getCheckSecurityBootstrapMessage());
-            }
-            if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'WARN') {
+            if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'WARN')
                 $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityBootstrapMessage());
-            }
-            if ($this->_applicationInstance->getCheckSecuritySign() == 'WARN') {
+            if ($this->_applicationInstance->getCheckSecuritySign() == 'WARN')
                 $this->displayMessageWarning($this->_applicationInstance->getCheckSecuritySignMessage());
-            }
-            if ($this->_applicationInstance->getCheckSecuritySign() == 'ERROR') {
+            if ($this->_applicationInstance->getCheckSecuritySign() == 'ERROR')
                 $this->displayMessageError($this->_applicationInstance->getCheckSecuritySignMessage());
-            }
-            if ($this->_applicationInstance->getCheckSecurityURL() == 'WARN') {
+            if ($this->_applicationInstance->getCheckSecurityURL() == 'WARN')
                 $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityURLMessage());
-            }
-            if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')) {
+            if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite'))
                 $this->displayMessageWarning(':::warn_ServNotPermitWrite');
-            }
-            if ($this->_nebuleInstance->getFlushCache()) {
+            if ($this->_nebuleInstance->getFlushCache())
                 $this->displayMessageWarning(':::warn_flushSessionAndCache');
-            }
             ?>
 
         </div>
@@ -1932,51 +1875,37 @@ class Action extends Actions
     const COMMAND_OPTION_NAME = 'name';
     const COMMAND_OPTION_VALUE = 'value';
 
-
-    /**
-     * Détermine si un message doit être affiche quand aucune action n'a été faite.
-     *
-     * @var boolean
-     */
-    private $_displayMessageLocked = true;
-
     /**
      * Traitement des actions génériques.
      */
     public function genericActions()
     {
-        $this->_metrology->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrology->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '1f5dd135');
 
         // Vérifie que l'entité instance locale du serveur est déverrouillée et que le ticket est valide.
         if ($this->_unlocked
             && $this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getInstanceEntity()
             && $this->_nebuleInstance->getTicketingInstance()->checkActionTicket()
-            && $this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitCreateLink')
+            && $this->_configuration->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink'))
         ) {
             // Extrait les actions.
             $this->_extractActionChangeOption();
             $this->_extractActionSignLink1();
 
             // Traite les options.
-            if ($this->_actionOptionName != '') {
-                $this->_displayMessageLocked = false;
+            if ($this->_actionOptionName != '')
                 $this->_actionChangeOption();
-            }
 
             // Traite les liens.
             if ($this->_unlocked
                 && $this->_configuration->getOptionAsBoolean('permitUploadLink')
                 && $this->_actionSignLinkInstance1 != ''
                 && is_a($this->_actionSignLinkInstance1, 'Link')
-            ) {
-                $this->_displayMessageLocked = false;
+            )
                 $this->_actionSignLink($this->_actionSignLinkInstance1);
-            }
         }
 
-        $this->_metrology->addLog('Generic actions end', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrology->addLog('Generic actions end', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'bb221384');
     }
 
 
@@ -1985,19 +1914,17 @@ class Action extends Actions
      */
     public function specialActions()
     {
-        $this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '4e9ebfc1');
 
         // Vérifie que le ticket est valide.
         if ($this->_nebuleInstance->getTicketingInstance()->checkActionTicket()) {
             $this->_extractActionSynchronizeApplication();
 
-            if ($this->_actionSynchronizeApplicationInstance != '') {
-                $this->_displayMessageLocked = false;
+            if ($this->_actionSynchronizeApplicationInstance != '')
                 $this->_actionSynchronizeApplication();
-            }
         }
 
-        $this->_metrology->addLog('Special actions end', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrology->addLog('Special actions end', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '1bb0ef71');
     }
 
 
@@ -2022,11 +1949,10 @@ class Action extends Actions
     protected function _extractActionChangeOption()
     {
         // Vérifie que l'écriture d'objets soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+        if ($this->_configuration->checkBooleanOptions(array('permitWrite', 'permitWriteLink'))
             && $this->_unlocked
         ) {
-            $this->_metrology->addLog('Extract action change option', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Extract action change option', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '62a03a08');
 
             /*
 			 *  ------------------------------------------------------------------------------------------
@@ -2068,12 +1994,11 @@ class Action extends Actions
     protected function _actionChangeOption()
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisés.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+        if ($this->_configuration->checkBooleanOptions(array('permitWrite', 'permitWriteLink'))
             && $this->_actionOptionName != ''
             && $this->_unlocked
         ) {
-            $this->_metrology->addLog('Action change option ' . $this->_actionOptionName . ' = ' . $this->_actionOptionValue, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrology->addLog('Action change option ' . $this->_actionOptionName . ' = ' . $this->_actionOptionValue, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'ae2be3f7');
 
             // Vérifie que l'option est du bon type.
             $listOptionsType = $this->_configuration->getListOptionsType();
@@ -2084,32 +2009,24 @@ class Action extends Actions
                 $value = $this->_actionOptionValue;
                 $okOption = true;
             } elseif ($type == 'boolean') {
-                if ($this->_actionOptionValue == 'true'
-                ) {
+                $value = false;
+                if ($this->_actionOptionValue == 'true')
                     $value = true;
-                } else {
-                    $value = false;
-                }
                 $okOption = true;
             } elseif ($type == 'integer') {
                 $value = (int)$this->_actionOptionValue;
                 $okOption = true;
-            } else {
-                $okOption = false;
             }
 
             // Change l'option.
-            if ($this->_actionOptionName != ''
-                && $okOption
+            if ($okOption
                 && $value !== null
             ) {
-                // Change l'option.
                 $this->_configuration->setOptionEnvironment($this->_actionOptionName, $value);
 
-                // Affichage des actions.
                 $this->_display->displayInlineAllActions();
 
-                $this->_metrology->addLog('Action change option ok', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+                $this->_metrology->addLog('Action change option ok', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '0db1fc8f');
             }
 
             // Affichage des actions.

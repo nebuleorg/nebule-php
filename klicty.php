@@ -638,7 +638,6 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         self::DEFAULT_ICON_LF,
         self::DEFAULT_ICON_LK,
         self::DEFAULT_ICON_LL,
-        self::DEFAULT_ICON_LLL,
         self::DEFAULT_ICON_LO,
         self::DEFAULT_ICON_LS,
         self::DEFAULT_ICON_LU,

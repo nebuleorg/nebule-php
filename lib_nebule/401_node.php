@@ -1589,7 +1589,7 @@ class Node implements nodeInterface
 
         // Création lien de groupe.
         $target = $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_DANGER);
-        $this->_writeLink('l>' . $this->_id . '>' . $target);
+        $this->writeLink('l>' . $this->_id . '>' . $target);
 
         $this->_cacheMarkDanger = true;
         return true;
@@ -1650,7 +1650,7 @@ class Node implements nodeInterface
 
         // Création lien de groupe.
         $target = $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_WARNING);
-        $this->_writeLink('l>' . $this->_id . '>' . $target);
+        $this->writeLink('l>' . $this->_id . '>' . $target);
 
         $this->_cacheMarkWarning = true;
         return true;
@@ -2011,7 +2011,7 @@ class Node implements nodeInterface
             // Crée le lien de type d'empreinte de la clé.
             $target = $this->_nebuleInstance->getNIDfromData($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
             $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/hash');
-            $this->_writeLink('l>' . $keyID . '>' . $target . '>' . $meta);
+            $this->writeLink('l>' . $keyID . '>' . $target . '>' . $meta);
 
             // Création du type mime des données chiffrées.
             $text = 'application/x-encrypted/' . $this->_configuration->getOptionAsString('cryptoSymmetricAlgorithm');
@@ -2019,7 +2019,7 @@ class Node implements nodeInterface
             if ($textID != '') {
                 // Crée le lien de type d'empreinte.
                 $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
-                $this->_writeLink('l>' . $codeID . '>' . $textID . '>' . $meta, $obfuscated);
+                $this->writeLink('l>' . $codeID . '>' . $textID . '>' . $meta, $obfuscated);
             }
 
             // Création du type mime de la clé chiffrée.
@@ -2028,21 +2028,21 @@ class Node implements nodeInterface
             if ($textID != '') {
                 // Crée le lien de type d'empreinte.
                 $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
-                $this->_writeLink('l>' . $codeKeyID . '>' . $textID . '>' . $meta, $obfuscated);
+                $this->writeLink('l>' . $codeKeyID . '>' . $textID . '>' . $meta, $obfuscated);
             }
 
             // Création du lien de chiffrement symétrique.
-            $this->_writeLink('k>' . $this->_id . '>' . $codeID . '>' . $keyID, $obfuscated);
+            $this->writeLink('k>' . $this->_id . '>' . $codeID . '>' . $keyID, $obfuscated);
 
             // Création du lien de chiffrement asymétrique.
-            $this->_writeLink('k>' . $keyID . '>' . $codekeyID . '>' . $signer, $obfuscated);
+            $this->writeLink('k>' . $keyID . '>' . $codekeyID . '>' . $signer, $obfuscated);
 
             // Supprime l'objet qui a été marqué protégé.
             $this->_metrology->addLog('Delete unprotected object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             $deleteObject = true;
 
             // Création lien.
-            $this->_writeLink('d>' . $this->_id);
+            $this->writeLink('d>' . $this->_id);
 
             // Lit les liens.
             $links = array();
@@ -2109,11 +2109,11 @@ class Node implements nodeInterface
                         if ($textID != '') {
                             // Crée le lien de type d'empreinte.
                             $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
-                            $this->_writeLink('l>' . $codeKeyID . '>' . $textID . '>' . $meta, $obfuscated);
+                            $this->writeLink('l>' . $codeKeyID . '>' . $textID . '>' . $meta, $obfuscated);
                         }
 
                         // Création du lien de chiffrement asymétrique.
-                        $this->_writeLink('k>' . $keyID . '>' . $codekeyID . '>' . $entity->getID(), $obfuscated);
+                        $this->writeLink('k>' . $keyID . '>' . $codekeyID . '>' . $entity->getID(), $obfuscated);
 
                         $this->_metrology->addLog('Set protection shared to recovery ' . $entity->getID(), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                     }
@@ -3613,7 +3613,7 @@ class Node implements nodeInterface
         else
             $id = $this->_id;
 
-        $this->_writeLink('d>' . $this->_id);
+        $this->writeLink('d>' . $this->_id);
 
         // Lit les liens.
         $links = array();
@@ -3642,7 +3642,7 @@ class Node implements nodeInterface
             $this->_metrology->addLog('Delete protected object ' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             $id = $this->_idProtected;
 
-            $this->_writeLink('d>' . $this->_id);
+            $this->writeLink('d>' . $this->_id);
 
             // Lit les liens.
             $links = array();
@@ -3679,7 +3679,7 @@ class Node implements nodeInterface
      */
     public function deleteObjectLinks(): bool
     {
-        $this->_writeLink('d>' . $this->_id);
+        $this->writeLink('d>' . $this->_id);
 
         // Lit les liens.
         $links = array();
@@ -3716,7 +3716,7 @@ class Node implements nodeInterface
      */
     public function deleteForceObject(): bool
     {
-        $this->_writeLink('d>' . $this->_id);
+        $this->writeLink('d>' . $this->_id);
 
         $r = $this->_io->unsetObject($this->_id);
 
@@ -3796,7 +3796,7 @@ class Node implements nodeInterface
         return $ok;
     }
 
-    protected function _writeLink(string $rl, bool $obfuscated = false, string $date = ''): bool
+    public function writeLink(string $rl, bool $obfuscated = false, string $date = ''): bool
     {
         if (!$this->_configuration->checkBooleanOptions(array('unlocked','permitWrite','permitWriteLink'))) {
             $this->_metrology->addLog('Write link no authorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');

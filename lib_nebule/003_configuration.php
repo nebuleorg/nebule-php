@@ -851,7 +851,7 @@ class Configuration
             return null;
 
         if ($this->_metrologyInstance !== null)
-            $this->_metrologyInstance->addLog('Get option ' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '56a98331'); // Log
+            $this->_metrologyInstance->addLog('Get option ' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '56a98331');
 
         $result = null;
 
@@ -881,12 +881,12 @@ class Configuration
         ) {
             $result = self::OPTIONS_DEFAULT_VALUE[$name];
             if ($this->_metrologyInstance !== null) {
-                $this->_metrologyInstance->addLog('Get default value for option ' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '3e39271b'); // Log
+                $this->_metrologyInstance->addLog('Get default value for option ' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '3e39271b');
             }
         }
 
         if ($this->_metrologyInstance !== null)
-            $this->_metrologyInstance->addLog('Return option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'd2fd4284'); // Log
+            $this->_metrologyInstance->addLog('Return option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'd2fd4284');
 
         // Write on cache.
         if ($result !== null
@@ -926,7 +926,7 @@ class Configuration
         $result = self::_changeTypeValueFromString($name, self::_getOptionFromEnvironmentStatic($name));
 
         if ($this->_metrologyInstance !== null)
-            $this->_metrologyInstance->addLog('Return option env = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '52ac2506'); // Log
+            $this->_metrologyInstance->addLog('Return option env = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '52ac2506');
 
         return $result;
     }
@@ -1169,7 +1169,7 @@ class Configuration
         $this->_optionsByLinksIsInUse = false;
 
         if ($this->_metrologyInstance !== null)
-            $this->_metrologyInstance->addLog('Return option links = ' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '1dc46c1a'); // Log
+            $this->_metrologyInstance->addLog('Return option links = ' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '1dc46c1a');
 
         return $value;
     }
@@ -1195,7 +1195,7 @@ class Configuration
         )
             return false;
 
-        $this->_metrologyInstance->addLog('Set option cache value ' . $name .' = ' . $this->_changeTypeValueToString($name, $value), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '73802724'); // Log
+        $this->_metrologyInstance->addLog('Set option cache value ' . $name .' = ' . $this->_changeTypeValueToString($name, $value), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '73802724');
 
         $this->_optionCache[$name] = $value;
         return true;
@@ -1225,20 +1225,20 @@ class Configuration
         )
             $entity = $this->_nebuleInstance->getCurrentEntity();
 
-        $this->_metrologyInstance->addLog('Set option ' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '3ae7eea2'); // Log
+        $this->_metrologyInstance->addLog('Set option ' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '3ae7eea2');
 
         // Prépare la valeur.
         $writeValue = $this->_changeTypeValueFromString($name, $value);
         if (is_null($writeValue))
             return false;
 
-        $this->_metrologyInstance->addLog('Set option value = ' . $writeValue, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'aa699a23'); // Log
+        $this->_metrologyInstance->addLog('Set option value = ' . $writeValue, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'aa699a23');
 
         // Crée l'instance de l'objet de la valeur.
         $instance = new Node($this->_nebuleInstance, 'new'); // $writeValue
         $id = $instance->getID();
         if ($id == '0') {
-            $this->_metrologyInstance->addLog("L'objet n'a pas pu être créé.", Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'e064cd5c'); // Log
+            $this->_metrologyInstance->addLog("L'objet n'a pas pu être créé.", Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'e064cd5c');
             return false;
         }
         $instance->setType(nebule::REFERENCE_OBJECT_TEXT);
@@ -1256,7 +1256,7 @@ class Configuration
             $this->_optionCache[$name] = $value;
             return true;
         } else {
-            $this->_metrologyInstance->addLog('Set option write error', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'ac640a99'); // Log
+            $this->_metrologyInstance->addLog('Set option write error', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'ac640a99');
             return false;
         }
     }
@@ -1325,7 +1325,7 @@ class Configuration
      */
     public function checkReadOnlyOptions()
     {
-        $this->_metrologyInstance->addLog('Check options', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'aa19c70a'); // Log
+        $this->_metrologyInstance->addLog('Check options', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'aa19c70a');
 
         foreach (self::OPTIONS_LIST as $option) {
             if (self::OPTIONS_CRITICALITY[$option] == 'critical') {
@@ -1346,8 +1346,7 @@ class Configuration
     }
 
     /**
-     * Check a list of boolean options if one is false.
-     * Prend "unlocked" comme une pseudo-option et vérifie l'état de connexion d'une entité.
+     * Check a list of boolean options. If one is false, return false.
      * @param array $list
      * @return bool
      */
