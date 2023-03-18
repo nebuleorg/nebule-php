@@ -1374,7 +1374,6 @@ class nebule
      */
     public function setCurrentEntity(Entity $entity): bool
     {
-        if (!$entity instanceof Entity) return false;
         // Reouvre une nouvelle session pour la suite.
         session_start();
 
@@ -1409,7 +1408,6 @@ class nebule
      */
     public function setTempCurrentEntity(Entity $entity): bool
     {
-        if (!$entity instanceof Entity) return false;
         // Reouvre une nouvelle session pour la suite.
         session_start();
 

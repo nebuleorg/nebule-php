@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Nebule\Application\Option;
 use Nebule\Library\Configuration;
+use Nebule\Library\Entity;
 use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
 use Nebule\Library\Actions;
@@ -41,7 +42,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020230226';
+    const APPLICATION_VERSION = '020230318';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2023';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -780,27 +781,10 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             }
         }
 
-        // Code master
-        /*foreach ($nebuleInstance->getCodeAuthoritiesInstance() as $instance)
-        {
-            $i++;
-            $list[$i]['object'] = $instance;
-            $list[$i]['param'] = $param;
-            $list[$i]['param']['enableDisplayRefs'] = true;
-            $list[$i]['param']['objectRefs'][0] = $nebuleInstance->getPuppetmasterInstance();
-            if ($instance->getID() == $nebuleInstance->getInstanceEntity())
-                $list[$i]['param']['flagMessage'] = 'Instance entity';
-            if ($instance->getID() == $nebuleInstance->getDefaultEntity()) {
-                if ($list[$i]['param']['flagMessage'] != '')
-                    $list[$i]['param']['flagMessage'] .= ', ';
-                $list[$i]['param']['flagMessage'] .= 'Default entity';
-            }
-        }*/
-
-
-
+        // Display list.
         echo $this->getDisplayObjectsList($list, 'medium');
 
+        // Display information.
         $param = array(
             'enableDisplayAlone' => true,
             'enableDisplayIcon' => true,
@@ -832,11 +816,18 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         $listEntities = $nebuleInstance->getLocalPrimaryAuthoritiesInstance();
         $listOkEntities = array(
             $nebuleInstance->getPuppetmaster() => true,
-            $nebuleInstance->getSecurityMaster() => true,
+        /*    $nebuleInstance->getSecurityMaster() => true,
             $nebuleInstance->getCodeMaster() => true,
             $nebuleInstance->getDirectoryMaster() => true,
-            $nebuleInstance->getTimeMaster() => true,
+            $nebuleInstance->getTimeMaster() => true,*/
         );
+        foreach (array_merge($nebuleInstance->getSecurityAuthorities(),
+            $nebuleInstance->getCodeAuthorities(),
+            $nebuleInstance->getDirectoryAuthorities(),
+            $nebuleInstance->getTimeAuthorities()()) as $id)
+        {
+            $listOkEntities[$id] = true;
+        }
 
         // Affiche les entités autorités.
         $list = array();

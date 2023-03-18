@@ -3053,7 +3053,8 @@ class Node implements nodeInterface
 
         foreach ($lines as $line)
         {
-            $bloc = $this->_cache->newLink($line, Cache::TYPE_LINK);
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK4 line=' . $line, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            $bloc = $this->_cache->newLink($line, Cache::TYPE_BLOCLINK);
             if ($bloc->getValidStructure()
                 && ( $bloc->getValid() || $withInvalidLinks )
             )
@@ -3230,15 +3231,7 @@ class Node implements nodeInterface
 
         if (!self::checkNID($reference))
             $reference = $this->_nebuleInstance->getNIDfromData($reference);
-
-        $list = array();
-        $filter = array(
-            'bl/rl/req' => 'f',
-            'bl/rl/nid1' => $this->_id,
-            'bl/rl/nid3' => $reference,
-            'bl/rl/nid4' => '',
-        );
-        $this->getLinks($list, $filter, false);
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 OID=' . $this->_id . ' RID=' . $reference, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         // Liste les liens à la recherche de la propriété.
         $list = array();
@@ -3249,6 +3242,10 @@ class Node implements nodeInterface
             'bl/rl/nid4' => '',
         );
         $this->getLinks($list, $filter, false);
+foreach ($list as $link)
+{
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 nid2=' . $link['bl/rl/nid2'], Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+}
 
         return $list;
     }
@@ -3799,7 +3796,7 @@ class Node implements nodeInterface
     public function writeLink(string $rl, bool $obfuscated = false, string $date = ''): bool
     {
         if (!$this->_configuration->checkBooleanOptions(array('unlocked','permitWrite','permitWriteLink'))) {
-            $this->_metrology->addLog('Write link no authorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+            $this->_metrology->addLog('Write link not authorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
             return false;
         }
 
@@ -3809,8 +3806,7 @@ class Node implements nodeInterface
         $newLink = new Link($this->_nebuleInstance, $rl, $newBlockLink);
         if ($obfuscated && !$newLink->setObfuscate())
             return false;
-        $newBlockLink->signwrite($this->_nebuleInstance->getCurrentEntity(), $date);
-        return true;
+        return $newBlockLink->signwrite($this->_nebuleInstance->getCurrentEntity(), $date);
     }
 
 

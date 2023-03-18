@@ -14,7 +14,7 @@ use Nebule\Library\References;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020230226';
+const BOOTSTRAP_VERSION = '020230318';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2023';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -6977,7 +6977,10 @@ chmod 644 <?php echo LIB_LOCAL_ENVIRONMENT_FILE; ?>
  */
 function bootstrap_firstDisplay9LocaleEntity(): bool
 {
-    global $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
+    global $nebuleInstance,
+           $nebulePublicEntity,
+           $nebulePrivateEntity,
+           $nebulePasswordEntity;
 
     $ok = true;
 
@@ -7065,6 +7068,14 @@ function bootstrap_firstDisplay9LocaleEntity(): bool
             obj_getNID('nebule/objet/nom')
         );
         lnk_write($newLink);
+
+        // Load entity on library.
+        $instance = $nebuleInstance->getCacheInstance()->newNode('0',Cache::TYPE_ENTITY);
+        $instance->setContent($nebulePrivateEntity);
+        $nebuleInstance->setCurrentEntity($instance);
+
+        // Write references links
+        References::signReferences($nebuleInstance, $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity);
 
         bootstrap_echoLineTitle('public ID');
         echo $nebulePublicEntity . '<br/>' . "\n";

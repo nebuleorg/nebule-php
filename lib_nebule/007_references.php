@@ -1829,7 +1829,7 @@ N98+3M2PiAQ8lJMzXblyZWRycnLASJ8KqdVq3n///Ut79+49M1RxH3UCdA8VCAgPD/eIiYmZ8dprrzkO
     static public function installation($nebuleInstance): bool
     {
         $ok = true;
-        # Generate objects for icons.
+        // Generate objects for icons.
         foreach ( self::OBJ_IMG as $name => $content)
         {
             $instance = new Node($nebuleInstance, '0');
@@ -1839,10 +1839,32 @@ N98+3M2PiAQ8lJMzXblyZWRycnLASJ8KqdVq3n///Ut79+49M1RxH3UCdA8VCAgPD/eIiYmZ8dprrzkO
             if (!$instance->write())
                 $ok = false;
             $nebuleInstance->getMetrologyInstance()->addLog('MARK ' . $instance->getID(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        }
+        return $ok;
+    }
 
+    static public function signReferences($nebuleInstance, $pubID, $privId, $pass): bool
+    {
+        $ok = true;
+
+        // Load entity before sign.
+        // TODO
+
+        // Generate links for icons.
+        foreach ( self::OBJ_IMG as $name => $content)
+        {
+            $instance = new Node($nebuleInstance, '0');
+            $decoded = (string)base64_decode($content, false);
+            if (!$instance->setContent($decoded))
+                $ok = false; // FIXME
+
+            $reference = $nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE);
             if (self::REF_IMG[$name] != '') {
-                $nebuleInstance->getMetrologyInstance()->addLog('MARK ' . 'f>' . self::REF_IMG[$name] . '>' . $instance->getID(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-                $instance->writeLink('f>' . self::REF_IMG[$name] . '>' . $instance->getID());
+                $nebuleInstance->getMetrologyInstance()->addLog('MARK ' . 'f>' . self::REF_IMG[$name] . '>' . $instance->getID() . '>' . $reference, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+                if ($instance->writeLink('f>' . self::REF_IMG[$name] . '>' . $instance->getID()) . '>' . $reference)
+                    $nebuleInstance->getMetrologyInstance()->addLog('MARK write link ok', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+                else
+                    $ok = false;
             }
         }
         return $ok;
