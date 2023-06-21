@@ -14,7 +14,7 @@ use Nebule\Library\References;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020230330';
+const BOOTSTRAP_VERSION = '020230621';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2023';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -7368,7 +7368,8 @@ function bootstrap_displayApplication2(): void
      * @return void
      */
 function bootstrap_displayApplication9(): void
-{global $lastReferenceSID;
+{
+    global $lastReferenceSID;
 
     // Initialisation des logs
     log_reopen('app2');
@@ -7390,10 +7391,10 @@ function bootstrap_displayApplication9(): void
 
     foreach ($ridList as $rid)
     {
-        echo "RID=" . $rid . "<br />\n";
+        echo "RID=<a href='?a=3&" . LIB_LOCAL_LINKS_FOLDER . "=$rid'>$rid</a><br />\n";
         $appList = app_getList($rid, false);
         foreach ($appList as $iid) {
-            echo "&gt;&nbsp;IID=$iid<br />\n";
+            echo "&gt;&nbsp;IID=<a href='?a=3&" . LIB_LOCAL_LINKS_FOLDER . "=$iid'>$iid</a><br />\n";
             $links = array();
             app_getCodeList($iid, $links);
             foreach ($links as $link)
@@ -7401,10 +7402,10 @@ function bootstrap_displayApplication9(): void
                 $oid = $link['bl/rl/nid2'];
                 $eid = $link['bs/rs1/eid'];
                 $date = $link['bl/rc'];
-                echo "&nbsp;-&nbsp;$date&nbsp;EID=$eid&nbsp;OID=$oid<br />\n";
+                echo "&nbsp;-&nbsp;$date&nbsp;EID=<a href='?a=3&" . LIB_LOCAL_LINKS_FOLDER . "=$eid'>$eid</a>a>&nbsp;OID=<a href='?a=3&" . LIB_LOCAL_LINKS_FOLDER . "=$oid'>$oid</a><br />\n";
             }
             $oid = app_getCode($iid);
-            echo "&nbsp;+&nbsp;EID=$lastReferenceSID&nbsp;OID=$oid<br />\n";
+            echo "&nbsp;+&nbsp;EID=<a href='?a=3&" . LIB_LOCAL_LINKS_FOLDER . "=$lastReferenceSID'>$lastReferenceSID</a>&nbsp;OID=<a href='?a=3&" . LIB_LOCAL_LINKS_FOLDER . "=$oid'>$oid</a><br />\n";
             echo "<br />\n";
         }
     }
