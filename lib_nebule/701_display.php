@@ -5262,7 +5262,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         }
 
         // Cherche une mise à jour éventuelle.
-        $updateIcon = $this->_getImageUpdate($icon);
+        //$updateIcon = $this->_getImageUpdate($icon);
+        $updateIcon = '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256';
 
         // Retourne un chemin direct si l'objet est présent.
         if ($this->_ioInstance->checkObjectPresent($updateIcon))
