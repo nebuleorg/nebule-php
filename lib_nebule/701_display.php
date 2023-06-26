@@ -456,7 +456,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Initialisation des variables et instances interdépendantes.
      * @return void
-     * @todo à optimiser avec __wakeup et __sleep.
+     * TODO à optimiser avec __wakeup et __sleep.
      *
      */
     public function initialisation2(): void
@@ -2801,7 +2801,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string      $id
      * @param string      $args
      * @return string
-     * @todo
+     * TODO
      */
     public function convertReferenceImage($object, string $alt = '', string $class = '', string $id = '', string $args = ''): string
     {
@@ -2924,7 +2924,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * ???
      * @param string $htlink
      * @return string
-     * @todo
+     * TODO
      */
     public function convertHypertextShortLink(string $htlink): string
     {
@@ -5232,14 +5232,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string $icon
      * @return string
      */
-    private function _getDisplayObjectIcon(Node $object, string $icon): string
+    private function _getDisplayObjectIcon(Node $object, string $icon = ''): string
     {
+$this->_metrologyInstance->addLog('MARK input icon='.$icon, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         if ($icon != ''
             && $this->_ioInstance->checkLinkPresent($icon)
         ) {
-            if (!is_a($icon, 'Nebule\Library\Node'))
-                $icon = $this->_nebuleInstance->newObject($icon);
+$this->_metrologyInstance->addLog('MARK if 1', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            $instanceIcon = $this->_nebuleInstance->newObject($icon);
         } else {
+$this->_metrologyInstance->addLog('MARK if 2', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             if (is_a($object, 'Nebule\Library\Entity'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_ENTITY);
             elseif (is_a($object, 'Nebule\Library\Conversation'))
@@ -5247,23 +5249,26 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             elseif (is_a($object, 'Nebule\Library\Group'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_GROUP);
             elseif (is_a($object, 'Nebule\Library\Wallet'))
-                $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // @todo
+                $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // TODO
             elseif (is_a($object, 'Nebule\Library\Transaction'))
-                $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // @todo
+                $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // TODO
             elseif (is_a($object, 'Nebule\Library\Token'))
-                $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // @todo
+                $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // TODO
             elseif (is_a($object, 'Nebule\Library\TokenPool'))
-                $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // @todo
+                $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // TODO
             elseif (is_a($object, 'Nebule\Library\Currency'))
-                $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // @todo
+                $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // TODO
             else
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT);
-            $icon = $this->_nebuleInstance->newObject($icon);
+$this->_metrologyInstance->addLog('MARK finded icon='.$icon, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            $instanceIcon = $this->_nebuleInstance->newObject($icon);
         }
 
         // Cherche une mise à jour éventuelle.
-        //$updateIcon = $this->_getImageUpdate($icon);
-        $updateIcon = '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256';
+        $updateIcon = $this->_getImageUpdate($icon); // FIXME TODO ERROR
+$this->_metrologyInstance->addLog('MARK finded updateIcon='.$updateIcon, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        $updateIcon = '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256'; // FIXME
+$this->_metrologyInstance->addLog('MARK force updateIcon='.$updateIcon, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         // Retourne un chemin direct si l'objet est présent.
         if ($this->_ioInstance->checkObjectPresent($updateIcon))
@@ -5986,7 +5991,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $footerContent .= $divFooterEmotsOpen . $footerEmotsContent . $divFooterEmotsClose;
             $footerContent .= $divFooterEntityOpen . $footerEntityContent . $divFooterEntityClose;
         } // Si taille grande (3).
-        elseif ($param['displaySize'] == 'large') // @todo pas utilisé...
+        elseif ($param['displaySize'] == 'large') // TODO pas utilisé...
         {
             // Prépare le titre de l'objet message.
             $paramObject = array(
@@ -7136,7 +7141,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * @param array $hook
      * @return void
-     * @todo Fonction périmée remplacée par getDisplayHookMenuList().
+     * TODO Fonction périmée remplacée par getDisplayHookMenuList().
      *
      */
     public function displayHookList(array $hook): void
@@ -7523,9 +7528,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if (!is_string($param['informationType'])
             || $param['informationType'] != 'information'
         ) {
-            //$message = filter_var($message, FILTER_SANITIZE_STRING); @todo refaire un filtre.
+            //$message = filter_var($message, FILTER_SANITIZE_STRING); TODO refaire un filtre.
         } else {
-            // @todo faire un filtre pour le type message...
+            // TODO faire un filtre pour le type message...
         }
         $contentDisplayMessage = trim($message);
         if ($contentDisplayMessage == '')
@@ -7645,7 +7650,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $contentDisplayIcon = '';
         if ($param['enableDisplayIcon']) {
             $contentDisplayIcon = $this->convertUpdateImage($messageIcon, $messageTextIcon);
-            // $contentDisplayIcon = $this->convertReferenceImage($messageIcon, $messageTextIcon); @todo par référence
+            // $contentDisplayIcon = $this->convertReferenceImage($messageIcon, $messageTextIcon); TODO par référence
         }
 
         // Assemble les contenus.
