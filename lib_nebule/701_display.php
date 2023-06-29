@@ -5282,7 +5282,7 @@ $this->_metrologyInstance->addLog('MARK force updateIcon='.$updateIcon, Metrolog
      *
      * Si l'entrée est un texte, retourne le texte (à afficher).
      *
-     * @param array:Object $list
+     * @param array $list
      * @return string
      */
     private function _getDisplayObjectRefs(array $list): string

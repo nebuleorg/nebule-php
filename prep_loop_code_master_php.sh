@@ -340,6 +340,7 @@ function work_refresh()
   optionSurnameOID=$(echo -n 'Op' | sha256sum | cut -d' ' -f1)'.sha2.256'
   uploadSurnameOID=$(echo -n 'Up' | sha256sum | cut -d' ' -f1)'.sha2.256'
   surnameRID=$(echo -n 'nebule/objet/surnom' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  imageRID=$(echo -n 'nebule/objet/image/reference' | sha256sum | cut -d' ' -f1)'.sha2.256'
 
   bootstrap_hash=$(sha256sum "${WORKSPACE}/bootstrap.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new bootstrap : ${bootstrap_hash}"
@@ -449,6 +450,7 @@ EOF
     "nebule:link/2:0_0>${current_date}/l>${optionSurnameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${uploadNameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${uploadSurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/f>6e6562756c652f6f626a65742f656e74697465000000000000000000000000000000.none.272>94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256>${imageRID}"
   )
   for link in "${links[@]}"
   do

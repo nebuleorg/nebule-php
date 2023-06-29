@@ -128,11 +128,11 @@ class Entity extends Node implements nodeInterface
             if (sizeof($newPkey) != 0) {
                 // Extraction des infos.
                 $this->_publicKey = $newPkey['public'];
-                $this->_id = $this->getNIDfromData($this->_publicKey);
+                $this->_id = $this->_nebuleInstance->getNIDfromData($this->_publicKey);
                 $this->_metrology->addLog('Generated entity ' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
                 $this->_privateKeyPasswordSalt = '';
                 $this->_privateKey = $newPkey['private'];
-                $this->_privateKeyID = $this->getNIDfromData($this->_privateKey);
+                $this->_privateKeyID = $this->_nebuleInstance->getNIDfromData($this->_privateKey);
                 $this->_issetPrivateKeyPassword = true;
                 $this->_newPrivateKey = true;
 
@@ -145,15 +145,15 @@ class Entity extends Node implements nodeInterface
 
                 // Création lien 1.
                 $source = $this->_id;
-                $target = $this->getNIDfromData($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
-                $meta = $this->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_HASH);
+                $target = $this->_nebuleInstance->getNIDfromData($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
+                $meta = $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_HASH);
                 $link = '_' . $this->_id . '_' . $date . '_l_' . $source . '_' . $target . '_' . $meta;
                 $this->_createNewEntityWriteLink($link, $source, $target, $meta);
 
                 // Création lien 2.
                 $source = $this->_id;
-                $target = $this->getNIDfromData(self::ENTITY_TYPE);
-                $meta = $this->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+                $target = $this->_nebuleInstance->getNIDfromData(self::ENTITY_TYPE);
+                $meta = $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_TYPE);
                 $link = '_' . $this->_id . '_' . $date . '_l_' . $source . '_' . $target . '_' . $meta;
                 $this->_createNewEntityWriteLink($link, $source, $target, $meta);
 
@@ -423,7 +423,7 @@ class Entity extends Node implements nodeInterface
         // A faire... le chiffrement du mot de passe avec le sel et l'ID de session php...
         $this->_privateKeyPassword = $newPasswd;
         $this->_privateKey = $newKey;
-        $this->_privateKeyID = $this->getNIDfromData($newKey);
+        $this->_privateKeyID = $this->_nebuleInstance->getNIDfromData($newKey);
         $this->_issetPrivateKeyPassword = true;
         $this->_metrology->addLog('Change entity password - new ' . $this->_privateKeyID, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
@@ -447,14 +447,14 @@ class Entity extends Node implements nodeInterface
         }
 
         // Création lien 3.
-        $target = $this->getNIDfromData($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
-        $meta = $this->getNIDfromData('nebule/objet/hash');
+        $target = $this->_nebuleInstance->getNIDfromData($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
+        $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/hash');
         $link = '_' . $this->_id . '_' . $date . '_l_' . $this->_privateKeyID . '_' . $target . '_' . $meta;
         $this->_createNewEntityWriteLink($link, $this->_privateKeyID, $target, $meta);
 
         // Création lien 4.
-        $target = $this->getNIDfromData(self::ENTITY_TYPE);
-        $meta = $this->getNIDfromData('nebule/objet/type');
+        $target = $this->_nebuleInstance->getNIDfromData(self::ENTITY_TYPE);
+        $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
         $link = '_' . $this->_id . '_' . $date . '_l_' . $this->_privateKeyID . '_' . $target . '_' . $meta;
         $this->_createNewEntityWriteLink($link, $this->_privateKeyID, $target, $meta);
 
@@ -851,7 +851,7 @@ class Entity extends Node implements nodeInterface
             'l',
             $this->id,
             '',
-            $this->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
+            $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
         );
 
         // Fait un tri par pertinance sociale.
@@ -885,7 +885,7 @@ class Entity extends Node implements nodeInterface
             'l',
             $this->id,
             '',
-            $this->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
+            $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
         );
 
         // Fait un tri par pertinence sociale.
@@ -918,7 +918,7 @@ class Entity extends Node implements nodeInterface
             'l',
             $this->id,
             '',
-            $this->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE)
+            $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE)
         );
 
         // Fait un tri par pertinence sociale.

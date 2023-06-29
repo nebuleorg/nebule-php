@@ -773,6 +773,8 @@ class Configuration
      */
     public function getOptionUntyped(string $name)
     {
+        if (! isset(self::OPTIONS_LIST[$name]))
+            return '';
         return self::_changeTypeValueFromString($name, $this->_getOption($name));
     }
 
@@ -840,33 +842,34 @@ class Configuration
     }
 
     /**
-     * Get content of an option.
+     * Get content of an option as a string.
+     * An unknown option, if resolv, return a value too.
      *
      * @param string $name
-     * @return string|null
+     * @return string
      */
-    private function _getOption(string $name): ?string
+    private function _getOption(string $name): string
     {
         if ($name == '')
-            return null;
+            return '';
 
         if ($this->_metrologyInstance !== null)
             $this->_metrologyInstance->addLog('Get option ' . $name, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '56a98331');
 
-        $result = null;
+        $result = '';
 
         // Read on cache.
         if (isset($this->_optionCache[$name]))
             $result = $this->_optionCache[$name];
 
-        if ($result === null)
+        if ($result == '')
         {
             $value = $this->_getOptionFromEnvironmentStatic($name);
             if ($value != '')
                 $result = $value;
         }
 
-        if ($result === null
+        if ($result == ''
             && isset(self::OPTIONS_WRITABLE[$name])
             && self::OPTIONS_WRITABLE[$name]
         )
@@ -876,7 +879,7 @@ class Configuration
                 $result = $value;
         }
 
-        if ($result === null
+        if ($result == ''
             && isset(self::OPTIONS_DEFAULT_VALUE[$name])
         ) {
             $result = self::OPTIONS_DEFAULT_VALUE[$name];
@@ -889,7 +892,7 @@ class Configuration
             $this->_metrologyInstance->addLog('Return option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'd2fd4284');
 
         // Write on cache.
-        if ($result !== null
+        if ($result != ''
             && !$this->_writeOptionCacheLock
         )
             $this->_optionCache[$name] = $result;
@@ -1026,7 +1029,7 @@ class Configuration
      * @param string $value
      * @return string|bool|int|null
      */
-    static private function _changeTypeValueFromString(string $name, string $value)
+    static private function _changeTypeValueFromString(string $name, string $value = '')
     {
         if (!isset(self::OPTIONS_TYPE[$name])
             || !isset(self::OPTIONS_DEFAULT_VALUE[$name])
@@ -1140,15 +1143,15 @@ class Configuration
      * Extrait les options depuis les liens.
      *
      * @param string $name
-     * @return string|null
+     * @return string
      */
-    private function _getOptionFromLinks(string $name): ?string
+    private function _getOptionFromLinks(string $name): string
     {
         if ($name == ''
             || !$this->_permitOptionsByLinks
             || $this->_optionsByLinksIsInUse
         )
-            return null;
+            return '';
 
         $this->_optionsByLinksIsInUse = true;
 
