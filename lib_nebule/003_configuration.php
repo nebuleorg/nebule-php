@@ -773,8 +773,11 @@ class Configuration
      */
     public function getOptionUntyped(string $name)
     {
-        if (! isset(self::OPTIONS_LIST[$name]))
+        if (! isset(self::OPTIONS_TYPE[$name]))
+        {
+            $this->_metrologyInstance->addLog('Ask unknown option "' . $name . '"', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'cbf78f11');
             return '';
+        }
         return self::_changeTypeValueFromString($name, $this->_getOption($name));
     }
 

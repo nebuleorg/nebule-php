@@ -180,7 +180,7 @@ class Entity extends Node implements nodeInterface
         $signedLink = $signe . '.' . $this->_configuration->getOptionAsString('cryptoHashAlgorithm') . $link;
 
         // Écrit le lien pour l'objet de l'entité signataire.
-        if ($this->_configuration->getOptionUntyped('NEBULE_DEFAULT_PERMIT_ADD_LINK_TO_SIGNER'))
+        if ($this->_configuration->getOptionUntyped('permitAddLinkToSigner'))
             $this->_io->setLink($this->_id, $signedLink);
 
         // Écrit le lien pour l'objet source.
