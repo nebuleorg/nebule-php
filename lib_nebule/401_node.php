@@ -3059,7 +3059,8 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK4 line=' . $line, Me
                 && ( $bloc->getValid() || $withInvalidLinks )
             )
             {
-                $newLinks = $bloc->getLinks();
+                $newLinks = $bloc->getLinks(); // FIXME
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK4 type=' . gettype($newLinks), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
                 $this->_filterLinksByStructure($newLinks, $filter);
                 $links = array_merge($links, $newLinks);
             }
