@@ -3243,9 +3243,11 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 OID=' . $this->_id
             'bl/rl/nid4' => '',
         );
         $this->getLinks($list, $filter, false);
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 size=' . sizeof($list), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 foreach ($list as $link)
 {
-$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 nid2=' . $link['bl/rl/nid2'], Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 nid2=' . gettype($link['bl/rl/nid2']), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 nid2=' . (string)$link['bl/rl/nid2'], Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 }
 
         return $list;
