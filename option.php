@@ -42,7 +42,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020230318';
+    const APPLICATION_VERSION = '020231017';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2023';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -113,15 +113,13 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         if (strpos(Application::APPLICATION_WEBSITE, '://') === false)
             $linkApplicationWebsite = 'http' . '://' . Application::APPLICATION_WEBSITE;
 
-        $nebuleInstance = $this->_nebuleInstance;
-
         // Récupère l'entité déverrouillée ou l'entité instance du serveur.
         if ($this->_unlocked) {
-            $username = $nebuleInstance->getCurrentEntityInstance()->getFullName();
-            $userID = $nebuleInstance->getCurrentEntity();
+            $username = $this->_nebuleInstance->getCurrentEntityInstance()->getFullName();
+            $userID = $this->_nebuleInstance->getCurrentEntity();
         } else {
-            $username = $nebuleInstance->getInstanceEntityInstance()->getFullName();
-            $userID = $nebuleInstance->getInstanceEntity();
+            $username = $this->_nebuleInstance->getInstanceEntityInstance()->getFullName();
+            $userID = $this->_nebuleInstance->getInstanceEntity();
         }
         ?>
         <!DOCTYPE html>
@@ -560,7 +558,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         <body>
         <div class="layout-header header<?php if ($this->_unlocked) {
             echo 'unlock';
-            if ($nebuleInstance->getCurrentEntity() != $nebuleInstance->getInstanceEntity()) echo 'other';
+            if ($this->_nebuleInstance->getCurrentEntity() != $this->_nebuleInstance->getInstanceEntity()) echo 'other';
         } ?>">
             <div class="header-left">
                 <a href="/?<?php echo Displays::DEFAULT_BOOTSTRAP_LOGO_LINK; ?>">
@@ -593,8 +591,8 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         ?>
 
                         <form method="post"
-                              action="?<?php echo nebule::COMMAND_SELECT_ENTITY . '=' . $nebuleInstance->getInstanceEntity() . '&' . nebule::COMMAND_SWITCH_TO_ENTITY; ?>">
-                            <input type="hidden" name="id" value="<?php echo $nebuleInstance->getInstanceEntity(); ?>">
+                              action="?<?php echo nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getInstanceEntity() . '&' . nebule::COMMAND_SWITCH_TO_ENTITY; ?>">
+                            <input type="hidden" name="id" value="<?php echo $this->_nebuleInstance->getInstanceEntity(); ?>">
                             <label>
                                 <input type="password" name="pwd">
                             </label>
@@ -608,7 +606,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         </div>
         <div class="layout-footer footer<?php if ($this->_unlocked) {
             echo 'unlock';
-            if ($nebuleInstance->getCurrentEntity() != $nebuleInstance->getInstanceEntity()) echo 'other';
+            if ($this->_nebuleInstance->getCurrentEntity() != $this->_nebuleInstance->getInstanceEntity()) echo 'other';
         } ?>">
             <div class="footer-center">
                 <p>
@@ -625,7 +623,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         <?php
         // Vérifie les tests de sécurité. Pas d'affichage des options si problème.
         if ($this->_applicationInstance->getCheckSecurityAll() == 'OK') {
-            if ($nebuleInstance->getModeRescue()) {
+            if ($this->_nebuleInstance->getModeRescue()) {
                 $this->displayMessageWarning('::::RESCUE');
             }
 
@@ -677,19 +675,19 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
     private function _displayMenu()
     {
         $list = array();
-        $list[0]['icon'] = Displays::DEFAULT_ICON_LL;
+        $list[0]['icon'] = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_LL);
         $list[0]['title'] = 'Options';
         $list[0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_OPTIONS;
-        $list[1]['icon'] = Displays::DEFAULT_ICON_LF;
+        $list[1]['icon'] = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_LF);
         $list[1]['title'] = 'Global authorities';
         $list[1]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_GLOBAL_AUTHORITIES;
-        $list[2]['icon'] = Displays::DEFAULT_ICON_LF;
+        $list[2]['icon'] = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_LF);
         $list[2]['title'] = 'Local authorities';
         $list[2]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_LOCAL_AUTHORITIES;
-        $list[4]['icon'] = Displays::DEFAULT_ICON_LS;
+        $list[4]['icon'] = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_LS);
         $list[4]['title'] = 'Applications';
         $list[4]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_APPLICATIONS;
-        $list[5]['icon'] = Displays::DEFAULT_ICON_LK;
+        $list[5]['icon'] = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_LK);
         $list[5]['title'] = 'Local recovery';
         $list[5]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_RECOVERY;
         ?>
@@ -722,10 +720,8 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
      */
     private function _displayGlobalAuthorities()
     {
-        $nebuleInstance = $this->_nebuleInstance;
-
         // Titre
-        echo $this->getDisplayTitle('Global authorities');
+        echo $this->getDisplayTitle('Global authorities', '', false);
 
         $param = array(
             'enableDisplayColor' => true,
@@ -753,28 +749,28 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         $i = 0;
 
         // Puppetmaster
-        $list[$i]['object'] = $nebuleInstance->getPuppetmasterInstance();
+        $list[$i]['object'] = $this->_nebuleInstance->getPuppetmasterInstance();
         $list[$i]['param'] = $param;
         $list[$i]['param']['flagProtection'] = true;
-        if ($nebuleInstance->getPuppetmaster() == $nebuleInstance->getInstanceEntity())
+        if ($this->_nebuleInstance->getPuppetmaster() == $this->_nebuleInstance->getInstanceEntity())
             $list[$i]['param']['flagMessage'] = 'Instance entity';
-        if ($nebuleInstance->getPuppetmaster() == $nebuleInstance->getDefaultEntity()) {
+        if ($this->_nebuleInstance->getPuppetmaster() == $this->_nebuleInstance->getDefaultEntity()) {
             if ($list[$i]['param']['flagMessage'] != '')
                 $list[$i]['param']['flagMessage'] .= ', ';
             $list[$i]['param']['flagMessage'] .= 'Default entity';
         }
 
         // Security and code masters
-        foreach (array_merge($nebuleInstance->getSecurityAuthoritiesInstance(), $nebuleInstance->getCodeAuthoritiesInstance()) as $instance)
+        foreach (array_merge($this->_nebuleInstance->getSecurityAuthoritiesInstance(), $this->_nebuleInstance->getCodeAuthoritiesInstance()) as $instance)
         {
             $i++;
             $list[$i]['object'] = $instance;
             $list[$i]['param'] = $param;
             $list[$i]['param']['enableDisplayRefs'] = true;
-            $list[$i]['param']['objectRefs'][0] = $nebuleInstance->getPuppetmasterInstance();
-            if ($instance->getID() == $nebuleInstance->getInstanceEntity())
+            $list[$i]['param']['objectRefs'][0] = $this->_nebuleInstance->getPuppetmasterInstance();
+            if ($instance->getID() == $this->_nebuleInstance->getInstanceEntity())
                 $list[$i]['param']['flagMessage'] = 'Instance entity';
-            if ($instance->getID() == $nebuleInstance->getDefaultEntity()) {
+            if ($instance->getID() == $this->_nebuleInstance->getDefaultEntity()) {
                 if ($list[$i]['param']['flagMessage'] != '')
                     $list[$i]['param']['flagMessage'] .= ', ';
                 $list[$i]['param']['flagMessage'] .= 'Default entity';
@@ -806,25 +802,25 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
      */
     private function _displayLocalAuthorities()
     {
-        $nebuleInstance = $this->_nebuleInstance;
-
-        $refAuthority = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
+        $refAuthority = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
 
         // Titre
-        echo $this->getDisplayTitle('Primary local authorities');
+        echo $this->getDisplayTitle('Primary local authorities', '', false);
 
-        $listEntities = $nebuleInstance->getLocalPrimaryAuthoritiesInstance();
+        $listEntities = $this->_nebuleInstance->getLocalPrimaryAuthoritiesInstance();
         $listOkEntities = array(
-            $nebuleInstance->getPuppetmaster() => true,
-        /*    $nebuleInstance->getSecurityMaster() => true,
-            $nebuleInstance->getCodeMaster() => true,
-            $nebuleInstance->getDirectoryMaster() => true,
-            $nebuleInstance->getTimeMaster() => true,*/
+            $this->_nebuleInstance->getPuppetmaster() => true,
+        /*    $this->_nebuleInstance->getSecurityMaster() => true,
+            $this->_nebuleInstance->getCodeMaster() => true,
+            $this->_nebuleInstance->getDirectoryMaster() => true,
+            $this->_nebuleInstance->getTimeMaster() => true,*/
         );
-        foreach (array_merge($nebuleInstance->getSecurityAuthorities(),
-            $nebuleInstance->getCodeAuthorities(),
-            $nebuleInstance->getDirectoryAuthorities(),
-            $nebuleInstance->getTimeAuthorities()()) as $id)
+        foreach (array_merge(
+                $this->_nebuleInstance->getSecurityAuthorities(),
+                $this->_nebuleInstance->getCodeAuthorities(),
+                $this->_nebuleInstance->getDirectoryAuthorities(),
+                $this->_nebuleInstance->getTimeAuthorities())
+            as $id)
         {
             $listOkEntities[$id] = true;
         }
@@ -862,13 +858,13 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     'flagProtection' => false,
                 );
 
-                if ($id == $nebuleInstance->getInstanceEntity()
+                if ($id == $this->_nebuleInstance->getInstanceEntity()
                     && $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
                 ) {
                     $list[$i]['param']['flagMessage'] = 'Instance entity';
                     $list[$i]['param']['flagProtection'] = true;
                 }
-                if ($id == $nebuleInstance->getDefaultEntity()
+                if ($id == $this->_nebuleInstance->getDefaultEntity()
                     && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                 ) {
                     if ($list[$i]['param']['flagMessage'] != '') {
@@ -890,12 +886,12 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         unset($list);
 
         // Titre des entités secondaires.
-        echo $this->getDisplayTitle('Secondary local authorities');
+        echo $this->getDisplayTitle('Secondary local authorities', '', false);
 
         if ($this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities')) {
             // Liste les entités marquées comme entités de recouvrement.
-            $listEntities = $nebuleInstance->getLocalAuthoritiesInstance();
-            $listSigners = $nebuleInstance->getLocalAuthoritiesSigners();
+            $listEntities = $this->_nebuleInstance->getLocalAuthoritiesInstance();
+            $listSigners = $this->_nebuleInstance->getLocalAuthoritiesSigners();
 
             // Affiche les entités autorités.
             $list = array();
@@ -931,20 +927,20 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     );
 
                     if ($this->_unlocked
-                        && $listSigners[$id] == $nebuleInstance->getCurrentEntity()
+                        && $listSigners[$id] == $this->_nebuleInstance->getCurrentEntity()
                         && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitUploadLink'))
-                        && ($id != $nebuleInstance->getInstanceEntity()
+                        && ($id != $this->_nebuleInstance->getInstanceEntity()
                             || !$this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
                         )
-                        && ($id != $nebuleInstance->getDefaultEntity()
+                        && ($id != $this->_nebuleInstance->getDefaultEntity()
                             || !$this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                         )
                     ) {
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Remove';
                         $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LX;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
-                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refAuthority
-                            . $nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refAuthority
+                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                     }
 
                     // Marque comme vu.
@@ -977,11 +973,11 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         if ($this->_unlocked
             && $this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities')
             && (
-                ($nebuleInstance->getCurrentEntity() == $nebuleInstance->getInstanceEntity()
+                ($this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getInstanceEntity()
                     && $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
                 )
                 ||
-                ($nebuleInstance->getCurrentEntity() == $nebuleInstance->getDefaultEntity()
+                ($this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getDefaultEntity()
                     && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                 )
             )
@@ -990,11 +986,11 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         ) {
 
             // Titre
-            echo $this->getDisplayTitle('Add entities as local authority');
+            echo $this->getDisplayTitle('Add entities as local authority', '', false);
 
             // Lister les entités.
-            $listEntities = $nebuleInstance->getListEntitiesInstances();
-            $listAuthorities = $nebuleInstance->getAuthorities();
+            $listEntities = $this->_nebuleInstance->getListEntitiesInstances();
+            $listAuthorities = $this->_nebuleInstance->getAuthorities();
 
             // Affiche les entités à ajouter.
             $list = array();
@@ -1035,8 +1031,8 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Add';
                         $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LL;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
-                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refAuthority
-                            . $nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $this->_nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refAuthority
+                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                     }
 
                     // Marque comme vu.
@@ -1081,10 +1077,8 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
      */
     private function _displayOptions()
     {
-        $nebuleInstance = $this->_nebuleInstance;
-
         // Titre
-        echo $this->getDisplayTitle('Options');
+        echo $this->getDisplayTitle('Options', '', false);
         ?>
 
         <div id="options">
@@ -1112,7 +1106,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
                     // Extrait les propriétés de l'option.
                     $optionValue = $this->_configurationInstance->getOptionUntyped($optionName);
-                    $optionID = $nebuleInstance->getCryptoInstance()->hash($optionName, 'sha2.256') . '.sha2.256';
+                    $optionID = $this->_nebuleInstance->getCryptoInstance()->hash($optionName, 'sha2.256') . '.sha2.256';
                     $optionValueDisplay = (string)$optionValue;
                     $optionType = $listOptionsType[$optionName];
                     $optionWritable = $listOptionsWritable[$optionName];
@@ -1199,7 +1193,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                                     Global write lock.
                                     <?php
                                 } elseif (!$this->_unlocked
-                                    || $nebuleInstance->getCurrentEntity() != $nebuleInstance->getInstanceEntity()
+                                    || $this->_nebuleInstance->getCurrentEntity() != $this->_nebuleInstance->getInstanceEntity()
                                 ) {
                                     ?>
 
@@ -1212,7 +1206,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                                         <input type="hidden" name="<?php echo Action::COMMAND_OPTION_NAME; ?>"
                                                value="<?php echo $optionName; ?>">
                                         <input type="hidden" name="<?php echo nebule::COMMAND_SELECT_TICKET; ?>"
-                                               value="<?php echo $nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
+                                               value="<?php echo $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                                         <?php
                                         if ($optionType == 'string') {
                                             ?>
@@ -1300,34 +1294,37 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
     private function _displayApplications()
     {
-        $nebuleInstance = $this->_nebuleInstance;
-
         // Titre
-        echo $this->getDisplayTitle('Applications');
+        echo $this->getDisplayTitle('Applications', '', false);
         ?>
 
         <div id="apps">
             <?php
             // Extraire la liste des applications disponibles.
-            $refAppsID = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
-            $instanceAppsID = $nebuleInstance->newObject($refAppsID);
+            $refAppsID = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
+            $instanceAppsID = $this->_nebuleInstance->newObject($refAppsID);
             $i = 0;
             $applicationsList = array();
             $signersList = array();
 
-            // Liste les applications reconnues par le maître du code.
-            $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getCodeMaster(), '', 'f', $refAppsID, '', $refAppsID);
-            foreach ($linksList as $link) {
-                $hashTarget = $link->getParsed()['bl/rl/nid2'];
-                $applicationsList[$hashTarget] = $hashTarget;
-                $signersList[$hashTarget] = $link->getParsed()['bs/rs1/eid'];
+            // Liste les applications reconnues par les maîtres du code.
+            $listCodeAuthorities = $this->_nebuleInstance->getCodeAuthorities();
+            $linksList = array();
+            foreach ($listCodeAuthorities as $instance) {
+                $linksList = $instanceAppsID->getLinksOnFields($instance, '', 'f', $refAppsID, '', $refAppsID);
+                foreach ($linksList as $link) {
+                    $hashTarget = $link->getParsed()['bl/rl/nid2'];
+                    $applicationsList[$hashTarget] = $hashTarget;
+                    $signersList[$hashTarget] = $link->getParsed()['bs/rs1/eid'];
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTarget, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+                }
             }
 
             // Liste les applications reconnues par l'entité instance du serveur, si autorité locale et pas en mode de récupération.
             if ($this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
-                && !$nebuleInstance->getModeRescue()
+                && !$this->_nebuleInstance->getModeRescue()
             ) {
-                $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getInstanceEntity(), '', 'f', $refAppsID, '', $refAppsID);
+                $linksList = $instanceAppsID->getLinksOnFields($this->_nebuleInstance->getInstanceEntity(), '', 'f', $refAppsID, '', $refAppsID);
                 foreach ($linksList as $link) {
                     $hashTarget = $link->getParsed()['bl/rl/nid2'];
                     $applicationsList[$hashTarget] = $hashTarget;
@@ -1337,9 +1334,9 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
             // Liste les applications reconnues par l'entité par défaut, si autorité locale et pas en mode de récupération.
             if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
-                && !$nebuleInstance->getModeRescue()
+                && !$this->_nebuleInstance->getModeRescue()
             ) {
-                $linksList = $instanceAppsID->getLinksOnFields($nebuleInstance->getDefaultEntity(), '', 'f', $refAppsID, '', $refAppsID);
+                $linksList = $instanceAppsID->getLinksOnFields($this->_nebuleInstance->getDefaultEntity(), '', 'f', $refAppsID, '', $refAppsID);
                 foreach ($linksList as $link) {
                     $hashTarget = $link->getParsed()['bl/rl/nid2'];
                     $applicationsList[$hashTarget] = $hashTarget;
@@ -1355,21 +1352,28 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
                 $color = '#' . substr($application . '000000', 0, 6);
                 //$colorSigner = '#'.substr($signersList[$application].'000000',0,6);
-                $instance = new Node($nebuleInstance, $application);
+                $instance = new Node($this->_nebuleInstance, $application);
                 $title = $instance->getName('authority');
                 $shortName = substr($instance->getSurname('authority') . '--', 0, 2);
                 $shortName = strtoupper(substr($shortName, 0, 1)) . strtolower(substr($shortName, 1, 1));
 
                 // Recherche si l'application ne doit pas être pré-chargée.
                 $noPreloadSigner = '';
-                $refNoPreload = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT);
-                $linksList = $instance->readLinksFilterFull('', '', 'f', $application, $refNoPreload, $application); // FIXME error !!!
+                $refNoPreload = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT);
+//                $linksList = $instance->readLinksFilterFull('', '', 'f', $application, $refNoPreload, $application); // FIXME error !!!
+                $filter = array(
+                    'bl/rl/req' => 'f',
+                    'bl/rl/nid1' => $application,
+                    'bl/rl/nid2' => $refNoPreload,
+                    'bl/rl/nid3' => $application,
+                );
+                $instance->getLinks($linksList, $filter);
                 if (sizeof($linksList) != 0) {
                     $signer = '';
                     $authority = '';
                     foreach ($linksList as $link) {
                         $signer = $link->getParsed()['bs/rs1/eid'];
-                        foreach ($nebuleInstance->getLocalAuthorities() as $authority) {
+                        foreach ($this->_nebuleInstance->getLocalAuthorities() as $authority) {
                             if ($signer == $authority) {
                                 // Si le lien est valide, active le chargement direct de l'application.
                                 $noPreloadSigner = $signer;
@@ -1394,27 +1398,46 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                 if ($application == $this->_configurationInstance->getOptionUntyped('defaultApplication'))
                     $activated = true;
                 if (!$activated) {
-                    $refActivated = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE);
-                    $linksList = $instance->readLinksFilterFull($nebuleInstance->getInstanceEntity(), '', 'f', $application, $refActivated, $application);
+                    $refActivated = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE);
+//                    $linksList = $instance->readLinksFilterFull($this->_nebuleInstance->getInstanceEntity(), '', 'f', $application, $refActivated, $application);
+                    $filter = array(
+                        'bs/rs1/eid' => $this->_nebuleInstance->getInstanceEntity(),
+                        'bl/rl/req' => 'f',
+                        'bl/rl/nid1' => $application,
+                        'bl/rl/nid2' => $refActivated,
+                        'bl/rl/nid3' => $application,
+                    );
+                    $instance->getLinks($linksList, $filter);
                     if (sizeof($linksList) != 0)
                         $activated = true;
                 }
 
-                // Recherche de la dernière mise à jours.
+                // Recherche de la dernière mise à jour.
                 $updater = $signersList[$application];
-                $linksResult = $instance->readLinksFilterFull($nebuleInstance->getCodeMaster(), '', 'f', $application, '', $refAppsID);
+                $linksResult = array();
+                foreach ($listCodeAuthorities as $instance) {
+//                    $linksResult = $instance->readLinksFilterFull($this->_nebuleInstance->getCodeMaster(), '', 'f', $application, '', $refAppsID);
+                    $filter = array(
+                        'bs/rs1/eid' => $instance,
+                        'bl/rl/req' => 'f',
+                        'bl/rl/nid1' => $application,
+                        'bl/rl/nid2' => '',
+                        'bl/rl/nid3' => $refAppsID,
+                    );
+                    $instance->getLinks($linksResult, $filter);
+                }
                 $linksList = array();
                 if ($this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
-                    && !$nebuleInstance->getModeRescue()
+                    && !$this->_nebuleInstance->getModeRescue()
                 ) {
-                    $linksList = $instance->readLinksFilterFull($nebuleInstance->getInstanceEntity(), '', 'f', $application, '', $refAppsID);
+                    $linksList = $instance->readLinksFilterFull($this->_nebuleInstance->getInstanceEntity(), '', 'f', $application, '', $refAppsID);
                     foreach ($linksList as $link)
                         $linksResult[] = $link;
                 }
                 if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
-                    && !$nebuleInstance->getModeRescue()
+                    && !$this->_nebuleInstance->getModeRescue()
                 ) {
-                    $linksList = $instance->readLinksFilterFull($nebuleInstance->getDefaultEntity(), '', 'f', $application, '', $refAppsID);
+                    $linksList = $instance->readLinksFilterFull($this->_nebuleInstance->getDefaultEntity(), '', 'f', $application, '', $refAppsID);
                     foreach ($linksList as $link)
                         $linksResult[] = $link;
                 }
@@ -1454,20 +1477,20 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
                             if ($activable
                                 && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink'))
-                                && $nebuleInstance->getCurrentEntityUnlocked()
-                                && $nebuleInstance->getCurrentEntity() == $nebuleInstance->getInstanceEntity()
+                                && $this->_nebuleInstance->getCurrentEntityUnlocked()
+                                && $this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getInstanceEntity()
                             ) {
                                 if ($activated) {
                                     $this->displayHypertextLink(
                                         $this->convertInlineIconFace(Displays::DEFAULT_ICON_LX) . 'Disable',
                                         '/?' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $application . '_' . $refActivated . '_' . $application
-                                        . $nebuleInstance->getTicketingInstance()->getActionTicketValue()
+                                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue()
                                     );
                                 } else {
                                     $this->displayHypertextLink(
                                         $this->convertInlineIconFace(Displays::DEFAULT_ICON_LL) . 'Enable',
                                         '/?' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $application . '_' . $refActivated . '_' . $application
-                                        . $nebuleInstance->getTicketingInstance()->getActionTicketValue()
+                                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue()
                                     );
                                 }
                                 echo "<br />\n";
@@ -1476,12 +1499,12 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                             if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject',
                                         'permitWriteLink', 'permitSynchronizeObject', 'permitSynchronizeLink',
                                         'permitSynchronizeApplication', 'permitPublicSynchronizeApplication'))
-                                    || $nebuleInstance->getCurrentEntityUnlocked()
+                                    || $this->_nebuleInstance->getCurrentEntityUnlocked()
                             ) {
                                 $this->displayHypertextLink(
                                     $this->convertInlineIconFace(Displays::DEFAULT_ICON_SYNOBJ) . 'Synchronize',
                                     '/?' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=' . $application
-                                    . $nebuleInstance->getTicketingInstance()->getActionTicketValue()
+                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue()
                                 );
                             }
                             ?>
@@ -1531,7 +1554,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
             if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject',
                         'permitWriteLink', 'permitSynchronizeObject', 'permitSynchronizeLink',
                         'permitSynchronizeApplication', 'permitPublicSynchronizeApplication'))
-                    || $nebuleInstance->getCurrentEntityUnlocked()
+                    || $this->_nebuleInstance->getCurrentEntityUnlocked()
             ) {
                 ?>
 
@@ -1540,7 +1563,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     $this->displayHypertextLink(
                         $this->convertInlineIconFace(Displays::DEFAULT_ICON_SYNOBJ) . 'Synchronize all applications',
                         '/?' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=0'
-                        . $nebuleInstance->getTicketingInstance()->getActionTicketValue()
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue()
                     );
                     ?>
 
@@ -1587,26 +1610,21 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
      */
     private function _displayRecovery()
     {
-        $nebuleInstance = $this->_nebuleInstance;
-
         // Titre
-        echo $this->getDisplayTitle('Local recovery');
+        echo $this->getDisplayTitle('Local recovery', '', false);
 
-        $listOkEntities = array(
-            $nebuleInstance->getPuppetmaster() => true,
-            $nebuleInstance->getSecurityMaster() => true,
-            $nebuleInstance->getCodeMaster() => true,
-            $nebuleInstance->getDirectoryMaster() => true,
-            $nebuleInstance->getTimeMaster() => true,
-        );
+        $listAuthorities = $this->_nebuleInstance->getAuthorities();
+        $listOkEntities = array();
+        foreach ($listAuthorities as $eid)
+            $listOkEntities[$eid] = true;
 
         // Liste les entités marquées comme entités de recouvrement.
-        $listEntities = $nebuleInstance->getRecoveryEntitiesInstance();
-        $listSigners = $nebuleInstance->getRecoveryEntitiesSigners();
+        $listEntities = $this->_nebuleInstance->getRecoveryEntitiesInstance();
+        $listSigners = $this->_nebuleInstance->getRecoveryEntitiesSigners();
 
         // Affiche les entités de recouvrement.
         if ($this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities')) {
-            $refRecovery = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
+            $refRecovery = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
             $list = array();
             $i = 0;
 
@@ -1639,13 +1657,13 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         'flagProtection' => false,
                     );
 
-                    if ($id == $nebuleInstance->getInstanceEntity()
+                    if ($id == $this->_nebuleInstance->getInstanceEntity()
                         && $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsRecovery')
                     ) {
                         $list[$i]['param']['flagMessage'] = 'Instance entity';
                         $list[$i]['param']['flagProtection'] = true;
                     }
-                    if ($id == $nebuleInstance->getDefaultEntity()
+                    if ($id == $this->_nebuleInstance->getDefaultEntity()
                         && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsRecovery')
                     ) {
                         if ($list[$i]['param']['flagMessage'] != '') {
@@ -1656,20 +1674,20 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     }
 
                     if ($this->_unlocked
-                        && $listSigners[$id] == $nebuleInstance->getCurrentEntity()
+                        && $listSigners[$id] == $this->_nebuleInstance->getCurrentEntity()
                         && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitUploadLink'))
-                        && ($id != $nebuleInstance->getInstanceEntity()
+                        && ($id != $this->_nebuleInstance->getInstanceEntity()
                             || !$this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsRecovery')
                         )
-                        && ($id != $nebuleInstance->getDefaultEntity()
+                        && ($id != $this->_nebuleInstance->getDefaultEntity()
                             || !$this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsRecovery')
                         )
                     ) {
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Remove';
                         $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LX;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
-                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refRecovery
-                            . $nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refRecovery
+                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                     }
 
                     // Marque comme vu.
@@ -1701,24 +1719,24 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         // Affiche les entités à ajouter.
         if ($this->_unlocked
             && (
-                ($nebuleInstance->getCurrentEntity() == $nebuleInstance->getInstanceEntity()
+                ($this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getInstanceEntity()
                     && $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
                 )
                 ||
-                ($nebuleInstance->getCurrentEntity() == $nebuleInstance->getDefaultEntity()
+                ($this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getDefaultEntity()
                     && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                 )
             )
             && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitUploadLink', 'permitRecoveryEntities'))
         ) {
             // Titre
-            echo $this->getDisplayTitle('Add entities as recovery');
+            echo $this->getDisplayTitle('Add entities as recovery', '', false);
 
             // Lister les entités.
-            $listEntities = $nebuleInstance->getListEntitiesInstances();
+            $listEntities = $this->_nebuleInstance->getListEntitiesInstances();
 
             // Affiche les entités.
-            $refRecovery = $nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
+            $refRecovery = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
             $list = array();
             $i = 0;
 
@@ -1755,8 +1773,8 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Add';
                         $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LL;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
-                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refRecovery
-                            . $nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $this->_nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refRecovery
+                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                     }
 
                     // Marque comme vu.

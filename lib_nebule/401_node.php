@@ -3053,14 +3053,14 @@ class Node implements nodeInterface
 
         foreach ($lines as $line)
         {
-$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK4 line=' . $line, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK4 line=' . $line, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             $bloc = $this->_cache->newLink($line, Cache::TYPE_BLOCLINK);
             if ($bloc->getValidStructure()
                 && ( $bloc->getValid() || $withInvalidLinks )
             )
             {
                 $newLinks = $bloc->getLinks(); // FIXME
-$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK4 type=' . gettype($newLinks), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK4 type=' . gettype($newLinks), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
                 $this->_filterLinksByStructure($newLinks, $filter);
                 $links = array_merge($links, $newLinks);
             }
@@ -3232,7 +3232,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK4 type=' . gettype($
 
         if (!self::checkNID($reference))
             $reference = $this->_nebuleInstance->getNIDfromData($reference);
-$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 OID=' . $this->_id . ' RID=' . $reference, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 OID=' . $this->_id . ' RID=' . $reference, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         // Liste les liens à la recherche de la propriété.
         $list = array();
@@ -3243,12 +3243,12 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 OID=' . $this->_id
             'bl/rl/nid4' => '',
         );
         $this->getLinks($list, $filter, false);
-$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 size=' . sizeof($list), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-foreach ($list as $link)
-{
-$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 nid2=' . gettype($link['bl/rl/nid2']), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 nid2=' . (string)$link['bl/rl/nid2'], Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-}
+//$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 size=' . sizeof($list), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//foreach ($list as $link)
+//{
+//$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 nid2=' . gettype($link->getParsed()['bl/rl/nid2']), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 nid2=' . (string)$link->getParsed()['bl/rl/nid2'], Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//}
 
         return $list;
     }

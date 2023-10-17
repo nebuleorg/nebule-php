@@ -2100,42 +2100,42 @@ class nebule
     private $_puppetmasterInstance = null;
 
     /**
-     * L'ID du maître de la sécurité.
+     * Les ID des maîtres de la sécurité.
      */
     private $_securityAuthorities = array();
 
     /**
-     * L'instance du maître de la sécurité.
+     * Les instances des maîtres de la sécurité.
      */
     private $_securityAuthoritiesInstance = array();
 
     /**
-     * L'ID du maître du code.
+     * Les ID des maîtres du code.
      */
     private $_codeAuthorities = array();
 
     /**
-     * L'instance du maître du code.
+     * Les instances des maîtres du code.
      */
     private $_codeAuthoritiesInstance = array();
 
     /**
-     * Le maître de l'annuaire.
+     * Les maîtres de l'annuaire.
      */
     private $_directoryAuthorities = array();
 
     /**
-     * L'instance du maître de l'annuaire.
+     * Les instances des maîtres de l'annuaire.
      */
     private $_directoryAuthoritiesInstance = array();
 
     /**
-     * Le maître du temps.
+     * Les maîtres du temps.
      */
     private $_timeAuthorities = array();
 
     /**
-     * L'instance du maître du temps.
+     * Les instances des maîtres du temps.
      */
     private $_timeAuthoritiesInstance = array();
 
@@ -2436,7 +2436,7 @@ class nebule
     }
 
     /**
-     * Ajoute des autres entité marqués comme autorités locales.
+     * Ajoute des autres entités marquées comme autorités locales.
      *
      * @return void
      */
@@ -2498,7 +2498,7 @@ class nebule
     }
 
     /**
-     * Lit la liste des instance des autorités.
+     * Lit la liste des instances des autorités.
      *
      * @return array:Entity
      */
@@ -2518,7 +2518,7 @@ class nebule
     }
 
     /**
-     * Lit la liste des instance des autorités locales.
+     * Lit la liste des instances des autorités locales.
      *
      * @return array:Entity
      */
@@ -2548,7 +2548,7 @@ class nebule
     }
 
     /**
-     * Lit la liste des instance des autorités locales.
+     * Lit la liste des instances des autorités locales.
      *
      * @return array:Entity
      */

@@ -1838,7 +1838,7 @@ N98+3M2PiAQ8lJMzXblyZWRycnLASJ8KqdVq3n///Ut79+49M1RxH3UCdA8VCAgPD/eIiYmZ8dprrzkO
                 $ok = false;
             if (!$instance->write())
                 $ok = false;
-            $nebuleInstance->getMetrologyInstance()->addLog('MARK ' . $instance->getID(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//            $nebuleInstance->getMetrologyInstance()->addLog('MARK ' . $instance->getID(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         }
         return $ok;
     }
@@ -1860,10 +1860,10 @@ N98+3M2PiAQ8lJMzXblyZWRycnLASJ8KqdVq3n///Ut79+49M1RxH3UCdA8VCAgPD/eIiYmZ8dprrzkO
 
             $reference = $nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE);
             if (self::REF_IMG[$name] != '') {
-                $nebuleInstance->getMetrologyInstance()->addLog('MARK ' . 'f>' . self::REF_IMG[$name] . '>' . $instance->getID() . '>' . $reference, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-                if ($instance->writeLink('f>' . self::REF_IMG[$name] . '>' . $instance->getID()) . '>' . $reference)
-                    $nebuleInstance->getMetrologyInstance()->addLog('MARK write link ok', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-                else
+//                $nebuleInstance->getMetrologyInstance()->addLog('MARK ' . 'f>' . self::REF_IMG[$name] . '>' . $instance->getID() . '>' . $reference, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+                if (!$instance->writeLink('f>' . self::REF_IMG[$name] . '>' . $instance->getID()) . '>' . $reference)
+//                    $nebuleInstance->getMetrologyInstance()->addLog('MARK write link ok', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//                else
                     $ok = false;
             }
         }

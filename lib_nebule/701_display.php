@@ -2118,9 +2118,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $messageText = '::::INFO';
             $messageIcon = self::DEFAULT_ICON_IINFO;
         }
+        $instanceIcon = $this->_nebuleInstance->newObject($messageIcon);
 
         return '<div class="' . $messageCssClass . '"><p>'
-            . $this->convertUpdateImage($messageIcon, $messageText, $iconCssClass)
+            . $this->convertUpdateImage($instanceIcon, $messageText, $iconCssClass)
             . '&nbsp;' . sprintf($this->_traductionInstance->getTraduction($text), $arg1, $arg2, $arg3, $arg4, $arg5)
             . "</p></div>\n";
     }
@@ -2247,14 +2248,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 	 *  Affichage des contenus.
 	 * -------------------------------------------------------------------------------- */
     /**
-     * Prépare à afficher le contenu d'un objet suivant sont type.
+     * Prépare à afficher le contenu d'un objet suivant son type.
      *
-     * @param string|Node $object
-     * @param string      $size [full|half|small]
-     * @param bool        $permitWarnProtected
+     * @param Node   $object
+     * @param string $size [full|half|small]
+     * @param bool   $permitWarnProtected
      * @return string
      */
-    public function convertObjectContentSized($object, string $size = 'half', bool $permitWarnProtected = true): string
+    public function convertObjectContentSized(Node $object, string $size = 'half', bool $permitWarnProtected = true): string
     {
         $result = '';
         $unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
@@ -2263,18 +2264,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             && $size != 'small'
         )
             $size = 'half';
-        // Vérifie que c'est un objet.
-        if (!is_a($object, 'Nebule\Library\Node') // TODO simplify!
-            && !is_a($object, 'Nebule\Library\Group')
-            && !is_a($object, 'Nebule\Library\Entity')
-            && !is_a($object, 'Nebule\Library\Conversation')
-            && !is_a($object, 'Nebule\Library\Currency')
-            && !is_a($object, 'Nebule\Library\TokenPool')
-            && !is_a($object, 'Nebule\Library\Token')
-            && !is_a($object, 'Nebule\Library\Transaction')
-            && !is_a($object, 'Nebule\Library\Wallet')
-        )
-            $object = $this->_nebuleInstance->newObject($object);
 
         // Détermine si c'est un groupe.
         $isGroup = $object->getIsGroup('all');
@@ -2360,73 +2349,73 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
     /**
-     * Prépare à afficher le contenu d'un objet suivant sont type. Version full.
+     * Prépare à afficher le contenu d'un objet suivant son type. Version full.
      *
-     * @param string|Node $object
-     * @param bool        $permitWarnProtected
+     * @param Node $object
+     * @param bool $permitWarnProtected
      * @return string
      */
-    public function convertObjectContentFull($object, bool $permitWarnProtected = true): string
+    public function convertObjectContentFull(Node $object, bool $permitWarnProtected = true): string
     {
         return $this->convertObjectContentSized($object, 'full', $permitWarnProtected);
     }
 
     /**
-     * Afficher le contenu d'un objet suivant sont type. Version full.
+     * Afficher le contenu d'un objet suivant son type. Version full.
      *
-     * @param string|Node $object
-     * @param bool        $permitWarnProtected
+     * @param Node $object
+     * @param bool $permitWarnProtected
      * @return void
      */
-    public function displayObjectContentFull($object, bool $permitWarnProtected = true): void
+    public function displayObjectContentFull(Node $object, bool $permitWarnProtected = true): void
     {
         echo $this->convertObjectContentSized($object, 'full', $permitWarnProtected);
     }
 
     /**
-     * Prépare à afficher le contenu d'un objet suivant sont type. Version half.
+     * Prépare à afficher le contenu d'un objet suivant son type. Version half.
      *
-     * @param string|Node $object
-     * @param bool        $permitWarnProtected
+     * @param Node $object
+     * @param bool $permitWarnProtected
      * @return string
      */
-    public function convertObjectContentHalf($object, bool $permitWarnProtected = true): string
+    public function convertObjectContentHalf(Node $object, bool $permitWarnProtected = true): string
     {
         return $this->convertObjectContentSized($object, 'half', $permitWarnProtected);
     }
 
     /**
-     * Afficher le contenu d'un objet suivant sont type. Version half.
+     * Afficher le contenu d'un objet suivant son type. Version half.
      *
-     * @param string|Node $object
-     * @param bool        $permitWarnProtected
+     * @param Node $object
+     * @param bool $permitWarnProtected
      * @return void
      */
-    public function displayObjectContentHalf($object, bool $permitWarnProtected = true): void
+    public function displayObjectContentHalf(Node $object, bool $permitWarnProtected = true): void
     {
         echo $this->convertObjectContentSized($object, 'half', $permitWarnProtected);
     }
 
     /**
-     * Prépare à afficher le contenu d'un objet suivant sont type. Version small.
+     * Prépare à afficher le contenu d'un objet suivant son type. Version small.
      *
-     * @param string|Node $object
-     * @param bool        $permitWarnProtected
+     * @param Node $object
+     * @param bool $permitWarnProtected
      * @return string
      */
-    public function convertObjectContentSmall($object, bool $permitWarnProtected = true): string
+    public function convertObjectContentSmall(Node $object, bool $permitWarnProtected = true): string
     {
         return $this->convertObjectContentSized($object, 'small', $permitWarnProtected);
     }
 
     /**
-     * Afficher le contenu d'un objet suivant sont type. Version small.
+     * Afficher le contenu d'un objet suivant son type. Version small.
      *
-     * @param string|Node $object
-     * @param bool        $permitWarnProtected
+     * @param Node $object
+     * @param bool $permitWarnProtected
      * @return void
      */
-    public function displayObjectContentSmall($object, bool $permitWarnProtected = true): void
+    public function displayObjectContentSmall(Node $object, bool $permitWarnProtected = true): void
     {
         echo $this->convertObjectContentSized($object, 'small', $permitWarnProtected);
     }
@@ -2437,12 +2426,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Affiche un objet sans tenir compte de son type nebule (Entity|Group|Conversation).
      * Mais affiche l'objet en fonction de son type mime déclaré.
      *
-     * @param string|Node $object
-     * @param string      $size [full|half|small]
-     * @param bool        $permitWarnProtected
+     * @param Node   $object
+     * @param string $size [full|half|small]
+     * @param bool   $permitWarnProtected
      * @return string
      */
-    public function convertAsObjectContentSized($object, string $size = 'half', bool $permitWarnProtected = true): string
+    public function convertAsObjectContentSized(Node $object, string $size = 'half', bool $permitWarnProtected = true): string
     {
         $result = '';
         $unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
@@ -2451,21 +2440,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             && $size != 'small'
         )
             $size = 'half';
-        // Vérifie que c'est un objet.
-        if (!is_a($object, 'Nebule\Library\Node')
-            && !is_a($object, 'Nebule\Library\Group')
-            && !is_a($object, 'Nebule\Library\Entity')
-            && !is_a($object, 'Nebule\Library\Conversation')
-            && !is_a($object, 'Nebule\Library\Currency')
-            && !is_a($object, 'Nebule\Library\TokenPool')
-            && !is_a($object, 'Nebule\Library\Token')
-            && !is_a($object, 'Nebule\Library\Transaction')
-            && !is_a($object, 'Nebule\Library\Wallet')
-        )
-            $object = $this->_nebuleInstance->newObject($object);
-        $id = $object->getID();
 
-        // Vérifie si il est protégé
+        $nid = $object->getID();
+
+        // Vérifie s'il est protégé
         $protected = $object->getMarkProtected();
 
         // Extrait les propriétés de l'objet.
@@ -2483,7 +2461,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     . $this->_traductionInstance->getTraduction(':::display:content:errorNotAvailable'),
                     'error');
         elseif ($protected
-            && $id == $object->getProtectedID()
+            && $nid == $object->getProtectedID()
         ) {
             $result = $result . $this->convertLineMessage(
                     $this->_traductionInstance->getTraduction(':::display:content:warningObjectProctected'),
@@ -2522,8 +2500,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 case nebule::REFERENCE_OBJECT_JPEG :
                     $content = $object->getContent(0);
                     if ($content != null)
-                        $result = $result . $divOpen . '<img src="?o=' . $id
-                            . '" alt="Image ' . $id . '">' . $divClose;
+                        $result = $result . $divOpen . '<img src="?o=' . $nid
+                            . '" alt="Image ' . $nid . '">' . $divClose;
                     else {
                         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash'))
                             $result = $result . $this->convertLineMessage(':::display:content:warningTooBig', 'warning');
@@ -2562,7 +2540,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 case nebule::REFERENCE_OBJECT_MP3 :
                     $content = $object->getContent(0);
                     if ($content != null)
-                        $result = $result . $divOpen . '<br /><audio controls><source src="?o=' . $id . '" type="audio/mp3" />' . $this->_traductionInstance->getTraduction(':::warn_NoAudioTagSupport') . '</audio><br />' . $divClose;
+                        $result = $result . $divOpen . '<br /><audio controls><source src="?o=' . $nid . '" type="audio/mp3" />' . $this->_traductionInstance->getTraduction(':::warn_NoAudioTagSupport') . '</audio><br />' . $divClose;
                     else {
                         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash'))
                             $result = $result . $this->convertLineMessage(':::display:content:warningTooBig', 'warning');
@@ -2573,7 +2551,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 case nebule::REFERENCE_OBJECT_OGG :
                     $content = $object->getContent(0);
                     if ($content != null)
-                        $result = $result . $divOpen . '<br /><audio controls><source src="?o=' . $id . '" type="audio/ogg" />' . $this->_traductionInstance->getTraduction(':::warn_NoAudioTagSupport') . '</audio><br />' . $divClose;
+                        $result = $result . $divOpen . '<br /><audio controls><source src="?o=' . $nid . '" type="audio/ogg" />' . $this->_traductionInstance->getTraduction(':::warn_NoAudioTagSupport') . '</audio><br />' . $divClose;
                     else {
                         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash'))
                             $result = $result . $this->convertLineMessage(':::display:content:warningTooBig', 'warning');
@@ -2597,11 +2575,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare à afficher le contenu d'un objet comme objet pur. Version full.
      *
-     * @param string|Node $object
-     * @param bool        $permitWarnProtected
+     * @param Node $object
+     * @param bool $permitWarnProtected
      * @return string
      */
-    public function convertAsObjectContentFull($object, bool $permitWarnProtected = true): string
+    public function convertAsObjectContentFull(Node $object, bool $permitWarnProtected = true): string
     {
         return $this->convertAsObjectContentSized($object, 'full', $permitWarnProtected);
     }
@@ -2609,11 +2587,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Afficher le contenu d'un objet comme objet pur. Version full.
      *
-     * @param string|Node $object
-     * @param bool        $permitWarnProtected
+     * @param Node $object
+     * @param bool $permitWarnProtected
      * @return void
      */
-    public function displayAsObjectContentFull($object, bool $permitWarnProtected = true): void
+    public function displayAsObjectContentFull(Node $object, bool $permitWarnProtected = true): void
     {
         echo $this->convertAsObjectContentSized($object, 'full', $permitWarnProtected);
     }
@@ -2621,11 +2599,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare à afficher le contenu d'un objet comme objet pur. Version half.
      *
-     * @param string|Node $object
-     * @param bool        $permitWarnProtected
+     * @param Node $object
+     * @param bool $permitWarnProtected
      * @return string
      */
-    public function convertAsObjectContentHalf($object, bool $permitWarnProtected = true): string
+    public function convertAsObjectContentHalf(Node $object, bool $permitWarnProtected = true): string
     {
         return $this->convertAsObjectContentSized($object, 'half', $permitWarnProtected);
     }
@@ -2633,11 +2611,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Afficher le contenu d'un objet comme objet pur. Version half.
      *
-     * @param string|Node $object
-     * @param bool        $permitWarnProtected
+     * @param Node $object
+     * @param bool $permitWarnProtected
      * @return void
      */
-    public function displayAsObjectContentHalf($object, bool $permitWarnProtected = true): void
+    public function displayAsObjectContentHalf(Node $object, bool $permitWarnProtected = true): void
     {
         echo $this->convertAsObjectContentSized($object, 'half', $permitWarnProtected);
     }
@@ -2645,11 +2623,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare à afficher le contenu d'un objet comme objet pur. Version small.
      *
-     * @param string|Node $object
-     * @param bool        $permitWarnProtected
+     * @param Node $object
+     * @param bool $permitWarnProtected
      * @return string
      */
-    public function convertAsObjectContentSmall($object, bool $permitWarnProtected = true): string
+    public function convertAsObjectContentSmall(Node $object, bool $permitWarnProtected = true): string
     {
         return $this->convertAsObjectContentSized($object, 'small', $permitWarnProtected);
     }
@@ -2657,11 +2635,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Afficher le contenu d'un objet comme objet pur. Version small.
      *
-     * @param string|Node $object
-     * @param bool        $permitWarnProtected
+     * @param Node $object
+     * @param bool $permitWarnProtected
      * @return void
      */
-    public function displayAsObjectContentSmall($object, bool $permitWarnProtected = true): void
+    public function displayAsObjectContentSmall(Node $object, bool $permitWarnProtected = true): void
     {
         echo $this->convertAsObjectContentSized($object, 'small', $permitWarnProtected);
     }
@@ -2669,19 +2647,15 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare à afficher un objet comme image avec éventuellement un texte et un identifiant CSS.
      *
-     * @param Node|string $object
-     * @param string      $alt
-     * @param string      $class
-     * @param string      $id
-     * @param string      $args
+     * @param Node   $object
+     * @param string $alt
+     * @param string $class
+     * @param string $id
+     * @param string $args
      * @return string
      */
-    public function convertImage($object, string $alt = '', string $class = '', string $id = '', string $args = ''): string
+    public function convertImage(Node $object, string $alt = '', string $class = '', string $id = '', string $args = ''): string
     {
-        // Récupère une instance de l'objet.
-        if (!is_a($object, 'Nebule\Library\Node'))
-            $object = $this->_nebuleInstance->newObject($object);
-
         if ($object->getID() == '0')
             return '';
 
@@ -2727,14 +2701,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche un objet comme image avec éventuellement un texte et un identifiant CSS.
      *
-     * @param string|Node $object
-     * @param string      $alt
-     * @param string      $class
-     * @param string      $id
-     * @param string      $args
+     * @param Node   $object
+     * @param string $alt
+     * @param string $class
+     * @param string $id
+     * @param string $args
      * @return void
      */
-    public function displayImage($object, string $alt = '', string $class = '', string $id = '', string $args = ''): void
+    public function displayImage(Node $object, string $alt = '', string $class = '', string $id = '', string $args = ''): void
     {
         echo $this->convertImage($object, $alt, $class, $id, $args);
     }
@@ -2742,35 +2716,29 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare à un objet comme image avec éventuellement un texte et un identifiant CSS.
      * Une recherche préalable est faite pour trouver la mise à jour la plus récente de l'objet.
-     * Si l'objet commence par data: c'est une image encodée en base64.
+     * Si l'objet commence par 'data:' c'est une image encodée en base64.
      * Retourne dans ce cas un affichage d'image.
      *
-     * @param string|Node $object
-     * @param string      $alt
-     * @param string      $class
-     * @param string      $id
-     * @param string      $args
+     * @param Node   $object
+     * @param string $alt
+     * @param string $class
+     * @param string $id
+     * @param string $args
      * @return string
      */
-    public function convertUpdateImage($object, string $alt = '', string $class = '', string $id = '', string $args = ''): string
+    public function convertUpdateImage(Node $object, string $alt = '', string $class = '', string $id = '', string $args = ''): string
     {
-        // Retourne un résultat tout de suite si l'objet est une image encodée.
-        if (substr($object, 0, 5) == 'data:')
-            return '<img src="' . $object . '" />';
-
-        // Récupère une instance de l'objet.
-        if (!is_a($object, 'Nebule\Library\Node'))
-            $object = $this->_nebuleInstance->newObject($object);
+        $nid = $object->getID();
 
         if ($object->getID() == '0')
             return '';
 
-        $newobj = $this->_getImageUpdate($object);
+        $uid = $this->_getImageUpdate($object);
 
-        if ($newobj == $object->getID())
+        if ($uid == $nid)
             $newObjectInstance = $object;
         else
-            $newObjectInstance = $this->_nebuleInstance->newObject($newobj);
+            $newObjectInstance = $this->_nebuleInstance->newObject($uid);
 
         return $this->convertImage($newObjectInstance, $alt, $class, $id, $args);
     }
@@ -2779,14 +2747,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Affiche un objet comme image avec éventuellement un texte et un identifiant CSS.
      * Une recherche préalable est faite pour trouver la mise à jour la plus récente de l'objet.
      *
-     * @param string|Node $object
-     * @param string      $alt
-     * @param string      $class
-     * @param string      $id
-     * @param string      $args
+     * @param Node   $object
+     * @param string $alt
+     * @param string $class
+     * @param string $id
+     * @param string $args
      * @return void
      */
-    public function displayUpdateImage($object, string $alt = '', string $class = '', string $id = '', string $args = ''): void
+    public function displayUpdateImage(Node $object, string $alt = '', string $class = '', string $id = '', string $args = ''): void
     {
         echo $this->convertUpdateImage($object, $alt, $class, $id, $args);
     }
@@ -2795,29 +2763,25 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Prépare à un objet comme image avec éventuellement un texte et un identifiant CSS.
      * L'objet est un objet virtuel qui permet juste d'adresser l'image attendu.
      *
-     * @param string|Node $object
-     * @param string      $alt
-     * @param string      $class
-     * @param string      $id
-     * @param string      $args
+     * @param Node   $object
+     * @param string $alt
+     * @param string $class
+     * @param string $id
+     * @param string $args
      * @return string
      * TODO
      */
-    public function convertReferenceImage($object, string $alt = '', string $class = '', string $id = '', string $args = ''): string
+    public function convertReferenceImage(Node $object, string $alt = '', string $class = '', string $id = '', string $args = ''): string
     {
-        // Récupère une instance de l'objet.
-        if (!is_a($object, 'Nebule\Library\Node'))
-            $object = $this->_nebuleInstance->newObject($object);
-
         if ($object->getID() == '0')
             return '';
 
-        $newobj = $this->_getImageByReference($object);
+        $uid = $this->_getImageByReference($object);
 
-        if ($newobj == $object->getID())
+        if ($uid == $object->getID())
             $newObjectInstance = $object;
         else
-            $newObjectInstance = $this->_nebuleInstance->newObject($newobj);
+            $newObjectInstance = $this->_nebuleInstance->newObject($uid);
 
         return $this->convertImage($newObjectInstance, $alt, $class, $id, $args);
     }
@@ -2826,14 +2790,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Affiche un objet comme image avec éventuellement un texte et un identifiant CSS.
      * L'objet est un objet virtuel qui permet juste d'adresser l'image attendu.
      *
-     * @param string|Node $object
-     * @param string      $alt
-     * @param string      $class
-     * @param string      $id
-     * @param string      $args
+     * @param Node   $object
+     * @param string $alt
+     * @param string $class
+     * @param string $id
+     * @param string $args
      * @return void
      */
-    public function displayReferenceImage($object, string $alt = '', string $class = '', string $id = '', string $args = ''): void
+    public function displayReferenceImage(Node $object, string $alt = '', string $class = '', string $id = '', string $args = ''): void
     {
         echo $this->convertReferenceImage($object, $alt, $class, $id, $args);
     }
@@ -3013,7 +2977,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 	 *  Affichage des objets.
 	 * -------------------------------------------------------------------------------- */
     /**
-     * Tableau de cache des mises à jours d'icônes déjà recherchées.
+     * Tableau de cache des mises à jour d'icônes déjà recherchées.
      *
      * @var array
      */
@@ -5234,14 +5198,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     private function _getDisplayObjectIcon(Node $object, string $icon = ''): string
     {
-$this->_metrologyInstance->addLog('MARK input icon='.$icon, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//$this->_metrologyInstance->addLog('MARK input icon='.$icon, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         if ($icon != ''
             && $this->_ioInstance->checkLinkPresent($icon)
         ) {
-$this->_metrologyInstance->addLog('MARK if 1', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//$this->_metrologyInstance->addLog('MARK if 1', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             $instanceIcon = $this->_nebuleInstance->newObject($icon);
         } else {
-$this->_metrologyInstance->addLog('MARK if 2', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//$this->_metrologyInstance->addLog('MARK if 2', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             if (is_a($object, 'Nebule\Library\Entity'))
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_ENTITY);
             elseif (is_a($object, 'Nebule\Library\Conversation'))
@@ -5260,15 +5224,15 @@ $this->_metrologyInstance->addLog('MARK if 2', Metrology::LOG_LEVEL_NORMAL, __FU
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // TODO
             else
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT);
-$this->_metrologyInstance->addLog('MARK finded icon='.$icon, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//$this->_metrologyInstance->addLog('MARK finded icon='.$icon, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             $instanceIcon = $this->_nebuleInstance->newObject($icon);
         }
 
         // Cherche une mise à jour éventuelle.
         $updateIcon = $this->_getImageUpdate($icon); // FIXME TODO ERROR
-$this->_metrologyInstance->addLog('MARK finded updateIcon='.$updateIcon, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//$this->_metrologyInstance->addLog('MARK finded updateIcon='.$updateIcon, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $updateIcon = '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256'; // FIXME
-$this->_metrologyInstance->addLog('MARK force updateIcon='.$updateIcon, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//$this->_metrologyInstance->addLog('MARK force updateIcon='.$updateIcon, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         // Retourne un chemin direct si l'objet est présent.
         if ($this->_ioInstance->checkObjectPresent($updateIcon))
@@ -7139,12 +7103,12 @@ $this->_metrologyInstance->addLog('MARK force updateIcon='.$updateIcon, Metrolog
     }
 
     /**
-     * @param array $hook
+     * @param string $hook
      * @return void
      * TODO Fonction périmée remplacée par getDisplayHookMenuList().
      *
      */
-    public function displayHookList(array $hook): void
+    public function displayHookList(string $hook): void
     {
         echo $this->getDisplayHookMenuList($hook, 'Medium');
     }
@@ -7575,25 +7539,30 @@ $this->_metrologyInstance->addLog('MARK force updateIcon='.$updateIcon, Metrolog
         if (isset($param['icon'])
             && $param['icon'] !== ''
         )
-            $messageIcon = $param['icon'];
+        {
+            if (is_string($param['icon']))
+                $messageIcon = $this->_nebuleInstance->newObject($param['icon']);
+            else
+                $messageIcon = $param['icon'];
+        }
         else {
             switch ($messageType) {
                 case 'Information':
                 case 'Message':
                     $messageTextIcon = '::::INFORMATION';
-                    $messageIcon = self::DEFAULT_ICON_IINFO;
+                    $messageIcon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IINFO);
                     break;
                 case 'Ok':
                     $messageTextIcon = '::::OK';
-                    $messageIcon = self::DEFAULT_ICON_IOK;
+                    $messageIcon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IOK);
                     break;
                 case 'Warn':
                     $messageTextIcon = '::::WARN';
-                    $messageIcon = self::DEFAULT_ICON_IWARN;
+                    $messageIcon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IWARN);
                     break;
                 case 'Error':
                     $messageTextIcon = '::::ERROR';
-                    $messageIcon = self::DEFAULT_ICON_IERR;
+                    $messageIcon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IERR);
                     break;
             }
         }
@@ -8282,13 +8251,12 @@ $this->_metrologyInstance->addLog('MARK force updateIcon='.$updateIcon, Metrolog
 
     public function convertInlineIconFace(string $iconName): string
     {
-        $iconID = '';
         if (Node::checkNID($iconName) && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($iconName))
             $iconID = $iconName;
-        elseif (strstr($iconName, ':') !== false)
-            $iconID = constant($iconName);
-        else
+        elseif (defined('self::' . $iconName))
             $iconID = constant('self::' . $iconName);
+        else
+            $iconID = self::DEFAULT_ICON_LO;
 
         $instance = $this->_nebuleInstance->newObject($iconID);
         if ($instance->getID() == '0')
