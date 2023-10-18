@@ -1909,7 +1909,7 @@ class Action extends Actions
             if ($this->_unlocked
                 && $this->_configuration->getOptionAsBoolean('permitUploadLink')
                 && $this->_actionSignLinkInstance1 != ''
-                && is_a($this->_actionSignLinkInstance1, 'Link')
+                && is_a($this->_actionSignLinkInstance1, 'Link') // FIXME la classe
             )
                 $this->_actionSignLink($this->_actionSignLinkInstance1);
         }

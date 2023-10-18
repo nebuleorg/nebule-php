@@ -21,7 +21,7 @@ abstract class Actions
 	 *   lorsque l'on appelle des fonctions de la classe parente non écrite dans la classe enfant.
 	 */
     const DEFAULT_COMMAND_APPLICATION = 'a';
-    const DEFAULT_COMMAND_NEBULE_BOOTSTRAP = 'a=0';
+    const DEFAULT_COMMAND_NEBULE_BOOTSTRAP = 'a=1';
     const DEFAULT_COMMAND_NEBULE_FLUSH = 'f';
     const DEFAULT_COMMAND_NEBULE_RESCUE = 'r';
     const DEFAULT_COMMAND_ACTION_SIGN_LINK1 = 'actsiglnk1';

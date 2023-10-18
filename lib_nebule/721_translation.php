@@ -145,11 +145,10 @@ abstract class Traductions
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_metrologyInstance->addLog('Load translates', Metrology::LOG_LEVEL_DEBUG); // Log
         // Détecte si les modules sont activés.
-        if ($this->_applicationInstance->getUseModules()) {
+        if ($this->_applicationInstance->getUseModules())
             $this->_useModules = true;
-        }
 
-        // Recherche les languages.
+        // Recherche les langages.
         $this->_findDefaultLanguage();
         $this->_findLanguages();
         $this->_findCurrentLanguage();
@@ -324,7 +323,7 @@ abstract class Traductions
             $this->_nebuleInstance->setSessionStore($this->_applicationInstance->getClassName() . 'DisplayLanguage', $arg_lang);
         } else {
             $cache = $this->_nebuleInstance->getSessionStore($this->_applicationInstance->getClassName() . 'DisplayLanguage');
-            // Si il existe une variable de session pour le mode d'affichage, la lit.
+            // S'il existe une variable de session pour le mode d'affichage, la lit.
             if ($cache !== false
                 && $cache != ''
             ) {
@@ -348,32 +347,31 @@ abstract class Traductions
      *
      * @return array of string
      */
-    public function getLanguageList()
+    public function getLanguageList(): array
     {
         return $this->_languageList;
     }
 
-    public function getDefaultLanguage()
+    public function getDefaultLanguage(): string
     {
         return $this->_defaultLanguage;
     }
 
-    public function getCurrentLanguage()
+    public function getCurrentLanguage(): string
     {
         return $this->_currentLanguage;
     }
 
-    public function getCurrentLanguageIcon()
+    public function getCurrentLanguageIcon(): string
     {
         return $this->_currentLanguageIcon;
     }
 
-    public function getLanguageIcon($lang)
+    public function getLanguageIcon($lang): string
     {
         $result = $this->_languageIconList[$this->_currentLanguage];
-        if (isset($this->_languageIconList[$lang])) {
+        if (isset($this->_languageIconList[$lang]))
             $result = $this->_languageIconList[$lang];
-        }
         return $result;
     }
 
@@ -395,12 +393,10 @@ abstract class Traductions
 
     /**
      * La traduction de textes recherche une traduction pour le langage en cours.
-     *
      * Sans module :
      * 1) Recherche le texte traduit dans le langage courant.
      * 2) Si aucune traduction n'est trouvée, retourne le texte traduit dans le langage par défaut.
      * 3) Si aucune traduction n'est trouvée, retourne le texte non traduit.
-     *
      * Avec modules :
      * 1) Recherche le texte traduit le module de traduction pour le langage courant.
      * 2) Si pas trouvé, recherche dans le module utilisé à l'affichage pour le langage courant.
@@ -409,20 +405,19 @@ abstract class Traductions
      * 5) Si pas trouvé, recherche dans tous les modules disponibles pour le langage courant.
      * 6) Si pas trouvé, recherche dans tous les modules disponibles pour le langage par défaut.
      * 7) Si pas trouvé, retourne le texte d'origine.
-     *
      * Un module, s'il n'est pas dédié à la traduction, ne doit prendre en charge que la translation des textes
      *   qui le concerne. Mais il peut traduire ces textes dans plusieurs langues.
-     *
      * Un texte qui commence par '<' est considéré comme une balise et n'est pas traduit.
      *
      * @param string $text
+     * @param string $lang
      * @return string
      */
-    public function getTraduction($text, $lang = '')
+    public function getTraduction(string $text, string $lang = ''): string
     {
         $result = $text;
 
-        // Sélectionne le language de traduction.
+        // Sélectionne le langage de traduction.
         if ($lang == '') {
             $lang = $this->_currentLanguage;
         }
@@ -538,11 +533,10 @@ abstract class Traductions
      * @param string $arg9
      * @return void
      */
-    public function echoTraduction($text, $color = '', $arg1 = null, $arg2 = null, $arg3 = null, $arg4 = null, $arg5 = null, $arg6 = null, $arg7 = null, $arg8 = null, $arg9 = null)
+    public function echoTraduction(string $text, $color = '', $arg1 = null, $arg2 = null, $arg3 = null, $arg4 = null, $arg5 = null, $arg6 = null, $arg7 = null, $arg8 = null, $arg9 = null) // FIXME null ou '' ?
     {
-        if ($color != '') {
+        if ($color != '')
             echo "<font color=\"$color\">";
-        }
         echo sprintf($this->getTraduction($text), $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9);
         if ($color != '') {
             echo '</font>';
@@ -552,12 +546,10 @@ abstract class Traductions
     protected function _findIcons()
     {
         if ($this->_useModules) {
-            foreach ($this->_languageInstanceList as $module) {
+            foreach ($this->_languageInstanceList as $module)
                 $this->_languageIconList[$module->getCommandName()] = $module->getLogo();
-            }
-        } else {
+        } else
             $this->_languageIconList = $this->LANGUAGE_ICON_LIST;
-        }
     }
 
     protected function _findCurrentIcon()

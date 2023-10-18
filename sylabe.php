@@ -45,7 +45,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020230110';
+    const APPLICATION_VERSION = '020231018';
     const APPLICATION_LICENCE = 'GNU GPL 2013-2023';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -65,7 +65,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_DEFAULT_PERMIT_PUBLIC_UPLOAD_LINKS = false;
     const APPLICATION_DEFAULT_LOG_UNLOCK_ENTITY = false;
     const APPLICATION_DEFAULT_LOG_LOCK_ENTITY = false;
-    const APPLICATION_DEFAULT_LOAD_MODULES = 'd6105350a2680281474df5438ddcb3979e5575afba6fda7f646886e78394a4fb';
+    const APPLICATION_DEFAULT_LOAD_MODULES = 'd6105350a2680281474df5438ddcb3979e5575afba6fda7f646886e78394a4fb.sha2.256';
 
     /**
      * Paramètre d'activation de la gestion des modules dans l'application et la traduction.
@@ -338,15 +338,15 @@ YKqKYEOVdjNbfI+Hy+1sePH3937NgxIzhEls/nCyMjI+GnT5/+Wcu4mm+HV1ZWdmw2W6G3t/f0YbkeF0
 Ply02Qy7TRSCaIoounp6ed3795d1rxFBiEEYrHYhsViyZ09e7aNIAhc6z0fDAZfjI6OLtdTQ6i7Sywej2+kUqlUd3e3hWEYixaLX11dfT82NvaLnD2vOICKY3z27NlbDMO27Xb7SbV6
 BXmeFx4+fPjryMjI/NLSkiJ1imarLFDprbF9zdJdDMOYj0yz9JfsMLfLawLgH07nKL4w8XnJK5/Pl/P5/KEIoZsvTTUBNAE0ATQBHGX7G6N1Cds7Fc/AAAAAAElFTkSuQmC";
     const DEFAULT_APPLICATION_LOGO_LINK = '?mod=hlp&view=about';
-    const DEFAULT_LOGO_MENUS = '15eb7dcf0554d76797ffb388e4bb5b866e70a3a33e7d394a120e68899a16c690';
-    const DEFAULT_LOGO_MODULE = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c';
-    //const DEFAULT_CSS_BACKGROUND			= '9fd9fd946bde32cc53e5d2f800f9f01a3957349ad50785b0521ed38408bd2c0e';
-    const DEFAULT_CSS_BACKGROUND = 'f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499';
+    const DEFAULT_LOGO_MENUS = '15eb7dcf0554d76797ffb388e4bb5b866e70a3a33e7d394a120e68899a16c690.sha2.256';
+    const DEFAULT_LOGO_MODULE = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c.sha2.256';
+    //const DEFAULT_CSS_BACKGROUND			= '9fd9fd946bde32cc53e5d2f800f9f01a3957349ad50785b0521ed38408bd2c0e.sha2.256';
+    const DEFAULT_CSS_BACKGROUND = 'f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499.sha2.256';
 
     // Icônes de marquage.
-    const DEFAULT_ICON_MARK = '65fb7dbaaa90465da5cb270da6d3f49614f6fcebb3af8c742e4efaa2715606f0';
-    const DEFAULT_ICON_UNMARK = 'ee1d761617468ade89cd7a77ac96d4956d22a9d4cbedbec048b0c0c1bd3d00d2';
-    const DEFAULT_ICON_UNMARKALL = 'fa40e3e73b9c11cb5169f3916b28619853023edbbf069d3bd9be76387f03a859';
+    const DEFAULT_ICON_MARK = '65fb7dbaaa90465da5cb270da6d3f49614f6fcebb3af8c742e4efaa2715606f0.sha2.256';
+    const DEFAULT_ICON_UNMARK = 'ee1d761617468ade89cd7a77ac96d4956d22a9d4cbedbec048b0c0c1bd3d00d2.sha2.256';
+    const DEFAULT_ICON_UNMARKALL = 'fa40e3e73b9c11cb5169f3916b28619853023edbbf069d3bd9be76387f03a859.sha2.256';
 
     const APPLICATION_LICENCE_LOGO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAACxMAAA
 sTAQCanBgAAAAHdElNRQfeDAYWDCX7YSGrAAABn0lEQVRIx62VPU8CQRCGn7toYWKCBRY0FNQe9CZ+dPwAt6AxkmgrJYX2JsaOVgtNTKQYfwCdYGKvUFOYGAooxJiYWHgWd5wL3C0Lc
@@ -394,7 +394,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
         $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
@@ -436,7 +436,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
         $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
@@ -544,7 +544,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
  		 *  ------------------------------------------------------------------------------------------
 		 */
-        // Préfix pour les objets. Les module sont chargés, on peut les utiliser.
+        // Préfix pour les objets. Les modules sont chargés, on peut les utiliser.
         $this->setHtlinkObjectPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
@@ -579,26 +579,26 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getDefaultView()
             . '&' . nebule::COMMAND_SELECT_ENTITY . '=');
         // Préfix pour les monnaies.
-        if ($this->_applicationInstance->isModuleLoaded('Moduleqantion')) {
+        if ($this->_applicationInstance->isModuleLoaded('ModuleQantion')) {
             $this->setHtlinkCurrencyPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getRegisteredViews()[3]
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[3]
                 . '&' . nebule::COMMAND_SELECT_CURRENCY . '=');
             $this->setHtlinkTokenPoolPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getRegisteredViews()[8]
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[8]
                 . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=');
             $this->setHtlinkTokenPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getRegisteredViews()[13]
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[13]
                 . '&' . nebule::COMMAND_SELECT_TOKEN . '=');
             $this->setHtlinkTransactionPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getRegisteredViews()[19]
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[19]
                 . '&' . nebule::COMMAND_SELECT_TRANSACTION . '=');
             $this->setHtlinkWalletPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getRegisteredViews()[23]
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[23]
                 . '&' . nebule::COMMAND_SELECT_WALLET . '=');
         } else {
             $this->setHtlinkCurrencyPrefix('?'
@@ -1671,7 +1671,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         // Ajoute l'application 0.
         $list[$j]['icon'] = parent::DEFAULT_APPLICATION_LOGO;
         $list[$j]['title'] = BOOTSTRAP_NAME;
-        $list[$j]['htlink'] = '?' . Action::DEFAULT_COMMAND_NEBULE_BOOTSTRAP;
+        $list[$j]['htlink'] = '?' . Actions::DEFAULT_COMMAND_NEBULE_BOOTSTRAP;
         $list[$j]['desc'] = $this->_applicationInstance->getTraductionInstance()->getTraduction('::appSwitch', $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
         $list[$j]['ref'] = 'nebule';
         $list[$j]['class'] = 'sylabeMenuListContentActionModules';
@@ -2154,17 +2154,17 @@ class ModuleManage extends Modules
     protected $MODULE_VERSION = '020230110';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2023';
-    protected $MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4';
+    protected $MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256';
     protected $MODULE_HELP = '::sylabe:module:manage:ModuleHelp';
     protected $MODULE_INTERFACE = '3.0';
 
     protected $MODULE_REGISTERED_VIEWS = array('list', 'disp', 'add', 'cod');
     protected $MODULE_REGISTERED_ICONS = array(
-        '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4',    // 0 Module
-        '37be5ba2a53e9835dbb0ff67a0ece1cc349c311660e4779680ee2daa4ac45636',    // 1 Ajout d'un module
+        '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256',    // 0 Module
+        '37be5ba2a53e9835dbb0ff67a0ece1cc349c311660e4779680ee2daa4ac45636.sha2.256',    // 1 Ajout d'un module
     );
     protected $MODULE_APP_TITLE_LIST = array('::sylabe:module:manage:AppTitle1');
-    protected $MODULE_APP_ICON_LIST = array('8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4');
+    protected $MODULE_APP_ICON_LIST = array('8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256');
     protected $MODULE_APP_DESC_LIST = array('::sylabe:module:manage:AppDesc1');
     protected $MODULE_APP_VIEW_LIST = array('list');
 
@@ -2320,9 +2320,9 @@ class ModuleManage extends Modules
     protected function _displayFull(): void
     {
         switch ($this->_display->getCurrentDisplayView()) {
-            case $this->MODULE_REGISTERED_VIEWS[0]:
-                $this->_displayModules();
-                break;
+//            case $this->MODULE_REGISTERED_VIEWS[0]:
+//                $this->_displayModules();
+//                break;
             case $this->MODULE_REGISTERED_VIEWS[1]:
                 $this->_displayModule();
                 break;
@@ -2385,7 +2385,7 @@ class ModuleManage extends Modules
             $this->_actionAddModule();
         }
 
-        // Changement du code d'une module.
+        // Changement du code d'un module.
         $this->_extractActionAddModuleCode();
         if ($this->_actionAddModuleCode) {
             $this->_actionAddModuleCode();
@@ -3313,19 +3313,19 @@ class ModuleHelp extends Modules
     protected $MODULE_VERSION = '020230110';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2023';
-    protected $MODULE_LOGO = '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d';
+    protected $MODULE_LOGO = '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d.sha2.256';
     protected $MODULE_HELP = '::sylabe:module:help:ModuleHelp';
     protected $MODULE_INTERFACE = '3.0';
 
     protected $MODULE_REGISTERED_VIEWS = array('1st', 'hlp', 'lang', 'about');
     protected $MODULE_REGISTERED_ICONS = array(
-        '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d',    // 0 : icône d'aide.
-        '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c',    // 1 : module
-        'd7f68db0a1d0977fb8e521fd038b18cd601946aa0e26071ff8c02c160549633b',    // 2 : bootstrap (metrologie)
-        '3638230cde600865159d5b5f7993d8a3310deb35aa1f6f8f57429b16472e03d6',    // 3 : world
+        '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d.sha2.256',    // 0 : icône d'aide.
+        '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c.sha2.256',    // 1 : module
+        'd7f68db0a1d0977fb8e521fd038b18cd601946aa0e26071ff8c02c160549633b.sha2.256',    // 2 : bootstrap (metrologie)
+        '3638230cde600865159d5b5f7993d8a3310deb35aa1f6f8f57429b16472e03d6.sha2.256',    // 3 : world
     );
     protected $MODULE_APP_TITLE_LIST = array('::sylabe:module:help:AppTitle1');
-    protected $MODULE_APP_ICON_LIST = array('1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d');
+    protected $MODULE_APP_ICON_LIST = array('1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d.sha2.256');
     protected $MODULE_APP_DESC_LIST = array('::sylabe:module:help:AppDesc1');
     protected $MODULE_APP_VIEW_LIST = array('hlp');
 
@@ -3464,27 +3464,33 @@ class ModuleHelp extends Modules
     {
         ?>
         <div class="sylabeModuleHelpText1stI1">
-            <?php $this->_applicationInstance->getDisplayInstance()->displayHypertextLink(
+            <?php
+            $icon = $this->_nebuleInstance->newObject(Display::DEFAULT_ICON_LSTENT);
+            $this->_applicationInstance->getDisplayInstance()->displayHypertextLink(
                 $this->_applicationInstance->getDisplayInstance()->convertUpdateImage(
-                    Display::DEFAULT_ICON_LSTENT,
+                    $icon,
                     $this->_traduction('Entités')),
                 '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=list'); ?>
 
         </div>
         <div class="sylabeModuleHelpText1stI2">
-            <?php $this->_applicationInstance->getDisplayInstance()->displayHypertextLink(
+            <?php
+            $icon = $this->_nebuleInstance->newObject($this->MODULE_LOGO);
+            $this->_applicationInstance->getDisplayInstance()->displayHypertextLink(
                 $this->_applicationInstance->getDisplayInstance()->convertUpdateImage(
-                    $this->MODULE_LOGO,
+                    $icon,
                     $this->_traduction('::sylabe:module:help:AideGenerale')),
                 '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=hlp'); ?>
 
         </div>
         <div class="sylabeModuleHelpText1stI3">
-            <?php $this->_applicationInstance->getDisplayInstance()->displayHypertextLink(
+            <?php
+            $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[3]);
+            $this->_applicationInstance->getDisplayInstance()->displayHypertextLink(
                 $this->_applicationInstance->getDisplayInstance()->convertUpdateImage(
-                    $this->MODULE_REGISTERED_ICONS[3],
+                    $icon,
                     $this->_traduction('::sylabe:module:help:ChangerLangue')),
                 '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=lang'); ?>
@@ -3785,27 +3791,27 @@ class ModuleEntities extends Modules
     protected $MODULE_VERSION = '020230110';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2023';
-    protected $MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60';
+    protected $MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
     protected $MODULE_HELP = '::sylabe:module:entities:ModuleHelp';
     protected $MODULE_INTERFACE = '3.0';
 
     protected $MODULE_REGISTERED_VIEWS = array('list', 'disp', 'auth', 'crea', 'srch', 'logs', 'acts', 'prop', 'klst', 'ulst', 'slst', 'kblst');
     protected $MODULE_REGISTERED_ICONS = array(
-        '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0',    // 0 entité (personnage)
-        '6d1d397afbc0d2f6866acd1a30ac88abce6a6c4c2d495179504c2dcb09d707c1',    // 1 lien chiffrement/protection
-        '7e9726b5aec1b2ab45c70f882f56ea0687c27d0739022e907c50feb87dfaf37d',    // 2 lien mise à jour
-        'cc2a24b13d8e03a5de238a79a8adda1a9744507b8870d59448a23b8c8eeb5588',    // 3 lister objets
-        '3edf52669e7284e4cefbdbb00a8b015460271765e97a0d6ce6496b11fe530ce1',    // 4 lister entités
-        'cba3712128bbdd5243af372884eb647595103bb4c1f1b4d2e2bf62f0eba3d6e6',    // 5 ajouter entité
-        '468f2e420371343c58dcdb49c4db9f00b81cce029a5ee1de627b9486994ee199',    // 6 sync entité
-        '4de7b15b364506d693ce0cd078398fa38ff941bf58c5f556a68a1dcd7209a2fc',    // 7 messagerie down
-        'a16490f9b25b2d3d055e50a2593ceda10c9d1608505e27acf15a5e2ecc314b52',    // 8 messagerie up
-        '1c6db1c9b3b52a9b68d19c936d08697b42595bec2f0adf16e8d9223df3a4e7c5',    // 9 clé
-        '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60',    // 10 entité (objet)
-        'de62640d07ac4cb2f50169fa361e062ed3595be1e973c55eb3ef623ed5661947',    // 11 verrouillage entité.
+        '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256',    // 0 entité (personnage)
+        '6d1d397afbc0d2f6866acd1a30ac88abce6a6c4c2d495179504c2dcb09d707c1.sha2.256',    // 1 lien chiffrement/protection
+        '7e9726b5aec1b2ab45c70f882f56ea0687c27d0739022e907c50feb87dfaf37d.sha2.256',    // 2 lien mise à jour
+        'cc2a24b13d8e03a5de238a79a8adda1a9744507b8870d59448a23b8c8eeb5588.sha2.256',    // 3 lister objets
+        '3edf52669e7284e4cefbdbb00a8b015460271765e97a0d6ce6496b11fe530ce1.sha2.256',    // 4 lister entités
+        'cba3712128bbdd5243af372884eb647595103bb4c1f1b4d2e2bf62f0eba3d6e6.sha2.256',    // 5 ajouter entité
+        '468f2e420371343c58dcdb49c4db9f00b81cce029a5ee1de627b9486994ee199.sha2.256',    // 6 sync entité
+        '4de7b15b364506d693ce0cd078398fa38ff941bf58c5f556a68a1dcd7209a2fc.sha2.256',    // 7 messagerie down
+        'a16490f9b25b2d3d055e50a2593ceda10c9d1608505e27acf15a5e2ecc314b52.sha2.256',    // 8 messagerie up
+        '1c6db1c9b3b52a9b68d19c936d08697b42595bec2f0adf16e8d9223df3a4e7c5.sha2.256',    // 9 clé
+        '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256',    // 10 entité (objet)
+        'de62640d07ac4cb2f50169fa361e062ed3595be1e973c55eb3ef623ed5661947.sha2.256',    // 11 verrouillage entité.
     );
     protected $MODULE_APP_TITLE_LIST = array('::sylabe:module:entities:AppTitle1');
-    protected $MODULE_APP_ICON_LIST = array('94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60');
+    protected $MODULE_APP_ICON_LIST = array('94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256');
     protected $MODULE_APP_DESC_LIST = array('::sylabe:module:entities:AppDesc1');
     protected $MODULE_APP_VIEW_LIST = array('list');
 
@@ -4098,9 +4104,9 @@ class ModuleEntities extends Modules
             case $this->MODULE_REGISTERED_VIEWS[0]:
                 $this->_displayKnownEntitiesList();
                 break;
-            case $this->MODULE_REGISTERED_VIEWS[1]:
-                $this->_displayEntityDisp();
-                break;
+//            case $this->MODULE_REGISTERED_VIEWS[1]:
+//                $this->_displayEntityDisp();
+//                break;
             case $this->MODULE_REGISTERED_VIEWS[2]:
                 $this->_displayEntityAuth();
                 break;
@@ -6371,18 +6377,18 @@ class ModuleGroups extends Modules
     protected $MODULE_VERSION = '020230110';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2023';
-    protected $MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2';
+    protected $MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
     protected $MODULE_HELP = '::sylabe:module:groups:ModuleHelp';
     protected $MODULE_INTERFACE = '3.0';
 
     protected $MODULE_REGISTERED_VIEWS = array('list', 'listall', 'setgroup', 'unsetgroup', 'addmarked', 'disp');
     protected $MODULE_REGISTERED_ICONS = array(
-        '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2',    // 0 : Icône des groupes.
-        '819babe3072d50f126a90c982722568a7ce2ddd2b294235f40679f9d220e8a0a',    // 1 : Créer un groupe.
-        'a269514d2b940d8269993a6f0138f38bbb86e5ac387dcfe7b810bf871002edf3',    // 2 : Ajouter objets marqués.
+        '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256',    // 0 : Icône des groupes.
+        '819babe3072d50f126a90c982722568a7ce2ddd2b294235f40679f9d220e8a0a.sha2.256',    // 1 : Créer un groupe.
+        'a269514d2b940d8269993a6f0138f38bbb86e5ac387dcfe7b810bf871002edf3.sha2.256',    // 2 : Ajouter objets marqués.
     );
     protected $MODULE_APP_TITLE_LIST = array('::sylabe:module:groups:AppTitle1');
-    protected $MODULE_APP_ICON_LIST = array('0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2');
+    protected $MODULE_APP_ICON_LIST = array('0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256');
     protected $MODULE_APP_DESC_LIST = array('::sylabe:module:groups:AppDesc1');
     protected $MODULE_APP_VIEW_LIST = array('list');
 
@@ -7428,17 +7434,17 @@ class ModuleObjects extends Modules
     protected $MODULE_VERSION = '020230110';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2023';
-    protected $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee';
+    protected $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
     protected $MODULE_HELP = '::sylabe:module:objects:ModuleHelp';
     protected $MODULE_INTERFACE = '3.0';
 
     protected $MODULE_REGISTERED_VIEWS = array('disp', 'desc', 'nav', 'prot', 'sprot');
     protected $MODULE_REGISTERED_ICONS = array(
-        '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee',    // 0 : Objet.
-        '2e836dd0ca088d84cbc472093a14445e5c81ee0998293b46a479fedc41adf10d',    // 1 : Loupe.
-        '06cac4acb887cff2c7ba6653f865d800276a4e9d493a3be4e1b05d107f5ecbaf',    // 2 : Fork.
-        '6d1d397afbc0d2f6866acd1a30ac88abce6a6c4c2d495179504c2dcb09d707c1',    // 3 : Protection d'un objet.
-        '1c6db1c9b3b52a9b68d19c936d08697b42595bec2f0adf16e8d9223df3a4e7c5',    // 4 : Clé.
+        '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 0 : Objet.
+        '2e836dd0ca088d84cbc472093a14445e5c81ee0998293b46a479fedc41adf10d.sha2.256',    // 1 : Loupe.
+        '06cac4acb887cff2c7ba6653f865d800276a4e9d493a3be4e1b05d107f5ecbaf.sha2.256',    // 2 : Fork.
+        '6d1d397afbc0d2f6866acd1a30ac88abce6a6c4c2d495179504c2dcb09d707c1.sha2.256',    // 3 : Protection d'un objet.
+        '1c6db1c9b3b52a9b68d19c936d08697b42595bec2f0adf16e8d9223df3a4e7c5.sha2.256',    // 4 : Clé.
     );
     protected $MODULE_APP_TITLE_LIST = array();
     protected $MODULE_APP_ICON_LIST = array();
@@ -8952,7 +8958,7 @@ class ModuleAdmin extends Modules
     protected $MODULE_VERSION = '020230110';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2023';
-    protected $MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3';
+    protected $MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256';
     protected $MODULE_HELP = '::sylabe:module:admin:ModuleHelp';
     protected $MODULE_INTERFACE = '3.0';
 
@@ -8963,11 +8969,11 @@ class ModuleAdmin extends Modules
         'recovery',
     );
     protected $MODULE_REGISTERED_ICONS = array(
-        '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3',    // 0 : Icône admin.
-        '3edf52669e7284e4cefbdbb00a8b015460271765e97a0d6ce6496b11fe530ce1',    // 1 : Icône liste entités.
+        '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256',    // 0 : Icône admin.
+        '3edf52669e7284e4cefbdbb00a8b015460271765e97a0d6ce6496b11fe530ce1.sha2.256',    // 1 : Icône liste entités.
     );
     protected $MODULE_APP_TITLE_LIST = array('::sylabe:module:admin:AppTitle1');
-    protected $MODULE_APP_ICON_LIST = array('1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3');
+    protected $MODULE_APP_ICON_LIST = array('1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256');
     protected $MODULE_APP_DESC_LIST = array('::sylabe:module:admin:AppDesc1');
     protected $MODULE_APP_VIEW_LIST = array('options');
 
@@ -9052,9 +9058,9 @@ class ModuleAdmin extends Modules
     protected function _displayFull(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
-            case $this->MODULE_REGISTERED_VIEWS[0]:
-                $this->_displayAppOptions();
-                break;
+//            case $this->MODULE_REGISTERED_VIEWS[0]:
+//                $this->_displayAppOptions();
+//                break;
             case $this->MODULE_REGISTERED_VIEWS[1]:
                 $this->_displayNebOptions();
                 break;
@@ -9586,12 +9592,12 @@ class ModuleTranslateFRFR extends Modules
     protected $MODULE_VERSION = '020230110';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2023';
-    protected $MODULE_LOGO = 'b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac';
+    protected $MODULE_LOGO = 'b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac.sha2.256';
     protected $MODULE_HELP = '::translateModule:fr-fr:ModuleHelp';
     protected $MODULE_INTERFACE = '3.0';
 
     protected $MODULE_REGISTERED_VIEWS = array();
-    protected $MODULE_REGISTERED_ICONS = array('b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac');
+    protected $MODULE_REGISTERED_ICONS = array('b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac.sha2.256');
     protected $MODULE_APP_TITLE_LIST = array();
     protected $MODULE_APP_ICON_LIST = array();
     protected $MODULE_APP_DESC_LIST = array();

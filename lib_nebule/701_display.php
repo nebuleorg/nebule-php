@@ -47,10 +47,10 @@ kATix8wea6b/b7UFAPhX9FyAkARipR/4l1b+QNMCCBdkJXouQEgCsVIDVrYSt6YFEEqKFYqxkASiZkWz
 yF75laYAGkRwPfDXEZlVbYniEXssrjezv+lGj0GXJPAaMEGDTYhhJbTFzE7sxl9W71LyAyxU8gvR1KS8sFt3JrqakJG1AkLESFdK/54IIEhgEzBF1YAQv1b6v2hmp3a73Ohm8gOMAvagxSchGpO/FnLjrW7uS+hJArr7xcA/6LoLcZCLzexH3f5L6704UzO7F7hL11wIAO7sRfL3TADhWYHLgdfQLkFR7dL/P81sSa+eR+hZDx5OeDTwRq+PRYgeJT/AGGBPr55H6HnSufs84DG0KCiqlfw1YL6Zre7lgdR7HYkQgGuU/KJC1IBrep38UZXd7r4C+GONDVEBVpjZZTEcSD2S5MfMFpN9XUiIMrPezC6L5SUkMVUAA/+6HfgttQSihH3/TmB8aH0lgENI4Gjgl8AISUCUKPnfA44D3o7pDUT1mKIUArMPOBk4gPYIiHIkfz/w6diSPzoBNEhgBzA1VACSgEg5+WtkD7/tjPHdg1GX2O4+HXgW7REQ6Sb/DDPbEOtB1mOOYAjcbFUCItHkPzPm5I++AmioBM4EnlIlIBJL/mdiP9hkksndZ5DtE5AEROzJf7qZPZvCASeVSO4+GdgUjlsSELEl/wHgVDPbnMpB1xML8magj+yeqtYEREzJ/y5wQhijSAAdINxG2Um2oWKnxp2IJPl3kH1kZUfEnxkrRQUwIIG3zWw8enZA9J5nzayPCDf5lFIAAxIIDxDNBFY0mFiIbs36AMvNbGYYi0meSD3VK9Aggcv48H0CkoDoRvLXgKvN7EspJz+UaCXd3eeSvVmo
 VOclopz555vZ42U4oVIlirsfA6wFTtRYFR3gF8AZZlaaL0vXS3aB9pjZScCdWhcQBc/6d5jZb1Oyz8qXrlQe6Mnc/YvAvWjnoGi/37/YzH6Uer9fCQEMksEoYDVwisayyMEmYJ6ZvVXWE6yX/ALuNbOpwDfUEogWS/5vhA91vlXmk61MaezuJwEPA5/SGBdD8Bqw0MxercLJ1it0YX9hZicC16saEEPM+icCr1blxCu5OObu44D7gFlokbDqiV8DngYuMrMdVQtAvaIXfoeZnQlcCuxXHlSW/cAiM5tN9kBP5dDMl1UENwLXqhqo1Kx/k5ldV/Vg1JX8ThgIxwI/0fpA6fv8fwKONbPrYvk6jwTQQxo2duw2swuB04B1EkHpEn8dMM3MLgJ2D7r2EoBEcHAwbDSzWcB8so0gEkHaib+J7OGdWcALSnwJoFkRrDazacBn+fDFIxJBOom/HvhsuIarlfgSQF4RPGpmZ5DdMnxQkYmeB8ie2DsDeFSJLwEUJYK1ZnY+MA74wUfMOKJ3sz3hmowzs8+Hfl+J3wS65dUijU+EufuVZG8jGoduIXY78WtkL4a90cxuGXxthATQTSmcCVwNLBo0QEXxSQ+wEvh2Cl/eUQtQDZ42s0vNrAZ8GXhSLULhJf4TwJfNrGZmlwJKfgkgunUCgB+a2Vzg48Cf8eGeAsmg9aRfF2J4pJnNA354iJgLtQBRtwhHAItDi/B5RWRIfgrcA6wwMz2nIQGURgKNi4fzgYuAC4DJFQ/NZuB+4B/NbPXgWAkJoOwyqAPnAQuBc4GZ
 g8rh1K/R4HNYBzwE/Ax40MwOKOklAAmhYfC7+zTgM8BcYDYwdZikijHRIduG+xTwOPCEmW081DkLCUAMLYXjgenANOBUYCIwBRjT40PdDbwE/Jxsr/1GYIOZ7VKySwCiO7I4GjgJmEC2Kel4si8oHwOMCj9HASOBjwFHhJ9aw+y9P/y8D7wD7CN7IeZeYA/wOrCL7MUZW8lesbZP0RdCCCGEEEIIIYQQQgghhIiR/wMLunxvKj8tigAAAABJRU5ErkJggg==";
-    const DEFAULT_APPLICATION_LOGO_LINK = 'a=0';
+    const DEFAULT_APPLICATION_LOGO_LINK = 'a=1';
     const DEFAULT_BOOTSTRAP_LOGO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAADkElEQVRo3u2ZT0hUQRzHP9sGgoEh0T8kL8/Ag+tBsUNdCpmKjA7VQdzKwg6pdIoOnkQKPHgUtUOGSrt0qIUORTGIXepgZAc9eJCFMgmUEj0IQotdlJ03b1779u2IK/k7vTfvN/P7zm9+8/v3YI/+d4oEZxUHaaaBCZJyw4cjQgvn+MwLuWIZgKijg9tEgTl6SJggiAhxuqkCMowwKKesARDPiSuvRgiK+C1KyBu2AOj7XWSaKJUcphRYY4nvZIhxxM0mI9sFICAFAbBvp2/BbgAg2sIuHmRmNOcigzwKvb0rztH0mwKMUJSQ4pLhwxTjTDLLAqtAGRVUc4pG6gy8b7kq10MBECW846w2uMYAY3LGZ0YNt+ikVBv+wEV/CP8C8Maz+z565XKOIyuni4e6FmRT3gDEIO2a2u/LTwGN7zT92nEMyY68jFC0aaaXpEl+C2p76XnnGVXElKEG50f6a04NaD4/S09ke4hLOMQ94wdXjIi4It4X44SkjIf0AwlajB/qs5FSdUTmU5qiNbQfaMUckjsMGhAH+WW0iDNBTc/HHD8ahjMc2kpZshpoNorvK0Q8yE/0GU2/2XsEDQbGNXoLjja9rBlGG7wAJpjzsA3kcjsBdLDMgGdwjgkvgCQ9HghjViLumEd8D0mzH7jGS9X+Zb2dmC++KH5xkQdqRunOB1KMK2/j1rIOdaVpd0LrAiA3XDdh0hoAdaWoO5/WM6JK5XnWGoBZHwkGAIeV5wVrABZ8JBgAqMnEqjUAqz4SijErVr1WmTUpZT4SDACWlOcKawAqfCQYAHxXnqutAaj2kaADEBEyyuspawDUlTIi4gNARIi78rhGawDUlWLEVQhRrb4/obAed16lFy1EghpXgnuAWn4702m
 PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf7Q4vfT7/xw0i2jaf6gUEjcx2joRUwaizYXZIUpad/OiepNbDHnGO52gw+pdkdn9JsIGd1LNp4qhWnrfJPXsof1cqyu3I4j+o4/dU56qoUYlx2ZtLzgU0vxXmtPH+82xoURdCi2fEmlU+rJj/ybc0EBmC4EcHJx/LzBLDXrN5eChto3lOi/bBY58L2AUho7bvr8pXBUtzFPSSsHYG8QT3DmxnzHDdJGdlS3NxscWQYpj7IH6Mi+G23R3v0FwbfFx3mQ2ZaAAAAAElFTkSuQmCC';
-    const DEFAULT_BOOTSTRAP_LOGO_LINK = 'a=0';
+    const DEFAULT_BOOTSTRAP_LOGO_LINK = 'a=1';
 
     // Les commandes.
     /**
@@ -360,7 +360,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL); // Log
+        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '46fcbf07');
         $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
@@ -466,7 +466,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL); // Log
+        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '4bffc1e9');
         $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
@@ -559,7 +559,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Seul le mode concerné sera traité et affiché.
      *
      * Si la liste des modes est vide et si les modules ne sont pas activés, on quitte.
-     * Si les modules sont activés mais que la liste des modules est vide, on quitte.
+     * Si les modules sont activés, mais que la liste des modules est vide, on quitte.
      *
      * @return void
      */
@@ -567,12 +567,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         global $applicationName;
 
+        // Prepare the right application's class to use, '\Nebule\Application\*\Display' and not '\Nebule\Library\Displays'.
+        $displayClass = $this->_applicationInstance->getNamespace() . '\\Display';
+
+//$this->_metrologyInstance->addLog('MARK7 size1=' . sizeof($this->_applicationInstance->getModulesListInstances()), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         // Vérifie que la liste des modes ne soit pas vide ou que l'on utilise les modules.
         if (sizeof($this->_listDisplayModes) == 0
             && !$this->_applicationInstance->getUseModules()
         )
             return;
-        // Vérifie la liste des modules si activé.
+        // Vérifie la liste des modules si activée.
         if ($this->_applicationInstance->getUseModules()
             && sizeof($this->_applicationInstance->getModulesListInstances()) == 0
         )
@@ -587,6 +591,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $arg_mod = filter_input(INPUT_GET, self::DEFAULT_DISPLAY_COMMAND_MODE, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 
         $list_mods_names = array();
+        $list_mods = array();
 
         // Si activé, extrait les modes.
         if ($this->_applicationInstance->getUseModules()) {
@@ -622,30 +627,41 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $this->_nebuleInstance->setSessionStore($applicationName . 'DisplayMode', $arg_mod);
         } else {
             $cache = $this->_nebuleInstance->getSessionStore('sylabeDisplayMode');
-            // Si il existe une variable de session pour le mode d'affichage, la lit.
+            // S'il existe une variable de session pour le mode d'affichage, la lit.
             if ($cache !== false
                 && $cache != ''
             )
                 $this->_currentDisplayMode = $cache;
-            else // Sinon active le mode par defaut.
+            else // Sinon active le mode par défaut.
             {
-                $this->_currentDisplayMode = Displays::DEFAULT_DISPLAY_MODE;
-                $this->_nebuleInstance->setSessionStore($applicationName . 'DisplayMode', Displays::DEFAULT_DISPLAY_MODE);
+                $this->_currentDisplayMode = $displayClass::DEFAULT_DISPLAY_MODE;
+                $this->_nebuleInstance->setSessionStore($applicationName . 'DisplayMode', $displayClass::DEFAULT_DISPLAY_MODE);
             }
             unset($cache);
         }
-        $this->_metrologyInstance->addLog('Current mode : ' . $this->_currentDisplayMode, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Current mode : ' . $this->_currentDisplayMode, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'bda64a7b');
 
+//$this->_metrologyInstance->addLog('MARK7 size2=' . sizeof($list_mods), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         // Récupère l'instance du module en cours.
         if ($this->_applicationInstance->getUseModules()) {
-            // Par défaut on récupère la constante.
-            $moduleName = Displays::DEFAULT_DISPLAY_MODE;
+            // Par défaut, on récupère la constante.
+            $moduleName = $displayClass::DEFAULT_DISPLAY_MODE;
 
             foreach ($list_mods as $module) {
+//$this->_metrologyInstance->addLog('MARK7 ModuleName=' . $module->getCommandName() . ' ' . $this->_currentDisplayMode, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
                 if ($module->getCommandName() == $this->_currentDisplayMode
                     && $module->getType() == 'application'
                 )
+                {
+//$this->_metrologyInstance->addLog('MARK7 MATCH', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//                    $moduleName = $this->_applicationInstance->getNamespace() . '\\' . $module->getClassName();
                     $moduleName = $module->getClassName();
+                }
+            }
+            if ($moduleName == $displayClass::DEFAULT_DISPLAY_MODE)
+            {
+                $moduleName = 'hlp';
+//$this->_metrologyInstance->addLog('MARK7 replace ' . $displayClass::DEFAULT_DISPLAY_MODE . ' with hlp', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             }
             $this->_currentModuleInstance = $this->_applicationInstance->getModulesListInstances()[$moduleName];
         }
@@ -681,14 +697,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Recherche la vue en cours.
      *
      * La recherche de la vue se fait en lisant la vue demandée dans l'URL,
-     *   puis en la comparant aux vues supportées par le modes en cours
+     *   puis en la comparant aux vues supportées par le mode en cours
      *   ou par la liste des vues si le mode n'est pas géré.
      *
      * Les vues des autres modes ne sont pas prises en comptes.
      * Seul le mode concerné sera traité et affiché.
      *
      * Si la liste des vues est vide et si les modules ne sont pas activés, on quitte.
-     * Si les modules sont activés mais que la liste des modules est vide, on quitte.
+     * Si les modules sont activés, mais que la liste des modules est vide, on quitte.
      *
      * @return void
      */
@@ -701,7 +717,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             && !$this->_applicationInstance->getUseModules()
         )
             return;
-        // Vérifie la liste des modules si activé.
+        // Vérifie la liste des modules si activée.
         if ($this->_applicationInstance->getUseModules()
             && sizeof($this->_applicationInstance->getModulesListInstances()) == 0
         )
@@ -718,7 +734,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $list_views_names = array();
 
         // Si activé, extrait les modes.
-        if ($this->_applicationInstance->getUseModules()) {
+        if ($this->_applicationInstance->getUseModules() && is_a($this->_currentModuleInstance, 'Nebule\Library\Modules')) {
             // Lit les vues déclarées.
             $list_views_names = $this->_currentModuleInstance->getRegisteredViews();
             // Si demande la vue par défaut.
@@ -746,7 +762,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $this->_nebuleInstance->setSessionStore($applicationName . 'DisplayView', $arg_view);
         } else {
             $cache = $this->_nebuleInstance->getSessionStore($applicationName . 'DisplayView');
-            // Si il existe une variable de session pour la vue, la lit.
+            // S'il existe une variable de session pour la vue, la lit.
             if ($cache !== false
                 && $cache != ''
             )
@@ -754,7 +770,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             else // Sinon active la vue par defaut.
             {
                 // Si activé, extrait les modes.
-                if ($this->_applicationInstance->getUseModules())
+                if ($this->_applicationInstance->getUseModules() && is_a($this->_currentModuleInstance, 'Nebule\Library\Modules'))
                     $this->_currentDisplayView = $this->_currentModuleInstance->getDefaultView();
                 else
                     $this->_currentDisplayView = self::DEFAULT_DISPLAY_VIEW;
@@ -763,7 +779,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
             unset($cache);
         }
-        $this->_metrologyInstance->addLog('Current view : ' . $this->_currentDisplayView, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Current view : ' . $this->_currentDisplayView, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'f5231ed0');
 
         unset($arg_view, $list_views_names, $ok_view);
     }
@@ -788,7 +804,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($arg_id != '')
             $this->_inlineContentID = $arg_id;
 
-        $this->_metrologyInstance->addLog('Find sub display : ' . $this->_inlineContentID, Metrology::LOG_LEVEL_DEBUG);
+        $this->_metrologyInstance->addLog('Find sub display : ' . $this->_inlineContentID, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '046d378a');
     }
 
     protected $_inlineContentID = '';
@@ -825,8 +841,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $this->_inlineContentIndex[$id] = $id;
         $this->_inlineContentOptions[$id] = $options;
 
-        // Log
-        $this->_metrologyInstance->addLog('Register sub display : ' . $id, Metrology::LOG_LEVEL_DEBUG);
+        $this->_metrologyInstance->addLog('Register sub display : ' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'e3c2b608');
         ?>
 
         <div class="inlinecontent" id="<?php echo $id; ?>">
@@ -5073,7 +5088,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $divTitleFlagsClose = '   </div>' . "\n";
                 $divTitleStatusOpen = '    <div class="objectTitleStatus">';
                 $divTitleStatusClose = '</div>' . "\n";
-                if ($param['enableDisplayRefs'])
+                if ($param['enableDisplayRefs'] && sizeof($param['objectRefs']) > 0 && $param['objectRefs'] !== null)
                     $titleRefsContent = $this->_getDisplayObjectRefs($param['objectRefs']);
                 if ($param['enableDisplayID']) {
                     $divTitleIdOpen = '    <div class="objectTitleID">';
@@ -5224,13 +5239,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // TODO
             else
                 $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT);
-//$this->_metrologyInstance->addLog('MARK finded icon='.$icon, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//$this->_metrologyInstance->addLog('MARK found icon='.$icon, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             $instanceIcon = $this->_nebuleInstance->newObject($icon);
         }
 
         // Cherche une mise à jour éventuelle.
         $updateIcon = $this->_getImageUpdate($icon); // FIXME TODO ERROR
-//$this->_metrologyInstance->addLog('MARK finded updateIcon='.$updateIcon, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//$this->_metrologyInstance->addLog('MARK found updateIcon='.$updateIcon, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $updateIcon = '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256'; // FIXME
 //$this->_metrologyInstance->addLog('MARK force updateIcon='.$updateIcon, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
@@ -5378,7 +5393,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $htlink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
 
                 // Préparation de l'icône de l'émotion.
-                $icon = $this->convertReferenceImage($listEmotions1[$emotion], $emotion, 'iconInlineDisplay');
+                $rid = $this->_nebuleInstance->newObject($listEmotions1[$emotion]);
+                $icon = $this->convertReferenceImage($rid, $emotion, 'iconInlineDisplay');
             } else {
                 // Création du lien.
                 $action = 'f';
@@ -5386,7 +5402,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $htlink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
 
                 // Préparation de l'icône de l'émotion.
-                $icon = $this->convertReferenceImage($listEmotions0[$emotion], $emotion, 'iconInlineDisplay');
+                $rid = $this->_nebuleInstance->newObject($listEmotions0[$emotion]);
+                $icon = $this->convertReferenceImage($rid, $emotion, 'iconInlineDisplay');
             }
 
             // Si connecté, l'icône est active.
@@ -6799,7 +6816,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
     /**
-     * Affiche une liste l'objets avec leurs paramètres propres ou des messages imbriqués.
+     * Affiche une liste d'objets avec leurs paramètres propres ou des messages imbriqués.
      * Se base sur la fonction getDisplayObject() pour l'affichage des objets.
      * Se base sur la fonction getDisplayInformation() pour l'affichage des messages.
      * Si 'information' est défini et que les paramètres contiennent 'informationType',
@@ -6815,9 +6832,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function getDisplayObjectsList(array $list, string $size = 'medium', bool $displayNoObject = false): string
     {
-        $result = '';
-
-        $result .= '<div class="layoutObjectsList">' . "\n";
+        $result = '<div class="layoutObjectsList">' . "\n";
         $result .= '<div class="objectsListContent">' . "\n";
 
         // Prépare le message si pas d'objet à afficher.
