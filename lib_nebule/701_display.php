@@ -6970,7 +6970,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * - title : le titre de l'entrée, obligatoire ;
      * - htlink : le lien HTML, obligatoire ;
      * - desc : la description sous le titre, facultatif ;
-     * - ref : un texte de référence au dessus du titre, facultatif ;
+     * - ref : un texte de référence au-dessus du titre, facultatif ;
      * - class : un texte qui référence une classe CSS, facultatif.
      * La taille peut être :
      * - Small
@@ -7029,7 +7029,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $result .= ' ' . $item['class'];
             $result .= '">' . "\n";
             $result .= '  <div class="menuListContentAction-icon">';
-            $result .= $this->convertUpdateImage($item['icon'], $item['title']);
+            if (is_a($item['icon'], 'Nebule\Library\Node'))
+                $icon = $item['icon'];
+            else
+                $icon = $this->_nebuleInstance->newObject((string)$item['icon']);
+            $result .= $this->convertUpdateImage($icon, $item['title']);
             $result .= '</div>' . "\n";
 
             $result .= '  <div class="menuListContentAction-content">' . "\n";
@@ -7179,12 +7183,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Affiche un titre de paragraphe.
      * La variable $displayEntity et l'option 'forceDisplayEntityOnTitle' forcent l'affichage de l'entité en cours.
      *
-     * @param string  $title
-     * @param string  $icon
-     * @param boolean $displayEntity
+     * @param string    $title
+     * @param Node|null $icon
+     * @param boolean   $displayEntity
      * @return string
      */
-    public function getDisplayTitle(string $title, string $icon = '', bool $displayEntity = false): string
+    public function getDisplayTitle(string $title, ?Node $icon = null, bool $displayEntity = false): string
     {
         $result = '';
 
@@ -7195,7 +7199,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $result .= ' <div class="titleContent">' . "\n";
 
         $result .= '  <div class="titleContentDiv">' . "\n";
-        if ($icon != '') {
+        if ($icon !== null) {
             $result .= '   <div class="titleContentIcon">' . "\n";
             $result .= $this->convertUpdateImage($icon, $title);
             $result .= "   </div>\n";
@@ -7893,11 +7897,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche l'image du carré de couleur de l'objet ou de l'entité, lien vers l'objet.
      *
-     * @param string|Node $object
-     * @param string      $htlink
+     * @param Node   $object
+     * @param string $htlink
      * @return void
      */
-    public function displayObjectColor($object, string $htlink = ''): void
+    public function displayObjectColor(Node $object, string $htlink = ''): void
     {
         echo $this->convertObjectColor($object, $htlink);
     }
@@ -7905,11 +7909,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare l'image du carré de couleur de l'objet ou de l'entité, lien vers l'objet.
      *
-     * @param string|Node $object
-     * @param string      $htlink
+     * @param Node   $object
+     * @param string $htlink
      * @return string
      */
-    public function convertObjectColor($object, string $htlink = ''): string
+    public function convertObjectColor(Node $object, string $htlink = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
@@ -7920,10 +7924,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche l'image du carré de couleur de l'objet ou de l'entité, mais pas de lien vers l'objet.
      *
-     * @param string $object
+     * @param Node $object
      * @return void
      */
-    public function displayInlineObjectColorNolink(string $object): void
+    public function displayInlineObjectColorNolink(Node $object): void
     {
         echo $this->convertInlineObjectColorNolink($object);
     }
@@ -7931,10 +7935,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare l'image du carré de couleur de l'objet ou de l'entité, mais pas de lien vers l'objet.
      *
-     * @param string $object
+     * @param Node $object
      * @return string
      */
-    public function convertInlineObjectColorNolink(string $object): string
+    public function convertInlineObjectColorNolink(Node $object): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         return $this->_prepareObjectColor($object, 'iconInlineDisplay');
@@ -7943,12 +7947,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche l'image de l'icône de l'objet ou de l'entité, lien vers l'objet.
      *
-     * @param string|Node|entity $object
-     * @param string             $htlink
-     * @param string             $icon
+     * @param Node   $object
+     * @param string $htlink
+     * @param string $icon
      * @return void
      */
-    public function displayObjectIcon($object, string $htlink = '', string $icon = ''): void
+    public function displayObjectIcon(Node $object, string $htlink = '', string $icon = ''): void
     {
         echo $this->convertObjectIcon($object, $htlink, $icon);
     }
@@ -7956,12 +7960,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare l'image de l'icône de l'objet ou de l'entité, lien vers l'objet.
      *
-     * @param string|Node|entity $object
-     * @param string             $htlink
-     * @param string             $icon
+     * @param Node   $object
+     * @param string $htlink
+     * @param string $icon
      * @return string
      */
-    public function convertObjectIcon($object, string $htlink = '', string $icon = ''): string
+    public function convertObjectIcon(Node $object, string $htlink = '', string $icon = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
@@ -7975,12 +7979,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche l'image du carré de couleur et l'icône de l'objet ou de l'entité, lien vers l'objet.
      *
-     * @param string|Node|entity $object
-     * @param string             $htlink
-     * @param string             $icon
+     * @param Node   $object
+     * @param string $htlink
+     * @param string $icon
      * @return void
      */
-    public function displayObjectColorIcon($object, string $htlink = '', string $icon = ''): void
+    public function displayObjectColorIcon(Node $object, string $htlink = '', string $icon = ''): void
     {
         echo $this->convertObjectColorIcon($object, $htlink, $icon);
     }
@@ -7988,12 +7992,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare l'image du carré de couleur et l'icône de l'objet ou de l'entité, lien vers l'objet.
      *
-     * @param string|Node|entity $object
-     * @param string             $htlink
-     * @param string             $icon
+     * @param Node   $object
+     * @param string $htlink
+     * @param string $icon
      * @return string
      */
-    public function convertObjectColorIcon($object, string $htlink = '', string $icon = ''): string
+    public function convertObjectColorIcon(Node $object, string $htlink = '', string $icon = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
@@ -8008,11 +8012,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare en version inserré au texte l'image du carré de couleur de l'objet ou de l'entité, lien vers l'objet.
      *
-     * @param string|Node $object
-     * @param string      $htlink
+     * @param Node   $object
+     * @param string $htlink
      * @return string
      */
-    public function prepareInlineObjectColor($object, string $htlink = ''): string
+    public function prepareInlineObjectColor(Node $object, string $htlink = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
@@ -8023,11 +8027,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche en version inserré au texte l'image de l'objet ou de l'entité, lien vers l'objet.
      *
-     * @param string|Node $object
+     * @param Node   $object
      * @param string $htlink
      * @return void
      */
-    public function displayInlineObjectColor($object, string $htlink = ''): void
+    public function displayInlineObjectColor(Node $object, string $htlink = ''): void
     {
         echo $this->convertInlineObjectColor($object, $htlink);
     }
@@ -8035,11 +8039,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare en version inserré au texte l'image de l'objet ou de l'entité, lien vers l'objet.
      *
-     * @param string|Node $object
+     * @param Node   $object
      * @param string $htlink
      * @return string
      */
-    public function convertInlineObjectColor($object, string $htlink = ''): string
+    public function convertInlineObjectColor(Node $object, string $htlink = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
@@ -8050,12 +8054,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche en version inserré au texte l'image de l'objet ou de l'entité et le nom ou un texte, lien vers l'objet.
      *
-     * @param string|Node $object
+     * @param Node   $object
      * @param string $text
      * @param string $htlink
      * @return void
      */
-    public function displayInlineObjectColorText($object, string $text = '', string $htlink = ''): void
+    public function displayInlineObjectColorText(Node $object, string $text = '', string $htlink = ''): void
     {
         echo $this->convertInlineObjectColorText($object, $text, $htlink);
     }
@@ -8063,12 +8067,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare en version inserré au texte l'image de l'objet ou de l'entité et le nom ou un texte, lien vers l'objet.
      *
-     * @param string|Node $object
+     * @param Node   $object
      * @param string $text
      * @param string $htlink
      * @return string
      */
-    public function convertInlineObjectColorText($object, string $text = '', string $htlink = ''): string
+    public function convertInlineObjectColorText(Node $object, string $text = '', string $htlink = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         if ($text == '')
@@ -8082,11 +8086,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche en version inserré au texte l'image de l'objet ou de l'entité et le nom, lien vers l'objet.
      *
-     * @param string|Node $object
+     * @param Node   $object
      * @param string $htlink
      * @return void
      */
-    public function displayInlineObjectColorName($object, string $htlink = ''): void
+    public function displayInlineObjectColorName(Node $object, string $htlink = ''): void
     {
         echo $this->convertInlineObjectColorName($object, $htlink);
     }
@@ -8094,11 +8098,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare en version inserré au texte l'image de l'objet ou de l'entité et le nom, lien vers l'objet.
      *
-     * @param string|Node $object
+     * @param Node   $object
      * @param string $htlink
      * @return string
      */
-    public function convertInlineObjectColorName($object, string $htlink = ''): string
+    public function convertInlineObjectColorName(Node $object, string $htlink = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
@@ -8110,21 +8114,21 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche en version inserré au texte l'icône couleur, l'image et un texte ou le nom de l'objet ou de l'entité, lien vers l'objet.
      *
-     * @param string|Node $object
+     * @param Node   $object
      * @param string $htlink
      * @return void
      */
-    public function displayInlineObjectColorIcon($object, string $htlink = ''): void
+    public function displayInlineObjectColorIcon(Node $object, string $htlink = ''): void
     {
         echo $this->convertInlineObjectColorIcon($object, $htlink);
     }
 
     /**
-     * @param Node|string $object
+     * @param Node   $object
      * @param string $htlink
      * @return string
      */
-    public function convertInlineObjectColorIcon($object, string $htlink = ''): string
+    public function convertInlineObjectColorIcon(Node $object, string $htlink = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
@@ -8136,16 +8140,21 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche en version inserré au texte l'icône couleur, l'image et un texte ou le nom de l'objet ou de l'entité, lien vers l'objet.
      *
-     * @param string|Node $object
+     * @param Node   $object
      * @param string $htlink
      * @return void
      */
-    public function displayInlineObjectColorIconName($object, string $htlink = ''): void
+    public function displayInlineObjectColorIconName(Node $object, string $htlink = ''): void
     {
         echo $this->convertInlineObjectColorIconName($object, $htlink);
     }
 
-    public function convertInlineObjectColorIconName($object, string $htlink = ''): string
+    /**
+     * @param Node   $object
+     * @param string $htlink
+     * @return string
+     */
+    public function convertInlineObjectColorIconName(Node $object, string $htlink = ''): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
@@ -8158,10 +8167,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche en version inserré au texte l'icône couleur, l'image et un texte ou le nom de l'objet ou de l'entité, mais pas de lien vers l'objet.
      *
-     * @param string|Node $object
+     * @param Node $object
      * @return void
      */
-    public function displayInlineObjectColorIconNameNolink($object): void
+    public function displayInlineObjectColorIconNameNolink(Node $object): void
     {
         echo $this->convertInlineObjectColorIconNameNolink($object);
     }
@@ -8169,10 +8178,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare en version inserré au texte l'icône couleur, l'image et un texte ou le nom de l'objet ou de l'entité, mais pas de lien vers l'objet.
      *
-     * @param string|Node $object
+     * @param Node $object
      * @return string
      */
-    public function convertInlineObjectColorIconNameNolink($object): string
+    public function convertInlineObjectColorIconNameNolink(Node $object): string
     {
         $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
         $name = $this->_truncateName($object->getFullName('all'), 0);
@@ -8201,42 +8210,52 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         switch ($link->getAction()) {
             case 'f':
-                $icon = $this->convertUpdateImage(self::DEFAULT_ICON_LF, 'f', 'iconInlineDisplay');
+                $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LF);
+                $iconUpdate = $this->convertUpdateImage($icon, 'f', 'iconInlineDisplay');
                 break;
             case 'u':
-                $icon = $this->convertUpdateImage(self::DEFAULT_ICON_LU, 'u', 'iconInlineDisplay');
+                $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LU);
+                $iconUpdate = $this->convertUpdateImage($icon, 'u', 'iconInlineDisplay');
                 break;
             case 'd':
-                $icon = $this->convertUpdateImage(self::DEFAULT_ICON_LD, 'd', 'iconInlineDisplay');
+                $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LD);
+                $iconUpdate = $this->convertUpdateImage($icon, 'd', 'iconInlineDisplay');
                 break;
             case 'e':
-                $icon = $this->convertUpdateImage(self::DEFAULT_ICON_LE, 'e', 'iconInlineDisplay');
+                $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LE);
+                $iconUpdate = $this->convertUpdateImage($icon, 'e', 'iconInlineDisplay');
                 break;
             case 'c':
-                $icon = $this->convertUpdateImage(self::DEFAULT_ICON_LC, 'c', 'iconInlineDisplay');
+                $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LC);
+                $iconUpdate = $this->convertUpdateImage($icon, 'c', 'iconInlineDisplay');
                 break;
             case 'k':
-                $icon = $this->convertUpdateImage(self::DEFAULT_ICON_LK, 'k', 'iconInlineDisplay');
+                $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LK);
+                $iconUpdate = $this->convertUpdateImage($icon, 'k', 'iconInlineDisplay');
                 break;
             case 's':
-                $icon = $this->convertUpdateImage(self::DEFAULT_ICON_LS, 's', 'iconInlineDisplay');
+                $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LS);
+                $iconUpdate = $this->convertUpdateImage($icon, 's', 'iconInlineDisplay');
                 break;
             case 'x':
-                $icon = $this->convertUpdateImage(self::DEFAULT_ICON_LX, 'x', 'iconInlineDisplay');
+                $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LX);
+                $iconUpdate = $this->convertUpdateImage($icon, 'x', 'iconInlineDisplay');
                 break;
             default :
-                $icon = $this->convertUpdateImage(self::DEFAULT_ICON_LL, 'l', 'iconInlineDisplay');
+                $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LL);
+                $iconUpdate = $this->convertUpdateImage($icon, 'l', 'iconInlineDisplay');
                 break;
         }
 
-        $colorDate = $this->convertUpdateImage(self::DEFAULT_ICON_IMLOG, $link->getDate(), 'iconInlineDisplay');
+        $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IMLOG);
+        $colorDate = $this->convertUpdateImage($icon, $link->getDate(), 'iconInlineDisplay'); // FIXME
 
         // Prépare le contenu à afficher.
         $return = '';
         foreach ($link->getSigners() as $signer)
             $return .= $this->convertInlineObjectColor($signer);
         $return .= $colorDate;
-        $return .= $icon;
+        $return .= $iconUpdate;
         $return .= $this->convertInlineObjectColor($link->getParsed()['bl/rl/nid1']);
         $return .= $this->convertInlineObjectColor($link->getParsed()['bl/rl/nid2']);
         $return .= $this->convertInlineObjectColor($link->getParsed()['bl/rl/nid3']);
@@ -8272,7 +8291,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     public function convertInlineInfoFace(): string
     {
-        return $this->convertUpdateImage(self::DEFAULT_ICON_IINFO, $this->_traductionInstance->getTraduction('::::INFO'), 'iconInlineDisplay');
+        $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IINFO);
+        return $this->convertUpdateImage($icon, $this->_traductionInstance->getTraduction('::::INFO'), 'iconInlineDisplay');
     }
 
     public function displayInlineOKFace(): void
@@ -8282,7 +8302,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     public function convertInlineOKFace(): string
     {
-        return $this->convertUpdateImage(self::DEFAULT_ICON_IOK, $this->_traductionInstance->getTraduction('::::OK'), 'iconInlineDisplay');
+        $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IOK);
+        return $this->convertUpdateImage($icon, $this->_traductionInstance->getTraduction('::::OK'), 'iconInlineDisplay');
     }
 
     public function displayInlineWarningFace(): void
@@ -8292,7 +8313,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     public function convertInlineWarningFace(): string
     {
-        return $this->convertUpdateImage(self::DEFAULT_ICON_IWARN, $this->_traductionInstance->getTraduction('::::WARN'), 'iconInlineDisplay');
+        $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IWARN);
+        return $this->convertUpdateImage($icon, $this->_traductionInstance->getTraduction('::::WARN'), 'iconInlineDisplay');
     }
 
     public function displayInlineErrorFace(): void
@@ -8302,7 +8324,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     public function convertInlineErrorFace(): string
     {
-        return $this->convertUpdateImage(self::DEFAULT_ICON_IERR, $this->_traductionInstance->getTraduction('::::ERROR'), 'iconInlineDisplay');
+        $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IERR);
+        return $this->convertUpdateImage($icon, $this->_traductionInstance->getTraduction('::::ERROR'), 'iconInlineDisplay');
     }
 
     public function displayInlineLastAction(): void
@@ -8683,8 +8706,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         ?>
 
                         <div class="oneAction-warn">
-                            <p><?php $this->displayUpdateImage(
-                                    self::DEFAULT_ICON_IWARN,
+                            <p><?php
+                                $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IWARN);
+                                $this->displayUpdateImage(
+                                    $icon,
                                     ':::display:content:warningTaggedWarning',
                                     'iconInlineDisplay');
                                 echo ' ';
@@ -8696,8 +8721,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         ?>
 
                         <div class="oneAction-error">
-                            <p><?php $this->displayUpdateImage(
-                                    self::DEFAULT_ICON_IERR,
+                            <p><?php
+                                $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IERR);
+                                $this->displayUpdateImage(
+                                    $icon,
                                     ':::display:content:errorBan',
                                     'iconInlineDisplay');
                                 echo ' ';
@@ -8709,8 +8736,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         ?>
 
                         <div class="oneAction-ok">
-                            <p><?php $this->displayUpdateImage(
-                                    self::DEFAULT_ICON_LK,
+                            <p><?php
+                                $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LK);
+                                $this->displayUpdateImage(
+                                    $icon,
                                     ':::display:content:ObjectProctected',
                                     'iconInlineDisplay');
                                 echo ' ';
@@ -8726,7 +8755,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         <div class="oneAction-actions">
                             <?php
                             foreach ($item['actions'] as $action) {
-                                $actionIcon = $this->convertUpdateImage($action['icon'], $action['name'], 'iconInlineDisplay');
+                                if (is_a($action['icon'], 'Nebule\Library\Node'))
+                                    $icon = $action['icon'];
+                                else
+                                    $icon = $this->_nebuleInstance->newObject($action['icon']);
+                                $actionIcon = $this->convertUpdateImage($icon, $action['name'], 'iconInlineDisplay');
                                 $actionName = $this->_traductionInstance->getTraduction($action['name']);
                                 echo '<p>' . $actionIcon . ' ' . $this->convertHypertextLink($actionName, $action['link']) . "</p>\n";
                                 unset($actionIcon, $actionName);

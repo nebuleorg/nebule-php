@@ -721,7 +721,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
     private function _displayGlobalAuthorities()
     {
         // Titre
-        echo $this->getDisplayTitle('Global authorities', '', false);
+        echo $this->getDisplayTitle('Global authorities', null, false);
 
         $param = array(
             'enableDisplayColor' => true,
@@ -805,7 +805,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         $refAuthority = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
 
         // Titre
-        echo $this->getDisplayTitle('Primary local authorities', '', false);
+        echo $this->getDisplayTitle('Primary local authorities', null, false);
 
         $listEntities = $this->_nebuleInstance->getLocalPrimaryAuthoritiesInstance();
         $listOkEntities = array(
@@ -886,7 +886,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         unset($list);
 
         // Titre des entités secondaires.
-        echo $this->getDisplayTitle('Secondary local authorities', '', false);
+        echo $this->getDisplayTitle('Secondary local authorities', null, false);
 
         if ($this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities')) {
             // Liste les entités marquées comme entités de recouvrement.
@@ -986,7 +986,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
         ) {
 
             // Titre
-            echo $this->getDisplayTitle('Add entities as local authority', '', false);
+            echo $this->getDisplayTitle('Add entities as local authority', null, false);
 
             // Lister les entités.
             $listEntities = $this->_nebuleInstance->getListEntitiesInstances();
@@ -1078,7 +1078,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
     private function _displayOptions()
     {
         // Titre
-        echo $this->getDisplayTitle('Options', '', false);
+        echo $this->getDisplayTitle('Options', null, false);
         ?>
 
         <div id="options">
@@ -1106,7 +1106,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
                     // Extrait les propriétés de l'option.
                     $optionValue = $this->_configurationInstance->getOptionUntyped($optionName);
-                    $optionID = $this->_nebuleInstance->getCryptoInstance()->hash($optionName, 'sha2.256') . '.sha2.256';
+                    $optionID = $this->_nebuleInstance->newObject($this->_nebuleInstance->getNIDfromData($optionName, 'sha2.256'));
                     $optionValueDisplay = (string)$optionValue;
                     $optionType = $listOptionsType[$optionName];
                     $optionWritable = $listOptionsWritable[$optionName];
@@ -1295,7 +1295,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
     private function _displayApplications()
     {
         // Titre
-        echo $this->getDisplayTitle('Applications', '', false);
+        echo $this->getDisplayTitle('Applications', null, false);
         ?>
 
         <div id="apps">
@@ -1611,7 +1611,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
     private function _displayRecovery()
     {
         // Titre
-        echo $this->getDisplayTitle('Local recovery', '', false);
+        echo $this->getDisplayTitle('Local recovery', null, false);
 
         $listAuthorities = $this->_nebuleInstance->getAuthorities();
         $listOkEntities = array();
@@ -1730,7 +1730,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
             && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitUploadLink', 'permitRecoveryEntities'))
         ) {
             // Titre
-            echo $this->getDisplayTitle('Add entities as recovery', '', false);
+            echo $this->getDisplayTitle('Add entities as recovery', null, false);
 
             // Lister les entités.
             $listEntities = $this->_nebuleInstance->getListEntitiesInstances();

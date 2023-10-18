@@ -42,7 +42,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020230110';
+    const APPLICATION_VERSION = '020231018';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2023';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -699,7 +699,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $this->_findLogoApplicationLink();
         $this->_findLogoApplicationName();
         $this->_findCurrentDisplayView();
-        $this->_findCurrentAction();
+//        $this->_findCurrentAction();
         $this->_findInlineContentID();
 
         // Si en mode téléchargement d'objet ou de lien, pas de traduction.
@@ -755,7 +755,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $this->_findLogoApplicationLink();
         $this->_findLogoApplicationName();
         $this->_findCurrentDisplayView();
-        $this->_findCurrentAction();
+//        $this->_findCurrentAction();
         $this->_findInlineContentID();
 
         // Si en mode téléchargement d'objet ou de lien, pas de traduction.
@@ -1439,19 +1439,22 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                 <div class="header-left2">
                     <?php
+                    $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LSTENT);
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
-                            self::DEFAULT_ICON_LSTENT,
+                            $icon,
                             '::EntitiesList'),
                         '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_LIST_COMMAND);
+                    $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_ADDENT);
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
-                            self::DEFAULT_ICON_ADDENT,
+                            $icon,
                             '::EntityAdd'),
                         '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_ADD_COMMAND);
+                    $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_WORLD);
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
-                            self::DEFAULT_ICON_WORLD,
+                            $icon,
                             ':::SelectLanguage'),
                         '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ABOUT_COMMAND . '#lang');
                     ?>
@@ -1468,13 +1471,14 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 } // Si un test est en warning maximum.
                 elseif ($this->_applicationInstance->getCheckSecurityAll() == 'WARN') {
                     // Si mode rescue et en warning.
+                    $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IWARN);
                     if ($this->_nebuleInstance->getModeRescue()) {
                         // Si l'entité est déverrouillées.
                         if ($this->_unlocked) {
                             // Affiche le lien de verrouillage sans les effets.
                             $this->displayHypertextLink(
                                 $this->convertUpdateImage(
-                                    $this->_iconIwarn, 'Etat déverrouillé, verrouiller ?',
+                                    $icon, 'Etat déverrouillé, verrouiller ?',
                                     '',
                                     '',
                                     'name="ico_lock"'),
@@ -1485,7 +1489,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             // Affiche de lien de déverrouillage sans les effets.
                             $this->displayHypertextLink(
                                 $this->convertUpdateImage(
-                                    $this->_iconIwarn, 'Etat verrouillé, déverrouiller ?',
+                                    $icon, 'Etat verrouillé, déverrouiller ?',
                                     '',
                                     '',
                                     'name="ico_lock"'),
@@ -1496,16 +1500,17 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     else {
                         $this->displayHypertextLink(
                             $this->convertUpdateImage(
-                                self::DEFAULT_ICON_IWARN,
+                                $icon,
                                 'WARNING'),
                             '?' . nebule::COMMAND_LOGOUT_ENTITY
                             . '&' . nebule::COMMAND_SWITCH_TO_ENTITY);
                     }
                 } // Sinon c'est une erreur.
                 else {
+                    $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IERR);
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
-                            self::DEFAULT_ICON_IERR,
+                            $icon,
                             'ERROR'),
                         '?' . nebule::COMMAND_LOGOUT_ENTITY
                         . '&' . nebule::COMMAND_FLUSH);
@@ -1618,7 +1623,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                 foreach ($modulesName as $i => $module) {
                     $name = $this->_applicationInstance->getTraductionInstance()->getTraduction($module);
-                    $icon = $modulesIcon[$i];
+                    $icon = $this->_nebuleInstance->newObject($modulesIcon[$i]);
                     $link = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $modulesLink[$i];
                     ?>
 
@@ -1800,7 +1805,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     private function _displayContentObjectList()
     {
         // Titre.
-        echo $this->getDisplayTitle('::ObjectList', self::DEFAULT_ICON_LSTOBJ);
+        $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LSTOBJ);
+        echo $this->getDisplayTitle('::ObjectList', $icon);
 
         // Appel l'affichage en ligne.
         $this->registerInlineContentID('objectlist');
@@ -1996,7 +2002,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     private function _displayContentEntityList()
     {
         // Titre.
-        echo $this->getDisplayTitle('::EntitiesList', self::DEFAULT_ICON_LSTENT);
+        $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LSTENT);
+        echo $this->getDisplayTitle('::EntitiesList', $icon);
 
         // Appel l'affichage en ligne.
         $this->registerInlineContentID('listentities');
@@ -2084,7 +2091,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     private function _displayContentEntityGroupList()
     {
         // Titre.
-        echo $this->getDisplayTitle('::EntitiesGroupList', self::DEFAULT_ICON_GRPENT);
+        $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_GRPENT);
+        echo $this->getDisplayTitle('::EntitiesGroupList', $icon);
 
         // Appel l'affichage en ligne.
         $this->registerInlineContentID('listgroups');
@@ -2166,12 +2174,13 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             $createGroupError = $this->_actionInstance->getCreateGroupError();
             $createGroupErrorMessage = $this->_actionInstance->getCreateGroupErrorMessage();
 
-            // Si la création à réussi.
+            // Si la création a réussi.
             if (!$createGroupError
                 && is_a($createGroupInstance, 'Group')
             ) {
                 // Affiche le titre.
-                echo $this->getDisplayTitle('::CreatedGroup', self::DEFAULT_ICON_GRPENT);
+                $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_GRPENT);
+                echo $this->getDisplayTitle('::CreatedGroup', $icon);
 
                 // Affiche la nouvelle entité.
                 echo '<div class="layoutObjectsList">' . "\n";
@@ -2206,7 +2215,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             }
         } else {
             // Affiche le titre.
-            echo $this->getDisplayTitle('::EntitiesGroupAdd', self::DEFAULT_ICON_GRPENTADD);
+            $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_GRPENTADD);
+            echo $this->getDisplayTitle('::EntitiesGroupAdd', $icon);
 
             // Si autorisé à créer un groupe.
             if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -2838,7 +2848,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 && is_a($createEntityInstance, 'Entity')
             ) {
                 // Affiche le titre.
-                echo $this->getDisplayTitle('::NewEntityCreated', self::DEFAULT_ICON_ADDENT);
+                $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_ADDENT);
+                echo $this->getDisplayTitle('::NewEntityCreated', $icon);
 
                 // Affiche la nouvelle entité.
                 echo '<div class="layoutObjectsList">' . "\n";
@@ -2883,7 +2894,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             }
         } else {
             // Affiche le titre.
-            echo $this->getDisplayTitle('::CreateEntity', self::DEFAULT_ICON_ADDENT);
+            $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_ADDENT);
+            echo $this->getDisplayTitle('::CreateEntity', $icon);
 
             // Si autorisé à créer une entité.
             if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -2972,7 +2984,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     private function _displayContentEntitySync()
     {
         // Affiche le titre.
-        echo $this->getDisplayTitle('::EntitySync', self::DEFAULT_ICON_SYNENT);
+        $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_SYNENT);
+        echo $this->getDisplayTitle('::EntitySync', $icon);
 
         // Si autorisé à synchroniser une entité.
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -3352,9 +3365,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 && $this->_unlocked
             )
         ) {
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayTitle('::EntityUnlocked', Display::DEFAULT_ICON_KEY);
+            $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_KEY);
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayTitle('::EntityUnlocked', $icon);
         } else {
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayTitle('::EntityLocked', Display::DEFAULT_ICON_ENTITY_LOCK);
+            $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_ENTITY_LOCK);
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayTitle('::EntityLocked', $icon);
         }
 
         // Extrait les états de tests en warning ou en erreur.
@@ -3496,6 +3511,10 @@ private function _displayContentAbout()
 {
     global $nebuleSurname,
            $nebuleWebsite;
+
+    $iconLL = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LL);
+    $iconLK = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LK);
+    $iconTIME = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_TIME);
     ?>
 
     <div class="textcenter" id="welcome">
@@ -3507,15 +3526,15 @@ private function _displayContentAbout()
     <div id="about"></div>
     <div id="iconsWelcome">
         <div id="iconWelcome1">
-            <?php $this->displayUpdateImage(self::DEFAULT_ICON_LL, '::Share', 'iconNormalDisplay') ?><br/>
+            <?php $this->displayUpdateImage($iconLL, '::Share', 'iconNormalDisplay') ?><br/>
             <?php $this->_traductionInstance->echoTraduction('::Share'); ?>
         </div>
         <div id="iconWelcome2">
-            <?php $this->displayUpdateImage(self::DEFAULT_ICON_LK, '::Protection', 'iconNormalDisplay') ?><br/>
+            <?php $this->displayUpdateImage($iconLK, '::Protection', 'iconNormalDisplay') ?><br/>
             <?php $this->_traductionInstance->echoTraduction('::Protection'); ?>
         </div>
         <div id="iconWelcome3">
-            <?php $this->displayUpdateImage(self::DEFAULT_ICON_TIME, '::TimeLimited', 'iconNormalDisplay') ?><br/>
+            <?php $this->displayUpdateImage($iconTIME, '::TimeLimited', 'iconNormalDisplay') ?><br/>
             <?php $this->_traductionInstance->echoTraduction('::TimeLimited'); ?>
         </div>
     </div>
@@ -3556,7 +3575,8 @@ private function _displayContentAbout()
 
     <div class="sequence" id="lang"></div>
 <?php
-echo $this->getDisplayTitle(':::SelectLanguage', self::DEFAULT_ICON_WORLD);
+$icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_WORLD);
+echo $this->getDisplayTitle(':::SelectLanguage', $icon);
 $i = 0;
 foreach ($this->_traductionInstance->getLanguageList() as $lang) {
     $actionList[$i]['title'] = $this->_traductionInstance->getTraduction(':::Language:' . $lang);
@@ -3573,7 +3593,7 @@ unset($actionList);
 ?>
 
     <div class="sequence" id="help"></div>
-<?php echo $this->getDisplayTitle('::Help', self::DEFAULT_ICON_HELP); ?>
+<?php $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_HELP); echo $this->getDisplayTitle('::Help', $icon); ?>
 
 <?php
 $param = array(
@@ -3586,7 +3606,7 @@ echo $this->getDisplayInformation('::HelpMessage', $param);
 ?>
 
     <div class="sequence" id="recovery"></div>
-<?php echo $this->getDisplayTitle('::ProtectionRecovery', self::DEFAULT_ICON_LC); ?>
+<?php $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LC); echo $this->getDisplayTitle('::ProtectionRecovery', $icon); ?>
 <?php $this->registerInlineContentID('listrecovery'); ?>
 
 <?php
@@ -3907,12 +3927,12 @@ if (strpos($nebuleWebsite, '://') === false)
 
     /**
      * Affiche le titre H1 pour un paragraphe de texte.
-     * @param string $icon
+     * @param Node $icon
      * @param string $title
      * @param string $desc
      * @param string $help
      */
-    public function displayDivTextTitleH1($icon, $title = '', $desc = '', $help = '')
+    public function displayDivTextTitleH1(Node $icon, $title = '', $desc = '', $help = '')
     {
         ?>
 
@@ -3940,12 +3960,12 @@ if (strpos($nebuleWebsite, '://') === false)
 
     /**
      * Affiche le titre H2 pour un paragraphe de texte.
-     * @param string $icon
+     * @param Node $icon
      * @param string $title
      * @param string $desc
      * @param string $help
      */
-    public function displayDivTextTitleH2($icon, $title = '', $desc = '', $help = '')
+    public function displayDivTextTitleH2(Node $icon, $title = '', $desc = '', $help = '')
     {
         ?>
 
@@ -3983,7 +4003,7 @@ if (strpos($nebuleWebsite, '://') === false)
             foreach ($actionList as $appHook) {
                 if ($appHook['name'] != '') {
                     $name = $this->_applicationInstance->getTraductionInstance()->getTraduction($appHook['name']);
-                    $icon = $appHook['icon'];
+                    $icon = $this->_nebuleInstance->newObject($appHook['icon']);
                     if ($icon == '')
                         $icon = self::DEFAULT_ICON_LSTOBJ;
                     $desc = $this->_applicationInstance->getTraductionInstance()->getTraduction($appHook['desc']);
@@ -4128,8 +4148,10 @@ if (strpos($nebuleWebsite, '://') === false)
                         ?>
 
                         <div class="oneAction-warn">
-                            <p><?php $this->displayUpdateImage(
-                                    self::DEFAULT_ICON_IWARN,
+                            <p><?php
+                                $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IWARN);
+                                $this->displayUpdateImage(
+                                    $icon,
                                     ':::display:content:warningTaggedWarning',
                                     'iconInlineDisplay');
                                 echo ' ';
@@ -4141,8 +4163,10 @@ if (strpos($nebuleWebsite, '://') === false)
                         ?>
 
                         <div class="oneAction-error">
-                            <p><?php $this->displayUpdateImage(
-                                    self::DEFAULT_ICON_IERR,
+                            <p><?php
+                                $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IERR);
+                                $this->displayUpdateImage(
+                                    $icon,
                                     ':::display:content:errorBan',
                                     'iconInlineDisplay');
                                 echo ' ';
@@ -4154,8 +4178,10 @@ if (strpos($nebuleWebsite, '://') === false)
                         ?>
 
                         <div class="oneAction-ok">
-                            <p><?php $this->displayUpdateImage(
-                                    self::DEFAULT_ICON_LK,
+                            <p><?php
+                                $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LK);
+                                $this->displayUpdateImage(
+                                    $icon,
                                     ':::display:content:ObjectProctected',
                                     'iconInlineDisplay');
                                 echo ' ';
@@ -4171,7 +4197,8 @@ if (strpos($nebuleWebsite, '://') === false)
                         <div class="oneAction-actions">
                             <?php
                             foreach ($item['actions'] as $action) {
-                                $actionIcon = $this->convertUpdateImage($action['icon'], $action['name'], 'iconInlineDisplay');
+                                $icon = $this->_nebuleInstance->newObject($action['icon']);
+                                $actionIcon = $this->convertUpdateImage($icon, $action['name'], 'iconInlineDisplay');
                                 $actionName = $this->_traductionInstance->getTraduction($action['name']);
                                 echo '<p>' . $actionIcon . ' ' . $this->convertHypertextLink($actionName, $action['link']) . "</p>\n";
                                 unset($actionIcon, $actionName);

@@ -14,7 +14,7 @@ use Nebule\Library\References;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020231017';
+const BOOTSTRAP_VERSION = '020231018';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2023';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -50,10 +50,13 @@ const BOOTSTRAP_CODING = 'application/x-httpd-php';
  PART6 : Manage and display breaking bootstrap on problem or user ask.
  PART7 : Display of preload application web page.
  PART8 : First synchronization of code and environment.
- PART9 : Display of application 0 web page to select application to run.
- PART10 : Display of application 1 web page to display documentation of nebule.
- PART11 : Display of application 2 default application.
- PART12 : Main display router.
+ PART9 : Display of application 0 default application.
+ PART10 : Display of application 1 web page to select application to run.
+ PART11 : Display of application 2 web page to authenticate entity.
+ PART12 : Display of application 3 web page to display documentation of nebule.
+ PART13 : Display of application 4 to simply show links.
+ PART14 : Display of application 9 to debug.
+ PART15 : Main display router.
  ------------------------------------------------------------------------------------------
 */
 
@@ -167,7 +170,7 @@ $nebuleInstance = null;
 $bootstrapBreak = array();
 
 /**
- * Variable de détection d'affichage inserré en ligne.
+ * Variable de détection de l'affichage inserré en ligne.
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapInlineDisplay = false;
@@ -209,7 +212,7 @@ $bootstrapCodeBID = '';
 $bootstrapCodeSID = '';
 
 /**
- * ID (Intermediate) de la bibliothèque mémorisé dans la session PHP.
+ * ID (Intermediate) de la bibliothèque mémorisée dans la session PHP.
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapLibraryIID = '';
@@ -227,19 +230,19 @@ $bootstrapLibraryOID = '';
 $bootstrapLibrarySID = '';
 
 /**
- * Instance non dé-sérialisée de la bibliothèque mémorisée dans la session PHP.
+ * Instance non désérialisée de la bibliothèque mémorisée dans la session PHP.
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapLibraryInstanceSleep = '';
 
 /**
- * ID (Intermediate) de l'application mémorisé dans la session PHP.
+ * ID (Intermediate) de l'application mémorisée dans la session PHP.
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapApplicationIID = '0';
 
 /**
- * ID de l'application mémorisé dans la session PHP.
+ * ID de l'application mémorisée dans la session PHP.
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapApplicationOID = '0';
@@ -251,7 +254,7 @@ $bootstrapApplicationOID = '0';
 $bootstrapApplicationSID = '';
 
 /**
- * Instance non dé-sérialisée de l'application mémorisée dans la session PHP.
+ * Instance non désérialisée de l'application mémorisée dans la session PHP.
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapApplicationInstanceSleep = '';
@@ -263,13 +266,13 @@ $bootstrapApplicationInstanceSleep = '';
 $bootstrapApplicationInstancePreloaded = false;
 
 /**
- * Instance non dé-sérialisée des actions de l'application mémorisée dans la session PHP.
+ * Instance non désérialisée des actions de l'application mémorisée dans la session PHP.
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapApplicationActionInstanceSleep = '';
 
 /**
- * Instance non dé-sérialisée des traductions de l'application mémorisée dans la session PHP.
+ * Instance non désérialisée des traductions de l'application mémorisée dans la session PHP.
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $bootstrapApplicationTraductionInstanceSleep = '';
@@ -603,6 +606,15 @@ const LIB_CONFIGURATIONS_TYPE = array(
     'sessionBufferSize' => 'integer',
     'defaultCurrentEntity' => 'string',
     'defaultApplication' => 'string',
+    'permitApplication1' => 'boolean',
+    'permitApplication2' => 'boolean',
+    'permitApplication3' => 'boolean',
+    'permitApplication4' => 'boolean',
+    'permitApplication5' => 'boolean',
+    'permitApplication6' => 'boolean',
+    'permitApplication7' => 'boolean',
+    'permitApplication8' => 'boolean',
+    'permitApplication9' => 'boolean',
     'defaultObfuscateLinks' => 'boolean',
     'defaultLinksVersion' => 'string',
     'subordinationEntity' => 'string',
@@ -682,7 +694,16 @@ const LIB_CONFIGURATIONS_DEFAULT = array(
     'permitBufferIO' => true,
     'sessionBufferSize' => 1000,
     'defaultCurrentEntity' => LIB_DEFAULT_PUPPETMASTER_EID,
-    'defaultApplication' => '0',
+    'defaultApplication' => '1',
+    'permitApplication1' => true,
+    'permitApplication2' => true,
+    'permitApplication3' => true,
+    'permitApplication4' => false,
+    'permitApplication5' => false,
+    'permitApplication6' => false,
+    'permitApplication7' => false,
+    'permitApplication8' => false,
+    'permitApplication9' => false,
     'defaultObfuscateLinks' => false,
     'defaultLinksVersion' => '2.0',
     'subordinationEntity' => '',
@@ -3948,6 +3969,11 @@ function app_checkOID(string $oid): bool
         || $oid != '1'
         || $oid != '2'
         || $oid != '3'
+        || $oid != '4'
+        || $oid != '5'
+        || $oid != '6'
+        || $oid != '7'
+        || $oid != '8'
         || $oid != '9'
     )
         return true;
@@ -4608,8 +4634,8 @@ function bootstrap_findApplication(): void
 
     // If running bad, use default app.
     if ($bootstrapApplicationOID == '') {
-        $bootstrapApplicationIID = '2';
-        $bootstrapApplicationOID = '2';
+        $bootstrapApplicationIID = '0';
+        $bootstrapApplicationOID = '0';
     }
 
     log_add('find application IID=' . $bootstrapApplicationIID . ' OID=' . $bootstrapApplicationOID, 'info', __FUNCTION__, '5bb68dab');
@@ -4636,6 +4662,11 @@ function bootstrap_findApplicationAsk(string &$bootstrapApplicationIID): void
             || $bootstrapSwitchApplication == '1'
             || $bootstrapSwitchApplication == '2'
             || $bootstrapSwitchApplication == '3'
+            || $bootstrapSwitchApplication == '4'
+            || $bootstrapSwitchApplication == '5'
+            || $bootstrapSwitchApplication == '6'
+            || $bootstrapSwitchApplication == '7'
+            || $bootstrapSwitchApplication == '8'
             || $bootstrapSwitchApplication == '9'
             || lnk_checkExist('f', LIB_RID_INTERFACE_APPLICATIONS, $bootstrapSwitchApplication, $phpNID, $codeBranchNID)
         )
@@ -4680,6 +4711,11 @@ function bootstrap_findApplicationDefault(string &$bootstrapApplicationIID): voi
         || $defaultApplicationID == '1'
         || $defaultApplicationID == '2'
         || $defaultApplicationID == '3'
+        || $defaultApplicationID == '4'
+        || $defaultApplicationID == '5'
+        || $defaultApplicationID == '6'
+        || $defaultApplicationID == '7'
+        || $defaultApplicationID == '8'
         || $defaultApplicationID == '9'
     )
         $bootstrapApplicationIID = $defaultApplicationID;
@@ -4687,8 +4723,10 @@ function bootstrap_findApplicationDefault(string &$bootstrapApplicationIID): voi
         && io_checkNodeHaveLink($defaultApplicationID)
     )
         $bootstrapApplicationIID = $defaultApplicationID;
+    elseif (lib_getConfiguration('permitApplication1'))
+        $bootstrapApplicationIID = '1';
     else
-        $bootstrapApplicationIID = '2';
+        $bootstrapApplicationIID = '0';
 
     log_add('use default application IID=' . $bootstrapApplicationIID, 'debug', __FUNCTION__, '423ae49b');
 }
@@ -5595,12 +5633,15 @@ function bootstrap_htmlTop()
     $name = ent_getFullName($nebuleServerEntity);
     if ($name == $nebuleServerEntity)
         $name = '/';
+    $defaultApp = '0';
+    if (lib_getConfiguration('permitApplication1'))
+        $defaultApp = '1';
 
     ?>
 <body>
 <div class="layout-header">
     <div class="header-left">
-        <a href="/?<?php echo LIB_ARG_SWITCH_APPLICATION; ?>=0">
+        <a href="/?<?php echo LIB_ARG_SWITCH_APPLICATION . '=' . $defaultApp; ?>">
             <img title="App switch" alt="[]" src="<?php echo LIB_BOOTSTRAP_ICON; ?>"/>
         </a>
     </div>
@@ -6161,7 +6202,7 @@ function bootstrap_echoLinkNID(string $nid, string $name = ''): void
     if ($name == '')
         $name = $nid;
     if (nod_checkNID($nid))
-        echo '<a href="?a=3&l=' . $nid . '">' . $name . '</a>';
+        echo '<a href="?a=4&l=' . $nid . '">' . $name . '</a>';
     else
         echo $name;
 }
@@ -7119,21 +7160,6 @@ chmod 644 <?php echo LIB_LOCAL_ENTITY_FILE; ?>
     return $ok;
 }
 
-
-
-/*
- *
- *
- *
- *
-
- ==/ 9 /===================================================================================
- PART9 : Display of application 0 web page to select application to run.
-
- TODO.
- ------------------------------------------------------------------------------------------
- */
-
 function bootstrap_displayLocalEntity(): void
 {
     if (file_exists(LIB_LOCAL_ENTITY_FILE))
@@ -7143,11 +7169,62 @@ function bootstrap_displayLocalEntity(): void
         echo '0';
 }
 
+
+
+/*
+ *
+ *
+ *
+ *
+
+ ==/ 9 /===================================================================================
+ PART9 : Display of application 0 default application.
+
+ TODO.
+ ------------------------------------------------------------------------------------------
+ */
+
 function bootstrap_displayApplication0(): void
+{
+    // Initialisation des logs
+    log_reopen('app0');
+    log_add('Loading', 'info', __FUNCTION__, '3a5c4178');
+
+    echo 'CHK';
+    ob_end_clean();
+
+    bootstrap_htmlHeader();
+    bootstrap_htmlTop();
+
+    echo '<div class="layout-main">' . "\n";
+    echo ' <div class="layout-content">' . "\n";
+    echo '  <img alt="nebule" id="logo" src="' . LIB_APPLICATION_LOGO_LIGHT . '"/>' . "\n";
+    echo " </div>\n";
+    echo "</div>\n";
+
+    bootstrap_htmlBottom();
+}
+
+
+
+/*
+ *
+ *
+ *
+ *
+
+ ==/ 10 /==================================================================================
+ PART10 : Display of application 1 web page to select application to run.
+
+ TODO.
+ ------------------------------------------------------------------------------------------
+ */
+
+function bootstrap_displayApplication1(): void
 {
     global $nebuleInstance;
 
-    log_reopen('app0');
+    log_reopen('app1');
     log_add('Loading', 'info', __FUNCTION__, '314e6e9b');
 
     echo 'CHK';
@@ -7166,16 +7243,22 @@ function bootstrap_displayApplication0(): void
     echo '<span class="appstitle">Nb</span><br /><span class="appsname">break</span>';
     echo "</div></a>\n";
 
-    // Display page of technical documentation.
-    echo '<a href="/?a=1">';
+    // Display default app page.
+    echo '<a href="/?a=0">';
     echo '<div class="apps" style="background:#111111;">';
-    echo '<span class="appstitle">N1</span><br /><span class="appsname">doctec</span>';
+    echo '<span class="appstitle">N0</span><br /><span class="appsname">defolt</span>';
     echo "</div></a>\n";
 
-    // Display default app page.
+    // Display page of technical documentation.
     echo '<a href="/?a=2">';
     echo '<div class="apps" style="background:#222222;">';
-    echo '<span class="appstitle">N2</span><br /><span class="appsname">defolt</span>';
+    echo '<span class="appstitle">N2</span><br /><span class="appsname">autent</span>';
+    echo "</div></a>\n";
+
+    // Display page of technical documentation.
+    echo '<a href="/?a=3">';
+    echo '<div class="apps" style="background:#333333;">';
+    echo '<span class="appstitle">N3</span><br /><span class="appsname">doctec</span>';
     echo "</div></a>\n";
 
     // List all applications.
@@ -7217,19 +7300,55 @@ function bootstrap_displayApplication0(): void
  *
  *
 
- ==/ 10 /==================================================================================
- PART10 : Display of application 1 web page to display documentation of nebule.
+ ==/ 11 /==================================================================================
+ PART11 : Display of application 2 web page to authenticate entity.
 
  TODO.
  ------------------------------------------------------------------------------------------
  */
 
-function bootstrap_displayApplication1(): void
+function bootstrap_displayApplication2(): void
+{
+    // Initialisation des logs
+    log_reopen('app2');
+    log_add('Loading', 'info', __FUNCTION__, 'cb4450a2');
+
+    echo 'CHK';
+    ob_end_clean();
+
+    bootstrap_htmlHeader();
+    bootstrap_htmlTop();
+
+    echo '<div class="layout-main">' . "\n";
+    echo ' <div class="layout-content">' . "\n";
+    echo '  <img alt="nebule" id="logo" src="' . LIB_APPLICATION_LOGO_LIGHT . '"/>' . "\n";
+    echo " </div>\n";
+    echo "</div>\n";
+
+    bootstrap_htmlBottom();
+}
+
+
+
+/*
+ *
+ *
+ *
+ *
+
+ ==/ 12 /==================================================================================
+ PART12 : Display of application 3 web page to display documentation of nebule.
+
+ TODO.
+ ------------------------------------------------------------------------------------------
+ */
+
+function bootstrap_displayApplication3(): void
 {
     global $nebuleInstance, $nebuleLibLevel, $nebuleLibVersion, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
 
     // Initialisation des logs
-    log_reopen('app1');
+    log_reopen('app3');
     log_add('Loading', 'info', __FUNCTION__, 'a4e4acfe');
 
     echo 'CHK';
@@ -7263,18 +7382,18 @@ function bootstrap_displayApplication1(): void
  *
  *
 
- ==/ 11 /==================================================================================
- PART11 : Display of application 2 default application.
+ ==/ 13 /==================================================================================
+ PART13 : Display of application 4 to simply show links.
 
  TODO.
  ------------------------------------------------------------------------------------------
  */
 
-function bootstrap_displayApplication2(): void
+function bootstrap_displayApplication4(): void
 {
     // Initialisation des logs
-    log_reopen('app2');
-    log_add('Loading', 'info', __FUNCTION__, '3a5c4178');
+    log_reopen('app4');
+    log_add('Loading', 'info', __FUNCTION__, 'a1613ff2');
 
     echo 'CHK';
     ob_end_clean();
@@ -7284,95 +7403,89 @@ function bootstrap_displayApplication2(): void
 
     echo '<div class="layout-main">' . "\n";
     echo ' <div class="layout-content">' . "\n";
-    echo '  <img alt="nebule" id="logo" src="' . LIB_APPLICATION_LOGO_LIGHT . '"/>' . "\n";
+
+    $nid = '';
+    $arg = '';
+    if (filter_has_var(INPUT_GET, LIB_LOCAL_LINKS_FOLDER))
+        $arg = trim(filter_input(INPUT_GET, LIB_LOCAL_LINKS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+    if (nod_checkNID($arg))
+        $nid = $arg;
+
+    if ($nid == '')
+        echo 'invalid NID' . "\n";
+    else {
+        echo 'NID=<a href="o/' . $nid . '">' . $nid . '</a><br /><br />' . "\n";
+
+        $blocLinks = array();
+        io_linksRead($nid, $blocLinks);
+        if (sizeof($blocLinks) == 0)
+            echo 'not link for NID ' . $nid . "\n";
+        else {
+            foreach ($blocLinks as $bloc) {
+                if (strlen($bloc) == 0)
+                    continue;
+                $parsedBloc = lnk_parse($bloc);
+
+                echo 'BH / RF=' . $parsedBloc['bh/rf'] . ' RV=' . $parsedBloc['bh/rv'] . "<br />\n";
+                echo 'BL / RC=' . $parsedBloc['bl/rc'] . '<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RL=' . $parsedBloc['bl/rl/req'] . '>';
+                bootstrap_echoLinkNID($parsedBloc['bl/rl/nid1'], substr($parsedBloc['bl/rl/nid1'], 0, 16));
+                if ($parsedBloc['bl/rl/nid2'] != '') {
+                    echo '>';
+                    bootstrap_echoLinkNID($parsedBloc['bl/rl/nid2'], substr($parsedBloc['bl/rl/nid2'], 0, 16));
+                }
+                if ($parsedBloc['bl/rl/nid3'] != '') {
+                    echo '>';
+                    bootstrap_echoLinkNID($parsedBloc['bl/rl/nid3'], substr($parsedBloc['bl/rl/nid3'], 0, 16));
+                }
+                if ($parsedBloc['bl/rl/nid4'] != '') {
+                    echo '>';
+                    bootstrap_echoLinkNID($parsedBloc['bl/rl/nid4'], substr($parsedBloc['bl/rl/nid4'], 0, 16));
+                }
+                echo "<br />\n";
+                echo 'BS / EID=';
+                bootstrap_echoLinkNID($parsedBloc['bs/rs1/eid'], substr($parsedBloc['bs/rs1/eid'], 0, 16));
+                echo ' SIG=' . substr($parsedBloc['bs/rs1/sig'], 0, 16) . ' ';
+                if (lnk_verify($bloc))
+                    echo 'OK';
+                else
+                    echo 'NOK';
+                echo "<br /><br />\n";
+            }
+        }
+    }
+
+
     echo " </div>\n";
     echo "</div>\n";
 
     bootstrap_htmlBottom();
 }
 
-    function bootstrap_displayApplication3(): void
-    {
-        // Initialisation des logs
-        log_reopen('app3');
-        log_add('Loading', 'info', __FUNCTION__, 'a1613ff2');
-
-        echo 'CHK';
-        ob_end_clean();
-
-        bootstrap_htmlHeader();
-        bootstrap_htmlTop();
-
-        echo '<div class="layout-main">' . "\n";
-        echo ' <div class="layout-content">' . "\n";
-
-        $nid = '';
-        $arg = '';
-        if (filter_has_var(INPUT_GET, LIB_LOCAL_LINKS_FOLDER))
-            $arg = trim(filter_input(INPUT_GET, LIB_LOCAL_LINKS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        if (nod_checkNID($arg))
-            $nid = $arg;
-
-        if ($nid == '')
-            echo 'invalid NID' . "\n";
-        else {
-            echo 'NID=<a href="o/' . $nid . '">' . $nid . '</a><br /><br />' . "\n";
-
-            $blocLinks = array();
-            io_linksRead($nid, $blocLinks);
-            if (sizeof($blocLinks) == 0)
-                echo 'not link for NID ' . $nid . "\n";
-            else {
-                foreach ($blocLinks as $bloc) {
-                    if (strlen($bloc) == 0)
-                        continue;
-                    $parsedBloc = lnk_parse($bloc);
-
-                    echo 'BH / RF=' . $parsedBloc['bh/rf'] . ' RV=' . $parsedBloc['bh/rv'] . "<br />\n";
-                    echo 'BL / RC=' . $parsedBloc['bl/rc'] . '<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RL=' . $parsedBloc['bl/rl/req'] . '>';
-                    bootstrap_echoLinkNID($parsedBloc['bl/rl/nid1'], substr($parsedBloc['bl/rl/nid1'], 0, 16));
-                    if ($parsedBloc['bl/rl/nid2'] != '') {
-                        echo '>';
-                        bootstrap_echoLinkNID($parsedBloc['bl/rl/nid2'], substr($parsedBloc['bl/rl/nid2'], 0, 16));
-                    }
-                    if ($parsedBloc['bl/rl/nid3'] != '') {
-                        echo '>';
-                        bootstrap_echoLinkNID($parsedBloc['bl/rl/nid3'], substr($parsedBloc['bl/rl/nid3'], 0, 16));
-                    }
-                    if ($parsedBloc['bl/rl/nid4'] != '') {
-                        echo '>';
-                        bootstrap_echoLinkNID($parsedBloc['bl/rl/nid4'], substr($parsedBloc['bl/rl/nid4'], 0, 16));
-                    }
-                    echo "<br />\n";
-                    echo 'BS / EID=';
-                    bootstrap_echoLinkNID($parsedBloc['bs/rs1/eid'], substr($parsedBloc['bs/rs1/eid'], 0, 16));
-                    echo ' SIG=' . substr($parsedBloc['bs/rs1/sig'], 0, 16) . ' ';
-                    if (lnk_verify($bloc))
-                        echo 'OK';
-                    else
-                        echo 'NOK';
-                    echo "<br /><br />\n";
-                }
-            }
-        }
 
 
-        echo " </div>\n";
-        echo "</div>\n";
+/*
+ *
+ *
+ *
+ *
 
-        bootstrap_htmlBottom();
-    }
+ ==/ 14 /==================================================================================
+ PART14 : Display of application 9 to debug.
 
-    /**
-     * Debug app.
-     * @return void
-     */
+ TODO.
+ ------------------------------------------------------------------------------------------
+ */
+
+/**
+ * Debug app.
+ * @return void
+ */
 function bootstrap_displayApplication9(): void
 {
     global $lastReferenceSID;
 
     // Initialisation des logs
-    log_reopen('app2');
+    log_reopen('app9');
     log_add('Loading', 'info', __FUNCTION__, 'df3680d3');
 
     echo 'CHK';
@@ -7391,10 +7504,10 @@ function bootstrap_displayApplication9(): void
 
     foreach ($ridList as $rid)
     {
-        echo "RID=<a href='?a=3&" . LIB_LOCAL_LINKS_FOLDER . "=$rid'>$rid</a><br />\n";
+        echo "RID=<a href='?a=4&" . LIB_LOCAL_LINKS_FOLDER . "=$rid'>$rid</a><br />\n";
         $appList = app_getList($rid, false);
         foreach ($appList as $iid) {
-            echo "&gt;&nbsp;IID=<a href='?a=3&" . LIB_LOCAL_LINKS_FOLDER . "=$iid'>$iid</a><br />\n";
+            echo "&gt;&nbsp;IID=<a href='?a=4&" . LIB_LOCAL_LINKS_FOLDER . "=$iid'>$iid</a><br />\n";
             $links = array();
             app_getCodeList($iid, $links);
             foreach ($links as $link)
@@ -7402,10 +7515,10 @@ function bootstrap_displayApplication9(): void
                 $oid = $link['bl/rl/nid2'];
                 $eid = $link['bs/rs1/eid'];
                 $date = $link['bl/rc'];
-                echo "&nbsp;-&nbsp;$date&nbsp;EID=<a href='?a=3&" . LIB_LOCAL_LINKS_FOLDER . "=$eid'>$eid</a>a>&nbsp;OID=<a href='?a=3&" . LIB_LOCAL_LINKS_FOLDER . "=$oid'>$oid</a><br />\n";
+                echo "&nbsp;-&nbsp;$date&nbsp;EID=<a href='?a=4&" . LIB_LOCAL_LINKS_FOLDER . "=$eid'>$eid</a>a>&nbsp;OID=<a href='?a=4&" . LIB_LOCAL_LINKS_FOLDER . "=$oid'>$oid</a><br />\n";
             }
             $oid = app_getCode($iid);
-            echo "&nbsp;+&nbsp;EID=<a href='?a=3&" . LIB_LOCAL_LINKS_FOLDER . "=$lastReferenceSID'>$lastReferenceSID</a>&nbsp;OID=<a href='?a=3&" . LIB_LOCAL_LINKS_FOLDER . "=$oid'>$oid</a><br />\n";
+            echo "&nbsp;+&nbsp;EID=<a href='?a=4&" . LIB_LOCAL_LINKS_FOLDER . "=$lastReferenceSID'>$lastReferenceSID</a>&nbsp;OID=<a href='?a=4&" . LIB_LOCAL_LINKS_FOLDER . "=$oid'>$oid</a><br />\n";
             echo "<br />\n";
         }
     }
@@ -7428,8 +7541,8 @@ function bootstrap_displayApplication9(): void
  *
  *
 
- ==/ 12 /==================================================================================
- PART12 : Main display router.
+ ==/ 15 /==================================================================================
+ PART15 : Main display router.
 
  TODO.
  ------------------------------------------------------------------------------------------
@@ -7482,14 +7595,26 @@ function bootstrap_displayRouter(): void
 
     if ($bootstrapApplicationIID == '0' || $bootstrapApplicationOID == '0')
         bootstrap_displayApplication0();
-    elseif ($bootstrapApplicationIID == '1')
+    elseif ($bootstrapApplicationIID == '1' && lib_getConfiguration('permitApplication1'))
         bootstrap_displayApplication1();
-    elseif ($bootstrapApplicationIID == '3')
+    elseif ($bootstrapApplicationIID == '2' && lib_getConfiguration('permitApplication2'))
+        bootstrap_displayApplication2();
+    elseif ($bootstrapApplicationIID == '3' && lib_getConfiguration('permitApplication3'))
         bootstrap_displayApplication3();
-    elseif ($bootstrapApplicationIID == '9')
+    elseif ($bootstrapApplicationIID == '4' && lib_getConfiguration('permitApplication4'))
+        bootstrap_displayApplication4();
+    elseif ($bootstrapApplicationIID == '5' && lib_getConfiguration('permitApplication5'))
+        bootstrap_displayApplication0();
+    elseif ($bootstrapApplicationIID == '6' && lib_getConfiguration('permitApplication6'))
+        bootstrap_displayApplication0();
+    elseif ($bootstrapApplicationIID == '7' && lib_getConfiguration('permitApplication7'))
+        bootstrap_displayApplication0();
+    elseif ($bootstrapApplicationIID == '8' && lib_getConfiguration('permitApplication8'))
+        bootstrap_displayApplication0();
+    elseif ($bootstrapApplicationIID == '9' && lib_getConfiguration('permitApplication9'))
         bootstrap_displayApplication9();
     elseif (strlen($bootstrapApplicationIID) < 2)
-        bootstrap_displayApplication2();
+        bootstrap_displayApplication0();
 //    elseif (isset($bootstrapApplicationInstanceSleep) && $bootstrapApplicationInstanceSleep != '')
 //        bootstrap_displaySleepingApplication();
     elseif ($bootstrapApplicationNoPreload)
@@ -7532,7 +7657,7 @@ function bootstrap_logMetrology(): void
         . $timers
         . $caches,
         'info',
-        __FUNCTION__,
+        'end',
         '52d76692');
 }
 
