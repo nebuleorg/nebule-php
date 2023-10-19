@@ -45,7 +45,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020231018';
+    const APPLICATION_VERSION = '020231019';
     const APPLICATION_LICENCE = 'GNU GPL 2013-2023';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -394,7 +394,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
@@ -436,7 +436,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
@@ -539,45 +539,45 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
      */
     public function display(): void
     {
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
- 		 *  ------------------------------------------------------------------------------------------
-		 */
+        $namespace = '\\' . __NAMESPACE__ . '\\';
+
         // Préfix pour les objets. Les modules sont chargés, on peut les utiliser.
         $this->setHtlinkObjectPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
-            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
+            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
+            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
             . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
         // Préfix pour les groupes.
-        if ($this->_applicationInstance->isModuleLoaded('ModuleGroups')) {
+        if ($this->_applicationInstance->isModuleLoaded($namespace . 'ModuleGroups')) {
             $this->setHtlinkGroupPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleGroups')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleGroups')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleGroups')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleGroups')->getDefaultView()
                 . '&' . nebule::COMMAND_SELECT_GROUP . '=');
         } else {
             $this->setHtlinkGroupPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
         }
+
         // Préfix pour les conversations.
-        if ($this->_applicationInstance->isModuleLoaded('ModuleMessenger')) {
+        if ($this->_applicationInstance->isModuleLoaded($namespace . 'Nebule\\Modules\\ModuleMessenger')) {
             $this->setHtlinkConversationPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleMessenger')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleMessenger')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Nebule\\Modules\\ModuleMessenger')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Nebule\\Modules\\ModuleMessenger')->getDefaultView()
                 . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=');
         } else {
             $this->setHtlinkConversationPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
         }
+
         // Préfix pour les entités.
         $this->setHtlinkEntityPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
-            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getDefaultView()
+            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleEntities')->getCommandName()
+            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleEntities')->getDefaultView()
             . '&' . nebule::COMMAND_SELECT_ENTITY . '=');
+
         // Préfix pour les monnaies.
         if ($this->_applicationInstance->isModuleLoaded('ModuleQantion')) {
             $this->setHtlinkCurrencyPrefix('?'
@@ -602,24 +602,24 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 . '&' . nebule::COMMAND_SELECT_WALLET . '=');
         } else {
             $this->setHtlinkCurrencyPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
             $this->setHtlinkTokenPoolPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
             $this->setHtlinkTokenPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
             $this->setHtlinkTransactionPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
             $this->setHtlinkWalletPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
         }
 
@@ -636,7 +636,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
      */
     protected function _displayFull(): void
     {
-        $this->_metrologyInstance->addLog('Display full', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Display full', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         ?>
         <!DOCTYPE html>
         <html lang="<?php echo $this->_currentDisplayLanguage; ?>">
@@ -650,24 +650,24 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
             <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
             <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
             <?php
-            $this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             $this->commonCSS();
             $this->displayCSS();
 
-            $this->_metrologyInstance->addLog('Display vbs', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_metrologyInstance->addLog('Display vbs', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             $this->_displayScripts();
             ?>
 
         </head>
         <body>
         <?php
-        $this->_metrologyInstance->addLog('Display actions', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Display actions', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         $this->_displayActions();
 
-        $this->_metrologyInstance->addLog('Display header', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Display header', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         $this->_displayHeader();
 
-        $this->_metrologyInstance->addLog('Display menu apps', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Display menu apps', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         $this->_displayMenuApplications();
         ?>
 
@@ -676,13 +676,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 <div id="curseur" class="infobulle"></div>
                 <div class="content">
                     <?php
-                    $this->_metrologyInstance->addLog('Display checks', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+                    $this->_metrologyInstance->addLog('Display checks', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                     $this->_displayChecks();
 
-                    $this->_metrologyInstance->addLog('Display content', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+                    $this->_metrologyInstance->addLog('Display content', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                     $this->_displayContent();
 
-                    $this->_metrologyInstance->addLog('Display metrology', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+                    $this->_metrologyInstance->addLog('Display metrology', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                     $this->_displayMetrology();
                     ?>
 
@@ -690,20 +690,20 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
             </div>
         </div>
         <?php
-        $this->_metrologyInstance->addLog('Display footer', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Display footer', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
         $this->_displayFooter();
     }
-
 
     /**
      * Affichage de la partie de page en ligne.
      */
     protected function _displayInline(): void
     {
-        $this->_metrologyInstance->addLog('Display inline', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+        $this->_metrologyInstance->addLog('Display inline', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
             if ($module->getCommandName() == $this->_currentDisplayMode) {
+                $this->_metrologyInstance->addLog('Display inline to module ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
                 $module->displayInline();
                 echo "\n";
             }
@@ -1293,7 +1293,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                     // Appelle les actions du module concerné par le mode d'affichage.
                     foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
                         if ($module->getCommandName() == $this->_currentDisplayMode) {
-                            $this->_metrologyInstance->addLog('Actions for module ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+                            $this->_metrologyInstance->addLog('Actions for module ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
                             $module->action();
                         }
                     }
@@ -2135,7 +2135,7 @@ class Traduction extends Traductions
 /**
  * Cette application permet de gérer les applications.
  *
- * Les modules sont référencés par leur RID à l'xception de certains modules intégrés à l'application.
+ * Les modules sont référencés par leur RID à l'exception de certains modules intégrés à l'application.
  * Il faut faire un tri pour l'affichage par rapport au nom de la classe des modules pour les distinguer correctement.
  *
  * @author Projet nebule
@@ -2208,12 +2208,10 @@ class ModuleManage extends Modules
      */
     public function getHookList(string $hookName, string $object = 'none'): array
     {
-        if ($object == 'none') {
+        if ($object == 'none')
             $object = $this->_applicationInstance->getCurrentObject();
-        }
-        if (is_a($object, 'Node')) {
+        if (is_a($object, 'Node'))
             $object = $object->getID();
-        }
 
         $listModulesRID = $this->_applicationInstance->getModulesListRID();
 
@@ -2410,7 +2408,7 @@ class ModuleManage extends Modules
             && $this->_configuration->getOptionAsBoolean('permitWriteObject')
             && $this->_unlocked
         ) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
             // Lit et nettoye le contenu de la variable GET.
             $arg_name = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_NOM, FILTER_SANITIZE_STRING));
@@ -2419,11 +2417,11 @@ class ModuleManage extends Modules
             // Ecriture des variables.
             if ($arg_name != '') {
                 $this->_actionAddModuleName = $arg_name;
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module NAME:' . $arg_name, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module NAME:' . $arg_name, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             }
             if (Node::checkNID($arg_rid)) {
                 $this->_actionAddModuleRID = $arg_rid;
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module RID:' . $arg_rid, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module RID:' . $arg_rid, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             }
 
             // Vérification du minimum pour la création.
@@ -2445,7 +2443,7 @@ class ModuleManage extends Modules
             && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
             // Lit et nettoye le contenu de la variable GET.
             $arg_rid = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_RIDC, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
@@ -2453,7 +2451,7 @@ class ModuleManage extends Modules
 
             if (Node::checkNID($arg_rid)) {
                 $this->_actionAddModuleRID = $arg_rid;
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module RID:' . $arg_id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module RID:' . $arg_id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             }
             if (Node::checkNID($arg_id)
                 && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($arg_id)
@@ -2463,7 +2461,7 @@ class ModuleManage extends Modules
                 && $arg_id != $arg_rid
             ) {
                 $this->_actionAddModuleID = $arg_id;
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module ID:' . $arg_id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module ID:' . $arg_id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             }
 
             // Vérification du minimum pour la création.
@@ -2487,7 +2485,7 @@ class ModuleManage extends Modules
             && $this->_configuration->getOptionAsBoolean('permitWriteObject')
             && $this->_unlocked
         ) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add module', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add module', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
             // Crée l'objet de la référence de l'application.
             $instance = new Node($this->_nebuleInstance, $this->_actionAddModuleRID, '', false, false);
@@ -2530,7 +2528,7 @@ class ModuleManage extends Modules
             && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add code ' . $this->_actionAddModuleID . ' to module ' . $this->_actionAddModuleRID, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add code ' . $this->_actionAddModuleID . ' to module ' . $this->_actionAddModuleRID, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
             // Crée le lien du code pour l'application.
             $date = date(DATE_ATOM);
@@ -2555,7 +2553,8 @@ class ModuleManage extends Modules
     private function _displayModules(): void
     {
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:manage:Modules', $this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
+        echo $this->_display->getDisplayTitle('::sylabe:module:manage:Modules', $icon, false);
 
         // Affichage la liste des modules.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('modlist');
@@ -2588,18 +2587,22 @@ class ModuleManage extends Modules
         $listModulesRID = $this->_applicationInstance->getModulesListRID();
         $listModulesSignerRID = $this->_applicationInstance->getModulesListSignersRID();
         $listOkModules = array();
+
+
+        $this->_applicationInstance->getDisplayInstance()->displayMessageInformation('Size ' . sizeof($listModules));
+
         ?>
 
         <div class="layoutObjectsList">
             <div class="objectsListContent">
                 <?php
                 // Affiche les différentes applications.
-                foreach ($listModules as $module) {
-                    $name = $module->getName();
-                    if (is_a($module, 'Modules')
+                foreach ($listModules as $moduleName => $instance) {
+                    $name = $instance->getName();
+                    if (is_a($instance, '\Nebule\Library\Modules')
                         && !isset($listOkModules[$name])
                     ) {
-                        $className = get_class($module);
+                        $className = get_class($instance);
                         $rid = '0';
                         if (isset($listModulesRID[$className])
                             && $listModulesRID[$className] != ''
@@ -2627,9 +2630,9 @@ class ModuleManage extends Modules
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $rid
                                 . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $className,
-                            'objectName' => $module->getTraduction($name, $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage()),
+                            'objectName' => $instance->getTraduction($name, $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage()),
                             'objectRefs' => array(),
-                            'objectIcon' => $module->getLogo(),
+                            'objectIcon' => $instance->getLogo(),
                             'displaySize' => 'medium',
                             'displayRatio' => 'short',
                         );
@@ -2675,13 +2678,14 @@ class ModuleManage extends Modules
                             $param['flagActivated'] = false;
                             $param['flagActivatedDesc'] = '::sylabe:module:manage:ModuleDisabled';
                         }
-                        echo $this->_display->getDisplayObject($module, $param);
+                        echo $this->_display->getDisplayObject($instance, $param);
 
                         // Marque comme vu.
                         $listOkModules[$name] = true;
+                    } else {
+                        $this->_applicationInstance->getDisplayInstance()->displayMessageWarning('Try ' . $moduleName);
                     }
                 }
-                unset($listModules, $module, $name, $className, $listOkModules);
                 ?>
 
             </div>
@@ -2698,7 +2702,8 @@ class ModuleManage extends Modules
     private function _displayModule(): void
     {
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:manage:Module', $this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
+        echo $this->_display->getDisplayTitle('::sylabe:module:manage:Module', $icon, false);
 
         // Affichage du module avec transmission de la variable d'affichage.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('moddisp', self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule());
@@ -3055,7 +3060,8 @@ class ModuleManage extends Modules
     private function _displayCreateModule(): void
     {
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:manage:create:createModule', $this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
+        echo $this->_display->getDisplayTitle('::sylabe:module:manage:create:createModule', $icon, false);
 
         // Si autorisé à créer des liens.
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
@@ -3105,7 +3111,8 @@ class ModuleManage extends Modules
     private function _displayChangeCode(): void
     {
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:manage:create:addModuleCode', $this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
+        echo $this->_display->getDisplayTitle('::sylabe:module:manage:create:addModuleCode', $icon, false);
 
         // Extrait le RID si nouveau module créé.
         $arg_rid = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_RID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
@@ -3525,7 +3532,8 @@ class ModuleHelp extends Modules
         echo $this->_display->getDisplayInformation($module->getTraduction($module->getName()), $param);
 
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle($this->_applicationInstance->getTraductionInstance()->getTraduction('::ChangeLanguage'), $this->MODULE_REGISTERED_ICONS[3]);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[3]);
+        echo $this->_display->getDisplayTitle($this->_applicationInstance->getTraductionInstance()->getTraduction('::ChangeLanguage'), $icon, false);
 
         // Affiche la liste des langues.
         echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('helpLanguages', 'Medium');
@@ -4650,9 +4658,11 @@ class ModuleEntities extends Modules
                 && $this->_unlocked
             )
         ) {
-            echo $this->_display->getDisplayTitle('::EntityUnlocked', $this->MODULE_REGISTERED_ICONS[9]);
+            $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[9]);
+            echo $this->_display->getDisplayTitle('::EntityUnlocked', $icon, false);
         } else {
-            echo $this->_display->getDisplayTitle('::EntityLocked', $this->MODULE_REGISTERED_ICONS[11]);
+            $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[11]);
+            echo $this->_display->getDisplayTitle('::EntityLocked', $icon, false);
         }
 
         // Extrait les états de tests en warning ou en erreur.
@@ -4786,7 +4796,8 @@ class ModuleEntities extends Modules
         }
 
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:ObjectTitle1', $this->MODULE_REGISTERED_ICONS[7], true);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[7]);
+        echo $this->_display->getDisplayTitle('::sylabe:module:entities:ObjectTitle1', $icon, true);
 
         // Extrait des propriétés de l'objet.
         $entity = $this->_displayEntity;
@@ -4995,7 +5006,8 @@ class ModuleEntities extends Modules
         }
 
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:ObjectTitle2', $this->MODULE_REGISTERED_ICONS[8], true);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[8]);
+        echo $this->_display->getDisplayTitle('::sylabe:module:entities:ObjectTitle2', $icon, true);
 
         // Extrait des propriétés de l'objet.
         $id = $this->_applicationInstance->getCurrentObjectInstance()->getID();
@@ -5103,7 +5115,8 @@ class ModuleEntities extends Modules
      */
     private function _displayMyEntitiesList(): void
     {
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:MyEntities', $this->MODULE_REGISTERED_ICONS[4], true);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
+        echo $this->_display->getDisplayTitle('::sylabe:module:entities:MyEntities', $icon, true);
 
         $this->_display->registerInlineContentID('myentities');
     }
@@ -5165,7 +5178,8 @@ class ModuleEntities extends Modules
      */
     private function _displayKnownEntitiesList(): void
     {
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:KnownEntities', $this->MODULE_REGISTERED_ICONS[4], true);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
+        echo $this->_display->getDisplayTitle('::sylabe:module:entities:KnownEntities', $icon, true);
 
         $this->_display->registerInlineContentID('knownentities');
     }
@@ -5234,7 +5248,8 @@ class ModuleEntities extends Modules
      */
     private function _displayKnownByEntitiesList(): void
     {
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:KnownByEntities', $this->MODULE_REGISTERED_ICONS[4], true);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
+        echo $this->_display->getDisplayTitle('::sylabe:module:entities:KnownByEntities', $icon, true);
 
         $this->_display->registerInlineContentID('knownentities');
     }
@@ -5303,7 +5318,8 @@ class ModuleEntities extends Modules
      */
     private function _displayUnknownEntitiesList(): void
     {
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:UnknownEntities', $this->MODULE_REGISTERED_ICONS[4], true);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
+        echo $this->_display->getDisplayTitle('::sylabe:module:entities:UnknownEntities', $icon, true);
 
         $this->_display->registerInlineContentID('unknownentities');
     }
@@ -5410,7 +5426,8 @@ class ModuleEntities extends Modules
      */
     private function _displaySpecialEntitiesList(): void
     {
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:SpecialEntities', $this->MODULE_REGISTERED_ICONS[4]);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
+        echo $this->_display->getDisplayTitle('::sylabe:module:entities:SpecialEntities', $icon, false);
 
         $this->_display->registerInlineContentID('specialentities');
     }
@@ -5551,7 +5568,8 @@ class ModuleEntities extends Modules
         }
 
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:CreateEntity', $this->MODULE_REGISTERED_ICONS[5], false);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[5]);
+        echo $this->_display->getDisplayTitle('::sylabe:module:entities:CreateEntity', $icon, false);
 
         // Vérifie que la création soit authorisée.
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
@@ -5820,7 +5838,8 @@ class ModuleEntities extends Modules
      */
     private function _displayEntityProp(): void
     {
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:Desc:AttribsTitle', $this->MODULE_REGISTERED_ICONS[3]);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[3]);
+        echo $this->_display->getDisplayTitle('::sylabe:module:entities:Desc:AttribsTitle', $icon, false);
 
         // Affiche les propriétés.
         $this->_display->registerInlineContentID('properties');
@@ -6749,7 +6768,8 @@ class ModuleGroups extends Modules
         }
 
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:MyGroups', $this->MODULE_LOGO);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_LOGO);
+        echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:MyGroups', $icon, false);
 
         // Affiche le contenu.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('groups');
@@ -6819,7 +6839,8 @@ class ModuleGroups extends Modules
     private function _displayAllGroups(): void
     {
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:otherGroups', $this->MODULE_LOGO);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_LOGO);
+        echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:otherGroups', $icon, false);
 
         // Affiche le contenu.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('allgroups');
@@ -7012,7 +7033,8 @@ class ModuleGroups extends Modules
     private function _displayCreateGroup(): void
     {
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:createGroup', $this->MODULE_REGISTERED_ICONS[1]);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[1]);
+        echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:createGroup', $icon, false);
 
         // Si autorisé à créer un groupe.
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
@@ -8583,7 +8605,8 @@ class ModuleObjects extends Modules
                 && $this->_configuration->getOptionAsBoolean('permitWriteObject')
             ) {
                 // Affiche le titre.
-                echo $this->_display->getDisplayTitle('::sylabe:module:objects:ShareObjectProtection', $this->MODULE_REGISTERED_ICONS[3], false);
+                $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[3]);
+                echo $this->_display->getDisplayTitle('::sylabe:module:objects:ShareObjectProtection', $icon, false);
 
                 // Affiche en ligne les entités pour qui c'est partagé.
                 $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('objectprotectionshareto');
@@ -9165,7 +9188,8 @@ class ModuleAdmin extends Modules
     private function _displayAppOptions(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:admin:display:AppOptions', $this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
+        echo $this->_display->getDisplayTitle('::sylabe:module:admin:display:AppOptions', $icon, false);
 
         if ($this->_unlocked) {
             $listOptions = $this->_listOptions;
@@ -9223,7 +9247,8 @@ class ModuleAdmin extends Modules
     private function _displayNebOptions(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:admin:display:NebOptions', $this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
+        echo $this->_display->getDisplayTitle('::sylabe:module:admin:display:NebOptions', $icon, false);
 
         if ($this->_unlocked) {
             $listOptions = nebule::getListOptions();
@@ -9289,7 +9314,8 @@ class ModuleAdmin extends Modules
     private function _displayAdmins(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:admin:display:seeAdmins', $this->MODULE_REGISTERED_ICONS[1]);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[1]);
+        echo $this->_display->getDisplayTitle('::sylabe:module:admin:display:seeAdmins', $icon, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('adminlist');
     }
@@ -9358,7 +9384,8 @@ class ModuleAdmin extends Modules
     private function _displayRecoveryEntities(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:admin:display:seeRecovery', $this->MODULE_REGISTERED_ICONS[1]);
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[1]);
+        echo $this->_display->getDisplayTitle('::sylabe:module:admin:display:seeRecovery', $icon, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('recoverylist');
     }

@@ -597,7 +597,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($this->_applicationInstance->getUseModules()) {
             $list_mods = $this->_applicationInstance->getModulesListInstances();
             // Extrait les noms de commandes des modes.
-            $list_mods_names = array(0 => Displays::DEFAULT_DISPLAY_MODE);
+            $list_mods_names = array(0 => Display::DEFAULT_DISPLAY_MODE);
             $module = null;
             foreach ($list_mods as $module) {
                 if ($module->getCommandName() != ''
@@ -660,7 +660,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
             if ($moduleName == $displayClass::DEFAULT_DISPLAY_MODE)
             {
-                $moduleName = 'hlp';
+                $moduleName = 'hlp'; // FIXME variable incohérente
 //$this->_metrologyInstance->addLog('MARK7 replace ' . $displayClass::DEFAULT_DISPLAY_MODE . ' with hlp', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             }
             $this->_currentModuleInstance = $this->_applicationInstance->getModulesListInstances()[$moduleName];
@@ -734,7 +734,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $list_views_names = array();
 
         // Si activé, extrait les modes.
-        if ($this->_applicationInstance->getUseModules() && is_a($this->_currentModuleInstance, 'Nebule\Library\Modules')) {
+        if ($this->_applicationInstance->getUseModules() && is_a($this->_currentModuleInstance, '\Nebule\Library\Modules')) {
+            $this->_metrologyInstance->addLog('Search view on ' . $this->_currentModuleInstance->getName(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             // Lit les vues déclarées.
             $list_views_names = $this->_currentModuleInstance->getRegisteredViews();
             // Si demande la vue par défaut.
@@ -825,7 +826,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     /**
      * Enregistre un ID de contenu html à remplacer.
-     * La variable options permet de passer des paramètres supplémentaires.
+     * La variable 'options' permet de passer des paramètres supplémentaires.
      *
      * @param string $id
      * @param string $options

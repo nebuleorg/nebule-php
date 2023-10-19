@@ -104,7 +104,6 @@ abstract class Applications implements applicationInterface
         $this->_nebuleInstance = $nebuleInstance;
         $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
         $this->_applicationNamespace = '\\Nebule\\Application\\' . strtoupper(substr(static::APPLICATION_NAME, 0, 1)) . strtolower(substr(static::APPLICATION_NAME, 1));
-//        $this->_applicationNamespace = __NAMESPACE__;
     }
 
     /**
@@ -118,7 +117,6 @@ abstract class Applications implements applicationInterface
 
         // S'autoréférence pour être capable de se transmettre aux objets.
         $this->_applicationInstance = $this;
-//        $this->_applicationNamespace = __NAMESPACE__;
         $this->_applicationNamespace = '\\Nebule\\Application\\' . strtoupper(substr(static::APPLICATION_NAME, 0, 1)) . strtolower(substr(static::APPLICATION_NAME, 1));
 
         // Charge l'instance de métrologie et de journalisation.
@@ -690,14 +688,13 @@ abstract class Applications implements applicationInterface
      */
     protected function _loadModules(): void
     {
-        if ($this->_loadModulesOK) {
+        if ($this->_loadModulesOK)
             return;
-        }
         $this->_loadModulesOK = true;
 
         // Vérifie si les modules sont activés.
         if (!$this->_useModules) {
-            $this->_metrologyInstance->addLog('Do not load modules', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Do not load modules', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'bcc98872');
             return;
         }
 
@@ -715,25 +712,26 @@ abstract class Applications implements applicationInterface
      */
     protected function _loadDefaultModules(): void
     {
-        // Vérifie si les modules sont activés.
         if (!$this->_useModules)
             return;
 
-        $this->getMetrologyInstance()->addLog('Load default modules', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        $this->getMetrologyInstance()->addLog('Load default modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '93eb59aa');
 
         foreach ($this->_listDefaultModules as $moduleName) {
             $this->getMetrologyInstance()->addTime();
-            $moduleNamespace = $this->_applicationNamespace . '\\' . $moduleName;
-            $this->getMetrologyInstance()->addLog('New ' . $moduleNamespace, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
-            $instance = new $moduleNamespace($this->_applicationInstance);
+            $moduleFullName = $this->_applicationNamespace . '\\' . $moduleName;
+            $this->getMetrologyInstance()->addLog('Loaded module ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '4879c453');
+            $instance = new $moduleFullName($this->_applicationInstance);
             $instance->initialisation();
-            $this->_listModulesName[] = $moduleName;
-            $this->_listModulesInstance[$moduleName] = $instance;
-            $this->_listModulesInitRID[$moduleName] = '0';
-            $this->_listModulesID[$moduleName] = '0';
-            $this->_listModulesSignerRID[$moduleName] = '0';
-            $this->_listModulesValid[$moduleName] = true;
+            $this->_listModulesName[$moduleName] = $moduleFullName;
+            $this->_listModulesInstance[$moduleFullName] = $instance;
+            $this->_listModulesInitRID[$moduleFullName] = '0';
+            $this->_listModulesID[$moduleFullName] = '0';
+            $this->_listModulesSignerRID[$moduleFullName] = '0';
+            $this->_listModulesValid[$moduleFullName] = true;
         }
+
+        $this->_metrologyInstance->addLog('Default modules loaded', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '050783df');
     }
 
     /**
@@ -750,7 +748,7 @@ abstract class Applications implements applicationInterface
         if (!$this->_useModules)
             return;
 
-        $this->getMetrologyInstance()->addLog('Find option modules', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+        $this->getMetrologyInstance()->addLog('Find option modules', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '226ce8be');
 
         // Extrait les modules référencés.
         $object = $this->_nebuleInstance->newObject($bootstrapApplicationIID);
@@ -772,7 +770,7 @@ abstract class Applications implements applicationInterface
                 }
             }
             if ($ok) {
-                $this->getMetrologyInstance()->addLog('Find modules ' . $module, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                $this->getMetrologyInstance()->addLog('Find modules ' . $module, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '1520ed55');
                 $this->_listModulesInitRID[$module] = $module;
                 $this->_listModulesSignerRID[$module] = $link->getParsed()['bs/rs1/eid'];
             }
@@ -790,7 +788,7 @@ abstract class Applications implements applicationInterface
         if (!$this->_useModules)
             return;
 
-        $this->getMetrologyInstance()->addLog('Find modules updates', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+        $this->getMetrologyInstance()->addLog('Find modules updates', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '19029717');
 
         // Recherche la mise à jour et vérifie les objets des modules avant de les charger.
         $listed = array();
@@ -804,7 +802,7 @@ abstract class Applications implements applicationInterface
 
             $moduleRID = $moduleID;
 
-            $this->getMetrologyInstance()->addLog('Ask load module ' . $moduleID, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->getMetrologyInstance()->addLog('Ask load module ' . $moduleID, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'cd99e217');
             $okValid = false;
             $okActivated = false;
             $okNotListed = true;
@@ -812,7 +810,7 @@ abstract class Applications implements applicationInterface
             // Vérifie que l'objet n'est pas déjà appelé.
             foreach ($listed as $element) {
                 if ($element == $moduleID) {
-                    $this->getMetrologyInstance()->addLog('Module already listed ' . $moduleID, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                    $this->getMetrologyInstance()->addLog('Module already listed ' . $moduleID, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '8a077f11');
                     $okNotListed = false;
                 }
             }
@@ -833,12 +831,12 @@ abstract class Applications implements applicationInterface
                 if ($instanceModule->getType('authority') == 'application/x-php'
                     && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($updateModule)
                 ) {
-                    $this->getMetrologyInstance()->addLog('Find module update ' . $updateModule, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                    $this->getMetrologyInstance()->addLog('Find module update ' . $updateModule, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'cabf8ebd');
                     $okValid = true;
                     // Vérifie que l'objet n'est pas déjà appelé.
                     foreach ($listed as $element) {
                         if ($element == $updateModule) {
-                            $this->getMetrologyInstance()->addLog('Module update already listed ' . $updateModule, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                            $this->getMetrologyInstance()->addLog('Module update already listed ' . $updateModule, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'fa4a752c');
                             $okNotListed = false;
                         }
                     }
@@ -846,7 +844,7 @@ abstract class Applications implements applicationInterface
                     $moduleID = $updateModule;
                     $listed[$updateModule] = $updateModule;
                 } else {
-                    $this->getMetrologyInstance()->addLog('Module updated type mime not valid ' . $moduleID, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+                    $this->getMetrologyInstance()->addLog('Module updated type mime not valid ' . $moduleID, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'f852ca44');
                     $okValid = false;
                 }
             }
@@ -873,7 +871,7 @@ abstract class Applications implements applicationInterface
                     // Charge le code php si le module est activé..
                     if ($okActivated || true) // @todo à revoir...
                     {
-                        $this->getMetrologyInstance()->addLog('Load module ' . $moduleID, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                        $this->getMetrologyInstance()->addLog('Load module ' . $moduleID, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '6d2f16cb');
                         include('o/' . $moduleID);                // @todo A modifier, passer par IO.
                         $this->_listModulesEnabled[$name] = true;
                     }
@@ -892,7 +890,7 @@ abstract class Applications implements applicationInterface
             } else {
                 $this->_listModulesValid[$name] = false;
             }
-            $this->getMetrologyInstance()->addLog('End load module ' . $moduleID, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->getMetrologyInstance()->addLog('End load module ' . $moduleID, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'ef4207a5');
         }
     }
 
@@ -912,7 +910,8 @@ abstract class Applications implements applicationInterface
     }
 
     /**
-     * Charge et initialise les modules.
+     * Load and init modules for the application.
+     * Some modules are loaded before by default with _loadDefaultModules() depending on the list '_listDefaultModules' give by le app.
      *
      * @return void
      */
@@ -921,35 +920,43 @@ abstract class Applications implements applicationInterface
         if (!$this->_useModules)
             return;
 
-        $this->getMetrologyInstance()->addLog('Load option modules on NameSpace=' . $this->_applicationInstance->getNamespace(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        $this->getMetrologyInstance()->addLog('Load optionals modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '2df08836');
 
         // Liste toutes les classes module* et les charges une à une.
         $list = get_declared_classes();
-        $searchModuleHead = $this->_applicationInstance->getNamespace() . '\\' . 'Module';
+        $searchModuleHead = $this->_applicationNamespace . '\\' . 'Module';
         $sizeModuleHead = strlen($searchModuleHead);
         foreach ($list as $i => $class) {
-//            $this->getMetrologyInstance()->addLog('Find on list ' . $class . ' with Head=' . $searchModuleHead . '(' . $sizeModuleHead . ')', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            $moduleFullName = '\\' . $class;
+            $moduleNamespace = preg_replace('/(.+\W)\w+/', '$1', $class);
+            $moduleName = preg_replace('/.+\W(\w+)/', '$1', $class);
+            $this->getMetrologyInstance()->addLog('Find on list ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '9a744ec7');
             // Ne regarde que les classes qui sont des modules d'après le nom.
             if (substr('\\' . $class, 0, $sizeModuleHead) == $searchModuleHead
+                && ($moduleNamespace == $this->_applicationNamespace || $moduleNamespace == 'Nebule\\Modules\\')
+                && $class != 'Nebule\\Library\\Modules'
                 && $class != 'Modules'
+                && $class != $searchModuleHead . 's'
+                && !isset($this->_listModulesName[$moduleName])
             ) {
                 $this->getMetrologyInstance()->addTime();
-                $this->getMetrologyInstance()->addLog('New ' . $class, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                $this->getMetrologyInstance()->addLog('New ' . $moduleFullName, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '5703836f');
                 $instance = new $class($this->_applicationInstance);
 
-                $this->_listModulesEnabled[$class] = false; // @todo à revoir...
+                $this->_listModulesEnabled[$moduleFullName] = false; // @todo à revoir...
 
                 // Vérifie si c'est une dépendance de la classe Modules.
-                if (is_a($instance, 'Nebule\Library\Modules')) {
-                    $this->getMetrologyInstance()->addLog('Class ' . $class . ' is child of Modules', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                if (is_a($instance, 'Nebule\\Library\\Modules')) {
+                    $this->getMetrologyInstance()->addLog('Loaded module ' . $moduleFullName, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '130bc586');
                     $instance->initialisation();
-                    $this->_listModulesInstance[$class] = $instance;
-                    $this->_listModulesEnabled[$class] = true; // @todo à revoir...
+                    $this->_listModulesName[$moduleName] = $moduleFullName;
+                    $this->_listModulesInstance[$moduleFullName] = $instance;
+                    $this->_listModulesEnabled[$moduleFullName] = true; // @todo à revoir...
                 }
             }
         }
 
-        $this->_metrologyInstance->addLog('Modules loaded', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        $this->_metrologyInstance->addLog('Optionals modules loaded', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '0237217e');
     }
 
     /**
@@ -1098,34 +1105,38 @@ abstract class Applications implements applicationInterface
     }
 
     /**
-     * Retourne le module demandé par le nom de sa classe.
-     * Si non trouvé, retourne false.
+     * Return the instance of a module with this name.
+     * Can use long name (with namespace) or short name.
+     *
+     * If not found, return false... but sure this will be a problem after...
      *
      * @param string $name
      * @return Modules|null
      */
     public function getModule(string $name): ?Modules
     {
-        if (!$this->_useModules)
+        if (!$this->_useModules || $name == '')
             return null;
 
-        if ($name == ''
-            || substr($name, 0, 6) != 'Module'
-            || $name == 'Modules'
-        )
-            return null;
-
-        $classes = get_declared_classes();
-
-        $result = null;
-        $fullname = substr($this->_applicationNamespace, 1) . '\\' . $name;
-        if (in_array($fullname, $classes))
+        // Try with long name.
+        if (isset($this->_listModulesInstance[$name]))
         {
-//            $this->_metrologyInstance->addLog('Module ' . $fullname . ' found', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-            $result = $this->_listModulesInstance[$fullname];
-        } //else
-//            $this->_metrologyInstance->addLog('Module ' . $fullname . ' not found', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-        return $result;
+            $this->_metrologyInstance->addLog('Module ' . $name . ' found', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '2446015f');
+            return $this->_listModulesInstance[$name];
+        }
+        // Search on list with short name
+        if (!isset($this->_listModulesName[$name]))
+            return null;
+        $moduleName = $this->_listModulesName[$name];
+        // Try with long name extract from short name.
+        if (isset($this->_listModulesInstance[$moduleName]))
+        {
+            $this->_metrologyInstance->addLog('Module ' . $name . ' found (' . $moduleName . ')', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'b44f071b');
+            return $this->_listModulesInstance[$moduleName];
+        }
+        // If not... bad day for the reste!
+        $this->_metrologyInstance->addLog('Module ' . $name . ' not found', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '82cd76b7');
+        return null;
     }
 
 
@@ -1136,13 +1147,13 @@ abstract class Applications implements applicationInterface
     {
         global $applicationTraductionInstance, $applicationDisplayInstance, $applicationActionInstance;
 
-        $this->_metrologyInstance->addLog('Running application', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        $this->_metrologyInstance->addLog('Running application', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'cd5ec83d');
 
         if ($this->_askDownload) {
             $this->_download();
         } else {
             // Affichage.
-            $this->_metrologyInstance->addLog('Running display', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Running display', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '13cb1fd7');
 
             // Récupère les instances.
             $this->_traductionInstance = $applicationTraductionInstance;
@@ -1152,7 +1163,7 @@ abstract class Applications implements applicationInterface
             // Affichage !
             $this->_displayInstance->display();
 
-            $this->_metrologyInstance->addLog('End display', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('End display', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '07edae7d');
         }
     }
 
