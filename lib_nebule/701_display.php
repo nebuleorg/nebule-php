@@ -567,39 +567,32 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         global $applicationName;
 
+        // Read and clean asked mode GET.
+        $arg_mod = filter_input(INPUT_GET, self::DEFAULT_DISPLAY_COMMAND_MODE, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $list_mods_names = array();
+
         // Prepare the right application's class to use, '\Nebule\Application\*\Display' and not '\Nebule\Library\Displays'.
         $displayClass = $this->_applicationInstance->getNamespace() . '\\Display';
 
 //$this->_metrologyInstance->addLog('MARK7 size1=' . sizeof($this->_applicationInstance->getModulesListInstances()), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-        // Vérifie que la liste des modes ne soit pas vide ou que l'on utilise les modules.
-        if (sizeof($this->_listDisplayModes) == 0
-            && !$this->_applicationInstance->getUseModules()
+        // If we don't use modules, list of modes must not be empty.
+        if (!$this->_applicationInstance->getUseModules()
+            && sizeof($this->_listDisplayModes) == 0
         )
             return;
+
         // Vérifie la liste des modules si activée.
-        if ($this->_applicationInstance->getUseModules()
-            && sizeof($this->_applicationInstance->getModulesListInstances()) == 0
-        )
+        $listModules = $this->_applicationInstance->getModulesListInstances();
+        if (sizeof($listModules) == 0
+            && $this->_applicationInstance->getUseModules())
             return;
-
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
- 		 *  ------------------------------------------------------------------------------------------
-		 */
-        // Lit et nettoye le contenu de la variable GET.
-        $arg_mod = filter_input(INPUT_GET, self::DEFAULT_DISPLAY_COMMAND_MODE, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-
-        $list_mods_names = array();
-        $list_mods = array();
 
         // Si activé, extrait les modes.
         if ($this->_applicationInstance->getUseModules()) {
-            $list_mods = $this->_applicationInstance->getModulesListInstances();
             // Extrait les noms de commandes des modes.
-            $list_mods_names = array(0 => Display::DEFAULT_DISPLAY_MODE);
+            $list_mods_names = array(0 => $displayClass::DEFAULT_DISPLAY_MODE);
             $module = null;
-            foreach ($list_mods as $module) {
+            foreach ($listModules as $module) {
                 if ($module->getCommandName() != ''
                     && $module->getType() == 'application'
                 ) {
@@ -647,7 +640,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             // Par défaut, on récupère la constante.
             $moduleName = $displayClass::DEFAULT_DISPLAY_MODE;
 
-            foreach ($list_mods as $module) {
+            foreach ($listModules as $module) {
 //$this->_metrologyInstance->addLog('MARK7 ModuleName=' . $module->getCommandName() . ' ' . $this->_currentDisplayMode, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
                 if ($module->getCommandName() == $this->_currentDisplayMode
                     && $module->getType() == 'application'
@@ -666,7 +659,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $this->_currentModuleInstance = $this->_applicationInstance->getModulesListInstances()[$moduleName];
         }
 
-        unset($arg_mod, $list_mods, $list_mods_names, $ok_mod, $name, $moduleName);
+        unset($arg_mod, $listModules, $list_mods_names, $ok_mod, $name, $moduleName);
     }
 
     /**
