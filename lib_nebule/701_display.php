@@ -403,6 +403,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
 
         $this->_findCurrentDisplayMode();
+        $this->_findCurrentModule();
         $this->_findCurrentDisplayView();
         $this->_findInlineContentID();
 
@@ -509,6 +510,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
 
         $this->_findCurrentDisplayMode();
+        $this->_findCurrentModule();
         $this->_findCurrentDisplayView();
         $this->_findInlineContentID();
 
@@ -544,13 +546,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     protected $_listDisplayModes = array();
 
     /**
-     * Variable de l'instance du mode en cours.
-     *
-     * @var Modules
-     */
-    protected $_currentModuleInstance = null;
-
-    /**
      * Cherche le mode d'affichage en cours.
      *
      * La recherche du mode se fait en lisant le mode demandé dans l'URL,
@@ -567,99 +562,51 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         global $applicationName;
 
-        // Read and clean asked mode GET.
-        $arg_mod = filter_input(INPUT_GET, self::DEFAULT_DISPLAY_COMMAND_MODE, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-        $list_mods_names = array();
-
         // Prepare the right application's class to use, '\Nebule\Application\*\Display' and not '\Nebule\Library\Displays'.
         $displayClass = $this->_applicationInstance->getNamespace() . '\\Display';
 
-//$this->_metrologyInstance->addLog('MARK7 size1=' . sizeof($this->_applicationInstance->getModulesListInstances()), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         // If we don't use modules, list of modes must not be empty.
         if (!$this->_applicationInstance->getUseModules()
-            && sizeof($this->_listDisplayModes) == 0
-        )
+            && sizeof($this->_listDisplayModes) == 0)
             return;
 
-        // Vérifie la liste des modules si activée.
-        $listModules = $this->_applicationInstance->getModulesListInstances();
-        if (sizeof($listModules) == 0
-            && $this->_applicationInstance->getUseModules())
-            return;
-
-        // Si activé, extrait les modes.
+        // If we use modules, extract name of modes from modules.
         if ($this->_applicationInstance->getUseModules()) {
-            // Extrait les noms de commandes des modes.
-            $list_mods_names = array(0 => $displayClass::DEFAULT_DISPLAY_MODE);
-            $module = null;
+            // Extract list of modules, must not be empty.
+            $listModules = $this->_applicationInstance->getModulesListInstances();
+            if (sizeof($listModules) == 0)
+                return;
+            // Extract names of commands on these modules.
+            $this->_listDisplayModes = array(0 => $displayClass::DEFAULT_DISPLAY_MODE);
             foreach ($listModules as $module) {
                 if ($module->getCommandName() != ''
-                    && $module->getType() == 'application'
+                    && strtolower($module->getType()) == 'application'
                 ) {
-                    $commandName = $module->getCommandName();
-                    $list_mods_names[$commandName] = $commandName;
+                    $mode = $module->getCommandName();
+                    $this->_listDisplayModes[] = $mode;
                 }
             }
-            unset($module, $commandName);
-        } else {
-            foreach ($this->_listDisplayModes as $mode)
-                $list_mods_names[$mode] = $mode;
         }
 
-        // Recherche un mode connu.
-        $ok_mod = false;
-        foreach ($list_mods_names as $name) {
-            if ($arg_mod == $name)
-                $ok_mod = true;
+        // Find mode to display by reading GET or ask cache or keep default mode..
+        $modeARG = filter_input(INPUT_GET, self::DEFAULT_DISPLAY_COMMAND_MODE, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $okModeARG = false;
+        foreach ($this->_listDisplayModes as $name) {
+            if ($modeARG == $name)
+                $okModeARG = true;
         }
-        if ($ok_mod) // Si le mode est connu.
-        {
-            // Ecrit le mode dans la variable.
-            $this->_currentDisplayMode = $arg_mod;
-            // Ecrit le mode dans la session.
-            $this->_nebuleInstance->setSessionStore($applicationName . 'DisplayMode', $arg_mod);
-        } else {
-            $cache = $this->_nebuleInstance->getSessionStore('sylabeDisplayMode');
-            // S'il existe une variable de session pour le mode d'affichage, la lit.
+        if ($okModeARG)
+            $this->_currentDisplayMode = $modeARG;
+        else {
+            $cache = $this->_nebuleInstance->getSessionStore($applicationName . 'DisplayMode');
             if ($cache !== false
-                && $cache != ''
-            )
+                && $cache != '')
                 $this->_currentDisplayMode = $cache;
-            else // Sinon active le mode par défaut.
-            {
+            else
                 $this->_currentDisplayMode = $displayClass::DEFAULT_DISPLAY_MODE;
-                $this->_nebuleInstance->setSessionStore($applicationName . 'DisplayMode', $displayClass::DEFAULT_DISPLAY_MODE);
-            }
-            unset($cache);
         }
+        $this->_nebuleInstance->setSessionStore($applicationName . 'DisplayMode', $this->_currentDisplayMode);
         $this->_metrologyInstance->addLog('Current mode : ' . $this->_currentDisplayMode, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'bda64a7b');
-
-//$this->_metrologyInstance->addLog('MARK7 size2=' . sizeof($list_mods), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-        // Récupère l'instance du module en cours.
-        if ($this->_applicationInstance->getUseModules()) {
-            // Par défaut, on récupère la constante.
-            $moduleName = $displayClass::DEFAULT_DISPLAY_MODE;
-
-            foreach ($listModules as $module) {
-//$this->_metrologyInstance->addLog('MARK7 ModuleName=' . $module->getCommandName() . ' ' . $this->_currentDisplayMode, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-                if ($module->getCommandName() == $this->_currentDisplayMode
-                    && $module->getType() == 'application'
-                )
-                {
-//$this->_metrologyInstance->addLog('MARK7 MATCH', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-//                    $moduleName = $this->_applicationInstance->getNamespace() . '\\' . $module->getClassName();
-                    $moduleName = $module->getClassName();
-                }
-            }
-            if ($moduleName == $displayClass::DEFAULT_DISPLAY_MODE)
-            {
-                $moduleName = 'hlp'; // FIXME variable incohérente
-//$this->_metrologyInstance->addLog('MARK7 replace ' . $displayClass::DEFAULT_DISPLAY_MODE . ' with hlp', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-            }
-            $this->_currentModuleInstance = $this->_applicationInstance->getModulesListInstances()[$moduleName];
-        }
-
-        unset($arg_mod, $listModules, $list_mods_names, $ok_mod, $name, $moduleName);
     }
 
     /**
@@ -672,6 +619,40 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         return $this->_currentDisplayMode;
     }
 
+    /**
+     * Variable de l'instance du mode en cours.
+     *
+     * @var Modules
+     */
+    protected $_currentModuleInstance = null;
+
+    /**
+     * @return void
+     */
+    protected function _findCurrentModule(): void
+    {
+        // Récupère l'instance du module en cours.
+        if ($this->_applicationInstance->getUseModules()) {
+            foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
+                if ($module->getCommandName() == $this->_currentDisplayMode
+                    && strtolower($module->getType()) == 'application')
+                {
+                    $this->_metrologyInstance->addLog('Find current module name : ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '7cd85d87');
+                    $this->_currentModuleInstance = $this->_applicationInstance->getModulesListInstances()['\\' . $module->getClassName()];
+                }
+            }
+        }
+    }
+
+    /**
+     * Retourne le mode d'affichage en cours.
+     *
+     * @return Modules
+     */
+    public function getCurrentModuleInstance(): Modules
+    {
+        return $this->_currentModuleInstance;
+    }
 
     /**
      * Variable de la vue en cours.
@@ -705,15 +686,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         global $applicationName;
 
-        // Vérifie que la liste des vues ne soit pas vide ou que l'on utilise les modules.
-        if (sizeof($this->_listDisplayViews) == 0
-            && !$this->_applicationInstance->getUseModules()
-        )
+        // If we don't use modules, list of modes must not be empty.
+        if (!$this->_applicationInstance->getUseModules()
+            && sizeof($this->_listDisplayModes) == 0)
             return;
+
         // Vérifie la liste des modules si activée.
         if ($this->_applicationInstance->getUseModules()
-            && sizeof($this->_applicationInstance->getModulesListInstances()) == 0
-        )
+            && sizeof($this->_applicationInstance->getModulesListInstances()) == 0)
             return;
 
         /*

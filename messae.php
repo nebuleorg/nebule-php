@@ -42,7 +42,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'messae';
     const APPLICATION_SURNAME = 'nebule/messae';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020230110';
+    const APPLICATION_VERSION = '020231022';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2023';
     const APPLICATION_WEBSITE = 'www.messae.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -273,6 +273,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $this->_findLogoApplicationLink();
         $this->_findLogoApplicationName();
         $this->_findCurrentDisplayMode();
+        $this->_findCurrentModule();
         $this->_findCurrentDisplayView();
         $this->_findInlineContentID();
 
@@ -315,6 +316,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $this->_findLogoApplicationLink();
         $this->_findLogoApplicationName();
         $this->_findCurrentDisplayMode();
+        $this->_findCurrentModule();
         $this->_findCurrentDisplayView();
         $this->_findInlineContentID();
 

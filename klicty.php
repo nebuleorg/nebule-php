@@ -43,7 +43,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020231018';
+    const APPLICATION_VERSION = '020231022';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2023';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
