@@ -2197,16 +2197,15 @@ class ModuleManage extends Modules
     /**
      * Ajout de fonctionnalités à des points d'ancrage.
      *
-     * @param string $hookName
-     * @param string $object
+     * @param string    $hookName
+     * @param Node|null $nid
      * @return array
      */
-    public function getHookList(string $hookName, string $object = 'none'): array
+    public function getHookList(string $hookName, ?Node $nid = null): array
     {
-        if ($object == 'none')
-            $object = $this->_applicationInstance->getCurrentObject();
-        if (is_a($object, 'Node'))
-            $object = $object->getID();
+        $object = $this->_applicationInstance->getCurrentObjectID();
+        if ($nid !== null)
+            $object = $nid->getID();
 
         $listModulesRID = $this->_applicationInstance->getModulesListRID();
 
@@ -2563,7 +2562,6 @@ class ModuleManage extends Modules
      */
     private function _display_InlineModules(): void
     {
-//$this->_metrologyInstance->addLog('MARK', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         // Vérifie que l'entité est connectée.
         if (!$this->_unlocked) {
             $param = array(
@@ -3351,18 +3349,15 @@ class ModuleHelp extends Modules
     /**
      * Ajout de fonctionnalités à des points d'ancrage.
      *
-     * @param string $hookName
-     * @param string $object
+     * @param string    $hookName
+     * @param Node|null $nid
      * @return array
      */
-    public function getHookList(string $hookName, string $object = 'none'): array
+    public function getHookList(string $hookName, ?Node $nid = null): array
     {
-        if ($object == 'none') {
-            $object = $this->_applicationInstance->getCurrentObject();
-        }
-        if (is_a($object, 'Node')) {
-            $object = $object->getID();
-        }
+        $object = $this->_applicationInstance->getCurrentObjectID();
+        if ($nid !== null)
+            $object = $nid->getID();
 
         $hookArray = array();
         switch ($hookName) {
@@ -3884,20 +3879,17 @@ class ModuleEntities extends Modules
     /**
      * Ajout de fonctionnalités à des points d'ancrage.
      *
-     * @param string $hookName
-     * @param string $object
+     * @param string    $hookName
+     * @param Node|null $nid
      * @return array
      */
-    public function getHookList(string $hookName, string $object = 'none'): array
+    public function getHookList(string $hookName, ?Node $nid = null): array
     {
-        $hookArray = array();
-        if ($object == 'none') {
-            $object = $this->_nebuleInstance->getCurrentEntity();
-        }
-        if (is_a($object, 'Node')) {
-            $object = $object->getID();
-        }
+        $object = $this->_applicationInstance->getCurrentObjectID();
+        if ($nid !== null)
+            $object = $nid->getID();
 
+        $hookArray = array();
         switch ($hookName) {
             case 'selfMenu':
             case 'typeMenuEntity':
@@ -4411,7 +4403,7 @@ class ModuleEntities extends Modules
      */
     private function _findDisplayEntity(): void
     {
-        $this->_displayEntity = $this->_applicationInstance->getCurrentEntity();
+        $this->_displayEntity = $this->_applicationInstance->getCurrentEntityID();
         $this->_displayEntityInstance = $this->_applicationInstance->getCurrentEntityInstance();
     }
 
@@ -4787,7 +4779,7 @@ class ModuleEntities extends Modules
     private function _displayEntityLogs(): void
     {
         // Entité en cours.
-        if ($this->_nebuleInstance->getCurrentEntity() != $this->_applicationInstance->getCurrentEntity()) {
+        if ($this->_nebuleInstance->getCurrentEntity() != $this->_applicationInstance->getCurrentEntityID()) {
             $this->_display->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
         }
 
@@ -4997,7 +4989,7 @@ class ModuleEntities extends Modules
     private function _displayEntityActs(): void
     {
         // Entité en cours.
-        if ($this->_nebuleInstance->getCurrentEntity() != $this->_applicationInstance->getCurrentEntity()) {
+        if ($this->_nebuleInstance->getCurrentEntity() != $this->_applicationInstance->getCurrentEntityID()) {
             $this->_display->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
         }
 
@@ -5187,10 +5179,10 @@ class ModuleEntities extends Modules
 
         // Liste les entités que j'ai marqué comme connues. @todo revoir la méthode !
         $links = $this->_applicationInstance->getCurrentEntityInstance()->readLinksFilterFull(
-            $this->_applicationInstance->getCurrentEntity(),
+            $this->_applicationInstance->getCurrentEntityID(),
             '',
             'f',
-            $this->_applicationInstance->getCurrentEntity(),
+            $this->_applicationInstance->getCurrentEntityID(),
             '',
             '');
 
@@ -5261,7 +5253,7 @@ class ModuleEntities extends Modules
             '',
             'f',
             '',
-            $this->_applicationInstance->getCurrentEntity(),
+            $this->_applicationInstance->getCurrentEntityID(),
             '');
 
         // Prépare l'affichage.
@@ -5327,10 +5319,10 @@ class ModuleEntities extends Modules
 
         // Liste les entités que j'ai marqué comme connues. @todo revoir la méthode !
         $links = $this->_applicationInstance->getCurrentEntityInstance()->readLinksFilterFull(
-            $this->_applicationInstance->getCurrentEntity(),
+            $this->_applicationInstance->getCurrentEntityID(),
             '',
             'f',
-            $this->_applicationInstance->getCurrentEntity(),
+            $this->_applicationInstance->getCurrentEntityID(),
             '',
             '');
         if (sizeof($links) != 0) {
@@ -5345,7 +5337,7 @@ class ModuleEntities extends Modules
             '',
             'f',
             '',
-            $this->_applicationInstance->getCurrentEntity(),
+            $this->_applicationInstance->getCurrentEntityID(),
             '');
 
         // Prépare l'affichage.
@@ -5777,7 +5769,7 @@ class ModuleEntities extends Modules
                     <input type="hidden" name="mod" value="ent">
                     <input type="hidden" name="view" value="srch">
                     <input type="hidden" name="obj"
-                           value="<?php echo $this->_applicationInstance->getCurrentObject(); ?>">
+                           value="<?php echo $this->_applicationInstance->getCurrentObjectID(); ?>">
                     <input type="hidden" name="ent"
                            value="<?php echo $this->_nebuleInstance->getCurrentEntity(); ?>">
                     <table border="0" padding="2px">
@@ -6090,7 +6082,7 @@ class ModuleEntities extends Modules
             ) {
                 $url = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_display->getCurrentDisplayView()
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntity()
+                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID()
                     . '&' . Display::DEFAULT_INLINE_COMMAND . '&' . Display::DEFAULT_INLINE_CONTENT_COMMAND . '=properties'
                     . '&' . Displays::DEFAULT_NEXT_COMMAND . '=' . $nextLinkSigne;
                 $this->_display->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTraductionInstance()->getTraduction('::seeMore'));
@@ -6432,19 +6424,17 @@ class ModuleGroups extends Modules
     /**
      * Ajout de fonctionnalités à des points d'ancrage.
      *
-     * @param string $hookName
-     * @param string $object
+     * @param string    $hookName
+     * @param Node|null $nid
      * @return array
      */
-    public function getHookList(string $hookName, string $object = 'none'):array
+    public function getHookList(string $hookName, ?Node $nid = null):array
     {
+        $object = $this->_applicationInstance->getCurrentObjectID();
+        if ($nid !== null)
+            $object = $nid->getID();
+
         $hookArray = array();
-        if ($object == 'none') {
-            $object = $this->_nebuleInstance->getCurrentGroup();
-        }
-        if (is_a($object, 'Node')) {
-            $object = $object->getID();
-        }
 
         switch ($hookName) {
             case 'selfMenu':
@@ -6779,7 +6769,7 @@ class ModuleGroups extends Modules
     private function _display_InlineGroups(): void
     {
         // Liste tous les groupes.
-        $listGroups = $this->_nebuleInstance->getListGroupsID($this->_applicationInstance->getCurrentEntity(), '');
+        $listGroups = $this->_nebuleInstance->getListGroupsID($this->_applicationInstance->getCurrentEntityID(), '');
 
         // Prépare l'affichage.
         $list = array();
@@ -6865,7 +6855,7 @@ class ModuleGroups extends Modules
             $signers = $instance->getPropertySigners(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
 
             if (!isset($listOkGroups[$group])
-                && !isset($signers[$this->_applicationInstance->getCurrentEntity()])
+                && !isset($signers[$this->_applicationInstance->getCurrentEntityID()])
             ) {
                 $list[$i]['object'] = $instance;
                 $list[$i]['param'] = array(
@@ -7206,7 +7196,7 @@ class ModuleGroups extends Modules
                         // Vérifie si le couple membre/signataire n'est pas déjà pris en compte.
                         // Vérifie si le signataire n'est pas l'entité en cours.
                         if (!isset($listOkItems[$item->getParsed()['bl/rl/nid1'] . $item->getParsed()['bs/rs1/eid']])
-                            && $item->getParsed()['bs/rs1/eid'] != $this->_applicationInstance->getCurrentEntity()
+                            && $item->getParsed()['bs/rs1/eid'] != $this->_applicationInstance->getCurrentEntityID()
                         ) {
                             $instance = $this->_nebuleInstance->convertIdToTypedObjectInstance($item->getParsed()['bl/rl/nid1']);
                             $instanceSigner = $this->_nebuleInstance->newEntity($item->getParsed()['bs/rs1/eid']);
@@ -7490,19 +7480,17 @@ class ModuleObjects extends Modules
     /**
      * Ajout de fonctionnalités à des points d'ancrage.
      *
-     * @param string $hookName
-     * @param string $object
+     * @param string    $hookName
+     * @param Node|null $nid
      * @return array
      */
-    public function getHookList(string $hookName, string $object = 'none'): array
+    public function getHookList(string $hookName, ?Node $nid = null): array
     {
+        $object = $this->_applicationInstance->getCurrentObjectID();
+        if ($nid !== null)
+            $object = $nid->getID();
+
         $hookArray = array();
-        if ($object == 'none') {
-            $object = $this->_applicationInstance->getCurrentObject();
-        }
-        if (is_a($object, 'Node')) {
-            $object = $object->getID();
-        }
 
         switch ($hookName) {
             case 'selfMenu':
@@ -7798,7 +7786,7 @@ class ModuleObjects extends Modules
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[4]
-                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObject();
+                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID();
                 }
                 break;
 
@@ -7809,7 +7797,7 @@ class ModuleObjects extends Modules
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
-                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObject();
+                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID();
                 break;
         }
         return $hookArray;
@@ -7979,7 +7967,7 @@ class ModuleObjects extends Modules
             '',
             '',
             '',
-            $this->_applicationInstance->getCurrentObject(),
+            $this->_applicationInstance->getCurrentObjectID(),
             '',
             '');
 
@@ -8322,7 +8310,7 @@ class ModuleObjects extends Modules
             ) {
                 // Vérifie la présence de l'objet.
                 if ($object->checkPresent()
-                    && $this->_applicationInstance->getCurrentObject() != $this->_nebuleInstance->getCurrentEntity()
+                    && $this->_applicationInstance->getCurrentObjectID() != $this->_nebuleInstance->getCurrentEntity()
                 ) {
                     // Ajout du message d'avertissement.
                     if ($object->getIsEntity('all')) {
@@ -8383,7 +8371,7 @@ class ModuleObjects extends Modules
                 && $this->_configuration->getOptionAsBoolean('permitWrite')
                 && $this->_configuration->getOptionAsBoolean('permitWriteLink')
                 && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-                && $this->_applicationInstance->getCurrentObject() != $this->_nebuleInstance->getCurrentEntity()
+                && $this->_applicationInstance->getCurrentObjectID() != $this->_nebuleInstance->getCurrentEntity()
             ) {
                 $list[2]['param']['selfHookList'][0]['name'] = '::ProtectObject';
                 $list[2]['param']['selfHookList'][0]['icon'] = $this->MODULE_REGISTERED_ICONS[3];
@@ -8618,7 +8606,7 @@ class ModuleObjects extends Modules
     private function _display_InlineObjectProtectionShare(): void
     {
         $object = $this->_applicationInstance->getCurrentObjectInstance();
-        $id = $this->_applicationInstance->getCurrentObject();
+        $id = $this->_applicationInstance->getCurrentObjectID();
 
         // Si l'objet est présent et protégé et si l'entité est déverrouillée
         if ($object->getMarkProtected()
@@ -8634,7 +8622,7 @@ class ModuleObjects extends Modules
             $instance = null;
 
             // Ajoute des entités et groupes à ne pas afficher.
-            $listOkEntities[$this->_applicationInstance->getCurrentEntity()] = true;
+            $listOkEntities[$this->_applicationInstance->getCurrentEntityID()] = true;
             $listOkEntities[$this->_nebuleInstance->getInstanceEntity()] = true;
             $listOkEntities[$this->_nebuleInstance->getPuppetmaster()] = true;
             $listOkEntities[$this->_nebuleInstance->getSecurityMaster()] = true;
@@ -8642,7 +8630,7 @@ class ModuleObjects extends Modules
             $listOkEntities[$this->_nebuleInstance->getDirectoryMaster()] = true;
             $listOkEntities[$this->_nebuleInstance->getTimeMaster()] = true;
             $listOkEntities[$this->_nebuleInstance->getCurrentEntity()] = true;
-            $listOkGroups[$this->_applicationInstance->getCurrentEntity()] = true;
+            $listOkGroups[$this->_applicationInstance->getCurrentEntityID()] = true;
             $listOkGroups[$this->_nebuleInstance->getInstanceEntity()] = true;
             $listOkGroups[$this->_nebuleInstance->getPuppetmaster()] = true;
             $listOkGroups[$this->_nebuleInstance->getSecurityMaster()] = true;
@@ -9015,18 +9003,15 @@ class ModuleAdmin extends Modules
     /**
      * Ajout de fonctionnalités à des points d'ancrage.
      *
-     * @param string $hookName
-     * @param string $object
+     * @param string    $hookName
+     * @param Node|null $nid
      * @return array
      */
-    public function getHookList(string $hookName, string $object = 'none'): array
+    public function getHookList(string $hookName, ?Node $nid = null): array
     {
-        if ($object == 'none') {
-            $object = $this->_applicationInstance->getCurrentObject();
-        }
-        if (is_a($object, 'Node')) {
-            $object = $object->getID();
-        }
+        $object = $this->_applicationInstance->getCurrentObjectID();
+        if ($nid !== null)
+            $object = $nid->getID();
 
         $hookArray = array();
         switch ($hookName) {
@@ -9642,18 +9627,15 @@ class ModuleTranslateFRFR extends Modules
     /**
      * Ajout de fonctionnalités à des points d'ancrage.
      *
-     * @param string $hookName
-     * @param string $object
+     * @param string    $hookName
+     * @param Node|null $nid
      * @return array
      */
-    public function getHookList(string $hookName, string $object = 'none'): array
+    public function getHookList(string $hookName, ?Node $nid = null): array
     {
-        if ($object == 'none') {
-            $object = $this->_applicationInstance->getCurrentObject();
-        }
-        if (is_a($object, 'Node')) {
-            $object = $object->getID();
-        }
+        $object = $this->_applicationInstance->getCurrentObjectID();
+        if ($nid !== null)
+            $object = $nid->getID();
 
         $hookArray = array();
         switch ($hookName) {

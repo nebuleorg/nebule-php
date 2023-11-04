@@ -3131,7 +3131,7 @@ abstract class Actions
         if ($this->_actionUploadFileUpdate) {
             // Crée le lien.
             $action = 'u';
-            $source = $this->_applicationInstance->getCurrentObject();
+            $source = $this->_applicationInstance->getCurrentObjectID();
             $target = $id;
             $meta = '0';
             $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);

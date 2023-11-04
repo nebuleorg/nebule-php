@@ -258,11 +258,11 @@ abstract class Modules implements moduleInterface
     /**
      * Ajout de fonctionnalités à des points d'ancrage.
      *
-     * @param string $hookName
-     * @param string $object
+     * @param string    $hookName
+     * @param Node|null $nid
      * @return array
      */
-    public function getHookList(string $hookName, string $object = 'none'): array
+    public function getHookList(string $hookName, ?Node $nid = null): array
     {
         return array();
     }

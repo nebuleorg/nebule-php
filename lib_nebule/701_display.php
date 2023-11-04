@@ -5360,7 +5360,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $htlink = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object->getID()
-                . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntity()
+                . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID()
                 . '&' . nebule::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroup()
                 . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=' . $this->_nebuleInstance->getCurrentConversation();
 
@@ -6179,7 +6179,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Ajoute les actions spécifiques à l'objet pour le module en cours.
         foreach ($modules as $module) {
             if ($module->getCommandName() == $this->_currentDisplayMode) {
-                // Liste les points d'encrages à afficher.
+                // Liste les points d'ancrages à afficher.
                 if (substr($module->getInterface(), 0, 1) == '1'
                     || substr($module->getInterface(), 0, 1) == '2'
                 )
@@ -7054,14 +7054,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affiche la liste de menu en fonction d'un point d'ancrage.
      * Utilise la fonction getDisplayMenuList().
-     * Le point d'enrage $hook est un texte qui sert de référence.
-     * les modules sont interrogés pour avoir les entrées correspondantes à cette référence.
+     * Le point d'ancrage $hook est un texte qui sert de référence.
+     * Les modules sont interrogés pour avoir les entrées correspondantes à cette référence.
      * La taille peut être :
      * - Small
      * - Medium
      * - Large
      * Par défaut la taille est Medium.
-     * Lors de la consultation des points d'encrage, il est possible de passer un objet à utiliser.
+     * Lors de la consultation des points d'ancrage, il est possible de passer un objet à utiliser.
      *
      * @param string $hook
      * @param string $size
@@ -7076,7 +7076,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         $modules = $this->_applicationInstance->getModulesListInstances();
         foreach ($modules as $module) {
-            // Liste les points d'encrages à afficher.
+            // Liste les points d'ancrages à afficher.
             $appHookList = $module->getHookList($hook, $object);
             $appHook = null;
             foreach ($appHookList as $appHook) {
@@ -7206,7 +7206,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $result .= '   <h1>' . $this->_traductionInstance->getTraduction($title) . "</h1>\n";
         $result .= "  </div>\n";
 
-        if ($this->_applicationInstance->getCurrentEntity() != $this->_nebuleInstance->getCurrentEntity()
+        if ($this->_applicationInstance->getCurrentEntityID() != $this->_nebuleInstance->getCurrentEntity()
             || $this->_configurationInstance->getOptionUntyped('forceDisplayEntityOnTitle')
             || $displayEntity
         ) {
@@ -7225,7 +7225,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 'enableDisplayJS' => false,
                 'enableDisplayObjectActions' => false,
             );
-            $result .= $this->getDisplayObject($this->_applicationInstance->getCurrentEntity(), $param);
+            $result .= $this->getDisplayObject($this->_applicationInstance->getCurrentEntityID(), $param);
             $result .= "  </div>\n";
         }
 
@@ -8486,7 +8486,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $htlink = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object->getID()
-                . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntity()
+                . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID()
                 . '&' . nebule::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroup()
                 . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=' . $this->_nebuleInstance->getCurrentConversation();
 
@@ -8652,7 +8652,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         ?>
 
         <div class="oneActionItem" id="<?php
-        if ($entityID == $this->_applicationInstance->getCurrentEntity())
+        if ($entityID == $this->_applicationInstance->getCurrentEntityID())
             echo 'selfEntity';
         else
             echo 'otherEntity';

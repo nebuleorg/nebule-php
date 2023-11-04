@@ -272,7 +272,7 @@ abstract class Applications implements applicationInterface
      *
      * @return string
      */
-    public function getCurrentObject(): string
+    public function getCurrentObjectID(): string
     {
         return $this->_nebuleInstance->getCurrentObject();
     }
@@ -454,7 +454,7 @@ abstract class Applications implements applicationInterface
         unset($arg_ent);
     }
 
-    public function getCurrentEntity(): string
+    public function getCurrentEntityID(): string
     {
         return $this->_currentEntity;
     }

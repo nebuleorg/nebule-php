@@ -36,6 +36,6 @@ interface moduleInterface
     public function getAppIconList(): array;
     public function getAppDescList(): array;
     public function getAppViewList(): array;
-    public function getHookList(string $hookName, string $object = 'none'): array;
+    public function getHookList(string $hookName, ?Node $nid = null): array;
     public function display(): void;
 }
