@@ -1872,18 +1872,28 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affichage des scripts JS.
      */
-    private function _displayScripts(): void
+    protected function _displayScripts(): void
     {
-        // Cette fonction doit être surchargée par l'application avec ses scripts JS propres.
+        // Nothing to do. This function must be rewrited on apps if needed.
     }
 
+    /**
+     * Code on apps before display.
+     */
+    protected function _preDisplay(): void
+    {
+        // Nothing to do. This function must be rewrited on apps if needed.
+    }
 
     /**
-     * Affichage de la page par défaut.
+     * Display page inline or not.
      */
     public function display(): void
     {
-        // Lit si la variable GET existe.
+        // Preload code from apps.
+        $this->_preDisplay();
+
+        // Read GET param if existed.
         if (filter_has_var(INPUT_GET, self::DEFAULT_INLINE_COMMAND))
             $this->_displayInline();
         else
@@ -1964,7 +1974,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     protected function _displayInline(): void
     {
-        // Cette fonction doit être surchargée par l'application.
+        // Nothing to do. This function must be rewrited on apps if needed.
     }
 
 

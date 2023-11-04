@@ -42,7 +42,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'messae';
     const APPLICATION_SURNAME = 'nebule/messae';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020231022';
+    const APPLICATION_VERSION = '020231104';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2023';
     const APPLICATION_WEBSITE = 'www.messae.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -394,13 +394,12 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         // @todo
     }
 
-
     /**
-     * Affichage de la page.
+     * Code before display.
      */
-    public function display(): void
+    protected function _preDisplay(): void
     {
-        // Préfix pour les objets. Les module sont chargés, on peut les utiliser.
+        // Préfix pour les objets. Les modules sont chargés, on peut les utiliser.
         $this->setHtlinkObjectPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
@@ -477,13 +476,6 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
-        }
-
-        // Lit si la variable GET existe.
-        if (filter_has_var(INPUT_GET, self::DEFAULT_INLINE_COMMAND)) {
-            $this->_displayInline();
-        } else {
-            $this->_displayFull();
         }
     }
 
@@ -1113,7 +1105,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     /**
      * Affichage des scripts JS.
      */
-    private function _displayScripts(): void
+    protected function _displayScripts(): void
     {
         $this->commonScripts();
 
