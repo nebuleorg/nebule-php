@@ -506,13 +506,13 @@ abstract class Applications implements applicationInterface
         if (Node::checkNID($arg_dwlobj)) {
             $this->_askDownload = true;
             $this->_askDownloadObject = trim($arg_dwlobj);
-            $this->_metrologyInstance->addLog('Ask for download object ' . $arg_dwlobj, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Ask for download object ' . $arg_dwlobj, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'df913e73');
         }
         $arg_dwllnk = trim((string)filter_input(INPUT_GET, nebule::NEBULE_LOCAL_LINKS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         if (Node::checkNID($arg_dwllnk)) {
             $this->_askDownload = true;
             $this->_askDownloadLinks = trim($arg_dwllnk);
-            $this->_metrologyInstance->addLog('Ask for download links ' . $arg_dwllnk, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Ask for download links ' . $arg_dwllnk, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '98d5ee6d');
         }
         return $this->_askDownload;
     }
@@ -531,7 +531,7 @@ abstract class Applications implements applicationInterface
         if ($this->_askDownloadLinks != '') // Détermine si c'est un lien à télécharger.
         {
             if ($this->_nebuleInstance->getIoInstance()->checkLinkPresent($this->_askDownloadLinks)) {
-                $this->_metrologyInstance->addLog('Sending links ' . $this->_askDownloadLinks, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                $this->_metrologyInstance->addLog('Sending links ' . $this->_askDownloadLinks, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '91b305b1');
                 // Flush des erreurs.
                 ob_end_clean();
                 // Transmission.
@@ -541,17 +541,17 @@ abstract class Applications implements applicationInterface
                 header('Content-Transfer-Encoding: binary');
                 header('Expires: 0');
 
-                $this->_metrologyInstance->addLog('End sending links ' . $this->_askDownloadLinks, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                $this->_metrologyInstance->addLog('End sending links ' . $this->_askDownloadLinks, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'd5318e9f');
             } else {
                 $err404 = true;
-                $this->_metrologyInstance->addLog('Error 404 sending links ' . $this->_askDownloadLinks, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+                $this->_metrologyInstance->addLog('Error 404 sending links ' . $this->_askDownloadLinks, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'df11e69f');
             }
         } else // Sinon c'est un objet à télécharger.
         {
             $instance = $this->_nebuleInstance->newObject($this->_askDownloadObject);
             $data = $instance->getContent(0);
             if ($data != null) {
-                $this->_metrologyInstance->addLog('Sending object ' . $this->_askDownloadObject, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                $this->_metrologyInstance->addLog('Sending object ' . $this->_askDownloadObject, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '18852ac4');
                 // Calcul type mime, nom et suffixe de fichier pour l'utilisateur final.
                 $downloadmime = $instance->getType('all');
                 $downloadname = $instance->getName('all');
@@ -569,15 +569,15 @@ abstract class Applications implements applicationInterface
                 header('Expires: 0');
                 echo $data;
 
-                $this->_metrologyInstance->addLog('End sending object ' . $this->_askDownloadObject, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                $this->_metrologyInstance->addLog('End sending object ' . $this->_askDownloadObject, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '99f390f9');
             } else {
                 $err404 = true;
-                $this->_metrologyInstance->addLog('Error 404 sending object ' . $this->_askDownloadObject, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+                $this->_metrologyInstance->addLog('Error 404 sending object ' . $this->_askDownloadObject, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'f8234249');
             }
         }
 
         if ($err404) {
-            $this->_metrologyInstance->addLog('Sending error 404 ', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Sending error 404 ', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '6efad36a');
             // Transmission.
             ob_end_clean();
             ob_clean();

@@ -1220,7 +1220,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
                     . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
             }
-            echo $this->getDisplayObject($this->_nebuleInstance->getCurrentEntity(), $param);
+            echo $this->getDisplayObject($this->_nebuleInstance->getCurrentEntityInstance(), $param);
             ?>
 
             <div class="header-right">
@@ -1236,7 +1236,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                             // Affiche le lien de verrouillage sans les effets.
                             $this->displayHypertextLink(
                                 $this->convertUpdateImage(
-                                    $this->_iconIwarn, 'Etat déverrouillé, verrouiller ?',
+                                    $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_WARNING), 'Etat déverrouillé, verrouiller ?',
                                     '',
                                     '',
                                     'name="ico_lock"'),
@@ -1247,7 +1247,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                             // Affiche de lien de déverrouillage sans les effets.
                             $this->displayHypertextLink(
                                 $this->convertUpdateImage(
-                                    $this->_iconIwarn, 'Etat verrouillé, déverrouiller ?',
+                                    $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_WARNING), 'Etat verrouillé, déverrouiller ?',
                                     '',
                                     '',
                                     'name="ico_lock"'),
@@ -1258,7 +1258,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                     else {
                         $this->displayHypertextLink(
                             $this->convertUpdateImage(
-                                self::DEFAULT_ICON_IWARN,
+                                $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_WARNING),
                                 'WARNING'),
                             '?' . ModuleEntities::COMMAND_LOGOUT_ENTITY
                             . '&' . ModuleEntities::COMMAND_SWITCH_TO_ENTITY);
@@ -1267,7 +1267,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 else {
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
-                            self::DEFAULT_ICON_IERR,
+                            $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_ERROR),
                             'ERROR'),
                         '?' . ModuleEntities::COMMAND_LOGOUT_ENTITY
                         . '&' . nebule::COMMAND_FLUSH);
@@ -3916,7 +3916,7 @@ class ModuleEntities extends Modules
                 $param['displaySize'] = 'small';
                 $param['displayRatio'] = 'long';
                 $param['objectIcon'] = $this->MODULE_REGISTERED_ICONS[9];
-                echo $this->_display->getDisplayObject($this->_nebuleInstance->getCurrentEntityPrivateKey(), $param);
+                echo $this->_display->getDisplayObject($this->_nebuleInstance->getCurrentEntityPrivateKeyInstance(), $param);
                 echo '</div>' . "\n";
                 echo '</div>' . "\n";
 

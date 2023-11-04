@@ -7116,7 +7116,7 @@ function bootstrap_firstDisplay9LocaleEntity(): bool
         $nebuleInstance->setCurrentEntity($instance);
 
         // Write references links
-        References::signReferences($nebuleInstance, $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity);
+        References::signReferences($nebuleInstance);
 
         bootstrap_echoLineTitle('public ID');
         echo $nebulePublicEntity . '<br/>' . "\n";

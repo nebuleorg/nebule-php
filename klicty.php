@@ -1421,28 +1421,25 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     $param['flagUnlockedLink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
                         . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
                 }
-                echo $this->getDisplayObject($this->_nebuleInstance->getCurrentEntity(), $param);
+                echo $this->getDisplayObject($this->_nebuleInstance->getCurrentEntityInstance(), $param);
             } else {
                 ?>
 
                 <div class="header-left2">
                     <?php
-                    $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LSTENT);
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
-                            $icon,
+                            $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LSTENT),
                             '::EntitiesList'),
                         '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_LIST_COMMAND);
-                    $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_ADDENT);
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
-                            $icon,
+                            $this->_nebuleInstance->newObject(self::DEFAULT_ICON_ADDENT),
                             '::EntityAdd'),
                         '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_ADD_COMMAND);
-                    $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_WORLD);
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
-                            $icon,
+                            $this->_nebuleInstance->newObject(self::DEFAULT_ICON_WORLD),
                             ':::SelectLanguage'),
                         '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ABOUT_COMMAND . '#lang');
                     ?>
@@ -1459,14 +1456,13 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 } // Si un test est en warning maximum.
                 elseif ($this->_applicationInstance->getCheckSecurityAll() == 'WARN') {
                     // Si mode rescue et en warning.
-                    $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IWARN);
                     if ($this->_nebuleInstance->getModeRescue()) {
                         // Si l'entité est déverrouillées.
                         if ($this->_unlocked) {
                             // Affiche le lien de verrouillage sans les effets.
                             $this->displayHypertextLink(
                                 $this->convertUpdateImage(
-                                    $icon, 'Etat déverrouillé, verrouiller ?',
+                                    $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_WARNING), 'Etat déverrouillé, verrouiller ?',
                                     '',
                                     '',
                                     'name="ico_lock"'),
@@ -1477,7 +1473,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             // Affiche de lien de déverrouillage sans les effets.
                             $this->displayHypertextLink(
                                 $this->convertUpdateImage(
-                                    $icon, 'Etat verrouillé, déverrouiller ?',
+                                    $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_WARNING), 'Etat verrouillé, déverrouiller ?',
                                     '',
                                     '',
                                     'name="ico_lock"'),
@@ -1488,17 +1484,16 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     else {
                         $this->displayHypertextLink(
                             $this->convertUpdateImage(
-                                $icon,
+                                $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_WARNING),
                                 'WARNING'),
                             '?' . nebule::COMMAND_LOGOUT_ENTITY
                             . '&' . nebule::COMMAND_SWITCH_TO_ENTITY);
                     }
                 } // Sinon c'est une erreur.
                 else {
-                    $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IERR);
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
-                            $icon,
+                            $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_ERROR),
                             'ERROR'),
                         '?' . nebule::COMMAND_LOGOUT_ENTITY
                         . '&' . nebule::COMMAND_FLUSH);
@@ -2157,7 +2152,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     {
         // Si un groupe a été créé.
         if ($this->_actionInstance->getCreateGroup()) {
-            $createGroupID = $this->_actionInstance->getCreateGroupID();
+            $createGroupID = $this->_actionInstance->getCreateGroupInstance();
             $createGroupInstance = $this->_actionInstance->getCreateGroupInstance();
             $createGroupError = $this->_actionInstance->getCreateGroupError();
             $createGroupErrorMessage = $this->_actionInstance->getCreateGroupErrorMessage();
@@ -3431,7 +3426,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $param['displaySize'] = 'small';
                 $param['displayRatio'] = 'long';
                 $param['objectIcon'] = Displays::DEFAULT_ICON_KEY;
-                echo $this->_applicationInstance->getDisplayInstance()->getDisplayObject($this->_nebuleInstance->getCurrentEntityPrivateKey(), $param);
+                echo $this->_applicationInstance->getDisplayInstance()->getDisplayObject($this->_nebuleInstance->getCurrentEntityPrivateKeyInstance(), $param);
                 echo '</div>' . "\n";
                 echo '</div>' . "\n";
 

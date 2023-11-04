@@ -2646,22 +2646,22 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare à afficher un objet comme image avec éventuellement un texte et un identifiant CSS.
      *
-     * @param Node   $object
+     * @param Node   $oid
      * @param string $alt
      * @param string $class
      * @param string $id
      * @param string $args
      * @return string
      */
-    public function convertImage(Node $object, string $alt = '', string $class = '', string $id = '', string $args = ''): string
+    public function convertImage(Node $oid, string $alt = '', string $class = '', string $id = '', string $args = ''): string
     {
-        if ($object->getID() == '0')
+        if ($oid->getID() == '0')
             return '';
 
-        $result = '<img src="/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $object->getID() . '"';
+        $result = '<img src="/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid->getID() . '"';
 
         if ($alt == '')
-            $alt = $object->getID();
+            $alt = $oid->getID();
         $alt = $this->_traductionInstance->getTraduction($alt);
         $result .= ' alt="' . $alt . '" title="' . $alt . '"';
 
@@ -2681,19 +2681,15 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare à afficher un objet comme image avec éventuellement un texte et un identifiant CSS.
      *
-     * @param Node|string $object
+     * @param Node $oid
      * @return string
      */
-    public function convertImageURL($object): string
+    public function convertImageURL(Node $oid): string
     {
-        // Récupère une instance de l'objet.
-        if (!is_a($object, 'Nebule\Library\Node'))
-            $object = $this->_nebuleInstance->newObject($object);
-
-        if ($object->getID() == '0')
+        if ($oid->getID() == '0')
             return '';
 
-        $obj = $object->getID();
+        $obj = $oid->getID();
         return nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $obj;
     }
 
@@ -2718,24 +2714,24 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Si l'objet commence par 'data:' c'est une image encodée en base64.
      * Retourne dans ce cas un affichage d'image.
      *
-     * @param Node   $object
+     * @param Node   $oid
      * @param string $alt
      * @param string $class
      * @param string $id
      * @param string $args
      * @return string
      */
-    public function convertUpdateImage(Node $object, string $alt = '', string $class = '', string $id = '', string $args = ''): string
+    public function convertUpdateImage(Node $oid, string $alt = '', string $class = '', string $id = '', string $args = ''): string
     {
-        $nid = $object->getID();
+        $nid = $oid->getID();
 
-        if ($object->getID() == '0')
+        if ($oid->getID() == '0')
             return '';
 
-        $uid = $this->_getImageUpdate($object);
+        $uid = $this->_getImageUpdate($oid);
 
         if ($uid == $nid)
-            $newObjectInstance = $object;
+            $newObjectInstance = $oid;
         else
             $newObjectInstance = $this->_nebuleInstance->newObject($uid);
 
@@ -2746,23 +2742,23 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Affiche un objet comme image avec éventuellement un texte et un identifiant CSS.
      * Une recherche préalable est faite pour trouver la mise à jour la plus récente de l'objet.
      *
-     * @param Node   $object
+     * @param Node   $oid
      * @param string $alt
      * @param string $class
      * @param string $id
      * @param string $args
      * @return void
      */
-    public function displayUpdateImage(Node $object, string $alt = '', string $class = '', string $id = '', string $args = ''): void
+    public function displayUpdateImage(Node $oid, string $alt = '', string $class = '', string $id = '', string $args = ''): void
     {
-        echo $this->convertUpdateImage($object, $alt, $class, $id, $args);
+        echo $this->convertUpdateImage($oid, $alt, $class, $id, $args);
     }
 
     /**
      * Prépare à un objet comme image avec éventuellement un texte et un identifiant CSS.
      * L'objet est un objet virtuel qui permet juste d'adresser l'image attendu.
      *
-     * @param Node   $object
+     * @param Node   $oid
      * @param string $alt
      * @param string $class
      * @param string $id
@@ -2770,15 +2766,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @return string
      * TODO
      */
-    public function convertReferenceImage(Node $object, string $alt = '', string $class = '', string $id = '', string $args = ''): string
+    public function convertReferenceImage(Node $oid, string $alt = '', string $class = '', string $id = '', string $args = ''): string
     {
-        if ($object->getID() == '0')
+        if ($oid->getID() == '0')
             return '';
 
-        $uid = $this->_getImageByReference($object);
+        $uid = $this->_getImageByReference($oid);
+$this->_metrologyInstance->addLog('MARK oid=' . $oid->getID() . ' uid=' . $uid, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
-        if ($uid == $object->getID())
-            $newObjectInstance = $object;
+        if ($uid == $oid->getID())
+            $newObjectInstance = $oid;
         else
             $newObjectInstance = $this->_nebuleInstance->newObject($uid);
 
@@ -2787,18 +2784,18 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     /**
      * Affiche un objet comme image avec éventuellement un texte et un identifiant CSS.
-     * L'objet est un objet virtuel qui permet juste d'adresser l'image attendu.
+     * L'objet est un objet virtuel qui permet juste d'adresser l'image attendue.
      *
-     * @param Node   $object
+     * @param Node   $oid
      * @param string $alt
      * @param string $class
      * @param string $id
      * @param string $args
      * @return void
      */
-    public function displayReferenceImage(Node $object, string $alt = '', string $class = '', string $id = '', string $args = ''): void
+    public function displayReferenceImage(Node $oid, string $alt = '', string $class = '', string $id = '', string $args = ''): void
     {
-        echo $this->convertReferenceImage($object, $alt, $class, $id, $args);
+        echo $this->convertReferenceImage($oid, $alt, $class, $id, $args);
     }
 
 
@@ -3029,44 +3026,45 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Recherche par référence une image.
      * Fait une mise en cache du résultat.
      *
-     * @param string|Node $reference
+     * @param string|Node $rid
      * @param boolean     $useBuffer
      * @return string
      */
-    private function _getImageByReference($reference, bool $useBuffer = true): string
+    private function _getImageByReference(Node $rid, bool $useBuffer = true): string
     {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer'))
             $useBuffer = false;
 
-        // Récupère une instance de l'objet.
-        if (!is_a($reference, 'Nebule\Library\Node'))
-            $reference = $this->_nebuleInstance->newObject($reference);
-
-        if ($reference->getID() == '0')
+        if ($rid->getID() == '0')
             return '';
 
         // Si présent dans le cache, utilise la valeur stockée.
         if ($useBuffer
-            && isset($this->_cacheIconByReference[$reference->getID()])
+            && isset($this->_cacheIconByReference[$rid->getID()])
         )
-            return $this->_cacheIconByReference[$reference->getID()];
+            return $this->_cacheIconByReference[$rid->getID()];
 
         // Sinon, lit l'id de l'objet référencé.
-        $update = $reference->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'myself');
-        if ($update == $reference->getID())
-            $update = $reference->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
+        $uid = $rid->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'myself');
+//$this->_metrologyInstance->addLog('MARK rid=' . $rid->getID() . ' uid=' . $uid, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        if ($uid == $rid->getID())
+            $uid = $rid->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
+//$this->_metrologyInstance->addLog('MARK dup rid=' . $rid->getID() . ' uid=' . $uid, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        if ($uid == $rid->getID())
+            $uid = $rid->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'all'); // FIXME peut-être trop...
+//$this->_metrologyInstance->addLog('MARK terce rid=' . $rid->getID() . ' uid=' . $uid, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         // Mémorise le résultat.
         if ($useBuffer)
-            $this->_cacheIconByReference[$reference->getID()] = $update;
+            $this->_cacheIconByReference[$rid->getID()] = $uid;
 
-        return $update;
+        return $uid;
     }
 
     /**
      * Prépare l'image de l'icône sans lien hypertexte ni encapsulation html img.
-     * Cette fonction est dédiée aux icônes de l'interface dont les objets sont par défaut disponibles.
-     * Mais les mises à jours de ces objets ne le sont pas forcément.
+     * Cette fonction est dédiée aux icônes de l'interface dont les objets sont par défaut disponible.
+     * Mais les mises à jour de ces objets ne le sont pas forcément.
      *
      * @param string $icon
      * @return string
@@ -3919,7 +3917,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     /**
      * Retourne la représentation html de l'objet en fonction des paramètres passés.
-     *
      * Les paramètres d'activation de contenus :
      * - enableDisplayColor : Affiche le carré de couleur.
      *     Par défaut true : affiche le carré de couleur.
@@ -4005,7 +4002,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *     Si false, le menu n'est pas caché et son contenu s'affiche sous la barre de titre de l'objet.
      *     Par défaut true : utilise le Java Script.
      *     Boolean
-     *
      * Les paramètres de définition de contenus :
      * - social : Détermine le niveau social de tri des liens.
      *     Par défaut vide : utilise le niveau social par défaut.
@@ -4171,9 +4167,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *     - groupe : typeMenuGroup
      *     - conversation : typeMenuConversation
      *     String
-     *
      * Exemple de table de paramètres avec les valeurs par défaut :
-     *
      * $param = array(
      * 'enableDisplayColor' => true,
      * 'enableDisplayIcon' => true,
@@ -4229,16 +4223,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * 'typeHookName' => '',
      * );
      *
-     * @param string|Node|entity $object
+     * @param Node  $nid
      * @param array $param
      * @return string
      */
-    public function getDisplayObject($object, array $param): string
+    public function getDisplayObject(Node $nid, array $param): string
     {
         $result = '';
-
-        // Prépare l'objet.
-        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
 
         // Prépare les paramètres d'activation de contenus.
         if (!isset($param['enableDisplayColor'])
@@ -4377,7 +4368,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if (!isset($param['objectType'])
             || $param['objectType'] == null
         )
-            $param['objectType'] = $object->getType($param['social']); // Par défaut extrait le type de l'objet.
+            $param['objectType'] = $nid->getType($param['social']); // Par défaut extrait le type de l'objet.
 
         /**
          * Le nom complet de l'objet à afficher.
@@ -4391,9 +4382,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 || $param['objectName'] == null
             ) {
                 if ($param['enableDisplayIconApp'])
-                    $param['objectName'] = $object->getName($param['social']); // Par défaut extrait le nom simple de l'objet (application).
+                    $param['objectName'] = $nid->getName($param['social']); // Par défaut extrait le nom simple de l'objet (application).
                 else
-                    $param['objectName'] = $object->getFullName($param['social']); // Par défaut extrait le nom complet de l'objet.
+                    $param['objectName'] = $nid->getFullName($param['social']); // Par défaut extrait le nom complet de l'objet.
             }
             $contentDisplayName = trim(filter_var($param['objectName'], FILTER_SANITIZE_STRING));
         } else
@@ -4407,7 +4398,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if (!isset($param['objectAppShortName'])
                 || $param['objectAppShortName'] == null
             )
-                $param['objectAppShortName'] = $object->getSurname($param['social']); // Par défaut extrait le surnom de l'objet (application).
+                $param['objectAppShortName'] = $nid->getSurname($param['social']); // Par défaut extrait le surnom de l'objet (application).
             $contentDisplayAppShortName = trim(filter_var($param['objectAppShortName'], FILTER_SANITIZE_STRING));
         } else
             $param['objectAppShortName'] = '';
@@ -4473,11 +4464,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         if (!isset($param['flagUnlocked'])) {
             $param['flagUnlocked'] = false; // Par défaut à false.
-            if (is_a($object, 'Nebule\Library\Entity')) {
+            if (is_a($nid, 'Nebule\Library\Entity')) {
                 // Extrait l'état de verrouillage de l'objet entité.
-                $param['flagUnlocked'] = $object->issetPrivateKeyPassword();
+                $param['flagUnlocked'] = $nid->issetPrivateKeyPassword();
                 // Vérifie si c'est l'entité courante.
-                if ($object->getID() == $this->_nebuleInstance->getCurrentEntity()
+                if ($nid->getID() == $this->_nebuleInstance->getCurrentEntity()
                     && $this->_unlocked
                 )
                     $param['flagUnlocked'] = true;
@@ -4535,11 +4526,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if (!isset($param['flagState'])
                 || strlen(trim($param['flagState'])) == 0
             ) {
-                if ($object->getMarkDanger())
+                if ($nid->getMarkDanger())
                     $param['flagState'] = 'e';
-                elseif ($object->getMarkWarning())
+                elseif ($nid->getMarkWarning())
                     $param['flagState'] = 'w';
-                elseif ($object->checkPresent())
+                elseif ($nid->checkPresent())
                     $param['flagState'] = 'o';
                 else
                     $param['flagState'] = 'n';
@@ -4633,21 +4624,21 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             else
                 $param['selfHookName'] = '';
             if ($param['selfHookName'] == '') {
-                if (is_a($object, 'Nebule\Library\Entity'))
+                if (is_a($nid, 'Nebule\Library\Entity'))
                     $param['selfHookName'] = 'selfMenuEntity';
-                elseif (is_a($object, 'Nebule\Library\Conversation'))
+                elseif (is_a($nid, 'Nebule\Library\Conversation'))
                     $param['selfHookName'] = 'selfMenuConversation';
-                elseif (is_a($object, 'Nebule\Library\Group'))
+                elseif (is_a($nid, 'Nebule\Library\Group'))
                     $param['selfHookName'] = 'selfMenuGroup';
-                elseif (is_a($object, 'Nebule\Library\Transaction'))
+                elseif (is_a($nid, 'Nebule\Library\Transaction'))
                     $param['selfHookName'] = 'selfMenuTransaction';
-                elseif (is_a($object, 'Nebule\Library\Wallet'))
+                elseif (is_a($nid, 'Nebule\Library\Wallet'))
                     $param['selfHookName'] = 'selfMenuWallet';
-                elseif (is_a($object, 'Nebule\Library\Token'))
+                elseif (is_a($nid, 'Nebule\Library\Token'))
                     $param['selfHookName'] = 'selfMenuToken';
-                elseif (is_a($object, 'Nebule\Library\TokenPool'))
+                elseif (is_a($nid, 'Nebule\Library\TokenPool'))
                     $param['selfHookName'] = 'selfMenuTokenPool';
-                elseif (is_a($object, 'Nebule\Library\Currency'))
+                elseif (is_a($nid, 'Nebule\Library\Currency'))
                     $param['selfHookName'] = 'selfMenuCurrency';
                 else
                     $param['selfHookName'] = 'selfMenuObject';
@@ -4660,21 +4651,21 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $param['typeHookName'] = trim(filter_var($param['typeHookName'], FILTER_SANITIZE_STRING));else
                 $param['typeHookName'] = '';
             if ($param['typeHookName'] == '') {
-                if (is_a($object, 'Nebule\Library\Entity'))
+                if (is_a($nid, 'Nebule\Library\Entity'))
                     $param['typeHookName'] = 'typeMenuEntity';
-                elseif (is_a($object, 'Nebule\Library\Conversation'))
+                elseif (is_a($nid, 'Nebule\Library\Conversation'))
                     $param['typeHookName'] = 'typeMenuConversation';
-                elseif (is_a($object, 'Nebule\Library\Group'))
+                elseif (is_a($nid, 'Nebule\Library\Group'))
                     $param['typeHookName'] = 'typeMenuGroup';
-                elseif (is_a($object, 'Nebule\Library\Transaction'))
+                elseif (is_a($nid, 'Nebule\Library\Transaction'))
                     $param['typeHookName'] = 'typeMenuTransaction';
-                elseif (is_a($object, 'Nebule\Library\Wallet'))
+                elseif (is_a($nid, 'Nebule\Library\Wallet'))
                     $param['typeHookName'] = 'typeMenuWallet';
-                elseif (is_a($object, 'Nebule\Library\Token'))
+                elseif (is_a($nid, 'Nebule\Library\Token'))
                     $param['typeHookName'] = 'typeMenuToken';
-                elseif (is_a($object, 'Nebule\Library\TokenPool'))
+                elseif (is_a($nid, 'Nebule\Library\TokenPool'))
                     $param['typeHookName'] = 'typeMenuTokenPool';
-                elseif (is_a($object, 'Nebule\Library\Currency'))
+                elseif (is_a($nid, 'Nebule\Library\Currency'))
                     $param['typeHookName'] = 'typeMenuCurrency';
                 else
                     $param['typeHookName'] = 'typeMenuObject';
@@ -4726,7 +4717,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $param['enableDisplayStatus'] = false;
         }
 
-        if (!$this->_configurationInstance->getOptionUntyped('displayEmotions'))
+        if (!$this->_configurationInstance->getOptionAsBoolean('displayEmotions'))
             $param['enableDisplayFlagEmotions'] = false;
 
         if ($param['displaySize'] == 'tiny'
@@ -4739,7 +4730,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         //if ( $param['displaySize'] == 'large' ) $param['enableDisplayID'] == true;
 
         // Prépare les contenus.
-        $objectColor = $object->getPrimaryColor();
+        $objectColor = $nid->getPrimaryColor();
         $ObjectActionsID = '0';
         if ($param['enableDisplayObjectActions']
             && $param['enableDisplayJS']
@@ -4765,7 +4756,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $param['objectIcon'] = '';
             $contentDisplayIcon = '<img title="' . $contentDisplayName;
             $contentDisplayIcon .= '" style="background:#' . $objectColor;
-            $contentDisplayIcon .= ';" alt="[I]" src="' . $this->_getDisplayObjectIcon($object, $param['objectIcon']) . '" ';
+            $contentDisplayIcon .= ';" alt="[I]" src="' . $this->_getDisplayObjectIcon($nid, $param['objectIcon']) . '" ';
             if ($param['enableDisplayObjectActions']
                 && $param['enableDisplayJS']
             )
@@ -4792,7 +4783,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 )
                     $titleLinkOpenName = '<a href="' . $param['link2Object'] . '">';
                 else
-                    $titleLinkOpenName = '<a href="' . $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object) . '">';
+                    $titleLinkOpenName = '<a href="' . $this->_prepareDefaultObjectOrGroupOrEntityHtlink($nid) . '">';
                 $titleLinkCloseName = '</a>';
             } else {
                 if (isset($param['link2Object'])
@@ -4800,7 +4791,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 )
                     $titleLinkOpenImg = '<a href="' . $param['link2Object'] . '">' . "\n";
                 else
-                    $titleLinkOpenImg = '<a href="' . $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object) . '">';
+                    $titleLinkOpenImg = '<a href="' . $this->_prepareDefaultObjectOrGroupOrEntityHtlink($nid) . '">';
                 $titleLinkOpenName = $titleLinkOpenImg;
                 $titleLinkCloseImg = '</a>';
                 $titleLinkCloseName = $titleLinkCloseImg;
@@ -4835,7 +4826,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             && $param['enableDisplayObjectActions']
         ) {
             $menuContent = '   <div class="objectMenuContentMsg objectMenuContentMsgID">ID:';
-            $menuContent .= $object->getID();
+            $menuContent .= $nid->getID();
             $menuContent .= '</div>' . "\n";
             if ($param['enableDisplayFlags']) {
                 if ($param['enableDisplayFlagState']) {
@@ -4965,7 +4956,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     && $param['enableDisplayJS']
                 ) {
                     $menuContent .= '   <div class="objectMenuContentMsg objectMenuContentMsgEmotions">';
-                    $menuContent .= $this->_getDisplayObjectFlagEmotions($object, true);
+                    $menuContent .= $this->_getDisplayObjectFlagEmotions($nid, true);
                     $menuContent .= '</div>' . "\n";
                 }
             }
@@ -4984,7 +4975,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $menuActions = $this->_getDisplayObjectHookList(
                     $param['selfHookName'],
                     $param['typeHookName'],
-                    $object,
+                    $nid,
                     true,
                     $sizeCSS . 'Long',
                     $param['selfHookList']);
@@ -4999,7 +4990,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $menuActions = $this->_getDisplayObjectHookList(
                     $param['selfHookName'],
                     $param['typeHookName'],
-                    $object,
+                    $nid,
                     false,
                     $sizeCSS . $ratioCSS,
                     $param['selfHookList']);
@@ -5077,7 +5068,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 if ($param['enableDisplayID']) {
                     $divTitleIdOpen = '    <div class="objectTitleID">';
                     $divTitleIdClose = '</div>' . "\n";
-                    $titleIdContent = $object->getID();
+                    $titleIdContent = $nid->getID();
                 }
                 $titleNameContent = $contentDisplayName;
                 if ($param['enableDisplayFlags']) {
@@ -5130,7 +5121,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                             ':::display:object:flag:activated');
                     }
                     if ($param['enableDisplayFlagEmotions'])
-                        $titleFlagsContent .= $this->_getDisplayObjectFlagEmotions($object, false);
+                        $titleFlagsContent .= $this->_getDisplayObjectFlagEmotions($nid, false);
                 }
                 if ($param['enableDisplayStatus'])
                     $titleStatusContent = $status;
@@ -5165,7 +5156,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
 
             if ($param['enableDisplayContent'])
-                $objectContent = $this->getDisplayObjectContent($object, $param['displaySize'], $param['displayRatio']);
+                $objectContent = $this->getDisplayObjectContent($nid, $param['displaySize'], $param['displayRatio']);
 
             // Prépare le résultat à afficher.
             $result = $divDisplayOpen;
@@ -5206,23 +5197,23 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         } else {
 //$this->_metrologyInstance->addLog('MARK if 2', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             if (is_a($object, 'Nebule\Library\Entity'))
-                $icon = $this->_getImageByReference(self::REFERENCE_ICON_ENTITY);
+                $icon = $this->_getImageByReference($this->_nebuleInstance->newEntity(self::REFERENCE_ICON_ENTITY));
             elseif (is_a($object, 'Nebule\Library\Conversation'))
-                $icon = $this->_getImageByReference(self::REFERENCE_ICON_CONVERSATION);
+                $icon = $this->_getImageByReference($this->_nebuleInstance->newConversation(self::REFERENCE_ICON_CONVERSATION));
             elseif (is_a($object, 'Nebule\Library\Group'))
-                $icon = $this->_getImageByReference(self::REFERENCE_ICON_GROUP);
+                $icon = $this->_getImageByReference($this->_nebuleInstance->newGroup(self::REFERENCE_ICON_GROUP));
             elseif (is_a($object, 'Nebule\Library\Wallet'))
-                $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // TODO
+                $icon = $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_OBJECT)); // TODO
             elseif (is_a($object, 'Nebule\Library\Transaction'))
-                $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // TODO
+                $icon = $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_OBJECT)); // TODO
             elseif (is_a($object, 'Nebule\Library\Token'))
-                $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // TODO
+                $icon = $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_OBJECT)); // TODO
             elseif (is_a($object, 'Nebule\Library\TokenPool'))
-                $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // TODO
+                $icon = $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_OBJECT)); // TODO
             elseif (is_a($object, 'Nebule\Library\Currency'))
-                $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT); // TODO
+                $icon = $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_OBJECT)); // TODO
             else
-                $icon = $this->_getImageByReference(self::REFERENCE_ICON_OBJECT);
+                $icon = $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_OBJECT));
 //$this->_metrologyInstance->addLog('MARK found icon='.$icon, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
             $instanceIcon = $this->_nebuleInstance->newObject($icon);
         }
@@ -5357,7 +5348,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         foreach ($listEmotions as $emotion) {
             // Génère la base du lien html pour revenir au bon endroit en toute situation.
-            $htlink = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
+            $httpLink = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                 . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID()
@@ -5371,31 +5362,22 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
             // Détermine si l'émotion a été marqué par l'entité en cours.
             if ($object->getMarkEmotion($emotion, 'myself')) {
-                // Création du lien.
                 $action = 'x';
-                $link = $action . '_' . $source . '_' . $target . '_' . $meta;
-                $htlink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
-
-                // Préparation de l'icône de l'émotion.
                 $rid = $this->_nebuleInstance->newObject($listEmotions1[$emotion]);
-                $icon = $this->convertReferenceImage($rid, $emotion, 'iconInlineDisplay');
             } else {
-                // Création du lien.
                 $action = 'f';
-                $link = $action . '_' . $source . '_' . $target . '_' . $meta;
-                $htlink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
-
-                // Préparation de l'icône de l'émotion.
                 $rid = $this->_nebuleInstance->newObject($listEmotions0[$emotion]);
-                $icon = $this->convertReferenceImage($rid, $emotion, 'iconInlineDisplay');
             }
+            $link = $action . '_' . $source . '_' . $target . '_' . $meta;
+            $httpLink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+            $icon = $this->convertReferenceImage($rid, $emotion, 'iconInlineDisplay');
 
             // Si connecté, l'icône est active.
             if ($this->_unlocked
                 && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
                 && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             )
-                $result .= $this->convertHypertextLink($icon, $htlink);
+                $result .= $this->convertHypertextLink($icon, $httpLink);
             else
                 $result .= $icon;
 
@@ -6375,13 +6357,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if (!isset($dispHook['hookType']))
             $dispHook['hookType'] = '';
         if (!isset($dispHook['icon']))
-            $dispHook['icon'] = '';
+            $dispHook['icon'] = Displays::REFERENCE_ICON_OBJECT;
         if (!isset($dispHook['name']))
             $dispHook['name'] = '';
         if (!isset($dispHook['moduleName']))
             $dispHook['moduleName'] = '';
         if (!isset($dispHook['desc']))
             $dispHook['desc'] = '';
+
+        if (!is_a($dispHook['icon'], 'Nebule\Library\Node'))
+            $dispHook['icon'] = $this->_nebuleInstance->newObject($dispHook['icon']);
 
         if ($dispHook['link'] != '')
             $result .= ' <a href="' . $dispHook['link'] . '">' . "\n";
@@ -7063,12 +7048,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Par défaut la taille est Medium.
      * Lors de la consultation des points d'ancrage, il est possible de passer un objet à utiliser.
      *
-     * @param string $hook
-     * @param string $size
-     * @param string $object
+     * @param string    $hook
+     * @param string    $size
+     * @param Node|null $nid
      * @return string
      */
-    public function getDisplayHookMenuList(string $hook, string $size = 'Medium', string $object = 'none'): string
+    public function getDisplayHookMenuList(string $hook, string $size = 'Medium', ?Node $nid = null): string
     {
         $list = array();
         $i = 0;
@@ -7077,7 +7062,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $modules = $this->_applicationInstance->getModulesListInstances();
         foreach ($modules as $module) {
             // Liste les points d'ancrages à afficher.
-            $appHookList = $module->getHookList($hook, $object);
+            $appHookList = $module->getHookList($hook, $nid);
             $appHook = null;
             foreach ($appHookList as $appHook) {
                 if ($appHook['name'] != '') {
@@ -7104,18 +7089,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Affiche la liste.
         return $this->getDisplayMenuList($list, $size);
     }
-
-    /**
-     * @param string $hook
-     * @return void
-     * TODO Fonction périmée remplacée par getDisplayHookMenuList().
-     *
-     */
-    public function displayHookList(string $hook): void
-    {
-        echo $this->getDisplayHookMenuList($hook, 'Medium');
-    }
-
 
     /**
      * Le CSS de la fonction getDisplayTitle().
@@ -7225,7 +7198,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 'enableDisplayJS' => false,
                 'enableDisplayObjectActions' => false,
             );
-            $result .= $this->getDisplayObject($this->_applicationInstance->getCurrentEntityID(), $param);
+            $result .= $this->getDisplayObject($this->_applicationInstance->getCurrentEntityInstance(), $param);
             $result .= "  </div>\n";
         }
 
@@ -7803,11 +7776,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         ) {
             if ($instance->getSigned()) {
                 $contantDisplayValid .= '<img title="OK" ';
-                $contantDisplayValid .= 'alt="[O]" src="o/' . $this->_getImageByReference(self::REFERENCE_ICON_OK) . '" ';
+                $contantDisplayValid .= 'alt="[O]" src="o/' . $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_OK)) . '" ';
                 $contantDisplayValid .= '/>';
             } else {
                 $contantDisplayValid .= '<img title="ERROR" ';
-                $contantDisplayValid .= 'alt="[E]" src="o/' . $this->_getImageByReference(self::REFERENCE_ICON_ERROR) . '" ';
+                $contantDisplayValid .= 'alt="[E]" src="o/' . $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_ERROR)) . '" ';
                 $contantDisplayValid .= '/>';
             }
 
@@ -7850,7 +7823,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
             $contantDisplayAction .= '<img title="Action ' . $instance->getAction() . '" ';
             $contantDisplayAction .= 'alt="[' . $instance->getAction() . ']" ';
-            $contantDisplayAction .= 'src="o/' . $this->_getImageByReference($icon) . '" />';
+            $contantDisplayAction .= 'src="o/' . $this->_getImageByReference($this->_nebuleInstance->newObject($icon)) . '" />';
 
             $object = $this->_nebuleInstance->newObject($instance->getParsed()['bl/rl/nid1']);
             $contantDisplaySource .= '<img title="' . $object->getFullName();
@@ -7868,11 +7841,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $contantDisplayMeta .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
         } else {
             $contantDisplayIcon .= '<img title="ERROR" ';
-            $contantDisplayIcon .= 'alt="[E]" src="o/' . $this->_getImageByReference(self::REFERENCE_ICON_LINK_LL) . '" ';
+            $contantDisplayIcon .= 'alt="[E]" src="o/' . $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_LINK_LL)) . '" ';
             $contantDisplayIcon .= '/>';
 
             $contantDisplayValid .= '<img title="ERROR" ';
-            $contantDisplayValid .= 'alt="[E]" src="o/' . $this->_getImageByReference(self::REFERENCE_ICON_ERROR) . '" ';
+            $contantDisplayValid .= 'alt="[E]" src="o/' . $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_ERROR)) . '" ';
             $contantDisplayValid .= '/>';
         }
 
