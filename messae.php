@@ -545,22 +545,6 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
 
     /**
-     * Display inline page.
-     */
-    protected function _displayInline(): void
-    {
-        $this->_metrologyInstance->addLog('Display inline', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000'); // Log
-
-        foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-            if ($module->getCommandName() == $this->_currentDisplayMode) {
-                $module->displayInline();
-                echo "\n";
-            }
-        }
-    }
-
-
-    /**
      * Affichage du style CSS.
      */
     public function displayCSS(): void
@@ -1577,7 +1561,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         } else {
             foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
                 if ($module->getCommandName() == $this->_currentDisplayMode) {
-                    $module->display();
+                    $module->displayModule();
                 }
             }
         }
@@ -2076,7 +2060,7 @@ class ModuleHelp extends Modules
     /**
      * Affichage principale.
      */
-    public function display(): void
+    public function displayModule(): void
     {
         $this->_displayHlpHeader();
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
@@ -2101,7 +2085,7 @@ class ModuleHelp extends Modules
     /**
      * Affichage en ligne comme élément inseré dans une page web.
      */
-    public function displayInline(): void
+    public function displayModuleInline(): void
     {
         // Rien à faire.
     }
@@ -2559,7 +2543,7 @@ class ModuleAdmin extends Modules
     /**
      * Affichage principale.
      */
-    public function display(): void
+    public function displayModule(): void
     {
         $this->_displayHeader();
 
@@ -2583,7 +2567,7 @@ class ModuleAdmin extends Modules
     /**
      * Affichage en ligne comme élément inseré dans une page web.
      */
-    public function displayInline(): void
+    public function displayModuleInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[1]:
@@ -3305,7 +3289,7 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    public function display(): void
+    public function displayModule(): void
     {
         switch ($this->_display->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -3355,7 +3339,7 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    public function displayInline(): void
+    public function displayModuleInline(): void
     {
         switch ($this->_display->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -5802,7 +5786,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    public function display(): void
+    public function displayModule(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -5835,7 +5819,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    public function displayInline(): void
+    public function displayModuleInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -6955,7 +6939,7 @@ class ModuleObjects extends Modules
      *
      * @return void
      */
-    public function display(): void
+    public function displayModule(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -6984,7 +6968,7 @@ class ModuleObjects extends Modules
      *
      * @return void
      */
-    public function displayInline(): void
+    public function displayModuleInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[1]:
@@ -8635,7 +8619,7 @@ class ModuleMessenger extends Modules
      *
      * @return void
      */
-    public function display(): void
+    public function displayModule(): void
     {
         $this->_displayHeader();
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
@@ -8677,7 +8661,7 @@ class ModuleMessenger extends Modules
      *
      * @return void
      */
-    public function displayInline(): void
+    public function displayModuleInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -9812,7 +9796,7 @@ class ModuleMessenger extends Modules
             return;
         }
 
-        $link = $this->_nebuleInstance->newLink($linkArg);
+        $link = $this->_nebuleInstance->newBlockLink($linkArg);
 
         // Vérifie que le lien est structurellement valide. Vérifie que les champs sont non nuls.
         if (!$link->getValidStructure()

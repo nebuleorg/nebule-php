@@ -271,7 +271,7 @@ abstract class Modules implements moduleInterface
     /**
      * Affichage de la page par défaut. FIXME à vider
      */
-    public function display(): void
+    public function displayModule(): void
     {
         // Lit si la variable GET existe.
         /*if (filter_has_var(INPUT_GET, Displays::DEFAULT_INLINE_COMMAND))
@@ -280,35 +280,15 @@ abstract class Modules implements moduleInterface
             $this->_displayFull();*/
     }
 
-    /*
-     * Affichage principale.
-     *
-     * @return void
-     */
-    /*protected function _displayFull(): void
-    {
-        // N'affiche rien par défaut.
-    }*/
-
     /**
-     * Affichage en ligne comme élément inseré dans une page web.
+     * Affichage en ligne comme élément inserré dans une page web.
      *
      * @return void
      */
-    public function displayInline(): void
+    public function displayModuleInline(): void
     {
         // N'affiche rien par défaut.
     }
-
-    /*
-     * Affichage en ligne comme élément inseré dans une page web.
-     *
-     * @return void
-     */
-    /*protected function _displayInline(): void
-    {
-        // N'affiche rien par défaut.
-    }*/
 
     /**
      * Cache de la lecture de la commande d'action d'affichage du module.

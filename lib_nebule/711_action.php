@@ -2704,7 +2704,7 @@ abstract class Actions
             $link->write();
             $this->_metrology->addLog('Action upload link - signed link ' . $link->getRaw(), Metrology::LOG_LEVEL_NORMAL);
         } elseif ($this->_unlocked) {
-            $link = $this->_nebuleInstance->newLink(
+            $link = $this->_nebuleInstance->newBlockLink(
                 '0_'
                 . $this->_nebuleInstance->getCurrentEntity() . '_'
                 . $link->getDate() . '_'
@@ -3232,7 +3232,7 @@ abstract class Actions
         foreach ($updata as $line) {
             if (substr($line, 0, 21) != 'nebule/liens/version/') {
                 $nbLines++;
-                $instance = $this->_nebuleInstance->newLink($line);
+                $instance = $this->_nebuleInstance->newBlockLink($line);
                 if ($instance->getValid()) {
                     if ($instance->getSigned()
                         && (($instance->getSigners() == $this->_nebuleInstance->getCodeAuthorities()
@@ -3246,7 +3246,7 @@ abstract class Actions
                         $nbLinks++;
                         $this->_metrology->addLog('Action upload file links - signed link ' . $instance->getRaw(), Metrology::LOG_LEVEL_NORMAL);
                     } elseif ($this->_unlocked) {
-                        $instance = $this->_nebuleInstance->newLink(
+                        $instance = $this->_nebuleInstance->newBlockLink(
                             '0_'
                             . $this->_nebuleInstance->getCurrentEntity() . '_'
                             . $instance->getDate() . '_'

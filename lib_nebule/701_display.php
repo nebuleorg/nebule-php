@@ -1971,10 +1971,20 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     /**
      * Display inline page.
+     *
+     * Can be overwritten by apps.
      */
     protected function _displayInline(): void
     {
-        // Nothing to do. This function must be rewritten on apps if needed.
+        $this->_metrologyInstance->addLog('Display inline', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'bfcdcd6d');
+
+        foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
+            if ($module->getCommandName() == $this->_currentDisplayMode) {
+                $this->_metrologyInstance->addLog('Display inline to module ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'f74be2e8');
+                $module->displayModuleInline();
+                echo "\n";
+            }
+        }
     }
 
 
@@ -4223,13 +4233,15 @@ $this->_metrologyInstance->addLog('MARK oid=' . $oid->getID() . ' uid=' . $uid, 
      * 'typeHookName' => '',
      * );
      *
-     * @param Node  $nid
-     * @param array $param
+     * @param Node|null $nid
+     * @param array     $param
      * @return string
      */
-    public function getDisplayObject(Node $nid, array $param): string
+    public function getDisplayObject(?Node $nid, array $param): string
     {
         $result = '';
+        if (!is_a($nid, 'Nebule\Library\Node'))
+            return $result;
 
         // Prépare les paramètres d'activation de contenus.
         if (!isset($param['enableDisplayColor'])
@@ -7731,7 +7743,7 @@ $this->_metrologyInstance->addLog('MARK oid=' . $oid->getID() . ' uid=' . $uid, 
         if (is_a($link, 'Nebule\Library\Link'))
             $instance = $link;
         elseif (is_string($link))
-            $instance = $this->_nebuleInstance->newLink($link);
+            $instance = $this->_nebuleInstance->newBlockLink($link);
 
         // Teste la validité du lien.
         if ($instance == null
@@ -8176,7 +8188,7 @@ $this->_metrologyInstance->addLog('MARK oid=' . $oid->getID() . ' uid=' . $uid, 
         if ($link == '')
             return '';
         if (!is_a($link, 'Nebule\Library\Link'))
-            $link = $this->_nebuleInstance->newLink($link);
+            $link = $this->_nebuleInstance->newBlockLink($link);
         if (!$link->getValid())
             return '';
 

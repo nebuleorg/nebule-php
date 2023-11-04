@@ -234,9 +234,9 @@ class ioNetworkHTTPS extends io implements ioInterface
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::getLinks()
+     * @see ioInterface::getBlockLinks()
      */
-    public function getLinks(string $oid, string $url = '', int $offset = 0): array
+    public function getBlockLinks(string $oid, string $url = '', int $offset = 0): array
     {
         if ($url == '')
             $url = $this->_defaultLocalisation;
@@ -297,9 +297,9 @@ class ioNetworkHTTPS extends io implements ioInterface
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::setLink()
+     * @see ioInterface::setBlockLink()
      */
-    public function setLink(string $oid, string &$link, string $url = ''): bool
+    public function setBlockLink(string $oid, string &$link, string $url = ''): bool
     {
         return false;
     }

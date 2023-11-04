@@ -374,12 +374,12 @@ class io implements ioInterface
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::getLinks()
+     * @see ioInterface::getBlockLinks()
      */
-    public function getLinks(string $oid, string $url = '', int $offset = 0): array
+    public function getBlockLinks(string $oid, string $url = '', int $offset = 0): array
     {
         $instance = $this->_findType($url);
-        return $instance->getLinks($oid, $url, $offset);
+        return $instance->getBlockLinks($oid, $url, $offset);
     }
 
     /**
@@ -404,12 +404,12 @@ class io implements ioInterface
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::setLink()
+     * @see ioInterface::setBlockLink()
      */
-    public function setLink(string $oid, string &$link, string $url = ''): bool
+    public function setBlockLink(string $oid, string &$link, string $url = ''): bool
     {
         $instance = $this->_findType($url);
-        return $instance->setLink($oid, $link, $url);
+        return $instance->setBlockLink($oid, $link, $url);
     }
 
     /**

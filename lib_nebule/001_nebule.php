@@ -788,9 +788,9 @@ class nebule
      * @param string $link
      * @return BlocLink
      */
-    public function newLink(string $link): BlocLink
+    public function newBlockLink(string $link): BlocLink
     {
-        return $this->_cacheInstance->newLink($link, Cache::TYPE_LINK);
+        return $this->_cacheInstance->newBlockLink($link, Cache::TYPE_LINK);
     }
 
     /**
@@ -802,7 +802,7 @@ class nebule
      */
     public function newTransaction(string $link): BlocLink
     {
-        return $this->_cacheInstance->newLink($link, Cache::TYPE_TRANSACTION);
+        return $this->_cacheInstance->newBlockLink($link, Cache::TYPE_TRANSACTION);
     }
 
 
@@ -968,7 +968,7 @@ class nebule
             && $id != ''
             && $instance !== false
             && $instance !== ''
-            && is_a($instance, 'Entity')
+            && is_a($instance, 'Nebule\Library\Entity')
         ) {
             $this->_instanceEntity = $id;
             $this->_instanceEntityInstance = $instance;
@@ -1064,7 +1064,7 @@ class nebule
             && $id != ''
             && $instance !== false
             && $instance !== ''
-            && is_a($instance, 'Entity')
+            && is_a($instance, 'Nebule\Library\Entity')
         ) {
             $this->_defaultEntity = $id;
             $this->_defaultEntityInstance = $instance;
@@ -1178,7 +1178,7 @@ class nebule
         ) {
             unset($itc_ent);
             // Vide le mot de passe de l'entité en cours.
-            if (is_a($this->_currentEntityInstance, 'Entity')) {
+            if (is_a($this->_currentEntityInstance, 'Nebule\Library\Entity')) {
                 $this->_currentEntityInstance->unsetPrivateKeyPassword();
                 $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
             }
@@ -1189,7 +1189,7 @@ class nebule
             $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
             // Vide la clé privée connue.
             $this->_currentEntityPrivateKey = '';
-            $this->_currentEntityPrivateKeyInstance = '';
+            $this->_currentEntityPrivateKeyInstance = null;
             $this->setSessionStore('nebulePrivateEntity', '');
             $this->_metrologyInstance->addLog('New current entity ' . $this->_currentEntity, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
         } else {
@@ -1201,7 +1201,7 @@ class nebule
             if ($tID !== false
                 && $tID != ''
                 && $tInstance !== false
-                && is_a($tInstance, 'Entity')
+                && is_a($tInstance, 'Nebule\Library\Entity')
             ) {
                 $this->_currentEntity = $tID;
                 $this->_currentEntityInstance = $tInstance;
@@ -1224,7 +1224,7 @@ class nebule
                     $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
                     // Vide la clé privée connue.
                     $this->_currentEntityPrivateKey = '';
-                    $this->_currentEntityPrivateKeyInstance = '';
+                    $this->_currentEntityPrivateKeyInstance = null;
                     $this->setSessionStore('nebulePrivateEntity', '');
                     $this->_metrologyInstance->addLog('Find default current entity ' . $this->_currentEntity, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
                 } // Sinon utilise l'entité de l'instance.
@@ -1235,7 +1235,7 @@ class nebule
                     $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
                     // Vide la clé privée connue.
                     $this->_currentEntityPrivateKey = '';
-                    $this->_currentEntityPrivateKeyInstance = '';
+                    $this->_currentEntityPrivateKeyInstance = null;
                     $this->setSessionStore('nebulePrivateEntity', '');
                     $this->_metrologyInstance->addLog('Find current (instance) entity ' . $this->_currentEntity, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000'); // Log
                 }
@@ -1260,21 +1260,21 @@ class nebule
             $this->_metrologyInstance->addLog('Reuse current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '75e1c757');
         }
         else {
-            if (is_a($this->_currentEntityInstance, 'Entity')) {
+            if (is_a($this->_currentEntityInstance, 'Nebule\Library\Entity')) {
                 $this->_currentEntityPrivateKey = $this->_currentEntityInstance->getPrivateKeyID();
                 if ($this->_currentEntityPrivateKey != '') {
                     $this->_currentEntityPrivateKeyInstance = $this->newObject($this->_currentEntityPrivateKey);
                     // Log
                     $this->_metrologyInstance->addLog('Find current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '6be388ca');
                 } else {
-                    $this->_currentEntityPrivateKeyInstance = '';
+                    $this->_currentEntityPrivateKeyInstance = null;
                     // Log
                     $this->_metrologyInstance->addLog('Cant find current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '1e5bed72');
                 }
                 $this->setSessionStore('nebulePrivateEntity', $this->_currentEntityPrivateKey);
             } else {
                 $this->_currentEntityPrivateKey = '';
-                $this->_currentEntityPrivateKeyInstance = '';
+                $this->_currentEntityPrivateKeyInstance = null;
             }
         }
     }
@@ -1284,7 +1284,7 @@ class nebule
         if (filter_has_var(INPUT_GET, self::COMMAND_LOGOUT_ENTITY)
             || filter_has_var(INPUT_POST, self::COMMAND_LOGOUT_ENTITY))
         {
-            if (is_a($this->_currentEntityInstance, 'Entity')) {
+            if (is_a($this->_currentEntityInstance, 'Nebule\Library\Entity')) {
                 $this->_metrologyInstance->addLog('Logout ' . $this->_currentEntity, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '4efbc71f');
                 $this->_currentEntityInstance->unsetPrivateKeyPassword();
                 $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));

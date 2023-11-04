@@ -877,12 +877,12 @@ class blocLink implements blocLinkInterface
 
         // If needed, in history.
         if ($this->_configuration->getOptionAsBoolean('permitHistoryLinksSign'))
-            $this->_io->setLink(nebule::NEBULE_LOCAL_HISTORY_FILE, $this->_rawBlocLink);
+            $this->_io->setBlockLink(nebule::NEBULE_LOCAL_HISTORY_FILE, $this->_rawBlocLink);
 
         // If needed, in signers.
         for ($j = 0; $j > $this->_maxRS; $j++) {
             if (isset($this->_parsedLink['bs/rs'.$j.'/eid']))
-                $this->_io->setLink($this->_parsedLink['bs/rs'.$j.'/eid'], $this->_rawBlocLink);
+                $this->_io->setBlockLink($this->_parsedLink['bs/rs'.$j.'/eid'], $this->_rawBlocLink);
             else
                 break;
         }
@@ -893,12 +893,12 @@ class blocLink implements blocLinkInterface
                 if ($this->_parsedLink['bl/rl' . $i . '/req'] != 'c') {
                     for ($j = 0; $j > $this->_maxRLUID; $j++) {
                         if (isset($this->_parsedLink['bl/rl' . $i . '/nid' . $j]))
-                            $this->_io->setLink($this->_parsedLink['bl/rl' . $i . '/nid' . $j], $this->_rawBlocLink);
+                            $this->_io->setBlockLink($this->_parsedLink['bl/rl' . $i . '/nid' . $j], $this->_rawBlocLink);
                     }
                 } elseif ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
                     for ($j = 0; $j > $this->_maxRS; $j++) {
                         if (isset($this->_parsedLink['bs/rs'.$j.'/eid']))
-                            $this->_io->setLink($this->_parsedLink['bs/rs'.$j.'/eid'] . '-' . $this->_parsedLink['bl/rl' . $i . '/nid1'], $this->_rawBlocLink);
+                            $this->_io->setBlockLink($this->_parsedLink['bs/rs'.$j.'/eid'] . '-' . $this->_parsedLink['bl/rl' . $i . '/nid1'], $this->_rawBlocLink);
                         else
                             break;
                     }

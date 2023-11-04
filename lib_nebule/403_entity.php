@@ -181,16 +181,16 @@ class Entity extends Node implements nodeInterface
 
         // Écrit le lien pour l'objet de l'entité signataire.
         if ($this->_configuration->getOptionUntyped('permitAddLinkToSigner'))
-            $this->_io->setLink($this->_id, $signedLink);
+            $this->_io->setBlockLink($this->_id, $signedLink);
 
         // Écrit le lien pour l'objet source.
-        $this->_io->setLink($source, $signedLink);
+        $this->_io->setBlockLink($source, $signedLink);
 
         // Écrit le lien pour l'objet cible.
-        $this->_io->setLink($target, $signedLink);
+        $this->_io->setBlockLink($target, $signedLink);
 
         // Écrit le lien pour l'objet méta.
-        $this->_io->setLink($meta, $signedLink);
+        $this->_io->setBlockLink($meta, $signedLink);
     }
 
 

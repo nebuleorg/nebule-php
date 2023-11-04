@@ -3047,14 +3047,14 @@ class Node implements nodeInterface
         if (!$this->_configuration->getOptionAsBoolean('permitListInvalidLinks'))
             $withInvalidLinks = false;
 
-        $lines = $this->_io->getLinks($this->_id, '', 0);
+        $lines = $this->_io->getBlockLinks($this->_id, '', 0);
         if (sizeof($lines) == 0)
             return;
 
         foreach ($lines as $line)
         {
 //$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK4 line=' . $line, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-            $bloc = $this->_cache->newLink($line, Cache::TYPE_BLOCLINK);
+            $bloc = $this->_cache->newBlockLink($line, Cache::TYPE_BLOCLINK);
             if ($bloc->getValidStructure()
                 && ( $bloc->getValid() || $withInvalidLinks )
             )
@@ -3125,7 +3125,7 @@ class Node implements nodeInterface
             return array();
 
         $links = array();
-        $filter = array( 'bl/rl/nid4' => $nid4, );
+        $filter = array();
 
         if ($eid != '')
             $filter['bs/rs1/eid'] = $eid;
@@ -3139,6 +3139,8 @@ class Node implements nodeInterface
             $filter['bl/rl/nid2'] = $nid2;
         if ($nid3 != '')
             $filter['bl/rl/nid3'] = $nid3;
+        if ($nid4 != '')
+            $filter['bl/rl/nid4'] = $nid4;
 
         $this->getLinks($links, $filter, false);
         return $links;
@@ -3584,11 +3586,11 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 nid2=' . (string)$
         $link = null;
         $linkInstance = null;
         foreach ($localisations as $localisation) {
-            $links = $this->_io->getLinks($this->_id, $localisation);
+            $links = $this->_io->getBlockLinks($this->_id, $localisation);
             $this->_metrology->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
             foreach ($links as $link) {
-                $linkInstance = $this->_nebuleInstance->newLink($link);
+                $linkInstance = $this->_nebuleInstance->newBlockLink($link);
                 $linkInstance->write();
             }
         }

@@ -690,23 +690,6 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     }
 
     /**
-     * Display inline page.
-     */
-    protected function _displayInline(): void
-    {
-        $this->_metrologyInstance->addLog('Display inline', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'bfcdcd6d');
-
-        foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-            if ($module->getCommandName() == $this->_currentDisplayMode) {
-                $this->_metrologyInstance->addLog('Display inline to module ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'f74be2e8');
-                $module->displayInline();
-                echo "\n";
-            }
-        }
-    }
-
-
-    /**
      * Affichage du style CSS.
      */
     public function displayCSS(): void
@@ -1742,7 +1725,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         } else {
             foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
                 if ($module->getCommandName() == $this->_currentDisplayMode) {
-                    $module->display();
+                    $module->displayModule();
                 }
             }
         }
@@ -2309,7 +2292,7 @@ class ModuleManage extends Modules
      *
      * @return void
      */
-    public function display(): void
+    public function displayModule(): void
     {
         switch ($this->_display->getCurrentDisplayView()) {
 //            case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -2335,7 +2318,7 @@ class ModuleManage extends Modules
      *
      * @return void
      */
-    public function displayInline(): void
+    public function displayModuleInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -2563,7 +2546,7 @@ class ModuleManage extends Modules
     private function _display_InlineModules(): void
     {
         // Vérifie que l'entité est connectée.
-        if (!$this->_unlocked) {
+        if (!$this->_unlocked && false) { // FIXME déblocage pour test...
             $param = array(
                 'enableDisplayIcon' => true,
                 'displaySize' => 'medium',
@@ -2601,9 +2584,8 @@ class ModuleManage extends Modules
                         if (isset($listModulesRID[$className])
                             && $listModulesRID[$className] != ''
                             && $listModulesRID[$className] != '0'
-                        ) {
+                        )
                             $rid = $listModulesRID[$className];
-                        }
 
                         $param = array(
                             'enableDisplayColor' => false,
@@ -2635,19 +2617,17 @@ class ModuleManage extends Modules
                         if (isset($listModulesSignerRID[$className])
                             && $listModulesSignerRID[$className] != ''
                             && $listModulesSignerRID[$className] != '0'
-                        ) {
+                        )
                             $param['objectRefs'][] = $listModulesSignerRID[$className];
-                        }
 
                         // Module (non) intégré à l'application.
                         if (isset($listModulesRID[$className])
                             && $listModulesRID[$className] != ''
                             && $listModulesRID[$className] != '0'
-                        ) {
+                        )
                             $param['enableDisplayFlagState'] = true;
-                        } else {
+                        else
                             $param['enableDisplayFlagState'] = false;
-                        }
 
                         // Module valide (si non intégré).
                         if ($param['enableDisplayFlagState']) {
@@ -2672,13 +2652,13 @@ class ModuleManage extends Modules
                             $param['flagActivated'] = false;
                             $param['flagActivatedDesc'] = '::sylabe:module:manage:ModuleDisabled';
                         }
+                        $instance = $this->_nebuleInstance->newObject('0'); // FIXME
                         echo $this->_display->getDisplayObject($instance, $param);
 
                         // Marque comme vu.
                         $listOkModules[$name] = true;
-                    } else {
+                    } else
                         $this->_applicationInstance->getDisplayInstance()->displayMessageWarning('Try ' . $moduleName);
-                    }
                 }
                 ?>
 
@@ -3401,7 +3381,7 @@ class ModuleHelp extends Modules
      *
      * @return void
      */
-    public function display(): void
+    public function displayModule(): void
     {
         $this->_displayHlpHeader();
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
@@ -3428,7 +3408,7 @@ class ModuleHelp extends Modules
      *
      * @return void
      */
-    public function displayInline(): void
+    public function displayModuleInline(): void
     {
         // Rien à faire.
     }
@@ -4092,7 +4072,7 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    public function display(): void
+    public function displayModule(): void
     {
         switch ($this->_display->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -4142,7 +4122,7 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    public function displayInline(): void
+    public function displayModuleInline(): void
     {
         switch ($this->_display->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -4639,7 +4619,7 @@ class ModuleEntities extends Modules
         echo '</div>' . "\n";
         echo '</div>' . "\n";
 
-        if ($this->_displayEntityInstance->checkPrivateKeyPassword()
+        if ($this->_displayEntityInstance->issetPrivateKeyPassword()
             || ($this->_displayEntity == $this->_nebuleInstance->getCurrentEntity()
                 && $this->_unlocked
             )
@@ -4697,8 +4677,8 @@ class ModuleEntities extends Modules
             echo $this->_display->getDisplayInformation('::::SecurityChecks', $param);
         }
 
-        // Affiche le champs de mot de passe.
-        if ($this->_displayEntityInstance->checkPrivateKeyPassword()
+        // Affiche le champ de mot de passe.
+        if ($this->_displayEntityInstance->issetPrivateKeyPassword()
             || ($this->_displayEntity == $this->_nebuleInstance->getCurrentEntity()
                 && $this->_unlocked
             )
@@ -6626,7 +6606,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    public function display(): void
+    public function displayModule(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -6659,7 +6639,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    public function displayInline(): void
+    public function displayModuleInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -7530,7 +7510,7 @@ class ModuleObjects extends Modules
                     if ($update != $id) {
                         // Affichage de l'objet à jour.
                         $hookArray[1]['name'] = '::sylabe:module:objects:DisplayObjectUpdated';
-                        $hookArray[1]['icon'] = Display::DEFAULT_ICON_LU;
+                        $hookArray[1]['icon'] = Displays::DEFAULT_ICON_LU;
                         $hookArray[1]['desc'] = '';
                         $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
@@ -7566,7 +7546,7 @@ class ModuleObjects extends Modules
                 if ($instance->checkPresent()) {
                     // Télécharger l'objet.
                     $hookArray[4]['name'] = '::sylabe:module:objects:ObjectDownload';
-                    $hookArray[4]['icon'] = Display::DEFAULT_ICON_IDOWNLOAD;
+                    $hookArray[4]['icon'] = Displays::DEFAULT_ICON_IDOWNLOAD;
                     $hookArray[4]['desc'] = '::sylabe:module:objects:Action:Download';
                     $hookArray[4]['link'] = '?o=' . $id;
 
@@ -7578,11 +7558,11 @@ class ModuleObjects extends Modules
                     ) {
                         // Supprimer l'objet.
                         $hookArray[5]['name'] = '::sylabe:module:objects:ObjectDelete';
-                        $hookArray[5]['icon'] = Display::DEFAULT_ICON_LD;
+                        $hookArray[5]['icon'] = Displays::DEFAULT_ICON_LD;
                         $hookArray[5]['desc'] = '';
                         $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
-                            . '&' . Action::DEFAULT_COMMAND_ACTION_DELETE_OBJECT . '=' . $id
+                            . '&' . Actions::DEFAULT_COMMAND_ACTION_DELETE_OBJECT . '=' . $id
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
 
                         // Protéger l'objet.
@@ -7621,7 +7601,7 @@ class ModuleObjects extends Modules
                     $hookArray[8]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                        . '&' . Action::DEFAULT_COMMAND_ACTION_MARK_OBJECT . '=' . $id
+                        . '&' . Actions::DEFAULT_COMMAND_ACTION_MARK_OBJECT . '=' . $id
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 } else {
                     // Retirer la marque de l'objet.
@@ -7631,7 +7611,7 @@ class ModuleObjects extends Modules
                     $hookArray[8]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
-                        . '&' . Action::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT . '=' . $id
+                        . '&' . Actions::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT . '=' . $id
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 }
 
@@ -7644,7 +7624,7 @@ class ModuleObjects extends Modules
                     $hookArray[9]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object
-                        . '&' . Action::DEFAULT_COMMAND_ACTION_UNMARK_ALL_OBJECT
+                        . '&' . Actions::DEFAULT_COMMAND_ACTION_UNMARK_ALL_OBJECT
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 }
                 unset($instance, $id, $protected, $update, $markList, $marked);
@@ -7662,7 +7642,7 @@ class ModuleObjects extends Modules
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                        . '&' . Action::DEFAULT_COMMAND_ACTION_UNMARK_ALL_OBJECT
+                        . '&' . Actions::DEFAULT_COMMAND_ACTION_UNMARK_ALL_OBJECT
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 }
                 unset($markList);
@@ -7683,7 +7663,7 @@ class ModuleObjects extends Modules
                     // Si pas d'erreur.
                     if (!$this->_applicationInstance->getActionInstance()->getUploadObjectError()) {
                         $hookArray[0]['name'] = '::sylabe:module:objects:DisplayNewObject';
-                        $hookArray[0]['icon'] = Display::DEFAULT_ICON_LO;
+                        $hookArray[0]['icon'] = Displays::DEFAULT_ICON_LO;
                         $hookArray[0]['desc'] = '';
                         $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
@@ -7698,7 +7678,7 @@ class ModuleObjects extends Modules
             case 'typeMenuToken':
                 // Voir l'objet de l'entité.
                 $hookArray[0]['name'] = '::sylabe:module:objects:DisplayAsObject';
-                $hookArray[0]['icon'] = Display::DEFAULT_ICON_LO;
+                $hookArray[0]['icon'] = Displays::DEFAULT_ICON_LO;
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_DEFAULT_VIEW
@@ -7725,7 +7705,7 @@ class ModuleObjects extends Modules
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id
-                        . '&' . Action::DEFAULT_COMMAND_ACTION_MARK_OBJECT . '=' . $id
+                        . '&' . Actions::DEFAULT_COMMAND_ACTION_MARK_OBJECT . '=' . $id
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 } else {
                     // Retirer la marque de l'objet.
@@ -7735,7 +7715,7 @@ class ModuleObjects extends Modules
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id
-                        . '&' . Action::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT . '=' . $id
+                        . '&' . Actions::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT . '=' . $id
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 }
                 unset($instance, $id, $marked);
@@ -7748,7 +7728,7 @@ class ModuleObjects extends Modules
             case 'selfMenuConversation':
                 // Voir comme objet simplement.
                 $hookArray[0]['name'] = '::sylabe:module:objects:DisplayAsObject';
-                $hookArray[0]['icon'] = Display::DEFAULT_ICON_LO;
+                $hookArray[0]['icon'] = Displays::DEFAULT_ICON_LO;
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_DEFAULT_VIEW
@@ -7807,12 +7787,12 @@ class ModuleObjects extends Modules
      *
      * @return void
      */
-    public function display(): void
+    public function displayModule(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
-            case $this->MODULE_REGISTERED_VIEWS[0]:
+            /*case $this->MODULE_REGISTERED_VIEWS[0]:
                 $this->_displayObjectContent();
-                break;
+                break;*/
             case $this->MODULE_REGISTERED_VIEWS[1]:
                 $this->_displayObjectDescription();
                 break;
@@ -7836,7 +7816,7 @@ class ModuleObjects extends Modules
      *
      * @return void
      */
-    public function displayInline(): void
+    public function displayModuleInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[1]:
@@ -7945,18 +7925,14 @@ class ModuleObjects extends Modules
      */
     private function _display_InlineObjectDescription(): void
     {
-        /**
-         * @var Display $display
-         */
         $display = $this->_applicationInstance->getDisplayInstance();
 
         // Préparation de la gestion de l'affichage par parties.
         $startLinkSigne = $this->_nebuleInstance->getDisplayNextObject();
         $displayCount = 0;
         $okDisplay = false;
-        if ($startLinkSigne == '') {
+        if ($startLinkSigne == '')
             $okDisplay = true;
-        }
         $displayNext = false;
         $nextLinkSigne = '';
 
@@ -7985,30 +7961,26 @@ class ModuleObjects extends Modules
                 $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
             );
             $emotionsIcons = array(
-                nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Display::REFERENCE_ICON_EMOTION_JOIE1,
-                nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Display::REFERENCE_ICON_EMOTION_CONFIANCE1,
-                nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Display::REFERENCE_ICON_EMOTION_PEUR1,
-                nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Display::REFERENCE_ICON_EMOTION_SURPRISE1,
-                nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Display::REFERENCE_ICON_EMOTION_TRISTESSE1,
-                nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Display::REFERENCE_ICON_EMOTION_DEGOUT1,
-                nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Display::REFERENCE_ICON_EMOTION_COLERE1,
-                nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Display::REFERENCE_ICON_EMOTION_INTERET1,
+                nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE1,
+                nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE1,
+                nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR1,
+                nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE1,
+                nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE1,
+                nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT1,
+                nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE1,
+                nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET1,
             );
 
             foreach ($links as $i => $link) {
                 // Vérifie si la signature de lien est celle de départ de l'affichage.
-                if ($link->getSigneValue() == $startLinkSigne) {
+                if ($link->getRaw() == $startLinkSigne)
                     $okDisplay = true;
-                }
 
                 // Enregistre le message suivant à afficher si le compteur d'affichage est dépassé.
-                if ($displayNext
-                    && $nextLinkSigne == ''
-                ) {
-                    $nextLinkSigne = $link->getSigneValue();
-                }
+                if ($displayNext && $nextLinkSigne == '')
+                    $nextLinkSigne = $link->getRaw();
 
-                // Si l'affichage est permit.
+                // Si l'affichage est permis.
                 if ($okDisplay) {
                     // Extraction des attributs.
                     $action = $link->getAction();
@@ -8191,11 +8163,19 @@ class ModuleObjects extends Modules
                 $url = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $display->getCurrentDisplayView()
                     . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_nebuleInstance->getCurrentObject()
-                    . '&' . Display::DEFAULT_INLINE_COMMAND . '&' . Display::DEFAULT_INLINE_CONTENT_COMMAND . '=objprop'
+                    . '&' . Displays::DEFAULT_INLINE_COMMAND . '&' . Displays::DEFAULT_INLINE_CONTENT_COMMAND . '=objprop'
                     . '&' . Displays::DEFAULT_NEXT_COMMAND . '=' . $nextLinkSigne;
                 $display->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTraductionInstance()->getTraduction('::seeMore'));
             }
             unset($links);
+        } else {
+            $param = array(
+                'enableDisplayIcon' => true,
+                'displaySize' => 'medium',
+                'displayRatio' => 'short',
+                'informationType' => 'info',
+            );
+            echo $this->_display->getDisplayInformation(':::display:content:notAnObject', $param);
         }
     }
 
@@ -8511,7 +8491,7 @@ class ModuleObjects extends Modules
                             $list[$i]['param']['selfHookList'][0]['icon'] = $this->MODULE_REGISTERED_ICONS[3];
                             $list[$i]['param']['selfHookList'][0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_ICONS[3]
-                                . '&' . Action::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT . '=' . $object->getID()
+                                . '&' . Actions::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT . '=' . $object->getID()
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                                 . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         } elseif (!$this->_nebuleInstance->getIsRecoveryEntity($entity)
@@ -8519,10 +8499,10 @@ class ModuleObjects extends Modules
                         ) {
                             // Annuler le partage de protection. Non fiable...
                             $list[$i]['param']['selfHookList'][0]['name'] = '::RemoveShareProtect';
-                            $list[$i]['param']['selfHookList'][0]['icon'] = Display::DEFAULT_ICON_LX;
+                            $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LX;
                             $list[$i]['param']['selfHookList'][0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_ICONS[3]
-                                . '&' . Action::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY . '=' . $entity
+                                . '&' . Actions::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY . '=' . $entity
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                                 . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         }
@@ -9057,7 +9037,7 @@ class ModuleAdmin extends Modules
      *
      * @return void
      */
-    public function display(): void
+    public function displayModule(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
 //            case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -9084,7 +9064,7 @@ class ModuleAdmin extends Modules
      *
      * @return void
      */
-    public function displayInline(): void
+    public function displayModuleInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[2]:

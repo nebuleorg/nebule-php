@@ -285,9 +285,9 @@ class ioDisk extends io implements ioInterface
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::getLinks()
+     * @see ioInterface::getBlockLinks()
      */
-    public function getLinks(string $oid, string $url = '', int $offset = 0): array
+    public function getBlockLinks(string $oid, string $url = '', int $offset = 0): array
     {
         /**
          * Compteur de liens lus.
@@ -413,9 +413,9 @@ class ioDisk extends io implements ioInterface
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::setLink()
+     * @see ioInterface::setBlockLink()
      */
-    public function setLink(string $oid, string &$link, string $url = ''): bool
+    public function setBlockLink(string $oid, string &$link, string $url = ''): bool
     {
         // Vérifie les arguments.
         if (!Node::checkNID($oid, false)

@@ -611,7 +611,7 @@ class Cache
      * @param string $type
      * @return blocLinkInterface
      */
-    public function newLink(string $link, string $type = self::TYPE_LINK): blocLinkInterface
+    public function newBlockLink(string $link, string $type = self::TYPE_LINK): blocLinkInterface
     {
         if ($link == '')
             $link = 'invalid';

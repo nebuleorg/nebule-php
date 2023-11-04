@@ -181,7 +181,7 @@ interface ioInterface
      * @param int    $offset
      * @return array
      */
-    public function getLinks(string $oid, string $url = '', int $offset = 0): array;
+    public function getBlockLinks(string $oid, string $url = '', int $offset = 0): array;
 
     /**
      * Lit les liens dissimulés de l'entité dite destinataire. Retourne un tableau des liens lus, même vide.
@@ -218,7 +218,7 @@ interface ioInterface
      * @param string $url
      * @return boolean
      */
-    public function setLink(string $oid, string &$link, string $url = ''): bool;
+    public function setBlockLink(string $oid, string &$link, string $url = ''): bool;
 
     /**
      * Write data to an object.
