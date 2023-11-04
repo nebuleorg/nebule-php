@@ -4633,11 +4633,10 @@ class ModuleEntities extends Modules
 
         // Extrait les états de tests en warning ou en erreur.
         $idCheck = 'Error';
-        if ($this->_applicationInstance->getCheckSecurityAll() == 'OK') {
+        if ($this->_applicationInstance->getCheckSecurityAll() == 'OK')
             $idCheck = 'Ok';
-        } elseif ($this->_applicationInstance->getCheckSecurityAll() == 'WARN') {
+        elseif ($this->_applicationInstance->getCheckSecurityAll() == 'WARN')
             $idCheck = 'Warn';
-        }
         // Affiche les tests.
         if ($idCheck != 'Ok') {
             $list = array();
@@ -4659,11 +4658,10 @@ class ModuleEntities extends Modules
                 $list[$i]['information'] = $chnam[$i];
                 $list[$i]['object'] = '1';
                 $list[$i]['param']['informationType'] = 'error';
-                if ($check[$i] == 'OK') {
+                if ($check[$i] == 'OK')
                     $list[$i]['param']['informationType'] = 'ok';
-                } elseif ($check[$i] == 'WARN') {
+                elseif ($check[$i] == 'WARN')
                     $list[$i]['param']['informationType'] = 'warn';
-                }
             }
             echo $this->_display->getDisplayObjectsList($list, 'small');
         } else {
