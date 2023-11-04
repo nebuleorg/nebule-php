@@ -105,7 +105,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
 
 
     /**
-     * Affichage de la page.
+     * Display full page.
      */
     protected function _displayFull(): void
     {

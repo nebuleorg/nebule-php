@@ -59,7 +59,7 @@ class Application extends Applications
 class Display extends Displays
 {
     /**
-     * Affichage de la page.
+     * Display full page.
      */
     public function _displayFull(): void
     {

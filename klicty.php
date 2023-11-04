@@ -855,7 +855,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
 
     /**
-     * Affichage de la page complète.
+     * Display full page.
      */
     protected function _displayFull(): void
     {
@@ -922,7 +922,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     }
 
     /**
-     * Affichage de la partie de page en ligne.
+     * Display inline page.
      */
     protected function _displayInline(): void
     {

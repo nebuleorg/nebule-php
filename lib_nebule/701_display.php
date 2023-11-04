@@ -1874,7 +1874,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     protected function _displayScripts(): void
     {
-        // Nothing to do. This function must be rewrited on apps if needed.
+        // Nothing to do. This function must be rewritten on apps if needed.
     }
 
     /**
@@ -1882,7 +1882,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     protected function _preDisplay(): void
     {
-        // Nothing to do. This function must be rewrited on apps if needed.
+        // Nothing to do. This function must be rewritten on apps if needed.
     }
 
     /**
@@ -1901,7 +1901,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
     /**
-     * Affichage de la page complète.
+     * Display full page.
      */
     protected function _displayFull(): void
     {
@@ -1970,11 +1970,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
     /**
-     * Affichage de la partie de page en ligne.
+     * Display inline page.
      */
     protected function _displayInline(): void
     {
-        // Nothing to do. This function must be rewrited on apps if needed.
+        // Nothing to do. This function must be rewritten on apps if needed.
     }
 
 

@@ -627,11 +627,11 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
 
     /**
-     * Affichage de la page complète.
+     * Display full page.
      */
     protected function _displayFull(): void
     {
-        $this->_metrologyInstance->addLog('Display full', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        $this->_metrologyInstance->addLog('Display full', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'c3cdf3de');
         ?>
         <!DOCTYPE html>
         <html lang="<?php echo $this->_currentDisplayLanguage; ?>">
@@ -645,24 +645,24 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
             <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
             <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
             <?php
-            $this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '7fcf1976');
             $this->commonCSS();
             $this->displayCSS();
 
-            $this->_metrologyInstance->addLog('Display vbs', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Display vbs', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'ecbd188e');
             $this->_displayScripts();
             ?>
 
         </head>
         <body>
         <?php
-        $this->_metrologyInstance->addLog('Display actions', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+        $this->_metrologyInstance->addLog('Display actions', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'fac72c30');
         $this->_displayActions();
 
-        $this->_metrologyInstance->addLog('Display header', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+        $this->_metrologyInstance->addLog('Display header', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '5d4eb6f0');
         $this->_displayHeader();
 
-        $this->_metrologyInstance->addLog('Display menu apps', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+        $this->_metrologyInstance->addLog('Display menu apps', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '89f37a59');
         $this->_displayMenuApplications();
         ?>
 
@@ -671,13 +671,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 <div id="curseur" class="infobulle"></div>
                 <div class="content">
                     <?php
-                    $this->_metrologyInstance->addLog('Display checks', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                    $this->_metrologyInstance->addLog('Display checks', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '28feadb6');
                     $this->_displayChecks();
 
-                    $this->_metrologyInstance->addLog('Display content', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                    $this->_metrologyInstance->addLog('Display content', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '58d043ab');
                     $this->_displayContent();
 
-                    $this->_metrologyInstance->addLog('Display metrology', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                    $this->_metrologyInstance->addLog('Display metrology', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '3012e9f4');
                     $this->_displayMetrology();
                     ?>
 
@@ -685,20 +685,20 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
             </div>
         </div>
         <?php
-        $this->_metrologyInstance->addLog('Display footer', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+        $this->_metrologyInstance->addLog('Display footer', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'b1d7feb6');
         $this->_displayFooter();
     }
 
     /**
-     * Affichage de la partie de page en ligne.
+     * Display inline page.
      */
     protected function _displayInline(): void
     {
-        $this->_metrologyInstance->addLog('Display inline', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        $this->_metrologyInstance->addLog('Display inline', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'bfcdcd6d');
 
         foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
             if ($module->getCommandName() == $this->_currentDisplayMode) {
-                $this->_metrologyInstance->addLog('Display inline to module ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+                $this->_metrologyInstance->addLog('Display inline to module ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'f74be2e8');
                 $module->displayInline();
                 echo "\n";
             }
@@ -1251,7 +1251,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     /**
      * Affichage des scripts JS.
      */
-    protected function _displayScripts()
+    protected function _displayScripts(): void
     {
         $this->commonScripts();
 
@@ -2310,7 +2310,7 @@ class ModuleManage extends Modules
      *
      * @return void
      */
-    protected function _displayFull(): void
+    public function display(): void
     {
         switch ($this->_display->getCurrentDisplayView()) {
 //            case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -2336,7 +2336,7 @@ class ModuleManage extends Modules
      *
      * @return void
      */
-    protected function _displayInline(): void
+    public function displayInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -2563,7 +2563,7 @@ class ModuleManage extends Modules
      */
     private function _display_InlineModules(): void
     {
-$this->_metrologyInstance->addLog('MARK', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//$this->_metrologyInstance->addLog('MARK', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         // Vérifie que l'entité est connectée.
         if (!$this->_unlocked) {
             $param = array(
@@ -3405,7 +3405,7 @@ class ModuleHelp extends Modules
      *
      * @return void
      */
-    protected function _displayFull(): void
+    public function display(): void
     {
         $this->_displayHlpHeader();
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
@@ -3432,7 +3432,7 @@ class ModuleHelp extends Modules
      *
      * @return void
      */
-    protected function _displayInline(): void
+    public function displayInline(): void
     {
         // Rien à faire.
     }
@@ -4102,7 +4102,7 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    protected function _displayFull(): void
+    public function display(): void
     {
         switch ($this->_display->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -4152,7 +4152,7 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    protected function _displayInline(): void
+    public function displayInline(): void
     {
         switch ($this->_display->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -6638,7 +6638,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    protected function _displayFull(): void
+    public function display(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -6671,7 +6671,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    protected function _displayInline(): void
+    public function displayInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -7821,7 +7821,7 @@ class ModuleObjects extends Modules
      *
      * @return void
      */
-    protected function _displayFull(): void
+    public function display(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -7850,7 +7850,7 @@ class ModuleObjects extends Modules
      *
      * @return void
      */
-    protected function _displayInline(): void
+    public function displayInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[1]:
@@ -9074,7 +9074,7 @@ class ModuleAdmin extends Modules
      *
      * @return void
      */
-    protected function _displayFull(): void
+    public function display(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
 //            case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -9101,7 +9101,7 @@ class ModuleAdmin extends Modules
      *
      * @return void
      */
-    protected function _displayInline(): void
+    public function displayInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[2]:

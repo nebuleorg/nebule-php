@@ -487,7 +487,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
 
     /**
-     * Affichage de la page complète.
+     * Display full page.
      */
     protected function _displayFull(): void
     {
@@ -551,7 +551,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
 
     /**
-     * Affichage de la partie de page en ligne.
+     * Display inline page.
      */
     protected function _displayInline(): void
     {
@@ -2075,7 +2075,7 @@ class ModuleHelp extends Modules
     /**
      * Affichage principale.
      */
-    protected function _displayFull(): void
+    public function display(): void
     {
         $this->_displayHlpHeader();
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
@@ -2100,7 +2100,7 @@ class ModuleHelp extends Modules
     /**
      * Affichage en ligne comme élément inseré dans une page web.
      */
-    protected function _displayInline(): void
+    public function displayInline(): void
     {
         // Rien à faire.
     }
@@ -2558,7 +2558,7 @@ class ModuleAdmin extends Modules
     /**
      * Affichage principale.
      */
-    protected function _displayFull(): void
+    public function display(): void
     {
         $this->_displayHeader();
 
@@ -2582,7 +2582,7 @@ class ModuleAdmin extends Modules
     /**
      * Affichage en ligne comme élément inseré dans une page web.
      */
-    protected function _displayInline(): void
+    public function displayInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[1]:
@@ -3317,7 +3317,7 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    protected function _displayFull(): void
+    public function display(): void
     {
         switch ($this->_display->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -3367,7 +3367,7 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    protected function _displayInline(): void
+    public function displayInline(): void
     {
         switch ($this->_display->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -5842,7 +5842,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    protected function _displayFull(): void
+    public function display(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -5875,7 +5875,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    protected function _displayInline(): void
+    public function displayInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -7022,7 +7022,7 @@ class ModuleObjects extends Modules
      *
      * @return void
      */
-    protected function _displayFull(): void
+    public function display(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
@@ -7051,7 +7051,7 @@ class ModuleObjects extends Modules
      *
      * @return void
      */
-    protected function _displayInline(): void
+    public function displayInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[1]:
@@ -8619,7 +8619,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    protected function _displayFull(): void
+    public function display(): void
     {
         $this->_displayHeader();
 
@@ -8695,7 +8695,7 @@ class Moduleqantion extends Modules
      *
      * @return void
      */
-    protected function _displayInline(): void
+    public function displayInline(): void
     {
         switch ($this->_display->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
