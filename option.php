@@ -42,7 +42,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020231104';
+    const APPLICATION_VERSION = '020231105';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2023';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -1316,7 +1316,7 @@ nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRf
                     $hashTarget = $link->getParsed()['bl/rl/nid2'];
                     $applicationsList[$hashTarget] = $hashTarget;
                     $signersList[$hashTarget] = $link->getParsed()['bs/rs1/eid'];
-$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTarget, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTarget, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                 }
             }
 
@@ -1348,7 +1348,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
             // Lister les applications.
             $application = '';
             foreach ($applicationsList as $application) {
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('add application ' . $application, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'de6e59f5');
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('add application ' . $application, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'de6e59f5');
 
                 $color = '#' . substr($application . '000000', 0, 6);
                 //$colorSigner = '#'.substr($signersList[$application].'000000',0,6);
@@ -1889,7 +1889,7 @@ class Action extends Actions
      */
     public function genericActions()
     {
-        $this->_metrology->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '1f5dd135');
+        $this->_metrology->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1f5dd135');
 
         // Vérifie que l'entité instance locale du serveur est déverrouillée et que le ticket est valide.
         if ($this->_unlocked
@@ -1914,7 +1914,7 @@ class Action extends Actions
                 $this->_actionSignLink($this->_actionSignLinkInstance1);
         }
 
-        $this->_metrology->addLog('Generic actions end', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'bb221384');
+        $this->_metrology->addLog('Generic actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bb221384');
     }
 
 
@@ -1923,7 +1923,7 @@ class Action extends Actions
      */
     public function specialActions()
     {
-        $this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '4e9ebfc1');
+        $this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4e9ebfc1');
 
         // Vérifie que le ticket est valide.
         if ($this->_nebuleInstance->getTicketingInstance()->checkActionTicket()) {
@@ -1933,7 +1933,7 @@ class Action extends Actions
                 $this->_actionSynchronizeApplication();
         }
 
-        $this->_metrology->addLog('Special actions end', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '1bb0ef71');
+        $this->_metrology->addLog('Special actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1bb0ef71');
     }
 
 
@@ -1961,7 +1961,7 @@ class Action extends Actions
         if ($this->_configuration->checkBooleanOptions(array('permitWrite', 'permitWriteLink'))
             && $this->_unlocked
         ) {
-            $this->_metrology->addLog('Extract action change option', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '62a03a08');
+            $this->_metrology->addLog('Extract action change option', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '62a03a08');
 
             /*
 			 *  ------------------------------------------------------------------------------------------
@@ -2007,7 +2007,7 @@ class Action extends Actions
             && $this->_actionOptionName != ''
             && $this->_unlocked
         ) {
-            $this->_metrology->addLog('Action change option ' . $this->_actionOptionName . ' = ' . $this->_actionOptionValue, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'ae2be3f7');
+            $this->_metrology->addLog('Action change option ' . $this->_actionOptionName . ' = ' . $this->_actionOptionValue, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ae2be3f7');
 
             // Vérifie que l'option est du bon type.
             $listOptionsType = $this->_configuration->getListOptionsType();
@@ -2035,7 +2035,7 @@ class Action extends Actions
 
                 $this->_display->displayInlineAllActions();
 
-                $this->_metrology->addLog('Action change option ok', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '0db1fc8f');
+                $this->_metrology->addLog('Action change option ok', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0db1fc8f');
             }
 
             // Affichage des actions.

@@ -45,7 +45,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020231104';
+    const APPLICATION_VERSION = '020231105';
     const APPLICATION_LICENCE = 'GNU GPL 2013-2023';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -394,7 +394,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
@@ -437,7 +437,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
@@ -631,7 +631,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
      */
     protected function _displayFull(): void
     {
-        $this->_metrologyInstance->addLog('Display full', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'c3cdf3de');
+        $this->_metrologyInstance->addLog('Display full', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'c3cdf3de');
         ?>
         <!DOCTYPE html>
         <html lang="<?php echo $this->_currentDisplayLanguage; ?>">
@@ -645,24 +645,24 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
             <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
             <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
             <?php
-            $this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '7fcf1976');
+            $this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7fcf1976');
             $this->commonCSS();
             $this->displayCSS();
 
-            $this->_metrologyInstance->addLog('Display vbs', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'ecbd188e');
+            $this->_metrologyInstance->addLog('Display vbs', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ecbd188e');
             $this->_displayScripts();
             ?>
 
         </head>
         <body>
         <?php
-        $this->_metrologyInstance->addLog('Display actions', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'fac72c30');
+        $this->_metrologyInstance->addLog('Display actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'fac72c30');
         $this->_displayActions();
 
-        $this->_metrologyInstance->addLog('Display header', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '5d4eb6f0');
+        $this->_metrologyInstance->addLog('Display header', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '5d4eb6f0');
         $this->_displayHeader();
 
-        $this->_metrologyInstance->addLog('Display menu apps', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '89f37a59');
+        $this->_metrologyInstance->addLog('Display menu apps', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '89f37a59');
         $this->_displayMenuApplications();
         ?>
 
@@ -671,13 +671,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 <div id="curseur" class="infobulle"></div>
                 <div class="content">
                     <?php
-                    $this->_metrologyInstance->addLog('Display checks', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '28feadb6');
+                    $this->_metrologyInstance->addLog('Display checks', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '28feadb6');
                     $this->_displayChecks();
 
-                    $this->_metrologyInstance->addLog('Display content', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '58d043ab');
+                    $this->_metrologyInstance->addLog('Display content', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '58d043ab');
                     $this->_displayContent();
 
-                    $this->_metrologyInstance->addLog('Display metrology', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '3012e9f4');
+                    $this->_metrologyInstance->addLog('Display metrology', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '3012e9f4');
                     $this->_displayMetrology();
                     ?>
 
@@ -685,7 +685,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
             </div>
         </div>
         <?php
-        $this->_metrologyInstance->addLog('Display footer', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'b1d7feb6');
+        $this->_metrologyInstance->addLog('Display footer', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b1d7feb6');
         $this->_displayFooter();
     }
 
@@ -1271,7 +1271,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                     // Appelle les actions du module concerné par le mode d'affichage.
                     foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
                         if ($module->getCommandName() == $this->_currentDisplayMode) {
-                            $this->_metrologyInstance->addLog('Actions for module ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+                            $this->_metrologyInstance->addLog('Actions for module ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                             $module->action();
                         }
                     }
@@ -2385,7 +2385,7 @@ class ModuleManage extends Modules
             && $this->_configuration->getOptionAsBoolean('permitWriteObject')
             && $this->_unlocked
         ) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
             // Lit et nettoye le contenu de la variable GET.
             $arg_name = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_NOM, FILTER_SANITIZE_STRING));
@@ -2394,11 +2394,11 @@ class ModuleManage extends Modules
             // Ecriture des variables.
             if ($arg_name != '') {
                 $this->_actionAddModuleName = $arg_name;
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module NAME:' . $arg_name, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module NAME:' . $arg_name, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             }
             if (Node::checkNID($arg_rid)) {
                 $this->_actionAddModuleRID = $arg_rid;
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module RID:' . $arg_rid, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module RID:' . $arg_rid, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             }
 
             // Vérification du minimum pour la création.
@@ -2420,7 +2420,7 @@ class ModuleManage extends Modules
             && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
             // Lit et nettoye le contenu de la variable GET.
             $arg_rid = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_RIDC, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
@@ -2428,7 +2428,7 @@ class ModuleManage extends Modules
 
             if (Node::checkNID($arg_rid)) {
                 $this->_actionAddModuleRID = $arg_rid;
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module RID:' . $arg_id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module RID:' . $arg_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             }
             if (Node::checkNID($arg_id)
                 && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($arg_id)
@@ -2438,7 +2438,7 @@ class ModuleManage extends Modules
                 && $arg_id != $arg_rid
             ) {
                 $this->_actionAddModuleID = $arg_id;
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module ID:' . $arg_id, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module ID:' . $arg_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             }
 
             // Vérification du minimum pour la création.
@@ -2462,7 +2462,7 @@ class ModuleManage extends Modules
             && $this->_configuration->getOptionAsBoolean('permitWriteObject')
             && $this->_unlocked
         ) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add module', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add module', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 
             // Crée l'objet de la référence de l'application.
             $instance = new Node($this->_nebuleInstance, $this->_actionAddModuleRID, '', false, false);
@@ -2505,7 +2505,7 @@ class ModuleManage extends Modules
             && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add code ' . $this->_actionAddModuleID . ' to module ' . $this->_actionAddModuleRID, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add code ' . $this->_actionAddModuleID . ' to module ' . $this->_actionAddModuleRID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 
             // Crée le lien du code pour l'application.
             $date = date(DATE_ATOM);
@@ -5154,13 +5154,12 @@ class ModuleEntities extends Modules
         $listOkEntities = $this->_nebuleInstance->getSpecialEntities();
 
         // Liste les entités que j'ai marqué comme connues. @todo revoir la méthode !
-        $links = $this->_applicationInstance->getCurrentEntityInstance()->readLinksFilterFull(
-            $this->_applicationInstance->getCurrentEntityID(),
-            '',
-            'f',
-            $this->_applicationInstance->getCurrentEntityID(),
-            '',
-            '');
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid1' => $this->_applicationInstance->getCurrentEntityID(),
+        );
+        $this->_applicationInstance->getCurrentEntityInstance()->getLinks($links, $filter);
 
         // Prépare l'affichage.
         $list = array();
@@ -5168,7 +5167,7 @@ class ModuleEntities extends Modules
         foreach ($links as $link) {
             $instance = $this->_nebuleInstance->newEntity($link->getParsed()['bl/rl/nid2']);
             if (!isset($listOkEntities[$link->getParsed()['bl/rl/nid2']])
-                && $instance->getType('all') == Entity::ENTITY_TYPE
+                && $instance->getType('all') == \Nebule\Library\Entity::ENTITY_TYPE
                 && $instance->getIsPublicKey()
             ) {
                 $list[$i]['object'] = $instance;
@@ -5196,12 +5195,9 @@ class ModuleEntities extends Modules
                 $i++;
             }
         }
-        unset($link, $instance);
 
         // Affichage.
         echo $this->_display->getDisplayObjectsList($list, 'medium');
-
-        unset($list, $links, $listOkEntities);
     }
 
 
@@ -5224,13 +5220,12 @@ class ModuleEntities extends Modules
         $listOkEntities = $this->_nebuleInstance->getSpecialEntities();
 
         // Liste les entités que j'ai marqué comme connues. @todo revoir la méthode !
-        $links = $this->_applicationInstance->getCurrentEntityInstance()->readLinksFilterFull(
-            '',
-            '',
-            'f',
-            '',
-            $this->_applicationInstance->getCurrentEntityID(),
-            '');
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid2' => $this->_applicationInstance->getCurrentEntityID(),
+        );
+        $this->_applicationInstance->getCurrentEntityInstance()->getLinks($links, $filter);
 
         // Prépare l'affichage.
         $list = array();
@@ -5294,13 +5289,12 @@ class ModuleEntities extends Modules
         $listOkEntities = $this->_nebuleInstance->getSpecialEntities();
 
         // Liste les entités que j'ai marqué comme connues. @todo revoir la méthode !
-        $links = $this->_applicationInstance->getCurrentEntityInstance()->readLinksFilterFull(
-            $this->_applicationInstance->getCurrentEntityID(),
-            '',
-            'f',
-            $this->_applicationInstance->getCurrentEntityID(),
-            '',
-            '');
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid1' => $this->_applicationInstance->getCurrentEntityID(),
+        );
+        $this->_applicationInstance->getCurrentEntityInstance()->getLinks($links, $filter);
         if (sizeof($links) != 0) {
             foreach ($links as $link) {
                 $listOkEntities[$link->getParsed()['bl/rl/nid2']] = true;
@@ -5308,13 +5302,12 @@ class ModuleEntities extends Modules
         }
 
         // Liste les entités dont je suis marqué comme connu.
-        $links = $this->_applicationInstance->getCurrentEntityInstance()->readLinksFilterFull(
-            '',
-            '',
-            'f',
-            '',
-            $this->_applicationInstance->getCurrentEntityID(),
-            '');
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid2' => $this->_applicationInstance->getCurrentEntityID(),
+        );
+        $this->_applicationInstance->getCurrentEntityInstance()->getLinks($links, $filter);
 
         // Prépare l'affichage.
         if (sizeof($links) != 0) {
@@ -5399,25 +5392,42 @@ class ModuleEntities extends Modules
     private function _display_InlineSpecialEntitiesList(): void
     {
         // Liste des entités.
-        $entities = array(
-            0 => $this->_nebuleInstance->getPuppetmasterInstance(),
-            1 => $this->_nebuleInstance->getSecurityMasterInstance(),
-            2 => $this->_nebuleInstance->getCodeMasterInstance(),
-            3 => $this->_nebuleInstance->getDirectoryMasterInstance(),
-            4 => $this->_nebuleInstance->getTimeMasterInstance(),
-            5 => $this->_nebuleInstance->getInstanceEntityInstance(),
-        );
-        $masters = array(
-            0 => '',
-            1 => nebule::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_SECURITE,
-            2 => nebule::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_CODE,
-            3 => nebule::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_ANNUAIRE,
-            4 => nebule::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_TEMPS,
-            5 => 'Hôte',
-        );
+        $entities = array();
+        $masters = array();
+        $signers = array();
+        $entities[] = $this->_nebuleInstance->getPuppetmasterInstance();
+        $masters[] = '';
+        $signers[] = array();
+        foreach ($this->_nebuleInstance->getSecurityAuthoritiesInstance() as $instance)
+        {
+            $entities[] = $instance;
+            $masters[] = nebule::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_SECURITE;
+            $signers[] = $this->_nebuleInstance->getSecuritySignersInstance()[$instance->getID()];
+        }
+        foreach ($this->_nebuleInstance->getCodeAuthoritiesInstance() as $instance)
+        {
+            $entities[] = $instance;
+            $masters[] = nebule::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_CODE;
+            $signers[] = $this->_nebuleInstance->getCodeSignersInstance()[$instance->getID()];
+        }
+        foreach ($this->_nebuleInstance->getDirectoryAuthoritiesInstance() as $instance)
+        {
+            $entities[] = $instance;
+            $masters[] = nebule::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_ANNUAIRE;
+            $signers[] = $this->_nebuleInstance->getDirectorySignersInstance()[$instance->getID()];
+        }
+        foreach ($this->_nebuleInstance->getTimeAuthoritiesInstance() as $instance)
+        {
+            $entities[] = $instance;
+            $masters[] = nebule::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_TEMPS;
+            $signers[] = $this->_nebuleInstance->getTimeSignersInstance()[$instance->getID()];
+        }
+        $entities[] = $this->_nebuleInstance->getInstanceEntityInstance();
+        $masters[] = 'Hôte';
+        $signers[] = array();
+
         // Prépare l'affichage.
         $list = array();
-        $i = 0;
         foreach ($entities as $i => $entity) {
             $list[$i]['object'] = $entity;
             $list[$i]['param'] = array(
@@ -5439,18 +5449,25 @@ class ModuleEntities extends Modules
                 'displaySize' => 'medium',
                 'displayRatio' => 'long',
             );
-            if ($i < 5) {
+/*echo 'Entity=' . $entity->getID() . "<br />\n";
+var_dump($signers); echo "<br />\n";
+var_dump($signers[$i]); echo "<br /><br />\n"; ob_flush();
+foreach ($signers[$i] as $j => $eid)
+{
+    $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK eid='.$eid, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+    $e = $this->_nebuleInstance->getCacheInstance()->newNode($eid, \Nebule\Library\Cache::TYPE_ENTITY);
+    $signers[$i][$j] = $e;
+}*/
+            if (sizeof($signers[$i]) != 0) {
                 $list[$i]['param']['enableDisplayRefs'] = true;
-                $list[$i]['param']['objectRefs'] = array($this->_nebuleInstance->getPuppetmasterInstance());
+                $list[$i]['param']['objectRefs'] = $signers[$i];
             }
-
-            $i++;
         }
-        unset($entities, $masters, $entity);
 
         // Affiche les entités.
+$this->_nebuleInstance->getMetrologyInstance()->setLogsLevel('FUNCTION');
         echo $this->_display->getDisplayObjectsList($list, 'medium');
-        unset($list);
+$this->_nebuleInstance->getMetrologyInstance()->setLogsLevel('ERROR');
     }
 
 
@@ -8173,7 +8190,7 @@ class ModuleObjects extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'info',
             );
-            echo $this->_display->getDisplayInformation(':::display:content:notAnObject', $param);
+            echo $this->_display->getDisplayInformation('::EmptyList', $param);
         }
     }
 

@@ -180,7 +180,7 @@ class Cache
      */
     public function flushBufferStore(): bool
     {
-        $this->_metrology->addLog('Flush buffer store', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        $this->_metrology->addLog('Flush buffer store', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         session_start();
         unset($_SESSION['Buffer']);
         $_SESSION['Buffer'] = array();
@@ -203,7 +203,7 @@ class Cache
             return;
 
         if ($c > 100)
-            $this->_metrology->addLog(__METHOD__ . ' cache need flush ' . $c . '/' . sizeof($this->_cacheDateInsertion), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '5bdb6961'); // Log
+            $this->_metrology->addLog(__METHOD__ . ' cache need flush ' . $c . '/' . sizeof($this->_cacheDateInsertion), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '5bdb6961'); // Log
 
         for ($i = 0; $i < $c; $i++)
         {

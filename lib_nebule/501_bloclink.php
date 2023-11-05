@@ -34,6 +34,8 @@ class blocLink implements blocLinkInterface
     const NID_MAX_HASH_SIZE = 8192;
     const NID_MIN_ALGO_SIZE = 2;
     const NID_MAX_ALGO_SIZE = 12;
+    const LINK_MAX_BL_SIZE = 16384;
+    const LINK_MAX_BS_SIZE = 16384;
 
     /**
      * Instance nebule en cours.
@@ -223,7 +225,7 @@ class blocLink implements blocLinkInterface
     protected function _parse(string $link): bool
     {
         $this->_validStructure = false;
-        if (strlen($link) > 4096) return false; // TODO à revoir.
+        if (strlen($link) > (self::LINK_MAX_BL_SIZE + self::LINK_MAX_BS_SIZE + 1)) return false;
         if (strlen($link) == 0) return false;
 
         // Extract blocs from link L : BH_BL_BS
@@ -293,7 +295,11 @@ class blocLink implements blocLinkInterface
     {
         $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'ad2228cc');
 
-        return $this->_links; // FIXME
+        $result = array();
+        for ($i = 1; $i <= $this->_parsedLink['bs/count']; $i++)
+            $result[] = $this->_parsedLink["bs/rs$i/eid"];
+
+        return $result;
     }
 
     /**
@@ -395,7 +401,11 @@ class blocLink implements blocLinkInterface
      */
     protected function _checkBH(string &$bh): bool
     {
-        if (strlen($bh) > 15) return false;
+        if (strlen($bh) > 15)
+        {
+            $this->_metrology->addLog('BH size overflow '.substr($bh, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '84cf4447');
+            return false;
+        }
 
         $rf = strtok($bh, '/');
         if (is_bool($rf)) return false;
@@ -472,7 +482,11 @@ class blocLink implements blocLinkInterface
      */
     protected function _checkBL(string &$bl): bool
     {
-        if (strlen($bl) > 4096) return false; // TODO à revoir.
+        if (strlen($bl) > self::LINK_MAX_BL_SIZE)
+        {
+            $this->_metrology->addLog('BL size overflow '.substr($bl, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '9d3f9bda');
+            return false;
+        }
 
         $rc = strtok($bl, '/');
         if (is_bool($rc)) return false;
@@ -491,7 +505,7 @@ class blocLink implements blocLinkInterface
             $i++;
             if ($i > $this->_maxRL)
             {
-                $this->_metrology->addLog('BL overflow '.substr($bl, 0, 60) . '+ maxRL=' . $this->_maxRL, Metrology::LOG_LEVEL_ERROR, __METHOD__, '6a777706');
+                $this->_metrology->addLog('BL overflow '.substr($bl, 0, 1000) . '+ maxRL=' . $this->_maxRL, Metrology::LOG_LEVEL_ERROR, __METHOD__, '6a777706');
                 return false;
             }
             $rl = strtok('/');
@@ -523,7 +537,11 @@ class blocLink implements blocLinkInterface
      */
     protected function _checkRC(string &$rc): bool
     {
-        if (strlen($rc) > 27) return false;
+        if (strlen($rc) > 27)
+        {
+            $this->_metrology->addLog('BL/RC size overflow '.substr($rc, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '7282e54a');
+            return false;
+        }
 
         // Check items from RC : MOD>CHR
         $mod = strtok($rc, '>');
@@ -536,7 +554,11 @@ class blocLink implements blocLinkInterface
         // TODO faire un filtrage plus fin...
 
         // Check registry overflow
-        if (strtok('>') !== false) return false;
+        if (strtok('>') !== false)
+        {
+            $this->_metrology->addLog('BL/RC overflow '.substr($rc, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '84cf4447');
+            return false;
+        }
 
         $this->_parsedLink['bl/rc'] = $rc;
         $this->_parsedLink['bl/rc/mod'] = $mod;
@@ -553,7 +575,11 @@ class blocLink implements blocLinkInterface
      */
     protected function _checkRL(string &$rl, string $i): bool
     {
-        if (strlen($rl) > 4096) return false; // TODO à revoir.
+        if (strlen($rl) > 4096) // TODO maybe can be a constant
+        {
+            $this->_metrology->addLog('BL/RL size overflow '.substr($rl, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '4835c147');
+            return false;
+        }
 
         // Extract items from RL : REQ>NID>NID>NID>NID...
         $req = strtok($rl, '>');
@@ -572,7 +598,7 @@ class blocLink implements blocLinkInterface
             $j++;
             if ($j > $this->_maxRLUID)
             {
-                $this->_metrology->addLog('BL/RL overflow '.substr($rl, 0, 60) . '+ maxRLUID=' . $this->_maxRLUID,
+                $this->_metrology->addLog('BL/RL overflow '.substr($rl, 0, 1000) . '+ maxRLUID=' . $this->_maxRLUID,
                     Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd0c9961a');
                 return false;
             }
@@ -623,28 +649,33 @@ class blocLink implements blocLinkInterface
      */
     protected function _checkBS(string &$bh_bl, string &$bs): bool
     {
-        if (strlen($bs) > 4096) return false; // TODO à revoir.
+        if (strlen($bs) > self::LINK_MAX_BS_SIZE)
+        {
+            $this->_metrology->addLog('BS size overflow '.substr($bs, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'efc551d7');
+            return false;
+        }
 
         $rs = strtok($bs, '/');
         if (is_bool($rs)) return false;
 
-        $i = 1;
+        $i = 0;
         while (!is_bool($rs))
         {
+            $i++;
+            if ($i > $this->_maxRS)
+            {
+                $this->_metrology->addLog('BS overflow '.substr($bs, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '9f2e670f');
+                return false;
+            }
             //if (!$this->_checkRS($rs, $bh, $bl)) $this->_metrology->addLog('check link BS/RS failed '.$bs, Metrology::LOG_LEVEL_ERROR, __METHOD__, '0690f5ac');
             //if (!$this->_checkRS($rs, $bh_bl, (string)$i)) return false;
             $this->_checkRS($rs, $bh_bl, (string)$i); // Do not quit on invalid sign, just need one of them ok.
 
-            $i++;
-            if ($i - 1 > $this->_maxRS)
-            {
-                $this->_metrology->addLog('BS overflow '.substr($bs, 0, 60) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '9f2e670f');
-                return false;
-            }
             $rs = strtok('/');
         }
 
         $this->_parsedLink['bs'] = $bs;
+        $this->_parsedLink['bs/count'] = $i;
         return true;
     }
 

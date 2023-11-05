@@ -472,12 +472,12 @@ abstract class Actions
     {
         if (!isset(self::ACTIONS_PERMIT[$name]))
         {
-            $this->_metrology->addLog('unknown action ' . $name, Metrology::LOG_LEVEL_ERROR, __FUNCTION__,'5edb0ddf');
+            $this->_metrology->addLog('unknown action ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__,'5edb0ddf');
             return false;
         }
         if (!$this->_configuration->checkBooleanOptions(self::ACTIONS_PERMIT[$name]))
         {
-            $this->_metrology->addLog('insuffisant permission for action=' . $name, Metrology::LOG_LEVEL_ERROR, __FUNCTION__,'a5f2e385');
+            $this->_metrology->addLog('insuffisant permission for action=' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__,'a5f2e385');
             return false;
         }
         return true;

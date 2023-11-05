@@ -319,7 +319,7 @@ class Link implements linkInterface
      */
     public function getRaw(): string
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '4c0ae196');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '4c0ae196');
 
         return $this->_rawLink;
     }
@@ -331,7 +331,7 @@ class Link implements linkInterface
      */
     public function getBlocLink(): blocLink
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'c9e671f6');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'c9e671f6');
 
         return $this->_blocLink;
     }
@@ -343,7 +343,7 @@ class Link implements linkInterface
      */
     public function getParsed(): array
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '0d5b79f7');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '0d5b79f7');
 
         return $this->_parsedLink;
     }
@@ -355,7 +355,7 @@ class Link implements linkInterface
      */
     public function getSigners(): array
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'f0fbd222');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'f0fbd222');
 
         return $this->_blocLink->getSigners();
     }
@@ -367,7 +367,7 @@ class Link implements linkInterface
      */
     public function getAction(): string
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '8bbf598d');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '8bbf598d');
 
         return $this->_action;
     }
@@ -379,7 +379,7 @@ class Link implements linkInterface
      */
     public function getDate(): string
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '9826c54f');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '9826c54f');
 
         return $this->_blocLink->getDate();
     }
@@ -392,7 +392,7 @@ class Link implements linkInterface
      */
     public function getValid(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'e56bcde6');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'e56bcde6');
 
         return ( $this->_blocLink->getValid() || !$this->_blocLink->getCheckCompleted() ) && $this->_valid;
     }
@@ -404,7 +404,7 @@ class Link implements linkInterface
      */
     public function getValidStructure(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '84e4f268');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '84e4f268');
 
         return $this->_validStructure;
     }
@@ -415,7 +415,7 @@ class Link implements linkInterface
      */
     public function getSigned(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'e9a7d99f');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'e9a7d99f');
 
         return $this->_blocLink->getSigned();
     }
@@ -428,7 +428,7 @@ class Link implements linkInterface
      */
     public function getObfuscated(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '4ad73631');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '4ad73631');
 
         return $this->_obfuscated;
     }
@@ -440,7 +440,7 @@ class Link implements linkInterface
      */
     public function getVersion(): string
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '0efb74c8');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '0efb74c8');
 
         return $this->_blocLink->getVersion();
     }
@@ -475,7 +475,7 @@ class Link implements linkInterface
      */
     public function setObfuscate(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '654de486');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '654de486');
 
         if (!$this->_obfuscated
             && $this->_valid
@@ -495,7 +495,7 @@ class Link implements linkInterface
      */
     public function unsetObfuscate(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '5e357597');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '5e357597');
 
         if ($this->_obfuscated
             && $this->_valid
@@ -514,7 +514,7 @@ class Link implements linkInterface
      */
     public function decrypt(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 32), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '2c0b785a');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '2c0b785a');
 
         if ($this->_obfuscated
             && $this->_valid

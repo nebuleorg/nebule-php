@@ -394,7 +394,7 @@ class Metrology
         $this->_actionArray[$this->_actionCount]['result'] = $result;
         $this->_actionCount++;
 
-        $this->addLog($type . ' ' . $action, self::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+        $this->addLog($type . ' ' . $action, self::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
     }
 
     /**
