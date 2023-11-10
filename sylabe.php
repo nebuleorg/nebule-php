@@ -5465,7 +5465,7 @@ foreach ($signers[$i] as $j => $eid)
         }
 
         // Affiche les entités.
-$this->_nebuleInstance->getMetrologyInstance()->setLogsLevel('FUNCTION');
+$this->_nebuleInstance->getMetrologyInstance()->setLogsLevel('FUNCTION'); // FIXME loop sur le puppetmaster...
         echo $this->_display->getDisplayObjectsList($list, 'medium');
 $this->_nebuleInstance->getMetrologyInstance()->setLogsLevel('ERROR');
     }

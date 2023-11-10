@@ -3137,6 +3137,11 @@ class Node implements nodeInterface
         }
     }
 
+    /**
+     * @param array $links
+     * @param array $filter
+     * @return void
+     */
     protected function _filterLinksByStructure(array &$links, array $filter): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');

@@ -175,6 +175,8 @@ class Link implements linkInterface
         $this->_maxRLUID = $this->_configuration->getOptionAsInteger('linkMaxRLUID');
         $this->_rawLink = $rl;
 
+        $this->_metrology->addLog(substr($rl, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '630d2c33');
+
         $this->_validStructure = $this->_checkRL($rl);
 
         // Détecte si c'est un lien dissimulé.
