@@ -14,7 +14,7 @@ use Nebule\Library\References;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020231110';
+const BOOTSTRAP_VERSION = '020231117';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2023';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -147,7 +147,7 @@ function log_addDisp(string $message, string $level = 'msg', string $function = 
 
 // Initialize logs.
 log_init(BOOTSTRAP_NAME);
-syslog(LOG_INFO, 'LogT=0 LogT0=' . $metrologyStartTime . ' LogL="info" LogI="00000001" LogM="start ' . BOOTSTRAP_NAME . '"');
+syslog(LOG_INFO, 'LogT=0 LogT0=' . $metrologyStartTime . ' LogL="info" LogI="76941959" LogM="start ' . BOOTSTRAP_NAME . '"');
 
 
 
