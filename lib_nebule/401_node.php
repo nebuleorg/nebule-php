@@ -997,7 +997,7 @@ class Node implements nodeInterface
      */
     public function getType(string $socialClass = ''): string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, $socialClass);
     }
 
@@ -1269,7 +1269,7 @@ class Node implements nodeInterface
      */
     public function getIsEntity(string $socialClass = 'myself'): bool
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Si déjà marqué, donne le résultat tout de suite.
         if ($this->_isEntity)
             return true;
@@ -2816,7 +2816,7 @@ class Node implements nodeInterface
      */
     public function getContent(int $limit = 0): ?string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_haveData)
             return $this->_data;
 
@@ -2846,7 +2846,7 @@ class Node implements nodeInterface
      */
     protected function _getUnprotectedContent(int $limit = 0): ?string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_haveData)
             return $this->_data;
 
@@ -2871,7 +2871,7 @@ class Node implements nodeInterface
             return null;
 
         // Prépare la limite de lecture.
-        $maxLimit = $this->_configuration->getOptionUntyped('ioReadMaxData');
+        $maxLimit = $this->_configuration->getOptionAsInteger('ioReadMaxData');
         if ($limit == 0
             || $limit > $maxLimit
         )
@@ -3043,17 +3043,14 @@ class Node implements nodeInterface
      */
     public function readOneLineAsText(int $limit = 0): string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_io->checkObjectPresent($this->_id)) {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_io->checkObjectPresent($this->_id))
             return '';
-        }
 
-        if ($limit == 0) {
+        if ($limit == 0)
             $limit = $this->_configuration->getOptionUntyped('ioReadMaxData');
-        }
-        if ($limit < 4) {
+        if ($limit < 4)
             $limit = 4;
-        }
 
         $text = trim(strtok(filter_var($this->getContent($limit), FILTER_SANITIZE_STRING), "\n"));
         if (extension_loaded('mbstring'))
@@ -3061,9 +3058,8 @@ class Node implements nodeInterface
         else
             $this->_metrology->addLog('mbstring extension not installed or activated!', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c2becfad');
 
-        if (strlen($text) > $limit) {
+        if (strlen($text) > $limit)
             $text = substr($text, 0, ($limit - 3)) . '...';
-        }
 
         return $text;
     }
@@ -3077,12 +3073,10 @@ class Node implements nodeInterface
     public function readAsText(int $limit = 0): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_io->checkObjectPresent($this->_id)) {
+        if (!$this->_io->checkObjectPresent($this->_id))
             return '';
-        }
-        if ($limit < 4) {
+        if ($limit < 4)
             $limit = 4;
-        }
 
         $text = trim(filter_var($this->getContent($limit + 4), FILTER_SANITIZE_STRING));
         if (extension_loaded('mbstring'))
@@ -3090,9 +3084,8 @@ class Node implements nodeInterface
         else
             $this->_metrology->addLog('mbstring extension not installed or activated!', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c2becfad');
 
-        if (strlen($text) > $limit) {
+        if (strlen($text) > $limit)
             $text = substr($text, 0, ($limit - 3)) . '...';
-        }
         return $text;
     }
 
@@ -3121,14 +3114,14 @@ class Node implements nodeInterface
 
         foreach ($lines as $line)
         {
-//$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK4 line=' . $line, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+//$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK line=' . $line, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             $bloc = $this->_cache->newBlockLink($line, Cache::TYPE_BLOCLINK);
             if ($bloc->getValidStructure()
                 && ( $bloc->getValid() || $withInvalidLinks )
             )
             {
                 $newLinks = $bloc->getLinks(); // FIXME
-//$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK4 type=' . gettype($newLinks), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+//$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK type=' . gettype($newLinks), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                 $this->_filterLinksByStructure($newLinks, $filter);
                 $links = array_merge($links, $newLinks);
             }
@@ -3313,7 +3306,6 @@ class Node implements nodeInterface
 
         if (!self::checkNID($reference))
             $reference = $this->_nebuleInstance->getNIDfromData($reference);
-//$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 OID=' . $this->_id . ' RID=' . $reference, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 
         // Liste les liens à la recherche de la propriété.
         $list = array();
@@ -3324,14 +3316,6 @@ class Node implements nodeInterface
             'bl/rl/nid4' => '',
         );
         $this->getLinks($list, $filter, false);
-
-/*
-$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 size=' . sizeof($list), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
-foreach ($list as $link)
-{
-$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 nid2=' . gettype($link->getParsed()['bl/rl/nid2']), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
-$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 nid2=' . (string)$link->getParsed()['bl/rl/nid2'], Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
-}*/
 
         return $list;
     }
@@ -3628,6 +3612,8 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 nid2=' . (string)$
         return true;
     }
 
+    private $syncLinkAntiLoop = false;
+
     /**
      * Synchronisation des liens de l'objet.
      *
@@ -3637,9 +3623,12 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 nid2=' . (string)$
      */
     public function syncLinks(bool $hardSync = false): bool
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($hardSync !== true)
-            $hardSync = false;
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
+        // Anti loop.
+        if ($this->syncLinkAntiLoop)
+            return false;
+        $this->syncLinkAntiLoop = true;
 
         // Vérifie si autorisé.
         if (!$this->_configuration->checkBooleanOptions(array('permitWriteLink','permitSynchronizeLink')))
@@ -3655,11 +3644,11 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 nid2=' . (string)$
         $this->getLinks($links, $filter, false);
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
-        if (sizeof($links) == 0
+        /*if (sizeof($links) == 0
             && $this->_configuration->getOptionAsBoolean('permitListOtherHash')
         ) {
-            // A faire...
-        }
+            // TODO
+        }*/
         if (sizeof($links) == 0)
             return false;
 
@@ -3671,8 +3660,6 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 nid2=' . (string)$
             $localisations[$i] = $this->_readOneLineOtherObject($l->getParsed()['bl/rl/nid2']);
 
         // Synchronisation
-        $link = null;
-        $linkInstance = null;
         foreach ($localisations as $localisation) {
             $links = $this->_io->getBlockLinks($this->_id, $localisation);
             $this->_metrology->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
@@ -3683,7 +3670,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 nid2=' . (string)$
             }
         }
 
-        unset($localisations, $localisation, $links, $link, $linkInstance);
+        $this->syncLinkAntiLoop = false;
         return true;
     }
 

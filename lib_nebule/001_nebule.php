@@ -3251,7 +3251,6 @@ class nebule
      */
     public function convertIdToTypedObjectInstance($nid)
     {
-$this->_metrologyInstance->addLog('MARK2a type='.gettype($nid), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         if (is_a($nid, 'Node')
             || is_a($nid, '\Nebule\Library\Node')
             || is_a($nid, 'Group')
@@ -3271,7 +3270,6 @@ $this->_metrologyInstance->addLog('MARK2a type='.gettype($nid), Metrology::LOG_L
         )
             return $nid;
 
-$this->_metrologyInstance->addLog('MARK2b type='.gettype($nid), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         if (!is_string($nid))
             $nid = '0';
 
@@ -3282,7 +3280,6 @@ $this->_metrologyInstance->addLog('MARK2b type='.gettype($nid), Metrology::LOG_L
         )
             $instance = $this->_nebuleInstance->newObject('0');
         else {
-$this->_metrologyInstance->addLog('MARK2c type='.gettype($nid), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_NODE);
             if ($instance->getIsEntity($social))
                 $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_ENTITY);
@@ -3307,7 +3304,6 @@ $this->_metrologyInstance->addLog('MARK2c type='.gettype($nid), Metrology::LOG_L
             }
         }
 
-$this->_metrologyInstance->addLog('MARK2d type='.gettype($nid), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         return $instance;
     }
 }

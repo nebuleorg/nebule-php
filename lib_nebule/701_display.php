@@ -2782,7 +2782,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             return '';
 
         $uid = $this->_getImageByReference($oid);
-$this->_metrologyInstance->addLog('MARK oid=' . $oid->getID() . ' uid=' . $uid, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 
         if ($uid == $oid->getID())
             $newObjectInstance = $oid;
@@ -3056,13 +3055,10 @@ $this->_metrologyInstance->addLog('MARK oid=' . $oid->getID() . ' uid=' . $uid, 
 
         // Sinon, lit l'id de l'objet référencé.
         $uid = $rid->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'myself');
-//$this->_metrologyInstance->addLog('MARK rid=' . $rid->getID() . ' uid=' . $uid, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         if ($uid == $rid->getID())
             $uid = $rid->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
-//$this->_metrologyInstance->addLog('MARK dup rid=' . $rid->getID() . ' uid=' . $uid, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         if ($uid == $rid->getID())
             $uid = $rid->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'all'); // FIXME peut-être trop...
-//$this->_metrologyInstance->addLog('MARK terce rid=' . $rid->getID() . ' uid=' . $uid, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 
         // Mémorise le résultat.
         if ($useBuffer)
@@ -5200,14 +5196,11 @@ $this->_metrologyInstance->addLog('MARK oid=' . $oid->getID() . ' uid=' . $uid, 
      */
     private function _getDisplayObjectIcon(Node $object, string $icon = ''): string
     {
-//$this->_metrologyInstance->addLog('MARK input icon='.$icon, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         if ($icon != ''
             && $this->_ioInstance->checkLinkPresent($icon)
         ) {
-//$this->_metrologyInstance->addLog('MARK if 1', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             $instanceIcon = $this->_nebuleInstance->newObject($icon);
         } else {
-//$this->_metrologyInstance->addLog('MARK if 2', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             if (is_a($object, 'Nebule\Library\Entity'))
                 $icon = $this->_getImageByReference($this->_nebuleInstance->newEntity(self::REFERENCE_ICON_ENTITY));
             elseif (is_a($object, 'Nebule\Library\Conversation'))
@@ -5226,15 +5219,12 @@ $this->_metrologyInstance->addLog('MARK oid=' . $oid->getID() . ' uid=' . $uid, 
                 $icon = $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_OBJECT)); // TODO
             else
                 $icon = $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_OBJECT));
-//$this->_metrologyInstance->addLog('MARK found icon='.$icon, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             $instanceIcon = $this->_nebuleInstance->newObject($icon);
         }
 
         // Cherche une mise à jour éventuelle.
         $updateIcon = $this->_getImageUpdate($icon); // FIXME TODO ERROR
-//$this->_metrologyInstance->addLog('MARK found updateIcon='.$updateIcon, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         $updateIcon = '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256'; // FIXME
-//$this->_metrologyInstance->addLog('MARK force updateIcon='.$updateIcon, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 
         // Retourne un chemin direct si l'objet est présent.
         if ($this->_ioInstance->checkObjectPresent($updateIcon))
@@ -5262,9 +5252,7 @@ $this->_metrologyInstance->addLog('MARK oid=' . $oid->getID() . ' uid=' . $uid, 
         $count = 0;
 
         foreach ($list as $object) {
-$this->_metrologyInstance->addLog('MARK type='.gettype($object), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
-$this->_metrologyInstance->addLog('MARK oid='.$object->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object);
             $color = $this->_prepareObjectColor($object);
             $icon = '';

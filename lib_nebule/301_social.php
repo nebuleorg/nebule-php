@@ -164,7 +164,6 @@ class Social implements SocialInterface
      */
     public function arraySocialFilter(array &$links, string $socialClass = ''): void
     {
-//        $this->_metrology->addLog('MARK1 class=' . get_class($this) . ' socialClass=' . $socialClass, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         if ($socialClass == ''
             || !isset($this->_listClasses[$socialClass])
             || !isset($this->_listInstances[$socialClass])
@@ -174,7 +173,6 @@ class Social implements SocialInterface
             return;
         }
 
-//        $this->_metrology->addLog('MARK2 class=' . get_class($this) . ' class=' . get_class($this->_listInstances[$socialClass]), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
         $this->_listInstances[$socialClass]->arraySocialFilter($links, '');
     }
 

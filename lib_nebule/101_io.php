@@ -93,7 +93,7 @@ class io implements ioInterface
         $this->_configuration = $nebuleInstance->getConfigurationInstance();
         $this->_cache = $nebuleInstance->getCacheInstance();
 
-        //$this->_metrology->addLog('MARK1 class=' . get_class($this), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+//$this->_metrology->addLog('MARK1 class=' . get_class($this), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
         $this->_initialisation($nebuleInstance);
     }
