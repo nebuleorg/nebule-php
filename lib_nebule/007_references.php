@@ -3294,7 +3294,7 @@ AzkAAAAASUVORK5CYII=',
 
             $reference = $nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE);
             if (self::REF_IMG[$name] != '') {
-                $nebuleInstance->getMetrologyInstance()->addLog('MARK ' . 'f>' . self::REF_IMG[$name] . '>' . $instance->getID() . '>' . $reference, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+#$nebuleInstance->getMetrologyInstance()->addLog('MARK ' . 'f>' . self::REF_IMG[$name] . '>' . $instance->getID() . '>' . $reference, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
 
                 // Use credentials on the first run with local entity. FIXME peut être refait avec Nebule::setTempCurrentEntity()
                 $newLink = \Nebule\Bootstrap\lnk_generateSign('',

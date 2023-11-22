@@ -696,11 +696,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             && sizeof($this->_applicationInstance->getModulesListInstances()) == 0)
             return;
 
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
- 		 *  ------------------------------------------------------------------------------------------
-		 */
         // Lit et nettoye le contenu de la variable GET.
         $arg_view = filter_input(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 
@@ -708,7 +703,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         // Si activé, extrait les modes.
         if ($this->_applicationInstance->getUseModules() && is_a($this->_currentModuleInstance, '\Nebule\Library\Modules')) {
-            $this->_metrologyInstance->addLog('Search view on ' . $this->_currentModuleInstance->getName(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Search view on ' . $this->_currentModuleInstance->getName(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '0acf655b');
             // Lit les vues déclarées.
             $list_views_names = $this->_currentModuleInstance->getRegisteredViews();
             // Si demande la vue par défaut.

@@ -981,7 +981,7 @@ class nebule
                 $id = filter_var(trim(strtok(file_get_contents(self::NEBULE_LOCAL_ENTITY_FILE), "\n")), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
             }
 
-            if (Node::checkNID($id, false, false)
+            if (is_string($id) && Node::checkNID($id, false, false)
                 && $this->_ioInstance->checkObjectPresent($id)
                 && $this->_ioInstance->checkLinkPresent($id)
             ) {

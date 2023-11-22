@@ -143,7 +143,7 @@ abstract class Traductions
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load translates', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Load translates', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         // Détecte si les modules sont activés.
         if ($this->_applicationInstance->getUseModules())
             $this->_useModules = true;
@@ -214,7 +214,7 @@ abstract class Traductions
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load translates', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Load translates', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         // Détecte si les modules sont activés.
         if ($this->_applicationInstance->getUseModules()) {
             $this->_useModules = true;
@@ -250,7 +250,7 @@ abstract class Traductions
             }
         }
 
-        $this->_metrologyInstance->addLog('Find default language : ' . $this->_defaultLanguage, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Find default language : ' . $this->_defaultLanguage, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
     }
 
 
@@ -267,12 +267,11 @@ abstract class Traductions
                     $this->_languageList[$module->getCommandName()] = $module->getCommandName();
                     $this->_languageInstanceList[$module->getCommandName()] = $module;
 
-                    $this->_metrologyInstance->addLog('Find new language : ' . $module->getCommandName(), Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_metrologyInstance->addLog('Find new language : ' . $module->getCommandName(), Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '00000000');
                 }
             }
-        } else {
+        } else
             $this->_languageList = $this->LANGUAGE_LIST;
-        }
     }
 
 
@@ -286,11 +285,6 @@ abstract class Traductions
      */
     protected function _findCurrentLanguage()
     {
-        /*
-		 *  ------------------------------------------------------------------------------------------
-		 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-		 *  ------------------------------------------------------------------------------------------
-		 */
         // Lit et nettoye le contenu de la variable GET.
         $arg_lang = filter_input(INPUT_GET, self::DEFAULT_COMMAND_LANGUAGE, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 
@@ -298,9 +292,8 @@ abstract class Traductions
         if ($arg_lang != ''
             && strlen($arg_lang) != 5
             && substr($arg_lang, 2, 1) != '-'
-        ) {
+        )
             $arg_lang = '';
-        }
 
         // Recherche un langage connu.
         $ok_lang = false;
@@ -308,9 +301,8 @@ abstract class Traductions
         foreach ($this->_languageList as $lang) {
             if ($arg_lang == $lang) {
                 $ok_lang = true;
-                if ($this->_useModules) {
+                if ($this->_useModules)
                     $lang_instance = $this->_languageInstanceList[$lang];
-                }
                 break;
             }
         }
@@ -328,9 +320,8 @@ abstract class Traductions
                 && $cache != ''
             ) {
                 $this->_currentLanguage = $cache;
-                $this->_currentLanguageInstance = $this->_languageInstanceList[$cache];
-            } else // Sinon active le langage par defaut.
-            {
+                $this->_currentLanguageInstance = $this->_languageInstanceList[$cache]; // FIXME en-en not exist
+            } else {
                 $this->_currentLanguage = $this->_defaultLanguage;
                 $this->_currentLanguageInstance = $this->_languageInstanceList[$this->_defaultLanguage];
                 $this->_nebuleInstance->setSessionStore($this->_applicationInstance->getClassName() . 'DisplayLanguage', $this->_defaultLanguage);
@@ -338,7 +329,7 @@ abstract class Traductions
             unset($cache);
         }
 
-        $this->_metrologyInstance->addLog('Find current language : ' . $this->_currentLanguage, Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Find current language : ' . $this->_currentLanguage, Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '00000000');
     }
 
 
@@ -422,7 +413,7 @@ abstract class Traductions
             $lang = $this->_currentLanguage;
         }
 
-        $this->_metrologyInstance->addLog('Get traduction ' . $lang . ' : "' . substr($text, 0, 250) . '"', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('Get traduction ' . $lang . ' : "' . substr($text, 0, 250) . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         // Si le texte est une balise, comme par '<', ne fait pas la traduction.
         if (substr($text, 0, 1) == '<') {
@@ -442,7 +433,7 @@ abstract class Traductions
             foreach ($this->_languageInstanceList as $module) {
                 if ($module->getCommandName() == $lang) {
                     $result = $module->getTraduction($text, $lang);
-                    $this->_metrologyInstance->addLog('Module 1 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_metrologyInstance->addLog('Module 1 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                 }
             }
 
@@ -451,7 +442,7 @@ abstract class Traductions
                 || $result == $text
             ) {
                 $result = $this->_applicationInstance->getCurrentModuleInstance()->getTraduction($text, $lang);
-                $this->_metrologyInstance->addLog('Module 2 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG); // Log
+                $this->_metrologyInstance->addLog('Module 2 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             }
 
             // 3) Si rien trouvé, appel le module de traduction avec la langue par défaut.
@@ -463,7 +454,7 @@ abstract class Traductions
                 foreach ($this->_languageInstanceList as $module) {
                     if ($module->getCommandName() == $this->_defaultLanguage) {
                         $result = $module->getTraduction($text, $this->_defaultLanguage);
-                        $this->_metrologyInstance->addLog('Module 3 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG); // Log
+                        $this->_metrologyInstance->addLog('Module 3 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                     }
                 }
             }
@@ -473,7 +464,7 @@ abstract class Traductions
                 || $result == $text
             ) {
                 $result = $this->_applicationInstance->getCurrentModuleInstance()->getTraduction($text, $this->_defaultLanguage);
-                $this->_metrologyInstance->addLog('Module 4 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG); // Log
+                $this->_metrologyInstance->addLog('Module 4 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             }
 
             // 5) Si rien trouvé, appel tous les modules avec la langue en cours.
@@ -482,7 +473,7 @@ abstract class Traductions
             ) {
                 foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
                     $result = $module->getTraduction($text, $lang);
-                    $this->_metrologyInstance->addLog('Module 5 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_metrologyInstance->addLog('Module 5 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                     if ($result != $text) {
                         break;
                     }
@@ -497,7 +488,7 @@ abstract class Traductions
             ) {
                 foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
                     $result = $module->getTraduction($text, $this->_defaultLanguage);
-                    $this->_metrologyInstance->addLog('Module 6 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG); // Log
+                    $this->_metrologyInstance->addLog('Module 6 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                     if ($result != $text) {
                         break;
                     }
@@ -511,7 +502,7 @@ abstract class Traductions
         }
 
         // Retourne le résultat.
-        $this->_metrologyInstance->addLog('End find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG); // Log
+        $this->_metrologyInstance->addLog('End find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         return $result;
     }
 

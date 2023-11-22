@@ -394,7 +394,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'cf96279b');
         $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
@@ -437,7 +437,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'c51ba49d');
         $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
@@ -1271,7 +1271,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                     // Appelle les actions du module concerné par le mode d'affichage.
                     foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
                         if ($module->getCommandName() == $this->_currentDisplayMode) {
-                            $this->_metrologyInstance->addLog('Actions for module ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+                            $this->_metrologyInstance->addLog('Actions for module ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '55fba077');
                             $module->action();
                         }
                     }
@@ -2385,7 +2385,7 @@ class ModuleManage extends Modules
             && $this->_configuration->getOptionAsBoolean('permitWriteObject')
             && $this->_unlocked
         ) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '468a2957');
 
             // Lit et nettoye le contenu de la variable GET.
             $arg_name = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_NOM, FILTER_SANITIZE_STRING));
@@ -2394,11 +2394,11 @@ class ModuleManage extends Modules
             // Ecriture des variables.
             if ($arg_name != '') {
                 $this->_actionAddModuleName = $arg_name;
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module NAME:' . $arg_name, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module NAME:' . $arg_name, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '8e89341e');
             }
             if (Node::checkNID($arg_rid)) {
                 $this->_actionAddModuleRID = $arg_rid;
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module RID:' . $arg_rid, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module RID:' . $arg_rid, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '8b454112');
             }
 
             // Vérification du minimum pour la création.
@@ -2420,7 +2420,7 @@ class ModuleManage extends Modules
             && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9e20fc27');
 
             // Lit et nettoye le contenu de la variable GET.
             $arg_rid = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_RIDC, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
@@ -2428,7 +2428,7 @@ class ModuleManage extends Modules
 
             if (Node::checkNID($arg_rid)) {
                 $this->_actionAddModuleRID = $arg_rid;
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module RID:' . $arg_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module RID:' . $arg_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'c7317945');
             }
             if (Node::checkNID($arg_id)
                 && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($arg_id)
@@ -2438,7 +2438,7 @@ class ModuleManage extends Modules
                 && $arg_id != $arg_rid
             ) {
                 $this->_actionAddModuleID = $arg_id;
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module ID:' . $arg_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module ID:' . $arg_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '86688bd0');
             }
 
             // Vérification du minimum pour la création.
@@ -2462,7 +2462,7 @@ class ModuleManage extends Modules
             && $this->_configuration->getOptionAsBoolean('permitWriteObject')
             && $this->_unlocked
         ) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add module', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add module', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '25403222');
 
             // Crée l'objet de la référence de l'application.
             $instance = new Node($this->_nebuleInstance, $this->_actionAddModuleRID, '', false, false);
@@ -2505,7 +2505,7 @@ class ModuleManage extends Modules
             && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add code ' . $this->_actionAddModuleID . ' to module ' . $this->_actionAddModuleRID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add code ' . $this->_actionAddModuleID . ' to module ' . $this->_actionAddModuleRID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '128f5522');
 
             // Crée le lien du code pour l'application.
             $date = date(DATE_ATOM);
@@ -5465,9 +5465,7 @@ foreach ($signers[$i] as $j => $eid)
         }
 
         // Affiche les entités.
-$this->_nebuleInstance->getMetrologyInstance()->setLogsLevel('FUNCTION'); // FIXME loop sur le puppetmaster...
         echo $this->_display->getDisplayObjectsList($list, 'medium');
-$this->_nebuleInstance->getMetrologyInstance()->setLogsLevel('ERROR');
     }
 
 

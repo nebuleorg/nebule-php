@@ -109,7 +109,7 @@ class Group extends Node implements nodeInterface
 
             // Création lien de hash.
             $action = 'l';
-            $source = $this->_id;
+            $source = $this->_id; // FIXME
             $target = $this->_crypto->hash($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
             $meta = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_HASH);
             $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
@@ -118,7 +118,7 @@ class Group extends Node implements nodeInterface
 
             // Création lien de groupe.
             $action = 'l';
-            $source = $this->_id;
+            $source = $this->_id; // FIXME
             $target = $hashGroup;
             $meta = $this->_crypto->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
             $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
@@ -129,7 +129,7 @@ class Group extends Node implements nodeInterface
             $this->write();
             $this->_isGroup = true;
         } else {
-            $this->_metrology->addLog('Create group error no autorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+            $this->_metrology->addLog('Create group error no autorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '8613d472');
             $this->_id = '0';
         }
     }

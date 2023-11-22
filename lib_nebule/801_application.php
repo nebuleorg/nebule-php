@@ -761,7 +761,8 @@ abstract class Applications implements applicationInterface
             $ok = false;
             $module = $link->getParsed()['bl/rl/nid2'];
             foreach ($this->_nebuleInstance->getLocalAuthorities() as $autority) {
-                if ($link->getParsed()['bs/rs1/eid'] == $autority
+                if (isset($link->getParsed()['bs/rs1/eid'])
+                    && $link->getParsed()['bs/rs1/eid'] == $autority
                     && $module != '0'
                     && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($module)
                 ) {
