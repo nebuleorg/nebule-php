@@ -16,6 +16,7 @@ class nebule
     const NEBULE_LICENCE_NAME = 'nebule';
     const NEBULE_LICENCE_LINK = 'http://www.nebule.org/';
     const NEBULE_LICENCE_DATE = '2010-2023';
+    const NEBULE_FUNCTION_VERSION = '020231125';
     const NEBULE_ENVIRONMENT_FILE = 'c'; // Into folder /
     const NEBULE_BOOTSTRAP_FILE = 'index.php'; // Into folder /
     const NEBULE_LOCAL_ENTITY_FILE = 'e'; // Into folder /

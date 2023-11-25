@@ -14,7 +14,8 @@ use Nebule\Library\References;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020231122';
+const BOOTSTRAP_VERSION = '020231125';
+const BOOTSTRAP_FUNCTION_VERSION = '020231125';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2023';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -503,10 +504,11 @@ const BREAK_DESCRIPTIONS = array(
     '32' => 'library load : finding library OID error.',
     '41' => 'library load : find code error',
     '42' => 'library load : include code error',
-    '43' => 'library load : load error',
-    '44' => 'application : find code error',
-    '45' => 'application : include code error',
-    '46' => 'application : load error',
+    '43' => 'library load : functional version too old',
+    '44' => 'library load : load error',
+    '45' => 'application : find code error',
+    '46' => 'application : include code error',
+    '47' => 'application : load error',
     '51' => 'unknown bootstrap hash',
     '61' => 'no local server entity',
     '62' => 'local server entity error',
@@ -4534,6 +4536,10 @@ function bootstrap_loadLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
     if (!$libraryCheckOK)
         return;
 
+    // Check for minimum functionalities level.
+    if ((float)BOOTSTRAP_FUNCTION_VERSION > (float)\Nebule\Library\nebule::NEBULE_FUNCTION_VERSION)
+        bootstrap_setBreak('43', __FUNCTION__);
+
     if ($bootstrapLibraryIID != '') {
         try {
             if (!class_exists('nebule', false))
@@ -4549,7 +4555,7 @@ function bootstrap_loadLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
             log_add('Library nebule load error ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), 'error', __FUNCTION__, '959c188b');
-            bootstrap_setBreak('43', __FUNCTION__);
+            bootstrap_setBreak('44', __FUNCTION__);
         }
     }
 }
@@ -4776,10 +4782,10 @@ function bootstrap_includeApplication(): void
     //log_add('include application code OID=' . $bootstrapApplicationOID, 'info', __FUNCTION__, '8683e195');
     if ($bootstrapApplicationOID == '' || $bootstrapApplicationOID == '0') {
         log_reopen(BOOTSTRAP_NAME);
-        bootstrap_setBreak('44', __FUNCTION__);
+        bootstrap_setBreak('45', __FUNCTION__);
     } elseif (!io_objectInclude($bootstrapApplicationOID)) {
         log_reopen(BOOTSTRAP_NAME);
-        bootstrap_setBreak('45', __FUNCTION__);
+        bootstrap_setBreak('46', __FUNCTION__);
         $bootstrapApplicationOID = '0';
     }
 }
@@ -4875,7 +4881,7 @@ function bootstrap_loadApplication(): void
     } catch (\Error $e) {
         log_reopen(BOOTSTRAP_NAME);
         log_add('Application load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '202824cb');
-        bootstrap_setBreak('46', __FUNCTION__);
+        bootstrap_setBreak('47', __FUNCTION__);
     }
 
     try {
@@ -4886,7 +4892,7 @@ function bootstrap_loadApplication(): void
     } catch (\Error $e) {
         log_reopen(BOOTSTRAP_NAME);
         log_add('Application display load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '4c7da4e2');
-        bootstrap_setBreak('46', __FUNCTION__);
+        bootstrap_setBreak('47', __FUNCTION__);
     }
 
     try {
@@ -4897,7 +4903,7 @@ function bootstrap_loadApplication(): void
     } catch (\Error $e) {
         log_reopen(BOOTSTRAP_NAME);
         log_add('Application action load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '3c042de3');
-        bootstrap_setBreak('46', __FUNCTION__);
+        bootstrap_setBreak('47', __FUNCTION__);
     }
 
     try {
@@ -4908,7 +4914,7 @@ function bootstrap_loadApplication(): void
     } catch (\Error $e) {
         log_reopen(BOOTSTRAP_NAME);
         log_add('Application traduction load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '585648a2');
-        bootstrap_setBreak('46', __FUNCTION__);
+        bootstrap_setBreak('47', __FUNCTION__);
     }
 }
 
@@ -5906,6 +5912,9 @@ function bootstrap_breakDisplay4LibraryPOO()
     bootstrap_echoLinkNID($bootstrapLibraryOID);
     if ($bootstrapLibraryOID != '')
         echo ' version ' . $nebuleLibVersion;
+    echo "<br />\n";
+    bootstrap_echoLineTitle('functional level');
+    echo 'found ' . \Nebule\Library\nebule::NEBULE_FUNCTION_VERSION . ', need >= ' . BOOTSTRAP_FUNCTION_VERSION;
     echo "<br />\n";
 
     if (is_a($nebuleInstance, 'Nebule\Library\nebule')) {
