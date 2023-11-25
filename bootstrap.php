@@ -4534,10 +4534,10 @@ function bootstrap_includeLibraryPOO(): void
         return;
 
     if ($bootstrapLibraryOID == '') {
-        log_reopen(BOOTSTRAP_NAME);
+        log_reopen(BOOTSTRAP_NAME); // TODO vérifier si nécessaire.
         bootstrap_setBreak('41', __FUNCTION__);
     } elseif (!io_objectInclude($bootstrapLibraryOID)) {
-        log_reopen(BOOTSTRAP_NAME);
+        log_reopen(BOOTSTRAP_NAME); // TODO vérifier si nécessaire.
         bootstrap_setBreak('42', __FUNCTION__);
         $bootstrapLibraryOID = '';
     }
@@ -4558,20 +4558,22 @@ function bootstrap_loadLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
     if (!$libraryCheckOK)
         return;
 
-    // Check for minimum functionalities level.
-    if ((float)BOOTSTRAP_FUNCTION_VERSION > (float)\Nebule\Library\nebule::NEBULE_FUNCTION_VERSION)
-        bootstrap_setBreak('43', __FUNCTION__);
-
     if ($bootstrapLibraryIID != '') {
         try {
-            if (!class_exists('nebule', false))
+            if (class_exists('\Nebule\Library\nebule', false))
             {
-                if ($bootstrapLibraryInstanceSleep == '')
-                    $nebuleInstance = new nebule();
-                else
-                    $nebuleInstance = unserialize($bootstrapLibraryInstanceSleep);
-                log_reopen(BOOTSTRAP_NAME);
-            }
+                log_add('Find class \Nebule\Library\nebule to instancing', 'info', __FUNCTION__, 'daff566b');
+                if ((float)BOOTSTRAP_FUNCTION_VERSION >= (float)\Nebule\Library\nebule::NEBULE_FUNCTION_VERSION)
+                {
+                    if ($bootstrapLibraryInstanceSleep == '')
+                        $nebuleInstance = new nebule();
+                    else
+                        $nebuleInstance = unserialize($bootstrapLibraryInstanceSleep);
+                    log_reopen(BOOTSTRAP_NAME);
+                } else
+                    bootstrap_setBreak('43', __FUNCTION__);
+            } else
+                log_add('No class \Nebule\Library\nebule to instancing', 'error', __FUNCTION__, '60a345b8');
         } catch (\Error $e) {
             log_reopen(BOOTSTRAP_NAME);
             log_add('Library nebule load error ('  . $e->getCode() . ') : ' . $e->getFile()
@@ -4594,7 +4596,7 @@ function bootstrap_saveLibraryPOO(): void
            $bootstrapLibraryOID,
            $bootstrapLibrarySID;
 
-    if (! is_a($nebuleInstance, 'Nebule\Library\nebule'))
+    if (!is_a($nebuleInstance, 'Nebule\Library\nebule'))
         return;
 
     session_start();
@@ -4627,7 +4629,8 @@ function bootstrap_saveLibraryPOO(): void
  */
 function bootstrap_findApplication(): void
 {
-    global $libraryCheckOK,
+    global $nebuleInstance,
+           $libraryCheckOK,
            $bootstrapApplicationIID,
            $bootstrapApplicationOID,
            $bootstrapUpdate;
@@ -4635,7 +4638,7 @@ function bootstrap_findApplication(): void
     $bootstrapApplicationIID = '';
     $bootstrapApplicationOID = '';
 
-    if (!$libraryCheckOK)
+    if (!$libraryCheckOK || !is_a($nebuleInstance, 'Nebule\Library\nebule'))
         return;
 
     // Get ID of app.
@@ -7103,120 +7106,122 @@ function bootstrap_firstDisplay10LocaleEntity(): bool
 
     echo '<div class="parts">' . "\n";
     echo '<span class="partstitle">#10 local entity for server</span><br/>' . "\n";
-    if (file_put_contents(LIB_LOCAL_ENTITY_FILE, '0') !== false) {
-        echo 'new server entity<br/>' . "\n";
 
-        // Generate new password for new local entity.
-        $nebulePasswordEntity = '';
-        $newPasswd = openssl_random_pseudo_bytes(LIB_FIRST_GENERATED_PASSWORD_SIZE * 20);
-        $nebulePasswordEntity .= preg_replace('/[^[:print:]]/', '', $newPasswd);
-        $nebulePasswordEntity = (string)substr($nebulePasswordEntity, 0, LIB_FIRST_GENERATED_PASSWORD_SIZE);
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        $newPasswd = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        $newPasswd = null;
+    if (is_a($nebuleInstance, 'Nebule\Library\nebule')) {
+        if (file_put_contents(LIB_LOCAL_ENTITY_FILE, '0') !== false) {
+            echo 'new server entity<br/>' . "\n";
 
-        $nebulePublicEntity = '0';
-        $nebulePrivateEntity = '0';
-        // Génère une nouvelle entité.
-        ent_generate(
-            lib_getConfiguration('cryptoAsymmetricAlgorithm'),
-            lib_getConfiguration('cryptoHashAlgorithm'),
-            $nebulePublicEntity,
-            $nebulePrivateEntity,
-            $nebulePasswordEntity
-        );
-        log_add('switch to new entity ' . $nebulePublicEntity, 'warn', __FUNCTION__, '94c27df0');
+            // Generate new password for new local entity.
+            $nebulePasswordEntity = '';
+            $newPasswd = openssl_random_pseudo_bytes(LIB_FIRST_GENERATED_PASSWORD_SIZE * 20);
+            $nebulePasswordEntity .= preg_replace('/[^[:print:]]/', '', $newPasswd);
+            $nebulePasswordEntity = (string)substr($nebulePasswordEntity, 0, LIB_FIRST_GENERATED_PASSWORD_SIZE);
+            /** @noinspection PhpUnusedLocalVariableInspection */
+            $newPasswd = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
+            /** @noinspection PhpUnusedLocalVariableInspection */
+            $newPasswd = null;
 
-        // Définit l'entité comme entité instance du serveur.
-        file_put_contents(LIB_LOCAL_ENTITY_FILE, $nebulePublicEntity);
+            $nebulePublicEntity = '0';
+            $nebulePrivateEntity = '0';
+            // Génère une nouvelle entité.
+            ent_generate(
+                lib_getConfiguration('cryptoAsymmetricAlgorithm'),
+                lib_getConfiguration('cryptoHashAlgorithm'),
+                $nebulePublicEntity,
+                $nebulePrivateEntity,
+                $nebulePasswordEntity
+            );
+            log_add('switch to new entity ' . $nebulePublicEntity, 'warn', __FUNCTION__, '94c27df0');
 
-        // Calcul le nom.
-        $hexvalue = preg_replace('/[[:^xdigit:]]/', '', $nebulePublicEntity);
-        $genname = hex2bin($hexvalue . $hexvalue);
-        $name = '';
-        // Filtrage des caractères du nom dans un espace restreint.
-        for ($i = 0; $i < strlen($genname); $i++) {
-            $a = ord($genname[$i]);
-            if (($a > 96 && $a < 123)) {
-                $name .= $genname[$i];
-                // Insertion de voyelles.
-                if (($i % 3) == 0) {
-                    $car = hexdec(bin2hex(openssl_random_pseudo_bytes(1))) % 14;
-                    switch ($car) {
-                        case 0 :
-                        case 6 :
-                            $name .= 'a';
-                            break;
-                        case 1 :
-                        case 7 :
-                        case 11 :
-                        case 13 :
-                            $name .= 'e';
-                            break;
-                        case 2 :
-                        case 8 :
-                            $name .= 'i';
-                            break;
-                        case 3 :
-                        case 9 :
-                            $name .= 'o';
-                            break;
-                        case 4 :
-                        case 10 :
-                        case 12 :
-                            $name .= 'u';
-                            break;
-                        case 5 :
-                            $name .= 'y';
-                            break;
+            // Définit l'entité comme entité instance du serveur.
+            file_put_contents(LIB_LOCAL_ENTITY_FILE, $nebulePublicEntity);
+
+            // Calcul le nom.
+            $hexvalue = preg_replace('/[[:^xdigit:]]/', '', $nebulePublicEntity);
+            $genname = hex2bin($hexvalue . $hexvalue);
+            $name = '';
+            // Filtrage des caractères du nom dans un espace restreint.
+            for ($i = 0; $i < strlen($genname); $i++) {
+                $a = ord($genname[$i]);
+                if (($a > 96 && $a < 123)) {
+                    $name .= $genname[$i];
+                    // Insertion de voyelles.
+                    if (($i % 3) == 0) {
+                        $car = hexdec(bin2hex(openssl_random_pseudo_bytes(1))) % 14;
+                        switch ($car) {
+                            case 0 :
+                            case 6 :
+                                $name .= 'a';
+                                break;
+                            case 1 :
+                            case 7 :
+                            case 11 :
+                            case 13 :
+                                $name .= 'e';
+                                break;
+                            case 2 :
+                            case 8 :
+                                $name .= 'i';
+                                break;
+                            case 3 :
+                            case 9 :
+                                $name .= 'o';
+                                break;
+                            case 4 :
+                            case 10 :
+                            case 12 :
+                                $name .= 'u';
+                                break;
+                            case 5 :
+                                $name .= 'y';
+                                break;
+                        }
                     }
                 }
             }
-        }
-        $name = substr($name . 'robott', 0, LIB_FIRST_GENERATED_NAME_SIZE);
+            $name = substr($name . 'robott', 0, LIB_FIRST_GENERATED_NAME_SIZE);
 
-        // Enregistrement du nom.
-        obj_setContentAsText($name);
-        $newLink = lnk_generateSign('',
-            'l',
-            $nebulePublicEntity,
-            obj_getNID($name),
-            obj_getNID('nebule/objet/nom')
-        );
-        lnk_write($newLink);
+            // Enregistrement du nom.
+            obj_setContentAsText($name);
+            $newLink = lnk_generateSign('',
+                'l',
+                $nebulePublicEntity,
+                obj_getNID($name),
+                obj_getNID('nebule/objet/nom')
+            );
+            lnk_write($newLink);
 
-        // Load entity on library.
-        $instance = $nebuleInstance->getCacheInstance()->newNode('0',Cache::TYPE_ENTITY);
-        $instance->setContent($nebulePrivateEntity);
-        $nebuleInstance->setCurrentEntity($instance);
+            // Load entity on library.
+            $instance = $nebuleInstance->getCacheInstance()->newNode('0',Cache::TYPE_ENTITY);
+            $instance->setContent($nebulePrivateEntity);
+            $nebuleInstance->setCurrentEntity($instance);
 
-        // Write references links
-        References::signReferences($nebuleInstance);
+            // Write references links
+            \Nebule\Library\References::signReferences($nebuleInstance);
 
-        bootstrap_echoLineTitle('public ID');
-        echo $nebulePublicEntity . '<br/>' . "\n";
-        bootstrap_echoLineTitle('private ID');
-        echo $nebulePrivateEntity . "\n";
+            bootstrap_echoLineTitle('public ID');
+            echo $nebulePublicEntity . '<br/>' . "\n";
+            bootstrap_echoLineTitle('private ID');
+            echo $nebulePrivateEntity . "\n";
 
-        ?>
+            ?>
 
-        <div class="important">
-            name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $name; ?><br/>
-            public ID : <?php echo $nebulePublicEntity; ?><br/>
-            password &nbsp;: <?php echo htmlspecialchars($nebulePasswordEntity); ?><br/>
-            Please keep and save securely these private information!
-        </div>
-        <?php
-    } else {
-        file_put_contents(LIB_LOCAL_ENTITY_FILE, '0');
-        echo '<span class="error">ERROR!</span><br />' . "\n";
-        echo '<div class="diverror">' . "\n";
-        ?>
-        Unable to create local entity file <b><?php echo LIB_LOCAL_ENTITY_FILE; ?></b> .<br/>
-        On the same path as <b>index.php</b>, please create file manually.<br/>
-        As <i>root</i>, run :<br/>
-        <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
+            <div class="important">
+                name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $name; ?><br/>
+                public ID : <?php echo $nebulePublicEntity; ?><br/>
+                password &nbsp;: <?php echo htmlspecialchars($nebulePasswordEntity); ?><br/>
+                Please keep and save securely these private information!
+            </div>
+            <?php
+        } else {
+            file_put_contents(LIB_LOCAL_ENTITY_FILE, '0');
+            echo '<span class="error">ERROR!</span><br />' . "\n";
+            echo '<div class="diverror">' . "\n";
+            ?>
+            Unable to create local entity file <b><?php echo LIB_LOCAL_ENTITY_FILE; ?></b> .<br/>
+            On the same path as <b>index.php</b>, please create file manually.<br/>
+            As <i>root</i>, run :<br/>
+            <pre>cd <?php echo getenv('DOCUMENT_ROOT'); ?>
 
 touch <?php echo LIB_LOCAL_ENTITY_FILE; ?>
 
@@ -7225,8 +7230,12 @@ chown <?php echo getenv('APACHE_RUN_USER') . '.' . getenv('APACHE_RUN_GROUP') . 
 chmod 644 <?php echo LIB_LOCAL_ENTITY_FILE; ?>
 </pre>
 
-        <?php
-        echo "</div>\n";
+            <?php
+            echo "</div>\n";
+        }
+    } else {
+        echo '<span class="error">ERROR cannot load library!</span><br />' . "\n";
+        $ok = false;
     }
     echo "</div>\n";
 
