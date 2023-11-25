@@ -184,10 +184,10 @@ function work_full_reinit()
   sudo chown 1000.33 l o
   sudo chmod 775 l o
 
-  cat "${WORKSPACE}/nebule.env" \
-    | sed 's/^puppetmaster = .*/puppetmaster = '"${puppetmaster_develop_pem_hash}"'/' \
-    | sed 's/^codeBranch = .*/codeBranch = develop/' \
-    > c
+#  cat "${WORKSPACE}/nebule.env" \
+#    | sed 's/^puppetmaster = .*/puppetmaster = '"${puppetmaster_develop_pem_hash}"'/' \
+#    | sed 's/^codeBranch = .*/codeBranch = develop/' \
+#    > c
 
   echo ' > obj'
   echo -n "${puppetmaster_develop_key}" > "o/${puppetmaster_develop_key_hash}"

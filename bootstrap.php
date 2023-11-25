@@ -1870,7 +1870,7 @@ function crypto_getPseudoRandom(int $count = 32): string
     global $nebuleServerEntity;
 
     $result = '';
-    $algo = 'sha256';
+    $algo = 'sha256'; // fixme Do not use default algo
     if ($count == 0 || !is_int($count))
         return $result;
 
@@ -2294,9 +2294,18 @@ function lnk_getList(string $nid, array &$links, array $filter, bool $withInvali
         lnk_filterBySigners($links, $validSigners);
 }
 
+/**
+ * Link - Check if link already exist with pre-parsed parts.
+ *
+ * @param string $req
+ * @param string $nid1
+ * @param string $nid2
+ * @param string $nid3
+ * @param string $nid4
+ * @return boolean
+ */
 function lnk_checkExist(string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): bool
 {
-
     $links = array();
     $filter = array(
         'bl/rl/req' => $req,
@@ -2310,6 +2319,19 @@ function lnk_checkExist(string $req, string $nid1, string $nid2 = '', string $ni
     if (sizeof($links) == 0)
         return false;
     return true;
+}
+
+/**
+ * Link - Check if block link already exist in complete form.
+ *
+ * @param $link
+ * @return boolean
+ */
+function lnk_checkLinkExist($link): bool
+{
+    $linkParsed = lnk_parse($link);
+
+    return lnk_checkExist($linkParsed['bl/rl/req'], $linkParsed['bl/rl/nid1'], $linkParsed['bl/rl/nid2'], $linkParsed['bl/rl/nid3'], $linkParsed['bl/rl/nid4']);
 }
 
 /**
@@ -5913,11 +5935,11 @@ function bootstrap_breakDisplay4LibraryPOO()
     if ($bootstrapLibraryOID != '')
         echo ' version ' . $nebuleLibVersion;
     echo "<br />\n";
-    bootstrap_echoLineTitle('functional level');
-    echo 'found ' . \Nebule\Library\nebule::NEBULE_FUNCTION_VERSION . ', need >= ' . BOOTSTRAP_FUNCTION_VERSION;
-    echo "<br />\n";
 
     if (is_a($nebuleInstance, 'Nebule\Library\nebule')) {
+        bootstrap_echoLineTitle('functional level');
+        echo 'found ' . \Nebule\Library\nebule::NEBULE_FUNCTION_VERSION . ', need >= ' . BOOTSTRAP_FUNCTION_VERSION;
+        echo "<br />\n";
         bootstrap_echoLineTitle('library SID');
         bootstrap_echoLinkNID($bootstrapLibrarySID);
         echo "<br />\n";
@@ -6397,7 +6419,7 @@ function bootstrap_displayApplicationFirst(): void
     bootstrap_firstDisplay1Breaks();
     $ok = bootstrap_firstDisplay2Folders();
     if ($ok)
-        $ok = bootstrap_firstDisplay3Objects();
+        $ok = bootstrap_firstDisplay3ReservedObjects();
     if ($ok)
         $ok = bootstrap_firstDisplay4Puppetmaster();
     if ($ok)
@@ -6409,7 +6431,9 @@ function bootstrap_displayApplicationFirst(): void
     if ($ok)
         $ok = bootstrap_firstDisplay8OptionsFile();
     if ($ok)
-        $ok = bootstrap_firstDisplay9LocaleEntity();
+        $ok = bootstrap_firstDisplay9NeededObjects();
+    if ($ok)
+        $ok = bootstrap_firstDisplay10LocaleEntity();
 
     echo '<div id="parts">';
     if ($ok)
@@ -6529,25 +6553,28 @@ chmod 755 <?php echo LIB_LOCAL_OBJECTS_FOLDER; ?></pre>
 }
 
 /**
- * Create if not present objects needed by nebule.
+ * Create if not present reserved objects needed by nebule.
  *
  * @return bool
  */
-function bootstrap_firstDisplay3Objects(): bool
+function bootstrap_firstDisplay3ReservedObjects(): bool
 {
     global $nebuleInstance;
 
     $ok = true;
 
     echo '<div class="parts">' . "\n";
-    echo '<span class="partstitle">#3 needed objects</span><br/>' . "\n";
+    echo '<span class="partstitle">#3 reserved objects</span><br/>' . "\n";
 
     foreach (LIB_FIRST_LOCALISATIONS as $data) {
         $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
-        if (!io_checkNodeHaveContent($hash)) {
-            log_add('need create objects ' . $hash, 'warn', __FUNCTION__, 'ca195598');
+        if (io_checkNodeHaveContent($hash))
             echo '.';
-            if (!io_objectWrite($data, $hash)) {
+        else {
+            log_add('need create objects ' . $hash, 'warn', __FUNCTION__, 'ca195598');
+            if (io_objectWrite($data, $hash))
+                echo '+';
+            else {
                 $ok = false;
                 echo 'E';
             }
@@ -6555,18 +6582,49 @@ function bootstrap_firstDisplay3Objects(): bool
     }
     foreach (LIB_FIRST_RESERVED_OBJECTS as $data) {
         $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
-        if (!io_checkNodeHaveContent($hash)) {
-            log_add('need create objects ' . $hash, 'warn', __FUNCTION__, 'fc68d2ff');
+        if (io_checkNodeHaveContent($hash))
             echo '.';
-            if (!io_objectWrite($data, $hash)) {
+        else {
+            log_add('need create objects ' . $hash, 'warn', __FUNCTION__, 'fc68d2ff');
+            if (io_objectWrite($data, $hash))
+                echo '+';
+            else {
                 $ok = false;
                 echo 'E';
             }
         }
     }
-
-    if (!References::installation($nebuleInstance))
-        $ok = false;
+    foreach (LIB_FIRST_AUTHORITIES_PUBLIC_KEY as $data)
+    {
+        $hash = obj_getNID($data, lib_getConfiguration('cryptoHashAlgorithm'));
+        if (io_checkNodeHaveContent($hash))
+            echo '.';
+        else {
+            log_add('need create objects ' . $hash, 'warn', __FUNCTION__, '6a7b99a6');
+            if (io_objectWrite($data, $hash))
+                echo '+';
+            else {
+                $ok = false;
+                echo 'E';
+            }
+        }
+    }
+    foreach (LIB_FIRST_LINKS as $link)
+    {
+        $algo = 'sha2.256';
+        if (lnk_checkLinkExist($link))
+            echo '.';
+        else {
+            $hash = hash(crypto_getTranslatedHashAlgo($algo), $link);
+            log_add('need create link ' . $hash, 'warn', __FUNCTION__, '8d9c24e2');
+            if (lnk_write($link))
+                echo '+';
+            else {
+                $ok = false;
+                echo 'E';
+            }
+        }
+    }
 
     if ($ok) {
         log_add('ok objects', 'info', __FUNCTION__, '5c7be016');
@@ -6814,20 +6872,6 @@ function bootstrap_firstDisplay6SyncObjects(): bool
     echo '<div class="parts">' . "\n";
     echo '<span class="partstitle">#6 synchronizing objets</span><br/>' . "\n";
 
-    // Write locations objects content
-    bootstrap_echoLineTitle('objects');
-    foreach (LIB_FIRST_LOCALISATIONS as $data) {
-        obj_setContent($data);
-        echo '.';
-    }
-
-    // Write reserved objects content
-    foreach (LIB_FIRST_RESERVED_OBJECTS as $data) {
-        obj_setContent($data);
-        echo '.';
-    }
-    flush();
-
     // Si la bibliothèque ne se charge pas correctement, fait une première synchronisation des entités.
     if (!io_checkNodeHaveLink($refAppsID)
         || !io_checkNodeHaveLink($refLibID)
@@ -6865,8 +6909,6 @@ function bootstrap_firstDisplay6SyncObjects(): bool
     return $ok;
 }
 
-
-// ------------------------------------------------------------------------------------------
 /**
  * Ask for subordination of the local entity.
  *
@@ -6937,8 +6979,6 @@ function bootstrap_firstDisplay7Subordination(): bool
     return $ok;
 }
 
-
-// ------------------------------------------------------------------------------------------
 /**
  * Crée le fichier des options par défaut.
  *
@@ -7017,15 +7057,42 @@ chmod 644 <?php echo LIB_LOCAL_ENVIRONMENT_FILE; ?>
     return $ok;
 }
 
+/**
+ * Create if not present objects needed by nebule.
+ *
+ * @return bool
+ */
+function bootstrap_firstDisplay9NeededObjects(): bool
+{
+    global $nebuleInstance;
 
+    $ok = true;
 
-// ------------------------------------------------------------------------------------------
+    echo '<div class="parts">' . "\n";
+    echo '<span class="partstitle">#9 needed objects</span><br/>' . "\n";
+
+    if (is_a($nebuleInstance, 'Nebule\Library\nebule')
+        && !\Nebule\Library\References::installation($nebuleInstance)
+    )
+        $ok = false;
+
+    if ($ok) {
+        log_add('ok objects', 'info', __FUNCTION__, 'ba3772d3');
+        echo " ok\n";
+    } else
+        echo ' <span class=\"error\">nok</span>' . "\n";
+
+    echo "</div>\n";
+
+    return $ok;
+}
+
 /**
  * Crée le fichier des options par défaut.
  *
  * @return bool
  */
-function bootstrap_firstDisplay9LocaleEntity(): bool
+function bootstrap_firstDisplay10LocaleEntity(): bool
 {
     global $nebuleInstance,
            $nebulePublicEntity,
@@ -7035,7 +7102,7 @@ function bootstrap_firstDisplay9LocaleEntity(): bool
     $ok = true;
 
     echo '<div class="parts">' . "\n";
-    echo '<span class="partstitle">#9 local entity for server</span><br/>' . "\n";
+    echo '<span class="partstitle">#10 local entity for server</span><br/>' . "\n";
     if (file_put_contents(LIB_LOCAL_ENTITY_FILE, '0') !== false) {
         echo 'new server entity<br/>' . "\n";
 
@@ -7565,6 +7632,7 @@ function bootstrap_displayRouter(): void
            $bootstrapApplicationIID,
            $bootstrapApplicationOID,
            //$bootstrapApplicationInstanceSleep,
+           //$libraryCheckOK,
            $bootstrapApplicationNoPreload;
 
     // End of Web page buffering with a buffer erase before display important things.

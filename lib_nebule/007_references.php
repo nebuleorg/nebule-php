@@ -3260,19 +3260,30 @@ AzkAAAAASUVORK5CYII=',
         '8interet1' => '6e696574657274656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000001.none.272',
     );
 
+    /**
+     * Create many contents needed on installation.
+     *
+     * @param $nebuleInstance
+     * @return bool
+     */
     static public function installation($nebuleInstance): bool
     {
         $ok = true;
         // Generate objects for icons.
-        foreach ( self::OBJ_IMG as $name => $content)
-        {
+        foreach ( self::OBJ_IMG as $name => $content) {
             $instance = new Node($nebuleInstance, '0');
             $decoded = (string)base64_decode($content, false);
-            if (!$instance->setContent($decoded))
+            if ($instance->setContent($decoded)) {
+                if ($instance->write()) {
+                    echo '+';
+                } else {
+                    echo 'E';
+                    $ok = false;
+                }
+            } else {
+                echo 'E';
                 $ok = false;
-            if (!$instance->write())
-                $ok = false;
-//            $nebuleInstance->getMetrologyInstance()->addLog('MARK ' . $instance->getID(), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            }
         }
         return $ok;
     }
@@ -3285,8 +3296,7 @@ AzkAAAAASUVORK5CYII=',
         // TODO
 
         // Generate links for icons.
-        foreach ( self::OBJ_IMG as $name => $content)
-        {
+        foreach ( self::OBJ_IMG as $name => $content) {
             $instance = new Node($nebuleInstance, '0');
             $decoded = (string)base64_decode($content, false);
             if (!$instance->setContent($decoded))
