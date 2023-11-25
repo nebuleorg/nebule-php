@@ -1489,7 +1489,7 @@ function io_checkNodeHaveContent(string $nid): bool
  * @param integer $maxLinks
  * @return array
  */
-function io_linksRead(string $nid, array &$lines, int $maxLinks = 0): array
+function io_blockLinksRead(string $nid, array &$lines, int $maxLinks = 0): array
 {
     $count = 0;
 
@@ -1516,10 +1516,10 @@ function io_linksRead(string $nid, array &$lines, int $maxLinks = 0): array
  * I/O - Write a link to a node.
  *
  * @param string $nid
- * @param string $link
+ * @param string $block
  * @return boolean
  */
-function io_linkWrite(string $nid, string &$link): bool
+function io_blockLinkWrite(string $nid, string &$block): bool
 {
     if (!lib_getConfiguration('permitWrite')
         || !lib_getConfiguration('permitWriteLink')
@@ -1532,14 +1532,14 @@ function io_linkWrite(string $nid, string &$link): bool
         $l = file(LIB_LOCAL_LINKS_FOLDER . '/' . $nid, FILE_SKIP_EMPTY_LINES);
         if ($l !== false) {
             foreach ($l as $k) {
-                if (trim($k) == trim($link))
+                if (trim($k) == trim($block))
                     return true;
             }
         }
     }
 
     // Write link on file.
-    if (file_put_contents(LIB_LOCAL_LINKS_FOLDER . '/' . $nid, "$link\n", FILE_APPEND) === false)
+    if (file_put_contents(LIB_LOCAL_LINKS_FOLDER . '/' . $nid, "$block\n", FILE_APPEND) === false)
         return false;
     return true;
 }
@@ -1551,7 +1551,7 @@ function io_linkWrite(string $nid, string &$link): bool
  * @param string $location
  * @return bool
  */
-function io_linkSynchronize(string $nid, string $location): bool
+function io_blockLinkSynchronize(string $nid, string $location): bool
 {
     if (!lib_getConfiguration('permitWrite')
         || !lib_getConfiguration('permitWriteLink')
@@ -1570,7 +1570,7 @@ function io_linkSynchronize(string $nid, string $location): bool
     if ($ressource !== false) {
         while (feof($ressource) !== false) {
             $line = trim(fgets($ressource));
-            lnk_write($line);
+            blk_write($line);
         }
         fclose($ressource);
     }
@@ -2065,7 +2065,7 @@ function crypto_asymmetricVerify(string $sign, string $hash, string $nid): bool
  * @param string $nid4
  * @return string
  */
-function lnk_generate(string $rc, string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): string
+function blk_generate(string $rc, string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): string
 {
     if ($req == ''
         || !nod_checkNID($nid1)
@@ -2098,7 +2098,7 @@ function lnk_generate(string $rc, string $req, string $nid1, string $nid2 = '', 
  * @param string $bh_bl
  * @return string
  */
-function lnk_sign(string $bh_bl): string
+function blk_sign(string $bh_bl): string
 {
     global $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
 
@@ -2138,119 +2138,13 @@ function lnk_sign(string $bh_bl): string
  * @param string $nid4
  * @return string
  */
-function lnk_generateSign(string $rc, string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): string
+function blk_generateSign(string $rc, string $req, string $nid1, string $nid2 = '', string $nid3 = '', string $nid4 = ''): string
 {
-    $bh_bl = lnk_generate($rc, $req, $nid1, $nid2, $nid3, $nid4);
+    $bh_bl = blk_generate($rc, $req, $nid1, $nid2, $nid3, $nid4);
     if ($bh_bl == '')
         return '';
 
-    return lnk_sign($bh_bl);
-}
-
-/**
- * Link - Liste et filtre les liens sur des actions et objets dans un ordre déterminé.
- *  - $object objet dont les liens sont à lire.
- *  - $table table dans laquelle seront retournés les liens.
- *  - $action filtre sur l'action.
- *  - $srcobj filtre sur un objet source.
- *  - $dstobj filtre sur un objet destination.
- *  - $metobj filtre sur un objet meta.
- *  - $withinvalid optionnel pour autoriser la lecture des liens invalides.
- * Les liens sont triés par ordre chronologique et les liens marqués comme supprimés sont retirés de la liste.
- * Version inclusive, càd liens x valable uniquement sur les liens du même signataire.
- *
- * @param string  $nid
- * @param array   $table
- * @param string  $action
- * @param string  $srcobj
- * @param string  $dstobj
- * @param string  $metobj
- * @param boolean $withinvalid
- * @return void
- */
-function lnk_findInclusive_FIXME(&$nid, &$table, $action, $srcobj, $dstobj, $metobj, $withinvalid = false): void
-{
-    $followXOnSameDate = true; // TODO à supprimer.
-
-    $linkDate = array();
-    $tmpArray = array();
-    $i1 = 0;
-
-    lnk_getListFilterNid($nid, $tmpArray, $metobj, $action, $withinvalid);
-
-    foreach ($tmpArray as $n => $t) {
-        $linkDate [$n] = $t [3];
-    }
-
-    // Tri par date.
-    array_multisort($linkDate, SORT_STRING, SORT_ASC, $tmpArray);
-
-    foreach ($tmpArray as $tline) {
-        if ($tline [4] == 'x') {
-            continue 1; // Suppression de l'affichage des liens x.
-        }
-        if ($action != '' && $tline [4] != $action) {
-            continue 1;
-        }
-        if ($srcobj != '' && $tline [5] != $srcobj) {
-            continue 1;
-        }
-        if ($dstobj != '' && $tline [6] != $dstobj) {
-            continue 1;
-        }
-        if ($metobj != '' && $tline [7] != $metobj) {
-            continue 1;
-        }
-
-        // Filtre du lien.
-        foreach ($tmpArray as $vline) {
-            if ($vline [4] == 'x'
-                && $tline [4] != 'x'
-                && $tline [5] == $vline [5]
-                && $tline [6] == $vline [6]
-                && $tline [7] == $vline [7]
-                && $vline [2] == $tline [2]
-                && ($vline [9] == 1
-                    || $vline [9] == -1
-                )
-                && (($followXOnSameDate
-                        && strtotime($tline [3]) < strtotime($vline [3])
-                    )
-                    || strtotime($tline [3]) <= strtotime($vline [3])
-                )
-            ) {
-                continue 2;
-            }
-        }
-
-        // Suppression de l'affichage des liens en double, même à des dates différentes.
-        foreach ($table as $vline) {
-            if ($tline [2] == $vline [2]
-                && $tline [4] == $vline [4]
-                && $tline [5] == $vline [5]
-                && $tline [6] == $vline [6]
-                && $tline [7] == $vline [7]
-            ) {
-                continue 2;
-            }
-        }
-        // Remplissage de la table des résultats.
-        $table [$i1] [0] = $tline [0];
-        $table [$i1] [1] = $tline [1];
-        $table [$i1] [2] = $tline [2];
-        $table [$i1] [3] = $tline [3];
-        $table [$i1] [4] = $tline [4];
-        $table [$i1] [5] = $tline [5];
-        $table [$i1] [6] = $tline [6];
-        $table [$i1] [7] = $tline [7];
-        $table [$i1] [8] = $tline [8];
-        $table [$i1] [9] = $tline [9];
-        $table [$i1] [10] = $tline [10];
-        $table [$i1] [11] = $tline [11];
-        $table [$i1] [12] = $tline [12];
-        $i1++;
-    }
-    unset($linkDate, $i1, $n, $t, $tline);
+    return blk_sign($bh_bl);
 }
 
 /**
@@ -2276,12 +2170,12 @@ function lnk_getList(string $nid, array &$links, array $filter, bool $withInvali
         $withInvalidLinks = false;
 
     $lines = array();
-    io_linksRead($nid, $lines);
+    io_blockLinksRead($nid, $lines);
     foreach ($lines as $line) {
-        if ($withInvalidLinks || lnk_verify($line)) {
-            $link = lnk_parse($line);
-            if (lnk_checkNotSuppressed($link, $lines) && lnk_filterStructure($link, $filter))
-                $links [] = $link;
+        if ($withInvalidLinks || blk_verify($line)) {
+            $link = blk_parse($line);
+            if (lnk_checkNotSuppressed($link, $lines) && blk_filterStructure($link, $filter))
+                $links[] = $link;
         }
     }
 
@@ -2291,7 +2185,7 @@ function lnk_getList(string $nid, array &$links, array $filter, bool $withInvali
 
     // Social filter.
     if (!$withInvalidLinks)
-        lnk_filterBySigners($links, $validSigners);
+        blk_filterBySigners($links, $validSigners);
 }
 
 /**
@@ -2324,14 +2218,19 @@ function lnk_checkExist(string $req, string $nid1, string $nid2 = '', string $ni
 /**
  * Link - Check if block link already exist in complete form.
  *
- * @param $link
+ * @param string $link
  * @return boolean
  */
-function lnk_checkLinkExist($link): bool
+function blk_checkExist(string $link): bool
 {
-    $linkParsed = lnk_parse($link);
+    $linkParsed = blk_parse($link);
+    $nid = $linkParsed['bl/rl/nid1'];
 
-    return lnk_checkExist($linkParsed['bl/rl/req'], $linkParsed['bl/rl/nid1'], $linkParsed['bl/rl/nid2'], $linkParsed['bl/rl/nid3'], $linkParsed['bl/rl/nid4']);
+    $lines = array();
+    io_blockLinksRead($nid, $lines);
+    if (in_array($link, $lines))
+        return true;
+    return false;
 }
 
 /**
@@ -2346,8 +2245,8 @@ function lnk_checkNotSuppressed(array &$link, array &$lines): bool
     foreach ($lines as $line) {
         if (strpos($line, '/x>') === false)
             continue;
-        if (lnk_verify($line)) {
-            $linkCompare = lnk_parse($line);
+        if (blk_verify($line)) {
+            $linkCompare = blk_parse($line);
             if ($linkCompare['bl/rl/req'] == 'x'
                 && lnk_dateCompare($link['bl/rc/mod'], $link['bl/rc/chr'], $linkCompare['bl/rc/mod'], $linkCompare['bl/rc/chr']) < 0
             )
@@ -2396,11 +2295,11 @@ function lnk_dateCompare(string $mod1, string $chr1, string $mod2, string $chr2)
  * Filtering on have bl/rl/req, bl/rl/nid1, bl/rl/nid2, bl/rl/nid3, bl/rl/nid4, bl/rl/nid*, bs/rs1/eid, or not have.
  * TODO revoir pour les liens de type x...
  *
- * @param array $link
+ * @param array $block
  * @param array $filter
  * @return bool
  */
-function lnk_filterStructure(array $link, array $filter): bool
+function blk_filterStructure(array $block, array $filter): bool
 {
     foreach ($filter as $n => $f)
     {
@@ -2409,8 +2308,8 @@ function lnk_filterStructure(array $link, array $filter): bool
             $a = array($f);
         foreach ($a as $v)
         {
-            if (isset($link[$n]) && $link[$n] != $v
-                || $v == '' && !isset($link[$n])
+            if (isset($block[$n]) && $block[$n] != $v
+                || $v == '' && !isset($block[$n])
             )
                 return false;
         }
@@ -2421,22 +2320,22 @@ function lnk_filterStructure(array $link, array $filter): bool
 /**
  * Filter links by signers (BS/RS1/EID) of the links.
  *
- * @param array $links
+ * @param array $blocks
  * @param array $signers
  */
-function lnk_filterBySigners(array &$links, array $signers): void
+function blk_filterBySigners(array &$blocks, array $signers): void
 {
-    if (sizeof($links) == 0 || sizeof($signers) == 0)
+    if (sizeof($blocks) == 0 || sizeof($signers) == 0)
         return;
 
-    foreach ($links as $i => $link) {
+    foreach ($blocks as $i => $block) {
         $ok = false;
         foreach ($signers as $authority) {
-            if ($link['bs/rs1/eid'] == $authority)
+            if ($block['bs/rs1/eid'] == $authority)
                 $ok = true;
         }
         if (!$ok)
-            unset($links[$i]);
+            unset($blocks[$i]);
     }
 }
 
@@ -2462,13 +2361,13 @@ function lnk_getListFilterNid(string $nid, array &$result, string $filterOnNid =
         $withInvalidLinks = false;
 
     $lines = array();
-    io_linksRead($nid, $lines);
+    io_blockLinksRead($nid, $lines);
     foreach ($lines as $line) {
         // Verify link.
-        if (!$withInvalidLinks && !lnk_verify($line))
+        if (!$withInvalidLinks && !blk_verify($line))
             continue;
 
-        $linkParse = lnk_parse($line);
+        $linkParse = blk_parse($line);
 
         // Filter and add link on result.
         if (($filterOnReq == '' || $linkParse['bl/rl/req'] == $filterOnReq)
@@ -2514,7 +2413,7 @@ function lnk_getDistantAnywhere(string $nid): void
     foreach ($locationList as $location) {
         $url = '';
         if (obj_getLocalContent($location, $url))
-            io_linkSynchronize($nid, $url);
+            io_blockLinkSynchronize($nid, $url);
     }
 }
 
@@ -2540,7 +2439,7 @@ function lnk_getDistantOnLocations(string $nid, array $locations = array()): boo
         $locations = LIB_FIRST_LOCALISATIONS;
 
     foreach ($locations as $location)
-        io_linkSynchronize($nid, $location);
+        io_blockLinkSynchronize($nid, $location);
     return true;
 }
 
@@ -2550,7 +2449,7 @@ function lnk_getDistantOnLocations(string $nid, array $locations = array()): boo
  * @param string $bh
  * @return bool
  */
-function lnk_checkBH(string &$bh): bool
+function blk_checkBH(string &$bh): bool
 {
     if (strlen($bh) > 15) return false;
 
@@ -2564,9 +2463,9 @@ function lnk_checkBH(string &$bh): bool
 
     // Check RF and RV.
     //if (!lnk_checkRF($rf)) log_add('check link BH/RF failed '.$bh, 'error', __FUNCTION__, '3c0b5c4f');
-    if (!lnk_checkRF($rf)) return false;
+    if (!blk_checkRF($rf)) return false;
     //if (!lnk_checkRV($rv)) log_add('check link BH/RV failed '.$bh, 'error', __FUNCTION__, '80c5975c');
-    if (!lnk_checkRV($rv)) return false;
+    if (!blk_checkRV($rv)) return false;
 
     return true;
 }
@@ -2577,7 +2476,7 @@ function lnk_checkBH(string &$bh): bool
  * @param string $rf
  * @return bool
  */
-function lnk_checkRF(string &$rf): bool
+function blk_checkRF(string &$rf): bool
 {
     if (strlen($rf) > 11) return false;
 
@@ -2601,7 +2500,7 @@ function lnk_checkRF(string &$rf): bool
  * @param string $rv
  * @return bool
  */
-function lnk_checkRV(string &$rv): bool
+function blk_checkRV(string &$rv): bool
 {
     if (strlen($rv) > 3) return false;
 
@@ -2624,7 +2523,7 @@ function lnk_checkRV(string &$rv): bool
  * @param string $bl
  * @return bool
  */
-function lnk_checkBL(string &$bl): bool
+function blk_checkBL(string &$bl): bool
 {
     if (strlen($bl) > 4096) return false; // TODO à revoir.
 
@@ -2740,7 +2639,7 @@ function lnk_checkREQ(string &$req): bool
  * @param string $bs
  * @return bool
  */
-function lnk_checkBS(string &$bh, string &$bl, string &$bs): bool
+function blk_checkBS(string &$bh, string &$bl, string &$bs): bool
 {
     if (strlen($bs) > 4096) return false; // TODO à revoir.
 
@@ -2752,7 +2651,7 @@ function lnk_checkBS(string &$bh, string &$bl, string &$bs): bool
 
     // Check content RS 1 NID 1 : hash.algo.size
     //if (!lnk_checkRS($rs, $bh, $bl)) log_add('check link BS/RS failed '.$bs, 'error', __FUNCTION__, '0690f5ac');
-    if (!lnk_checkRS($rs, $bh, $bl)) return false;
+    if (!blk_checkRS($rs, $bh, $bl)) return false;
 
     return true;
 }
@@ -2765,7 +2664,7 @@ function lnk_checkBS(string &$bh, string &$bl, string &$bs): bool
  * @param string $bl
  * @return bool
  */
-function lnk_checkRS(string &$rs, string &$bh, string &$bl): bool
+function blk_checkRS(string &$rs, string &$bh, string &$bl): bool
 {
     if (strlen($rs) > 4096) return false; // TODO à revoir.
 
@@ -2783,7 +2682,7 @@ function lnk_checkRS(string &$rs, string &$bh, string &$bl): bool
     //if (!nod_checkNID($nid, false)) log_add('check link bs/rs1/eid failed '.$rs, 'error', __FUNCTION__, '6e1150f9');
     if (!nod_checkNID($nid, false)) return false;
     //if (!lnk_checkSIG($bh, $bl, $sig, $nid)) log_add('check link BS/RS1/SIG failed '.$rs, 'error', __FUNCTION__, 'e99ec81f');
-    if (!lnk_checkSIG($bh, $bl, $sig, $nid)) return false;
+    if (!blk_checkSIG($bh, $bl, $sig, $nid)) return false;
 
     return true;
 }
@@ -2797,7 +2696,7 @@ function lnk_checkRS(string &$rs, string &$bh, string &$bl): bool
  * @param string $nid
  * @return boolean
  */
-function lnk_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): bool
+function blk_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): bool
 {
     if (strlen($sig) > 4096) return false; // TODO à revoir.
 
@@ -2849,16 +2748,16 @@ function lnk_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): boo
  * TYP : 'link'
  * MOD : '0'
  *
- * @param string $link
+ * @param string $block
  * @return boolean
  */
-function lnk_verify(string $link): bool
+function blk_verify(string $block): bool
 {
-    if (strlen($link) > 4096) return false; // TODO à revoir.
-    if (strlen($link) == 0) return false;
+    if (strlen($block) > 4096) return false; // TODO à revoir.
+    if (strlen($block) == 0) return false;
 
     // Extract blocs from link L : BH_BL_BS
-    $bh = strtok(trim($link), '_');
+    $bh = strtok(trim($block), '_');
     if (is_bool($bh)) return false;
     $bl = strtok('_');
     if (is_bool($bl)) return false;
@@ -2870,11 +2769,11 @@ function lnk_verify(string $link): bool
 
     // Check BH, BL and BS.
     //if (!lnk_checkBH($bh)) log_add('check link BH failed '.$link, 'error', __FUNCTION__, '80cbba4b');
-    if (!lnk_checkBH($bh)) return false;
+    if (!blk_checkBH($bh)) return false;
     //if (!lnk_checkBL($bl)) log_add('check link BL failed '.$link, 'error', __FUNCTION__, 'c5d22fda');
-    if (!lnk_checkBL($bl)) return false;
+    if (!blk_checkBL($bl)) return false;
     //if (!lnk_checkBS($bh, $bl, $bs)) log_add('check link BS failed '.$link, 'error', __FUNCTION__, '2828e6ae');
-    if (!lnk_checkBS($bh, $bl, $bs)) return false;
+    if (!blk_checkBS($bh, $bl, $bs)) return false;
 
     return true;
 }
@@ -2882,13 +2781,13 @@ function lnk_verify(string $link): bool
 /**
  * Link - Explode link and it's values into array.
  *
- * @param string $link
+ * @param string $block
  * @return array
  */
-function lnk_parse(string $link): array
+function blk_parse(string $block): array
 {
     // Extract blocs from link L : BH_BL_BS
-    $bh = strtok(trim($link), '_');
+    $bh = strtok(trim($block), '_');
     $bl = strtok('_');
     $bs = strtok('_');
 
@@ -2936,7 +2835,7 @@ function lnk_parse(string $link): array
     $bs_rs1_sig_size = strtok('.');
 
     return array(
-        'link' => $link, // original link
+        'link' => $block, // original link
         'bh' => $bh,
         'bh/rf' => $bh_rf,
         'bh/rf/app' => $bh_rf_app,
@@ -2967,37 +2866,37 @@ function lnk_parse(string $link): array
 /**
  * Link - Check and write link into parts files.
  *
- * @param $link
+ * @param $block
  * @return boolean
  */
-function lnk_write($link): bool
+function blk_write($block): bool
 {
     if (!lib_getConfiguration('permitWrite')
         || !lib_getConfiguration('permitWriteLink')
-        || !lnk_verify($link)
+        || !blk_verify($block)
     )
         return false;
 
     // Extract link parts.
-    $linkParsed = lnk_parse($link);
+    $linkParsed = blk_parse($block);
 
     // Write link into parts files.
-    $result = io_linkWrite($linkParsed['bl/rl/nid1'], $link);
+    $result = io_blockLinkWrite($linkParsed['bl/rl/nid1'], $block);
     if ($linkParsed['bl/rl/nid2'] != '')
-        $result = io_linkWrite($linkParsed['bl/rl/nid2'], $link) && $result;
+        $result = io_blockLinkWrite($linkParsed['bl/rl/nid2'], $block) && $result;
     if ($linkParsed['bl/rl/nid3'] != '')
-        $result = io_linkWrite($linkParsed['bl/rl/nid3'], $link) && $result;
+        $result = io_blockLinkWrite($linkParsed['bl/rl/nid3'], $block) && $result;
     if ($linkParsed['bl/rl/nid4'] != '')
-        $result = io_linkWrite($linkParsed['bl/rl/nid4'], $link) && $result;
+        $result = io_blockLinkWrite($linkParsed['bl/rl/nid4'], $block) && $result;
 
     // Write link for signer if needed.
     if (lib_getConfiguration('permitAddLinkToSigner'))
-        $result = io_linkWrite($linkParsed['bs/rs1/eid'], $link) && $result;
+        $result = io_blockLinkWrite($linkParsed['bs/rs1/eid'], $block) && $result;
 
     // Write link to history if needed.
     $histFile = LIB_LOCAL_HISTORY_FILE;
     if (lib_getConfiguration('permitHistoryLinksSign'))
-        $result = io_linkWrite($histFile, $link) && $result;
+        $result = io_blockLinkWrite($histFile, $block) && $result;
 
     return $result;
 }
@@ -3361,7 +3260,7 @@ function obj_checkTypeMime(string $nid, string $typeMime, string $addSigner = ''
     lnk_getList($nid, $links, $filter, false, $addSigner);
     $signers = $nebuleLocalAuthorities;
     $signers[] = $nid;
-    lnk_filterBySigners($links, $signers);
+    blk_filterBySigners($links, $signers);
 
     if (sizeof($links) == 0)
         return false;
@@ -3416,26 +3315,26 @@ function obj_generate_FIXME(string &$data, string $typeMime = ''): bool
     if (!io_checkNodeHaveContent($hash))
         obj_setContent($data, $hash);
 
-    $link = lnk_generateSign(
+    $link = blk_generateSign(
         $date,
         'l',
         $hash,
         obj_getNID(lib_getConfiguration('cryptoHashAlgorithm'), lib_getConfiguration('cryptoHashAlgorithm')),
         obj_getNID('nebule/objet/hash', lib_getConfiguration('cryptoHashAlgorithm'))
     );
-    if (lnk_verify($link))
-        lnk_write($link);
+    if (blk_verify($link))
+        blk_write($link);
 
     if ($typeMime != '') {
-        $link = lnk_generateSign(
+        $link = blk_generateSign(
             $date,
             'l',
             $hash,
             obj_getNID($typeMime, lib_getConfiguration('cryptoHashAlgorithm')),
             obj_getNID('nebule/objet/type', lib_getConfiguration('cryptoHashAlgorithm'))
         );
-        if (lnk_verify($link))
-            lnk_write($link);
+        if (blk_verify($link))
+            blk_write($link);
     }
     return true;
 }
@@ -3639,26 +3538,26 @@ function ent_generate(string $asymmetricAlgo, string $hashAlgo, string &$hashPub
 
     $list = array($oidType, $oidPem, $oidPKey, $oidText);
     foreach ($list as $item) {
-        $bh_bl = lnk_generate('', 'l', $item, $oidText, $oidType);
+        $bh_bl = blk_generate('', 'l', $item, $oidText, $oidType);
         $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
         $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getConfiguration('cryptoHashAlgorithm');
-        if (!lnk_write($link))
+        if (!blk_write($link))
             return false;
     }
 
     $list = array($hashPublicKey, $hashPrivateKey);
     foreach ($list as $item) {
-        $bh_bl = lnk_generate('', 'l', $item, $oidPem, $oidType);
+        $bh_bl = blk_generate('', 'l', $item, $oidPem, $oidType);
         $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
         $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getConfiguration('cryptoHashAlgorithm');
-        if (!lnk_write($link))
+        if (!blk_write($link))
             return false;
     }
 
-    $bh_bl = lnk_generate('', 'f', $hashPublicKey, $hashPrivateKey, $oidPKey);
+    $bh_bl = blk_generate('', 'f', $hashPublicKey, $hashPrivateKey, $oidPKey);
     $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
     $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getConfiguration('cryptoHashAlgorithm');
-    if (!lnk_write($link))
+    if (!blk_write($link))
         return false;
 
     return true;
@@ -3881,7 +3780,7 @@ function ent_syncPuppetmaster(string $oid): void
             io_objectWrite($data, $hash);
         }
         foreach (LIB_FIRST_LINKS as $link)
-            lnk_write($link);
+            blk_write($link);
     }
 
     ent_syncAuthorities(array($oid));
@@ -4072,7 +3971,7 @@ function app_getPreload(string $oid): bool
         'bl/rl/nid4' => '',
     );
     lnk_getList($oid, $links, $filter);
-    lnk_filterBySigners($links, $nebuleLocalAuthorities);
+    blk_filterBySigners($links, $nebuleLocalAuthorities);
 
     if (sizeof($links) != 0)
         return true;
@@ -4114,7 +4013,7 @@ function app_getCurrentBranch(): void
             'bl/rl/nid4' => '',
         );
         lnk_getList($codeBranchRID, $bLinks, $filter, false);
-        lnk_filterBySigners($bLinks, $nebuleLocalAuthorities);
+        blk_filterBySigners($bLinks, $nebuleLocalAuthorities);
 
         // Get all NID with the name of wanted code branch.
         $codeBranchRID = obj_getNID($codeBranchName, LIB_REF_CODE_ALGO);
@@ -4126,7 +4025,7 @@ function app_getCurrentBranch(): void
             'bl/rl/nid4' => '',
         );
         lnk_getList($codeBranchRID, $nLinks, $filter, false);
-        lnk_filterBySigners($nLinks, $nebuleLocalAuthorities);
+        blk_filterBySigners($nLinks, $nebuleLocalAuthorities);
 
         // Latest collision of code branches with the name
         $bl_rc_mod = '0';
@@ -4174,7 +4073,7 @@ function app_getByRef(string $rid): string
         'bl/rl/nid4' => $codeBranchNID,
     );
     lnk_getList($rid, $links, $filter, false);
-    lnk_filterBySigners($links, $nebuleLocalAuthorities);
+    blk_filterBySigners($links, $nebuleLocalAuthorities);
 
     if (sizeof($links) == 0)
         return '';
@@ -4222,7 +4121,7 @@ function app_getList(string $rid, bool $activated = true, bool $allBranches=fals
     if (!$allBranches)
         $filter['bl/rl/nid4'] = $codeBranchNID;
     lnk_getList($rid, $links, $filter, false);
-    lnk_filterBySigners($links, $nebuleLocalAuthorities);
+    blk_filterBySigners($links, $nebuleLocalAuthorities);
 
     if (sizeof($links) == 0)
         return $links;
@@ -4257,7 +4156,7 @@ function app_getCodeList(string $iid, array &$links): void
         'bl/rl/nid4' => '',
     );
     lnk_getList($iid, $links, $filter, false);
-    lnk_filterBySigners($links, $nebuleLocalAuthorities);
+    blk_filterBySigners($links, $nebuleLocalAuthorities);
 }
 
 /**
@@ -5104,7 +5003,7 @@ function bootstrap_checkFingerprint(): bool
         'bl/rl/nid4' => '',
     );
     lnk_getList($hash, $links, $filter, false);
-    lnk_filterBySigners($links, $nebuleLocalAuthorities);
+    blk_filterBySigners($links, $nebuleLocalAuthorities);
 
     $result = false;
     foreach ($links as $link)
@@ -6615,12 +6514,12 @@ function bootstrap_firstDisplay3ReservedObjects(): bool
     foreach (LIB_FIRST_LINKS as $link)
     {
         $algo = 'sha2.256';
-        if (lnk_checkLinkExist($link))
+        if (blk_checkExist($link))
             echo '.';
         else {
             $hash = hash(crypto_getTranslatedHashAlgo($algo), $link);
             log_add('need create link ' . $hash, 'warn', __FUNCTION__, '8d9c24e2');
-            if (lnk_write($link))
+            if (blk_write($link))
                 echo '+';
             else {
                 $ok = false;
@@ -7183,13 +7082,13 @@ function bootstrap_firstDisplay10LocaleEntity(): bool
 
             // Enregistrement du nom.
             obj_setContentAsText($name);
-            $newLink = lnk_generateSign('',
+            $newLink = blk_generateSign('',
                 'l',
                 $nebulePublicEntity,
                 obj_getNID($name),
                 obj_getNID('nebule/objet/nom')
             );
-            lnk_write($newLink);
+            blk_write($newLink);
 
             // Load entity on library.
             $instance = $nebuleInstance->getCacheInstance()->newNode('0',Cache::TYPE_ENTITY);
@@ -7502,14 +7401,14 @@ function bootstrap_displayApplication4(): void
         echo 'NID=<a href="o/' . $nid . '">' . $nid . '</a><br /><br />' . "\n";
 
         $blocLinks = array();
-        io_linksRead($nid, $blocLinks);
+        io_blockLinksRead($nid, $blocLinks);
         if (sizeof($blocLinks) == 0)
             echo 'not link for NID ' . $nid . "\n";
         else {
             foreach ($blocLinks as $bloc) {
                 if (strlen($bloc) == 0)
                     continue;
-                $parsedBloc = lnk_parse($bloc);
+                $parsedBloc = blk_parse($bloc);
 
                 echo 'BH / RF=' . $parsedBloc['bh/rf'] . ' RV=' . $parsedBloc['bh/rv'] . "<br />\n";
                 echo 'BL / RC=' . $parsedBloc['bl/rc'] . '<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RL=' . $parsedBloc['bl/rl/req'] . '>';
@@ -7530,7 +7429,7 @@ function bootstrap_displayApplication4(): void
                 echo 'BS / EID=';
                 bootstrap_echoLinkNID($parsedBloc['bs/rs1/eid'], substr($parsedBloc['bs/rs1/eid'], 0, 16));
                 echo ' SIG=' . substr($parsedBloc['bs/rs1/sig'], 0, 16) . ' ';
-                if (lnk_verify($bloc))
+                if (blk_verify($bloc))
                     echo 'OK';
                 else
                     echo 'NOK';
