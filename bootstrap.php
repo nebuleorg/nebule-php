@@ -6653,12 +6653,12 @@ function bootstrap_firstDisplay4Puppetmaster(): bool
 
     if (!file_exists(LIB_LOCAL_ENVIRONMENT_FILE)) {
         if (!filter_has_var(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_EID)) {
-            log_add('ask subordination oid', 'info', __FUNCTION__, '213a735c');
+            log_add('ask puppetmaster eid', 'info', __FUNCTION__, '70a99b83');
             ?>
             <form action="" method="get">
                 <div>
-                    <label for="oid">OID &nbsp;&nbsp;&nbsp;&nbsp; :</label>
-                    <input type="text" id="oid" name="<?php echo LIB_ARG_FIRST_PUPPETMASTER_EID; ?>"
+                    <label for="oid">EID &nbsp;&nbsp;&nbsp;&nbsp; :</label>
+                    <input type="text" id="eid" name="<?php echo LIB_ARG_FIRST_PUPPETMASTER_EID; ?>"
                            value="<?php echo LIB_DEFAULT_PUPPETMASTER_EID; ?>"/>
                 </div>
                 <div>
@@ -6674,29 +6674,29 @@ function bootstrap_firstDisplay4Puppetmaster(): bool
             <?php
             $ok = false;
         } else {
-            $argOID = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            if (ent_checkIsPublicKey($argOID)) {
-                $firstAlternativePuppetmasterEid = $argOID;
+            $argEID = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            if (ent_checkIsPublicKey($argEID)) {
+                $firstAlternativePuppetmasterEid = $argEID;
             }
             if (filter_has_var(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_LOC)) {
-                echo 'try alternative puppetmaster : ' . $argOID . ' ';
-                if (nod_checkNID($argOID, false)) {
-                    $firstAlternativePuppetmasterEid = $argOID;
+                echo 'try alternative puppetmaster eid : ' . $argEID . ' ';
+                if (nod_checkNID($argEID, false)) {
+                    $firstAlternativePuppetmasterEid = $argEID;
                     $argLoc = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_LOC, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
                     if (strlen($argLoc) != 0 && filter_var($argLoc, FILTER_VALIDATE_URL) !== false) {
                         echo 'sync...';
-                        obj_getDistantContent($argOID, array($argLoc));
-                        lnk_getDistantOnLocations($argOID, array($argLoc));
+                        obj_getDistantContent($argEID, array($argLoc));
+                        lnk_getDistantOnLocations($argEID, array($argLoc));
                     }
                 }
-                if (!ent_checkIsPublicKey($argOID)) {
-                    log_add('unable to find alternative puppetmaster oid', 'error', __FUNCTION__, '102c9011');
+                if (!ent_checkIsPublicKey($argEID)) {
+                    log_add('unable to find alternative puppetmaster eid', 'error', __FUNCTION__, '102c9011');
                     echo " <span class=\"error\">invalid!</span>\n";
                     $argLoc = LIB_DEFAULT_PUPPETMASTER_LOCATION; // TODO not really used ...
                     $firstAlternativePuppetmasterEid = LIB_DEFAULT_PUPPETMASTER_EID;
                 }
                 echo "<br />\n";
-                log_add('define alternative puppetmaster oid = ' . $firstAlternativePuppetmasterEid, 'warn', __FUNCTION__, '10a0bd6d');
+                log_add('define alternative puppetmaster eid = ' . $firstAlternativePuppetmasterEid, 'warn', __FUNCTION__, '10a0bd6d');
                 echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ' . $firstAlternativePuppetmasterEid . "<br />\n";
                 log_add('define alternative puppetmaster location = ' . $argLoc, 'info', __FUNCTION__, '6d54e19e');
                 echo 'location on &nbsp;&nbsp;&nbsp;&nbsp; : ' . $argLoc . "\n";
@@ -6925,12 +6925,12 @@ function bootstrap_firstDisplay7Subordination(): bool
 
     if (!file_exists(LIB_LOCAL_ENVIRONMENT_FILE)) {
         if (!filter_has_var(INPUT_GET, LIB_ARG_FIRST_SUBORD_EID)) {
-            log_add('ask subordination oid', 'info', __FUNCTION__, '213a735c');
+            log_add('ask subordination eid', 'info', __FUNCTION__, '213a735c');
             ?>
             <form action="" method="get">
                 <div>
-                    <label for="oid">OID &nbsp;&nbsp;&nbsp;&nbsp; :</label>
-                    <input type="text" id="oid" name="<?php echo LIB_ARG_FIRST_SUBORD_EID; ?>"/>
+                    <label for="oid">EID &nbsp;&nbsp;&nbsp;&nbsp; :</label>
+                    <input type="text" id="eid" name="<?php echo LIB_ARG_FIRST_SUBORD_EID; ?>"/>
                 </div>
                 <div>
                     <label for="loc">Location :</label>
@@ -6946,24 +6946,24 @@ function bootstrap_firstDisplay7Subordination(): bool
             <?php
             $ok = false;
         } else {
-            $argOID = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_SUBORD_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            if (nod_checkNID($argOID, false)) {
-                echo 'try alternative puppetmaster : ' . $argOID . ' ';
-                $firstSubordinationEID = $argOID;
+            $argEID = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_SUBORD_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            if (nod_checkNID($argEID, false)) {
+                echo 'try alternative subordination eid : ' . $argEID . ' ';
+                $firstSubordinationEID = $argEID;
                 $argLoc = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_SUBORD_LOC, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
                 if (strlen($argLoc) != 0 && filter_var($argLoc, FILTER_VALIDATE_URL) !== false) {
                     echo 'sync...';
-                    obj_getDistantContent($argOID, array($argLoc));
-                    lnk_getDistantOnLocations($argOID, array($argLoc));
+                    obj_getDistantContent($argEID, array($argLoc));
+                    lnk_getDistantOnLocations($argEID, array($argLoc));
                 }
             } else {
-                log_add('unable to find subordination oid', 'error', __FUNCTION__, '5cd18917');
+                log_add('unable to find subordination eid', 'error', __FUNCTION__, '5cd18917');
                 echo " <span class=\"error\">invalid!</span>\n";
                 $argLoc = '';
                 $firstSubordinationEID = '';
             }
             echo "<br />\n";
-            log_add('define subordination oid = ' . $firstSubordinationEID, 'warn', __FUNCTION__, 'a875618e');
+            log_add('define subordination eid = ' . $firstSubordinationEID, 'warn', __FUNCTION__, 'a875618e');
             echo 'subordination to : ' . $firstSubordinationEID . "<br />\n";
             log_add('define subordination location = ' . $argLoc, 'info', __FUNCTION__, 'c1c943a5');
             echo 'location on &nbsp;&nbsp;&nbsp;&nbsp; : ' . $argLoc . "\n";
