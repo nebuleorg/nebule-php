@@ -2226,7 +2226,14 @@ class Traduction extends Traductions
         <h4 id="oabd">OABD / Description</h4>
         <p>Le <i>bootstrap</i> est un programme autonome de <i>nebule</i> constitué d'un seul et unique fichier écrit en
             PHP.</p>
-        <p style="color: red; font-weight: bold">A revoir...</p>
+        <p>Il constitue le point d'entrée par défaut de toute connexion des utilisateurs ou robots vers l'instance,
+            c'est-à-dire une localisation précise sur un serveur Web sur lequel on se connecte avec une URL dédiée.</p>
+        <p>Il permet de gérer un certain nombre d'applications intégrées ou externes. Ces applications sont des
+            interfaces entre les informations stockées dans les objets et reliées par des liens. En interagissant avec
+            le <i>bootstrap</i>, il est possible d'accéder aux applications. Via une option, il est possible de modifier
+            l'application par défaut afin de personnaliser une instance.</p>
+        <p>Il est aussi en charge de trouver les dernières versions de la bibliothèque
+            <?php echo \Nebule\Library\nebule::NEBULE_LICENCE_NAME; ?> et des applications de manière sécurisée.</p>
 
         <h4 id="oabi">OABI / Installation</h4>
         <p>Le <i>bootstrap</i> nécessite pour fonctionner un serveur Web avec PHP pré-installé. Il peut être hébergé sur

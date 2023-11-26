@@ -190,6 +190,8 @@ function work_full_reinit()
   sed -i 's/^#codeBranch = .*$/codeBranch = develop/' c
   sed -i 's/^#logsLevel = .*$/logsLevel = DEVELOP/' c
   sed -i 's/^#displayUnsecureURL = .*$/displayUnsecureURL = false/' c
+  sed -i 's/^#permitApplication4 = .*$/permitApplication4 = true/' c
+  sed -i 's/^#permitApplication9 = .*$/permitApplication9 = true/' c
 
   echo ' > obj'
   echo -n "${puppetmaster_develop_key}" > "o/${puppetmaster_develop_key_hash}"
