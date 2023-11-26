@@ -832,15 +832,10 @@ class Configuration
      * C'est la façon de forcer une option.
      *
      * @param string $name
-     * @return string|bool|int|null
+     * @return string|bool|int
      */
     public function getOptionUntyped(string $name)
     {
-        if (! isset(self::OPTIONS_TYPE[$name]))
-        {
-            $this->_metrologyInstance->addLog('Ask unknown option "' . $name . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'cbf78f11');
-            return '';
-        }
         return self::_changeTypeValueFromString($name, $this->_getOption($name));
     }
 
@@ -922,7 +917,8 @@ class Configuration
         if (is_a($this->_metrologyInstance, '\Nebule\Library\Metrology'))
             $this->_metrologyInstance->addLog('Get option ' . $name, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '56a98331');
 
-        $result = '';
+        if (! isset(self::OPTIONS_TYPE[$name]))
+            $this->_metrologyInstance->addLog('Ask unknown option "' . $name . '"', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'cbf78f11');
 
         // Read on cache.
         if (isset($this->_optionCache[$name]))
@@ -1086,15 +1082,10 @@ class Configuration
      *
      * @param string $name
      * @param string $value
-     * @return string|bool|int|null
+     * @return string|bool|int
      */
     static private function _changeTypeValueFromString(string $name, string $value = '')
     {
-        if (!isset(self::OPTIONS_TYPE[$name])
-            || !isset(self::OPTIONS_DEFAULT_VALUE[$name])
-        )
-            return null;
-
         switch (self::OPTIONS_TYPE[$name]) {
             case 'string' :
                 return trim($value);
@@ -1108,7 +1099,7 @@ class Configuration
             case 'integer' :
                 return (int)$value;
             default :
-                return null;
+                return $value;
         }
     }
 
