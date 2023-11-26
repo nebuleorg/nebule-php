@@ -672,7 +672,7 @@ class Configuration
         'permitApplication1' => 'The switch to permit the use of application 1 to select application.',
         'permitApplication2' => 'The switch to permit the use of application 2 to authenticate with local entity.',
         'permitApplication3' => 'The switch to permit the use of application 3 for documentation.',
-        'permitApplication4' => 'The switch to permit the use of application 4 for debug purposes.',
+        'permitApplication4' => 'The switch to permit the use of application 4 to shortly display blocklink.',
         'permitApplication5' => 'The switch to permit the use of application 5, not implemented.',
         'permitApplication6' => 'The switch to permit the use of application 6, not implemented.',
         'permitApplication7' => 'The switch to permit the use of application 7, not implemented.',

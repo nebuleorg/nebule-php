@@ -386,16 +386,6 @@ class Crypto implements CryptoInterface
      */
     static public function echoDocumentationCore()
     {
-        global $nebuleInstance;
-
-        $options = $nebuleInstance->getConfigurationInstance()->getListOptions();
-        $categories = $nebuleInstance->getConfigurationInstance()->getListCategoriesOptions();
-        $optionsCategory = $nebuleInstance->getConfigurationInstance()->getListOptionsCategory();
-        $optionsType = $nebuleInstance->getConfigurationInstance()->getListOptionsType();
-        $optionsWriteable = $nebuleInstance->getConfigurationInstance()->getListOptionsWritable();
-        $optionsDefaultValue = $nebuleInstance->getConfigurationInstance()->getListOptionsDefaultValue();
-        $optionsCriticality = $nebuleInstance->getConfigurationInstance()->getListOptionsCriticality();
-        $optionsDescription = $nebuleInstance->getConfigurationInstance()->getListOptionsDescription();
         ?>
 
         <h1 id="c">C / Confiance</h1>
@@ -486,9 +476,8 @@ class Crypto implements CryptoInterface
         <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="cco">CCO / Options</h3>
-        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Les options permettent de modifier le comportement du code de la bibliothèque et des applications.</p>
-        <p>La sensibilité des options est variable. On compte trois niveau de sensibilité :</p>
+        <p>La sensibilité des options est variable. On compte trois niveaux de sensibilité :</p>
         <ul>
             <li>utile (useful)</li>
             <li>important (careful)</li>
@@ -496,35 +485,35 @@ class Crypto implements CryptoInterface
         </ul>
         <p>Les options sont rangées par catégories, c'est juste de l'affichage :</p>
         <ul>
-            <?php foreach (Configuration::OPTIONS_LIST as $item ) { echo "\t<li>".$item."</li>\n"; } ?>
+            <?php foreach (\Nebule\Library\Configuration::OPTIONS_CATEGORIES as $o ) { echo "\t<li>".$o."</li>\n"; } ?>
         </ul>
         <p>Toutes les options ont une valeur par défaut. Les valeurs peuvent être modifiées via un fichier de configuration et via des liens. Les modifications appliquées dans le fichier de configuration ne sont pas écrasables par des modifications faites via des liens, cela force le comportement du code sur un serveur. Pour des raisons de sécurité, certaines options ne peuvent être modifiées que dans le fichier de configuration, elles sont dites en lecture seule.</p>
         <p>Liste des options :</p>
         <ul>
             <?php
-            foreach ( $categories as $categorie )
+            foreach ( \Nebule\Library\Configuration::OPTIONS_CATEGORIES as $categorie )
             {
                 echo "\t<li>Catégorie '<code>".$categorie."</code>' :\n\t\t<ul>\n";
-                foreach ( $options as $option )
+                foreach ( \Nebule\Library\Configuration::OPTIONS_LIST as $option )
                 {
-                    if ( $optionsCategory[$option] == $categorie )
+                    if ( \Nebule\Library\Configuration::OPTIONS_CATEGORY[$option] == $categorie )
                     {
                         echo "\t\t\t<li>Option '<code>$option</code>' :\n\t\t\t\t<ul>\n";
-                        echo "\t\t\t\t\t<li>Description : <code>$optionsDescription[$option]</code></li>\n";
-                        echo "\t\t\t\t\t<li>Criticité : <code>$optionsCriticality[$option]</code></li>\n";
-                        echo "\t\t\t\t\t<li>Type : <code>$optionsType[$option]</code></li>\n";
+                        echo "\t\t\t\t\t<li>Description : <code>".\Nebule\Library\Configuration::OPTIONS_DESCRIPTION[$option]."</code></li>\n";
+                        echo "\t\t\t\t\t<li>Criticité : <code>".\Nebule\Library\Configuration::OPTIONS_CRITICALITY[$option]."</code></li>\n";
+                        echo "\t\t\t\t\t<li>Type : <code>".\Nebule\Library\Configuration::OPTIONS_TYPE[$option]."</code></li>\n";
                         $value = '';
-                        if ( $optionsType[$option] == 'boolean' )
+                        if ( \Nebule\Library\Configuration::OPTIONS_TYPE[$option] == 'boolean' )
                         {
-                            if ( $optionsDefaultValue[$option] === true )
+                            if ( \Nebule\Library\Configuration::OPTIONS_DEFAULT_VALUE[$option] == 'true' )
                                 $value = 'true';
                             else
                                 $value = 'false';
                         }
                         else
-                            $value = $optionsDefaultValue[$option];
+                            $value = \Nebule\Library\Configuration::OPTIONS_DEFAULT_VALUE[$option];
                         echo "\t\t\t\t\t<li>Valeur par défaut : <code>$value</code></li>\n";
-                        if ( $optionsWriteable[$option] !== true )
+                        if ( \Nebule\Library\Configuration::OPTIONS_WRITABLE[$option] != 'true' )
                             echo "\t\t\t\t\t<li>En lecture seule.</li>\n";
                         echo "\t\t\t\t</ul>\n\t\t\t</li>\n";
                     }
@@ -578,18 +567,18 @@ class Crypto implements CryptoInterface
 
 # nebule php
 <?php
-foreach ( $options as $option )
+foreach ( \Nebule\Library\Configuration::OPTIONS_LIST as $option )
 {
-    if ( $optionsType[$option] == 'boolean' ) {
-        if ( $optionsDefaultValue[$option] === true )
+    if ( \Nebule\Library\Configuration::OPTIONS_TYPE[$option] == 'boolean' ) {
+        if ( \Nebule\Library\Configuration::OPTIONS_DEFAULT_VALUE[$option] == 'true' )
             $value = 'true';
         else
             $value = 'false';
-    } elseif ( $optionsType[$option] == 'integer' ) {
-        $value = (string)$optionsDefaultValue[$option];
+    } elseif ( \Nebule\Library\Configuration::OPTIONS_TYPE[$option] == 'integer' ) {
+        $value = (string)\Nebule\Library\Configuration::OPTIONS_DEFAULT_VALUE[$option];
     }
     else
-        $value = $optionsDefaultValue[$option];
+        $value = \Nebule\Library\Configuration::OPTIONS_DEFAULT_VALUE[$option];
     echo '#'.$option.' = '.$value."\n";
 }
 ?>
@@ -615,9 +604,9 @@ foreach ( $options as $option )
         <p>Liste des options non modifiables via des liens :</p>
         <ul>
             <?php
-            foreach ( $options as $option )
+            foreach ( \Nebule\Library\Configuration::OPTIONS_LIST as $option )
             {
-                if ( $optionsWriteable[$option] !== true )
+                if ( \Nebule\Library\Configuration::OPTIONS_WRITABLE[$option] != 'true' )
                     echo "\t<li>Option '<code>$option</code>'</li>\n";
             }
             ?>
