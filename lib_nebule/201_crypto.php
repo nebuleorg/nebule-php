@@ -542,23 +542,39 @@ class Crypto implements CryptoInterface
         </ul>
 
         <h4 id="ccof">CCOF / Options via Fichier</h4>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Dans les deux méthodes pour gérer les options, il y a le fichier des options. Toutes les options inscrites dans ce fichier sont dites forcées et ne peuvent être surchargées par un lien d'option. Les options dites en lecture seule ne peuvent être changée que via le fichier des options.</p>
-        <p>Le fichier contenant les options doit s'appeler <code>nebule.env</code>, doit être positionné à côté du fichier <code>index.php</code> utilisé, et doit être lisible de l'utilisateur du service web. Par sécurité, les fichiers <code>nebule.env</code> et <code>index.php</code> doivent être protégés en écriture, c'est à dire en lecture seule, pour l'utilisateur du service web.</p>
-        <p>Chaque option est représentée sur une seule ligne commençant par le nom de l'option suivi du caractère <code>=</code> entouré ou non d'espaces. Tout ce qui est après le signe <code>=</code> constitue la valeur de l'option. La valeur ne nécessite par de simple ou double côte de protection.</p>
-        <p>Dans le fichier des options, une ligne commençant par le caractère <code>#</code> est entièrement ignorée. C'est un commentaire. Une ligne ne contenant pas le signe <code>=</code> est ignorée mais cela peut être perçu comme ambiguë, à éviter.</p>
-        <p>Si des espaces sont présents en début ou fin de ligne, ils sont ignorés lors du traitement de l'option. Les espaces autour du signe <code>=</code> sont ignorés lors du traitement de l'option.</p>
-        <p>Le fichier des options peut contenir indifféremment des options pour plusieurs bibliothèques et applications. Le fichier des options n'est parcouru que lors de la recherche d'une options. Les options inconnues sont ignorées. Seule la première occurence d'une option est prise en compte.</p>
-        <p>Les booléens sont comparés par rapport à la valeur par défaut de l'option correspondante. C'est à dire que toute valeur autre que l'option par défaut vaut inversion de la valeur par défaut.</p>
+        <p>Dans les deux méthodes pour gérer les options, il y a le fichier des options. Toutes les options inscrites
+            dans ce fichier sont dites forcées et ne peuvent être surchargées par un lien d'option. Les options dites en
+            lecture seule ne peuvent être changées que via le fichier des options.</p>
+        <p>Le fichier contenant les options doit s'appeler
+            <code><?php echo \Nebule\Bootstrap\LIB_LOCAL_ENVIRONMENT_FILE; ?></code>, doit être positionné à côté du
+            fichier <code>index.php</code> utilisé, et doit être lisible de l'utilisateur du service web. Par sécurité,
+            les fichiers <code><?php echo \Nebule\Bootstrap\LIB_LOCAL_ENVIRONMENT_FILE; ?></code> et
+            <code>index.php</code> doivent être protégés en écriture, c'est-à-dire en lecture seule, pour l'utilisateur
+            du service web.</p>
+        <p>Chaque option est représentée sur une seule ligne commençant par le nom de l'option suivi du caractère
+            <code>=</code> entouré ou non d'espaces. Tout ce qui est après le signe <code>=</code> constitue la valeur
+            de l'option. La valeur ne nécessite par de simple ou double côte de protection.</p>
+        <p>Dans le fichier des options, une ligne commençant par le caractère <code>#</code> est entièrement ignorée.
+            C'est un commentaire. Une ligne ne contenant pas le signe <code>=</code> est ignorée, mais cela peut être
+            perçu comme ambiguë, à éviter.</p>
+        <p>Si des espaces sont présents en début ou fin de ligne, ils sont ignorés lors du traitement de l'option. Les
+            espaces autour du signe <code>=</code> sont ignorés lors du traitement de l'option.</p>
+        <p>Le fichier des options peut contenir indifféremment des options pour plusieurs bibliothèques et applications.
+            Le fichier des options n'est parcouru que lors de la recherche d'une option. Les options inconnues sont
+            ignorées. Seule la première occurrence d'une option est prise en compte.</p>
+        <p>Les booléens sont comparés par rapport à <code>true</code>. C'est-à-dire que toute autre valeur équivaut à
+            <code>false</code>.</p>
+        <p>Pour modifier une option, si cela est authorisé, il faut aller modifier sa valeur dans le fichier
+            <code><?php echo \Nebule\Bootstrap\LIB_LOCAL_ENVIRONMENT_FILE; ?></code> et au besoin retirer le
+            <code>#</code> de mise en commentaire pour que la nouvelle valeur soit prise en compte. Ensuite, si une
+            session est déjà ouverte, il faut vider le cache des options pour que ce soit pris en compte, voir
+            <a href="oabc">OABC</a>.</p>
         <p>Par défaut, le fichier des options contient :</p>
         <pre>
-# nebule bash
-filesystemBaseDirectory=~/nebule
-filesystemPublicDirectory=~/nebule/pub
-filesystemPrivateDirectory=~/nebule/priv
-filesystemTemporaryDirectory=~/nebule/temp
-filesystemLogActivate=false
-filesystemLogFile=~/nebule/neb.log
+# Generated by the <?php echo \Nebule\Bootstrap\BOOTSTRAP_NAME; ?>, part of the <?php echo \Nebule\Bootstrap\BOOTSTRAP_AUTHOR; ?>.
+# <?php echo \Nebule\Bootstrap\BOOTSTRAP_SURNAME; ?>
+# Version : <?php echo \Nebule\Bootstrap\BOOTSTRAP_VERSION; ?>
+# <?php echo \Nebule\Bootstrap\BOOTSTRAP_WEBSITE; ?>
 
 # nebule php
 <?php

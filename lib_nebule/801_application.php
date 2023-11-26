@@ -1668,12 +1668,42 @@ abstract class Applications implements applicationInterface
                                 <li><a href="#oaigd">OAIGD / Nd - defolt</a></li>
                             </ul>
                         </li>
+                        <li><a href="#oaio">OAIO / Implémentation des Options</a></li>
+                        <li><a href="#oaia">OAIA / Implémentation des Actions</a></li>
                     </ul>
                 </li>
-                <?php Modules::echoDocumentationTitles(); ?>
-
-                <li><a href="#oaio">OAIO / Implémentation des Options</a></li>
-                <li><a href="#oaia">OAIA / Implémentation des Actions</a></li>
+                <li><a href="#oab">OAB / Bootstrap</a>
+                    <ul>
+                        <li><a href="#oabd">OABD / Description</a></li>
+                        <li><a href="#oabi">OABI / Installation</a></li>
+                        <li><a href="#oabf">OABF / Premier démarrage</a></li>
+                        <li><a href="#oabd">OABD / Commandes</a></li>
+                        <li><a href="#oabc">OABC / Configuration</a></li>
+                        <li><a href="#oabb">OABB / Interruption</a></li>
+                        <li><a href="#oaba">OABA / Applications intégrées</a>
+                            <ul>
+                                <li><a href="#oaba0">OABA0 / Application 0</a></li>
+                                <li><a href="#oaba1">OABA1 / Application 1</a></li>
+                                <li><a href="#oaba2">OABA2 / Application 2</a></li>
+                                <li><a href="#oaba3">OABA3 / Application 3</a></li>
+                                <li><a href="#oaba4">OABA4 / Application 4</a></li>
+                                <li><a href="#oaba5">OABA5 / Application 5</a></li>
+                                <li><a href="#oaba6">OABA6 / Application 6</a></li>
+                                <li><a href="#oaba7">OABA7 / Application 7</a></li>
+                                <li><a href="#oaba8">OABA8 / Application 8</a></li>
+                                <li><a href="#oaba9">OABA9 / Application 9</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#oabn">OABN / Fonctionnement nominal</a></li>
+                    </ul>
+                </li>
+                <li><a href="#oal">OAL / Librairie</a>
+                    <ul>
+                        <li><a href="#oald">OALD / Description</a></li>
+                        <li><a href="#oalc">OALC / Configuration</a></li>
+                    </ul>
+                </li>
+                <?php \Nebule\Library\Modules::echoDocumentationTitles(); ?>
             </ul>
         </li>
 
@@ -1691,7 +1721,7 @@ abstract class Applications implements applicationInterface
         ?>
 
         <h2 id="oa">OA / Application</h2>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Une application permet d'interagir avec les objets et liens.</p>
         <p>Un application qui ne fait que lire des objets et liens, ou retrasmettre des liens déjà signés, est dite
             passive. Si l'application à la capacité de générer des liens signés, donc avec une entité déverrouillée,
@@ -1733,25 +1763,25 @@ abstract class Applications implements applicationInterface
             Traductions dans la librairie nebule.</p>
 
         <h3 id="oan">OAN / Nommage</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="oap">OAP / Protection</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="oad">OAD / Dissimulation</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="oal">OAL / Liens</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="oac">OAC / Création</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="oas">OAS / Stockage</h3>
         <p>Voir <a href="#oos">OOS</a>, pas de particularité de stockage.</p>
 
         <h3 id="oat">OAT / Transfert</h3>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h3 id="oar">OAR / Réservation</h3>
         <p>Les objets réservés spécifiquement pour les applications :</p>
@@ -1763,7 +1793,7 @@ abstract class Applications implements applicationInterface
         <p>Une interface est un programme dédié aux interactions entre deux milieux différents.</p>
         <p>Une interface permet à une entité, c'est-à-dire un utilisateur ou un robot, d'interagir avec une application.
             Cela peut être vu comme une extension de l'application.</p>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <p>Les applications développées dans le cadre de <i>nebule</i> :</p>
         <ul>
@@ -1808,16 +1838,16 @@ abstract class Applications implements applicationInterface
         </div>
 
         <h4 id="oain">OAIN / Nommage</h4>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="oaip">OAIP / Protection</h4>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="oaid">OAID / Dissimulation</h4>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="oail">OAIL / Liens</h4>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="oaic">OAIC / Création</h4>
         <p>La création d'une application se passe en trois parties. Il faut créer un objet de référence de la nouvelle
@@ -2138,16 +2168,16 @@ class Traduction extends Traductions
             <li>cible :</li>
             <li>méta :</li>
         </ul>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="oaiu">OAIU / Mise à Jour</h4>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="oais">OAIS / Stockage</h4>
         <p>Voir <a href="#oos">OOS</a>, pas de particularité de stockage.</p>
 
         <h4 id="oait">OAIT / Transfert</h4>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="oair">OAIR / Réservation</h4>
         <p>Les objets réservés spécifiquement pour les applications :</p>
@@ -2165,34 +2195,160 @@ class Traduction extends Traductions
         <p>Le nom de ces applications est toujours en minuscule.</p>
 
         <h5 id="oaigb">OAIGB / Nb - bootstrap</h5>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+        <p>voir <a href="#oab">OAB</a></p>
 
         <h5 id="oaigs">OAIGS / Sy - sylabe</h5>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h5 id="oaigk">OAIGK / Kl - klicty</h5>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h5 id="oaigm">OAIGM / Me - messae</h5>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h5 id="oaigo">OAIGO / No - option</h5>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h5 id="oaigu">OAIGU / Nu - upload</h5>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h5 id="oaigd">OAIGD / Nd - defolt</h5>
-        <p>A faire...</p>
-
-        <?php Modules::echoDocumentationCore(); ?>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="oaio">OAIO / Implémentation des Options</h4>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="oaia">OAIA / Implémentation des Actions</h4>
-        <p>A faire...</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <?php
+        <h3 id="oab">OAB / Bootstrap</h3>
+        <h4 id="oabd">OABD / Description</h4>
+        <p>Le <i>bootstrap</i> est un programme autonome de <i>nebule</i> constitué d'un seul et unique fichier écrit en
+            PHP.</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <h4 id="oabi">OABI / Installation</h4>
+        <p>Le <i>bootstrap</i> nécessite pour fonctionner un serveur Web avec PHP pré-installé. Il peut être hébergé sur
+            le site principal, dans un sous-domaine ou un sous-dossier de site Web. Il nécessite le droit d'écriture sur
+            le dossier le contenant au moins le temps du premier démarrage.</p>
+        <p>Procédure :</p>
+        <ul>
+            <li>Installer un serveur Web (Linux/Apache) avec PHP. Aucun serveur de base de données n'est utilisé.</li>
+            <li>Télécharger le fichier <i>bootstrap</i> sur le site Web
+                <a href="<?php echo \Nebule\Library\nebule::NEBULE_LICENCE_LINK; ?>">
+                <?php echo \Nebule\Library\nebule::NEBULE_LICENCE_LINK; ?></a>.
+                <span style="color: red; font-weight: bold">FIXME téléchargement sécurisé !</span></li>
+            <li>Positionner le fichier <i>bootstrap</i> dans le dossier Web du serveur Web. Au besoin, renommer le
+                fichier en <i>index.php</i>.</li>
+            <li>Donner les droits de lecture et d'écriture (755 groupe apache) sur le dossier Web contenant le fichier
+                <i>bootstrap</i> et le droit de lecture sur le fichier <i>index.php</i> (644).</li>
+            <li>Ouvrir un navigateur Web et donner en URL l'adresse du serveur Web.</li>
+            <li>La partie premier démarrage du <i>bootstrap</i> est appelée. Voir <a href="#oabf">OABF</a>.</li>
+            <li>Entrer un EID et une localisation pour le <i>puppetmaster</i> ou laisser celui par défaut. Valider.</li>
+            <li>Entrer un EID et une localisation pour l'entité de subordination ou laisser celle par défaut. Valider.</li>
+            <li>Noter l'empreinte EID de la nouvelle entité de l'instance et son mot de passe.</li>
+            <li>Si tout se passe bien, on arrive sur l'application 1 de selection des applications.</li>
+            <li>L'instance est prête.</li>
+        </ul>
+        <p>Après le premier démarrage, les droits de lecture sont suffisants sauf pour les dossiers <i>o</i> et <i>l</i>
+            qui nécessitent le droit d'écriture.</p>
+        <p>Il est possible sur une instance de ne laisser que les droits de lecture sur toute l'arborescence. Cependant,
+            cela empêchera toute interaction nécessitant la création d'objets ou de liens. Il est préférable dans ce cas
+            de positionner l'option <b>permitWrite</b> à <i>false</i> dans le fichier de configuration. Voir
+            <a href="#cco">CCO</a> pour changer la configuration.</p>
+
+        <h4 id="oabf">OABF / Premier démarrage</h4>
+        <p>Lors du premier démarrage (firstboot), c'est-à-dire lorsque l'on appelle le <i>bootstrap</i> via le serveur Web PHP, il
+            va se charger de préparer l'environnement nécessaire au bon fonctionnement d'une instance <i>nebule</i>.
+            Cela va inclure :</p>
+        <ul>
+            <li>La création d'un fichier <i>c</i> de configuration générique.</li>
+            <li>La création d'un dossier <i>o</i> pour stocker les objets.</li>
+            <li>La création d'un dossier <i>l</i> pour stocker les liens.</li>
+            <li>La génération d'une entité locale, dite entité de l'instance.</li>
+            <li>La création d'un fichier <i>e</i> contenant l'empreinte <i>EID</i> de l'entité de l'instance.</li>
+            <li>La création de différents objets dans le dossier des objets.</li>
+            <li>La création de différents liens dans le dossier des liens.</li>
+        </ul>
+        <p>Au besoin, un certain nombre de ces dossiers et fichiers peuvent être pré-initialisé lorsque l'on dépose le
+            <i>bootstrap</i> sur le serveur Web. Mais cela n'est pas le fonctionnement normal.</p>
+
+        <h4 id="oabd">OABD / Commandes</h4>
+        <p>Il est possible d'interagir avec le <i>bootstrap></i> au moyen de commandes dans l'URL.</p>
+        <p>Liste des commandes :</p>
+        <ul>
+            <li><b>a</b> : Sélection d'une application.</li>
+            <li><b>b</b> : Interruption du <i>bootstrap</i>. Voir <a href="#oabb">OABB</a>.</li>
+            <li><b>e</b> : Affichage de l'empreinte EID de l'entité de l'instance.</li>
+            <li><b>f</b> : Réinitialisation de la session, suppression du cache, fermeture des applications et entités.</li>
+            <li><b>i</b> : Affichage en mode page intégrée d'une application.</li>
+            <li><b>l</b> : Dans l'application 4, désigne le bloc de liens à afficher. Non reconnu ailleurs.</li>
+            <li><b>r</b> : Charge en mode restreint pour dépannage.</li>
+            <li><b>u</b> : Demande une mise à jour des applications et du cache associé.</li>
+            <li><b>bootstrapfirstpuppetmastereid</b> : Dans le <i>firstboot</i>, donne l'EID de puppetmaster. Non
+                reconnu ailleurs.</li>
+            <li><b>bootstrapfirstpuppetmasterlocation</b> : Dans le <i>firstboot</i>, donne la localisation de
+                téléchargement de puppetmaster. Non reconnu ailleurs.</li>
+            <li><b>bootstrapfirstsubordinationeid</b> : Dans le <i>firstboot</i>, donne l'EID de l'entité de
+                subordination. Non reconnu ailleurs.</li>
+            <li><b>bootstrapfirstsubordinationlocation</b> : Dans le <i>firstboot</i>, donne la localisation de
+                téléchargement de l'entité de subordination. Non reconnu ailleurs.</li>
+        </ul>
+
+        <h4 id="oabc">OABC / Configuration</h4>
+        <p>Le <i>bootstrap</i> obéit aux mêmes options que la bibliothèque et les applications. Voir
+            <a href="#cco">CCO</a>.</p>
+
+        <h4 id="oabb">OABB / Interruption</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <h4 id="oaba">OABA / Applications intégrées</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <h5 id="oaba0">OABA0 / Application 0</h5>
+        <p>C'est l'application par défaut pour les instances sans interaction. La page Web délivrée est minimaliste.</p>
+
+        <h5 id="oaba1">OABA1 / Application 1</h5>
+        <p>C'est l'application de sélection et de navigation et les différentes applications.</p>
+
+        <h5 id="oaba2">OABA2 / Application 2</h5>
+        <p>C'est une application minimale d'authentification des utilisateurs sur les entités.</p>
+
+        <h5 id="oaba3">OABA3 / Application 3</h5>
+        <p>C'est l'application d'affichage de la documentation technique.</p>
+
+        <h5 id="oaba4">OABA4 / Application 4</h5>
+        <p>C'est une application qui permet de voir de façon simplifiée les blocs de liens.</p>
+        <p>Elle est désactivée par défaut.</p>
+
+        <h5 id="oaba5">OABA5 / Application 5</h5>
+        <p>Non utilisé.</p>
+
+        <h5 id="oaba6">OABA6 / Application 6</h5>
+        <p>Non utilisé.</p>
+
+        <h5 id="oaba7">OABA7 / Application 7</h5>
+        <p>Non utilisé.</p>
+
+        <h5 id="oaba8">OABA8 / Application 8</h5>
+        <p>Non utilisé.</p>
+
+        <h5 id="oaba9">OABA9 / Application 9</h5>
+        <p>C'est une application utilisée pour le déverminage du code.</p>
+        <p>Elle est désactivée par défaut.</p>
+
+        <h4 id="oabn">OABN / Fonctionnement nominal</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <h3 id="oal">OAL / Librairie</h3>
+        <h4 id="oald">OALD / Description</h4>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <h4 id="oalc">OALC / Configuration</h4>
+        <p>La bibliothèque obéit aux mêmes options que le <i>bootstrap</i> et les applications. Voir
+            <a href="#cco">CCO</a>.</p>
+
+        <?php Modules::echoDocumentationCore();
     }
 }
