@@ -1680,6 +1680,7 @@ abstract class Applications implements applicationInterface
                         <li><a href="#oabd">OABD / Commandes</a></li>
                         <li><a href="#oabc">OABC / Configuration</a></li>
                         <li><a href="#oabb">OABB / Interruption</a></li>
+                        <li><a href="#oabe">OABE / Applications externes</a></li>
                         <li><a href="#oaba">OABA / Applications intégrées</a>
                             <ul>
                                 <li><a href="#oaba0">OABA0 / Application 0</a></li>
@@ -2308,45 +2309,84 @@ class Traduction extends Traductions
             <a href="#cco">CCO</a>.</p>
 
         <h4 id="oabb">OABB / Interruption</h4>
+        <p>La présence de la commande <i>b</i> sur l'URL déclenche l'affichage d'une page d'interruption dédiée du
+            <i>bootstrap</i>.</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
+        <h4 id="oabe">OABE / Applications externes</h4>
+        <p>La présence de la commande <i>a=RID</i> sur l'URL permet de passer vers l'application référencée par ce RID.
+            Pour les applications externes, le RID est l'objet de référence de l'application. Chaque application dispose
+            d'un RID unique avec une valeur assez longue pour éviter toute collision avec une autre application.</p>
+        <p>Voir <a href="#oa">OA</a>.</p>
+
         <h4 id="oaba">OABA / Applications intégrées</h4>
-        <p style="color: red; font-weight: bold">A revoir...</p>
+        <p>La présence de la commande <i>a=RID</i> sur l'URL permet de passer vers l'application référencée par ce RID.
+            Pour les applications internes, le RID est l'objet de référence interne de l'application sur un seul
+            chiffre (0 à 9).</p>
+        <p> Toutes les applications internes ne sont pas actives et donc ne sont pas accessibles. Certaines
+            applications internes peuvent être bloquées par des options de configuration.</p>
+        <p>Ci-dessous les différentes applications.</p>
 
         <h5 id="oaba0">OABA0 / Application 0</h5>
         <p>C'est l'application par défaut pour les instances sans interaction. La page Web délivrée est minimaliste.</p>
+        <p>La présence de la commande <i>a=0</i> sur l'URL déclenche l'affichage de cette page dédiée du
+            <i>bootstrap</i>.</p>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication1</b> à <i>false</i> ou un lien équivalent.</p>
 
         <h5 id="oaba1">OABA1 / Application 1</h5>
         <p>C'est l'application de sélection et de navigation et les différentes applications.</p>
+        <p>La présence de la commande <i>a=1</i> sur l'URL déclenche l'affichage de cette page dédiée du
+            <i>bootstrap</i>.</p>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication1</b> à <i>false</i> ou un lien équivalent.</p>
 
         <h5 id="oaba2">OABA2 / Application 2</h5>
         <p>C'est une application minimale d'authentification des utilisateurs sur les entités.</p>
+        <p>La présence de la commande <i>a=2</i> sur l'URL déclenche l'affichage de cette page dédiée du
+            <i>bootstrap</i>.</p>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication2</b> à <i>false</i> ou un lien équivalent.</p>
 
         <h5 id="oaba3">OABA3 / Application 3</h5>
         <p>C'est l'application d'affichage de la documentation technique.</p>
+        <p>La présence de la commande <i>a=3</i> sur l'URL déclenche l'affichage de cette page dédiée du
+            <i>bootstrap</i>.</p>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication3</b> à <i>false</i> ou un lien équivalent.</p>
 
         <h5 id="oaba4">OABA4 / Application 4</h5>
         <p>C'est une application qui permet de voir de façon simplifiée les blocs de liens.</p>
+        <p>La présence de la commande <i>a=4</i> sur l'URL déclenche l'affichage de cette page dédiée du
+            <i>bootstrap</i>.</p>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication4</b> à <i>false</i> ou un lien équivalent.</p>
         <p>Elle est désactivée par défaut.</p>
 
         <h5 id="oaba5">OABA5 / Application 5</h5>
-        <p>Non utilisé.</p>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication5</b> à <i>false</i> ou un lien équivalent.</p>
+        <p>Non utilisé, redirigé vers l'application 0.</p>
 
         <h5 id="oaba6">OABA6 / Application 6</h5>
-        <p>Non utilisé.</p>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication6</b> à <i>false</i> ou un lien équivalent.</p>
+        <p>Non utilisé, redirigé vers l'application 0.</p>
 
         <h5 id="oaba7">OABA7 / Application 7</h5>
-        <p>Non utilisé.</p>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication7</b> à <i>false</i> ou un lien équivalent.</p>
+        <p>Non utilisé, redirigé vers l'application 0.</p>
 
         <h5 id="oaba8">OABA8 / Application 8</h5>
-        <p>Non utilisé.</p>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication8</b> à <i>false</i> ou un lien équivalent.</p>
+        <p>Non utilisé, redirigé vers l'application 0.</p>
 
         <h5 id="oaba9">OABA9 / Application 9</h5>
         <p>C'est une application utilisée pour le déverminage du code.</p>
+        <p>La présence de la commande <i>a=9</i> sur l'URL déclenche l'affichage de cette page dédiée du
+            <i>bootstrap</i>.</p>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication9</b> à <i>false</i> ou un lien équivalent.</p>
         <p>Elle est désactivée par défaut.</p>
 
         <h4 id="oabn">OABN / Fonctionnement nominal</h4>
-        <p style="color: red; font-weight: bold">A revoir...</p>
+        <p>Le <i>bootstrap</i> mémorise la dernière application utilisée et va, jusqu'à déconnexion de la session à
+            l'instance ou vidage du cache ou problème, représenter la même application à l'utilisateur. C'est le
+            fonctionnement nominal pour un utilisateur.</p>
+        <p>La présence de la commande <i>a=RID</i> sur l'URL permet de passer vers l'application référencée par ce RID.
+            Tant que la commande <i>a</i> n'est pas de nouveau utilisée, on reste sur la même application.</p>
 
         <h3 id="oal">OAL / Librairie</h3>
         <h4 id="oald">OALD / Description</h4>
