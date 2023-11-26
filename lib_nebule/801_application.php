@@ -2282,8 +2282,8 @@ class Traduction extends Traductions
             <li><b>b</b> : Interruption du <i>bootstrap</i>. Voir <a href="#oabb">OABB</a>.</li>
             <li><b>e</b> : Affichage de l'empreinte EID de l'entité de l'instance.</li>
             <li><b>f</b> : Réinitialisation de la session, suppression du cache, fermeture des applications et entités.</li>
-            <li><b>i</b> : Affichage en mode page intégrée d'une application.</li>
-            <li><b>l</b> : Dans l'application 4, désigne le bloc de liens à afficher. Non reconnu ailleurs.</li>
+            <li><b>i</b> : Affichage en mode page intégrée d'une application. N'est pas supporté partout.</li>
+            <li><b>l</b> : Dans l'application 4, désigne le NID dont on veux afficher les blocs de liens. Non reconnu ailleurs.</li>
             <li><b>r</b> : Charge en mode restreint pour dépannage.</li>
             <li><b>u</b> : Demande une mise à jour des applications et du cache associé.</li>
             <li><b>bootstrapfirstpuppetmastereid</b> : Dans le <i>firstboot</i>, donne l'EID de puppetmaster. Non
