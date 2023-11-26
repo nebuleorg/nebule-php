@@ -188,6 +188,8 @@ function work_full_reinit()
   sed -i 's/^puppetmaster = .*$/puppetmaster = '"${puppetmaster_develop_pem_hash}"'/' c
   sed -i 's/^#hostURL = .*$/hostURL = bachue.developpement.nebule.org/' c
   sed -i 's/^#codeBranch = .*$/codeBranch = develop/' c
+  sed -i 's/^#logsLevel = .*$/logsLevel = DEVELOP/' c
+  sed -i 's/^#displayUnsecureURL = .*$/displayUnsecureURL = false/' c
 
   echo ' > obj'
   echo -n "${puppetmaster_develop_key}" > "o/${puppetmaster_develop_key_hash}"
