@@ -701,7 +701,7 @@ class Configuration
      * Verrou des modifications des options dans le cache.
      * @var boolean
      */
-    private $_writeOptionCacheLock = false;
+    private $_overwriteOptionCacheLock = false;
 
     /**
      * Verrouillage de la recherche d'option via les liens.
@@ -919,47 +919,41 @@ class Configuration
         if ($name == '')
             return '';
 
-        if ($this->_metrologyInstance !== null)
+        if (is_a($this->_metrologyInstance, '\Nebule\Library\Metrology'))
             $this->_metrologyInstance->addLog('Get option ' . $name, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '56a98331');
 
         $result = '';
 
         // Read on cache.
         if (isset($this->_optionCache[$name]))
-            $result = $this->_optionCache[$name];
+            return $this->_optionCache[$name];
 
-        if ($result == '')
-        {
-            $value = $this->_getOptionFromEnvironmentStatic($name);
-            if ($value != '')
-                $result = $value;
-        }
+        // Read from config file.
+        $result = $this->_getOptionFromEnvironmentStatic($name);
 
+        // If empty, read from links.
         if ($result == ''
             && isset(self::OPTIONS_WRITABLE[$name])
             && self::OPTIONS_WRITABLE[$name]
         )
-        {
-            $value = $this->_getOptionFromLinks($name);
-            if ($value != '')
-                $result = $value;
-        }
+            $result = $this->_getOptionFromLinks($name);
 
+        // If empty, read default value.
         if ($result == ''
             && isset(self::OPTIONS_DEFAULT_VALUE[$name])
         ) {
             $result = self::OPTIONS_DEFAULT_VALUE[$name];
-            if ($this->_metrologyInstance !== null) {
+            if (is_a($this->_metrologyInstance, '\Nebule\Library\Metrology')) {
                 $this->_metrologyInstance->addLog('Get default value for option ' . $name, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3e39271b');
             }
         }
 
-        if ($this->_metrologyInstance !== null)
+        if (is_a($this->_metrologyInstance, '\Nebule\Library\Metrology'))
             $this->_metrologyInstance->addLog('Return option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'd2fd4284');
 
         // Write on cache.
         if ($result != ''
-            && !$this->_writeOptionCacheLock
+            && !$this->_overwriteOptionCacheLock
         )
             $this->_optionCache[$name] = $result;
 
@@ -994,7 +988,7 @@ class Configuration
     {
         $result = self::_changeTypeValueFromString($name, self::_getOptionFromEnvironmentStatic($name));
 
-        if ($this->_metrologyInstance !== null)
+        if (is_a($this->_metrologyInstance, '\Nebule\Library\Metrology'))
             $this->_metrologyInstance->addLog('Return option env = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '52ac2506');
 
         return $result;
@@ -1058,6 +1052,7 @@ class Configuration
     }
 
     /**
+     * Read option from config file.
      * @param string $name
      * @return string
      */
@@ -1066,26 +1061,24 @@ class Configuration
         if ($name == '' )
             return '';
 
-        // Read configuration file.
-        $value = '';
         if (file_exists(nebule::NEBULE_ENVIRONMENT_FILE)) {
             $file = file(nebule::NEBULE_ENVIRONMENT_FILE, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
             foreach ($file as $line) {
                 $l = trim($line);
 
-                if (substr($l, 0, 1) == "#")
+                if ($l == '' || substr($l, 0, 1) == "#")
                     continue;
 
                 $fname = trim(filter_var(strtok($l, '='), FILTER_SANITIZE_STRING));
                 $fvalue = trim(filter_var(strtok('='), FILTER_SANITIZE_STRING));
                 if ($fname == $name) {
-                    $value = $fvalue;
+                    return $fvalue;
                     break;
                 }
             }
             unset($file);
         }
-        return $value;
+        return '';
     }
 
     /**
@@ -1219,25 +1212,26 @@ class Configuration
         )
             return '';
 
+        // Anti loop.
         $this->_optionsByLinksIsInUse = true;
 
         // Si une entité de subordination est défini, lit l'option forcée par cette entité.
         $value = '';
+        $rid = \Nebule\Library\nebule::REFERENCE_NEBULE_OPTION . '/' . $name;
         if ($this->_nebuleInstance->getSubordinationEntity() != '') {
             $instance = $this->_nebuleInstance->getSubordinationEntity();
-            $value = trim($instance->getProperty(nebule::REFERENCE_NEBULE_OPTION . '/' . $name));
-            unset($instance);
+            $value = trim($instance->getProperty($rid));
         }
 
         // Si aucune valeur trouvée de l'entité de subordination, lit l'option pour l'entité en cours.
         if ($value == ''
             && is_a($this->_nebuleInstance->getCurrentEntityInstance(), 'Entity')
         )
-            $value = trim($this->_nebuleInstance->getCurrentEntityInstance()->getProperty(nebule::REFERENCE_NEBULE_OPTION . '/' . $name));
+            $value = trim($this->_nebuleInstance->getCurrentEntityInstance()->getProperty($rid));
 
         $this->_optionsByLinksIsInUse = false;
 
-        if ($this->_metrologyInstance !== null)
+        if (is_a($this->_metrologyInstance, '\Nebule\Library\Metrology'))
             $this->_metrologyInstance->addLog('Return option links = ' . $value, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1dc46c1a');
 
         return $value;
@@ -1260,11 +1254,11 @@ class Configuration
         if ($name == ''
             || !isset(self::OPTIONS_TYPE[$name])
             || !self::OPTIONS_WRITABLE[$name]
-            || $this->_writeOptionCacheLock
+            || $this->_overwriteOptionCacheLock
         )
             return false;
 
-        $this->_metrologyInstance->addLog('Set option cache value ' . $name .' = ' . $this->_changeTypeValueToString($name, $value), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '73802724');
+        $this->_metrologyInstance->addLog('Overwrite option cache value ' . $name .' = ' . $this->_changeTypeValueToString($name, $value), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '73802724');
 
         $this->_optionCache[$name] = $value;
         return true;
@@ -1364,7 +1358,7 @@ class Configuration
     public function lockCache(): void
     {
         $this->_metrologyInstance->addLog('Cache lock', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'a65d3e7e');
-        $this->_writeOptionCacheLock = true;
+        $this->_overwriteOptionCacheLock = true;
     }
 
     /**
@@ -1374,7 +1368,7 @@ class Configuration
      */
     public function flushCache(): void
     {
-        if (!$this->_writeOptionCacheLock)
+        if (!$this->_overwriteOptionCacheLock)
             $this->_optionCache = array();
     }
 
