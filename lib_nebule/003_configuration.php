@@ -920,7 +920,7 @@ class Configuration
             return '';
 
         if (is_a($this->_metrologyInstance, '\Nebule\Library\Metrology'))
-            $this->_metrologyInstance->addLog('Get option ' . $name, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '56a98331');
+            $this->_metrologyInstance->addLog('Get option ' . $name, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '56a98331');
 
         $result = '';
 
@@ -944,12 +944,12 @@ class Configuration
         ) {
             $result = self::OPTIONS_DEFAULT_VALUE[$name];
             if (is_a($this->_metrologyInstance, '\Nebule\Library\Metrology')) {
-                $this->_metrologyInstance->addLog('Get default value for option ' . $name, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3e39271b');
+                $this->_metrologyInstance->addLog('Get default value for option ' . $name, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '3e39271b');
             }
         }
 
         if (is_a($this->_metrologyInstance, '\Nebule\Library\Metrology'))
-            $this->_metrologyInstance->addLog('Return option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'd2fd4284');
+            $this->_metrologyInstance->addLog('Return option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd2fd4284');
 
         // Write on cache.
         if ($result != ''
