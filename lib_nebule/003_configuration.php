@@ -470,7 +470,7 @@ class Configuration
         'ioReadMaxLinks' => '2000',
         'ioReadMaxData' => '10000',
         'ioReadMaxUpload' => '2000000',
-        'ioTimeout' => 1,
+        'ioTimeout' => '1',
         'displayUnsecureURL' => 'true',
         'displayNameSize' => '128',
         'displayEmotions' => 'true',

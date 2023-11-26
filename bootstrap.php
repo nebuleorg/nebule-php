@@ -6992,7 +6992,7 @@ function bootstrap_firstDisplay9NeededObjects(): bool
     echo '<div class="parts">' . "\n";
     echo '<span class="partstitle">#9 needed objects</span><br/>' . "\n";
 
-    if (is_a($nebuleInstance, 'Nebule\Library\nebule')
+    if (is_a($nebuleInstance, '\Nebule\Library\nebule')
         && !\Nebule\Library\References::installation($nebuleInstance)
     )
         $ok = false;
