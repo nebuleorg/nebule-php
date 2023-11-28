@@ -2351,9 +2351,9 @@ security authority    : 488f70485b940ed254b05a4f312d948e4ff1d9a3821568e1c5709f51
 code authority        : 61c5907df8b34c33eaa7e3df8c0e6a483f949c7e004b0d192d2756d388d60434.sha2.256 OK
 directory authority   : af90bfb248ea1338b4c4aee5b2cf07d2479e6351f321760b15440b987ba4e731.sha2.256 OK
 time authority        : 288239c8ba88f43a6581f45e95152f5a4ac3ff560b3162bf97bd614a1c8659cd.sha2.256 OK
-server entity         : 5fe528863badf85aceb5337d7cf9f72262a7c5abc501b4f205b68ad179f5f06d.sha2.256 OK
-default entity        : 88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256 OK
-current entity        : 5fe528863badf85aceb5337d7cf9f72262a7c5abc501b4f205b68ad179f5f06d.sha2.256 OK
+server entity         : 5fe528863badf85aceb5337d7cf9f72262a7c5abc501b4f205b68ad179f5f06d.sha2.256 OK (local authority)
+default entity        : 88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256 OK (local authority)
+current entity        : 5fe528863badf85aceb5337d7cf9f72262a7c5abc501b4f205b68ad179f5f06d.sha2.256 OK (local authority)
 subordination         : cdc0daf378b1a425b5a3be326da558d663b7b2256112eae3dc39d3a41ab9faf3.sha2.256 OK
 cryptography class    : Nebule\Library\CryptoOpenssl
 cryptography          : hash sha2.256 OK
