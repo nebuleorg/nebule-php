@@ -612,7 +612,7 @@ class Link implements linkInterface
             Le type de cette relation est définie par un troisième objet, c'est la façon dont on va interpréter
             la relation entre les deux premiers nœuds.
             La relation peut être contextualisée avec un quatrième nœud, ou plus.</p>
-        <p>Dans le cas d'un lien à lien à deux ou trois nœuds, nous sommes dans un cas similaire à un
+        <p>Dans le cas d'un lien à deux ou trois nœuds, nous sommes dans un cas similaire à un
             <a href="https://fr.wikipedia.org/wiki/Th%C3%A9orie_des_graphes">graphe</a> orienté tel qu'on
             le trouve dans une base de données de type graphe. Nous retrouvons ce principe dans le Resource
             Description Framework (<a href="https://fr.wikipedia.org/wiki/Resource_Description_Framework">RDF</a>).
@@ -623,7 +623,7 @@ class Link implements linkInterface
             nœuds dans les liens, nous pouvons cependant déjà considérer que nous sommes dans un hypergraphe au-delà
             de deux nœuds.</p>
         <p>Le lien ne porte pas son autoprotection. Il est enregistré dans un bloc de liens qui se charge de faire
-            cohabiter et de protéger un ou plusieurs liens.</p>
+            cohabiter et de protéger un ou plusieurs liens. Voir <a href="#b">B</a>.</p>
 
         <h2 id="ls">LS / Structure</h2>
         <p>Chaque lien est écrit dans ce que l'on appelle un registre de lien. Ce registre va comprendre plusieurs
@@ -633,7 +633,7 @@ class Link implements linkInterface
         <p>Dans le registre, chaque champ est séparé des autres par le caractère «&nbsp;&gt;&nbsp;». Le nombre de champs
             exploitable, sans compter la requête d'action, est limité par l'option <i>linkMaxRLUID</i>. Si le nombre de
             champs du registre est supérieur à la valeur limite, le lien est déclaré invalide.</p>
-        <p>la forme du registre de lien :</p>
+        <p>La forme du registre de lien :</p>
         <p align="center"><code>REQ>NID>NID>NID>NID</code></p>
 
         <h5 id="lelpo">LELPO / Liens à Propos d’un Objet</h5>
@@ -683,16 +683,16 @@ class Link implements linkInterface
             de prise d’empreinte utilisée.</p>
         <p>La signature est calculée sur l’empreinte du lien réalisée avec la fonction de prise d’empreinte désignée
             dans la deuxième partie. L’empreinte du lien est calculée sur tout le lien sauf le champs
-            <code>signature</code>, c’est à dire sur «&nbsp;<code>_HashSignataire_TimeStamp_Action_HashSource_HashCible_HashMeta</code>&nbsp;»
+            <code>signature</code>, c'est-à-dire sur «&nbsp;<code>_HashSignataire_TimeStamp_Action_HashSource_HashCible_HashMeta</code>&nbsp;»
             avec le premier underscore inclus.</p>
-        <p>La signature ne contient que des caractères hexadécimaux, c’est à dire de «&nbsp;0&nbsp;» à «&nbsp;9&nbsp;»
+        <p>La signature ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;» à «&nbsp;9&nbsp;»
             et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule. La fonction de prise d’empreinte est notée en
-            caractères alpha-numériques en minuscule.</p>
+            caractères alphanumériques en minuscule.</p>
 
         <h5 id="lrusi">LRHSI / Le champ <code>HashSignataire</code></h5>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le champ <code>HashSignataire</code> désigne l’objet de l’entité qui génère le lien et le signe.</p>
-        <p>Il ne contient que des caractères hexadécimaux, c’est à dire de «&nbsp;0&nbsp;» à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;»
+        <p>Il ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;» à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;»
             à «&nbsp;f&nbsp;» en minuscule.</p>
 
         <h3 id="lrt">LRT / Le champ <code>TimeStamp</code></h3>
@@ -707,7 +707,7 @@ class Link implements linkInterface
         <p>Le champ <code>Action</code> détermine la façon dont le lien doit être utilisé.</p>
         <p>Quand on parle du type d’un lien, on fait référence à son champ <code>Action</code>.</p>
         <p>L’interprétation de ce champ est limité au premier caractère. Des caractères alpha-numériques supplémentaires
-            sont autorisés mais ignorés.</p>
+            sont autorisés, mais ignorés.</p>
         <p>Cette interprétation est basée sur un vocabulaire particulier. Ce vocabulaire est spécifique à <i>nebule
                 v1.2</i> (et <i>nebule v1.1</i>).</p>
         <p>Le vocabulaire ne reconnaît que les 8 caractères <code>l</code>, <code>f</code>, <code>u</code>,
@@ -724,7 +724,7 @@ class Link implements linkInterface
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le nouvel objet est considéré comme enfant ou parent suivant le sens du lien.</p>
         <p>Le champs <code>ObjetMeta</code> doit être vu comme le contexte du lien. Par exemple, deux objets contenants
-            du texte peuvent être reliés simplement sans contexte, c’est à dire reliés de façon simplement hiérarchique.
+            du texte peuvent être reliés simplement sans contexte, c'est-à-dire reliés de façon simplement hiérarchique.
             Ces deux mêmes textes peuvent être plutôt (ou en plus) reliés avec un contexte comme celui d’une discussion
             dans un blog. Dans ce deuxième cas, la relation entre les deux textes n’a pas de sens en dehors de cette
             discussion sur ce blog. Il est même probable que le blog n’affichera pas les autres textes en relations si
@@ -740,19 +740,19 @@ class Link implements linkInterface
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L’objet est marqué comme à supprimer d’un ou de tous ses emplacements de stockage.</p>
         <p><code>d</code> comme <i>delete</i>.</p>
-        <p>Le champs <code>HashCible</code> <span style="text-decoration: underline;">peut</span> être nuls, c’est à
-            dire égal à <code>0</code>. Si non nul, ce champs doit contenir une entité destinataire de <i>l’ordre</i> de
+        <p>Le champs <code>HashCible</code> <span style="text-decoration: underline;">peut</span> être nuls, c'est-à-dire égal à <code>0</code>.
+            Si non nul, ce champs doit contenir une entité destinataire de <i>l’ordre</i> de
             suppression. C’est utilisé pour demander à une entité relaie de supprimer un objet spécifique. Cela peut
             être utilisé pour demander à une entité en règle générale de bien vouloir supprimer l’objet, ce qui n’est
             pas forcément exécuté.</p>
-        <p>Le champs <code>HashMeta</code> <span style="text-decoration: underline;">doit</span> être nuls, c’est à dire
+        <p>Le champs <code>HashMeta</code> <span style="text-decoration: underline;">doit</span> être nuls, c'est-à-dire
             égal à <code>0</code>.</p>
         <p>Un lien de suppression sur un objet ne veut pas forcément dire qu’il a été supprimé. Même localement, l’objet
             est peut-être encore présent. Si le lien de suppression vient d’une autre entité, on ne va sûrement pas par
             défaut en tenir compte.</p>
         <p>Lorsque le lien de suppression est généré, le serveur sur lequel est généré le lien doit essayer par défaut
             de supprimer l’objet. Dans le cas d’un serveur hébergeant plusieurs entités, un objet ne sera pas supprimé
-            si il est encore utilisé par une autre entité, c’est à dire si une entité a un lien qui le concerne et n’a
+            si il est encore utilisé par une autre entité, c'est-à-dire si une entité a un lien qui le concerne et n’a
             pas de lien de suppression.</p>
 
         <h4 id="lrae">LRAE / Action <code>e</code> – Équivalence d’objets</h4>
@@ -761,20 +761,20 @@ class Link implements linkInterface
 
         <h4 id="lrac">LRAC / Action <code>c</code> – Chiffrement de lien</h4>
         <p>Ce lien de dissimulation contient un lien dissimulé sans signature. Il permet d’offusquer des liens entre
-            objets et donc d’anonymiser certaines actions de l’entité (cf <a href="#ckl">CKL</a>).</p>
+            objets et donc d’anonymiser certaines actions de l’entité (cf. <a href="#ckl">CKL</a>).</p>
         <p>Le champs <code>HashSource</code> fait référence à l’entité destinataire du lien, celle qui peut le
-            déchiffrer. A part le champs de l’entité signataire, c’est le seul champs qui fait référence à un objet.</p>
-        <p>Le champs <code>HashCible</code> ne contient pas la référence d’un objet mais le lien chiffré et encodé en
+            déchiffrer. À part le champs de l’entité signataire, c’est le seul champs qui fait référence à un objet.</p>
+        <p>Le champs <code>HashCible</code> ne contient pas la référence d’un objet, mais le lien chiffré et encodé en
             hexadécimal. Le chiffrement est de type symétrique avec la clé de session. Le lien offusqué n’a pas grand
-            intérêt en lui même, c’est le lien déchiffré qui en a.</p>
-        <p>Le champs <code>HashMeta</code> ne contient pas la référence d’un objet mais la clé de chiffrement du lien,
+            intérêt en lui-même, c’est le lien déchiffré qui en a.</p>
+        <p>Le champs <code>HashMeta</code> ne contient pas la référence d’un objet, mais la clé de chiffrement du lien,
             dite clé de session. Cette clé est chiffrée (asymétrique) pour l’entité destinataire et encodée en
-            hexadécimal. Chaque entités destinataires d'un lien de dissimulé doit disposer d'un lien de dissimulation
+            hexadécimal. Chaque entité destinataires d'un lien de dissimulé doit disposer d'un lien de dissimulation
             qui lui est propre.</p>
         <p>Lors du traitement des liens, si une entité est déverrouillée, les liens offusqués pour cette entité doivent
             être déchiffrés et utilisés en remplacement des liens offusqués originels. Les liens offusqués doivent être
             vérifiés avant déchiffrement. Les liens déchiffrés doivent être vérifiés avant exploitation.</p>
-        <p>Les liens de dissimulations posent un problème pour être efficacement utilisés par les entités émetrices et
+        <p>Les liens de dissimulations posent un problème pour être efficacement utilisés par les entités émeteurs et
             destinataires. Pour résoudre ce problème sans risquer de révéler les identifiants des objets utilisés dans
             un lien dissimulé, les liens de dissimulation sont attachés à des objets virtuels translatés depuis les
             identifiants des objets originaux (cf <a href="#ld">LD</a>).</p>
@@ -783,7 +783,7 @@ class Link implements linkInterface
 
         <h4 id="lrak">LRAK / Action <code>k</code> – Chiffrement d’objet</h4>
         <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Désigne la version chiffrée de l’objet (cf <a href="#cko">CKO</a>).</p>
+        <p>Désigne la version chiffrée de l’objet (cf. <a href="#cko">CKO</a>).</p>
         <p>L'option <code>permitProtectedObject</code> permet de désactiver la protection (chiffrement) des objets. Dans
             ce cas le lien de type <code>k</code> est rejeté comme invalide avec le code erreur 42.</p>
 

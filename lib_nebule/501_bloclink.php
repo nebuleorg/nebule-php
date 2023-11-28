@@ -969,60 +969,37 @@ class blocLink implements blocLinkInterface
     {
         ?>
 
-        <li><a href="#l">B / Bloc de liens</a>
+        <li><a href="#b">B / Bloc de liens</a>
             <ul>
-                <li><a href="#lelpo">BELPO / Liens à Propos d’un Objet</a></li>
-                <li><a href="#lelco">BELCO / Liens Contenu dans un Objet</a></li>
-                <li><a href="#le">BE / Entête</a></li>
-                <li><a href="#lr">BR / Registre</a>
+                <li><a href="#bd">BD / Description</a></li>
+                <li><a href="#bc">BC / Construction</a>
                     <ul>
-                        <li><a href="#lrsi">BRSI / Le champs <code>Signature</code></a></li>
-                        <li><a href="#lrusi">BRHSI / Le champs <code>HashSignataire</code></a></li>
-                        <li><a href="#lrt">BRT / Le champs <code>TimeStamp</code></a></li>
-                        <li><a href="#lra">BRA / Le champs <code>Action</code></a>
+                        <li><a href="#bcb">BCB / Blocs</a>
                             <ul>
-                                <li><a href="#lral">BRAL / Action <code>l</code> – Lien entre objets</a></li>
-                                <li><a href="#lraf">BRAF / Action <code>f</code> – Dérivé d’objet</a></li>
-                                <li><a href="#lrau">BRAU / Action <code>u</code> – Mise à jour d’objet</a></li>
-                                <li><a href="#lrad">BRAD / Action <code>d</code> – Suppression d’objet</a></li>
-                                <li><a href="#lrae">BRAE / Action <code>e</code> – Équivalence d’objets</a></li>
-                                <li><a href="#lrac">BRAC / Action <code>c</code> – Chiffrement de lien</a></li>
-                                <li><a href="#lrak">BRAK / Action <code>k</code> – Chiffrement d’objet</a></li>
-                                <li><a href="#lras">BRAS / Action <code>s</code> – Subdivision d’objet</a></li>
-                                <li><a href="#lrax">BRAX / Action <code>x</code> – Suppression de lien</a></li>
+                                <li><a href="#bcbh">BCBH / Bloc d'entête</a></li>
+                                <li><a href="#bcbl">BCBL / Bloc de liens</a></li>
+                                <li><a href="#bcbs">BCBS / Bloc de signature</a></li>
                             </ul>
                         </li>
-                        <li><a href="#lrhs">BRHS / Le champs <code>HashSource</code></a></li>
-                        <li><a href="#lrhc">BRHC / Le champs <code>HashCible</code></a></li>
-                        <li><a href="#lrhm">BRHM / Le champs <code>HashMeta</code></a></li>
-                    </ul>
-                </li>
-                <li><a href="#l1">B1 / Lien simple</a></li>
-                <li><a href="#l2">B2 / Lien double</a></li>
-                <li><a href="#l3">B3 / Lien triple</a></li>
-                <li><a href="#ls">BS / Stockage</a>
-                    <ul>
-                        <li><a href="#lsa">BSA / Arborescence</a></li>
-                        <li><a href="#lsd">BSD / Dissimulation</a>
+                        <li><a href="#bcr">BCR / Registres</a>
                             <ul>
-                                <li><a href="#lsdrp">BSDRP / Registre public</a></li>
-                                <li><a href="#lsdrd">BSDRD / Registre dissimulé</a></li>
-                                <li><a href="#lsda">BSDA / Attaque sur la dissimulation</a></li>
-                                <li><a href="#lsds">BSDS / Stockage et transcodage</a>
-                                    <ul>
-                                        <li><a href="#lsdst">BSDST / Translation de lien</a></li>
-                                        <li><a href="#lsdsp">BSDSP / Protection de translation</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#lsdt">BSDT / Transfert et partage</a></li>
-                                <li><a href="#lsdc">BSDC / Compromission</a></li>
+                                <li><a href="#bcrf">BCRF / Registre de forme</a></li>
+                                <li><a href="#bcrv">BCRV / Registre de version</a></li>
+                                <li><a href="#bcrc">BCRC / Registre de chronologie</a></li>
+                                <li><a href="#bcrl">BCRL / Registre de liens</a></li>
+                                <li><a href="#bcrs">BCRS / Registre de signature</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#bce">BCE / Eléments</a>
+                            <ul>
+                                <li><a href="#bceapp">BCEAPP / Application</a></li>
+                                <li><a href="#bcetyp">BCETYP / Type de contenu</a></li>
                             </ul>
                         </li>
                     </ul>
                 </li>
-                <li><a href="#lt">BT / Transfert</a></li>
-                <li><a href="#lv">BV / Vérification</a></li>
-                <li><a href="#lo">BO / Oubli</a></li>
+                <li><a href="#bt">BT / Transfert</a></li>
+                <li><a href="#bv">BV / Vérification</a></li>
             </ul>
         </li>
 
@@ -1038,382 +1015,69 @@ class blocLink implements blocLinkInterface
     {
         ?>
 
-        <h1 id="l">B / Bloc de liens</h1>
+        <h1 id="b">B / Bloc de liens</h1>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p style="color:red;">Cette partie est périmée avec la nouvelle version de liens !</p>
         <p>Le lien est la matérialisation dans un graphe d’une relation entre deux objets pondéré par un troisième
             objet.</p>
 
-        <h5 id="lelpo">BELPO / Liens à Propos d’un Objet</h5>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Les liens d’un objet sont consultables séquentiellement. Ils doivent être perçus comme des méta-données d’un
-            objet.</p>
-        <p>Les liens sont séparés soit par un caractère espace «&nbsp;», soit par un retour chariot «&nbsp;\n&nbsp;». Un
-            lien est donc une suite de caractères ininterrompue, c'est-à-dire sans espace ou retour à la ligne.</p>
-        <p>La taille du lien dépend de la taille de chaque champ.</p>
-        <p>Chaque localisation contenant des liens doit avoir un entête de version.</p>
-
-        <h5 id="lelco">BELCO / Liens Contenu dans un Objet</h5>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Certains liens d’un objet peuvent être contenus dans un autre objet.</p>
-        <p>Cette forme de stockage des liens permet de les transmettre et de les manipuler sous la forme d’un objet. On
-            peut ainsi profiter du découpage et du chiffrement. Plusieurs liens peuvent être stockés sans être
-            nécessairement en rapport avec les mêmes objets.</p>
-        <p>Les liens stockés dans un objet ne peuvent pas faire référence à ce même objet.</p>
-        <p>Tout ajout de lien crée implicitement un nouvel objet de mise à jour, c'est-à-dire lié par un lien de type
-            u.</p>
-        <p>Chaque fichier contenant des liens doit avoir un entête de version.</p>
-        <p>Les objets contenants des liens ne sont pas reconnus et exploités lors de la lecture des liens. Ceux-ci
-            doivent d’abord être extraits et injectés dans les liens des objets concernés. En clair, on ne peut pas s’en
-            servir facilement pour de l’anonymisation.</p>
-
-        <h2 id="le">BE / Entête</h2>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>L’entête des liens est constitué du texte <code>nebule/liens/version/1.2</code>. Il est séparé du premier
-            lien soit par un caractère espace «&nbsp;», soit par un retour chariot «&nbsp;\n&nbsp;».</p>
-        <p>Il doit être transmis avec les liens, en premier.</p>
-
-        <h2 id="lr">BR / Registre</h2>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le registre du lien décrit la syntaxe du lien :</p>
-        <p style="text-align:center">
-            <code>Signature_HashSignataire_TimeStamp_Action_HashSource_HashCible_HashMeta</code></p>
-        <p>Ce registre a un nombre de champs fixe. Chaque champ a une place fixe dans le lien. Les champs ont une
-            taille variable. Le séparateur de champs est l’underscore «&nbsp;_&nbsp;». Les champs ne peuvent contenir ni
-            l’underscore «&nbsp;_&nbsp;» ni l’espace &nbsp;» &nbsp;» ni le retour chariot «&nbsp;\n&nbsp;».</p>
-        <p>Tout lien qui ne respecte pas cette syntaxe est à considérer comme invalide et à supprimer. Tout lien dont la
-            <code>Signature</code> est invalide est à considérer comme invalide et à supprimer. La vérification peut
-            être réalisée en réassemblant les champs après nettoyage.</p>
-
-        <h4 id="lrsi">BRSI / Le champs <code>Signature</code></h4>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le champs <code>Signature</code> est représenté en deux parties séparées par un point «&nbsp;.&nbsp;» . La
-            première partie contient la valeur de la signature. La deuxième partie contient le nom court de la fonction
-            de prise d’empreinte utilisée.</p>
-        <p>La signature est calculée sur l’empreinte du lien réalisée avec la fonction de prise d’empreinte désignée
-            dans la deuxième partie. L’empreinte du lien est calculée sur tout le lien sauf le champs
-            <code>signature</code>, c'est-à-dire sur «&nbsp;<code>_HashSignataire_TimeStamp_Action_HashSource_HashCible_HashMeta</code>&nbsp;»
-            avec le premier underscore inclus.</p>
-        <p>La signature ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;» à «&nbsp;9&nbsp;»
-            et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule. La fonction de prise d’empreinte est notée en
-            caractères alpha-numériques en minuscule.</p>
-
-        <h5 id="lrusi">BRHSI / Le champs <code>HashSignataire</code></h5>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le champs <code>HashSignataire</code> désigne l’objet de l’entité qui génère le lien et le signe.</p>
-        <p>Il ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;» à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;»
-            à «&nbsp;f&nbsp;» en minuscule.</p>
-
-        <h3 id="lrt">BRT / Le champs <code>TimeStamp</code></h3>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le champs <code>TimeStamp</code> est une marque de temps qui donne un ordre temporel aux liens. Ce champs peut
-            être une date et une heure au format <a class="external text" title="http://fr.wikipedia.org/wiki/ISO_8601"
-                                                    href="http://fr.wikipedia.org/wiki/ISO_8601"
-                                                    rel="nofollow">ISO8601</a> ou simplement un compteur incrémental.
-        </p>
-
-        <h3 id="lra">BRA / Le champs <code>Action</code></h3>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le champs <code>Action</code> détermine la façon dont le lien doit être utilisé.</p>
-        <p>Quand on parle du type d’un lien, on fait référence à son champs <code>Action</code>.</p>
-        <p>L’interprétation de ce champ est limité au premier caractère. Des caractères alpha-numériques supplémentaires
-            sont autorisés mais ignorés.</p>
-        <p>Cette interprétation est basée sur un vocabulaire particulier. Ce vocabulaire est spécifique à <i>nebule
-                v1.2</i> (et <i>nebule v1.1</i>).</p>
-        <p>Le vocabulaire ne reconnaît que les 8 caractères <code>l</code>, <code>f</code>, <code>u</code>,
-            <code>d</code>, <code>e</code>, <code>x</code>, <code>k</code> et <code>s</code>, en minuscule.</p>
-
-        <h4 id="lral">BRAL / Action <code>l</code> – Lien entre objets</h4>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Met en place une relation entre deux objets. Cette relation a un sens de mise en place et peut être pondérée
-            par un objet méta.</p>
-        <p>Les liens de type <code>l</code> ne devraient avoir ni <code>HashMeta</code> nul ni <code>HashCible</code>
-            nul.</p>
-
-        <h4 id="lraf">BRAF / Action <code>f</code> – Dérivé d’objet</h4>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le nouvel objet est considéré comme enfant ou parent suivant le sens du lien.</p>
-        <p>Le champs <code>ObjetMeta</code> doit être vu comme le contexte du lien. Par exemple, deux objets contenants
-            du texte peuvent être reliés simplement sans contexte, c'est-à-dire reliés de façon simplement hiérarchique.
-            Ces deux mêmes textes peuvent être plutôt (ou en plus) reliés avec un contexte comme celui d’une discussion
-            dans un blog. Dans ce deuxième cas, la relation entre les deux textes n’a pas de sens en dehors de cette
-            discussion sur ce blog. Il est même probable que le blog n’affichera pas les autres textes en relations si
-            ils n’ont pas un contexte appartenant à ce blog.</p>
-        <p><code>f</code> comme <i>fork</i>.</p>
-
-        <h4 id="lrau">BRAU / Action <code>u</code> – Mise à jour d’objet</h4>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Mise à jour d’un objet dérivé qui remplace l’objet parent.</p>
-        <p><code>u</code> comme <i>update</i>.</p>
-
-        <h4 id="lrad">BRAD / Action <code>d</code> – Suppression d’objet</h4>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>L’objet est marqué comme à supprimer d’un ou de tous ses emplacements de stockage.</p>
-        <p><code>d</code> comme <i>delete</i>.</p>
-        <p>Le champs <code>HashCible</code> <span style="text-decoration: underline;">peut</span> être nuls, c'est-à-dire égal à <code>0</code>.
-            Si non nul, ce champ doit contenir une entité destinataire de <i>l’ordre</i> de
-            suppression. C’est utilisé pour demander à une entité relaie de supprimer un objet spécifique. Cela peut
-            être utilisé pour demander à une entité en règle générale de bien vouloir supprimer l’objet, ce qui n’est
-            pas forcément exécuté.</p>
-        <p>Le champs <code>HashMeta</code> <span style="text-decoration: underline;">doit</span> être nuls, c'est-à-dire
-            égal à <code>0</code>.</p>
-        <p>Un lien de suppression sur un objet ne veut pas forcément dire qu’il a été supprimé. Même localement, l’objet
-            est peut-être encore présent. Si le lien de suppression vient d’une autre entité, on ne va sûrement pas par
-            défaut en tenir compte.</p>
-        <p>Lorsque le lien de suppression est généré, le serveur sur lequel est généré le lien doit essayer par défaut
-            de supprimer l’objet. Dans le cas d’un serveur hébergeant plusieurs entités, un objet ne sera pas supprimé
-            s'il est encore utilisé par une autre entité, c'est-à-dire si une entité a un lien qui le concerne et n’a
-            pas de lien de suppression.</p>
-
-        <h4 id="lrae">BRAE / Action <code>e</code> – Équivalence d’objets</h4>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Définit des objets jugés équivalents, et donc interchangeables par exemple pour une traduction.</p>
-
-        <h4 id="lrac">BRAC / Action <code>c</code> – Chiffrement de lien</h4>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Ce lien de dissimulation contient un lien dissimulé sans signature. Il permet d’offusquer des liens entre
-            objets et donc d’anonymiser certaines actions de l’entité (cf <a href="#ckl">CKL</a>).</p>
-        <p>Le champs <code>HashSource</code> fait référence à l’entité destinataire du lien, celle qui peut le
-            déchiffrer. A part le champ de l’entité signataire, c’est le seul champ qui fait référence à un objet.</p>
-        <p>Le champs <code>HashCible</code> ne contient pas la référence d’un objet mais le lien chiffré et encodé en
-            hexadécimal. Le chiffrement est de type symétrique avec la clé de session. Le lien offusqué n’a pas grand
-            intérêt en lui-même, c’est le lien déchiffré qui en a.</p>
-        <p>Le champs <code>HashMeta</code> ne contient pas la référence d’un objet mais la clé de chiffrement du lien,
-            dite clé de session. Cette clé est chiffrée (asymétrique) pour l’entité destinataire et encodée en
-            hexadécimal. Chaque entité destinataires d'un lien de dissimulé doit disposer d'un lien de dissimulation
-            qui lui est propre.</p>
-        <p>Lors du traitement des liens, si une entité est déverrouillée, les liens offusqués pour cette entité doivent
-            être déchiffrés et utilisés en remplacement des liens offusqués originels. Les liens offusqués doivent être
-            vérifiés avant déchiffrement. Les liens déchiffrés doivent être vérifiés avant exploitation.</p>
-        <p>Les liens de dissimulations posent un problème pour être efficacement utilisés par les entités émettrices et
-            destinataires. Pour résoudre ce problème sans risquer de révéler les identifiants des objets utilisés dans
-            un lien dissimulé, les liens de dissimulation sont attachés à des objets virtuels translatés depuis les
-            identifiants des objets originaux (cf <a href="#ld">BD</a>).</p>
-        <p>L'option <code>permitObfuscatedLink</code> permet de désactiver la dissimulation (offuscation) des liens des
-            objets. Dans ce cas le lien de type <code>c</code> est rejeté comme invalide avec le code erreur 43.</p>
-
-        <h4 id="lrak">BRAK / Action <code>k</code> – Chiffrement d’objet</h4>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Désigne la version chiffrée de l’objet (cf <a href="#cko">CKO</a>).</p>
-        <p>L'option <code>permitProtectedObject</code> permet de désactiver la protection (chiffrement) des objets. Dans
-            ce cas le lien de type <code>k</code> est rejeté comme invalide avec le code erreur 42.</p>
-
-        <h4 id="lras">BRAS / Action <code>s</code> – Subdivision d’objet</h4>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Désigne un fragment de l’objet.</p>
-        <p>Ce champs nécessite un objet méta qui précise l'intervalle de contenu de l’objet d’origine. Le contenu de
-            l’objet méta doit être de la forme <code>x-y</code> avec :</p>
-        <ul>
-            <li><code>x</code> et <code>y</code> exprimé en octet sans zéro et sans unité ;</li>
-            <li><code>x</code> strictement supérieur à zéro ;</li>
-            <li><code>y</code> strictement inférieur ou égal à la taille de l’objet (lien vers
-                <i>nebule/objet/taille</i>) ;
-            </li>
-            <li><code>x</code> inférieur à <code>y</code> ;</li>
-            <li>sans espace, tabulation ou retour chariot.</li>
-        </ul>
-
-        <h4 id="lrax">BRAX / Action <code>x</code> – Suppression de lien</h4>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Supprime un ou plusieurs liens précédemment mis en place.</p>
-        <p>Les liens concernés par la suppression sont les liens antérieurs de type <code>l</code>, <code>f</code>,
-            <code>u</code>, <code>d</code>, <code>e</code>, <code>k</code> et <code>s</code>. Ils sont repérés par les 3
-            derniers champs, c'est-à-dire sur <code>HashSource_HashCible_HashMeta</code>. Les champs nuls sont
-            strictement pris en compte.</p>
-        <p>Le champs <code>TimeStamp</code> permet de déterminer l’antériorité du lien et donc de déterminer sa
-            suppression ou pas.</p>
-        <p>C’est la seule action sur les liens et non sur les objets.</p>
-
-        <h4 id="lrhs">BRHS / Le champs <code>HashSource</code></h4>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le champs <code>HashSource</code> désigne l’objet source du lien.</p>
-        <p>Le champs <code>signataire</code> ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;»
-            à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule.</p>
-
-        <h4 id="lrhc">BRHC / Le champs <code>HashCible</code></h4>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le champs <code>HashCible</code> désigne l’objet destination du lien.</p>
-        <p>Le champs <code>signataire</code> ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;»
-            à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule.</p>
-        <p>Il peut être nuls, c'est-à-dire représentés par la valeur «&nbsp;0&nbsp;» sur un seul caractère.</p>
-
-        <h4 id="lrhm">BRHM / Le champs <code>HashMeta</code></h4>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le champs <code>HashMeta</code> désigne l’objet contenant une caractérisation du lien entre l’objet source et
-            l’objet destination.</p>
-        <p>Le champs <code>signataire</code> ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;»
-            à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule.</p>
-        <p>Il peut être nuls, c'est-à-dire représentés par la valeur «&nbsp;0&nbsp;» sur un seul caractère.</p>
-
-        <h2 id="l1">B1 / Lien simple</h2>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le registre du lien simple a ses champs <code>HashCible</code> et <code>HashMeta</code> égaux à «&nbsp;0&nbsp;».
-        </p>
-        <p>Il ressemble à :</p>
-        <p class="pcenter"><code>Signature_HashSignataire_TimeStamp_Action_HashSource_0_0</code></p>
-
-        <h2 id="l2">B2 / Lien double</h2>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le registre du lien double a son champs <code>HashMeta</code> égal à «&nbsp;0&nbsp;».</p>
-        <p>Il ressemble à :</p>
-        <p class="pcenter"><code>Signature_HashSignataire_TimeStamp_Action_HashSource_HashCible_0</code></p>
-
-        <h2 id="l3">B3 / Lien triple</h2>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le registre du lien triple est complètement utilisé.</p>
-        <p>Il ressemble à :</p>
-        <p class="pcenter"><code>Signature_HashSignataire_TimeStamp_Action_HashSource_HashCible_HashMeta</code></p>
-
-        <h2 id="ls">BS / Stockage</h2>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Tous les liens sont stockés dans un même emplacement où sont visibles comme étant dans un même emplacement.
-            Cet emplacement ne contient pas les contenus des objets (cf <a href="#oos">OOS</a>).</p>
-        <p>Le lien dissimulé est stocké dans le même emplacement mais dispose de fichiers de stockages différents du
-            fait de la spécificité (cf <a href="#lsds">BSDS</a>).</p>
-
-        <h3 id="lsa">BSA / Arborescence</h3>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Sur un système de fichiers, tous les liens sont stockés dans des fichiers contenus dans le dossier <code>pub/l/</code>
-            (<code>l</code> comme lien).</p>
-        <p>A faire...</p>
-
-        <h3 id="lsd">BSD / Dissimulation</h3>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le lien de dissimulation, de type <code>c</code>, contient un lien dissimulé sans signature (cf <a
-                href="#lrac">BRAC</a>). Il permet d’offusquer des liens entre objets et donc d’anonymiser certaines
-            actions de l’entité (cf <a href="#ckl">CKL</a>).</p>
-
-        <h5 id="lsdrp">BSDRP / Registre public</h5>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le registre du lien de dissimulation, public par nature, est conforme au registre des autres liens (cf <a
-                href="#lr">BR</a>). Si ce lien ne respectait pas cette structure, il serait automatiquement ignoré ou
-            rejeté. Son stockage et sa transmission ont cependant quelques particularités.</p>
-        <p>Les champs <code>Signature</code> (cf <a href="#lrsi">BRSI</a>) et <code>HashSignataire</code> (cf <a
-                href="#lrhsi">BRHSI</a>) du registre sont conformes aux autres liens. Ils assurent la protection du
-            lien. Le champ signataire fait office d'émeteur du lien dissimulé.</p>
-        <p>Le champs <code>TimeStamp</code> (cf <a href="#lrt">BRT</a>) du registre est conformes aux autres liens. Il a
-            cependant une valeur non significative et sourtout pas liée au <code>TimeStamp</code> du lien dissimulé.</p>
-        <p>Le champs <code>Action</code> (cf <a href="#lrt">BRT</a>) du registre est de type <code>c</code> (cf <a
-                href="#lra">BRA</a> et <a href="#lrac">BRAC</a>).</p>
-        <p>Le champs <code>HashSource</code> fait référence à l’entité destinataire du lien, celle qui peut le
-            déchiffrer. A part le champ de l’entité signataire, c’est le seul champ qui fait référence à un objet.</p>
-        <p>Le champs <code>HashCible</code> ne contient pas la référence d’un objet mais le lien chiffré et encodé en
-            hexadécimal. Le chiffrement est de type symétrique avec la clé de session. Le lien offusqué n’a pas grand
-            intérêt en lui-même, c’est le lien déchiffré qui en a.</p>
-        <p>Le champs <code>HashMeta</code> ne contient pas la référence d’un objet mais la clé de chiffrement du lien,
-            dite clé de session. Cette clé est chiffrée (asymétrique) pour l’entité destinataire et encodée en
-            hexadécimal. Chaque entité destinataires d'un lien de dissimulé doit disposer d'un lien de dissimulation
-            qui lui est propre.</p>
-        <p>Le registre du lien de dissimulation :</p>
-        <ul>
-            <li>Signature du lien</li>
-            <li>Identifiant du signataire</li>
-            <li>Horodatage non significatif</li>
-            <li>action : <code>c</code></li>
-            <li>source : hash(destinataire)</li>
-            <li>cible : Lien dissimulé chiffré</li>
-            <li>méta : clé de déchiffrement du lien, chiffrée pour le destinataire</li>
-        </ul>
-
-        <h5 id="lsdrd">BSDRD / Registre dissimulé</h5>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le registre du lien dissimulé est la partie utile du lien qui est protégée dans le lien de dissimulation.</p>
-        <p>L'extraction du lien dissimulé se fait depuis le lien de dissimulation :</p>
-        <ol>
-            <li>L'entité destinataire vérifie que son identifiant est bien celui présenté par le champs
-                <code>HashSource</code>.
-            </li>
-            <li>Le champs <code>HashMeta</code> est déchiffré (asymétrique) avec la clé privée de l'entité destinataire
-                pour obtenir la clé de session.
-            </li>
-            <li>Le champs <code>HashCible</code> est déchiffré (symétrique) avec la clé de session pour obtenir le lien
-                dissimulé.
-            </li>
-            <li>Le lien dissimulé obtenu ne contient pas les champs <code>Signature</code> et
-                <code>HashSignataire</code> mais on peut garder ceux du lien de dissimulation 'pour affichage'.
-            </li>
-        </ol>
-        <p>A faire...</p>
-        <p>Le registre du lien dissimulé :</p>
-        <ul>
-            <li>Horodatage significatif</li>
-            <li>action : tout sauf <code>c</code></li>
-            <li>source : hash(objet source)</li>
-            <li>cible : hash(objet cible)</li>
-            <li>méta : hash(objet méta)</li>
-        </ul>
-
-        <h4 id="lsda">BSDA / Attaque sur la dissimulation</h4>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le fait qu’une entité synchronise des liens dissimulés que d’autres entités partagent et les range dans des
-            fichiers transcodés peut révéler l’ID de l’objet transcodé. Et par tâtonnement on peut retourner ainsi le
-            transcodage de tous les objets.</p>
-        <p>Il suffit qu’une entité attaquante génère un lien dissimulé à destination d’une entité attaquée concernant un
-            objet en particulier. L’entité attaquée va alors ranger le lien dissimulé dans le fichier transcodé.
-            L’entité attaquante peut alors rechercher quel fichier transcodé contient sont lien dissimulé et en déduire
-            que ce fichier transcodé correspond à l’objet.</p>
-        <p>En plus, si le lien dissimulé n’a aucune action valable, il ne sera pas exploité, donc pas détecté par
-            l’entité attaquée.</p>
-        <p>La solution implémentée pour palier à ce problème c'est la méthode dite de translation des liens
-            dissimulés.</p>
-
-        <h4 id="lsds">BSDS / Stockage et transcodage</h4>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Les liens dissimulés sont camouflés dans des liens de dissimulation, ils ne sont donc plus utilisables pour
-            assurer le transfert entre entités et le tri dans les fichiers de stockage des liens.</p>
-        <p>De plus, les liens de dissimulations ne doivent pas être stockés directement dans des fichiers de stockage
-            des liens directement rattachés aux objets concernés, comme les autres liens, sous peine de dévoiler assez
-            rapidement les identifiants des objets utilisés... et donc assez facilement le lien dissimulé correspondant.
-            Cela poserait en plus un problème lors du nettoyage des liens parce qu'il faut avoir accès aux liens
-            dissimulés pour correctement les ranger.</p>
-        <p>Le nommage des fichiers contenant ces liens doit aussi être différent des entités signataires et
-            destinataires des liens, et ce nommage peut par facilité faire référence simultanément à ces deux entités.
-            Ainsi ces fichiers sont stockés dans le dossier des liens. Cette organisation et cette séparation des liens
-            dans des fichiers clairement distincts répond au besoin d'utilisation. Et lors du nettoyage des liens, le
-            traitement peut être différencié par rapport à la structure du nom des fichiers.</p>
-
-        <h5 id="lsdst">BSDST / Translation de lien</h5>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>La répartition des liens de dissimulation dans des fichiers attachés à l'entité émettrice et l'entité
-            destinataire ne permet pas une exmploitation efficace et rapide des liens dissimulés. Il faut trouver un
-            moyen d'associer les liens de dissimulations aux objets concernés par les liens dissimulés sans révéler
-            publiquement ce lien. Une translation va permettre de camoufler cette association.</p>
-        <p>La translation des liens dissimulés signifie la dissimulation par translation des identifiants des objets
-            auxquels s'appliquent des liens dissimulés moyennant une clé de translation. Cette translation doit
-            permettre de préserver la dissociation entre l'identifiant d'un objet et l'identifiant 'virtuel' auquel sont
-            attachés les liens dissimulés.</p>
-        <p>Le système de translation est basé sur une clé unique de translation par entité. Cette translation doit être
-            une fonction à sens unique, donc à base de prise d’empreinte (hash). Elle doit maintenir la non association
-            entre identifiants virtuels et réels des objets, y compris lorsqu’une ou plusieurs translations sont
-            connues. Enfin, la translation doit être dépendante de l’entité qui les utilise, c’est à dire qu’une même
-            clé peut être commune à plusieurs entités sans donner les mêmes translations.</p>
-        <p>A faire...</p>
-
-        <h5 id="lsdsp">BSDSP / Protection de translation</h5>
+        <h2 id="bd">BD / Description</h2>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="lsdt">BSDT / Transfert et partage</h4>
+        <h2 id="bc">BC / Construction</h2>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="lsdc">BSDC / Compromission</h4>
+        <h3 id="bcb">BCB / Blocs</h3>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h2 id="lt">BT / Transfert</h2>
+        <h4 id="bcbh">BCBH / Bloc d'entête</h4>
+        <p>Le bloc d'entête contient les registres <a href="#bcrf">RF</a> et <a href="#bcrv">RV</a>.</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h2 id="lv">BV / Vérification</h2>
+        <h4 id="bcbl">BCBL / Bloc de liens</h4>
+        <p>Le bloc de liens contient les registres <a href="#bcrc">RC</a> et <a href="#bcrl">RL</a>.</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>La signature d’un lien doit être vérifiée lors de la fin de la réception du lien. La signature d’un lien
-            devrait être vérifiée avant chaque utilisation de ce lien. Un lien avec une signature invalide doit être
-            supprimé. Lors de la suppression d’un lien, les autres liens de cet objet ne sont pas supprimés et l'objet
-            n'est pas supprimé. La vérification de la validité des objets est complètement indépendante de celle des
-            liens, et inversement (cf <a href="#cl">CL</a> et <a href="#oov">OOV</a>).</p>
-        <p>Toute modification de l’un des champs du lien entraîne l’invalidation de tout le lien.</p>
 
-        <h2 id="lo">BO / Oubli</h2>
+        <h4 id="bcbs">BCBS / Bloc de signature</h4>
+        <p>Le bloc d'entête contient les registres <a href="#bcrs">RS</a>.</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>L'oubli vonlontaire de certains liens et objets n'est encore ni théorisé ni implémenté mais deviendra
-            indispensable lorsque l'espace viendra à manquer (cf <a href="#cn">CN</a>).</p>
+
+        <h3 id="bcr">BCR / Registres</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <h4 id="bcrf">BCRF / Registre de forme</h4>
+        <p>Le registre de forme est le premier registre du <a href="#BCBH">bloc d'entête</a>.
+            Il contient les éléments <a href="#bceapp">APP</a> et <a href="#bcetyp">TYP</a>.</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <h4 id="bcrv">BCRV / Registre de version</h4>
+        <p>Le registre de version est le second et dernier registre du <a href="#BCBH">bloc d'entête</a>.</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <h4 id="bcrc">BCRC / Registre de chronologie</h4>
+        <p>Le registre de chronologie est le premier registre du <a href="#BCBL">bloc de liens</a>.</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <h4 id="bcrl">BCRL / Registre de liens</h4>
+        <p>Le registre de liens est le second registre et les suivants du <a href="#BCBL">bloc de liens</a>.</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <h4 id="bcrs">BCRS / Registre de signature</h4>
+        <p>Le registre de signature est le ou les registres du <a href="#BCBL">bloc de signature</a>.</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <h3 id="bce">BCE / Eléments</h3>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <h4 id="bceapp">BCEAPP / Application</h4>
+        <p>L'élément application (APP) est le premier élément du <a href="#BCBH">Registre de forme</a>.</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <h2 id="bt">BT / Transfert</h2>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <h2 id="bv">BV / Vérification</h2>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <?php
     }
