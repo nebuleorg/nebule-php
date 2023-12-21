@@ -45,7 +45,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020231105';
+    const APPLICATION_VERSION = '020231221';
     const APPLICATION_LICENCE = 'GNU GPL 2013-2023';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -2111,7 +2111,7 @@ class Traduction extends Traductions
 
 
 /**
- * Cette application permet de gérer les applications.
+ * Ce module permet de gérer les applications.
  *
  * Les modules sont référencés par leur RID à l'exception de certains modules intégrés à l'application.
  * Il faut faire un tri pour l'affichage par rapport au nom de la classe des modules pour les distinguer correctement.
@@ -3277,7 +3277,7 @@ class ModuleManage extends Modules
 
 
 /**
- * Cette application permet d'afficher l'aide et la page par défaut.
+ * Ce module permet d'afficher l'aide et la page par défaut.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -3750,7 +3750,7 @@ Le menu en haut à gauche est le meilleur moyen de se déplacer dans l'interface
 
 
 /**
- * Cette application permet de gérer les entités.
+ * Ce module permet de gérer les entités.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -6357,7 +6357,7 @@ foreach ($signers[$i] as $j => $eid)
 
 
 /**
- * Cette application permet de gérer les groupes.
+ * Ce module permet de gérer les groupes.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -7415,7 +7415,7 @@ class ModuleGroups extends Modules
 
 
 /**
- * Cette application permet gérer les objets.
+ * Ce module permet gérer les objets.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -8938,7 +8938,7 @@ class ModuleObjects extends Modules
 
 
 /**
- * Cette application permet de gérer les options de l'application ainsi que certains rôles d'entités.
+ * Ce module permet de gérer les options de l'application ainsi que certains rôles d'entités.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -9573,7 +9573,7 @@ class ModuleAdmin extends Modules
 
 
 /**
- * Cette application permet la prise en compte dans l'interface de la langue française.
+ * Ce module permet la prise en compte dans l'interface de la langue française.
  *
  * @author Projet nebule
  * @license GNU GPLv3
