@@ -375,9 +375,16 @@ EOF
   cp "${WORKSPACE}/lib_nebule.php" "/tmp/lib_nebule.php"
   mv "${WORKSPACE}/lib_nebule.php" "o/${library_hash}"
 
-  sylabe_hash=$(sha256sum "${WORKSPACE}/sylabe.php" | cut -d' ' -f1)'.sha2.256'
+  cat "${WORKSPACE}/sylabe.php" > "/tmp/sylabe.php"
+  tail +4 "${WORKSPACE}/module_manage.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' >> "/tmp/sylabe.php"
+  tail +4 "${WORKSPACE}/module_admin.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' >> "/tmp/sylabe.php"
+  tail +4 "${WORKSPACE}/module_objects.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' >> "/tmp/sylabe.php"
+  tail +4 "${WORKSPACE}/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' >> "/tmp/sylabe.php"
+  tail +4 "${WORKSPACE}/module_entities.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' >> "/tmp/sylabe.php"
+  tail +4 "${WORKSPACE}/module_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' >> "/tmp/sylabe.php"
+  sylabe_hash=$(sha256sum "/tmp/sylabe.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new sylabe : ${sylabe_hash}"
-  cp "${WORKSPACE}/sylabe.php" "o/${sylabe_hash}"
+  cp "/tmp/sylabe.php" "o/${sylabe_hash}"
 
   klicty_hash=$(sha256sum "${WORKSPACE}/klicty.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new klicty : ${klicty_hash}"

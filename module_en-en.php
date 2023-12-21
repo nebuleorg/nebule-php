@@ -4,10 +4,9 @@ namespace Nebule\Application\Modules;
 use Nebule\Library\Modules;
 use Nebule\Library\nebule;
 use Nebule\Library\Node;
-use Nebule\Library\Traductions;
 
 /**
- * Cette application permet la prise en compte dans l'interface de la langue française.
+ * This module add translation in English EN-EN.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -38,18 +37,6 @@ class ModuleTranslateENEN extends Modules
 
 
     /**
-     * Configuration spécifique au module.
-     *
-     * @return void
-     */
-    public function initialisation(): void
-    {
-        $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_initTable();
-    }
-
-
-    /**
      * Ajout de fonctionnalités à des points d'ancrage.
      *
      * @param string    $hookName
@@ -58,20 +45,7 @@ class ModuleTranslateENEN extends Modules
      */
     public function getHookList(string $hookName, ?Node $nid = null): array
     {
-        $object = $this->_applicationInstance->getCurrentObjectID();
-        if ($nid !== null)
-            $object = $nid->getID();
-
-        $hookArray = array();
-        switch ($hookName) {
-            case 'helpLanguages':
-                $hookArray[0]['name'] = $this->_traduction('::::Bienvenue', $this->MODULE_COMMAND_NAME);
-                $hookArray[0]['icon'] = $this->MODULE_LOGO;
-                $hookArray[0]['desc'] = $this->_traduction('::translateModule:' . $this->MODULE_COMMAND_NAME . ':ModuleDescription', $this->MODULE_COMMAND_NAME);
-                $hookArray[0]['link'] = '?mod=hlp&view=lang&' . Traductions::DEFAULT_COMMAND_LANGUAGE . '=' . $this->MODULE_COMMAND_NAME;
-                break;
-        }
-        return $hookArray;
+        return $this->getHookListTranslation($hookName);
     }
 
 

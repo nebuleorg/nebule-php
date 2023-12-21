@@ -256,7 +256,7 @@ abstract class Modules implements moduleInterface
 
 
     /**
-     * Ajout de fonctionnalités à des points d'ancrage.
+     * Add functionalities on hooks.
      *
      * @param string    $hookName
      * @param Node|null $nid
@@ -265,6 +265,24 @@ abstract class Modules implements moduleInterface
     public function getHookList(string $hookName, ?Node $nid = null): array
     {
         return array();
+    }
+
+    /**
+     * Add functionalities on hooks, only for translation modules.
+     *
+     * @param string $hookName
+     * @return array
+     */
+    public function getHookListTranslation(string $hookName): array
+    {
+        $hookArray = array();
+        if ($hookName == 'helpLanguages') {
+            $hookArray[0]['name'] = $this->_traduction('::::Bienvenue', $this->MODULE_COMMAND_NAME);
+            $hookArray[0]['icon'] = $this->MODULE_LOGO;
+            $hookArray[0]['desc'] = $this->_traduction('::translateModule:' . $this->MODULE_COMMAND_NAME . ':ModuleDescription', $this->MODULE_COMMAND_NAME);
+            $hookArray[0]['link'] = '?mod=hlp&view=lang&' . Traductions::DEFAULT_COMMAND_LANGUAGE . '=' . $this->MODULE_COMMAND_NAME;
+        }
+        return $hookArray;
     }
 
 
