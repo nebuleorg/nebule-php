@@ -1802,8 +1802,6 @@ abstract class Applications implements applicationInterface
         <p>Une interface est un programme dédié aux interactions entre deux milieux différents.</p>
         <p>Une interface permet à une entité, c'est-à-dire un utilisateur ou un robot, d'interagir avec une application.
             Cela peut être vu comme une extension de l'application.</p>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-
         <p>Les applications développées dans le cadre de <i>nebule</i> :</p>
         <ul>
             <li><b>bootstrap</b> : le chargeur initial de la librairie et des applications, <a href="#oaigb">OAIGB</a>.
