@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Nebule\Application\Authen;
+namespace Nebule\Application\Autent;
 use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
 use Nebule\Library\Actions;
@@ -35,10 +35,10 @@ use Nebule\Library\Traductions;
  */
 class Application extends Applications
 {
-    const APPLICATION_NAME = 'authen';
-    const APPLICATION_SURNAME = 'nebule/authen';
+    const APPLICATION_NAME = 'autent';
+    const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020231105';
+    const APPLICATION_VERSION = '020231229';
     const APPLICATION_LICENCE = 'GNU GPL 2023-2023';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';

@@ -2,6 +2,14 @@
 declare(strict_types=1);
 namespace Nebule\Library;
 use Nebule\Library\nebule;
+use const Nebule\Bootstrap\LIB_ARG_BOOTSTRAP_BREAK;
+use const Nebule\Bootstrap\LIB_ARG_FLUSH_SESSION;
+use const Nebule\Bootstrap\LIB_ARG_INLINE_DISPLAY;
+use const Nebule\Bootstrap\LIB_ARG_RESCUE_MODE;
+use const Nebule\Bootstrap\LIB_ARG_SWITCH_APPLICATION;
+use const Nebule\Bootstrap\LIB_ARG_UPDATE_APPLICATION;
+use const Nebule\Bootstrap\LIB_LOCAL_ENTITY_FILE;
+use const Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER;
 
 /**
  * Classe de référence des applications.
@@ -1660,12 +1668,12 @@ abstract class Applications implements applicationInterface
                         <li><a href="#oaig">OAIG / Applications d'Interfaçage Génériques</a>
                             <ul>
                                 <li><a href="#oaigb">OAIGB / Nb - bootstrap</a></li>
+                                <li><a href="#oaiga">OAIGA / Au - authen</a></li>
                                 <li><a href="#oaigs">OAIGS / Sy - sylabe</a></li>
                                 <li><a href="#oaigk">OAIGK / Kl - klicty</a></li>
                                 <li><a href="#oaigm">OAIGM / Me - messae</a></li>
                                 <li><a href="#oaigo">OAIGO / No - option</a></li>
                                 <li><a href="#oaigu">OAIGU / Nu - upload</a></li>
-                                <li><a href="#oaigd">OAIGD / Nd - defolt</a></li>
                             </ul>
                         </li>
                         <li><a href="#oaio">OAIO / Implémentation des Options</a></li>
@@ -1677,7 +1685,7 @@ abstract class Applications implements applicationInterface
                         <li><a href="#oabd">OABD / Description</a></li>
                         <li><a href="#oabi">OABI / Installation</a></li>
                         <li><a href="#oabf">OABF / Premier démarrage</a></li>
-                        <li><a href="#oabd">OABD / Commandes</a></li>
+                        <li><a href="#oabm">OABM / Commandes</a></li>
                         <li><a href="#oabc">OABC / Configuration</a></li>
                         <li><a href="#oabb">OABB / Interruption</a></li>
                         <li><a href="#oabe">OABE / Applications externes</a></li>
@@ -1724,21 +1732,21 @@ abstract class Applications implements applicationInterface
         <h2 id="oa">OA / Application</h2>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Une application permet d'interagir avec les objets et liens.</p>
-        <p>Un application qui ne fait que lire des objets et liens, ou retrasmettre des liens déjà signés, est dite
+        <p>Une application qui ne fait que lire des objets et liens, ou retransmettre des liens déjà signés, est dite
             passive. Si l'application à la capacité de générer des liens signés, donc avec une entité déverrouillée,
             alors elle est dite active.</p>
         <p>Si l'entité d'une instance d'application est par défaut et automatiquement déverrouillée, donc active, alors
             c'est aussi un robot. Le déverrouillage de cette entité peut cependant bénéficier de protections
-            paticulières.</p>
+            particulières.</p>
 
         <h3 id="oaf">OAF / Fonctionnement</h3>
         <p>Dans la construction du code, il y a quatre niveaux. Chaque niveau de code est constitué d’un et un seul
-            objet nebule ou fichier utilisé. Une seule application est utilisé à un instant donné mais il peut y avoir
+            objet nebule ou fichier utilisé. Une seule application est utilisée à un instant donné, mais il peut y avoir
             plusieurs modules utilisés par l’application. Les niveaux :</p>
         <ul>
             <li>le bootstrap, fichier ;</li>
             <li>la librairie en PHP orienté objet, objet ;</li>
-            <li>une application au choix, objets ;</li>
+            <li>une application au choix, objet ou intégré ;</li>
             <li>des modules au choix, facultatifs, objets.</li>
         </ul>
         <p>Les applications sont toutes construites sur le même modèle et dépendent (extend) toutes des mêmes classes de
@@ -1800,6 +1808,7 @@ abstract class Applications implements applicationInterface
         <ul>
             <li><b>bootstrap</b> : le chargeur initial de la librairie et des applications, <a href="#oaigb">OAIGB</a>.
             </li>
+            <li><b>autent</b> : l’application d'authentification interactive, <a href="#oaiga">OAIGA</a>.</li>
             <li><b>sylabe</b> : l’application de référence des possibilités de nebule, <a href="#oaigs">OAIGS</a>, <a
                     href="http://blog.sylabe.org">blog.sylabe.org</a>.
             </li>
@@ -1810,30 +1819,33 @@ abstract class Applications implements applicationInterface
                     href="http://blog.messae.org">blog.messae.org</a>.
             </li>
             <li><b>option</b> : l’application de gestion des options, <a href="#oaigo">OAIGO</a>.</li>
-            <li><b>upload</b> : l’application de chargement de mises à jours, <a href="#oaigu">OAIGU</a>.</li>
-            <li><b>defolt</b> : l’application pour un affichage par défaut sans application interactive, <a
-                    href="#oaigd">OAIGD</a>.
-            </li>
+            <li><b>upload</b> : l’application de chargement de mises à jour, <a href="#oaigu">OAIGU</a>.</li>
         </ul>
         <div class="layout-main">
             <div class="layout-content">
                 <div id="appslist">
                     <div class="apps" style="background:#000000;"><span class="appstitle">Nb</span><br/><span
                             class="appsname">break</span></div>
-                    <div class="apps" style="background:#11dd11;"><span class="appstitle">Me</span><br/><span
-                            class="appsname">messae</span></div>
-                    <div class="apps" style="background:#212151;"><span class="appstitle">No</span><br/><span
-                            class="appsname">option</span></div>
-                    <div class="apps" style="background:#313131;"><span class="appstitle">Nd</span><br/><span
+                    <div class="apps" style="background:#000000;"><span class="appstitle">N0</span><br/><span
                             class="appsname">defolt</span></div>
-                    <div class="apps" style="background:#ee8011;"><span class="appstitle">Kl</span><br/><span
-                            class="appsname">klicty</span></div>
-                    <div class="apps" style="background:#115131;"><span class="appstitle">Nu</span><br/><span
+                    <div class="apps" style="background:#222222;"><span class="appstitle">N2</span><br/><span
+                            class="appsname">autent</span></div>
+                    <div class="apps" style="background:#333333;"><span class="appstitle">N3</span><br/><span
+                            class="appsname">doctech</span></div>
+                    <div class="apps" style="background:#902060;"><span class="appstitle">Au</span><br/><span
+                                class="appsname">autent</span></div>
+                    <div class="apps" style="background:#c02030;"><span class="appstitle">Sy</span><br/><span
+                                class="appsname">sylabe</span></div>
+                    <div class="apps" style="background:#d0b020;"><span class="appstitle">Kl</span><br/><span
+                                class="appsname">klicty</span></div>
+                    <div class="apps" style="background:#2060a0;"><span class="appstitle">Me</span><br/><span
+                            class="appsname">messae</span></div>
+                    <div class="apps" style="background:#20a040;"><span class="appstitle">Qa</span><br/><span
+                                class="appsname">qantion</span></div>
+                    <div class="apps" style="background:#555555;"><span class="appstitle">Op</span><br/><span
+                            class="appsname">option</span></div>
+                    <div class="apps" style="background:#666666;"><span class="appstitle">Up</span><br/><span
                             class="appsname">upload</span></div>
-                    <div class="apps" style="background:#dd1111;"><span class="appstitle">Sy</span><br/><span
-                            class="appsname">sylabe</span></div>
-                    <div class="apps" style="background:#eed11f;"><span class="appstitle">Qa</span><br/><span
-                            class="appsname">qantion</span></div>
                 </div>
             </div>
         </div>
@@ -1854,33 +1866,35 @@ abstract class Applications implements applicationInterface
         <p>La création d'une application se passe en trois parties. Il faut créer un objet de référence de la nouvelle
             application. Il faut lui affecter un objet de code, objet de code qui sera mise à jour plus tard. Enfin il
             faut enregistrer l'application pour la rendre disponible.</p>
-        <h4 id="oaicr">OAICR / Référence</h4>
+
+        <h5 id="oaicr">OAICR / Référence</h5>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Cette partie est à faire au début lorsque l’on veut rendre visible et utiliser la nouvelle application. Elle
             ne sera plus refaite par la suite. Le but est de permettre au <i>bootstrap</i> de retrouver l’application et
             de permettre à l’utilisateur de la sélectionner.</p>
         <div class="layout-main">
             <div class="layout-content">
                 <div id="appslist">
-                    <div class="apps" style="background:#dd1111;"><span class="appstitle">Sy</span><br/><span
+                    <div class="apps" style="background:#c02030;"><span class="appstitle">Sy</span><br/><span
                             class="appsname">sylabe</span></div>
                 </div>
             </div>
         </div>
-        <p>On définit un objet de référence, un objet qui sera en quelque sorte virtuel puisqu’il n’aura pas de contenu.
+        <p>On définit un objet de référence, un objet qui sera virtuel puisqu'il n’aura pas de contenu.
             Sa seule contrainte forte est que l’empreinte est exprimée en hexadécimal. Par convention, il est recommandé
             que la taille de l’empreinte des objets virtuels soit comprise en 129 et 191 bits. Cet objet de référence
             peut être généré aléatoirement ou au contraire avoir un contenu pré-déterminé, ou mixer les deux.</p>
         <p>Chaque application doit avoir un objet de référence qui lui est réservé. Utiliser l’objet de référence d’une
             autre application revient à tenter de mettre à jour l’application, non à en faire une nouvelle.</p>
-        <p>Par exemple avec la commande : <code>openssl rand -hex 24</code></p>
+        <p>Par exemple avec la commande : <code>openssl rand -hex 36</code></p>
         <p>Cela donne une valeur, notre objet de référence, qui ressemble à ça :</p>
-        <code>e5ce3e9938247402722233e4698cda4adb44bb2e01aa0687</code>
+        <code>f3c2e389d0ec1bd3f279410748ba352c205ca354cec396a5f9fa0f8c0dcc1f9900bfd9</code>
         <p>Pour finir avec l’objet de référence, la couleur de l’application dépend de lui. Cette couleur étant
             constituée des 6 premiers caractères de l’empreinte de l’objet de référence, il est possible de choisir
             volontairement cette couleur.</p>
         <p>L’application doit avoir un nom et un préfixe. Ces deux propriétés sont utilisées par le bootstrap pour
             l’affichage des applications dans l’application de sélection des applications.</p>
-        <p>Le nom est libre mais si il est trop grand il sera tronqué pour tenir dans le carré de l’application.</p>
+        <p>Le nom est libre, mais si il est trop grand, il sera tronqué pour tenir dans le carré de l’application.</p>
         <p>Le préfixe doit faire 2 caractères. Si ce sont des lettres, systématiquement la première sera transformée en
             majuscule et la deuxième en minuscule.</p>
         <p>Par exemple :</p>
@@ -1894,66 +1908,52 @@ abstract class Applications implements applicationInterface
         <ul>
             <li>Le lien de hash :
                 <ul>
-                    <li>Signature du lien</li>
-                    <li>Identifiant du signataire</li>
-                    <li>Horodatage</li>
-                    <li>action : <code>l</code></li>
-                    <li>source : ID de l'application</li>
-                    <li>cible : hash du nom de l’algorithme de prise d’empreinte</li>
-                    <li>méta : hash(‘nebule/objet/hash’)</li>
+                    <li>REQ : <code>l</code></li>
+                    <li>NID1 : ID de l'application</li>
+                    <li>NID2 : hash du nom de l’algorithme de prise d’empreinte</li>
+                    <li>NID3 : hash(‘nebule/objet/hash’)</li>
                 </ul>
             </li>
             <li>Le lien de définition de type application :
                 <ul>
-                    <li>Signature du lien</li>
-                    <li>Identifiant du signataire</li>
-                    <li>Horodatage</li>
-                    <li>action : <code>l</code></li>
-                    <li>source : ID de l'application</li>
-                    <li>cible : hash(‘nebule/objet/interface/web/php/applications’)</li>
-                    <li>méta : hash(‘nebule/objet/type’)</li>
+                    <li>REQ : <code>l</code></li>
+                    <li>NID1 : ID de l'application</li>
+                    <li>NID2 : hash(‘nebule/objet/interface/web/php/applications’)</li>
+                    <li>NID3 : hash(‘nebule/objet/type’)</li>
                 </ul>
             </li>
             <li>Le lien de nommage long de l'application :
                 <ul>
-                    <li>Signature du lien</li>
-                    <li>Identifiant du signataire</li>
-                    <li>Horodatage</li>
-                    <li>action : <code>l</code></li>
-                    <li>source : ID de l'application</li>
-                    <li>cible : hash(nom long de l'application)</li>
-                    <li>méta : hash(‘nebule/objet/nom’)</li>
+                    <li>REQ : <code>l</code></li>
+                    <li>NID1 : ID de l'application</li>
+                    <li>NID2 : hash(nom long de l'application)</li>
+                    <li>NID3 : hash(‘nebule/objet/nom’)</li>
                 </ul>
             </li>
             <li>Le lien de nommage court de l'application :
                 <ul>
-                    <li>Signature du lien</li>
-                    <li>Identifiant du signataire</li>
-                    <li>Horodatage</li>
-                    <li>action : <code>l</code></li>
-                    <li>source : ID de l'application</li>
-                    <li>cible : hash(nom court de l'application)</li>
-                    <li>méta : hash(‘nebule/objet/surnom’)</li>
+                    <li>REQ : <code>l</code></li>
+                    <li>NID1 : ID de l'application</li>
+                    <li>NID2 : hash(nom court de l'application)</li>
+                    <li>NID3 : hash(‘nebule/objet/surnom’)</li>
                 </ul>
             </li>
         </ul>
         <p>Pour que ces liens soient reconnus par le bootstrap, ils doivent tous être signés d’une autorité locale.</p>
 
         <h5 id="oaicc">OAICC / Code</h5>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>La création de la base d’une application est simple, il suffit de copier le modèle d’application dans un
             nouveau fichier et dans un premier temps d’adapter les variables et la fonction d’affichage.</p>
-        <p>Ensuite, ce fichier doit être nébulisé, c’est à dire transféré vers le serveur comme nouvel objet.</p>
+        <p>Ensuite, ce fichier doit être nébulisé, c'est-à-dire transféré vers le serveur comme nouvel objet.</p>
         <p>Une fois nébulisé, l’objet peut être déclaré par un lien comme code pour l’objet de référence de
             l’application. Ainsi, l'objet référence point un code à exécuter.</p>
         <p>Le lien de pointage du code :</p>
         <ul>
-            <li>Signature du lien</li>
-            <li>Identifiant du signataire</li>
-            <li>Horodatage</li>
-            <li>action : <code>f</code></li>
-            <li>source :</li>
-            <li>cible :</li>
-            <li>méta :</li>
+            <li>REQ : <code>f</code></li>
+            <li>NID1 :</li>
+            <li>NID2 :</li>
+            <li>NID3 :</li>
         </ul>
 
         <p>Exemple de modèle d'application :</p>
@@ -2196,25 +2196,35 @@ class Traduction extends Traductions
         <p>Le nom de ces applications est toujours en minuscule.</p>
 
         <h5 id="oaigb">OAIGB / Nb - bootstrap</h5>
-        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>voir <a href="#oab">OAB</a></p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <h5 id="oaiga">OAIGA / Au - authen</h5>
+        <p>IID=9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h5 id="oaigs">OAIGS / Sy - sylabe</h5>
+        <p>IID=c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h5 id="oaigk">OAIGK / Kl - klicty</h5>
+        <p>IID=d0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h5 id="oaigm">OAIGM / Me - messae</h5>
+        <p>IID=2060a0d21853a42093f01d2e4809c2a5e9300b4ec31afbaf18af66ec65586d6c78b2823a.none.288</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <h5 id="oaigq">OAIGQ / Qa - qantion</h5>
+        <p>IID=20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h5 id="oaigo">OAIGO / No - option</h5>
+        <p>IID=555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h5 id="oaigu">OAIGU / Nu - upload</h5>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-
-        <h5 id="oaigd">OAIGD / Nd - defolt</h5>
+        <p>IID=6666661d0923f08d50de4d70be7dc3014e73de3325b6c7b16efd1a6f5a12f5957b68336d.none.288</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h4 id="oaio">OAIO / Implémentation des Options</h4>
@@ -2254,7 +2264,8 @@ class Traduction extends Traductions
             <li>Ouvrir un navigateur Web et donner en URL l'adresse du serveur Web.</li>
             <li>La partie premier démarrage du <i>bootstrap</i> est appelée. Voir <a href="#oabf">OABF</a>.</li>
             <li>Entrer un EID et une localisation pour le <i>puppetmaster</i> ou laisser celui par défaut. Valider.</li>
-            <li>Entrer un EID et une localisation pour l'entité de subordination ou laisser celle par défaut. Valider.</li>
+            <li>Entrer un EID et une localisation pour l'entité de subordination ou laisser celle par défaut.
+                Valider.</li>
             <li>Noter l'empreinte EID de la nouvelle entité de l'instance et son mot de passe.</li>
             <li>Si tout se passe bien, on arrive sur l'application 1 de selection des applications.</li>
             <li>L'instance est prête.</li>
@@ -2267,33 +2278,44 @@ class Traduction extends Traductions
             <a href="#cco">CCO</a> pour changer la configuration.</p>
 
         <h4 id="oabf">OABF / Premier démarrage</h4>
-        <p>Lors du premier démarrage (firstboot), c'est-à-dire lorsque l'on appelle le <i>bootstrap</i> via le serveur Web PHP, il
-            va se charger de préparer l'environnement nécessaire au bon fonctionnement d'une instance <i>nebule</i>.
+        <p>Lors du premier démarrage (firstboot), c'est-à-dire lorsque l'on appelle le <i>bootstrap</i> via le serveur
+            Web PHP, il va se charger de préparer l'environnement nécessaire au bon fonctionnement d'une instance
+            <i>nebule</i>.
             Cela va inclure :</p>
         <ul>
-            <li>La création d'un fichier <i>c</i> de configuration générique.</li>
-            <li>La création d'un dossier <i>o</i> pour stocker les objets.</li>
-            <li>La création d'un dossier <i>l</i> pour stocker les liens.</li>
+            <li>La création d'un fichier <i><?php echo \Nebule\Library\nebule::NEBULE_ENVIRONMENT_FILE; ?></i> de
+                configuration générique.</li>
+            <li>La création d'un dossier <i><?php echo \Nebule\Library\nebule::NEBULE_LOCAL_OBJECTS_FOLDER; ?></i> pour
+                stocker les objets.</li>
+            <li>La création d'un dossier <i><?php echo \Nebule\Library\nebule::NEBULE_LOCAL_LINKS_FOLDER; ?></i> pour
+                stocker les liens.</li>
             <li>La génération d'une entité locale, dite entité de l'instance.</li>
-            <li>La création d'un fichier <i>e</i> contenant l'empreinte <i>EID</i> de l'entité de l'instance.</li>
+            <li>La création d'un fichier <i><?php echo \Nebule\Library\nebule::NEBULE_LOCAL_ENTITY_FILE; ?></i>
+                contenant l'empreinte <i>EID</i> de l'entité de l'instance.</li>
             <li>La création de différents objets dans le dossier des objets.</li>
             <li>La création de différents liens dans le dossier des liens.</li>
         </ul>
         <p>Au besoin, un certain nombre de ces dossiers et fichiers peuvent être pré-initialisé lorsque l'on dépose le
             <i>bootstrap</i> sur le serveur Web. Mais cela n'est pas le fonctionnement normal.</p>
 
-        <h4 id="oabd">OABD / Commandes</h4>
+        <h4 id="oabm">OABM / Commandes</h4>
         <p>Il est possible d'interagir avec le <i>bootstrap></i> au moyen de commandes dans l'URL.</p>
         <p>Liste des commandes :</p>
         <ul>
-            <li><b>a</b> : Sélection d'une application.</li>
-            <li><b>b</b> : Interruption du <i>bootstrap</i>. Voir <a href="#oabb">OABB</a>.</li>
-            <li><b>e</b> : Affichage de l'empreinte EID de l'entité de l'instance.</li>
-            <li><b>f</b> : Réinitialisation de la session, suppression du cache, fermeture des applications et entités.</li>
-            <li><b>i</b> : Affichage en mode page intégrée d'une application. N'est pas supporté partout.</li>
-            <li><b>l</b> : Dans l'application 4, désigne le NID dont on veux afficher les blocs de liens. Non reconnu ailleurs.</li>
-            <li><b>r</b> : Charge en mode restreint pour dépannage.</li>
-            <li><b>u</b> : Demande une mise à jour des applications et du cache associé.</li>
+            <li><b><?php echo LIB_ARG_SWITCH_APPLICATION; ?></b> : Sélection d'une application.</li>
+            <li><b><?php echo LIB_ARG_BOOTSTRAP_BREAK; ?></b> : Interruption du <i>bootstrap</i>.
+                Voir <a href="#oabb">OABB</a>.</li>
+            <li><b><?php echo LIB_LOCAL_ENTITY_FILE; ?></b> : Affichage de l'empreinte EID de l'entité de
+                l'instance.</li>
+            <li><b><?php echo LIB_ARG_FLUSH_SESSION; ?></b> : Réinitialisation de la session, suppression du cache,
+                fermeture des applications et entités.</li>
+            <li><b><?php echo LIB_ARG_INLINE_DISPLAY; ?></b> : Affichage en mode page intégrée d'une application.
+                Ce n'est pas supporté partout.</li>
+            <li><b><?php echo LIB_LOCAL_LINKS_FOLDER; ?></b> : Dans l'application 4, désigne le NID dont on veut
+                afficher les blocs de liens. Non reconnu ailleurs.</li>
+            <li><b><?php echo LIB_ARG_RESCUE_MODE; ?></b> : Charge en mode restreint pour dépannage.</li>
+            <li><b><?php echo LIB_ARG_UPDATE_APPLICATION; ?></b> : Demande une mise à jour des applications et du cache
+                associé.</li>
             <li><b>bootstrapfirstpuppetmastereid</b> : Dans le <i>firstboot</i>, donne l'EID de puppetmaster. Non
                 reconnu ailleurs.</li>
             <li><b>bootstrapfirstpuppetmasterlocation</b> : Dans le <i>firstboot</i>, donne la localisation de
@@ -2309,8 +2331,8 @@ class Traduction extends Traductions
             <a href="#cco">CCO</a>.</p>
 
         <h4 id="oabb">OABB / Interruption</h4>
-        <p>La présence de la commande <i>b</i> sur l'URL déclenche l'affichage d'une page d'interruption dédiée du
-            <i>bootstrap</i>.</p>
+        <p>La présence de la commande <i><?php echo LIB_ARG_BOOTSTRAP_BREAK; ?></i> sur l'URL déclenche l'affichage
+            d'une page d'interruption dédiée du <i>bootstrap</i>.</p>
         <p>Le résultat est une page contenant en partie centrale, par exemple :</p>
         <pre>
 #1 bootstrap break on
@@ -2391,13 +2413,15 @@ tE=0.0632s
         <p style="color: red; font-weight: bold">A compléter avec la description des lignes...</p>
 
         <h4 id="oabe">OABE / Applications externes</h4>
-        <p>La présence de la commande <i>a=RID</i> sur l'URL permet de passer vers l'application référencée par ce RID.
+        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=RID</i> sur l'URL permet de passer
+            vers l'application référencée par ce RID.
             Pour les applications externes, le RID est l'objet de référence de l'application. Chaque application dispose
             d'un RID unique avec une valeur assez longue pour éviter toute collision avec une autre application.</p>
-        <p>Voir <a href="#oa">OA</a>.</p>
+        <p>Voir <a href="#oa">OA</a>, <a href="#oail">OAIL</a> et <a href="#oabn">OABN</a>.</p>
 
         <h4 id="oaba">OABA / Applications intégrées</h4>
-        <p>La présence de la commande <i>a=RID</i> sur l'URL permet de passer vers l'application référencée par ce RID.
+        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=RID</i> sur l'URL permet de passer
+            vers l'application référencée par ce RID.
             Pour les applications internes, le RID est l'objet de référence interne de l'application sur un seul
             chiffre (0 à 9).</p>
         <p> Toutes les applications internes ne sont pas actives et donc ne sont pas accessibles. Certaines
@@ -2406,32 +2430,32 @@ tE=0.0632s
 
         <h5 id="oaba0">OABA0 / Application 0</h5>
         <p>C'est l'application par défaut pour les instances sans interaction. La page Web délivrée est minimaliste.</p>
-        <p>La présence de la commande <i>a=0</i> sur l'URL déclenche l'affichage de cette page dédiée du
-            <i>bootstrap</i>.</p>
+        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=0</i> sur l'URL déclenche l'affichage
+            de cette page dédiée du <i>bootstrap</i>.</p>
         <p>Son accès peut être bloqué par l'option <b>permitApplication1</b> à <i>false</i> ou un lien équivalent.</p>
 
         <h5 id="oaba1">OABA1 / Application 1</h5>
         <p>C'est l'application de sélection et de navigation et les différentes applications.</p>
-        <p>La présence de la commande <i>a=1</i> sur l'URL déclenche l'affichage de cette page dédiée du
-            <i>bootstrap</i>.</p>
+        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=1</i> sur l'URL déclenche l'affichage
+            de cette page dédiée du <i>bootstrap</i>.</p>
         <p>Son accès peut être bloqué par l'option <b>permitApplication1</b> à <i>false</i> ou un lien équivalent.</p>
 
         <h5 id="oaba2">OABA2 / Application 2</h5>
         <p>C'est une application minimale d'authentification des utilisateurs sur les entités.</p>
-        <p>La présence de la commande <i>a=2</i> sur l'URL déclenche l'affichage de cette page dédiée du
-            <i>bootstrap</i>.</p>
+        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=2</i> sur l'URL déclenche l'affichage
+            de cette page dédiée du <i>bootstrap</i>.</p>
         <p>Son accès peut être bloqué par l'option <b>permitApplication2</b> à <i>false</i> ou un lien équivalent.</p>
 
         <h5 id="oaba3">OABA3 / Application 3</h5>
         <p>C'est l'application d'affichage de la documentation technique.</p>
-        <p>La présence de la commande <i>a=3</i> sur l'URL déclenche l'affichage de cette page dédiée du
-            <i>bootstrap</i>.</p>
+        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=3</i> sur l'URL déclenche l'affichage
+            de cette page dédiée du <i>bootstrap</i>.</p>
         <p>Son accès peut être bloqué par l'option <b>permitApplication3</b> à <i>false</i> ou un lien équivalent.</p>
 
         <h5 id="oaba4">OABA4 / Application 4</h5>
         <p>C'est une application qui permet de voir de façon simplifiée les blocs de liens.</p>
-        <p>La présence de la commande <i>a=4</i> sur l'URL déclenche l'affichage de cette page dédiée du
-            <i>bootstrap</i>.</p>
+        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=4</i> sur l'URL déclenche l'affichage
+            de cette page dédiée du <i>bootstrap</i>.</p>
         <p>Son accès peut être bloqué par l'option <b>permitApplication4</b> à <i>false</i> ou un lien équivalent.</p>
         <p>Elle est désactivée par défaut.</p>
 
@@ -2453,17 +2477,28 @@ tE=0.0632s
 
         <h5 id="oaba9">OABA9 / Application 9</h5>
         <p>C'est une application utilisée pour le déverminage du code.</p>
-        <p>La présence de la commande <i>a=9</i> sur l'URL déclenche l'affichage de cette page dédiée du
-            <i>bootstrap</i>.</p>
+        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=9</i> sur l'URL déclenche l'affichage
+            de cette page dédiée du <i>bootstrap</i>.</p>
         <p>Son accès peut être bloqué par l'option <b>permitApplication9</b> à <i>false</i> ou un lien équivalent.</p>
         <p>Elle est désactivée par défaut.</p>
 
         <h4 id="oabn">OABN / Fonctionnement nominal</h4>
-        <p>Le <i>bootstrap</i> mémorise la dernière application utilisée et va, jusqu'à déconnexion de la session à
-            l'instance ou vidage du cache ou problème, représenter la même application à l'utilisateur. C'est le
-            fonctionnement nominal pour un utilisateur.</p>
-        <p>La présence de la commande <i>a=RID</i> sur l'URL permet de passer vers l'application référencée par ce RID.
-            Tant que la commande <i>a</i> n'est pas de nouveau utilisée, on reste sur la même application.</p>
+        <p>Le <i>bootstrap</i> mémorise la dernière application utilisée, externe ou intégrée, et va représenter la même
+            application à l'utilisateur jusqu'à déconnexion de la session à l'instance ou vidage du cache ou problème.
+            C'est le fonctionnement nominal pour un utilisateur.</p>
+        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=RID</i> sur l'URL permet de passer
+            vers l'application référencée par ce RID.
+            Tant que la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?></i> n'est pas de nouveau utilisée, on
+            reste sur la même application.</p>
+        <p>La recherche de l'application à utiliser par le <i>bootstrap</i> est faite dans l'ordre :</p>
+        <ul>
+            <li>1 : Si présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?></i>, il essaie de trouver
+                l'application correspondante.</li>
+            <li>2 : Si une application est mémorisée dans le cache, il la charge.</li>
+            <li>3 : Sinon il charge l'application par défaut. C'est équivalent à
+                <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=1</i>.</li>
+        </ul>
+        <p>Voir <a href="#oail">OAIL</a>.</p>
 
         <h3 id="oal">OAL / Librairie</h3>
         <h4 id="oald">OALD / Description</h4>

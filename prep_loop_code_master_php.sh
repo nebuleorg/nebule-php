@@ -7,7 +7,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020231104
+# Version 020231229
 
 export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
@@ -27,7 +27,7 @@ export IID_INTERFACE_BOOTSTRAP='304f4431cd011211e8fbb57081cd8f1609a25a46ab30476e
 export LIB_RID_INTERFACE_LIBRARY='780c5e2767e15ad2a92d663cf4fb0841f31fd302ea0fa97a53bfd1038a0f1c130010e15c.none.288'
 export IID_INTERFACE_LIBRARY='21f6396e921e4373a91d70d13895b04a359316fc269a1c0dc9268a71419ecfb41e88d58d.none.288'
 export LIB_RID_INTERFACE_APPLICATIONS='4046edc20127dfa1d99f645a7a4ca3db42e94feffa151319c406269bd6ede981c32b96e2.none.288'
-export IID_INTERFACE_AUTHEN='c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288'
+export IID_INTERFACE_AUTENT='9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288'
 export IID_INTERFACE_SYLABE='c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288'
 export IID_INTERFACE_KLICTY='d0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288'
 export IID_INTERFACE_MESSAE='2060a0d21853a42093f01d2e4809c2a5e9300b4ec31afbaf18af66ec65586d6c78b2823a.none.288'
@@ -333,7 +333,7 @@ function work_refresh()
   phpOID=$(echo -n 'application/x-httpd-php' | sha256sum | cut -d' ' -f1)'.sha2.256'
   textOID=$(echo -n 'text/plain' | sha256sum | cut -d' ' -f1)'.sha2.256'
   typeRID=$(echo -n 'nebule/objet/type' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  authenNameOID=$(echo -n 'authen' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  autentNameOID=$(echo -n 'autent' | sha256sum | cut -d' ' -f1)'.sha2.256'
   sylabeNameOID=$(echo -n 'sylabe' | sha256sum | cut -d' ' -f1)'.sha2.256'
   klictyNameOID=$(echo -n 'klicty' | sha256sum | cut -d' ' -f1)'.sha2.256'
   messaeNameOID=$(echo -n 'messae' | sha256sum | cut -d' ' -f1)'.sha2.256'
@@ -341,7 +341,7 @@ function work_refresh()
   optionNameOID=$(echo -n 'option' | sha256sum | cut -d' ' -f1)'.sha2.256'
   uploadNameOID=$(echo -n 'upload' | sha256sum | cut -d' ' -f1)'.sha2.256'
   nameRID=$(echo -n 'nebule/objet/nom' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  authenSurnameOID=$(echo -n 'Au' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  autentSurnameOID=$(echo -n 'Au' | sha256sum | cut -d' ' -f1)'.sha2.256'
   sylabeSurnameOID=$(echo -n 'Sy' | sha256sum | cut -d' ' -f1)'.sha2.256'
   klictySurnameOID=$(echo -n 'Kl' | sha256sum | cut -d' ' -f1)'.sha2.256'
   messaeSurnameOID=$(echo -n 'Me' | sha256sum | cut -d' ' -f1)'.sha2.256'
@@ -374,6 +374,10 @@ EOF
   echo " > new library : ${library_hash}"
   cp "${WORKSPACE}/lib_nebule.php" "/tmp/lib_nebule.php"
   mv "${WORKSPACE}/lib_nebule.php" "o/${library_hash}"
+
+  autent_hash=$(sha256sum "${WORKSPACE}/autent.php" | cut -d' ' -f1)'.sha2.256'
+  echo " > new autent : ${autent_hash}"
+  cp "${WORKSPACE}/autent.php" "o/${autent_hash}"
 
   cat "${WORKSPACE}/sylabe.php" > "/tmp/sylabe.php"
   tail +4 "${WORKSPACE}/module_manage.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' >> "/tmp/sylabe.php"
@@ -411,7 +415,7 @@ EOF
     # nodes
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_BOOTSTRAP}>${IID_INTERFACE_BOOTSTRAP}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_LIBRARY}>${IID_INTERFACE_LIBRARY}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_AUTHEN}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_AUTENT}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_SYLABE}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_KLICTY}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_MESSAE}>${phpOID}>${NID_CODE_BRANCH}"
@@ -421,6 +425,7 @@ EOF
     # type mime = application/x-httpd-php
     "nebule:link/2:0_0>${current_date}/l>${bootstrap_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${library_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${autent_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${sylabe_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${klicty_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${messae_hash}>${phpOID}>${typeRID}"
@@ -430,14 +435,14 @@ EOF
     # nebule/objet/interface/web/php/bootstrap in develop branch
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_BOOTSTRAP}>${bootstrap_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_LIBRARY}>${library_hash}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_AUTHEN}>${sylabe_hash}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_AUTENT}>${autent_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_SYLABE}>${sylabe_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_KLICTY}>${klicty_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_MESSAE}>${messae_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_QANTION}>${qantion_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_OPTION}>${option_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_UPLOAD}>${upload_hash}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_AUTHEN}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_AUTENT}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_SYLABE}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_KLICTY}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_MESSAE}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
@@ -445,8 +450,8 @@ EOF
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_OPTION}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_UPLOAD}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     # names
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_AUTHEN}>${sylabeNameOID}>${nameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_AUTHEN}>${sylabeSurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_AUTENT}>${autentNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_AUTENT}>${autentSurnameOID}>${surnameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_SYLABE}>${sylabeNameOID}>${nameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_SYLABE}>${sylabeSurnameOID}>${surnameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_KLICTY}>${klictyNameOID}>${nameRID}"
@@ -459,8 +464,8 @@ EOF
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_OPTION}>${optionSurnameOID}>${surnameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_UPLOAD}>${uploadNameOID}>${nameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_UPLOAD}>${uploadSurnameOID}>${surnameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${authenNameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${authenSurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${autentNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${autentSurnameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${sylabeNameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${sylabeSurnameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${klictyNameOID}>${textOID}>${typeRID}"
@@ -480,8 +485,8 @@ EOF
     sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
   done
 
-  echo -n "authen" > "o/${authenNameOID}"
-  echo -n "Au" > "o/${authenSurnameOID}"
+  echo -n "autent" > "o/${autentNameOID}"
+  echo -n "Au" > "o/${autentSurnameOID}"
   echo -n "sylabe" > "o/${sylabeNameOID}"
   echo -n "Sy" > "o/${sylabeSurnameOID}"
   echo -n "klicty" > "o/${klictyNameOID}"
