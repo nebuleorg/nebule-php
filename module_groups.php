@@ -24,9 +24,9 @@ class ModuleGroups extends Modules
     protected $MODULE_COMMAND_NAME = 'grp';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:groups:ModuleDescription';
-    protected $MODULE_VERSION = '020231221';
+    protected $MODULE_VERSION = '020240206';
     protected $MODULE_AUTHOR = 'Projet nebule';
-    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2023';
+    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
     protected $MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
     protected $MODULE_HELP = '::sylabe:module:groups:ModuleHelp';
     protected $MODULE_INTERFACE = '3.0';

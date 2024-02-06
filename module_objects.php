@@ -25,9 +25,9 @@ class ModuleObjects extends Modules
     protected $MODULE_COMMAND_NAME = 'obj';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    protected $MODULE_VERSION = '020231221';
+    protected $MODULE_VERSION = '020240206';
     protected $MODULE_AUTHOR = 'Projet nebule';
-    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2023';
+    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
     protected $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
     protected $MODULE_HELP = '::sylabe:module:objects:ModuleHelp';
     protected $MODULE_INTERFACE = '3.0';

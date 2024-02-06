@@ -21,9 +21,9 @@ class ModuleTranslateESCO extends Modules
     protected $MODULE_COMMAND_NAME = 'es-co';
     protected $MODULE_DEFAULT_VIEW = '';
     protected $MODULE_DESCRIPTION = '::translateModule:es-co:ModuleDescription';
-    protected $MODULE_VERSION = '020231221';
+    protected $MODULE_VERSION = '020240206';
     protected $MODULE_AUTHOR = 'Projet nebule';
-    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2023';
+    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
     protected $MODULE_LOGO = 'b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac.sha2.256';
     protected $MODULE_HELP = '::translateModule:es-co:ModuleHelp';
     protected $MODULE_INTERFACE = '3.0';

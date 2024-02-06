@@ -25,9 +25,9 @@ class ModuleEntities extends Modules
     protected $MODULE_COMMAND_NAME = 'ent';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
-    protected $MODULE_VERSION = '020231221';
+    protected $MODULE_VERSION = '020240206';
     protected $MODULE_AUTHOR = 'Projet nebule';
-    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2023';
+    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
     protected $MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
     protected $MODULE_HELP = '::sylabe:module:entities:ModuleHelp';
     protected $MODULE_INTERFACE = '3.0';

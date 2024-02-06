@@ -28,9 +28,9 @@ class ModuleManage extends Modules
     protected $MODULE_COMMAND_NAME = 'modmanager';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:manage:ModuleDescription';
-    protected $MODULE_VERSION = '020231229';
+    protected $MODULE_VERSION = '020240206';
     protected $MODULE_AUTHOR = 'Projet nebule';
-    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2023';
+    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
     protected $MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256';
     protected $MODULE_HELP = '::sylabe:module:manage:ModuleHelp';
     protected $MODULE_INTERFACE = '3.0';
