@@ -38,7 +38,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240206';
+    const APPLICATION_VERSION = '020240207';
     const APPLICATION_LICENCE = 'GNU GPL 2023-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -68,7 +68,7 @@ class Display extends Displays
             $linkApplicationWebsite = 'http://' . Application::APPLICATION_WEBSITE;
         ?>
         <!DOCTYPE html>
-        <html>
+        <html lang="">
         <head>
             <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
             <title><?php echo Application::APPLICATION_NAME; ?></title>
@@ -78,7 +78,7 @@ class Display extends Displays
             <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
             <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
             <?php $this->commonCSS(); ?>
-            <style type="text/css">
+            <style>
                 .layout-content {
                     max-width: 80%;
                 }
@@ -145,134 +145,15 @@ class Display extends Displays
         <div class="layout-main">
             <div class="layout-content">
                 <?php
-                $param = array(
-                    'enableDisplayAlone' => true,
-                    'enableDisplayIcon' => true,
-                    'informationType' => 'warn',
-                    'displayRatio' => 'short',
-                );
-                if ($this->_nebuleInstance->getModeRescue()) {
-                    $param['informationType'] = 'warn';
-                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation('::::RESCUE', $param);
-                }
-                if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'WARN') {
-                    $param['informationType'] = 'warn';
-                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityCryptoHashMessage(), $param);
-                }
-                if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'ERROR') {
-                    $param['informationType'] = 'error';
-                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityCryptoHashMessage(), $param);
-                }
-                if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'WARN') {
-                    $param['informationType'] = 'warn';
-                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityCryptoSymMessage(), $param);
-                }
-                if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'ERROR') {
-                    $param['informationType'] = 'error';
-                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityCryptoSymMessage(), $param);
-                }
-                if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'WARN') {
-                    $param['informationType'] = 'warn';
-                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityCryptoAsymMessage(), $param);
-                }
-                if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'ERROR') {
-                    $param['informationType'] = 'error';
-                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityCryptoAsymMessage(), $param);
-                }
-                if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'ERROR') {
-                    $param['informationType'] = 'error';
-                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityBootstrapMessage(), $param);
-                }
-                if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'WARN') {
-                    $param['informationType'] = 'warn';
-                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityBootstrapMessage(), $param);
-                }
-                if ($this->_applicationInstance->getCheckSecuritySign() == 'WARN') {
-                    $param['informationType'] = 'warn';
-                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecuritySignMessage(), $param);
-                }
-                if ($this->_applicationInstance->getCheckSecuritySign() == 'ERROR') {
-                    $param['informationType'] = 'error';
-                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecuritySignMessage(), $param);
-                }
-                if ($this->_applicationInstance->getCheckSecurityURL() == 'WARN') {
-                    $param['informationType'] = 'warn';
-                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityURLMessage(), $param);
-                }
-                if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')) {
-                    $param['informationType'] = 'warn';
-                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::warn_ServNotPermitWrite', $param);
-                }
-                if ($this->_nebuleInstance->getFlushCache()) {
-                    $param['informationType'] = 'warn';
-                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::warn_flushSessionAndCache', $param);
-                }
+                $securityCheck = $this->displaySecurityAlert('medium', true);
 
-                // Vérifie que la création et le chargement de liens soit autorisé.
-                if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
-                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-                    && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink')
-                    && ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
-                        || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
-                        || $this->_unlocked
-                    )
-                ) {
-                    // Vérifie si tous les liens pré-signés peuvent être chargés. Sinon par défaut, c'est juste ceux du maître du code.
-                    if (!$this->_unlocked) {
-                        $param = array(
-                            'enableDisplayAlone' => true,
-                            'enableDisplayIcon' => true,
-                            'informationType' => 'warn',
-                            'displayRatio' => 'short',
-                        );
-                        if ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')) {
-                            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::info_OnlySignedLinks', $param);
-                        } else {
-                            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::info_OnlyLinksFromCodeMaster', $param);
-                        }
+                // FIXME
+                if ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity') && $securityCheck == 'ok') {
+                    if ($this->_unlocked) {
+                        $this->_askLock();
+                    } else {
+                        $this->_askUnlock();
                     }
-                    ?>
-
-                    <div>
-                        <h1>One link upload</h1>
-                        <div>
-                            <form enctype="multipart/form-data" method="post"
-                                  action="<?php echo '?' . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
-                                <input type="text" class="newlink"
-                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_SIGNED_LINK; ?>"
-                                       value=""/><br/>
-                                <input type="submit"
-                                       value="Upload"/>
-                            </form>
-                        </div>
-                    </div>
-                    <div>
-                        <h1>Link's file upload</h1>
-                        <div>
-                            <form enctype="multipart/form-data" method="post"
-                                  action="<?php echo '?' . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
-                                <input type="hidden"
-                                       name="MAX_FILE_SIZE"
-                                       value="<?php echo $this->_configurationInstance->getOptionUntyped('ioReadMaxData'); ?>"/>
-                                <input type="file"
-                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LINKS; ?>"/><br/>
-                                <input type="submit"
-                                       value="Upload"/>
-                            </form>
-                        </div>
-                    </div>
-                    <div>
-                        <h1>Upload result</h1>
-                        <div class="result">
-                            <?php
-                            $this->_actionInstance->genericActions();
-                            $this->_actionInstance->specialActions();
-
-                            ?>
-
-                        </div>
-                    </div>
-                    <?php
                 } else {
                     $param = array(
                         'enableDisplayAlone' => true,
@@ -283,10 +164,33 @@ class Display extends Displays
                     echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::err_NotPermit', $param);
                 }
                 ?>
+
             </div>
         </div>
         </body>
         </html>
+        <?php
+    }
+
+    private function _askLock()
+    {
+        echo '&gt;&nbsp;';
+        $this->_applicationInstance->getDisplayInstance()->displayHypertextLink('Lock', '?' . nebule::COMMAND_LOGOUT_ENTITY . '&' . nebule::COMMAND_FLUSH);
+        echo '&nbsp;&lt;';
+    }
+
+    private function _askUnlock()
+    {
+        ?>
+
+        <form method="post"
+              action="?<?php echo nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getInstanceEntity() . '&' . nebule::COMMAND_SWITCH_TO_ENTITY; ?>">
+            <input type="hidden" name="id" value="<?php echo $this->_nebuleInstance->getInstanceEntity(); ?>">
+            <label>
+                <input type="password" name="pwd">
+            </label>
+            <input type="submit" value="Unlock">
+        </form>
         <?php
     }
 }
@@ -302,65 +206,7 @@ class Display extends Displays
  */
 class Action extends Actions
 {
-    const ACTION_APPLY_DELAY = 5;
-
-    /**
-     * Traitement des actions génériques.
-     */
-    public function genericActions()
-    {
-        $this->_metrology->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-
-        // Rien.
-
-        $this->_metrology->addLog('Generic actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-    }
-
-
-    /**
-     * Traitement des actions spéciales, qui peuvent être réalisées sans entité déverrouillée.
-     *
-     * Utilise les fonctions d'action _actionUploadLink() et _actionUploadFileLinks() de la bibliothèque nebule.
-     * Le fonctionnement est identique à celui du module module_upload de l'application sylabe.
-     *
-     * @return void
-     */
-    public function specialActions()
-    {
-        $this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-
-        // Vérifie que l'action de chargement de lien soit permise.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitUploadLink')
-            && ($this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
-                || $this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
-                || $this->_unlocked
-            )
-        ) {
-            // Extrait les actions.
-            $this->_extractActionUploadLink();
-            $this->_extractActionUploadFileLinks();
-
-            $this->_metrology->addLog('Router Special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-
-            // Liens pré-signés.
-            if ($this->_actionUploadLinkInstance != ''
-                && is_a($this->_actionUploadLinkInstance, 'Link')
-            ) {
-                sleep(self::ACTION_APPLY_DELAY);
-                $this->_actionUploadLink($this->_actionUploadLinkInstance);
-            }
-
-            // Fichier de liens pré-signés.
-            if ($this->_actionUploadFileLinks) {
-                sleep(self::ACTION_APPLY_DELAY);
-                $this->_actionUploadFileLinks();
-            }
-        }
-
-        $this->_metrology->addLog('Special actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-    }
+    // Tout par défaut.
 }
 
 
@@ -413,6 +259,7 @@ class Traduction extends Traductions
         $this->_table['en-en']['::::RESCUE'] = 'Rescue mode!';
         $this->_table['es-co']['::::RESCUE'] = '¡Modo de rescate!';
 
+        $this->_table['fr-fr']['::::SecurityChecks'] = 'Tests de sécurité';
         $this->_table['fr-fr'][':::warn_ServNotPermitWrite'] = "Ce serveur n'autorise pas les modifications !";
         $this->_table['fr-fr'][':::warn_flushSessionAndCache'] = "Toutes les données de connexion ont été effacées !";
         $this->_table['fr-fr'][':::info_OnlySignedLinks'] = 'Uniquement des liens signés !';
@@ -430,6 +277,7 @@ class Traduction extends Traductions
         $this->_table['fr-fr'][':::act_chk_errBootstrap'] = "L'empreinte cryptographique du bootstrap est invalide !";
         $this->_table['fr-fr'][':::act_chk_warnSigns'] = 'La vérification des signatures de liens est désactivée !';
         $this->_table['fr-fr'][':::act_chk_errSigns'] = 'La vérification des signatures de liens ne fonctionne pas !';
+        $this->_table['en-en']['::::SecurityChecks']='Security checks';
         $this->_table['en-en'][':::warn_ServNotPermitWrite'] = 'This server do not permit modifications!';
         $this->_table['en-en'][':::warn_flushSessionAndCache'] = 'All datas of this connexion have been flushed!';
         $this->_table['en-en'][':::info_OnlySignedLinks'] = 'Only signed links!';
@@ -447,6 +295,7 @@ class Traduction extends Traductions
         $this->_table['en-en'][':::act_chk_errBootstrap'] = "L'empreinte cryptographique du bootstrap est invalide !";
         $this->_table['en-en'][':::act_chk_warnSigns'] = 'La vérification des signatures de liens est désactivée !';
         $this->_table['en-en'][':::act_chk_errSigns'] = 'La vérification des signatures de liens ne fonctionne pas !';
+        $this->_table['es-co']['::::SecurityChecks']='Controles de seguridad';
         $this->_table['es-co'][':::warn_ServNotPermitWrite'] = 'This server do not permit modifications!';
         $this->_table['es-co'][':::warn_flushSessionAndCache'] = 'All datas of this connexion have been flushed!';
         $this->_table['es-co'][':::info_OnlySignedLinks'] = 'Only signed links!';

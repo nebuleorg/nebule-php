@@ -5056,7 +5056,7 @@ global $libraryRescueMode;
 
 ?>
     <!DOCTYPE html>
-<html>
+<html lang="">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <title><?php echo BOOTSTRAP_NAME;
@@ -5065,7 +5065,7 @@ global $libraryRescueMode;
     <meta name="author"
           content="<?php echo BOOTSTRAP_AUTHOR . ' - ' . BOOTSTRAP_WEBSITE . ' - ' . BOOTSTRAP_VERSION; ?>"/>
     <meta name="licence" content="<?php echo BOOTSTRAP_LICENCE . ' ' . BOOTSTRAP_AUTHOR; ?>"/>
-    <style type="text/css">
+    <style>
         /* CSS reset. http://meyerweb.com/eric/tools/css/reset/ v2.0 20110126. Public domain */
         * {
             margin: 0;

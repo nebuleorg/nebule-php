@@ -860,7 +860,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         ?>
 
-        <style type="text/css">
+        <style>
             /* CSS reset. http://meyerweb.com/eric/tools/css/reset/ v2.0 20110126. Public domain */
             * {
                 margin: 0;
@@ -8531,7 +8531,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
 
     /**
-     * Affiche des entrés.
+     * Affiche des entrées.
      *
      * @param array $list
      * @return void
@@ -8746,5 +8746,101 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         </div>
         <?php
         unset($object, $entityName, $name, $shortname, $icon, $desc);
+    }
+
+
+    /**
+     * Show security warning.
+     *
+     * @param string $size
+     * @param bool   $displayOk
+     * @return string
+     */
+    public function displaySecurityAlert(string $size, bool $displayOk = false): string
+    {
+        $error = 'ok';
+        $param = array(
+            'enableDisplayAlone' => true,
+            'enableDisplayIcon' => true,
+            'informationType' => 'warn',
+            'displayRatio' => 'short',
+            'displaySize' => $size,
+        );
+        if ($this->_nebuleInstance->getModeRescue()) {
+            $param['informationType'] = 'warn';
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation('::::RESCUE', $param);
+            $error = 'wr';
+        }
+        if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'WARN') {
+            $param['informationType'] = 'warn';
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityCryptoHashMessage(), $param);
+            $error = 'wr';
+        }
+        if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'ERROR') {
+            $param['informationType'] = 'error';
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityCryptoHashMessage(), $param);
+            $error = 'er';
+        }
+        if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'WARN') {
+            $param['informationType'] = 'warn';
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityCryptoSymMessage(), $param);
+            $error = 'wr';
+        }
+        if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'ERROR') {
+            $param['informationType'] = 'error';
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityCryptoSymMessage(), $param);
+            $error = 'er';
+        }
+        if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'WARN') {
+            $param['informationType'] = 'warn';
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityCryptoAsymMessage(), $param);
+            $error = 'wr';
+        }
+        if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'ERROR') {
+            $param['informationType'] = 'error';
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityCryptoAsymMessage(), $param);
+            $error = 'er';
+        }
+        if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'ERROR') {
+            $param['informationType'] = 'error';
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityBootstrapMessage(), $param);
+            $error = 'er';
+        }
+        if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'WARN') {
+            $param['informationType'] = 'warn';
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityBootstrapMessage(), $param);
+            $error = 'wr';
+        }
+        if ($this->_applicationInstance->getCheckSecuritySign() == 'WARN') {
+            $param['informationType'] = 'warn';
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecuritySignMessage(), $param);
+            $error = 'wr';
+        }
+        if ($this->_applicationInstance->getCheckSecuritySign() == 'ERROR') {
+            $param['informationType'] = 'error';
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecuritySignMessage(), $param);
+            $error = 'er';
+        }
+        if ($this->_applicationInstance->getCheckSecurityURL() == 'WARN') {
+            $param['informationType'] = 'warn';
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation($this->_applicationInstance->getCheckSecurityURLMessage(), $param);
+            $error = 'wr';
+        }
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')) {
+            $param['informationType'] = 'warn';
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::warn_ServNotPermitWrite', $param);
+            $error = 'wr';
+        }
+        if ($this->_nebuleInstance->getFlushCache()) {
+            $param['informationType'] = 'warn';
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::warn_flushSessionAndCache', $param);
+            $error = 'wr';
+        }
+        if ( $displayOk && $error == 'ok')
+        {
+            $param['informationType'] = 'ok';
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation('::::SecurityChecks', $param);
+        }
+        return $error;
     }
 }

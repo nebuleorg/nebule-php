@@ -21,7 +21,7 @@ class ModuleTranslateENEN extends Modules
     protected $MODULE_COMMAND_NAME = 'en-en';
     protected $MODULE_DEFAULT_VIEW = '';
     protected $MODULE_DESCRIPTION = '::translateModule:en-en:ModuleDescription';
-    protected $MODULE_VERSION = '020240206';
+    protected $MODULE_VERSION = '020240207';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
     protected $MODULE_LOGO = 'b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac.sha2.256';
@@ -195,6 +195,8 @@ class ModuleTranslateENEN extends Modules
         $this->_table['en-en'][':::act_chk_errBootstrap']="L'empreinte cryptographique du bootstrap est invalide !";
         $this->_table['en-en'][':::act_chk_warnSigns']='La vérification des signatures de liens est désactivée !';
         $this->_table['en-en'][':::act_chk_errSigns']='La vérification des signatures de liens ne fonctionne pas !';
+        $this->_table['en-en'][':::info_OnlySignedLinks'] = 'Only signed links!';
+        $this->_table['en-en'][':::info_OnlyLinksFromCodeMaster'] = 'Only links signed by the code master!';
 
         $this->_table['en-en'][':::display:object:flag:protected'] = 'This object is protected.';
         $this->_table['en-en'][':::display:object:flag:unprotected'] = 'This object is not protected.';
