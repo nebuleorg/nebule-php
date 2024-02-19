@@ -7,7 +7,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020231229
+# Version 020240219
 
 export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
@@ -31,6 +31,7 @@ export IID_INTERFACE_AUTENT='9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0b
 export IID_INTERFACE_SYLABE='c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288'
 export IID_INTERFACE_KLICTY='d0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288'
 export IID_INTERFACE_MESSAE='2060a0d21853a42093f01d2e4809c2a5e9300b4ec31afbaf18af66ec65586d6c78b2823a.none.288'
+export IID_INTERFACE_NEBLOG='05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288'
 export IID_INTERFACE_QANTION='20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288'
 export IID_INTERFACE_OPTION='555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288'
 export IID_INTERFACE_UPLOAD='6666661d0923f08d50de4d70be7dc3014e73de3325b6c7b16efd1a6f5a12f5957b68336d.none.288'
@@ -340,6 +341,7 @@ function work_refresh()
   qantionNameOID=$(echo -n 'qantion' | sha256sum | cut -d' ' -f1)'.sha2.256'
   optionNameOID=$(echo -n 'option' | sha256sum | cut -d' ' -f1)'.sha2.256'
   uploadNameOID=$(echo -n 'upload' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  neblogNameOID=$(echo -n 'neblog' | sha256sum | cut -d' ' -f1)'.sha2.256'
   nameRID=$(echo -n 'nebule/objet/nom' | sha256sum | cut -d' ' -f1)'.sha2.256'
   autentSurnameOID=$(echo -n 'Au' | sha256sum | cut -d' ' -f1)'.sha2.256'
   sylabeSurnameOID=$(echo -n 'Sy' | sha256sum | cut -d' ' -f1)'.sha2.256'
@@ -348,6 +350,7 @@ function work_refresh()
   qantionSurnameOID=$(echo -n 'Qa' | sha256sum | cut -d' ' -f1)'.sha2.256'
   optionSurnameOID=$(echo -n 'Op' | sha256sum | cut -d' ' -f1)'.sha2.256'
   uploadSurnameOID=$(echo -n 'Up' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  neblogSurnameOID=$(echo -n 'Ne' | sha256sum | cut -d' ' -f1)'.sha2.256'
   surnameRID=$(echo -n 'nebule/objet/surnom' | sha256sum | cut -d' ' -f1)'.sha2.256'
   imageRID=$(echo -n 'nebule/objet/image/reference' | sha256sum | cut -d' ' -f1)'.sha2.256'
 
@@ -410,6 +413,10 @@ EOF
   echo " > new upload : ${upload_hash}"
   cp "${WORKSPACE}/upload.php" "o/${upload_hash}"
 
+  neblog_hash=$(sha256sum "${WORKSPACE}/neblog.php" | cut -d' ' -f1)'.sha2.256'
+  echo " > new neblog : ${neblog_hash}"
+  cp "${WORKSPACE}/neblog.php" "o/${neblog_hash}"
+
   echo ' > links'
   links=(
     # nodes
@@ -419,6 +426,7 @@ EOF
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_SYLABE}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_KLICTY}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_MESSAE}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_NEBLOG}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_QANTION}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_OPTION}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_UPLOAD}>${phpOID}>${NID_CODE_BRANCH}"
@@ -429,6 +437,7 @@ EOF
     "nebule:link/2:0_0>${current_date}/l>${sylabe_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${klicty_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${messae_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${neblog_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${qantion_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${option_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${upload_hash}>${phpOID}>${typeRID}"
@@ -439,6 +448,7 @@ EOF
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_SYLABE}>${sylabe_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_KLICTY}>${klicty_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_MESSAE}>${messae_hash}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_NEBLOG}>${neblog_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_QANTION}>${qantion_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_OPTION}>${option_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_UPLOAD}>${upload_hash}>${NID_CODE_BRANCH}"
@@ -446,6 +456,7 @@ EOF
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_SYLABE}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_KLICTY}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_MESSAE}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_NEBLOG}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_QANTION}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_OPTION}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_UPLOAD}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
@@ -458,6 +469,8 @@ EOF
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_KLICTY}>${klictySurnameOID}>${surnameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_MESSAE}>${messaeNameOID}>${nameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_MESSAE}>${messaeSurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_NEBLOG}>${neblogNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_NEBLOG}>${neblogSurnameOID}>${surnameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_QANTION}>${qantionNameOID}>${nameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_QANTION}>${qantionSurnameOID}>${surnameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_OPTION}>${optionNameOID}>${nameRID}"
@@ -472,6 +485,8 @@ EOF
     "nebule:link/2:0_0>${current_date}/l>${klictySurnameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${messaeNameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${messaeSurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${neblogNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${neblogSurnameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${qantionNameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${qantionSurnameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${optionNameOID}>${textOID}>${typeRID}"
@@ -493,6 +508,8 @@ EOF
   echo -n "Kl" > "o/${klictySurnameOID}"
   echo -n "messae" > "o/${messaeNameOID}"
   echo -n "Me" > "o/${messaeSurnameOID}"
+  echo -n "neblog" > "o/${neblogNameOID}"
+  echo -n "Ne" > "o/${neblogSurnameOID}"
   echo -n "qantion" > "o/${qantionNameOID}"
   echo -n "Qa" > "o/${qantionSurnameOID}"
   echo -n "option" > "o/${optionNameOID}"

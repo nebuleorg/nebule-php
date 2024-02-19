@@ -1810,12 +1810,14 @@ abstract class Applications implements applicationInterface
             <li><b>sylabe</b> : l’application de référence des possibilités de nebule, <a href="#oaigs">OAIGS</a>, <a
                     href="http://blog.sylabe.org">blog.sylabe.org</a>.
             </li>
-            <li><b>klicty</b> : l’application de partage d’objets à durée limitée, <a href="#oaigk">OAIGk</a>, <a
+            <li><b>klicty</b> : l’application de partage d’objets à durée limitée, <a href="#oaigk">OAIGK</a>, <a
                     href="http://blog.klicty.org">blog.klicty.org</a>.
             </li>
             <li><b>messae</b> : l’application de gestion des conversations et messages, <a href="#oaigm">OAIGM</a>, <a
                     href="http://blog.messae.org">blog.messae.org</a>.
             </li>
+            <li><b>neblog</b> : l’application de gestion des web logs, <a href="#oaign">OAIGN</a>.</li>
+            <li><b>qantion</b> : l’application de gestion des monnaies, <a href="#oaigq">OAIGQ</a>.</li>
             <li><b>option</b> : l’application de gestion des options, <a href="#oaigo">OAIGO</a>.</li>
             <li><b>upload</b> : l’application de chargement de mises à jour, <a href="#oaigu">OAIGU</a>.</li>
         </ul>
@@ -1838,6 +1840,8 @@ abstract class Applications implements applicationInterface
                                 class="appsname">klicty</span></div>
                     <div class="apps" style="background:#2060a0;"><span class="appstitle">Me</span><br/><span
                             class="appsname">messae</span></div>
+                    <div class="apps" style="background:#05c3dd;"><span class="appstitle">Ne</span><br/><span
+                            class="appsname">neblog</span></div>
                     <div class="apps" style="background:#20a040;"><span class="appstitle">Qa</span><br/><span
                                 class="appsname">qantion</span></div>
                     <div class="apps" style="background:#555555;"><span class="appstitle">Op</span><br/><span
@@ -2211,6 +2215,10 @@ class Traduction extends Traductions
 
         <h5 id="oaigm">OAIGM / Me - messae</h5>
         <p>IID=2060a0d21853a42093f01d2e4809c2a5e9300b4ec31afbaf18af66ec65586d6c78b2823a.none.288</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <h5 id="oaign">OAIGN / Ne - neblog</h5>
+        <p>IID=05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
         <h5 id="oaigq">OAIGQ / Qa - qantion</h5>
