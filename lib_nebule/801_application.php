@@ -1804,22 +1804,33 @@ abstract class Applications implements applicationInterface
             Cela peut être vu comme une extension de l'application.</p>
         <p>Les applications développées dans le cadre de <i>nebule</i> :</p>
         <ul>
-            <li><b>bootstrap</b> : le chargeur initial de la librairie et des applications, <a href="#oaigb">OAIGB</a>.
+            <li><b>bootstrap</b> : le chargeur initial de la librairie et des applications, <a href="#oaigb">OAIGB</a>,
+                <a href="http://blog.nebule.org">blog.nebule.org</a>.
             </li>
-            <li><b>autent</b> : l’application d'authentification interactive, <a href="#oaiga">OAIGA</a>.</li>
-            <li><b>sylabe</b> : l’application de référence des possibilités de nebule, <a href="#oaigs">OAIGS</a>, <a
-                    href="http://blog.sylabe.org">blog.sylabe.org</a>.
+            <li><b>autent</b> : l’application d'authentification interactive, <a href="#oaiga">OAIGA</a>,
+                <a href="http://blog.nebule.org">blog.nebule.org</a>.
             </li>
-            <li><b>klicty</b> : l’application de partage d’objets à durée limitée, <a href="#oaigk">OAIGK</a>, <a
-                    href="http://blog.klicty.org">blog.klicty.org</a>.
+            <li><b>sylabe</b> : l’application de référence des possibilités de nebule, <a href="#oaigs">OAIGS</a>,
+                <a href="http://blog.sylabe.org">blog.sylabe.org</a>.
             </li>
-            <li><b>messae</b> : l’application de gestion des conversations et messages, <a href="#oaigm">OAIGM</a>, <a
-                    href="http://blog.messae.org">blog.messae.org</a>.
+            <li><b>klicty</b> : l’application de partage d’objets à durée limitée, <a href="#oaigk">OAIGK</a>,
+                <a href="http://blog.klicty.org">blog.klicty.org</a>.
             </li>
-            <li><b>neblog</b> : l’application de gestion des web logs, <a href="#oaign">OAIGN</a>.</li>
-            <li><b>qantion</b> : l’application de gestion des monnaies, <a href="#oaigq">OAIGQ</a>.</li>
-            <li><b>option</b> : l’application de gestion des options, <a href="#oaigo">OAIGO</a>.</li>
-            <li><b>upload</b> : l’application de chargement de mises à jour, <a href="#oaigu">OAIGU</a>.</li>
+            <li><b>messae</b> : l’application de gestion des conversations et messages, <a href="#oaigm">OAIGM</a>,
+                <a href="http://blog.messae.org">blog.messae.org</a>.
+            </li>
+            <li><b>neblog</b> : l’application de gestion des web logs, <a href="#oaign">OAIGN</a>,
+                <a href="http://blog.neblog.org">blog.neblog.org</a>.
+            </li>
+            <li><b>qantion</b> : l’application de gestion des monnaies, <a href="#oaigq">OAIGQ</a>,
+                <a href="http://blog.qantion.org">blog.qantion.org</a>.
+            </li>
+            <li><b>option</b> : l’application de gestion des options, <a href="#oaigo">OAIGO</a>,
+                <a href="http://blog.nebule.org">blog.nebule.org</a>.
+            </li>
+            <li><b>upload</b> : l’application de chargement de mises à jour, <a href="#oaigu">OAIGU</a>,
+                <a href="http://blog.nebule.org">blog.nebule.org</a>.
+            </li>
         </ul>
         <div class="layout-main">
             <div class="layout-content">
