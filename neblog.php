@@ -1,12 +1,19 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Neblog;
+use Nebule\Library\applicationInterface;
 use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
 use Nebule\Library\Actions;
 use Nebule\Library\Applications;
 use Nebule\Library\Displays;
+use Nebule\Library\Modules;
+use Nebule\Library\Node;
 use Nebule\Library\Traductions;
+use const Nebule\Bootstrap\BOOTSTRAP_NAME;
+use const Nebule\Bootstrap\BOOTSTRAP_SURNAME;
+use const Nebule\Bootstrap\BOOTSTRAP_WEBSITE;
+use const Nebule\Bootstrap\LIB_BOOTSTRAP_ICON;
 
 /*
 ------------------------------------------------------------------------------------------
@@ -292,86 +299,10 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
         $namespace = '\\' . __NAMESPACE__ . '\\';
 
         // Préfix pour les objets. Les modules sont chargés, on peut les utiliser.
-        $this->setHtlinkObjectPrefix('?'
+        /*$this->setHtlinkObjectPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
-        // Préfix pour les groupes.
-        if ($this->_applicationInstance->isModuleLoaded($namespace . 'ModuleGroups')) {
-            $this->setHtlinkGroupPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleGroups')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleGroups')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_GROUP . '=');
-        } else {
-            $this->setHtlinkGroupPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
-        }
-
-        // Préfix pour les conversations.
-        if ($this->_applicationInstance->isModuleLoaded($namespace . 'Nebule\\Modules\\ModuleMessenger')) {
-            $this->setHtlinkConversationPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Nebule\\Modules\\ModuleMessenger')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Nebule\\Modules\\ModuleMessenger')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=');
-        } else {
-            $this->setHtlinkConversationPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
-        }
-
-        // Préfix pour les entités.
-        $this->setHtlinkEntityPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleEntities')->getCommandName()
-            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleEntities')->getDefaultView()
-            . '&' . nebule::COMMAND_SELECT_ENTITY . '=');
-
-        // Préfix pour les monnaies.
-        if ($this->_applicationInstance->isModuleLoaded('ModuleQantion')) {
-            $this->setHtlinkCurrencyPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[3]
-                . '&' . nebule::COMMAND_SELECT_CURRENCY . '=');
-            $this->setHtlinkTokenPoolPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[8]
-                . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=');
-            $this->setHtlinkTokenPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[13]
-                . '&' . nebule::COMMAND_SELECT_TOKEN . '=');
-            $this->setHtlinkTransactionPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[19]
-                . '&' . nebule::COMMAND_SELECT_TRANSACTION . '=');
-            $this->setHtlinkWalletPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[23]
-                . '&' . nebule::COMMAND_SELECT_WALLET . '=');
-        } else {
-            $this->setHtlinkCurrencyPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
-            $this->setHtlinkTokenPoolPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
-            $this->setHtlinkTokenPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
-            $this->setHtlinkTransactionPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
-            $this->setHtlinkWalletPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
-        }
+            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');*/
     }
 
 

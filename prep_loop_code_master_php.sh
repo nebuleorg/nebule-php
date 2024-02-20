@@ -413,9 +413,11 @@ EOF
   echo " > new upload : ${upload_hash}"
   cp "${WORKSPACE}/upload.php" "o/${upload_hash}"
 
-  neblog_hash=$(sha256sum "${WORKSPACE}/neblog.php" | cut -d' ' -f1)'.sha2.256'
+  cat "${WORKSPACE}/neblog.php" > "/tmp/neblog.php"
+  tail +4 "${WORKSPACE}/module_objects.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' >> "/tmp/neblog.php"
+  neblog_hash=$(sha256sum "/tmp/neblog.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new neblog : ${neblog_hash}"
-  cp "${WORKSPACE}/neblog.php" "o/${neblog_hash}"
+  cp "/tmp/neblog.php" "o/${neblog_hash}"
 
   echo ' > links'
   links=(
