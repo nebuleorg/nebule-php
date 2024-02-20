@@ -43,7 +43,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240206';
+    const APPLICATION_VERSION = '020240220';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2024';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -1384,7 +1384,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             echo 'Unlock';
         } ?>">
             <div class="header-left">
-                <img src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>" alt="[M]"
+                <img src="<?php echo $this->_logoApplication; ?>" alt="[K]"
                      title="<?php echo $this->_traductionInstance->getTraduction('::menu'); ?>"
                      onclick="display_menu('layout-menu-applications');"/>
             </div>
@@ -1532,7 +1532,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         <div class="layout-menu-applications" id="layout-menu-applications">
             <div class="menu-applications-sign">
-                <img alt="<?php echo Application::APPLICATION_NAME; ?>" src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>"/><br/>
+                <img alt="<?php echo Application::APPLICATION_NAME; ?>" src="<?php echo $this->_logoApplication; ?>"/><br/>
                 <?php echo Application::APPLICATION_NAME; ?><br/>
                 (c) <?php echo Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR; ?><br/>
                 <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Version');
@@ -1540,7 +1540,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo Application::APPLICATION_WEBSITE; ?></a>
             </div>
             <div class="menu-applications-logo">
-                <img src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>" alt="[M]"
+                <img src="<?php echo $this->_logoApplication; ?>" alt="[K]"
                      title="<?php echo $this->_traductionInstance->getTraduction('::menu'); ?>"
                      onclick="display_menu('layout-menu-applications');"/>
             </div>

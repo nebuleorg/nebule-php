@@ -42,7 +42,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'messae';
     const APPLICATION_SURNAME = 'nebule/messae';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240206';
+    const APPLICATION_VERSION = '020240220';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.messae.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -1160,14 +1160,14 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 <?php
                 if ($this->_configurationInstance->getOptionAsBoolean('permitJavaScript')) {
                     ?>
-                    <img src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>" alt="[M]"
+                    <img src="<?php echo $this->_logoApplication; ?>" alt="[M]"
                          title="<?php echo $this->_traductionInstance->getTraduction('::menu'); ?>"
                          onclick="display_menu('layout-menu-applications');"/>
                     <?php
                 } else {
                     ?>
                     <a href="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->getCurrentDisplayMode() . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW; ?>=menu">
-                        <img src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>" alt="[M]"
+                        <img src="<?php echo $this->_logoApplication; ?>" alt="[M]"
                              title="<?php echo $this->_traductionInstance->getTraduction('::menu'); ?>"/>
                     </a>
                     <?php
@@ -1291,7 +1291,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
         <div class="layout-menu-applications" id="layout-menu-applications">
             <div class="menu-applications-sign">
-                <img alt="<?php echo Application::APPLICATION_NAME; ?>" src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>"/><br/>
+                <img alt="<?php echo Application::APPLICATION_NAME; ?>" src="<?php echo $this->_logoApplication; ?>"/><br/>
                 <?php echo Application::APPLICATION_NAME; ?><br/>
                 (c) <?php echo Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR; ?><br/>
                 <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Version');
@@ -1299,7 +1299,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo Application::APPLICATION_WEBSITE; ?></a>
             </div>
             <div class="menu-applications-logo">
-                <img src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>" alt="[M]"
+                <img src="<?php echo $this->_logoApplication; ?>" alt="[M]"
                      title="<?php echo $this->_applicationInstance->getTraductionInstance()->getTraduction('::menu'); ?>"
                      onclick="display_menu('layout-menu-applications');"/>
             </div>

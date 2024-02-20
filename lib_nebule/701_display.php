@@ -8751,6 +8751,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     /**
      * Show security warning.
+     * $size = tiny|small|medium|large|full
      *
      * @param string $size
      * @param bool   $displayOk

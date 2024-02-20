@@ -45,7 +45,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240206';
+    const APPLICATION_VERSION = '020240220';
     const APPLICATION_LICENCE = 'GNU GPL 2013-2024';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -672,7 +672,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 <div class="content">
                     <?php
                     $this->_metrologyInstance->addLog('Display checks', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '28feadb6');
-                    $this->_displayChecks();
+                    $this->displaySecurityAlert('small', false);
 
                     $this->_metrologyInstance->addLog('Display content', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '58d043ab');
                     $this->_displayContent();
@@ -1305,14 +1305,14 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 <?php
                 if ($this->_configurationInstance->getOptionAsBoolean('permitJavaScript')) {
                     ?>
-                    <img src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>" alt="[M]"
+                    <img src="<?php echo $this->_logoApplication; ?>" alt="[M]"
                          title="<?php echo $this->_traductionInstance->getTraduction('::menu'); ?>"
                          onclick="display_menu('layout-menu-applications');"/>
                     <?php
                 } else {
                     ?>
                     <a href="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->getCurrentDisplayMode() . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW; ?>=menu">
-                        <img src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>" alt="[M]"
+                        <img src="<?php echo $this->_logoApplication; ?>" alt="[M]"
                              title="<?php echo $this->_traductionInstance->getTraduction('::menu'); ?>"/>
                     </a>
                     <?php
@@ -1436,7 +1436,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
         <div class="layout-menu-applications" id="layout-menu-applications">
             <div class="menu-applications-sign">
-                <img alt="<?php echo Application::APPLICATION_NAME; ?>" src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>"/><br/>
+                <img alt="<?php echo Application::APPLICATION_NAME; ?>" src="<?php echo $this->_logoApplication; ?>"/><br/>
                 <?php echo Application::APPLICATION_NAME; ?><br/>
                 (c) <?php echo Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR; ?><br/>
                 <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Version');
@@ -1444,7 +1444,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo Application::APPLICATION_WEBSITE; ?></a>
             </div>
             <div class="menu-applications-logo">
-                <img src="<?php echo self::DEFAULT_APPLICATION_LOGO; ?>" alt="[M]"
+                <img src="<?php echo $this->_logoApplication; ?>" alt="[M]"
                      title="<?php echo $this->_applicationInstance->getTraductionInstance()->getTraduction('::menu'); ?>"
                      onclick="display_menu('layout-menu-applications');"/>
             </div>
@@ -1657,55 +1657,6 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         echo $this->getDisplayMenuList($list, 'Medium');
     }
 
-
-    /**
-     * Affiche les alertes.
-     */
-    private function _displayChecks()
-    {
-        if ($this->_nebuleInstance->getModeRescue()) {
-            $this->displayMessageWarning('::::RESCUE');
-        }
-        if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'WARN') {
-            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
-        }
-        if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'ERROR') {
-            $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
-        }
-        if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'WARN') {
-            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
-        }
-        if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'ERROR') {
-            $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
-        }
-        if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'WARN') {
-            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
-        }
-        if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'ERROR') {
-            $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
-        }
-        if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'ERROR') {
-            $this->displayMessageError($this->_applicationInstance->getCheckSecurityBootstrapMessage());
-        }
-        if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'WARN') {
-            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityBootstrapMessage());
-        }
-        if ($this->_applicationInstance->getCheckSecuritySign() == 'WARN') {
-            $this->displayMessageWarning($this->_applicationInstance->getCheckSecuritySignMessage());
-        }
-        if ($this->_applicationInstance->getCheckSecuritySign() == 'ERROR') {
-            $this->displayMessageError($this->_applicationInstance->getCheckSecuritySignMessage());
-        }
-        if ($this->_applicationInstance->getCheckSecurityURL() == 'WARN') {
-            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityURLMessage());
-        }
-        if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')) {
-            $this->displayMessageWarning(':::warn_ServNotPermitWrite');
-        }
-        if ($this->_nebuleInstance->getFlushCache()) {
-            $this->displayMessageWarning(':::warn_flushSessionAndCache');
-        }
-    }
 
     /**
      * Contenu de la page.
