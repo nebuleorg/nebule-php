@@ -7,7 +7,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020240219
+# Version 020240223
 
 export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
@@ -389,6 +389,7 @@ EOF
   tail +4 "${WORKSPACE}/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' >> "/tmp/sylabe.php"
   tail +4 "${WORKSPACE}/module_entities.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' >> "/tmp/sylabe.php"
   tail +4 "${WORKSPACE}/module_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' >> "/tmp/sylabe.php"
+  tail +4 "${WORKSPACE}/module_neblog.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' >> "/tmp/sylabe.php"
   sylabe_hash=$(sha256sum "/tmp/sylabe.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new sylabe : ${sylabe_hash}"
   cp "/tmp/sylabe.php" "o/${sylabe_hash}"
@@ -416,6 +417,7 @@ EOF
   cat "${WORKSPACE}/neblog.php" > "/tmp/neblog.php"
   tail +4 "${WORKSPACE}/module_objects.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' >> "/tmp/neblog.php"
   tail +4 "${WORKSPACE}/module_entities.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' >> "/tmp/neblog.php"
+  tail +4 "${WORKSPACE}/module_neblog.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' >> "/tmp/neblog.php"
   neblog_hash=$(sha256sum "/tmp/neblog.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new neblog : ${neblog_hash}"
   cp "/tmp/neblog.php" "o/${neblog_hash}"
