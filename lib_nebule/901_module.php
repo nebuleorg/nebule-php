@@ -19,7 +19,7 @@ abstract class Modules implements moduleInterface
 	 * Leur modification change profondément le comportement de l'application.
 	 *
 	 * Si déclarées 'const' ou 'static' elles ne sont pas remplacée dans les classes enfants
-	 *   lorsque l'on appelle des fonctions de la classe parente non écrite dans la classe enfant...
+	 * lorsque l'on appelle des fonctions de la classe parente non écrite dans la classe enfant...
 	 */
     /**
      * Le type de module.
@@ -538,6 +538,10 @@ abstract class Modules implements moduleInterface
         ?>
 
         <h3 id="oam">OAM / Module</h3>
+        <p>Le module est une classe enfant de la classe Modules. Cela permet d'étendre les fonctionnalités d'une
+            application. Un module peut être par défaut présent dans une application, c'est-à-dire présent dans l'objet
+            de l'application. Dans ce cas son nom doit être présent dans la liste des modules intégrés à l'application.
+            </p>
         <p>A faire...</p>
 
         <h4 id="oamn">OAMN / Nommage</h4>
@@ -553,6 +557,11 @@ abstract class Modules implements moduleInterface
         <p>A faire...</p>
 
         <h4 id="oamc">OAMC / Création</h4>
+        <p>Les modules sont chargés par la classe Applications dont hérite toutes les applications. </p>
+        <p>Pour activer les modules, dans la classe Application d'une application, il faut positionner la variable
+            <b>$_useModules = true</b>b></p>
+        <p>Si des modules sont intégrés par défaut dans l'objet d'une application, pour être utilisé ils doivent tous
+            être déclarés dans la variable <b>$_listDefaultModules</b> sous forme d'une liste.</p>
         <p>Liste des liens à générer lors de la création d'un module.</p>
         <p>A faire...</p>
 

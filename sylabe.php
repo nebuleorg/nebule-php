@@ -45,7 +45,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240220';
+    const APPLICATION_VERSION = '020240223';
     const APPLICATION_LICENCE = 'GNU GPL 2013-2024';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -88,6 +88,7 @@ class Application extends Applications implements applicationInterface
         'ModuleGroups',
         'ModuleObjects',
         'ModuleAdmin',
+        'ModuleNeblog',
         'ModuleTranslateFRFR',
     );
 
@@ -297,7 +298,7 @@ class Application extends Applications implements applicationInterface
      *
      * @return array:string
      */
-    public function getMarkObjectList()
+    public function getMarkObjectList(): array
     {
         $list = $this->_nebuleInstance->getSessionStore('sylabeObjectMarkList');
         if ($list === false) {

@@ -51,6 +51,38 @@ class Application extends Applications
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
     const APPLICATION_CODING = 'application/x-httpd-php';
 
+    /**
+     * Paramètre d'activation de la gestion des modules dans l'application et la traduction.
+     *
+     * L'application sylabe a besoin des modules.
+     *
+     * @var boolean
+     */
+    protected $_useModules = true;
+
+    /**
+     * Liste des noms des modules par défaut.
+     *
+     * @var array
+     */
+    protected $_listDefaultModules = array(
+        'ModuleEntities',
+        'ModuleObjects',
+        'ModuleNeblog',
+        'ModuleTranslateFRFR',
+    );
+
+    /**
+     * Constructeur.
+     *
+     * @param nebule $nebuleInstance
+     * @return void
+     */
+    public function __construct(nebule $nebuleInstance)
+    {
+        parent::__construct($nebuleInstance);
+    }
+
     // All default.
 }
 
@@ -1699,23 +1731,42 @@ class Action extends Actions
 class Traduction extends Traductions
 {
     /**
+     * Langue par défaut.
+     *
+     * @var string
+     */
+    protected $DEFAULT_LANGUAGE = 'fr-fr';
+
+
+    /**
+     * Constructeur.
+     *
+     * @param Application $applicationInstance
+     * @return void
+     */
+    public function __construct(Application $applicationInstance)
+    {
+        parent::__construct($applicationInstance);
+    }
+
+    /**
      * La langue d'affichage de l'interface.
      *
      * Dans cette application la langue est forcée à sa valeur par défaut.
      *
      * @return void
      */
-    protected function _findCurrentLanguage()
+    /*protected function _findCurrentLanguage()
     {
         $this->_currentLanguage = $this->_defaultLanguage;
         $this->_currentLanguageInstance = $this->_defaultLanguageInstance;
-    }
+    }*/
 
 
     /**
      * Initialisation de la table de traduction.
      */
-    protected function _initTable()
+    /*protected function _initTable()
     {
         $this->_table['fr-fr']['::::INFO'] = 'Information';
         $this->_table['en-en']['::::INFO'] = 'Information';
@@ -1732,5 +1783,5 @@ class Traduction extends Traductions
         $this->_table['fr-fr']['::::ERROR'] = 'ERREUR !';
         $this->_table['en-en']['::::ERROR'] = 'ERROR!';
         $this->_table['es-co']['::::ERROR'] = '¡ERROR!';
-    }
+    }*/
 }
