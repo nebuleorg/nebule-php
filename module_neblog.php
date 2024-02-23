@@ -17,7 +17,7 @@ use Nebule\Library\Node;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleObjects extends Modules
+class ModuleNeblog extends Modules
 {
     protected $MODULE_TYPE = 'Application';
     protected $MODULE_NAME = '::sylabe:module:objects:ModuleName';
