@@ -607,7 +607,7 @@ abstract class Applications implements applicationInterface
 
     /**
      * Liste des noms des modules chargés.
-     * Trié par ordre numérique d'arrivé.
+     * Trié par ordre numérique d'arrivée.
      *
      * @var array of string
      */
@@ -624,7 +624,7 @@ abstract class Applications implements applicationInterface
     /**
      * Liste des signataires des modules (RID).
      * Trié par noms de modules.
-     * A 0 si le modules est chargé par défaut.
+     * A 0 si le module est chargé par défaut.
      *
      * @var array of string
      */
@@ -633,7 +633,7 @@ abstract class Applications implements applicationInterface
     /**
      * Liste des ID originaux (de référence) des modules chargés.
      * Trié par noms de modules.
-     * A 0 si le modules est chargé par défaut.
+     * A 0 si le module est chargé par défaut.
      *
      * @var array of string
      */
@@ -642,16 +642,16 @@ abstract class Applications implements applicationInterface
     /**
      * Liste des ID de référence finaux des modules chargés.
      * Trié par noms de modules.
-     * A 0 si le modules est chargé par défaut.
+     * A 0 si le module est chargé par défaut.
      *
      * @var array of string
      */
     protected $_listModulesRID = array();
 
     /**
-     * Liste des ID mis à jours des modules chargés.
+     * Liste des ID mis à jour des modules chargés.
      * Trié par noms de modules.
-     * A 0 si le modules est chargé par défaut.
+     * A 0 si le module est chargé par défaut.
      *
      * @var array of string
      */
