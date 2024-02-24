@@ -1627,8 +1627,82 @@ abstract class Applications implements applicationInterface
     }
 
 
+    
     /**
-     * Affiche la partie menu de la documentation.
+     * Marque un objet.
+     *
+     * @param string $object
+     * @return void
+     */
+    public function setMarkObject(string $object): void
+    {
+        $list = $this->_nebuleInstance->getSessionStore('objectsMarkList');
+        if ($list === false)
+            $list = array();
+        $list[$object] = true;
+        $this->_nebuleInstance->setSessionStore('objectsMarkList', $list);
+        unset($list);
+    }
+
+    /**
+     * Supprime la marque d'un objet.
+     *
+     * @param string $object
+     * @return void
+     */
+    public function setUnmarkObject(string $object): void
+    {
+        $list = $this->_nebuleInstance->getSessionStore('objectsMarkList');
+        if ($list === false)
+            return;
+        unset($list[$object]);
+        $this->_nebuleInstance->setSessionStore('objectsMarkList', $list);
+        unset($list);
+    }
+
+    /**
+     * Supprime les marques de tous les objets.
+     * 
+     * @return void
+     */
+    public function setUnmarkAllObjects(): void
+    {
+        $list = array();
+        $this->_nebuleInstance->setSessionStore('objectsMarkList', $list);
+        unset($list);
+    }
+
+    /**
+     * Lit si un objet est marqué.
+     *
+     * @param string $object
+     * @return boolean
+     */
+    public function getMarkObject(string $object): bool
+    {
+        $list = $this->_nebuleInstance->getSessionStore('objectsMarkList');
+        if ($list === false)
+            return false;
+        if (isset($list[$object]))
+            return true;
+        return false;
+    }
+
+    /**
+     * Lit la liste des objets marqués.
+     * @return array
+     */
+    public function getMarkObjectList(): array
+    {
+        $list = $this->_nebuleInstance->getSessionStore('objectsMarkList');
+        if ($list === false)
+            $list = array();
+        return $list;
+    }
+
+
+    /**
+     * Affiche la partie du menu de la documentation.
      * Inclu les modules.
      *
      * @return void
