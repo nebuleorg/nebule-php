@@ -560,8 +560,10 @@ abstract class Modules implements moduleInterface
         <p>Les modules sont chargés par la classe Applications dont hérite toutes les applications. </p>
         <p>Pour activer les modules, dans la classe Application d'une application, il faut positionner la variable
             <b>$_useModules = true</b>b></p>
-        <p>Si des modules sont intégrés par défaut dans l'objet d'une application, pour être utilisé ils doivent tous
+        <p>Si des modules sont intégrés (interne) par défaut dans l'objet d'une application, pour être utilisé, ils doivent tous
             être déclarés dans la variable <b>$_listDefaultModules</b> sous forme d'une liste.</p>
+        <p>Les modules externes, ils peuvent être pris en compte via le lien des modules si <b>$_useExternalModules =
+                true</b></p>
         <p>Liste des liens à générer lors de la création d'un module.</p>
         <p>A faire...</p>
 
