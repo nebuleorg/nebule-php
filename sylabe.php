@@ -77,6 +77,15 @@ class Application extends Applications implements applicationInterface
     protected $_useModules = true;
 
     /**
+     * Paramètre d'activation de la gestion des modules externes (dans des objets) dans l'application et la traduction.
+     *
+     * Par défault les applications n'utilisent pas les modules externes.
+     *
+     * @var boolean
+     */
+    protected $_useExternalModules = true;
+
+    /**
      * Liste des noms des modules par défaut.
      *
      * @var array

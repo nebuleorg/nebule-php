@@ -99,6 +99,15 @@ abstract class Applications implements applicationInterface
      */
     protected $_useModules = false;
 
+    /**
+     * Paramètre d'activation de la gestion des modules externes (dans des objets) dans l'application et la traduction.
+     *
+     * Par défault les applications n'utilisent pas les modules externes.
+     *
+     * @var boolean
+     */
+    protected $_useExternalModules = false;
+
 
     
     /**
@@ -303,6 +312,16 @@ abstract class Applications implements applicationInterface
     public function getUseModules(): bool
     {
         return $this->_useModules;
+    }
+
+    /**
+     * Retourne si les modules externes sont activés dans l'application.
+     *
+     * @return bool
+     */
+    public function getUseExternalModules(): bool
+    {
+        return $this->_useExternalModules;
     }
 
 
@@ -700,21 +719,29 @@ abstract class Applications implements applicationInterface
             return;
         $this->_loadModulesOK = true;
 
-        // Vérifie si les modules sont activés.
+        // Vérifie si les modules internes sont activés.
         if (!$this->_useModules) {
-            $this->_metrologyInstance->addLog('Do not load modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bcc98872');
+            $this->_metrologyInstance->addLog('Do not load internal modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bcc98872');
             return;
         }
 
-        // Charge les modules.
+        // Charge les modules internes.
         $this->_loadDefaultModules();
+
+        // Vérifie si les modules externes sont activés.
+        if (!$this->_useExternalModules) {
+            $this->_metrologyInstance->addLog('Do not load external modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7b3af452');
+            return;
+        }
+
+        // Charge les modules externes.
         $this->_findModulesRID();
         $this->_findModulesUpdateID();
         $this->_initModules();
     }
 
     /**
-     * Charge et initialise les modules par défaut.
+     * Charge et initialise les modules internes par défaut.
      *
      * @return void
      */
@@ -743,7 +770,7 @@ abstract class Applications implements applicationInterface
     }
 
     /**
-     * Recherche les ID de référence des modules configurés.
+     * Recherche les ID de référence des modules externes configurés.
      * Extrait la liste des modules depuis les liens de l'objet de référence.
      *
      * @return void
@@ -753,7 +780,7 @@ abstract class Applications implements applicationInterface
         global $bootstrapApplicationIID;
 
         // Vérifie si les modules sont activés.
-        if (!$this->_useModules)
+        if (!$this->_useModules || !$this->_useExternalModules)
             return;
 
         $this->getMetrologyInstance()->addLog('Find option modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '226ce8be');
@@ -787,14 +814,14 @@ abstract class Applications implements applicationInterface
     }
 
     /**
-     * Recherche les mises à jour des modules à partir des ID de référence.
+     * Recherche les mises à jour des modules externes à partir des ID de référence.
      * @return void
      * @todo
      *
      */
     protected function _findModulesUpdateID(): void
     {
-        if (!$this->_useModules)
+        if (!$this->_useModules || !$this->_useExternalModules)
             return;
 
         $this->getMetrologyInstance()->addLog('Find modules updates', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '19029717');
@@ -919,14 +946,14 @@ abstract class Applications implements applicationInterface
     }
 
     /**
-     * Load and init modules for the application.
+     * Load and init external modules for the application.
      * Some modules are loaded before by default with _loadDefaultModules() depending on the list '_listDefaultModules' give by le app.
      *
      * @return void
      */
     protected function _initModules(): void
     {
-        if (!$this->_useModules)
+        if (!$this->_useModules || !$this->_useExternalModules)
             return;
 
         $this->getMetrologyInstance()->addLog('Load optionals modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2df08836');
