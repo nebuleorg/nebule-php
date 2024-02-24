@@ -1093,6 +1093,8 @@ class Configuration
      */
     static private function _changeTypeValueFromString(string $name, string $value = '')
     {
+        if (!isset(self::OPTIONS_TYPE[$name]))
+            return $value;
         switch (self::OPTIONS_TYPE[$name]) {
             case 'string' :
                 return trim($value);
