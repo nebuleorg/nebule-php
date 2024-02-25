@@ -1130,7 +1130,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
             );
             if ($this->_unlocked) {
                 $param['flagUnlockedLink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth&' . ModuleEntities::COMMAND_LOGOUT_ENTITY
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth&' . nebule::COMMAND_LOGOUT_ENTITY
                     . '&' . nebule::COMMAND_FLUSH;
             } else {
                 $param['flagUnlockedLink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
@@ -1158,7 +1158,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                                     '',
                                     'name="ico_lock"'),
                                 '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleHelp')->getCommandName()
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth&' . ModuleEntities::COMMAND_LOGOUT_ENTITY
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth&' . nebule::COMMAND_LOGOUT_ENTITY
                                 . '&' . nebule::COMMAND_FLUSH);
                         } else {
                             // Affiche de lien de déverrouillage sans les effets.
@@ -1177,8 +1177,8 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                             $this->convertUpdateImage(
                                 $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_WARNING),
                                 'WARNING'),
-                            '?' . ModuleEntities::COMMAND_LOGOUT_ENTITY
-                            . '&' . ModuleEntities::COMMAND_SWITCH_TO_ENTITY);
+                            '?' . nebule::COMMAND_LOGOUT_ENTITY
+                            . '&' . nebule::COMMAND_SWITCH_TO_ENTITY);
                     }
                 } // Sinon c'est une erreur.
                 else {
@@ -1186,7 +1186,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                         $this->convertUpdateImage(
                             $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_ERROR),
                             'ERROR'),
-                        '?' . ModuleEntities::COMMAND_LOGOUT_ENTITY
+                        '?' . nebule::COMMAND_LOGOUT_ENTITY
                         . '&' . nebule::COMMAND_FLUSH);
                 }
                 ?>

@@ -5,6 +5,7 @@ use Nebule\Application\Sylabe\Action;
 use Nebule\Application\Sylabe\Display;
 use Nebule\Library\Actions;
 use Nebule\Library\Displays;
+use Nebule\Library\Entity;
 use Nebule\Library\Modules;
 use Nebule\Library\nebule;
 use Nebule\Library\Node;

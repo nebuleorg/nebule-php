@@ -23,7 +23,7 @@ class ModuleNeblog extends Modules
     protected $MODULE_NAME = '::sylabe:module:objects:ModuleName';
     protected $MODULE_MENU_NAME = '::sylabe:module:objects:MenuName';
     protected $MODULE_COMMAND_NAME = 'log';
-    protected $MODULE_DEFAULT_VIEW = 'disp';
+    protected $MODULE_DEFAULT_VIEW = 'blog';
     protected $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
     protected $MODULE_VERSION = '020240225';
     protected $MODULE_AUTHOR = 'Projet nebule';
@@ -32,9 +32,10 @@ class ModuleNeblog extends Modules
     protected $MODULE_HELP = '::sylabe:module:objects:ModuleHelp';
     protected $MODULE_INTERFACE = '3.0';
 
-    protected $MODULE_REGISTERED_VIEWS = array('disp');
+    protected $MODULE_REGISTERED_VIEWS = array('blog', 'list');
     protected $MODULE_REGISTERED_ICONS = array(
         '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 0 : Objet.
+        '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 1 : Objet.
     );
     protected $MODULE_APP_TITLE_LIST = array();
     protected $MODULE_APP_ICON_LIST = array();
@@ -80,10 +81,10 @@ class ModuleNeblog extends Modules
     public function displayModule(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
-            /*case $this->MODULE_REGISTERED_VIEWS[0]:
-                $this->_displayObjectContent();
+            case $this->MODULE_REGISTERED_VIEWS[0]:
+                $this->_displayList();
                 break;
-            case $this->MODULE_REGISTERED_VIEWS[1]:
+            /*case $this->MODULE_REGISTERED_VIEWS[1]:
                 $this->_displayObjectDescription();
                 break;
             case $this->MODULE_REGISTERED_VIEWS[2]:
@@ -96,7 +97,7 @@ class ModuleNeblog extends Modules
                 $this->_displayObjectProtectionShare();
                 break;*/
             default:
-                $this->_displayBlogContent();
+                $this->_displayBlog();
                 break;
         }
     }
@@ -108,20 +109,20 @@ class ModuleNeblog extends Modules
      */
     public function displayModuleInline(): void
     {
-        /*switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
+        switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
+            case $this->MODULE_REGISTERED_VIEWS[0]:
+                $this->_display_InlineBlog();
+                break;
             case $this->MODULE_REGISTERED_VIEWS[1]:
-                $this->_display_InlineObjectDescription();
+                $this->_display_InlineList();
                 break;
-            case $this->MODULE_REGISTERED_VIEWS[2]:
-                $this->_display_InlineObjectRelations();
-                break;
-            case $this->MODULE_REGISTERED_VIEWS[3]:
+            /*case $this->MODULE_REGISTERED_VIEWS[3]:
                 $this->_display_InlineObjectProtection();
                 break;
             case $this->MODULE_REGISTERED_VIEWS[4]:
                 $this->_display_InlineObjectProtectionShare();
-                break;
-        }*/
+                break;*/
+        }
     }
 
 
@@ -151,9 +152,9 @@ class ModuleNeblog extends Modules
 
 
     /**
-     * Affichage de la vue disp.
+     * Display view of blog.
      */
-    private function _displayBlogContent(): void
+    private function _displayBlog(): void
     {
         $param = array(
             'enableDisplayColor' => true,
@@ -176,6 +177,50 @@ class ModuleNeblog extends Modules
             'enableDisplayTypeHook' => false,
         );
         echo $this->_display->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+    }
+
+    /**
+     * Display inline view of blog.
+     */
+    private function _display_InlineBlog(): void
+    {
+        // TODO
+    }
+
+    /**
+     * Display view of list of blog.
+     */
+    private function _displayList(): void
+    {
+        $param = array(
+            'enableDisplayColor' => true,
+            'enableDisplayIcon' => true,
+            'enableDisplayRefs' => false,
+            'enableDisplayName' => true,
+            'enableDisplayID' => false,
+            'enableDisplayFlags' => true,
+            'enableDisplayFlagProtection' => true,
+            'flagProtection' => $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected(),
+            'enableDisplayFlagObfuscate' => false,
+            'enableDisplayFlagUnlocked' => false,
+            'enableDisplayFlagState' => true,
+            'enableDisplayFlagEmotions' => true,
+            'enableDisplayStatus' => true,
+            'enableDisplayContent' => true,
+            'displaySize' => 'medium',
+            'displayRatio' => 'long',
+            'enableDisplaySelfHook' => true,
+            'enableDisplayTypeHook' => false,
+        );
+        echo $this->_display->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+    }
+
+    /**
+     * Display inline view of list of blog.
+     */
+    private function _display_InlineList(): void
+    {
+        // TODO
     }
 
 

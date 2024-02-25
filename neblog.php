@@ -66,8 +66,6 @@ class Application extends Applications
      * @var array
      */
     protected $_listDefaultModules = array(
-        'ModuleEntities',
-        'ModuleObjects',
         'ModuleNeblog',
         'ModuleTranslateFRFR',
     );
@@ -97,8 +95,8 @@ class Application extends Applications
  */
 class Display extends Displays
 {
-    const DEFAULT_DISPLAY_MODE = 'hlp';
-    const DEFAULT_DISPLAY_VIEW = '1st';
+    const DEFAULT_DISPLAY_MODE = 'log';
+    const DEFAULT_DISPLAY_VIEW = 'disp';
     const DEFAULT_LINK_COMMAND = 'lnk';
     const DEFAULT_APPLICATION_LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABg2lDQ1BJQ0MgcHJvZmlsZQAAKJF9
 kT1Iw0AcxV/TiiIVh2YQcchQnayIijhqFYpQIdQKrTqYXPoFTRqSFBdHwbXg4Mdi1cHFWVcHV0EQ/ABxdnBSdJES/9cUWsR4cNyPd/ced+8AoV5muh0aB3TDsVKJuJTJrkrdrxAgIoIxhBRmm3OynITv
@@ -1054,7 +1052,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
             );
             if ($this->_unlocked) {
                 $param['flagUnlockedLink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth&' . ModuleEntities::COMMAND_LOGOUT_ENTITY
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth&' . nebule::COMMAND_LOGOUT_ENTITY
                     . '&' . nebule::COMMAND_FLUSH;
             } else {
                 $param['flagUnlockedLink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
@@ -1082,7 +1080,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                                     '',
                                     'name="ico_lock"'),
                                 '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth&' . ModuleEntities::COMMAND_LOGOUT_ENTITY
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth&' . nebule::COMMAND_LOGOUT_ENTITY
                                 . '&' . nebule::COMMAND_FLUSH);
                         } else {
                             // Affiche de lien de déverrouillage sans les effets.
@@ -1102,8 +1100,8 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                             $this->convertUpdateImage(
                                 $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_WARNING),
                                 'WARNING'),
-                            '?' . ModuleEntities::COMMAND_LOGOUT_ENTITY
-                            . '&' . ModuleEntities::COMMAND_SWITCH_TO_ENTITY);
+                            '?' . nebule::COMMAND_LOGOUT_ENTITY
+                            . '&' . nebule::COMMAND_SWITCH_TO_ENTITY);
                     }
                 } // Sinon c'est une erreur.
                 else {
@@ -1111,7 +1109,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                         $this->convertUpdateImage(
                             $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_ERROR),
                             'ERROR'),
-                        '?' . ModuleEntities::COMMAND_LOGOUT_ENTITY
+                        '?' . nebule::COMMAND_LOGOUT_ENTITY
                         . '&' . nebule::COMMAND_FLUSH);
                 }
                 ?>
