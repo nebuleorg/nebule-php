@@ -1940,8 +1940,6 @@ abstract class Applications implements applicationInterface
                             class="appsname">break</span></div>
                     <div class="apps" style="background:#000000;"><span class="appstitle">N0</span><br/><span
                             class="appsname">defolt</span></div>
-                    <div class="apps" style="background:#222222;"><span class="appstitle">N2</span><br/><span
-                            class="appsname">autent</span></div>
                     <div class="apps" style="background:#333333;"><span class="appstitle">N3</span><br/><span
                             class="appsname">doctech</span></div>
                     <div class="apps" style="background:#902060;"><span class="appstitle">Au</span><br/><span
@@ -2443,6 +2441,8 @@ class Traduction extends Traductions
             <li><b>bootstrapfirstsubordinationlocation</b> : Dans le <i>firstboot</i>, donne la localisation de
                 téléchargement de l'entité de subordination. Non reconnu ailleurs.</li>
         </ul>
+        <p><b>ATTENTION</b> : si la bibliothèque ne peut être chargée, le <i>bootstrap</i> renverra systématiquement sur
+            la page d'interruption ! Voir <a href="#oabb">OABB</a>.</p>
 
         <h4 id="oabc">OABC / Configuration</h4>
         <p>Le <i>bootstrap</i> obéit aux mêmes options que la bibliothèque et les applications. Voir
@@ -2451,6 +2451,10 @@ class Traduction extends Traductions
         <h4 id="oabb">OABB / Interruption</h4>
         <p>La présence de la commande <i><?php echo LIB_ARG_BOOTSTRAP_BREAK; ?></i> sur l'URL déclenche l'affichage
             d'une page d'interruption dédiée du <i>bootstrap</i>.</p>
+        <p>En cas de problème lors de l'initialisation du <i>bootstrap</i> ou de la bibliothèque, le <i>bootstrap</i>
+            renverra systématiquement sur la page d'interruption avec une erreur.</p>
+        <p>Si la bibliothèque ne peut être chargée, quelque soit les arguments passés, le <i>bootstrap</i> renverra
+            systématiquement sur la page d'interruption avec une erreur.</p>
         <p>Le résultat est une page contenant en partie centrale, par exemple :</p>
         <pre>
 #1 bootstrap break on
@@ -2528,7 +2532,7 @@ application SID       :
 #6 end bootstrap
 tE=0.0632s
         </pre>
-        <p style="color: red; font-weight: bold">A compléter avec la description des lignes...</p>
+        <p style="color: red; font-weight: bold">À compléter avec la description des lignes...</p>
 
         <h4 id="oabe">OABE / Applications externes</h4>
         <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=RID</i> sur l'URL permet de passer

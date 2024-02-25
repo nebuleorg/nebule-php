@@ -4,6 +4,7 @@ namespace Nebule\Bootstrap;
 
 //use nebule;
 // ------------------------------------------------------------------------------------------
+use Nebule\Application\Upload\App2;
 use Nebule\Library\Cache;
 use Nebule\Library\Crypto;
 use Nebule\Library\Documentation;
@@ -19,7 +20,7 @@ const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
-const BOOTSTRAP_FUNCTION_VERSION = '020231125';
+const BOOTSTRAP_FUNCTION_VERSION = '020240225';
 // ------------------------------------------------------------------------------------------
 
 
@@ -52,12 +53,7 @@ const BOOTSTRAP_FUNCTION_VERSION = '020231125';
  PART7 : Display of preload application web page.
  PART8 : First synchronization of code and environment.
  PART9 : Display of application 0 default application.
- PART10 : Display of application 1 web page to select application to run.
- PART11 : Display of application 2 web page to authenticate entity.
- PART12 : Display of application 3 web page to display documentation of nebule.
- PART13 : Display of application 4 to simply show links.
- PART14 : Display of application 9 to debug.
- PART15 : Main display router.
+ PART10 : Main display router.
  ------------------------------------------------------------------------------------------
 */
 
@@ -7217,336 +7213,6 @@ function bootstrap_displayApplication0(): void
  *
 
  ==/ 10 /==================================================================================
- PART10 : Display of application 1 web page to select application to run.
-
- TODO.
- ------------------------------------------------------------------------------------------
- */
-
-function bootstrap_displayApplication1(): void
-{
-    global $nebuleInstance;
-
-    log_reopen('app1');
-    log_add('Loading', 'info', __FUNCTION__, '314e6e9b');
-
-    echo 'CHK';
-    ob_end_clean();
-
-    bootstrap_htmlHeader();
-    bootstrap_htmlTop();
-
-    echo '<div id="appslist">';
-
-    $appList = app_getList(LIB_RID_INTERFACE_APPLICATIONS, false);
-
-    // Display interrupt page.
-    echo '<a href="/?b">';
-    echo '<div class="apps" style="background:#000000;">';
-    echo '<span class="appstitle">Nb</span><br /><span class="appsname">break</span>';
-    echo "</div></a>\n";
-
-    // Display default app page.
-    echo '<a href="/?a=0">';
-    echo '<div class="apps" style="background:#111111;">';
-    echo '<span class="appstitle">N0</span><br /><span class="appsname">defolt</span>';
-    echo "</div></a>\n";
-
-    // Display page of technical documentation.
-    echo '<a href="/?a=2">';
-    echo '<div class="apps" style="background:#222222;">';
-    echo '<span class="appstitle">N2</span><br /><span class="appsname">autent</span>';
-    echo "</div></a>\n";
-
-    // Display page of technical documentation.
-    echo '<a href="/?a=3">';
-    echo '<div class="apps" style="background:#333333;">';
-    echo '<span class="appstitle">N3</span><br /><span class="appsname">doctec</span>';
-    echo "</div></a>\n";
-
-    // List all applications.
-    foreach ($appList as $application) {
-        $instance = new Node($nebuleInstance, $application);
-        $color = '#' . substr($application . '000000', 0, 6);
-        $title = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_NOM,'authority');
-        if ($title == '')
-            $title = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_NOM,'self');
-        if ($title == '')
-            $title = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_NOM,'all');
-        if ($title == '')
-            $title = $instance->getID();
-        $shortName = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_SURNOM,'authority');
-        if ($shortName == '')
-            $shortName = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_SURNOM,'self');
-        if ($shortName == '')
-            $shortName = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_SURNOM,'all');
-        $shortName = substr($shortName . '--', 0, 2);
-        $subName = strtoupper(substr($shortName, 0, 1)) . strtolower(substr($shortName, 1, 1));
-        log_add('app=' . $application . ' name=' . $title . ' sname=' . $shortName, 'debug', __FUNCTION__, '9715d88e');
-        echo '<a href="/?' . LIB_ARG_SWITCH_APPLICATION . '=' . $application . '">';
-        echo '<div class="apps" style="background:' . $color . ';">';
-        echo '<span class="appstitle">' . $subName . '</span><br /><span class="appsname">' . $title . '</span>';
-        echo "</div></a>\n";
-    }
-
-    echo "</div>\n";
-    echo '<div id="sync">'."\n";
-    echo "</div>\n";
-    bootstrap_htmlBottom();
-}
-
-
-
-/*
- *
- *
- *
- *
-
- ==/ 11 /==================================================================================
- PART11 : Display of application 2 web page to authenticate entity.
-
- ?a=2&mod=auth&view=login|logout|info CF class nebule
-
- TODO.
- ------------------------------------------------------------------------------------------
- */
-
-function bootstrap_displayApplication2(): void
-{
-    // Initialisation des logs
-    log_reopen('app2');
-    log_add('Loading', 'info', __FUNCTION__, 'cb4450a2');
-
-    echo 'CHK';
-    ob_end_clean();
-
-    bootstrap_htmlHeader();
-    bootstrap_htmlTop();
-
-    echo '<div class="layout-main">' . "\n";
-    echo ' <div class="layout-content">' . "\n";
-    echo '  <img alt="nebule" id="logo" src="' . LIB_APPLICATION_LOGO_LIGHT . '"/>' . "\n";
-    echo " </div>\n";
-    echo "</div>\n";
-
-    bootstrap_htmlBottom();
-}
-
-
-
-/*
- *
- *
- *
- *
-
- ==/ 12 /==================================================================================
- PART12 : Display of application 3 web page to display documentation of nebule.
-
- TODO.
- ------------------------------------------------------------------------------------------
- */
-
-function bootstrap_displayApplication3(): void
-{
-    global $nebuleInstance, $nebuleLibLevel, $nebuleLibVersion, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
-
-    // Initialisation des logs
-    log_reopen('app3');
-    log_add('Loading', 'info', __FUNCTION__, 'a4e4acfe');
-
-    echo 'CHK';
-    ob_end_clean();
-
-    bootstrap_htmlHeader();
-    bootstrap_htmlTop();
-
-    // Instancie la classe de la documentation.
-    $instance = new Documentation($nebuleInstance);
-
-    // Affiche la documentation.
-    echo '<div id="layout_documentation">' . "\n";
-    echo ' <div id="title_documentation"><p>Documentation technique de ' . $nebuleInstance->__toString() . '<br />' . "\n";
-    echo '  Version ' . $nebuleInstance->getConfigurationInstance()->getOptionAsString('defaultLinksVersion')
-        . ' - ' . $nebuleLibVersion . ' ' . $nebuleLibLevel . '<br />' . "\n";
-    echo '  (c) ' . $nebuleLicence . ' ' . $nebuleAuthor . ' - <a href="' . $nebuleWebsite . '">' . $nebuleWebsite . "</a></p></div>\n";
-    echo ' <div id="content_documentation">' . "\n";
-    $instance->display_content();
-    echo " </div>\n";
-    echo "</div>\n";
-
-    bootstrap_htmlBottom();
-}
-
-
-
-/*
- *
- *
- *
- *
-
- ==/ 13 /==================================================================================
- PART13 : Display of application 4 to simply show links.
-
- TODO.
- ------------------------------------------------------------------------------------------
- */
-
-function bootstrap_displayApplication4(): void
-{
-    // Initialisation des logs
-    log_reopen('app4');
-    log_add('Loading', 'info', __FUNCTION__, 'a1613ff2');
-
-    echo 'CHK';
-    ob_end_clean();
-
-    bootstrap_htmlHeader();
-    bootstrap_htmlTop();
-
-    echo '<div class="layout-main">' . "\n";
-    echo ' <div class="layout-content">' . "\n";
-
-    $nid = '';
-    $arg = '';
-    if (filter_has_var(INPUT_GET, LIB_LOCAL_LINKS_FOLDER))
-        $arg = trim(filter_input(INPUT_GET, LIB_LOCAL_LINKS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-    if (nod_checkNID($arg))
-        $nid = $arg;
-
-    if ($nid == '')
-        echo 'invalid NID' . "\n";
-    else {
-        echo 'NID=<a href="o/' . $nid . '">' . $nid . '</a><br /><br />' . "\n";
-
-        $blocLinks = array();
-        io_blockLinksRead($nid, $blocLinks);
-        if (sizeof($blocLinks) == 0)
-            echo 'not link for NID ' . $nid . "\n";
-        else {
-            foreach ($blocLinks as $bloc) {
-                if (strlen($bloc) == 0)
-                    continue;
-                $parsedBloc = blk_parse($bloc);
-
-                echo 'BH / RF=' . $parsedBloc['bh/rf'] . ' RV=' . $parsedBloc['bh/rv'] . "<br />\n";
-                echo 'BL / RC=' . $parsedBloc['bl/rc'] . '<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RL=' . $parsedBloc['bl/rl/req'] . '>';
-                bootstrap_echoLinkNID($parsedBloc['bl/rl/nid1'], substr($parsedBloc['bl/rl/nid1'], 0, 16));
-                if ($parsedBloc['bl/rl/nid2'] != '') {
-                    echo '>';
-                    bootstrap_echoLinkNID($parsedBloc['bl/rl/nid2'], substr($parsedBloc['bl/rl/nid2'], 0, 16));
-                }
-                if ($parsedBloc['bl/rl/nid3'] != '') {
-                    echo '>';
-                    bootstrap_echoLinkNID($parsedBloc['bl/rl/nid3'], substr($parsedBloc['bl/rl/nid3'], 0, 16));
-                }
-                if ($parsedBloc['bl/rl/nid4'] != '') {
-                    echo '>';
-                    bootstrap_echoLinkNID($parsedBloc['bl/rl/nid4'], substr($parsedBloc['bl/rl/nid4'], 0, 16));
-                }
-                echo "<br />\n";
-                echo 'BS / EID=';
-                bootstrap_echoLinkNID($parsedBloc['bs/rs1/eid'], substr($parsedBloc['bs/rs1/eid'], 0, 16));
-                echo ' SIG=' . substr($parsedBloc['bs/rs1/sig'], 0, 16) . ' ';
-                if (blk_verify($bloc))
-                    echo 'OK';
-                else
-                    echo 'NOK';
-                echo "<br /><br />\n";
-            }
-        }
-    }
-
-
-    echo " </div>\n";
-    echo "</div>\n";
-
-    bootstrap_htmlBottom();
-}
-
-
-
-/*
- *
- *
- *
- *
-
- ==/ 14 /==================================================================================
- PART14 : Display of application 9 to debug.
-
- TODO.
- ------------------------------------------------------------------------------------------
- */
-
-/**
- * Debug app.
- * @return void
- */
-function bootstrap_displayApplication9(): void
-{
-    global $lastReferenceSID;
-
-    // Initialisation des logs
-    log_reopen('app9');
-    log_add('Loading', 'info', __FUNCTION__, 'df3680d3');
-
-    echo 'CHK';
-    ob_end_clean();
-
-    bootstrap_htmlHeader();
-    bootstrap_htmlTop();
-
-    echo '<div class="layout-main">' . "\n";
-    echo ' <div class="layout-content">' . "\n";
-
-    $ridList = array(
-        LIB_RID_INTERFACE_BOOTSTRAP,
-        LIB_RID_INTERFACE_LIBRARY,
-        LIB_RID_INTERFACE_APPLICATIONS);
-
-    foreach ($ridList as $rid)
-    {
-        echo "RID=<a href='?a=4&" . LIB_LOCAL_LINKS_FOLDER . "=$rid'>$rid</a><br />\n";
-        $appList = app_getList($rid, false);
-        foreach ($appList as $iid) {
-            echo "&gt;&nbsp;IID=<a href='?a=4&" . LIB_LOCAL_LINKS_FOLDER . "=$iid'>$iid</a><br />\n";
-            $links = array();
-            app_getCodeList($iid, $links);
-            foreach ($links as $link)
-            {
-                $oid = $link['bl/rl/nid2'];
-                $eid = $link['bs/rs1/eid'];
-                $date = $link['bl/rc'];
-                echo "&nbsp;-&nbsp;$date&nbsp;EID=<a href='?a=4&" . LIB_LOCAL_LINKS_FOLDER . "=$eid'>$eid</a>a>&nbsp;OID=<a href='?a=4&" . LIB_LOCAL_LINKS_FOLDER . "=$oid'>$oid</a><br />\n";
-            }
-            $oid = app_getCode($iid);
-            echo "&nbsp;+&nbsp;EID=<a href='?a=4&" . LIB_LOCAL_LINKS_FOLDER . "=$lastReferenceSID'>$lastReferenceSID</a>&nbsp;OID=<a href='?a=4&" . LIB_LOCAL_LINKS_FOLDER . "=$oid'>$oid</a><br />\n";
-            echo "<br />\n";
-        }
-    }
-
-    /*session_start();
-    var_dump($_SESSION);
-    session_abort();*/
-
-    echo " </div>\n";
-    echo "</div>\n";
-
-    bootstrap_htmlBottom();
-}
-
-
-
-/*
- *
- *
- *
- *
-
- ==/ 15 /==================================================================================
  PART15 : Main display router.
 
  TODO.
@@ -7560,8 +7226,6 @@ function bootstrap_displayRouter(): void
            $bootstrapInlineDisplay,
            $bootstrapApplicationIID,
            $bootstrapApplicationOID,
-           //$bootstrapApplicationInstanceSleep,
-           //$libraryCheckOK,
            $bootstrapApplicationNoPreload;
 
     // End of Web page buffering with a buffer erase before display important things.
@@ -7601,24 +7265,42 @@ function bootstrap_displayRouter(): void
 
     if ($bootstrapApplicationIID == '0' || $bootstrapApplicationOID == '0')
         bootstrap_displayApplication0();
-    elseif ($bootstrapApplicationIID == '1' && lib_getOption('permitApplication1'))
-        bootstrap_displayApplication1();
-    elseif ($bootstrapApplicationIID == '2' && lib_getOption('permitApplication2'))
-        bootstrap_displayApplication2();
-    elseif ($bootstrapApplicationIID == '3' && lib_getOption('permitApplication3'))
-        bootstrap_displayApplication3();
-    elseif ($bootstrapApplicationIID == '4' && lib_getOption('permitApplication4'))
-        bootstrap_displayApplication4();
-    elseif ($bootstrapApplicationIID == '5' && lib_getOption('permitApplication5'))
-        bootstrap_displayApplication0();
-    elseif ($bootstrapApplicationIID == '6' && lib_getOption('permitApplication6'))
-        bootstrap_displayApplication0();
-    elseif ($bootstrapApplicationIID == '7' && lib_getOption('permitApplication7'))
-        bootstrap_displayApplication0();
-    elseif ($bootstrapApplicationIID == '8' && lib_getOption('permitApplication8'))
-        bootstrap_displayApplication0();
-    elseif ($bootstrapApplicationIID == '9' && lib_getOption('permitApplication9'))
-        bootstrap_displayApplication9();
+    elseif ($bootstrapApplicationIID == '1' && lib_getOption('permitApplication1')) {
+        $instance = New \Nebule\Library\App1();
+        $instance->display();
+    }
+    elseif ($bootstrapApplicationIID == '2' && lib_getOption('permitApplication2')) {
+        $instance = New \Nebule\Library\App2();
+        $instance->display();
+    }
+    elseif ($bootstrapApplicationIID == '3' && lib_getOption('permitApplication3')) {
+        $instance = New \Nebule\Library\App3();
+        $instance->display();
+    }
+    elseif ($bootstrapApplicationIID == '4' && lib_getOption('permitApplication4')) {
+        $instance = New \Nebule\Library\App4();
+        $instance->display();
+    }
+    elseif ($bootstrapApplicationIID == '5' && lib_getOption('permitApplication5')) {
+        $instance = New \Nebule\Library\App5();
+        $instance->display();
+    }
+    elseif ($bootstrapApplicationIID == '6' && lib_getOption('permitApplication6')) {
+        $instance = New \Nebule\Library\App6();
+        $instance->display();
+    }
+    elseif ($bootstrapApplicationIID == '7' && lib_getOption('permitApplication7')) {
+        $instance = New \Nebule\Library\App7();
+        $instance->display();
+    }
+    elseif ($bootstrapApplicationIID == '8' && lib_getOption('permitApplication8')) {
+        $instance = New \Nebule\Library\App8();
+        $instance->display();
+    }
+    elseif ($bootstrapApplicationIID == '9' && lib_getOption('permitApplication9')) {
+        $instance = New \Nebule\Library\App9();
+        $instance->display();
+    }
     elseif (strlen($bootstrapApplicationIID) < 2)
         bootstrap_displayApplication0();
 //    elseif (isset($bootstrapApplicationInstanceSleep) && $bootstrapApplicationInstanceSleep != '')
