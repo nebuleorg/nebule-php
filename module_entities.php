@@ -243,7 +243,7 @@ class ModuleEntities extends Modules
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2]
-                        . '&' . nebule::COMMAND_LOGOUT_ENTITY
+                        . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
                         . '&' . nebule::COMMAND_SWITCH_TO_ENTITY
                         . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
                 } elseif (!$this->_unlocked) {
@@ -261,7 +261,7 @@ class ModuleEntities extends Modules
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2]
-                        . '&' . nebule::COMMAND_LOGOUT_ENTITY
+                        . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
                         . '&' . nebule::COMMAND_FLUSH;
                 }
 
@@ -949,7 +949,7 @@ class ModuleEntities extends Modules
             $list[0]['icon'] = $this->MODULE_REGISTERED_ICONS[11];
             $list[0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2]
-                . '&' . nebule::COMMAND_LOGOUT_ENTITY
+                . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
                 . '&' . nebule::COMMAND_FLUSH;
             echo $this->_display->getDisplayMenuList($list, 'Medium');
         } else {

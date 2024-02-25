@@ -588,7 +588,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
                     if ($this->_unlocked) {
                         echo '&gt;&nbsp;';
-                        $this->_applicationInstance->getDisplayInstance()->displayHypertextLink('Lock', '?' . nebule::COMMAND_LOGOUT_ENTITY . '&' . nebule::COMMAND_FLUSH);
+                        $this->_applicationInstance->getDisplayInstance()->displayHypertextLink('Lock', '?' . nebule::COMMAND_AUTH_ENTITY_LOGOUT . '&' . nebule::COMMAND_FLUSH);
                         echo '&nbsp;&lt;';
                     } else {
                         ?>

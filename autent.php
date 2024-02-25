@@ -2,10 +2,12 @@
 declare(strict_types=1);
 namespace Nebule\Application\Autent;
 use Nebule\Library\Metrology;
+use Nebule\Library\Modules;
 use Nebule\Library\nebule;
 use Nebule\Library\Actions;
 use Nebule\Library\Applications;
 use Nebule\Library\Displays;
+use Nebule\Library\Node;
 use Nebule\Library\Traductions;
 
 /*
@@ -175,7 +177,7 @@ class Display extends Displays
     private function _askLock()
     {
         echo '&gt;&nbsp;';
-        $this->_applicationInstance->getDisplayInstance()->displayHypertextLink('Lock', '?' . nebule::COMMAND_LOGOUT_ENTITY . '&' . nebule::COMMAND_FLUSH);
+        $this->_applicationInstance->getDisplayInstance()->displayHypertextLink('Lock', '?' . nebule::COMMAND_AUTH_ENTITY_LOGOUT . '&' . nebule::COMMAND_FLUSH);
         echo '&nbsp;&lt;';
     }
 
@@ -313,5 +315,209 @@ class Traduction extends Traductions
         $this->_table['es-co'][':::act_chk_errBootstrap'] = "L'empreinte cryptographique du bootstrap est invalide !";
         $this->_table['es-co'][':::act_chk_warnSigns'] = 'La vérification des signatures de liens est désactivée !';
         $this->_table['es-co'][':::act_chk_errSigns'] = 'La vérification des signatures de liens ne fonctionne pas !';
+    }
+}
+
+
+/**
+ * Ce module permet gérer les objets.
+ *
+ * @author Projet nebule
+ * @license GNU GPLv3
+ * @copyright Projet nebule
+ * @link www.nebule.org
+ */
+class ModuleAutent extends Modules
+{
+    protected $MODULE_TYPE = 'Application';
+    protected $MODULE_NAME = '::sylabe:module:objects:ModuleName';
+    protected $MODULE_MENU_NAME = '::sylabe:module:objects:MenuName';
+    protected $MODULE_COMMAND_NAME = 'log';
+    protected $MODULE_DEFAULT_VIEW = 'blog';
+    protected $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
+    protected $MODULE_VERSION = '020240225';
+    protected $MODULE_AUTHOR = 'Projet nebule';
+    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
+    protected $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
+    protected $MODULE_HELP = '::sylabe:module:objects:ModuleHelp';
+    protected $MODULE_INTERFACE = '3.0';
+
+    protected $MODULE_REGISTERED_VIEWS = array('desc', 'unlock', 'logout');
+    protected $MODULE_REGISTERED_ICONS = array(
+        '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 0 : Objet.
+        '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 1 : Objet.
+        '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 2 : Objet.
+    );
+    protected $MODULE_APP_TITLE_LIST = array();
+    protected $MODULE_APP_ICON_LIST = array();
+    protected $MODULE_APP_DESC_LIST = array();
+    protected $MODULE_APP_VIEW_LIST = array();
+
+    const DEFAULT_ATTRIBS_DISPLAY_NUMBER = 10;
+
+
+    /**
+     * Ajout de fonctionnalités à des points d'ancrage.
+     *
+     * @param string    $hookName
+     * @param Node|null $nid
+     * @return array
+     */
+    public function getHookList(string $hookName, ?Node $nid = null): array
+    {
+        $object = $this->_applicationInstance->getCurrentObjectID();
+        if ($nid !== null)
+            $object = $nid->getID();
+
+        $hookArray = array();
+
+        switch ($hookName) {
+            case 'selfMenu':
+            case 'selfMenuBlog':
+                //$instance = $this->_applicationInstance->getCurrentObjectInstance();
+                $instance = $this->_nebuleInstance->newObject($object);
+                $id = $instance->getID();
+
+                break;
+        }
+        return $hookArray;
+    }
+
+
+    /**
+     * Affichage principale.
+     *
+     * @return void
+     */
+    public function displayModule(): void
+    {
+        switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
+            case $this->MODULE_REGISTERED_VIEWS[0]:
+                $this->_displayInfo();
+                break;
+            case $this->MODULE_REGISTERED_VIEWS[1]:
+                $this->_displayLogin();
+                break;
+            default:
+                $this->_displayLogout();
+                break;
+        }
+    }
+
+    /**
+     * Affichage en ligne comme élément inseré dans une page web.
+     *
+     * @return void
+     */
+    public function displayModuleInline(): void
+    {
+        // Nothing
+    }
+
+
+    /**
+     * Display view to describe entity state.
+     */
+    private function _displayInfo(): void
+    {
+        $param = array(
+            'enableDisplayColor' => true,
+            'enableDisplayIcon' => true,
+            'enableDisplayRefs' => false,
+            'enableDisplayName' => true,
+            'enableDisplayID' => false,
+            'enableDisplayFlags' => true,
+            'enableDisplayFlagProtection' => true,
+            'flagProtection' => $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected(),
+            'enableDisplayFlagObfuscate' => false,
+            'enableDisplayFlagUnlocked' => false,
+            'enableDisplayFlagState' => true,
+            'enableDisplayFlagEmotions' => true,
+            'enableDisplayStatus' => true,
+            'enableDisplayContent' => true,
+            'displaySize' => 'medium',
+            'displayRatio' => 'long',
+            'enableDisplaySelfHook' => true,
+            'enableDisplayTypeHook' => false,
+        );
+        echo $this->_display->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+    }
+
+    /**
+     * Display view to unlocking entity.
+     */
+    private function _displayLogin(): void
+    {
+        $param = array(
+            'enableDisplayColor' => true,
+            'enableDisplayIcon' => true,
+            'enableDisplayRefs' => false,
+            'enableDisplayName' => true,
+            'enableDisplayID' => false,
+            'enableDisplayFlags' => true,
+            'enableDisplayFlagProtection' => true,
+            'flagProtection' => $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected(),
+            'enableDisplayFlagObfuscate' => false,
+            'enableDisplayFlagUnlocked' => false,
+            'enableDisplayFlagState' => true,
+            'enableDisplayFlagEmotions' => true,
+            'enableDisplayStatus' => true,
+            'enableDisplayContent' => true,
+            'displaySize' => 'medium',
+            'displayRatio' => 'long',
+            'enableDisplaySelfHook' => true,
+            'enableDisplayTypeHook' => false,
+        );
+        echo $this->_display->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+    }
+
+    /**
+     * Display view to locking entity.
+     */
+    private function _displayLogout(): void
+    {
+        $param = array(
+            'enableDisplayColor' => true,
+            'enableDisplayIcon' => true,
+            'enableDisplayRefs' => false,
+            'enableDisplayName' => true,
+            'enableDisplayID' => false,
+            'enableDisplayFlags' => true,
+            'enableDisplayFlagProtection' => true,
+            'flagProtection' => $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected(),
+            'enableDisplayFlagObfuscate' => false,
+            'enableDisplayFlagUnlocked' => false,
+            'enableDisplayFlagState' => true,
+            'enableDisplayFlagEmotions' => true,
+            'enableDisplayStatus' => true,
+            'enableDisplayContent' => true,
+            'displaySize' => 'medium',
+            'displayRatio' => 'long',
+            'enableDisplaySelfHook' => true,
+            'enableDisplayTypeHook' => false,
+        );
+        echo $this->_display->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+    }
+
+
+    /**
+     * Initialisation de la table de traduction.
+     *
+     * @return void
+     */
+    protected function _initTable(): void
+    {
+        $this->_table['fr-fr']['::sylabe:module:objects:ModuleName'] = 'Module des blogs';
+        $this->_table['en-en']['::sylabe:module:objects:ModuleName'] = 'Blogs module';
+        $this->_table['es-co']['::sylabe:module:objects:ModuleName'] = 'Módulo de blogs';
+        $this->_table['fr-fr']['::sylabe:module:objects:MenuName'] = 'Blogs';
+        $this->_table['en-en']['::sylabe:module:objects:MenuName'] = 'Blogs';
+        $this->_table['es-co']['::sylabe:module:objects:MenuName'] = 'Blogs';
+        $this->_table['fr-fr']['::sylabe:module:objects:ModuleDescription'] = 'Module de gestion des blogs.';
+        $this->_table['en-en']['::sylabe:module:objects:ModuleDescription'] = 'Blogs management module.';
+        $this->_table['es-co']['::sylabe:module:objects:ModuleDescription'] = 'Módulo de gestión de blogs.';
+        $this->_table['fr-fr']['::sylabe:module:objects:ModuleHelp'] = "Ce module permet de voir et de gérer les blogs.";
+        $this->_table['en-en']['::sylabe:module:objects:ModuleHelp'] = 'This module permit to see and manage blogs.';
+        $this->_table['es-co']['::sylabe:module:objects:ModuleHelp'] = 'This module permit to see and manage blogs.';
     }
 }

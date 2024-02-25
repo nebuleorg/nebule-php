@@ -1341,7 +1341,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 );
                 if ($this->_unlocked) {
                     $param['flagUnlockedLink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
-                        . '&' . nebule::COMMAND_LOGOUT_ENTITY
+                        . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
                         . '&' . nebule::COMMAND_FLUSH;
                 } else {
                     $param['flagUnlockedLink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
@@ -1393,7 +1393,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     '',
                                     'name="ico_lock"'),
                                 '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
-                                . '&' . nebule::COMMAND_LOGOUT_ENTITY
+                                . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
                                 . '&' . nebule::COMMAND_FLUSH);
                         } else {
                             // Affiche de lien de déverrouillage sans les effets.
@@ -1412,7 +1412,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             $this->convertUpdateImage(
                                 $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_WARNING),
                                 'WARNING'),
-                            '?' . nebule::COMMAND_LOGOUT_ENTITY
+                            '?' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
                             . '&' . nebule::COMMAND_SWITCH_TO_ENTITY);
                     }
                 } // Sinon c'est une erreur.
@@ -1421,7 +1421,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $this->convertUpdateImage(
                             $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_ERROR),
                             'ERROR'),
-                        '?' . nebule::COMMAND_LOGOUT_ENTITY
+                        '?' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
                         . '&' . nebule::COMMAND_FLUSH);
                 }
                 ?>
@@ -1499,7 +1499,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         self::DEFAULT_GROUP_ENTITY_ADD_COMMAND,
                         self::DEFAULT_ABOUT_COMMAND . '#help',
                         self::DEFAULT_ABOUT_COMMAND . '#lang',
-                        self::DEFAULT_ABOUT_COMMAND . '&' . nebule::COMMAND_LOGOUT_ENTITY . '&' . nebule::COMMAND_FLUSH);
+                        self::DEFAULT_ABOUT_COMMAND . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT . '&' . nebule::COMMAND_FLUSH);
                 } else {
                     $modulesName = array(
                         '::ObjectsList',
@@ -1971,7 +1971,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $param['selfHookList'][0]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
                 $param['selfHookList'][0]['link'] = '?'
                     . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
-                    . '&' . nebule::COMMAND_LOGOUT_ENTITY
+                    . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
                     . '&' . nebule::COMMAND_SWITCH_TO_ENTITY
                     . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id;
 
@@ -2268,7 +2268,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[1]['desc'] = '';
                 $actionList[1]['link'] = '?'
                     . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
-                    . '&' . nebule::COMMAND_LOGOUT_ENTITY . '&' . nebule::COMMAND_SWITCH_TO_ENTITY
+                    . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT . '&' . nebule::COMMAND_SWITCH_TO_ENTITY
                     . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id;
             }
 
@@ -2292,7 +2292,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[3]['css'] = 'oneAction-bg-warn';
                 $actionList[3]['link'] = '?'
                     . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ABOUT_COMMAND
-                    . '&' . nebule::COMMAND_LOGOUT_ENTITY . '&' . nebule::COMMAND_FLUSH;
+                    . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT . '&' . nebule::COMMAND_FLUSH;
             }
 
             // Voir les objets.
@@ -2785,7 +2785,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $param['selfHookList'][0]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
                 $param['selfHookList'][0]['link'] = '?'
                     . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
-                    . '&' . nebule::COMMAND_LOGOUT_ENTITY
+                    . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
                     . '&' . nebule::COMMAND_SWITCH_TO_ENTITY
                     . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $createEntityInstance;
 
@@ -3343,7 +3343,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $list[0]['desc'] = $this->_traductionInstance->getTraduction('::EntityUnlocked');
                 $list[0]['icon'] = Displays::DEFAULT_ICON_ENTITY_LOCK;
                 $list[0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
-                    . '&' . nebule::COMMAND_LOGOUT_ENTITY
+                    . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
                     . '&' . nebule::COMMAND_FLUSH;
                 echo $this->_applicationInstance->getDisplayInstance()->getDisplayMenuList($list, 'Medium');
             } else {
@@ -3401,7 +3401,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $list[0]['desc'] = $this->_traductionInstance->getTraduction('::EntityUnlocked');
                 $list[0]['icon'] = Displays::DEFAULT_ICON_ENTITY_LOCK;
                 $list[0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
-                    . '&' . nebule::COMMAND_LOGOUT_ENTITY
+                    . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
                     . '&' . nebule::COMMAND_FLUSH;
                 echo $this->_applicationInstance->getDisplayInstance()->getDisplayMenuList($list, 'Medium');
             } else {

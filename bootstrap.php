@@ -7306,6 +7306,8 @@ function bootstrap_displayApplication1(): void
  ==/ 11 /==================================================================================
  PART11 : Display of application 2 web page to authenticate entity.
 
+ ?a=2&mod=auth&view=login|logout|info CF class nebule
+
  TODO.
  ------------------------------------------------------------------------------------------
  */

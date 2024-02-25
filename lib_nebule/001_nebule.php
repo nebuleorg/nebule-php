@@ -31,7 +31,10 @@ class nebule
     const COMMAND_SWITCH_APPLICATION = 'a';
     const COMMAND_FLUSH = 'f';
     const COMMAND_RESCUE = 'r';
-    const COMMAND_LOGOUT_ENTITY = 'logout';
+    const COMMAND_AUTH_ENTITY_MOD = 'auth';
+    const COMMAND_AUTH_ENTITY_INFO = 'info';
+    const COMMAND_AUTH_ENTITY_LOGIN = 'login';
+    const COMMAND_AUTH_ENTITY_LOGOUT = 'logout';
     const COMMAND_SWITCH_TO_ENTITY = 'switch';
     const COMMAND_SELECT_OBJECT = 'obj';
     const COMMAND_SELECT_LINK = 'lnk';
@@ -1278,8 +1281,8 @@ class nebule
 
     private function _getCurrentEntityPassword()
     {
-        if (filter_has_var(INPUT_GET, self::COMMAND_LOGOUT_ENTITY)
-            || filter_has_var(INPUT_POST, self::COMMAND_LOGOUT_ENTITY))
+        if (filter_has_var(INPUT_GET, self::COMMAND_AUTH_ENTITY_LOGOUT)
+            || filter_has_var(INPUT_POST, self::COMMAND_AUTH_ENTITY_LOGOUT))
         {
             if (is_a($this->_currentEntityInstance, 'Nebule\Library\Entity')) {
                 $this->_metrologyInstance->addLog('Logout ' . $this->_currentEntity, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '4efbc71f');
