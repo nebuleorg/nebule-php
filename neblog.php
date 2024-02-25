@@ -1720,6 +1720,8 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
  */
 class Action extends Actions
 {
+    const DEFAULT_COMMAND_ACTION_NEW_BLOG_NAME = 'actnewblogname';
+    const DEFAULT_COMMAND_ACTION_NEW_BLOG_TITLE = 'actnewblogtitle';
     // Tout par défaut.
 }
 

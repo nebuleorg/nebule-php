@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
-use Nebule\Application\Sylabe\Action;
-use Nebule\Application\Sylabe\Display;
+use Nebule\Application\Neblog\Action;
+use Nebule\Application\Neblog\Display;
 use Nebule\Library\Actions;
 use Nebule\Library\Displays;
 use Nebule\Library\Modules;
@@ -20,22 +20,25 @@ use Nebule\Library\Node;
 class ModuleNeblog extends Modules
 {
     protected $MODULE_TYPE = 'Application';
-    protected $MODULE_NAME = '::sylabe:module:objects:ModuleName';
-    protected $MODULE_MENU_NAME = '::sylabe:module:objects:MenuName';
+    protected $MODULE_NAME = '::neblog:module:objects:ModuleName';
+    protected $MODULE_MENU_NAME = '::neblog:module:objects:MenuName';
     protected $MODULE_COMMAND_NAME = 'log';
     protected $MODULE_DEFAULT_VIEW = 'blog';
-    protected $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
+    protected $MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
     protected $MODULE_VERSION = '020240225';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
     protected $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
-    protected $MODULE_HELP = '::sylabe:module:objects:ModuleHelp';
+    protected $MODULE_HELP = '::neblog:module:objects:ModuleHelp';
     protected $MODULE_INTERFACE = '3.0';
 
-    protected $MODULE_REGISTERED_VIEWS = array('blog', 'list');
+    protected $MODULE_REGISTERED_VIEWS = array('blog', 'list', 'new', 'modify', 'delete');
     protected $MODULE_REGISTERED_ICONS = array(
         '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 0 : Objet.
         '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 1 : Objet.
+        '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 2 : Objet.
+        '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 3 : Objet.
+        '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 4 : Objet.
     );
     protected $MODULE_APP_TITLE_LIST = array();
     protected $MODULE_APP_ICON_LIST = array();
@@ -81,21 +84,12 @@ class ModuleNeblog extends Modules
     public function displayModule(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
-            case $this->MODULE_REGISTERED_VIEWS[0]:
+            case $this->MODULE_REGISTERED_VIEWS[1]:
                 $this->_displayList();
                 break;
-            /*case $this->MODULE_REGISTERED_VIEWS[1]:
-                $this->_displayObjectDescription();
-                break;
             case $this->MODULE_REGISTERED_VIEWS[2]:
-                $this->_displayObjectRelations();
+                $this->_displayNew();
                 break;
-            case $this->MODULE_REGISTERED_VIEWS[3]:
-                $this->_displayObjectProtection();
-                break;
-            case $this->MODULE_REGISTERED_VIEWS[4]:
-                $this->_displayObjectProtectionShare();
-                break;*/
             default:
                 $this->_displayBlog();
                 break;
@@ -116,12 +110,6 @@ class ModuleNeblog extends Modules
             case $this->MODULE_REGISTERED_VIEWS[1]:
                 $this->_display_InlineList();
                 break;
-            /*case $this->MODULE_REGISTERED_VIEWS[3]:
-                $this->_display_InlineObjectProtection();
-                break;
-            case $this->MODULE_REGISTERED_VIEWS[4]:
-                $this->_display_InlineObjectProtectionShare();
-                break;*/
         }
     }
 
@@ -133,9 +121,8 @@ class ModuleNeblog extends Modules
      */
     public function headerStyle(): void
     {
-        ?>
+        /*?> FIXME
 
-        /* Module objets */
         .sylabeModuleObjectsDescList1 { padding:5px; background:rgba(255,255,255,0.5); background-origin:border-box; color:#000000; clear:both; }
         .sylabeModuleObjectsDescList2 { padding:5px; background:rgba(230,230,230,0.5); background-origin:border-box; color:#000000; clear:both; }
         .sylabeModuleObjectsDescError { padding:5px; background:rgba(0,0,0,0.3); background-origin:border-box; clear:both; }
@@ -147,7 +134,7 @@ class ModuleNeblog extends Modules
         .sylabeModuleObjectsDescValue { font-weight:bold; }
         .sylabeModuleObjectsDescEmotion { font-weight:bold; }
         .sylabeModuleObjectsDescEmotion img { height:16px; width:16px; }
-        <?php
+        <?php*/
     }
 
 
@@ -155,6 +142,19 @@ class ModuleNeblog extends Modules
      * Display view of blog.
      */
     private function _displayBlog(): void
+    {
+        // Titre.
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
+        echo $this->_display->getDisplayTitle('::neblog:module:blog:dispblog', $icon, false);
+
+        // Affichage le blog.
+        $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('dispblog');
+    }
+
+    /**
+     * Display inline view of blog.
+     */
+    private function _display_InlineBlog(): void
     {
         $param = array(
             'enableDisplayColor' => true,
@@ -180,18 +180,14 @@ class ModuleNeblog extends Modules
     }
 
     /**
-     * Display inline view of blog.
-     */
-    private function _display_InlineBlog(): void
-    {
-        // TODO
-    }
-
-    /**
      * Display view of list of blog.
      */
     private function _displayList(): void
     {
+        // Titre.
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[1]);
+        echo $this->_display->getDisplayTitle('::neblog:module:list:listblog', $icon, false);
+
         $param = array(
             'enableDisplayColor' => true,
             'enableDisplayIcon' => true,
@@ -223,6 +219,64 @@ class ModuleNeblog extends Modules
         // TODO
     }
 
+    /**
+     * Display view of blog.
+     */
+    private function _displayNew(): void
+    {
+        // Titre.
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[2]);
+        echo $this->_display->getDisplayTitle('::neblog:module:new:newblog', $icon, false);
+
+        ?>
+
+        <div>
+            <h1>New blog</h1>
+            <div>
+                <form enctype="multipart/form-data" method="post"
+                      action="<?php echo '?' . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
+                    <label>
+                        <input type="text" class="newblog"
+                               name="<?php echo Action::DEFAULT_COMMAND_ACTION_NEW_BLOG_NAME; ?>"
+                               value="Name"/>
+                    </label><br/>
+                    <label>
+                        <input type="text" class="newblog"
+                               name="<?php echo Action::DEFAULT_COMMAND_ACTION_NEW_BLOG_TITLE; ?>"
+                               value="Title"/>
+                    </label><br/>
+                    <input type="submit"
+                           value="Create"/>
+                </form>
+            </div>
+        </div>
+        <?php
+    }
+
+    /**
+     * Display view of blog.
+     */
+    private function _displayModify(): void
+    {
+        // Titre.
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[3]);
+        echo $this->_display->getDisplayTitle('::neblog:module:modify:modblog', $icon, false);
+
+        // TODO
+    }
+
+    /**
+     * Display view of blog.
+     */
+    private function _displayDelete(): void
+    {
+        // Titre.
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
+        echo $this->_display->getDisplayTitle('::neblog:module:delete:delblog', $icon, false);
+
+        // TODO
+    }
+
 
 
     /**
@@ -232,17 +286,33 @@ class ModuleNeblog extends Modules
      */
     protected function _initTable(): void
     {
-        $this->_table['fr-fr']['::sylabe:module:objects:ModuleName'] = 'Module des blogs';
-        $this->_table['en-en']['::sylabe:module:objects:ModuleName'] = 'Blogs module';
-        $this->_table['es-co']['::sylabe:module:objects:ModuleName'] = 'Módulo de blogs';
-        $this->_table['fr-fr']['::sylabe:module:objects:MenuName'] = 'Blogs';
-        $this->_table['en-en']['::sylabe:module:objects:MenuName'] = 'Blogs';
-        $this->_table['es-co']['::sylabe:module:objects:MenuName'] = 'Blogs';
-        $this->_table['fr-fr']['::sylabe:module:objects:ModuleDescription'] = 'Module de gestion des blogs.';
-        $this->_table['en-en']['::sylabe:module:objects:ModuleDescription'] = 'Blogs management module.';
-        $this->_table['es-co']['::sylabe:module:objects:ModuleDescription'] = 'Módulo de gestión de blogs.';
-        $this->_table['fr-fr']['::sylabe:module:objects:ModuleHelp'] = "Ce module permet de voir et de gérer les blogs.";
-        $this->_table['en-en']['::sylabe:module:objects:ModuleHelp'] = 'This module permit to see and manage blogs.';
-        $this->_table['es-co']['::sylabe:module:objects:ModuleHelp'] = 'This module permit to see and manage blogs.';
+        $this->_table['fr-fr']['::neblog:module:objects:ModuleName'] = 'Module des blogs';
+        $this->_table['en-en']['::neblog:module:objects:ModuleName'] = 'Blogs module';
+        $this->_table['es-co']['::neblog:module:objects:ModuleName'] = 'Módulo de blogs';
+        $this->_table['fr-fr']['::neblog:module:objects:MenuName'] = 'Blogs';
+        $this->_table['en-en']['::neblog:module:objects:MenuName'] = 'Blogs';
+        $this->_table['es-co']['::neblog:module:objects:MenuName'] = 'Blogs';
+        $this->_table['fr-fr']['::neblog:module:objects:ModuleDescription'] = 'Module de gestion des blogs.';
+        $this->_table['en-en']['::neblog:module:objects:ModuleDescription'] = 'Blogs management module.';
+        $this->_table['es-co']['::neblog:module:objects:ModuleDescription'] = 'Módulo de gestión de blogs.';
+        $this->_table['fr-fr']['::neblog:module:objects:ModuleHelp'] = "Ce module permet de voir et de gérer les blogs.";
+        $this->_table['en-en']['::neblog:module:objects:ModuleHelp'] = 'This module permit to see and manage blogs.';
+        $this->_table['es-co']['::neblog:module:objects:ModuleHelp'] = 'This module permit to see and manage blogs.';
+
+        $this->_table['fr-fr']['::neblog:module:blog:dispblog'] = 'Display blog';
+        $this->_table['en-en']['::neblog:module:blog:dispblog'] = 'Display blog';
+        $this->_table['es-co']['::neblog:module:blog:dispblog'] = 'Display blog';
+        $this->_table['fr-fr']['::neblog:module:list:listblog'] = 'List blogs';
+        $this->_table['en-en']['::neblog:module:list:listblog'] = 'List blogs';
+        $this->_table['es-co']['::neblog:module:list:listblog'] = 'List blogs';
+        $this->_table['fr-fr']['::neblog:module:new:newblog'] = 'New blog';
+        $this->_table['en-en']['::neblog:module:new:newblog'] = 'New blog';
+        $this->_table['es-co']['::neblog:module:new:newblog'] = 'New blog';
+        $this->_table['fr-fr']['::neblog:module:modify:modifyblog'] = 'Modify blog';
+        $this->_table['en-en']['::neblog:module:modify:modifyblog'] = 'Modify blog';
+        $this->_table['es-co']['::neblog:module:modify:modifyblog'] = 'Modify blog';
+        $this->_table['fr-fr']['::neblog:module:delete:delblog'] = 'Delete blog';
+        $this->_table['en-en']['::neblog:module:delete:delblog'] = 'Delete blog';
+        $this->_table['es-co']['::neblog:module:delete:delblog'] = 'Delete blog';
     }
 }
