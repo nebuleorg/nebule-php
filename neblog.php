@@ -47,7 +47,7 @@ class Application extends Applications
     const APPLICATION_AUTHOR = 'Projet nebule';
     const APPLICATION_VERSION = '020240225';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2024';
-    const APPLICATION_WEBSITE = 'www.nebule.org';
+    const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
     const APPLICATION_CODING = 'application/x-httpd-php';
 
@@ -96,7 +96,7 @@ class Application extends Applications
 class Display extends Displays
 {
     const DEFAULT_DISPLAY_MODE = 'log';
-    const DEFAULT_DISPLAY_VIEW = 'disp';
+    const DEFAULT_DISPLAY_VIEW = 'blog';
     const DEFAULT_LINK_COMMAND = 'lnk';
     const DEFAULT_APPLICATION_LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABg2lDQ1BJQ0MgcHJvZmlsZQAAKJF9
 kT1Iw0AcxV/TiiIVh2YQcchQnayIijhqFYpQIdQKrTqYXPoFTRqSFBdHwbXg4Mdi1cHFWVcHV0EQ/ABxdnBSdJES/9cUWsR4cNyPd/ced+8AoV5muh0aB3TDsVKJuJTJrkrdrxAgIoIxhBRmm3OynITv
@@ -118,7 +118,7 @@ zK0RGBoaguHhYahFBpkgCDhz5gwMDQ1BZ2dnrndIExMTj6anp9/IagdkFkkhhODhw4e28+fPD9Rz5icQ
 JceXqVTqk8VieRAIBJalam0ZK1sRpEAgsGyxWB6UU1pfVqns9va2dP/+/SjG+OOpU6dMSuYPi1k2m92amJh4dO3ateWtra2yOqPsWmFJkmBhYSH+5MmTvwcGBg7qdDqt2sXSV69e/XV6evpNJY5YNoDc
 JfL27dvPWltbP3Z3d//Q2tqq6KFKIpFITk1N/TY8PDz/8uXLinMWFQMA+JxInZ+fX7t79+6f+/fv/+fQoUNtGGNc7QsT9+7d+/3y5ctzs7OzsXwJzrLiCfh+ZUbZm6N78tLUThHlnro2ly+i/G/JqnkM
 UVYg1Gj2HcBeB/AvE200xGvbl50AAAAASUVORK5CYII=";
-    const DEFAULT_APPLICATION_LOGO_LINK = '?mod=hlp&view=about';
+    const DEFAULT_APPLICATION_LOGO_LINK = '?mod=log&view=about';
     const DEFAULT_LOGO_MENUS = '15eb7dcf0554d76797ffb388e4bb5b866e70a3a33e7d394a120e68899a16c690.sha2.256';
     const DEFAULT_LOGO_MODULE = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c.sha2.256';
     const DEFAULT_CSS_BACKGROUND = 'f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499.sha2.256';
@@ -1390,11 +1390,13 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
         if ($this->_currentDisplayView == 'menu') {
             $this->_displayInternalMenuApplications();
         } else {
-            foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
+            $module = $this->_applicationInstance->getModule('ModuleNeblog');
+            $module->displayModule();
+            /*foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
                 if ($module->getCommandName() == $this->_currentDisplayMode) {
                     $module->displayModule();
                 }
-            }
+            }*/
         }
         $this->_displayInlineContentID();
     }
@@ -1720,8 +1722,8 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
  */
 class Action extends Actions
 {
-    const DEFAULT_COMMAND_ACTION_NEW_BLOG_NAME = 'actnewblogname';
-    const DEFAULT_COMMAND_ACTION_NEW_BLOG_TITLE = 'actnewblogtitle';
+    const COMMAND_ACTION_NEW_BLOG_NAME = 'actnewblogname';
+    const COMMAND_ACTION_NEW_BLOG_TITLE = 'actnewblogtitle';
     // Tout par défaut.
 }
 

@@ -32,13 +32,14 @@ class ModuleNeblog extends Modules
     protected $MODULE_HELP = '::neblog:module:objects:ModuleHelp';
     protected $MODULE_INTERFACE = '3.0';
 
-    protected $MODULE_REGISTERED_VIEWS = array('blog', 'list', 'new', 'modify', 'delete');
+    protected $MODULE_REGISTERED_VIEWS = array('blog', 'list', 'new', 'modify', 'delete', 'about');
     protected $MODULE_REGISTERED_ICONS = array(
-        '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 0 : Objet.
+        '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256',    // 0 : Group.
         '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 1 : Objet.
-        '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 2 : Objet.
+        '819babe3072d50f126a90c982722568a7ce2ddd2b294235f40679f9d220e8a0a.sha2.256',    // 2 : Create.
         '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 3 : Objet.
         '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 4 : Objet.
+        '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 5 : Objet.
     );
     protected $MODULE_APP_TITLE_LIST = array();
     protected $MODULE_APP_ICON_LIST = array();
@@ -65,11 +66,22 @@ class ModuleNeblog extends Modules
 
         switch ($hookName) {
             case 'selfMenu':
-            case 'selfMenuBlog':
-                //$instance = $this->_applicationInstance->getCurrentObjectInstance();
-                $instance = $this->_nebuleInstance->newObject($object);
-                $id = $instance->getID();
-
+            case 'selfMenuNeblog':
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[0]) {
+                    // Voir les groupes de l'entité.
+                    $hookArray[0]['name'] = '::neblog:module:blog:display';
+                    $hookArray[0]['icon'] = $this->MODULE_LOGO;
+                    $hookArray[0]['desc'] = '';
+                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0];
+                } else {
+                    // Voir les groupes des autres entités.
+                    $hookArray[0]['name'] = '::neblog:module:blog:display2';
+                    $hookArray[0]['icon'] = $this->MODULE_LOGO;
+                    $hookArray[0]['desc'] = '';
+                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1];
+                }
                 break;
         }
         return $hookArray;
@@ -89,6 +101,15 @@ class ModuleNeblog extends Modules
                 break;
             case $this->MODULE_REGISTERED_VIEWS[2]:
                 $this->_displayNew();
+                break;
+            case $this->MODULE_REGISTERED_VIEWS[3]:
+                $this->_displayModify();
+                break;
+            case $this->MODULE_REGISTERED_VIEWS[4]:
+                $this->_displayDelete();
+                break;
+            case $this->MODULE_REGISTERED_VIEWS[5]:
+                $this->_displayAbout();
                 break;
             default:
                 $this->_displayBlog();
@@ -237,12 +258,12 @@ class ModuleNeblog extends Modules
                       action="<?php echo '?' . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                     <label>
                         <input type="text" class="newblog"
-                               name="<?php echo Action::DEFAULT_COMMAND_ACTION_NEW_BLOG_NAME; ?>"
+                               name="<?php echo Action::COMMAND_ACTION_NEW_BLOG_NAME; ?>"
                                value="Name"/>
                     </label><br/>
                     <label>
                         <input type="text" class="newblog"
-                               name="<?php echo Action::DEFAULT_COMMAND_ACTION_NEW_BLOG_TITLE; ?>"
+                               name="<?php echo Action::COMMAND_ACTION_NEW_BLOG_TITLE; ?>"
                                value="Title"/>
                     </label><br/>
                     <input type="submit"
@@ -263,6 +284,14 @@ class ModuleNeblog extends Modules
         echo $this->_display->getDisplayTitle('::neblog:module:modify:modblog', $icon, false);
 
         // TODO
+        $param = array(
+            'enableDisplayIcon' => true,
+            'enableDisplayAlone' => true,
+            'informationType' => 'error',
+            'displaySize' => 'medium',
+            'displayRatio' => 'short',
+        );
+        echo $this->_display->getDisplayInformation('::::Developpement', $param);
     }
 
     /**
@@ -275,6 +304,28 @@ class ModuleNeblog extends Modules
         echo $this->_display->getDisplayTitle('::neblog:module:delete:delblog', $icon, false);
 
         // TODO
+        $param = array(
+            'enableDisplayIcon' => true,
+            'enableDisplayAlone' => true,
+            'informationType' => 'error',
+            'displaySize' => 'medium',
+            'displayRatio' => 'short',
+        );
+        echo $this->_display->getDisplayInformation('::::Developpement', $param);
+    }
+
+    /**
+     * Display view of blog.
+     */
+    private function _displayAbout(): void
+    {
+        // Titre.
+        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
+        echo $this->_display->getDisplayTitle('::neblog:module:about:title', $icon, false);
+
+        echo '<div>';
+        echo '<p>' . $this->_traduction('::neblog:module:about:desc') . '</p>';
+        echo '</div>';
     }
 
 
@@ -308,11 +359,17 @@ class ModuleNeblog extends Modules
         $this->_table['fr-fr']['::neblog:module:new:newblog'] = 'New blog';
         $this->_table['en-en']['::neblog:module:new:newblog'] = 'New blog';
         $this->_table['es-co']['::neblog:module:new:newblog'] = 'New blog';
-        $this->_table['fr-fr']['::neblog:module:modify:modifyblog'] = 'Modify blog';
-        $this->_table['en-en']['::neblog:module:modify:modifyblog'] = 'Modify blog';
-        $this->_table['es-co']['::neblog:module:modify:modifyblog'] = 'Modify blog';
+        $this->_table['fr-fr']['::neblog:module:modify:modblog'] = 'Modify blog';
+        $this->_table['en-en']['::neblog:module:modify:modblog'] = 'Modify blog';
+        $this->_table['es-co']['::neblog:module:modify:modblog'] = 'Modify blog';
         $this->_table['fr-fr']['::neblog:module:delete:delblog'] = 'Delete blog';
         $this->_table['en-en']['::neblog:module:delete:delblog'] = 'Delete blog';
         $this->_table['es-co']['::neblog:module:delete:delblog'] = 'Delete blog';
+        $this->_table['fr-fr']['::neblog:module:about:title'] = 'A propos';
+        $this->_table['en-en']['::neblog:module:about:title'] = 'About';
+        $this->_table['es-co']['::neblog:module:about:title'] = 'About';
+        $this->_table['fr-fr']['::neblog:module:about:desc'] = 'Ceci est un gestionnaire/afficheur de weblog basé sur nebule.';
+        $this->_table['en-en']['::neblog:module:about:desc'] = 'This is a manager/reader for weblog based on nebule.';
+        $this->_table['es-co']['::neblog:module:about:desc'] = 'This is a manager/reader for weblog based on nebule.';
     }
 }
