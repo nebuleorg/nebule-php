@@ -65,7 +65,7 @@ class Application extends Applications
      *
      * @var array
      */
-    protected $_listDefaultModules = array(
+    protected $_listInternalModules = array(
         'ModuleNeblog',
         'ModuleTranslateFRFR',
     );

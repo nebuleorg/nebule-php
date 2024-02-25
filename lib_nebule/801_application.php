@@ -615,14 +615,26 @@ abstract class Applications implements applicationInterface
 
 
     /**
-     * Liste des noms des modules par défaut.
+     * Liste des noms des modules internes à l'application.
      * Cette liste est à fournir par l'application en cours.
      *
-     * Ces modules ne sont pas des objets à part entière mais ils sont intégrés à l'objet de l'application.
+     * Ces modules ne sont pas des objets à part entière, mais ils sont intégrés à l'objet de l'application.
      *
      * @var array of string
      */
-    protected $_listDefaultModules = array();
+    protected $_listInternalModules = array();
+
+    /**
+     * Liste des noms des modules externes à l'application.
+     * Cette liste est à fournir par l'application en cours.
+     *
+     * C'est la liste des modules que la librairie va charger pour une application donnée.
+     *
+     * Ces modules sont des objets à part entière, ils doivent être trouvés avant le chargement de l'application.
+     *
+     * @var array of string
+     */
+    protected $_listExternalModules = array();
 
     /**
      * Liste des noms des modules chargés.
@@ -752,7 +764,7 @@ abstract class Applications implements applicationInterface
 
         $this->getMetrologyInstance()->addLog('Load default modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '93eb59aa');
 
-        foreach ($this->_listDefaultModules as $moduleName) {
+        foreach ($this->_listInternalModules as $moduleName) {
             $this->getMetrologyInstance()->addTime();
             $moduleFullName = $this->_applicationNamespace . '\\' . $moduleName;
             $this->getMetrologyInstance()->addLog('Loaded module ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '4879c453');
@@ -947,7 +959,10 @@ abstract class Applications implements applicationInterface
 
     /**
      * Load and init external modules for the application.
-     * Some modules are loaded before by default with _loadDefaultModules() depending on the list '_listDefaultModules' give by le app.
+     * Some modules are loaded before by default with _loadDefaultModules() depending on the list '_listInternalModules' give by le app.
+     *
+     * TODO gérer le chargement uniquement des modules listés dans _listExternalModules, si disponibles.
+     * TODO prévoir un renforcement de la recherche avec les RID des modules...
      *
      * @return void
      */

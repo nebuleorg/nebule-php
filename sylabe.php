@@ -90,7 +90,7 @@ class Application extends Applications implements applicationInterface
      *
      * @var array
      */
-    protected $_listDefaultModules = array(
+    protected $_listInternalModules = array(
         'ModuleManage',
         'ModuleHelp',
         'ModuleEntities',
