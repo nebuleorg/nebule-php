@@ -14,9 +14,11 @@ class References
 {
     // Les commandes.
     const COMMAND_SWITCH_APPLICATION = 'a';
+    const COMMAND_APPLICATION_BACK = 'c';
     const COMMAND_FLUSH = 'f';
     const COMMAND_RESCUE = 'r';
-    const COMMAND_LOGOUT_ENTITY = 'logout';
+    const COMMAND_AUTH_ENTITY_LOGIN = 'login';
+    const COMMAND_AUTH_ENTITY_LOGOUT = 'logout';
     const COMMAND_SWITCH_TO_ENTITY = 'switch';
     const COMMAND_SELECT_OBJECT = 'obj';
     const COMMAND_SELECT_LINK = 'lnk';

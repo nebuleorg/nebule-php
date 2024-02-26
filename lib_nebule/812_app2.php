@@ -12,33 +12,59 @@ namespace Nebule\Library;
  */
 class App2
 {
-    const APPLICATION_NAME = 'doctec';
-    const APPLICATION_SURNAME = 'nebule/doctec';
+    const APPLICATION_NAME = 'autent';
+    const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240225';
+    const APPLICATION_VERSION = '020240226';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
     const APPLICATION_CODING = 'application/x-httpd-php';
 
+    const DEFAULT_REDIRECT_AUTH_APP = '9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288';
+
     public function display(): void
     {
+        global $nebuleServerEntity;
+
         // Initialisation des logs
         \Nebule\Bootstrap\log_reopen('app2');
         \Nebule\Bootstrap\log_add('Loading', 'info', __FUNCTION__, 'cb4450a2');
 
+        if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK))
+            $argBack = trim(filter_input(INPUT_GET, References::COMMAND_APPLICATION_BACK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        else
+            $argBack = '1';
+        if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK))
+            $argEnt = trim(filter_input(INPUT_GET, References::COMMAND_SELECT_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        else
+            $argEnt = $nebuleServerEntity;
+        $argLogout = filter_has_var(INPUT_GET, References::COMMAND_AUTH_ENTITY_LOGOUT);
+        $args = '?a=' . self::DEFAULT_REDIRECT_AUTH_APP;
+        $args .= '&' . References::COMMAND_APPLICATION_BACK . '=' . $argBack;
+        $args .= '&' . References::COMMAND_SELECT_ENTITY . '=' . $argEnt;
+        $args .= '&mod=auth&view=';
+        if ($argLogout)
+            $args .= References::COMMAND_AUTH_ENTITY_LOGOUT . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT;
+        else
+            $args .= References::COMMAND_AUTH_ENTITY_LOGIN;
+
         echo 'CHK';
         ob_end_clean();
 
-        \Nebule\Bootstrap\bootstrap_htmlHeader();
-        \Nebule\Bootstrap\bootstrap_htmlTop();
-
-        echo '<div class="layout-main">' . "\n";
-        echo ' <div class="layout-content">' . "\n";
-        echo '  <img alt="nebule" id="logo" src="' . \Nebule\Bootstrap\LIB_APPLICATION_LOGO_LIGHT . '"/>' . "\n";
-        echo " </div>\n";
-        echo "</div>\n";
-
-        \Nebule\Bootstrap\bootstrap_htmlBottom();
+        ?>
+<!DOCTYPE html>
+<html lang="">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+        <link rel="icon" type="image/png" href="favicon.png"/>
+        <meta http-equiv="refresh" content="0; url=<?php echo $args; ?>" />
+        <title>Redirect</title>
+    </head>
+    <body>
+        Redirect...
+    </body>
+</html>
+        <?php
     }
 }

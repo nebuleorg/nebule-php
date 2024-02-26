@@ -1,16 +1,9 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Bootstrap;
-
-//use nebule;
-// ------------------------------------------------------------------------------------------
-use Nebule\Application\Upload\App2;
 use Nebule\Library\Cache;
 use Nebule\Library\Crypto;
-use Nebule\Library\Documentation;
 use Nebule\Library\nebule;
-use Nebule\Library\Node;
-use Nebule\Library\References;
 
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
@@ -5048,10 +5041,10 @@ function bootstrap_getCheckFingerprint(): void
  */
 function bootstrap_htmlHeader()
 {
-global $libraryRescueMode;
+    global $libraryRescueMode;
 
-?>
-    <!DOCTYPE html>
+    ?>
+<!DOCTYPE html>
 <html lang="">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
