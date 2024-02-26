@@ -32,14 +32,21 @@ class ModuleNeblog extends Modules
     protected $MODULE_HELP = '::neblog:module:objects:ModuleHelp';
     protected $MODULE_INTERFACE = '3.0';
 
-    protected $MODULE_REGISTERED_VIEWS = array('blog', 'list', 'new', 'modify', 'delete', 'about');
+    protected $MODULE_REGISTERED_VIEWS = array(
+        'blog',
+        'list',
+        'new',
+        'modify',
+        'delete',
+        'about',
+    );
     protected $MODULE_REGISTERED_ICONS = array(
-        '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256',    // 0 : Group.
-        '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 1 : Objet.
-        '819babe3072d50f126a90c982722568a7ce2ddd2b294235f40679f9d220e8a0a.sha2.256',    // 2 : Create.
-        '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 3 : Objet.
-        '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 4 : Objet.
-        '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 5 : Objet.
+        Displays::DEFAULT_ICON_LO,
+        Displays::DEFAULT_ICON_LSTOBJ,
+        Displays::DEFAULT_ICON_ADDOBJ,
+        Displays::DEFAULT_ICON_IMODIFY,
+        Displays::DEFAULT_ICON_LD,
+        Displays::DEFAULT_ICON_HELP,
     );
     protected $MODULE_APP_TITLE_LIST = array();
     protected $MODULE_APP_ICON_LIST = array();
@@ -69,30 +76,30 @@ class ModuleNeblog extends Modules
             case 'selfMenuNeblog':
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[0]) {
                     $hookArray[0]['name'] = '::neblog:module:blog:dispblog';
-                    $hookArray[0]['icon'] = Displays::DEFAULT_ICON_LO;
+                    $hookArray[0]['icon'] = $this->MODULE_REGISTERED_ICONS[0];
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0];
                 }
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[1]) {
-                    $hookArray[0]['name'] = '::neblog:module:blog:listblog';
-                    $hookArray[0]['icon'] = Displays::DEFAULT_ICON_LSTOBJ;
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
+                    $hookArray[1]['name'] = '::neblog:module:list:listblog';
+                    $hookArray[1]['icon'] = $this->MODULE_REGISTERED_ICONS[1];
+                    $hookArray[1]['desc'] = '';
+                    $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1];
                 }
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[2]) {
-                    $hookArray[0]['name'] = '::neblog:module:blog:newblog';
-                    $hookArray[0]['icon'] = Displays::DEFAULT_ICON_ADDOBJ;
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
+                    $hookArray[2]['name'] = '::neblog:module:new:newblog';
+                    $hookArray[2]['icon'] = $this->MODULE_REGISTERED_ICONS[2];
+                    $hookArray[2]['desc'] = '';
+                    $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2];
                 }
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[5]) {
-                    $hookArray[0]['name'] = '::neblog:module:blog:title';
-                    $hookArray[0]['icon'] = Displays::DEFAULT_ICON_HELP;
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
+                    $hookArray[5]['name'] = '::neblog:module:about:title';
+                    $hookArray[5]['icon'] = $this->MODULE_REGISTERED_ICONS[5];
+                    $hookArray[5]['desc'] = '';
+                    $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[5];
                 }
                 break;

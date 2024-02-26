@@ -147,7 +147,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
      *
      * @var array
      */
-    protected $_neededObjectsList = array(
+    protected $_neededObjectsList = array( // FIXME
         self::DEFAULT_LOGO_MENUS,
         self::DEFAULT_ICON_ALPHA_COLOR,
         self::DEFAULT_ICON_LC,
