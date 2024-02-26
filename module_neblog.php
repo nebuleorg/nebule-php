@@ -68,19 +68,32 @@ class ModuleNeblog extends Modules
             case 'selfMenu':
             case 'selfMenuNeblog':
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[0]) {
-                    // Voir les groupes de l'entité.
-                    $hookArray[0]['name'] = '::neblog:module:blog:display';
-                    $hookArray[0]['icon'] = $this->MODULE_LOGO;
+                    $hookArray[0]['name'] = '::neblog:module:blog:dispblog';
+                    $hookArray[0]['icon'] = Displays::DEFAULT_ICON_LO;
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0];
-                } else {
-                    // Voir les groupes des autres entités.
-                    $hookArray[0]['name'] = '::neblog:module:blog:display2';
-                    $hookArray[0]['icon'] = $this->MODULE_LOGO;
+                }
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[1]) {
+                    $hookArray[0]['name'] = '::neblog:module:blog:listblog';
+                    $hookArray[0]['icon'] = Displays::DEFAULT_ICON_LSTOBJ;
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1];
+                }
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[2]) {
+                    $hookArray[0]['name'] = '::neblog:module:blog:newblog';
+                    $hookArray[0]['icon'] = Displays::DEFAULT_ICON_ADDOBJ;
+                    $hookArray[0]['desc'] = '';
+                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2];
+                }
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[5]) {
+                    $hookArray[0]['name'] = '::neblog:module:blog:title';
+                    $hookArray[0]['icon'] = Displays::DEFAULT_ICON_HELP;
+                    $hookArray[0]['desc'] = '';
+                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[5];
                 }
                 break;
         }
