@@ -8,6 +8,7 @@ use Nebule\Library\Actions;
 use Nebule\Library\Applications;
 use Nebule\Library\Displays;
 use Nebule\Library\Node;
+use Nebule\Library\References;
 use Nebule\Library\Traductions;
 
 /*
@@ -65,6 +66,24 @@ class Display extends Displays
      */
     public function _displayFull(): void
     {
+        $mode = '';
+        if (filter_has_var(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_MODE))
+            $mode = trim(filter_input(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_MODE, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        $view = '';
+        if (filter_has_var(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW))
+            $view = trim(filter_input(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK))
+            $argBack = trim(filter_input(INPUT_GET, References::COMMAND_APPLICATION_BACK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        else
+            $argBack = '1';
+        if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK))
+            $argEnt = trim(filter_input(INPUT_GET, References::COMMAND_SELECT_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        else
+            $argEnt = $nebuleServerEntity;
+        $argLogout = filter_has_var(INPUT_GET, References::COMMAND_AUTH_ENTITY_LOGOUT);
+
         $linkApplicationWebsite = Application::APPLICATION_WEBSITE;
         if (strpos(Application::APPLICATION_WEBSITE, '://') === false)
             $linkApplicationWebsite = 'http://' . Application::APPLICATION_WEBSITE;
@@ -79,7 +98,14 @@ class Display extends Displays
             <meta name="description" content="<?php echo Application::APPLICATION_NAME; ?>"/>
             <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
             <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
-            <?php $this->commonCSS(); ?>
+            <?php
+            $this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7fcf1976');
+            $this->commonCSS();
+            $this->displayCSS();
+
+            $this->_metrologyInstance->addLog('Display vbs', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ecbd188e');
+            $this->_displayScripts();
+            ?>
             <style>
                 .layout-content {
                     max-width: 80%;
@@ -147,6 +173,12 @@ class Display extends Displays
         <div class="layout-main">
             <div class="layout-content">
                 <?php
+                $this->_metrologyInstance->addLog('Display checks', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '28feadb6');
+                $this->displaySecurityAlert('small', false);
+
+                $this->_metrologyInstance->addLog('Display content', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '58d043ab');
+                $this->_displayContent();
+
                 $securityCheck = $this->displaySecurityAlert('medium', true);
 
                 // FIXME
@@ -169,6 +201,72 @@ class Display extends Displays
 
             </div>
         </div>
+        </body>
+        </html>
+        <?php
+    }
+
+    public function displayCSS(): void
+    {
+        ?>
+
+        <?php
+
+        // Ajout de la partie CSS du module en cours d'utilisation, si présent.
+        foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
+            if ($module->getCommandName() == $this->_currentDisplayMode) {
+                $module->getCSS();
+            }
+        }
+    }
+
+    protected function _displayScripts(): void
+    {
+        $this->commonScripts();
+
+        // Ajout de la partie script JS du module en cours d'utilisation, si présent.
+        foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
+            if ($module->getCommandName() == $this->_currentDisplayMode) {
+                $module->headerScript();
+                echo "\n";
+            }
+        }
+    }
+
+    private function _displayHeader()
+    {
+        ?>
+
+        <?php
+    }
+
+    private function _displayHeaderCenter()
+    {
+        //...
+    }
+
+    private function _displayMenuApplications()
+    {
+
+    }
+
+    private function _displayInternalMenuApplications()
+    {
+
+    }
+
+    private function _displayContent()
+    {
+        $module = $this->_applicationInstance->getModule('ModuleAuth');
+        $module->displayModule();
+        $this->_displayInlineContentID();
+    }
+
+    // Affiche la fin de page.
+    private function _displayFooter()
+    {
+        ?>
+
         </body>
         </html>
         <?php

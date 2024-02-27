@@ -1724,7 +1724,6 @@ class Action extends Actions
 {
     const COMMAND_ACTION_NEW_BLOG_NAME = 'actnewblogname';
     const COMMAND_ACTION_NEW_BLOG_TITLE = 'actnewblogtitle';
-    // Tout par défaut.
 }
 
 

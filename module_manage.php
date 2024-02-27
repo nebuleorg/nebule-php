@@ -278,7 +278,7 @@ class ModuleManage extends Modules
      */
     private function _extractActionAddModule(): void
     {
-        // Vérifie que la crétion de liens soit authorisé.
+        // Vérifie que la création de liens soit authorisé.
         if ($this->_configuration->getOptionAsBoolean('permitWrite')
             && $this->_configuration->getOptionAsBoolean('permitWriteLink')
             && $this->_configuration->getOptionAsBoolean('permitWriteObject')
@@ -290,7 +290,7 @@ class ModuleManage extends Modules
             $arg_name = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_NOM, FILTER_SANITIZE_STRING));
             $arg_rid = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_RID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            // Ecriture des variables.
+            // Écriture des variables.
             if ($arg_name != '') {
                 $this->_actionAddModuleName = $arg_name;
                 $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module NAME:' . $arg_name, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '8e89341e');

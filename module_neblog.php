@@ -5,6 +5,7 @@ use Nebule\Application\Neblog\Action;
 use Nebule\Application\Neblog\Display;
 use Nebule\Library\Actions;
 use Nebule\Library\Displays;
+use Nebule\Library\Metrology;
 use Nebule\Library\Modules;
 use Nebule\Library\nebule;
 use Nebule\Library\Node;
@@ -346,6 +347,94 @@ class ModuleNeblog extends Modules
         echo '<div>';
         echo '<p>' . $this->_traduction('::neblog:module:about:desc') . '</p>';
         echo '</div>';
+    }
+
+
+    const DEFAULT_COMMAND_ACTION_NOM = 'actaddnam';
+    const DEFAULT_COMMAND_ACTION_RID = 'actaddnam';
+    const COMMAND_ACTION_NEW_BLOG_NAME = 'actnewblogname';
+    const COMMAND_ACTION_NEW_BLOG_TITLE = 'actnewblogtitle';
+    private $_actionAddBlogName = '';
+    private $_actionAddBlogTitle = '';
+    private $_actionChangeBlog = false;
+
+    public function action(): void
+    {
+        $this->_extractActionAddBlog();
+        if ($this->_actionChangeBlog) {
+            $this->_actionAddBlog();
+        }
+    }
+
+    private function _extractActionAddBlog(): void
+    {
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_unlocked
+        ) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add blog', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd59dbd21');
+
+            $arg_name = trim(filter_input(INPUT_POST, self::COMMAND_ACTION_NEW_BLOG_NAME, FILTER_SANITIZE_STRING));
+            $arg_title = trim(filter_input(INPUT_POST, self::COMMAND_ACTION_NEW_BLOG_TITLE, FILTER_SANITIZE_STRING));
+
+            if ($arg_name != '') {
+                $this->_actionAddBlogName = $arg_name;
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add blog name:' . $arg_name, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2ae0f501');
+            }
+            if (Node::checkNID($arg_title)) {
+                $this->_actionAddBlogTitle = $arg_title;
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add blog title:' . $arg_title, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3376510b');
+            }
+
+            if ($this->_actionAddBlogName != ''
+                && $this->_actionAddBlogTitle != ''
+            ) {
+                $this->_actionChangeBlog = true;
+            }
+        }
+    }
+
+    private function _actionAddBlog(): void
+    {
+        global $bootstrapApplicationIID;
+
+        if ($this->_configuration->getOptionAsBoolean('permitWrite')
+            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_unlocked
+        ) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add blog', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '047b0bdc');
+
+            // Crée l'objet de la référence de l'application.
+            /*$instance = new Node($this->_nebuleInstance, $this->_actionAddModuleRID, '', false, false);
+
+            // Création du type mime.
+            $instance->setType($this->_hashModule);
+
+            // Crée le lien de hash.
+            $date = date(DATE_ATOM);
+            $signer = $this->_nebuleInstance->getCurrentEntity();
+            $action = 'l';
+            $source = $this->_actionAddModuleRID;
+            $target = $this->_nebuleInstance->getCryptoInstance()->hash($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
+            $meta = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_HASH);
+            $this->_createLink_DEPRECATED($signer, $date, $action, $source, $target, $meta, false);
+
+            // Crée l'objet du nom.
+            $instance->setName($this->_actionAddModuleName);
+
+            // Crée le lien de référence.
+            $action = 'f';
+            $source = $this->_hashModule;
+            $target = $this->_actionAddModuleRID;
+            $meta = $this->_hashModule;
+            $this->_createLink_DEPRECATED($signer, $date, $action, $source, $target, $meta, false);
+
+            // Crée le lien d'activation dans l'application.
+            $source = $bootstrapApplicationIID;
+            $this->_createLink_DEPRECATED($signer, $date, $action, $source, $target, $meta, false);*/
+        }
     }
 
 
