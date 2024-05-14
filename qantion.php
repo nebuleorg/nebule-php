@@ -40,7 +40,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'qantion';
     const APPLICATION_SURNAME = 'nebule/qantion';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240224';
+    const APPLICATION_VERSION = '020240514';
     const APPLICATION_LICENCE = 'GNU GPL 2019-2024';
     const APPLICATION_WEBSITE = 'www.qantion.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -60,7 +60,7 @@ class Application extends Applications
     const APPLICATION_DEFAULT_PERMIT_PUBLIC_UPLOAD_LINKS = false;
     const APPLICATION_DEFAULT_LOG_UNLOCK_ENTITY = false;
     const APPLICATION_DEFAULT_LOG_LOCK_ENTITY = false;
-    const APPLICATION_DEFAULT_LOAD_MODULES = 'd6105350a2680281474df5438ddcb3979e5575afba6fda7f646886e78394a4fb';
+    const APPLICATION_DEFAULT_LOAD_MODULES = 'd6105350a2680281474df5438ddcb3979e5575afba6fda7f646886e78394a4fb.sha2.256';
 
     /**
      * Paramètre d'activation de la gestion des modules dans l'application et la traduction.

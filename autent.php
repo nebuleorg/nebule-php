@@ -41,7 +41,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240227';
+    const APPLICATION_VERSION = '020240514';
     const APPLICATION_LICENCE = 'GNU GPL 2023-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -61,6 +61,9 @@ class Application extends Applications
  */
 class Display extends Displays
 {
+    const DEFAULT_DISPLAY_MODE = 'autent';
+    const DEFAULT_DISPLAY_VIEW = 'logout';
+
     /**
      * Display full page.
      */
@@ -257,9 +260,20 @@ class Display extends Displays
 
     private function _displayContent()
     {
-        $module = $this->_applicationInstance->getModule('ModuleAuth');
-        $module->displayModule();
-        $this->_displayInlineContentID();
+        $module = $this->_applicationInstance->getModule('ModuleAutent');
+        if ($module != null)
+        {
+            $module->displayModule();
+            $this->_displayInlineContentID();
+        } else {
+            $param = array(
+                'enableDisplayAlone' => true,
+                'enableDisplayIcon' => true,
+                'informationType' => 'error',
+                'displayRatio' => 'short',
+            );
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation('ERROR LOADING MODULE!', $param);
+        }
     }
 
     // Affiche la fin de page.
@@ -433,7 +447,7 @@ class ModuleAutent extends Modules
     protected $MODULE_COMMAND_NAME = 'log';
     protected $MODULE_DEFAULT_VIEW = 'blog';
     protected $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    protected $MODULE_VERSION = '020240225';
+    protected $MODULE_VERSION = '020240514';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
     protected $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -518,6 +532,7 @@ class ModuleAutent extends Modules
      */
     private function _displayInfo(): void
     {
+        $this->_metrologyInstance->addLog('Display desc ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '1f00a8b1');
         $param = array(
             'enableDisplayColor' => true,
             'enableDisplayIcon' => true,
@@ -546,6 +561,7 @@ class ModuleAutent extends Modules
      */
     private function _displayLogin(): void
     {
+        $this->_metrologyInstance->addLog('Display login ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '61a2b0dd');
         $param = array(
             'enableDisplayColor' => true,
             'enableDisplayIcon' => true,
@@ -574,6 +590,7 @@ class ModuleAutent extends Modules
      */
     private function _displayLogout(): void
     {
+        $this->_metrologyInstance->addLog('Display logout ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '833de289');
         $param = array(
             'enableDisplayColor' => true,
             'enableDisplayIcon' => true,

@@ -821,7 +821,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
     /**
-     * Affiche le nécesaire pour le contenu html à remplacer.
+     * Affiche le nécessaire pour le contenu html à remplacer.
      *
      * @return boolean
      */

@@ -102,6 +102,13 @@ abstract class Modules implements moduleInterface
     protected $_traduction;
 
     /**
+     * Instance de la métrologie.
+     *
+     * @var Metrology
+     */
+    protected $_metrologyInstance;
+
+    /**
      * Etat de verrouillage de l'entité en cours.
      *
      * @var boolean
@@ -138,6 +145,7 @@ abstract class Modules implements moduleInterface
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_display = $this->_applicationInstance->getDisplayInstance();
         $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
     }
