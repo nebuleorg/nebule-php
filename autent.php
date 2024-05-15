@@ -47,6 +47,29 @@ class Application extends Applications
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
     const APPLICATION_CODING = 'application/x-httpd-php';
 
+    /**
+     * {@inheritDoc}
+     * @see Applications::_useModules
+     * @var boolean
+     */
+    protected $_useModules = true;
+
+    /**
+     * {@inheritDoc}
+     * @see Applications::_useExternalModules
+     * @var boolean
+     */
+    protected $_useExternalModules = false;
+
+    /**
+     * Liste des noms des modules par défaut.
+     *
+     * @var array
+     */
+    protected $_listInternalModules = array(
+        'ModuleAutent',
+    );
+
     // All default.
 }
 
@@ -261,18 +284,18 @@ class Display extends Displays
     private function _displayContent()
     {
         $module = $this->_applicationInstance->getModule('ModuleAutent');
-        if ($module != null)
-        {
+        if ($module != null) {
             $module->displayModule();
             $this->_displayInlineContentID();
         } else {
+            $this->_metrologyInstance->addLog('Error loading ModuleAutent', Metrology::LOG_LEVEL_ERROR, __METHOD__, '57b017ad');
             $param = array(
                 'enableDisplayAlone' => true,
                 'enableDisplayIcon' => true,
                 'informationType' => 'error',
                 'displayRatio' => 'short',
             );
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation('ERROR LOADING MODULE!', $param);
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation('::::ERROR', $param);
         }
     }
 
