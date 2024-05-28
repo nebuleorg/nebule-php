@@ -92,22 +92,11 @@ class Display extends Displays
      */
     public function _displayFull(): void
     {
-        $mode = '';
-        if (filter_has_var(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_MODE))
-            $mode = trim(filter_input(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_MODE, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-
-        $view = '';
-        if (filter_has_var(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW))
-            $view = trim(filter_input(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-
+        # TODO
         if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK))
             $argBack = trim(filter_input(INPUT_GET, References::COMMAND_APPLICATION_BACK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         else
             $argBack = '1';
-        if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK))
-            $argEnt = trim(filter_input(INPUT_GET, References::COMMAND_SELECT_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        else
-            $argEnt = $nebuleServerEntity;
         $argLogout = filter_has_var(INPUT_GET, References::COMMAND_AUTH_ENTITY_LOGOUT);
 
         $linkApplicationWebsite = Application::APPLICATION_WEBSITE;
