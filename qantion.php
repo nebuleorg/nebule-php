@@ -1935,8 +1935,8 @@ class ModuleHelp extends Modules
     public function initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_display = $this->_applicationInstance->getDisplayInstance();
-        $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
     }
@@ -2056,7 +2056,7 @@ class ModuleHelp extends Modules
     private function _displayHlpFirst(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle($this->_applicationInstance->getTraductionInstance()->getTraduction('::SelectUser'), $this->MODULE_REGISTERED_ICONS[4]);
+        echo $this->_displayInstance->getDisplayTitle($this->_applicationInstance->getTraductionInstance()->getTraduction('::SelectUser'), $this->MODULE_REGISTERED_ICONS[4]);
 
         // Liste des entités déjà affichées.
         $listOkEntities = $this->_nebuleInstance->getSpecialEntities();
@@ -2107,7 +2107,7 @@ class ModuleHelp extends Modules
         unset($link, $instance);
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
         unset($list, $links, $listOkEntities);
     }
@@ -2129,10 +2129,10 @@ class ModuleHelp extends Modules
             'displayRatio' => 'short',
             'icon' => $module->getLogo(),
         );
-        echo $this->_display->getDisplayInformation($module->getTraduction($module->getName()), $param);
+        echo $this->_displayInstance->getDisplayInformation($module->getTraduction($module->getName()), $param);
 
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle($this->_applicationInstance->getTraductionInstance()->getTraduction('::ChangeLanguage'), $this->MODULE_REGISTERED_ICONS[3]);
+        echo $this->_displayInstance->getDisplayTitle($this->_applicationInstance->getTraductionInstance()->getTraduction('::ChangeLanguage'), $this->MODULE_REGISTERED_ICONS[3]);
 
         // Affiche la liste des langues.
         echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('helpLanguages', 'Medium');
@@ -2182,7 +2182,7 @@ class ModuleHelp extends Modules
         $list[2]['param'] = $param;
         $list[3]['information'] = '<a href="' . $linkApplicationWebsite . '" target="_blank">' . Application::APPLICATION_WEBSITE . '</a>';
         $list[3]['param'] = $param;
-        echo $this->_display->getDisplayObjectsList($list, 'Medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'Medium');
 
         ?>
         <div class="text">
@@ -2194,7 +2194,7 @@ class ModuleHelp extends Modules
             </p>
         </div>
         <?php
-        if ($this->_unlocked && $this->_configuration->getOptionUntyped('qantionDisplayOnlineOptions')) {
+        if ($this->_unlocked && $this->_configurationInstance->getOptionUntyped('qantionDisplayOnlineOptions')) {
             ?>
             <div class="text">
                 <p>
@@ -2209,7 +2209,7 @@ class ModuleHelp extends Modules
                     );
                     foreach ($options as $option) {
                         echo $option . ' : ';
-                        var_dump($this->_configuration->getOptionUntyped($option));
+                        var_dump($this->_configurationInstance->getOptionUntyped($option));
                         echo "<br />\n";
                     }
                     ?>
@@ -2428,8 +2428,8 @@ class ModuleAdmin extends Modules
     public function initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_display = $this->_applicationInstance->getDisplayInstance();
-        $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
     }
@@ -2629,14 +2629,14 @@ class ModuleAdmin extends Modules
                         <?php
                         echo $option . ' = ';
                         if ($this->_listOptionsType[$option] == 'b') {
-                            if ($this->_configuration->getOptionUntyped($option))
+                            if ($this->_configurationInstance->getOptionUntyped($option))
                                 echo 'true';
                             else
                                 echo 'false';
                         } elseif ($this->_listOptionsType[$option] == 'i') {
-                            echo $this->_configuration->getOptionUntyped($option);
+                            echo $this->_configurationInstance->getOptionUntyped($option);
                         } elseif ($this->_listOptionsType[$option] == 't') {
-                            echo $this->_configuration->getOptionUntyped($option);
+                            echo $this->_configurationInstance->getOptionUntyped($option);
                         }
                         ?>
 
@@ -3011,8 +3011,8 @@ class ModuleEntities extends Modules
     public function initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_display = $this->_applicationInstance->getDisplayInstance();
-        $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_findDisplayEntity();
         $this->_initTable();
@@ -3088,11 +3088,11 @@ class ModuleEntities extends Modules
                     . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
 
                 // Vérifie que la création soit authorisée.
-                if ($this->_configuration->getOptionAsBoolean('permitWrite')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteEntity')
-                    && ($this->_unlocked || $this->_configuration->getOptionAsBoolean('permitPublicCreateEntity'))
+                if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteEntity')
+                    && ($this->_unlocked || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity'))
                 ) {
                     // Créer une nouvelle entité.
                     $hookArray[6]['name'] = '::sylabe:module:entities:CreateEntity';
@@ -3104,11 +3104,11 @@ class ModuleEntities extends Modules
                 }
 
                 // Vérifie que la synchronisation soit authorisée.
-                if ($this->_configuration->getOptionAsBoolean('permitWrite')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                    && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
-                    && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
+                if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeObject')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink')
                     && $this->_unlocked
                 ) {
                     // Rechercher une entité.
@@ -3242,7 +3242,7 @@ class ModuleEntities extends Modules
      */
     public function displayModule(): void
     {
-        switch ($this->_display->getCurrentDisplayView()) {
+        switch ($this->_displayInstance->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
                 $this->_displayKnownEntitiesList();
                 break;
@@ -3292,7 +3292,7 @@ class ModuleEntities extends Modules
      */
     public function displayModuleInline(): void
     {
-        switch ($this->_display->getCurrentDisplayView()) {
+        switch ($this->_displayInstance->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
                 $this->_display_InlineKnownEntitiesList();
                 break;
@@ -3577,11 +3577,11 @@ class ModuleEntities extends Modules
 
         // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
         if ($arg !== false
-            && $this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink')
             && $this->_unlocked
         ) {
             $this->_synchronizeEntity = true;
@@ -3597,23 +3597,23 @@ class ModuleEntities extends Modules
      */
     private function _actionSynchronizeEntity(): void
     {
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink')
             && $this->_unlocked
             && $this->_synchronizeEntity
         ) {
             // Synchronize l'entité.
-            echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNLNK')
-                . $this->_display->displayInlineObjectColorIconName($this->_displayEntityInstance);
+            echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNLNK')
+                . $this->_displayInstance->displayInlineObjectColorIconName($this->_displayEntityInstance);
             echo ' &nbsp;&nbsp;';
-            echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNOBJ')
-                . $this->_display->displayInlineObjectColorIconName($this->_displayEntityInstance);
+            echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNOBJ')
+                . $this->_displayInstance->displayInlineObjectColorIconName($this->_displayEntityInstance);
             echo ' &nbsp;&nbsp;';
-            echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNENT')
-                . $this->_display->displayInlineObjectColorIconName($this->_displayEntityInstance);
+            echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNENT')
+                . $this->_displayInstance->displayInlineObjectColorIconName($this->_displayEntityInstance);
 
             // A faire...
 
@@ -3654,11 +3654,11 @@ class ModuleEntities extends Modules
 
     private function _actionSearchEntity(): void
     {
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink')
             && $this->_unlocked
             && ($this->_searchEntityID != ''
                 || $this->_searchEntityURL != ''
@@ -3671,13 +3671,13 @@ class ModuleEntities extends Modules
                 // Si recherche sur ID et URL.
                 echo $this->_applicationInstance->getTraductionInstance()->getTraduction('Recherche')
                     . ' ' . $this->_searchEntityURL
-                    . ' ' . $this->_display->displayInlineObjectColorIconName($this->_searchEntityID);
+                    . ' ' . $this->_displayInstance->displayInlineObjectColorIconName($this->_searchEntityID);
             } elseif ($this->_searchEntityID != ''
                 && $this->_searchEntityURL == ''
             ) {
                 // Sinon recherche sur ID.
                 echo $this->_applicationInstance->getTraductionInstance()->getTraduction('Recherche')
-                    . ' ' . $this->_display->displayInlineObjectColorIconName($this->_searchEntityID);
+                    . ' ' . $this->_displayInstance->displayInlineObjectColorIconName($this->_searchEntityID);
             } elseif ($this->_searchEntityID == ''
                 && $this->_searchEntityURL != ''
             ) {
@@ -3749,7 +3749,7 @@ class ModuleEntities extends Modules
             'displaySize' => 'large',
             'displayRatio' => 'short',
         );
-        echo $this->_display->getDisplayObject($this->_displayEntityInstance, $param);
+        echo $this->_displayInstance->getDisplayObject($this->_displayEntityInstance, $param);
 
         echo '</div>' . "\n";
         echo '</div>' . "\n";
@@ -3782,7 +3782,7 @@ class ModuleEntities extends Modules
             'displaySize' => 'medium',
             'displayRatio' => 'short',
         );
-        echo $this->_display->getDisplayObject($this->_displayEntityInstance, $param);
+        echo $this->_displayInstance->getDisplayObject($this->_displayEntityInstance, $param);
 
         echo '</div>' . "\n";
         echo '</div>' . "\n";
@@ -3792,9 +3792,9 @@ class ModuleEntities extends Modules
                 && $this->_unlocked
             )
         ) {
-            echo $this->_display->getDisplayTitle('::EntityUnlocked', $this->MODULE_REGISTERED_ICONS[9]);
+            echo $this->_displayInstance->getDisplayTitle('::EntityUnlocked', $this->MODULE_REGISTERED_ICONS[9]);
         } else {
-            echo $this->_display->getDisplayTitle('::EntityLocked', $this->MODULE_REGISTERED_ICONS[11]);
+            echo $this->_displayInstance->getDisplayTitle('::EntityLocked', $this->MODULE_REGISTERED_ICONS[11]);
         }
 
         // Extrait les états de tests en warning ou en erreur.
@@ -3831,7 +3831,7 @@ class ModuleEntities extends Modules
                     $list[$i]['param']['informationType'] = 'warn';
                 }
             }
-            echo $this->_display->getDisplayObjectsList($list, 'small');
+            echo $this->_displayInstance->getDisplayObjectsList($list, 'small');
         } else {
             $param = array(
                 'enableDisplayIcon' => true,
@@ -3840,7 +3840,7 @@ class ModuleEntities extends Modules
                 'displaySize' => 'small',
                 'displayRatio' => 'short',
             );
-            echo $this->_display->getDisplayInformation('::::SecurityChecks', $param);
+            echo $this->_displayInstance->getDisplayInformation('::::SecurityChecks', $param);
         }
 
         // Affiche le champs de mot de passe.
@@ -3858,7 +3858,7 @@ class ModuleEntities extends Modules
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2]
                 . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
                 . '&' . nebule::COMMAND_FLUSH;
-            echo $this->_display->getDisplayMenuList($list, 'Medium');
+            echo $this->_displayInstance->getDisplayMenuList($list, 'Medium');
         } else {
             if ($idCheck != 'Error') {
                 echo '<div class="layoutAloneItem">' . "\n";
@@ -3866,7 +3866,7 @@ class ModuleEntities extends Modules
                 $param['displaySize'] = 'small';
                 $param['displayRatio'] = 'long';
                 $param['objectIcon'] = $this->MODULE_REGISTERED_ICONS[9];
-                echo $this->_display->getDisplayObject($this->_nebuleInstance->getCurrentEntityPrivateKeyInstance(), $param);
+                echo $this->_displayInstance->getDisplayObject($this->_nebuleInstance->getCurrentEntityPrivateKeyInstance(), $param);
                 echo '</div>' . "\n";
                 echo '</div>' . "\n";
 
@@ -3911,7 +3911,7 @@ class ModuleEntities extends Modules
                     'displaySize' => 'medium',
                     'displayRatio' => 'short',
                 );
-                echo $this->_display->getDisplayInformation(':::err_NotPermit', $param);
+                echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
             }
         }
     }
@@ -3924,11 +3924,11 @@ class ModuleEntities extends Modules
     {
         // Entité en cours.
         if ($this->_nebuleInstance->getCurrentEntity() != $this->_applicationInstance->getCurrentEntityID()) {
-            $this->_display->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
+            $this->_displayInstance->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
         }
 
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:ObjectTitle1', $this->MODULE_REGISTERED_ICONS[7], true);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:ObjectTitle1', $this->MODULE_REGISTERED_ICONS[7], true);
 
         // Extrait des propriétés de l'objet.
         $entity = $this->_displayEntity;
@@ -3942,13 +3942,13 @@ class ModuleEntities extends Modules
                     $this->_applicationInstance->getTraductionInstance()->echoTraduction(
                         '::sylabe:module:entities:DisplayEntityMessages',
                         '',
-                        $this->_display->convertInlineObjectColorIconName($instance));
+                        $this->_displayInstance->convertInlineObjectColorIconName($instance));
                     $dispWarn = false;
                 } else {
                     $this->_applicationInstance->getTraductionInstance()->echoTraduction(
                         '::sylabe:module:entities:DisplayEntityPublicMessages',
                         '',
-                        $this->_display->convertInlineObjectColorIconName($instance));
+                        $this->_displayInstance->convertInlineObjectColorIconName($instance));
                     $dispWarn = true;
                 }
                 ?>
@@ -3958,7 +3958,7 @@ class ModuleEntities extends Modules
         <?php
         // Si besoin, affiche le message d'information.
         if ($dispWarn) {
-            $this->_display->displayMessageInformation(
+            $this->_displayInstance->displayMessageInformation(
                 $this->_traduction('::sylabe:module:entities:DisplayEntityPublicMessagesWarning'));
         }
         unset($dispWarn);
@@ -4035,11 +4035,11 @@ class ModuleEntities extends Modules
                         ?>
 
                         <div class="sylabeModuleEntityActionDivIcon">
-                            <?php $this->_display->displayUpdateImage(Display::DEFAULT_ICON_LC); ?>
+                            <?php $this->_displayInstance->displayUpdateImage(Display::DEFAULT_ICON_LC); ?>
                         </div>
                         <div>
                             <p class="sylabeModuleEntityActionDate">
-                                <?php $this->_display->displayDate($date);
+                                <?php $this->_displayInstance->displayDate($date);
                                 echo "\n"; ?>
                             </p>
                             <p class="sylabeModuleEntityActionTitle">
@@ -4047,7 +4047,7 @@ class ModuleEntities extends Modules
                             </p>
                             <p class="sylabeModuleEntityActionFromTo">
                                 <?php $this->_echoTraduction('::sylabe:module:entities:From'); ?>
-                                &nbsp;<?php $this->_display->displayInlineObjectColorIconName($signer); ?><br/>
+                                &nbsp;<?php $this->_displayInstance->displayInlineObjectColorIconName($signer); ?><br/>
                             </p>
                         </div>
                         <?php
@@ -4061,11 +4061,11 @@ class ModuleEntities extends Modules
                         ?>
 
                         <div class="sylabeModuleEntityActionDivIcon">
-                            <?php $this->_display->displayUpdateImage(Display::DEFAULT_ICON_LK); ?>
+                            <?php $this->_displayInstance->displayUpdateImage(Display::DEFAULT_ICON_LK); ?>
                         </div>
                         <div>
                             <p class="sylabeModuleEntityActionDate">
-                                <?php $this->_display->displayDate($date);
+                                <?php $this->_displayInstance->displayDate($date);
                                 echo "\n"; ?>
                             </p>
                             <p class="sylabeModuleEntityActionTitle">
@@ -4073,7 +4073,7 @@ class ModuleEntities extends Modules
                             </p>
                             <p class="sylabeModuleEntityActionFromTo">
                                 <?php $this->_echoTraduction('::sylabe:module:entities:From'); ?>
-                                &nbsp;<?php $this->_display->displayInlineObjectColorIconName($signer); ?><br/>
+                                &nbsp;<?php $this->_displayInstance->displayInlineObjectColorIconName($signer); ?><br/>
                             </p>
                         </div>
                         <?php
@@ -4087,14 +4087,14 @@ class ModuleEntities extends Modules
                         ?>
 
                         <div class="sylabeModuleEntityActionDivIcon">
-                            <?php $this->_display->displayObjectColorIcon(
+                            <?php $this->_displayInstance->displayObjectColorIcon(
                                 $objectInstance, Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $link->getParsed()['bl/rl/nid2']); ?>
                         </div>
                         <div>
                             <p class="sylabeModuleEntityActionDate">
-                                <?php $this->_display->displayDate($date);
+                                <?php $this->_displayInstance->displayDate($date);
                                 echo "\n"; ?>
                             </p>
                             <p class="sylabeModuleEntityActionTitle">
@@ -4105,7 +4105,7 @@ class ModuleEntities extends Modules
                             </p>
                             <p class="sylabeModuleEntityActionFromTo">
                                 <?php $this->_echoTraduction('::sylabe:module:entities:From'); ?>
-                                &nbsp;<?php $this->_display->displayInlineObjectColorIconName($signer); ?><br/>
+                                &nbsp;<?php $this->_displayInstance->displayInlineObjectColorIconName($signer); ?><br/>
                             </p>
                         </div>
                         <?php
@@ -4133,11 +4133,11 @@ class ModuleEntities extends Modules
     {
         // Entité en cours.
         if ($this->_nebuleInstance->getCurrentEntity() != $this->_applicationInstance->getCurrentEntityID()) {
-            $this->_display->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
+            $this->_displayInstance->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
         }
 
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:ObjectTitle2', $this->MODULE_REGISTERED_ICONS[8], true);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:ObjectTitle2', $this->MODULE_REGISTERED_ICONS[8], true);
 
         // Extrait des propriétés de l'objet.
         $id = $this->_applicationInstance->getCurrentObjectInstance()->getID();
@@ -4156,7 +4156,7 @@ class ModuleEntities extends Modules
             $this->_applicationInstance->getTraductionInstance()->echoTraduction(
                 '::sylabe:module:entities:DisplayEntityPublicMessages',
                 '',
-                $this->_display->convertInlineObjectColorIconName($entity));
+                $this->_displayInstance->convertInlineObjectColorIconName($entity));
             $dispWarn = true;
         } // Sinon, affiche les messages de l'entité courante.
         else {
@@ -4167,12 +4167,12 @@ class ModuleEntities extends Modules
                 $this->_applicationInstance->getTraductionInstance()->echoTraduction(
                     '::sylabe:module:entities:DisplayEntityMessages',
                     '',
-                    $this->_display->convertInlineObjectColorIconName($entity));
+                    $this->_displayInstance->convertInlineObjectColorIconName($entity));
             } else {
                 $this->_applicationInstance->getTraductionInstance()->echoTraduction(
                     '::sylabe:module:entities:DisplayEntityPublicMessages',
                     '',
-                    $this->_display->convertInlineObjectColorIconName($entity));
+                    $this->_displayInstance->convertInlineObjectColorIconName($entity));
                 $dispWarn = true;
             }
         }
@@ -4183,7 +4183,7 @@ class ModuleEntities extends Modules
         <?php
         // Si besoin, affiche le message d'information.
         if ($dispWarn) {
-            $this->_display->displayMessageInformation(
+            $this->_displayInstance->displayMessageInformation(
                 $this->_traduction('::sylabe:module:entities:DisplayEntityPublicMessagesWarning'));
         }
         unset($dispWarn);
@@ -4206,11 +4206,11 @@ class ModuleEntities extends Modules
 
                 <div class="sylabeModuleEntityActionTextList<?php echo $bg; ?>">
                     <div class="sylabeModuleEntityActionDivIcon">
-                        <?php $this->_display->displayObjectColorIcon($objectInstance); ?>
+                        <?php $this->_displayInstance->displayObjectColorIcon($objectInstance); ?>
                     </div>
                     <div>
                         <p class="sylabeModuleEntityActionDate">
-                            <?php $this->_display->displayDate($date);
+                            <?php $this->_displayInstance->displayDate($date);
                             echo "\n"; ?>
                         </p>
                         <p class="sylabeModuleEntityActionTitle">
@@ -4221,7 +4221,7 @@ class ModuleEntities extends Modules
                         </p>
                         <p class="sylabeModuleEntityActionFromTo">
                             <?php $this->_echoTraduction('::sylabe:module:entities:To'); ?>
-                            &nbsp;<?php $this->_display->displayInlineObjectColorIconName($source); ?><br/>
+                            &nbsp;<?php $this->_displayInstance->displayInlineObjectColorIconName($source); ?><br/>
                         </p>
                     </div>
                 </div>
@@ -4245,9 +4245,9 @@ class ModuleEntities extends Modules
      */
     private function _displayMyEntitiesList(): void
     {
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:MyEntities', $this->MODULE_REGISTERED_ICONS[4], true);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:MyEntities', $this->MODULE_REGISTERED_ICONS[4], true);
 
-        $this->_display->registerInlineContentID('myentities');
+        $this->_displayInstance->registerInlineContentID('myentities');
     }
 
     /**
@@ -4291,11 +4291,11 @@ class ModuleEntities extends Modules
 
         // Affichage
         if ($this->_unlocked) {
-            echo $this->_display->getDisplayHookMenuList('::sylabe:module:entities:DisplayMyEntities');
+            echo $this->_displayInstance->getDisplayHookMenuList('::sylabe:module:entities:DisplayMyEntities');
         }
 
         // Affiche les entités.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
         unset($list);
     }
 
@@ -4307,9 +4307,9 @@ class ModuleEntities extends Modules
      */
     private function _displayKnownEntitiesList(): void
     {
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:KnownEntities', $this->MODULE_REGISTERED_ICONS[4], true);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:KnownEntities', $this->MODULE_REGISTERED_ICONS[4], true);
 
-        $this->_display->registerInlineContentID('knownentities');
+        $this->_displayInstance->registerInlineContentID('knownentities');
     }
 
     private function _display_InlineKnownEntitiesList(): void
@@ -4363,7 +4363,7 @@ class ModuleEntities extends Modules
         unset($link, $instance);
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
         unset($list, $links, $listOkEntities);
     }
@@ -4376,9 +4376,9 @@ class ModuleEntities extends Modules
      */
     private function _displayKnownByEntitiesList(): void
     {
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:KnownByEntities', $this->MODULE_REGISTERED_ICONS[4], true);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:KnownByEntities', $this->MODULE_REGISTERED_ICONS[4], true);
 
-        $this->_display->registerInlineContentID('knownentities');
+        $this->_displayInstance->registerInlineContentID('knownentities');
     }
 
     private function _display_InlineKnownByEntitiesList(): void
@@ -4432,7 +4432,7 @@ class ModuleEntities extends Modules
         unset($link, $instance);
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
         unset($list, $links, $listOkEntities);
     }
@@ -4445,9 +4445,9 @@ class ModuleEntities extends Modules
      */
     private function _displayUnknownEntitiesList(): void
     {
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:UnknownEntities', $this->MODULE_REGISTERED_ICONS[4], true);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:UnknownEntities', $this->MODULE_REGISTERED_ICONS[4], true);
 
-        $this->_display->registerInlineContentID('unknownentities');
+        $this->_displayInstance->registerInlineContentID('unknownentities');
     }
 
     private function _display_InlineUnknownEntitiesList(): void
@@ -4533,12 +4533,12 @@ class ModuleEntities extends Modules
             unset($link, $instance, $id);
             // Affichage
             if (sizeof($list) != 0) {
-                echo $this->_display->getDisplayObjectsList($list, 'medium');
+                echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
             }
             unset($list);
         } else {
             // Pas d'entité.
-            $this->_display->displayMessageInformation(
+            $this->_displayInstance->displayMessageInformation(
                 '::sylabe:module:entities:Display:NoEntity');
         }
         unset($links, $listOkEntities);
@@ -4552,9 +4552,9 @@ class ModuleEntities extends Modules
      */
     private function _displaySpecialEntitiesList(): void
     {
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:SpecialEntities', $this->MODULE_REGISTERED_ICONS[4]);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:SpecialEntities', $this->MODULE_REGISTERED_ICONS[4]);
 
-        $this->_display->registerInlineContentID('specialentities');
+        $this->_displayInstance->registerInlineContentID('specialentities');
     }
 
     private function _display_InlineSpecialEntitiesList(): void
@@ -4610,7 +4610,7 @@ class ModuleEntities extends Modules
         unset($entities, $masters, $entity);
 
         // Affiche les entités.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
         unset($list);
     }
 
@@ -4688,20 +4688,20 @@ class ModuleEntities extends Modules
             }
 
             // Affiche le message et les objets créés.
-            echo $this->_display->getDisplayObjectsList($list, 'medium');
+            echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
             unset($list);
         }
 
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:CreateEntity', $this->MODULE_REGISTERED_ICONS[5], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:CreateEntity', $this->MODULE_REGISTERED_ICONS[5], false);
 
         // Vérifie que la création soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteEntity')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteEntity')
             && ($this->_unlocked
-                || $this->_configuration->getOptionAsBoolean('permitPublicCreateEntity')
+                || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity')
             )
         ) {
             ?>
@@ -4817,7 +4817,7 @@ class ModuleEntities extends Modules
                                 <select
                                         name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_ALGORITHM; ?>"
                                         class="sylabeModuleEntityCreatePropertyEntry">
-                                    <option value="<?php echo $this->_configuration->getOptionAsString('cryptoAsymmetricAlgorithm'); ?>"
+                                    <option value="<?php echo $this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm'); ?>"
                                             selected>
                                         <?php echo $this->_nebuleInstance->getConfigurationInstance()->getOptionAsString('cryptoAsymmetricAlgorithm'); ?>
 
@@ -4871,7 +4871,7 @@ class ModuleEntities extends Modules
             </div>
             <?php
         } else {
-            $this->_display->displayMessageWarning('::sylabe:module:entities:CreateEntityNotAllowed');
+            $this->_displayInstance->displayMessageWarning('::sylabe:module:entities:CreateEntityNotAllowed');
         }
     }
 
@@ -4882,18 +4882,18 @@ class ModuleEntities extends Modules
     private function _displayEntitySearch(): void
     {
         // Affiche la création d'une entité.
-        $this->_display->displayDivTextTitleH2(
+        $this->_displayInstance->displayDivTextTitleH2(
             Display::DEFAULT_ICON_LF,
             '::sylabe:module:entities:SearchEntity',
             '::sylabe:module:entities:SearchEntityDesc',
             '::sylabe:module:entities:SearchEntityHelp');
 
         // Vérifie que la création soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
-            && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink')
             && $this->_unlocked
         ) {
             ?>
@@ -4945,9 +4945,9 @@ class ModuleEntities extends Modules
                 </p>
             </div>
             <?php
-            $this->_display->displayMessageInformation('::sylabe:module:entities:SearchEntityLongTime');
+            $this->_displayInstance->displayMessageInformation('::sylabe:module:entities:SearchEntityLongTime');
         } else {
-            $this->_display->displayMessageWarning('::sylabe:module:entities:SearchEntityNotAllowed');
+            $this->_displayInstance->displayMessageWarning('::sylabe:module:entities:SearchEntityNotAllowed');
         }
     }
 
@@ -4962,10 +4962,10 @@ class ModuleEntities extends Modules
      */
     private function _displayEntityProp(): void
     {
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:Desc:AttribsTitle', $this->MODULE_REGISTERED_ICONS[3]);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:Desc:AttribsTitle', $this->MODULE_REGISTERED_ICONS[3]);
 
         // Affiche les propriétés.
-        $this->_display->registerInlineContentID('properties');
+        $this->_displayInstance->registerInlineContentID('properties');
     }
 
     private function _display_InlineEntityProp(): void
@@ -4988,7 +4988,7 @@ class ModuleEntities extends Modules
         if ($update != $this->_displayEntity) {
             // A affiner...
             //
-            $this->_display->displayMessageWarning(
+            $this->_displayInstance->displayMessageWarning(
                 $this->_traduction('::sylabe:module:objects:warning:ObjectHaveUpdate'));
         }
         unset($update);
@@ -5114,7 +5114,7 @@ class ModuleEntities extends Modules
                                 ?>
 
                                 <div class="sylabeModuleEntityDescIcon">
-                                    <?php $this->_display->displayHypertextLink($this->_display->convertInlineIconFace('DEFAULT_ICON_LL'),
+                                    <?php $this->_displayInstance->displayHypertextLink($this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_LL'),
                                         '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleLinks')->getCommandName()
                                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . Display::DEFAULT_LINK_COMMAND
                                         . '&' . ModuleLinks::DEFAULT_LINK_COMMAND . '=' . $link->getFullLink()); ?>
@@ -5124,8 +5124,8 @@ class ModuleEntities extends Modules
                             }
                             ?>
 
-                            <div class="sylabeModuleEntityDescDate"><?php $this->_display->displayDate($link->getDate()); ?></div>
-                            <div class="sylabeModuleEntityDescSigner"><?php $this->_display->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
+                            <div class="sylabeModuleEntityDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
+                            <div class="sylabeModuleEntityDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleEntityDescContent">
                                 <span class="sylabeModuleEntityDescAttrib"><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction($attribName); ?></span>
                                 =
@@ -5144,7 +5144,7 @@ class ModuleEntities extends Modules
                                 ?>
 
                                 <div class="sylabeModuleEntityDescIcon">
-                                    <?php $this->_display->displayHypertextLink($this->_display->convertInlineIconFace('DEFAULT_ICON_LL'),
+                                    <?php $this->_displayInstance->displayHypertextLink($this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_LL'),
                                         '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleLinks')->getCommandName()
                                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . Display::DEFAULT_LINK_COMMAND
                                         . '&' . ModuleLinks::DEFAULT_LINK_COMMAND . '=' . $link->getFullLink()); ?>
@@ -5154,11 +5154,11 @@ class ModuleEntities extends Modules
                             }
                             ?>
 
-                            <div class="sylabeModuleEntityDescDate"><?php $this->_display->displayDate($link->getDate()); ?></div>
-                            <div class="sylabeModuleEntityDescSigner"><?php $this->_display->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
+                            <div class="sylabeModuleEntityDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
+                            <div class="sylabeModuleEntityDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleEntityDescContent">
 		<span class="sylabeModuleEntityDescEmotion">
-			<?php $this->_display->displayReferenceImage($emotionsIcons[$emotion], $emotionsList[$hashValue]); ?>
+			<?php $this->_displayInstance->displayReferenceImage($emotionsIcons[$emotion], $emotionsList[$hashValue]); ?>
             <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction($emotionsList[$hashValue]); ?>
 		</span>
                             </div>
@@ -5175,20 +5175,20 @@ class ModuleEntities extends Modules
                                 ?>
 
                                 <div class="sylabeModuleEntityDescIcon">
-                                    <?php $this->_display->displayHypertextLink($this->_display->convertInlineIconFace('DEFAULT_ICON_LL'),
+                                    <?php $this->_displayInstance->displayHypertextLink($this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_LL'),
                                         '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleLinks')->getCommandName()
                                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . Display::DEFAULT_LINK_COMMAND
                                         . '&' . ModuleLinks::DEFAULT_LINK_COMMAND . '=' . $link->getFullLink()); ?>
                                     &nbsp;
-                                    <?php $this->_display->displayInlineIconFace('DEFAULT_ICON_IWARN'); ?>
+                                    <?php $this->_displayInstance->displayInlineIconFace('DEFAULT_ICON_IWARN'); ?>
 
                                 </div>
                                 <?php
                             }
                             ?>
 
-                            <div class="sylabeModuleEntityDescDate"><?php $this->_display->displayDate($link->getDate()); ?></div>
-                            <div class="sylabeModuleEntityDescSigner"><?php $this->_display->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
+                            <div class="sylabeModuleEntityDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
+                            <div class="sylabeModuleEntityDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleEntityDescContent">
                                 <span class="sylabeModuleEntityDescAttrib"><?php $this->_echoTraduction('::sylabe:module:entities:AttribNotDisplayable'); ?></span>
                             </div>
@@ -5216,11 +5216,11 @@ class ModuleEntities extends Modules
                 && $nextLinkSigne != ''
             ) {
                 $url = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_display->getCurrentDisplayView()
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
                     . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID()
                     . '&' . Display::DEFAULT_INLINE_COMMAND . '&' . Display::DEFAULT_INLINE_CONTENT_COMMAND . '=properties'
                     . '&' . Displays::DEFAULT_NEXT_COMMAND . '=' . $nextLinkSigne;
-                $this->_display->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTraductionInstance()->getTraduction('::seeMore'));
+                $this->_displayInstance->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTraductionInstance()->getTraduction('::seeMore'));
             }
             unset($links);
         }
@@ -5545,8 +5545,8 @@ class ModuleGroups extends Modules
     public function initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_display = $this->_applicationInstance->getDisplayInstance();
-        $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
         $this->_hashGroup = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
@@ -5874,7 +5874,7 @@ class ModuleGroups extends Modules
                 );
 
                 // Affiche la liste de l'objet et du message.
-                echo $this->_display->getDisplayObjectsList($list, 'medium');
+                echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
                 unset($list);
             } else {
                 $param = array(
@@ -5883,12 +5883,12 @@ class ModuleGroups extends Modules
                     'displayRatio' => 'long',
                     'informationType' => 'error',
                 );
-                echo $this->_display->getDisplayInformation('::sylabe:module:groups:display:notOKCreateGroup', $param);
+                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:groups:display:notOKCreateGroup', $param);
             }
         }
 
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:MyGroups', $this->MODULE_LOGO);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:groups:display:MyGroups', $this->MODULE_LOGO);
 
         // Affiche le contenu.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('groups');
@@ -5944,7 +5944,7 @@ class ModuleGroups extends Modules
         unset($link, $instance);
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
         unset($list, $links, $listOkGroups);
     }
@@ -5958,7 +5958,7 @@ class ModuleGroups extends Modules
     private function _displayAllGroups(): void
     {
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:otherGroups', $this->MODULE_LOGO);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:groups:display:otherGroups', $this->MODULE_LOGO);
 
         // Affiche le contenu.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('allgroups');
@@ -6019,7 +6019,7 @@ class ModuleGroups extends Modules
         unset($link, $instance);
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
         unset($list, $links, $listOkGroups);
 
@@ -6151,13 +6151,13 @@ class ModuleGroups extends Modules
     private function _displayCreateGroup(): void
     {
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:createGroup', $this->MODULE_REGISTERED_ICONS[1]);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:groups:display:createGroup', $this->MODULE_REGISTERED_ICONS[1]);
 
         // Si autorisé à créer un groupe.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
             && $this->_unlocked
         ) {
             ?>
@@ -6254,7 +6254,7 @@ class ModuleGroups extends Modules
             'enableDisplayTypeHook' => false,
         );
         $param['objectRefs'] = $instance->getPropertySigners(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
-        echo $this->_display->getDisplayObject($instance, $param);
+        echo $this->_displayInstance->getDisplayObject($instance, $param);
         unset($instance);
 
         // Affichage des membres du groupe.
@@ -6291,9 +6291,9 @@ class ModuleGroups extends Modules
 
                         // Supprimer le groupe.
                         if ($this->_unlocked
-                            && $this->_configuration->getOptionAsBoolean('permitWrite')
-                            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
+                            && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                            && $this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
                         ) {
                             $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                             $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
@@ -6344,9 +6344,9 @@ class ModuleGroups extends Modules
 
                             // Supprimer le groupe.
                             if ($this->_unlocked
-                                && $this->_configuration->getOptionAsBoolean('permitWrite')
-                                && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                                && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
+                                && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                                && $this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
                             ) {
                                 $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                                 $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
@@ -6408,9 +6408,9 @@ class ModuleGroups extends Modules
 
                         // Supprimer le groupe.
                         if ($this->_unlocked
-                            && $this->_configuration->getOptionAsBoolean('permitWrite')
-                            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
+                            && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                            && $this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
                         ) {
                             $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                             $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
@@ -6601,8 +6601,8 @@ class ModuleObjects extends Modules
     public function initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_display = $this->_applicationInstance->getDisplayInstance();
-        $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
     }
@@ -6642,8 +6642,8 @@ class ModuleObjects extends Modules
                 // Recherche si l'objet est marqué.
                 $marked = $this->_applicationInstance->getMarkObject($id);
                 $markList = $this->_applicationInstance->getMarkObjectList();
-                $mode = $this->_display->getCurrentDisplayMode();
-                $view = $this->_display->getCurrentDisplayView();
+                $mode = $this->_displayInstance->getCurrentDisplayMode();
+                $view = $this->_displayInstance->getCurrentDisplayView();
 
                 if ($mode != $this->MODULE_COMMAND_NAME
                     || ($mode == $this->MODULE_COMMAND_NAME
@@ -6704,9 +6704,9 @@ class ModuleObjects extends Modules
 
                     // Si l'entité est déverrouillée.
                     if ($this->_unlocked
-                        && $this->_configuration->getOptionAsBoolean('permitWrite')
-                        && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                        && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
                     ) {
                         // Supprimer l'objet.
                         $hookArray[5]['name'] = '::sylabe:module:objects:ObjectDelete';
@@ -6906,9 +6906,9 @@ class ModuleObjects extends Modules
             case '::sylabe:module:objet:ProtectionButtons' :
                 // Si l'entité est déverrouillée.
                 if ($this->_unlocked
-                    && $this->_configuration->getOptionAsBoolean('permitWrite')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
                     && $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected()
                 ) {
                     $hookArray[0]['name'] = '::sylabe:module:objects:ShareProtection';
@@ -7037,7 +7037,7 @@ class ModuleObjects extends Modules
             'enableDisplaySelfHook' => true,
             'enableDisplayTypeHook' => false,
         );
-        echo $this->_display->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        echo $this->_displayInstance->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
     }
 
 
@@ -7066,7 +7066,7 @@ class ModuleObjects extends Modules
             'enableDisplaySelfHook' => true,
             'enableDisplayTypeHook' => false,
         );
-        echo $this->_display->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        echo $this->_displayInstance->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
 
         // Affiche les propriétés.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('objprop');
@@ -7357,7 +7357,7 @@ class ModuleObjects extends Modules
             'enableDisplaySelfHook' => true,
             'enableDisplayTypeHook' => false,
         );
-        echo $this->_display->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        echo $this->_displayInstance->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
 
         // Affiche la navigation.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('objnav');
@@ -7412,14 +7412,14 @@ class ModuleObjects extends Modules
                 'enableDisplayJS' => true,
                 //'selfHookName' => 'selfMenuObject',
             );
-            echo $this->_display->getDisplayObjectsList($list, 'long');
+            echo $this->_displayInstance->getDisplayObjectsList($list, 'long');
             unset($list);
 
             // Affiche en ligne les entités pour qui c'est partagé.
             $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('objectprotectionshared');
 
             // affichage des boutons.
-            echo $this->_display->getDisplayHookMenuList('::sylabe:module:objet:ProtectionButtons', 'medium');
+            echo $this->_displayInstance->getDisplayHookMenuList('::sylabe:module:objet:ProtectionButtons', 'medium');
         } else {
             $list = array();
 
@@ -7434,9 +7434,9 @@ class ModuleObjects extends Modules
 
             // N'affiche un message que si la modification est possible.
             if ($this->_unlocked
-                && $this->_configuration->getOptionAsBoolean('permitWrite')
-                && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             ) {
                 // Vérifie la présence de l'objet.
                 if ($object->checkPresent()
@@ -7498,9 +7498,9 @@ class ModuleObjects extends Modules
             // Ajoute l'action de protection.
             if ($object->checkPresent()
                 && $this->_unlocked
-                && $this->_configuration->getOptionAsBoolean('permitWrite')
-                && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
                 && $this->_applicationInstance->getCurrentObjectID() != $this->_nebuleInstance->getCurrentEntity()
             ) {
                 $list[2]['param']['selfHookList'][0]['name'] = '::ProtectObject';
@@ -7513,7 +7513,7 @@ class ModuleObjects extends Modules
             }
 
             // Affichage.
-            echo $this->_display->getDisplayObjectsList($list, 'medium');
+            echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
             unset($list);
         }
     }
@@ -7633,9 +7633,9 @@ class ModuleObjects extends Modules
 
                     // Ajout l'action de déprotection ou de suppression de partage de protection.
                     if ($this->_unlocked
-                        && $this->_configuration->getOptionAsBoolean('permitWrite')
-                        && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                        && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
                     ) {
                         if ($entity == $this->_nebuleInstance->getCurrentEntity()) {
                             // Déprotéger l'objet.
@@ -7647,7 +7647,7 @@ class ModuleObjects extends Modules
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                                 . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         } elseif (!$this->_nebuleInstance->getIsRecoveryEntity($entity)
-                            || $this->_configuration->getOptionAsBoolean('permitRecoveryRemoveEntity')
+                            || $this->_configurationInstance->getOptionAsBoolean('permitRecoveryRemoveEntity')
                         ) {
                             // Annuler le partage de protection. Non fiable...
                             $list[$i]['param']['selfHookList'][0]['name'] = '::RemoveShareProtect';
@@ -7669,7 +7669,7 @@ class ModuleObjects extends Modules
             unset($instance, $typeEntity, $shareTo, $listOkEntities);
 
             // Affichage.
-            echo $this->_display->getDisplayObjectsList($list, 'medium');
+            echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
             unset($list);
         }
@@ -7708,18 +7708,18 @@ class ModuleObjects extends Modules
                 'enableDisplayTypeHook' => false,
                 'enableDisplayJS' => true,
             );
-            echo $this->_display->getDisplayObjectsList($list, 'long');
+            echo $this->_displayInstance->getDisplayObjectsList($list, 'long');
 
             // affichage des boutons.
-            echo $this->_display->getDisplayHookMenuList('::sylabe:module:objet:ProtectionShareButtons', 'medium');
+            echo $this->_displayInstance->getDisplayHookMenuList('::sylabe:module:objet:ProtectionShareButtons', 'medium');
 
             if ($this->_unlocked
-                && $this->_configuration->getOptionAsBoolean('permitWrite')
-                && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             ) {
                 // Affiche le titre.
-                echo $this->_display->getDisplayTitle('::sylabe:module:objects:ShareObjectProtection', $this->MODULE_REGISTERED_ICONS[3], false);
+                echo $this->_displayInstance->getDisplayTitle('::sylabe:module:objects:ShareObjectProtection', $this->MODULE_REGISTERED_ICONS[3], false);
 
                 // Affiche en ligne les entités pour qui c'est partagé.
                 $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('objectprotectionshareto');
@@ -7740,9 +7740,9 @@ class ModuleObjects extends Modules
         // Si l'objet est présent et protégé et si l'entité est déverrouillée
         if ($object->getMarkProtected()
             && $this->_unlocked
-            && $this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
         ) {
             $listOkEntities = array();
             $listOkGroups = array();
@@ -7909,7 +7909,7 @@ class ModuleObjects extends Modules
             unset($instance, $link, $typeEntity, $links, $listOkEntities);
 
             // Affichage.
-            echo $this->_display->getDisplayObjectsList($list, 'medium');
+            echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
             unset($list);
         }
@@ -8160,8 +8160,8 @@ class Moduleqantion extends Modules
     public function initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_display = $this->_applicationInstance->getDisplayInstance();
-        $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
     }
@@ -8184,13 +8184,13 @@ class Moduleqantion extends Modules
         $arraySeed = 0;
 
         // Si pas autorisé à manipuler les monnaies, quitte.
-        if (!$this->_configuration->getOptionAsBoolean('permitCurrency')) {
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             return $hookArray;
         }
 
         switch ($hookName) {
             case 'selfMenu':
-                if ($this->_display->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[0]
+                if ($this->_displayInstance->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[0]
                     || $this->_applicationInstance->getCurrentEntityID() != $this->_nebuleInstance->getCurrentEntity()
                 ) {
                     // Liste des monnaies de l'entité déverrouillée.
@@ -8204,8 +8204,8 @@ class Moduleqantion extends Modules
                 }
 
                 // Monnaie -----------------------------------------------
-                if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[6]
-                    || $this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[10]
+                if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[6]
+                    || $this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[10]
                 ) {
                     // Affichage simple de la monnaie.
                     $arraySeed++;
@@ -8217,8 +8217,8 @@ class Moduleqantion extends Modules
                         . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
-                if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[3]
-                    || $this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[6]
+                if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[3]
+                    || $this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[6]
                 ) {
                     // Description de la monnaie.
                     $arraySeed++;
@@ -8230,10 +8230,10 @@ class Moduleqantion extends Modules
                         . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
-                if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[3]
-                    || $this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[10]
-                    || $this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[15]
-                    || $this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[18]
+                if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[3]
+                    || $this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[10]
+                    || $this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[15]
+                    || $this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[18]
                 ) {
                     // Administre une monnaie.
                     $arraySeed++;
@@ -8245,7 +8245,7 @@ class Moduleqantion extends Modules
                         . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
-                if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[6]) {
+                if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[6]) {
                     // Liste les sac de jetons d'une monnaie.
                     $arraySeed++;
                     $hookArray[$arraySeed]['name'] = '::sylabe:module:qantion:AllPools';
@@ -8266,8 +8266,8 @@ class Moduleqantion extends Modules
                 }
 
                 // Sac de jetons -----------------------------------------------
-                if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[9]
-                    || $this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[11]
+                if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[9]
+                    || $this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[11]
                 ) {
                     // Affichage simplifié d'un sac de jetons.
                     $arraySeed++;
@@ -8280,8 +8280,8 @@ class Moduleqantion extends Modules
                         . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
-                if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[8]
-                    || $this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[9]
+                if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[8]
+                    || $this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[9]
                 ) {
                     // Description du sac de jetons.
                     $arraySeed++;
@@ -8294,10 +8294,10 @@ class Moduleqantion extends Modules
                         . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
-                if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[8]
-                    || $this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[11]
-                    || $this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[16]
-                    || $this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[19]
+                if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[8]
+                    || $this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[11]
+                    || $this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[16]
+                    || $this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[19]
                 ) {
                     // Administre un sac de jetons.
                     $arraySeed++;
@@ -8310,7 +8310,7 @@ class Moduleqantion extends Modules
                         . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
-                if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[9]) {
+                if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[9]) {
                     // Liste les jetons d'un sac de jetons.
                     $arraySeed++;
                     $hookArray[$arraySeed]['name'] = '::sylabe:module:qantion:AllTokens';
@@ -8333,8 +8333,8 @@ class Moduleqantion extends Modules
                 }
 
                 // Jeton -----------------------------------------------
-                if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[14]
-                    || $this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[12]
+                if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[14]
+                    || $this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[12]
                 ) {
                     // Affichage simplifié d'un jeton.
                     $arraySeed++;
@@ -8348,8 +8348,8 @@ class Moduleqantion extends Modules
                         . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
-                if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[13]
-                    || $this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[14]
+                if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[13]
+                    || $this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[14]
                 ) {
                     // Description du jeton.
                     $arraySeed++;
@@ -8363,9 +8363,9 @@ class Moduleqantion extends Modules
                         . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
-                if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[13]
-                    || $this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[12]
-                    || $this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[17]
+                if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[13]
+                    || $this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[12]
+                    || $this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[17]
                 ) {
                     // Administre un jeton.
                     $arraySeed++;
@@ -8379,7 +8379,7 @@ class Moduleqantion extends Modules
                         . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
-                if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[14]) {
+                if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[14]) {
                     // Supprime un jeton.
                     $arraySeed++;
                     $hookArray[$arraySeed]['name'] = '::sylabe:module:qantion:Delete';
@@ -8393,7 +8393,7 @@ class Moduleqantion extends Modules
                 }
 
 
-                if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[0]) {
+                if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[0]) {
                     // Liste de toutes les monnaies.
                     $arraySeed++;
                     $hookArray[$arraySeed]['name'] = '::sylabe:module:qantion:ListAll';
@@ -8403,10 +8403,10 @@ class Moduleqantion extends Modules
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1];
 
                     // Si l'entité est déverrouillée.
-                    if ($this->_configuration->getOptionAsBoolean('permitWrite')
-                        && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                        && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-                        && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
+                    if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteCurrency')
                         && $this->_unlocked
                     ) {
                         // Crée une monnaie.
@@ -8419,8 +8419,8 @@ class Moduleqantion extends Modules
                     }
                 }
 
-                if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[0]
-                    || $this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]
+                if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[0]
+                    || $this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]
                 ) {
                     // Trouve une monnaie.
                     $arraySeed++;
@@ -8440,12 +8440,12 @@ class Moduleqantion extends Modules
                         . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
                 }
 
-                if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[7]) {
+                if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[7]) {
                     // Si l'entité est déverrouillée.
-                    if ($this->_configuration->getOptionAsBoolean('permitWrite')
-                        && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                        && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-                        && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
+                    if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteCurrency')
                         && $this->_unlocked
                     ) {
                         // Crée un sac de jetons.
@@ -8461,10 +8461,10 @@ class Moduleqantion extends Modules
 
             case 'selfCreateCurrenty';
                 // Si l'entité est déverrouillée.
-                if ($this->_configuration->getOptionAsBoolean('permitWrite')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
+                if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteCurrency')
                     && $this->_unlocked
                 ) {
                     // Crée un sac de jetons.
@@ -8537,7 +8537,7 @@ class Moduleqantion extends Modules
     {
         $this->_displayHeader();
 
-        switch ($this->_display->getCurrentDisplayView()) {
+        switch ($this->_displayInstance->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
                 $this->_displayList();
                 break;
@@ -8611,7 +8611,7 @@ class Moduleqantion extends Modules
      */
     public function displayModuleInline(): void
     {
-        switch ($this->_display->getCurrentDisplayView()) {
+        switch ($this->_displayInstance->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
                 $this->_display_InlineList();
                 break;
@@ -8693,18 +8693,18 @@ class Moduleqantion extends Modules
      */
     private function _displayHeader(): void
     {
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitCurrency')
-            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
-            && $this->_configuration->getOptionAsBoolean('permitCreateCurrency')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitCurrency')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteCurrency')
+            && $this->_configurationInstance->getOptionAsBoolean('permitCreateCurrency')
             && $this->_unlocked
         ) {
             // Si création d'une monnaie.
             if ($this->_applicationInstance->getActionInstance()->getCreateCurrency()) {
                 // Affiche le titre.
-                echo $this->_display->getDisplayTitle('::sylabe:module:qantion:CreateCurrency', $this->MODULE_LOGO, false);
+                echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:CreateCurrency', $this->MODULE_LOGO, false);
 
                 $createPoolError = $this->_applicationInstance->getActionInstance()->getCreateCurrencyError();
                 $createPoolErrorMessage = $this->_applicationInstance->getActionInstance()->getCreateCurrencyErrorMessage();
@@ -8754,7 +8754,7 @@ class Moduleqantion extends Modules
                     }
 
                     // Affichage.
-                    echo $this->_display->getDisplayObjectsList($list, 'medium');
+                    echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
                     unset($list);
                 } else {
                     $param = array(
@@ -8763,14 +8763,14 @@ class Moduleqantion extends Modules
                         'displayRatio' => 'long',
                         'informationType' => 'error',
                     );
-                    echo $this->_display->getDisplayInformation('::sylabe:module:qantion:create:notOKCreation', $param);
+                    echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:create:notOKCreation', $param);
                 }
             }
 
             // Si création d'un sac de jetons.
             if ($this->_applicationInstance->getActionInstance()->getCreateTokenPool()) {
                 // Affiche le titre.
-                echo $this->_display->getDisplayTitle('::sylabe:module:qantion:CreatePool', $this->MODULE_REGISTERED_ICONS[0], false);
+                echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:CreatePool', $this->MODULE_REGISTERED_ICONS[0], false);
 
                 $createPoolError = $this->_applicationInstance->getActionInstance()->getCreateTokenPoolError();
                 $createPoolErrorMessage = $this->_applicationInstance->getActionInstance()->getCreateTokenPoolErrorMessage();
@@ -8820,7 +8820,7 @@ class Moduleqantion extends Modules
                     }
 
                     // Affichage.
-                    echo $this->_display->getDisplayObjectsList($list, 'medium');
+                    echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
                     unset($list);
                 } else {
                     $param = array(
@@ -8829,14 +8829,14 @@ class Moduleqantion extends Modules
                         'displayRatio' => 'long',
                         'informationType' => 'error',
                     );
-                    echo $this->_display->getDisplayInformation('::sylabe:module:qantion:create:notOKCreation', $param);
+                    echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:create:notOKCreation', $param);
                 }
             }
 
             // Si création de jetons.
             if ($this->_applicationInstance->getActionInstance()->getCreateTokens()) {
                 // Affiche le titre.
-                echo $this->_display->getDisplayTitle('::sylabe:module:qantion:CreateTokens', $this->MODULE_REGISTERED_ICONS[0], false);
+                echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:CreateTokens', $this->MODULE_REGISTERED_ICONS[0], false);
 
                 $createTokensError = $this->_applicationInstance->getActionInstance()->getCreateTokensError();
                 $createTokensErrorMessage = $this->_applicationInstance->getActionInstance()->getCreateTokensErrorMessage();
@@ -8873,7 +8873,7 @@ class Moduleqantion extends Modules
                                 'objectName' => $instance->getParam('VAL') . $name,
                                 'displaySize' => 'small',
                                 'displayRatio' => 'short',
-                                'objectRefs' => $this->getTraduction('::sylabe:module:qantion:Token'),
+                                'objectRefs' => $this->getTraductionInstance('::sylabe:module:qantion:Token'),
                                 'link2Object' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[13]
                                     . '&' . nebule::COMMAND_SELECT_TOKEN . '=' . $instance->getID()
@@ -8886,7 +8886,7 @@ class Moduleqantion extends Modules
                     }
 
                     // Affichage.
-                    echo $this->_display->getDisplayObjectsList($list, 'small');
+                    echo $this->_displayInstance->getDisplayObjectsList($list, 'small');
                     unset($list);
                 } else {
                     $param = array(
@@ -8895,7 +8895,7 @@ class Moduleqantion extends Modules
                         'displayRatio' => 'long',
                         'informationType' => 'error',
                     );
-                    echo $this->_display->getDisplayInformation('::sylabe:module:qantion:create:notOKCreation', $param);
+                    echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:create:notOKCreation', $param);
                 }
             }
         }
@@ -8910,7 +8910,7 @@ class Moduleqantion extends Modules
     private function _displayList(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:MyList', $this->MODULE_LOGO, false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:MyList', $this->MODULE_LOGO, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('list');
     }
@@ -8987,7 +8987,7 @@ class Moduleqantion extends Modules
         unset($link, $instance, $listOkObjects);
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
         unset($list);
     }
@@ -9001,7 +9001,7 @@ class Moduleqantion extends Modules
     private function _displayListAll(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:ListAll', $this->MODULE_LOGO, false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:ListAll', $this->MODULE_LOGO, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('listall');
     }
@@ -9030,7 +9030,7 @@ class Moduleqantion extends Modules
     private function _displayFindCurrency(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Find', $this->MODULE_LOGO, false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Find', $this->MODULE_LOGO, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('find');
     }
@@ -9049,7 +9049,7 @@ class Moduleqantion extends Modules
             'displayRatio' => 'short',
             'informationType' => 'error',
         );
-        echo $this->_display->getDisplayInformation('::::Developpement', $param);
+        echo $this->_displayInstance->getDisplayInformation('::::Developpement', $param);
     }
 
 
@@ -9090,11 +9090,11 @@ class Moduleqantion extends Modules
         $hashEntityObject = $this->_nebuleInstance->newObject($hashEntity);
 
         // Si autorisé à créer des liens.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitCurrency')
-            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitCurrency')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteCurrency')
             && $this->_unlocked
         ) {
             // Prépare les paramètres en fonction du type d'objet demandé.
@@ -9148,7 +9148,7 @@ class Moduleqantion extends Modules
             }
 
             // Affiche le titre.
-            echo $this->_display->getDisplayTitle($title, $icon, false);
+            echo $this->_displayInstance->getDisplayTitle($title, $icon, false);
 
             ?>
 
@@ -9288,7 +9288,7 @@ class Moduleqantion extends Modules
                                                 echo 'checked ';
                                             }
                                             echo '/><label for="' . $property['shortname'] . $item . '">&nbsp;' . $item . '</label>&nbsp;-&nbsp;';
-                                            $this->_display->displayInlineObjectColorIconName($item);
+                                            $this->_displayInstance->displayInlineObjectColorIconName($item);
                                             echo "\n";
                                         }
                                         unset($checkboxArray);
@@ -9371,7 +9371,7 @@ class Moduleqantion extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'short',
             );
-            echo $this->_display->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
         }
     }
 
@@ -9384,7 +9384,7 @@ class Moduleqantion extends Modules
     private function _displayAdminCurrency(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Admin', $this->MODULE_LOGO, false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Admin', $this->MODULE_LOGO, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('admincurrency');
     }
@@ -9403,7 +9403,7 @@ class Moduleqantion extends Modules
             'displayRatio' => 'short',
             'informationType' => 'error',
         );
-        echo $this->_display->getDisplayInformation('::::Developpement', $param);
+        echo $this->_displayInstance->getDisplayInformation('::::Developpement', $param);
     }
 
 
@@ -9415,7 +9415,7 @@ class Moduleqantion extends Modules
     private function _displayAdminPool(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Admin', $this->MODULE_LOGO, false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Admin', $this->MODULE_LOGO, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('adminpool');
     }
@@ -9434,7 +9434,7 @@ class Moduleqantion extends Modules
             'displayRatio' => 'short',
             'informationType' => 'error',
         );
-        echo $this->_display->getDisplayInformation('::::Developpement', $param);
+        echo $this->_displayInstance->getDisplayInformation('::::Developpement', $param);
     }
 
 
@@ -9446,7 +9446,7 @@ class Moduleqantion extends Modules
     private function _displayAdminToken(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Admin', $this->MODULE_LOGO, false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Admin', $this->MODULE_LOGO, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('admintoken');
     }
@@ -9465,7 +9465,7 @@ class Moduleqantion extends Modules
             'displayRatio' => 'short',
             'informationType' => 'error',
         );
-        echo $this->_display->getDisplayInformation('::::Developpement', $param);
+        echo $this->_displayInstance->getDisplayInformation('::::Developpement', $param);
     }
 
 
@@ -9477,7 +9477,7 @@ class Moduleqantion extends Modules
     private function _displayListPools(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:AllPools', $this->MODULE_LOGO, false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:AllPools', $this->MODULE_LOGO, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('listallpools');
     }
@@ -9537,7 +9537,7 @@ class Moduleqantion extends Modules
         unset($link, $instance, $listOkObjects);
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
         unset($list);
     }
@@ -9551,12 +9551,12 @@ class Moduleqantion extends Modules
     private function _displayDispCurrency(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Currency', $this->MODULE_REGISTERED_ICONS[3], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Currency', $this->MODULE_REGISTERED_ICONS[3], false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('dispcurrency');
 
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:RelativeValue', $this->MODULE_REGISTERED_ICONS[6], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:RelativeValue', $this->MODULE_REGISTERED_ICONS[6], false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('displayvalue');
     }
@@ -9582,7 +9582,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_display->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
         }
 
         switch ($value) {
@@ -9606,12 +9606,12 @@ class Moduleqantion extends Modules
     private function _displayDispPool(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:DisplayPool', $this->MODULE_REGISTERED_ICONS[4], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:DisplayPool', $this->MODULE_REGISTERED_ICONS[4], false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('displaypool');
 
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:RelativeValue', $this->MODULE_REGISTERED_ICONS[6], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:RelativeValue', $this->MODULE_REGISTERED_ICONS[6], false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('displayvalue');
     }
@@ -9637,7 +9637,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_display->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
         }
 
         $instance->setCID($this->_nebuleInstance->getCurrentCurrencyInstance());
@@ -9664,12 +9664,12 @@ class Moduleqantion extends Modules
     private function _displayDispToken(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:DisplayToken', $this->MODULE_REGISTERED_ICONS[5], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:DisplayToken', $this->MODULE_REGISTERED_ICONS[5], false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('displaytoken');
 
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:RelativeValue', $this->MODULE_REGISTERED_ICONS[6], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:RelativeValue', $this->MODULE_REGISTERED_ICONS[6], false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('displayvalue');
     }
@@ -9695,7 +9695,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_display->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
         }
 
         $instance->setCID($this->_nebuleInstance->getCurrentCurrencyInstance());
@@ -9722,11 +9722,11 @@ class Moduleqantion extends Modules
     private function _displayDescCurrency(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Currency', $this->MODULE_REGISTERED_ICONS[3], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Currency', $this->MODULE_REGISTERED_ICONS[3], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('desccurrencydisp');
 
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Desc', $this->MODULE_REGISTERED_ICONS[6], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Desc', $this->MODULE_REGISTERED_ICONS[6], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('desccurrencydesc');
     }
 
@@ -9751,7 +9751,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_display->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
         }
 
         switch ($value) {
@@ -9889,7 +9889,7 @@ class Moduleqantion extends Modules
         }
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
     }
 
     /**
@@ -10028,7 +10028,7 @@ class Moduleqantion extends Modules
         unset($items);
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
     }
 
     /**
@@ -10057,7 +10057,7 @@ class Moduleqantion extends Modules
         }
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
     }
 
 
@@ -10069,11 +10069,11 @@ class Moduleqantion extends Modules
     private function _displayDescPool(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:DisplayPool', $this->MODULE_REGISTERED_ICONS[4], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:DisplayPool', $this->MODULE_REGISTERED_ICONS[4], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('descpooldisp');
 
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Desc', $this->MODULE_REGISTERED_ICONS[6], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Desc', $this->MODULE_REGISTERED_ICONS[6], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('descpooldesc');
 
         // Affiche le titre.
@@ -10102,7 +10102,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_display->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
         }
 
         $instance->setCID($this->_nebuleInstance->getCurrentCurrencyInstance());
@@ -10128,11 +10128,11 @@ class Moduleqantion extends Modules
     private function _displayDescToken(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:DisplayToken', $this->MODULE_REGISTERED_ICONS[5], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:DisplayToken', $this->MODULE_REGISTERED_ICONS[5], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('desctokendisp');
 
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Desc', $this->MODULE_REGISTERED_ICONS[6], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Desc', $this->MODULE_REGISTERED_ICONS[6], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('desctokendesc');
     }
 
@@ -10157,7 +10157,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_display->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
         }
 
         $instance->setCID($this->_nebuleInstance->getCurrentCurrencyInstance());
@@ -10184,13 +10184,13 @@ class Moduleqantion extends Modules
     private function _displayDeleteCurrency(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Delete', $this->MODULE_REGISTERED_ICONS[3], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Delete', $this->MODULE_REGISTERED_ICONS[3], false);
 
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitCurrency')
-            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitCurrency')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteCurrency')
             && $this->_unlocked
         ) {
             $instance = $this->_nebuleInstance->getCurrentCurrencyInstance();
@@ -10207,7 +10207,7 @@ class Moduleqantion extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'error',
                 );
-                echo $this->_display->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
             }
 
             if ($this->_nebuleInstance->getCurrentCurrency() != '0') {
@@ -10222,7 +10222,7 @@ class Moduleqantion extends Modules
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[6]
                         . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency(),
                 );
-                echo $this->_display->getDisplayHookAction($dispHook, true, 'MediumShort');
+                echo $this->_displayInstance->getDisplayHookAction($dispHook, true, 'MediumShort');
 
                 // message d'avertissement.
                 $param = array(
@@ -10231,7 +10231,7 @@ class Moduleqantion extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'warn',
                 );
-                echo $this->_display->getDisplayInformation('::sylabe:module:qantion:DeleteWarn', $param);
+                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:DeleteWarn', $param);
 
                 $target = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE);
                 $meta = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
@@ -10247,7 +10247,7 @@ class Moduleqantion extends Modules
                         . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_nebuleInstance->getCurrentCurrency() . '_' . $target . '_' . $meta
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(),
                 );
-                echo $this->_display->getDisplayHookAction($dispHook, true, 'MediumShort');
+                echo $this->_displayInstance->getDisplayHookAction($dispHook, true, 'MediumShort');
             }
         } else {
             $param = array(
@@ -10256,7 +10256,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_display->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
         }
     }
 
@@ -10269,13 +10269,13 @@ class Moduleqantion extends Modules
     private function _displayDeletePool(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Delete', $this->MODULE_REGISTERED_ICONS[4], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Delete', $this->MODULE_REGISTERED_ICONS[4], false);
 
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitCurrency')
-            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitCurrency')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteCurrency')
             && $this->_unlocked
         ) {
             $instance = $this->_nebuleInstance->getCurrentTokenPoolInstance();
@@ -10294,7 +10294,7 @@ class Moduleqantion extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'error',
                 );
-                echo $this->_display->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
             }
 
             if ($this->_nebuleInstance->getCurrentTokenPool() != '0') {
@@ -10309,7 +10309,7 @@ class Moduleqantion extends Modules
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[9]
                         . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentTokenPool(),
                 );
-                echo $this->_display->getDisplayHookAction($dispHook, true, 'MediumShort');
+                echo $this->_displayInstance->getDisplayHookAction($dispHook, true, 'MediumShort');
 
                 // message d'avertissement.
                 $param = array(
@@ -10318,7 +10318,7 @@ class Moduleqantion extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'warn',
                 );
-                echo $this->_display->getDisplayInformation('::sylabe:module:qantion:DeleteWarn', $param);
+                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:DeleteWarn', $param);
 
                 $target = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_SAC);
                 $meta1 = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
@@ -10336,7 +10336,7 @@ class Moduleqantion extends Modules
                         . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK2 . '=x_' . $this->_nebuleInstance->getCurrentTokenPool() . '_' . $this->_nebuleInstance->getCurrentCurrency() . '_' . $meta2
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(),
                 );
-                echo $this->_display->getDisplayHookAction($dispHook, true, 'MediumShort');
+                echo $this->_displayInstance->getDisplayHookAction($dispHook, true, 'MediumShort');
             }
         } else {
             $param = array(
@@ -10345,7 +10345,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_display->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
         }
     }
 
@@ -10358,13 +10358,13 @@ class Moduleqantion extends Modules
     private function _displayDeleteToken(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Delete', $this->MODULE_REGISTERED_ICONS[5], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Delete', $this->MODULE_REGISTERED_ICONS[5], false);
 
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitCurrency')
-            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitCurrency')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteCurrency')
             && $this->_unlocked
         ) {
             $instance = $this->_nebuleInstance->getCurrentTokenInstance();
@@ -10384,7 +10384,7 @@ class Moduleqantion extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'error',
                 );
-                echo $this->_display->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
             }
 
             if ($this->_nebuleInstance->getCurrentToken() != '0') {
@@ -10399,7 +10399,7 @@ class Moduleqantion extends Modules
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[14]
                         . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentToken(),
                 );
-                echo $this->_display->getDisplayHookAction($dispHook, true, 'MediumShort');
+                echo $this->_displayInstance->getDisplayHookAction($dispHook, true, 'MediumShort');
 
                 // message d'avertissement.
                 $param = array(
@@ -10408,7 +10408,7 @@ class Moduleqantion extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'warn',
                 );
-                echo $this->_display->getDisplayInformation('::sylabe:module:qantion:DeleteWarn', $param);
+                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:DeleteWarn', $param);
 
                 $target = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_JETON);
                 $meta1 = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
@@ -10428,7 +10428,7 @@ class Moduleqantion extends Modules
                         . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK3 . '=x_' . $this->_nebuleInstance->getCurrentToken() . '_' . $this->_nebuleInstance->getCurrentCurrency() . '_' . $meta3
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(),
                 );
-                echo $this->_display->getDisplayHookAction($dispHook, true, 'MediumShort');
+                echo $this->_displayInstance->getDisplayHookAction($dispHook, true, 'MediumShort');
             }
         } else {
             $param = array(
@@ -10437,7 +10437,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_display->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
         }
     }
 
@@ -10450,11 +10450,11 @@ class Moduleqantion extends Modules
     private function _displayItemsCurrency(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:Currency', $this->MODULE_REGISTERED_ICONS[3], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Currency', $this->MODULE_REGISTERED_ICONS[3], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('desccurrencydisp');
 
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:AllPools', $this->MODULE_REGISTERED_ICONS[4], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:AllPools', $this->MODULE_REGISTERED_ICONS[4], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('desccurrencypools');
 
         // Affiche la création d'un sac de jetons.
@@ -10483,7 +10483,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_display->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
         }
 
         switch ($value) {
@@ -10566,7 +10566,7 @@ class Moduleqantion extends Modules
                     'objectName' => $name,
                     'displaySize' => 'small',
                     'displayRatio' => 'short',
-                    'objectRefs' => $this->getTraduction('::sylabe:module:qantion:' . $subtype),
+                    'objectRefs' => $this->getTraductionInstance('::sylabe:module:qantion:' . $subtype),
                     'link2Object' => $link,
                     'objectIcon' => $icon,
                     //	'selfHookName' => '::sylabe:module:qantion:'.$type2,
@@ -10577,7 +10577,7 @@ class Moduleqantion extends Modules
         }
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'small');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'small');
     }
 
 
@@ -10589,11 +10589,11 @@ class Moduleqantion extends Modules
     private function _displayItemsPool(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:DisplayPool', $this->MODULE_REGISTERED_ICONS[4], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:DisplayPool', $this->MODULE_REGISTERED_ICONS[4], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('descpooldisp');
 
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:qantion:AllTokens', $this->MODULE_REGISTERED_ICONS[5], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:AllTokens', $this->MODULE_REGISTERED_ICONS[5], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('descpooltokens');
 
         // Affiche la création de jetons.
@@ -10621,7 +10621,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_display->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
         }
 
         $instance->setCID($this->_nebuleInstance->getCurrentCurrencyInstance());

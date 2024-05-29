@@ -53,8 +53,8 @@ class ModuleGroups extends Modules
     public function initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_display = $this->_applicationInstance->getDisplayInstance();
-        $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
         $this->_hashGroup = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
@@ -383,7 +383,7 @@ class ModuleGroups extends Modules
                 );
 
                 // Affiche la liste de l'objet et du message.
-                echo $this->_display->getDisplayObjectsList($list, 'medium');
+                echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
                 unset($list);
             } else {
                 $param = array(
@@ -392,13 +392,13 @@ class ModuleGroups extends Modules
                     'displayRatio' => 'long',
                     'informationType' => 'error',
                 );
-                echo $this->_display->getDisplayInformation('::sylabe:module:groups:display:notOKCreateGroup', $param);
+                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:groups:display:notOKCreateGroup', $param);
             }
         }
 
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_LOGO);
-        echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:MyGroups', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:groups:display:MyGroups', $icon, false);
 
         // Affiche le contenu.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('groups');
@@ -454,7 +454,7 @@ class ModuleGroups extends Modules
         unset($link, $instance);
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
         unset($list, $links, $listOkGroups);
     }
@@ -469,7 +469,7 @@ class ModuleGroups extends Modules
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_LOGO);
-        echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:otherGroups', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:groups:display:otherGroups', $icon, false);
 
         // Affiche le contenu.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('allgroups');
@@ -530,7 +530,7 @@ class ModuleGroups extends Modules
         unset($link, $instance);
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
         unset($list, $links, $listOkGroups);
 
@@ -663,13 +663,13 @@ class ModuleGroups extends Modules
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[1]);
-        echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:createGroup', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:groups:display:createGroup', $icon, false);
 
         // Si autorisé à créer un groupe.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
             && $this->_unlocked
         ) {
             ?>
@@ -766,7 +766,7 @@ class ModuleGroups extends Modules
             'enableDisplayTypeHook' => false,
         );
         $param['objectRefs'] = $instance->getPropertySigners(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
-        echo $this->_display->getDisplayObject($instance, $param);
+        echo $this->_displayInstance->getDisplayObject($instance, $param);
         unset($instance);
 
         // Affichage des membres du groupe.
@@ -803,9 +803,9 @@ class ModuleGroups extends Modules
 
                         // Supprimer le groupe.
                         if ($this->_unlocked
-                            && $this->_configuration->getOptionAsBoolean('permitWrite')
-                            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
+                            && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                            && $this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
                         ) {
                             $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                             $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
@@ -856,9 +856,9 @@ class ModuleGroups extends Modules
 
                             // Supprimer le groupe.
                             if ($this->_unlocked
-                                && $this->_configuration->getOptionAsBoolean('permitWrite')
-                                && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                                && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
+                                && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                                && $this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
                             ) {
                                 $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                                 $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
@@ -920,9 +920,9 @@ class ModuleGroups extends Modules
 
                         // Supprimer le groupe.
                         if ($this->_unlocked
-                            && $this->_configuration->getOptionAsBoolean('permitWrite')
-                            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                            && $this->_configuration->getOptionAsBoolean('permitWriteGroup')
+                            && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                            && $this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
                         ) {
                             $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                             $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;

@@ -1935,8 +1935,8 @@ class ModuleHelp extends Modules
     public function initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_display = $this->_applicationInstance->getDisplayInstance();
-        $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
     }
@@ -2056,7 +2056,7 @@ class ModuleHelp extends Modules
     private function _displayHlpFirst(): void
     {
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle($this->_applicationInstance->getTraductionInstance()->getTraduction('::SelectUser'), $this->MODULE_REGISTERED_ICONS[4]);
+        echo $this->_displayInstance->getDisplayTitle($this->_applicationInstance->getTraductionInstance()->getTraduction('::SelectUser'), $this->MODULE_REGISTERED_ICONS[4]);
 
         // Liste des entités déjà affichées.
         $listOkEntities = $this->_nebuleInstance->getSpecialEntities();
@@ -2107,7 +2107,7 @@ class ModuleHelp extends Modules
         unset($link, $instance);
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
         unset($list, $links, $listOkEntities);
     }
@@ -2129,10 +2129,10 @@ class ModuleHelp extends Modules
             'displayRatio' => 'short',
             'icon' => $module->getLogo(),
         );
-        echo $this->_display->getDisplayInformation($module->getTraduction($module->getName()), $param);
+        echo $this->_displayInstance->getDisplayInformation($module->getTraduction($module->getName()), $param);
 
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle($this->_applicationInstance->getTraductionInstance()->getTraduction('::ChangeLanguage'), $this->MODULE_REGISTERED_ICONS[3]);
+        echo $this->_displayInstance->getDisplayTitle($this->_applicationInstance->getTraductionInstance()->getTraduction('::ChangeLanguage'), $this->MODULE_REGISTERED_ICONS[3]);
 
         // Affiche la liste des langues.
         echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('helpLanguages', 'Medium');
@@ -2182,7 +2182,7 @@ class ModuleHelp extends Modules
         $list[2]['param'] = $param;
         $list[3]['information'] = '<a href="' . $linkApplicationWebsite . '" target="_blank">' . Application::APPLICATION_WEBSITE . '</a>';
         $list[3]['param'] = $param;
-        echo $this->_display->getDisplayObjectsList($list, 'Medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'Medium');
 
         ?>
         <div class="text">
@@ -2194,7 +2194,7 @@ class ModuleHelp extends Modules
             </p>
         </div>
         <?php
-        if ($this->_unlocked && $this->_configuration->getOptionUntyped('messaeDisplayOnlineOptions')) {
+        if ($this->_unlocked && $this->_configurationInstance->getOptionUntyped('messaeDisplayOnlineOptions')) {
             ?>
             <div class="text">
                 <p>
@@ -2209,7 +2209,7 @@ class ModuleHelp extends Modules
                     );
                     foreach ($options as $option) {
                         echo $option . ' : ';
-                        var_dump($this->_configuration->getOptionUntyped($option));
+                        var_dump($this->_configurationInstance->getOptionUntyped($option));
                         echo "<br />\n";
                     }
                     ?>
@@ -2427,8 +2427,8 @@ class ModuleAdmin extends Modules
     public function initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_display = $this->_applicationInstance->getDisplayInstance();
-        $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
     }
@@ -2628,14 +2628,14 @@ class ModuleAdmin extends Modules
                         <?php
                         echo $option . ' = ';
                         if ($this->_listOptionsType[$option] == 'b') {
-                            if ($this->_configuration->getOptionUntyped($option))
+                            if ($this->_configurationInstance->getOptionUntyped($option))
                                 echo 'true';
                             else
                                 echo 'false';
                         } elseif ($this->_listOptionsType[$option] == 'i') {
-                            echo $this->_configuration->getOptionUntyped($option);
+                            echo $this->_configurationInstance->getOptionUntyped($option);
                         } elseif ($this->_listOptionsType[$option] == 't') {
-                            echo $this->_configuration->getOptionUntyped($option);
+                            echo $this->_configurationInstance->getOptionUntyped($option);
                         }
                         ?>
 
@@ -3010,8 +3010,8 @@ class ModuleEntities extends Modules
     public function initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_display = $this->_applicationInstance->getDisplayInstance();
-        $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_findDisplayEntity();
         $this->_initTable();
@@ -3086,8 +3086,8 @@ class ModuleEntities extends Modules
                     . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
 
                 // Vérifie que la création soit authorisée.
-                if ($this->_configuration->checkBooleanOptions(array('permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitWriteEntity'))
-                    && ($this->_unlocked || $this->_configuration->getOptionAsBoolean('permitPublicCreateEntity'))
+                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitWriteEntity'))
+                    && ($this->_unlocked || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity'))
                 ) {
                     // Créer une nouvelle entité.
                     $hookArray[6]['name'] = '::sylabe:module:entities:CreateEntity';
@@ -3099,7 +3099,7 @@ class ModuleEntities extends Modules
                 }
 
                 // Vérifie que la synchronisation soit authorisée.
-                if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitSynchronizeObject','permitSynchronizeLink'))) {
+                if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitSynchronizeObject','permitSynchronizeLink'))) {
                     // Rechercher une entité.
                     $hookArray[7]['name'] = '::sylabe:module:entities:SearchEntity';
                     $hookArray[7]['icon'] = Displays::DEFAULT_ICON_LF;
@@ -3231,7 +3231,7 @@ class ModuleEntities extends Modules
      */
     public function displayModule(): void
     {
-        switch ($this->_display->getCurrentDisplayView()) {
+        switch ($this->_displayInstance->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
                 $this->_displayKnownEntitiesList();
                 break;
@@ -3281,7 +3281,7 @@ class ModuleEntities extends Modules
      */
     public function displayModuleInline(): void
     {
-        switch ($this->_display->getCurrentDisplayView()) {
+        switch ($this->_displayInstance->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
                 $this->_display_InlineKnownEntitiesList();
                 break;
@@ -3566,7 +3566,7 @@ class ModuleEntities extends Modules
 
         // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
         if ($arg !== false
-            && $this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitSynchronizeObject','permitSynchronizeLink'))
+            && $this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitSynchronizeObject','permitSynchronizeLink'))
         ) {
             $this->_synchronizeEntity = true;
         }
@@ -3581,18 +3581,18 @@ class ModuleEntities extends Modules
      */
     private function _actionSynchronizeEntity(): void
     {
-        if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitSynchronizeObject','permitSynchronizeLink'))
+        if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitSynchronizeObject','permitSynchronizeLink'))
             && $this->_synchronizeEntity
         ) {
             // Synchronize l'entité.
-            echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNLNK')
-                . $this->_display->displayInlineObjectColorIconName($this->_displayEntityInstance->getID());
+            echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNLNK')
+                . $this->_displayInstance->displayInlineObjectColorIconName($this->_displayEntityInstance->getID());
             echo ' &nbsp;&nbsp;';
-            echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNOBJ')
-                . $this->_display->displayInlineObjectColorIconName($this->_displayEntityInstance->getID());
+            echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNOBJ')
+                . $this->_displayInstance->displayInlineObjectColorIconName($this->_displayEntityInstance->getID());
             echo ' &nbsp;&nbsp;';
-            echo $this->_display->convertInlineIconFace('DEFAULT_ICON_SYNENT')
-                . $this->_display->displayInlineObjectColorIconName($this->_displayEntityInstance->getID());
+            echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNENT')
+                . $this->_displayInstance->displayInlineObjectColorIconName($this->_displayEntityInstance->getID());
 
             // A faire...
 
@@ -3633,7 +3633,7 @@ class ModuleEntities extends Modules
 
     private function _actionSearchEntity(): void
     {
-        if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitSynchronizeObject','permitSynchronizeLink'))
+        if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitSynchronizeObject','permitSynchronizeLink'))
             && ($this->_searchEntityID != ''
                 || $this->_searchEntityURL != ''
             )
@@ -3645,13 +3645,13 @@ class ModuleEntities extends Modules
                 // Si recherche sur ID et URL.
                 echo $this->_applicationInstance->getTraductionInstance()->getTraduction('Recherche')
                     . ' ' . $this->_searchEntityURL
-                    . ' ' . $this->_display->displayInlineObjectColorIconName($this->_searchEntityID);
+                    . ' ' . $this->_displayInstance->displayInlineObjectColorIconName($this->_searchEntityID);
             } elseif ($this->_searchEntityID != ''
                 && $this->_searchEntityURL == ''
             ) {
                 // Sinon recherche sur ID.
                 echo $this->_applicationInstance->getTraductionInstance()->getTraduction('Recherche')
-                    . ' ' . $this->_display->displayInlineObjectColorIconName($this->_searchEntityID);
+                    . ' ' . $this->_displayInstance->displayInlineObjectColorIconName($this->_searchEntityID);
             } elseif ($this->_searchEntityID == ''
                 && $this->_searchEntityURL != ''
             ) {
@@ -3723,7 +3723,7 @@ class ModuleEntities extends Modules
             'displaySize' => 'large',
             'displayRatio' => 'short',
         );
-        echo $this->_display->getDisplayObject($this->_displayEntityInstance, $param);
+        echo $this->_displayInstance->getDisplayObject($this->_displayEntityInstance, $param);
 
         echo '</div>' . "\n";
         echo '</div>' . "\n";
@@ -3756,7 +3756,7 @@ class ModuleEntities extends Modules
             'displaySize' => 'medium',
             'displayRatio' => 'short',
         );
-        echo $this->_display->getDisplayObject($this->_displayEntityInstance, $param);
+        echo $this->_displayInstance->getDisplayObject($this->_displayEntityInstance, $param);
 
         echo '</div>' . "\n";
         echo '</div>' . "\n";
@@ -3766,9 +3766,9 @@ class ModuleEntities extends Modules
                 && $this->_unlocked
             )
         ) {
-            echo $this->_display->getDisplayTitle('::EntityUnlocked', $this->MODULE_REGISTERED_ICONS[9]);
+            echo $this->_displayInstance->getDisplayTitle('::EntityUnlocked', $this->MODULE_REGISTERED_ICONS[9]);
         } else {
-            echo $this->_display->getDisplayTitle('::EntityLocked', $this->MODULE_REGISTERED_ICONS[11]);
+            echo $this->_displayInstance->getDisplayTitle('::EntityLocked', $this->MODULE_REGISTERED_ICONS[11]);
         }
 
         // Extrait les états de tests en warning ou en erreur.
@@ -3805,7 +3805,7 @@ class ModuleEntities extends Modules
                     $list[$i]['param']['informationType'] = 'warn';
                 }
             }
-            echo $this->_display->getDisplayObjectsList($list, 'small');
+            echo $this->_displayInstance->getDisplayObjectsList($list, 'small');
         } else {
             $param = array(
                 'enableDisplayIcon' => true,
@@ -3814,7 +3814,7 @@ class ModuleEntities extends Modules
                 'displaySize' => 'small',
                 'displayRatio' => 'short',
             );
-            echo $this->_display->getDisplayInformation('::::SecurityChecks', $param);
+            echo $this->_displayInstance->getDisplayInformation('::::SecurityChecks', $param);
         }
 
         // Affiche le champs de mot de passe.
@@ -3832,7 +3832,7 @@ class ModuleEntities extends Modules
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2]
                 . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
                 . '&' . nebule::COMMAND_FLUSH;
-            echo $this->_display->getDisplayMenuList($list, 'Medium');
+            echo $this->_displayInstance->getDisplayMenuList($list, 'Medium');
         } else {
             if ($idCheck != 'Error') {
                 echo '<div class="layoutAloneItem">' . "\n";
@@ -3840,7 +3840,7 @@ class ModuleEntities extends Modules
                 $param['displaySize'] = 'small';
                 $param['displayRatio'] = 'long';
                 $param['objectIcon'] = $this->MODULE_REGISTERED_ICONS[9];
-                echo $this->_display->getDisplayObject($this->_nebuleInstance->getCurrentEntityPrivateKeyInstance(), $param);
+                echo $this->_displayInstance->getDisplayObject($this->_nebuleInstance->getCurrentEntityPrivateKeyInstance(), $param);
                 echo '</div>' . "\n";
                 echo '</div>' . "\n";
 
@@ -3885,7 +3885,7 @@ class ModuleEntities extends Modules
                     'displaySize' => 'medium',
                     'displayRatio' => 'short',
                 );
-                echo $this->_display->getDisplayInformation(':::err_NotPermit', $param);
+                echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
             }
         }
     }
@@ -3898,11 +3898,11 @@ class ModuleEntities extends Modules
     {
         // Entité en cours.
         if ($this->_nebuleInstance->getCurrentEntity() != $this->_applicationInstance->getCurrentEntityID()) {
-            $this->_display->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
+            $this->_displayInstance->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
         }
 
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:ObjectTitle1', $this->MODULE_REGISTERED_ICONS[7], true);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:ObjectTitle1', $this->MODULE_REGISTERED_ICONS[7], true);
 
         // Extrait des propriétés de l'objet.
         $entity = $this->_displayEntity;
@@ -3916,13 +3916,13 @@ class ModuleEntities extends Modules
                     $this->_applicationInstance->getTraductionInstance()->echoTraduction(
                         '::sylabe:module:entities:DisplayEntityMessages',
                         '',
-                        $this->_display->convertInlineObjectColorIconName($instance));
+                        $this->_displayInstance->convertInlineObjectColorIconName($instance));
                     $dispWarn = false;
                 } else {
                     $this->_applicationInstance->getTraductionInstance()->echoTraduction(
                         '::sylabe:module:entities:DisplayEntityPublicMessages',
                         '',
-                        $this->_display->convertInlineObjectColorIconName($instance));
+                        $this->_displayInstance->convertInlineObjectColorIconName($instance));
                     $dispWarn = true;
                 }
                 ?>
@@ -3932,7 +3932,7 @@ class ModuleEntities extends Modules
         <?php
         // Si besoin, affiche le message d'information.
         if ($dispWarn) {
-            $this->_display->displayMessageInformation(
+            $this->_displayInstance->displayMessageInformation(
                 $this->_traduction('::sylabe:module:entities:DisplayEntityPublicMessagesWarning'));
         }
         unset($dispWarn);
@@ -4009,11 +4009,11 @@ class ModuleEntities extends Modules
                         ?>
 
                         <div class="sylabeModuleEntityActionDivIcon">
-                            <?php $this->_display->displayUpdateImage(Display::DEFAULT_ICON_LC); ?>
+                            <?php $this->_displayInstance->displayUpdateImage(Display::DEFAULT_ICON_LC); ?>
                         </div>
                         <div>
                             <p class="sylabeModuleEntityActionDate">
-                                <?php $this->_display->displayDate($date);
+                                <?php $this->_displayInstance->displayDate($date);
                                 echo "\n"; ?>
                             </p>
                             <p class="sylabeModuleEntityActionTitle">
@@ -4021,7 +4021,7 @@ class ModuleEntities extends Modules
                             </p>
                             <p class="sylabeModuleEntityActionFromTo">
                                 <?php $this->_echoTraduction('::sylabe:module:entities:From'); ?>
-                                &nbsp;<?php $this->_display->displayInlineObjectColorIconName($signer); ?><br/>
+                                &nbsp;<?php $this->_displayInstance->displayInlineObjectColorIconName($signer); ?><br/>
                             </p>
                         </div>
                         <?php
@@ -4035,11 +4035,11 @@ class ModuleEntities extends Modules
                         ?>
 
                         <div class="sylabeModuleEntityActionDivIcon">
-                            <?php $this->_display->displayUpdateImage(Display::DEFAULT_ICON_LK); ?>
+                            <?php $this->_displayInstance->displayUpdateImage(Display::DEFAULT_ICON_LK); ?>
                         </div>
                         <div>
                             <p class="sylabeModuleEntityActionDate">
-                                <?php $this->_display->displayDate($date);
+                                <?php $this->_displayInstance->displayDate($date);
                                 echo "\n"; ?>
                             </p>
                             <p class="sylabeModuleEntityActionTitle">
@@ -4047,7 +4047,7 @@ class ModuleEntities extends Modules
                             </p>
                             <p class="sylabeModuleEntityActionFromTo">
                                 <?php $this->_echoTraduction('::sylabe:module:entities:From'); ?>
-                                &nbsp;<?php $this->_display->displayInlineObjectColorIconName($signer); ?><br/>
+                                &nbsp;<?php $this->_displayInstance->displayInlineObjectColorIconName($signer); ?><br/>
                             </p>
                         </div>
                         <?php
@@ -4061,14 +4061,14 @@ class ModuleEntities extends Modules
                         ?>
 
                         <div class="sylabeModuleEntityActionDivIcon">
-                            <?php $this->_display->displayObjectColorIcon(
+                            <?php $this->_displayInstance->displayObjectColorIcon(
                                 $objectInstance, Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $link->getParsed()['bl/rl/nid2']); ?>
                         </div>
                         <div>
                             <p class="sylabeModuleEntityActionDate">
-                                <?php $this->_display->displayDate($date);
+                                <?php $this->_displayInstance->displayDate($date);
                                 echo "\n"; ?>
                             </p>
                             <p class="sylabeModuleEntityActionTitle">
@@ -4079,7 +4079,7 @@ class ModuleEntities extends Modules
                             </p>
                             <p class="sylabeModuleEntityActionFromTo">
                                 <?php $this->_echoTraduction('::sylabe:module:entities:From'); ?>
-                                &nbsp;<?php $this->_display->displayInlineObjectColorIconName($signer); ?><br/>
+                                &nbsp;<?php $this->_displayInstance->displayInlineObjectColorIconName($signer); ?><br/>
                             </p>
                         </div>
                         <?php
@@ -4107,11 +4107,11 @@ class ModuleEntities extends Modules
     {
         // Entité en cours.
         if ($this->_nebuleInstance->getCurrentEntity() != $this->_applicationInstance->getCurrentEntityID()) {
-            $this->_display->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
+            $this->_displayInstance->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
         }
 
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:ObjectTitle2', $this->MODULE_REGISTERED_ICONS[8], true);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:ObjectTitle2', $this->MODULE_REGISTERED_ICONS[8], true);
 
         // Extrait des propriétés de l'objet.
         $id = $this->_applicationInstance->getCurrentObjectInstance()->getID();
@@ -4130,7 +4130,7 @@ class ModuleEntities extends Modules
                     $this->_applicationInstance->getTraductionInstance()->echoTraduction(
                         '::sylabe:module:entities:DisplayEntityPublicMessages',
                         '',
-                        $this->_display->convertInlineObjectColorIconName($entity));
+                        $this->_displayInstance->convertInlineObjectColorIconName($entity));
                     $dispWarn = true;
                 } // Sinon, affiche les messages de l'entité courante.
                 else {
@@ -4141,12 +4141,12 @@ class ModuleEntities extends Modules
                         $this->_applicationInstance->getTraductionInstance()->echoTraduction(
                             '::sylabe:module:entities:DisplayEntityMessages',
                             '',
-                            $this->_display->convertInlineObjectColorIconName($entity));
+                            $this->_displayInstance->convertInlineObjectColorIconName($entity));
                     } else {
                         $this->_applicationInstance->getTraductionInstance()->echoTraduction(
                             '::sylabe:module:entities:DisplayEntityPublicMessages',
                             '',
-                            $this->_display->convertInlineObjectColorIconName($entity));
+                            $this->_displayInstance->convertInlineObjectColorIconName($entity));
                         $dispWarn = true;
                     }
                 }
@@ -4157,7 +4157,7 @@ class ModuleEntities extends Modules
         <?php
         // Si besoin, affiche le message d'information.
         if ($dispWarn) {
-            $this->_display->displayMessageInformation(
+            $this->_displayInstance->displayMessageInformation(
                 $this->_traduction('::sylabe:module:entities:DisplayEntityPublicMessagesWarning'));
         }
         unset($dispWarn);
@@ -4180,11 +4180,11 @@ class ModuleEntities extends Modules
 
                 <div class="sylabeModuleEntityActionTextList<?php echo $bg; ?>">
                     <div class="sylabeModuleEntityActionDivIcon">
-                        <?php $this->_display->displayObjectColorIcon($objectInstance); ?>
+                        <?php $this->_displayInstance->displayObjectColorIcon($objectInstance); ?>
                     </div>
                     <div>
                         <p class="sylabeModuleEntityActionDate">
-                            <?php $this->_display->displayDate($date);
+                            <?php $this->_displayInstance->displayDate($date);
                             echo "\n"; ?>
                         </p>
                         <p class="sylabeModuleEntityActionTitle">
@@ -4195,7 +4195,7 @@ class ModuleEntities extends Modules
                         </p>
                         <p class="sylabeModuleEntityActionFromTo">
                             <?php $this->_echoTraduction('::sylabe:module:entities:To'); ?>
-                            &nbsp;<?php $this->_display->displayInlineObjectColorIconName($source); ?><br/>
+                            &nbsp;<?php $this->_displayInstance->displayInlineObjectColorIconName($source); ?><br/>
                         </p>
                     </div>
                 </div>
@@ -4219,9 +4219,9 @@ class ModuleEntities extends Modules
      */
     private function _displayMyEntitiesList(): void
     {
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:MyEntities', $this->MODULE_REGISTERED_ICONS[4], true);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:MyEntities', $this->MODULE_REGISTERED_ICONS[4], true);
 
-        $this->_display->registerInlineContentID('myentities');
+        $this->_displayInstance->registerInlineContentID('myentities');
     }
 
     /**
@@ -4265,11 +4265,11 @@ class ModuleEntities extends Modules
 
         // Affichage
         if ($this->_unlocked) {
-            echo $this->_display->getDisplayHookMenuList('::sylabe:module:entities:DisplayMyEntities');
+            echo $this->_displayInstance->getDisplayHookMenuList('::sylabe:module:entities:DisplayMyEntities');
         }
 
         // Affiche les entités.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
         unset($list);
     }
 
@@ -4281,9 +4281,9 @@ class ModuleEntities extends Modules
      */
     private function _displayKnownEntitiesList(): void
     {
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:KnownEntities', $this->MODULE_REGISTERED_ICONS[4], true);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:KnownEntities', $this->MODULE_REGISTERED_ICONS[4], true);
 
-        $this->_display->registerInlineContentID('knownentities');
+        $this->_displayInstance->registerInlineContentID('knownentities');
     }
 
     private function _display_InlineKnownEntitiesList(): void
@@ -4337,7 +4337,7 @@ class ModuleEntities extends Modules
         unset($link, $instance);
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
         unset($list, $links, $listOkEntities);
     }
@@ -4350,9 +4350,9 @@ class ModuleEntities extends Modules
      */
     private function _displayKnownByEntitiesList(): void
     {
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:KnownByEntities', $this->MODULE_REGISTERED_ICONS[4], true);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:KnownByEntities', $this->MODULE_REGISTERED_ICONS[4], true);
 
-        $this->_display->registerInlineContentID('knownentities');
+        $this->_displayInstance->registerInlineContentID('knownentities');
     }
 
     private function _display_InlineKnownByEntitiesList(): void
@@ -4406,7 +4406,7 @@ class ModuleEntities extends Modules
         unset($link, $instance);
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
         unset($list, $links, $listOkEntities);
     }
@@ -4419,9 +4419,9 @@ class ModuleEntities extends Modules
      */
     private function _displayUnknownEntitiesList(): void
     {
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:UnknownEntities', $this->MODULE_REGISTERED_ICONS[4], true);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:UnknownEntities', $this->MODULE_REGISTERED_ICONS[4], true);
 
-        $this->_display->registerInlineContentID('unknownentities');
+        $this->_displayInstance->registerInlineContentID('unknownentities');
     }
 
     private function _display_InlineUnknownEntitiesList(): void
@@ -4507,12 +4507,12 @@ class ModuleEntities extends Modules
             unset($link, $instance, $id);
             // Affichage
             if (sizeof($list) != 0) {
-                echo $this->_display->getDisplayObjectsList($list, 'medium');
+                echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
             }
             unset($list);
         } else {
             // Pas d'entité.
-            $this->_display->displayMessageInformation(
+            $this->_displayInstance->displayMessageInformation(
                 '::sylabe:module:entities:Display:NoEntity');
         }
         unset($links, $listOkEntities);
@@ -4526,9 +4526,9 @@ class ModuleEntities extends Modules
      */
     private function _displaySpecialEntitiesList(): void
     {
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:SpecialEntities', $this->MODULE_REGISTERED_ICONS[4]);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:SpecialEntities', $this->MODULE_REGISTERED_ICONS[4]);
 
-        $this->_display->registerInlineContentID('specialentities');
+        $this->_displayInstance->registerInlineContentID('specialentities');
     }
 
     private function _display_InlineSpecialEntitiesList(): void
@@ -4584,7 +4584,7 @@ class ModuleEntities extends Modules
         unset($entities, $masters, $entity);
 
         // Affiche les entités.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
         unset($list);
     }
 
@@ -4662,17 +4662,17 @@ class ModuleEntities extends Modules
             }
 
             // Affiche le message et les objets créés.
-            echo $this->_display->getDisplayObjectsList($list, 'medium');
+            echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
             unset($list);
         }
 
         // Affiche le titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:CreateEntity', $this->MODULE_REGISTERED_ICONS[5], false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:CreateEntity', $this->MODULE_REGISTERED_ICONS[5], false);
 
         // Vérifie que la création soit authorisée.
-        if ($this->_configuration->checkBooleanOptions(array('permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitWriteEntity'))
+        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitWriteEntity'))
             && ($this->_unlocked
-                || $this->_configuration->getOptionAsBoolean('permitPublicCreateEntity')
+                || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity')
             )
         ) {
             ?>
@@ -4788,7 +4788,7 @@ class ModuleEntities extends Modules
                                 <select
                                         name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_ALGORITHM; ?>"
                                         class="sylabeModuleEntityCreatePropertyEntry">
-                                    <option value="<?php echo $this->_configuration->getOptionAsString('cryptoAsymmetricAlgorithm'); ?>"
+                                    <option value="<?php echo $this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm'); ?>"
                                             selected>
                                         <?php echo $this->_nebuleInstance->getConfigurationInstance()->getOptionAsString('cryptoAsymmetricAlgorithm'); ?>
 
@@ -4842,7 +4842,7 @@ class ModuleEntities extends Modules
             </div>
             <?php
         } else {
-            $this->_display->displayMessageWarning('::sylabe:module:entities:CreateEntityNotAllowed');
+            $this->_displayInstance->displayMessageWarning('::sylabe:module:entities:CreateEntityNotAllowed');
         }
     }
 
@@ -4853,14 +4853,14 @@ class ModuleEntities extends Modules
     private function _displayEntitySearch(): void
     {
         // Affiche la création d'une entité.
-        $this->_display->displayDivTextTitleH2(
+        $this->_displayInstance->displayDivTextTitleH2(
             Displays::DEFAULT_ICON_LF,
             '::sylabe:module:entities:SearchEntity',
             '::sylabe:module:entities:SearchEntityDesc',
             '::sylabe:module:entities:SearchEntityHelp');
 
         // Vérifie que la création soit authorisée.
-        if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitSynchronizeObject','permitSynchronizeLink'))) {
+        if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitSynchronizeObject','permitSynchronizeLink'))) {
             ?>
             <div class="text">
                 <p>
@@ -4910,9 +4910,9 @@ class ModuleEntities extends Modules
                 </p>
             </div>
             <?php
-            $this->_display->displayMessageInformation('::sylabe:module:entities:SearchEntityLongTime');
+            $this->_displayInstance->displayMessageInformation('::sylabe:module:entities:SearchEntityLongTime');
         } else {
-            $this->_display->displayMessageWarning('::sylabe:module:entities:SearchEntityNotAllowed');
+            $this->_displayInstance->displayMessageWarning('::sylabe:module:entities:SearchEntityNotAllowed');
         }
     }
 
@@ -4927,10 +4927,10 @@ class ModuleEntities extends Modules
      */
     private function _displayEntityProp(): void
     {
-        echo $this->_display->getDisplayTitle('::sylabe:module:entities:Desc:AttribsTitle', $this->MODULE_REGISTERED_ICONS[3]);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:Desc:AttribsTitle', $this->MODULE_REGISTERED_ICONS[3]);
 
         // Affiche les propriétés.
-        $this->_display->registerInlineContentID('properties');
+        $this->_displayInstance->registerInlineContentID('properties');
     }
 
     private function _display_InlineEntityProp(): void
@@ -4953,7 +4953,7 @@ class ModuleEntities extends Modules
         if ($update != $this->_displayEntity) {
             // A affiner...
             //
-            $this->_display->displayMessageWarning(
+            $this->_displayInstance->displayMessageWarning(
                 $this->_traduction('::sylabe:module:objects:warning:ObjectHaveUpdate'));
         }
         unset($update);
@@ -5079,7 +5079,7 @@ class ModuleEntities extends Modules
                                 ?>
 
                                 <div class="sylabeModuleEntityDescIcon">
-                                    <?php $this->_display->displayHypertextLink($this->_display->convertInlineIconFace('DEFAULT_ICON_LL'),
+                                    <?php $this->_displayInstance->displayHypertextLink($this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_LL'),
                                         '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleLinks')->getCommandName()
                                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . Display::DEFAULT_LINK_COMMAND
                                         . '&' . ModuleLinks::DEFAULT_LINK_COMMAND . '=' . $link->getFullLink()); ?>
@@ -5089,8 +5089,8 @@ class ModuleEntities extends Modules
                             }
                             ?>
 
-                            <div class="sylabeModuleEntityDescDate"><?php $this->_display->displayDate($link->getDate()); ?></div>
-                            <div class="sylabeModuleEntityDescSigner"><?php $this->_display->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
+                            <div class="sylabeModuleEntityDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
+                            <div class="sylabeModuleEntityDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleEntityDescContent">
                                 <span class="sylabeModuleEntityDescAttrib"><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction($attribName); ?></span>
                                 =
@@ -5109,7 +5109,7 @@ class ModuleEntities extends Modules
                                 ?>
 
                                 <div class="sylabeModuleEntityDescIcon">
-                                    <?php $this->_display->displayHypertextLink($this->_display->convertInlineIconFace('DEFAULT_ICON_LL'),
+                                    <?php $this->_displayInstance->displayHypertextLink($this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_LL'),
                                         '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleLinks')->getCommandName()
                                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . Display::DEFAULT_LINK_COMMAND
                                         . '&' . ModuleLinks::DEFAULT_LINK_COMMAND . '=' . $link->getFullLink()); ?>
@@ -5119,11 +5119,11 @@ class ModuleEntities extends Modules
                             }
                             ?>
 
-                            <div class="sylabeModuleEntityDescDate"><?php $this->_display->displayDate($link->getDate()); ?></div>
-                            <div class="sylabeModuleEntityDescSigner"><?php $this->_display->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
+                            <div class="sylabeModuleEntityDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
+                            <div class="sylabeModuleEntityDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleEntityDescContent">
 		<span class="sylabeModuleEntityDescEmotion">
-			<?php $this->_display->displayReferenceImage($emotionsIcons[$emotion], $emotionsList[$hashValue]); ?>
+			<?php $this->_displayInstance->displayReferenceImage($emotionsIcons[$emotion], $emotionsList[$hashValue]); ?>
             <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction($emotionsList[$hashValue]); ?>
 		</span>
                             </div>
@@ -5140,20 +5140,20 @@ class ModuleEntities extends Modules
                                 ?>
 
                                 <div class="sylabeModuleEntityDescIcon">
-                                    <?php $this->_display->displayHypertextLink($this->_display->convertInlineIconFace('DEFAULT_ICON_LL'),
+                                    <?php $this->_displayInstance->displayHypertextLink($this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_LL'),
                                         '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleLinks')->getCommandName()
                                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . Display::DEFAULT_LINK_COMMAND
                                         . '&' . ModuleLinks::DEFAULT_LINK_COMMAND . '=' . $link->getFullLink()); ?>
                                     &nbsp;
-                                    <?php $this->_display->displayInlineIconFace('DEFAULT_ICON_IWARN'); ?>
+                                    <?php $this->_displayInstance->displayInlineIconFace('DEFAULT_ICON_IWARN'); ?>
 
                                 </div>
                                 <?php
                             }
                             ?>
 
-                            <div class="sylabeModuleEntityDescDate"><?php $this->_display->displayDate($link->getDate()); ?></div>
-                            <div class="sylabeModuleEntityDescSigner"><?php $this->_display->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
+                            <div class="sylabeModuleEntityDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
+                            <div class="sylabeModuleEntityDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleEntityDescContent">
                                 <span class="sylabeModuleEntityDescAttrib"><?php $this->_echoTraduction('::sylabe:module:entities:AttribNotDisplayable'); ?></span>
                             </div>
@@ -5181,11 +5181,11 @@ class ModuleEntities extends Modules
                 && $nextLinkSigne != ''
             ) {
                 $url = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_display->getCurrentDisplayView()
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
                     . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID()
                     . '&' . Displays::DEFAULT_INLINE_COMMAND . '&' . Displays::DEFAULT_INLINE_CONTENT_COMMAND . '=properties'
                     . '&' . Displays::DEFAULT_NEXT_COMMAND . '=' . $nextLinkSigne;
-                $this->_display->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTraductionInstance()->getTraduction('::seeMore'));
+                $this->_displayInstance->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTraductionInstance()->getTraduction('::seeMore'));
             }
             unset($links);
         }
@@ -5510,8 +5510,8 @@ class ModuleGroups extends Modules
     public function initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_display = $this->_applicationInstance->getDisplayInstance();
-        $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
         $this->_hashGroup = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
@@ -5838,7 +5838,7 @@ class ModuleGroups extends Modules
                 );
 
                 // Affiche la liste de l'objet et du message.
-                echo $this->_display->getDisplayObjectsList($list, 'medium');
+                echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
                 unset($list);
             } else {
                 $param = array(
@@ -5847,12 +5847,12 @@ class ModuleGroups extends Modules
                     'displayRatio' => 'long',
                     'informationType' => 'error',
                 );
-                echo $this->_display->getDisplayInformation('::sylabe:module:groups:display:notOKCreateGroup', $param);
+                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:groups:display:notOKCreateGroup', $param);
             }
         }
 
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:MyGroups', $this->MODULE_LOGO);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:groups:display:MyGroups', $this->MODULE_LOGO);
 
         // Affiche le contenu.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('groups');
@@ -5908,7 +5908,7 @@ class ModuleGroups extends Modules
         unset($link, $instance);
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
         unset($list, $links, $listOkGroups);
     }
@@ -5922,7 +5922,7 @@ class ModuleGroups extends Modules
     private function _displayAllGroups(): void
     {
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:otherGroups', $this->MODULE_LOGO);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:groups:display:otherGroups', $this->MODULE_LOGO);
 
         // Affiche le contenu.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('allgroups');
@@ -5983,7 +5983,7 @@ class ModuleGroups extends Modules
         unset($link, $instance);
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
         unset($list, $links, $listOkGroups);
 
@@ -6115,10 +6115,10 @@ class ModuleGroups extends Modules
     private function _displayCreateGroup(): void
     {
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:groups:display:createGroup', $this->MODULE_REGISTERED_ICONS[1]);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:groups:display:createGroup', $this->MODULE_REGISTERED_ICONS[1]);
 
         // Si autorisé à créer un groupe.
-        if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitWriteGroup'))) {
+        if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitWriteGroup'))) {
             ?>
 
             <div class="text">
@@ -6213,7 +6213,7 @@ class ModuleGroups extends Modules
             'enableDisplayTypeHook' => false,
         );
         $param['objectRefs'] = $instance->getPropertySigners(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
-        echo $this->_display->getDisplayObject($instance, $param);
+        echo $this->_displayInstance->getDisplayObject($instance, $param);
         unset($instance);
 
         // Affichage des membres du groupe.
@@ -6249,7 +6249,7 @@ class ModuleGroups extends Modules
                         $list[$i]['actions'] = array();
 
                         // Supprimer le groupe.
-                        if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteLink', 'permitWriteGroup'))) {
+                        if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteLink', 'permitWriteGroup'))) {
                             $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                             $list[$i]['actions'][0]['icon'] = Displays::DEFAULT_ICON_LX;
                             $list[$i]['actions'][0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -6298,7 +6298,7 @@ class ModuleGroups extends Modules
                             $list[$i]['actions'] = array();
 
                             // Supprimer le groupe.
-                            if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteLink', 'permitWriteGroup'))) {
+                            if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteLink', 'permitWriteGroup'))) {
                                 $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                                 $list[$i]['actions'][0]['icon'] = Displays::DEFAULT_ICON_LX;
                                 $list[$i]['actions'][0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -6358,7 +6358,7 @@ class ModuleGroups extends Modules
                         $list[$i]['actions'] = array();
 
                         // Supprimer le groupe.
-                        if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteLink', 'permitWriteGroup'))) {
+                        if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteLink', 'permitWriteGroup'))) {
                             $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                             $list[$i]['actions'][0]['icon'] = Displays::DEFAULT_ICON_LX;
                             $list[$i]['actions'][0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -6548,8 +6548,8 @@ class ModuleObjects extends Modules
     public function initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_display = $this->_applicationInstance->getDisplayInstance();
-        $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
     }
@@ -6589,8 +6589,8 @@ class ModuleObjects extends Modules
                 // Recherche si l'objet est marqué.
                 $marked = $this->_applicationInstance->getMarkObject($id);
                 $markList = $this->_applicationInstance->getMarkObjectList();
-                $mode = $this->_display->getCurrentDisplayMode();
-                $view = $this->_display->getCurrentDisplayView();
+                $mode = $this->_displayInstance->getCurrentDisplayMode();
+                $view = $this->_displayInstance->getCurrentDisplayView();
 
                 if ($mode != $this->MODULE_COMMAND_NAME
                     || ($mode == $this->MODULE_COMMAND_NAME
@@ -6650,7 +6650,7 @@ class ModuleObjects extends Modules
                     $hookArray[4]['link'] = '?o=' . $id;
 
                     // Si l'entité est déverrouillée.
-                    if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink'))) {
+                    if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink'))) {
                         // Supprimer l'objet.
                         $hookArray[5]['name'] = '::sylabe:module:objects:ObjectDelete';
                         $hookArray[5]['icon'] = Displays::DEFAULT_ICON_LD;
@@ -6848,7 +6848,7 @@ class ModuleObjects extends Modules
 
             case '::sylabe:module:objet:ProtectionButtons' :
                 // Si l'entité est déverrouillée.
-                if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink'))
+                if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink'))
                     && $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected()
                 ) {
                     $hookArray[0]['name'] = '::sylabe:module:objects:ShareProtection';
@@ -6977,7 +6977,7 @@ class ModuleObjects extends Modules
             'enableDisplaySelfHook' => true,
             'enableDisplayTypeHook' => false,
         );
-        echo $this->_display->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        echo $this->_displayInstance->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
     }
 
 
@@ -7006,7 +7006,7 @@ class ModuleObjects extends Modules
             'enableDisplaySelfHook' => true,
             'enableDisplayTypeHook' => false,
         );
-        echo $this->_display->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        echo $this->_displayInstance->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
 
         // Affiche les propriétés.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('objprop');
@@ -7297,7 +7297,7 @@ class ModuleObjects extends Modules
             'enableDisplaySelfHook' => true,
             'enableDisplayTypeHook' => false,
         );
-        echo $this->_display->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        echo $this->_displayInstance->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
 
         // Affiche la navigation.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('objnav');
@@ -7352,14 +7352,14 @@ class ModuleObjects extends Modules
                 'enableDisplayJS' => true,
                 //'selfHookName' => 'selfMenuObject',
             );
-            echo $this->_display->getDisplayObjectsList($list, 'long');
+            echo $this->_displayInstance->getDisplayObjectsList($list, 'long');
             unset($list);
 
             // Affiche en ligne les entités pour qui c'est partagé.
             $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('objectprotectionshared');
 
             // affichage des boutons.
-            echo $this->_display->getDisplayHookMenuList('::sylabe:module:objet:ProtectionButtons', 'medium');
+            echo $this->_displayInstance->getDisplayHookMenuList('::sylabe:module:objet:ProtectionButtons', 'medium');
         } else {
             $list = array();
 
@@ -7373,7 +7373,7 @@ class ModuleObjects extends Modules
             );
 
             // N'affiche un message que si la modification est possible.
-            if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink'))) {
+            if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink'))) {
                 // Vérifie la présence de l'objet.
                 if ($object->checkPresent()
                     && $this->_applicationInstance->getCurrentObjectID() != $this->_nebuleInstance->getCurrentEntity()
@@ -7433,7 +7433,7 @@ class ModuleObjects extends Modules
 
             // Ajoute l'action de protection.
             if ($object->checkPresent()
-                && $this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink'))
+                && $this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink'))
                 && $this->_applicationInstance->getCurrentObjectID() != $this->_nebuleInstance->getCurrentEntity()
             ) {
                 $list[2]['param']['selfHookList'][0]['name'] = '::ProtectObject';
@@ -7446,7 +7446,7 @@ class ModuleObjects extends Modules
             }
 
             // Affichage.
-            echo $this->_display->getDisplayObjectsList($list, 'medium');
+            echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
             unset($list);
         }
     }
@@ -7565,7 +7565,7 @@ class ModuleObjects extends Modules
 
 
                     // Ajout l'action de déprotection ou de suppression de partage de protection.
-                    if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink'))) {
+                    if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink'))) {
                         if ($entity == $this->_nebuleInstance->getCurrentEntity()) {
                             // Déprotéger l'objet.
                             $list[$i]['param']['selfHookList'][0]['name'] = '::UnprotectObject';
@@ -7576,7 +7576,7 @@ class ModuleObjects extends Modules
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                                 . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         } elseif (!$this->_nebuleInstance->getIsRecoveryEntity($entity)
-                            || $this->_configuration->getOptionAsBoolean('permitRecoveryRemoveEntity')
+                            || $this->_configurationInstance->getOptionAsBoolean('permitRecoveryRemoveEntity')
                         ) {
                             // Annuler le partage de protection. Non fiable...
                             $list[$i]['param']['selfHookList'][0]['name'] = '::RemoveShareProtect';
@@ -7598,7 +7598,7 @@ class ModuleObjects extends Modules
             unset($instance, $typeEntity, $shareTo, $listOkEntities);
 
             // Affichage.
-            echo $this->_display->getDisplayObjectsList($list, 'medium');
+            echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
             unset($list);
         }
@@ -7637,14 +7637,14 @@ class ModuleObjects extends Modules
                 'enableDisplayTypeHook' => false,
                 'enableDisplayJS' => true,
             );
-            echo $this->_display->getDisplayObjectsList($list, 'long');
+            echo $this->_displayInstance->getDisplayObjectsList($list, 'long');
 
             // affichage des boutons.
-            echo $this->_display->getDisplayHookMenuList('::sylabe:module:objet:ProtectionShareButtons', 'medium');
+            echo $this->_displayInstance->getDisplayHookMenuList('::sylabe:module:objet:ProtectionShareButtons', 'medium');
 
-            if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink'))) {
+            if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink'))) {
                 // Affiche le titre.
-                echo $this->_display->getDisplayTitle('::sylabe:module:objects:ShareObjectProtection', $this->MODULE_REGISTERED_ICONS[3], false);
+                echo $this->_displayInstance->getDisplayTitle('::sylabe:module:objects:ShareObjectProtection', $this->MODULE_REGISTERED_ICONS[3], false);
 
                 // Affiche en ligne les entités pour qui cela est partagé.
                 $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('objectprotectionshareto');
@@ -7664,7 +7664,7 @@ class ModuleObjects extends Modules
 
         // Si l'objet est présent et protégé et si l'entité est déverrouillée
         if ($object->getMarkProtected()
-            && $this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink'))
+            && $this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink'))
         ) {
             $listOkEntities = array();
             $listOkGroups = array();
@@ -7831,7 +7831,7 @@ class ModuleObjects extends Modules
             unset($instance, $link, $typeEntity, $links, $listOkEntities);
 
             // Affichage.
-            echo $this->_display->getDisplayObjectsList($list, 'medium');
+            echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
             unset($list);
         }
@@ -8068,8 +8068,8 @@ class ModuleMessenger extends Modules
     public function initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_display = $this->_applicationInstance->getDisplayInstance();
-        $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
         $this->_hashConversation = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION);
@@ -8218,7 +8218,7 @@ class ModuleMessenger extends Modules
                 if ($view != $this->MODULE_REGISTERED_VIEWS[8]) {
                     // Affiche l'aide.
                     $arraySeed++;
-                    $hookArray[$arraySeed]['name'] = $this->_traduction->getTraduction('::::help');
+                    $hookArray[$arraySeed]['name'] = $this->_traductionInstance->getTraduction('::::help');
                     $hookArray[$arraySeed]['icon'] = Displays::DEFAULT_ICON_HELP;
                     $hookArray[$arraySeed]['desc'] = '::sylabe:module:messenger:helpConversation';
                     $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -8227,8 +8227,8 @@ class ModuleMessenger extends Modules
                 break;
 
             case 'selfMenuConversation':
-                if ($this->_display->getCurrentDisplayMode() == $this->MODULE_COMMAND_NAME) {
-                    if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[3]) {
+                if ($this->_displayInstance->getCurrentDisplayMode() == $this->MODULE_COMMAND_NAME) {
+                    if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[3]) {
                         if ($this->_unlocked) {
                             // Synchroniser.
                             $arraySeed++;
@@ -8346,7 +8346,7 @@ class ModuleMessenger extends Modules
                             }
 
                             // Si authorisé à dissimuler les liens.
-                            if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+                            if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
                                 // Si la conversation est marquée dissimulée.
                                 if ($objectInstance->getMarkObfuscated()) {
                                     // Rendre la conversation non dissimulée.
@@ -8434,7 +8434,7 @@ class ModuleMessenger extends Modules
                             . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=' . $object;
                     }
 
-                    if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[7]
+                    if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[7]
                         && $this->_unlocked
                     ) {
                         // Si pas une de mes conversations, ajouter la conversation.
@@ -8686,7 +8686,7 @@ class ModuleMessenger extends Modules
         // Si une conversation à été créée.
         if ($this->_applicationInstance->getActionInstance()->getCreateConversation()) {
             // Titre.
-            echo $this->_display->getDisplayTitle('::sylabe:module:messenger:conversationsAddTitle', $this->MODULE_REGISTERED_ICONS[1]);
+            echo $this->_displayInstance->getDisplayTitle('::sylabe:module:messenger:conversationsAddTitle', $this->MODULE_REGISTERED_ICONS[1]);
 
             // Récupération du résultat de la création.
             $createConversationID = $this->_applicationInstance->getActionInstance()->getCreateConversationID();
@@ -8756,7 +8756,7 @@ class ModuleMessenger extends Modules
                 }
 
                 // Détection de l'état de dissimulation.
-                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+                if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
                     $markObfuscated = $this->_conversationInstance->getMarkObfuscated($this->_nebuleInstance->getCurrentEntity());
                     $markObfuscatedDesc = '::sylabe:module:messenger:conversation:defaultUnobfuscated';
                     $markObfuscatedLink = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -8783,8 +8783,8 @@ class ModuleMessenger extends Modules
                 }
 
                 // Si pas de droits, pas d'actions possibles.
-                if (!$this->_configuration->getOptionAsBoolean('permitWrite')
-                    || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+                if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                    || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                     || !$this->_unlocked
                 ) {
                     $markClosedLink = '';
@@ -8829,7 +8829,7 @@ class ModuleMessenger extends Modules
                     'flagUnlockedIcon' => Displays::DEFAULT_ICON_LF,
                     'flagUnlockedLink' => $markClosedLink,
                 );
-                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+                if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
                     $list[0]['param']['enableDisplayFlagObfuscate'] = true;
                     $list[0]['param']['flagObfuscate'] = $markObfuscated;
                     $list[0]['param']['flagObfuscateText'] = $markObfuscatedDesc;
@@ -8837,7 +8837,7 @@ class ModuleMessenger extends Modules
                 }
 
                 // Affichage.
-                echo $this->_display->getDisplayObjectsList($list, 'medium');
+                echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
                 unset($list);
             } else {
                 $param = array(
@@ -8846,20 +8846,20 @@ class ModuleMessenger extends Modules
                     'displayRatio' => 'long',
                     'informationType' => 'error',
                 );
-                echo $this->_display->getDisplayInformation('::sylabe:module:messenger:create:notOKCreateConversation', $param);
+                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:messenger:create:notOKCreateConversation', $param);
             }
         }
 
         if ($this->_extractDisplayListAll()) {
             // Titre.
-            echo $this->_display->getDisplayTitle('::sylabe:module:messenger:conversationsListAllTitle', $this->MODULE_LOGO);
+            echo $this->_displayInstance->getDisplayTitle('::sylabe:module:messenger:conversationsListAllTitle', $this->MODULE_LOGO);
 
             $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('listconversations', $this->MODULE_REGISTERED_VIEWS[9]);
         } else {
             // Titre.
             /*if ( $this->_applicationInstance->getCurrentEntity() == $this->_nebuleInstance->getCurrentEntity() )
 			{*/
-            echo $this->_display->getDisplayTitle('::sylabe:module:messenger:myConversationsListTitle', $this->MODULE_LOGO);
+            echo $this->_displayInstance->getDisplayTitle('::sylabe:module:messenger:myConversationsListTitle', $this->MODULE_LOGO);
             /*}
 			else
 			{
@@ -8910,7 +8910,7 @@ class ModuleMessenger extends Modules
                 }
 
                 // Détection de l'état de dissimulation.
-                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+                if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
                     $markObfuscated = $objectInstance->getMarkObfuscated($this->_nebuleInstance->getCurrentEntity());
                     $markObfuscatedDesc = '::sylabe:module:messenger:conversation:defaultUnobfuscated';
                     if ($markObfuscated) {
@@ -8955,7 +8955,7 @@ class ModuleMessenger extends Modules
                     'flagUnlockedText' => $markClosedDesc,
                     'flagUnlockedIcon' => Displays::DEFAULT_ICON_LF,
                 );
-                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+                if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
                     $list[$i]['param']['enableDisplayFlagObfuscate'] = true;
                     $list[$i]['param']['flagObfuscate'] = $markObfuscated;
                     $list[$i]['param']['flagObfuscateText'] = $markObfuscatedDesc;
@@ -8969,7 +8969,7 @@ class ModuleMessenger extends Modules
         unset($listInstances, $id, $objectInstance);
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
         unset($list);
     }
 
@@ -8980,10 +8980,10 @@ class ModuleMessenger extends Modules
     private function _displayCreateConversation(): void
     {
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:messenger:conversationsAddTitle', $this->MODULE_REGISTERED_ICONS[1]);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:messenger:conversationsAddTitle', $this->MODULE_REGISTERED_ICONS[1]);
 
         // Si autorisé à créer une conversation.
-        if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitWriteConversation'))) {
+        if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitWriteConversation'))) {
             ?>
 
             <div class="text">
@@ -9001,17 +9001,17 @@ class ModuleMessenger extends Modules
                     <br/>
                     <input type="checkbox"
                            name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION_CLOSED; ?>"
-                           value="y"<?php if ($this->_configuration->getOptionUntyped('defaultObfuscateLinks')) echo ' checked'; ?> />
+                           value="y"<?php if ($this->_configurationInstance->getOptionUntyped('defaultObfuscateLinks')) echo ' checked'; ?> />
                     <?php $this->_echoTraduction('::sylabe:module:messenger:create:closedConversation'); ?><br/>
                     <input type="checkbox"
                            name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION_PROTECTED; ?>"
-                           value="y"<?php if ($this->_configuration->getOptionUntyped('defaultObfuscateLinks')) echo ' checked'; ?> />
+                           value="y"<?php if ($this->_configurationInstance->getOptionUntyped('defaultObfuscateLinks')) echo ' checked'; ?> />
                     <?php $this->_echoTraduction('::sylabe:module:messenger:create:defaultProtectedConversation'); ?>
                     <br/>
-                    <?php if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) { ?>
+                    <?php if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) { ?>
                         <input type="checkbox"
                                name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION_OBFUSCATE_LINKS; ?>"
-                               value="y"<?php if ($this->_configuration->getOptionUntyped('defaultObfuscateLinks')) echo ' checked'; ?> />
+                               value="y"<?php if ($this->_configurationInstance->getOptionUntyped('defaultObfuscateLinks')) echo ' checked'; ?> />
                         <?php $this->_echoTraduction('::sylabe:module:messenger:create:defaultProtectedConversationLinks'); ?>
                         <br/>
                     <?php } ?>
@@ -9028,7 +9028,7 @@ class ModuleMessenger extends Modules
                 'displayRatio' => 'long',
                 'informationType' => 'error',
             );
-            echo $this->_display->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
         }
     }
 
@@ -9091,7 +9091,7 @@ class ModuleMessenger extends Modules
         }
 
         // Détection de l'état de dissimulation.
-        if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
             $markObfuscated = $this->_conversationInstance->getMarkObfuscated($this->_nebuleInstance->getCurrentEntity());
             $markObfuscatedDesc = '::sylabe:module:messenger:conversation:defaultUnobfuscated';
             $markObfuscatedLink = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -9118,8 +9118,8 @@ class ModuleMessenger extends Modules
         }
 
         // Si pas de droits, pas d'actions possibles.
-        if (!$this->_configuration->getOptionAsBoolean('permitWrite')
-            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_unlocked
         ) {
             $markClosedLink = '';
@@ -9164,7 +9164,7 @@ class ModuleMessenger extends Modules
             'flagUnlockedIcon' => Displays::DEFAULT_ICON_LF,
             'flagUnlockedLink' => $markClosedLink,
         );
-        if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
             $list[0]['param']['enableDisplayFlagObfuscate'] = true;
             $list[0]['param']['flagObfuscate'] = $markObfuscated;
             $list[0]['param']['flagObfuscateText'] = $markObfuscatedDesc;
@@ -9172,10 +9172,10 @@ class ModuleMessenger extends Modules
         }
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
         // Affiche la création d'un message.
-        if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink','permitWriteConversation'))) {
+        if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink','permitWriteConversation'))) {
             $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('dispconversationhead');
         }
 
@@ -9253,7 +9253,7 @@ class ModuleMessenger extends Modules
     private function _display_InlineCreateMessage(): void
     {
         // Si autorisé à créer un message.
-        if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitWriteConversation'))) {
+        if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitWriteConversation'))) {
             ?>
 
             <div class="textSmall">
@@ -9275,15 +9275,15 @@ class ModuleMessenger extends Modules
                     <textarea
                             name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT; ?>"
                             rows="2" cols="80" wrap="soft"
-                            maxlength="<?php echo $this->_configuration->getOptionUntyped('sylabeIOReadMaxDataPHP'); ?>"></textarea><br/>
-                    <?php if ($this->_configuration->getOptionAsBoolean('permitProtectedObject')) { ?>
+                            maxlength="<?php echo $this->_configurationInstance->getOptionUntyped('sylabeIOReadMaxDataPHP'); ?>"></textarea><br/>
+                    <?php if ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject')) { ?>
                         <input
                                 type="checkbox"
                                 name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_PROTECT; ?>"
                                 value="y"<?php if ($this->_conversationInstance->getMarkProtected()) echo ' checked'; ?> />
                         <?php $this->_echoTraduction('::sylabe:module:messenger:create:createProtectedMessageShort'); ?>&nbsp;
                     <?php }
-                    if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+                    if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
                         ?>
 
                         <input
@@ -9387,7 +9387,7 @@ class ModuleMessenger extends Modules
         unset($links, $link);
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
     }
 
     /**
@@ -9443,7 +9443,7 @@ class ModuleMessenger extends Modules
         }
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
 
         // Comptage des messages affichés.
@@ -9470,7 +9470,7 @@ class ModuleMessenger extends Modules
                     'displayRatio' => 'long',
                     'informationType' => 'information',
                 );
-                echo $this->_display->getDisplayInformation('::sylabe:module:messenger:entityPublicConversationsWarning', $param);
+                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:messenger:entityPublicConversationsWarning', $param);
             }
 
             // Indice de fond paire ou impaire.
@@ -9625,7 +9625,7 @@ class ModuleMessenger extends Modules
                                 </p>
                                 <?php
                             }
-                            if ($this->_configuration->getOptionUntyped('sylabeModuleMessageriePermitSubReply') && $this->_unlocked) {
+                            if ($this->_configurationInstance->getOptionUntyped('sylabeModuleMessageriePermitSubReply') && $this->_unlocked) {
                                 ?>
 
                                 <p class="sylabeModuleMessagerieAction">
@@ -9683,7 +9683,7 @@ class ModuleMessenger extends Modules
                 'displayRatio' => 'long',
                 'informationType' => 'information',
             );
-            echo $this->_display->getDisplayInformation('::sylabe:module:messenger:noMessage', $param);
+            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:messenger:noMessage', $param);
         }
         unset($links);
     }
@@ -9707,7 +9707,7 @@ class ModuleMessenger extends Modules
     private function _displayMessage(): void
     {
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:messenger:messageDispTitle', $this->MODULE_REGISTERED_ICONS[4]);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:messenger:messageDispTitle', $this->MODULE_REGISTERED_ICONS[4]);
 
         // Extrait le lien de message à afficher.
         $linkid = $this->_extractLinkSign();
@@ -9731,7 +9731,7 @@ class ModuleMessenger extends Modules
                 'displayRatio' => 'long',
                 'informationType' => 'info',
             );
-            echo $this->_display->getDisplayInformation('::EmptyList', $param);
+            echo $this->_displayInstance->getDisplayInformation('::EmptyList', $param);
 
             return;
         }
@@ -9753,7 +9753,7 @@ class ModuleMessenger extends Modules
                 'displayRatio' => 'long',
                 'informationType' => 'error',
             );
-            echo $this->_display->getDisplayInformation(':::display:link:errorInvalid', $param);
+            echo $this->_displayInstance->getDisplayInformation(':::display:link:errorInvalid', $param);
 
             return;
         }
@@ -9824,7 +9824,7 @@ class ModuleMessenger extends Modules
         }
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
     }
 
 
@@ -9843,8 +9843,8 @@ class ModuleMessenger extends Modules
             '');
 
         // Si autorisé à créer un message.
-        if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink'))
-            && $this->_configuration->getOptionUntyped('sylabePermitUploadObject') // FIXME
+        if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteObject', 'permitWriteLink'))
+            && $this->_configurationInstance->getOptionUntyped('sylabePermitUploadObject') // FIXME
         ) {
             ?>
 
@@ -9865,14 +9865,14 @@ class ModuleMessenger extends Modules
                     <textarea
                             name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT; ?>"
                             rows="12" cols="80" wrap="soft"
-                            maxlength="<?php echo $this->_configuration->getOptionUntyped('sylabeIOReadMaxDataPHP'); ?>"></textarea><br/>
-                    <?php if ($this->_configuration->getOptionAsBoolean('permitProtectedObject')) { ?>
+                            maxlength="<?php echo $this->_configurationInstance->getOptionUntyped('sylabeIOReadMaxDataPHP'); ?>"></textarea><br/>
+                    <?php if ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject')) { ?>
                         <input type="checkbox"
                                name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_PROTECT; ?>"
                                value="y"<?php if ($this->_conversationInstance->getMarkProtected()) echo ' checked'; ?> />
                         <?php $this->_echoTraduction('::sylabe:module:messenger:create:createProtectedMessage'); ?><br/>
                     <?php }
-                    if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+                    if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
                         ?>
 
                         <input type="checkbox"
@@ -9893,7 +9893,7 @@ class ModuleMessenger extends Modules
                 'displayRatio' => 'long',
                 'informationType' => 'information',
             );
-            echo $this->_display->getDisplayInformation('::sylabe:module:messenger:MaxTextSize', $param, $this->_configuration->getOptionUntyped('sylabeIOReadMaxDataPHP'));
+            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:messenger:MaxTextSize', $param, $this->_configurationInstance->getOptionUntyped('sylabeIOReadMaxDataPHP'));
         } else {
             $param = array(
                 'enableDisplayIcon' => true,
@@ -9901,7 +9901,7 @@ class ModuleMessenger extends Modules
                 'displayRatio' => 'long',
                 'informationType' => 'error',
             );
-            echo $this->_display->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
         }
     }
 
@@ -9914,7 +9914,7 @@ class ModuleMessenger extends Modules
     private function _displayFollowers(): void
     {
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:messenger:conversationDestEntities', $this->MODULE_REGISTERED_ICONS[5]);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:messenger:conversationDestEntities', $this->MODULE_REGISTERED_ICONS[5]);
 
         $list = array();
 
@@ -9969,7 +9969,7 @@ class ModuleMessenger extends Modules
         }
 
         // Détection de l'état de dissimulation.
-        if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
             $markObfuscated = $this->_conversationInstance->getMarkObfuscated($this->_nebuleInstance->getCurrentEntity());
             $markObfuscatedDesc = '::sylabe:module:messenger:conversation:defaultUnobfuscated';
             $markObfuscatedLink = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -9996,8 +9996,8 @@ class ModuleMessenger extends Modules
         }
 
         // Si pas de droits, pas d'actions possibles.
-        if (!$this->_configuration->getOptionAsBoolean('permitWrite')
-            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_unlocked
         ) {
             $markClosedLink = '';
@@ -10040,7 +10040,7 @@ class ModuleMessenger extends Modules
             'flagUnlockedIcon' => Displays::DEFAULT_ICON_LF,
             'flagUnlockedLink' => $markClosedLink,
         );
-        if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
             $list[0]['param']['enableDisplayFlagObfuscate'] = true;
             $list[0]['param']['flagObfuscate'] = $markObfuscated;
             $list[0]['param']['flagObfuscateText'] = $markObfuscatedDesc;
@@ -10048,7 +10048,7 @@ class ModuleMessenger extends Modules
         }
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('listmyfollowers');
 
@@ -10175,7 +10175,7 @@ class ModuleMessenger extends Modules
                     'selfHookName' => '::module:messagerie:dest:followers:remove',
                     'objectRefs' => $addedBy,
                 );
-                if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteLink'))) {
+                if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteLink'))) {
                     $list[$i]['param']['enableDisplaySelfHook'] = true;
                     if ($addedByMe) {
                         $list[$i]['param']['selfHookList'][0] = array(
@@ -10191,7 +10191,7 @@ class ModuleMessenger extends Modules
                                 . '_' . $this->_hashConversationFollow
                                 . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(),
                         );
-                        if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) // @todo à vérifier si le lien dissimulé est bien pris en compte...
+                        if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) // @todo à vérifier si le lien dissimulé est bien pris en compte...
                         {
                             $list[$i]['param']['selfHookList'][1] = array(
                                 'name' => '::sylabe:module:messenger:hideAsFollower',
@@ -10225,7 +10225,7 @@ class ModuleMessenger extends Modules
                                 . '_' . $this->_hashConversationFollow
                                 . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(),
                         );
-                        if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+                        if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
                             $list[$i]['param']['selfHookList'][1] = array(
                                 'name' => '::sylabe:module:messenger:addAsHiddenFollower',
                                 'icon' => Displays::DEFAULT_ICON_LC,
@@ -10250,7 +10250,7 @@ class ModuleMessenger extends Modules
             }
         }
 
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
         unset($list, $listID);
     }
 
@@ -10264,8 +10264,8 @@ class ModuleMessenger extends Modules
     private function _display_InlineAddFollowers(): void
     {
         // Vérifie que une entité est connectée.
-        if (!$this->_configuration->getOptionAsBoolean('permitWrite')
-            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_unlocked) {
             return;
         }
@@ -10313,7 +10313,7 @@ class ModuleMessenger extends Modules
                     'displaySize' => 'medium',
                     'displayRatio' => 'short',
                 );
-                if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteLink'))) {
+                if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteLink'))) {
                     $list[$i]['param']['selfHookList'][0] = array(
                         'name' => '::sylabe:module:messenger:addAsFollower',
                         'icon' => $this->MODULE_REGISTERED_ICONS[3],
@@ -10327,7 +10327,7 @@ class ModuleMessenger extends Modules
                             . '_' . $this->_hashConversationFollow
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(),
                     );
-                    if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+                    if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
                         $list[$i]['param']['selfHookList'][1] = array(
                             'name' => '::sylabe:module:messenger:addAsHiddenFollower',
                             'icon' => Displays::DEFAULT_ICON_LC,
@@ -10356,9 +10356,9 @@ class ModuleMessenger extends Modules
             echo "<div class=\"sequence\"></div>\n";
 
             // Titre.
-            echo $this->_display->getDisplayTitle('::sylabe:module:messenger:alreadyFollower', $this->MODULE_REGISTERED_ICONS[3]);
+            echo $this->_displayInstance->getDisplayTitle('::sylabe:module:messenger:alreadyFollower', $this->MODULE_REGISTERED_ICONS[3]);
 
-            echo $this->_display->getDisplayObjectsList($list, 'medium');
+            echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
         }
         unset($list, $listID);
 
@@ -10417,7 +10417,7 @@ class ModuleMessenger extends Modules
                     'enableDisplayJS' => false,
                     'selfHookName' => '::module:messagerie:dest:followers:add',
                 );
-                if ($this->_configuration->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteLink'))) {
+                if ($this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteLink'))) {
                     $list[$i]['param']['selfHookList'][0] = array(
                         'name' => '::sylabe:module:messenger:addAsFollower',
                         'icon' => $this->MODULE_REGISTERED_ICONS[3],
@@ -10431,7 +10431,7 @@ class ModuleMessenger extends Modules
                             . '_' . $this->_hashConversationFollow
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(),
                     );
-                    if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+                    if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
                         $list[$i]['param']['selfHookList'][1] = array(
                             'name' => '::sylabe:module:messenger:addAsHiddenFollower',
                             'icon' => Displays::DEFAULT_ICON_LC,
@@ -10461,9 +10461,9 @@ class ModuleMessenger extends Modules
             echo "<div class=\"sequence\"></div>\n";
 
             // Titre.
-            echo $this->_display->getDisplayTitle('::sylabe:module:messenger:addAsFollower', $this->MODULE_REGISTERED_ICONS[3]);
+            echo $this->_displayInstance->getDisplayTitle('::sylabe:module:messenger:addAsFollower', $this->MODULE_REGISTERED_ICONS[3]);
 
-            echo $this->_display->getDisplayObjectsList($list, 'medium');
+            echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
         }
         unset($list, $listID);
     }
@@ -10477,7 +10477,7 @@ class ModuleMessenger extends Modules
     private function _displayHelp(): void
     {
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:messenger:AppTitle1', $this->MODULE_LOGO);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:messenger:AppTitle1', $this->MODULE_LOGO);
 
         // Aide traduite.
         $param = array(
@@ -10486,7 +10486,7 @@ class ModuleMessenger extends Modules
             'displayRatio' => 'long',
             'informationType' => 'information',
         );
-        echo $this->_display->getDisplayInformation('::sylabe:module:messenger:conversationHelp', $param);
+        echo $this->_displayInstance->getDisplayInformation('::sylabe:module:messenger:conversationHelp', $param);
 
         $list = array();
 
@@ -10496,7 +10496,7 @@ class ModuleMessenger extends Modules
             'displaySize' => 'medium',
             'displayRatio' => 'short',
         );
-        if ($this->_configuration->getOptionAsBoolean('permitProtectedObject')) {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject')) {
             $list[0]['param']['informationType'] = 'ok';
             $list[0]['information'] = '::sylabe:module:messenger:protectingEnabled';
         } else {
@@ -10510,7 +10510,7 @@ class ModuleMessenger extends Modules
             'displaySize' => 'medium',
             'displayRatio' => 'short',
         );
-        if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
             $list[1]['param']['informationType'] = 'ok';
             $list[1]['information'] = '::sylabe:module:messenger:obfuscatingEnabled';
         } else {
@@ -10518,7 +10518,7 @@ class ModuleMessenger extends Modules
             $list[1]['information'] = '::sylabe:module:messenger:obfuscatingDisabled';
         }
 
-        echo $this->_display->getDisplayObjectsList($list, 'medium', true);
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium', true);
     }
 
 
@@ -10530,7 +10530,7 @@ class ModuleMessenger extends Modules
     private function _displayListAll(): void
     {
         // Titre.
-        echo $this->_display->getDisplayTitle('::sylabe:module:messenger:conversationsListAllObjects', $this->MODULE_LOGO);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:messenger:conversationsListAllObjects', $this->MODULE_LOGO);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('listallconversations');
     }
@@ -10614,7 +10614,7 @@ class ModuleMessenger extends Modules
                     'flagUnlockedText' => $markClosedDesc,
                     'flagUnlockedIcon' => Displays::DEFAULT_ICON_LF,
                 );
-                if ($this->_configuration->getOptionAsBoolean('permitObfuscatedLink')) {
+                if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
                     $list[$i]['param']['enableDisplayFlagObfuscate'] = true;
                     $list[$i]['param']['flagObfuscate'] = $markObfuscated;
                     $list[$i]['param']['flagObfuscateText'] = $markObfuscatedDesc;
@@ -10628,7 +10628,7 @@ class ModuleMessenger extends Modules
         unset($link, $object, $objectInstance);
 
         // Affichage.
-        echo $this->_display->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
         unset($links);
     }
 

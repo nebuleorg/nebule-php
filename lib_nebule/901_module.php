@@ -85,21 +85,21 @@ abstract class Modules implements moduleInterface
      *
      * @var Configuration
      */
-    protected $_configuration;
+    protected $_configurationInstance;
 
     /**
      * Instance de la classe d'affichage.
      *
      * @var Displays
      */
-    protected $_display;
+    protected $_displayInstance;
 
     /**
      * Instance de la classe de traduction.
      *
      * @var Traductions
      */
-    protected $_traduction;
+    protected $_traductionInstance;
 
     /**
      * Instance de la métrologie.
@@ -132,7 +132,7 @@ abstract class Modules implements moduleInterface
     public function __construct(Applications $applicationInstance)
     {
         $this->_applicationInstance = $applicationInstance;
-        $this->_configuration = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
+        $this->_configurationInstance = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
     }
 
     /**
@@ -143,8 +143,8 @@ abstract class Modules implements moduleInterface
     public function initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_display = $this->_applicationInstance->getDisplayInstance();
-        $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
@@ -336,7 +336,7 @@ abstract class Modules implements moduleInterface
             return $this->_commandActionDisplayModuleCache;
 
         // Vérifie que l'on est en vue affichage de module.
-        if ($this->_display->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]) {
+        if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]) {
             // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE, FILTER_SANITIZE_STRING));
 
@@ -407,15 +407,15 @@ abstract class Modules implements moduleInterface
      * @param string $lang
      * @return string
      */
-    public function getTraduction(string $text, string $lang = ''): string
+    public function getTraductionInstance(string $text, string $lang = ''): string
     {
         $result = $text;
-        if ($this->_traduction == null) {
-            $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        if ($this->_traductionInstance == null) {
+            $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         }
 
         if ($lang == '') {
-            $lang = $this->_traduction->getCurrentLanguage();
+            $lang = $this->_traductionInstance->getCurrentLanguage();
         }
 
         if (isset($this->_table[$lang][$text])) {
@@ -433,7 +433,7 @@ abstract class Modules implements moduleInterface
      */
     protected function _traduction(string $text, string $lang = ''): string
     {
-        return $this->_traduction->getTraduction($text, $lang);
+        return $this->_traductionInstance->getTraduction($text, $lang);
     }
 
     /**
@@ -444,7 +444,7 @@ abstract class Modules implements moduleInterface
      */
     protected function _echoTraduction(string $text): void
     {
-        $this->_traduction->echoTraduction($text);
+        $this->_traductionInstance->echoTraduction($text);
     }
 
 

@@ -41,7 +41,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240528';
+    const APPLICATION_VERSION = '020240529';
     const APPLICATION_LICENCE = 'GNU GPL 2023-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -92,17 +92,8 @@ class Display extends Displays
      */
     public function _displayFull(): void
     {
-        # TODO
-        if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK))
-            $argBack = trim(filter_input(INPUT_GET, References::COMMAND_APPLICATION_BACK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        else
-            $argBack = '1';
-        $argLogout = filter_has_var(INPUT_GET, References::COMMAND_AUTH_ENTITY_LOGOUT);
-
-        $linkApplicationWebsite = Application::APPLICATION_WEBSITE;
-        if (strpos(Application::APPLICATION_WEBSITE, '://') === false)
-            $linkApplicationWebsite = 'http://' . Application::APPLICATION_WEBSITE;
         ?>
+
         <!DOCTYPE html>
         <html lang="">
         <head>
@@ -121,97 +112,17 @@ class Display extends Displays
             $this->_metrologyInstance->addLog('Display vbs', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ecbd188e');
             $this->_displayScripts();
             ?>
-            <style>
-                .layout-content {
-                    max-width: 80%;
-                }
-
-                .layout-content > div {
-                    min-width: 400px;
-                    margin-bottom: 20px;
-                    text-align: left;
-                    color: #ababab;
-                    white-space: normal;
-                }
-
-                h1 {
-                    font-family: monospace;
-                    font-size: 1.4em;
-                    font-weight: normal;
-                    color: #ababab;
-                }
-
-                .newlink {
-                    width: 100%;
-                }
-
-                .result img {
-                    height: 16px;
-                    width: 16px;
-                }
-            </style>
         </head>
         <body>
-        <div class="layout-header">
-            <div class="header-left">
-                <a href="/?<?php echo Displays::DEFAULT_BOOTSTRAP_LOGO_LINK; ?>">
-                    <img title="App switch" alt="[]" src="<?php echo Displays::DEFAULT_APPLICATION_LOGO; ?>"/>
-                </a>
-            </div>
-            <div class="header-right">
-                &nbsp;
-            </div>
-            <div class="header-center">
-                <p>
-                    <?php
-                    $name = $this->_nebuleInstance->getInstanceEntityInstance()->getFullName();
-                    if ($name != $this->_nebuleInstance->getInstanceEntity())
-                        echo $name;
-                    else
-                        echo '/';
-                    echo '<br />' . $this->_nebuleInstance->getInstanceEntity();
-                    ?>
-                </p>
-            </div>
-        </div>
-        <div class="layout-footer">
-            <div class="footer-center">
-                <p>
-                    <?php echo Application::APPLICATION_NAME; ?><br/>
-                    <?php echo Application::APPLICATION_VERSION . ' ' . $this->_configurationInstance->getOptionAsString('codeBranch'); ?><br/>
-                    (c) <?php echo Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR; ?> - <a
-                            href="<?php echo $linkApplicationWebsite; ?>" target="_blank"
-                            style="text-decoration:none;"><?php echo Application::APPLICATION_WEBSITE; ?></a>
-                </p>
-            </div>
-        </div>
+        <?php
+        $this->_displayHeader();
+        $this->_displayFooter();
+        ?>
         <div class="layout-main">
             <div class="layout-content">
                 <?php
-                $this->_metrologyInstance->addLog('Display checks', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '28feadb6');
-                $this->displaySecurityAlert('small', false);
-
                 $this->_metrologyInstance->addLog('Display content', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '58d043ab');
                 $this->_displayContent();
-
-                $securityCheck = $this->displaySecurityAlert('medium', true);
-
-                // FIXME
-                if ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity') && $securityCheck == 'ok') {
-                    if ($this->_unlocked) {
-                        $this->_askLock();
-                    } else {
-                        $this->_askUnlock();
-                    }
-                } else {
-                    $param = array(
-                        'enableDisplayAlone' => true,
-                        'enableDisplayIcon' => true,
-                        'informationType' => 'error',
-                        'displayRatio' => 'short',
-                    );
-                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::err_NotPermit', $param);
-                }
                 ?>
 
             </div>
@@ -225,6 +136,35 @@ class Display extends Displays
     {
         ?>
 
+        <style>
+            .layout-content {
+                max-width: 80%;
+            }
+
+            .layout-content > div {
+                min-width: 400px;
+                margin-bottom: 20px;
+                text-align: left;
+                color: #ababab;
+                white-space: normal;
+            }
+
+            h1 {
+                font-family: monospace;
+                font-size: 1.4em;
+                font-weight: normal;
+                color: #ababab;
+            }
+
+            .newlink {
+                width: 100%;
+            }
+
+            .result img {
+                height: 16px;
+                width: 16px;
+            }
+        </style>
         <?php
 
         // Ajout de la partie CSS du module en cours d'utilisation, si présent.
@@ -252,12 +192,29 @@ class Display extends Displays
     {
         ?>
 
+        <div class="layout-header">
+            <div class="header-left">
+                <a href="/?<?php echo Displays::DEFAULT_BOOTSTRAP_LOGO_LINK; ?>">
+                    <img title="App switch" alt="[]" src="<?php echo Displays::DEFAULT_APPLICATION_LOGO; ?>"/>
+                </a>
+            </div>
+            <div class="header-right">
+                &nbsp;
+            </div>
+            <div class="header-center">
+                <p>
+                    <?php
+                    $name = $this->_nebuleInstance->getInstanceEntityInstance()->getFullName();
+                    if ($name != $this->_nebuleInstance->getInstanceEntity())
+                        echo $name;
+                    else
+                        echo '/';
+                    echo '<br />' . $this->_nebuleInstance->getInstanceEntity();
+                    ?>
+                </p>
+            </div>
+        </div>
         <?php
-    }
-
-    private function _displayHeaderCenter()
-    {
-        //...
     }
 
     private function _displayMenuApplications()
@@ -273,6 +230,14 @@ class Display extends Displays
     private function _displayContent()
     {
         $module = $this->_applicationInstance->getModule('ModuleAutent');
+
+        # TODO
+        if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK))
+            $argBack = trim(filter_input(INPUT_GET, References::COMMAND_APPLICATION_BACK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        else
+            $argBack = '1';
+        $argLogout = filter_has_var(INPUT_GET, References::COMMAND_AUTH_ENTITY_LOGOUT);
+
         if ($module != null) {
             $module->displayModule();
             $this->_displayInlineContentID();
@@ -291,32 +256,23 @@ class Display extends Displays
     // Affiche la fin de page.
     private function _displayFooter()
     {
+        $linkApplicationWebsite = Application::APPLICATION_WEBSITE;
+        if (strpos(Application::APPLICATION_WEBSITE, '://') === false)
+            $linkApplicationWebsite = 'http://' . Application::APPLICATION_WEBSITE;
+
         ?>
 
-        </body>
-        </html>
-        <?php
-    }
-
-    private function _askLock()
-    {
-        echo '&gt;&nbsp;';
-        $this->_applicationInstance->getDisplayInstance()->displayHypertextLink('Lock', '?' . nebule::COMMAND_AUTH_ENTITY_LOGOUT . '&' . nebule::COMMAND_FLUSH);
-        echo '&nbsp;&lt;';
-    }
-
-    private function _askUnlock()
-    {
-        ?>
-
-        <form method="post"
-              action="?<?php echo nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getInstanceEntity() . '&' . nebule::COMMAND_SWITCH_TO_ENTITY; ?>">
-            <input type="hidden" name="id" value="<?php echo $this->_nebuleInstance->getInstanceEntity(); ?>">
-            <label>
-                <input type="password" name="pwd">
-            </label>
-            <input type="submit" value="Unlock">
-        </form>
+        <div class="layout-footer">
+            <div class="footer-center">
+                <p>
+                    <?php echo Application::APPLICATION_NAME; ?><br/>
+                    <?php echo Application::APPLICATION_VERSION . ' ' . $this->_configurationInstance->getOptionAsString('codeBranch'); ?><br/>
+                    (c) <?php echo Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR; ?> - <a
+                            href="<?php echo $linkApplicationWebsite; ?>" target="_blank"
+                            style="text-decoration:none;"><?php echo Application::APPLICATION_WEBSITE; ?></a>
+                </p>
+            </div>
+        </div>
         <?php
     }
 }
@@ -459,7 +415,7 @@ class ModuleAutent extends Modules
     protected $MODULE_COMMAND_NAME = 'log';
     protected $MODULE_DEFAULT_VIEW = 'blog';
     protected $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    protected $MODULE_VERSION = '020240514';
+    protected $MODULE_VERSION = '020240529';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
     protected $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -515,6 +471,10 @@ class ModuleAutent extends Modules
      */
     public function displayModule(): void
     {
+        $this->_metrologyInstance->addLog('Display checks', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '28feadb6');
+        $this->_displayInstance->displaySecurityAlert('small', true);
+        $this->_displayCurrentEntity();
+
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
                 $this->_displayInfo();
@@ -545,27 +505,11 @@ class ModuleAutent extends Modules
     private function _displayInfo(): void
     {
         $this->_metrologyInstance->addLog('Display desc ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '1f00a8b1');
-        $param = array(
-            'enableDisplayColor' => true,
-            'enableDisplayIcon' => true,
-            'enableDisplayRefs' => false,
-            'enableDisplayName' => true,
-            'enableDisplayID' => false,
-            'enableDisplayFlags' => true,
-            'enableDisplayFlagProtection' => true,
-            'flagProtection' => $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected(),
-            'enableDisplayFlagObfuscate' => false,
-            'enableDisplayFlagUnlocked' => false,
-            'enableDisplayFlagState' => true,
-            'enableDisplayFlagEmotions' => true,
-            'enableDisplayStatus' => true,
-            'enableDisplayContent' => true,
-            'displaySize' => 'medium',
-            'displayRatio' => 'long',
-            'enableDisplaySelfHook' => true,
-            'enableDisplayTypeHook' => false,
-        );
-        echo $this->_display->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        if ($this->_unlocked) {
+            echo "Lock"; # FIXME link
+        } else {
+            echo "Unlock"; # FIXME link
+        }
     }
 
     /**
@@ -574,27 +518,29 @@ class ModuleAutent extends Modules
     private function _displayLogin(): void
     {
         $this->_metrologyInstance->addLog('Display login ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '61a2b0dd');
-        $param = array(
-            'enableDisplayColor' => true,
-            'enableDisplayIcon' => true,
-            'enableDisplayRefs' => false,
-            'enableDisplayName' => true,
-            'enableDisplayID' => false,
-            'enableDisplayFlags' => true,
-            'enableDisplayFlagProtection' => true,
-            'flagProtection' => $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected(),
-            'enableDisplayFlagObfuscate' => false,
-            'enableDisplayFlagUnlocked' => false,
-            'enableDisplayFlagState' => true,
-            'enableDisplayFlagEmotions' => true,
-            'enableDisplayStatus' => true,
-            'enableDisplayContent' => true,
-            'displaySize' => 'medium',
-            'displayRatio' => 'long',
-            'enableDisplaySelfHook' => true,
-            'enableDisplayTypeHook' => false,
-        );
-        echo $this->_display->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        if ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')
+            && $this->_applicationInstance->getCheckSecurityAll() == 'OK')
+        {
+            ?>
+
+            <form method="post"
+                  action="?<?php echo nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getInstanceEntity() . '&' . nebule::COMMAND_SWITCH_TO_ENTITY; ?>">
+                <input type="hidden" name="id" value="<?php echo $this->_nebuleInstance->getInstanceEntity(); ?>">
+                <label>
+                    <input type="password" name="pwd">
+                </label>
+                <input type="submit" value="Unlock">
+            </form>
+            <?php
+        } else {
+            $param = array(
+                'enableDisplayAlone' => true,
+                'enableDisplayIcon' => true,
+                'informationType' => 'error',
+                'displayRatio' => 'short',
+            );
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::err_NotPermit', $param);
+        }
     }
 
     /**
@@ -603,6 +549,21 @@ class ModuleAutent extends Modules
     private function _displayLogout(): void
     {
         $this->_metrologyInstance->addLog('Display logout ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '833de289');
+        ?>
+
+        <form method="post"
+              action="?<?php echo nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getInstanceEntity() . '&' . nebule::COMMAND_SWITCH_TO_ENTITY; ?>">
+            <input type="hidden" name="id" value="<?php echo $this->_nebuleInstance->getInstanceEntity(); ?>">
+            <label>
+                <input type="password" name="pwd">
+            </label>
+            <input type="submit" value="Unlock">
+        </form>
+        <?php
+    }
+
+    private function _displayCurrentEntity(): void
+    {
         $param = array(
             'enableDisplayColor' => true,
             'enableDisplayIcon' => true,
@@ -619,11 +580,11 @@ class ModuleAutent extends Modules
             'enableDisplayStatus' => true,
             'enableDisplayContent' => true,
             'displaySize' => 'medium',
-            'displayRatio' => 'long',
+            'displayRatio' => 'short',
             'enableDisplaySelfHook' => true,
             'enableDisplayTypeHook' => false,
         );
-        echo $this->_display->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        echo $this->_displayInstance->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
     }
 
 

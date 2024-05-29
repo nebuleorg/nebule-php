@@ -438,7 +438,7 @@ abstract class Traductions
             if (($result == '' || $result == $text)
                 && is_a($this->_applicationInstance->getCurrentModuleInstance(), '\Nebule\Library\Modules')
             ) {
-                $result = $this->_applicationInstance->getCurrentModuleInstance()->getTraduction($text, $lang);
+                $result = $this->_applicationInstance->getCurrentModuleInstance()->getTraductionInstance($text, $lang);
                 $this->_metrologyInstance->addLog('Module 2 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             }
 
@@ -458,7 +458,7 @@ abstract class Traductions
             if (($result == '' || $result == $text)
                 && is_a($this->_applicationInstance->getCurrentModuleInstance(), '\Nebule\Library\Modules')
             ) {
-                $result = $this->_applicationInstance->getCurrentModuleInstance()->getTraduction($text, $this->_defaultLanguage);
+                $result = $this->_applicationInstance->getCurrentModuleInstance()->getTraductionInstance($text, $this->_defaultLanguage);
                 $this->_metrologyInstance->addLog('Module 4 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             }
 

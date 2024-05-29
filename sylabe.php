@@ -2205,11 +2205,11 @@ class ModuleHelp extends Modules
             'displayRatio' => 'short',
             'icon' => $module->getLogo(),
         );
-        echo $this->_display->getDisplayInformation($module->getTraduction($module->getName()), $param);
+        echo $this->_displayInstance->getDisplayInformation($module->getTraduction($module->getName()), $param);
 
         // Affiche le titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[3]);
-        echo $this->_display->getDisplayTitle($this->_applicationInstance->getTraductionInstance()->getTraduction('::ChangeLanguage'), $icon, false);
+        echo $this->_displayInstance->getDisplayTitle($this->_applicationInstance->getTraductionInstance()->getTraduction('::ChangeLanguage'), $icon, false);
 
         // Affiche la liste des langues.
         echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('helpLanguages', 'Medium');
@@ -2266,7 +2266,7 @@ class ModuleHelp extends Modules
         //$list[4]['object'] = '1';
         $list[5]['information'] = '<a href="http://' . BOOTSTRAP_WEBSITE . '" target="_blank">' . BOOTSTRAP_WEBSITE . '</a>';
         $list[5]['param'] = $param;
-        echo $this->_display->getDisplayObjectsList($list, 'Medium', false);
+        echo $this->_displayInstance->getDisplayObjectsList($list, 'Medium', false);
 
         ?>
         <div class="text">

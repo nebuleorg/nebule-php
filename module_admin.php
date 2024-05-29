@@ -216,7 +216,7 @@ class ModuleAdmin extends Modules
     {
         // Affiche le titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
-        echo $this->_display->getDisplayTitle('::sylabe:module:admin:display:AppOptions', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:admin:display:AppOptions', $icon, false);
 
         if ($this->_unlocked) {
             $listOptions = $this->_listOptions;
@@ -238,7 +238,7 @@ class ModuleAdmin extends Modules
             $i = 0;
             foreach ($listOptions as $optionName) {
                 // Extrait les propriétés de l'option.
-                $optionValue = $this->_configuration->getOptionUntyped($optionName);
+                $optionValue = $this->_configurationInstance->getOptionUntyped($optionName);
                 $optionID = $this->_nebuleInstance->getCryptoInstance()->hash($optionName);
                 $optionValueDisplay = (string)$optionValue;
                 $optionType = $listOptionsType[$optionName];
@@ -254,7 +254,7 @@ class ModuleAdmin extends Modules
             }
 
             // Affichage.
-            echo $this->_display->getDisplayObjectsList($list, 'Medium', false);
+            echo $this->_displayInstance->getDisplayObjectsList($list, 'Medium', false);
         } else {
             $param = array(
                 'enableDisplayAlone' => true,
@@ -262,7 +262,7 @@ class ModuleAdmin extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_display->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
         }
     }
 
@@ -275,7 +275,7 @@ class ModuleAdmin extends Modules
     {
         // Affiche le titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
-        echo $this->_display->getDisplayTitle('::sylabe:module:admin:display:NebOptions', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:admin:display:NebOptions', $icon, false);
 
         if ($this->_unlocked) {
             $listOptions = nebule::getListOptions();
@@ -301,7 +301,7 @@ class ModuleAdmin extends Modules
             $i = 0;
             foreach ($listOptions as $optionName) {
                 // Extrait les propriétés de l'option.
-                $optionValue = $this->_configuration->getOptionUntyped($optionName);
+                $optionValue = $this->_configurationInstance->getOptionUntyped($optionName);
                 $optionID = $this->_nebuleInstance->getCryptoInstance()->hash($optionName);
                 $optionValueDisplay = (string)$optionValue;
                 $optionType = $listOptionsType[$optionName];
@@ -311,7 +311,7 @@ class ModuleAdmin extends Modules
                 $optionDefaultDisplay = (string)$optionDefaultValue;
                 $optionCriticality = $listOptionsCriticality[$optionName];
                 $optionDescription = $listOptionsDescription[$optionName];
-                $optionLocked = ($this->_configuration->getOptionFromEnvironmentUntyped($optionName) !== null);
+                $optionLocked = ($this->_configurationInstance->getOptionFromEnvironmentUntyped($optionName) !== null);
 
                 $list[$i]['information'] = $optionName . ' = ' . $optionValueDisplay . '<br />' . $optionDescription;
                 $list[$i]['param'] = $param;
@@ -321,7 +321,7 @@ class ModuleAdmin extends Modules
             }
 
             // Affichage.
-            echo $this->_display->getDisplayObjectsList($list, 'Medium', false);
+            echo $this->_displayInstance->getDisplayObjectsList($list, 'Medium', false);
         } else {
             $param = array(
                 'enableDisplayAlone' => true,
@@ -329,7 +329,7 @@ class ModuleAdmin extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_display->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
         }
     }
 
@@ -342,7 +342,7 @@ class ModuleAdmin extends Modules
     {
         // Affiche le titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[1]);
-        echo $this->_display->getDisplayTitle('::sylabe:module:admin:display:seeAdmins', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:admin:display:seeAdmins', $icon, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('adminlist');
     }
@@ -399,7 +399,7 @@ class ModuleAdmin extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_display->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
         }
     }
 
@@ -412,7 +412,7 @@ class ModuleAdmin extends Modules
     {
         // Affiche le titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[1]);
-        echo $this->_display->getDisplayTitle('::sylabe:module:admin:display:seeRecovery', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:admin:display:seeRecovery', $icon, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('recoverylist');
     }
@@ -470,7 +470,7 @@ class ModuleAdmin extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_display->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
         }
     }
 

@@ -68,8 +68,8 @@ class ModuleManage extends Modules
     public function initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_display = $this->_applicationInstance->getDisplayInstance();
-        $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
         $this->_hashModule = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
@@ -105,13 +105,13 @@ class ModuleManage extends Modules
 
                 // Synchronisation des applications.
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[0]
-                    && $this->_configuration->getOptionAsBoolean('permitWrite')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                    && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
-                    && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
-                    && $this->_configuration->getOptionAsBoolean('permitSynchronizeApplication')
-                    && ($this->_configuration->getOptionAsBoolean('permitPublicSynchronizeApplication')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeObject')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeApplication')
+                    && ($this->_configurationInstance->getOptionAsBoolean('permitPublicSynchronizeApplication')
                         || $this->_unlocked
                     )
                 ) {
@@ -128,10 +128,10 @@ class ModuleManage extends Modules
 
                 // Ajout d'un module.
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[0]
-                    && $this->_configuration->getOptionAsBoolean('permitWrite')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                    && $this->_configuration->getOptionAsBoolean('permitUploadLink')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
                     && $this->_unlocked
                 ) {
                     $hookArray[1]['name'] = '::sylabe:module:manage:create:createModule';
@@ -143,14 +143,14 @@ class ModuleManage extends Modules
 
                 // Synchronisation du module.
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]
-                    && $this->_configuration->getOptionAsBoolean('permitWrite')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-                    && $this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
-                    && $this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
-                    && $this->_configuration->getOptionAsBoolean('permitSynchronizeApplication')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeObject')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeApplication')
                     && isset($listModulesRID[$this->getExtractCommandDisplayModule()])
-                    && ($this->_configuration->getOptionAsBoolean('permitPublicSynchronizeApplication')
+                    && ($this->_configurationInstance->getOptionAsBoolean('permitPublicSynchronizeApplication')
                         || $this->_unlocked
                     )
                 ) {
@@ -167,8 +167,8 @@ class ModuleManage extends Modules
 
                 // Modification du code du module.
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]
-                    && $this->_configuration->getOptionAsBoolean('permitWrite')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                     && isset($listModulesRID[$this->getExtractCommandDisplayModule()])
                     && $this->_unlocked
                 ) {
@@ -193,7 +193,7 @@ class ModuleManage extends Modules
      */
     public function displayModule(): void
     {
-        switch ($this->_display->getCurrentDisplayView()) {
+        switch ($this->_displayInstance->getCurrentDisplayView()) {
 //            case $this->MODULE_REGISTERED_VIEWS[0]:
 //                $this->_displayModules();
 //                break;
@@ -279,9 +279,9 @@ class ModuleManage extends Modules
     private function _extractActionAddModule(): void
     {
         // Vérifie que la création de liens soit authorisé.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '468a2957');
@@ -315,8 +315,8 @@ class ModuleManage extends Modules
     private function _extractActionAddModuleCode(): void
     {
         // Vérifie que la crétion de liens soit authorisé.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9e20fc27');
@@ -356,9 +356,9 @@ class ModuleManage extends Modules
         global $bootstrapApplicationIID;
 
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             && $this->_unlocked
         ) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add module', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '25403222');
@@ -374,7 +374,7 @@ class ModuleManage extends Modules
             $signer = $this->_nebuleInstance->getCurrentEntity();
             $action = 'l';
             $source = $this->_actionAddModuleRID;
-            $target = $this->_nebuleInstance->getCryptoInstance()->hash($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
+            $target = $this->_nebuleInstance->getCryptoInstance()->hash($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
             $meta = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_HASH);
             $this->_createLink_DEPRECATED($signer, $date, $action, $source, $target, $meta, false);
 
@@ -400,8 +400,8 @@ class ModuleManage extends Modules
     private function _actionAddModuleCode(): void
     {
         // Vérifie que la création de liens soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add code ' . $this->_actionAddModuleID . ' to module ' . $this->_actionAddModuleRID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '128f5522');
@@ -430,7 +430,7 @@ class ModuleManage extends Modules
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
-        echo $this->_display->getDisplayTitle('::sylabe:module:manage:Modules', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:manage:Modules', $icon, false);
 
         // Affichage la liste des modules.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('modlist');
@@ -452,7 +452,7 @@ class ModuleManage extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_display->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
 
             return;
         }
@@ -505,7 +505,7 @@ class ModuleManage extends Modules
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
                                 . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $rid
                                 . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $className,
-                            'objectName' => $instance->getTraduction($name, $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage()),
+                            'objectName' => $instance->getTraductionInstance($name, $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage()),
                             'objectRefs' => array(),
                             'objectIcon' => $instance->getLogo(),
                             'displaySize' => 'medium',
@@ -552,7 +552,7 @@ class ModuleManage extends Modules
                             $param['flagActivatedDesc'] = '::sylabe:module:manage:ModuleDisabled';
                         }
                         $instance = $this->_nebuleInstance->newObject('0'); // FIXME
-                        echo $this->_display->getDisplayObject($instance, $param);
+                        echo $this->_displayInstance->getDisplayObject($instance, $param);
 
                         // Marque comme vu.
                         $listOkModules[$name] = true;
@@ -576,7 +576,7 @@ class ModuleManage extends Modules
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
-        echo $this->_display->getDisplayTitle('::sylabe:module:manage:Module', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:manage:Module', $icon, false);
 
         // Affichage du module avec transmission de la variable d'affichage.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('moddisp', self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule());
@@ -608,7 +608,7 @@ class ModuleManage extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_display->getDisplayInformation('::sylabe:module:manage:display:noModule', $param);
+            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:manage:display:noModule', $param);
 
             return;
         }
@@ -621,7 +621,7 @@ class ModuleManage extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_display->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
 
             return;
         }
@@ -641,7 +641,7 @@ class ModuleManage extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_display->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
 
             return;
         }
@@ -694,7 +694,7 @@ class ModuleManage extends Modules
                     'displaySize' => 'medium',
                     'displayRatio' => 'long',
                 );
-                echo $this->_display->getDisplayObject($instance, $param);
+                echo $this->_displayInstance->getDisplayObject($instance, $param);
 
                 // description du module.
                 $param = array(
@@ -703,7 +703,7 @@ class ModuleManage extends Modules
                     'displayRatio' => 'long',
                     'informationType' => 'information',
                 );
-                echo $this->_display->getDisplayInformation($instance->getTraduction($instance->getHelp()), $param);
+                echo $this->_displayInstance->getDisplayInformation($instance->getTraduction($instance->getHelp()), $param);
 
                 // Affiche l'application (RID).
                 if ($rid != '0') {
@@ -743,7 +743,7 @@ class ModuleManage extends Modules
                             . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $rid;
                         $param['objectIcon'] = $this->_applicationInstance->getModule('ModuleReferences')->getLogo();
                     }
-                    echo $this->_display->getDisplayObject($object, $param);
+                    echo $this->_displayInstance->getDisplayObject($object, $param);
                 } else {
                     $param = array(
                         'enableDisplayIcon' => true,
@@ -751,7 +751,7 @@ class ModuleManage extends Modules
                         'displayRatio' => 'long',
                         'informationType' => 'warn',
                     );
-                    echo $this->_display->getDisplayInformation('::sylabe:module:manage:display:integratedModule', $param);
+                    echo $this->_displayInstance->getDisplayInformation('::sylabe:module:manage:display:integratedModule', $param);
                 }
 
                 // ID
@@ -766,7 +766,7 @@ class ModuleManage extends Modules
                     $param['objectIcon'] = $this->MODULE_LOGO;
                     $param['enableDisplayFlagState'] = true;
                     $param['enableDisplayFlagProtection'] = true;
-                    echo $this->_display->getDisplayObject($object, $param);
+                    echo $this->_displayInstance->getDisplayObject($object, $param);
                 }
 
                 ?>
@@ -784,7 +784,7 @@ class ModuleManage extends Modules
                         'displayRatio' => 'short',
                         'informationType' => 'ok',
                     );
-                    echo $this->_display->getDisplayInformation('::sylabe:module:manage:ModuleValid', $param);
+                    echo $this->_displayInstance->getDisplayInformation('::sylabe:module:manage:ModuleValid', $param);
                 } else {
                     $param = array(
                         'enableDisplayIcon' => true,
@@ -792,18 +792,18 @@ class ModuleManage extends Modules
                         'displayRatio' => 'short',
                         'informationType' => 'error',
                     );
-                    echo $this->_display->getDisplayInformation('::sylabe:module:manage:ModuleInvalid', $param);
+                    echo $this->_displayInstance->getDisplayInformation('::sylabe:module:manage:ModuleInvalid', $param);
                 }
 
                 // Activation du module.
                 if ($this->_unlocked
-                    && $this->_configuration->getOptionAsBoolean('permitWrite')
-                    && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                     && ($this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getCodeMaster()
                         || ($this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getDefaultEntity()
-                            && $this->_configuration->getOptionAsBoolean('permitInstanceEntityAsAuthority') )
+                            && $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority') )
                         || ($this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getDefaultEntity()
-                            && $this->_configuration->getOptionAsBoolean('permitDefaultEntityAsAuthority'))
+                            && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority'))
                     )
                     && $rid != '0'
                 ) {
@@ -834,7 +834,7 @@ class ModuleManage extends Modules
                         $dispHook['name'] = $this->_traduction('::sylabe:module:manage:ModuleDisabled');
                         $dispHook['desc'] = $this->_traduction('::sylabe:module:manage:ModuleEnable');
                     }
-                    echo $this->_display->getDisplayHookAction($dispHook, true, 'MediumShort');
+                    echo $this->_displayInstance->getDisplayHookAction($dispHook, true, 'MediumShort');
                 } else {
                     $param = array(
                         'enableDisplayIcon' => true,
@@ -845,10 +845,10 @@ class ModuleManage extends Modules
                         && $listModulesEnabled[$className]
                     ) {
                         $param['informationType'] = 'ok';
-                        echo $this->_display->getDisplayInformation('::sylabe:module:manage:ModuleEnabled', $param);
+                        echo $this->_displayInstance->getDisplayInformation('::sylabe:module:manage:ModuleEnabled', $param);
                     } else {
                         $param['informationType'] = 'error';
-                        echo $this->_display->getDisplayInformation('::sylabe:module:manage:ModuleDisabled', $param);
+                        echo $this->_displayInstance->getDisplayInformation('::sylabe:module:manage:ModuleDisabled', $param);
                     }
                 }
 
@@ -859,7 +859,7 @@ class ModuleManage extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'information',
                 );
-                echo $this->_display->getDisplayInformation('Class : ' . $className, $param);
+                echo $this->_displayInstance->getDisplayInformation('Class : ' . $className, $param);
 
                 // Version.
                 $param = array(
@@ -868,7 +868,7 @@ class ModuleManage extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'information',
                 );
-                echo $this->_display->getDisplayInformation('Version : ' . $instance->getVersion(), $param);
+                echo $this->_displayInstance->getDisplayInformation('Version : ' . $instance->getVersion(), $param);
 
                 // Interface.
                 $param = array(
@@ -877,7 +877,7 @@ class ModuleManage extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'information',
                 );
-                echo $this->_display->getDisplayInformation('Interface : ' . $instance->getInterface(), $param);
+                echo $this->_displayInstance->getDisplayInformation('Interface : ' . $instance->getInterface(), $param);
 
                 // Licence.
                 $param = array(
@@ -886,7 +886,7 @@ class ModuleManage extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'information',
                 );
-                echo $this->_display->getDisplayInformation($instance->getDevelopper() . ' <br />' . $instance->getLicence(), $param);
+                echo $this->_displayInstance->getDisplayInformation($instance->getDevelopper() . ' <br />' . $instance->getLicence(), $param);
 
                 // Synchronisation de l'application.
                 /*		if ( $this->_configuration->getOption('permitWrite')
@@ -934,12 +934,12 @@ class ModuleManage extends Modules
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
-        echo $this->_display->getDisplayTitle('::sylabe:module:manage:create:createModule', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:manage:create:createModule', $icon, false);
 
         // Si autorisé à créer des liens.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             && $this->_unlocked
         ) {
             ?>
@@ -985,7 +985,7 @@ class ModuleManage extends Modules
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
-        echo $this->_display->getDisplayTitle('::sylabe:module:manage:create:addModuleCode', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:manage:create:addModuleCode', $icon, false);
 
         // Extrait le RID si nouveau module créé.
         $arg_rid = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_RID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
@@ -998,8 +998,8 @@ class ModuleManage extends Modules
         }
 
         // Si autorisé à créer des liens.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             && $rid != '0'
             && $this->_unlocked
         ) {
@@ -1030,7 +1030,7 @@ class ModuleManage extends Modules
                     'displaySize' => 'medium',
                     'displayRatio' => 'short',
                 );
-                echo $this->_display->getDisplayObject($ridInstance, $param);
+                echo $this->_displayInstance->getDisplayObject($ridInstance, $param);
                 ?>
 
                 <div class="layoutObjectsList">
