@@ -472,7 +472,7 @@ class ModuleAutent extends Modules
     public function displayModule(): void
     {
         $this->_metrologyInstance->addLog('Display checks', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '28feadb6');
-        $this->_displayInstance->displaySecurityAlert('small', true);
+        $this->_displayInstance->displaySecurityAlert('medium', true);
         $this->_displayCurrentEntity();
 
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
@@ -578,7 +578,7 @@ class ModuleAutent extends Modules
             'enableDisplayFlagState' => true,
             'enableDisplayFlagEmotions' => true,
             'enableDisplayStatus' => true,
-            'enableDisplayContent' => true,
+            'enableDisplayContent' => false,
             'displaySize' => 'medium',
             'displayRatio' => 'short',
             'enableDisplaySelfHook' => true,

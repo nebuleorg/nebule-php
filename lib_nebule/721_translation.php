@@ -465,7 +465,7 @@ abstract class Traductions
             // 5) Si rien trouvé, appel tous les modules avec la langue en cours.
             if ($result == '' || $result == $text) {
                 foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-                    $result = $module->getTraduction($text, $lang);
+                    $result = $module->getTraductionInstance($text, $lang);
                     $this->_metrologyInstance->addLog('Module 5 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                     if ($result != $text)
                         break;
@@ -477,7 +477,7 @@ abstract class Traductions
                 && $lang != $this->_defaultLanguage
             ) {
                 foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-                    $result = $module->getTraduction($text, $this->_defaultLanguage);
+                    $result = $module->getTraductionInstance($text, $this->_defaultLanguage);
                     $this->_metrologyInstance->addLog('Module 6 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                     if ($result != $text)
                         break;
