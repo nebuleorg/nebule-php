@@ -585,7 +585,6 @@ $this->_metrologyInstance->addLog('MARK view=' . $this->_applicationInstance->ge
             'informationType' => 'back',
             'htlink' => '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId,
         );
-
         echo $this->_applicationInstance->getDisplayInstance()->getDisplayObjectsList($list, 'medium');
     }
 
@@ -595,6 +594,41 @@ $this->_metrologyInstance->addLog('MARK view=' . $this->_applicationInstance->ge
     private function _displayLogin(): void
     {
         $this->_metrologyInstance->addLog('Display login ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '61a2b0dd');
+
+        $list = array();
+        $list[0]['object'] = $this->_applicationInstance->getCurrentObjectInstance();
+        $list[0]['param'] = array(
+            'enableDisplayColor' => true,
+            'enableDisplayIcon' => true,
+            'enableDisplayName' => true,
+            'enableDisplayRefs' => false,
+            'enableDisplayID' => false,
+            'enableDisplayFlags' => true,
+            'enableDisplayFlagProtection' => false,
+            'enableDisplayFlagObfuscate' => false,
+            'enableDisplayFlagState' => true,
+            'enableDisplayFlagUnlocked' => true,
+            'enableDisplayFlagEmotions' => false,
+            'enableDisplayStatus' => true,
+            'enableDisplayContent' => false,
+            'enableDisplayJS' => false,
+            'enableDisplayLink2Object' => true,
+            'displaySize' => 'medium',
+            'displayRatio' => 'short',
+            'status' => '',
+            'flagUnlocked' => $this->_unlocked,
+        );
+        $list[1]['information'] = ':::return';
+        $list[1]['param'] = array(
+            'enableDisplayIcon' => true,
+            'enableDisplayAlone' => true,
+            'displayRatio' => 'short',
+            'displaySize' => 'medium',
+            'informationType' => 'back',
+            'htlink' => '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId,
+        );
+        echo $this->_applicationInstance->getDisplayInstance()->getDisplayObjectsList($list, 'medium');
+
         if ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')
             && $this->_applicationInstance->getCheckSecurityAll() == 'OK')
         {
@@ -670,7 +704,6 @@ $this->_metrologyInstance->addLog('MARK view=' . $this->_applicationInstance->ge
             'informationType' => 'back',
             'htlink' => '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId,
         );
-
         echo $this->_applicationInstance->getDisplayInstance()->getDisplayObjectsList($list, 'medium');
     }
 
