@@ -541,14 +541,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         global $bootstrapApplicationIID;
 
-        /*
-        $arg = '';
-        if (filter_has_var(INPUT_GET, References::COMMAND_SWITCH_APPLICATION))
-            $arg = trim(filter_input(INPUT_GET, References::COMMAND_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        elseif (filter_has_var(INPUT_POST, References::COMMAND_SWITCH_APPLICATION))
-            $arg = trim(filter_input(INPUT_POST, References::COMMAND_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        */
-
         $this->_currentApplicationIID = $bootstrapApplicationIID;
     }
 
@@ -593,9 +585,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $displayClass = $this->_applicationInstance->getNamespace() . '\\Display';
 
         // If we don't use modules, list of modes must not be empty.
-        if (!$this->_applicationInstance->getUseModules()
-            && sizeof($this->_listDisplayModes) == 0)
+        if (!$this->_applicationInstance->getUseModules() && sizeof($this->_listDisplayModes) == 0) {
+            $this->_metrologyInstance->addLog('Search mode, no module and no mode', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ddcc0850');
             return;
+        }
 
         // If we use modules, extract name of modes from modules.
         if ($this->_applicationInstance->getUseModules()) {
@@ -661,9 +654,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Récupère l'instance du module en cours.
         if ($this->_applicationInstance->getUseModules()) {
             foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-                if ($module->getCommandName() == $this->_currentDisplayMode
-                    && strtolower($module->getType()) == 'application')
-                {
+                if ($module->getCommandName() == $this->_currentDisplayMode && strtolower($module->getType()) == 'application') {
                     $this->_metrologyInstance->addLog('Find current module name : ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '7cd85d87');
                     $this->_currentModuleInstance = $this->_applicationInstance->getModulesListInstances()['\\' . $module->getClassName()];
                 }
@@ -714,14 +705,22 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         global $applicationName;
 
         // If we don't use modules, list of modes must not be empty.
-        if (!$this->_applicationInstance->getUseModules()
-            && sizeof($this->_listDisplayModes) == 0)
+        if (!$this->_applicationInstance->getUseModules() && sizeof($this->_listDisplayModes) == 0) {
+            $this->_metrologyInstance->addLog('Search view, no module and no mode', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '82b83c17');
             return;
+        }
 
         // Vérifie la liste des modules si activée.
-        if ($this->_applicationInstance->getUseModules()
-            && sizeof($this->_applicationInstance->getModulesListInstances()) == 0)
+        if ($this->_applicationInstance->getUseModules() && sizeof($this->_applicationInstance->getModulesListInstances()) == 0) {
+            $this->_metrologyInstance->addLog('Search view, module but no mode', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '21dc60cc');
             return;
+        }
+
+$this->_metrologyInstance->addLog('MARK1', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+if ($this->_applicationInstance->getUseModules())
+    $this->_metrologyInstance->addLog('MARK2 OK getUseModules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+if (is_a($this->_currentModuleInstance, '\Nebule\Library\Modules'))
+    $this->_metrologyInstance->addLog('MARK3 Search view on ' . $this->_currentModuleInstance->getName(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         // Lit et nettoye le contenu de la variable GET.
         $arg_view = filter_input(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);

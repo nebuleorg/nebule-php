@@ -80,6 +80,7 @@ ob_start();
 /** @noinspection PhpUnusedLocalVariableInspection */
 $loggerSessionID = bin2hex(openssl_random_pseudo_bytes(6, $false));
 $metrologyStartTime = microtime(true);
+$permitLogsOnDebugFile = false;
 
 /**
  * Switch log prefix from one app to another.
@@ -106,6 +107,25 @@ function log_reopen(string $name): void
 }
 
 /**
+ * If permitted, write debug level logs to debug file.
+ *
+ * @return void
+ */
+function log_initDebugFile(): void
+{
+    global $metrologyStartTime, $permitLogsOnDebugFile;
+
+    if (lib_getOption('permitLogsOnDebugFile'))
+    {
+        if (file_exists(LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE))
+            unlink(LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE);
+        file_put_contents(LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE, 'LogT=' . sprintf('%01.6f', microtime(true) - $metrologyStartTime) . ' LogL="info" LogI="76941959" LogM="start ' . BOOTSTRAP_NAME . "\"\n");
+        syslog(LOG_INFO, 'LogT=0 LogT0=' . $metrologyStartTime . ' LogL="info" LogI="50615f80" LogM="create debug file ' . LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE . '"');
+        $permitLogsOnDebugFile = true;
+    }
+}
+
+/**
  * Add message to logs.
  *
  * @param string $message
@@ -116,8 +136,12 @@ function log_reopen(string $name): void
  */
 function log_add(string $message, string $level = 'msg', string $function = '', string $id = '00000000'): void
 {
-    global $metrologyStartTime;
+    global $metrologyStartTime, $permitLogsOnDebugFile;
     syslog(LOG_INFO, 'LogT=' . sprintf('%01.6f', microtime(true) - $metrologyStartTime) . ' LogL="' . $level . '" LogI="' . $id . '" LogF="' . $function . '" LogM="' . $message . '"');
+
+    // If permitted, write debug level logs to debug file.
+    if ($permitLogsOnDebugFile)
+        file_put_contents(LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE, 'LogT=' . sprintf('%01.6f', microtime(true) - $metrologyStartTime) . ' LogL="' . $level . '" LogI="' . $id . '" LogF="' . $function . '" LogM="' . $message . "\"\n", FILE_APPEND);
 }
 
 /**
@@ -342,6 +366,7 @@ const LIB_LOCAL_ENTITY_FILE = 'e';
 const LIB_LOCAL_LINKS_FOLDER = 'l';
 const LIB_LOCAL_OBJECTS_FOLDER = 'o';
 const LIB_LOCAL_HISTORY_FILE = 'h';
+const LIB_LOCAL_DEBUG_FILE = 'debug';
 const LIB_NID_MIN_HASH_SIZE = 64;
 const LIB_NID_MAX_HASH_SIZE = 8192;
 const LIB_NID_MIN_ALGO_SIZE = 2;
@@ -569,6 +594,7 @@ const LIB_CONFIGURATIONS_TYPE = array(
     'permitFollowUpdates' => 'boolean',
     'permitOnlineRescue' => 'boolean',
     'permitLogs' => 'boolean',
+    'permitLogsOnDebugFile' => 'boolean',
     'permitJavaScript' => 'boolean',
     'codeBranch' => 'string',
     'logsLevel' => 'string',
@@ -658,6 +684,7 @@ const LIB_CONFIGURATIONS_DEFAULT = array(
     'permitFollowUpdates' => 'true',
     'permitOnlineRescue' => 'false',
     'permitLogs' => 'false',
+    'permitLogsOnDebugFile' => 'false',
     'permitJavaScript' => 'false',
     'codeBranch' => 'stable',
     'logsLevel' => 'NORMAL',
@@ -7344,6 +7371,7 @@ function bootstrap_logMetrology(): void
 
 function main(): void
 {
+    log_initDebugFile();
     if (!lib_init())
         bootstrap_setBreak('21', __FUNCTION__);
 

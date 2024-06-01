@@ -7,7 +7,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020240225
+# Version 020240601
 
 export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
@@ -195,6 +195,7 @@ function work_full_reinit()
   sed -i 's/^#displayUnsecureURL = .*$/displayUnsecureURL = false/' c
   sed -i 's/^#permitApplication4 = .*$/permitApplication4 = true/' c
   sed -i 's/^#permitApplication9 = .*$/permitApplication9 = true/' c
+  sed -i 's/^#permitLogsOnDebugFile = .*$/permitLogsOnDebugFile = true/' c
 
   echo ' > obj'
   echo -n "${puppetmaster_develop_key}" > "o/${puppetmaster_develop_key_hash}"

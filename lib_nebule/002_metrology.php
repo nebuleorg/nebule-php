@@ -51,6 +51,8 @@ class Metrology
      */
     const DEFAULT_LOG_LEVEL = 1;
 
+    const DEFAULT_DEBUG_FILE = 'debug';
+
     /**
      * Instance de la librairie en cours.
      *
@@ -282,6 +284,8 @@ class Metrology
      */
     private $_logsLevel = self::LOG_LEVEL_NORMAL;
 
+    private $_permitLogsOnDebugFile = false;
+
     /**
      * Restaure le niveau de log par défaut.
      *
@@ -304,6 +308,13 @@ class Metrology
             $level = Configuration::OPTIONS_DEFAULT_VALUE['logsLevel'];
 
         $this->setLogsLevel($level);
+
+        // If permitted, write debug level logs to debug file.
+        if (Configuration::getOptionFromEnvironmentAsBooleanStatic('permitLogsOnDebugFile'))
+        {
+            file_put_contents(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE, 'START on library ' . $this->_timeStart . "\n", FILE_APPEND);
+            $this->_permitLogsOnDebugFile = true;
+        }
     }
 
     /**
@@ -370,6 +381,14 @@ class Metrology
                 $message = $message . ' LogMem="' . memory_get_usage() . '"';
 
             syslog(LOG_INFO, $message);
+        }
+
+        // If permitted, write debug level logs to debug file.
+        if ($this->_permitLogsOnDebugFile)
+        {
+            $message = 'LogT=' . sprintf('%01.6f', (float)microtime(true) - $this->_timeStart) . ' LogL="' . $logLevel . '" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"';
+            if (file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE))
+                file_put_contents(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE, $message . "\n", FILE_APPEND);
         }
     }
 

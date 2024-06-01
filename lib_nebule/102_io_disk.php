@@ -437,11 +437,11 @@ class ioDisk extends io implements ioInterface
                 if (trim($k) == trim($link))
                     return true;
             }
-        } else {
+        /*} else {
             // Si le fichier de lien n'est pas présent, le crée.
             file_put_contents(
                 nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid,
-                'nebule/liens/version/' . $this->_configuration->getOptionUntyped('defaultLinksVersion') . "\n");
+                'nebule/liens/version/' . $this->_configuration->getOptionUntyped('defaultLinksVersion') . "\n");*/
         }
 
         if (file_put_contents(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid, $link . "\n", FILE_APPEND) !== false)

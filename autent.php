@@ -85,7 +85,7 @@ class Application extends Applications
 class Display extends Displays
 {
     const DEFAULT_DISPLAY_MODE = 'autent';
-    const DEFAULT_DISPLAY_VIEW = 'logout';
+    const DEFAULT_DISPLAY_VIEW = 'view';
 
     /**
      * Display full page.
