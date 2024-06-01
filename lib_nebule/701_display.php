@@ -716,12 +716,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             return;
         }
 
-$this->_metrologyInstance->addLog('MARK1', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-if ($this->_applicationInstance->getUseModules())
-    $this->_metrologyInstance->addLog('MARK2 OK getUseModules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-if (is_a($this->_currentModuleInstance, '\Nebule\Library\Modules'))
-    $this->_metrologyInstance->addLog('MARK3 Search view on ' . $this->_currentModuleInstance->getName(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-
         // Lit et nettoye le contenu de la variable GET.
         $arg_view = filter_input(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 

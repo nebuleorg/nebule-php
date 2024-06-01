@@ -375,20 +375,20 @@ class Metrology
 
         // Si le niveau de log est suffisant, écrit le message.
         if ($logLevel <= $this->_logsLevel) {
-            $message = 'LogT=' . sprintf('%01.6f', (float)microtime(true) - $this->_timeStart) . ' LogL="' . $logLevel . '" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"';
+            $logM = 'LogT=' . sprintf('%01.6f', (float)microtime(true) - $this->_timeStart) . ' LogL="' . $logLevel . '" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"';
 
             if ($logLevel == self::LOG_LEVEL_DEBUG)
-                $message = $message . ' LogMem="' . memory_get_usage() . '"';
+                $logM = $logM . ' LogMem="' . memory_get_usage() . '"';
 
-            syslog(LOG_INFO, $message);
+            syslog(LOG_INFO, $logM);
         }
 
         // If permitted, write debug level logs to debug file.
         if ($this->_permitLogsOnDebugFile)
         {
-            $message = 'LogT=' . sprintf('%01.6f', (float)microtime(true) - $this->_timeStart) . ' LogL="' . $logLevel . '" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"';
+            $logM = 'LogT=' . sprintf('%01.6f', (float)microtime(true) - $this->_timeStart) . ' LogL="' . $logLevel . '" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"';
             if (file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE))
-                file_put_contents(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE, $message . "\n", FILE_APPEND);
+                file_put_contents(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE, $logM . "\n", FILE_APPEND);
         }
     }
 

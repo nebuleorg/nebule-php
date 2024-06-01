@@ -422,8 +422,8 @@ class ModuleAutent extends Modules
     protected $MODULE_TYPE = 'Application';
     protected $MODULE_NAME = '::sylabe:module:objects:ModuleName';
     protected $MODULE_MENU_NAME = '::sylabe:module:objects:MenuName';
-    protected $MODULE_COMMAND_NAME = 'log';
-    protected $MODULE_DEFAULT_VIEW = 'blog';
+    protected $MODULE_COMMAND_NAME = 'autent';
+    protected $MODULE_DEFAULT_VIEW = 'desc';
     protected $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
     protected $MODULE_VERSION = '020240601';
     protected $MODULE_AUTHOR = 'Projet nebule';
