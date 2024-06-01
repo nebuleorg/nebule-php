@@ -91,6 +91,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     const DEFAULT_ICON_IWARN = 'bca818062c4548d7957b949707c5160a3606c83027c1e855fa6d189768b60a47.sha2.256';
     const DEFAULT_ICON_IERR = '25a0ea1b1d88d7a659ff0fa3d1b70d0cf7ae788023f897da845b1ce8d1cc7e00.sha2.256';
     const DEFAULT_ICON_IINFO = '77c14d86041ded85f77b1cc3395c55ffe8f9c5eb1bda9dc6dfc650eeecb86980.sha2.256';
+    const DEFAULT_ICON_IBACK = '63e0cd9b3a77b16023549bfc5b0b872399074c932d4b40b80a67128767d8a11c.sha2.256';
+    const DEFAULT_ICON_IPLAY = 'a64a346dbd155baccb3d702f23a094c24a626727c859e54ca421755e5621a20a.sha2.256';
     const DEFAULT_ICON_IMLOG = 'd7f68db0a1d0977fb8e521fd038b18cd601946aa0e26071ff8c02c160549633b.sha2.256';
     const DEFAULT_ICON_IMODIFY = '8481a8f5b0172db714caa5ea98a924ff40672e66e563b9b628bbf4c5044cfdad.sha2.256';
     const DEFAULT_ICON_IDOWNLOAD = '3cd50162b66b62d582110858a6167794d7afc7f83a918aa4f2339f00b66ac620.sha2.256';
@@ -402,6 +404,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
             . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
 
+        $this->_findCurrentApplication();
         $this->_findCurrentDisplayMode();
         $this->_findCurrentModule();
         $this->_findCurrentDisplayView();
@@ -509,6 +512,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
             . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
 
+        $this->_findCurrentApplication();
         $this->_findCurrentDisplayMode();
         $this->_findCurrentModule();
         $this->_findCurrentDisplayView();
@@ -528,6 +532,29 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function getNeededObjectsList(): array
     {
         return $this->_neededObjectsList;
+    }
+
+
+    protected $_currentApplicationIID = '';
+
+    protected function _findCurrentApplication(): void
+    {
+        global $bootstrapApplicationIID;
+
+        /*
+        $arg = '';
+        if (filter_has_var(INPUT_GET, References::COMMAND_SWITCH_APPLICATION))
+            $arg = trim(filter_input(INPUT_GET, References::COMMAND_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        elseif (filter_has_var(INPUT_POST, References::COMMAND_SWITCH_APPLICATION))
+            $arg = trim(filter_input(INPUT_POST, References::COMMAND_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        */
+
+        $this->_currentApplicationIID = $bootstrapApplicationIID;
+    }
+
+    public function getCurrentApplicationIID(): string
+    {
+        return $this->_currentApplicationIID;
     }
 
 
@@ -7247,6 +7274,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 background: #ababab;
             }
 
+            .informationDisplayGo {
+                background: #abbcab;
+            }
+
+            .informationDisplayBack {
+                background: #abbccd;
+            }
+
             .informationTitleText {
                 background: none;
                 height: auto;
@@ -7330,6 +7365,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 color: #ff8000;
             }
 
+            .informationTitleNameGo, .informationTitleRefsGo {
+                color: #ffffff;
+            }
+
+            .informationTitleNameBack, .informationTitleRefsBack {
+                color: #ffffff;
+            }
+
             .informationTitleNameWarn {
                 font-weight: bold;
             }
@@ -7403,6 +7446,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *     - warn : affichage d'un message d'avertissement en jaune gras sur fond orange clair.
      *     - error : affichage d'un message d'erreur en rouge gras sur fond rose clair.
      *     - info : affichage d'un message simple en noir sur fond blanc transparent (style d'affichage des objets).
+     *     - go : affichage d'un message pour valider une action.
+     *     - back : affichage d'un message de retour arrière.
      *     Par défaut info.
      *     String
      * - informationTypeName : Détermine le nom du type de message à afficher.
@@ -7430,6 +7475,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *     Par défaut vide : l'icône est sélectionnée automatiquement.
      *     enableDisplayIcon doit être à true.
      *     String
+     * - htlink : Détermine le lien HTML à utiliser.
+     *     Si non présent, pas de lien HTML.
      * Exemple de table de paramètres avec les valeurs par défaut :
      * $param = array(
      * 'enableDisplayIcon' => true,
@@ -7439,6 +7486,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * 'displaySize' => 'medium',
      * 'displayRatio' => 'short',
      * 'icon' => '',
+     * 'htlink' => '',
      * );
      *
      * @param string $message
@@ -7462,13 +7510,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $param['enableDisplayIcon'] = true; // Par défaut à true.
 
         $message = sprintf($this->_traductionInstance->getTraduction($message), $arg1, $arg2, $arg3, $arg4, $arg5);
-        if (!is_string($param['informationType'])
+        /*if (!is_string($param['informationType'])
             || $param['informationType'] != 'information'
         ) {
             //$message = filter_var($message, FILTER_SANITIZE_STRING); TODO refaire un filtre.
         } else {
             // TODO faire un filtre pour le type message...
-        }
+        }*/
         $contentDisplayMessage = trim($message);
         if ($contentDisplayMessage == '')
             return '';
@@ -7480,13 +7528,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $result .= ' <div class="aloneItemContent">' . "\n";
         }
 
+        // link
+        if (isset($param['htlink']))
+            $result .= '<a href="' . $param['htlink'] . '">' . "\n";
+
         // Avec une première lettre majuscule pour le CSS.
-        $messageType = '';
         switch (strtolower($param['informationType'])) {
-            case 'info':
-            case 'information':
-                $messageType = 'Information';
-                break;
             case 'ok':
                 $messageType = 'Ok';
                 break;
@@ -7502,29 +7549,29 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             case 'message':
                 $messageType = 'Message';
                 break;
+            case 'play':
+            case 'go':
+                $messageType = 'Go';
+                break;
+            case 'back':
+            case 'return':
+                $messageType = 'Back';
+                break;
             default:
                 $messageType = 'Information';
                 break;
         }
 
         $messageTextIcon = '';
-        $messageIcon = '';
         if (isset($param['icon'])
             && $param['icon'] !== ''
-        )
-        {
+        ) {
             if (is_string($param['icon']))
                 $messageIcon = $this->_nebuleInstance->newObject($param['icon']);
             else
                 $messageIcon = $param['icon'];
-        }
-        else {
+        } else {
             switch ($messageType) {
-                case 'Information':
-                case 'Message':
-                    $messageTextIcon = '::::INFORMATION';
-                    $messageIcon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IINFO);
-                    break;
                 case 'Ok':
                     $messageTextIcon = '::::OK';
                     $messageIcon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IOK);
@@ -7537,6 +7584,18 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     $messageTextIcon = '::::ERROR';
                     $messageIcon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IERR);
                     break;
+                case 'Go':
+                    $messageTextIcon = '::::GO';
+                    $messageIcon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IPLAY);
+                    break;
+                case 'Back':
+                    $messageTextIcon = '::::BACK';
+                    $messageIcon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IBACK);
+                    break;
+                default:
+                    $messageTextIcon = '::::INFORMATION';
+                    $messageIcon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IINFO);
+                    break;
             }
         }
         if (isset($param['informationTypeName'])
@@ -7544,56 +7603,46 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         )
             $messageTextIcon = $param['informationTypeName'];
 
-        $sizeCSS = 'Medium';
-        if (!isset($param['displaySize'])) {
+        if (!isset($param['displaySize']))
             $param['displaySize'] = 'medium';
-            $sizeCSS = 'Medium';
-        } else {
-            switch ($param['displaySize']) {
-                case 'tiny':
-                    $sizeCSS = 'Tiny';
-                    break;
-                case 'small':
-                    $sizeCSS = 'Small';
-                    break;
-                case 'large':
-                    $sizeCSS = 'Large';
-                    break;
-                case 'full':
-                    $sizeCSS = 'Full';
-                    break;
-                default:
-                    $param['displaySize'] = 'medium';
-                    $sizeCSS = 'Medium';
-                    break;
-            }
+        switch ($param['displaySize']) {
+            case 'tiny':
+                $sizeCSS = 'Tiny';
+                break;
+            case 'small':
+                $sizeCSS = 'Small';
+                break;
+            case 'large':
+                $sizeCSS = 'Large';
+                break;
+            case 'full':
+                $sizeCSS = 'Full';
+                break;
+            default:
+                $param['displaySize'] = 'medium';
+                $sizeCSS = 'Medium';
+                break;
         }
 
-        $ratioCSS = 'short';
-        if (!isset($param['displayRatio'])) {
+        if (!isset($param['displayRatio']))
             $param['displayRatio'] = 'short';
-            $ratioCSS = 'Short';
-        } else {
-            switch ($param['displayRatio']) {
-                case 'square':
-                    $ratioCSS = 'Square';
-                    break;
-                case 'long':
-                    $ratioCSS = 'Long';
-                    break;
-                default:
-                    $param['displayRatio'] = 'short';
-                    $ratioCSS = 'Short';
-                    break;
-            }
+        switch ($param['displayRatio']) {
+            case 'square':
+                $ratioCSS = 'Square';
+                break;
+            case 'long':
+                $ratioCSS = 'Long';
+                break;
+            default:
+                $param['displayRatio'] = 'short';
+                $ratioCSS = 'Short';
+                break;
         }
 
         // Prépare les contenus.
         $contentDisplayIcon = '';
-        if ($param['enableDisplayIcon']) {
+        if ($param['enableDisplayIcon'])
             $contentDisplayIcon = $this->convertUpdateImage($messageIcon, $messageTextIcon);
-            // $contentDisplayIcon = $this->convertReferenceImage($messageIcon, $messageTextIcon); TODO par référence
-        }
 
         // Assemble les contenus.
         $divDisplayOpen = '';
@@ -7646,6 +7695,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $result .= $divTitleOpen . $titleContent . $divTitleClose;
             $result .= $divDisplayClose;
         }
+
+        // link
+        if (isset($param['htlink']))
+            $result .= '</a>' . "\n";
 
         if ($param['enableDisplayAlone'] === true) {
             $result .= " </div>\n";

@@ -341,6 +341,16 @@ class Traduction extends Traductions
         $this->_table['en-en']['::::RESCUE'] = 'Rescue mode!';
         $this->_table['es-co']['::::RESCUE'] = '¡Modo de rescate!';
 
+        $this->_table['fr-fr'][':::login'] = 'Se connecter';
+        $this->_table['en-en'][':::login'] = 'Connecting';
+        $this->_table['es-co'][':::login'] = 'Connecting';
+        $this->_table['fr-fr'][':::logout'] = 'Se déconnecter';
+        $this->_table['en-en'][':::logout'] = 'Disconnecting';
+        $this->_table['es-co'][':::logout'] = 'Disconnecting';
+        $this->_table['fr-fr'][':::return'] = 'Retour';
+        $this->_table['en-en'][':::return'] = 'Return';
+        $this->_table['es-co'][':::return'] = 'Return';
+
         $this->_table['fr-fr']['::::SecurityChecks'] = 'Tests de sécurité';
         $this->_table['fr-fr'][':::warn_ServNotPermitWrite'] = "Ce serveur n'autorise pas les modifications !";
         $this->_table['fr-fr'][':::warn_flushSessionAndCache'] = "Toutes les données de connexion ont été effacées !";
@@ -435,6 +445,7 @@ class ModuleAutent extends Modules
 
     const DEFAULT_ATTRIBS_DISPLAY_NUMBER = 10;
 
+    private $_comebackAppId = '';
 
     /**
      * Ajout de fonctionnalités à des points d'ancrage.
@@ -473,17 +484,24 @@ class ModuleAutent extends Modules
     {
         $this->_metrologyInstance->addLog('Display checks', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '28feadb6');
         $this->_displayInstance->displaySecurityAlert('medium', true);
-        $this->_displayCurrentEntity();
 
+        if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK))
+            $this->_comebackAppId = trim(filter_input(INPUT_GET, References::COMMAND_APPLICATION_BACK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        else
+            $this->_comebackAppId = '1';
+        if ($this->_comebackAppId == '')
+            $this->_comebackAppId = '1';
+
+$this->_metrologyInstance->addLog('MARK view=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
-            case $this->MODULE_REGISTERED_VIEWS[0]:
-                $this->_displayInfo();
-                break;
             case $this->MODULE_REGISTERED_VIEWS[1]:
                 $this->_displayLogin();
                 break;
-            default:
+            case $this->MODULE_REGISTERED_VIEWS[2]:
                 $this->_displayLogout();
+                break;
+            default:
+                $this->_displayInfo();
                 break;
         }
     }
@@ -505,11 +523,70 @@ class ModuleAutent extends Modules
     private function _displayInfo(): void
     {
         $this->_metrologyInstance->addLog('Display desc ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '1f00a8b1');
-        if ($this->_unlocked) {
-            echo "Lock"; # FIXME link
+
+        if (! $this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')
+            || $this->_applicationInstance->getCheckSecurityAll() != 'OK'
+        ) {
+            $htlink = '/?f';
+            $title = ':::err_NotPermit';
+            $type = 'error';
+        } elseif ($this->_unlocked) {
+            $htlink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
+                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this->MODULE_REGISTERED_VIEWS[2];
+            $title = ':::logout';
+            $type = 'error';
         } else {
-            echo "Unlock"; # FIXME link
+            $htlink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
+                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this->MODULE_REGISTERED_VIEWS[1];
+            $title = ':::login';
+            $type = 'go';
         }
+
+        $list = array();
+        $list[0]['object'] = $this->_applicationInstance->getCurrentObjectInstance();
+        $list[0]['param'] = array(
+            'enableDisplayColor' => true,
+            'enableDisplayIcon' => true,
+            'enableDisplayRefs' => false,
+            'enableDisplayName' => true,
+            'enableDisplayID' => false,
+            'enableDisplayFlags' => true,
+            'enableDisplayFlagProtection' => false,
+            'enableDisplayFlagObfuscate' => false,
+            'enableDisplayFlagUnlocked' => true,
+            'enableDisplayFlagState' => true,
+            'enableDisplayFlagEmotions' => false,
+            'enableDisplayStatus' => true,
+            'enableDisplayContent' => false,
+            'enableDisplayJS' => false,
+            'enableDisplayLink2Object' => true,
+            'displaySize' => 'medium',
+            'displayRatio' => 'short',
+            'status' => '',
+            'flagUnlocked' => $this->_unlocked,
+        );
+        $list[1]['information'] = $title;
+        $list[1]['param'] = array(
+            'enableDisplayAlone' => true,
+            'enableDisplayIcon' => true,
+            'displayRatio' => 'short',
+            'displaySize' => 'medium',
+            'informationType' => $type,
+            'htlink' => $htlink,
+        );
+        $list[2]['information'] = ':::return';
+        $list[2]['param'] = array(
+            'enableDisplayAlone' => true,
+            'enableDisplayIcon' => true,
+            'displayRatio' => 'short',
+            'displaySize' => 'medium',
+            'informationType' => 'back',
+            'htlink' => '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId,
+        );
+
+        echo $this->_applicationInstance->getDisplayInstance()->getDisplayObjectsList($list, 'medium');
     }
 
     /**
@@ -549,42 +626,52 @@ class ModuleAutent extends Modules
     private function _displayLogout(): void
     {
         $this->_metrologyInstance->addLog('Display logout ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '833de289');
-        ?>
 
-        <form method="post"
-              action="?<?php echo nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getInstanceEntity() . '&' . nebule::COMMAND_SWITCH_TO_ENTITY; ?>">
-            <input type="hidden" name="id" value="<?php echo $this->_nebuleInstance->getInstanceEntity(); ?>">
-            <label>
-                <input type="password" name="pwd">
-            </label>
-            <input type="submit" value="Unlock">
-        </form>
-        <?php
-    }
-
-    private function _displayCurrentEntity(): void
-    {
-        $param = array(
+        $list = array();
+        $list[0]['object'] = $this->_applicationInstance->getCurrentObjectInstance();
+        $list[0]['param'] = array(
             'enableDisplayColor' => true,
             'enableDisplayIcon' => true,
-            'enableDisplayRefs' => false,
             'enableDisplayName' => true,
+            'enableDisplayRefs' => false,
             'enableDisplayID' => false,
             'enableDisplayFlags' => true,
-            'enableDisplayFlagProtection' => true,
-            'flagProtection' => $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected(),
+            'enableDisplayFlagProtection' => false,
             'enableDisplayFlagObfuscate' => false,
-            'enableDisplayFlagUnlocked' => false,
+            'enableDisplayFlagUnlocked' => true,
             'enableDisplayFlagState' => true,
-            'enableDisplayFlagEmotions' => true,
+            'enableDisplayFlagEmotions' => false,
             'enableDisplayStatus' => true,
             'enableDisplayContent' => false,
+            'enableDisplayJS' => false,
+            'enableDisplayLink2Object' => true,
             'displaySize' => 'medium',
             'displayRatio' => 'short',
-            'enableDisplaySelfHook' => true,
-            'enableDisplayTypeHook' => false,
+            'status' => '',
+            'flagUnlocked' => $this->_unlocked,
         );
-        echo $this->_displayInstance->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        if ($this->_unlocked) {
+            $list[1]['information'] = ':::logout';
+            $list[1]['param'] = array(
+                'enableDisplayAlone' => true,
+                'enableDisplayIcon' => true,
+                'displayRatio' => 'short',
+                'displaySize' => 'medium',
+                'informationType' => 'go',
+                'htlink' => '/?f',
+            );
+        }
+        $list[2]['information'] = ':::return';
+        $list[2]['param'] = array(
+            'enableDisplayIcon' => true,
+            'enableDisplayAlone' => true,
+            'displayRatio' => 'short',
+            'displaySize' => 'medium',
+            'informationType' => 'back',
+            'htlink' => '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId,
+        );
+
+        echo $this->_applicationInstance->getDisplayInstance()->getDisplayObjectsList($list, 'medium');
     }
 
 
@@ -595,7 +682,7 @@ class ModuleAutent extends Modules
      */
     protected function _initTable(): void
     {
-        $this->_table['fr-fr']['::sylabe:module:objects:ModuleName'] = 'Module des blogs';
+        $this->_table['fr-fr']['::sylabe:module:objects:ModuleName'] = 'Module des blogs'; # FIXME
         $this->_table['en-en']['::sylabe:module:objects:ModuleName'] = 'Blogs module';
         $this->_table['es-co']['::sylabe:module:objects:ModuleName'] = 'Módulo de blogs';
         $this->_table['fr-fr']['::sylabe:module:objects:MenuName'] = 'Blogs';
