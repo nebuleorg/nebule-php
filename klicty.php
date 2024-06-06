@@ -43,7 +43,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240224';
+    const APPLICATION_VERSION = '0202402606';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2024';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -582,32 +582,32 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
 
         $this->setHtlinkObjectPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkGroupPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkConversationPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkEntityPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkCurrencyPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkTokenPoolPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkTokenPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkTransactionPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkWalletPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
 
         $this->_findLogoApplication();
         $this->_findLogoApplicationLink();
@@ -638,32 +638,32 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
 
         $this->setHtlinkObjectPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkGroupPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkConversationPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkEntityPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkCurrencyPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkTokenPoolPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkTokenPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkTransactionPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkWalletPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
 
         $this->_findLogoApplication();
         $this->_findLogoApplicationLink();
@@ -759,8 +759,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         self::DEFAULT_OBJECT_LIST_COMMAND,
         self::DEFAULT_ENTITY_LIST_COMMAND,
         self::DEFAULT_GROUP_LIST_COMMAND,
-        nebule::COMMAND_SELECT_OBJECT,
-        nebule::COMMAND_SELECT_GROUP,
+        References::COMMAND_SELECT_OBJECT,
+        References::COMMAND_SELECT_GROUP,
         self::DEFAULT_OBJECT_ADD_COMMAND,
         self::DEFAULT_ENTITY_ADD_COMMAND,
         self::DEFAULT_GROUP_ENTITY_ADD_COMMAND,
@@ -1341,11 +1341,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 );
                 if ($this->_unlocked) {
                     $param['flagUnlockedLink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
-                        . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                        . '&' . nebule::COMMAND_FLUSH;
+                        . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                        . '&' . References::COMMAND_FLUSH;
                 } else {
                     $param['flagUnlockedLink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
-                        . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
                 }
                 echo $this->getDisplayObject($this->_nebuleInstance->getCurrentEntityInstance(), $param);
             } else {
@@ -1393,8 +1393,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     '',
                                     'name="ico_lock"'),
                                 '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
-                                . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                                . '&' . nebule::COMMAND_FLUSH);
+                                . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                                . '&' . References::COMMAND_FLUSH);
                         } else {
                             // Affiche de lien de déverrouillage sans les effets.
                             $this->displayHypertextLink(
@@ -1404,7 +1404,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     '',
                                     'name="ico_lock"'),
                                 '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
-                                . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity());
+                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity());
                         }
                     } // Sinon affiche le warning.
                     else {
@@ -1412,8 +1412,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             $this->convertUpdateImage(
                                 $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_WARNING),
                                 'WARNING'),
-                            '?' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                            . '&' . nebule::COMMAND_SWITCH_TO_ENTITY);
+                            '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                            . '&' . References::COMMAND_SWITCH_TO_ENTITY);
                     }
                 } // Sinon c'est une erreur.
                 else {
@@ -1421,8 +1421,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $this->convertUpdateImage(
                             $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_ERROR),
                             'ERROR'),
-                        '?' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                        . '&' . nebule::COMMAND_FLUSH);
+                        '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                        . '&' . References::COMMAND_FLUSH);
                 }
                 ?>
 
@@ -1492,14 +1492,14 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         self::DEFAULT_ICON_WORLD,
                         self::DEFAULT_ICON_ENTITY_LOCK);
                     $modulesLink = array(
-                        self::DEFAULT_OBJECT_LIST_COMMAND . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity(),
+                        self::DEFAULT_OBJECT_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity(),
                         self::DEFAULT_OBJECT_ADD_COMMAND,
                         self::DEFAULT_ENTITY_LIST_COMMAND,
-                        self::DEFAULT_GROUP_LIST_COMMAND . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity(),
+                        self::DEFAULT_GROUP_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity(),
                         self::DEFAULT_GROUP_ENTITY_ADD_COMMAND,
                         self::DEFAULT_ABOUT_COMMAND . '#help',
                         self::DEFAULT_ABOUT_COMMAND . '#lang',
-                        self::DEFAULT_ABOUT_COMMAND . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT . '&' . nebule::COMMAND_FLUSH);
+                        self::DEFAULT_ABOUT_COMMAND . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT . '&' . References::COMMAND_FLUSH);
                 } else {
                     $modulesName = array(
                         '::ObjectsList',
@@ -1520,11 +1520,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         self::DEFAULT_ICON_WORLD,
                     );
                     $modulesLink = array(
-                        self::DEFAULT_OBJECT_LIST_COMMAND . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity(),
+                        self::DEFAULT_OBJECT_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity(),
                         self::DEFAULT_ENTITY_LIST_COMMAND,
                         self::DEFAULT_ENTITY_SYNC_COMMAND,
                         self::DEFAULT_ENTITY_ADD_COMMAND,
-                        self::DEFAULT_ABOUT_COMMAND . '&' . nebule::COMMAND_FLUSH,
+                        self::DEFAULT_ABOUT_COMMAND . '&' . References::COMMAND_FLUSH,
                         self::DEFAULT_ABOUT_COMMAND . '#help',
                         self::DEFAULT_ABOUT_COMMAND . '#lang',
                     );
@@ -1636,7 +1636,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             case self::DEFAULT_GROUP_LIST_COMMAND :
                 $this->_displayContentEntityGroupList();
                 break;
-            case nebule::COMMAND_SELECT_OBJECT :
+            case References::COMMAND_SELECT_OBJECT :
                 $this->_displayContentObject();
                 break;
             case self::DEFAULT_OBJECT_ADD_COMMAND :
@@ -1689,7 +1689,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             case self::DEFAULT_GROUP_LIST_COMMAND :
                 $this->_displayInlineContentEntityGroupList();
                 break;
-            case nebule::COMMAND_SELECT_OBJECT :
+            case References::COMMAND_SELECT_OBJECT :
                 $this->_displayInlineContentObject();
                 break;
             case self::DEFAULT_OBJECT_ADD_COMMAND :
@@ -1971,9 +1971,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $param['selfHookList'][0]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
                 $param['selfHookList'][0]['link'] = '?'
                     . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
-                    . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                    . '&' . nebule::COMMAND_SWITCH_TO_ENTITY
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id;
+                    . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                    . '&' . References::COMMAND_SWITCH_TO_ENTITY
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $id;
 
                 echo $this->getDisplayObject($instance, $param);
 
@@ -2254,8 +2254,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[0]['desc'] = '';
                 $actionList[0]['css'] = 'oneAction-bg-warn';
                 $actionList[0]['link'] = '?'
-                    . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
+                    . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                    . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
                     . '&' . Actions::DEFAULT_COMMAND_ACTION_DELETE_GROUP . '=' . $this->_applicationInstance->getCurrentObjectID()
                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
             }
@@ -2268,8 +2268,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[1]['desc'] = '';
                 $actionList[1]['link'] = '?'
                     . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
-                    . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT . '&' . nebule::COMMAND_SWITCH_TO_ENTITY
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id;
+                    . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT . '&' . References::COMMAND_SWITCH_TO_ENTITY
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $id;
             }
 
             if ($this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink') && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeObject')) {
@@ -2278,8 +2278,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[2]['icon'] = self::DEFAULT_ICON_SYNENT;
                 $actionList[2]['desc'] = '';
                 $actionList[2]['link'] = '?'
-                    . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                    . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                    . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                     . '&' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY . '=' . $id
                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
             }
@@ -2292,7 +2292,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[3]['css'] = 'oneAction-bg-warn';
                 $actionList[3]['link'] = '?'
                     . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ABOUT_COMMAND
-                    . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT . '&' . nebule::COMMAND_FLUSH;
+                    . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT . '&' . References::COMMAND_FLUSH;
             }
 
             // Voir les objets.
@@ -2301,7 +2301,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             $actionList[4]['desc'] = '';
             $actionList[4]['link'] = '?'
                 . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_OBJECT_LIST_COMMAND
-                . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id;
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $id;
 
             // Voir les groupes.
             $actionList[5]['name'] = '::EntitiesGroupList';
@@ -2309,7 +2309,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             $actionList[5]['desc'] = '';
             $actionList[5]['link'] = '?'
                 . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_GROUP_LIST_COMMAND
-                . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id;
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $id;
         }
         if (!$isEntity
             && !$isGroup
@@ -2332,7 +2332,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     $actionList[1]['desc'] = '';
                     $actionList[1]['link'] = '?'
                         . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
-                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id;
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id;
                 }
 
                 // Si l'entité est déverrouillée.
@@ -2343,9 +2343,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     $actionList[2]['desc'] = '';
                     $actionList[2]['css'] = 'oneAction-bg-warn';
                     $actionList[2]['link'] = '?'
-                        . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
+                        . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                         . '&' . Actions::DEFAULT_COMMAND_ACTION_DELETE_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
-                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
 
                     // Renouveler le bail de durée de vie.
@@ -2359,8 +2359,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $actionList[3]['icon'] = self::DEFAULT_ICON_SYNLNK;
                         $actionList[3]['desc'] = '';
                         $actionList[3]['link'] = '?'
-                            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
+                            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                            . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
                             . '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $source . '_' . $target . '_' . $meta
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                     }
@@ -2389,8 +2389,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 <div class="text">
                     <p>
                     <form method="post"
-                          action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-                              . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object
+                          action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                              . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                               . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                         <input type="submit"
                                value="<?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::AddToGroup'); ?>"
@@ -2425,8 +2425,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             $list[$i]['object'] = $instance;
                             $list[$i]['entity'] = '';
                             $list[$i]['icon'] = '';
-                            $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-                                . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $group;
+                            $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                                . '&' . References::COMMAND_SELECT_OBJECT . '=' . $group;
                             $list[$i]['desc'] = '';
                             $list[$i]['actions'] = array();
 
@@ -2438,8 +2438,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             ) {
                                 $list[$i]['actions'][0]['name'] = '::RemoveFromGroup';
                                 $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
-                                $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-                                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
+                                $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                                    . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
                                     . '&' . Actions::DEFAULT_COMMAND_ACTION_REMOVE_FROM_GROUP . '=' . $group
                                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                             }
@@ -2480,8 +2480,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['object'] = $instance;
                         $list[$i]['entity'] = '';
                         $list[$i]['icon'] = '';
-                        $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $item;
+                        $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                            . '&' . References::COMMAND_SELECT_OBJECT . '=' . $item;
                         $list[$i]['desc'] = '';
                         $list[$i]['actions'] = array();
 
@@ -2493,8 +2493,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         ) {
                             $list[$i]['actions'][0]['name'] = '::RemoveFromGroup';
                             $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
-                            $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-                                . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
+                            $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                                . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
                                 . '&' . Actions::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item
                                 . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         }
@@ -2615,8 +2615,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     $instance = $this->_nebuleInstance->newObject($id);
                     $name = $instance->getName('all');
                     $desc = $instance->getType('all');
-                    $htlink = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id;
+                    $htlink = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id;
                     ?>
 
                     <div class="textAction">
@@ -2785,9 +2785,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $param['selfHookList'][0]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
                 $param['selfHookList'][0]['link'] = '?'
                     . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
-                    . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                    . '&' . nebule::COMMAND_SWITCH_TO_ENTITY
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $createEntityInstance;
+                    . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                    . '&' . References::COMMAND_SWITCH_TO_ENTITY
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $createEntityInstance;
 
                 echo $this->getDisplayObject($createEntityInstance, $param);
 
@@ -3045,8 +3045,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['object'] = $instance;
                         $list[$i]['entity'] = '';
                         $list[$i]['icon'] = '';
-                        $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $entity;
+                        $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                            . '&' . References::COMMAND_SELECT_OBJECT . '=' . $entity;
                         $list[$i]['desc'] = '';
                         $list[$i]['actions'] = array();
 
@@ -3061,7 +3061,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LK;
                                 $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                                     . '&' . Actions::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT . '=' . $id
-                                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                                    . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                             } elseif (!$this->_nebuleInstance->getIsRecoveryEntity($entity)
                                 || $this->_configurationInstance->getOptionAsBoolean('permitRecoveryRemoveEntity')
@@ -3071,7 +3071,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
                                 $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                                     . '&' . Actions::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY . '=' . $entity
-                                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                                    . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                             }
                         }
@@ -3106,7 +3106,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[0]['desc'] = '';
                 $actionList[0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                     . '&' . Actions::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT . '=' . $id
-                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                    . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 $this->displayActionList($actionList);
                 unset($actionList);
@@ -3150,8 +3150,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['object'] = $instance;
                         $list[$i]['entity'] = '';
                         $list[$i]['icon'] = '';
-                        $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $group;
+                        $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                            . '&' . References::COMMAND_SELECT_OBJECT . '=' . $group;
                         if ($typeClosed)
                             $list[$i]['desc'] = '::GroupeFerme';
                         else
@@ -3164,12 +3164,12 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         if ($typeClosed)
                             $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                                 . '&' . Actions::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED . '=' . $group
-                                . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                                . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                                 . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         else
                             $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                                 . '&' . Actions::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED . '=' . $group
-                                . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                                . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                                 . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
 
                         // Marque comme vu.
@@ -3214,8 +3214,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['object'] = $instance;
                         $list[$i]['entity'] = '';
                         $list[$i]['icon'] = '';
-                        $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $link->getParsed()['bl/rl/nid1'];
+                        $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                            . '&' . References::COMMAND_SELECT_OBJECT . '=' . $link->getParsed()['bl/rl/nid1'];
                         $list[$i]['desc'] = '';
                         $list[$i]['actions'] = array();
 
@@ -3224,7 +3224,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LL;
                         $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                             . '&' . Actions::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY . '=' . $link->getParsed()['bl/rl/nid1']
-                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                            . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
 
                         // Marque comme vu.
@@ -3343,8 +3343,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $list[0]['desc'] = $this->_traductionInstance->getTraduction('::EntityUnlocked');
                 $list[0]['icon'] = Displays::DEFAULT_ICON_ENTITY_LOCK;
                 $list[0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
-                    . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                    . '&' . nebule::COMMAND_FLUSH;
+                    . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                    . '&' . References::COMMAND_FLUSH;
                 echo $this->_applicationInstance->getDisplayInstance()->getDisplayMenuList($list, 'Medium');
             } else {
                 echo '<div class="layoutAloneItem">' . "\n";
@@ -3372,7 +3372,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 ?>
                 <form method="post"
                       action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
-                          . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID(); ?>">
+                          . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID(); ?>">
                     <input type="hidden" name="ent"
                            value="<?php echo $this->_applicationInstance->getCurrentEntityID(); ?>">
                     <input type="password" name="pwd">
@@ -3401,8 +3401,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $list[0]['desc'] = $this->_traductionInstance->getTraduction('::EntityUnlocked');
                 $list[0]['icon'] = Displays::DEFAULT_ICON_ENTITY_LOCK;
                 $list[0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
-                    . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                    . '&' . nebule::COMMAND_FLUSH;
+                    . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                    . '&' . References::COMMAND_FLUSH;
                 echo $this->_applicationInstance->getDisplayInstance()->getDisplayMenuList($list, 'Medium');
             } else {
                 // Affiche un message d'erreur.

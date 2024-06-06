@@ -1295,8 +1295,8 @@ class nebule
         if ($this->_currentEntityInstance->issetPrivateKeyPassword())
             return;
 
-        $arg_get_pwd = filter_input(INPUT_GET, self::COMMAND_SELECT_PASSWORD, FILTER_SANITIZE_STRING);
-        $arg_post_pwd = filter_input(INPUT_POST, self::COMMAND_SELECT_PASSWORD, FILTER_SANITIZE_STRING);
+        $arg_get_pwd = filter_input(INPUT_GET, References::COMMAND_SELECT_PASSWORD, FILTER_SANITIZE_STRING);
+        $arg_post_pwd = filter_input(INPUT_POST, References::COMMAND_SELECT_PASSWORD, FILTER_SANITIZE_STRING);
 
         if ($arg_post_pwd != '')
             $arg_pwd = $arg_post_pwd;
@@ -2888,8 +2888,8 @@ class nebule
     {
         if ($this->_configurationInstance->getOptionUntyped('modeRescue')
             || ($this->_configurationInstance->getOptionAsBoolean('permitOnlineRescue')
-                && (filter_has_var(INPUT_GET, nebule::COMMAND_RESCUE)
-                    || filter_has_var(INPUT_POST, nebule::COMMAND_RESCUE)
+                && (filter_has_var(INPUT_GET, References::COMMAND_RESCUE)
+                    || filter_has_var(INPUT_POST, References::COMMAND_RESCUE)
                 )
             )
         )

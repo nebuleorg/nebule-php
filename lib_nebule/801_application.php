@@ -448,7 +448,7 @@ abstract class Applications implements applicationInterface
     {
         $this->_metrologyInstance->addLog('Find current entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         
-        $arg_ent = filter_input(INPUT_GET, nebule::COMMAND_SELECT_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $arg_ent = filter_input(INPUT_GET, References::COMMAND_SELECT_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         if ($arg_ent === false || $arg_ent === null)
             $arg_ent = '';
         $arg_ent = trim($arg_ent);

@@ -40,7 +40,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'qantion';
     const APPLICATION_SURNAME = 'nebule/qantion';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240514';
+    const APPLICATION_VERSION = '020240606';
     const APPLICATION_LICENCE = 'GNU GPL 2019-2024';
     const APPLICATION_WEBSITE = 'www.qantion.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -365,57 +365,57 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $this->setHtlinkObjectPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         // Préfix pour les groupes.
         if ($this->_applicationInstance->isModuleLoaded('ModuleGroups')) {
             $this->setHtlinkGroupPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleGroups')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleGroups')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_GROUP . '=');
+                . '&' . References::COMMAND_SELECT_GROUP . '=');
         } else {
             $this->setHtlinkGroupPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+                . '&' . References::COMMAND_SELECT_OBJECT . '=');
         }
         // Préfix pour les conversations.
         if ($this->_applicationInstance->isModuleLoaded('ModuleMessenger')) {
             $this->setHtlinkConversationPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleMessenger')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleMessenger')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=');
+                . '&' . References::COMMAND_SELECT_CONVERSATION . '=');
         } else {
             $this->setHtlinkConversationPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+                . '&' . References::COMMAND_SELECT_OBJECT . '=');
         }
         // Préfix pour les entités.
         $this->setHtlinkEntityPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getDefaultView()
-            . '&' . nebule::COMMAND_SELECT_ENTITY . '=');
+            . '&' . References::COMMAND_SELECT_ENTITY . '=');
         // Préfix pour les monnaies.
         $this->setHtlinkCurrencyPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getCommandName()
             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getRegisteredViews()[3]
-            . '&' . nebule::COMMAND_SELECT_CURRENCY . '=');
+            . '&' . References::COMMAND_SELECT_CURRENCY . '=');
         $this->setHtlinkTokenPoolPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getCommandName()
             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getRegisteredViews()[8]
-            . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=');
+            . '&' . References::COMMAND_SELECT_TOKENPOOL . '=');
         $this->setHtlinkTokenPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getCommandName()
             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getRegisteredViews()[13]
-            . '&' . nebule::COMMAND_SELECT_TOKEN . '=');
+            . '&' . References::COMMAND_SELECT_TOKEN . '=');
         $this->setHtlinkTransactionPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getCommandName()
             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getRegisteredViews()[19]
-            . '&' . nebule::COMMAND_SELECT_TRANSACTION . '=');
+            . '&' . References::COMMAND_SELECT_TRANSACTION . '=');
         $this->setHtlinkWalletPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getCommandName()
             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getRegisteredViews()[23]
-            . '&' . nebule::COMMAND_SELECT_WALLET . '=');
+            . '&' . References::COMMAND_SELECT_WALLET . '=');
     }
 
 
@@ -1135,16 +1135,16 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 'enableDisplayObjectActions' => false,
             );
             if ($this->_unlocked) {
-                $param['flagUnlockedLink'] = '?' . nebule::COMMAND_SWITCH_APPLICATION . '=2'
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . nebule::COMMAND_AUTH_ENTITY_MOD
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_AUTH_ENTITY_INFO
-                    . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                    . '&' . nebule::COMMAND_FLUSH;
+                $param['flagUnlockedLink'] = '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_INFO
+                    . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                    . '&' . References::COMMAND_FLUSH;
             } else {
-                $param['flagUnlockedLink'] = '?' . nebule::COMMAND_SWITCH_APPLICATION . '=2'
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . nebule::COMMAND_AUTH_ENTITY_MOD
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_AUTH_ENTITY_LOGIN
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
+                $param['flagUnlockedLink'] = '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_LOGIN
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
             }
             echo $this->getDisplayObject($this->_nebuleInstance->getCurrentEntityInstance(), $param);
             ?>
@@ -1166,11 +1166,11 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                                     '',
                                     '',
                                     'name="ico_lock"'),
-                                '?' . nebule::COMMAND_SWITCH_APPLICATION . '=2'
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . nebule::COMMAND_AUTH_ENTITY_MOD
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_AUTH_ENTITY_INFO
-                                . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                                . '&' . nebule::COMMAND_FLUSH);
+                                '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_INFO
+                                . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                                . '&' . References::COMMAND_FLUSH);
                         } else {
                             // Affiche de lien de déverrouillage sans les effets.
                             $this->displayHypertextLink(
@@ -1179,10 +1179,10 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                                     '',
                                     '',
                                     'name="ico_lock"'),
-                                '?' . nebule::COMMAND_SWITCH_APPLICATION . '=2'
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . nebule::COMMAND_AUTH_ENTITY_MOD
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_AUTH_ENTITY_LOGIN
-                                . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity());
+                                '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_LOGIN
+                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity());
                         }
                     } // Sinon affiche le warning.
                     else {
@@ -1190,8 +1190,8 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                             $this->convertUpdateImage(
                                 $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_WARNING),
                                 'WARNING'),
-                            '?' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                            . '&' . nebule::COMMAND_SWITCH_TO_ENTITY);
+                            '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                            . '&' . References::COMMAND_SWITCH_TO_ENTITY);
                     }
                 } // Sinon c'est une erreur.
                 else {
@@ -1199,8 +1199,8 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                         $this->convertUpdateImage(
                             $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_ERROR),
                             'ERROR'),
-                        '?' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                        . '&' . nebule::COMMAND_FLUSH);
+                        '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                        . '&' . References::COMMAND_FLUSH);
                 }
                 ?>
 
@@ -2693,7 +2693,7 @@ class ModuleAdmin extends Modules
                 $list[$i]['icon'] = '';
                 $list[$i]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . \Nebule\Application\Qantion\ModuleEntities::MODULE_DEFAULT_VIEW
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id;
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $id;
                 $list[$i]['desc'] = '';
                 $list[$i]['actions'] = array();
                 $i++;
@@ -2743,7 +2743,7 @@ class ModuleAdmin extends Modules
             $list[$i]['htlink'] = '?'
                 . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . \Nebule\Application\Qantion\ModuleEntities::MODULE_DEFAULT_VIEW
-                . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id;
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $id;
             $list[$i]['desc'] = '';
             $list[$i]['actions'] = array();
             $i++;
@@ -3045,7 +3045,7 @@ class ModuleEntities extends Modules
                 $hookArray[0]['desc'] = '::sylabe:module:entities:KnownEntitiesDesc';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
 
                 // Lister des entités qui me connuaissent.
                 $hookArray[1]['name'] = '::sylabe:module:entities:KnownByEntities';
@@ -3053,7 +3053,7 @@ class ModuleEntities extends Modules
                 $hookArray[1]['desc'] = '::sylabe:module:entities:KnownByEntitiesDesc';
                 $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[11]
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
 
                 // Lister de mes entités.
                 $hookArray[2]['name'] = '::sylabe:module:entities:MyEntities';
@@ -3061,7 +3061,7 @@ class ModuleEntities extends Modules
                 $hookArray[2]['desc'] = '::sylabe:module:entities:MyEntitiesDesc';
                 $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[8]
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
 
                 // Lister des entités inconnues.
                 $hookArray[3]['name'] = '::sylabe:module:entities:UnknownEntities';
@@ -3069,7 +3069,7 @@ class ModuleEntities extends Modules
                 $hookArray[3]['desc'] = '::sylabe:module:entities:UnknownEntitiesDesc';
                 $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[9]
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
 
                 // Lister des entités spéciales.
                 $hookArray[4]['name'] = '::sylabe:module:entities:SpecialEntities';
@@ -3077,7 +3077,7 @@ class ModuleEntities extends Modules
                 $hookArray[4]['desc'] = '::sylabe:module:entities:SpecialEntitiesDesc';
                 $hookArray[4]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[10]
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
 
                 // Voir les propriétés de l'entité.
                 $hookArray[5]['name'] = '::sylabe:module:entities:DescriptionEntity';
@@ -3085,7 +3085,7 @@ class ModuleEntities extends Modules
                 $hookArray[5]['desc'] = '::sylabe:module:entities:DescriptionEntityDesc';
                 $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[7]
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
 
                 // Vérifie que la création soit authorisée.
                 if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -3100,7 +3100,7 @@ class ModuleEntities extends Modules
                     $hookArray[6]['desc'] = '::sylabe:module:entities:CreateEntityDesc';
                     $hookArray[6]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
-                        . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
                 }
 
                 // Vérifie que la synchronisation soit authorisée.
@@ -3117,7 +3117,7 @@ class ModuleEntities extends Modules
                     $hookArray[7]['desc'] = '::sylabe:module:entities:SearchEntityDesc';
                     $hookArray[7]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[4]
-                        . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
                 }
                 break;
 
@@ -3138,7 +3138,7 @@ class ModuleEntities extends Modules
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
-                        . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id;
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $id;
                 }
                 break;
 
@@ -3150,9 +3150,9 @@ class ModuleEntities extends Modules
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2]
-                        . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                        . '&' . nebule::COMMAND_SWITCH_TO_ENTITY
-                        . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
+                        . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                        . '&' . References::COMMAND_SWITCH_TO_ENTITY
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
                 } elseif (!$this->_unlocked) {
                     // Se connecter avec l'entité.
                     $hookArray[0]['name'] = '::sylabe:module:entities:disp:ConnectWith';
@@ -3160,7 +3160,7 @@ class ModuleEntities extends Modules
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2]
-                        . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
                 } else {
                     // Se déconnecter de l'entité.
                     $hookArray[0]['name'] = '::sylabe:module:entities:disp:Disconnect';
@@ -3168,8 +3168,8 @@ class ModuleEntities extends Modules
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2]
-                        . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                        . '&' . nebule::COMMAND_FLUSH;
+                        . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                        . '&' . References::COMMAND_FLUSH;
                 }
 
                 // Synchroniser l'entité.
@@ -3179,7 +3179,7 @@ class ModuleEntities extends Modules
                 $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
                     . '&' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
 
                 // Voir l'entité.
@@ -3188,7 +3188,7 @@ class ModuleEntities extends Modules
                 $hookArray[3]['desc'] = '';
                 $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
 
                 // Recherche si l'objet est marqué.
                 if (!$this->_applicationInstance->getMarkObject($object)) {
@@ -3198,7 +3198,7 @@ class ModuleEntities extends Modules
                     $hookArray[4]['desc'] = '';
                     $hookArray[4]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . Action::DEFAULT_COMMAND_ACTION_MARK_OBJECT . '=' . $object
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 }
@@ -3214,7 +3214,7 @@ class ModuleEntities extends Modules
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
                     . '&' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
                     . '&' . self::COMMAND_SYNC_KNOWN_ENTITIES
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity()
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity()
                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 break;
 
@@ -3227,7 +3227,7 @@ class ModuleEntities extends Modules
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
                     . '&' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
                     . '&' . self::COMMAND_SYNC_NEBULE_ENTITIES
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity()
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity()
                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 break;
         }
@@ -3856,8 +3856,8 @@ class ModuleEntities extends Modules
             $list[0]['icon'] = $this->MODULE_REGISTERED_ICONS[11];
             $list[0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2]
-                . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                . '&' . nebule::COMMAND_FLUSH;
+                . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                . '&' . References::COMMAND_FLUSH;
             echo $this->_displayInstance->getDisplayMenuList($list, 'Medium');
         } else {
             if ($idCheck != 'Error') {
@@ -3887,7 +3887,7 @@ class ModuleEntities extends Modules
                 <form method="post"
                       action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                           . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2]
-                          . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_displayEntity; ?>">
+                          . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_displayEntity; ?>">
                     <input type="hidden" name="ent" value="<?php echo $this->_displayEntity; ?>">
                     <input type="password" name="pwd">
                     <input type="submit" value="<?php echo $this->_traduction('::Unlock'); ?>">
@@ -4090,7 +4090,7 @@ class ModuleEntities extends Modules
                             <?php $this->_displayInstance->displayObjectColorIcon(
                                 $objectInstance, Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
-                                . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $link->getParsed()['bl/rl/nid2']); ?>
+                                . '&' . References::COMMAND_SELECT_OBJECT . '=' . $link->getParsed()['bl/rl/nid2']); ?>
                         </div>
                         <div>
                             <p class="sylabeModuleEntityActionDate">
@@ -4712,7 +4712,7 @@ class ModuleEntities extends Modules
                           action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                               . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
                               . '&' . Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY
-                              . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity()
+                              . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity()
                               . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                         <div class="sylabeModuleEntityCreate" id="sylabeModuleEntityCreateNames">
                             <div class="sylabeModuleEntityCreateHeader">
@@ -5217,7 +5217,7 @@ class ModuleEntities extends Modules
             ) {
                 $url = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID()
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID()
                     . '&' . Display::DEFAULT_INLINE_COMMAND . '&' . Display::DEFAULT_INLINE_CONTENT_COMMAND . '=properties'
                     . '&' . Displays::DEFAULT_NEXT_COMMAND . '=' . $nextLinkSigne;
                 $this->_displayInstance->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTraductionInstance()->getTraduction('::seeMore'));
@@ -5609,8 +5609,8 @@ class ModuleGroups extends Modules
                             $hookArray[2]['desc'] = '';
                             $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[4]
-                                . '&' . nebule::COMMAND_SELECT_GROUP . '=' . $object
-                                . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
+                                . '&' . References::COMMAND_SELECT_GROUP . '=' . $object
+                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
                         }
                         unset($markList);
                     }
@@ -5665,7 +5665,7 @@ class ModuleGroups extends Modules
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
                 break;
 
             case 'selfMenuObject':
@@ -5679,7 +5679,7 @@ class ModuleGroups extends Modules
                         $hookArray[0]['desc'] = '';
                         $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[5]
-                            . '&' . nebule::COMMAND_SELECT_GROUP . '=' . $object;
+                            . '&' . References::COMMAND_SELECT_GROUP . '=' . $object;
 
                         if ($this->_unlocked) {
                             // Refuser l'objet comme un groupe.
@@ -5699,7 +5699,7 @@ class ModuleGroups extends Modules
                         $hookArray[0]['desc'] = '';
                         $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[5]
-                            . '&' . nebule::COMMAND_SELECT_GROUP . '=' . $object;
+                            . '&' . References::COMMAND_SELECT_GROUP . '=' . $object;
 
                         if ($this->_unlocked) {
                             // Faire de l'objet un groupe pour moi aussi.
@@ -5742,7 +5742,7 @@ class ModuleGroups extends Modules
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
                 break;
 
             case 'typeMenuEntity':
@@ -5870,7 +5870,7 @@ class ModuleGroups extends Modules
                     'enableDisplayJS' => true,
                     'link2Object' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[5]
-                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $createGroupID,
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $createGroupID,
                 );
 
                 // Affiche la liste de l'objet et du message.
@@ -6052,7 +6052,7 @@ class ModuleGroups extends Modules
 						$list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
 						$list[$i]['actions'][0]['htlink'] = '?'.Displays::DEFAULT_DISPLAY_COMMAND_MODE.'='.$this->MODULE_COMMAND_NAME
 							.'&'.Displays::DEFAULT_DISPLAY_COMMAND_VIEW.'='.$this->MODULE_REGISTERED_VIEWS[3]
-							.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$link->getParsed()['bl/rl/nid1'];
+							.'&'.References::COMMAND_SELECT_OBJECT.'='.$link->getParsed()['bl/rl/nid1'];
 						// Utiliser comme groupe ouvert.
 						$list[$i]['actions'][1]['name'] = '::sylabe:module:groups:display:useAsGroupOpened';
 						$list[$i]['actions'][1]['icon'] = Display::DEFAULT_ICON_LL;
@@ -6352,7 +6352,7 @@ class ModuleGroups extends Modules
                                 $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
                                 $list[$i]['actions'][0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_DEFAULT_VIEW
-                                    . '&' . nebule::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroup()
+                                    . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroup()
                                     . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item->getParsed()['bl/rl/nid1']
                                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                             }
@@ -6415,7 +6415,7 @@ class ModuleGroups extends Modules
                             $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                             $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
                             $list[$i]['actions'][0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroup()
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroup()
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item->getParsed()['bl/rl/nid1']
                                 . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         }
@@ -6656,7 +6656,7 @@ class ModuleObjects extends Modules
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
-                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id;
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id;
 
                     // Si l'objet a une mise à jour.
                     if ($update != $id) {
@@ -6666,7 +6666,7 @@ class ModuleObjects extends Modules
                         $hookArray[1]['desc'] = '';
                         $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
-                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $update;
+                            . '&' . References::COMMAND_SELECT_OBJECT . '=' . $update;
                     }
                 }
 
@@ -6679,7 +6679,7 @@ class ModuleObjects extends Modules
                     $hookArray[2]['desc'] = '';
                     $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
-                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id;
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id;
                 }
 
                 // Naviguer autour de l'objet.
@@ -6691,7 +6691,7 @@ class ModuleObjects extends Modules
                     $hookArray[3]['desc'] = '';
                     $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2]
-                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id;
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id;
                 }
 
                 // Si le contenu de l'objet est présent.
@@ -6726,7 +6726,7 @@ class ModuleObjects extends Modules
                             $hookArray[6]['desc'] = '';
                             $hookArray[6]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
-                                . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id;
+                                . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id;
                         }
 
                         // Partager la protection
@@ -6739,7 +6739,7 @@ class ModuleObjects extends Modules
                             $hookArray[7]['desc'] = '';
                             $hookArray[7]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[4]
-                                . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id;
+                                . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id;
                         }
                     }
                 }
@@ -6752,7 +6752,7 @@ class ModuleObjects extends Modules
                     $hookArray[8]['desc'] = '';
                     $hookArray[8]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                         . '&' . Action::DEFAULT_COMMAND_ACTION_MARK_OBJECT . '=' . $id
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 } else {
@@ -6762,7 +6762,7 @@ class ModuleObjects extends Modules
                     $hookArray[8]['desc'] = '';
                     $hookArray[8]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                         . '&' . Action::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT . '=' . $id
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 }
@@ -6775,7 +6775,7 @@ class ModuleObjects extends Modules
                     $hookArray[9]['desc'] = '';
                     $hookArray[9]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . Action::DEFAULT_COMMAND_ACTION_UNMARK_ALL_OBJECT
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 }
@@ -6806,7 +6806,7 @@ class ModuleObjects extends Modules
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
-                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object;
+                    . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object;
                 break;
 
             case '::sylabe:module:upload:FileUploaded':
@@ -6819,7 +6819,7 @@ class ModuleObjects extends Modules
                         $hookArray[0]['desc'] = '';
                         $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
-                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getActionInstance()->getUploadObjectID();
+                            . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getActionInstance()->getUploadObjectID();
                     }
                 }
                 break;
@@ -6834,7 +6834,7 @@ class ModuleObjects extends Modules
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_DEFAULT_VIEW
-                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object;
+                    . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object;
 
                 $instance = $this->_applicationInstance->getCurrentEntityInstance();
                 $id = $instance->getID();
@@ -6856,7 +6856,7 @@ class ModuleObjects extends Modules
                     $hookArray[1]['desc'] = '';
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                        . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $id
                         . '&' . Action::DEFAULT_COMMAND_ACTION_MARK_OBJECT . '=' . $id
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 } else {
@@ -6866,7 +6866,7 @@ class ModuleObjects extends Modules
                     $hookArray[1]['desc'] = '';
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                        . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $id
                         . '&' . Action::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT . '=' . $id
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 }
@@ -6884,7 +6884,7 @@ class ModuleObjects extends Modules
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_DEFAULT_VIEW
-                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object;
+                    . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object;
                 break;
 
             case '::sylabe:module:objet:ProtectionAdd' :
@@ -6916,7 +6916,7 @@ class ModuleObjects extends Modules
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[4]
-                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID();
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID();
                 }
                 break;
 
@@ -6927,7 +6927,7 @@ class ModuleObjects extends Modules
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
-                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID();
+                    . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID();
                 break;
         }
         return $hookArray;
@@ -7322,7 +7322,7 @@ class ModuleObjects extends Modules
             ) {
                 $url = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $display->getCurrentDisplayView()
-                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $this->_nebuleInstance->getCurrentObject()
+                    . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_nebuleInstance->getCurrentObject()
                     . '&' . Display::DEFAULT_INLINE_COMMAND . '&' . Display::DEFAULT_INLINE_CONTENT_COMMAND . '=objprop'
                     . '&' . Displays::DEFAULT_NEXT_COMMAND . '=' . $nextLinkSigne;
                 $display->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTraductionInstance()->getTraduction('::seeMore'));
@@ -7508,7 +7508,7 @@ class ModuleObjects extends Modules
                 $list[2]['param']['selfHookList'][0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
                     . '&' . Action::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT . '=' . $object->getID()
-                    . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object->getID()
+                    . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
             }
 
@@ -7644,7 +7644,7 @@ class ModuleObjects extends Modules
                             $list[$i]['param']['selfHookList'][0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_ICONS[3]
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT . '=' . $object->getID()
-                                . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object->getID()
+                                . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                                 . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         } elseif (!$this->_nebuleInstance->getIsRecoveryEntity($entity)
                             || $this->_configurationInstance->getOptionAsBoolean('permitRecoveryRemoveEntity')
@@ -7655,7 +7655,7 @@ class ModuleObjects extends Modules
                             $list[$i]['param']['selfHookList'][0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_ICONS[3]
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY . '=' . $entity
-                                . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object->getID()
+                                . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                                 . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         }
                     }
@@ -7836,13 +7836,13 @@ class ModuleObjects extends Modules
                         $list[$i]['param']['selfHookList'][0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_ICONS[4]
                             . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED . '=' . $group
-                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                            . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                     } else {
                         $list[$i]['param']['selfHookList'][0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_ICONS[4]
                             . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED . '=' . $group
-                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                            . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                     }
 
@@ -7898,7 +7898,7 @@ class ModuleObjects extends Modules
                     $list[$i]['param']['selfHookList'][0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[4]
                         . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY . '=' . $link->getParsed()['bl/rl/nid1']
-                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $id
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
 
                     // Marque comme vu.
@@ -8200,7 +8200,7 @@ class Moduleqantion extends Modules
                     $hookArray[$arraySeed]['desc'] = '';
                     $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
-                        . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
                 }
 
                 // Monnaie -----------------------------------------------
@@ -8214,7 +8214,7 @@ class Moduleqantion extends Modules
                     $hookArray[$arraySeed]['desc'] = '';
                     $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
                 if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[3]
@@ -8227,7 +8227,7 @@ class Moduleqantion extends Modules
                     $hookArray[$arraySeed]['desc'] = '';
                     $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[10]
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
                 if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[3]
@@ -8242,7 +8242,7 @@ class Moduleqantion extends Modules
                     $hookArray[$arraySeed]['desc'] = '';
                     $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[6]
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
                 if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[6]) {
@@ -8253,7 +8253,7 @@ class Moduleqantion extends Modules
                     $hookArray[$arraySeed]['desc'] = '';
                     $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[18]
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
 
                     // Supprime une monnaie.
                     $arraySeed++;
@@ -8262,7 +8262,7 @@ class Moduleqantion extends Modules
                     $hookArray[$arraySeed]['desc'] = '';
                     $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[15]
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
                 // Sac de jetons -----------------------------------------------
@@ -8276,8 +8276,8 @@ class Moduleqantion extends Modules
                     $hookArray[$arraySeed]['desc'] = '';
                     $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[8]
-                        . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
+                        . '&' . References::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
                 if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[8]
@@ -8290,8 +8290,8 @@ class Moduleqantion extends Modules
                     $hookArray[$arraySeed]['desc'] = '';
                     $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[11]
-                        . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
+                        . '&' . References::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
                 if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[8]
@@ -8306,8 +8306,8 @@ class Moduleqantion extends Modules
                     $hookArray[$arraySeed]['desc'] = '';
                     $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[9]
-                        . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
+                        . '&' . References::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
                 if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[9]) {
@@ -8318,8 +8318,8 @@ class Moduleqantion extends Modules
                     $hookArray[$arraySeed]['desc'] = '';
                     $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[19]
-                        . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
+                        . '&' . References::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
 
                     // Supprime un sac de jetons.
                     $arraySeed++;
@@ -8328,8 +8328,8 @@ class Moduleqantion extends Modules
                     $hookArray[$arraySeed]['desc'] = '';
                     $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[16]
-                        . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
+                        . '&' . References::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
                 // Jeton -----------------------------------------------
@@ -8343,9 +8343,9 @@ class Moduleqantion extends Modules
                     $hookArray[$arraySeed]['desc'] = '';
                     $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[13]
-                        . '&' . nebule::COMMAND_SELECT_TOKEN . '=' . $this->_nebuleInstance->getCurrentToken()
-                        . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
+                        . '&' . References::COMMAND_SELECT_TOKEN . '=' . $this->_nebuleInstance->getCurrentToken()
+                        . '&' . References::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
                 if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[13]
@@ -8358,9 +8358,9 @@ class Moduleqantion extends Modules
                     $hookArray[$arraySeed]['desc'] = '';
                     $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[12]
-                        . '&' . nebule::COMMAND_SELECT_TOKEN . '=' . $this->_nebuleInstance->getCurrentToken()
-                        . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
+                        . '&' . References::COMMAND_SELECT_TOKEN . '=' . $this->_nebuleInstance->getCurrentToken()
+                        . '&' . References::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
                 if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[13]
@@ -8374,9 +8374,9 @@ class Moduleqantion extends Modules
                     $hookArray[$arraySeed]['desc'] = '';
                     $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[14]
-                        . '&' . nebule::COMMAND_SELECT_TOKEN . '=' . $this->_nebuleInstance->getCurrentToken()
-                        . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
+                        . '&' . References::COMMAND_SELECT_TOKEN . '=' . $this->_nebuleInstance->getCurrentToken()
+                        . '&' . References::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
                 if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[14]) {
@@ -8387,9 +8387,9 @@ class Moduleqantion extends Modules
                     $hookArray[$arraySeed]['desc'] = '';
                     $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[17]
-                        . '&' . nebule::COMMAND_SELECT_TOKEN . '=' . $this->_nebuleInstance->getCurrentToken()
-                        . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
+                        . '&' . References::COMMAND_SELECT_TOKEN . '=' . $this->_nebuleInstance->getCurrentToken()
+                        . '&' . References::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 }
 
 
@@ -8437,7 +8437,7 @@ class Moduleqantion extends Modules
                     $hookArray[$arraySeed]['desc'] = '';
                     $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[7]
-                        . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
                 }
 
                 if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[7]) {
@@ -8474,7 +8474,7 @@ class Moduleqantion extends Modules
                     $hookArray[$arraySeed]['desc'] = '';
                     $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[5]
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $object;
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $object;
                 }
                 break;
 
@@ -8486,7 +8486,7 @@ class Moduleqantion extends Modules
                 $hookArray[$arraySeed]['desc'] = '';
                 $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
                 break;
 
             case 'selfMenuCurrency';
@@ -8497,7 +8497,7 @@ class Moduleqantion extends Modules
                 $hookArray[$arraySeed]['desc'] = '';
                 $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
-                    . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $object;
+                    . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $object;
                 break;
 
             case 'selfMenuTokenPool';
@@ -8507,8 +8507,8 @@ class Moduleqantion extends Modules
                 $hookArray[$arraySeed]['desc'] = '';
                 $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[8]
-                    . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $object
-                    . '&' . nebule::COMMAND_SELECT_CURRENCY . '=0';
+                    . '&' . References::COMMAND_SELECT_TOKENPOOL . '=' . $object
+                    . '&' . References::COMMAND_SELECT_CURRENCY . '=0';
                 break;
 
             case 'selfMenuToken';
@@ -8519,9 +8519,9 @@ class Moduleqantion extends Modules
                 $hookArray[$arraySeed]['desc'] = '';
                 $hookArray[$arraySeed]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[13]
-                    . '&' . nebule::COMMAND_SELECT_TOKEN . '=' . $object
-                    . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=0'
-                    . '&' . nebule::COMMAND_SELECT_CURRENCY . '=0';
+                    . '&' . References::COMMAND_SELECT_TOKEN . '=' . $object
+                    . '&' . References::COMMAND_SELECT_TOKENPOOL . '=0'
+                    . '&' . References::COMMAND_SELECT_CURRENCY . '=0';
                 break;
         }
         return $hookArray;
@@ -8746,7 +8746,7 @@ class Moduleqantion extends Modules
                             //'status' => $param['CurrencyPoolCount'],
                             'link2Object' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
-                                . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $instance->getID(),
+                                . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $instance->getID(),
                             'objectIcon' => $this->MODULE_REGISTERED_ICONS[3],
                             'selfHookName' => 'selfCreateCurrency',
                             'typeHookName' => 'typeMenuCurrency',
@@ -8811,8 +8811,8 @@ class Moduleqantion extends Modules
                             'objectRefs' => array(0 => $param['PoolCurrencyID']),
                             'link2Object' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[8]
-                                . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $instance->getID()
-                                . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $instance->getParam('CID'),
+                                . '&' . References::COMMAND_SELECT_TOKENPOOL . '=' . $instance->getID()
+                                . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $instance->getParam('CID'),
                             'objectIcon' => $this->MODULE_REGISTERED_ICONS[4],
                             'selfHookName' => '::sylabe:module:qantion:TokenPools',
                             'typeHookName' => 'typeMenuTokenPool',
@@ -8876,9 +8876,9 @@ class Moduleqantion extends Modules
                                 'objectRefs' => $this->getTraductionInstance('::sylabe:module:qantion:Token'),
                                 'link2Object' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[13]
-                                    . '&' . nebule::COMMAND_SELECT_TOKEN . '=' . $instance->getID()
-                                    . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $instance->getParam('PID')
-                                    . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $instance->getParam('CID'),
+                                    . '&' . References::COMMAND_SELECT_TOKEN . '=' . $instance->getID()
+                                    . '&' . References::COMMAND_SELECT_TOKENPOOL . '=' . $instance->getParam('PID')
+                                    . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $instance->getParam('CID'),
                                 'objectIcon' => $this->MODULE_REGISTERED_ICONS[5],
                             );
                             $i++;
@@ -8972,7 +8972,7 @@ class Moduleqantion extends Modules
                     //	'status' => $instance->getParam('PCN').'x'.$instance->getParam('TCN'),
                     'link2Object' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $link->getParsed()['bl/rl/nid1'],
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $link->getParsed()['bl/rl/nid1'],
                     'objectIcon' => $this->MODULE_REGISTERED_ICONS[3],
                     'selfHookName' => 'selfMenuCurrency',
                     'typeHookName' => 'typeMenuCurrency',
@@ -9115,7 +9115,7 @@ class Moduleqantion extends Modules
                 $icon = $this->MODULE_REGISTERED_ICONS[4];
                 $title = '::sylabe:module:qantion:NewPool';
                 $action = Actions::DEFAULT_COMMAND_ACTION_CREATE_TOKEN_POOL
-                    . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
+                    . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 $instance = $this->_nebuleInstance->getCurrentTokenPoolInstance();
                 if ($instance->getID() == '0') {
                     $instance = $this->_nebuleInstance->getCurrentCurrencyInstance();
@@ -9132,8 +9132,8 @@ class Moduleqantion extends Modules
                 $icon = $this->MODULE_REGISTERED_ICONS[5];
                 $title = '::sylabe:module:qantion:NewTokens';
                 $action = Actions::DEFAULT_COMMAND_ACTION_CREATE_TOKENS
-                    . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
-                    . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
+                    . '&' . References::COMMAND_SELECT_TOKENPOOL . '=' . $this->_nebuleInstance->getCurrentTokenPool()
+                    . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency();
                 $instance = $this->_nebuleInstance->getCurrentTokenInstance();
                 if ($instance->getID() == '0') {
                     $instance = $this->_nebuleInstance->getCurrentTokenPoolInstance();
@@ -9525,7 +9525,7 @@ class Moduleqantion extends Modules
                     'objectRefs' => array(0 => $instance->getParam('FID')),
                     'link2Object' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[8]
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $instance->getID(),
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $instance->getID(),
                     'objectIcon' => $this->MODULE_REGISTERED_ICONS[0],
                 );
 
@@ -9782,7 +9782,7 @@ class Moduleqantion extends Modules
             $name = $instance->getParam('NAM');
             $link = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
-                . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $instance->getID();
+                . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $instance->getID();
             $icon = $this->MODULE_REGISTERED_ICONS[3];
             $refInstance = $this->_nebuleInstance->newEntity($instance->getParam('AID'));
         } elseif (get_class($instance) == 'TokenPool') {
@@ -9790,8 +9790,8 @@ class Moduleqantion extends Modules
             $name = $instance->getParam('NAM');
             $link = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[8]
-                . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $instance->getID()
-                . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $instance->getParam('CID');
+                . '&' . References::COMMAND_SELECT_TOKENPOOL . '=' . $instance->getID()
+                . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $instance->getParam('CID');
             $icon = $this->MODULE_REGISTERED_ICONS[4];
             $refInstance = $this->_nebuleInstance->newEntity($instance->getParam('CID'));
         } elseif (get_class($instance) == 'Token') {
@@ -9799,9 +9799,9 @@ class Moduleqantion extends Modules
             $name = $instance->getParam('VAL') . $instance->getParam('UNI');
             $link = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[13]
-                . '&' . nebule::COMMAND_SELECT_TOKEN . '=' . $instance->getID()
-                . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $instance->getParam('PID')
-                . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $instance->getParam('CID');
+                . '&' . References::COMMAND_SELECT_TOKEN . '=' . $instance->getID()
+                . '&' . References::COMMAND_SELECT_TOKENPOOL . '=' . $instance->getParam('PID')
+                . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $instance->getParam('CID');
             $icon = $this->MODULE_REGISTERED_ICONS[5];
             $refInstance = $this->_nebuleInstance->newEntity($instance->getParam('PID'));
         } else {
@@ -9854,7 +9854,7 @@ class Moduleqantion extends Modules
             $name = $currencyInstance->getParam('NAM');
             $link = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
-                . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $currencyInstance->getID();
+                . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $currencyInstance->getID();
             $icon = $this->MODULE_REGISTERED_ICONS[3];
             $refInstance = $this->_nebuleInstance->newEntity($instance->getParam('AID'));
 
@@ -10220,7 +10220,7 @@ class Moduleqantion extends Modules
                     //'desc' => $this->_traduction('::sylabe:module:applications:AppDisable'),
                     'link' => '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[6]
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency(),
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentCurrency(),
                 );
                 echo $this->_displayInstance->getDisplayHookAction($dispHook, true, 'MediumShort');
 
@@ -10307,7 +10307,7 @@ class Moduleqantion extends Modules
                     //'desc' => $this->_traduction('::sylabe:module:applications:AppDisable'),
                     'link' => '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[9]
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentTokenPool(),
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentTokenPool(),
                 );
                 echo $this->_displayInstance->getDisplayHookAction($dispHook, true, 'MediumShort');
 
@@ -10397,7 +10397,7 @@ class Moduleqantion extends Modules
                     //'desc' => $this->_traduction('::sylabe:module:applications:AppDisable'),
                     'link' => '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[14]
-                        . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentToken(),
+                        . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $this->_nebuleInstance->getCurrentToken(),
                 );
                 echo $this->_displayInstance->getDisplayHookAction($dispHook, true, 'MediumShort');
 
@@ -10534,16 +10534,16 @@ class Moduleqantion extends Modules
                 $name = $instance->getParam('NAM');
                 $link = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[8]
-                    . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $instanceItem->getID()
-                    . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $instance->getID();
+                    . '&' . References::COMMAND_SELECT_TOKENPOOL . '=' . $instanceItem->getID()
+                    . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $instance->getID();
             } elseif ($type1 == 'TokenPool') {
                 $instanceItem = new Token($this->_nebuleInstance, $item);
                 $name = $instanceItem->getParam('VAL') . ' ' . $instanceItem->getParam('UNI');
                 $link = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[13]
-                    . '&' . nebule::COMMAND_SELECT_TOKEN . '=' . $instanceItem->getID()
-                    . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=' . $instance->getID()
-                    . '&' . nebule::COMMAND_SELECT_CURRENCY . '=' . $instanceItem->getParam('CID');
+                    . '&' . References::COMMAND_SELECT_TOKEN . '=' . $instanceItem->getID()
+                    . '&' . References::COMMAND_SELECT_TOKENPOOL . '=' . $instance->getID()
+                    . '&' . References::COMMAND_SELECT_CURRENCY . '=' . $instanceItem->getParam('CID');
             } else {
                 continue;
             }

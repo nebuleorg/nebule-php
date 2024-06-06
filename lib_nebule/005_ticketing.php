@@ -70,9 +70,9 @@ class Ticketing
     {
         $ticket = '0';
         // Lit et nettoie le contenu de la variable GET.
-        $arg_get = trim(' ' . filter_input(INPUT_GET, nebule::COMMAND_SELECT_TICKET, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $arg_get = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_TICKET, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         // Lit et nettoie le contenu de la variable POST.
-        $arg_post = trim(' ' . filter_input(INPUT_POST, nebule::COMMAND_SELECT_TICKET, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $arg_post = trim(' ' . filter_input(INPUT_POST, References::COMMAND_SELECT_TICKET, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
         // Vérifie les variables.
         if ($arg_get != ''
@@ -135,7 +135,7 @@ class Ticketing
      */
     public function getActionTicketCommand(): string
     {
-        return '&' . nebule::COMMAND_SELECT_TICKET . '=' . $this->getActionTicketValue();
+        return '&' . References::COMMAND_SELECT_TICKET . '=' . $this->getActionTicketValue();
     }
 
     /**

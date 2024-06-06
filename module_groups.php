@@ -24,7 +24,7 @@ class ModuleGroups extends Modules
     protected $MODULE_COMMAND_NAME = 'grp';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:groups:ModuleDescription';
-    protected $MODULE_VERSION = '020240206';
+    protected $MODULE_VERSION = '020240606';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
     protected $MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -118,8 +118,8 @@ class ModuleGroups extends Modules
                             $hookArray[2]['desc'] = '';
                             $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[4]
-                                . '&' . nebule::COMMAND_SELECT_GROUP . '=' . $object
-                                . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
+                                . '&' . References::COMMAND_SELECT_GROUP . '=' . $object
+                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
                         }
                         unset($markList);
                     }
@@ -174,7 +174,7 @@ class ModuleGroups extends Modules
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
                 break;
 
             case 'selfMenuObject':
@@ -188,7 +188,7 @@ class ModuleGroups extends Modules
                         $hookArray[0]['desc'] = '';
                         $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[5]
-                            . '&' . nebule::COMMAND_SELECT_GROUP . '=' . $object;
+                            . '&' . References::COMMAND_SELECT_GROUP . '=' . $object;
 
                         if ($this->_unlocked) {
                             // Refuser l'objet comme un groupe.
@@ -208,7 +208,7 @@ class ModuleGroups extends Modules
                         $hookArray[0]['desc'] = '';
                         $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[5]
-                            . '&' . nebule::COMMAND_SELECT_GROUP . '=' . $object;
+                            . '&' . References::COMMAND_SELECT_GROUP . '=' . $object;
 
                         if ($this->_unlocked) {
                             // Faire de l'objet un groupe pour moi aussi.
@@ -251,7 +251,7 @@ class ModuleGroups extends Modules
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $object;
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
                 break;
 
             case 'typeMenuEntity':
@@ -379,7 +379,7 @@ class ModuleGroups extends Modules
                     'enableDisplayJS' => true,
                     'link2Object' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[5]
-                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $createGroupID,
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $createGroupID,
                 );
 
                 // Affiche la liste de l'objet et du message.
@@ -563,7 +563,7 @@ class ModuleGroups extends Modules
 						$list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
 						$list[$i]['actions'][0]['htlink'] = '?'.Displays::DEFAULT_DISPLAY_COMMAND_MODE.'='.$this->MODULE_COMMAND_NAME
 							.'&'.Displays::DEFAULT_DISPLAY_COMMAND_VIEW.'='.$this->MODULE_REGISTERED_VIEWS[3]
-							.'&'.nebule::COMMAND_SELECT_OBJECT.'='.$link->getParsed()['bl/rl/nid1'];
+							.'&'.References::COMMAND_SELECT_OBJECT.'='.$link->getParsed()['bl/rl/nid1'];
 						// Utiliser comme groupe ouvert.
 						$list[$i]['actions'][1]['name'] = '::sylabe:module:groups:display:useAsGroupOpened';
 						$list[$i]['actions'][1]['icon'] = Display::DEFAULT_ICON_LL;
@@ -864,7 +864,7 @@ class ModuleGroups extends Modules
                                 $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
                                 $list[$i]['actions'][0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_DEFAULT_VIEW
-                                    . '&' . nebule::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroup()
+                                    . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroup()
                                     . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item->getParsed()['bl/rl/nid1']
                                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                             }
@@ -927,7 +927,7 @@ class ModuleGroups extends Modules
                             $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                             $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
                             $list[$i]['actions'][0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroup()
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroup()
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item->getParsed()['bl/rl/nid1']
                                 . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         }

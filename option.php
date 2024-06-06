@@ -42,7 +42,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240207';
+    const APPLICATION_VERSION = '020240606';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -588,13 +588,13 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
                     if ($this->_unlocked) {
                         echo '&gt;&nbsp;';
-                        $this->_applicationInstance->getDisplayInstance()->displayHypertextLink('Lock', '?' . nebule::COMMAND_AUTH_ENTITY_LOGOUT . '&' . nebule::COMMAND_FLUSH);
+                        $this->_applicationInstance->getDisplayInstance()->displayHypertextLink('Lock', '?' . References::COMMAND_AUTH_ENTITY_LOGOUT . '&' . References::COMMAND_FLUSH);
                         echo '&nbsp;&lt;';
                     } else {
                         ?>
 
                         <form method="post"
-                              action="?<?php echo nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getInstanceEntity() . '&' . nebule::COMMAND_SWITCH_TO_ENTITY; ?>">
+                              action="?<?php echo References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getInstanceEntity() . '&' . References::COMMAND_SWITCH_TO_ENTITY; ?>">
                             <input type="hidden" name="id" value="<?php echo $this->_nebuleInstance->getInstanceEntity(); ?>">
                             <label>
                                 <input type="password" name="pwd">
@@ -1208,7 +1208,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                                     <form method="get" action="">
                                         <input type="hidden" name="<?php echo Action::COMMAND_OPTION_NAME; ?>"
                                                value="<?php echo $optionName; ?>">
-                                        <input type="hidden" name="<?php echo nebule::COMMAND_SELECT_TICKET; ?>"
+                                        <input type="hidden" name="<?php echo References::COMMAND_SELECT_TICKET; ?>"
                                                value="<?php echo $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                                         <?php
                                         if ($optionType == 'string') {
@@ -1462,7 +1462,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
                 ?>
 
                 <div class="appItemList">
-                    <a href="/?<?php echo nebule::COMMAND_SWITCH_APPLICATION . '=' . $application; ?>">
+                    <a href="/?<?php echo References::COMMAND_SWITCH_APPLICATION . '=' . $application; ?>">
                         <div class="appLink" style="background:<?php echo $color; ?>;">
                             <span class="appShortname"><?php echo $shortName; ?></span><br/><span
                                     class="appTitle"><?php echo $title; ?></span>
@@ -1517,19 +1517,19 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
                         <div class="appRef"><?php echo $instance->getID(); ?></div>
                         <div class="appSigner">Declared by <?php $this->displayInlineObjectColorIconName(
                                 $signersList[$application],
-                                '?' . nebule::COMMAND_SWITCH_APPLICATION . '=' . self::REFERENCE_DISPLAY_APPLICATION
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . nebule::COMMAND_SELECT_ENTITY
+                                '?' . References::COMMAND_SWITCH_APPLICATION . '=' . self::REFERENCE_DISPLAY_APPLICATION
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_SELECT_ENTITY
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=default'
-                                . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $signersList[$application]); ?>
+                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $signersList[$application]); ?>
                             <?php
                             if ($updater != $signersList[$application]) {
                                 ?>
                                 and updated by <?php $this->displayInlineObjectColorIconName(
                                     $updater,
-                                    '?' . nebule::COMMAND_SWITCH_APPLICATION . '=' . self::REFERENCE_DISPLAY_APPLICATION
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . nebule::COMMAND_SELECT_ENTITY
+                                    '?' . References::COMMAND_SWITCH_APPLICATION . '=' . self::REFERENCE_DISPLAY_APPLICATION
+                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_SELECT_ENTITY
                                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=default'
-                                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $updater); ?>
+                                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $updater); ?>
                                 <?php
                             }
                             ?>
@@ -1541,10 +1541,10 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
 
                             <div class="appNoPreload">No preload by <?php $this->displayInlineObjectColorIconName(
                                     $noPreloadSigner,
-                                    '?' . nebule::COMMAND_SWITCH_APPLICATION . '=' . self::REFERENCE_DISPLAY_APPLICATION
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . nebule::COMMAND_SELECT_ENTITY
+                                    '?' . References::COMMAND_SWITCH_APPLICATION . '=' . self::REFERENCE_DISPLAY_APPLICATION
+                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_SELECT_ENTITY
                                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=default'
-                                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $noPreloadSigner); ?>.
+                                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $noPreloadSigner); ?>.
                             </div>
                             <?php
                         }

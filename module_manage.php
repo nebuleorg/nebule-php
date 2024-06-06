@@ -28,7 +28,7 @@ class ModuleManage extends Modules
     protected $MODULE_COMMAND_NAME = 'modmanager';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:manage:ModuleDescription';
-    protected $MODULE_VERSION = '020240206';
+    protected $MODULE_VERSION = '020240606';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
     protected $MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256';
@@ -120,7 +120,7 @@ class ModuleManage extends Modules
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
-                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
                         . '&' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=0'
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
@@ -159,7 +159,7 @@ class ModuleManage extends Modules
                     $hookArray[2]['desc'] = '';
                     $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
                         . '&' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=' . $object
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
@@ -177,7 +177,7 @@ class ModuleManage extends Modules
                     $hookArray[3]['desc'] = '';
                     $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
-                        . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule();
                 }
                 break;
@@ -503,7 +503,7 @@ class ModuleManage extends Modules
                             'enableDisplayJS' => true,
                             'link2Object' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
-                                . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $rid
+                                . '&' . References::COMMAND_SELECT_OBJECT . '=' . $rid
                                 . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $className,
                             'objectName' => $instance->getTraductionInstance($name, $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage()),
                             'objectRefs' => array(),
@@ -740,7 +740,7 @@ class ModuleManage extends Modules
                         $param['link2Object'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleReferences')->getCommandName()
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleReferences')->getRegisteredViews()[0]
                             . '&' . $this->_applicationInstance->getModule('ModuleReferences')->getCommandName() . '=' . $this->_hashModule
-                            . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $rid;
+                            . '&' . References::COMMAND_SELECT_OBJECT . '=' . $rid;
                         $param['objectIcon'] = $this->_applicationInstance->getModule('ModuleReferences')->getLogo();
                     }
                     echo $this->_displayInstance->getDisplayObject($object, $param);
@@ -1038,7 +1038,7 @@ class ModuleManage extends Modules
                         <form enctype="multipart/form-data" method="post"
                               action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                   . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
-                                  . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $rid
+                                  . '&' . References::COMMAND_SELECT_OBJECT . '=' . $rid
                                   . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                             <input type="hidden"
                                    name="<?php echo self::DEFAULT_COMMAND_ACTION_RIDC; ?>"

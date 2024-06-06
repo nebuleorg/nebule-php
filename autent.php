@@ -41,7 +41,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240604';
+    const APPLICATION_VERSION = '020240606';
     const APPLICATION_LICENCE = 'GNU GPL 2023-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -641,8 +641,8 @@ $this->_metrologyInstance->addLog('MARK view=' . $this->_applicationInstance->ge
         );
         $list[2]['information'] = ':::return';
         $list[2]['param'] = array(
-            'enableDisplayAlone' => true,
             'enableDisplayIcon' => true,
+            'enableDisplayAlone' => true,
             'displayRatio' => 'short',
             'displaySize' => 'medium',
             'informationType' => 'back',
@@ -656,10 +656,14 @@ $this->_metrologyInstance->addLog('MARK view=' . $this->_applicationInstance->ge
             ?>
 
             <form method="post"
-                  action="?<?php echo nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getInstanceEntity() . '&' . nebule::COMMAND_SWITCH_TO_ENTITY; ?>">
+                  action="?<?php echo References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
+                      . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
+                      . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this->MODULE_REGISTERED_VIEWS[1]
+                      . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getInstanceEntity()
+                      . '&' . References::COMMAND_SWITCH_TO_ENTITY; ?>">
                 <input type="hidden" name="id" value="<?php echo $this->_nebuleInstance->getInstanceEntity(); ?>">
                 <label>
-                    <input type="password" name="pwd">
+                    <input type="password" name="<?php echo References::COMMAND_SELECT_PASSWORD; ?>"
                 </label>
                 <input type="submit" value="Unlock">
             </form>

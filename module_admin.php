@@ -23,7 +23,7 @@ class ModuleAdmin extends Modules
     protected $MODULE_COMMAND_NAME = 'adm';
     protected $MODULE_DEFAULT_VIEW = 'options';
     protected $MODULE_DESCRIPTION = '::sylabe:module:admin:ModuleDescription';
-    protected $MODULE_VERSION = '020240206';
+    protected $MODULE_VERSION = '020240606';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
     protected $MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256';
@@ -375,7 +375,7 @@ class ModuleAdmin extends Modules
                 $list[$i]['htlink'] = '?'
                     . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getDefaultView()
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id;
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $id;
                 $list[$i]['desc'] = '';
                 $list[$i]['actions'] = array();
                 $i++;
@@ -445,7 +445,7 @@ class ModuleAdmin extends Modules
                 $list[$i]['htlink'] = '?'
                     . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getDefaultView()
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $id;
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $id;
                 $list[$i]['desc'] = '';
                 $list[$i]['actions'] = array();
                 $i++;

@@ -369,40 +369,40 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         $this->setHtlinkObjectPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkGroupPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkConversationPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkEntityPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkCurrencyPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkTokenPoolPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkTokenPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkTransactionPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkWalletPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
 
         $this->_findCurrentApplication();
         $this->_findCurrentDisplayMode();
@@ -477,40 +477,40 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         $this->setHtlinkObjectPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkGroupPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkConversationPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkEntityPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkCurrencyPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkTokenPoolPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkTokenPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkTransactionPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setHtlinkWalletPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_SELECT_OBJECT
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
 
         $this->_findCurrentApplication();
         $this->_findCurrentDisplayMode();
@@ -5367,10 +5367,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             // Génère la base du lien html pour revenir au bon endroit en toute situation.
             $httpLink = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object->getID()
-                . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID()
-                . '&' . nebule::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroup()
-                . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=' . $this->_nebuleInstance->getCurrentConversation();
+                . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID()
+                . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroup()
+                . '&' . References::COMMAND_SELECT_CONVERSATION . '=' . $this->_nebuleInstance->getCurrentConversation();
 
             // Préparation du lien.
             $source = $object->getID();
@@ -8501,10 +8501,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             // Génère la base du lien html pour revenir au bon endroit en toute situation.
             $htlink = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                . '&' . nebule::COMMAND_SELECT_OBJECT . '=' . $object->getID()
-                . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID()
-                . '&' . nebule::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroup()
-                . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=' . $this->_nebuleInstance->getCurrentConversation();
+                . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID()
+                . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroup()
+                . '&' . References::COMMAND_SELECT_CONVERSATION . '=' . $this->_nebuleInstance->getCurrentConversation();
 
             // Préparation du lien.
             $source = $object->getID();

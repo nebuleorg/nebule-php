@@ -45,7 +45,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240224';
+    const APPLICATION_VERSION = '020240606';
     const APPLICATION_LICENCE = 'GNU GPL 2013-2024';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -477,18 +477,18 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $this->setHtlinkObjectPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-            . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
         // Préfix pour les groupes.
         if ($this->_applicationInstance->isModuleLoaded($namespace . 'ModuleGroups')) {
             $this->setHtlinkGroupPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleGroups')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleGroups')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_GROUP . '=');
+                . '&' . References::COMMAND_SELECT_GROUP . '=');
         } else {
             $this->setHtlinkGroupPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+                . '&' . References::COMMAND_SELECT_OBJECT . '=');
         }
 
         // Préfix pour les conversations.
@@ -496,63 +496,63 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
             $this->setHtlinkConversationPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Nebule\\Modules\\ModuleMessenger')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Nebule\\Modules\\ModuleMessenger')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_CONVERSATION . '=');
+                . '&' . References::COMMAND_SELECT_CONVERSATION . '=');
         } else {
             $this->setHtlinkConversationPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+                . '&' . References::COMMAND_SELECT_OBJECT . '=');
         }
 
         // Préfix pour les entités.
         $this->setHtlinkEntityPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleEntities')->getCommandName()
             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleEntities')->getDefaultView()
-            . '&' . nebule::COMMAND_SELECT_ENTITY . '=');
+            . '&' . References::COMMAND_SELECT_ENTITY . '=');
 
         // Préfix pour les monnaies.
         if ($this->_applicationInstance->isModuleLoaded('ModuleQantion')) {
             $this->setHtlinkCurrencyPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[3]
-                . '&' . nebule::COMMAND_SELECT_CURRENCY . '=');
+                . '&' . References::COMMAND_SELECT_CURRENCY . '=');
             $this->setHtlinkTokenPoolPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[8]
-                . '&' . nebule::COMMAND_SELECT_TOKENPOOL . '=');
+                . '&' . References::COMMAND_SELECT_TOKENPOOL . '=');
             $this->setHtlinkTokenPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[13]
-                . '&' . nebule::COMMAND_SELECT_TOKEN . '=');
+                . '&' . References::COMMAND_SELECT_TOKEN . '=');
             $this->setHtlinkTransactionPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[19]
-                . '&' . nebule::COMMAND_SELECT_TRANSACTION . '=');
+                . '&' . References::COMMAND_SELECT_TRANSACTION . '=');
             $this->setHtlinkWalletPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[23]
-                . '&' . nebule::COMMAND_SELECT_WALLET . '=');
+                . '&' . References::COMMAND_SELECT_WALLET . '=');
         } else {
             $this->setHtlinkCurrencyPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+                . '&' . References::COMMAND_SELECT_OBJECT . '=');
             $this->setHtlinkTokenPoolPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+                . '&' . References::COMMAND_SELECT_OBJECT . '=');
             $this->setHtlinkTokenPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+                . '&' . References::COMMAND_SELECT_OBJECT . '=');
             $this->setHtlinkTransactionPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+                . '&' . References::COMMAND_SELECT_OBJECT . '=');
             $this->setHtlinkWalletPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . nebule::COMMAND_SELECT_OBJECT . '=');
+                . '&' . References::COMMAND_SELECT_OBJECT . '=');
         }
     }
 
@@ -1272,16 +1272,16 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 'enableDisplayObjectActions' => false,
             );
             if ($this->_unlocked) {
-                $param['flagUnlockedLink'] = '?' . nebule::COMMAND_SWITCH_APPLICATION . '=2'
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . nebule::COMMAND_AUTH_ENTITY_MOD
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_AUTH_ENTITY_INFO
-                    . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                    . '&' . nebule::COMMAND_FLUSH;
+                $param['flagUnlockedLink'] = '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_INFO
+                    . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                    . '&' . References::COMMAND_FLUSH;
             } else {
-                $param['flagUnlockedLink'] = '?' . nebule::COMMAND_SWITCH_APPLICATION . '=2'
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . nebule::COMMAND_AUTH_ENTITY_MOD
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_AUTH_ENTITY_LOGIN
-                    . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
+                $param['flagUnlockedLink'] = '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_LOGIN
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
             }
             echo $this->getDisplayObject($this->_nebuleInstance->getCurrentEntityInstance(), $param);
             ?>
@@ -1303,11 +1303,11 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                                     '',
                                     '',
                                     'name="ico_lock"'),
-                                '?' . nebule::COMMAND_SWITCH_APPLICATION . '=2'
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . nebule::COMMAND_AUTH_ENTITY_MOD
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_AUTH_ENTITY_INFO
-                                . '&' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                                . '&' . nebule::COMMAND_FLUSH);
+                                '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_INFO
+                                . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                                . '&' . References::COMMAND_FLUSH);
                         } else {
                             // Affiche de lien de déverrouillage sans les effets.
                             $this->displayHypertextLink(
@@ -1316,10 +1316,10 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                                     '',
                                     '',
                                     'name="ico_lock"'),
-                                '?' . nebule::COMMAND_SWITCH_APPLICATION . '=2'
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . nebule::COMMAND_AUTH_ENTITY_MOD
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . nebule::COMMAND_AUTH_ENTITY_LOGIN
-                                . '&' . nebule::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity());
+                                '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_LOGIN
+                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity());
                         }
                     } // Sinon affiche le warning.
                     else {
@@ -1327,8 +1327,8 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                             $this->convertUpdateImage(
                                 $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_WARNING),
                                 'WARNING'),
-                            '?' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                            . '&' . nebule::COMMAND_SWITCH_TO_ENTITY);
+                            '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                            . '&' . References::COMMAND_SWITCH_TO_ENTITY);
                     }
                 } // Sinon c'est une erreur.
                 else {
@@ -1336,8 +1336,8 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                         $this->convertUpdateImage(
                             $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_ERROR),
                             'ERROR'),
-                        '?' . nebule::COMMAND_AUTH_ENTITY_LOGOUT
-                        . '&' . nebule::COMMAND_FLUSH);
+                        '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                        . '&' . References::COMMAND_FLUSH);
                 }
                 ?>
 
