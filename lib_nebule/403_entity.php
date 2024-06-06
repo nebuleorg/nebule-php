@@ -304,26 +304,34 @@ class Entity extends Node implements nodeInterface
     private function _findPrivateKeyID(): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
+        $oidPKey = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_PRIVATE_KEY);
+
         // Vérifie la présence d'un ID de clé privée.
         if (isset($this->_privateKeyID)
             && $this->_privateKeyID != '0'
         )
             return true;
         // Extrait les liens f vers la clé publique.
-        $list = $this->getLinksOnFields($this->_id, '', 'f', '', $this->_id, '0');
-        if (sizeof($list) == 0) {
+        $list = $this->getLinksOnFields($this->_id, '', 'f', $this->_id, '', $oidPKey);
+        if (sizeof($list) == 0)
             return true;
-        }
         // Boucle de recherche d'une clé privée.
         foreach ($list as $link) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Try link ' . $link->getParsed()['bl/rl'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bc321274');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('bs/rs1/eid=' . $link->getParsed()['bs/rs1/eid'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('action=' . $link->getAction(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000'); // FIXME Ne trouve pas le champ...
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('bl/rl/nid1=' . $link->getParsed()['bl/rl/nid1'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('bl/rl/nid3=' . $link->getParsed()['bl/rl/nid3'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             $hashSource = $link->getParsed()['bl/rl/nid1'];
             // Vérifie le lien et la présence de l'objet source.
             if ($link->getParsed()['bs/rs1/eid'] == $this->_id
                 && $link->getAction() == 'f'
-                && $link->getParsed()['bl/rl/nid2'] == $this->_id
-                && $link->getParsed()['bl/rl/nid3'] == '0'
+                && $link->getParsed()['bl/rl/nid1'] == $this->_id
+                && $link->getParsed()['bl/rl/nid3'] == $oidPKey
                 && $this->_io->checkObjectPresent($hashSource)
             ) {
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('OK link ', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '63781bce');
                 // Extrait le contenu de l'objet source. @todo remplacer par Object::getContent ...
                 $line = $this->_io->getObject($hashSource, self::ENTITY_MAX_SIZE);
                 // Vérifie si le contenu contient un entête de clé privée
@@ -336,9 +344,8 @@ class Entity extends Node implements nodeInterface
         // Vérifie qu'une clé privée a été trouvée.
         if (isset($this->_privateKeyID)
             && $this->_privateKeyID != '0'
-        ) {
+        )
             return true;
-        }
         return false;
     }
 
@@ -1088,7 +1095,7 @@ class Entity extends Node implements nodeInterface
                     <li>Lien de type <code>l</code></li>
                     <li>Identifiant de la clé <span style="font-weight:bold;">publique</span></li>
                     <li>Empreinte de l’algorithme de hash utilisé pour le calcul des empreintes</li>
-                    <li>Empreinte de ‘nebule/objet/hash’</li>
+                    <li>Empreinte de ‘<?php echo References::REFERENCE_NEBULE_OBJET_HASH; ?>’</li>
                 </ul>
             </li>
             <li>Lien 2 :
@@ -1099,7 +1106,7 @@ class Entity extends Node implements nodeInterface
                     <li>Lien de type <code>l</code></li>
                     <li>Identifiant de la clé <span style="font-weight:bold;">privée</span></li>
                     <li>Empreinte de l’algorithme de hash utilisé pour le calcul des empreintes</li>
-                    <li>Empreinte de ‘nebule/objet/hash’</li>
+                    <li>Empreinte de ‘<?php echo References::REFERENCE_NEBULE_OBJET_HASH; ?>’</li>
                 </ul>
             </li>
             <li>Lien 3 :
@@ -1109,8 +1116,8 @@ class Entity extends Node implements nodeInterface
                     <li>Horodatage</li>
                     <li>Lien de type <code>l</code></li>
                     <li>Identifiant de la clé <span style="font-weight:bold;">publique</span></li>
-                    <li>Empreinte de ‘application/x-pem-file’</li>
-                    <li>Empreinte de ‘nebule/objet/type’</li>
+                    <li>Empreinte de ‘<?php echo References::REFERENCE_OBJECT_ENTITY; ?>’</li>
+                    <li>Empreinte de ‘<?php echo References::REFERENCE_NEBULE_OBJET_TYPE; ?>’</li>
                 </ul>
             </li>
             <li>Lien 4 :
@@ -1120,8 +1127,8 @@ class Entity extends Node implements nodeInterface
                     <li>Horodatage</li>
                     <li>Lien de type <code>l</code></li>
                     <li>Identifiant de la clé <span style="font-weight:bold;">privée</span></li>
-                    <li>Empreinte de ‘application/x-pem-file’</li>
-                    <li>Empreinte de ‘nebule/objet/type’</li>
+                    <li>Empreinte de ‘<?php echo References::REFERENCE_OBJECT_ENTITY; ?>’</li>
+                    <li>Empreinte de ‘<?php echo References::REFERENCE_NEBULE_OBJET_TYPE; ?>’</li>
                 </ul>
             </li>
             <li>Lien 5 :
@@ -1132,7 +1139,7 @@ class Entity extends Node implements nodeInterface
                     <li>Lien de type <code>f</code> ;</li>
                     <li>Identifiant de la clé <span style="font-weight:bold;">privée</span></li>
                     <li>Identifiant de la clé <span style="font-weight:bold;">publique</span></li>
-                    <li>0.</li>
+                    <li>Empreinte de ‘<?php echo References::REFERENCE_PRIVATE_KEY; ?>’.</li>
                 </ul>
             </li>
         </ul>

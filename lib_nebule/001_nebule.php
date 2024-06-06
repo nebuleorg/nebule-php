@@ -1254,6 +1254,7 @@ class nebule
         // S'il existe une variable de session pour l'entite, la lit
         if ($privateKey !== false
             && $privateKey != ''
+            && $privateKey != '0'
         ) {
             $this->_currentEntityPrivateKey = $privateKey;
             $this->_currentEntityPrivateKeyInstance = $this->newObject($this->_currentEntityPrivateKey);

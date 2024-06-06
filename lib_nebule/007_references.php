@@ -46,6 +46,7 @@ class References
     const REFERENCE_OBJECT_CRYPT_RSA = 'application/x-encrypted/rsa';
     const REFERENCE_OBJECT_ENTITY = 'application/x-pem-file';
     const REFERENCE_ENTITY_HEADER = '-----BEGIN PUBLIC KEY-----';
+    const REFERENCE_PRIVATE_KEY = 'nebule/objet/entite/prive';
     const REFERENCE_CRYPTO_HASH_ALGORITHM = 'sha2.256';
     const LIB_RID_SECURITY_AUTHORITY = 'a4b210d4fb820a5b715509e501e36873eb9e27dca1dd591a98a5fc264fd2238adf4b489d.none.288';
     const LIB_RID_CODE_AUTHORITY = '2b9dd679451eaca14a50e7a65352f959fc3ad55efc572dcd009c526bc01ab3fe304d8e69.none.288';
