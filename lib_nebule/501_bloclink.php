@@ -226,6 +226,8 @@ class blocLink implements blocLinkInterface
      */
     protected function _parse(string $link): bool
     {
+        $this->_metrology->addLog(substr($link, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
         $this->_validStructure = false;
         if (strlen($link) > (self::LINK_MAX_BL_SIZE + self::LINK_MAX_BS_SIZE + 1)) return false;
         if (strlen($link) == 0) return false;
@@ -403,6 +405,8 @@ class blocLink implements blocLinkInterface
      */
     protected function _checkBH(string &$bh): bool
     {
+        $this->_metrology->addLog(substr($bh, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
         if (strlen($bh) > 15)
         {
             $this->_metrology->addLog('BH size overflow '.substr($bh, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '84cf4447');
@@ -435,6 +439,8 @@ class blocLink implements blocLinkInterface
      */
     protected function _checkRF(string &$rf): bool
     {
+        $this->_metrology->addLog(substr($rf, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
         if (strlen($rf) > 11) return false;
 
         // Check items from RF : APP:TYP
@@ -460,6 +466,8 @@ class blocLink implements blocLinkInterface
      */
     protected function _checkRV(string &$rv): bool
     {
+        $this->_metrology->addLog(substr($rv, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
         if (strlen($rv) > 3) return false;
 
         // Check items from RV : VER:SUB
@@ -484,6 +492,8 @@ class blocLink implements blocLinkInterface
      */
     protected function _checkBL(string &$bl): bool
     {
+        $this->_metrology->addLog(substr($bl, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
         if (strlen($bl) > self::LINK_MAX_BL_SIZE)
         {
             $this->_metrology->addLog('BL size overflow '.substr($bl, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '9d3f9bda');
@@ -539,6 +549,8 @@ class blocLink implements blocLinkInterface
      */
     protected function _checkRC(string &$rc): bool
     {
+        $this->_metrology->addLog(substr($rc, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
         if (strlen($rc) > 27)
         {
             $this->_metrology->addLog('BL/RC size overflow '.substr($rc, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '7282e54a');
@@ -577,6 +589,8 @@ class blocLink implements blocLinkInterface
      */
     protected function _checkRL(string &$rl, string $i): bool
     {
+        $this->_metrology->addLog(substr($rl, 0, 512) . ' / ' . $i, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
         if (strlen($rl) > 4096) // TODO maybe can be a constant
         {
             $this->_metrology->addLog('BL/RL size overflow '.substr($rl, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '4835c147');
@@ -625,6 +639,8 @@ class blocLink implements blocLinkInterface
      */
     protected function _checkREQ(string &$req, string $i): bool
     {
+        $this->_metrology->addLog(substr($req, 0, 512) . ' / ' . $i, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
         if ($req != 'l'
             && $req != 'f'
             && $req != 'u'
@@ -651,6 +667,8 @@ class blocLink implements blocLinkInterface
      */
     protected function _checkBS(string &$bh_bl, string &$bs): bool
     {
+        $this->_metrology->addLog(substr($bh_bl, 0, 256) . ' / ' . substr($bs, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
         if (strlen($bs) > self::LINK_MAX_BS_SIZE)
         {
             $this->_metrology->addLog('BS size overflow '.substr($bs, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'efc551d7');
@@ -691,6 +709,8 @@ class blocLink implements blocLinkInterface
      */
     protected function _checkRS(string &$rs, string &$bh_bl, string $i): bool
     {
+        $this->_metrology->addLog(substr($bh_bl, 0, 256) . ' / ' . substr($rs, 0, 512) . ' / ' . $i, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
         if (strlen($rs) > 4096) return false; // TODO à revoir.
 
         // Extract items from RS : NID>SIG
@@ -727,6 +747,8 @@ class blocLink implements blocLinkInterface
      */
     protected function _checkSIG(string &$bh_bl, string &$sig, string &$nid, string $i): bool
     {
+        $this->_metrology->addLog(substr($bh_bl, 0, 512) . ' / ' . $sig . ' / ' . $nid . ' / ' . $i, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
         if (strlen($sig) > 4096) return false; // TODO à revoir.
 
         // Check hash value.
@@ -770,6 +792,8 @@ class blocLink implements blocLinkInterface
 
     protected function _checkObjectContent($oid): bool
     {
+        $this->_metrology->addLog($oid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
         if (!Node::checkNID($oid, false)
             || !$this->_io->checkObjectPresent($oid)
         )
