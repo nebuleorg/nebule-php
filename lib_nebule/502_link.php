@@ -175,7 +175,8 @@ class Link implements linkInterface
         $this->_maxRLUID = $this->_configuration->getOptionAsInteger('linkMaxRLUID');
         $this->_rawLink = $rl;
 
-        $this->_metrology->addLog(substr($rl, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '630d2c33');
+        $this->_metrology->addLog(substr($rl, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '1111c0de');
 
         $this->_validStructure = $this->_checkRL($rl);
 
@@ -196,13 +197,22 @@ class Link implements linkInterface
      */
     protected function _checkRL(string $rl): bool
     {
-        if (strlen($rl) > 4096) return false; // TODO à revoir.
+        $this->_metrology->addLog(substr($rl, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '1111c0de');
+
+        if (strlen($rl) > blocLink::LINK_MAX_RL_SIZE)
+        {
+            $this->_metrology->addLog('BL/RL size overflow '.substr($rl, 0, 1000) . '+',
+                Metrology::LOG_LEVEL_ERROR, __METHOD__, '8d33e123');
+            return false;
+        }
 
         // Extract items from RL : REQ>NID>NID>NID>NID...
         $req = strtok($rl, '>');
         if (is_bool($req)) return false;
         if (!$this->_checkREQ($req)) return false;
         $this->_parsedLink['bl/rl/req'] = $req;
+        $this->_action = $req;
 
         $rl1nid = strtok('>');
         if (is_bool($rl1nid)) return false;
@@ -215,7 +225,8 @@ class Link implements linkInterface
             $j++;
             if ($j > $this->_maxRLUID)
             {
-                $this->_metrology->addLog('BL/RL overflow '.substr($rl, 0, 60) . '+ maxRLUID=' . $this->_maxRLUID, Metrology::LOG_LEVEL_ERROR, __METHOD__, '72920c39');
+                $this->_metrology->addLog('BL/RL overflow '.substr($rl, 0, 60) . '+ maxRLUID='
+                    . $this->_maxRLUID, Metrology::LOG_LEVEL_ERROR, __METHOD__, '72920c39');
                 return false;
             }
             $rl1nid = strtok('>');
@@ -239,6 +250,9 @@ class Link implements linkInterface
      */
     protected function _checkREQ(string &$req): bool
     {
+        $this->_metrology->addLog(substr($req, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '1111c0de');
+
         if ($req != 'l'
             && $req != 'f'
             && $req != 'u'
@@ -309,6 +323,9 @@ class Link implements linkInterface
      */
     public function setBlocInstance(blocLink $instance)
     {
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '1111c0de');
+
         if (!is_null($this->_blocLink))
             return;
         $this->_blocLink = $instance;
@@ -321,7 +338,8 @@ class Link implements linkInterface
      */
     public function getRaw(): string
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '4c0ae196');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '1111c0de');
 
         return $this->_rawLink;
     }
@@ -333,7 +351,11 @@ class Link implements linkInterface
      */
     public function getBlocLink(): blocLink
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'c9e671f6');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '1111c0de');
+
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK _blocklink : ' . gettype($this->_blocLink), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK _blocklink=' . serialize($this->_blocLink), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         return $this->_blocLink;
     }
@@ -345,7 +367,8 @@ class Link implements linkInterface
      */
     public function getParsed(): array
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '0d5b79f7');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '1111c0de');
 
         return $this->_parsedLink;
     }
@@ -357,7 +380,8 @@ class Link implements linkInterface
      */
     public function getSigners(): array
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'f0fbd222');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '1111c0de');
 
         return $this->_blocLink->getSigners();
     }
@@ -369,7 +393,8 @@ class Link implements linkInterface
      */
     public function getAction(): string
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '8bbf598d');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '1111c0de');
 
         return $this->_action;
     }
@@ -381,7 +406,8 @@ class Link implements linkInterface
      */
     public function getDate(): string
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '9826c54f');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '1111c0de');
 
         return $this->_blocLink->getDate();
     }
@@ -394,7 +420,8 @@ class Link implements linkInterface
      */
     public function getValid(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'e56bcde6');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '1111c0de');
 
         return ( $this->_blocLink->getValid() || !$this->_blocLink->getCheckCompleted() ) && $this->_valid;
     }
@@ -406,7 +433,8 @@ class Link implements linkInterface
      */
     public function getValidStructure(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '84e4f268');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '1111c0de');
 
         return $this->_validStructure;
     }
@@ -417,7 +445,8 @@ class Link implements linkInterface
      */
     public function getSigned(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'e9a7d99f');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '1111c0de');
 
         return $this->_blocLink->getSigned();
     }
@@ -430,7 +459,8 @@ class Link implements linkInterface
      */
     public function getObfuscated(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '4ad73631');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '1111c0de');
 
         return $this->_obfuscated;
     }
@@ -442,7 +472,8 @@ class Link implements linkInterface
      */
     public function getVersion(): string
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '0efb74c8');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '1111c0de');
 
         return $this->_blocLink->getVersion();
     }
@@ -457,6 +488,9 @@ class Link implements linkInterface
      */
     protected function _extractObfuscated(): bool
     {
+        $this->_metrology->addLog('extract obfuscated part', Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '1111c0de');
+
         $this->_parsedLinkObfuscated = $this->_parsedLink;
 
         // TODO
@@ -477,7 +511,11 @@ class Link implements linkInterface
      */
     public function setObfuscate(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '654de486');
+        $this->_metrology->addLog('convert link to obfuscated', Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '1111c0de');
+
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '654de486');
 
         if (!$this->_obfuscated
             && $this->_valid
@@ -497,7 +535,11 @@ class Link implements linkInterface
      */
     public function unsetObfuscate(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '5e357597');
+        $this->_metrology->addLog('dis-obfuscate link', Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '1111c0de');
+
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '5e357597');
 
         if ($this->_obfuscated
             && $this->_valid
@@ -516,7 +558,8 @@ class Link implements linkInterface
      */
     public function decrypt(): bool
     {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '2c0b785a');
+        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+            __METHOD__, '2c0b785a');
 
         if ($this->_obfuscated
             && $this->_valid
