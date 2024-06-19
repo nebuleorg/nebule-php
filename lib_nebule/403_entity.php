@@ -307,42 +307,40 @@ class Entity extends Node implements nodeInterface
 
         $oidPKey = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_PRIVATE_KEY);
 
-        // Vérifie la présence d'un ID de clé privée.
         if (isset($this->_privateKeyID)
             && $this->_privateKeyID != '0'
         )
             return true;
-        // Extrait les liens f vers la clé publique.
+
         $list = $this->getLinksOnFields($this->_id, '', 'f', $this->_id, '', $oidPKey);
         if (sizeof($list) == 0)
             return true;
-        // Boucle de recherche d'une clé privée.
+
+        $refDate = '0';
         foreach ($list as $link) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Try link ' . $link->getParsed()['bl/rl'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bc321274');
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('bs/rs1/eid=' . $link->getBlocLink()->getParsed()['bs/rs1/eid'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('bl/rl/req=' . $link->getParsed()['bl/rl/req'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000'); // FIXME Ne trouve pas le champ...
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('bl/rl/nid1=' . $link->getParsed()['bl/rl/nid1'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('bl/rl/nid2=' . $link->getParsed()['bl/rl/nid2'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('bl/rl/nid3=' . $link->getParsed()['bl/rl/nid3'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-            $hashSource = $link->getParsed()['bl/rl/nid1'];
-            // Vérifie le lien et la présence de l'objet source.
+            /*if (!$link->getValid()) FIXME
+                continue;*/
+
+            $nid2 = $link->getParsed()['bl/rl/nid2'];
+            $instance = $this->_cache->newNode($nid2);
+            $line = $instance->getContent(self::ENTITY_MAX_SIZE);
             if ($link->getBlocLink()->getParsed()['bs/rs1/eid'] == $this->_id
                 && $link->getParsed()['bl/rl/req'] == 'f'
                 && $link->getParsed()['bl/rl/nid1'] == $this->_id
                 && $link->getParsed()['bl/rl/nid3'] == $oidPKey
-                && $this->_io->checkObjectPresent($hashSource)
+                && strlen($nid2) > 0
+                && $line !== null
+                && strstr($line, self::ENTITY_PRIVATE_HEADER) !== false
+                && strcmp($link->getDate(), $refDate) > 0
             ) {
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('OK link ', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '63781bce');
-                // Extrait le contenu de l'objet source. @todo remplacer par Object::getContent ...
-                $line = $this->_io->getObject($hashSource, self::ENTITY_MAX_SIZE);
-                // Vérifie si le contenu contient un entête de clé privée
-                if (strstr($line, self::ENTITY_PRIVATE_HEADER) !== false) {
-                    // Mémorise l'ID de la clé privée.
-                    $this->_privateKeyID = $hashSource;
-                }
-            }
+                $this->_privateKeyID = $nid2;
+                $refDate = $link->getDate();
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('OK private key ' . $nid2, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '63781bce');
+            } else
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Invalid private key ' . $nid2, Metrology::LOG_LEVEL_ERROR, __METHOD__, '293d8170');
         }
-        // Vérifie qu'une clé privée a été trouvée.
+
         if (isset($this->_privateKeyID)
             && $this->_privateKeyID != '0'
         )

@@ -386,10 +386,11 @@ class blocLink implements blocLinkInterface
         $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 256), Metrology::LOG_LEVEL_FUNCTION,
             __METHOD__, '1111c0de');
 
-        if (!isset($this->_parsedLink['bl/rv']))
+        /*if (!isset($this->_parsedLink['bl/rv']))
             return '';
 
-        return $this->_parsedLink['bl/rv'];
+        return $this->_parsedLink['bl/rv'];*/
+        return $this->_parsedLink['bl/rv'] ?: '';
     }
 
     /**
@@ -402,10 +403,11 @@ class blocLink implements blocLinkInterface
         $this->_metrology->addLog(substr($this->_rawBlocLink, 0, 256), Metrology::LOG_LEVEL_FUNCTION,
             __METHOD__, '1111c0de');
 
-        if (!isset($this->_parsedLink['bl/rc/chr']))
-            return '';
+        //if (!isset($this->_parsedLink['bl/rc/chr']))
+        //    return '';
 
-        return $this->_parsedLink['bl/rc/chr'];
+        //return $this->_parsedLink['bl/rc/chr'];
+        return $this->_parsedLink['bl/rc/chr'] ?: '';
     }
 
 

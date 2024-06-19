@@ -2818,7 +2818,7 @@ class Node implements nodeInterface
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_haveData)
-            return $this->_data;
+            return $this->_data; // FIXME gérer aussi la taille dans le cache !
 
         /*if ($this->_getMarkProtected())
             return $this->_getProtectedContent($limit);

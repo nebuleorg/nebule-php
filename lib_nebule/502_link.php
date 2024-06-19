@@ -22,7 +22,6 @@ class Link implements linkInterface
         '_parsedLink',
         '_parsedLinkObfuscated',
         '_signe',
-        '_date',
         '_obfuscated',
         '_valid',
         '_validStructure',
@@ -100,13 +99,6 @@ class Link implements linkInterface
      * @var string $_signe
      */
     protected $_signe = '0';
-
-    /**
-     * Texte date du lien.
-     *
-     * @var string $_date
-     */
-    protected $_date = '';
 
     /**
      * Booléen si le lien est dissimulé.
