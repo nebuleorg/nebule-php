@@ -2708,7 +2708,7 @@ abstract class Actions
                 '0_'
                 . $this->_nebuleInstance->getCurrentEntity() . '_'
                 . $link->getDate() . '_'
-                . $link->getAction() . '_'
+                . $link->getParsed()['bl/rl/req'] . '_'
                 . $link->getParsed()['bl/rl/nid1'] . '_'
                 . $link->getParsed()['bl/rl/nid2'] . '_'
                 . $link->getParsed()['bl/rl/nid3']
@@ -3250,7 +3250,7 @@ abstract class Actions
                             '0_'
                             . $this->_nebuleInstance->getCurrentEntity() . '_'
                             . $instance->getDate() . '_'
-                            . $instance->getAction() . '_'
+                            . $instance->getParsed()['bl/rl/req'] . '_'
                             . $instance->getParsed()['bl/rl/nid1'] . '_'
                             . $instance->getParsed()['bl/rl/nid2'] . '_'
                             . $instance->getParsed()['bl/rl/nid3']

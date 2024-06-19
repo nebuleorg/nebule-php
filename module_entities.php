@@ -27,7 +27,7 @@ class ModuleEntities extends Modules
     protected $MODULE_COMMAND_NAME = 'ent';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
-    protected $MODULE_VERSION = '020240606';
+    protected $MODULE_VERSION = '020240619';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
     protected $MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -1119,7 +1119,7 @@ class ModuleEntities extends Modules
                 <div class="sylabeModuleEntityActionTextList<?php echo $bg; ?>">
                     <?php
                     // Extrait l'action.
-                    $action = $link->getAction();
+                    $action = $link->getParsed()['bl/rl/req'];
 
                     if ($action == 'c') {
                         // Extrait nom et ID pour affichage.
@@ -2162,7 +2162,7 @@ class ModuleEntities extends Modules
                 // Si l'affichage est permit.
                 if ($okDisplay) {
                     // Extraction des attributs.
-                    $action = $link->getAction();
+                    $action = $link->getParsed()['bl/rl/req'];
                     $showAttrib = false;
                     $showEmotion = false;
                     $hashAttrib = $link->getParsed()['bl/rl/nid3'];

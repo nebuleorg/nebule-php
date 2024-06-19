@@ -8,6 +8,7 @@ use Nebule\Library\Displays;
 use Nebule\Library\Modules;
 use Nebule\Library\nebule;
 use Nebule\Library\Node;
+use Nebule\Library\References;
 
 /**
  * Ce module permet gérer les objets.
@@ -25,7 +26,7 @@ class ModuleObjects extends Modules
     protected $MODULE_COMMAND_NAME = 'obj';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    protected $MODULE_VERSION = '020240206';
+    protected $MODULE_VERSION = '020240619';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
     protected $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -576,7 +577,7 @@ class ModuleObjects extends Modules
                 // Si l'affichage est permis.
                 if ($okDisplay) {
                     // Extraction des attributs.
-                    $action = $link->getAction();
+                    $action = $link->getParsed()['bl/rl/req'];
                     $showAttrib = false;
                     $showEmotion = false;
                     $hashAttrib = $link->getParsed()['bl/rl/nid3'];

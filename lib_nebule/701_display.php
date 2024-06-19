@@ -7838,7 +7838,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $contantDisplayDate = '';
 
             $icon = self::REFERENCE_ICON_LINK_LL;
-            switch ($instance->getAction()) {
+            switch ($instance->getParsed()['bl/rl/req']) {
                 case 'f':
                     $icon = self::REFERENCE_ICON_LINK_LF;
                     break;
@@ -7864,8 +7864,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     $icon = self::REFERENCE_ICON_LINK_LX;
                     break;
             }
-            $contantDisplayAction .= '<img title="Action ' . $instance->getAction() . '" ';
-            $contantDisplayAction .= 'alt="[' . $instance->getAction() . ']" ';
+            $contantDisplayAction .= '<img title="Action ' . $instance->getParsed()['bl/rl/req'] . '" ';
+            $contantDisplayAction .= 'alt="[' . $instance->getParsed()['bl/rl/req'] . ']" ';
             $contantDisplayAction .= 'src="o/' . $this->_getImageByReference($this->_nebuleInstance->newObject($icon)) . '" />';
 
             $object = $this->_nebuleInstance->newObject($instance->getParsed()['bl/rl/nid1']);
@@ -8223,7 +8223,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if (!$link->getValid())
             return '';
 
-        switch ($link->getAction()) {
+        switch ($link->getParsed()['bl/rl/req']) {
             case 'f':
                 $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LF);
                 $iconUpdate = $this->convertUpdateImage($icon, 'f', 'iconInlineDisplay');

@@ -1858,7 +1858,7 @@ class Node implements nodeInterface
             // Recherche la clé utilisée pour l'entité en cours.
             foreach ($listT as $linkSym) {
                 // Si lien de chiffrement et l'objet source est l'objet en cours non protégé.
-                if ($linkSym->getAction() == 'k'
+                if ($linkSym->getParsed()['bl/rl/req'] == 'k'
                     && $linkSym->getParsed()['bl/rl/nid2'] == $this->_idProtected
                 ) {
                     // Lit l'objet de clé de chiffrement symétrique et ses liens.
@@ -1869,7 +1869,7 @@ class Node implements nodeInterface
                     foreach ($linksAsym as $linkAsym) {
                         // Si lien de chiffrement.
                         $targetA = $linkAsym->getParsed()['bl/rl/nid2'];
-                        if ($linkAsym->getAction() == 'k'
+                        if ($linkAsym->getParsed()['bl/rl/req'] == 'k'
                             && $linkAsym->getParsed()['bl/rl/nid2'] != $this->_idProtected
                             && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($targetA)
                         ) {
@@ -1895,7 +1895,7 @@ class Node implements nodeInterface
             foreach ($listS as $linkSym) {
                 $targetS = $linkSym->getParsed()['bl/rl/nid2'];
                 // Si lien de chiffrement et l'objet source est l'objet en cours non protégé.
-                if ($linkSym->getAction() == 'k'
+                if ($linkSym->getParsed()['bl/rl/req'] == 'k'
                     && $linkSym->getParsed()['bl/rl/nid1'] == $this->_idUnprotected
                     && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($targetS)
                 ) {
@@ -1907,7 +1907,7 @@ class Node implements nodeInterface
                     foreach ($linksAsym as $linkAsym) {
                         $targetA = $linkAsym->getParsed()['bl/rl/nid2'];
                         // Si lien de chiffrement.
-                        if ($linkAsym->getAction() == 'k'
+                        if ($linkAsym->getParsed()['bl/rl/req'] == 'k'
                             && $linkAsym->getParsed()['bl/rl/nid1'] != $this->_idUnprotected
                             && $linkAsym->getParsed()['bl/rl/nid3'] == $this->_nebuleInstance->getCurrentEntity()
                             && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($targetA)

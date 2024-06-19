@@ -40,7 +40,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'qantion';
     const APPLICATION_SURNAME = 'nebule/qantion';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240606';
+    const APPLICATION_VERSION = '020240619';
     const APPLICATION_LICENCE = 'GNU GPL 2019-2024';
     const APPLICATION_WEBSITE = 'www.qantion.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -4024,7 +4024,7 @@ class ModuleEntities extends Modules
                 <div class="sylabeModuleEntityActionTextList<?php echo $bg; ?>">
                     <?php
                     // Extrait l'action.
-                    $action = $link->getAction();
+                    $action = $link->getParsed()['bl/rl/req'];
 
                     if ($action == 'c') {
                         // Extrait nom et ID pour affichage.
@@ -5044,7 +5044,7 @@ class ModuleEntities extends Modules
                 // Si l'affichage est permit.
                 if ($okDisplay) {
                     // Extraction des attributs.
-                    $action = $link->getAction();
+                    $action = $link->getParsed()['bl/rl/req'];
                     $showAttrib = false;
                     $showEmotion = false;
                     $hashAttrib = $link->getParsed()['bl/rl/nid3'];
@@ -6570,7 +6570,7 @@ class ModuleObjects extends Modules
     protected $MODULE_COMMAND_NAME = 'obj';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    protected $MODULE_VERSION = '020230110';
+    protected $MODULE_VERSION = '020240619';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2023';
     protected $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee';
@@ -7143,7 +7143,7 @@ class ModuleObjects extends Modules
                 // Si l'affichage est permit.
                 if ($okDisplay) {
                     // Extraction des attributs.
-                    $action = $link->getAction();
+                    $action = $link->getParsed()['bl/rl/req'];
                     $showAttrib = false;
                     $showEmotion = false;
                     $hashAttrib = $link->getParsed()['bl/rl/nid3'];

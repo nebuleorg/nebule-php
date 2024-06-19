@@ -320,14 +320,14 @@ class Entity extends Node implements nodeInterface
         foreach ($list as $link) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Try link ' . $link->getParsed()['bl/rl'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bc321274');
             $this->_nebuleInstance->getMetrologyInstance()->addLog('bs/rs1/eid=' . $link->getBlocLink()->getParsed()['bs/rs1/eid'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('action=' . $link->getAction(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000'); // FIXME Ne trouve pas le champ...
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('bl/rl/req=' . $link->getParsed()['bl/rl/req'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000'); // FIXME Ne trouve pas le champ...
             $this->_nebuleInstance->getMetrologyInstance()->addLog('bl/rl/nid1=' . $link->getParsed()['bl/rl/nid1'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             $this->_nebuleInstance->getMetrologyInstance()->addLog('bl/rl/nid2=' . $link->getParsed()['bl/rl/nid2'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             $this->_nebuleInstance->getMetrologyInstance()->addLog('bl/rl/nid3=' . $link->getParsed()['bl/rl/nid3'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             $hashSource = $link->getParsed()['bl/rl/nid1'];
             // Vérifie le lien et la présence de l'objet source.
             if ($link->getBlocLink()->getParsed()['bs/rs1/eid'] == $this->_id
-                && $link->getAction() == 'f'
+                && $link->getParsed()['bl/rl/req'] == 'f'
                 && $link->getParsed()['bl/rl/nid1'] == $this->_id
                 && $link->getParsed()['bl/rl/nid3'] == $oidPKey
                 && $this->_io->checkObjectPresent($hashSource)

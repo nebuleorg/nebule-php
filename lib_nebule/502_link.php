@@ -23,7 +23,6 @@ class Link implements linkInterface
         '_parsedLinkObfuscated',
         '_signe',
         '_date',
-        '_action',
         '_obfuscated',
         '_valid',
         '_validStructure',
@@ -110,13 +109,6 @@ class Link implements linkInterface
     protected $_date = '';
 
     /**
-     * Texte action du lien, sur un octet.
-     *
-     * @var string $_action
-     */
-    protected $_action = '';
-
-    /**
      * Booléen si le lien est dissimulé.
      *
      * @var boolean $_obfuscated
@@ -182,7 +174,7 @@ class Link implements linkInterface
 
         // Détecte si c'est un lien dissimulé.
         $this->_obfuscated = false;
-        if ($this->_permitObfuscated && $this->_action == 'c')
+        if ($this->_permitObfuscated && $this->_parsedLink['bl/rl/req'] == 'c')
             $this->_extractObfuscated();
 
         // Actions supplémentaires pour les dérivés de liens.
@@ -212,7 +204,6 @@ class Link implements linkInterface
         if (is_bool($req)) return false;
         if (!$this->_checkREQ($req)) return false;
         $this->_parsedLink['bl/rl/req'] = $req;
-        $this->_action = $req;
 
         $rl1nid = strtok('>');
         if (is_bool($rl1nid)) return false;
@@ -384,19 +375,6 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK _blocklink=' . seri
             __METHOD__, '1111c0de');
 
         return $this->_blocLink->getSigners();
-    }
-
-    /**
-     * Retourne l'action du lien.
-     *
-     * @return string
-     */
-    public function getAction(): string
-    {
-        $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
-            __METHOD__, '1111c0de');
-
-        return $this->_action;
     }
 
     /**

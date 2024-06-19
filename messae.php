@@ -43,7 +43,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'messae';
     const APPLICATION_SURNAME = 'nebule/messae';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240606';
+    const APPLICATION_VERSION = '020240619';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.messae.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -3999,7 +3999,7 @@ class ModuleEntities extends Modules
                 <div class="sylabeModuleEntityActionTextList<?php echo $bg; ?>">
                     <?php
                     // Extrait l'action.
-                    $action = $link->getAction();
+                    $action = $link->getParsed()['bl/rl/req'];
 
                     if ($action == 'c') {
                         // Extrait nom et ID pour affichage.
@@ -5010,7 +5010,7 @@ class ModuleEntities extends Modules
                 // Si l'affichage est permit.
                 if ($okDisplay) {
                     // Extraction des attributs.
-                    $action = $link->getAction();
+                    $action = $link->getParsed()['bl/rl/req'];
                     $showAttrib = false;
                     $showEmotion = false;
                     $hashAttrib = $link->getParsed()['bl/rl/nid3'];
@@ -7084,7 +7084,7 @@ class ModuleObjects extends Modules
                 // Si l'affichage est permit.
                 if ($okDisplay) {
                     // Extraction des attributs.
-                    $action = $link->getAction();
+                    $action = $link->getParsed()['bl/rl/req'];
                     $showAttrib = false;
                     $showEmotion = false;
                     $hashAttrib = $link->getParsed()['bl/rl/nid3'];
