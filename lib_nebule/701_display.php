@@ -6770,35 +6770,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     private function _getDisplayObjectsListCSS(): void
     {
-        ?>
-
-        <style type="text/css">
-            /* CSS de la fonction getDisplayObjectsList(). */
-            .layoutObjectsList {
-                width: 100%;
-            }
-
-            .objectsListContent {
-                margin: auto;
-                text-align: center;
-                font-size: 0;
-                min-height: 34px;
-                padding: 0 5px 5px 0;
-                background: none;
-            }
-
-            /* max-width:2005px; */
-            .objectsListContent p, .objectsListContent form {
-                font-size: 1rem;
-                color: #000000;
-                text-align: left;
-            }
-
-            .objectsListContent p a, .objectsListContent form a {
-                color: #000000;
-            }
-        </style>
-        <?php
+        DisplayLink::displayCSS();
     }
 
     /**
@@ -7114,58 +7086,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     private function _getDisplayTitleCSS(): void
     {
-        ?>
-
-        <style type="text/css">
-            /* CSS de la fonction getDisplayTitle(). */
-            .layoutTitle {
-                margin-bottom: 10px;
-                margin-top: 32px;
-                width: 100%;
-                height: 32px;
-                text-align: center;
-            }
-
-            .titleContent {
-                margin: auto;
-                text-align: center;
-            }
-
-            .titleContentDiv {
-                display: inline-block;
-                background: #333333;
-                height: 32px;
-                width: 384px;
-            }
-
-            .titleContentEntity {
-                display: inline-block;
-            }
-
-            .titleContentEntity .layoutObject {
-                margin: -11px 0 0 0;
-            }
-
-            .titleContentIcon {
-                float: left;
-            }
-
-            .titleContentIcon img {
-                height: 32px;
-                width: 32px;
-                margin-right: 5px;
-            }
-
-            .titleContent h1 {
-                font-size: 1.2rem;
-                font-weight: bold;
-                color: #ababab;
-                overflow: hidden;
-                white-space: nowrap;
-                margin-top: 5px;
-            }
-        </style>
-        <?php
+        DisplayTitle::displayCSS();
     }
 
     /**
@@ -7226,197 +7147,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
 
-    /**
-     * Le CSS de la fonction getDisplayInformation().
-     *
-     * Le style CSS est hérité de celui utilisé pour la fonction getDisplayObject() et adapté.
-     *
-     * @return void
-     */
+
     private function _getDisplayInformationCSS(): void
     {
-        ?>
-
-        <style type="text/css">
-            /* CSS de la fonction getDisplayInformation(). */
-            .informationTitleIcons img {
-                background: none;
-            }
-
-            .informationDisplay {
-                height: auto;
-            }
-
-            .informationDisplayMessage {
-                background: #333333;
-            }
-
-            .informationDisplayOk {
-                background: #103020;
-            }
-
-            .informationDisplayWarn {
-                background: #ffe080;
-            }
-
-            .informationDisplayError {
-                background: #ffa0a0;
-            }
-
-            .informationDisplayInformation {
-                background: #ababab;
-            }
-
-            .informationDisplayGo {
-                background: #abbcab;
-            }
-
-            .informationDisplayBack {
-                background: #abbccd;
-            }
-
-            .informationTitleText {
-                background: none;
-                height: auto;
-            }
-
-            .informationDisplayTiny {
-            }
-
-            .informationDisplaySmall {
-                min-height: 32px;
-                font-size: 32px;
-                border: 0;
-            }
-
-            .informationDisplayMedium {
-                min-height: 64px;
-                font-size: 64px;
-                border: 0;
-            }
-
-            .informationDisplayLarge {
-                min-height: 128px;
-                font-size: 128px;
-                border: 0;
-            }
-
-            .informationDisplayFull {
-                min-height: 256px;
-                font-size: 256px;
-                border: 0;
-            }
-
-            .informationTitleTinyText {
-                min-height: 16px;
-                background: none;
-            }
-
-            .informationTitleSmallText {
-                min-height: 30px;
-                text-align: left;
-                padding: 1px 0 1px 1px;
-                color: #000000;
-            }
-
-            .informationTitleMediumText {
-                min-height: 58px;
-                text-align: left;
-                padding: 3px 0 3px 3px;
-                color: #000000;
-            }
-
-            .informationTitleLargeText {
-                min-height: 122px;
-                text-align: left;
-                padding: 3px 0 3px 3px;
-                color: #000000;
-            }
-
-            .informationTitleFullText {
-                min-height: 246px;
-                text-align: left;
-                padding: 5px 0 5px 5px;
-                color: #000000;
-            }
-
-            .informationTitleName {
-                font-weight: normal;
-                overflow: hidden;
-                height: auto;
-            }
-
-            .informationTitleNameMessage, .informationTitleRefsMessage {
-                color: #ffffff;
-            }
-
-            .informationTitleNameOk, .informationTitleRefsOk {
-                color: #ffffff;
-            }
-
-            .informationTitleNameWarn, .informationTitleRefsWarn {
-                color: #ff8000;
-            }
-
-            .informationTitleNameGo, .informationTitleRefsGo {
-                color: #ffffff;
-            }
-
-            .informationTitleNameBack, .informationTitleRefsBack {
-                color: #ffffff;
-            }
-
-            .informationTitleNameWarn {
-                font-weight: bold;
-            }
-
-            .informationTitleNameError, .informationTitleRefsError {
-                color: #ff0000;
-            }
-
-            .informationTitleNameError {
-                font-weight: bold;
-            }
-
-            .informationTitleNameInformation, .informationTitleRefsInformation {
-                color: #000000;
-            }
-
-            .informationTitleTinyName {
-                height: 1rem;
-                line-height: 1rem;
-                font-size: 1rem;
-            }
-
-            .informationTitleSmallName {
-                line-height: 14px;
-                overflow: hidden;
-                white-space: normal;
-                font-size: 1rem;
-            }
-
-            .informationTitleMediumName {
-                line-height: 22px;
-                overflow: hidden;
-                white-space: normal;
-                font-size: 1.2rem;
-            }
-
-            .informationTitleLargeName {
-                line-height: 30px;
-                overflow: hidden;
-                white-space: normal;
-                font-size: 1.5rem;
-            }
-
-            .informationTitleFullName {
-                line-height: 62px;
-                overflow: hidden;
-                white-space: normal;
-                font-size: 2rem;
-            }
-        </style>
-        <?php
+        DisplayInformation::displayCSS();
     }
 
     /**
@@ -7702,37 +7436,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
 
-    /**
-     * Le CSS de la fonction getDisplayLink().
-     *
-     * @return void
-     */
+
     private function _getDisplayLinkCSS(): void
     {
-        ?>
-
-        <style type="text/css">
-            /* CSS de la fonction getDisplayLink(). */
-            .layoutLink {
-                margin-right: 5px;
-            }
-
-            .linkDisplay {
-            }
-
-            .linkDisplaySmall img {
-                height: 16px;
-            }
-
-            .linkDisplayMedium img {
-                height: 32px;
-            }
-
-            .linkDisplayLarge img {
-                height: 64px;
-            }
-        </style>
-        <?php
+        DisplayLink::displayCSS();
     }
 
     /**

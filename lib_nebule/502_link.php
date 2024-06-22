@@ -337,8 +337,8 @@ class Link implements linkInterface
         $this->_metrology->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
             __METHOD__, '1111c0de');
 
-$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK _blocklink : ' . gettype($this->_blocLink), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK _blocklink=' . serialize($this->_blocLink), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+//$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK _blocklink : ' . gettype($this->_blocLink), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+//$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK _blocklink=' . serialize($this->_blocLink), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         return $this->_blocLink;
     }
