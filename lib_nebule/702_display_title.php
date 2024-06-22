@@ -12,6 +12,99 @@ namespace Nebule\Library;
  */
 class DisplayTitle extends DisplayItem implements DisplayInterface
 {
+    private $_title = '';
+    private $_icon = null;
+    private $_displayEntity = false;
+
+    public function getHTML(): string
+    {
+        if ($this->_title == '')
+            return '';
+
+        $result = '<div class="layoutTitle">' . "\n";
+        $result .= ' <div class="titleContent">' . "\n";
+        $result .= '  <div class="titleContentDiv">' . "\n";
+        $this->_getIconHTML($result);
+        $this->_getTitleHTML($result);
+        $result .= "  </div>\n";
+        $this->_getEntityHTML($result);
+        $result .= " </div>\n";
+        $result .= "</div>\n";
+
+        return $result;
+    }
+
+    private function _getIconHTML(&$result)
+    {
+        if ($this->_icon === null)
+            return;
+
+        $result .= '<div class="titleContentIcon">';
+        $result .= $this->_displayInstance->convertUpdateImage($this->_icon, $this->_title);
+        $result .= '</div>' . "\n";
+    }
+
+    private function _getTitleHTML(&$result)
+    {
+        $result .= '   <h1>' . $this->_title . "</h1>\n";
+    }
+
+    private function _getEntityHTML(&$result)
+    {
+        if ($this->_applicationInstance->getCurrentEntityID() != $this->_nebuleInstance->getCurrentEntity()
+            || $this->_configurationInstance->getOptionUntyped('forceDisplayEntityOnTitle')
+            || $this->_displayEntity
+        ) {
+            $result .= '<div class="titleContentEntity">';
+            $param = array(
+                'enableDisplayColor' => true,
+                'enableDisplayIcon' => true,
+                'enableDisplayRefs' => false,
+                'enableDisplayName' => true,
+                'enableDisplayID' => false,
+                'enableDisplayFlags' => false,
+                'enableDisplayStatus' => false,
+                'enableDisplayContent' => false,
+                'displaySize' => 'small',
+                'displayRatio' => 'short',
+                'enableDisplayJS' => false,
+                'enableDisplayObjectActions' => false,
+            );
+            $result .= $this->_displayInstance->getDisplayObject($this->_applicationInstance->getCurrentEntityInstance(), $param);
+            $result .= '</div>' . "\n";
+        }
+    }
+
+    public function setTitle(string $title,
+                             string $arg1 = '',
+                             string $arg2 = '',
+                             string $arg3 = '',
+                             string $arg4 = '',
+                             string $arg5 = ''): void
+    {
+        $this->_title = sprintf($this->_traductionInstance->getTraduction($title), $arg1, $arg2, $arg3, $arg4, $arg5);
+    }
+
+    /**
+     * @param Node|null $oid
+     * @return void
+     * Set icon to display with the title.
+     * If null = disable (by default).
+     * Must have content.
+     */
+    public function setIcon(?Node $oid): void
+    {
+        if ($oid === null)
+            $this->_icon = null;
+        elseif ($oid->getID() != '0' && $oid->checkPresent())
+            $this->_icon = $oid;
+    }
+
+    public function setEnableEntity(bool $displayEntity)
+    {
+        $this->_displayEntity = $displayEntity;
+    }
+
     public static function displayCSS(): void
     {
         ?>
@@ -66,15 +159,5 @@ class DisplayTitle extends DisplayItem implements DisplayInterface
             }
         </style>
         <?php
-    }
-
-    public function getHTML(): string
-    {
-        return ''; // TODO
-    }
-
-    public function display(): void
-    {
-        echo ''; // TODO
     }
 }

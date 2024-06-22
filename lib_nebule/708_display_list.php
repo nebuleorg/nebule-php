@@ -12,6 +12,11 @@ namespace Nebule\Library;
  */
 class DisplayList extends DisplayItem implements DisplayInterface
 {
+    public function getHTML(): string
+    {
+        return ''; // TODO
+    }
+
     public static function displayCSS(): void
     {
         ?>
@@ -43,15 +48,5 @@ class DisplayList extends DisplayItem implements DisplayInterface
             }
         </style>
         <?php
-    }
-
-    public function getHTML(): string
-    {
-        return ''; // TODO
-    }
-
-    public function display(): void
-    {
-        echo ''; // TODO
     }
 }

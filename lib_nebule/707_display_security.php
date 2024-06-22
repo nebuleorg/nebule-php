@@ -12,17 +12,12 @@ namespace Nebule\Library;
  */
 class DisplaySecurity extends DisplayItem implements DisplayInterface
 {
-    public static function displayCSS(): void
-    {
-        echo ''; // TODO
-    }
-
     public function getHTML(): string
     {
         return ''; // TODO
     }
 
-    public function display(): void
+    public static function displayCSS(): void
     {
         echo ''; // TODO
     }

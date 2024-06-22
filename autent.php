@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Autent;
+use Nebule\Library\DisplayInformation;
+use Nebule\Library\DisplayTitle;
 use Nebule\Library\Metrology;
 use Nebule\Library\Modules;
 use Nebule\Library\nebule;
@@ -41,7 +43,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240616';
+    const APPLICATION_VERSION = '020240622';
     const APPLICATION_LICENCE = 'GNU GPL 2023-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -482,9 +484,6 @@ class ModuleAutent extends Modules
      */
     public function displayModule(): void
     {
-        $this->_metrologyInstance->addLog('Display checks', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '28feadb6');
-        $this->_displayInstance->displaySecurityAlert('medium', true);
-
         if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK))
             $this->_comebackAppId = trim(filter_input(INPUT_GET, References::COMMAND_APPLICATION_BACK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         else
@@ -524,24 +523,30 @@ $this->_metrologyInstance->addLog('MARK view=' . $this->_applicationInstance->ge
     {
         $this->_metrologyInstance->addLog('Display desc ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '1f00a8b1');
 
+        $title = new DisplayTitle($this->_applicationInstance);
+        $title->setTitle('::::INFO');
+        $title->display();
+
+        $this->_displayInstance->displaySecurityAlert('medium', true);
+
         if (! $this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')
             || $this->_applicationInstance->getCheckSecurityAll() != 'OK'
         ) {
             $htlink = '/?f';
             $title = ':::err_NotPermit';
-            $type = 'error';
+            $type = DisplayInformation::TYPE_ERROR;
         } elseif ($this->_unlocked) {
             $htlink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this->MODULE_REGISTERED_VIEWS[2];
             $title = ':::logout';
-            $type = 'error';
+            $type = DisplayInformation::TYPE_ERROR;
         } else {
             $htlink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this->MODULE_REGISTERED_VIEWS[1];
             $title = ':::login';
-            $type = 'go';
+            $type = DisplayInformation::TYPE_GO;
         }
 
         $list = array();
@@ -582,7 +587,7 @@ $this->_metrologyInstance->addLog('MARK view=' . $this->_applicationInstance->ge
             'enableDisplayIcon' => true,
             'displayRatio' => 'short',
             'displaySize' => 'medium',
-            'informationType' => 'back',
+            'informationType' => DisplayInformation::TYPE_BACK,
             'htlink' => '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId,
         );
         echo $this->_applicationInstance->getDisplayInstance()->getDisplayObjectsList($list, 'medium');
@@ -594,6 +599,12 @@ $this->_metrologyInstance->addLog('MARK view=' . $this->_applicationInstance->ge
     private function _displayLogin(): void
     {
         $this->_metrologyInstance->addLog('Display login ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '61a2b0dd');
+
+        $title = new DisplayTitle($this->_applicationInstance);
+        $title->setTitle(':::login');
+        $title->display();
+
+        $this->_displayInstance->displaySecurityAlert('medium', true);
 
         $list = array();
         $list[0]['object'] = $this->_applicationInstance->getCurrentObjectInstance();
@@ -645,7 +656,7 @@ $this->_metrologyInstance->addLog('MARK view=' . $this->_applicationInstance->ge
             'enableDisplayAlone' => true,
             'displayRatio' => 'short',
             'displaySize' => 'medium',
-            'informationType' => 'back',
+            'informationType' => DisplayInformation::TYPE_BACK,
             'htlink' => '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId,
         );
         echo $this->_applicationInstance->getDisplayInstance()->getDisplayObjectsList($list, 'medium');
@@ -686,6 +697,12 @@ $this->_metrologyInstance->addLog('MARK view=' . $this->_applicationInstance->ge
     {
         $this->_metrologyInstance->addLog('Display logout ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '833de289');
 
+        $title = new DisplayTitle($this->_applicationInstance);
+        $title->setTitle(':::logout');
+        $title->display();
+
+        $this->_displayInstance->displaySecurityAlert('medium', true);
+
         $list = array();
         $list[0]['object'] = $this->_applicationInstance->getCurrentObjectInstance();
         $list[0]['param'] = array(
@@ -716,7 +733,7 @@ $this->_metrologyInstance->addLog('MARK view=' . $this->_applicationInstance->ge
                 'enableDisplayIcon' => true,
                 'displayRatio' => 'short',
                 'displaySize' => 'medium',
-                'informationType' => 'go',
+                'informationType' => DisplayInformation::TYPE_GO,
                 'htlink' => '/?f',
             );
         }
@@ -726,7 +743,7 @@ $this->_metrologyInstance->addLog('MARK view=' . $this->_applicationInstance->ge
             'enableDisplayAlone' => true,
             'displayRatio' => 'short',
             'displaySize' => 'medium',
-            'informationType' => 'back',
+            'informationType' => DisplayInformation::TYPE_BACK,
             'htlink' => '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId,
         );
         echo $this->_applicationInstance->getDisplayInstance()->getDisplayObjectsList($list, 'medium');

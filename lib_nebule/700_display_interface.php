@@ -35,9 +35,11 @@ abstract class DisplayItem implements DisplayInterface
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+        $this->_init();
     }
+    protected function _init(): void {}
 
     public static function displayCSS(): void {}
     public function getHTML(): string { return '';}
-    public function display(): void {}
+    public function display(): void { echo $this->getHTML(); }
 }
