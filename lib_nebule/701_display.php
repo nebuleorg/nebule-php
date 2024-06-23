@@ -171,6 +171,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     const REFERENCE_ICON_EMOTION_INTERET1 = '6e696574657274656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000001.none.272';
 
 
+
     /**
      * Liste des objets nécessaires au bon fonctionnement de l'application.
      * Vide par défaut, est remplacé par l'application.
@@ -2828,25 +2829,27 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 	 *  Fonctions internes.
 	 * -------------------------------------------------------------------------------- */
     /**
-     * Retourne le nom tronqué d'une entité.
+     * Get automatically truncated name of object or entity.
+     *  If 0, cut to the default displayNameSize option value.
      *
      * @param string $name
      * @param int    $maxsize
      * @return string
      */
-    public function truncateName(string $name, int $maxsize): string
+    public function truncateName(string $name, int $maxsize = 0): string
     {
         return $this->_truncateName($name, $maxsize);
     }
 
     /**
-     * Retourne le nom tronqué d'une entité.
+     * Get automatically truncated name of object or entity.
+     *  If 0, cut to the default displayNameSize option value.
      *
      * @param string $name
      * @param int    $maxsize
      * @return string
      */
-    private function _truncateName(string $name, int $maxsize): string
+    private function _truncateName(string $name, int $maxsize = 0): string
     {
         if ($maxsize == 0 || $maxsize > $this->_configurationInstance->getOptionUntyped('displayNameSize'))
             $maxsize = $this->_configurationInstance->getOptionUntyped('displayNameSize');
@@ -3003,6 +3006,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     private $_cacheIconUpdate = array();
 
+    public function getImageUpdate($object, bool $useBuffer = true): string
+    {
+        return $this->_getImageUpdate($object, $useBuffer);
+    }
+
     /**
      * Recherche la mise à jour de l'objet d'une image.
      *
@@ -3045,6 +3053,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @var array
      */
     private $_cacheIconByReference = array();
+
+    public function getImageByReference(Node $rid, bool $useBuffer = true): string
+    {
+        return $this->_getImageByReference($rid, $useBuffer);
+    }
 
     /**
      * Recherche par référence une image.
@@ -3129,63 +3142,78 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         return '<img ' . $title . 'alt="[]" src="' . $image . '" ' . $class . '/>';
     }
 
+    public function prepareObjectIcon(Node $nid, string $icon, string $class = ''): string
+    {
+        return $this->_prepareObjectIcon($nid, $icon, $class);
+    }
+
     /**
      * Prépare l'image de l'icône pour un objet sans lien hypertexte.
      *
-     * @param Node/entity $object
+     * @param Node   $nid
      * @param string $icon
      * @param string $class
      * @return string
      */
-    private function _prepareObjectIcon($object, string $icon, string $class = ''): string
+    private function _prepareObjectIcon(Node $nid, string $icon, string $class = ''): string
     {
-        $color = $object->getPrimaryColor();
-        $title = $object->getFullName('all');
+        $color = $nid->getPrimaryColor();
+        $title = $nid->getFullName('all');
         $image = $this->prepareIcon($icon);
         if ($class != '')
             $class = 'class="' . $class . '" ';
         return '<img title="' . $title . '" style="background:#' . $color . ';" alt="[]" src="' . $image . '" ' . $class . '/>';
     }
 
+    public function prepareObjectColor(Node $nid, string $class = '', string $title = ''): string
+    {
+        return $this->_prepareObjectColor($nid, $class, $title);
+    }
+
     /**
      * Prépare l'image du carré de couleur de l'objet ou de l'entité sans lien hypertexte.
      *
-     * @param Node/entity $object
+     * @param Node   $nid
      * @param string $class
      * @param string $title
      * @return string
      */
-    private function _prepareObjectColor($object, string $class = '', string $title = ''): string
+    private function _prepareObjectColor(Node $nid, string $class = '', string $title = ''): string
     {
-        $color = $object->getPrimaryColor();
+        $color = $nid->getPrimaryColor();
         if ($title == '')
-            $title = $object->getFullName('all');
+            $title = $nid->getFullName('all');
         if ($class != '')
             $class = 'class="' . $class . '" ';
         return '<img title="' . $title . '" style="background:#' . $color . ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" ' . $class . '/>';
     }
 
+    public function prepareObjectFace(Node $nid, string $class = ''): string
+    {
+        return $this->_prepareObjectFace($nid, $class);
+    }
+
     /**
      * Prépare l'image de l'objet ou de l'entité sans lien hypertexte.
      *
-     * @param Node/entity $object
+     * @param Node   $nid
      * @param string $class
      * @return string
      */
-    private function _prepareObjectFace($object, string $class = ''): string
+    private function _prepareObjectFace(Node $nid, string $class = ''): string
     {
-        $color = $object->getPrimaryColor();
-        $title = $object->getFullName('all');
-        if (is_a($object, 'Nebule\Library\Entity')) {
-            $faceID = $object->getFaceID(64);
+        $color = $nid->getPrimaryColor();
+        $title = $nid->getFullName('all');
+        if (is_a($nid, 'Nebule\Library\Entity')) {
+            $faceID = $nid->getFaceID(64);
             if ($faceID != '0')
                 $image = '?o=' . $faceID;
             else
                 $image = 'o/' . $this->_getImageUpdate(self::DEFAULT_ICON_USER);
             unset($faceID);
-        } elseif (is_a($object, 'Nebule\Library\Conversation'))
+        } elseif (is_a($nid, 'Nebule\Library\Conversation'))
             $image = 'o/' . $this->_getImageUpdate(self::DEFAULT_ICON_CVTOBJ);
-        elseif (is_a($object, 'Nebule\Library\Group'))
+        elseif (is_a($nid, 'Nebule\Library\Group'))
             $image = 'o/' . $this->_getImageUpdate(self::DEFAULT_ICON_GRPOBJ);
         else
             $image = 'o/' . $this->_getImageUpdate(self::DEFAULT_ICON_LO);
@@ -5384,6 +5412,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         }
 
         return $result;
+    }
+
+    public function getDisplayObjectHookList(string $selfHookName, string $typeHookName, Node $object,
+                                             bool $enableDisplayJS, string $size, array $appHookList = array()): string
+    {
+        return $this->_getDisplayObjectHookList($selfHookName, $typeHookName, $object, $enableDisplayJS, $size, $appHookList);
     }
 
     /**

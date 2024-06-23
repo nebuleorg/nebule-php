@@ -13,8 +13,8 @@ namespace Nebule\Library;
  *  $instance->setDisplayAlone(true);
  *  $instance->setType(DisplayInformation::TYPE_MESSAGE);
  *  $instance->setIconText('Alternative text on icon');
- *  $instance->setSize(DisplayInformation::SIZE_MEDIUM);
- *  $instance->setRatio(DisplayInformation::RATIO_SHORT);
+ *  $instance->setSize(self::SIZE_MEDIUM);
+ *  $instance->setRatio(self::RATIO_SHORT);
  *  $icon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IOK);
  *  $instance->setIcon($icon);
  *  $instance->setLink('https://everywhere.net');
@@ -51,7 +51,7 @@ namespace Nebule\Library;
  *       - DisplayInformation::SIZE_MEDIUM : taille moyenne correspondant à un carré de base de 64 pixels de large par défaut.
  *       - DisplayInformation::SIZE_LARGE : grande taille correspondant à un carré de base de 128 pixels de large par défaut.
  *       - DisplayInformation::SIZE_FULL : très grande taille correspondant à un carré de base de 256 pixels de large par défaut.
- *       Default: DisplayInformation::SIZE_MEDIUM
+ *       Default: self::SIZE_MEDIUM
  *       String
  *   - setRatio : Détermine la forme de l'affichage par son ratio dans la mesure du possible si pas d'affichage du contenu de l'objet.
  *       Ratios disponibles :
@@ -75,7 +75,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class DisplayInformation extends DisplayItem implements DisplayInterface
+class DisplayInformation extends DisplayItemSizeable implements DisplayInterface
 {
     const TYPE_MESSAGE = 'message';
     const TYPE_INFORMATION = 'information';
@@ -84,23 +84,12 @@ class DisplayInformation extends DisplayItem implements DisplayInterface
     const TYPE_ERROR = 'error';
     const TYPE_GO = 'go';
     const TYPE_BACK = 'back';
-    const SIZE_TINY = 'tiny';
-    const SIZE_SMALL = 'small';
-    const SIZE_MEDIUM = 'medium';
-    const SIZE_LARGE = 'large';
-    const SIZE_FULL = 'full';
-    const RATIO_SHORT = 'short';
-    const RATIO_LONG = 'long';
-    const RATIO_SQUARE = 'square';
 
     private $_message = '';
     private $_displayAlone = false;
     private $_link = '';
     private $_type = '';
-    private $_icon = null;
     private $_iconText = '';
-    private $_sizeCSS = '';
-    private $_ratioCSS = '';
 
     protected function _init(): void
     {
@@ -245,58 +234,14 @@ class DisplayInformation extends DisplayItem implements DisplayInterface
         }
     }
 
-    public function setIcon(?Node $oid)
-    {
-        if ($oid === null)
-            $this->_icon = null;
-        elseif ($oid->getID() != '0' && $oid->checkPresent())
-            $this->_icon = $oid;
-    }
-    
     public function setIconText(String $text)
     {
         $this->_iconText = $this->_traductionInstance->getTraduction($text);
     }
 
-    public function setDisplayAlone(bool $DisplayAlone): void
+    public function setDisplayAlone(bool $enable): void
     {
-        $this->_displayAlone = $DisplayAlone;
-    }
-
-    public function setSize(string $size): void
-    {
-        switch (strtolower($size)) {
-            case self::SIZE_TINY:
-                $this->_sizeCSS = 'Tiny';
-                break;
-            case self::SIZE_SMALL:
-                $this->_sizeCSS = 'Small';
-                break;
-            case self::SIZE_LARGE:
-                $this->_sizeCSS = 'Large';
-                break;
-            case self::SIZE_FULL:
-                $this->_sizeCSS = 'Full';
-                break;
-            default:
-                $this->_sizeCSS = 'Medium';
-                break;
-        }
-    }
-
-    public function setRatio(string $ratio): void
-    {
-        switch (strtolower($ratio)) {
-            case self::RATIO_SQUARE:
-                $this->_ratioCSS = 'Square';
-                break;
-            case self::RATIO_LONG:
-                $this->_ratioCSS = 'Long';
-                break;
-            default:
-                $this->_ratioCSS = 'Short';
-                break;
-        }
+        $this->_displayAlone = $enable;
     }
 
     public static function displayCSS(): void

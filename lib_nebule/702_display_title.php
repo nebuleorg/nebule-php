@@ -4,9 +4,9 @@ namespace Nebule\Library;
 
 /**
  * Classe DisplayTitle
- *
+ *       ---
  * Display or prepare a title message to the interface with the user.
- *
+ *       ---
  * Example:
  *  $instance = new DisplayTitle($this->_applicationInstance);
  *  $instance->setTitle('Title', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5');
@@ -14,7 +14,7 @@ namespace Nebule\Library;
  *  $instance->setIcon($icon);
  *  $instance->setEnableEntity(false);
  *  $instance->display();
- *
+ *       ---
  * Usage:
  *  FIXME
  *
@@ -23,10 +23,9 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class DisplayTitle extends DisplayItem implements DisplayInterface
+class DisplayTitle extends DisplayItemIconable implements DisplayInterface
 {
     private $_title = '';
-    private $_icon = null;
     private $_displayEntity = false;
 
     public function getHTML(): string
@@ -98,24 +97,9 @@ class DisplayTitle extends DisplayItem implements DisplayInterface
         $this->_title = sprintf($this->_traductionInstance->getTraduction($title), $arg1, $arg2, $arg3, $arg4, $arg5);
     }
 
-    /**
-     * @param Node|null $oid
-     * @return void
-     * Set icon to display with the title.
-     * If null = disable (by default).
-     * Must have content.
-     */
-    public function setIcon(?Node $oid): void
+    public function setEnableEntity(bool $enable): void
     {
-        if ($oid === null)
-            $this->_icon = null;
-        elseif ($oid->getID() != '0' && $oid->checkPresent())
-            $this->_icon = $oid;
-    }
-
-    public function setEnableEntity(bool $displayEntity)
-    {
-        $this->_displayEntity = $displayEntity;
+        $this->_displayEntity = $enable;
     }
 
     public static function displayCSS(): void
