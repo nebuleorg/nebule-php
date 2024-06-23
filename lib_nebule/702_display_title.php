@@ -3,7 +3,20 @@ declare(strict_types=1);
 namespace Nebule\Library;
 
 /**
- * Classe Display
+ * Classe DisplayTitle
+ *
+ * Display or prepare a title message to the interface with the user.
+ *
+ * Example:
+ *  $instance = new DisplayTitle($this->_applicationInstance);
+ *  $instance->setTitle('Title', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5');
+ *  $icon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IOK);
+ *  $instance->setIcon($icon);
+ *  $instance->setEnableEntity(false);
+ *  $instance->display();
+ *
+ * Usage:
+ *  FIXME
  *
  * @author Projet nebule
  * @license GNU GPLv3

@@ -3,7 +3,13 @@ declare(strict_types=1);
 namespace Nebule\Library;
 
 /**
- * Classe Display
+ * Classe DisplayMenu
+ *       ---
+ *  Example:
+ *   FIXME
+ *       ---
+ *  Usage:
+ *   FIXME
  *
  * @author Projet nebule
  * @license GNU GPLv3
