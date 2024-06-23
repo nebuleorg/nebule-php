@@ -4,6 +4,314 @@ namespace Nebule\Library;
 
 /**
  * Classe DisplayObject
+ *       ---
+ *  FIXME
+ *  Retourne la représentation html de l'objet en fonction des paramètres passés.
+ *  Les paramètres d'activation de contenus :
+ *  - enableDisplayColor : Affiche le carré de couleur.
+ *      Par défaut true : affiche le carré de couleur.
+ *      enableDisplayIconApp doit être à false.
+ *      Boolean
+ *  - enableDisplayIcon : Affiche le carré avec l'image attaché à l'objet ou l'icône de son type sur la couleur de l'objet en fond.
+ *      Par défaut true : affiche le carré de l'image/icône.
+ *      enableDisplayIconApp doit être à false.
+ *      Boolean
+ *  - enableDisplayIconApp : Affiche le carré de couleur avec le nom long et court d'une application.
+ *      Par défaut true : affiche le carré de couleur avec le nom.
+ *      Boolean
+ *  - enableDisplayRefs : Affiche le(s) référence(s) de l'objet (signataire du lien).
+ *      enableDisplayName doit être à true.
+ *      Par défaut false : n'affiche pas la référence.
+ *      Boolean
+ *  - enableDisplayName : Affiche le nom de l'objet.
+ *      Par défaut true : affiche le nom.
+ *      Boolean
+ *  - enableDisplayID : Affiche l'ID de l'objet.
+ *      Par défaut false : n'affiche pas l'ID.
+ *      Boolean
+ *  - enableDisplayFlags : Affiche les icônes d'état de l'objet (protection...).
+ *      enableDisplayName doit être à true.
+ *      Par défaut false : n'affiche pas les icônes d'état.
+ *      Boolean
+ *  - enableDisplayFlagEmotions : Affiche les icônes des émotions de l'objet sans les compteurs.
+ *      enableDisplayFlags et l'option displayEmotions doivent être à true.
+ *      Par défaut false : n'affiche pas les icônes.
+ *      Boolean
+ *  - enableDisplayFlagProtection : Affiche l'icône de protection de l'objet.
+ *      enableDisplayFlags doit être à true.
+ *      L'option permitProtectedObject doit être à true.
+ *      Par défaut false : n'affiche pas l'icône.
+ *      Boolean
+ *  - enableDisplayFlagObfuscate : Affiche l'icône de dissimulation de l'objet.
+ *      enableDisplayFlags doit être à true.
+ *      L'option permitObfuscatedLink doit être à true.
+ *      Par défaut false : n'affiche pas l'icône.
+ *      Boolean
+ *  - enableDisplayFlagUnlocked : Affiche l'icône de déverrouillage de l'entité.
+ *      enableDisplayFlags doit être à true.
+ *      Par défaut false : n'affiche pas l'icône.
+ *      Boolean
+ *  - enableDisplayFlagActivated : Affiche l'icône d'activation de l'objet.
+ *      enableDisplayFlags doit être à true.
+ *      Par défaut false : n'affiche pas l'icône.
+ *      Boolean
+ *  - enableDisplayFlagState : Affiche l'icône d'état de l'objet.
+ *      enableDisplayFlags doit être à true.
+ *      Par défaut false : n'affiche pas l'icône.
+ *      Boolean
+ *  - enableDisplayStatus : Affiche le status de l'objet (indicatif).
+ *      Par défaut false : n'affiche pas le status.
+ *      Boolean
+ *  - enableDisplayContent : Affiche le contenu de l'objet si possible.
+ *      Par défaut false : n'affiche pas le contenu.
+ *      Boolean
+ *  - enableDisplayLink2Object : Affiche le lien HTML vers l'objet :
+ *      Sur le nom de l'objet.
+ *      Sur le carré de couleur et sur l'image/icône de l'objet, ou si le menu des actions est activé le menu remplace le lien HTML.
+ *      Par défaut true : affiche le lien ou le menu.
+ *      Boolean
+ *  - enableDisplayObjectActions : Affiche le menu des actions liées à l'objet.
+ *      Sinon le lien de l'objet est utilisé à la place.
+ *      enableDisplayLink2Object doit être à true.
+ *      Par défaut true : affiche le menu.
+ *      Boolean
+ *  - enableDisplayLink2Refs : Affiche le lien HTML vers le(s) référence(s) de l'objet.
+ *      enableDisplayRefs doit être à true.
+ *      Par défaut true : affiche le lien.
+ *      Boolean
+ *  - enableDisplaySelfHook : Affiche les actions principales de l'objet utilisé.
+ *      enableDisplayObjectActions doit être à true.
+ *      Par défaut true : affiche les actions.
+ *      Boolean
+ *  - enableDisplayTypeHook : Affiche les actions secondaires de l'objet par rapport à son type.
+ *      enableDisplayObjectActions doit être à true.
+ *      Par défaut true si enableDisplayJS : affiche les actions.
+ *      Par défaut false si pas enableDisplayJS : n'affiche pas les actions.
+ *      Boolean
+ *  - enableDisplayJS : Utilise le Java Script pour le menu des actions.
+ *      Si false, le menu n'est pas caché et son contenu s'affiche sous la barre de titre de l'objet.
+ *      Par défaut true : utilise le Java Script.
+ *      Boolean
+ *  Les paramètres de définition de contenus :
+ *  - social : Détermine le niveau social de tri des liens.
+ *      Par défaut vide : utilise le niveau social par défaut.
+ *      String
+ *  - objectType : Détermine le type d'objet pour le traitement.
+ *      Par défaut null : le type est extrait en fonction du niveau social.
+ *      String
+ *  - objectName : Détermine le nom de l'objet ou un texte de remplacement.
+ *      enableDisplayName doit être à true.
+ *      Par défaut null : le nom complet est extrait en fonction du niveau social.
+ *      Si enableDisplayIconApp à true, le nom simple est extrait en fonction du niveau social.
+ *      String
+ *  - objectAppShortName : Détermine le nom de l'objet ou un texte de remplacement.
+ *      enableDisplayIconApp doit être à true.
+ *      Par défaut null : le nom court (prénom) est extrait en fonction du niveau social.
+ *      String
+ *  - objectIcon : Détermine l'image de l'objet.
+ *      enableDisplayIcon doit être à true.
+ *      Le fond est de la couleur de l'objet.
+ *      Par défaut null : l'image est une icône représentant le type d'objet.
+ *      String
+ *  - objectRefs : Détermine la liste des références de l'objet affiché, ou autres entités.
+ *      Si c'est un text, affiche juste le texte après un filtre.
+ *      Par défaut vide.
+ *      Array of string|Object ou string
+ *  - link2Object : Détermine le lien HTML vers l'objet.
+ *      Par défaut vide : le lien est préparé vers l'objet en fonction de son type.
+ *      String
+ *  - flagProtection : Détermine l'icône de protection de l'objet.
+ *      enableDisplayFlags et enableDisplayFlagProtection doivent être à true.
+ *      Par défaut false : icône éteinte.
+ *      Boolean
+ *  - flagProtectionIcon : Détermine l'icône de protection de l'objet.
+ *      Permet de détourner le bouton de son usage primaire.
+ *      enableDisplayFlags et enableDisplayFlagProtection doivent être à true.
+ *      Par défaut vide : icône de lien de chiffrement LK.
+ *      String
+ *  - flagProtectionText : Détermine l'icône de protection de l'objet.
+ *      Permet de détourner le bouton de son usage primaire.
+ *      enableDisplayFlags et enableDisplayFlagProtection doivent être à true.
+ *      Par défaut vide : Texte standard traduit.
+ *      String
+ *  - flagProtectionLink : Détermine le lien HTML de l'icône de protection de l'objet.
+ *      Permet de détourner le bouton de son usage primaire.
+ *      enableDisplayFlags et enableDisplayFlagProtection doivent être à true.
+ *      Par défaut vide.
+ *      String
+ *  - flagObfuscate : Détermine l'icône de dissimulation de l'objet.
+ *      enableDisplayFlags et enableDisplayFlagObfuscate doivent être à true.
+ *      Par défaut false : icône éteinte.
+ *      Boolean
+ *  - flagObfuscateIcon : Détermine l'icône de dissimulation de l'objet.
+ *      Permet de détourner le bouton de son usage primaire.
+ *      enableDisplayFlags et enableDisplayFlagObfuscate doivent être à true.
+ *      Par défaut vide : icône de lien de dissimulation LC.
+ *      String
+ *  - flagObfuscateText : Détermine l'icône de dissimulation de l'objet.
+ *      Permet de détourner le bouton de son usage primaire.
+ *      enableDisplayFlags et enableDisplayFlagObfuscate doivent être à true.
+ *      Par défaut vide : Texte standard traduit.
+ *      String
+ *  - flagObfuscateLink : Détermine le lien HTML de l'icône de dissimulation de l'objet.
+ *      Permet de détourner le bouton de son usage primaire.
+ *      enableDisplayFlags et enableDisplayFlagProtection doivent être à true.
+ *      Par défaut vide.
+ *      String
+ *  - flagUnlocked : Détermine l'icône de déverrouillage de l'entité.
+ *      enableDisplayFlags et enableDisplayFlagUnlocked doivent être à true.
+ *      Par défaut dépend de l'état de l'entité.
+ *      Si pas une entité, par défaut false : icône éteinte.
+ *      Boolean
+ *  - flagUnlockedIcon : Détermine l'icône de déverrouillage de l'entité.
+ *      Permet de détourner le bouton de son usage primaire.
+ *      enableDisplayFlags et enableDisplayFlagUnlocked doivent être à true.
+ *      Par défaut vide : icône de lien de chiffrement LK.
+ *      String
+ *  - flagUnlockedText : Détermine l'icône de déverrouillage de l'entité.
+ *      Permet de détourner le bouton de son usage primaire.
+ *      enableDisplayFlags et enableDisplayFlagUnlocked doivent être à true.
+ *      Par défaut vide : Texte standard traduit.
+ *      String
+ *  - flagUnlockedLink : Détermine le lien HTML de l'icône de déverrouillage de l'entité.
+ *      Permet de détourner le bouton de son usage primaire.
+ *      enableDisplayFlags et enableDisplayFlagUnlocked doivent être à true.
+ *      Par défaut vide.
+ *      String
+ *  - flagActivated : Détermine l'icône d'activation de l'objet.
+ *      enableDisplayFlags et enableDisplayFlagActivateded doivent être à true.
+ *      Par défaut false : icône rouge en croix.
+ *      Si à true, icône verte validée.
+ *      Boolean
+ *  - flagActivatedDesc : Détermine le texte de description de l'activation de l'objet.
+ *      enableDisplayFlags et enableDisplayFlagActivated doivent être à true.
+ *      Par défaut vide : calcul la description de l'état de l'objet.
+ *      Le texte de ces état est traduit.
+ *      Par défaut est calculé par rapport à flagActivated :
+ *        - false : ':::display:content:NotActived'
+ *        - true  : ':::display:content:Actived'
+ *      String
+ *  - flagState : Détermine l'icône de l'état de l'objet.
+ *      enableDisplayFlags et enableDisplayFlagState doivent être à true.
+ *      Par défaut vide : calcul l'état de l'objet.
+ *      Les états possibles sont :
+ *        - e : l'objet est taggé 'banni' ;
+ *        - w : l'objet est taggé 'warning' ;
+ *        - n : l'objet n'est pas présent ;
+ *        - o : OK tout va bien.
+ *      String
+ *  - flagStateDesc : Détermine le texte de description de l'état de l'objet.
+ *      enableDisplayFlags et enableDisplayFlagState doivent être à true.
+ *      Par défaut vide : calcul la description de l'état de l'objet.
+ *      Le texte de ces état est traduit.
+ *      Par défaut est calculé par rapport à flagState :
+ *        - e : ':::display:content:errorBan'
+ *        - w : ':::display:content:warningTaggedWarning'
+ *        - n : ':::display:content:errorNotAvailable'
+ *        - o : ':::display:content:OK'
+ *      String
+ *  - flagMessage : Détermine un message à afficher au niveau des flags dépliés.
+ *      enableDisplayFlags doit être à true.
+ *      N'apparait pas comme icône simple.
+ *      Par défaut vide : pas de message.
+ *      String
+ *  - flagTargetObject : Détermine un objet 'cible' (ou pas) à afficher au niveau des flags dépliés.
+ *      enableDisplayFlags doit être à true.
+ *      N'apparait pas comme icône simple. L'objet est affiché sous forme tiny.
+ *      Par défaut vide : pas d'objet.
+ *      String (hex)
+ *  - status : Détermine le status de l'objet.
+ *      Par défaut vide : pas de status.
+ *      String
+ *  - displaySize : Détermine la taille de l'affichage de l'élément complet.
+ *      Tailles disponibles :
+ *      - tiny : très petite taille correspondant à un carré de base de 16 pixels de large.
+ *          Certains éléments ne sont pas affichés.
+ *      - small : petite taille correspondant à un carré de base de 32 pixels de large.
+ *      - medium : taille moyenne correspondant à un carré de base de 64 pixels de large par défaut.
+ *      - large : grande taille correspondant à un carré de base de 128 pixels de large par défaut.
+ *      - full : très grande taille correspondant à un carré de base de 256 pixels de large par défaut.
+ *      Par défaut medium : taille moyenne.
+ *      String
+ *  - displayRatio : Détermine la forme de l'affichage par son ratio dans la mesure du possible si pas d'affichage du contenu de l'objet.
+ *      Ratios disponibles :
+ *      - square : forme carrée de 2x2 displaySize.
+ *      - short : forme plate courte de 6x1 displaySize.
+ *      - long : forme plate longue de toute largeure disponible.
+ *      Par défaut short : forme plate courte.
+ *      String
+ *  - selfHookList : Détermine la liste des point d'encrage à utiliser pour les actions sur l'objet utilisé.
+ *      Par défaut vide : est préparé en fonction de selfHookName.
+ *      Array
+ *  - selfHookName : Détermine le nom du point d'encrage à utiliser pour les actions sur l'objet utilisé.
+ *      Par défaut vide : est préparé en fonction du type d'objet :
+ *      - objet : selfMenuObject
+ *      - entité : selfMenuEntity
+ *      - groupe : selfMenuGroup
+ *      - conversation : selfMenuConversation
+ *      String
+ *  - typeHookName : Détermine le nom du point d'encrage à utiliser pour les actions sur l'objet par rapport à son type.
+ *      Par défaut vide : est préparé en fonction du type d'objet :
+ *      - objet : typeMenuObject
+ *      - entité : typeMenuEntity
+ *      - groupe : typeMenuGroup
+ *      - conversation : typeMenuConversation
+ *      String
+ *  Exemple de table de paramètres avec les valeurs par défaut :
+ *  $param = array(
+ *  'enableDisplayColor' => true,
+ *  'enableDisplayIcon' => true,
+ *  'enableDisplayIconApp' => false,
+ *  'enableDisplayRefs' => false,
+ *  'enableDisplayName' => true,
+ *  'enableDisplayID' => false,
+ *  'enableDisplayFlags' => false,
+ *  'enableDisplayFlagEmotions' => true,
+ *  'enableDisplayFlagProtection' => false,
+ *  'enableDisplayFlagObfuscate' => false,
+ *  'enableDisplayFlagUnlocked' => false,
+ *  'enableDisplayFlagActivated' => false,
+ *  'enableDisplayFlagState' => false,
+ *  'enableDisplayStatus' => false,
+ *  'enableDisplayContent' => false,
+ *  'enableDisplayLink2Object' => true,
+ *  'enableDisplayObjectActions' => true,
+ *  'enableDisplayLink2Refs' => true,
+ *  'enableDisplaySelfHook' => true,
+ *  'enableDisplayTypeHook' => true,
+ *  'enableDisplayJS' => true,
+ *  'social' => '',
+ *  'objectType' => null,
+ *  'objectName' => null,
+ *  'objectAppShortName' => null,
+ *  'objectIcon' => null,
+ *  'objectRefs' => array(),
+ *  'link2Object' => '',
+ *  'flagProtection' => false,
+ *  'flagProtectionIcon' => '',
+ *  'flagProtectionText' => '',
+ *  'flagProtectionLink' => '',
+ *  'flagObfuscate' => false,
+ *  'flagObfuscateIcon' => '',
+ *  'flagObfuscateText' => '',
+ *  'flagObfuscateLink' => '',
+ *  'flagUnlocked' => false,
+ *  'flagUnlockedIcon' => '',
+ *  'flagUnlockedText' => '',
+ *  'flagUnlockedLink' => '',
+ *  'flagActivated' => false,
+ *  'flagActivatedDesc' => '',
+ *  'flagState' => '',
+ *  'flagStateDesc' => '',
+ *  'flagMessage' => '',
+ *  'flagTargetObject' => '',
+ *  'status' => '',
+ *  'displaySize' => 'medium',
+ *  'displayRatio' => 'short',
+ *  'selfHookList' => array(),
+ *  'selfHookName' => '',
+ *  'typeHookName' => '',
+ *  );
  *      ---
  * Example:
  *  FIXME
@@ -332,7 +640,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
 
         if ($this->_displayIconApp) {
             $contentDisplayIcon = '<div class="objectTitleIconsApp" style="background:#' . $objectColor . ';">';
-            $contentDisplayIcon .= '<div><span class="objectTitleIconsAppShortname">' . $contentDisplayAppShortName . '</span><br /><span class="objectTitleIconsAppTitle">' . $this->_name . '</span></div>';
+            $contentDisplayIcon .= '<div><span class="objectTitleIconsAppShortname">' . $this->_appShortname . '</span><br /><span class="objectTitleIconsAppTitle">' . $this->_name . '</span></div>';
             $contentDisplayIcon .= '</div>';
         }
 
@@ -370,7 +678,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         ) {
             $status = trim(filter_var($param['status'], FILTER_SANITIZE_STRING));
             if ($status == '')
-                $status = $this->_traductionInstance->getTraduction($param['objectType']);
+                $status = $this->_traductionInstance->getTraduction($this->_type);
             if ($status == '')
                 $this->_displayStatus = false;
         }
