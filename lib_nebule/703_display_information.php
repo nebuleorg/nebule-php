@@ -177,7 +177,7 @@ class DisplayInformation extends DisplayItemSizeable implements DisplayInterface
 
     public function setLink(string $link): void
     {
-        $this->_link = $link;
+        $this->_link = trim(filter_var($link, FILTER_SANITIZE_URL));
     }
 
     public function setType(string $type): void

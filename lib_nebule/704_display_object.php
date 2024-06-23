@@ -351,15 +351,34 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
     private $_type = '';
     private $_name = '';
     private $_appShortname = '';
+    private $_flagProtection = false;
+    private $_flagProtectionIcon = null;
+    private $_flagProtectionText = ':::display:object:flag:unprotected';
+    private $_flagProtectionLink = '';
+    private $_flagObfuscate = false;
+    private $_flagObfuscateIcon = null;
+    private $_flagObfuscateText = ':::display:object:flag:unobfuscated';
+    private $_flagObfuscateLink = '';
+    private $_flagUnlocked = false;
+    private $_flagUnlockedIcon = null;
+    private $_flagUnlockedText = ':::display:object:flag:locked';
+    private $_flagUnlockedLink = '';
+    private $_flagActivated = false;
+    private $_flagActivatedText = ':::display:object:flag:unactivated';
+    private $_flagState = '';
+    private $_flagStateIcon = null;
+    private $_flagStateText = '';
+    private $_flagMessage = '';
+    private $_flagTargetObject = null;
+    private $_selfHookName = '';
+    private $_typeHookName = '';
+    private $_selfHookList = array();
 
     protected function _init(): void
     {
         $this->setSize(self::SIZE_MEDIUM);
         $this->setRatio(self::RATIO_SHORT);
         $this->setSocial('');
-        $this->setType('');
-        $this->setName('');
-        $this->setAppShortName('');
     }
 
     public function getHTML(): string
@@ -369,244 +388,8 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
 
         $result = '';
 
-
-
-        if (!isset($param['flagProtection'])
-            || $param['flagProtection'] !== true
-        )
-            $param['flagProtection'] = false; // Par défaut à false.
-        if ($this->_displayFlagProtection) {
-            if (!isset($param['flagProtectionIcon'])
-                || $param['flagProtectionIcon'] == ''
-                || !Node::checkNID($param['flagProtectionIcon'])
-                || !$this->_nebuleInstance->getIoInstance()->checkLinkPresent($param['flagProtectionIcon'])
-            )
-                $param['flagProtectionIcon'] = Displays::DEFAULT_ICON_LK;
-            if (isset($param['flagProtectionText']))
-                $param['flagProtectionText'] = trim(filter_var($param['flagProtectionText'], FILTER_SANITIZE_STRING));
-            if (!isset($param['flagProtectionText'])
-                || trim($param['flagProtectionText']) == ''
-            ) {
-                if ($param['flagProtection'])
-                    $param['flagProtectionText'] = ':::display:object:flag:protected';
-                else
-                    $param['flagProtectionText'] = ':::display:object:flag:unprotected';
-            }
-            if (isset($param['flagProtectionLink']))
-                $param['flagProtectionLink'] = trim(filter_var($param['flagProtectionLink'], FILTER_SANITIZE_URL));
-            if (!isset($param['flagProtectionLink'])
-                || trim($param['flagProtectionLink']) == ''
-            )
-                $param['flagProtectionLink'] = null;
-        }
-
-        if (!isset($param['flagObfuscate'])
-            || $param['flagObfuscate'] !== true
-        )
-            $param['flagObfuscate'] = false; // Par défaut à false.
-        if ($this->_displayFlagObfuscate) {
-            if (!isset($param['flagObfuscateIcon'])
-                || $param['flagObfuscateIcon'] == ''
-                || !Node::checkNID($param['flagObfuscateIcon'])
-                || !$this->_nebuleInstance->getIoInstance()->checkLinkPresent($param['flagObfuscateIcon'])
-            )
-                $param['flagObfuscateIcon'] = Displays::DEFAULT_ICON_LC;
-            if (isset($param['flagObfuscateText']))
-                $param['flagObfuscateText'] = trim(filter_var($param['flagObfuscateText'], FILTER_SANITIZE_STRING));
-            if (!isset($param['flagObfuscateText'])
-                || trim($param['flagObfuscateText']) == ''
-            ) {
-                if ($param['flagObfuscate'])
-                    $param['flagObfuscateText'] = ':::display:object:flag:obfuscated';
-                else
-                    $param['flagObfuscateText'] = ':::display:object:flag:unobfuscated';
-            }
-            if (isset($param['flagObfuscateLink']))
-                $param['flagObfuscateLink'] = trim(filter_var($param['flagObfuscateLink'], FILTER_SANITIZE_URL));
-            if (!isset($param['flagObfuscateLink'])
-                || trim($param['flagObfuscateLink']) == ''
-            )
-                $param['flagObfuscateLink'] = null;
-        }
-
-        if (!isset($param['flagUnlocked'])) {
-            $param['flagUnlocked'] = false; // Par défaut à false.
-            if (is_a($this->_nid, 'Nebule\Library\Entity')) {
-                // Extrait l'état de verrouillage de l'objet entité.
-                $param['flagUnlocked'] = $this->_nid->issetPrivateKeyPassword();
-                // Vérifie si c'est l'entité courante.
-                if ($this->_nid->getID() == $this->_nebuleInstance->getCurrentEntity()
-                    && $this->_unlocked
-                )
-                    $param['flagUnlocked'] = true;
-            }
-        }
-        // Lisse la valeur binaire.
-        if ($param['flagUnlocked'] !== true) {
-            $param['flagUnlocked'] = false; // Par défaut à false.
-        }
-        if ($this->_displayFlagUnlocked) {
-            if (!isset($param['flagUnlockedIcon'])
-                || $param['flagUnlockedIcon'] == ''
-                || !Node::checkNID($param['flagUnlockedIcon'])
-                || !$this->_nebuleInstance->getIoInstance()->checkLinkPresent($param['flagUnlockedIcon'])
-            )
-                $param['flagUnlockedIcon'] = Displays::DEFAULT_ICON_KEY;
-            if (isset($param['flagUnlockedText']))
-                $param['flagUnlockedText'] = trim(filter_var($param['flagUnlockedText'], FILTER_SANITIZE_STRING));
-            if (!isset($param['flagUnlockedText'])
-                || trim($param['flagUnlockedText']) == ''
-            ) {
-                if ($param['flagUnlocked'])
-                    $param['flagUnlockedText'] = ':::display:object:flag:locked';
-                else
-                    $param['flagUnlockedText'] = ':::display:object:flag:unlocked';
-            }
-            if (isset($param['flagUnlockedLink']))
-                $param['flagUnlockedLink'] = trim(filter_var($param['flagUnlockedLink'], FILTER_SANITIZE_URL));
-            if (!isset($param['flagUnlockedLink'])
-                || trim($param['flagUnlockedLink']) == ''
-            )
-                $param['flagUnlockedLink'] = null;
-        }
-
-        if (!isset($param['flagActivated'])
-            || $param['flagActivated'] !== true
-        )
-            $param['flagActivated'] = false; // Par défaut à false.
-
-        if ($this->_displayFlagActivated) {
-            if (!isset($param['flagActivatedDesc'])
-                || strlen(trim($param['flagActivatedDesc'])) == 0
-            ) {
-                if ($param['flagActivated'])
-                    $param['flagActivatedDesc'] = ':::display:content:Activated';
-                else
-                    $param['flagActivatedDesc'] = ':::display:content:NotActivated';
-            } else
-                $param['flagActivatedDesc'] = trim($param['flagActivatedDesc']);
-        }
-
-        $flagStateContentIcon = '';
-        $flagStateContentDesc = '';
-        if ($this->_displayFlagState) {
-            if (!isset($param['flagState'])
-                || strlen(trim($param['flagState'])) == 0
-            ) {
-                if ($this->_nid->getMarkDanger())
-                    $param['flagState'] = 'e';
-                elseif ($this->_nid->getMarkWarning())
-                    $param['flagState'] = 'w';
-                elseif ($this->_nid->checkPresent())
-                    $param['flagState'] = 'o';
-                else
-                    $param['flagState'] = 'n';
-            }
-            if ($param['flagState'] == 'e') {
-                $flagStateContentIcon = Displays::DEFAULT_ICON_IERR;
-                $flagStateContentDesc = ':::display:content:errorBan';
-            } elseif ($param['flagState'] == 'w') {
-                $flagStateContentIcon = Displays::DEFAULT_ICON_IWARN;
-                $flagStateContentDesc = ':::display:content:warningTaggedWarning';
-            } elseif ($param['flagState'] == 'o') {
-                $flagStateContentIcon = Displays::DEFAULT_ICON_IOK;
-                $flagStateContentDesc = ':::display:content:OK';
-            } else {
-                $param['flagState'] = 'n';
-                $flagStateContentIcon = Displays::DEFAULT_ICON_IERR;
-                $flagStateContentDesc = ':::display:content:errorNotAvailable';
-            }
-            if (isset($param['flagStateDesc'])
-                && strlen(trim($param['flagStateDesc'])) != 0
-            )
-                $flagStateContentDesc = trim(filter_var($param['flagStateDesc'], FILTER_SANITIZE_STRING));
-        } else {
-            $param['flagState'] = 'n';
-            $param['flagStateDesc'] = '';
-        }
-
-        if (!isset($param['flagMessage'])
-            || trim($param['flagMessage']) == ''
-        )
-            $param['flagMessage'] = null; // Par défaut vide.
-        else
-            $param['flagMessage'] = trim(filter_var($param['flagMessage'], FILTER_SANITIZE_STRING));
-
-        if (!isset($param['flagTargetObject'])
-            || trim($param['flagTargetObject']) == ''
-        )
-            $param['flagTargetObject'] = null; // Par défaut vide.
-        else {
-            $param['flagTargetObject'] = trim(filter_var($param['flagTargetObject'], FILTER_SANITIZE_STRING));
-            if (!Node::checkNID($param['flagTargetObject'])) {
-                $param['flagTargetObject'] = null;
-            }
-        }
-
-        if ($this->_displaySelfHook) {
-            if (isset($param['selfHookName']))
-                $param['selfHookName'] = trim(filter_var($param['selfHookName'], FILTER_SANITIZE_STRING));
-            else
-                $param['selfHookName'] = '';
-            if ($param['selfHookName'] == '') {
-                if (is_a($this->_nid, 'Nebule\Library\Entity'))
-                    $param['selfHookName'] = 'selfMenuEntity';
-                elseif (is_a($this->_nid, 'Nebule\Library\Conversation'))
-                    $param['selfHookName'] = 'selfMenuConversation';
-                elseif (is_a($this->_nid, 'Nebule\Library\Group'))
-                    $param['selfHookName'] = 'selfMenuGroup';
-                elseif (is_a($this->_nid, 'Nebule\Library\Transaction'))
-                    $param['selfHookName'] = 'selfMenuTransaction';
-                elseif (is_a($this->_nid, 'Nebule\Library\Wallet'))
-                    $param['selfHookName'] = 'selfMenuWallet';
-                elseif (is_a($this->_nid, 'Nebule\Library\Token'))
-                    $param['selfHookName'] = 'selfMenuToken';
-                elseif (is_a($this->_nid, 'Nebule\Library\TokenPool'))
-                    $param['selfHookName'] = 'selfMenuTokenPool';
-                elseif (is_a($this->_nid, 'Nebule\Library\Currency'))
-                    $param['selfHookName'] = 'selfMenuCurrency';
-                else
-                    $param['selfHookName'] = 'selfMenuObject';
-            }
-        } else
-            $param['selfHookName'] = '';
-
-        if ($this->_displayTypeHook) {
-            if (isset($param['typeHookName']))
-                $param['typeHookName'] = trim(filter_var($param['typeHookName'], FILTER_SANITIZE_STRING));else
-                $param['typeHookName'] = '';
-            if ($param['typeHookName'] == '') {
-                if (is_a($this->_nid, 'Nebule\Library\Entity'))
-                    $param['typeHookName'] = 'typeMenuEntity';
-                elseif (is_a($this->_nid, 'Nebule\Library\Conversation'))
-                    $param['typeHookName'] = 'typeMenuConversation';
-                elseif (is_a($this->_nid, 'Nebule\Library\Group'))
-                    $param['typeHookName'] = 'typeMenuGroup';
-                elseif (is_a($this->_nid, 'Nebule\Library\Transaction'))
-                    $param['typeHookName'] = 'typeMenuTransaction';
-                elseif (is_a($this->_nid, 'Nebule\Library\Wallet'))
-                    $param['typeHookName'] = 'typeMenuWallet';
-                elseif (is_a($this->_nid, 'Nebule\Library\Token'))
-                    $param['typeHookName'] = 'typeMenuToken';
-                elseif (is_a($this->_nid, 'Nebule\Library\TokenPool'))
-                    $param['typeHookName'] = 'typeMenuTokenPool';
-                elseif (is_a($this->_nid, 'Nebule\Library\Currency'))
-                    $param['typeHookName'] = 'typeMenuCurrency';
-                else
-                    $param['typeHookName'] = 'typeMenuObject';
-            }
-        } else
-            $param['typeHookName'] = '';
-
-        if (!isset($param['selfHookList'])
-            || !is_array($param['selfHookList'])
-        )
-            $param['selfHookList'] = array();
-
-        // Résoud les conflits.
         $this->_solveConflicts();
         
-
         // Prépare les contenus.
         $objectColor = $this->_nid->getPrimaryColor();
         $ObjectActionsID = '0';
@@ -705,109 +488,109 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
             if ($this->_displayFlags) {
                 if ($this->_displayFlagState) {
                     $menuContent .= '   <div class="objectMenuContentMsg objectMenuContentMsg';
-                    if ($param['flagState'] == 'e')
+                    if ($this->_flagState == 'e')
                         $menuContent .= 'Error';
-                    elseif ($param['flagState'] == 'w')
+                    elseif ($this->_flagState == 'w')
                         $menuContent .= 'Warn';
-                    elseif ($param['flagState'] == 'n')
+                    elseif ($this->_flagState == 'n')
                         $menuContent .= 'Error';
                     else
                         $menuContent .= 'OK';
                     $menuContent .= '">';
                     $menuContent .= $this->_getObjectFlagHTML(
                         false,
-                        $flagStateContentIcon,
-                        $flagStateContentDesc,
+                        $this->_flagStateIcon->getID(),
+                        $this->_flagStateText,
                         '');
-                    $menuContent .= $this->_traductionInstance->getTraduction($flagStateContentDesc);
+                    $menuContent .= $this->_traductionInstance->getTraduction($this->_flagStateText);
                     $menuContent .= '</div>' . "\n";
                 }
                 if ($this->_displayFlagProtection) {
-                    if ($param['flagProtectionLink'] != '')
-                        $menuContent .= '<a href="' . $param['flagProtectionLink'] . '">';
+                    if ($this->_flagProtectionLink != '')
+                        $menuContent .= '<a href="' . $this->_flagProtectionLink . '">';
                     $menuContent .= '   <div class="objectMenuContentMsg objectMenuContentMsg';
-                    if ($param['flagProtection'])
+                    if ($this->_flagProtection)
                         $menuContent .= 'OK';
                     else
                         $menuContent .= 'Info';
                     $menuContent .= '">';
                     $menuContent .= $this->_getObjectFlagHTML(
-                        $param['flagProtection'],
-                        $param['flagProtectionIcon'],
-                        $param['flagProtectionText'],
-                        $param['flagProtectionText']);
-                    $menuContent .= $this->_traductionInstance->getTraduction($param['flagProtectionText']);
+                        $this->_flagProtection,
+                        $this->_flagProtectionIcon->getID(),
+                        $this->_flagProtectionText,
+                        $this->_flagProtectionText);
+                    $menuContent .= $this->_traductionInstance->getTraduction($this->_flagProtectionText);
                     $menuContent .= '</div>' . "\n";
-                    if ($param['flagProtectionLink'] != '')
+                    if ($this->_flagProtectionLink != '')
                         $menuContent .= '</a>';
                 }
                 if ($this->_displayFlagObfuscate) {
-                    if ($param['flagObfuscateLink'] != '')
-                        $menuContent .= '<a href="' . $param['flagObfuscateLink'] . '">';
+                    if ($this->_flagObfuscateLink != '')
+                        $menuContent .= '<a href="' . $this->_flagObfuscateLink . '">';
                     $menuContent .= '   <div class="objectMenuContentMsg objectMenuContentMsg';
-                    if ($param['flagObfuscate'])
+                    if ($this->_flagObfuscate)
                         $menuContent .= 'OK';
                     else
                         $menuContent .= 'Info';
                     $menuContent .= '">';
                     $menuContent .= $this->_getObjectFlagHTML(
-                        $param['flagObfuscate'],
-                        $param['flagObfuscateIcon'],
-                        $param['flagObfuscateText'],
-                        $param['flagObfuscateText']);
-                    $menuContent .= $this->_traductionInstance->getTraduction($param['flagObfuscateText']);
+                        $this->_flagObfuscate,
+                        $this->_flagObfuscateIcon->getID(),
+                        $this->_flagObfuscateText,
+                        $this->_flagObfuscateText);
+                    $menuContent .= $this->_traductionInstance->getTraduction($this->_flagObfuscateText);
                     $menuContent .= '</div>' . "\n";
-                    if ($param['flagObfuscateLink'] != '')
+                    if ($this->_flagObfuscateLink != '')
                         $menuContent .= '</a>';
                 }
                 if ($this->_displayFlagUnlocked) {
-                    if ($param['flagUnlockedLink'] != '')
-                        $menuContent .= '<a href="' . $param['flagUnlockedLink'] . '">';
+                    if ($this->_flagUnlockedLink != '')
+                        $menuContent .= '<a href="' . $this->_flagUnlockedLink . '">';
                     $menuContent .= '   <div class="objectMenuContentMsg objectMenuContentMsg';
-                    if ($param['flagUnlocked'])
+                    if ($this->_flagUnlocked)
                         $menuContent .= 'OK';
                     else
                         $menuContent .= 'Info';
                     $menuContent .= '">';
                     $menuContent .= $this->_getObjectFlagHTML(
-                        $param['flagUnlocked'],
-                        $param['flagUnlockedIcon'],
-                        $param['flagUnlockedText'],
-                        $param['flagUnlockedText']);
-                    $menuContent .= $this->_traductionInstance->getTraduction($param['flagUnlockedText']);
+                        $this->_flagUnlocked,
+                        $this->_flagUnlockedIcon->getID(),
+                        $this->_flagUnlockedText,
+                        $this->_flagUnlockedText);
+                    $menuContent .= $this->_traductionInstance->getTraduction($this->_flagUnlockedText);
                     $menuContent .= '</div>' . "\n";
-                    if ($param['flagUnlockedLink'] != '')
+                    if ($this->_flagUnlockedLink != '')
                         $menuContent .= '</a>';
                 }
                 if ($this->_displayFlagActivated) {
                     $menuContent .= '   <div class="objectMenuContentMsg objectMenuContentMsg';
-                    if ($param['flagActivated'])
+                    if ($this->_flagActivated)
                         $menuContent .= 'OK';
                     else
                         $menuContent .= 'Info';
                     $menuContent .= '">';
                     $menuContent .= $this->_getObjectFlagHTML(
-                        $param['flagActivated'],
+                        $this->_flagActivated,
                         Displays::DEFAULT_ICON_LL,
-                        ':::display:object:flag:unactivated',
-                        ':::display:object:flag:activated');
-                    if ($param['flagActivated'])
+                        $this->_flagActivatedText,
+                        $this->_flagActivatedText);
+                    if ($this->_flagActivated)
                         $menuContent .= $this->_traductionInstance->getTraduction(':::display:object:flag:activated');
                     else
                         $menuContent .= $this->_traductionInstance->getTraduction(':::display:object:flag:unactivated');
                     $menuContent .= '</div>' . "\n";
                 }
-                if ($param['flagMessage'] != null) {
+                if ($this->_flagMessage != '') {
                     $menuContent .= '   <div class="objectMenuContentMsg objectMenuContentMsgInfo">';
                     $menuContent .= $this->_getObjectFlagHTML(
                         false,
                         Displays::DEFAULT_ICON_IINFO,
                         '',
                         '-');
-                    $menuContent .= $param['flagMessage'];
+                    $menuContent .= $this->_flagMessage;
                     $menuContent .= '</div>' . "\n";
                 }
-                if ($param['flagTargetObject'] != null) {
+                if ($this->_flagTargetObject != null) {
                     $menuContent .= '   <div class="objectMenuContentMsg objectMenuContentMsgtargetObject">';
                     $paramTiny = array(
                         'enableDisplayColor' => true,
@@ -821,11 +604,10 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
                         'displayRatio' => 'short',
                     );
                     // ATTENTION à une possible boucle infinie !
-                    $menuContent .= $this->_displayInstance->getDisplayObject($param['flagTargetObject'], $paramTiny);
+                    $menuContent .= $this->_displayInstance->getDisplayObject($this->_flagTargetObject, $paramTiny);
                     unset($paramTiny);
                     $menuContent .= '</div>' . "\n";
                 }
-                // $param['flagTargetObject']
                 if ($this->_displayFlagEmotions
                     && $this->_displayJS
                 ) {
@@ -847,12 +629,12 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
                 $divTitleMenuContentOpen = '    <div class="objectMenuContent">' . "\n";
                 $divTitleMenuContentClose = '    </div>' . "\n";
                 $menuActions = $this->_displayInstance->getDisplayObjectHookList(
-                    $param['selfHookName'],
-                    $param['typeHookName'],
+                    $this->_selfHookName,
+                    $this->_typeHookName,
                     $this->_nid,
                     true,
                     $this->_sizeCSS . 'Long',
-                    $param['selfHookList']);
+                    $this->_selfHookList);
                 if ($menuActions != '') {
                     $divTitleMenuActionsOpen = '<div class="objectMenuContentActions objectMenuContentActions' . $this->_sizeCSS . 'Long">' . "\n";
                     $divTitleMenuActionsClose = ' <div class="objectMenuContentAction-close"></div>' . "\n</div>\n";
@@ -862,12 +644,12 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
                 $divMenuContentOpen = '  <div class="objectMenuContent objectDisplay' . $this->_sizeCSS . ' objectDisplay' . $this->_sizeCSS . $this->_ratioCSS . '">' . "\n";
                 $divMenuContentClose = '  </div>' . "\n";
                 $menuActions = $this->_displayInstance->getDisplayObjectHookList(
-                    $param['selfHookName'],
-                    $param['typeHookName'],
+                    $this->_selfHookName,
+                    $this->_typeHookName,
                     $this->_nid,
                     false,
                     $this->_sizeCSS . $this->_ratioCSS,
-                    $param['selfHookList']);
+                    $this->_selfHookList);
                 if ($menuActions != '') {
                     $divTitleMenuActionsOpen = '<div class="objectMenuContentActions objectMenuContentActions' . $this->_sizeCSS . $this->_ratioCSS . '">' . "\n";
                     $divTitleMenuActionsClose = ' <div class="objectMenuContentAction-close"></div>' . "\n</div>\n";
@@ -949,47 +731,47 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
                     if ($this->_displayFlagState) {
                         $titleFlagsContent .= $this->_getObjectFlagHTML(
                             false,
-                            $flagStateContentIcon,
-                            $flagStateContentDesc,
+                            $this->_flagStateIcon->getID(),
+                            $this->_flagStateText,
                             '');
                     }
                     if ($this->_displayFlagProtection) {
-                        if ($param['flagProtectionLink'] != '') {
-                            $titleFlagsContent .= '<a href="' . $param['flagProtectionLink'] . '">';
+                        if ($this->_flagProtectionLink != '') {
+                            $titleFlagsContent .= '<a href="' . $this->_flagProtectionLink . '">';
                         }
                         $titleFlagsContent .= $this->_getObjectFlagHTML(
-                            $param['flagProtection'],
-                            $param['flagProtectionIcon'],
-                            $param['flagProtectionText'],
-                            $param['flagProtectionText']);
-                        if ($param['flagProtectionLink'] != '')
+                            $this->_flagProtection,
+                            $this->_flagProtectionIcon->getID(),
+                            $this->_flagProtectionText,
+                            $this->_flagProtectionText);
+                        if ($this->_flagProtectionLink != '')
                             $titleFlagsContent .= '</a>';
                     }
                     if ($this->_displayFlagObfuscate) {
-                        if ($param['flagObfuscateLink'] != '')
-                            $titleFlagsContent .= '<a href="' . $param['flagObfuscateLink'] . '">';
+                        if ($this->_flagObfuscateLink != '')
+                            $titleFlagsContent .= '<a href="' . $this->_flagObfuscateLink . '">';
                         $titleFlagsContent .= $this->_getObjectFlagHTML(
-                            $param['flagObfuscate'],
-                            $param['flagObfuscateIcon'],
-                            $param['flagObfuscateText'],
-                            $param['flagObfuscateText']);
-                        if ($param['flagObfuscateLink'] != '')
+                            $this->_flagObfuscate,
+                            $this->_flagObfuscateIcon->getID(),
+                            $this->_flagObfuscateText,
+                            $this->_flagObfuscateText);
+                        if ($this->_flagObfuscateLink != '')
                             $titleFlagsContent .= '</a>';
                     }
                     if ($this->_displayFlagUnlocked) {
-                        if ($param['flagUnlockedLink'] != '')
-                            $titleFlagsContent .= '<a href="' . $param['flagUnlockedLink'] . '">';
+                        if ($this->_flagUnlockedLink != '')
+                            $titleFlagsContent .= '<a href="' . $this->_flagUnlockedLink . '">';
                         $titleFlagsContent .= $this->_getObjectFlagHTML(
-                            $param['flagUnlocked'],
-                            $param['flagUnlockedIcon'],
-                            $param['flagUnlockedText'],
-                            $param['flagUnlockedText']);
-                        if ($param['flagUnlockedLink'] != '')
+                            $this->_flagUnlocked,
+                            $this->_flagUnlockedIcon->getID(),
+                            $this->_flagUnlockedText,
+                            $this->_flagUnlockedText);
+                        if ($this->_flagUnlockedLink != '')
                             $titleFlagsContent .= '</a>';
                     }
                     if ($this->_displayFlagActivated) {
                         $titleFlagsContent .= $this->_getObjectFlagHTML(
-                            $param['flagActivated'],
+                            $this->_flagActivated,
                             Displays::DEFAULT_ICON_LL,
                             ':::display:object:flag:unactivated',
                             ':::display:object:flag:activated');
@@ -1324,8 +1106,11 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
     {
         if ($nid === null)
             $this->_nid = null;
-        elseif ($nid->getID() != '0' && is_a($nid, 'Nebule\Library\Node') && $nid->checkPresent())
+        elseif ($nid->getID() != '0' && is_a($nid, 'Nebule\Library\Node') && $nid->checkPresent()) {
             $this->_nid = $nid;
+            $this->setType('');
+            $this->setName('');
+        }
     }
 
     public function setEnableColor(bool $enable): void
@@ -1363,33 +1148,6 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         $this->_displayFlagEmotions = $enable;
     }
 
-    public function setEnableFlagProtection(bool $enable): void
-    {
-        if ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject'))
-            $this->_displayFlagProtection = $enable;
-    }
-
-    public function setEnableFlagObfuscate(bool $enable): void
-    {
-        if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
-            $this->_displayFlagObfuscate = $enable;
-    }
-
-    public function setEnableFlagUnlocked(bool $enable): void
-    {
-        $this->_displayFlagUnlocked = $enable;
-    }
-
-    public function setEnableFlagActivated(bool $enable): void
-    {
-        $this->_displayFlagActivated = $enable;
-    }
-
-    public function setEnableFlagState(bool $enable): void
-    {
-        $this->_displayFlagState = $enable;
-    }
-
     public function setEnableStatus(bool $enable): void
     {
         $this->_displayStatus = $enable;
@@ -1419,16 +1177,6 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
     {
         if ($this->_configurationInstance->getOptionAsBoolean('permitJavaScript'))
             $this->_displayJS = $enable;
-    }
-
-    public function setEnableSelfHook(bool $enable): void
-    {
-        $this->_displaySelfHook = $enable;
-    }
-
-    public function setEnableTypeHook(bool $enable): void
-    {
-        $this->_displayTypeHook = $enable;
     }
 
     public function setSocial(string $social): void
@@ -1479,6 +1227,279 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
             else
                 $this->_appShortname = '';
         }
+    }
+
+    public function setEnableFlagProtection(bool $enable): void
+    {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject'))
+            $this->_displayFlagProtection = $enable;
+        
+        if ($enable) {
+            $this->_flagProtectionIcon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_LK);
+        }
+    }
+
+    public function setFlagProtection(bool $enable): void
+    {
+        $this->_flagProtection = $enable;
+        $this->_setFlagProtection();
+    }
+
+    private function _setFlagProtection(): void
+    {
+        if ($this->_flagProtection)
+            $this->_flagProtectionText = ':::display:object:flag:protected';
+        else
+            $this->_flagProtectionText = ':::display:object:flag:unprotected';
+    }
+
+    public function setFlagProtectionIcon(?Node $oid): void
+    {
+        if ($oid->getID() != '0' && is_a($oid, 'Nebule\Library\Node') && $oid->checkPresent())
+            $this->_flagProtectionIcon = $oid;
+    }
+
+    public function setFlagProtectionText(string $text): void
+    {
+        $this->_flagProtectionText = trim(filter_var($text, FILTER_SANITIZE_STRING));
+    }
+
+    public function setFlagProtectionLink(string $link): void
+    {
+        $this->_flagProtectionLink = trim(filter_var($link, FILTER_SANITIZE_URL));
+    }
+
+    public function setEnableFlagObfuscate(bool $enable): void
+    {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
+            $this->_displayFlagObfuscate = $enable;
+
+        if ($enable) {
+            $this->_flagObfuscateIcon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_LC);
+        }
+    }
+
+    public function setFlagObfuscate(bool $enable): void
+    {
+        $this->_flagObfuscate = $enable;
+        $this->_setFlagObfuscate();
+    }
+
+    private function _setFlagObfuscate(): void
+    {
+        if ($this->_flagObfuscate)
+            $this->_flagObfuscateText = ':::display:object:flag:obfuscated';
+        else
+            $this->_flagObfuscateText = ':::display:object:flag:unobfuscated';
+    }
+
+    public function setFlagObfuscateIcon(?Node $oid): void
+    {
+        if ($oid->getID() != '0' && is_a($oid, 'Nebule\Library\Node') && $oid->checkPresent())
+            $this->_flagObfuscateIcon = $oid;
+    }
+
+    public function setFlagObfuscateText(string $text): void
+    {
+        $this->_flagObfuscateText = trim(filter_var($text, FILTER_SANITIZE_STRING));
+    }
+
+    public function setFlagObfuscateLink(string $link): void
+    {
+        $this->_flagObfuscateLink = trim(filter_var($link, FILTER_SANITIZE_URL));
+    }
+
+    public function setEnableFlagUnlocked(bool $enable): void
+    {
+        $this->_displayFlagUnlocked = $enable;
+
+        if ($enable){
+            $this->_flagUnlockedIcon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_KEY);
+        }
+    }
+
+    public function setFlagUnlocked(bool $enable): void
+    {
+        $this->_flagUnlocked = $enable;
+        $this->_setFlagUnlocked();
+    }
+
+    private function _setFlagUnlocked(): void
+    {
+        if ($this->_flagUnlocked)
+            $this->_flagUnlockedText = ':::display:object:flag:locked';
+        else
+            $this->_flagUnlockedText = ':::display:object:flag:unlocked';
+    }
+
+    public function setFlagUnlockedIcon(?Node $oid): void
+    {
+        if ($oid->getID() != '0' && is_a($oid, 'Nebule\Library\Node') && $oid->checkPresent())
+            $this->_flagUnlockedIcon = $oid;
+    }
+
+    public function setFlagUnlockedText(string $text): void
+    {
+        $this->_flagUnlockedText = trim(filter_var($text, FILTER_SANITIZE_STRING));
+    }
+
+    public function setFlagUnlockedLink(string $link): void
+    {
+        $this->_flagUnlockedLink = trim(filter_var($link, FILTER_SANITIZE_URL));
+    }
+
+    public function setEnableFlagActivated(bool $enable): void
+    {
+        $this->_displayFlagActivated = $enable;
+    }
+
+    public function setActivated(bool $enable): void
+    {
+        $this->_flagActivated = $enable;
+        $this->_setActivated();
+    }
+
+    private function _setActivated(): void
+    {
+        if ($this->_flagActivated)
+            $this->_flagActivatedText = ':::display:object:flag:activated';
+        else
+            $this->_flagActivatedText = ':::display:object:flag:unactivated';
+    }
+    
+    public function setActivatedText(string $text): void
+    {
+        $this->_flagActivatedText = trim(filter_var($text, FILTER_SANITIZE_STRING));
+    }
+
+    public function setEnableFlagState(bool $enable): void
+    {
+        $this->_displayFlagState = $enable;
+        $this->_setFlagState();
+    }
+
+    private function _setFlagState(): void
+    {
+        if ($this->_nid->getMarkDanger())
+            $this->setFlagState('e');
+        elseif ($this->_nid->getMarkWarning())
+            $this->setFlagState('w');
+        elseif ($this->_nid->checkPresent())
+            $this->setFlagState('o');
+        else
+            $this->setFlagState('n');
+    }
+
+    public function setFlagState(string $state): void
+    {
+        if ($state == 'e') {
+            $this->_flagState = 'e';
+            $this->_flagStateIcon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IERR);
+            $this->_flagStateText = ':::display:content:errorBan';
+        } elseif ($state == 'w') {
+            $this->_flagState = 'w';
+            $this->_flagStateIcon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IWARN);
+            $this->_flagStateText = ':::display:content:warningTaggedWarning';
+        } elseif ($state == 'o') {
+            $this->_flagState = 'o';
+            $this->_flagStateIcon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IOK);
+            $this->_flagStateText = ':::display:content:OK';
+        } else {
+            $this->_flagState = 'n';
+            $this->_flagStateIcon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IERR);
+            $this->_flagStateText = ':::display:content:errorNotAvailable';
+        }
+    }
+
+    public function setFlagStateText(string $text): void
+    {
+        $this->_flagStateText = trim(filter_var($text, FILTER_SANITIZE_STRING));
+    }
+
+    public function setFlagMessage(string $text): void
+    {
+        $this->_flagMessage = trim(filter_var($text, FILTER_SANITIZE_STRING));
+    }
+
+    public function setFlagTargetObject(?Node $nid): void
+    {
+        if ($nid === null)
+            $this->_flagTargetObject = null;
+        elseif ($nid->getID() != '0' && is_a($nid, 'Nebule\Library\Node') && $nid->checkPresent())
+            $this->_flagTargetObject = $nid;
+    }
+
+    public function setEnableSelfHook(bool $enable): void
+    {
+        $this->_displaySelfHook = $enable;
+        if ($enable)
+            $this->_setSelfHookName();
+    }
+
+    private function _setSelfHookName(): void
+    {
+        if (is_a($this->_nid, 'Nebule\Library\Entity'))
+            $this->_selfHookName = 'selfMenuEntity';
+        elseif (is_a($this->_nid, 'Nebule\Library\Conversation'))
+            $this->_selfHookName = 'selfMenuConversation';
+        elseif (is_a($this->_nid, 'Nebule\Library\Group'))
+            $this->_selfHookName = 'selfMenuGroup';
+        elseif (is_a($this->_nid, 'Nebule\Library\Transaction'))
+            $this->_selfHookName = 'selfMenuTransaction';
+        elseif (is_a($this->_nid, 'Nebule\Library\Wallet'))
+            $this->_selfHookName = 'selfMenuWallet';
+        elseif (is_a($this->_nid, 'Nebule\Library\Token'))
+            $this->_selfHookName = 'selfMenuToken';
+        elseif (is_a($this->_nid, 'Nebule\Library\TokenPool'))
+            $this->_selfHookName = 'selfMenuTokenPool';
+        elseif (is_a($this->_nid, 'Nebule\Library\Currency'))
+            $this->_selfHookName = 'selfMenuCurrency';
+        else
+            $this->_selfHookName = 'selfMenuObject';
+    }
+
+    public function setSelfHook(string $name): void
+    {
+        $this->_selfHookName = trim(filter_var($name, FILTER_SANITIZE_STRING));
+    }
+
+    public function setEnableTypeHook(bool $enable): void
+    {
+        $this->_displayTypeHook = $enable;
+        if ($enable)
+            $this->_setTypeHookName();
+    }
+
+    private function _setTypeHookName(): void
+    {
+        if (is_a($this->_nid, 'Nebule\Library\Entity'))
+            $this->_typeHookName = 'typeMenuEntity';
+        elseif (is_a($this->_nid, 'Nebule\Library\Conversation'))
+            $this->_typeHookName = 'typeMenuConversation';
+        elseif (is_a($this->_nid, 'Nebule\Library\Group'))
+            $this->_typeHookName = 'typeMenuGroup';
+        elseif (is_a($this->_nid, 'Nebule\Library\Transaction'))
+            $this->_typeHookName = 'typeMenuTransaction';
+        elseif (is_a($this->_nid, 'Nebule\Library\Wallet'))
+            $this->_typeHookName = 'typeMenuWallet';
+        elseif (is_a($this->_nid, 'Nebule\Library\Token'))
+            $this->_typeHookName = 'typeMenuToken';
+        elseif (is_a($this->_nid, 'Nebule\Library\TokenPool'))
+            $this->_typeHookName = 'typeMenuTokenPool';
+        elseif (is_a($this->_nid, 'Nebule\Library\Currency'))
+            $this->_typeHookName = 'typeMenuCurrency';
+        else
+            $this->_typeHookName = 'typeMenuObject';
+    }
+
+    public function setTypeHook(string $name): void
+    {
+        $this->_typeHookName = trim(filter_var($name, FILTER_SANITIZE_STRING));
+    }
+    
+    public function setHookList(array $list)
+    {
+        $this->_selfHookList = $list;
     }
 
     public static function displayCSS(): void

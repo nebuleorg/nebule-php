@@ -406,7 +406,7 @@ abstract class Traductions
      */
     public function getTraduction(string $text, string $lang = ''): string
     {
-        $result = $text;
+        $result = trim(filter_var($text, FILTER_SANITIZE_STRING));
 
         // Sélectionne le langage de traduction.
         if ($lang == '')
