@@ -830,6 +830,65 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         return $result;
     }
 
+    private function _solveConflicts():void
+    {
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitProtectedObject'))
+            $this->_displayFlagProtection = false;
+
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
+            $this->_displayFlagObfuscate = false;
+
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitJavaScript'))
+            $this->_displayJS = false;
+
+        if ($this->_sizeCSS == 'Tiny') {
+            $this->_displayLink2Refs = false;
+            $this->_displayObjectActions = false;
+            $this->_displayRefs = false;
+            $this->_displayFlags = false;
+            $this->_displayStatus = false;
+            $this->_displayContent = false;
+        }
+
+        if ($this->_sizeCSS == 'Small') {
+            $this->_displayFlags = false;
+            $this->_displayStatus = false;
+        }
+
+        if ($this->_displayContent
+            && $this->_ratioCSS == 'Square'
+        ) {
+            $this->_ratioCSS = 'Short';
+        }
+
+        if ($this->_displayIconApp) {
+            $this->_displayColor = false;
+            $this->_icon = null;
+        }
+
+        if (!$this->_displayColor
+            && $this->_icon === null
+            && !$this->_displayIconApp
+        )
+            $this->_displayObjectActions = false;
+
+        if (!$this->_displayName) {
+            $this->_displayRefs = false;
+            $this->_displayFlags = false;
+            $this->_displayStatus = false;
+        }
+
+        if (!$this->_configurationInstance->getOptionAsBoolean('displayEmotions'))
+            $this->_displayFlagEmotions = false;
+
+        if ($this->_sizeCSS == self::SIZE_TINY
+            || $this->_sizeCSS == self::SIZE_SMALL
+            || ($this->_sizeCSS == self::SIZE_MEDIUM && $this->_displayFlags)
+            || !$this->_displayName
+        )
+            $this->_displayNID = false;
+    }
+
     /**
      * Pour la fonction getDisplayObject().
      * Prépare l'icône de l'objet.
@@ -838,43 +897,39 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
      * Une mise à jour éventuelle de l'icône est recherchée.
      * Si l'objet de l'icône est présent, génère un chemin direct pour améliorer les performances.
      *
-     * @param Node   $object
-     * @param string $icon
+     * @param Node      $object
+     * @param Node|null $icon
      * @return string
      */
-    private function _getObjectIconHTML(Node $object, string $icon = ''): string
+    private function _getObjectIconHTML(Node $object, ?Node $icon = null): string
     {
-        if ($icon != ''
-            && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($icon)
+        if ($icon === null
+            || !$icon->checkPresent()
         ) {
-            $instanceIcon = $this->_nebuleInstance->newObject($icon);
-        } else {
             if (is_a($object, 'Nebule\Library\Entity'))
-                $icon = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newEntity(Displays::REFERENCE_ICON_ENTITY));
+                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newEntity(Displays::REFERENCE_ICON_ENTITY));
             elseif (is_a($object, 'Nebule\Library\Conversation'))
-                $icon = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newConversation(Displays::REFERENCE_ICON_CONVERSATION));
+                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newConversation(Displays::REFERENCE_ICON_CONVERSATION));
             elseif (is_a($object, 'Nebule\Library\Group'))
-                $icon = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newGroup(Displays::REFERENCE_ICON_GROUP));
+                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newGroup(Displays::REFERENCE_ICON_GROUP));
             elseif (is_a($object, 'Nebule\Library\Wallet'))
-                $icon = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
+                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
             elseif (is_a($object, 'Nebule\Library\Transaction'))
-                $icon = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
+                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
             elseif (is_a($object, 'Nebule\Library\Token'))
-                $icon = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
+                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
             elseif (is_a($object, 'Nebule\Library\TokenPool'))
-                $icon = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
+                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
             elseif (is_a($object, 'Nebule\Library\Currency'))
-                $icon = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
+                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
             else
-                $icon = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT));
-            $instanceIcon = $this->_nebuleInstance->newObject($icon);
+                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT));
+            $icon = $this->_nebuleInstance->newObject($oid);
         }
 
-        // Cherche une mise à jour éventuelle.
         $updateIcon = $this->_displayInstance->getImageUpdate($icon); // FIXME TODO ERROR
-        $updateIcon = '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256'; // FIXME
+        //$updateIcon = '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256'; // FIXME
 
-        // Retourne un chemin direct si l'objet est présent.
         if ($this->_nebuleInstance->getIoInstance()->checkObjectPresent($updateIcon))
             return nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $updateIcon;
         return '?' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '=' . $updateIcon;
@@ -902,7 +957,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
 
         foreach ($list as $object) {
             $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
-            $htlink = $this->_displayInstance->prepareDefaultObjectOrGroupOrEntityHtlink($object);
+            $htLink = $this->_displayInstance->prepareDefaultObjectOrGroupOrEntityHtlink($object);
             $color = $this->_displayInstance->prepareObjectColor($object);
             $icon = '';
             if ($size < 11)
@@ -910,7 +965,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
             $name = '';
             if ($size < 3)
                 $name = $this->_displayInstance->truncateName($object->getFullName('all'));
-            $result .= $this->_displayInstance->convertHypertextLink($color . $icon . $name, $htlink);
+            $result .= $this->_displayInstance->convertHypertextLink($color . $icon . $name, $htLink);
             if ($size < 11)
                 $result .= ' ';
 
@@ -1041,65 +1096,6 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         }
 
         return $result;
-    }
-
-    private function _solveConflicts():void
-    {
-        if (!$this->_configurationInstance->getOptionAsBoolean('permitProtectedObject'))
-            $this->_displayFlagProtection = false;
-        
-        if (!$this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
-            $this->_displayFlagObfuscate = false;
-        
-        if (!$this->_configurationInstance->getOptionAsBoolean('permitJavaScript'))
-            $this->_displayJS = false;
-        
-        if ($this->_sizeCSS == 'Tiny') {
-            $this->_displayLink2Refs = false;
-            $this->_displayObjectActions = false;
-            $this->_displayRefs = false;
-            $this->_displayFlags = false;
-            $this->_displayStatus = false;
-            $this->_displayContent = false;
-        }
-
-        if ($this->_sizeCSS == 'Small') {
-            $this->_displayFlags = false;
-            $this->_displayStatus = false;
-        }
-
-        if ($this->_displayContent
-            && $this->_ratioCSS == 'Square'
-        ) {
-            $this->_ratioCSS = 'Short';
-        }
-
-        if ($this->_displayIconApp) {
-            $this->_displayColor = false;
-            $this->_icon = null;
-        }
-
-        if (!$this->_displayColor
-            && $this->_icon === null
-            && !$this->_displayIconApp
-        )
-            $this->_displayObjectActions = false;
-
-        if (!$this->_displayName) {
-            $this->_displayRefs = false;
-            $this->_displayFlags = false;
-            $this->_displayStatus = false;
-        }
-
-        if (!$this->_configurationInstance->getOptionAsBoolean('displayEmotions'))
-            $this->_displayFlagEmotions = false;
-
-        if ($this->_sizeCSS == self::SIZE_TINY
-            || $this->_sizeCSS == self::SIZE_SMALL
-            || ($this->_sizeCSS == self::SIZE_MEDIUM && $this->_displayFlags)
-            || !$this->_displayName
-        )
-            $this->_displayNID = false;
     }
 
     public function setNID(?Node $nid): void
