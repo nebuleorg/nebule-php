@@ -16,11 +16,12 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class DisplayIcon extends DisplayItem implements DisplayInterface
+class DisplayIcon extends DisplayItemIconable implements DisplayInterface
 {
     private $_nid = null;
     private $_social = '';
     private $_name = '';
+    private $_class = '';
     private $_type = '';
     private $_displayActions = false;
     private $_displayJS = true;
@@ -35,7 +36,19 @@ class DisplayIcon extends DisplayItem implements DisplayInterface
         if ($this->_nid === null)
             return '';
 
-        return ''; // TODO
+        if ($this->_icon === null)
+            return ''; // TODO if no icon, display face instead.
+
+        $result = '<img title="' . $this->_name . '"';
+        $result .= ' style="background:#' . $this->_nid->getPrimaryColor() . ';"';
+        $result .= ' alt="[I]" src="o/' . $this->_getObjectIconHTML($this->_nid, $this->_icon) . '"';
+        if ($this->_class != '')
+            $result .= ' class="' . $this->_class . '"';
+        if ($this->_displayActions && $this->_displayJS)
+            $result .= " onclick=\"display_menu('objectTitleMenu-" . $this->_actionsID . "');\" ";
+        $result .= '/>';
+
+        return $result;
     }
 
     public function setNID(?Node $nid): void
@@ -61,12 +74,8 @@ class DisplayIcon extends DisplayItem implements DisplayInterface
     {
         if ($name != '')
             $this->_name = trim(filter_var($name, FILTER_SANITIZE_STRING));
-        else {
-            if ($this->_displayIconApp)
-                $this->_name = $this->_nid->getName($this->_social);
-            else
-                $this->_name = $this->_nid->getFullName($this->_social);
-        }
+        else
+            $this->_name = $this->_nid->getFullName($this->_social);
     }
 
     public function setSocial(string $social): void
@@ -85,6 +94,11 @@ class DisplayIcon extends DisplayItem implements DisplayInterface
         }
         if ($this->_social == '')
             $this->_social = 'all';
+    }
+
+    public function setClass(string $class): void
+    {
+        $this->_class = trim(filter_var($class, FILTER_SANITIZE_STRING));
     }
 
     public function setEnableActions(bool $enable): void

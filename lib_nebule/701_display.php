@@ -4598,56 +4598,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
     /**
-     * Pour la fonction getDisplayObject().
-     * Prépare l'icône de l'objet.
-     * Si une icône est imposée, elle est utilisée.
-     * Sinon fait une recherche par référence en fonction du type de l'objet.
-     * Une mise à jour éventuelle de l'icône est recherchée.
-     * Si l'objet de l'icône est présent, génère un chemin direct pour améliorer les performances.
-     *
-     * @param Node   $object
-     * @param string $icon
-     * @return string
-     */
-    private function _getDisplayObjectIcon(Node $object, string $icon = ''): string
-    {
-        if ($icon != ''
-            && $this->_ioInstance->checkLinkPresent($icon)
-        ) {
-            $instanceIcon = $this->_nebuleInstance->newObject($icon);
-        } else {
-            if (is_a($object, 'Nebule\Library\Entity'))
-                $icon = $this->_getImageByReference($this->_nebuleInstance->newEntity(self::REFERENCE_ICON_ENTITY));
-            elseif (is_a($object, 'Nebule\Library\Conversation'))
-                $icon = $this->_getImageByReference($this->_nebuleInstance->newConversation(self::REFERENCE_ICON_CONVERSATION));
-            elseif (is_a($object, 'Nebule\Library\Group'))
-                $icon = $this->_getImageByReference($this->_nebuleInstance->newGroup(self::REFERENCE_ICON_GROUP));
-            elseif (is_a($object, 'Nebule\Library\Wallet'))
-                $icon = $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_OBJECT)); // TODO
-            elseif (is_a($object, 'Nebule\Library\Transaction'))
-                $icon = $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_OBJECT)); // TODO
-            elseif (is_a($object, 'Nebule\Library\Token'))
-                $icon = $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_OBJECT)); // TODO
-            elseif (is_a($object, 'Nebule\Library\TokenPool'))
-                $icon = $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_OBJECT)); // TODO
-            elseif (is_a($object, 'Nebule\Library\Currency'))
-                $icon = $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_OBJECT)); // TODO
-            else
-                $icon = $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_OBJECT));
-            $instanceIcon = $this->_nebuleInstance->newObject($icon);
-        }
-
-        // Cherche une mise à jour éventuelle.
-        $updateIcon = $this->_getImageUpdate($icon); // FIXME TODO ERROR
-        $updateIcon = '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256'; // FIXME
-
-        // Retourne un chemin direct si l'objet est présent.
-        if ($this->_ioInstance->checkObjectPresent($updateIcon))
-            return nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $updateIcon;
-        return '?' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '=' . $updateIcon;
-    }
-
-    /**
      * Pour les fonctions getDisplayObject() et getDisplayMessage().
      * Prépare la liste des références (signataires).
      *
