@@ -314,7 +314,61 @@ namespace Nebule\Library;
  *  );
  *      ---
  * Example:
- *  FIXME
+ * $instance = new DisplayObject($this->_applicationInstance);
+ * $instance->setNID($nid);
+ * $instance->setEnableColor(true);
+ * $instance->setEnableIconApp(false);
+ * $instance->setEnableRefs(true);
+ * $instance->setEnableName(true);
+ * $instance->setEnableNID(true);
+ * $instance->setEnableFlags(true);
+ * $instance->setEnableFlagEmotions(true);
+ * $instance->setEnableFlagProtection(true);
+ * $instance->setEnableFlagObfuscate(true);
+ * $instance->setEnableFlagUnlocked(true);
+ * $instance->setEnableFlagActivated(true);
+ * $instance->setEnableFlagState(true);
+ * $instance->setEnableStatus(true);
+ * $instance->setEnableContent(true);
+ * $instance->setEnableLink(true);
+ * $instance->setEnableActions(true);
+ * $instance->setEnableLink2Refs(true);
+ * $instance->setEnableSelfHook(true);
+ * $instance->setEnableTypeHook(true);
+ * $instance->setEnableJS(true);
+ * $instance->setSocial('all');
+ * $instance->setType('Node');
+ * $instance->setName('Name');
+ * $instance->setAppShortName('Shortname');
+ * $icon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IOK);
+ * $instance->setIcon($icon);
+ * $instance->setRefs(array());
+ * $instance->setLink('https://nebule.org');
+ * $instance->setFlagProtection(false);
+ * $instance->setFlagProtectionIcon($icon);
+ * $instance->setFlagProtectionText('Text');
+ * $instance->setFlagProtectionLink('https://nebule.org');
+ * $instance->setFlagObfuscate(false);
+ * $instance->setFlagObfuscateIcon($icon);
+ * $instance->setFlagObfuscateText('Text');
+ * $instance->setFlagObfuscateLink('https://nebule.org');
+ * $instance->setFlagUnlocked(false);
+ * $instance->setFlagUnlockedIcon($icon);
+ * $instance->setFlagUnlockedText('Text');
+ * $instance->setFlagUnlockedLink('https://nebule.org');
+ * $instance->setActivated(false);
+ * $instance->setActivatedText('Text');
+ * $instance->setFlagState('o');
+ * $instance->setFlagStateText('Text');
+ * $instance->setFlagMessage('Text');
+ * $instance->setFlagTargetObject('https://nebule.org');
+ * $instance->setStatus('');
+ * $instance->setSize(self::SIZE_MEDIUM);
+ * $instance->setRatio(self::RATIO_SHORT);
+ * $instance->setSelfHookList(array());
+ * $instance->setSelfHookName('Name');
+ * $instance->setTypeHookName('Name');
+ * $instance->display();
  *      ---
  * Usage:
  *  FIXME
@@ -341,8 +395,8 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
     private $_displayFlagState = false;
     private $_displayStatus = false;
     private $_displayContent = false;
-    private $_displayObjectActions = true;
-    private $_displayLink2Object = true;
+    private $_displayActions = false;
+    private $_displayLink = true;
     private $_displayLink2Refs = true;
     private $_displayJS = true;
     private $_displaySelfHook = true;
@@ -350,6 +404,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
     private $_social = '';
     private $_type = '';
     private $_name = '';
+    private $_link = '';
     private $_appShortname = '';
     private $_flagProtection = false;
     private $_flagProtectionIcon = null;
@@ -370,6 +425,8 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
     private $_flagStateText = '';
     private $_flagMessage = '';
     private $_flagTargetObject = null;
+    private $_status = '';
+    private $_refs = array();
     private $_selfHookName = '';
     private $_typeHookName = '';
     private $_selfHookList = array();
@@ -388,33 +445,33 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
 
         $result = '';
 
+        // FIXME
+
         $this->_solveConflicts();
         
         // Prépare les contenus.
         $objectColor = $this->_nid->getPrimaryColor();
         $ObjectActionsID = '0';
-        if ($this->_displayObjectActions
+        if ($this->_displayActions
             && $this->_displayJS
         )
             $ObjectActionsID = bin2hex($this->_nebuleInstance->getCryptoInstance()->getRandom(8, Crypto::RANDOM_PSEUDO));
-        $contentDisplayColor = '';
+        $colorInstance = new DisplayColor($this->_applicationInstance);
         if ($this->_displayColor) {
-            $contentDisplayColor = '<img title="' . $this->_name;
-            $contentDisplayColor .= '" style="background:#' . $objectColor;
-            $contentDisplayColor .= ';" alt="[C]" src="o/' . displays::DEFAULT_ICON_ALPHA_COLOR . '" ';
-            if ($this->_displayObjectActions
-                && $this->_displayJS
-            )
-                $contentDisplayColor .= "onclick=\"display_menu('objectTitleMenu-" . $ObjectActionsID . "');\" ";
-            $contentDisplayColor .= '/>';
+            $colorInstance->setNID($this->_nid);
+            $colorInstance->setName($this->_name);
+            $colorInstance->setActionsID($ObjectActionsID);
+            $colorInstance->setEnableActions($this->_displayActions);
+            $colorInstance->setEnableJS($this->_displayJS);
         }
+        $contentDisplayColor = $colorInstance->getHTML();
 
         $contentDisplayIcon = '';
         if ($this->_icon !== null) {
             $contentDisplayIcon = '<img title="' . $this->_name;
             $contentDisplayIcon .= '" style="background:#' . $objectColor;
             $contentDisplayIcon .= ';" alt="[I]" src="' . $this->_getObjectIconHTML($this->_nid, $this->_icon) . '" ';
-            if ($this->_displayObjectActions
+            if ($this->_displayActions
                 && $this->_displayJS
             )
                 $contentDisplayIcon .= "onclick=\"display_menu('objectTitleMenu-" . $ObjectActionsID . "');\" ";
@@ -431,39 +488,24 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         $titleLinkOpenName = '';
         $titleLinkCloseImg = '';
         $titleLinkCloseName = '';
-        if ($this->_displayLink2Object) {
-            if ($this->_displayObjectActions
+        if ($this->_displayLink) {
+            if ($this->_displayActions
                 && $this->_displayJS
             ) {
-                if (isset($param['link2Object'])
-                    && $param['link2Object'] != null
-                )
-                    $titleLinkOpenName = '<a href="' . $param['link2Object'] . '">';
+                if ($this->_link != '')
+                    $titleLinkOpenName = '<a href="' . $this->_link . '">';
                 else
                     $titleLinkOpenName = '<a href="' . $this->_displayInstance->prepareDefaultObjectOrGroupOrEntityHtlink($this->_nid) . '">';
                 $titleLinkCloseName = '</a>';
             } else {
-                if (isset($param['link2Object'])
-                    && $param['link2Object'] != null
-                )
-                    $titleLinkOpenImg = '<a href="' . $param['link2Object'] . '">' . "\n";
+                if ($this->_link != '')
+                    $titleLinkOpenImg = '<a href="' . $this->_link . '">' . "\n";
                 else
                     $titleLinkOpenImg = '<a href="' . $this->_displayInstance->prepareDefaultObjectOrGroupOrEntityHtlink($this->_nid) . '">';
                 $titleLinkOpenName = $titleLinkOpenImg;
                 $titleLinkCloseImg = '</a>';
                 $titleLinkCloseName = $titleLinkCloseImg;
             }
-        }
-
-        $status = '';
-        if ($this->_displayStatus
-            && isset($param['status'])
-        ) {
-            $status = trim(filter_var($param['status'], FILTER_SANITIZE_STRING));
-            if ($status == '')
-                $status = $this->_traductionInstance->getTraduction($this->_type);
-            if ($status == '')
-                $this->_displayStatus = false;
         }
 
         // Prépare le menu si besoin.
@@ -479,8 +521,8 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         $divTitleMenuActionsClose = '';
         $menuContent = '';
         $menuActions = '';
-        if ($this->_displayLink2Object
-            && $this->_displayObjectActions
+        if ($this->_displayLink
+            && $this->_displayActions
         ) {
             $menuContent = '   <div class="objectMenuContentMsg objectMenuContentMsgID">ID:';
             $menuContent .= $this->_nid->getID();
@@ -590,7 +632,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
                     $menuContent .= $this->_flagMessage;
                     $menuContent .= '</div>' . "\n";
                 }
-                if ($this->_flagTargetObject != null) {
+                if ($this->_flagTargetObject !== null) {
                     $menuContent .= '   <div class="objectMenuContentMsg objectMenuContentMsgtargetObject">';
                     $paramTiny = array(
                         'enableDisplayColor' => true,
@@ -719,8 +761,8 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
                 $divTitleFlagsClose = '   </div>' . "\n";
                 $divTitleStatusOpen = '    <div class="objectTitleStatus">';
                 $divTitleStatusClose = '</div>' . "\n";
-                if ($this->_displayRefs && sizeof($param['objectRefs']) > 0 && $param['objectRefs'] !== null)
-                    $titleRefsContent = $this->_getObjectRefsHTML($param['objectRefs']);
+                if ($this->_displayRefs && sizeof($this->_refs) > 0)
+                    $titleRefsContent = $this->_getObjectRefsHTML($this->_refs);
                 if ($this->_displayNID) {
                     $divTitleIdOpen = '    <div class="objectTitleID">';
                     $divTitleIdClose = '</div>' . "\n";
@@ -780,7 +822,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
                         $titleFlagsContent .= $this->_getObjectFlagEmotionsHTML($this->_nid, false);
                 }
                 if ($this->_displayStatus)
-                    $titleStatusContent = $status;
+                    $titleStatusContent = $this->_status;
             }
             $titleContent = $titleLinkOpenImg . "\n" . $divTitleIconsOpen . $titleIconsContent . $divTitleIconsClose . $titleLinkCloseImg . "\n";
             $titleContent .= $divTitleTextOpen;
@@ -792,7 +834,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
             $titleContent .= $divTitleFlagsClose;
             $titleContent .= $divTitleTextClose;
             if ($this->_displayJS
-                && $this->_displayObjectActions
+                && $this->_displayActions
             ) {
                 $titleContent .= $divTitleMenuOpen;
                 $titleContent .= $divTitleMenuTitleOpen;
@@ -818,7 +860,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
             $result = $divDisplayOpen;
             $result .= $divTitleOpen . $titleContent . $divTitleClose;
             if (!$this->_displayJS
-                && $this->_displayObjectActions
+                && $this->_displayActions
             ) {
                 $result .= $divMenuContentOpen . $menuContent . $divMenuContentClose;
                 $result .= $divTitleMenuActionsOpen . $menuActions . $divTitleMenuActionsClose;
@@ -843,7 +885,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
 
         if ($this->_sizeCSS == 'Tiny') {
             $this->_displayLink2Refs = false;
-            $this->_displayObjectActions = false;
+            $this->_displayActions = false;
             $this->_displayRefs = false;
             $this->_displayFlags = false;
             $this->_displayStatus = false;
@@ -870,7 +912,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
             && $this->_icon === null
             && !$this->_displayIconApp
         )
-            $this->_displayObjectActions = false;
+            $this->_displayActions = false;
 
         if (!$this->_displayName) {
             $this->_displayRefs = false;
@@ -928,7 +970,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         }
 
         $updateIcon = $this->_displayInstance->getImageUpdate($icon); // FIXME TODO ERROR
-        //$updateIcon = '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256'; // FIXME
+        $updateIcon = '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256'; // FIXME
 
         if ($this->_nebuleInstance->getIoInstance()->checkObjectPresent($updateIcon))
             return nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $updateIcon;
@@ -1106,6 +1148,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
             $this->_nid = $nid;
             $this->setType('');
             $this->setName('');
+            $this->_getDefaultIcon();
         }
     }
 
@@ -1117,11 +1160,6 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
     public function setEnableIconApp(bool $enable): void
     {
         $this->_displayIconApp = $enable;
-    }
-
-    public function setEnableRefs(bool $enable): void
-    {
-        $this->_displayRefs = $enable;
     }
 
     public function setEnableName(bool $enable): void
@@ -1144,29 +1182,19 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         $this->_displayFlagEmotions = $enable;
     }
 
-    public function setEnableStatus(bool $enable): void
-    {
-        $this->_displayStatus = $enable;
-    }
-
     public function setEnableContent(bool $enable): void
     {
         $this->_displayContent = $enable;
     }
 
-    public function setEnableObjectActions(bool $enable): void
+    public function setEnableActions(bool $enable): void
     {
-        $this->_displayObjectActions = $enable;
+        $this->_displayActions = $enable;
     }
 
-    public function setEnableLink2Object(bool $enable): void
+    public function setEnableLink(bool $enable): void
     {
-        $this->_displayLink2Object = $enable;
-    }
-
-    public function setEnableLink2Refs(bool $enable): void
-    {
-        $this->_displayLink2Refs = $enable;
+        $this->_displayLink = $enable;
     }
 
     public function setEnableJS(bool $enable): void
@@ -1223,6 +1251,26 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
             else
                 $this->_appShortname = '';
         }
+    }
+
+    public function setEnableRefs(bool $enable): void
+    {
+        $this->_displayRefs = $enable;
+    }
+
+    public function setRefs(array $refs): void
+    {
+        $this->_refs = $refs;
+    }
+
+    public function setEnableLink2Refs(bool $enable): void
+    {
+        $this->_displayLink2Refs = $enable;
+    }
+
+    public function setLink(string $link): void
+    {
+        $this->_link = trim(filter_var($link, FILTER_SANITIZE_URL));
     }
 
     public function setEnableFlagProtection(bool $enable): void
@@ -1412,6 +1460,22 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         $this->_flagStateText = trim(filter_var($text, FILTER_SANITIZE_STRING));
     }
 
+    public function setEnableStatus(bool $enable): void
+    {
+        $this->_displayStatus = $enable;
+    }
+
+    public function setStatus(string $status): void
+    {
+        if ($status == '')
+            $this->_status = $this->_traductionInstance->getTraduction($this->_type);
+        else
+            $this->_status = trim(filter_var($status, FILTER_SANITIZE_STRING));
+        
+        if ($this->_status == '')
+                $this->_displayStatus = false;
+    }
+
     public function setFlagMessage(string $text): void
     {
         $this->_flagMessage = trim(filter_var($text, FILTER_SANITIZE_STRING));
@@ -1454,7 +1518,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
             $this->_selfHookName = 'selfMenuObject';
     }
 
-    public function setSelfHook(string $name): void
+    public function setSelfHookName(string $name): void
     {
         $this->_selfHookName = trim(filter_var($name, FILTER_SANITIZE_STRING));
     }
@@ -1488,16 +1552,38 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
             $this->_typeHookName = 'typeMenuObject';
     }
 
-    public function setTypeHook(string $name): void
+    public function setTypeHookName(string $name): void
     {
         $this->_typeHookName = trim(filter_var($name, FILTER_SANITIZE_STRING));
     }
     
-    public function setHookList(array $list)
+    public function setSelfHookList(array $list)
     {
         $this->_selfHookList = $list;
     }
-
+    private function _getDefaultIcon(): void
+    {
+        if (is_a($this->_nid, 'Nebule\Library\Entity'))
+            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_ENTITY));
+        elseif (is_a($this->_nid, 'Nebule\Library\Conversation'))
+            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_CONVERSATION));
+        elseif (is_a($this->_nid, 'Nebule\Library\Group'))
+            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_GROUP));
+        elseif (is_a($this->_nid, 'Nebule\Library\Wallet'))
+            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
+        elseif (is_a($this->_nid, 'Nebule\Library\Transaction'))
+            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
+        elseif (is_a($this->_nid, 'Nebule\Library\Token'))
+            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
+        elseif (is_a($this->_nid, 'Nebule\Library\TokenPool'))
+            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
+        elseif (is_a($this->_nid, 'Nebule\Library\Currency'))
+            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
+        else
+            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT));
+        $this->_icon = $this->_nebuleInstance->newObject($oid);
+        // TODO add get update of object.
+    }
     public static function displayCSS(): void
     {
         ?>

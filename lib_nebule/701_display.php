@@ -1696,14 +1696,17 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
         </style>
         <?php
-        DisplayMenu::displayCSS();
         DisplayTitle::displayCSS();
         DisplayInformation::displayCSS();
-        DisplayLink::displayCSS();
-        DisplayList::displayCSS();
         DisplayObject::displayCSS();
-        $this->_getDisplayObjectContentCSS();
-        $this->_getDisplayMessageCSS();
+        DisplayLink::displayCSS();
+        DisplayBlockLink::displayCSS();
+        DisplaySecurity::displayCSS();
+        DisplayList::displayCSS();
+        DisplayMenu::displayCSS();
+        DisplayColor::displayCSS();
+        DisplayIcon::displayCSS();
+        DisplayContent::displayCSS();
     }
 
     /**
@@ -3180,12 +3183,18 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     private function _prepareObjectColor(Node $nid, string $class = '', string $title = ''): string
     {
-        $color = $nid->getPrimaryColor();
+        /*$color = $nid->getPrimaryColor();
         if ($title == '')
             $title = $nid->getFullName('all');
         if ($class != '')
             $class = 'class="' . $class . '" ';
-        return '<img title="' . $title . '" style="background:#' . $color . ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" ' . $class . '/>';
+        return '<img title="' . $title . '" style="background:#' . $color . ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" ' . $class . '/>';*/
+
+        $instance = new DisplayColor($this->_applicationInstance);
+        $instance->setNID($nid);
+        $instance->setName($title);
+        $instance->setClass($class);
+        return $instance->getHTML();
     }
 
     public function prepareObjectFace(Node $nid, string $class = ''): string
@@ -3538,7 +3547,117 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function getDisplayObject(?Node $nid, array $param): string
     {
-        $result = '';
+        $instance = new DisplayObject($this->_applicationInstance);
+        $instance->setNID($nid);
+        if (isset($param['enableDisplayColor']))
+            $instance->setEnableColor($param['enableDisplayColor']);
+        if (isset($param['enableDisplayIconApp']))
+            $instance->setEnableIconApp($param['enableDisplayIconApp']);
+        if (isset($param['enableDisplayRefs']))
+            $instance->setEnableRefs($param['enableDisplayRefs']);
+        if (isset($param['enableDisplayName']))
+            $instance->setEnableName($param['enableDisplayName']);
+        if (isset($param['enableDisplayID']))
+            $instance->setEnableNID($param['enableDisplayID']);
+        if (isset($param['enableDisplayFlags']))
+            $instance->setEnableFlags($param['enableDisplayFlags']);
+        if (isset($param['enableDisplayFlagEmotions']))
+            $instance->setEnableFlagEmotions($param['enableDisplayFlagEmotions']);
+        if (isset($param['enableDisplayFlagProtection']))
+            $instance->setEnableFlagProtection($param['enableDisplayFlagProtection']);
+        if (isset($param['enableDisplayFlagObfuscate']))
+            $instance->setEnableFlagObfuscate($param['enableDisplayFlagObfuscate']);
+        if (isset($param['enableDisplayFlagUnlocked']))
+            $instance->setEnableFlagUnlocked($param['enableDisplayFlagUnlocked']);
+        if (isset($param['enableDisplayFlagActivated']))
+            $instance->setEnableFlagActivated($param['enableDisplayFlagActivated']);
+        if (isset($param['enableDisplayFlagState']))
+            $instance->setEnableFlagState($param['enableDisplayFlagState']);
+        if (isset($param['enableDisplayStatus']))
+            $instance->setEnableStatus($param['enableDisplayStatus']);
+        if (isset($param['enableDisplayContent']))
+            $instance->setEnableContent($param['enableDisplayContent']);
+        if (isset($param['enableDisplayLink2Object']))
+            $instance->setEnableLink($param['enableDisplayLink2Object']);
+        if (isset($param['enableDisplayObjectActions']))
+            $instance->setEnableActions($param['enableDisplayObjectActions']);
+        if (isset($param['enableDisplayLink2Refs']))
+            $instance->setEnableLink2Refs($param['enableDisplayLink2Refs']);
+        if (isset($param['enableDisplaySelfHook']))
+            $instance->setEnableSelfHook($param['enableDisplaySelfHook']);
+        if (isset($param['enableDisplayTypeHook']))
+            $instance->setEnableTypeHook($param['enableDisplayTypeHook']);
+        if (isset($param['enableDisplayJS']))
+            $instance->setEnableJS($param['enableDisplayJS']);
+        if (isset($param['social']))
+            $instance->setSocial($param['social']);
+        if (isset($param['objectType']))
+            $instance->setType($param['objectType']);
+        if (isset($param['objectName']))
+            $instance->setName($param['objectName']);
+        if (isset($param['objectAppShortName']))
+            $instance->setAppShortName($param['objectAppShortName']);
+        if (isset($param['icon']))
+            $instance->setIcon($param['icon']);
+        if (!isset($param['enableDisplayIcon']) || $param['enableDisplayIcon'] === false)
+            $instance->setIcon(null);
+        if (isset($param['objectRefs']))
+            $instance->setRefs($param['objectRefs']);
+        if (isset($param['link2Object']))
+            $instance->setLink($param['link2Object']);
+        if (isset($param['flagProtection']))
+            $instance->setFlagProtection($param['flagProtection']);
+        if (isset($param['flagProtectionIcon']))
+            $instance->setFlagProtectionIcon($param['flagProtectionIcon']);
+        if (isset($param['flagProtectionText']))
+            $instance->setFlagProtectionText($param['flagProtectionText']);
+        if (isset($param['flagProtectionLink']))
+            $instance->setFlagProtectionLink($param['flagProtectionLink']);
+        if (isset($param['flagObfuscate']))
+            $instance->setFlagObfuscate($param['flagObfuscate']);
+        if (isset($param['flagObfuscateIcon']))
+            $instance->setFlagObfuscateIcon($param['flagObfuscateIcon']);
+        if (isset($param['flagObfuscateText']))
+            $instance->setFlagObfuscateText($param['flagObfuscateText']);
+        if (isset($param['flagObfuscateLink']))
+            $instance->setFlagObfuscateLink($param['flagObfuscateLink']);
+        if (isset($param['flagUnlocked']))
+            $instance->setFlagUnlocked($param['flagUnlocked']);
+        if (isset($param['flagUnlockedIcon']))
+            $instance->setFlagUnlockedIcon($param['flagUnlockedIcon']);
+        if (isset($param['flagUnlockedText']))
+            $instance->setFlagUnlockedText($param['flagUnlockedText']);
+        if (isset($param['flagUnlockedLink']))
+            $instance->setFlagUnlockedLink($param['flagUnlockedLink']);
+        if (isset($param['flagActivated']))
+            $instance->setActivated($param['flagActivated']);
+        if (isset($param['flagActivatedDesc']))
+            $instance->setActivatedText($param['flagActivatedDesc']);
+        if (isset($param['flagState']))
+            $instance->setFlagState($param['flagState']);
+        if (isset($param['flagStateDesc']))
+            $instance->setFlagStateText($param['flagStateDesc']);
+        if (isset($param['flagMessage']))
+            $instance->setFlagMessage($param['flagMessage']);
+        if (isset($param['flagTargetObject']))
+            $instance->setFlagTargetObject($param['flagTargetObject']);
+        if (isset($param['status']))
+            $instance->setStatus($param['status']);
+        if (isset($param['displaySize']))
+            $instance->setSize($param['displaySize']);
+        if (isset($param['displayRatio']))
+            $instance->setRatio($param['displayRatio']);
+        if (isset($param['selfHookList']))
+            $instance->setSelfHookList($param['selfHookList']);
+        if (isset($param['selfHookName']))
+            $instance->setSelfHookName($param['selfHookName']);
+        if (isset($param['typeHookName']))
+            $instance->setTypeHookName($param['typeHookName']);
+        return $instance->getHTML();
+
+
+
+        /*$result = '';
         if (!is_a($nid, 'Nebule\Library\Node'))
             return $result;
 
@@ -3681,10 +3800,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         )
             $param['objectType'] = $nid->getType($param['social']); // Par défaut extrait le type de l'objet.
 
-        /**
-         * Le nom complet de l'objet à afficher.
-         * Si c'est une application, c'est le nom simple qui est affiché.
-         */
         $contentDisplayName = '';
         if ($param['enableDisplayName']
             || $param['enableDisplayIconApp']
@@ -3701,9 +3816,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         } else
             $param['objectName'] = '';
 
-        /**
-         * Le nom court d'une application.
-         */
         $contentDisplayAppShortName = '';
         if ($param['enableDisplayIconApp']) {
             if (!isset($param['objectAppShortName'])
@@ -4482,7 +4594,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $result .= $divDisplayClose;
         }
 
-        return $result;
+        return $result;*/
     }
 
     /**
@@ -4695,290 +4807,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         }
 
         return $result;
-    }
-
-    /**
-     * Le CSS de la fonction getDisplayMessage().
-     *
-     * @return void
-     */
-    private function _getDisplayMessageCSS(): void
-    {
-        ?>
-
-        <style type="text/css">
-            /* CSS de la fonction getDisplayMessage(). */
-            .layoutMessage {
-                margin: 5px 0 0 5px;
-                border: 0;
-                background: none;
-                display: inline-block;
-                vertical-align: top;
-            }
-
-            .messageDisplay {
-                background: rgba(255, 255, 255, 0.333);
-            }
-
-            .messageDisplay .layoutObject {
-                margin: 0;
-            }
-
-            .messageDisplaySmall {
-                font-size: 32px;
-            }
-
-            .messageDisplayMedium {
-                font-size: 64px;
-            }
-
-            .messageDisplayLarge {
-                font-size: 128px;
-            }
-
-            .messageDisplaySmallShort {
-                width: 8em;
-            }
-
-            .messageDisplayMediumShort {
-                width: 6em;
-            }
-
-            .messageDisplayLargeShort {
-                width: 5em;
-            }
-
-            .messageDisplaySmallLong, .messageDisplayMediumLong, .messageDisplayLargeLong {
-                width: 256px;
-            }
-
-            @media screen and (min-width: 320px) {
-                .messageDisplaySmallLong, .messageDisplayMediumLong, .messageDisplayLargeLong {
-                    width: 310px;
-                }
-            }
-
-            @media screen and (min-width: 480px) {
-                .messageDisplaySmallLong, .messageDisplayMediumLong, .messageDisplayLargeLong {
-                    width: 470px;
-                }
-            }
-
-            @media screen and (min-width: 600px) {
-                .messageDisplaySmallLong, .messageDisplayMediumLong, .messageDisplayLargeLong {
-                    width: 590px;
-                }
-            }
-
-            @media screen and (min-width: 768px) {
-                .messageDisplaySmallLong, .messageDisplayMediumLong, .messageDisplayLargeLong {
-                    width: 758px;
-                }
-            }
-
-            @media screen and (min-width: 1024px) {
-                .messageDisplaySmallLong, .messageDisplayMediumLong, .messageDisplayLargeLong {
-                    width: 914px;
-                }
-            }
-
-            @media screen and (min-width: 1200px) {
-                .messageDisplaySmallLong, .messageDisplayMediumLong, .messageDisplayLargeLong {
-                    width: 943px;
-                }
-            }
-
-            @media screen and (min-width: 1600px) {
-                .messageDisplaySmallLong, .messageDisplayMediumLong, .messageDisplayLargeLong {
-                    width: 1343px;
-                }
-            }
-
-            @media screen and (min-width: 1920px) {
-                .messageDisplaySmallLong, .messageDisplayMediumLong, .messageDisplayLargeLong {
-                    width: 1663px;
-                }
-            }
-
-            @media screen and (min-width: 2048px) {
-                .messageDisplaySmallLong, .messageDisplayMediumLong, .messageDisplayLargeLong {
-                    width: 1040px;
-                }
-            }
-
-            @media screen and (min-width: 2400px) {
-                .messageDisplaySmallLong, .messageDisplayMediumLong, .messageDisplayLargeLong {
-                    width: 1240px;
-                }
-            }
-
-            @media screen and (min-width: 3840px) {
-                .messageDisplaySmallLong, .messageDisplayMediumLong, .messageDisplayLargeLong {
-                    width: 2000px;
-                }
-            }
-
-            @media screen and (min-width: 4096px) {
-                .messageDisplaySmallLong, .messageDisplayMediumLong, .messageDisplayLargeLong {
-                    width: 2050px;
-                }
-            }
-
-            .messageHeader a:link, .messageHeader a:visited, .messageFooter a:link, .messageFooter a:visited {
-                font-weight: bold;
-                text-decoration: none;
-                color: #000000;
-            }
-
-            .messageHeader a:hover, .messageHeader a:active, .messageFooter a:hover, .messageFooter a:active {
-                font-weight: bold;
-                text-decoration: underline;
-                color: #000000;
-            }
-
-            .messageHeaderSmall {
-                height: 16px;
-                padding: 2px 2px 0 2px;
-                font-size: 16px;
-                margin-bottom: 2px;
-                border: 0;
-            }
-
-            .messageHeaderMedium {
-                height: 16px;
-                padding: 2px 2px 0 2px;
-                font-size: 16px;
-                margin-bottom: 2px;
-                border: 0;
-            }
-
-            .messageHeaderLarge {
-                height: 64px;
-                padding: 5px 5px 0 5px;
-                font-size: 64px;
-                margin-bottom: 2px;
-                border: 0;
-            }
-
-            .messageFooterSmall {
-                height: 16px;
-                padding: 0 2px 2px 2px;
-                font-size: 16px;
-                margin-bottom: 8px;
-                border: 0;
-            }
-
-            .messageFooterMedium {
-                height: 16px;
-                padding: 0 2px 2px 2px;
-                font-size: 16px;
-                margin-bottom: 8px;
-                border: 0;
-            }
-
-            .messageFooterLarge {
-                height: 64px;
-                padding: 0 5px 5px 5px;
-                font-size: 64px;
-                margin-bottom: 16px;
-                border: 0;
-            }
-
-            .messageHeaderDate {
-                height: 16px;
-                line-height: 16px;
-                overflow: hidden;
-                white-space: nowrap;
-                font-size: 12px;
-                float: right;
-                color: #454545
-            }
-
-            .messageFooterEntity {
-                height: 16px;
-                line-height: 16px;
-                overflow: hidden;
-                white-space: nowrap;
-                font-size: 12px;
-                float: right;
-            }
-
-            .messageFooterEntity img {
-                height: 16px;
-                width: 16px;
-            }
-
-            .messageFooterEmots {
-                height: 16px;
-                font-size: 16px;
-                float: left;
-            }
-
-            .messageFooterEmots img {
-                height: 1em;
-                width: 1em;
-            }
-
-            .messageHeaderFlags {
-                height: 16px;
-                font-size: 16px;
-                float: left;
-            }
-
-            .messageHeaderFlags img {
-                height: 1em;
-                width: 1em;
-            }
-
-            .messageHeaderFlagsPrt img {
-                margin-left: 3px;
-            }
-
-            .messageFooterFlags {
-                height: 16px;
-                font-size: 16px;
-                float: left;
-            }
-
-            .messageFooterFlags img {
-                height: 1em;
-                width: 1em;
-            }
-
-            .messageFooterFlagsPrt img {
-                margin-left: 3px;
-            }
-
-            .messageContent {
-                font-size: 0.8rem;
-                border: 0;
-                padding: 3px;
-                margin: 0;
-                color: #000000;
-                overflow: auto;
-            }
-
-            .messageContentShort {
-                width: 378px;
-                max-height: 378px;
-            }
-
-            .messageContentText {
-                background: rgba(255, 255, 255, 0.666);
-                text-align: left;
-            }
-
-            .messageContentImage {
-                background: rgba(255, 255, 255, 0.12);
-                text-align: center;
-            }
-
-            .messageContentImage img {
-                height: auto;
-                max-width: 100%;
-            }
-        </style>
-        <?php
     }
 
     /**
@@ -5705,68 +5533,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
 
-    /**
-     * Le CSS des fonctions getDisplayObjectContent() et getDisplayAsObjectContent().
-     *
-     * @return void
-     */
-    private function _getDisplayObjectContentCSS(): void
-    {
-        ?>
-
-        <style type="text/css">
-            /* CSS des fonctions getDisplayObjectContent() et getDisplayAsObjectContent(). */
-            .objectContent {
-            }
-
-            /* .layoutInformation { max-width:2000px; } */
-            .objectContent .layoutInformation {
-                margin-left: -3px;
-            }
-
-            .objectContentObject {
-            }
-
-            .objectContentEntity {
-            }
-
-            .objectContentGroup {
-            }
-
-            .objectContentConversation {
-            }
-
-            .objectContentText {
-                font-size: 0.8rem;
-                background: rgba(255, 255, 255, 0.666);
-                text-align: left;
-                color: #000000;
-                font-family: sans-serif;
-            }
-
-            .objectContentCode {
-                font-size: 0.8rem;
-                background: rgba(255, 255, 255, 0.666);
-                text-align: left;
-                color: #000000;
-                font-family: monospace;
-            }
-
-            .objectContentAudio {
-            }
-
-            .objectContentImage {
-                background: rgba(255, 255, 255, 0.12);
-                text-align: center;
-            }
-
-            .objectContentImage img {
-                height: auto;
-                max-width: 100%;
-            }
-        </style>
-        <?php
-    }
 
     /**
      * Prépare à afficher le contenu d'un objet suivant sont type.

@@ -17,7 +17,7 @@ namespace Nebule\Library;
  *  $instance->setRatio(self::RATIO_SHORT);
  *  $icon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IOK);
  *  $instance->setIcon($icon);
- *  $instance->setLink('https://everywhere.net');
+ *  $instance->setLink('https://nebule.org');
  *  $instance->display();
  *     ---
  * Usage:
