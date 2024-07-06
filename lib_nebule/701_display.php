@@ -3160,12 +3160,19 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     private function _prepareObjectIcon(Node $nid, string $icon, string $class = ''): string
     {
-        $color = $nid->getPrimaryColor();
+        /*$color = $nid->getPrimaryColor();
         $title = $nid->getFullName('all');
         $image = $this->prepareIcon($icon);
         if ($class != '')
             $class = 'class="' . $class . '" ';
-        return '<img title="' . $title . '" style="background:#' . $color . ';" alt="[]" src="' . $image . '" ' . $class . '/>';
+        return '<img title="' . $title . '" style="background:#' . $color . ';" alt="[]" src="' . $image . '" ' . $class . '/>';*/
+
+        $iconInstance = $this->_nebuleInstance->getCacheInstance()->newNode($icon);
+        $instance = new DisplayIcon($this->_applicationInstance);
+        $instance->setNID($nid);
+        $instance->setIcon($iconInstance);
+        $instance->setClassCSS($class);
+        return $instance->getHTML();
     }
 
     public function prepareObjectColor(Node $nid, string $class = '', string $title = ''): string
@@ -3193,7 +3200,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $instance = new DisplayColor($this->_applicationInstance);
         $instance->setNID($nid);
         $instance->setName($title);
-        $instance->setClass($class);
+        $instance->setClassCSS($class);
         return $instance->getHTML();
     }
 

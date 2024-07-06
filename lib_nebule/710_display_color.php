@@ -23,15 +23,19 @@ class DisplayColor extends DisplayItem implements DisplayInterface
     private $_nid = null;
     private $_social = '';
     private $_name = '';
-    private $_class = '';
+    private $_classCSS = '';
+    private $_idCSS = '';
+    private $_styleCSS = '';
     private $_displayActions = false;
     private $_displayJS = true;
     private $_actionsID = '';
 
     protected function _init(): void
     {
-        $this->setSocial('');
+        $this->setSocial();
+        $this->setEnableJS();
         $this->setActionsID('');
+        $this->setStyleCSS();
     }
 
     public function getHTML(): string
@@ -40,10 +44,12 @@ class DisplayColor extends DisplayItem implements DisplayInterface
             return '';
 
         $result = '<img title="' . $this->_name . '"';
-        $result .= ' style="background:#' . $this->_nid->getPrimaryColor() . ';"';
+        $result .= $this->_styleCSS;
         $result .= ' alt="[C]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '"';
-        if ($this->_class != '')
-            $result .= ' class="' . $this->_class . '"';
+        if ($this->_classCSS != '')
+            $result .= ' class="' . $this->_classCSS . '"';
+        if ($this->_idCSS != '')
+            $result .= ' id="' . $this->_idCSS . '"';
         if ($this->_displayActions && $this->_displayJS)
             $result .= " onclick=\"display_menu('objectTitleMenu-" . $this->_actionsID . "');\" ";
         $result .= '/>';
@@ -57,11 +63,11 @@ class DisplayColor extends DisplayItem implements DisplayInterface
             $this->_nid = null;
         elseif ($nid->getID() != '0' && is_a($nid, 'Nebule\Library\Node') && $nid->checkPresent()) {
             $this->_nid = $nid;
-            $this->setName('');
+            $this->setName();
         }
     }
 
-    public function setName(string $name): void
+    public function setName(string $name = ''): void
     {
         if ($name != '')
             $this->_name = trim(filter_var($name, FILTER_SANITIZE_STRING));
@@ -69,7 +75,7 @@ class DisplayColor extends DisplayItem implements DisplayInterface
             $this->_name = $this->_nid->getFullName($this->_social);
     }
 
-    public function setSocial(string $social): void
+    public function setSocial(string $social = ''): void
     {
         if ($social == '')
         {
@@ -87,9 +93,22 @@ class DisplayColor extends DisplayItem implements DisplayInterface
             $this->_social = 'all';
     }
 
-    public function setClass(string $class): void
+    public function setClassCSS(string $class = ''): void
     {
-        $this->_class = trim(filter_var($class, FILTER_SANITIZE_STRING));
+        $this->_classCSS = trim(filter_var($class, FILTER_SANITIZE_STRING));
+    }
+
+    public function setIdCSS(string $id = ''): void
+    {
+        $this->_idCSS = trim(filter_var($id, FILTER_SANITIZE_STRING));
+    }
+
+    public function setStyleCSS(string $style = ''): void
+    {
+        $this->_styleCSS = ' style="background:#'
+            . $this->_nid->getPrimaryColor()
+            . trim(filter_var($style, FILTER_SANITIZE_STRING))
+            . ';"';
     }
 
     public function setEnableActions(bool $enable): void
@@ -97,17 +116,19 @@ class DisplayColor extends DisplayItem implements DisplayInterface
         $this->_displayActions = $enable;
     }
 
-    public function setActionsID(string $id)
+    public function setActionsID(string $id = '')
     {
         if ($id == '')
             $this->_actionsID = bin2hex($this->_nebuleInstance->getCryptoInstance()->getRandom(8, Crypto::RANDOM_PSEUDO));
         else
             $this->_actionsID = trim(filter_var($id, FILTER_SANITIZE_STRING));
     }
-    public function setEnableJS(bool $enable): void
+    public function setEnableJS(bool $enable = true): void
     {
         if ($this->_configurationInstance->getOptionAsBoolean('permitJavaScript'))
             $this->_displayJS = $enable;
+        else
+            $this->_displayJS = false;
     }
 
     public static function displayCSS(): void
