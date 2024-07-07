@@ -11,9 +11,9 @@ namespace Nebule\Library;
 interface DisplayInterface
 {
     public function __construct(Applications $applicationInstance);
-    public static function displayCSS(): void;
     public function getHTML(): string;
     public function display(): void;
+    public static function displayCSS(): void;
 }
 
 abstract class DisplayItem implements DisplayInterface
@@ -41,11 +41,18 @@ abstract class DisplayItem implements DisplayInterface
     protected function _init(): void { $this->setSocial(''); }
 
     public static function displayCSS(): void {}
-    public function getHTML(): string { return '';}
-    public function display(): void { echo $this->getHTML(); }
+    public function getHTML(): string {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        return '';
+    }
+    public function display(): void {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('display HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        echo $this->getHTML();
+    }
 
     public function setSocial(string $social = ''): void
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set social ' . $social, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($social == '')
         {
             $this->_social = 'all';
@@ -68,10 +75,11 @@ abstract class DisplayItemIconable extends DisplayItem
     protected $_icon = null;
     protected $_iconUpdate = true;
 
-    public function setIcon(?Node $oid, bool $update): void
+    public function setIcon(?Node $oid, bool $update = true): void
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($oid === null)
-            $this->_icon = null; // = disabled
+            $this->_icon = null;
         elseif ($oid->getID() != '0' && is_a($oid, 'Nebule\Library\Node') && $oid->checkPresent())
             $this->_icon = $oid;
 
@@ -80,6 +88,7 @@ abstract class DisplayItemIconable extends DisplayItem
 
     protected function _getNidIconHTML(?Node $nid, ?Node $icon = null): string
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($nid === null
             || $icon === null
             || !$icon->checkPresent()
@@ -95,6 +104,7 @@ abstract class DisplayItemIconable extends DisplayItem
 
     protected function _getNidDefaultIcon(?Node $rid): Node
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (is_a($rid, 'Nebule\Library\Node'))
             $oid = $rid::DEFAULT_ICON_RID;
         else
@@ -104,6 +114,7 @@ abstract class DisplayItemIconable extends DisplayItem
 
     protected function _getIconUpdate(?Node $nid): string
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_iconUpdate) {
             //$updateIcon = $nid->getUpdateNID(true, false, $this->_social); // FIXME TODO ERROR
             $updateIcon = '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256'; // FIXME
@@ -130,6 +141,7 @@ abstract class DisplayItemSizeable extends DisplayItemIconable
 
     public function setSize(string $size): void
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set size ' . $size, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch (strtolower($size)) {
             case self::SIZE_TINY:
                 $this->_sizeCSS = 'Tiny';
@@ -151,6 +163,7 @@ abstract class DisplayItemSizeable extends DisplayItemIconable
 
     public function setRatio(string $ratio): void
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Set ratio ' . $ratio, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch (strtolower($ratio)) {
             case self::RATIO_SQUARE:
                 $this->_ratioCSS = 'Square';

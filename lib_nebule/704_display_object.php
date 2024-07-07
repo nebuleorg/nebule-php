@@ -382,6 +382,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
 {
     private $_nid = null;
     private $_displayColor = true;
+    private $_displayIcon = false;
     private $_displayIconApp = false;
     private $_displayRefs = false;
     private $_displayName = true;
@@ -439,6 +440,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
 
     public function getHTML(): string
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_nid === null)
             return '';
 
@@ -466,21 +468,13 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         $contentDisplayColor = $colorInstance->getHTML();
 
         $iconInstance = new DisplayIcon($this->_applicationInstance);
-        if ($this->_icon !== null) {
+        if ($this->_displayIcon) {
             $iconInstance->setNID($this->_nid);
-            $colorInstance->setName($this->_name);
-            $colorInstance->setActionsID($ObjectActionsID);
-            $colorInstance->setEnableActions($this->_displayActions);
-            $colorInstance->setEnableJS($this->_displayJS);
-
-            $contentDisplayIcon = '<img title="' . $this->_name;
-            $contentDisplayIcon .= '" style="background:#' . $objectColor;
-            $contentDisplayIcon .= ';" alt="[I]" src="' . $this->_getObjectIconHTML($this->_nid, $this->_icon) . '" ';
-            if ($this->_displayActions
-                && $this->_displayJS
-            )
-                $contentDisplayIcon .= "onclick=\"display_menu('objectTitleMenu-" . $ObjectActionsID . "');\" ";
-            $contentDisplayIcon .= '/>';
+            $iconInstance->setName($this->_name);
+            $iconInstance->setActionsID($ObjectActionsID);
+            $iconInstance->setEnableActions($this->_displayActions);
+            $iconInstance->setEnableJS($this->_displayJS);
+            $iconInstance->setIcon($this->_icon);
         }
         $contentDisplayIcon = $iconInstance->getHTML();
 
@@ -745,7 +739,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
             $divTitleIconsOpen = '  <div class="objectTitleIcons">';
             $divTitleIconsClose = '</div>' . "\n";
             if ($this->_displayColor
-                || $this->_icon !== null
+                || $this->_displayIcon
                 || $this->_displayIconApp
             )
                 $titleIconsContent = $contentDisplayColor . $contentDisplayIcon;
@@ -753,7 +747,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
                 $padding = 0;
                 if ($this->_displayColor)
                     $padding += 1;
-                if ($this->_icon !== null)
+                if ($this->_displayIcon)
                     $padding += 1;
                 if ($this->_displayIconApp)
                     $padding += 1;
@@ -915,7 +909,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         }
 
         if (!$this->_displayColor
-            && $this->_icon === null
+            && !$this->_displayIcon
             && !$this->_displayIconApp
         )
             $this->_displayActions = false;
@@ -1134,68 +1128,74 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
 
     public function setNID(?Node $nid): void
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set nid ' . gettype($nid), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($nid === null)
             $this->_nid = null;
         elseif ($nid->getID() != '0' && is_a($nid, 'Nebule\Library\Node') && $nid->checkPresent()) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('set nid ' . $nid->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ce973fae');
             $this->_nid = $nid;
-            $this->setType('');
-            $this->setName('');
-            $this->_getDefaultIcon();
+            $this->setType();
+            $this->setName();
         }
     }
 
-    public function setEnableColor(bool $enable): void
+    public function setEnableColor(bool $enable = true): void
     {
         $this->_displayColor = $enable;
     }
 
-    public function setEnableIconApp(bool $enable): void
+    public function setEnableIcon(bool $enable = true): void
+    {
+        $this->_displayIcon = $enable;
+    }
+
+    public function setEnableIconApp(bool $enable = true): void
     {
         $this->_displayIconApp = $enable;
     }
 
-    public function setEnableName(bool $enable): void
+    public function setEnableName(bool $enable = true): void
     {
         $this->_displayName = $enable;
     }
 
-    public function setEnableNID(bool $enable): void
+    public function setEnableNID(bool $enable = true): void
     {
         $this->_displayNID = $enable;
     }
 
-    public function setEnableFlags(bool $enable): void
+    public function setEnableFlags(bool $enable = true): void
     {
         $this->_displayFlags = $enable;
     }
 
-    public function setEnableFlagEmotions(bool $enable): void
+    public function setEnableFlagEmotions(bool $enable = true): void
     {
         $this->_displayFlagEmotions = $enable;
     }
 
-    public function setEnableContent(bool $enable): void
+    public function setEnableContent(bool $enable = true): void
     {
         $this->_displayContent = $enable;
     }
 
-    public function setEnableActions(bool $enable): void
+    public function setEnableActions(bool $enable = true): void
     {
         $this->_displayActions = $enable;
     }
 
-    public function setEnableLink(bool $enable): void
+    public function setEnableLink(bool $enable = true): void
     {
         $this->_displayLink = $enable;
     }
 
-    public function setEnableJS(bool $enable): void
+    public function setEnableJS(bool $enable = true): void
     {
         if ($this->_configurationInstance->getOptionAsBoolean('permitJavaScript'))
             $this->_displayJS = $enable;
     }
     
-    public function setType(string $type): void
+    public function setType(string $type = ''): void
     {
         if ($type == '')
             $this->_type = $this->_nid->getType($this->_social);
@@ -1203,7 +1203,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
             $this->_type = $type;
     }
     
-    public function setName(string $name): void
+    public function setName(string $name = ''): void
     {
         if ($name != '')
             $this->_name = trim(filter_var($name, FILTER_SANITIZE_STRING));
@@ -1227,7 +1227,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         }
     }
 
-    public function setEnableRefs(bool $enable): void
+    public function setEnableRefs(bool $enable = true): void
     {
         $this->_displayRefs = $enable;
     }
@@ -1237,7 +1237,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         $this->_refs = $refs;
     }
 
-    public function setEnableLink2Refs(bool $enable): void
+    public function setEnableLink2Refs(bool $enable = true): void
     {
         $this->_displayLink2Refs = $enable;
     }
@@ -1257,7 +1257,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         }
     }
 
-    public function setFlagProtection(bool $enable): void
+    public function setFlagProtection(bool $enable = true): void
     {
         $this->_flagProtection = $enable;
         $this->_setFlagProtection();
@@ -1287,7 +1287,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         $this->_flagProtectionLink = trim(filter_var($link, FILTER_SANITIZE_URL));
     }
 
-    public function setEnableFlagObfuscate(bool $enable): void
+    public function setEnableFlagObfuscate(bool $enable = true): void
     {
         if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
             $this->_displayFlagObfuscate = $enable;
@@ -1297,7 +1297,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         }
     }
 
-    public function setFlagObfuscate(bool $enable): void
+    public function setFlagObfuscate(bool $enable = true): void
     {
         $this->_flagObfuscate = $enable;
         $this->_setFlagObfuscate();
@@ -1327,7 +1327,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         $this->_flagObfuscateLink = trim(filter_var($link, FILTER_SANITIZE_URL));
     }
 
-    public function setEnableFlagUnlocked(bool $enable): void
+    public function setEnableFlagUnlocked(bool $enable = true): void
     {
         $this->_displayFlagUnlocked = $enable;
 
@@ -1366,12 +1366,12 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         $this->_flagUnlockedLink = trim(filter_var($link, FILTER_SANITIZE_URL));
     }
 
-    public function setEnableFlagActivated(bool $enable): void
+    public function setEnableFlagActivated(bool $enable = true): void
     {
         $this->_displayFlagActivated = $enable;
     }
 
-    public function setActivated(bool $enable): void
+    public function setActivated(bool $enable = true): void
     {
         $this->_flagActivated = $enable;
         $this->_setActivated();
@@ -1390,7 +1390,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         $this->_flagActivatedText = trim(filter_var($text, FILTER_SANITIZE_STRING));
     }
 
-    public function setEnableFlagState(bool $enable): void
+    public function setEnableFlagState(bool $enable = true): void
     {
         $this->_displayFlagState = $enable;
         $this->_setFlagState();
@@ -1434,7 +1434,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         $this->_flagStateText = trim(filter_var($text, FILTER_SANITIZE_STRING));
     }
 
-    public function setEnableStatus(bool $enable): void
+    public function setEnableStatus(bool $enable = true): void
     {
         $this->_displayStatus = $enable;
     }
@@ -1463,7 +1463,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
             $this->_flagTargetObject = $nid;
     }
 
-    public function setEnableSelfHook(bool $enable): void
+    public function setEnableSelfHook(bool $enable = true): void
     {
         $this->_displaySelfHook = $enable;
         if ($enable)
@@ -1497,7 +1497,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         $this->_selfHookName = trim(filter_var($name, FILTER_SANITIZE_STRING));
     }
 
-    public function setEnableTypeHook(bool $enable): void
+    public function setEnableTypeHook(bool $enable = true): void
     {
         $this->_displayTypeHook = $enable;
         if ($enable)
@@ -1535,15 +1535,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
     {
         $this->_selfHookList = $list;
     }
-    private function _getDefaultIcon(): void
-    {
-        if (is_a($this->_nid, 'Nebule\Library\Node'))
-            $oid = $this->_nid::DEFAULT_ICON_RID;
-        else
-            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Node::DEFAULT_ICON_RID));
-        $this->_icon = $this->_nebuleInstance->newObject($oid);
-        // TODO add get update of object.
-    }
+
     public static function displayCSS(): void
     {
         ?>

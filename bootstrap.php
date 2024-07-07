@@ -115,10 +115,11 @@ function log_initDebugFile(): void
 {
     global $metrologyStartTime, $permitLogsOnDebugFile;
 
+    if (file_exists(LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE))
+        unlink(LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE);
+
     if (lib_getOption('permitLogsOnDebugFile'))
     {
-        if (file_exists(LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE))
-            unlink(LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE);
         file_put_contents(LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE, 'LogT=' . sprintf('%01.6f', microtime(true) - $metrologyStartTime) . ' LogL="info" LogI="76941959" LogM="start ' . BOOTSTRAP_NAME . "\"\n");
         syslog(LOG_INFO, 'LogT=0 LogT0=' . $metrologyStartTime . ' LogL="info" LogI="50615f80" LogM="create debug file ' . LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE . '"');
         $permitLogsOnDebugFile = true;

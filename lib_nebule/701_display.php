@@ -3152,13 +3152,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     private function _prepareObjectIcon(Node $nid, string $icon, string $class = ''): string
     {
-        /*$color = $nid->getPrimaryColor();
-        $title = $nid->getFullName('all');
-        $image = $this->prepareIcon($icon);
-        if ($class != '')
-            $class = 'class="' . $class . '" ';
-        return '<img title="' . $title . '" style="background:#' . $color . ';" alt="[]" src="' . $image . '" ' . $class . '/>';*/
-
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('prepare object icon ' . $nid->getID(), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $iconInstance = $this->_nebuleInstance->getCacheInstance()->newNode($icon);
         $instance = new DisplayIcon($this->_applicationInstance);
         $instance->setNID($nid);
@@ -3182,13 +3176,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     private function _prepareObjectColor(Node $nid, string $class = '', string $title = ''): string
     {
-        /*$color = $nid->getPrimaryColor();
-        if ($title == '')
-            $title = $nid->getFullName('all');
-        if ($class != '')
-            $class = 'class="' . $class . '" ';
-        return '<img title="' . $title . '" style="background:#' . $color . ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" ' . $class . '/>';*/
-
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('prepare object color ' . $nid->getID(), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new DisplayColor($this->_applicationInstance);
         $instance->setNID($nid);
         $instance->setName($title);
@@ -3598,8 +3586,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $instance->setAppShortName($param['objectAppShortName']);
         if (isset($param['icon']))
             $instance->setIcon($param['icon']);
-        if (!isset($param['enableDisplayIcon']) || $param['enableDisplayIcon'] === false)
-            $instance->setIcon(null);
+        if (isset($param['enableDisplayIcon']))
+            $instance->setEnableIcon($param['enableDisplayIcon']);
+        else
+            $instance->setEnableIcon(false);
         if (isset($param['objectRefs']))
             $instance->setRefs($param['objectRefs']);
         if (isset($param['link2Object']))
