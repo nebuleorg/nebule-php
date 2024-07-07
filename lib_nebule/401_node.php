@@ -25,7 +25,8 @@ namespace Nebule\Library;
  */
 class Node implements nodeInterface
 {
-    const CRYPTO_SESSION_KEY_SIZE = 117; // @todo utilisé par setProtected(), à refaire pour le cas général.
+    const CRYPTO_SESSION_KEY_SIZE = 117; // FIXME utilisé par setProtected(), à refaire pour le cas général.
+    const DEFAULT_ICON_RID = '6e6562756c652f6f626a657400000000000000000000000000000000000000000000.none.272';
 
     /**
      * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.

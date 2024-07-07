@@ -18,24 +18,22 @@ namespace Nebule\Library;
  */
 class DisplayColor extends DisplayItem implements DisplayInterface
 {
-    const DEFAULT_ICON_ALPHA_COLOR = '87b260416aa0f50736d3ca51bcb6aae3eff373bf471d5662883b8b6797e73e85.sha2.256';
+    const ICON_ALPHA_COLOR_OID = '87b260416aa0f50736d3ca51bcb6aae3eff373bf471d5662883b8b6797e73e85.sha2.256';
 
     private $_nid = null;
-    private $_social = '';
     private $_name = '';
     private $_classCSS = '';
     private $_idCSS = '';
     private $_styleCSS = '';
     private $_displayActions = false;
-    private $_displayJS = true;
     private $_actionsID = '';
+    private $_displayJS = true;
 
     protected function _init(): void
     {
         $this->setSocial();
         $this->setEnableJS();
         $this->setActionsID('');
-        $this->setStyleCSS();
     }
 
     public function getHTML(): string
@@ -45,7 +43,7 @@ class DisplayColor extends DisplayItem implements DisplayInterface
 
         $result = '<img title="' . $this->_name . '"';
         $result .= $this->_styleCSS;
-        $result .= ' alt="[C]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '"';
+        $result .= ' alt="[C]" src="o/' . self::ICON_ALPHA_COLOR_OID . '"';
         if ($this->_classCSS != '')
             $result .= ' class="' . $this->_classCSS . '"';
         if ($this->_idCSS != '')
@@ -64,6 +62,7 @@ class DisplayColor extends DisplayItem implements DisplayInterface
         elseif ($nid->getID() != '0' && is_a($nid, 'Nebule\Library\Node') && $nid->checkPresent()) {
             $this->_nid = $nid;
             $this->setName();
+            $this->setStyleCSS();
         }
     }
 
@@ -73,24 +72,6 @@ class DisplayColor extends DisplayItem implements DisplayInterface
             $this->_name = trim(filter_var($name, FILTER_SANITIZE_STRING));
         else
             $this->_name = $this->_nid->getFullName($this->_social);
-    }
-
-    public function setSocial(string $social = ''): void
-    {
-        if ($social == '')
-        {
-            $this->_social = 'all';
-            return;
-        }
-        $socialList = $this->_nebuleInstance->getSocialInstance()->getSocialNames();
-        foreach ($socialList as $s) {
-            if ($social == $s) {
-                $this->_social = $social;
-                break;
-            }
-        }
-        if ($this->_social == '')
-            $this->_social = 'all';
     }
 
     public function setClassCSS(string $class = ''): void
@@ -122,7 +103,11 @@ class DisplayColor extends DisplayItem implements DisplayInterface
             $this->_actionsID = bin2hex($this->_nebuleInstance->getCryptoInstance()->getRandom(8, Crypto::RANDOM_PSEUDO));
         else
             $this->_actionsID = trim(filter_var($id, FILTER_SANITIZE_STRING));
+
+        if ($this->_actionsID != '')
+            $this->_displayActions = true;
     }
+
     public function setEnableJS(bool $enable = true): void
     {
         if ($this->_configurationInstance->getOptionAsBoolean('permitJavaScript'))

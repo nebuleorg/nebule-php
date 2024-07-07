@@ -401,7 +401,6 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
     private $_displayJS = true;
     private $_displaySelfHook = true;
     private $_displayTypeHook = true;
-    private $_social = '';
     private $_type = '';
     private $_name = '';
     private $_link = '';
@@ -433,9 +432,9 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
 
     protected function _init(): void
     {
+        $this->setSocial('');
         $this->setSize(self::SIZE_MEDIUM);
         $this->setRatio(self::RATIO_SHORT);
-        $this->setSocial('');
     }
 
     public function getHTML(): string
@@ -466,8 +465,14 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         }
         $contentDisplayColor = $colorInstance->getHTML();
 
-        $contentDisplayIcon = '';
+        $iconInstance = new DisplayIcon($this->_applicationInstance);
         if ($this->_icon !== null) {
+            $iconInstance->setNID($this->_nid);
+            $colorInstance->setName($this->_name);
+            $colorInstance->setActionsID($ObjectActionsID);
+            $colorInstance->setEnableActions($this->_displayActions);
+            $colorInstance->setEnableJS($this->_displayJS);
+
             $contentDisplayIcon = '<img title="' . $this->_name;
             $contentDisplayIcon .= '" style="background:#' . $objectColor;
             $contentDisplayIcon .= ';" alt="[I]" src="' . $this->_getObjectIconHTML($this->_nid, $this->_icon) . '" ';
@@ -477,6 +482,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
                 $contentDisplayIcon .= "onclick=\"display_menu('objectTitleMenu-" . $ObjectActionsID . "');\" ";
             $contentDisplayIcon .= '/>';
         }
+        $contentDisplayIcon = $iconInstance->getHTML();
 
         if ($this->_displayIconApp) {
             $contentDisplayIcon = '<div class="objectTitleIconsApp" style="background:#' . $objectColor . ';">';
@@ -939,33 +945,19 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
      * Une mise à jour éventuelle de l'icône est recherchée.
      * Si l'objet de l'icône est présent, génère un chemin direct pour améliorer les performances.
      *
-     * @param Node      $object
+     * @param Node      $nid
      * @param Node|null $icon
      * @return string
      */
-    private function _getObjectIconHTML(Node $object, ?Node $icon = null): string
+    private function _getObjectIconHTML(Node $nid, ?Node $icon = null): string
     {
         if ($icon === null
             || !$icon->checkPresent()
         ) {
-            if (is_a($object, 'Nebule\Library\Entity'))
-                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newEntity(Displays::REFERENCE_ICON_ENTITY));
-            elseif (is_a($object, 'Nebule\Library\Conversation'))
-                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newConversation(Displays::REFERENCE_ICON_CONVERSATION));
-            elseif (is_a($object, 'Nebule\Library\Group'))
-                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newGroup(Displays::REFERENCE_ICON_GROUP));
-            elseif (is_a($object, 'Nebule\Library\Wallet'))
-                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
-            elseif (is_a($object, 'Nebule\Library\Transaction'))
-                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
-            elseif (is_a($object, 'Nebule\Library\Token'))
-                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
-            elseif (is_a($object, 'Nebule\Library\TokenPool'))
-                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
-            elseif (is_a($object, 'Nebule\Library\Currency'))
-                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
+            if (is_a($nid, 'Nebule\Library\Node'))
+                $oid = $nid::DEFAULT_ICON_RID;
             else
-                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT));
+                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Node::DEFAULT_ICON_RID));
             $icon = $this->_nebuleInstance->newObject($oid);
         }
 
@@ -1201,24 +1193,6 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
     {
         if ($this->_configurationInstance->getOptionAsBoolean('permitJavaScript'))
             $this->_displayJS = $enable;
-    }
-
-    public function setSocial(string $social): void
-    {
-        if ($social == '')
-        {
-            $this->_social = 'all';
-            return;
-        }
-        $socialList = $this->_nebuleInstance->getSocialInstance()->getSocialNames();
-        foreach ($socialList as $s) {
-            if ($social == $s) {
-                $this->_social = $social;
-                break;
-            }
-        }
-        if ($this->_social == '')
-            $this->_social = 'all';
     }
     
     public function setType(string $type): void
@@ -1563,24 +1537,10 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
     }
     private function _getDefaultIcon(): void
     {
-        if (is_a($this->_nid, 'Nebule\Library\Entity'))
-            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_ENTITY));
-        elseif (is_a($this->_nid, 'Nebule\Library\Conversation'))
-            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_CONVERSATION));
-        elseif (is_a($this->_nid, 'Nebule\Library\Group'))
-            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_GROUP));
-        elseif (is_a($this->_nid, 'Nebule\Library\Wallet'))
-            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
-        elseif (is_a($this->_nid, 'Nebule\Library\Transaction'))
-            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
-        elseif (is_a($this->_nid, 'Nebule\Library\Token'))
-            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
-        elseif (is_a($this->_nid, 'Nebule\Library\TokenPool'))
-            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
-        elseif (is_a($this->_nid, 'Nebule\Library\Currency'))
-            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT)); // TODO
+        if (is_a($this->_nid, 'Nebule\Library\Node'))
+            $oid = $this->_nid::DEFAULT_ICON_RID;
         else
-            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_OBJECT));
+            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Node::DEFAULT_ICON_RID));
         $this->_icon = $this->_nebuleInstance->newObject($oid);
         // TODO add get update of object.
     }

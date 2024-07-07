@@ -143,14 +143,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     const REFERENCE_ICON_LINK_LS = '6e6562756c652f6c69656e2f6c730000000000000000000000000000000000000000.none.272';
     const REFERENCE_ICON_LINK_LU = '6e6562756c652f6c69656e2f6c750000000000000000000000000000000000000000.none.272';
     const REFERENCE_ICON_LINK_LX = '6e6562756c652f6c69656e2f6c780000000000000000000000000000000000000000.none.272';
-    const REFERENCE_ICON_OBJECT = '6e6562756c652f6f626a657400000000000000000000000000000000000000000000.none.272';
-    const REFERENCE_ICON_ENTITY = '6e6562756c652f6f626a65742f656e74697465000000000000000000000000000000.none.272';
-    const REFERENCE_ICON_GROUP = '6e6562756c652f6f626a65742f67726f757065000000000000000000000000000000.none.272';
-    const REFERENCE_ICON_CONVERSATION = '6e6562756c652f6f626a65742f636f6e766572736174696f6e000000000000000000.none.272';
-    const REFERENCE_ICON_INFORMATION = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272';
-    const REFERENCE_ICON_OK = '69636f6e206f6b000000000000000000000000000000000000000000000000000000.none.272';
-    const REFERENCE_ICON_WARNING = '69636f6e207761726e696e6700000000000000000000000000000000000000000000.none.272';
-    const REFERENCE_ICON_ERROR = '69636f6e206572726f72000000000000000000000000000000000000000000000000.none.272';
 
     // Références des icônes des émotions.
     const REFERENCE_ICON_EMOTION_JOIE0 = '6f6a6569656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000000000000.none.272';
@@ -5453,7 +5445,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if (!isset($dispHook['hookType']))
             $dispHook['hookType'] = '';
         if (!isset($dispHook['icon']))
-            $dispHook['icon'] = Displays::REFERENCE_ICON_OBJECT;
+            $dispHook['icon'] = Node::DEFAULT_ICON_RID;
         if (!isset($dispHook['name']))
             $dispHook['name'] = '';
         if (!isset($dispHook['moduleName']))
@@ -6197,11 +6189,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         ) {
             if ($instance->getSigned()) {
                 $contantDisplayValid .= '<img title="OK" ';
-                $contantDisplayValid .= 'alt="[O]" src="o/' . $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_OK)) . '" ';
+                $contantDisplayValid .= 'alt="[O]" src="o/' . $this->_getImageByReference($this->_nebuleInstance->newObject(DisplayInformation::ICON_OK_RID)) . '" ';
                 $contantDisplayValid .= '/>';
             } else {
                 $contantDisplayValid .= '<img title="ERROR" ';
-                $contantDisplayValid .= 'alt="[E]" src="o/' . $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_ERROR)) . '" ';
+                $contantDisplayValid .= 'alt="[E]" src="o/' . $this->_getImageByReference($this->_nebuleInstance->newObject(DisplayInformation::ICON_ERROR_RID)) . '" ';
                 $contantDisplayValid .= '/>';
             }
 
@@ -6266,7 +6258,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $contantDisplayIcon .= '/>';
 
             $contantDisplayValid .= '<img title="ERROR" ';
-            $contantDisplayValid .= 'alt="[E]" src="o/' . $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_ERROR)) . '" ';
+            $contantDisplayValid .= 'alt="[E]" src="o/' . $this->_getImageByReference($this->_nebuleInstance->newObject(DisplayInformation::ICON_ERROR_RID)) . '" ';
             $contantDisplayValid .= '/>';
         }
 

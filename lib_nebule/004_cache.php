@@ -320,9 +320,9 @@ class Cache
      *
      * @param string $nid
      * @param string $type
-     * @return nodeInterface
+     * @return node
      */
-    public function newNode(string $nid, string $type = self::TYPE_NODE): nodeInterface
+    public function newNode(string $nid, string $type = self::TYPE_NODE): node
     {
         if ($nid == '')
             $nid = '0';

@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Nebule\Application\Klicty;
 use DateTime;
+use Nebule\Library\DisplayInformation;
 use Nebule\Library\nebule;
 use Nebule\Library\Metrology;
 use Nebule\Library\Entity;
@@ -1388,7 +1389,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             // Affiche le lien de verrouillage sans les effets.
                             $this->displayHypertextLink(
                                 $this->convertUpdateImage(
-                                    $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_WARNING), 'Etat déverrouillé, verrouiller ?',
+                                    $this->_nebuleInstance->newObject(DisplayInformation::ICON_WARN_RID), 'Etat déverrouillé, verrouiller ?',
                                     '',
                                     '',
                                     'name="ico_lock"'),
@@ -1399,7 +1400,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             // Affiche de lien de déverrouillage sans les effets.
                             $this->displayHypertextLink(
                                 $this->convertUpdateImage(
-                                    $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_WARNING), 'Etat verrouillé, déverrouiller ?',
+                                    $this->_nebuleInstance->newObject(DisplayInformation::ICON_WARN_RID), 'Etat verrouillé, déverrouiller ?',
                                     '',
                                     '',
                                     'name="ico_lock"'),
@@ -1410,7 +1411,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     else {
                         $this->displayHypertextLink(
                             $this->convertUpdateImage(
-                                $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_WARNING),
+                                $this->_nebuleInstance->newObject(DisplayInformation::ICON_WARN_RID),
                                 'WARNING'),
                             '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
                             . '&' . References::COMMAND_SWITCH_TO_ENTITY);
@@ -1419,7 +1420,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 else {
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
-                            $this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_ERROR),
+                            $this->_nebuleInstance->newObject(DisplayInformation::ICON_ERROR_RID),
                             'ERROR'),
                         '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
                         . '&' . References::COMMAND_FLUSH);

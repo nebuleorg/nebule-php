@@ -19,20 +19,19 @@ namespace Nebule\Library;
 class DisplayIcon extends DisplayItemIconable implements DisplayInterface
 {
     private $_nid = null;
-    private $_social = '';
     private $_name = '';
     private $_classCSS = '';
     private $_idCSS = '';
     private $_styleCSS = '';
     private $_type = '';
     private $_displayActions = false;
+    private $_actionsID = '';
     private $_displayJS = true;
 
     protected function _init(): void
     {
         $this->setSocial();
         $this->setEnableJS();
-        $this->setStyleCSS();
     }
 
     public function getHTML(): string
@@ -45,7 +44,7 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
 
         $result = '<img title="' . $this->_name . '"';
         $result .= $this->_styleCSS;
-        $result .= ' alt="[I]" src="o/' . $this->_getObjectIconHTML($this->_nid, $this->_icon) . '"';
+        $result .= ' alt="[I]" src="o/' . $this->_getNidIconHTML($this->_nid, $this->_icon) . '"';
         if ($this->_classCSS != '')
             $result .= ' class="' . $this->_classCSS . '"';
         if ($this->_idCSS != '')
@@ -65,6 +64,7 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
             $this->_nid = $nid;
             $this->setType();
             $this->setName();
+            $this->setStyleCSS();
         }
     }
 
@@ -82,24 +82,6 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
             $this->_name = trim(filter_var($name, FILTER_SANITIZE_STRING));
         else
             $this->_name = $this->_nid->getFullName($this->_social);
-    }
-
-    public function setSocial(string $social = ''): void
-    {
-        if ($social == '')
-        {
-            $this->_social = 'all';
-            return;
-        }
-        $socialList = $this->_nebuleInstance->getSocialInstance()->getSocialNames();
-        foreach ($socialList as $s) {
-            if ($social == $s) {
-                $this->_social = $social;
-                break;
-            }
-        }
-        if ($this->_social == '')
-            $this->_social = 'all';
     }
 
     public function setClassCSS(string $class = ''): void
@@ -123,6 +105,17 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
     public function setEnableActions(bool $enable = true): void
     {
         $this->_displayActions = $enable;
+    }
+
+    public function setActionsID(string $id = '')
+    {
+        if ($id == '')
+            $this->_actionsID = bin2hex($this->_nebuleInstance->getCryptoInstance()->getRandom(8, Crypto::RANDOM_PSEUDO));
+        else
+            $this->_actionsID = trim(filter_var($id, FILTER_SANITIZE_STRING));
+
+        if ($this->_actionsID != '')
+            $this->_displayActions = true;
     }
 
     public function setEnableJS(bool $enable = true): void

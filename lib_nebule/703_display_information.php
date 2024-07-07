@@ -77,13 +77,19 @@ namespace Nebule\Library;
  */
 class DisplayInformation extends DisplayItemSizeable implements DisplayInterface
 {
-    const TYPE_MESSAGE = 'message';
-    const TYPE_INFORMATION = 'information';
-    const TYPE_OK = 'ok';
-    const TYPE_WARN = 'warn';
-    const TYPE_ERROR = 'error';
-    const TYPE_GO = 'go';
-    const TYPE_BACK = 'back';
+    public const TYPE_MESSAGE = 'message';
+    public const TYPE_INFORMATION = 'information';
+    public const TYPE_OK = 'ok';
+    public const TYPE_WARN = 'warn';
+    public const TYPE_ERROR = 'error';
+    public const TYPE_GO = 'go';
+    public const TYPE_BACK = 'back';
+    public const ICON_INFORMATION_RID = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272';
+    public const ICON_OK_RID = '69636f6e206f6b000000000000000000000000000000000000000000000000000000.none.272';
+    public const ICON_WARN_RID = '69636f6e207761726e696e6700000000000000000000000000000000000000000000.none.272';
+    public const ICON_ERROR_RID = '69636f6e206572726f72000000000000000000000000000000000000000000000000.none.272';
+    public const ICON_GO_RID = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272'; // FIXME
+    public const ICON_BACK_RID = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272'; // FIXME
 
     private $_message = '';
     private $_displayAlone = false;

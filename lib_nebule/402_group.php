@@ -30,6 +30,7 @@ class Group extends Node implements nodeInterface
 {
     // Suffixe d'identifiant de nouveaux groupes.
     const DEFAULT_SUFFIX_NEW_GROUP = '006e6562756c652f6f626a65742f67726f757065';
+    const DEFAULT_ICON_RID = '6e6562756c652f6f626a65742f67726f757065000000000000000000000000000000.none.272';
 
     /**
      * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.

@@ -29,6 +29,7 @@ class Entity extends Node implements nodeInterface
     const ENTITY_TYPE = 'application/x-pem-file';
     const ENTITY_PUBLIC_HEADER = '-----BEGIN PUBLIC KEY-----';
     const ENTITY_PRIVATE_HEADER = '-----BEGIN ENCRYPTED PRIVATE KEY-----';
+    const DEFAULT_ICON_RID = '6e6562756c652f6f626a65742f656e74697465000000000000000000000000000000.none.272';
 
     /**
      * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
