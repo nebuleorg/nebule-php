@@ -397,6 +397,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
     private $_displayStatus = false;
     private $_displayContent = false;
     private $_displayActions = false;
+    private $_actionsID = '';
     private $_displayLink = true;
     private $_displayLink2Refs = true;
     private $_displayJS = true;
@@ -436,6 +437,8 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         $this->setSocial('');
         $this->setSize(self::SIZE_MEDIUM);
         $this->setRatio(self::RATIO_SHORT);
+        $this->setEnableJS();
+        $this->setActionsID();
     }
 
     public function getHTML(): string
@@ -449,40 +452,8 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         // FIXME
 
         $this->_solveConflicts();
-        
-        // Prépare les contenus.
-        $objectColor = $this->_nid->getPrimaryColor();
-        $ObjectActionsID = '0';
-        if ($this->_displayActions
-            && $this->_displayJS
-        )
-            $ObjectActionsID = bin2hex($this->_nebuleInstance->getCryptoInstance()->getRandom(8, Crypto::RANDOM_PSEUDO));
-        $colorInstance = new DisplayColor($this->_applicationInstance);
-        if ($this->_displayColor) {
-            $colorInstance->setNID($this->_nid);
-            $colorInstance->setName($this->_name);
-            $colorInstance->setActionsID($ObjectActionsID);
-            $colorInstance->setEnableActions($this->_displayActions);
-            $colorInstance->setEnableJS($this->_displayJS);
-        }
-        $contentDisplayColor = $colorInstance->getHTML();
 
-        $iconInstance = new DisplayIcon($this->_applicationInstance);
-        if ($this->_displayIcon) {
-            $iconInstance->setNID($this->_nid);
-            $iconInstance->setName($this->_name);
-            $iconInstance->setActionsID($ObjectActionsID);
-            $iconInstance->setEnableActions($this->_displayActions);
-            $iconInstance->setEnableJS($this->_displayJS);
-            $iconInstance->setIcon($this->_icon);
-        }
-        $contentDisplayIcon = $iconInstance->getHTML();
-
-        if ($this->_displayIconApp) {
-            $contentDisplayIcon = '<div class="objectTitleIconsApp" style="background:#' . $objectColor . ';">';
-            $contentDisplayIcon .= '<div><span class="objectTitleIconsAppShortname">' . $this->_appShortname . '</span><br /><span class="objectTitleIconsAppTitle">' . $this->_name . '</span></div>';
-            $contentDisplayIcon .= '</div>';
-        }
+        $titleMenuIcons = $this->_getObjectColorHTML() . $this->_getObjectIconHTML();
 
         $titleLinkOpenImg = '';
         $titleLinkOpenName = '';
@@ -660,12 +631,11 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
             }
 
             if ($this->_displayJS) {
-                $divTitleMenuOpen = '  <div class="objectTitleMenuContentLayout" id="objectTitleMenu-' . $ObjectActionsID . '" '
-                    . "onclick=\"display_hide('objectTitleMenu-" . $ObjectActionsID . "');\" >\n";
+                $divTitleMenuOpen = '  <div class="objectTitleMenuContentLayout" id="objectTitleMenu-' . $this->_actionsID . '" '
+                    . "onclick=\"display_hide('objectTitleMenu-" . $this->_actionsID . "');\" >\n";
                 $divTitleMenuOpen .= '   <div class="objectTitleMenuContent">' . "\n";
                 $divTitleMenuTitleOpen = '    <div class="objectTitleMedium objectTitleMediumLong">' . "\n";
                 $divTitleMenuIconsOpen = '    <div class="objectTitleIcons">' . "\n";
-                $titleMenuIcons = $contentDisplayColor . $contentDisplayIcon . "\n";
                 $divTitleMenuIconsClose = '    </div>' . "\n";
                 $divTitleMenuTitleClose = '    </div>' . "\n";
                 $divTitleMenuContentOpen = '    <div class="objectMenuContent">' . "\n";
@@ -730,7 +700,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         $divObjectClose = '';
         $objectContent = '';
         if ($this->_sizeCSS == 'tiny')
-            $result = $titleLinkOpenName . '<span style="font-size:1em" class="objectTitleIconsInline">' . $contentDisplayColor . $contentDisplayIcon . '</span>' . $this->_name . $titleLinkCloseName;
+            $result = $titleLinkOpenName . '<span style="font-size:1em" class="objectTitleIconsInline">' . $titleMenuIcons . '</span>' . $this->_name . $titleLinkCloseName;
         else {
             $divDisplayOpen = '<div class="layoutObject">' . "\n";
             $divDisplayClose = '</div>' . "\n";
@@ -738,11 +708,6 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
             $divTitleClose = ' </div>' . "\n";
             $divTitleIconsOpen = '  <div class="objectTitleIcons">';
             $divTitleIconsClose = '</div>' . "\n";
-            if ($this->_displayColor
-                || $this->_displayIcon
-                || $this->_displayIconApp
-            )
-                $titleIconsContent = $contentDisplayColor . $contentDisplayIcon;
             if ($this->_displayName) {
                 $padding = 0;
                 if ($this->_displayColor)
@@ -824,7 +789,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
                 if ($this->_displayStatus)
                     $titleStatusContent = $this->_status;
             }
-            $titleContent = $titleLinkOpenImg . "\n" . $divTitleIconsOpen . $titleIconsContent . $divTitleIconsClose . $titleLinkCloseImg . "\n";
+            $titleContent = $titleLinkOpenImg . "\n" . $divTitleIconsOpen . $titleMenuIcons . $divTitleIconsClose . $titleLinkCloseImg . "\n";
             $titleContent .= $divTitleTextOpen;
             $titleContent .= $divTitleRefsOpen . $titleRefsContent . $divTitleRefsClose;
             $titleContent .= $divTitleNameOpen . $titleLinkOpenName . $titleNameContent . $titleLinkCloseName . $divTitleNameClose;
@@ -838,7 +803,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
             ) {
                 $titleContent .= $divTitleMenuOpen;
                 $titleContent .= $divTitleMenuTitleOpen;
-                $titleContent .= $divTitleMenuIconsOpen . $titleMenuIcons . $divTitleMenuIconsClose;
+                $titleContent .= $divTitleMenuIconsOpen . $titleMenuIcons . "\n" . $divTitleMenuIconsClose;
                 $titleContent .= $divTitleTextOpen;
                 $titleContent .= $divTitleRefsOpen . $titleRefsContent . $divTitleRefsClose;
                 $titleContent .= $divTitleNameOpen . $titleLinkOpenName . $titleNameContent . $titleLinkCloseName . $divTitleNameClose;
@@ -931,36 +896,43 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
             $this->_displayNID = false;
     }
 
-    /**
-     * Pour la fonction getDisplayObject().
-     * Prépare l'icône de l'objet.
-     * Si une icône est imposée, elle est utilisée.
-     * Sinon fait une recherche par référence en fonction du type de l'objet.
-     * Une mise à jour éventuelle de l'icône est recherchée.
-     * Si l'objet de l'icône est présent, génère un chemin direct pour améliorer les performances.
-     *
-     * @param Node      $nid
-     * @param Node|null $icon
-     * @return string
-     */
-    private function _getObjectIconHTML(Node $nid, ?Node $icon = null): string
+    private function _getObjectColorHTML(): string
     {
-        if ($icon === null
-            || !$icon->checkPresent()
-        ) {
-            if (is_a($nid, 'Nebule\Library\Node'))
-                $oid = $nid::DEFAULT_ICON_RID;
-            else
-                $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Node::DEFAULT_ICON_RID));
-            $icon = $this->_nebuleInstance->newObject($oid);
+        if (!$this->_displayColor)
+            return '';
+
+        $colorInstance = new DisplayColor($this->_applicationInstance);
+        $colorInstance->setNID($this->_nid);
+        if ($this->_name != '')
+            $colorInstance->setName($this->_name);
+        $colorInstance->setActionsID($this->_actionsID);
+        $colorInstance->setEnableActions($this->_displayActions);
+        $colorInstance->setEnableJS($this->_displayJS);
+        return $colorInstance->getHTML();
+    }
+
+    private function _getObjectIconHTML(): string
+    {
+        if (!$this->_displayIcon)
+            return '';
+
+        if ($this->_displayIconApp) {
+            $iconInstance = new DisplayIconApplication($this->_applicationInstance);
+            $iconInstance->setNID($this->_nid);
+            if ($this->_appShortname != '')
+                $iconInstance->setShortName($this->_appShortname);
         }
-
-        $updateIcon = $this->_displayInstance->getImageUpdate($icon); // FIXME TODO ERROR
-        $updateIcon = '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256'; // FIXME
-
-        if ($this->_nebuleInstance->getIoInstance()->checkObjectPresent($updateIcon))
-            return nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $updateIcon;
-        return '?' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '=' . $updateIcon;
+        else {
+            $iconInstance = new DisplayIcon($this->_applicationInstance);
+            $iconInstance->setNID($this->_nid);
+            $iconInstance->setIcon($this->_icon);
+        }
+        if ($this->_name != '')
+            $iconInstance->setName($this->_name);
+        $iconInstance->setActionsID($this->_actionsID);
+        $iconInstance->setEnableActions($this->_displayActions);
+        $iconInstance->setEnableJS($this->_displayJS);
+        return $iconInstance->getHTML();
     }
 
     /**
@@ -1179,9 +1151,22 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         $this->_displayContent = $enable;
     }
 
-    public function setEnableActions(bool $enable = true): void
+    public function setEnableActions(bool $enable = true): void // TODO rétrocompatibilité, en double de enableJS, à supprimer.
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set enable actions ' . (string)$enable, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayActions = $enable;
+    }
+
+    public function setActionsID(string $id = '')
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set actions id ' . $id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($id == '')
+            $this->_actionsID = bin2hex($this->_nebuleInstance->getCryptoInstance()->getRandom(8, Crypto::RANDOM_PSEUDO));
+        else
+            $this->_actionsID = trim(filter_var($id, FILTER_SANITIZE_STRING));
+
+        if ($this->_actionsID != '')
+            $this->_displayActions = true;
     }
 
     public function setEnableLink(bool $enable = true): void
@@ -1191,8 +1176,11 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
 
     public function setEnableJS(bool $enable = true): void
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set enable JS ' . (string)$enable, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->getOptionAsBoolean('permitJavaScript'))
             $this->_displayJS = $enable;
+        else
+            $this->_displayJS = false;
     }
     
     public function setType(string $type = ''): void
@@ -1814,29 +1802,6 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
             .objectTitleIconsInline img {
                 height: 1em;
                 width: 1em;
-            }
-
-            .objectTitleIconsApp {
-                height: 1em;
-                width: 1em;
-                float: left;
-            }
-
-            .objectTitleIconsApp div {
-                overflow: hidden;
-                font-size: 12px;
-                text-align: left;
-                font-weight: normal;
-                margin: 3px;
-                color: #ffffff;
-            }
-
-            .objectTitleIconsAppShortname {
-                font-size: 18px;
-            }
-
-            .objectTitleIconsAppTitle {
-                font-size: 11px;
             }
 
             .objectTitleText0 {

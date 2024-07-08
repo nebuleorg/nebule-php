@@ -27,7 +27,7 @@ abstract class DisplayItem implements DisplayInterface
     protected $_unlocked;
     protected $_social = '';
 
-    public function __construct(Applications $applicationInstance)
+    public function __construct(Applications $applicationInstance) // Should not be overridden by children classes.
     {
         $this->_applicationInstance = $applicationInstance;
         $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
@@ -38,19 +38,21 @@ abstract class DisplayItem implements DisplayInterface
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_init();
     }
-    protected function _init(): void { $this->setSocial(''); }
+    protected function _init(): void { $this->setSocial(''); } // Should be overridden by children classes.
 
-    public static function displayCSS(): void {}
-    public function getHTML(): string {
+    public static function displayCSS(): void {} // Must be overridden by children classes.
+
+    public function getHTML(): string { // Must be overridden by children classes.
         $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return '';
     }
-    public function display(): void {
+
+    public function display(): void { // Should not be overridden by children classes.
         $this->_nebuleInstance->getMetrologyInstance()->addLog('display HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         echo $this->getHTML();
     }
 
-    public function setSocial(string $social = ''): void
+    public function setSocial(string $social = ''): void // Should not be overridden by children classes.
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set social ' . $social, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($social == '')

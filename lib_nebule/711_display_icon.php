@@ -32,6 +32,7 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
     {
         $this->setSocial();
         $this->setEnableJS();
+        $this->setActionsID();
     }
 
     public function getHTML(): string
@@ -42,15 +43,14 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
             return '';
         }
 
-        $result = '<img title="' . $this->_name . '"';
-        $result .= $this->_styleCSS;
+        $result = '<img title="' . $this->_name . '"' . $this->_styleCSS;
         $result .= ' alt="[I]" src="' . $this->_getNidIconHTML($this->_nid, $this->_icon) . '"';
         if ($this->_classCSS != '')
             $result .= ' class="' . $this->_classCSS . '"';
         if ($this->_idCSS != '')
             $result .= ' id="' . $this->_idCSS . '"';
         if ($this->_displayActions && $this->_displayJS)
-            $result .= " onclick=\"display_menu('objectTitleMenu-" . $this->_actionsID . "');\" ";
+            $result .= " onclick=\"display_menu('objectTitleMenu-" . $this->_actionsID . "');\"";
         $result .= '/>';
 
         return $result;
@@ -109,7 +109,7 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
             . ';"';
     }
 
-    public function setEnableActions(bool $enable = true): void
+    public function setEnableActions(bool $enable = true): void // TODO rétrocompatibilité, en double de enableJS, à supprimer.
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set enable actions ' . (string)$enable, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayActions = $enable;

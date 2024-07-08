@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace Nebule\Library;
 
 /**
- * Classe DisplayColor
+ * Classe DisplayIconApplication
  *       ---
  *  Example:
  *   FIXME
@@ -16,12 +16,11 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class DisplayColor extends DisplayItem implements DisplayInterface
+class DisplayIconApplication extends DisplayItem implements DisplayInterface
 {
-    const ICON_ALPHA_COLOR_OID = '87b260416aa0f50736d3ca51bcb6aae3eff373bf471d5662883b8b6797e73e85.sha2.256';
-
     private $_nid = null;
     private $_name = '';
+    private $_shortName = '';
     private $_classCSS = '';
     private $_idCSS = '';
     private $_styleCSS = '';
@@ -40,19 +39,19 @@ class DisplayColor extends DisplayItem implements DisplayInterface
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_nid === null) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('nid null', Metrology::LOG_LEVEL_ERROR, __METHOD__, '4d5732c9');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('nid null', Metrology::LOG_LEVEL_ERROR, __METHOD__, '0ee97bc0');
             return '';
         }
 
-        $result = '<img title="' . $this->_name . '"' . $this->_styleCSS;
-        $result .= ' alt="[C]" src="o/' . self::ICON_ALPHA_COLOR_OID . '"';
+        $result = '<div class="objectTitleIconsApp"' . $this->_styleCSS;
         if ($this->_classCSS != '')
             $result .= ' class="' . $this->_classCSS . '"';
         if ($this->_idCSS != '')
             $result .= ' id="' . $this->_idCSS . '"';
         if ($this->_displayActions && $this->_displayJS)
             $result .= " onclick=\"display_menu('objectTitleMenu-" . $this->_actionsID . "');\"";
-        $result .= '/>';
+        $result .= '/><div><span class="objectTitleIconsAppShortname">' . $this->_shortName
+            . '</span><br /><span class="objectTitleIconsAppTitle">' . $this->_name . '</span></div></div>';
 
         return $result;
     }
@@ -63,9 +62,10 @@ class DisplayColor extends DisplayItem implements DisplayInterface
         if ($nid === null)
             $this->_nid = null;
         elseif ($nid->getID() != '0' && is_a($nid, 'Nebule\Library\Node') && $nid->checkPresent()) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('set nid ' . $nid->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'af41d8bd');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('set nid ' . $nid->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '2cd59e0e');
             $this->_nid = $nid;
             $this->setName();
+            $this->setShortName();
             $this->setStyleCSS();
         }
     }
@@ -76,7 +76,15 @@ class DisplayColor extends DisplayItem implements DisplayInterface
         if ($name != '')
             $this->_name = trim(filter_var($name, FILTER_SANITIZE_STRING));
         else
-            $this->_name = $this->_nid->getFullName($this->_social);
+            $this->_name = $this->_nid->getName($this->_social);
+    }
+
+    public function setShortName(string $name): void
+    {
+        if ($name != '')
+            $this->_shortName = trim(filter_var($name, FILTER_SANITIZE_STRING));
+        else
+            $this->_shortName = $this->_nid->getSurname($this->_social);
     }
 
     public function setClassCSS(string $class = ''): void
@@ -129,6 +137,32 @@ class DisplayColor extends DisplayItem implements DisplayInterface
 
     public static function displayCSS(): void
     {
-        echo ''; // TODO
+        ?>
+
+        <style type="text/css">
+            .objectTitleIconsApp {
+                height: 1em;
+                width: 1em;
+                float: left;
+            }
+
+            .objectTitleIconsApp div {
+                overflow: hidden;
+                font-size: 12px;
+                text-align: left;
+                font-weight: normal;
+                margin: 3px;
+                color: #ffffff;
+            }
+
+            .objectTitleIconsAppShortname {
+                font-size: 18px;
+            }
+
+            .objectTitleIconsAppTitle {
+                font-size: 11px;
+            }
+        </style>
+        <?php
     }
 }
