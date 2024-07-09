@@ -3,9 +3,9 @@ declare(strict_types=1);
 namespace Nebule\Library;
 
 /**
- * Classe DisplayInformation
+ * Classe DisplayMessage
  *     ---
- * Display or prepare a message to the interface with the user.
+ * Display or prepare a simple message to the interface with the user.
  *     ---
  * Example:
  *  $instance = new DisplayMessage($this->_applicationInstance);
@@ -54,16 +54,10 @@ namespace Nebule\Library;
  */
 class DisplayMessage extends DisplayItemIconMessage implements DisplayInterface
 {
-    public const ICON_INFORMATION_RID = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272';
-    public const ICON_OK_RID = '69636f6e206f6b000000000000000000000000000000000000000000000000000000.none.272';
-    public const ICON_WARN_RID = '69636f6e207761726e696e6700000000000000000000000000000000000000000000.none.272';
-    public const ICON_ERROR_RID = '69636f6e206572726f72000000000000000000000000000000000000000000000000.none.272';
-    public const ICON_GO_RID = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272'; // FIXME
-    public const ICON_BACK_RID = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272'; // FIXME
-
     protected function _init(): void
     {
         $this->setType(self::TYPE_INFORMATION);
+        $this->setIconText('[I]');
     }
 
     public function getHTML(): string
