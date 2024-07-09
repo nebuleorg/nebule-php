@@ -8,13 +8,10 @@ namespace Nebule\Library;
  * Display or prepare a message to the interface with the user.
  *     ---
  * Example:
- *  $instance = new DisplayInformation($this->_applicationInstance);
+ *  $instance = new DisplayMessage($this->_applicationInstance);
  *  $instance->setMessage('Message to user', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5');
- *  $instance->setDisplayAlone(true);
  *  $instance->setType(DisplayInformation::TYPE_MESSAGE);
  *  $instance->setIconText('Alternative text on icon');
- *  $instance->setSize(self::SIZE_MEDIUM);
- *  $instance->setRatio(self::RATIO_SHORT);
  *  $icon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IOK);
  *  $instance->setIcon($icon);
  *  $instance->setLink('https://nebule.org');
@@ -25,9 +22,6 @@ namespace Nebule\Library;
  *       If empty, nothing displayed.
  *       Default: empty.
  *       String
- *   - setDisplayAlone : Affiche le message dans une position identique à un titre. C'est utilisé pour un message isolé.
- *       Default: true
- *       Boolean
  *   - setType : Détermine le type de message.
  *       Les types disponibles :
  *       - DisplayInformation::TYPE_MESSAGE : affichage d'un message simple en blanc sur fond noir transparent.
@@ -42,23 +36,6 @@ namespace Nebule\Library;
  *   - setIconText : Détermine le nom du type de message à afficher.
  *       If empty, no alternate text displayed.
  *       Default: empty.
- *       String
- *   - setSize : Détermine la taille de l'affichage de l'élément complet.
- *       Tailles disponibles :
- *       - DisplayInformation::SIZE_TINY : très petite taille correspondant à un carré de base de 16 pixels de large.
- *           Certains éléments ne sont pas affichés.
- *       - DisplayInformation::SIZE_SMALL : petite taille correspondant à un carré de base de 32 pixels de large.
- *       - DisplayInformation::SIZE_MEDIUM : taille moyenne correspondant à un carré de base de 64 pixels de large par défaut.
- *       - DisplayInformation::SIZE_LARGE : grande taille correspondant à un carré de base de 128 pixels de large par défaut.
- *       - DisplayInformation::SIZE_FULL : très grande taille correspondant à un carré de base de 256 pixels de large par défaut.
- *       Default: self::SIZE_MEDIUM
- *       String
- *   - setRatio : Détermine la forme de l'affichage par son ratio dans la mesure du possible si pas d'affichage du contenu de l'objet.
- *       Ratios disponibles :
- *       - DisplayInformation::RATIO_SQUARE : forme carrée de 2x2 displaySize.
- *       - DisplayInformation::RATIO_SHORT : forme plate courte de 6x1 displaySize.
- *       - DisplayInformation::RATIO_LONG : forme plate longue de toute largeure disponible.
- *       Default: DisplayInformation::RATIO_SHORT
  *       String
  *   - setIcon : Détermine l'icône à utiliser.
  *       Si null, l'icône est sélectionnée automatiquement en fonction du type de message.

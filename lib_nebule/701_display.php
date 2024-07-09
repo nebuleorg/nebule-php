@@ -2119,7 +2119,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertLineMessage(string $text, string $type = 'information', string $arg1 = '', string $arg2 = '',
                                        string $arg3 = '', string $arg4 = '', string $arg5 = ''): string
     {
-        $instance = new DisplayInformation($this->_applicationInstance);
+        $instance = new DisplayMessage($this->_applicationInstance);
         $instance->setType($type);
         $instance->setMessage($text, $arg1, $arg2, $arg3, $arg4, $arg5);
         $instance->setClassCSS('iconemoyenpuce');
