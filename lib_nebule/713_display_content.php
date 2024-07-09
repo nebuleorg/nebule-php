@@ -18,9 +18,117 @@ namespace Nebule\Library;
  */
 class DisplayContent extends DisplayItemSizeable implements DisplayInterface
 {
+    private $_nid = null;
+    
+    protected function _init(): void
+    {
+        $this->setSize();
+        $this->setRatio();
+    }
+
     public function getHTML(): string
     {
-        return ''; // TODO
+        $result = '<div class="objectContent">' . "\n";
+        switch (get_class($this->_nid)) {
+            case 'Nebule\Library\Entity':
+                $result .= $this->_getEntityHTML();
+                break;
+            case 'Nebule\Library\Group':
+                $result .= $this->_getGroupHTML();
+                break;
+            case 'Nebule\Library\Conversation':
+                $result .= $this->_getConversationHTML();
+                break;
+            default:
+                $result .= $this->_getObjectHTML();
+                break;
+        }
+        $result .= "</div>\n";
+
+        return $result;
+    }
+
+    private function _getEntityHTML(): string
+    {
+        $result = '';
+        if ($this->_nid->checkPresent()) {
+            if ($this->_sizeCSS == 'medium' || $this->_sizeCSS == 'full') {
+                $result .= '<div class="objectContentEntity">' . "\n<p>";
+                $result .= sprintf($this->_traductionInstance->getTraduction('::UniqueID'),
+                    $this->convertInlineObjectColorIcon($this->_nid) . ' ' . '<b>' . $this->_nid->getID() . "</b>\n");
+                $result .= "</p>\n";
+
+                if ($this->_sizeCSS = 'full') {
+                    // Liste des localisations.
+                    $localisations = $this->_nid->getLocalisationsID();
+                    if (sizeof($localisations) > 0) {
+                        $result .= '<table border="0"><tr><td><td>' . $this->_traductionInstance->getTraduction('::EntityLocalisation') . " :</td><td>\n";
+                        foreach ($localisations as $localisation) {
+                            $locObject = $this->_nebuleInstance->newObject($localisation);
+                            $result .= "\t " . $this->convertInlineObjectColorIcon($localisation) . ' '
+                                . $this->convertHypertextLink(
+                                    $locObject->readOneLineAsText(),
+                                    $locObject->readOneLineAsText()
+                                ) . "<br />\n";
+                        }
+                        $result .= "</td></tr></table>\n";
+                        unset($localisations, $localisation, $locObject);
+                    }
+                }
+                $result .= "</div>\n";
+            }
+        } else
+            $result .= $this->convertLineMessage(':::display:content:errorNotAvailable', 'error');
+        return $result;
+    }
+
+    private function _getGroupHTML(): string
+    {
+        $result = '';
+        $result .= '<div class="objectContentGroup">' . "\n\t<p>"
+            . sprintf($this->_traductionInstance->getTraduction('::UniqueID'),
+                $this->convertInlineObjectColorIcon($this->_nid) . ' ' . '<b>' . $this->_nid->getID() . "</b>\n");
+        if ($this->_nid->getMarkClosed())
+            $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::GroupeFerme') . ".\n";
+        else
+            $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::GroupeOuvert') . ".\n";
+        $result .= "\t</p>\n</div>\n";
+        return $result;
+    }
+
+    private function _getConversationHTML(): string
+    {
+        $result = '';
+        $result .= '<div class="objectContentConversation">' . "\n\t<p>"
+            . sprintf($this->_traductionInstance->getTraduction('::UniqueID'),
+                $this->convertInlineObjectColorIcon($this->_nid) . ' ' . '<b>' . $this->_nid->getID() . "</b>\n");
+        if ($this->_nid->getMarkClosed())
+            $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::ConversationFermee') . ".\n";
+        else
+            $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::ConversationOuverte') . ".\n";
+        $result .= "\t</p>\n</div>\n";
+        return $result;
+    }
+
+    private function _getObjectHTML(): string
+    {
+        $result = '';
+        $result .= $this->getDisplayAsObjectContent($this->_nid, $this->_sizeCSS, $this->_ratioCSS, $permitWarnProtected);
+        return $result;
+    }
+
+    public function setNID(?Node $nid): void
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set nid ' . gettype($nid), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($nid === null)
+            $this->_nid = null;
+        elseif ($nid->getID() != '0' && is_a($nid, 'Nebule\Library\Node') && $nid->checkPresent()) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('set nid ' . $nid->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '2cd59e0e');
+            $this->_nid = $nid;
+            $this->setName();
+            $this->setShortName();
+            $this->setStyleCSS();
+        }
     }
 
     public static function displayCSS(): void

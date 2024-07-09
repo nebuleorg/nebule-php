@@ -75,15 +75,18 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class DisplayInformation extends DisplayItemSizeable implements DisplayInterface
+class DisplayMessage extends DisplayItemIconMessage implements DisplayInterface
 {
-    private $_displayAlone = false;
+    public const ICON_INFORMATION_RID = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272';
+    public const ICON_OK_RID = '69636f6e206f6b000000000000000000000000000000000000000000000000000000.none.272';
+    public const ICON_WARN_RID = '69636f6e207761726e696e6700000000000000000000000000000000000000000000.none.272';
+    public const ICON_ERROR_RID = '69636f6e206572726f72000000000000000000000000000000000000000000000000.none.272';
+    public const ICON_GO_RID = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272'; // FIXME
+    public const ICON_BACK_RID = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272'; // FIXME
 
     protected function _init(): void
     {
         $this->setType(self::TYPE_INFORMATION);
-        $this->setSize();
-        $this->setRatio();
     }
 
     public function getHTML(): string
@@ -92,80 +95,36 @@ class DisplayInformation extends DisplayItemSizeable implements DisplayInterface
         if ($this->_message == '')
             return '';
 
-        $result = $this->_getAloneStartHTML()
-            . $this->_getLinkStartHTML();
-        if ($this->_sizeCSS == self::SIZE_TINY)
-            $result .= $this->_getTinyHTML();
-        else
-            $result .= $this->_getNotTinyHTML();
-        $result .= $this->_getLinkEndHTML()
-            . $this->_getAloneEndHTML()
-            . "\n";
-
-        return $result;
-    }
-
-    private function _getAloneStartHTML(): string
-    {
-        if ($this->_displayAlone)
-            return '<div class="layoutAloneItem"><div class="aloneItemContent">';
-        return '';
-    }
-
-    private function _getAloneEndHTML(): string
-    {
-        if ($this->_displayAlone)
-            return '</div></div>';
-        return '';
-    }
-
-    private function _getLinkStartHTML(): string
-    {
-        if ($this->_link != '')
-            return '<a href="' . $this->_link . '">';
-        return '';
-    }
-
-    private function _getLinkEndHTML(): string
-    {
-        if ($this->_link != '')
-            return '</a>';
-        return '';
-    }
-
-    private function _getTinyHTML(): string
-    {
-        $result = '';
+        $result = '<div class="' . $this->_type . '"><p>';
+        $this->_getLinkStartHTML($result);
         if ($this->_icon !== null)
-            $result .= '<span style="font-size:1em" class="objectTitleIconsInline">' . $this->_getImageHTML($this->_icon, $this->_iconText) . '</span>';
-        $result .= $this->_message;
-        return $result;
-    }
-
-    private function _getNotTinyHTML(): string
-    {
-        $padding = 0;
-        $result = '<div class="layoutObject layoutInformation">';
-        $result .= '<div class="objectTitle objectDisplay' . $this->_sizeCSS . $this->_ratioCSS . ' informationDisplay informationDisplay' . $this->_sizeCSS . ' informationDisplay' . $this->_type . '">';
-        $result .= '<div class="objectTitleIcons informationTitleIcons informationTitleIcons' . $this->_type . '">';
-        if ($this->_icon !== null) {
             $result .= $this->_getImageHTML($this->_icon, $this->_iconText);
-            $padding = 1;
-        }
-        $result .= '</div>';
-        $result .= '<div class="objectTitleText' . $padding . ' informationTitleText informationTitle' . $this->_sizeCSS . 'Text">';
-        $result .= '<div class="objectTitleRefs objectTitle' . $this->_sizeCSS . 'Refs informationTitleRefs informationTitleRefs' . $this->_type . '">' . $this->_traductionInstance->getTraduction($this->_iconText) . '</div>';
-        $result .= '<div class="informationTitleName informationTitleName' . $this->_type . ' informationTitle' . $this->_sizeCSS . 'Name">' . $this->_message . '</div>';
-        $result .= '</div></div></div>';
+        $result .= '&nbsp;' . $this->_message
+            . '</p></div>';
+        $this->_getLinkEndHTML($result);
+        $result .= "\n";
+
         return $result;
+
+        /*return '<div class="' . $this->_type . '"><p>'
+            . $this->_getImageHTML($instanceIcon, $messageText, $iconCssClass)
+            . '&nbsp;' . $this->_message
+            . "</p></div>\n";*/
     }
 
-    public function setDisplayAlone(bool $enable): void
+    private function _getLinkStartHTML(&$result)
     {
-        $this->_displayAlone = $enable;
+        if ($this->_link != '')
+            $result .= '<a href="' . $this->_link . '">';
     }
 
-    public static function displayCSS(): void
+    private function _getLinkEndHTML(&$result)
+    {
+        if ($this->_link != '')
+            $result .= '</a>';
+    }
+
+    public static function displayCSS(): void // FIXME
     {
         ?>
 

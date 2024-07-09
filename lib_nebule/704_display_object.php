@@ -403,9 +403,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
     private $_displayJS = true;
     private $_displaySelfHook = true;
     private $_displayTypeHook = true;
-    private $_type = '';
     private $_name = '';
-    private $_link = '';
     private $_appShortname = '';
     private $_flagProtection = false;
     private $_flagProtectionIcon = null;
@@ -435,8 +433,8 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
     protected function _init(): void
     {
         $this->setSocial('');
-        $this->setSize(self::SIZE_MEDIUM);
-        $this->setRatio(self::RATIO_SHORT);
+        $this->setSize();
+        $this->setRatio();
         $this->setEnableJS();
         $this->setActionsID();
     }
