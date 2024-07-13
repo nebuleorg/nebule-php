@@ -378,7 +378,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class DisplayObject extends DisplayItemSizeable implements DisplayInterface
+class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInterface
 {
     private $_nid = null;
     private $_displayColor = true;

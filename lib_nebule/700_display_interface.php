@@ -18,6 +18,15 @@ interface DisplayInterface
 
 abstract class DisplayItem implements DisplayInterface
 {
+    public const RATIO_SQUARE = 'square';
+    public const SIZE_SMALL = 'small';
+    public const RATIO_SHORT = 'short';
+    public const SIZE_LARGE = 'large';
+    public const SIZE_TINY = 'tiny';
+    public const SIZE_MEDIUM = 'medium';
+    public const SIZE_FULL = 'full';
+    public const RATIO_LONG = 'long';
+
     protected $_nebuleInstance;
     protected $_displayInstance;
     protected $_applicationInstance;
@@ -265,17 +274,53 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
     }
 }
 
-abstract class DisplayItemSizeable extends DisplayItemIconMessage
+abstract class DisplayItemSizeable extends DisplayItem
 {
-    public const SIZE_TINY = 'tiny';
-    public const SIZE_SMALL = 'small';
-    public const SIZE_MEDIUM = 'medium';
-    public const SIZE_LARGE = 'large';
-    public const SIZE_FULL = 'full';
-    public const RATIO_SHORT = 'short';
-    public const RATIO_LONG = 'long';
-    public const RATIO_SQUARE = 'square';
 
+    protected $_sizeCSS = '';
+    protected $_ratioCSS = '';
+
+    public function setSize(string $size = ''): void
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set size ' . $size, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        switch (strtolower($size)) {
+            case DisplayItem::SIZE_TINY:
+                $this->_sizeCSS = 'Tiny';
+                break;
+            case DisplayItem::SIZE_SMALL:
+                $this->_sizeCSS = 'Small';
+                break;
+            case DisplayItem::SIZE_LARGE:
+                $this->_sizeCSS = 'Large';
+                break;
+            case DisplayItem::SIZE_FULL:
+                $this->_sizeCSS = 'Full';
+                break;
+            default:
+                $this->_sizeCSS = 'Medium';
+                break;
+        }
+    }
+
+    public function setRatio(string $ratio = ''): void
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Set ratio ' . $ratio, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        switch (strtolower($ratio)) {
+            case DisplayItem::RATIO_SQUARE:
+                $this->_ratioCSS = 'Square';
+                break;
+            case DisplayItem::RATIO_LONG:
+                $this->_ratioCSS = 'Long';
+                break;
+            default:
+                $this->_ratioCSS = 'Short';
+                break;
+        }
+    }
+}
+
+abstract class DisplayItemIconMessageSizeable extends DisplayItemIconMessage
+{
     protected $_sizeCSS = '';
     protected $_ratioCSS = '';
 

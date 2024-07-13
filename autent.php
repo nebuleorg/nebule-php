@@ -2,8 +2,17 @@
 declare(strict_types=1);
 namespace Nebule\Application\Autent;
 use Nebule\Library\DisplayInformation;
+use Nebule\Library\DisplayItem;
+use Nebule\Library\DisplayItemIconMessage;
+use Nebule\Library\DisplayItemIconMessageSizeable;
+use Nebule\Library\DisplayItemSizeable;
+use Nebule\Library\DisplayList;
+use Nebule\Library\DisplayMenu;
 use Nebule\Library\DisplayNotify;
+use Nebule\Library\DisplayObject;
+use Nebule\Library\DisplaySecurity;
 use Nebule\Library\DisplayTitle;
+use Nebule\Library\Entity;
 use Nebule\Library\Metrology;
 use Nebule\Library\Modules;
 use Nebule\Library\nebule;
@@ -246,13 +255,10 @@ class Display extends Displays
             $this->_displayInlineContentID();
         } else {
             $this->_metrologyInstance->addLog('Error loading ModuleAutent', Metrology::LOG_LEVEL_ERROR, __METHOD__, '57b017ad');
-            $param = array(
-                'enableDisplayAlone' => true,
-                'enableDisplayIcon' => true,
-                'informationType' => 'error',
-                'displayRatio' => 'short',
-            );
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::ERROR', $param);
+            $notify = new DisplayNotify($this->_applicationInstance);
+            $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
+            $notify->setMessage('::::ERROR');
+            $notify->display();
         }
     }
 
@@ -494,7 +500,7 @@ class ModuleAutent extends Modules
 
         $instance = new DisplayNotify($this->_applicationInstance);
         $instance->setMessage('under construction!');
-        $instance->setType(DisplayNotify::TYPE_WARN);
+        $instance->setType(DisplayItemIconMessage::TYPE_WARN);
         $instance->display();
 
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
@@ -532,70 +538,33 @@ class ModuleAutent extends Modules
         $title->setTitle('::::INFO');
         $title->display();
 
-        $this->_displayInstance->displaySecurityAlert('medium', true);
-
         if (! $this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')
             || $this->_applicationInstance->getCheckSecurityAll() != 'OK'
         ) {
             $htlink = '/?f';
             $title = ':::err_NotPermit';
-            $type = DisplayInformation::TYPE_ERROR;
+            $type = DisplayItemIconMessage::TYPE_ERROR;
         } elseif ($this->_unlocked) {
             $htlink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this->MODULE_REGISTERED_VIEWS[2];
             $title = ':::logout';
-            $type = DisplayInformation::TYPE_ERROR;
+            $type = DisplayItemIconMessage::TYPE_ERROR;
         } else {
             $htlink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this->MODULE_REGISTERED_VIEWS[1];
             $title = ':::login';
-            $type = DisplayInformation::TYPE_GO;
+            $type = DisplayItemIconMessage::TYPE_GO;
         }
 
-        $list = array();
-        $list[0]['object'] = $this->_applicationInstance->getCurrentObjectInstance();
-        $list[0]['param'] = array(
-            'enableDisplayColor' => true,
-            'enableDisplayIcon' => true,
-            'enableDisplayRefs' => false,
-            'enableDisplayName' => true,
-            'enableDisplayID' => false,
-            'enableDisplayFlags' => true,
-            'enableDisplayFlagProtection' => false,
-            'enableDisplayFlagObfuscate' => false,
-            'enableDisplayFlagUnlocked' => true,
-            'enableDisplayFlagState' => true,
-            'enableDisplayFlagEmotions' => false,
-            'enableDisplayStatus' => true,
-            'enableDisplayContent' => false,
-            'enableDisplayJS' => false,
-            'enableDisplayLink2Object' => true,
-            'displaySize' => 'medium',
-            'displayRatio' => 'short',
-            'status' => '',
-            'flagUnlocked' => $this->_unlocked,
-        );
-        $list[1]['information'] = $title;
-        $list[1]['param'] = array(
-            'enableDisplayAlone' => true,
-            'enableDisplayIcon' => true,
-            'displayRatio' => 'short',
-            'displaySize' => 'medium',
-            'informationType' => $type,
-            'htlink' => $htlink,
-        );
-        $list[2]['information'] = ':::return';
-        $list[2]['param'] = array(
-            'enableDisplayAlone' => true,
-            'enableDisplayIcon' => true,
-            'displayRatio' => 'short',
-            'displaySize' => 'medium',
-            'informationType' => DisplayInformation::TYPE_BACK,
-            'htlink' => '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId,
-        );
-        echo $this->_applicationInstance->getDisplayInstance()->getDisplayObjectsList($list, 'medium');
+        $instanceList = new DisplayList($this->_applicationInstance);
+        $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+        $this->_displayAddSecurity($instanceList, false);
+        $this->_displayAddEID($instanceList, $this->_applicationInstance->getCurrentObjectInstance(), false);
+        $this->_displayAddButton($instanceList, $title, $type, $htlink);
+        $this->_displayAddButton($instanceList, ':::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
+        $instanceList->display();
     }
 
     /**
@@ -609,62 +578,13 @@ class ModuleAutent extends Modules
         $title->setTitle(':::login');
         $title->display();
 
-        $this->_displayInstance->displaySecurityAlert('medium', true);
-
-        $list = array();
-        $list[0]['object'] = $this->_applicationInstance->getCurrentObjectInstance();
-        $list[0]['param'] = array(
-            'enableDisplayColor' => true,
-            'enableDisplayIcon' => true,
-            'enableDisplayName' => true,
-            'enableDisplayRefs' => false,
-            'enableDisplayID' => false,
-            'enableDisplayFlags' => true,
-            'enableDisplayFlagProtection' => false,
-            'enableDisplayFlagObfuscate' => false,
-            'enableDisplayFlagState' => true,
-            'enableDisplayFlagUnlocked' => true,
-            'enableDisplayFlagEmotions' => false,
-            'enableDisplayStatus' => true,
-            'enableDisplayContent' => false,
-            'enableDisplayJS' => false,
-            'enableDisplayLink2Object' => true,
-            'displaySize' => 'medium',
-            'displayRatio' => 'short',
-            'status' => '',
-            'flagUnlocked' => $this->_unlocked,
-        );
-        $list[1]['object'] = $this->_nebuleInstance->getCurrentEntityPrivateKeyInstance();
-        $list[1]['param'] = array(
-            'enableDisplayColor' => true,
-            'enableDisplayIcon' => true,
-            'enableDisplayName' => true,
-            'enableDisplayRefs' => false,
-            'enableDisplayID' => false,
-            'enableDisplayFlags' => true,
-            'enableDisplayFlagProtection' => false,
-            'enableDisplayFlagObfuscate' => false,
-            'enableDisplayFlagState' => true,
-            'enableDisplayFlagUnlocked' => false,
-            'enableDisplayFlagEmotions' => false,
-            'enableDisplayStatus' => true,
-            'enableDisplayContent' => false,
-            'enableDisplayJS' => false,
-            'enableDisplayLink2Object' => true,
-            'displaySize' => 'medium',
-            'displayRatio' => 'short',
-            'status' => '',
-        );
-        $list[2]['information'] = ':::return';
-        $list[2]['param'] = array(
-            'enableDisplayIcon' => true,
-            'enableDisplayAlone' => true,
-            'displayRatio' => 'short',
-            'displaySize' => 'medium',
-            'informationType' => DisplayInformation::TYPE_BACK,
-            'htlink' => '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId,
-        );
-        echo $this->_applicationInstance->getDisplayInstance()->getDisplayObjectsList($list, 'medium');
+        $instanceList = new DisplayList($this->_applicationInstance);
+        $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+        $this->_displayAddSecurity($instanceList, true);
+        $this->_displayAddEID($instanceList, $this->_applicationInstance->getCurrentObjectInstance(), false);
+        $this->_displayAddEID($instanceList, $this->_nebuleInstance->getCurrentEntityPrivateKeyInstance(), true);
+        $this->_displayAddButton($instanceList, ':::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
+        $instanceList->display();
 
         if ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')
             && $this->_applicationInstance->getCheckSecurityAll() == 'OK')
@@ -685,13 +605,10 @@ class ModuleAutent extends Modules
             </form>
             <?php
         } else {
-            $param = array(
-                'enableDisplayAlone' => true,
-                'enableDisplayIcon' => true,
-                'informationType' => 'error',
-                'displayRatio' => 'short',
-            );
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
+            $notify = new DisplayNotify($this->_applicationInstance);
+            $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
+            $notify->setMessage(':::err_NotPermit');
+            $notify->display();
         }
     }
 
@@ -706,52 +623,62 @@ class ModuleAutent extends Modules
         $title->setTitle(':::logout');
         $title->display();
 
-        $this->_displayInstance->displaySecurityAlert('medium', true);
+        $instanceList = new DisplayList($this->_applicationInstance);
+        $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+        $this->_displayAddSecurity($instanceList, false);
+        $this->_displayAddEID($instanceList, $this->_applicationInstance->getCurrentObjectInstance(), false);
+        if ($this->_unlocked)
+            $this->_displayAddButton($instanceList, ':::logout', DisplayItemIconMessage::TYPE_GO, '/?f');
+        $this->_displayAddButton($instanceList, ':::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
+        $instanceList->display();
+    }
 
-        $list = array();
-        $list[0]['object'] = $this->_applicationInstance->getCurrentObjectInstance();
-        $list[0]['param'] = array(
-            'enableDisplayColor' => true,
-            'enableDisplayIcon' => true,
-            'enableDisplayName' => true,
-            'enableDisplayRefs' => false,
-            'enableDisplayID' => false,
-            'enableDisplayFlags' => true,
-            'enableDisplayFlagProtection' => false,
-            'enableDisplayFlagObfuscate' => false,
-            'enableDisplayFlagUnlocked' => true,
-            'enableDisplayFlagState' => true,
-            'enableDisplayFlagEmotions' => false,
-            'enableDisplayStatus' => true,
-            'enableDisplayContent' => false,
-            'enableDisplayJS' => false,
-            'enableDisplayLink2Object' => true,
-            'displaySize' => 'medium',
-            'displayRatio' => 'short',
-            'status' => '',
-            'flagUnlocked' => $this->_unlocked,
-        );
-        if ($this->_unlocked) {
-            $list[1]['information'] = ':::logout';
-            $list[1]['param'] = array(
-                'enableDisplayAlone' => true,
-                'enableDisplayIcon' => true,
-                'displayRatio' => 'short',
-                'displaySize' => 'medium',
-                'informationType' => DisplayInformation::TYPE_GO,
-                'htlink' => '/?f',
-            );
+    private function _displayAddEID(DisplayList $instanceList, Node $eid, bool $isKey)
+    {
+        $instanceObject = new DisplayObject($this->_applicationInstance);
+        $instanceObject->setNID($eid);
+        $instanceObject->setEnableColor(true);
+        $instanceObject->setEnableIcon(true);
+        $instanceObject->setEnableName(true);
+        $instanceObject->setEnableRefs(false);
+        $instanceObject->setEnableNID(false);
+        $instanceObject->setEnableFlags(true);
+        $instanceObject->setEnableFlagProtection(false);
+        $instanceObject->setEnableFlagObfuscate(false);
+        $instanceObject->setEnableFlagState(true);
+        $instanceObject->setEnableFlagEmotions(false);
+        $instanceObject->setEnableStatus(true);
+        $instanceObject->setEnableContent(false);
+        $instanceObject->setEnableJS(false);
+        $instanceObject->setEnableLink(true);
+        $instanceObject->setRatio(DisplayItem::RATIO_SHORT);
+        $instanceObject->setStatus('');
+        if ($isKey)
+            $instanceObject->setEnableFlagUnlocked(false);
+        else
+        {
+            $instanceObject->setEnableFlagUnlocked(true);
+            $instanceObject->setFlagUnlocked($this->_unlocked);
         }
-        $list[2]['information'] = ':::return';
-        $list[2]['param'] = array(
-            'enableDisplayIcon' => true,
-            'enableDisplayAlone' => true,
-            'displayRatio' => 'short',
-            'displaySize' => 'medium',
-            'informationType' => DisplayInformation::TYPE_BACK,
-            'htlink' => '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId,
-        );
-        echo $this->_applicationInstance->getDisplayInstance()->getDisplayObjectsList($list, 'medium');
+        $instanceList->addItem($instanceObject);
+    }
+
+    private function _displayAddSecurity(DisplayList $instanceList, bool $displayFull)
+    {
+        $instance = new DisplaySecurity($this->_applicationInstance);
+        $instance->setDisplayOK(!$displayFull);
+        $instance->setDisplayFull($displayFull);
+        $instanceList->addItem($instance);
+    }
+
+    private function _displayAddButton(DisplayList $instanceList, string $message, string $type, string $link)
+    {
+        $instance = new DisplayInformation($this->_applicationInstance);
+        $instance->setMessage($message);
+        $instance->setType($type);
+        $instance->setRatio(DisplayItem::RATIO_SHORT);
+        $instance->setLink($link);
+        $instanceList->addItem($instance);
     }
 
 

@@ -16,21 +16,55 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class DisplayList extends DisplayItem implements DisplayInterface
+class DisplayList extends DisplayItemSizeable implements DisplayInterface
 {
-    public function getHTML(): string
-    {
+    private $_list = array();
+
+    public function getHTML(): string {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return ''; // TODO
+
+        if (sizeof($this->_list) == 0)
+            return '';
+
+        $result = '<div class="layoutList">' . "\n";
+        $result .= '<div class="listContent">' . "\n";
+        $result .= "\n";
+        foreach ($this->_list as $item){
+            if ($item instanceof DisplayInformation) {
+                $item->setSize($this->_sizeCSS);
+                $item->setDisplayAlone(false);
+                $result .= $item->getHTML();
+            } elseif ($item instanceof DisplayObject) {
+                $item->setSize($this->_sizeCSS);
+                // $item->setDisplayAlone(false); TODO
+                $result .= $item->getHTML();
+            } elseif ($item instanceof DisplaySecurity) {
+                $item->setSize($this->_sizeCSS);
+                $item->setDisplayAlone(false);
+                $result .= $item->getHTML();
+            }
+            $result .= "\n";
+        }
+        $result .= '</div>';
+        $result .= '</div>';
+        $result .= "\n";
+
+        return $result;
     }
 
-    public static function displayCSS(): void
-    {
+    public function addItem(DisplayItem $item): void {
+        if ($item instanceof DisplayInformation || $item instanceof DisplayObject || $item instanceof DisplaySecurity)
+            $this->_list[] = $item;
+    }
+
+    public static function displayCSS(): void {
         ?>
 
         <style type="text/css">
             /* CSS de la fonction DisplayList(). */
-
+            .layoutList {
+                padding: 3px;
+            }
         </style>
         <?php
     }
