@@ -430,7 +430,7 @@ class ModuleManage extends Modules
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:manage:Modules', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:manage:Modules', $icon, false);
 
         // Affichage la liste des modules.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('modlist');
@@ -452,7 +452,7 @@ class ModuleManage extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
 
             return;
         }
@@ -465,7 +465,7 @@ class ModuleManage extends Modules
         $listOkModules = array();
 
 
-        $this->_applicationInstance->getDisplayInstance()->displayMessageInformation('Size ' . sizeof($listModules));
+        $this->_applicationInstance->getDisplayInstance()->displayMessageInformation_DEPRECATED('Size ' . sizeof($listModules));
 
         ?>
 
@@ -552,12 +552,12 @@ class ModuleManage extends Modules
                             $param['flagActivatedDesc'] = '::sylabe:module:manage:ModuleDisabled';
                         }
                         $instance = $this->_nebuleInstance->newObject('0'); // FIXME
-                        echo $this->_displayInstance->getDisplayObject($instance, $param);
+                        echo $this->_displayInstance->getDisplayObject_DEPRECATED($instance, $param);
 
                         // Marque comme vu.
                         $listOkModules[$name] = true;
                     } else
-                        $this->_applicationInstance->getDisplayInstance()->displayMessageWarning('Try ' . $moduleName);
+                        $this->_applicationInstance->getDisplayInstance()->displayMessageWarning_DEPRECATED('Try ' . $moduleName);
                 }
                 ?>
 
@@ -576,7 +576,7 @@ class ModuleManage extends Modules
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:manage:Module', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:manage:Module', $icon, false);
 
         // Affichage du module avec transmission de la variable d'affichage.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('moddisp', self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule());
@@ -608,7 +608,7 @@ class ModuleManage extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:manage:display:noModule', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:manage:display:noModule', $param);
 
             return;
         }
@@ -621,7 +621,7 @@ class ModuleManage extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
 
             return;
         }
@@ -641,7 +641,7 @@ class ModuleManage extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
 
             return;
         }
@@ -694,7 +694,7 @@ class ModuleManage extends Modules
                     'displaySize' => 'medium',
                     'displayRatio' => 'long',
                 );
-                echo $this->_displayInstance->getDisplayObject($instance, $param);
+                echo $this->_displayInstance->getDisplayObject_DEPRECATED($instance, $param);
 
                 // description du module.
                 $param = array(
@@ -703,7 +703,7 @@ class ModuleManage extends Modules
                     'displayRatio' => 'long',
                     'informationType' => 'information',
                 );
-                echo $this->_displayInstance->getDisplayInformation($instance->getTraduction($instance->getHelp()), $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED($instance->getTraduction($instance->getHelp()), $param);
 
                 // Affiche l'application (RID).
                 if ($rid != '0') {
@@ -743,7 +743,7 @@ class ModuleManage extends Modules
                             . '&' . References::COMMAND_SELECT_OBJECT . '=' . $rid;
                         $param['objectIcon'] = $this->_applicationInstance->getModule('ModuleReferences')->getLogo();
                     }
-                    echo $this->_displayInstance->getDisplayObject($object, $param);
+                    echo $this->_displayInstance->getDisplayObject_DEPRECATED($object, $param);
                 } else {
                     $param = array(
                         'enableDisplayIcon' => true,
@@ -751,7 +751,7 @@ class ModuleManage extends Modules
                         'displayRatio' => 'long',
                         'informationType' => 'warn',
                     );
-                    echo $this->_displayInstance->getDisplayInformation('::sylabe:module:manage:display:integratedModule', $param);
+                    echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:manage:display:integratedModule', $param);
                 }
 
                 // ID
@@ -766,7 +766,7 @@ class ModuleManage extends Modules
                     $param['objectIcon'] = $this->MODULE_LOGO;
                     $param['enableDisplayFlagState'] = true;
                     $param['enableDisplayFlagProtection'] = true;
-                    echo $this->_displayInstance->getDisplayObject($object, $param);
+                    echo $this->_displayInstance->getDisplayObject_DEPRECATED($object, $param);
                 }
 
                 ?>
@@ -784,7 +784,7 @@ class ModuleManage extends Modules
                         'displayRatio' => 'short',
                         'informationType' => 'ok',
                     );
-                    echo $this->_displayInstance->getDisplayInformation('::sylabe:module:manage:ModuleValid', $param);
+                    echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:manage:ModuleValid', $param);
                 } else {
                     $param = array(
                         'enableDisplayIcon' => true,
@@ -792,7 +792,7 @@ class ModuleManage extends Modules
                         'displayRatio' => 'short',
                         'informationType' => 'error',
                     );
-                    echo $this->_displayInstance->getDisplayInformation('::sylabe:module:manage:ModuleInvalid', $param);
+                    echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:manage:ModuleInvalid', $param);
                 }
 
                 // Activation du module.
@@ -845,10 +845,10 @@ class ModuleManage extends Modules
                         && $listModulesEnabled[$className]
                     ) {
                         $param['informationType'] = 'ok';
-                        echo $this->_displayInstance->getDisplayInformation('::sylabe:module:manage:ModuleEnabled', $param);
+                        echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:manage:ModuleEnabled', $param);
                     } else {
                         $param['informationType'] = 'error';
-                        echo $this->_displayInstance->getDisplayInformation('::sylabe:module:manage:ModuleDisabled', $param);
+                        echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:manage:ModuleDisabled', $param);
                     }
                 }
 
@@ -859,7 +859,7 @@ class ModuleManage extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'information',
                 );
-                echo $this->_displayInstance->getDisplayInformation('Class : ' . $className, $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED('Class : ' . $className, $param);
 
                 // Version.
                 $param = array(
@@ -868,7 +868,7 @@ class ModuleManage extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'information',
                 );
-                echo $this->_displayInstance->getDisplayInformation('Version : ' . $instance->getVersion(), $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED('Version : ' . $instance->getVersion(), $param);
 
                 // Interface.
                 $param = array(
@@ -877,7 +877,7 @@ class ModuleManage extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'information',
                 );
-                echo $this->_displayInstance->getDisplayInformation('Interface : ' . $instance->getInterface(), $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED('Interface : ' . $instance->getInterface(), $param);
 
                 // Licence.
                 $param = array(
@@ -886,7 +886,7 @@ class ModuleManage extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'information',
                 );
-                echo $this->_displayInstance->getDisplayInformation($instance->getDevelopper() . ' <br />' . $instance->getLicence(), $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED($instance->getDevelopper() . ' <br />' . $instance->getLicence(), $param);
 
                 // Synchronisation de l'application.
                 /*		if ( $this->_configuration->getOption('permitWrite')
@@ -934,7 +934,7 @@ class ModuleManage extends Modules
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:manage:create:createModule', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:manage:create:createModule', $icon, false);
 
         // Si autorisé à créer des liens.
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -971,7 +971,7 @@ class ModuleManage extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
         }
     }
 
@@ -985,7 +985,7 @@ class ModuleManage extends Modules
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:manage:create:addModuleCode', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:manage:create:addModuleCode', $icon, false);
 
         // Extrait le RID si nouveau module créé.
         $arg_rid = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_RID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
@@ -1030,7 +1030,7 @@ class ModuleManage extends Modules
                     'displaySize' => 'medium',
                     'displayRatio' => 'short',
                 );
-                echo $this->_displayInstance->getDisplayObject($ridInstance, $param);
+                echo $this->_displayInstance->getDisplayObject_DEPRECATED($ridInstance, $param);
                 ?>
 
                 <div class="layoutObjectsList">
@@ -1060,7 +1060,7 @@ class ModuleManage extends Modules
                     'informationType' => 'error',
                     'displayRatio' => 'short',
                 );
-                echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation('::sylabe:module:manage:display:noModule', $param);
+                echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::sylabe:module:manage:display:noModule', $param);
             }
         } else {
             $param = array(
@@ -1069,7 +1069,7 @@ class ModuleManage extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'short',
             );
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
         }
     }
 

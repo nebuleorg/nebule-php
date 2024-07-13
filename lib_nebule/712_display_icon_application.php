@@ -140,6 +140,7 @@ class DisplayIconApplication extends DisplayItem implements DisplayInterface
         ?>
 
         <style type="text/css">
+            /* CSS for DisplayIconApplication(). */
             .objectTitleIconsApp {
                 height: 1em;
                 width: 1em;

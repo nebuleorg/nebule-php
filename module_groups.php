@@ -392,13 +392,13 @@ class ModuleGroups extends Modules
                     'displayRatio' => 'long',
                     'informationType' => 'error',
                 );
-                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:groups:display:notOKCreateGroup', $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:groups:display:notOKCreateGroup', $param);
             }
         }
 
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_LOGO);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:groups:display:MyGroups', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:groups:display:MyGroups', $icon, false);
 
         // Affiche le contenu.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('groups');
@@ -469,7 +469,7 @@ class ModuleGroups extends Modules
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_LOGO);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:groups:display:otherGroups', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:groups:display:otherGroups', $icon, false);
 
         // Affiche le contenu.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('allgroups');
@@ -663,7 +663,7 @@ class ModuleGroups extends Modules
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[1]);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:groups:display:createGroup', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:groups:display:createGroup', $icon, false);
 
         // Si autorisé à créer un groupe.
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -699,7 +699,7 @@ class ModuleGroups extends Modules
             </div>
             <?php
         } else {
-            $this->_applicationInstance->getDisplayInstance()->displayMessageError(':::err_NotPermit');
+            $this->_applicationInstance->getDisplayInstance()->displayMessageError_DEPRECATED(':::err_NotPermit');
         }
     }
 
@@ -713,7 +713,7 @@ class ModuleGroups extends Modules
             echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('::sylabe:module:group:remove');
         } else {
             // Ce n'est pas un groupe.
-            $this->_applicationInstance->getDisplayInstance()->displayMessageError('::sylabe:module:groups:display:thisIsNotGroup');
+            $this->_applicationInstance->getDisplayInstance()->displayMessageError_DEPRECATED('::sylabe:module:groups:display:thisIsNotGroup');
         }
     }
 
@@ -766,7 +766,7 @@ class ModuleGroups extends Modules
             'enableDisplayTypeHook' => false,
         );
         $param['objectRefs'] = $instance->getPropertySigners(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
-        echo $this->_displayInstance->getDisplayObject($instance, $param);
+        echo $this->_displayInstance->getDisplayObject_DEPRECATED($instance, $param);
         unset($instance);
 
         // Affichage des membres du groupe.
@@ -889,7 +889,7 @@ class ModuleGroups extends Modules
                 }
                 unset($list);
             } else {
-                $this->_applicationInstance->getDisplayInstance()->displayMessageInformation('::sylabe:module:groups:display:noGroupMember');
+                $this->_applicationInstance->getDisplayInstance()->displayMessageInformation_DEPRECATED('::sylabe:module:groups:display:noGroupMember');
             }
         } // Sinon c'est un groupe ouvert.
         else {
@@ -944,7 +944,7 @@ class ModuleGroups extends Modules
                 unset($list);
             } else {
                 // Pas d'entité.
-                $this->_applicationInstance->getDisplayInstance()->displayMessageInformation('::sylabe:module:groups:display:noGroupMember');
+                $this->_applicationInstance->getDisplayInstance()->displayMessageInformation_DEPRECATED('::sylabe:module:groups:display:noGroupMember');
             }
         }
     }

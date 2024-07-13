@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Nebule\Application\Autent;
 use Nebule\Library\DisplayInformation;
+use Nebule\Library\DisplayNotify;
 use Nebule\Library\DisplayTitle;
 use Nebule\Library\Metrology;
 use Nebule\Library\Modules;
@@ -43,7 +44,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240622';
+    const APPLICATION_VERSION = '020240713';
     const APPLICATION_LICENCE = 'GNU GPL 2023-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -251,7 +252,7 @@ class Display extends Displays
                 'informationType' => 'error',
                 'displayRatio' => 'short',
             );
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation('::::ERROR', $param);
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::ERROR', $param);
         }
     }
 
@@ -491,7 +492,11 @@ class ModuleAutent extends Modules
         if ($this->_comebackAppId == '')
             $this->_comebackAppId = '1';
 
-$this->_metrologyInstance->addLog('MARK view=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+        $instance = new DisplayNotify($this->_applicationInstance);
+        $instance->setMessage('under construction!');
+        $instance->setType(DisplayNotify::TYPE_WARN);
+        $instance->display();
+
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[1]:
                 $this->_displayLogin();
@@ -686,7 +691,7 @@ $this->_metrologyInstance->addLog('MARK view=' . $this->_applicationInstance->ge
                 'informationType' => 'error',
                 'displayRatio' => 'short',
             );
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
         }
     }
 

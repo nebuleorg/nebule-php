@@ -1147,7 +1147,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_LOGIN
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
             }
-            echo $this->getDisplayObject($this->_nebuleInstance->getCurrentEntityInstance(), $param);
+            echo $this->getDisplayObject_DEPRECATED($this->_nebuleInstance->getCurrentEntityInstance(), $param);
             ?>
 
             <div class="header-right">
@@ -1447,46 +1447,46 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     private function _displayChecks()
     {
         if ($this->_nebuleInstance->getModeRescue()) {
-            $this->displayMessageWarning('::::RESCUE');
+            $this->displayMessageWarning_DEPRECATED('::::RESCUE');
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'WARN') {
-            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
+            $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'ERROR') {
-            $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
+            $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'WARN') {
-            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
+            $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'ERROR') {
-            $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
+            $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'WARN') {
-            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
+            $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'ERROR') {
-            $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
+            $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'ERROR') {
-            $this->displayMessageError($this->_applicationInstance->getCheckSecurityBootstrapMessage());
+            $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityBootstrapMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'WARN') {
-            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityBootstrapMessage());
+            $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityBootstrapMessage());
         }
         if ($this->_applicationInstance->getCheckSecuritySign() == 'WARN') {
-            $this->displayMessageWarning($this->_applicationInstance->getCheckSecuritySignMessage());
+            $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecuritySignMessage());
         }
         if ($this->_applicationInstance->getCheckSecuritySign() == 'ERROR') {
-            $this->displayMessageError($this->_applicationInstance->getCheckSecuritySignMessage());
+            $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecuritySignMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityURL() == 'WARN') {
-            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityURLMessage());
+            $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityURLMessage());
         }
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')) {
-            $this->displayMessageWarning(':::warn_ServNotPermitWrite');
+            $this->displayMessageWarning_DEPRECATED(':::warn_ServNotPermitWrite');
         }
         if ($this->_nebuleInstance->getFlushCache()) {
-            $this->displayMessageWarning(':::warn_flushSessionAndCache');
+            $this->displayMessageWarning_DEPRECATED(':::warn_flushSessionAndCache');
         }
     }
 
@@ -2057,7 +2057,7 @@ class ModuleHelp extends Modules
     private function _displayHlpFirst(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle($this->_applicationInstance->getTraductionInstance()->getTraduction('::SelectUser'), $this->MODULE_REGISTERED_ICONS[4]);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED($this->_applicationInstance->getTraductionInstance()->getTraduction('::SelectUser'), $this->MODULE_REGISTERED_ICONS[4]);
 
         // Liste des entités déjà affichées.
         $listOkEntities = $this->_nebuleInstance->getSpecialEntities();
@@ -2130,10 +2130,10 @@ class ModuleHelp extends Modules
             'displayRatio' => 'short',
             'icon' => $module->getLogo(),
         );
-        echo $this->_displayInstance->getDisplayInformation($module->getTraduction($module->getName()), $param);
+        echo $this->_displayInstance->getDisplayInformation_DEPRECATED($module->getTraduction($module->getName()), $param);
 
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle($this->_applicationInstance->getTraductionInstance()->getTraduction('::ChangeLanguage'), $this->MODULE_REGISTERED_ICONS[3]);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED($this->_applicationInstance->getTraductionInstance()->getTraduction('::ChangeLanguage'), $this->MODULE_REGISTERED_ICONS[3]);
 
         // Affiche la liste des langues.
         echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('helpLanguages', 'Medium');
@@ -2662,7 +2662,7 @@ class ModuleAdmin extends Modules
                 <?php
             }
         } else {
-            $this->_applicationInstance->getDisplayInstance()->displayMessageError(':::err_NotPermit');
+            $this->_applicationInstance->getDisplayInstance()->displayMessageError_DEPRECATED(':::err_NotPermit');
         }
     }
 
@@ -2708,11 +2708,11 @@ class ModuleAdmin extends Modules
                 // Affiche les entités.
                 $this->_applicationInstance->getDisplayInstance()->displayItemList($list);
             } else {
-                $this->_applicationInstance->getDisplayInstance()->displayMessageInformation('::qantion:module:admin:Display:NoLocalAuthority');
+                $this->_applicationInstance->getDisplayInstance()->displayMessageInformation_DEPRECATED('::qantion:module:admin:Display:NoLocalAuthority');
             }
             unset($list, $listEntities);
         } else {
-            $this->_applicationInstance->getDisplayInstance()->displayMessageError(':::err_NotPermit');
+            $this->_applicationInstance->getDisplayInstance()->displayMessageError_DEPRECATED(':::err_NotPermit');
         }
     }
 
@@ -2758,7 +2758,7 @@ class ModuleAdmin extends Modules
             // Affiche les entités.
             $this->_applicationInstance->getDisplayInstance()->displayItemList($list);
         } else {
-            $this->_applicationInstance->getDisplayInstance()->displayMessageInformation('::qantion:module:admin:Display:NoRecoveryEntity');
+            $this->_applicationInstance->getDisplayInstance()->displayMessageInformation_DEPRECATED('::qantion:module:admin:Display:NoRecoveryEntity');
         }
         unset($list, $listEntities);
     }
@@ -3750,7 +3750,7 @@ class ModuleEntities extends Modules
             'displaySize' => 'large',
             'displayRatio' => 'short',
         );
-        echo $this->_displayInstance->getDisplayObject($this->_displayEntityInstance, $param);
+        echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_displayEntityInstance, $param);
 
         echo '</div>' . "\n";
         echo '</div>' . "\n";
@@ -3783,7 +3783,7 @@ class ModuleEntities extends Modules
             'displaySize' => 'medium',
             'displayRatio' => 'short',
         );
-        echo $this->_displayInstance->getDisplayObject($this->_displayEntityInstance, $param);
+        echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_displayEntityInstance, $param);
 
         echo '</div>' . "\n";
         echo '</div>' . "\n";
@@ -3793,9 +3793,9 @@ class ModuleEntities extends Modules
                 && $this->_unlocked
             )
         ) {
-            echo $this->_displayInstance->getDisplayTitle('::EntityUnlocked', $this->MODULE_REGISTERED_ICONS[9]);
+            echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::EntityUnlocked', $this->MODULE_REGISTERED_ICONS[9]);
         } else {
-            echo $this->_displayInstance->getDisplayTitle('::EntityLocked', $this->MODULE_REGISTERED_ICONS[11]);
+            echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::EntityLocked', $this->MODULE_REGISTERED_ICONS[11]);
         }
 
         // Extrait les états de tests en warning ou en erreur.
@@ -3841,7 +3841,7 @@ class ModuleEntities extends Modules
                 'displaySize' => 'small',
                 'displayRatio' => 'short',
             );
-            echo $this->_displayInstance->getDisplayInformation('::::SecurityChecks', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::SecurityChecks', $param);
         }
 
         // Affiche le champs de mot de passe.
@@ -3867,7 +3867,7 @@ class ModuleEntities extends Modules
                 $param['displaySize'] = 'small';
                 $param['displayRatio'] = 'long';
                 $param['objectIcon'] = $this->MODULE_REGISTERED_ICONS[9];
-                echo $this->_displayInstance->getDisplayObject($this->_nebuleInstance->getCurrentEntityPrivateKeyInstance(), $param);
+                echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_nebuleInstance->getCurrentEntityPrivateKeyInstance(), $param);
                 echo '</div>' . "\n";
                 echo '</div>' . "\n";
 
@@ -3912,7 +3912,7 @@ class ModuleEntities extends Modules
                     'displaySize' => 'medium',
                     'displayRatio' => 'short',
                 );
-                echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
             }
         }
     }
@@ -3929,7 +3929,7 @@ class ModuleEntities extends Modules
         }
 
         // Titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:ObjectTitle1', $this->MODULE_REGISTERED_ICONS[7], true);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:ObjectTitle1', $this->MODULE_REGISTERED_ICONS[7], true);
 
         // Extrait des propriétés de l'objet.
         $entity = $this->_displayEntity;
@@ -3959,7 +3959,7 @@ class ModuleEntities extends Modules
         <?php
         // Si besoin, affiche le message d'information.
         if ($dispWarn) {
-            $this->_displayInstance->displayMessageInformation(
+            $this->_displayInstance->displayMessageInformation_DEPRECATED(
                 $this->_traduction('::sylabe:module:entities:DisplayEntityPublicMessagesWarning'));
         }
         unset($dispWarn);
@@ -4138,7 +4138,7 @@ class ModuleEntities extends Modules
         }
 
         // Titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:ObjectTitle2', $this->MODULE_REGISTERED_ICONS[8], true);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:ObjectTitle2', $this->MODULE_REGISTERED_ICONS[8], true);
 
         // Extrait des propriétés de l'objet.
         $id = $this->_applicationInstance->getCurrentObjectInstance()->getID();
@@ -4184,7 +4184,7 @@ class ModuleEntities extends Modules
         <?php
         // Si besoin, affiche le message d'information.
         if ($dispWarn) {
-            $this->_displayInstance->displayMessageInformation(
+            $this->_displayInstance->displayMessageInformation_DEPRECATED(
                 $this->_traduction('::sylabe:module:entities:DisplayEntityPublicMessagesWarning'));
         }
         unset($dispWarn);
@@ -4246,7 +4246,7 @@ class ModuleEntities extends Modules
      */
     private function _displayMyEntitiesList(): void
     {
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:MyEntities', $this->MODULE_REGISTERED_ICONS[4], true);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:MyEntities', $this->MODULE_REGISTERED_ICONS[4], true);
 
         $this->_displayInstance->registerInlineContentID('myentities');
     }
@@ -4308,7 +4308,7 @@ class ModuleEntities extends Modules
      */
     private function _displayKnownEntitiesList(): void
     {
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:KnownEntities', $this->MODULE_REGISTERED_ICONS[4], true);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:KnownEntities', $this->MODULE_REGISTERED_ICONS[4], true);
 
         $this->_displayInstance->registerInlineContentID('knownentities');
     }
@@ -4377,7 +4377,7 @@ class ModuleEntities extends Modules
      */
     private function _displayKnownByEntitiesList(): void
     {
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:KnownByEntities', $this->MODULE_REGISTERED_ICONS[4], true);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:KnownByEntities', $this->MODULE_REGISTERED_ICONS[4], true);
 
         $this->_displayInstance->registerInlineContentID('knownentities');
     }
@@ -4446,7 +4446,7 @@ class ModuleEntities extends Modules
      */
     private function _displayUnknownEntitiesList(): void
     {
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:UnknownEntities', $this->MODULE_REGISTERED_ICONS[4], true);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:UnknownEntities', $this->MODULE_REGISTERED_ICONS[4], true);
 
         $this->_displayInstance->registerInlineContentID('unknownentities');
     }
@@ -4539,7 +4539,7 @@ class ModuleEntities extends Modules
             unset($list);
         } else {
             // Pas d'entité.
-            $this->_displayInstance->displayMessageInformation(
+            $this->_displayInstance->displayMessageInformation_DEPRECATED(
                 '::sylabe:module:entities:Display:NoEntity');
         }
         unset($links, $listOkEntities);
@@ -4553,7 +4553,7 @@ class ModuleEntities extends Modules
      */
     private function _displaySpecialEntitiesList(): void
     {
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:SpecialEntities', $this->MODULE_REGISTERED_ICONS[4]);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:SpecialEntities', $this->MODULE_REGISTERED_ICONS[4]);
 
         $this->_displayInstance->registerInlineContentID('specialentities');
     }
@@ -4694,7 +4694,7 @@ class ModuleEntities extends Modules
         }
 
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:CreateEntity', $this->MODULE_REGISTERED_ICONS[5], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:CreateEntity', $this->MODULE_REGISTERED_ICONS[5], false);
 
         // Vérifie que la création soit authorisée.
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -4872,7 +4872,7 @@ class ModuleEntities extends Modules
             </div>
             <?php
         } else {
-            $this->_displayInstance->displayMessageWarning('::sylabe:module:entities:CreateEntityNotAllowed');
+            $this->_displayInstance->displayMessageWarning_DEPRECATED('::sylabe:module:entities:CreateEntityNotAllowed');
         }
     }
 
@@ -4946,9 +4946,9 @@ class ModuleEntities extends Modules
                 </p>
             </div>
             <?php
-            $this->_displayInstance->displayMessageInformation('::sylabe:module:entities:SearchEntityLongTime');
+            $this->_displayInstance->displayMessageInformation_DEPRECATED('::sylabe:module:entities:SearchEntityLongTime');
         } else {
-            $this->_displayInstance->displayMessageWarning('::sylabe:module:entities:SearchEntityNotAllowed');
+            $this->_displayInstance->displayMessageWarning_DEPRECATED('::sylabe:module:entities:SearchEntityNotAllowed');
         }
     }
 
@@ -4963,7 +4963,7 @@ class ModuleEntities extends Modules
      */
     private function _displayEntityProp(): void
     {
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:Desc:AttribsTitle', $this->MODULE_REGISTERED_ICONS[3]);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:Desc:AttribsTitle', $this->MODULE_REGISTERED_ICONS[3]);
 
         // Affiche les propriétés.
         $this->_displayInstance->registerInlineContentID('properties');
@@ -4989,7 +4989,7 @@ class ModuleEntities extends Modules
         if ($update != $this->_displayEntity) {
             // A affiner...
             //
-            $this->_displayInstance->displayMessageWarning(
+            $this->_displayInstance->displayMessageWarning_DEPRECATED(
                 $this->_traduction('::sylabe:module:objects:warning:ObjectHaveUpdate'));
         }
         unset($update);
@@ -5884,12 +5884,12 @@ class ModuleGroups extends Modules
                     'displayRatio' => 'long',
                     'informationType' => 'error',
                 );
-                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:groups:display:notOKCreateGroup', $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:groups:display:notOKCreateGroup', $param);
             }
         }
 
         // Titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:groups:display:MyGroups', $this->MODULE_LOGO);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:groups:display:MyGroups', $this->MODULE_LOGO);
 
         // Affiche le contenu.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('groups');
@@ -5959,7 +5959,7 @@ class ModuleGroups extends Modules
     private function _displayAllGroups(): void
     {
         // Titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:groups:display:otherGroups', $this->MODULE_LOGO);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:groups:display:otherGroups', $this->MODULE_LOGO);
 
         // Affiche le contenu.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('allgroups');
@@ -6152,7 +6152,7 @@ class ModuleGroups extends Modules
     private function _displayCreateGroup(): void
     {
         // Titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:groups:display:createGroup', $this->MODULE_REGISTERED_ICONS[1]);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:groups:display:createGroup', $this->MODULE_REGISTERED_ICONS[1]);
 
         // Si autorisé à créer un groupe.
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -6188,7 +6188,7 @@ class ModuleGroups extends Modules
             </div>
             <?php
         } else {
-            $this->_applicationInstance->getDisplayInstance()->displayMessageError(':::err_NotPermit');
+            $this->_applicationInstance->getDisplayInstance()->displayMessageError_DEPRECATED(':::err_NotPermit');
         }
     }
 
@@ -6202,7 +6202,7 @@ class ModuleGroups extends Modules
             echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('::sylabe:module:group:remove');
         } else {
             // Ce n'est pas un groupe.
-            $this->_applicationInstance->getDisplayInstance()->displayMessageError('::sylabe:module:groups:display:thisIsNotGroup');
+            $this->_applicationInstance->getDisplayInstance()->displayMessageError_DEPRECATED('::sylabe:module:groups:display:thisIsNotGroup');
         }
     }
 
@@ -6255,7 +6255,7 @@ class ModuleGroups extends Modules
             'enableDisplayTypeHook' => false,
         );
         $param['objectRefs'] = $instance->getPropertySigners(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
-        echo $this->_displayInstance->getDisplayObject($instance, $param);
+        echo $this->_displayInstance->getDisplayObject_DEPRECATED($instance, $param);
         unset($instance);
 
         // Affichage des membres du groupe.
@@ -6378,7 +6378,7 @@ class ModuleGroups extends Modules
                 }
                 unset($list);
             } else {
-                $this->_applicationInstance->getDisplayInstance()->displayMessageInformation('::sylabe:module:groups:display:noGroupMember');
+                $this->_applicationInstance->getDisplayInstance()->displayMessageInformation_DEPRECATED('::sylabe:module:groups:display:noGroupMember');
             }
         } // Sinon c'est un groupe ouvert.
         else {
@@ -6433,7 +6433,7 @@ class ModuleGroups extends Modules
                 unset($list);
             } else {
                 // Pas d'entité.
-                $this->_applicationInstance->getDisplayInstance()->displayMessageInformation('::sylabe:module:groups:display:noGroupMember');
+                $this->_applicationInstance->getDisplayInstance()->displayMessageInformation_DEPRECATED('::sylabe:module:groups:display:noGroupMember');
             }
         }
     }
@@ -7038,7 +7038,7 @@ class ModuleObjects extends Modules
             'enableDisplaySelfHook' => true,
             'enableDisplayTypeHook' => false,
         );
-        echo $this->_displayInstance->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_applicationInstance->getCurrentObjectInstance(), $param);
     }
 
 
@@ -7067,7 +7067,7 @@ class ModuleObjects extends Modules
             'enableDisplaySelfHook' => true,
             'enableDisplayTypeHook' => false,
         );
-        echo $this->_displayInstance->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_applicationInstance->getCurrentObjectInstance(), $param);
 
         // Affiche les propriétés.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('objprop');
@@ -7358,7 +7358,7 @@ class ModuleObjects extends Modules
             'enableDisplaySelfHook' => true,
             'enableDisplayTypeHook' => false,
         );
-        echo $this->_displayInstance->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_applicationInstance->getCurrentObjectInstance(), $param);
 
         // Affiche la navigation.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('objnav');
@@ -7720,7 +7720,7 @@ class ModuleObjects extends Modules
                 && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             ) {
                 // Affiche le titre.
-                echo $this->_displayInstance->getDisplayTitle('::sylabe:module:objects:ShareObjectProtection', $this->MODULE_REGISTERED_ICONS[3], false);
+                echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:objects:ShareObjectProtection', $this->MODULE_REGISTERED_ICONS[3], false);
 
                 // Affiche en ligne les entités pour qui c'est partagé.
                 $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('objectprotectionshareto');
@@ -8705,7 +8705,7 @@ class Moduleqantion extends Modules
             // Si création d'une monnaie.
             if ($this->_applicationInstance->getActionInstance()->getCreateCurrency()) {
                 // Affiche le titre.
-                echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:CreateCurrency', $this->MODULE_LOGO, false);
+                echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:CreateCurrency', $this->MODULE_LOGO, false);
 
                 $createPoolError = $this->_applicationInstance->getActionInstance()->getCreateCurrencyError();
                 $createPoolErrorMessage = $this->_applicationInstance->getActionInstance()->getCreateCurrencyErrorMessage();
@@ -8764,14 +8764,14 @@ class Moduleqantion extends Modules
                         'displayRatio' => 'long',
                         'informationType' => 'error',
                     );
-                    echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:create:notOKCreation', $param);
+                    echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:qantion:create:notOKCreation', $param);
                 }
             }
 
             // Si création d'un sac de jetons.
             if ($this->_applicationInstance->getActionInstance()->getCreateTokenPool()) {
                 // Affiche le titre.
-                echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:CreatePool', $this->MODULE_REGISTERED_ICONS[0], false);
+                echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:CreatePool', $this->MODULE_REGISTERED_ICONS[0], false);
 
                 $createPoolError = $this->_applicationInstance->getActionInstance()->getCreateTokenPoolError();
                 $createPoolErrorMessage = $this->_applicationInstance->getActionInstance()->getCreateTokenPoolErrorMessage();
@@ -8830,14 +8830,14 @@ class Moduleqantion extends Modules
                         'displayRatio' => 'long',
                         'informationType' => 'error',
                     );
-                    echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:create:notOKCreation', $param);
+                    echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:qantion:create:notOKCreation', $param);
                 }
             }
 
             // Si création de jetons.
             if ($this->_applicationInstance->getActionInstance()->getCreateTokens()) {
                 // Affiche le titre.
-                echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:CreateTokens', $this->MODULE_REGISTERED_ICONS[0], false);
+                echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:CreateTokens', $this->MODULE_REGISTERED_ICONS[0], false);
 
                 $createTokensError = $this->_applicationInstance->getActionInstance()->getCreateTokensError();
                 $createTokensErrorMessage = $this->_applicationInstance->getActionInstance()->getCreateTokensErrorMessage();
@@ -8896,7 +8896,7 @@ class Moduleqantion extends Modules
                         'displayRatio' => 'long',
                         'informationType' => 'error',
                     );
-                    echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:create:notOKCreation', $param);
+                    echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:qantion:create:notOKCreation', $param);
                 }
             }
         }
@@ -8911,7 +8911,7 @@ class Moduleqantion extends Modules
     private function _displayList(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:MyList', $this->MODULE_LOGO, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:MyList', $this->MODULE_LOGO, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('list');
     }
@@ -9002,7 +9002,7 @@ class Moduleqantion extends Modules
     private function _displayListAll(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:ListAll', $this->MODULE_LOGO, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:ListAll', $this->MODULE_LOGO, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('listall');
     }
@@ -9031,7 +9031,7 @@ class Moduleqantion extends Modules
     private function _displayFindCurrency(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Find', $this->MODULE_LOGO, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:Find', $this->MODULE_LOGO, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('find');
     }
@@ -9050,7 +9050,7 @@ class Moduleqantion extends Modules
             'displayRatio' => 'short',
             'informationType' => 'error',
         );
-        echo $this->_displayInstance->getDisplayInformation('::::Developpement', $param);
+        echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::Developpement', $param);
     }
 
 
@@ -9149,7 +9149,7 @@ class Moduleqantion extends Modules
             }
 
             // Affiche le titre.
-            echo $this->_displayInstance->getDisplayTitle($title, $icon, false);
+            echo $this->_displayInstance->getDisplayTitle_DEPRECATED($title, $icon, false);
 
             ?>
 
@@ -9372,7 +9372,7 @@ class Moduleqantion extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'short',
             );
-            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
         }
     }
 
@@ -9385,7 +9385,7 @@ class Moduleqantion extends Modules
     private function _displayAdminCurrency(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Admin', $this->MODULE_LOGO, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:Admin', $this->MODULE_LOGO, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('admincurrency');
     }
@@ -9404,7 +9404,7 @@ class Moduleqantion extends Modules
             'displayRatio' => 'short',
             'informationType' => 'error',
         );
-        echo $this->_displayInstance->getDisplayInformation('::::Developpement', $param);
+        echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::Developpement', $param);
     }
 
 
@@ -9416,7 +9416,7 @@ class Moduleqantion extends Modules
     private function _displayAdminPool(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Admin', $this->MODULE_LOGO, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:Admin', $this->MODULE_LOGO, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('adminpool');
     }
@@ -9435,7 +9435,7 @@ class Moduleqantion extends Modules
             'displayRatio' => 'short',
             'informationType' => 'error',
         );
-        echo $this->_displayInstance->getDisplayInformation('::::Developpement', $param);
+        echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::Developpement', $param);
     }
 
 
@@ -9447,7 +9447,7 @@ class Moduleqantion extends Modules
     private function _displayAdminToken(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Admin', $this->MODULE_LOGO, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:Admin', $this->MODULE_LOGO, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('admintoken');
     }
@@ -9466,7 +9466,7 @@ class Moduleqantion extends Modules
             'displayRatio' => 'short',
             'informationType' => 'error',
         );
-        echo $this->_displayInstance->getDisplayInformation('::::Developpement', $param);
+        echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::Developpement', $param);
     }
 
 
@@ -9478,7 +9478,7 @@ class Moduleqantion extends Modules
     private function _displayListPools(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:AllPools', $this->MODULE_LOGO, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:AllPools', $this->MODULE_LOGO, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('listallpools');
     }
@@ -9552,12 +9552,12 @@ class Moduleqantion extends Modules
     private function _displayDispCurrency(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Currency', $this->MODULE_REGISTERED_ICONS[3], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:Currency', $this->MODULE_REGISTERED_ICONS[3], false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('dispcurrency');
 
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:RelativeValue', $this->MODULE_REGISTERED_ICONS[6], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:RelativeValue', $this->MODULE_REGISTERED_ICONS[6], false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('displayvalue');
     }
@@ -9583,7 +9583,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:qantion:WarnInvalid', $param);
         }
 
         switch ($value) {
@@ -9607,12 +9607,12 @@ class Moduleqantion extends Modules
     private function _displayDispPool(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:DisplayPool', $this->MODULE_REGISTERED_ICONS[4], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:DisplayPool', $this->MODULE_REGISTERED_ICONS[4], false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('displaypool');
 
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:RelativeValue', $this->MODULE_REGISTERED_ICONS[6], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:RelativeValue', $this->MODULE_REGISTERED_ICONS[6], false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('displayvalue');
     }
@@ -9638,7 +9638,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:qantion:WarnInvalid', $param);
         }
 
         $instance->setCID($this->_nebuleInstance->getCurrentCurrencyInstance());
@@ -9665,12 +9665,12 @@ class Moduleqantion extends Modules
     private function _displayDispToken(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:DisplayToken', $this->MODULE_REGISTERED_ICONS[5], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:DisplayToken', $this->MODULE_REGISTERED_ICONS[5], false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('displaytoken');
 
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:RelativeValue', $this->MODULE_REGISTERED_ICONS[6], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:RelativeValue', $this->MODULE_REGISTERED_ICONS[6], false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('displayvalue');
     }
@@ -9696,7 +9696,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:qantion:WarnInvalid', $param);
         }
 
         $instance->setCID($this->_nebuleInstance->getCurrentCurrencyInstance());
@@ -9723,11 +9723,11 @@ class Moduleqantion extends Modules
     private function _displayDescCurrency(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Currency', $this->MODULE_REGISTERED_ICONS[3], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:Currency', $this->MODULE_REGISTERED_ICONS[3], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('desccurrencydisp');
 
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Desc', $this->MODULE_REGISTERED_ICONS[6], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:Desc', $this->MODULE_REGISTERED_ICONS[6], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('desccurrencydesc');
     }
 
@@ -9752,7 +9752,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:qantion:WarnInvalid', $param);
         }
 
         switch ($value) {
@@ -10070,11 +10070,11 @@ class Moduleqantion extends Modules
     private function _displayDescPool(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:DisplayPool', $this->MODULE_REGISTERED_ICONS[4], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:DisplayPool', $this->MODULE_REGISTERED_ICONS[4], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('descpooldisp');
 
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Desc', $this->MODULE_REGISTERED_ICONS[6], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:Desc', $this->MODULE_REGISTERED_ICONS[6], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('descpooldesc');
 
         // Affiche le titre.
@@ -10103,7 +10103,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:qantion:WarnInvalid', $param);
         }
 
         $instance->setCID($this->_nebuleInstance->getCurrentCurrencyInstance());
@@ -10129,11 +10129,11 @@ class Moduleqantion extends Modules
     private function _displayDescToken(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:DisplayToken', $this->MODULE_REGISTERED_ICONS[5], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:DisplayToken', $this->MODULE_REGISTERED_ICONS[5], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('desctokendisp');
 
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Desc', $this->MODULE_REGISTERED_ICONS[6], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:Desc', $this->MODULE_REGISTERED_ICONS[6], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('desctokendesc');
     }
 
@@ -10158,7 +10158,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:qantion:WarnInvalid', $param);
         }
 
         $instance->setCID($this->_nebuleInstance->getCurrentCurrencyInstance());
@@ -10185,7 +10185,7 @@ class Moduleqantion extends Modules
     private function _displayDeleteCurrency(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Delete', $this->MODULE_REGISTERED_ICONS[3], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:Delete', $this->MODULE_REGISTERED_ICONS[3], false);
 
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
@@ -10208,7 +10208,7 @@ class Moduleqantion extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'error',
                 );
-                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:qantion:WarnInvalid', $param);
             }
 
             if ($this->_nebuleInstance->getCurrentCurrency() != '0') {
@@ -10232,7 +10232,7 @@ class Moduleqantion extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'warn',
                 );
-                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:DeleteWarn', $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:qantion:DeleteWarn', $param);
 
                 $target = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE);
                 $meta = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
@@ -10257,7 +10257,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
         }
     }
 
@@ -10270,7 +10270,7 @@ class Moduleqantion extends Modules
     private function _displayDeletePool(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Delete', $this->MODULE_REGISTERED_ICONS[4], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:Delete', $this->MODULE_REGISTERED_ICONS[4], false);
 
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
@@ -10295,7 +10295,7 @@ class Moduleqantion extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'error',
                 );
-                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:qantion:WarnInvalid', $param);
             }
 
             if ($this->_nebuleInstance->getCurrentTokenPool() != '0') {
@@ -10319,7 +10319,7 @@ class Moduleqantion extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'warn',
                 );
-                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:DeleteWarn', $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:qantion:DeleteWarn', $param);
 
                 $target = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_SAC);
                 $meta1 = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
@@ -10346,7 +10346,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
         }
     }
 
@@ -10359,7 +10359,7 @@ class Moduleqantion extends Modules
     private function _displayDeleteToken(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Delete', $this->MODULE_REGISTERED_ICONS[5], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:Delete', $this->MODULE_REGISTERED_ICONS[5], false);
 
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
@@ -10385,7 +10385,7 @@ class Moduleqantion extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'error',
                 );
-                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:qantion:WarnInvalid', $param);
             }
 
             if ($this->_nebuleInstance->getCurrentToken() != '0') {
@@ -10409,7 +10409,7 @@ class Moduleqantion extends Modules
                     'displayRatio' => 'short',
                     'informationType' => 'warn',
                 );
-                echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:DeleteWarn', $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:qantion:DeleteWarn', $param);
 
                 $target = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_JETON);
                 $meta1 = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
@@ -10438,7 +10438,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
         }
     }
 
@@ -10451,11 +10451,11 @@ class Moduleqantion extends Modules
     private function _displayItemsCurrency(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:Currency', $this->MODULE_REGISTERED_ICONS[3], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:Currency', $this->MODULE_REGISTERED_ICONS[3], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('desccurrencydisp');
 
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:AllPools', $this->MODULE_REGISTERED_ICONS[4], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:AllPools', $this->MODULE_REGISTERED_ICONS[4], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('desccurrencypools');
 
         // Affiche la création d'un sac de jetons.
@@ -10484,7 +10484,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:qantion:WarnInvalid', $param);
         }
 
         switch ($value) {
@@ -10590,11 +10590,11 @@ class Moduleqantion extends Modules
     private function _displayItemsPool(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:DisplayPool', $this->MODULE_REGISTERED_ICONS[4], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:DisplayPool', $this->MODULE_REGISTERED_ICONS[4], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('descpooldisp');
 
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:qantion:AllTokens', $this->MODULE_REGISTERED_ICONS[5], false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:qantion:AllTokens', $this->MODULE_REGISTERED_ICONS[5], false);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('descpooltokens');
 
         // Affiche la création de jetons.
@@ -10622,7 +10622,7 @@ class Moduleqantion extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation('::sylabe:module:qantion:WarnInvalid', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:qantion:WarnInvalid', $param);
         }
 
         $instance->setCID($this->_nebuleInstance->getCurrentCurrencyInstance());

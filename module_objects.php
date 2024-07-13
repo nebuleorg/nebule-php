@@ -479,7 +479,7 @@ class ModuleObjects extends Modules
             'enableDisplaySelfHook' => true,
             'enableDisplayTypeHook' => false,
         );
-        echo $this->_displayInstance->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_applicationInstance->getCurrentObjectInstance(), $param);
     }
 
 
@@ -508,7 +508,7 @@ class ModuleObjects extends Modules
             'enableDisplaySelfHook' => true,
             'enableDisplayTypeHook' => false,
         );
-        echo $this->_displayInstance->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_applicationInstance->getCurrentObjectInstance(), $param);
 
         // Affiche les propriétés.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('objprop');
@@ -769,7 +769,7 @@ class ModuleObjects extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'info',
             );
-            echo $this->_displayInstance->getDisplayInformation('::EmptyList', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::EmptyList', $param);
         }
     }
 
@@ -799,7 +799,7 @@ class ModuleObjects extends Modules
             'enableDisplaySelfHook' => true,
             'enableDisplayTypeHook' => false,
         );
-        echo $this->_displayInstance->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_applicationInstance->getCurrentObjectInstance(), $param);
 
         // Affiche la navigation.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('objnav');
@@ -1162,7 +1162,7 @@ class ModuleObjects extends Modules
             ) {
                 // Affiche le titre.
                 $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[3]);
-                echo $this->_displayInstance->getDisplayTitle('::sylabe:module:objects:ShareObjectProtection', $icon, false);
+                echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:objects:ShareObjectProtection', $icon, false);
 
                 // Affiche en ligne les entités pour qui c'est partagé.
                 $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('objectprotectionshareto');

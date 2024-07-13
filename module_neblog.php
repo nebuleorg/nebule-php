@@ -187,7 +187,7 @@ class ModuleNeblog extends Modules
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
-        echo $this->_displayInstance->getDisplayTitle('::neblog:module:blog:dispblog', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:blog:dispblog', $icon, false);
 
         // Affichage le blog.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('dispblog');
@@ -218,7 +218,7 @@ class ModuleNeblog extends Modules
             'enableDisplaySelfHook' => true,
             'enableDisplayTypeHook' => false,
         );
-        echo $this->_displayInstance->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_applicationInstance->getCurrentObjectInstance(), $param);
     }
 
     /**
@@ -228,7 +228,7 @@ class ModuleNeblog extends Modules
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[1]);
-        echo $this->_displayInstance->getDisplayTitle('::neblog:module:list:listblog', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:list:listblog', $icon, false);
 
         $param = array(
             'enableDisplayColor' => true,
@@ -250,7 +250,7 @@ class ModuleNeblog extends Modules
             'enableDisplaySelfHook' => true,
             'enableDisplayTypeHook' => false,
         );
-        echo $this->_displayInstance->getDisplayObject($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_applicationInstance->getCurrentObjectInstance(), $param);
     }
 
     /**
@@ -268,7 +268,7 @@ class ModuleNeblog extends Modules
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[2]);
-        echo $this->_displayInstance->getDisplayTitle('::neblog:module:new:newblog', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:new:newblog', $icon, false);
 
         ?>
 
@@ -302,7 +302,7 @@ class ModuleNeblog extends Modules
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[3]);
-        echo $this->_displayInstance->getDisplayTitle('::neblog:module:modify:modblog', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:modify:modblog', $icon, false);
 
         // TODO
         $param = array(
@@ -312,7 +312,7 @@ class ModuleNeblog extends Modules
             'displaySize' => 'medium',
             'displayRatio' => 'short',
         );
-        echo $this->_displayInstance->getDisplayInformation('::::Developpement', $param);
+        echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::Developpement', $param);
     }
 
     /**
@@ -322,7 +322,7 @@ class ModuleNeblog extends Modules
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
-        echo $this->_displayInstance->getDisplayTitle('::neblog:module:delete:delblog', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:delete:delblog', $icon, false);
 
         // TODO
         $param = array(
@@ -332,7 +332,7 @@ class ModuleNeblog extends Modules
             'displaySize' => 'medium',
             'displayRatio' => 'short',
         );
-        echo $this->_displayInstance->getDisplayInformation('::::Developpement', $param);
+        echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::Developpement', $param);
     }
 
     /**
@@ -342,7 +342,7 @@ class ModuleNeblog extends Modules
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
-        echo $this->_displayInstance->getDisplayTitle('::neblog:module:about:title', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:about:title', $icon, false);
 
         echo '<div>';
         echo '<p>' . $this->_traduction('::neblog:module:about:desc') . '</p>';

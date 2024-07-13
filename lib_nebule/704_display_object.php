@@ -603,20 +603,25 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
                 }
                 if ($this->_flagTargetObject !== null) {
                     $menuContent .= '   <div class="objectMenuContentMsg objectMenuContentMsgtargetObject">';
-                    $paramTiny = array(
-                        'enableDisplayColor' => true,
-                        'enableDisplayIcon' => true,
-                        'enableDisplayRefs' => false,
-                        'enableDisplayName' => true,
-                        'enableDisplayID' => false,
-                        'enableDisplayFlags' => false,
-                        'enableDisplayJS' => false,
-                        'displaySize' => 'tiny',
-                        'displayRatio' => 'short',
-                    );
                     // ATTENTION à une possible boucle infinie !
-                    $menuContent .= $this->_displayInstance->getDisplayObject($this->_flagTargetObject, $paramTiny);
-                    unset($paramTiny);
+
+                    // TODO rewrite this...
+                    $instanceNID = new DisplayObject($this->_applicationInstance);
+                    $instanceNID->setNID($this->_flagTargetObject);
+                    $instanceNID->setEnableColor(true);
+                    $instanceNID->setEnableIcon(true);
+                    $instanceNID->setEnableRefs(false);
+                    $instanceNID->setEnableName(true);
+                    $instanceNID->setEnableNID(false);
+                    $instanceNID->setEnableFlags(false);
+                    $instanceNID->setEnableStatus(false);
+                    $instanceNID->setEnableContent(false);
+                    $instanceNID->setSize(DisplayObject::SIZE_TINY);
+                    $instanceNID->setRatio(DisplayObject::RATIO_SHORT);
+                    $instanceNID->setEnableJS(false);
+                    $instanceNID->setEnableActions(false);
+                    $menuContent .= $instanceNID->getHTML();
+
                     $menuContent .= '</div>' . "\n";
                 }
                 if ($this->_displayFlagEmotions
@@ -1527,7 +1532,7 @@ class DisplayObject extends DisplayItemSizeable implements DisplayInterface
         ?>
 
         <style type="text/css">
-            /* CSS de la fonction getDisplayObject(). */
+            /* CSS for DisplayObject(). */
             .layoutObject {
                 margin: 5px 0 0 5px;
                 border: 0;

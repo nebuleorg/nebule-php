@@ -216,7 +216,7 @@ class ModuleAdmin extends Modules
     {
         // Affiche le titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:admin:display:AppOptions', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:admin:display:AppOptions', $icon, false);
 
         if ($this->_unlocked) {
             $listOptions = $this->_listOptions;
@@ -262,7 +262,7 @@ class ModuleAdmin extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
         }
     }
 
@@ -275,7 +275,7 @@ class ModuleAdmin extends Modules
     {
         // Affiche le titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:admin:display:NebOptions', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:admin:display:NebOptions', $icon, false);
 
         if ($this->_unlocked) {
             $listOptions = nebule::getListOptions();
@@ -329,7 +329,7 @@ class ModuleAdmin extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
         }
     }
 
@@ -342,7 +342,7 @@ class ModuleAdmin extends Modules
     {
         // Affiche le titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[1]);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:admin:display:seeAdmins', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:admin:display:seeAdmins', $icon, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('adminlist');
     }
@@ -389,7 +389,7 @@ class ModuleAdmin extends Modules
                 // Affiche les entités.
                 $this->_applicationInstance->getDisplayInstance()->displayItemList($list);
             } else {
-                $this->_applicationInstance->getDisplayInstance()->displayMessageInformation('::sylabe:module:admin:Display:NoLocalAuthority');
+                $this->_applicationInstance->getDisplayInstance()->displayMessageInformation_DEPRECATED('::sylabe:module:admin:Display:NoLocalAuthority');
             }
             unset($list, $listEntities, $listSigners);
         } else {
@@ -399,7 +399,7 @@ class ModuleAdmin extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
         }
     }
 
@@ -412,7 +412,7 @@ class ModuleAdmin extends Modules
     {
         // Affiche le titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[1]);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:admin:display:seeRecovery', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:admin:display:seeRecovery', $icon, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('recoverylist');
     }
@@ -460,7 +460,7 @@ class ModuleAdmin extends Modules
                 // Affiche les entités.
                 $this->_applicationInstance->getDisplayInstance()->displayItemList($list);
             } else {
-                $this->_applicationInstance->getDisplayInstance()->displayMessageInformation('::sylabe:module:admin:Display:NoRecoveryEntity');
+                $this->_applicationInstance->getDisplayInstance()->displayMessageInformation_DEPRECATED('::sylabe:module:admin:Display:NoRecoveryEntity');
             }
             unset($list, $listEntities, $listSigners);
         } else {
@@ -470,7 +470,7 @@ class ModuleAdmin extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
         }
     }
 

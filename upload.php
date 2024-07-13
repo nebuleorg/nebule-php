@@ -165,9 +165,9 @@ class Display extends Displays
                             'displayRatio' => 'short',
                         );
                         if ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')) {
-                            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::info_OnlySignedLinks', $param);
+                            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED(':::info_OnlySignedLinks', $param);
                         } else {
-                            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::info_OnlyLinksFromCodeMaster', $param);
+                            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED(':::info_OnlyLinksFromCodeMaster', $param);
                         }
                     }
                     ?>
@@ -219,7 +219,7 @@ class Display extends Displays
                         'informationType' => 'error',
                         'displayRatio' => 'short',
                     );
-                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::err_NotPermit', $param);
+                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
                 }
                 ?>
             </div>

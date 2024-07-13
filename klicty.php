@@ -1348,7 +1348,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     $param['flagUnlockedLink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
                         . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
                 }
-                echo $this->getDisplayObject($this->_nebuleInstance->getCurrentEntityInstance(), $param);
+                echo $this->getDisplayObject_DEPRECATED($this->_nebuleInstance->getCurrentEntityInstance(), $param);
             } else {
                 ?>
 
@@ -1570,46 +1570,46 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     private function _displayChecks()
     {
         if ($this->_nebuleInstance->getModeRescue()) {
-            $this->displayMessageWarning('::::RESCUE');
+            $this->displayMessageWarning_DEPRECATED('::::RESCUE');
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'WARN') {
-            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
+            $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'ERROR') {
-            $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
+            $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'WARN') {
-            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
+            $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'ERROR') {
-            $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
+            $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'WARN') {
-            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
+            $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'ERROR') {
-            $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
+            $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'ERROR') {
-            $this->displayMessageError($this->_applicationInstance->getCheckSecurityBootstrapMessage());
+            $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityBootstrapMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'WARN') {
-            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityBootstrapMessage());
+            $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityBootstrapMessage());
         }
         if ($this->_applicationInstance->getCheckSecuritySign() == 'WARN') {
-            $this->displayMessageWarning($this->_applicationInstance->getCheckSecuritySignMessage());
+            $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecuritySignMessage());
         }
         if ($this->_applicationInstance->getCheckSecuritySign() == 'ERROR') {
-            $this->displayMessageError($this->_applicationInstance->getCheckSecuritySignMessage());
+            $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecuritySignMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityURL() == 'WARN') {
-            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityURLMessage());
+            $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityURLMessage());
         }
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')) {
-            $this->displayMessageWarning(':::warn_ServNotPermitWrite');
+            $this->displayMessageWarning_DEPRECATED(':::warn_ServNotPermitWrite');
         }
         if ($this->_nebuleInstance->getFlushCache()) {
-            $this->displayMessageWarning(':::warn_flushSessionAndCache');
+            $this->displayMessageWarning_DEPRECATED(':::warn_flushSessionAndCache');
         }
     }
 
@@ -1716,7 +1716,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LSTOBJ);
-        echo $this->getDisplayTitle('::ObjectList', $icon);
+        echo $this->getDisplayTitle_DEPRECATED('::ObjectList', $icon);
 
         // Appel l'affichage en ligne.
         $this->registerInlineContentID('objectlist');
@@ -1789,7 +1789,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     'flagMessage' => $lifetime,
                 );
                 $param['objectRefs'][0] = $entity;
-                echo $this->getDisplayObject($instance, $param);
+                echo $this->getDisplayObject_DEPRECATED($instance, $param);
             }
             $DisplayedList[$id] = true;
         }
@@ -1879,7 +1879,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         'flagMessage' => $lifetime,
                     );
                     $param['objectRefs'][0] = $entity;
-                    echo $this->getDisplayObject($instance, $param);
+                    echo $this->getDisplayObject_DEPRECATED($instance, $param);
                 }
                 $DisplayedList[$id] = true;
             }
@@ -1893,7 +1893,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 'displayRatio' => 'short',
                 'informationType' => 'information',
             );
-            echo $this->getDisplayInformation('::NoFile', $param);
+            echo $this->getDisplayInformation_DEPRECATED('::NoFile', $param);
         } elseif (!$this->_unlocked) {
             // Si pas déverrouillé, affiche un message.
             $param = array(
@@ -1902,7 +1902,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 'displayRatio' => 'short',
                 'informationType' => 'warn',
             );
-            echo $this->getDisplayInformation('::AllNotDisplayed', $param);
+            echo $this->getDisplayInformation_DEPRECATED('::AllNotDisplayed', $param);
         }
 
         echo '</div>' . "\n";
@@ -1913,7 +1913,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LSTENT);
-        echo $this->getDisplayTitle('::EntitiesList', $icon);
+        echo $this->getDisplayTitle_DEPRECATED('::EntitiesList', $icon);
 
         // Appel l'affichage en ligne.
         $this->registerInlineContentID('listentities');
@@ -1976,7 +1976,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     . '&' . References::COMMAND_SWITCH_TO_ENTITY
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $id;
 
-                echo $this->getDisplayObject($instance, $param);
+                echo $this->getDisplayObject_DEPRECATED($instance, $param);
 
                 // Marque comme vu.
                 $listOkEntities[$id] = true;
@@ -1991,7 +1991,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 'displayRatio' => 'short',
                 'informationType' => 'information',
             );
-            echo $this->getDisplayInformation('::NoEntity', $param);
+            echo $this->getDisplayInformation_DEPRECATED('::NoEntity', $param);
         }
 
         echo '</div>' . "\n";
@@ -2002,7 +2002,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     {
         // Titre.
         $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_GRPENT);
-        echo $this->getDisplayTitle('::EntitiesGroupList', $icon);
+        echo $this->getDisplayTitle_DEPRECATED('::EntitiesGroupList', $icon);
 
         // Appel l'affichage en ligne.
         $this->registerInlineContentID('listgroups');
@@ -2052,7 +2052,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 }
 
-                echo $this->getDisplayObject($instance, $param);
+                echo $this->getDisplayObject_DEPRECATED($instance, $param);
 
                 // Marque comme vu.
                 $listOkGroups[$id] = true;
@@ -2067,7 +2067,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 'displayRatio' => 'short',
                 'informationType' => 'information',
             );
-            echo $this->getDisplayInformation('::NoEntityGroup', $param);
+            echo $this->getDisplayInformation_DEPRECATED('::NoEntityGroup', $param);
         }
 
         echo '</div>' . "\n";
@@ -2090,7 +2090,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             ) {
                 // Affiche le titre.
                 $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_GRPENT);
-                echo $this->getDisplayTitle('::CreatedGroup', $icon);
+                echo $this->getDisplayTitle_DEPRECATED('::CreatedGroup', $icon);
 
                 // Affiche la nouvelle entité.
                 echo '<div class="layoutObjectsList">' . "\n";
@@ -2110,7 +2110,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     'enableDisplayJS' => false,
                 );
                 $param['selfHookList'] = array();
-                echo $this->getDisplayObject($createGroupID, $param);
+                echo $this->getDisplayObject_DEPRECATED($createGroupID, $param);
 
                 echo '</div>' . "\n";
                 echo '</div>' . "\n";
@@ -2121,12 +2121,12 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     'informationType' => 'error',
                     'displayRatio' => 'long',
                 );
-                echo $this->getDisplayInformation('::NOKCreateGroup', $param);
+                echo $this->getDisplayInformation_DEPRECATED('::NOKCreateGroup', $param);
             }
         } else {
             // Affiche le titre.
             $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_GRPENTADD);
-            echo $this->getDisplayTitle('::EntitiesGroupAdd', $icon);
+            echo $this->getDisplayTitle_DEPRECATED('::EntitiesGroupAdd', $icon);
 
             // Si autorisé à créer un groupe.
             if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -2173,7 +2173,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     'informationType' => 'error',
                     'displayRatio' => 'long',
                 );
-                echo $this->getDisplayInformation(':::err_NotPermit', $param);
+                echo $this->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
             }
         }
     }
@@ -2201,7 +2201,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             'status' => $this->_applicationInstance->getTraductionInstance()->getTraduction($instance->getType('all')),
             'enableDisplayJS' => true,
         );
-        echo $this->getDisplayObject($instance, $param);
+        echo $this->getDisplayObject_DEPRECATED($instance, $param);
 
         echo '</div>' . "\n";
         echo '</div>' . "\n";
@@ -2458,7 +2458,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 unset($list);
             } else {
                 // Pas d'entité.
-                $this->displayMessageInformation('::NoGroupMember');
+                $this->displayMessageInformation_DEPRECATED('::NoGroupMember');
             }
             unset($listGroupsMember, $listOkGroups);
 
@@ -2512,7 +2512,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 unset($list);
             } else {
                 // Pas d'entité.
-                $this->displayMessageInformation('::NoEntityGroup');
+                $this->displayMessageInformation_DEPRECATED('::NoEntityGroup');
             }
             unset($groupListID, $listOkItems);
         }
@@ -2578,7 +2578,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             }
 
             if ($lifetimeExpired) {
-                $this->displayMessageError('::Expired');
+                $this->displayMessageError_DEPRECATED('::Expired');
             }
             ?>
 
@@ -2610,7 +2610,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 // Si pas d'erreur.
                 if (!$this->_applicationInstance->getActionInstance()->getUploadObjectError()) {
                     // Affiche un message OK.
-                    $this->displayMessageOk('::UploadedNewFileOK');
+                    $this->displayMessageOk_DEPRECATED('::UploadedNewFileOK');
 
                     $id = $this->_applicationInstance->getActionInstance()->getUploadObjectID();
                     $instance = $this->_nebuleInstance->newObject($id);
@@ -2641,7 +2641,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     </div>
                     <?php
                 } else {
-                    $this->displayMessageError('::UploadedNewFileError');
+                    $this->displayMessageError_DEPRECATED('::UploadedNewFileError');
                     ?>
 
                     <div class="text">
@@ -2734,9 +2734,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 </form>
             </div>
             <?php
-            $this->displayMessageInformation($this->_applicationInstance->getTraductionInstance()->getTraduction('::UploadMaxFileSize') . ' : ' . $this->_configurationInstance->getOptionUntyped('klictyIOReadMaxDataPHP') . 'o');
+            $this->displayMessageInformation_DEPRECATED($this->_applicationInstance->getTraductionInstance()->getTraduction('::UploadMaxFileSize') . ' : ' . $this->_configurationInstance->getOptionUntyped('klictyIOReadMaxDataPHP') . 'o');
         } else {
-            $this->displayMessageError(':::err_NotPermit');
+            $this->displayMessageError_DEPRECATED(':::err_NotPermit');
         }
     }
 
@@ -2760,7 +2760,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             ) {
                 // Affiche le titre.
                 $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_ADDENT);
-                echo $this->getDisplayTitle('::NewEntityCreated', $icon);
+                echo $this->getDisplayTitle_DEPRECATED('::NewEntityCreated', $icon);
 
                 // Affiche la nouvelle entité.
                 echo '<div class="layoutObjectsList">' . "\n";
@@ -2790,7 +2790,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     . '&' . References::COMMAND_SWITCH_TO_ENTITY
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $createEntityInstance;
 
-                echo $this->getDisplayObject($createEntityInstance, $param);
+                echo $this->getDisplayObject_DEPRECATED($createEntityInstance, $param);
 
                 echo '</div>' . "\n";
                 echo '</div>' . "\n";
@@ -2801,12 +2801,12 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     'informationType' => 'error',
                     'displayRatio' => 'long',
                 );
-                echo $this->getDisplayInformation('::EntityAddError', $param);
+                echo $this->getDisplayInformation_DEPRECATED('::EntityAddError', $param);
             }
         } else {
             // Affiche le titre.
             $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_ADDENT);
-            echo $this->getDisplayTitle('::CreateEntity', $icon);
+            echo $this->getDisplayTitle_DEPRECATED('::CreateEntity', $icon);
 
             // Si autorisé à créer une entité.
             if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -2887,7 +2887,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     'informationType' => 'error',
                     'displayRatio' => 'long',
                 );
-                echo $this->getDisplayInformation(':::err_NotPermit', $param);
+                echo $this->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
             }
         }
     }
@@ -2896,7 +2896,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     {
         // Affiche le titre.
         $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_SYNENT);
-        echo $this->getDisplayTitle('::EntitySync', $icon);
+        echo $this->getDisplayTitle_DEPRECATED('::EntitySync', $icon);
 
         // Si autorisé à synchroniser une entité.
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -2949,7 +2949,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->getDisplayInformation(':::err_NotPermit', $param);
+            echo $this->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
         }
     }
 
@@ -2968,7 +2968,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Si l'objet est présent.
         if ($object->checkPresent()) {
             if ($protect) {
-                $this->displayMessageOK('::ProtectedObject');
+                $this->displayMessageOk_DEPRECATED('::ProtectedObject');
                 ?>
 
                 <div class="text">
@@ -2998,13 +2998,13 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $this->displayDivTextTitleH2($icon, '::ShareProtectObject', '', '');
 
                 // Avertissement.
-                $this->displayMessageWarning('::WarningSharedProtection');
+                $this->displayMessageWarning_DEPRECATED('::WarningSharedProtection');
 
                 // Affiche en ligne les entités pour qui cela est partagé.
                 $this->registerInlineContentID('objectprotectionshareto');
             }
         } else {
-            $this->displayMessageError(':::display:content:errorNotAvailable');
+            $this->displayMessageError_DEPRECATED(':::display:content:errorNotAvailable');
         }
     }
 
@@ -3089,11 +3089,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 unset($list);
             } else {
                 // Pas d'entité.
-                $this->displayMessageInformation('::NoEntity');
+                $this->displayMessageInformation_DEPRECATED('::NoEntity');
             }
             unset($shareTo);
         } else {
-            $this->displayMessageInformation('::UnprotectedObject');
+            $this->displayMessageInformation_DEPRECATED('::UnprotectedObject');
 
             // Si l'entité est déverrouillée.
             if ($this->_unlocked
@@ -3112,7 +3112,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $this->displayActionList($actionList);
                 unset($actionList);
 
-                $this->displayMessageWarning('::WarningProtectObject');
+                $this->displayMessageWarning_DEPRECATED('::WarningProtectObject');
             }
         }
     }
@@ -3241,7 +3241,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             if (sizeof($list) != 0)
                 $this->displayItemList($list);
             else
-                $this->displayMessageInformation('::NoEntity');
+                $this->displayMessageInformation_DEPRECATED('::NoEntity');
             unset($list);
         }
     }
@@ -3268,7 +3268,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             'displaySize' => 'medium',
             'displayRatio' => 'short',
         );
-        echo $this->_applicationInstance->getDisplayInstance()->getDisplayObject($this->_applicationInstance->getCurrentEntityInstance(), $param);
+        echo $this->_applicationInstance->getDisplayInstance()->getDisplayObject_DEPRECATED($this->_applicationInstance->getCurrentEntityInstance(), $param);
         echo '</div>' . "\n";
         echo '</div>' . "\n";
 
@@ -3278,10 +3278,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             )
         ) {
             $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_KEY);
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayTitle('::EntityUnlocked', $icon);
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayTitle_DEPRECATED('::EntityUnlocked', $icon);
         } else {
             $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_ENTITY_LOCK);
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayTitle('::EntityLocked', $icon);
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayTitle_DEPRECATED('::EntityLocked', $icon);
         }
 
         // Extrait les états de tests en warning ou en erreur.
@@ -3328,7 +3328,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 'displaySize' => 'small',
                 'displayRatio' => 'short',
             );
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation('::::SecurityChecks', $param);
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::SecurityChecks', $param);
         }
 
         // Affiche le champs de mot de passe.
@@ -3353,7 +3353,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $param['displaySize'] = 'small';
                 $param['displayRatio'] = 'long';
                 $param['objectIcon'] = Displays::DEFAULT_ICON_KEY;
-                echo $this->_applicationInstance->getDisplayInstance()->getDisplayObject($this->_nebuleInstance->getCurrentEntityPrivateKeyInstance(), $param);
+                echo $this->_applicationInstance->getDisplayInstance()->getDisplayObject_DEPRECATED($this->_nebuleInstance->getCurrentEntityPrivateKeyInstance(), $param);
                 echo '</div>' . "\n";
                 echo '</div>' . "\n";
 
@@ -3414,7 +3414,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     'displaySize' => 'medium',
                     'displayRatio' => 'short',
                 );
-                echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation(':::err_NotPermit', $param);
+                echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
             }
         }
     }
@@ -3458,17 +3458,17 @@ private function _displayContentAbout()
                 'enableDisplayIcon' => true,
                 'informationType' => 'ok',
             );
-            echo $this->getDisplayInformation('::Welcome', $param);
+            echo $this->getDisplayInformation_DEPRECATED('::Welcome', $param);
 
             $applicationLevel = $this->_configurationInstance->getOptionAsString('codeBranch');
             if ($applicationLevel == 'Experimental'
                 || $applicationLevel == 'Developpement'
             ) {
                 $param['informationType'] = 'warn';
-                echo $this->getDisplayInformation('::::' . $applicationLevel, $param);
+                echo $this->getDisplayInformation_DEPRECATED('::::' . $applicationLevel, $param);
             }
             $param['informationType'] = 'information';
-            echo $this->getDisplayInformation($this->_traductionInstance->getTraduction('::Version') . ' : ' . Application::APPLICATION_VERSION, $param);
+            echo $this->getDisplayInformation_DEPRECATED($this->_traductionInstance->getTraduction('::Version') . ' : ' . Application::APPLICATION_VERSION, $param);
             ?>
         </div>
     </div>
@@ -3481,14 +3481,14 @@ private function _displayContentAbout()
         'informationType' => 'information',
         'displayRatio' => 'long',
     );
-    echo $this->getDisplayInformation('::AboutMessage', $param);
+    echo $this->getDisplayInformation_DEPRECATED('::AboutMessage', $param);
     ?>
     </div>
 
     <div class="sequence" id="lang"></div>
     <?php
     $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_WORLD);
-    echo $this->getDisplayTitle(':::SelectLanguage', $icon);
+    echo $this->getDisplayTitle_DEPRECATED(':::SelectLanguage', $icon);
     $i = 0;
     foreach ($this->_traductionInstance->getLanguageList() as $lang) {
         $actionList[$i]['title'] = $this->_traductionInstance->getTraduction(':::Language:' . $lang);
@@ -3505,7 +3505,7 @@ private function _displayContentAbout()
     ?>
 
     <div class="sequence" id="help"></div>
-    <?php $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_HELP); echo $this->getDisplayTitle('::Help', $icon); ?>
+    <?php $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_HELP); echo $this->getDisplayTitle_DEPRECATED('::Help', $icon); ?>
 
     <?php
     $param = array(
@@ -3514,11 +3514,11 @@ private function _displayContentAbout()
         'informationType' => 'information',
         'displayRatio' => 'long',
     );
-    echo $this->getDisplayInformation('::HelpMessage', $param);
+    echo $this->getDisplayInformation_DEPRECATED('::HelpMessage', $param);
     ?>
 
     <div class="sequence" id="recovery"></div>
-    <?php $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LC); echo $this->getDisplayTitle('::ProtectionRecovery', $icon); ?>
+    <?php $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LC); echo $this->getDisplayTitle_DEPRECATED('::ProtectionRecovery', $icon); ?>
     <?php $this->registerInlineContentID('listrecovery'); ?>
 
     <?php
@@ -3528,7 +3528,7 @@ private function _displayContentAbout()
         'informationType' => 'information',
         'displayRatio' => 'long',
     );
-    echo $this->getDisplayInformation('::HelpRecoveryEntity', $param);
+    echo $this->getDisplayInformation_DEPRECATED('::HelpRecoveryEntity', $param);
 
     $linkApplicationWebsite = Application::APPLICATION_WEBSITE;
     if (strpos(Application::APPLICATION_WEBSITE, '://') === false)
@@ -3594,7 +3594,7 @@ private function _displayContentAbout()
                 'enableDisplayIcon' => true,
                 'informationType' => 'information',
             );
-            echo $this->getDisplayInformation('::NoRecoveryEntity', $param);
+            echo $this->getDisplayInformation_DEPRECATED('::NoRecoveryEntity', $param);
         }
         unset($list);
     }

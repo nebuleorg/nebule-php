@@ -69,21 +69,24 @@ class DisplayTitle extends DisplayItemIconable implements DisplayInterface
             || $this->_displayEntity
         ) {
             $result .= '<div class="titleContentEntity">';
-            $param = array(
-                'enableDisplayColor' => true,
-                'enableDisplayIcon' => true,
-                'enableDisplayRefs' => false,
-                'enableDisplayName' => true,
-                'enableDisplayID' => false,
-                'enableDisplayFlags' => false,
-                'enableDisplayStatus' => false,
-                'enableDisplayContent' => false,
-                'displaySize' => 'small',
-                'displayRatio' => 'short',
-                'enableDisplayJS' => false,
-                'enableDisplayObjectActions' => false,
-            );
-            $result .= $this->_displayInstance->getDisplayObject($this->_applicationInstance->getCurrentEntityInstance(), $param);
+
+            // TODO rewrite this...
+            $instance = new DisplayObject($this->_applicationInstance);
+            $instance->setNID($this->_applicationInstance->getCurrentEntityInstance());
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setEnableRefs(false);
+            $instance->setEnableName(true);
+            $instance->setEnableNID(false);
+            $instance->setEnableFlags(false);
+            $instance->setEnableStatus(false);
+            $instance->setEnableContent(false);
+            $instance->setSize(DisplayObject::SIZE_SMALL);
+            $instance->setRatio(DisplayObject::RATIO_SHORT);
+            $instance->setEnableJS(false);
+            $instance->setEnableActions(false);
+            $result .= $instance->getHTML();
+
             $result .= '</div>' . "\n";
         }
     }
@@ -108,7 +111,7 @@ class DisplayTitle extends DisplayItemIconable implements DisplayInterface
         ?>
 
         <style type="text/css">
-            /* CSS de la fonction getDisplayTitle(). */
+            /* CSS for DisplayTitle(). */
             .layoutTitle {
                 margin-bottom: 10px;
                 margin-top: 32px;

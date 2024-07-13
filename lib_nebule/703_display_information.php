@@ -170,7 +170,7 @@ class DisplayInformation extends DisplayItemSizeable implements DisplayInterface
         ?>
 
         <style type="text/css">
-            /* CSS de la fonction getDisplayInformation(). */
+            /* CSS for DisplayInformation(). */
             .informationTitleIcons img {
                 background: none;
             }

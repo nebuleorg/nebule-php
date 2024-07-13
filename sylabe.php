@@ -1284,7 +1284,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_LOGIN
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
             }
-            echo $this->getDisplayObject($this->_nebuleInstance->getCurrentEntityInstance(), $param);
+            echo $this->getDisplayObject_DEPRECATED($this->_nebuleInstance->getCurrentEntityInstance(), $param);
             ?>
 
             <div class="header-right">
@@ -2206,11 +2206,11 @@ class ModuleHelp extends Modules
             'displayRatio' => 'short',
             'icon' => $module->getLogo(),
         );
-        echo $this->_displayInstance->getDisplayInformation($module->getTraduction($module->getName()), $param);
+        echo $this->_displayInstance->getDisplayInformation_DEPRECATED($module->getTraduction($module->getName()), $param);
 
         // Affiche le titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[3]);
-        echo $this->_displayInstance->getDisplayTitle($this->_applicationInstance->getTraductionInstance()->getTraduction('::ChangeLanguage'), $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED($this->_applicationInstance->getTraductionInstance()->getTraduction('::ChangeLanguage'), $icon, false);
 
         // Affiche la liste des langues.
         echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('helpLanguages', 'Medium');

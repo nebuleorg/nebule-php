@@ -136,7 +136,7 @@ class DisplayContent extends DisplayItemSizeable implements DisplayInterface
         ?>
 
         <style type="text/css">
-            /* CSS des fonctions getDisplayObjectContent() et getDisplayAsObjectContent(). */
+            /* CSS for DisplayContent(). */
             .objectContent {
             }
 

@@ -624,7 +624,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         // Vérifie les tests de sécurité. Pas d'affichage des options si problème.
         if ($this->_applicationInstance->getCheckSecurityAll() == 'OK') {
             if ($this->_nebuleInstance->getModeRescue())
-                $this->displayMessageWarning('::::RESCUE');
+                $this->displayMessageWarning_DEPRECATED('::::RESCUE');
 
             $this->_displayActions();
 
@@ -708,7 +708,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         );
         $message = "The 'option' application display current configurations such as options, applications and entities with special capabilities.";
         $message .= " Local authorities can modify some of those configurations.";
-        echo $this->getDisplayInformation($message, $param);
+        echo $this->getDisplayInformation_DEPRECATED($message, $param);
     }
 
 
@@ -721,7 +721,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
     private function _displayGlobalAuthorities()
     {
         // Titre
-        echo $this->getDisplayTitle('Global authorities', null, false);
+        echo $this->getDisplayTitle_DEPRECATED('Global authorities', null, false);
 
         $param = array(
             'enableDisplayColor' => true,
@@ -789,7 +789,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         );
         $message = "The global authorities are entities with specials capabilities on common things like code.";
         $message .= " Global authorities can't be removed or disabled.";
-        echo $this->getDisplayInformation($message, $param);
+        echo $this->getDisplayInformation_DEPRECATED($message, $param);
     }
 
 
@@ -805,7 +805,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         $refAuthority = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
 
         // Titre
-        echo $this->getDisplayTitle('Primary local authorities', null, false);
+        echo $this->getDisplayTitle_DEPRECATED('Primary local authorities', null, false);
 
         $listEntities = $this->_nebuleInstance->getLocalPrimaryAuthoritiesInstance();
         $listOkEntities = array(
@@ -886,7 +886,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         unset($list);
 
         // Titre des entités secondaires.
-        echo $this->getDisplayTitle('Secondary local authorities', null, false);
+        echo $this->getDisplayTitle_DEPRECATED('Secondary local authorities', null, false);
 
         if ($this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities')) {
             // Liste les entités marquées comme entités de recouvrement.
@@ -966,7 +966,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                 'enableDisplayIcon' => true,
                 'informationType' => 'warn',
             );
-            echo $this->getDisplayInformation('Not authorized!', $param);
+            echo $this->getDisplayInformation_DEPRECATED('Not authorized!', $param);
         }
 
         // Affiche les entités à ajouter.
@@ -986,7 +986,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         ) {
 
             // Titre
-            echo $this->getDisplayTitle('Add entities as local authority', null, false);
+            echo $this->getDisplayTitle_DEPRECATED('Add entities as local authority', null, false);
 
             // Lister les entités.
             $listEntities = $this->_nebuleInstance->getListEntitiesInstances();
@@ -1066,7 +1066,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         $message .= " 2: Local authorities defined by links from primary local authorities, known as secondary local authorities.<br /><br />\n";
         $message .= "An entity can be added as secondary authority and later can be removed.<br />\n";
         $message .= " Primary authorities can't be removed, they are forced by two options on the environment file : 'permitInstanceEntityAsAuthority' and 'permitDefaultEntityAsAuthority'.";
-        echo $this->getDisplayInformation($message, $param);
+        echo $this->getDisplayInformation_DEPRECATED($message, $param);
     }
 
 
@@ -1078,7 +1078,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
     private function _displayOptions()
     {
         // Titre
-        echo $this->getDisplayTitle('Options', null, false);
+        echo $this->getDisplayTitle_DEPRECATED('Options', null, false);
         ?>
 
         <div id="options">
@@ -1295,7 +1295,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
     private function _displayApplications()
     {
         // Titre
-        echo $this->getDisplayTitle('Applications', null, false);
+        echo $this->getDisplayTitle_DEPRECATED('Applications', null, false);
         ?>
 
         <div id="apps">
@@ -1611,7 +1611,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
     private function _displayRecovery()
     {
         // Titre
-        echo $this->getDisplayTitle('Local recovery', null, false);
+        echo $this->getDisplayTitle_DEPRECATED('Local recovery', null, false);
 
         $listAuthorities = $this->_nebuleInstance->getAuthorities();
         $listOkEntities = array();
@@ -1713,7 +1713,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
                 'enableDisplayIcon' => true,
                 'informationType' => 'warn',
             );
-            echo $this->getDisplayInformation('Not authorized!', $param);
+            echo $this->getDisplayInformation_DEPRECATED('Not authorized!', $param);
         }
 
         // Affiche les entités à ajouter.
@@ -1730,7 +1730,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
             && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitUploadLink', 'permitRecoveryEntities'))
         ) {
             // Titre
-            echo $this->getDisplayTitle('Add entities as recovery', null, false);
+            echo $this->getDisplayTitle_DEPRECATED('Add entities as recovery', null, false);
 
             // Lister les entités.
             $listEntities = $this->_nebuleInstance->getListEntitiesInstances();
@@ -1802,15 +1802,15 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
         );
         $message = "The recovery entities can, if needed, unprotect an object.";
         $message .= " This can be a security choise in an enterprise or legal contraint in some contries.";
-        echo $this->getDisplayInformation($message, $param);
+        echo $this->getDisplayInformation_DEPRECATED($message, $param);
         $param['informationType'] = 'warn';
         $message = "Whatever the entity that protect an object, the protection is automatically and silently shared with recovery entities.";
         $message .= " All recovery entities are displayed here, none are hidden.";
-        echo $this->getDisplayInformation($message, $param);
+        echo $this->getDisplayInformation_DEPRECATED($message, $param);
         $param['informationType'] = 'information';
         $message = "An entity can be added as recovery entity and later can be removed.";
         $message .= " Entities marqued as instance entity or default entity can't be removed, they are forced by two options on the environment file : 'permitInstanceEntityAsRecovery' and 'permitDefaultEntityAsRecovery'.";
-        echo $this->getDisplayInformation($message, $param);
+        echo $this->getDisplayInformation_DEPRECATED($message, $param);
     }
 
 
@@ -1826,31 +1826,31 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
         <div id="check">
             <?php
             if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'WARN')
-                $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
+                $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
             if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'ERROR')
-                $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
+                $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
             if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'WARN')
-                $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
+                $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
             if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'ERROR')
-                $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
+                $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
             if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'WARN')
-                $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
+                $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
             if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'ERROR')
-                $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
+                $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
             if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'ERROR')
-                $this->displayMessageError($this->_applicationInstance->getCheckSecurityBootstrapMessage());
+                $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityBootstrapMessage());
             if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'WARN')
-                $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityBootstrapMessage());
+                $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityBootstrapMessage());
             if ($this->_applicationInstance->getCheckSecuritySign() == 'WARN')
-                $this->displayMessageWarning($this->_applicationInstance->getCheckSecuritySignMessage());
+                $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecuritySignMessage());
             if ($this->_applicationInstance->getCheckSecuritySign() == 'ERROR')
-                $this->displayMessageError($this->_applicationInstance->getCheckSecuritySignMessage());
+                $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecuritySignMessage());
             if ($this->_applicationInstance->getCheckSecurityURL() == 'WARN')
-                $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityURLMessage());
+                $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityURLMessage());
             if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite'))
-                $this->displayMessageWarning(':::warn_ServNotPermitWrite');
+                $this->displayMessageWarning_DEPRECATED(':::warn_ServNotPermitWrite');
             if ($this->_nebuleInstance->getFlushCache())
-                $this->displayMessageWarning(':::warn_flushSessionAndCache');
+                $this->displayMessageWarning_DEPRECATED(':::warn_flushSessionAndCache');
             ?>
 
         </div>

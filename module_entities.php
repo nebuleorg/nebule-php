@@ -843,7 +843,7 @@ class ModuleEntities extends Modules
             'displaySize' => 'large',
             'displayRatio' => 'short',
         );
-        echo $this->_displayInstance->getDisplayObject($this->_displayEntityInstance, $param);
+        echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_displayEntityInstance, $param);
 
         echo '</div>' . "\n";
         echo '</div>' . "\n";
@@ -876,7 +876,7 @@ class ModuleEntities extends Modules
             'displaySize' => 'medium',
             'displayRatio' => 'short',
         );
-        echo $this->_displayInstance->getDisplayObject($this->_displayEntityInstance, $param);
+        echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_displayEntityInstance, $param);
 
         echo '</div>' . "\n";
         echo '</div>' . "\n";
@@ -887,10 +887,10 @@ class ModuleEntities extends Modules
             )
         ) {
             $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[9]);
-            echo $this->_displayInstance->getDisplayTitle('::EntityUnlocked', $icon, false);
+            echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::EntityUnlocked', $icon, false);
         } else {
             $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[11]);
-            echo $this->_displayInstance->getDisplayTitle('::EntityLocked', $icon, false);
+            echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::EntityLocked', $icon, false);
         }
 
         // Extrait les états de tests en warning ou en erreur.
@@ -934,7 +934,7 @@ class ModuleEntities extends Modules
                 'displaySize' => 'small',
                 'displayRatio' => 'short',
             );
-            echo $this->_displayInstance->getDisplayInformation('::::SecurityChecks', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::SecurityChecks', $param);
         }
 
         // Affiche le champ de mot de passe.
@@ -960,7 +960,7 @@ class ModuleEntities extends Modules
                 $param['displaySize'] = 'small';
                 $param['displayRatio'] = 'long';
                 $param['objectIcon'] = $this->MODULE_REGISTERED_ICONS[9];
-                echo $this->_displayInstance->getDisplayObject($this->_nebuleInstance->getCurrentEntityPrivateKeyInstance(), $param);
+                echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_nebuleInstance->getCurrentEntityPrivateKeyInstance(), $param);
                 echo '</div>' . "\n";
                 echo '</div>' . "\n";
 
@@ -1005,7 +1005,7 @@ class ModuleEntities extends Modules
                     'displaySize' => 'medium',
                     'displayRatio' => 'short',
                 );
-                echo $this->_displayInstance->getDisplayInformation(':::err_NotPermit', $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
             }
         }
     }
@@ -1023,7 +1023,7 @@ class ModuleEntities extends Modules
 
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[7]);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:ObjectTitle1', $icon, true);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:ObjectTitle1', $icon, true);
 
         // Extrait des propriétés de l'objet.
         $entity = $this->_displayEntity;
@@ -1053,7 +1053,7 @@ class ModuleEntities extends Modules
         <?php
         // Si besoin, affiche le message d'information.
         if ($dispWarn) {
-            $this->_displayInstance->displayMessageInformation(
+            $this->_displayInstance->displayMessageInformation_DEPRECATED(
                 $this->_traduction('::sylabe:module:entities:DisplayEntityPublicMessagesWarning'));
         }
         unset($dispWarn);
@@ -1233,7 +1233,7 @@ class ModuleEntities extends Modules
 
         // Titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[8]);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:ObjectTitle2', $icon, true);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:ObjectTitle2', $icon, true);
 
         // Extrait des propriétés de l'objet.
         $id = $this->_applicationInstance->getCurrentObjectInstance()->getID();
@@ -1279,7 +1279,7 @@ class ModuleEntities extends Modules
         <?php
         // Si besoin, affiche le message d'information.
         if ($dispWarn) {
-            $this->_displayInstance->displayMessageInformation(
+            $this->_displayInstance->displayMessageInformation_DEPRECATED(
                 $this->_traduction('::sylabe:module:entities:DisplayEntityPublicMessagesWarning'));
         }
         unset($dispWarn);
@@ -1342,7 +1342,7 @@ class ModuleEntities extends Modules
     private function _displayMyEntitiesList(): void
     {
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:MyEntities', $icon, true);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:MyEntities', $icon, true);
 
         $this->_displayInstance->registerInlineContentID('myentities');
     }
@@ -1405,7 +1405,7 @@ class ModuleEntities extends Modules
     private function _displayKnownEntitiesList(): void
     {
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:KnownEntities', $icon, true);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:KnownEntities', $icon, true);
 
         $this->_displayInstance->registerInlineContentID('knownentities');
     }
@@ -1471,7 +1471,7 @@ class ModuleEntities extends Modules
     private function _displayKnownByEntitiesList(): void
     {
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:KnownByEntities', $icon, true);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:KnownByEntities', $icon, true);
 
         $this->_displayInstance->registerInlineContentID('knownentities');
     }
@@ -1540,7 +1540,7 @@ class ModuleEntities extends Modules
     private function _displayUnknownEntitiesList(): void
     {
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:UnknownEntities', $icon, true);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:UnknownEntities', $icon, true);
 
         $this->_displayInstance->registerInlineContentID('unknownentities');
     }
@@ -1631,7 +1631,7 @@ class ModuleEntities extends Modules
             unset($list);
         } else {
             // Pas d'entité.
-            $this->_displayInstance->displayMessageInformation(
+            $this->_displayInstance->displayMessageInformation_DEPRECATED(
                 '::sylabe:module:entities:Display:NoEntity');
         }
         unset($links, $listOkEntities);
@@ -1646,7 +1646,7 @@ class ModuleEntities extends Modules
     private function _displaySpecialEntitiesList(): void
     {
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:SpecialEntities', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:SpecialEntities', $icon, false);
 
         $this->_displayInstance->registerInlineContentID('specialentities');
     }
@@ -1810,7 +1810,7 @@ class ModuleEntities extends Modules
 
         // Affiche le titre.
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[5]);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:CreateEntity', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:CreateEntity', $icon, false);
 
         // Vérifie que la création soit authorisée.
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -1988,7 +1988,7 @@ class ModuleEntities extends Modules
             </div>
             <?php
         } else {
-            $this->_displayInstance->displayMessageWarning('::sylabe:module:entities:CreateEntityNotAllowed');
+            $this->_displayInstance->displayMessageWarning_DEPRECATED('::sylabe:module:entities:CreateEntityNotAllowed');
         }
     }
 
@@ -2062,9 +2062,9 @@ class ModuleEntities extends Modules
                 </p>
             </div>
             <?php
-            $this->_displayInstance->displayMessageInformation('::sylabe:module:entities:SearchEntityLongTime');
+            $this->_displayInstance->displayMessageInformation_DEPRECATED('::sylabe:module:entities:SearchEntityLongTime');
         } else {
-            $this->_displayInstance->displayMessageWarning('::sylabe:module:entities:SearchEntityNotAllowed');
+            $this->_displayInstance->displayMessageWarning_DEPRECATED('::sylabe:module:entities:SearchEntityNotAllowed');
         }
     }
 
@@ -2080,7 +2080,7 @@ class ModuleEntities extends Modules
     private function _displayEntityProp(): void
     {
         $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[3]);
-        echo $this->_displayInstance->getDisplayTitle('::sylabe:module:entities:Desc:AttribsTitle', $icon, false);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:Desc:AttribsTitle', $icon, false);
 
         // Affiche les propriétés.
         $this->_displayInstance->registerInlineContentID('properties');
@@ -2106,7 +2106,7 @@ class ModuleEntities extends Modules
         if ($update != $this->_displayEntity) {
             // A affiner...
             //
-            $this->_displayInstance->displayMessageWarning(
+            $this->_displayInstance->displayMessageWarning_DEPRECATED(
                 $this->_traduction('::sylabe:module:objects:warning:ObjectHaveUpdate'));
         }
         unset($update);
