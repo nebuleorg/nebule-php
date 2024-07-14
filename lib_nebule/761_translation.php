@@ -460,8 +460,10 @@ abstract class Translates
             $result = $this->_getTranslateFromAllModulesWithDefault($text, $lang);
 
         // 7) Par défaut si rien trouvé renvoie le texte originel.
-        if ($result == '')
+        if ($result == '') {
             $result = $text;
+            $this->_metrologyInstance->addLog('no translate, keep same value : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '74bd1f3a');
+        }
 
         return $result;
     }
@@ -471,7 +473,7 @@ abstract class Translates
         foreach ($this->_languageInstanceList as $module) {
             if ($module->getCommandName() == $lang) {
                 $result = $module->getTraduction($text, $lang);
-                $this->_metrologyInstance->addLog('Module 1 find traduction : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '65349a7b');
+                $this->_metrologyInstance->addLog('module 1 find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '65349a7b');
             }
         }
         if ($result == $text)
@@ -483,7 +485,7 @@ abstract class Translates
         if (!is_a($this->_applicationInstance->getCurrentModuleInstance(), '\Nebule\Library\Modules'))
             return '';
         $result = $this->_applicationInstance->getCurrentModuleInstance()->getTranslateInstance($text, $lang);
-        $this->_metrologyInstance->addLog('Module 2 find traduction : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8811cb6a');
+        $this->_metrologyInstance->addLog('module 2 find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8811cb6a');
         if ($result == $text)
             $result = '';
         return $result;
@@ -496,7 +498,7 @@ abstract class Translates
         foreach ($this->_languageInstanceList as $module) {
             if ($module->getCommandName() == $this->_defaultLanguage) {
                 $result = $module->getTraduction($text, $this->_defaultLanguage);
-                $this->_metrologyInstance->addLog('Module 3 find traduction : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'de331d22');
+                $this->_metrologyInstance->addLog('module 3 find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'de331d22');
             }
         }
         if ($result == $text)
@@ -510,7 +512,7 @@ abstract class Translates
         if (!is_a($this->_applicationInstance->getCurrentModuleInstance(), '\Nebule\Library\Modules'))
             return '';
         $result = $this->_applicationInstance->getCurrentModuleInstance()->getTranslateInstance($text, $this->_defaultLanguage);
-        $this->_metrologyInstance->addLog('Module 4 find traduction : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c9a49d75');
+        $this->_metrologyInstance->addLog('module 4 find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c9a49d75');
         if ($result == $text)
             $result = '';
         return $result;
@@ -520,7 +522,7 @@ abstract class Translates
         $result = '';
         foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
             $result = $module->getTranslateInstance($text, $lang);
-            $this->_metrologyInstance->addLog('Module 5 find traduction : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e25be65f');
+            $this->_metrologyInstance->addLog('module 5 find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e25be65f');
             if ($result != $text)
                 break;
         }
@@ -535,7 +537,7 @@ abstract class Translates
         $result = '';
         foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
             $result = $module->getTranslateInstance($text, $this->_defaultLanguage);
-            $this->_metrologyInstance->addLog('Module 6 find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '5b607293');
+            $this->_metrologyInstance->addLog('module 6 find translate : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '5b607293');
             if ($result != $text)
                 break;
         }
