@@ -43,7 +43,7 @@ abstract class DisplayItem implements DisplayInterface
         $this->_displayInstance = $applicationInstance->getDisplayInstance();
         $this->_configurationInstance = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_init();
     }
@@ -127,7 +127,7 @@ abstract class DisplayItemIconable extends DisplayItemCSS
 
     public function setIconText(String $text)
     {
-        $this->_iconText = $this->_traductionInstance->getTraduction($text);
+        $this->_iconText = $this->_traductionInstance->getTranslate($text);
     }
 
     protected function _getNidIconHTML(?Node $nid, ?Node $icon = null): string
@@ -177,7 +177,7 @@ abstract class DisplayItemIconable extends DisplayItemCSS
 
         if ($alt == '')
             $alt = $oid->getID();
-        $alt = $this->_traductionInstance->getTraduction($alt);
+        $alt = $this->_traductionInstance->getTranslate($alt);
         $result .= ' alt="' . $alt . '" title="' . $alt . '"';
 
         if ($class != '')
@@ -201,14 +201,14 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
     public const TYPE_OK = 'ok';
     public const TYPE_WARN = 'warn';
     public const TYPE_ERROR = 'error';
-    public const TYPE_GO = 'go';
+    public const TYPE_PLAY = 'play';
     public const TYPE_BACK = 'back';
-    public const ICON_INFORMATION_RID = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272'; // FIXME unused ?
+    public const ICON_INFORMATION_RID = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272';
     public const ICON_OK_RID = '69636f6e206f6b000000000000000000000000000000000000000000000000000000.none.272';
     public const ICON_WARN_RID = '69636f6e207761726e696e6700000000000000000000000000000000000000000000.none.272';
     public const ICON_ERROR_RID = '69636f6e206572726f72000000000000000000000000000000000000000000000000.none.272';
-    public const ICON_GO_RID = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272'; // FIXME
-    public const ICON_BACK_RID = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272'; // FIXME
+    public const ICON_PLAY_RID = '73745872cd2b46a40992470eaa6dd1e5ca1face3c38a1da7650d4040d82193b9021d.none.272';
+    public const ICON_BACK_RID = '8ade584d3aa420335a7af82da4438654b891985777cc05bf6cbe86ebe328e31f1cc4.none.272';
 
     protected $_message = '';
     protected $_link = '';
@@ -222,7 +222,7 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
                                string $arg5 = ''): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set message ' . $message, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_message = sprintf($this->_traductionInstance->getTraduction($message), $arg1, $arg2, $arg3, $arg4, $arg5);
+        $this->_message = sprintf($this->_traductionInstance->getTranslate($message), $arg1, $arg2, $arg3, $arg4, $arg5);
     }
 
     public function setLink(string $link): void
@@ -254,10 +254,10 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
                 $this->_iconText = '::::INFORMATION';
                 $icon = self::ICON_INFORMATION_RID;
                 break;
-            case self::TYPE_GO:
+            case self::TYPE_PLAY:
                 $this->_type = 'Go';
                 $this->_iconText = '::::GO';
-                $icon = self::ICON_GO_RID;
+                $icon = self::ICON_PLAY_RID;
                 break;
             case self::TYPE_BACK:
                 $this->_type = 'Back';

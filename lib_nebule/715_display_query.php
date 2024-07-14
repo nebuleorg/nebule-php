@@ -23,8 +23,8 @@ class DisplayQuery extends DisplayItemIconMessageSizeable implements DisplayInte
 {
     public const TYPE_QUERY = 'query';
     public const TYPE_PASSWORD = 'password';
-    public const ICON_QUERY_RID = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272'; // FIXME
-    public const ICON_PASSWORD_RID = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272'; // FIXME
+    public const ICON_QUERY_RID = '16e9a40a7f705f9c3871d13ce78b9f016f6166c2214b293e5a38964502a5ff9a05bb.none.272';
+    public const ICON_PASSWORD_RID = 'ebde500081ce0916fb54efc3a900472be9fadee2dfcf988e3b5b721ebf00d687f655.none.272';
 
     private $_displayAlone = false;
     private $_displayPassword = '';

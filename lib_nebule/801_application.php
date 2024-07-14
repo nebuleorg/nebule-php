@@ -42,54 +42,54 @@ abstract class Applications implements applicationInterface
      *
      * @var Applications
      */
-    protected $_applicationInstance;
+    protected $_applicationInstance = null;
 
     /**
      * @var string
      */
-    protected $_applicationNamespace;
+    protected $_applicationNamespace = null;
 
     /**
      * Instance de la librairie en cours.
      *
      * @var nebule
      */
-    protected $_nebuleInstance;
+    protected $_nebuleInstance = null;
 
     /**
      * Instance de gestion de la configuration et des options.
      *
      * @var Configuration
      */
-    protected $_configurationInstance;
+    protected $_configurationInstance = null;
 
     /**
      * Instance de la métrologie.
      *
      * @var Metrology
      */
-    protected $_metrologyInstance;
+    protected $_metrologyInstance = null;
 
     /**
      * Instance de l'affichage de l'application.
      *
      * @var Displays
      */
-    protected $_displayInstance;
+    protected $_displayInstance = null;
 
     /**
      * Instance des actions de l'application.
      *
      * @var Actions
      */
-    protected $_actionInstance;
+    protected $_actionInstance = null;
 
     /**
      * Instance de traduction linguistique de l'application.
      *
-     * @var Traductions
+     * @var Translates
      */
-    protected $_traductionInstance;
+    protected $_translateInstance = null;
 
     /**
      * Paramètre d'activation de la gestion des modules dans l'application et la traduction.
@@ -131,7 +131,7 @@ abstract class Applications implements applicationInterface
      */
     public function initialisation(): void
     {
-        global $applicationTraductionInstance, $applicationDisplayInstance, $applicationActionInstance;
+        global $applicationTranslateInstance, $applicationDisplayInstance, $applicationActionInstance;
 
         // S'autoréférence pour être capable de se transmettre aux objets.
         $this->_applicationInstance = $this;
@@ -148,7 +148,7 @@ abstract class Applications implements applicationInterface
             return;
 
         // Récupère les instances.
-        $this->_traductionInstance = $applicationTraductionInstance;
+        $this->_translateInstance = $applicationTranslateInstance;
         $this->_displayInstance = $applicationDisplayInstance;
         $this->_actionInstance = $applicationActionInstance;
 
@@ -258,11 +258,11 @@ abstract class Applications implements applicationInterface
     /**
      * Lit l'instance de traduction linguistique de l'application.
      *
-     * @return Traductions
+     * @return Translates
      */
-    public function getTraductionInstance(): Traductions
+    public function getTranslateInstance(): Translates
     {
-        return $this->_traductionInstance;
+        return $this->_translateInstance;
     }
 
     /**
@@ -1197,7 +1197,7 @@ abstract class Applications implements applicationInterface
      */
     public function router(): void
     {
-        global $applicationTraductionInstance, $applicationDisplayInstance, $applicationActionInstance;
+        global $applicationTranslateInstance, $applicationDisplayInstance, $applicationActionInstance;
 
         $this->_metrologyInstance->addLog('Running application', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'cd5ec83d');
 
@@ -1208,7 +1208,7 @@ abstract class Applications implements applicationInterface
             $this->_metrologyInstance->addLog('Running display', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '13cb1fd7');
 
             // Récupère les instances.
-            $this->_traductionInstance = $applicationTraductionInstance;
+            $this->_translateInstance = $applicationTranslateInstance;
             $this->_displayInstance = $applicationDisplayInstance;
             $this->_actionInstance = $applicationActionInstance;
 
@@ -1660,8 +1660,8 @@ abstract class Applications implements applicationInterface
             && $this->_configurationInstance->getOptionUntyped('displayUnsecureURL')
         ) {
             $this->_checkSecurityURL = 'WARN';
-            $this->_checkSecurityURLMessage = $this->_traductionInstance->getTraduction('Connexion non sécurisée')
-                . '. ' . $this->_traductionInstance->getTraduction('Essayer plutôt')
+            $this->_checkSecurityURLMessage = $this->_translateInstance->getTranslate('Connexion non sécurisée')
+                . '. ' . $this->_translateInstance->getTranslate('Essayer plutôt')
                 . ' <a href="https://' . $this->_urlHost . '/' . $this->_urlBasename . '">https://' . $this->_urlHost . '/</a>';
             $this->_metrologyInstance->addLog('SECURITY WARN URL', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
         } else {

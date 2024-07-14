@@ -149,7 +149,7 @@ abstract class Actions
     /**
      * Instance de traduction.
      *
-     * @var Traductions
+     * @var Translates
      */
     protected $_traduction;
 
@@ -188,7 +188,7 @@ abstract class Actions
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Load actions', Metrology::LOG_LEVEL_DEBUG);
-        $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        $this->_traduction = $this->_applicationInstance->getTranslateInstance();
         $this->_display = $this->_applicationInstance->getDisplayInstance();
         $this->_metrology = $this->_applicationInstance->getMetrologyInstance();
         $this->_io = $this->_nebuleInstance->getIoInstance();
@@ -253,7 +253,7 @@ abstract class Actions
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Load actions', Metrology::LOG_LEVEL_DEBUG);
-        $this->_traduction = $this->_applicationInstance->getTraductionInstance();
+        $this->_traduction = $this->_applicationInstance->getTranslateInstance();
         $this->_display = $this->_applicationInstance->getDisplayInstance();
         $this->_metrology = $this->_applicationInstance->getMetrologyInstance();
         $this->_io = $this->_nebuleInstance->getIoInstance();

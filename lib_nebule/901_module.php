@@ -71,49 +71,49 @@ abstract class Modules implements moduleInterface
      *
      * @var Applications
      */
-    protected $_applicationInstance;
+    protected $_applicationInstance = null;
 
     /**
      * Instance de la librairie nebule.
      *
      * @var nebule
      */
-    protected $_nebuleInstance;
+    protected $_nebuleInstance = null;
 
     /**
      * Instance de gestion de la configuration et des options.
      *
      * @var Configuration
      */
-    protected $_configurationInstance;
+    protected $_configurationInstance = null;
 
     /**
      * Instance de la classe d'affichage.
      *
      * @var Displays
      */
-    protected $_displayInstance;
+    protected $_displayInstance = null;
 
     /**
      * Instance de la classe de traduction.
      *
-     * @var Traductions
+     * @var Translates
      */
-    protected $_traductionInstance;
+    protected $_translateInstance = null;
 
     /**
      * Instance de la métrologie.
      *
      * @var Metrology
      */
-    protected $_metrologyInstance;
+    protected $_metrologyInstance = null;
 
     /**
      * Etat de verrouillage de l'entité en cours.
      *
      * @var boolean
      */
-    protected $_unlocked;
+    protected $_unlocked = false;
 
     /**
      * Table des traductions spécifiques au module.
@@ -144,7 +144,7 @@ abstract class Modules implements moduleInterface
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
-        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
+        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
@@ -288,7 +288,7 @@ abstract class Modules implements moduleInterface
             $hookArray[0]['name'] = $this->_traduction('::::Bienvenue', $this->MODULE_COMMAND_NAME);
             $hookArray[0]['icon'] = $this->MODULE_LOGO;
             $hookArray[0]['desc'] = $this->_traduction('::translateModule:' . $this->MODULE_COMMAND_NAME . ':ModuleDescription', $this->MODULE_COMMAND_NAME);
-            $hookArray[0]['link'] = '?mod=hlp&view=lang&' . Traductions::DEFAULT_COMMAND_LANGUAGE . '=' . $this->MODULE_COMMAND_NAME;
+            $hookArray[0]['link'] = '?mod=hlp&view=lang&' . Translates::DEFAULT_COMMAND_LANGUAGE . '=' . $this->MODULE_COMMAND_NAME;
         }
         return $hookArray;
     }
@@ -407,20 +407,17 @@ abstract class Modules implements moduleInterface
      * @param string $lang
      * @return string
      */
-    public function getTraductionInstance(string $text, string $lang = ''): string
+    public function getTranslateInstance(string $text, string $lang = ''): string
     {
         $result = $text;
-        if ($this->_traductionInstance == null) {
-            $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
-        }
+        if ($this->_translateInstance === null)
+            $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
 
-        if ($lang == '') {
-            $lang = $this->_traductionInstance->getCurrentLanguage();
-        }
+        if ($lang == '')
+            $lang = $this->_translateInstance->getCurrentLanguage();
 
-        if (isset($this->_table[$lang][$text])) {
+        if (isset($this->_table[$lang][$text]))
             $result = $this->_table[$lang][$text];
-        }
         return $result;
     }
 
@@ -433,7 +430,7 @@ abstract class Modules implements moduleInterface
      */
     protected function _traduction(string $text, string $lang = ''): string
     {
-        return $this->_traductionInstance->getTraduction($text, $lang);
+        return $this->_translateInstance->getTranslate($text, $lang);
     }
 
     /**
@@ -444,7 +441,7 @@ abstract class Modules implements moduleInterface
      */
     protected function _echoTraduction(string $text): void
     {
-        $this->_traductionInstance->echoTraduction($text);
+        $this->_translateInstance->echoTranslate($text);
     }
 
 

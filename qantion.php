@@ -9,7 +9,7 @@ use Nebule\Library\Applications;
 use Nebule\Library\Displays;
 use Nebule\Library\Modules;
 use Nebule\Library\Node;
-use Nebule\Library\Traductions;
+use Nebule\Library\Translates;
 
 /*
 ------------------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'qantion';
     const APPLICATION_SURNAME = 'nebule/qantion';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240619';
+    const APPLICATION_VERSION = '020240714';
     const APPLICATION_LICENCE = 'GNU GPL 2019-2024';
     const APPLICATION_WEBSITE = 'www.qantion.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -212,7 +212,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000'); // Log
-        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
 
@@ -255,7 +255,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000'); // Log
-        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
 
@@ -435,7 +435,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
             <link rel="icon" type="image/png" href="favicon.png"/>
             <meta name="keywords" content="<?php echo Application::APPLICATION_SURNAME; ?>"/>
             <meta name="description" content="<?php echo Application::APPLICATION_NAME . ' - ';
-            $this->_traductionInstance->echoTraduction('::::HtmlHeadDescription'); ?>"/>
+            $this->_traductionInstance->echoTranslate('::::HtmlHeadDescription'); ?>"/>
             <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
             <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
             <?php
@@ -1101,14 +1101,14 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 if ($this->_configurationInstance->getOptionAsBoolean('permitJavaScript')) {
                     ?>
                     <img src="<?php echo $this->_logoApplication; ?>" alt="[Q]"
-                         title="<?php echo $this->_traductionInstance->getTraduction('::menu'); ?>"
+                         title="<?php echo $this->_traductionInstance->getTranslate('::menu'); ?>"
                          onclick="display_menu('layout-menu-applications');"/>
                     <?php
                 } else {
                     ?>
                     <a href="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->getCurrentDisplayMode() . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW; ?>=menu">
                         <img src="<?php echo $this->_logoApplication; ?>" alt="[Q]"
-                             title="<?php echo $this->_traductionInstance->getTraduction('::menu'); ?>"/>
+                             title="<?php echo $this->_traductionInstance->getTranslate('::menu'); ?>"/>
                     </a>
                     <?php
                 }
@@ -1241,13 +1241,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 <img alt="<?php echo Application::APPLICATION_NAME; ?>" src="<?php echo $this->_logoApplication; ?>"/><br/>
                 <?php echo Application::APPLICATION_NAME; ?><br/>
                 (c) <?php echo Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR; ?><br/>
-                <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::Version');
+                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::Version');
                 echo ' : ' . Application::APPLICATION_VERSION; ?><br/>
                 <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo Application::APPLICATION_WEBSITE; ?></a>
             </div>
             <div class="menu-applications-logo">
                 <img src="<?php echo $this->_logoApplication; ?>" alt="[Q]"
-                     title="<?php echo $this->_applicationInstance->getTraductionInstance()->getTraduction('::menu'); ?>"
+                     title="<?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::menu'); ?>"
                      onclick="display_menu('layout-menu-applications');"/>
             </div>
             <div class="menu-applications">
@@ -1274,7 +1274,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         foreach ($modules as $module) {
             if ($module->getCommandName() == $this->_currentDisplayMode) {
                 // Extrait le nom du module.
-                $moduleName = $module->getTraduction($module->getMenuName(), $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
+                $moduleName = $module->getTraduction($module->getMenuName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
 
                 // Mémorise le nom du module trouvé.
                 $currentModuleName = $module->getMenuName();
@@ -1282,10 +1282,10 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 // Affiche le lien du menu seul (sans JS).
                 if ($this->_currentDisplayView != 'menu') {
                     $list[$j]['icon'] = self::DEFAULT_LOGO_MODULE;
-                    $list[$j]['title'] = $this->_applicationInstance->getTraductionInstance()->getTraduction('::menu', $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
+                    $list[$j]['title'] = $this->_applicationInstance->getTranslateInstance()->getTranslate('::menu', $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                     $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module->getCommandName()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=menu';
-                    $list[$j]['desc'] = $this->_applicationInstance->getTraductionInstance()->getTraduction('::menuDesc', $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
+                    $list[$j]['desc'] = $this->_applicationInstance->getTranslateInstance()->getTranslate('::menuDesc', $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                     $list[$j]['ref'] = Application::APPLICATION_NAME;
                     $list[$j]['class'] = 'qantionMenuListContentActionModules';
                     $j++;
@@ -1303,13 +1303,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                             if ($icon == '') {
                                 $icon = self::DEFAULT_ICON_IMLOG;
                             }
-                            $desc = $module->getTraduction($appHook['desc'], $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
+                            $desc = $module->getTraduction($appHook['desc'], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                             if ($desc == '') {
                                 $desc = '&nbsp;';
                             }
 
                             $list[$j]['icon'] = $icon;
-                            $list[$j]['title'] = $module->getTraduction($appHook['name'], $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
+                            $list[$j]['title'] = $module->getTraduction($appHook['name'], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                             $list[$j]['htlink'] = $appHook['link'];
                             $list[$j]['desc'] = $desc;
                             $list[$j]['ref'] = $moduleName;
@@ -1325,7 +1325,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         foreach ($modules as $module) {
             if ($module->getCommandName() != $this->_currentDisplayMode) {
                 // Extrait le nom du module.
-                $moduleName = $module->getTraduction($module->getMenuName(), $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
+                $moduleName = $module->getTraduction($module->getMenuName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
 
                 // Liste les points d'encrages à afficher.
                 $appHookList = $module->getHookList($currentModuleName . 'SelfMenu');
@@ -1339,13 +1339,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                             if ($icon == '') {
                                 $icon = self::DEFAULT_ICON_IMLOG;
                             }
-                            $desc = $module->getTraduction($appHook['desc'], $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
+                            $desc = $module->getTraduction($appHook['desc'], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                             if ($desc == '') {
                                 $desc = '&nbsp;';
                             }
 
                             $list[$j]['icon'] = $icon;
-                            $list[$j]['title'] = $module->getTraduction($appHook['name'], $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
+                            $list[$j]['title'] = $module->getTraduction($appHook['name'], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                             $list[$j]['htlink'] = $appHook['link'];
                             $list[$j]['desc'] = $desc;
                             $list[$j]['ref'] = $moduleName;
@@ -1361,7 +1361,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         foreach ($modules as $module) {
             if ($module->getCommandName() != $this->_currentDisplayMode) {
                 // Extrait le nom du module.
-                $moduleName = $module->getTraduction($module->getMenuName(), $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
+                $moduleName = $module->getTraduction($module->getMenuName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
 
                 // Liste les points d'encrages à afficher.
                 $appHookList = $module->getHookList('menu');
@@ -1375,13 +1375,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                             if ($icon == '') {
                                 $icon = self::DEFAULT_ICON_IMLOG;
                             }
-                            $desc = $module->getTraduction($appHook['desc'], $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
+                            $desc = $module->getTraduction($appHook['desc'], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                             if ($desc == '') {
                                 $desc = '&nbsp;';
                             }
 
                             $list[$j]['icon'] = $icon;
-                            $list[$j]['title'] = $module->getTraduction($appHook['name'], $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
+                            $list[$j]['title'] = $module->getTraduction($appHook['name'], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                             $list[$j]['htlink'] = $appHook['link'];
                             $list[$j]['desc'] = $desc;
                             $list[$j]['ref'] = $moduleName;
@@ -1396,7 +1396,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         // Appelle la liste des modules.
         foreach ($modules as $module) {
             // Extrait le nom du module.
-            $moduleName = $module->getTraduction($module->getName(), $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
+            $moduleName = $module->getTraduction($module->getName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
 
             // Liste les options à afficher.
             $appTitleList = $module->getAppTitleList();
@@ -1412,13 +1412,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                     if ($icon == '') {
                         $icon = self::DEFAULT_ICON_LSTOBJ;
                     }
-                    $desc = $module->getTraduction($appDescList[$i], $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
+                    $desc = $module->getTraduction($appDescList[$i], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                     if ($desc == '') {
                         $desc = '&nbsp;';
                     }
 
                     $list[$j]['icon'] = $icon;
-                    $list[$j]['title'] = $module->getTraduction($appTitleList[$i], $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
+                    $list[$j]['title'] = $module->getTraduction($appTitleList[$i], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                     $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module->getCommandName()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $appViewList[$i];
                     $list[$j]['desc'] = $desc;
@@ -1433,7 +1433,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $list[$j]['icon'] = parent::DEFAULT_APPLICATION_LOGO;
         $list[$j]['title'] = BOOTSTRAP_NAME;
         $list[$j]['htlink'] = '?' . Action::DEFAULT_COMMAND_NEBULE_BOOTSTRAP;
-        $list[$j]['desc'] = $this->_applicationInstance->getTraductionInstance()->getTraduction('::appSwitch', $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage());
+        $list[$j]['desc'] = $this->_applicationInstance->getTranslateInstance()->getTranslate('::appSwitch', $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
         $list[$j]['ref'] = 'nebule';
         $list[$j]['class'] = 'qantionMenuListContentActionModules';
 
@@ -1535,13 +1535,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 		$this->_traductionInstance->echoTraduction('%01.0f liens vérifiés,','',$this->_bootstrapInstance->getMetrologyInstance()->getLinkVerify()); echo ' ';
 		$this->_traductionInstance->echoTraduction('%01.0f objets vérifiés.','',$this->_bootstrapInstance->getMetrologyInstance()->getObjectVerify()); echo "<br />\n";*/
                     echo 'Lib nebule : ';
-                    $this->_traductionInstance->echoTraduction('%01.0f liens lus,', '', $this->_metrologyInstance->getLinkRead());
+                    $this->_traductionInstance->echoTranslate('%01.0f liens lus,', $this->_metrologyInstance->getLinkRead());
                     echo ' ';
-                    $this->_traductionInstance->echoTraduction('%01.0f liens vérifiés,', '', $this->_metrologyInstance->getLinkVerify());
+                    $this->_traductionInstance->echoTranslate('%01.0f liens vérifiés,', $this->_metrologyInstance->getLinkVerify());
                     echo ' ';
-                    $this->_traductionInstance->echoTraduction('%01.0f objets lus.', '', $this->_metrologyInstance->getObjectRead());
+                    $this->_traductionInstance->echoTranslate('%01.0f objets lus.', $this->_metrologyInstance->getObjectRead());
                     echo ' ';
-                    $this->_traductionInstance->echoTraduction('%01.0f objets vérifiés.', '', $this->_metrologyInstance->getObjectVerify());
+                    $this->_traductionInstance->echoTranslate('%01.0f objets vérifiés.', $this->_metrologyInstance->getObjectVerify());
                     echo "<br />\n";
                     // Calcul de temps de chargement de la page - stop
                     /*		$bootstrapTimeList = $this->_bootstrapInstance->getMetrologyInstance()->getTimeArray();
@@ -1564,7 +1564,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                     foreach ($qantionTimeList as $time) {
                         $qantion_time_total = $qantion_time_total + $time;
                     }
-                    $this->_traductionInstance->echoTraduction('Le serveur à pris %01.4fs pour calculer la page.', '', $qantion_time_total);
+                    $this->_traductionInstance->echoTranslate('Le serveur à pris %01.4fs pour calculer la page.', $qantion_time_total);
                     echo ' (';
                     foreach ($qantionTimeList as $time) {
                         echo sprintf(" %1.4fs", $time);
@@ -1598,7 +1598,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         // Prépare le type mime.
         $typemime = $object->getType('all');
         if ($desc == '') {
-            $desc = $this->_applicationInstance->getTraductionInstance()->getTraduction($typemime);
+            $desc = $this->_applicationInstance->getTranslateInstance()->getTranslate($typemime);
         }
 
         // Détermine si c'est une entité.
@@ -1671,32 +1671,32 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 <?php
                 switch ($status) {
                     case 'notPresent':
-                        $msg = $this->_traductionInstance->getTraduction(':::display:content:errorNotAvailable');
+                        $msg = $this->_traductionInstance->getTranslate(':::display:content:errorNotAvailable');
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'tooBig':
                         if ($this->_configurationInstance->getOptionUntyped('qantionDisplayUnverifyLargeContent')) {
-                            $msg = $this->_traductionInstance->getTraduction(':::display:content:warningTooBig');
+                            $msg = $this->_traductionInstance->getTranslate(':::display:content:warningTooBig');
                             $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         } else {
-                            $msg = $this->_traductionInstance->getTraduction(':::display:content:errorTooBig');
+                            $msg = $this->_traductionInstance->getTranslate(':::display:content:errorTooBig');
                             $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         }
                         break;
                     case 'warning':
-                        $msg = $this->_traductionInstance->getTraduction(':::display:content:warningTaggedWarning');
+                        $msg = $this->_traductionInstance->getTranslate(':::display:content:warningTaggedWarning');
                         $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         break;
                     case 'danger':
-                        $msg = $this->_traductionInstance->getTraduction(':::display:content:errorBan');
+                        $msg = $this->_traductionInstance->getTranslate(':::display:content:errorBan');
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'notAnObject':
-                        $msg = $this->_traductionInstance->getTraduction(':::display:content:notAnObject');
+                        $msg = $this->_traductionInstance->getTranslate(':::display:content:notAnObject');
                         $this->displayIcon(self::DEFAULT_ICON_ALPHA_COLOR, $msg, 'iconNormalDisplay');
                         break;
                     default:
-                        $msg = $this->_traductionInstance->getTraduction(':::display:content:OK');
+                        $msg = $this->_traductionInstance->getTranslate(':::display:content:OK');
                         $this->displayIcon(self::DEFAULT_ICON_IOK, $msg, 'iconNormalDisplay');
                         break;
                 }
@@ -1726,14 +1726,14 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         // Si authorisé à afficher l'aide.
         if ($this->_configurationInstance->getOptionUntyped('qantionDisplayOnlineHelp')) {
             // Prépare le texte à afficher dans la bulle.
-            $txt = $this->_applicationInstance->getTraductionInstance()->getTraduction($help);
+            $txt = $this->_applicationInstance->getTranslateInstance()->getTranslate($help);
             $txt = str_replace('&', '&amp;', $txt);
             $txt = str_replace('"', '&quot;', $txt);
             $txt = str_replace("'", '&acute;', $txt);
             //$txt = str_replace('<','&lt;',$txt);
             $txt = str_replace("\n", ' ', $txt);
             // Prépare l'extension de lien.
-            $linkext = 'onmouseover="montre(\'<b>' . $this->_applicationInstance->getTraductionInstance()->getTraduction('Aide') . ' :</b><br />' . $txt . '\');" onmouseout="cache();"';
+            $linkext = 'onmouseover="montre(\'<b>' . $this->_applicationInstance->getTranslateInstance()->getTranslate('Aide') . ' :</b><br />' . $txt . '\');" onmouseout="cache();"';
             unset($txt);
             // Affiche la bulle et le texte.
             ?>
@@ -1782,13 +1782,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         <div class="textTitle">
             <?php
             if ($title != '') {
-                $title = $this->_applicationInstance->getTraductionInstance()->getTraduction($title);
+                $title = $this->_applicationInstance->getTranslateInstance()->getTranslate($title);
             }
 
             if ($desc == '') {
                 $desc = '-';
             } else {
-                $desc = $this->_applicationInstance->getTraductionInstance()->getTraduction($desc);
+                $desc = $this->_applicationInstance->getTranslateInstance()->getTranslate($desc);
             }
 
             $this->_displayDivOnlineHelp($help);
@@ -1821,13 +1821,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         <div class="textTitle2">
             <?php
             if ($title != '') {
-                $title = $this->_applicationInstance->getTraductionInstance()->getTraduction($title);
+                $title = $this->_applicationInstance->getTranslateInstance()->getTranslate($title);
             }
 
             if ($desc == '') {
                 $desc = '-';
             } else {
-                $desc = $this->_applicationInstance->getTraductionInstance()->getTraduction($desc);
+                $desc = $this->_applicationInstance->getTranslateInstance()->getTranslate($desc);
             }
 
             $this->_displayDivOnlineHelp($help);
@@ -1868,7 +1868,7 @@ class Action extends Actions
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Traduction extends Traductions
+class Translate extends Translates
 {
     /**
      * Langue par défaut.
@@ -1937,7 +1937,7 @@ class ModuleHelp extends Modules
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
-        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
+        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
     }
@@ -2057,7 +2057,7 @@ class ModuleHelp extends Modules
     private function _displayHlpFirst(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED($this->_applicationInstance->getTraductionInstance()->getTraduction('::SelectUser'), $this->MODULE_REGISTERED_ICONS[4]);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED($this->_applicationInstance->getTranslateInstance()->getTranslate('::SelectUser'), $this->MODULE_REGISTERED_ICONS[4]);
 
         // Liste des entités déjà affichées.
         $listOkEntities = $this->_nebuleInstance->getSpecialEntities();
@@ -2119,7 +2119,7 @@ class ModuleHelp extends Modules
      */
     private function _displayHlpLang(): void
     {
-        $module = $this->_applicationInstance->getTraductionInstance()->getCurrentLanguageInstance();
+        $module = $this->_applicationInstance->getTranslateInstance()->getCurrentLanguageInstance();
 
         // Affiche la langue en cours.
         $param = array(
@@ -2133,7 +2133,7 @@ class ModuleHelp extends Modules
         echo $this->_displayInstance->getDisplayInformation_DEPRECATED($module->getTraduction($module->getName()), $param);
 
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED($this->_applicationInstance->getTraductionInstance()->getTraduction('::ChangeLanguage'), $this->MODULE_REGISTERED_ICONS[3]);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED($this->_applicationInstance->getTranslateInstance()->getTranslate('::ChangeLanguage'), $this->MODULE_REGISTERED_ICONS[3]);
 
         // Affiche la liste des langues.
         echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('helpLanguages', 'Medium');
@@ -2148,7 +2148,7 @@ class ModuleHelp extends Modules
         ?>
         <div class="text">
             <p>
-                <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::qantion:module:help:AideGenerale:Text') ?>
+                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::qantion:module:help:AideGenerale:Text') ?>
             </p>
         </div>
         <?php
@@ -2177,7 +2177,7 @@ class ModuleHelp extends Modules
         $list[0]['param'] = $param;
         $list[0]['param']['icon'] = Display::DEFAULT_APPLICATION_LOGO;
         $list[0]['object'] = '1';
-        $list[1]['information'] = $this->_applicationInstance->getTraductionInstance()->getTraduction('::Version') . ' : ' . Application::APPLICATION_VERSION;
+        $list[1]['information'] = $this->_applicationInstance->getTranslateInstance()->getTranslate('::Version') . ' : ' . Application::APPLICATION_VERSION;
         $list[1]['param'] = $param;
         $list[2]['information'] = Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR;
         $list[2]['param'] = $param;
@@ -2188,10 +2188,10 @@ class ModuleHelp extends Modules
         ?>
         <div class="text">
             <p>
-                <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::qantion:module:help:APropos:Text') ?>
+                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::qantion:module:help:APropos:Text') ?>
             </p>
             <p>
-                <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction('::qantion:module:help:APropos:Liens') ?>
+                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::qantion:module:help:APropos:Liens') ?>
             </p>
         </div>
         <?php
@@ -2430,7 +2430,7 @@ class ModuleAdmin extends Modules
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
-        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
+        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
     }
@@ -3013,7 +3013,7 @@ class ModuleEntities extends Modules
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
-        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
+        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_findDisplayEntity();
         $this->_initTable();
@@ -3670,20 +3670,20 @@ class ModuleEntities extends Modules
                 && $this->_searchEntityURL != ''
             ) {
                 // Si recherche sur ID et URL.
-                echo $this->_applicationInstance->getTraductionInstance()->getTraduction('Recherche')
+                echo $this->_applicationInstance->getTranslateInstance()->getTranslate('Recherche')
                     . ' ' . $this->_searchEntityURL
                     . ' ' . $this->_displayInstance->displayInlineObjectColorIconName($this->_searchEntityID);
             } elseif ($this->_searchEntityID != ''
                 && $this->_searchEntityURL == ''
             ) {
                 // Sinon recherche sur ID.
-                echo $this->_applicationInstance->getTraductionInstance()->getTraduction('Recherche')
+                echo $this->_applicationInstance->getTranslateInstance()->getTranslate('Recherche')
                     . ' ' . $this->_displayInstance->displayInlineObjectColorIconName($this->_searchEntityID);
             } elseif ($this->_searchEntityID == ''
                 && $this->_searchEntityURL != ''
             ) {
                 // Sinon recherche sur URL.
-                echo $this->_applicationInstance->getTraductionInstance()->getTraduction('Recherche')
+                echo $this->_applicationInstance->getTranslateInstance()->getTranslate('Recherche')
                     . ' ' . $this->_searchEntityURL;
             }
 
@@ -3940,15 +3940,13 @@ class ModuleEntities extends Modules
             <p>
                 <?php
                 if ($entity == $this->_nebuleInstance->getCurrentEntity() && $this->_unlocked) {
-                    $this->_applicationInstance->getTraductionInstance()->echoTraduction(
+                    $this->_applicationInstance->getTranslateInstance()->echoTranslate(
                         '::sylabe:module:entities:DisplayEntityMessages',
-                        '',
                         $this->_displayInstance->convertInlineObjectColorIconName($instance));
                     $dispWarn = false;
                 } else {
-                    $this->_applicationInstance->getTraductionInstance()->echoTraduction(
+                    $this->_applicationInstance->getTranslateInstance()->echoTranslate(
                         '::sylabe:module:entities:DisplayEntityPublicMessages',
-                        '',
                         $this->_displayInstance->convertInlineObjectColorIconName($instance));
                     $dispWarn = true;
                 }
@@ -4102,7 +4100,7 @@ class ModuleEntities extends Modules
                                 <?php echo $objectInstance->getFullName('all'); ?>
                             </p>
                             <p class="sylabeModuleEntityActionType">
-                                <?php echo $this->_applicationInstance->getTraductionInstance()->echoTraduction($objectInstance->getType('all')); ?>
+                                <?php echo $this->_applicationInstance->getTranslateInstance()->echoTranslate($objectInstance->getType('all')); ?>
                             </p>
                             <p class="sylabeModuleEntityActionFromTo">
                                 <?php $this->_echoTraduction('::sylabe:module:entities:From'); ?>
@@ -4154,9 +4152,8 @@ class ModuleEntities extends Modules
         // Vérifie si l'objet courant est une entité, affiche les messages de cette entité.
         if ($typemime == 'application/x-pem-file' && $ispresent) {
             $entity = $this->_nebuleInstance->newEntity($id);
-            $this->_applicationInstance->getTraductionInstance()->echoTraduction(
+            $this->_applicationInstance->getTranslateInstance()->echoTranslate(
                 '::sylabe:module:entities:DisplayEntityPublicMessages',
-                '',
                 $this->_displayInstance->convertInlineObjectColorIconName($entity));
             $dispWarn = true;
         } // Sinon, affiche les messages de l'entité courante.
@@ -4165,14 +4162,12 @@ class ModuleEntities extends Modules
             $id = $this->_nebuleInstance->getCurrentEntity();
             $owned = true;
             if ($this->_unlocked) {
-                $this->_applicationInstance->getTraductionInstance()->echoTraduction(
+                $this->_applicationInstance->getTranslateInstance()->echoTranslate(
                     '::sylabe:module:entities:DisplayEntityMessages',
-                    '',
                     $this->_displayInstance->convertInlineObjectColorIconName($entity));
             } else {
-                $this->_applicationInstance->getTraductionInstance()->echoTraduction(
+                $this->_applicationInstance->getTranslateInstance()->echoTranslate(
                     '::sylabe:module:entities:DisplayEntityPublicMessages',
-                    '',
                     $this->_displayInstance->convertInlineObjectColorIconName($entity));
                 $dispWarn = true;
             }
@@ -4595,7 +4590,7 @@ class ModuleEntities extends Modules
                 'enableDisplayFlagState' => true,
                 'enableDisplayFlagEmotions' => false,
                 'enableDisplayStatus' => true,
-                'status' => $this->_applicationInstance->getTraductionInstance()->getTraduction($masters[$i]),
+                'status' => $this->_applicationInstance->getTranslateInstance()->getTranslate($masters[$i]),
                 'enableDisplayContent' => false,
                 'enableDisplayObjectActions' => false,
                 'displaySize' => 'medium',
@@ -5100,7 +5095,7 @@ class ModuleEntities extends Modules
                         unset($valueInstance);
                         // Vérifie la valeur.
                         if ($attribValue == null) {
-                            $attribValue = $this->_applicationInstance->getTraductionInstance()->getTraduction('::noContent');
+                            $attribValue = $this->_applicationInstance->getTranslateInstance()->getTranslate('::noContent');
                         }
                     }
 
@@ -5128,7 +5123,7 @@ class ModuleEntities extends Modules
                             <div class="sylabeModuleEntityDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
                             <div class="sylabeModuleEntityDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleEntityDescContent">
-                                <span class="sylabeModuleEntityDescAttrib"><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction($attribName); ?></span>
+                                <span class="sylabeModuleEntityDescAttrib"><?php $this->_applicationInstance->getTranslateInstance()->echoTranslate($attribName); ?></span>
                                 =
                                 <span class="sylabeModuleEntityDescValue"><?php echo $attribValue; ?></span>
                             </div>
@@ -5160,7 +5155,7 @@ class ModuleEntities extends Modules
                             <div class="sylabeModuleEntityDescContent">
 		<span class="sylabeModuleEntityDescEmotion">
 			<?php $this->_displayInstance->displayReferenceImage($emotionsIcons[$emotion], $emotionsList[$hashValue]); ?>
-            <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction($emotionsList[$hashValue]); ?>
+            <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate($emotionsList[$hashValue]); ?>
 		</span>
                             </div>
                         </div>
@@ -5221,7 +5216,7 @@ class ModuleEntities extends Modules
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID()
                     . '&' . Display::DEFAULT_INLINE_COMMAND . '&' . Display::DEFAULT_INLINE_CONTENT_COMMAND . '=properties'
                     . '&' . Displays::DEFAULT_NEXT_COMMAND . '=' . $nextLinkSigne;
-                $this->_displayInstance->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTraductionInstance()->getTraduction('::seeMore'));
+                $this->_displayInstance->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTranslateInstance()->getTranslate('::seeMore'));
             }
             unset($links);
         }
@@ -5547,7 +5542,7 @@ class ModuleGroups extends Modules
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
-        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
+        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
         $this->_hashGroup = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
@@ -6603,7 +6598,7 @@ class ModuleObjects extends Modules
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
-        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
+        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
     }
@@ -7205,7 +7200,7 @@ class ModuleObjects extends Modules
                         unset($valueInstance);
                         // Vérifie la valeur.
                         if ($value == null) {
-                            $value = $this->_applicationInstance->getTraductionInstance()->getTraduction('::noContent');
+                            $value = $this->_applicationInstance->getTranslateInstance()->getTranslate('::noContent');
                         }
                     }
 
@@ -7233,7 +7228,7 @@ class ModuleObjects extends Modules
                             <div class="sylabeModuleObjectsDescDate"><?php $display->displayDate($link->getDate()); ?></div>
                             <div class="sylabeModuleObjectsDescSigner"><?php $display->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleObjectsDescContent">
-                                <span class="sylabeModuleObjectsDescAttrib"><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction($attribName); ?></span>
+                                <span class="sylabeModuleObjectsDescAttrib"><?php $this->_applicationInstance->getTranslateInstance()->echoTranslate($attribName); ?></span>
                                 =
                                 <span class="sylabeModuleObjectsDescValue"><?php echo $value; ?></span>
                             </div>
@@ -7265,7 +7260,7 @@ class ModuleObjects extends Modules
                             <div class="sylabeModuleObjectsDescContent">
 		<span class="sylabeModuleObjectsDescEmotion">
 			<?php $display->displayReferenceImage($emotionsIcons[$emotion], $emotionsList[$hashValue]); ?>
-            <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction($emotionsList[$hashValue]); ?>
+            <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate($emotionsList[$hashValue]); ?>
 		</span>
                             </div>
                         </div>
@@ -7326,7 +7321,7 @@ class ModuleObjects extends Modules
                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_nebuleInstance->getCurrentObject()
                     . '&' . Display::DEFAULT_INLINE_COMMAND . '&' . Display::DEFAULT_INLINE_CONTENT_COMMAND . '=objprop'
                     . '&' . Displays::DEFAULT_NEXT_COMMAND . '=' . $nextLinkSigne;
-                $display->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTraductionInstance()->getTraduction('::seeMore'));
+                $display->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTranslateInstance()->getTranslate('::seeMore'));
             }
             unset($links);
         }
@@ -7566,7 +7561,7 @@ class ModuleObjects extends Modules
                 'enableDisplayJS' => false,
                 'enableDisplaySelfHook' => false,
                 'enableDisplayTypeHook' => false,
-                'objectName' => $this->_applicationInstance->getTraductionInstance()->getTraduction('::ProtectedID'),
+                'objectName' => $this->_applicationInstance->getTranslateInstance()->getTranslate('::ProtectedID'),
                 'displaySize' => 'medium', // Forcé par getDisplayObjectsList().
                 'displayRatio' => 'short',
             );
@@ -7590,7 +7585,7 @@ class ModuleObjects extends Modules
                 'enableDisplayJS' => false,
                 'enableDisplaySelfHook' => false,
                 'enableDisplayTypeHook' => false,
-                'objectName' => $this->_applicationInstance->getTraductionInstance()->getTraduction('::UnprotectedID'),
+                'objectName' => $this->_applicationInstance->getTranslateInstance()->getTranslate('::UnprotectedID'),
                 'displaySize' => 'medium', // Forcé par getDisplayObjectsList().
                 'displayRatio' => 'short',
             );
@@ -8162,7 +8157,7 @@ class Moduleqantion extends Modules
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
-        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
+        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
     }
@@ -8874,7 +8869,7 @@ class Moduleqantion extends Modules
                                 'objectName' => $instance->getParam('VAL') . $name,
                                 'displaySize' => 'small',
                                 'displayRatio' => 'short',
-                                'objectRefs' => $this->getTraductionInstance('::sylabe:module:qantion:Token'),
+                                'objectRefs' => $this->getTranslateInstance('::sylabe:module:qantion:Token'),
                                 'link2Object' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[13]
                                     . '&' . References::COMMAND_SELECT_TOKEN . '=' . $instance->getID()
@@ -10567,7 +10562,7 @@ class Moduleqantion extends Modules
                     'objectName' => $name,
                     'displaySize' => 'small',
                     'displayRatio' => 'short',
-                    'objectRefs' => $this->getTraductionInstance('::sylabe:module:qantion:' . $subtype),
+                    'objectRefs' => $this->getTranslateInstance('::sylabe:module:qantion:' . $subtype),
                     'link2Object' => $link,
                     'objectIcon' => $icon,
                     //	'selfHookName' => '::sylabe:module:qantion:'.$type2,
@@ -11097,7 +11092,7 @@ class ModuleTranslateFRFR extends Modules
                 $hookArray[0]['name'] = $this->_traduction('::::Bienvenue', $this->MODULE_COMMAND_NAME);
                 $hookArray[0]['icon'] = $this->MODULE_LOGO;
                 $hookArray[0]['desc'] = $this->_traduction('::translateModule:' . $this->MODULE_COMMAND_NAME . ':ModuleDescription', $this->MODULE_COMMAND_NAME);
-                $hookArray[0]['link'] = '?mod=hlp&view=lang&' . Traductions::DEFAULT_COMMAND_LANGUAGE . '=' . $this->MODULE_COMMAND_NAME;
+                $hookArray[0]['link'] = '?mod=hlp&view=lang&' . Translates::DEFAULT_COMMAND_LANGUAGE . '=' . $this->MODULE_COMMAND_NAME;
                 break;
         }
         return $hookArray;
@@ -11833,7 +11828,7 @@ class ModuleTranslateENEN extends Modules
                 $hookArray[0]['name'] = $this->_traduction('::::Bienvenue', $this->MODULE_COMMAND_NAME);
                 $hookArray[0]['icon'] = $this->MODULE_LOGO;
                 $hookArray[0]['desc'] = $this->_traduction('::translateModule:' . $this->MODULE_COMMAND_NAME . ':ModuleDescription', $this->MODULE_COMMAND_NAME);
-                $hookArray[0]['link'] = '?mod=hlp&view=lang&' . Traductions::DEFAULT_COMMAND_LANGUAGE . '=' . $this->MODULE_COMMAND_NAME;
+                $hookArray[0]['link'] = '?mod=hlp&view=lang&' . Translates::DEFAULT_COMMAND_LANGUAGE . '=' . $this->MODULE_COMMAND_NAME;
                 break;
         }
         return $hookArray;

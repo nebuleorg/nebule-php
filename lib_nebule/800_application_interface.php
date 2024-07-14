@@ -24,7 +24,7 @@ interface applicationInterface
     public function getName(): string;
     public function getNebuleInstance(): nebule;
     public function getDisplayInstance(): Displays;
-    public function getTraductionInstance(): Traductions;
+    public function getTranslateInstance(): Translates;
     public function getMetrologyInstance(): Metrology;
     public function getActionInstance(): Actions;
     // TODO

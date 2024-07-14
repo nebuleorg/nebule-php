@@ -10,7 +10,7 @@ use Nebule\Library\Applications;
 use Nebule\Library\Displays;
 //use Nebule\Library\Modules;
 use Nebule\Library\Node;
-use Nebule\Library\Traductions;
+use Nebule\Library\Translates;
 
 /*
 ------------------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240624';
+    const APPLICATION_VERSION = '020240714';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -135,7 +135,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
             <?php $this->commonCSS(); ?>
             <style>
                 .layout-content {
-                    max-width: 80%;
+                    max-width: 86%;
                 }
 
                 .layout-content > div {
@@ -2053,7 +2053,7 @@ class Action extends Actions
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Traduction extends Traductions
+class Translate extends Translates
 {
     /**
      * Constructeur.

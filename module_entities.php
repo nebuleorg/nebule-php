@@ -27,7 +27,7 @@ class ModuleEntities extends Modules
     protected $MODULE_COMMAND_NAME = 'ent';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
-    protected $MODULE_VERSION = '020240619';
+    protected $MODULE_VERSION = '020240714';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
     protected $MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -106,7 +106,7 @@ class ModuleEntities extends Modules
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
-        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
+        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_findDisplayEntity();
         $this->_initTable();
@@ -763,20 +763,20 @@ class ModuleEntities extends Modules
                 && $this->_searchEntityURL != ''
             ) {
                 // Si recherche sur ID et URL.
-                echo $this->_applicationInstance->getTraductionInstance()->getTraduction('Recherche')
+                echo $this->_applicationInstance->getTranslateInstance()->getTranslate('Recherche')
                     . ' ' . $this->_searchEntityURL
                     . ' ' . $this->_displayInstance->displayInlineObjectColorIconName($this->_searchEntityID);
             } elseif ($this->_searchEntityID != ''
                 && $this->_searchEntityURL == ''
             ) {
                 // Sinon recherche sur ID.
-                echo $this->_applicationInstance->getTraductionInstance()->getTraduction('Recherche')
+                echo $this->_applicationInstance->getTranslateInstance()->getTranslate('Recherche')
                     . ' ' . $this->_displayInstance->displayInlineObjectColorIconName($this->_searchEntityID);
             } elseif ($this->_searchEntityID == ''
                 && $this->_searchEntityURL != ''
             ) {
                 // Sinon recherche sur URL.
-                echo $this->_applicationInstance->getTraductionInstance()->getTraduction('Recherche')
+                echo $this->_applicationInstance->getTranslateInstance()->getTranslate('Recherche')
                     . ' ' . $this->_searchEntityURL;
             }
 
@@ -1034,15 +1034,13 @@ class ModuleEntities extends Modules
             <p>
                 <?php
                 if ($entity == $this->_nebuleInstance->getCurrentEntity() && $this->_unlocked) {
-                    $this->_applicationInstance->getTraductionInstance()->echoTraduction(
+                    $this->_applicationInstance->getTranslateInstance()->echoTranslate(
                         '::sylabe:module:entities:DisplayEntityMessages',
-                        '',
                         $this->_displayInstance->convertInlineObjectColorIconName($instance));
                     $dispWarn = false;
                 } else {
-                    $this->_applicationInstance->getTraductionInstance()->echoTraduction(
+                    $this->_applicationInstance->getTranslateInstance()->echoTranslate(
                         '::sylabe:module:entities:DisplayEntityPublicMessages',
-                        '',
                         $this->_displayInstance->convertInlineObjectColorIconName($instance));
                     $dispWarn = true;
                 }
@@ -1196,7 +1194,7 @@ class ModuleEntities extends Modules
                                 <?php echo $objectInstance->getFullName('all'); ?>
                             </p>
                             <p class="sylabeModuleEntityActionType">
-                                <?php echo $this->_applicationInstance->getTraductionInstance()->echoTraduction($objectInstance->getType('all')); ?>
+                                <?php echo $this->_applicationInstance->getTranslateInstance()->echoTranslate($objectInstance->getType('all')); ?>
                             </p>
                             <p class="sylabeModuleEntityActionFromTo">
                                 <?php $this->_echoTraduction('::sylabe:module:entities:From'); ?>
@@ -1249,9 +1247,8 @@ class ModuleEntities extends Modules
                 // Vérifie si l'objet courant est une entité, affiche les messages de cette entité.
                 if ($typemime == 'application/x-pem-file' && $ispresent) {
                     $entity = $this->_nebuleInstance->newEntity($id);
-                    $this->_applicationInstance->getTraductionInstance()->echoTraduction(
+                    $this->_applicationInstance->getTranslateInstance()->echoTranslate(
                         '::sylabe:module:entities:DisplayEntityPublicMessages',
-                        '',
                         $this->_displayInstance->convertInlineObjectColorIconName($entity));
                     $dispWarn = true;
                 } // Sinon, affiche les messages de l'entité courante.
@@ -1260,14 +1257,12 @@ class ModuleEntities extends Modules
                     $id = $this->_nebuleInstance->getCurrentEntity();
                     $owned = true;
                     if ($this->_unlocked) {
-                        $this->_applicationInstance->getTraductionInstance()->echoTraduction(
+                        $this->_applicationInstance->getTranslateInstance()->echoTranslate(
                             '::sylabe:module:entities:DisplayEntityMessages',
-                            '',
                             $this->_displayInstance->convertInlineObjectColorIconName($entity));
                     } else {
-                        $this->_applicationInstance->getTraductionInstance()->echoTraduction(
+                        $this->_applicationInstance->getTranslateInstance()->echoTranslate(
                             '::sylabe:module:entities:DisplayEntityPublicMessages',
-                            '',
                             $this->_displayInstance->convertInlineObjectColorIconName($entity));
                         $dispWarn = true;
                     }
@@ -1705,7 +1700,7 @@ class ModuleEntities extends Modules
                 'enableDisplayFlagState' => true,
                 'enableDisplayFlagEmotions' => false,
                 'enableDisplayStatus' => true,
-                'status' => $this->_applicationInstance->getTraductionInstance()->getTraduction($masters[$i]),
+                'status' => $this->_applicationInstance->getTranslateInstance()->getTranslate($masters[$i]),
                 'enableDisplayContent' => false,
                 'enableDisplayObjectActions' => false,
                 'displaySize' => 'medium',
@@ -2217,7 +2212,7 @@ class ModuleEntities extends Modules
                         unset($valueInstance);
                         // Vérifie la valeur.
                         if ($attribValue == null) {
-                            $attribValue = $this->_applicationInstance->getTraductionInstance()->getTraduction('::noContent');
+                            $attribValue = $this->_applicationInstance->getTranslateInstance()->getTranslate('::noContent');
                         }
                     }
 
@@ -2245,7 +2240,7 @@ class ModuleEntities extends Modules
                             <div class="sylabeModuleEntityDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
                             <div class="sylabeModuleEntityDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleEntityDescContent">
-                                <span class="sylabeModuleEntityDescAttrib"><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction($attribName); ?></span>
+                                <span class="sylabeModuleEntityDescAttrib"><?php $this->_applicationInstance->getTranslateInstance()->echoTranslate($attribName); ?></span>
                                 =
                                 <span class="sylabeModuleEntityDescValue"><?php echo $attribValue; ?></span>
                             </div>
@@ -2277,7 +2272,7 @@ class ModuleEntities extends Modules
                             <div class="sylabeModuleEntityDescContent">
 		<span class="sylabeModuleEntityDescEmotion">
 			<?php $this->_displayInstance->displayReferenceImage($emotionsIcons[$emotion], $emotionsList[$hashValue]); ?>
-            <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction($emotionsList[$hashValue]); ?>
+            <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate($emotionsList[$hashValue]); ?>
 		</span>
                             </div>
                         </div>
@@ -2338,7 +2333,7 @@ class ModuleEntities extends Modules
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID()
                     . '&' . Display::DEFAULT_INLINE_COMMAND . '&' . Display::DEFAULT_INLINE_CONTENT_COMMAND . '=properties'
                     . '&' . Displays::DEFAULT_NEXT_COMMAND . '=' . $nextLinkSigne;
-                $this->_displayInstance->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTraductionInstance()->getTraduction('::seeMore'));
+                $this->_displayInstance->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTranslateInstance()->getTranslate('::seeMore'));
             }
             unset($links);
         }

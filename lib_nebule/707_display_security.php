@@ -58,7 +58,7 @@ class DisplaySecurity extends DisplayItemIconMessageSizeable implements DisplayI
             $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
             $error = 'er';
             $result .= $instance->getHTML();
-        } elseif ($this->_displayFull) {
+        } elseif ($this->_displayFull) { // TODO revoir tous les messages OK avec de vrais messages...
             $instance->setType(DisplayItemIconMessage::TYPE_OK);
             $result .= $instance->getHTML();
         }

@@ -28,7 +28,7 @@ class ModuleManage extends Modules
     protected $MODULE_COMMAND_NAME = 'modmanager';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:manage:ModuleDescription';
-    protected $MODULE_VERSION = '020240606';
+    protected $MODULE_VERSION = '020240714';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
     protected $MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256';
@@ -69,7 +69,7 @@ class ModuleManage extends Modules
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
-        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
+        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
         $this->_initTable();
         $this->_hashModule = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
@@ -505,7 +505,7 @@ class ModuleManage extends Modules
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
                                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $rid
                                 . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $className,
-                            'objectName' => $instance->getTraductionInstance($name, $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage()),
+                            'objectName' => $instance->getTranslateInstance($name, $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage()),
                             'objectRefs' => array(),
                             'objectIcon' => $instance->getLogo(),
                             'displaySize' => 'medium',
@@ -690,7 +690,7 @@ class ModuleManage extends Modules
                     'enableDisplayJS' => false,
                     'objectName' => $instance->getTraduction($instance->getDescription()),
                     'objectIcon' => $instance->getLogo(),
-                    'objectRefs' => $instance->getTraduction($instance->getName(), $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage()),
+                    'objectRefs' => $instance->getTraduction($instance->getName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage()),
                     'displaySize' => 'medium',
                     'displayRatio' => 'long',
                 );
@@ -722,7 +722,7 @@ class ModuleManage extends Modules
                         'enableDisplayFlagEmotions' => true,
                         'enableDisplayStatus' => true,
                         'enableDisplayContent' => false,
-                        'objectName' => $instance->getTraduction($instance->getName(), $this->_applicationInstance->getTraductionInstance()->getCurrentLanguage()),
+                        'objectName' => $instance->getTraduction($instance->getName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage()),
                         'objectIcon' => Displays::DEFAULT_ICON_LO,
                         'displaySize' => 'medium',
                         'displayRatio' => 'long',

@@ -513,7 +513,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
                         $this->_flagStateIcon->getID(),
                         $this->_flagStateText,
                         '');
-                    $menuContent .= $this->_traductionInstance->getTraduction($this->_flagStateText);
+                    $menuContent .= $this->_traductionInstance->getTranslate($this->_flagStateText);
                     $menuContent .= '</div>' . "\n";
                 }
                 if ($this->_displayFlagProtection) {
@@ -530,7 +530,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
                         $this->_flagProtectionIcon->getID(),
                         $this->_flagProtectionText,
                         $this->_flagProtectionText);
-                    $menuContent .= $this->_traductionInstance->getTraduction($this->_flagProtectionText);
+                    $menuContent .= $this->_traductionInstance->getTranslate($this->_flagProtectionText);
                     $menuContent .= '</div>' . "\n";
                     if ($this->_flagProtectionLink != '')
                         $menuContent .= '</a>';
@@ -549,7 +549,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
                         $this->_flagObfuscateIcon->getID(),
                         $this->_flagObfuscateText,
                         $this->_flagObfuscateText);
-                    $menuContent .= $this->_traductionInstance->getTraduction($this->_flagObfuscateText);
+                    $menuContent .= $this->_traductionInstance->getTranslate($this->_flagObfuscateText);
                     $menuContent .= '</div>' . "\n";
                     if ($this->_flagObfuscateLink != '')
                         $menuContent .= '</a>';
@@ -568,7 +568,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
                         $this->_flagUnlockedIcon->getID(),
                         $this->_flagUnlockedText,
                         $this->_flagUnlockedText);
-                    $menuContent .= $this->_traductionInstance->getTraduction($this->_flagUnlockedText);
+                    $menuContent .= $this->_traductionInstance->getTranslate($this->_flagUnlockedText);
                     $menuContent .= '</div>' . "\n";
                     if ($this->_flagUnlockedLink != '')
                         $menuContent .= '</a>';
@@ -586,9 +586,9 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
                         $this->_flagActivatedText,
                         $this->_flagActivatedText);
                     if ($this->_flagActivated)
-                        $menuContent .= $this->_traductionInstance->getTraduction(':::display:object:flag:activated');
+                        $menuContent .= $this->_traductionInstance->getTranslate(':::display:object:flag:activated');
                     else
-                        $menuContent .= $this->_traductionInstance->getTraduction(':::display:object:flag:unactivated');
+                        $menuContent .= $this->_traductionInstance->getTranslate(':::display:object:flag:unactivated');
                     $menuContent .= '</div>' . "\n";
                 }
                 if ($this->_flagMessage != '') {
@@ -998,9 +998,9 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
 
         $image = $this->_displayInstance->prepareIcon($image);
         if ($on)
-            $desc = $this->_traductionInstance->getTraduction($descOn);
+            $desc = $this->_traductionInstance->getTranslate($descOn);
         else
-            $desc = $this->_traductionInstance->getTraduction($descOff);
+            $desc = $this->_traductionInstance->getTranslate($descOff);
         $result .= '<img title="' . $desc . '" ';
         if ($on)
             $result .= 'class="objectFlagOn" ';
@@ -1435,7 +1435,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     public function setStatus(string $status): void
     {
         if ($status == '')
-            $this->_status = $this->_traductionInstance->getTraduction($this->_type);
+            $this->_status = $this->_traductionInstance->getTranslate($this->_type);
         else
             $this->_status = trim(filter_var($status, FILTER_SANITIZE_STRING));
         

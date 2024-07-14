@@ -26,7 +26,7 @@ class ModuleObjects extends Modules
     protected $MODULE_COMMAND_NAME = 'obj';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    protected $MODULE_VERSION = '020240619';
+    protected $MODULE_VERSION = '020240714';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
     protected $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -638,7 +638,7 @@ class ModuleObjects extends Modules
                         unset($valueInstance);
                         // Vérifie la valeur.
                         if ($value == null) {
-                            $value = $this->_applicationInstance->getTraductionInstance()->getTraduction('::noContent');
+                            $value = $this->_applicationInstance->getTranslateInstance()->getTranslate('::noContent');
                         }
                     }
 
@@ -666,7 +666,7 @@ class ModuleObjects extends Modules
                             <div class="sylabeModuleObjectsDescDate"><?php $display->displayDate($link->getDate()); ?></div>
                             <div class="sylabeModuleObjectsDescSigner"><?php $display->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleObjectsDescContent">
-                                <span class="sylabeModuleObjectsDescAttrib"><?php $this->_applicationInstance->getTraductionInstance()->echoTraduction($attribName); ?></span>
+                                <span class="sylabeModuleObjectsDescAttrib"><?php $this->_applicationInstance->getTranslateInstance()->echoTranslate($attribName); ?></span>
                                 =
                                 <span class="sylabeModuleObjectsDescValue"><?php echo $value; ?></span>
                             </div>
@@ -698,7 +698,7 @@ class ModuleObjects extends Modules
                             <div class="sylabeModuleObjectsDescContent">
 		<span class="sylabeModuleObjectsDescEmotion">
 			<?php $display->displayReferenceImage($emotionsIcons[$emotion], $emotionsList[$hashValue]); ?>
-            <?php $this->_applicationInstance->getTraductionInstance()->echoTraduction($emotionsList[$hashValue]); ?>
+            <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate($emotionsList[$hashValue]); ?>
 		</span>
                             </div>
                         </div>
@@ -759,7 +759,7 @@ class ModuleObjects extends Modules
                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_nebuleInstance->getCurrentObject()
                     . '&' . Displays::DEFAULT_INLINE_COMMAND . '&' . Displays::DEFAULT_INLINE_CONTENT_COMMAND . '=objprop'
                     . '&' . Displays::DEFAULT_NEXT_COMMAND . '=' . $nextLinkSigne;
-                $display->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTraductionInstance()->getTraduction('::seeMore'));
+                $display->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTranslateInstance()->getTranslate('::seeMore'));
             }
             unset($links);
         } else {
@@ -1007,7 +1007,7 @@ class ModuleObjects extends Modules
                 'enableDisplayJS' => false,
                 'enableDisplaySelfHook' => false,
                 'enableDisplayTypeHook' => false,
-                'objectName' => $this->_applicationInstance->getTraductionInstance()->getTraduction('::ProtectedID'),
+                'objectName' => $this->_applicationInstance->getTranslateInstance()->getTranslate('::ProtectedID'),
                 'displaySize' => 'medium', // Forcé par getDisplayObjectsList().
                 'displayRatio' => 'short',
             );
@@ -1031,7 +1031,7 @@ class ModuleObjects extends Modules
                 'enableDisplayJS' => false,
                 'enableDisplaySelfHook' => false,
                 'enableDisplayTypeHook' => false,
-                'objectName' => $this->_applicationInstance->getTraductionInstance()->getTraduction('::UnprotectedID'),
+                'objectName' => $this->_applicationInstance->getTranslateInstance()->getTranslate('::UnprotectedID'),
                 'displaySize' => 'medium', // Forcé par getDisplayObjectsList().
                 'displayRatio' => 'short',
             );

@@ -290,7 +290,7 @@ $bootstrapApplicationActionInstanceSleep = '';
  * Instance non désérialisée des traductions de l'application mémorisée dans la session PHP.
  * @noinspection PhpUnusedLocalVariableInspection
  */
-$bootstrapApplicationTraductionInstanceSleep = '';
+$bootstrapApplicationTranslateInstanceSleep = '';
 
 /**
  * Commutateur pour charger directement une application sans passer par le pré-chargement.
@@ -326,7 +326,7 @@ $applicationActionInstance = null;
  * Instance de traduction de l'application.
  * @noinspection PhpUnusedLocalVariableInspection
  */
-$applicationTraductionInstance = null;
+$applicationTranslateInstance = null;
 
 /**
  * Name space of the application.
@@ -4790,7 +4790,7 @@ function bootstrap_loadApplication(): void
            $applicationInstance,
            $applicationDisplayInstance,
            $applicationActionInstance,
-           $applicationTraductionInstance,
+           $applicationTranslateInstance,
            $applicationNameSpace,
            $bootstrapApplicationOID;
 
@@ -4799,7 +4799,7 @@ function bootstrap_loadApplication(): void
     $applicationNameSpace = $nameSpaceApplication;
     $nameSpaceDisplay = $nameSpace.'\\Display';
     $nameSpaceAction = $nameSpace.'\\Action';
-    $nameSpaceTraduction = $nameSpace.'\\Traduction';
+    $nameSpaceTranslate = $nameSpace.'\\Translate';
 
     if ($bootstrapApplicationOID == ''
         || $bootstrapApplicationOID == '0'
@@ -4817,7 +4817,7 @@ function bootstrap_loadApplication(): void
     $bootstrapApplicationInstanceSleep = '';
     $bootstrapApplicationDisplayInstanceSleep = '';
     $bootstrapApplicationActionInstanceSleep = '';
-    $bootstrapApplicationTraductionInstanceSleep = '';
+    $bootstrapApplicationTranslateInstanceSleep = '';
     session_start();
     if (isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID])
         && $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID] != '')
@@ -4828,9 +4828,9 @@ function bootstrap_loadApplication(): void
     if (isset($_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationOID])
         && $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationOID] != '')
         $bootstrapApplicationActionInstanceSleep = $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationOID];
-    if (isset($_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationOID])
-        && $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationOID] != '')
-        $bootstrapApplicationTraductionInstanceSleep = $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationOID];
+    if (isset($_SESSION['bootstrapApplicationsTranslateInstances'][$bootstrapApplicationOID])
+        && $_SESSION['bootstrapApplicationsTranslateInstances'][$bootstrapApplicationOID] != '')
+        $bootstrapApplicationTranslateInstanceSleep = $_SESSION['bootstrapApplicationsTranslateInstances'][$bootstrapApplicationOID];
     session_abort();
 
     try {
@@ -4867,13 +4867,13 @@ function bootstrap_loadApplication(): void
     }
 
     try {
-        if ($bootstrapApplicationTraductionInstanceSleep == '')
-            $applicationTraductionInstance = new $nameSpaceTraduction($applicationInstance);
+        if ($bootstrapApplicationTranslateInstanceSleep == '')
+            $applicationTranslateInstance = new $nameSpaceTranslate($applicationInstance);
         else
-            $applicationTraductionInstance = unserialize($bootstrapApplicationTraductionInstanceSleep);
+            $applicationTranslateInstance = unserialize($bootstrapApplicationTranslateInstanceSleep);
     } catch (\Error $e) {
         log_reopen(BOOTSTRAP_NAME);
-        log_add('Application traduction load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '585648a2');
+        log_add('Application translate load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '585648a2');
         bootstrap_setBreak('47', __FUNCTION__);
     }
 }
@@ -4889,15 +4889,15 @@ function bootstrap_initApplication(bool $run): void
     global $applicationInstance,
            $applicationDisplayInstance,
            $applicationActionInstance,
-           $applicationTraductionInstance;
+           $applicationTranslateInstance;
 
     // Check
     if (! is_a($applicationInstance, 'Nebule\Library\Applications')) {
         log_addDisp('error init application', 'error', __FUNCTION__, '41ba02a9');
         return;
     }
-    if (! is_a($applicationTraductionInstance, 'Nebule\Library\Traductions')) {
-        log_addDisp('error init traductions', 'error', __FUNCTION__, 'd121af4c');
+    if (! is_a($applicationTranslateInstance, 'Nebule\Library\Translates')) {
+        log_addDisp('error init translates', 'error', __FUNCTION__, 'd121af4c');
         return;
     }
     if (! is_a($applicationDisplayInstance, 'Nebule\Library\Displays')) {
@@ -4915,7 +4915,7 @@ function bootstrap_initApplication(bool $run): void
     // Si la requête web est un téléchargement d'objet ou de lien, des accélérations peuvent être prévues dans ce cas.
     if (!$applicationInstance->askDownload()) {
         // Initialisation de réveil des instances.
-        $applicationTraductionInstance->initialisation();
+        $applicationTranslateInstance->initialisation();
         $applicationDisplayInstance->initialisation();
         $applicationActionInstance->initialisation();
 
@@ -4942,7 +4942,7 @@ function bootstrap_saveApplication(): void
     global $applicationInstance,
            $applicationDisplayInstance,
            $applicationActionInstance,
-           $applicationTraductionInstance,
+           $applicationTranslateInstance,
            $bootstrapApplicationIID,
            $bootstrapApplicationOID,
            $bootstrapApplicationSID;
@@ -4956,7 +4956,7 @@ function bootstrap_saveApplication(): void
         $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID] = serialize($applicationInstance);
         $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationOID] = serialize($applicationDisplayInstance);
         $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationOID] = serialize($applicationActionInstance);
-        $_SESSION['bootstrapApplicationsTraductionInstances'][$bootstrapApplicationOID] = serialize($applicationTraductionInstance);
+        $_SESSION['bootstrapApplicationsTranslateInstances'][$bootstrapApplicationOID] = serialize($applicationTranslateInstance);
     }
     session_write_close();
 }

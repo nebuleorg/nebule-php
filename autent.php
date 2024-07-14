@@ -22,7 +22,7 @@ use Nebule\Library\Applications;
 use Nebule\Library\Displays;
 use Nebule\Library\Node;
 use Nebule\Library\References;
-use Nebule\Library\Traductions;
+use Nebule\Library\Translates;
 
 /*
 ------------------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240713';
+    const APPLICATION_VERSION = '020240714';
     const APPLICATION_LICENCE = 'GNU GPL 2023-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -151,7 +151,7 @@ class Display extends Displays
 
         <style>
             .layout-content {
-                max-width: 80%;
+                max-width: 86%;
             }
 
             .layout-content > div {
@@ -310,7 +310,7 @@ class Action extends Actions
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Traduction extends Traductions
+class Translate extends Translates
 {
     /**
      * La langue d'affichage de l'interface.
@@ -427,8 +427,7 @@ class Traduction extends Traductions
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleAutent extends Modules
-{
+class ModuleAutent extends Modules {
     protected $MODULE_TYPE = 'Application';
     protected $MODULE_NAME = '::sylabe:module:objects:ModuleName';
     protected $MODULE_MENU_NAME = '::sylabe:module:objects:MenuName';
@@ -464,8 +463,7 @@ class ModuleAutent extends Modules
      * @param Node|null $nid
      * @return array
      */
-    public function getHookList(string $hookName, ?Node $nid = null): array
-    {
+    public function getHookList(string $hookName, ?Node $nid = null): array {
         $object = $this->_applicationInstance->getCurrentObjectID();
         if ($nid !== null)
             $object = $nid->getID();
@@ -490,8 +488,7 @@ class ModuleAutent extends Modules
      *
      * @return void
      */
-    public function displayModule(): void
-    {
+    public function displayModule(): void {
         if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK))
             $this->_comebackAppId = trim(filter_input(INPUT_GET, References::COMMAND_APPLICATION_BACK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         else
@@ -499,10 +496,10 @@ class ModuleAutent extends Modules
         if ($this->_comebackAppId == '')
             $this->_comebackAppId = '1';
 
-        $instance = new DisplayNotify($this->_applicationInstance);
+        /*$instance = new DisplayNotify($this->_applicationInstance);
         $instance->setMessage('under construction!');
         $instance->setType(DisplayItemIconMessage::TYPE_WARN);
-        $instance->display();
+        $instance->display();*/
 
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[1]:
@@ -522,8 +519,7 @@ class ModuleAutent extends Modules
      *
      * @return void
      */
-    public function displayModuleInline(): void
-    {
+    public function displayModuleInline(): void {
         // Nothing
     }
 
@@ -531,8 +527,7 @@ class ModuleAutent extends Modules
     /**
      * Display view to describe entity state.
      */
-    private function _displayInfo(): void
-    {
+    private function _displayInfo(): void {
         $this->_metrologyInstance->addLog('Display desc ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '1f00a8b1');
 
         $title = new DisplayTitle($this->_applicationInstance);
@@ -556,7 +551,7 @@ class ModuleAutent extends Modules
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this->MODULE_REGISTERED_VIEWS[1];
             $title = ':::login';
-            $type = DisplayItemIconMessage::TYPE_GO;
+            $type = DisplayItemIconMessage::TYPE_PLAY;
         }
 
         $instanceList = new DisplayList($this->_applicationInstance);
@@ -571,8 +566,7 @@ class ModuleAutent extends Modules
     /**
      * Display view to unlocking entity.
      */
-    private function _displayLogin(): void
-    {
+    private function _displayLogin(): void {
         $this->_metrologyInstance->addLog('Display login ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '61a2b0dd');
 
         $title = new DisplayTitle($this->_applicationInstance);
@@ -581,33 +575,32 @@ class ModuleAutent extends Modules
 
         $instanceList = new DisplayList($this->_applicationInstance);
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
-        $this->_displayAddSecurity($instanceList, true);
+        $this->_displayAddSecurity($instanceList, false);
         $this->_displayAddEID($instanceList, $this->_applicationInstance->getCurrentObjectInstance(), false);
         $this->_displayAddEID($instanceList, $this->_nebuleInstance->getCurrentEntityPrivateKeyInstance(), true);
-        $this->_displayAddButton($instanceList, ':::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
         if ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')
-            && $this->_applicationInstance->getCheckSecurityAll() == 'OK') {
-            $instancePassword = new DisplayQuery($this->_applicationInstance);
-            $instancePassword->setMessage('::::Password');
-            $instancePassword->setType(DisplayQuery::TYPE_PASSWORD);
-            $instancePassword->setLink(References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
+            && $this->_applicationInstance->getCheckSecurityAll() == 'OK')
+            $this->_displayAddButtonQuery($instanceList,
+                '::::Password',
+                DisplayQuery::TYPE_PASSWORD,
+                References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getInstanceEntity()
                 . '&' . References::COMMAND_SWITCH_TO_ENTITY);
-            $instancePassword->setHiddenName('id');
-            $instancePassword->setHiddenValue($this->_nebuleInstance->getInstanceEntity());
-            $instanceList->addItem($instancePassword);
-        } else
+        else
             $this->_displayAddButton($instanceList, ':::err_NotPermit', DisplayItemIconMessage::TYPE_ERROR, '');
+        $this->_displayAddButton($instanceList,
+            ':::return',
+            DisplayItemIconMessage::TYPE_BACK,
+            '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
         $instanceList->display();
     }
 
     /**
      * Display view to locking entity.
      */
-    private function _displayLogout(): void
-    {
+    private function _displayLogout(): void {
         $this->_metrologyInstance->addLog('Display logout ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '833de289');
 
         $title = new DisplayTitle($this->_applicationInstance);
@@ -618,14 +611,12 @@ class ModuleAutent extends Modules
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
         $this->_displayAddSecurity($instanceList, false);
         $this->_displayAddEID($instanceList, $this->_applicationInstance->getCurrentObjectInstance(), false);
-        if ($this->_unlocked)
-            $this->_displayAddButton($instanceList, ':::logout', DisplayItemIconMessage::TYPE_GO, '/?f');
+        $this->_displayAddButton($instanceList, ':::logout', DisplayItemIconMessage::TYPE_PLAY, '/?f');
         $this->_displayAddButton($instanceList, ':::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
         $instanceList->display();
     }
 
-    private function _displayAddEID(DisplayList $instanceList, Node $eid, bool $isKey)
-    {
+    private function _displayAddEID(DisplayList $instanceList, Node $eid, bool $isKey): void {
         $instanceObject = new DisplayObject($this->_applicationInstance);
         $instanceObject->setNID($eid);
         $instanceObject->setEnableColor(true);
@@ -654,16 +645,14 @@ class ModuleAutent extends Modules
         $instanceList->addItem($instanceObject);
     }
 
-    private function _displayAddSecurity(DisplayList $instanceList, bool $displayFull)
-    {
+    private function _displayAddSecurity(DisplayList $instanceList, bool $displayFull): void {
         $instance = new DisplaySecurity($this->_applicationInstance);
         $instance->setDisplayOK(!$displayFull);
         $instance->setDisplayFull($displayFull);
         $instanceList->addItem($instance);
     }
 
-    private function _displayAddButton(DisplayList $instanceList, string $message, string $type, string $link)
-    {
+    private function _displayAddButton(DisplayList $instanceList, string $message, string $type, string $link): void {
         $instance = new DisplayInformation($this->_applicationInstance);
         $instance->setMessage($message);
         $instance->setType($type);
@@ -672,14 +661,18 @@ class ModuleAutent extends Modules
         $instanceList->addItem($instance);
     }
 
+    private function _displayAddButtonQuery(DisplayList $instanceList, string $message, string $type, string $link): void {
+            $instancePassword = new DisplayQuery($this->_applicationInstance);
+            $instancePassword->setMessage($message);
+            $instancePassword->setType($type);
+            $instancePassword->setLink($link);
+            $instancePassword->setHiddenName('id');
+            $instancePassword->setHiddenValue($this->_nebuleInstance->getInstanceEntity());
+            $instanceList->addItem($instancePassword);
+    }
 
-    /**
-     * Initialisation de la table de traduction.
-     *
-     * @return void
-     */
-    protected function _initTable(): void
-    {
+
+    protected function _initTable(): void {
         $this->_table['fr-fr']['::sylabe:module:objects:ModuleName'] = 'Module des blogs'; # FIXME
         $this->_table['en-en']['::sylabe:module:objects:ModuleName'] = 'Blogs module';
         $this->_table['es-co']['::sylabe:module:objects:ModuleName'] = 'Módulo de blogs';

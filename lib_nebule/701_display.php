@@ -241,7 +241,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Instance de traduction.
      *
-     * @var Traductions
+     * @var Translates
      */
     protected $_traductionInstance;
 
@@ -356,7 +356,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '46fcbf07');
-        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
 
@@ -464,7 +464,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '4bffc1e9');
-        $this->_traductionInstance = $this->_applicationInstance->getTraductionInstance();
+        $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
 
@@ -2035,7 +2035,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     public function getTraduction(string $text): string
     {
-        return $this->_traductionInstance->getTraduction($text);
+        return $this->_traductionInstance->getTranslate($text);
     }
 
     public function setHtlinkObjectPrefix(string $htlink): void
@@ -2213,7 +2213,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     }
 
                     $result = '<div class="text">' . "\n\t<p>"
-                        . sprintf($this->_traductionInstance->getTraduction('::UniqueID'),
+                        . sprintf($this->_traductionInstance->getTranslate('::UniqueID'),
                             $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n")
                         . "\t</p>\n";
 
@@ -2221,7 +2221,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         // Liste des localisations.
                         $localisations = $object->getLocalisationsID();
                         if (sizeof($localisations) > 0) {
-                            $result .= '<table border="0"><tr><td><td>' . $this->_traductionInstance->getTraduction('::EntityLocalisation') . " :</td><td>\n";
+                            $result .= '<table border="0"><tr><td><td>' . $this->_traductionInstance->getTranslate('::EntityLocalisation') . " :</td><td>\n";
                             foreach ($localisations as $localisation) {
                                 $locObject = $this->_nebuleInstance->newObject($localisation);
                                 $result .= "\t " . $this->convertInlineObjectColorIcon($localisation) . ' '
@@ -2248,12 +2248,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $isClosed = $object->getMarkClosed();
 
             $result = '<div class="text">' . "\n\t<p>"
-                . sprintf($this->_traductionInstance->getTraduction('::UniqueID'),
+                . sprintf($this->_traductionInstance->getTranslate('::UniqueID'),
                     $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
             if ($isClosed)
-                $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::GroupeFerme') . ".\n";
+                $result .= "<br />\n" . $this->_traductionInstance->getTranslate('::GroupeFerme') . ".\n";
             else
-                $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::GroupeOuvert') . ".\n";
+                $result .= "<br />\n" . $this->_traductionInstance->getTranslate('::GroupeOuvert') . ".\n";
             $result .= "\t</p>\n</div>\n";
 
             unset($isOpened, $isClosed);
@@ -2263,12 +2263,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $isClosed = $object->getMarkClosed();
 
             $result = '<div class="text">' . "\n\t<p>"
-                . sprintf($this->_traductionInstance->getTraduction('::UniqueID'),
+                . sprintf($this->_traductionInstance->getTranslate('::UniqueID'),
                     $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
             if ($isClosed)
-                $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::ConversationFermee') . ".\n";
+                $result .= "<br />\n" . $this->_traductionInstance->getTranslate('::ConversationFermee') . ".\n";
             else
-                $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::ConversationOuverte') . ".\n";
+                $result .= "<br />\n" . $this->_traductionInstance->getTranslate('::ConversationOuverte') . ".\n";
             $result .= "\t</p>\n</div>\n";
 
             unset($isClosed);
@@ -2382,7 +2382,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $danger = $object->getMarkDanger();
         $warning = $object->getMarkWarning();
         $ispresent = $object->checkPresent();
-        $type = $this->_traductionInstance->getTraduction($typemime);
+        $type = $this->_traductionInstance->getTranslate($typemime);
 
         // Affichage du contenu.
         if ($danger) {
@@ -2407,7 +2407,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $result .= '  <div class="oneActionItem-top">' . "\n";
             $result .= '   <div class="oneAction-icon">' . $this->convertObjectColorIcon($unprotectedObject) . "</div>\n";
             $result .= '   <div class="oneAction-title"><p>' . $this->convertHypertextLink($unprotectedName, $htlink) . "</p></div>\n";
-            $result .= '   <div class="oneAction-text"><p>' . $this->_traductionInstance->getTraduction($unprotectedTypemime) . "</p></div>\n";
+            $result .= '   <div class="oneAction-text"><p>' . $this->_traductionInstance->getTranslate($unprotectedTypemime) . "</p></div>\n";
             $result .= "  </div>\n";
             $result .= " </div>\n";
             $result .= ' <div class="oneAction-close"></div>' . "\n";
@@ -2497,7 +2497,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 case nebule::REFERENCE_OBJECT_MP3 :
                     $content = $object->getContent(0);
                     if ($content != null)
-                        $result = $result . $divOpen . '<br /><audio controls><source src="?o=' . $nid . '" type="audio/mp3" />' . $this->_traductionInstance->getTraduction(':::warn_NoAudioTagSupport') . '</audio><br />' . $divClose;
+                        $result = $result . $divOpen . '<br /><audio controls><source src="?o=' . $nid . '" type="audio/mp3" />' . $this->_traductionInstance->getTranslate(':::warn_NoAudioTagSupport') . '</audio><br />' . $divClose;
                     else {
                         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
                             $notify = new DisplayNotify($this->_applicationInstance);
@@ -2516,7 +2516,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 case nebule::REFERENCE_OBJECT_OGG :
                     $content = $object->getContent(0);
                     if ($content != null)
-                        $result = $result . $divOpen . '<br /><audio controls><source src="?o=' . $nid . '" type="audio/ogg" />' . $this->_traductionInstance->getTraduction(':::warn_NoAudioTagSupport') . '</audio><br />' . $divClose;
+                        $result = $result . $divOpen . '<br /><audio controls><source src="?o=' . $nid . '" type="audio/ogg" />' . $this->_traductionInstance->getTranslate(':::warn_NoAudioTagSupport') . '</audio><br />' . $divClose;
                     else {
                         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
                             $notify = new DisplayNotify($this->_applicationInstance);
@@ -2645,7 +2645,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         if ($alt == '')
             $alt = $oid->getID();
-        $alt = $this->_traductionInstance->getTraduction($alt);
+        $alt = $this->_traductionInstance->getTranslate($alt);
         $result .= ' alt="' . $alt . '" title="' . $alt . '"';
 
         if ($class != '')
@@ -2904,7 +2904,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($id != '')
             $id = ' id="' . $id . '"';
 
-        $text = $this->_traductionInstance->getTraduction($text);
+        $text = $this->_traductionInstance->getTranslate($text);
         return '<a href="' . $htlink . '"' . $color . $class . $id . '>' . $text . '</a>';
     }
 
@@ -3665,9 +3665,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         $image = $this->prepareIcon($image);
         if ($on)
-            $desc = $this->_traductionInstance->getTraduction($descOn);
+            $desc = $this->_traductionInstance->getTranslate($descOn);
         else
-            $desc = $this->_traductionInstance->getTraduction($descOff);
+            $desc = $this->_traductionInstance->getTranslate($descOff);
         $result .= '<img title="' . $desc . '" ';
         if ($on)
             $result .= 'class="objectFlagOn" ';
@@ -4555,7 +4555,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if ($object->checkPresent()) {
                 if ($sizeCSS = 'medium' || $sizeCSS = 'full') {
                     $result .= '<div class="objectContentEntity">' . "\n<p>";
-                    $result .= sprintf($this->_traductionInstance->getTraduction('::UniqueID'),
+                    $result .= sprintf($this->_traductionInstance->getTranslate('::UniqueID'),
                         $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
                     $result .= "</p>\n";
 
@@ -4563,7 +4563,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         // Liste des localisations.
                         $localisations = $object->getLocalisationsID();
                         if (sizeof($localisations) > 0) {
-                            $result .= '<table border="0"><tr><td><td>' . $this->_traductionInstance->getTraduction('::EntityLocalisation') . " :</td><td>\n";
+                            $result .= '<table border="0"><tr><td><td>' . $this->_traductionInstance->getTranslate('::EntityLocalisation') . " :</td><td>\n";
                             foreach ($localisations as $localisation) {
                                 $locObject = $this->_nebuleInstance->newObject($localisation);
                                 $result .= "\t " . $this->convertInlineObjectColorIcon($localisation) . ' '
@@ -4586,21 +4586,21 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
         } elseif (is_a($object, 'Nebule\Library\Group')) {
             $result .= '<div class="objectContentGroup">' . "\n\t<p>"
-                . sprintf($this->_traductionInstance->getTraduction('::UniqueID'),
+                . sprintf($this->_traductionInstance->getTranslate('::UniqueID'),
                     $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
             if ($object->getMarkClosed())
-                $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::GroupeFerme') . ".\n";
+                $result .= "<br />\n" . $this->_traductionInstance->getTranslate('::GroupeFerme') . ".\n";
             else
-                $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::GroupeOuvert') . ".\n";
+                $result .= "<br />\n" . $this->_traductionInstance->getTranslate('::GroupeOuvert') . ".\n";
             $result .= "\t</p>\n</div>\n";
         } elseif (is_a($object, 'Nebule\Library\Conversation')) {
             $result .= '<div class="objectContentConversation">' . "\n\t<p>"
-                . sprintf($this->_traductionInstance->getTraduction('::UniqueID'),
+                . sprintf($this->_traductionInstance->getTranslate('::UniqueID'),
                     $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
             if ($object->getMarkClosed())
-                $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::ConversationFermee') . ".\n";
+                $result .= "<br />\n" . $this->_traductionInstance->getTranslate('::ConversationFermee') . ".\n";
             else
-                $result .= "<br />\n" . $this->_traductionInstance->getTraduction('::ConversationOuverte') . ".\n";
+                $result .= "<br />\n" . $this->_traductionInstance->getTranslate('::ConversationOuverte') . ".\n";
             $result .= "\t</p>\n</div>\n";
         } else
             $result .= $this->getDisplayAsObjectContent($object, $sizeCSS, $ratioCSS, $permitWarnProtected);
@@ -4656,7 +4656,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $danger = $object->getMarkDanger();
         $warning = $object->getMarkWarning();
         $ispresent = $object->checkPresent();
-        $type = $this->_traductionInstance->getTraduction($typemime);
+        $type = $this->_traductionInstance->getTranslate($typemime);
 
         $param = array(
             'enableDisplayIcon' => true,
@@ -4733,7 +4733,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 case nebule::REFERENCE_OBJECT_MP3 :
                     $content = $object->getContent(0);
                     if ($content != null)
-                        $result .= '<div class="objectContentObject objectContentAudio"><audio controls><source src="?o=' . $id . '" type="audio/mp3" />' . $this->_traductionInstance->getTraduction(':::warn_NoAudioTagSupport') . '</audio></div>' . "\n";
+                        $result .= '<div class="objectContentObject objectContentAudio"><audio controls><source src="?o=' . $id . '" type="audio/mp3" />' . $this->_traductionInstance->getTranslate(':::warn_NoAudioTagSupport') . '</audio></div>' . "\n";
                     else {
                         $param['informationType'] = 'error';
                         $result .= $this->getDisplayInformation_DEPRECATED(':::display:content:errorNotDisplayable', $param);
@@ -4742,7 +4742,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 case nebule::REFERENCE_OBJECT_OGG :
                     $content = $object->getContent(0);
                     if ($content != null)
-                        $result .= '<div class="objectContentObject objectContentAudio"><audio controls><source src="?o=' . $id . '" type="audio/ogg" />' . $this->_traductionInstance->getTraduction(':::warn_NoAudioTagSupport') . '</audio></div>' . "\n";
+                        $result .= '<div class="objectContentObject objectContentAudio"><audio controls><source src="?o=' . $id . '" type="audio/ogg" />' . $this->_traductionInstance->getTranslate(':::warn_NoAudioTagSupport') . '</audio></div>' . "\n";
                     else {
                         $param['informationType'] = 'error';
                         $result .= $this->getDisplayInformation_DEPRECATED(':::display:content:errorNotDisplayable', $param);
@@ -4779,7 +4779,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $result .= "</div>\n";
             $result .= '<div class="objectContent">' . "\n";
             $result .= $this->getDisplayInformation_DEPRECATED(
-                $this->_applicationInstance->getTraductionInstance()->getTraduction(':::display:content:ObjectHaveUpdate')
+                $this->_applicationInstance->getTranslateInstance()->getTranslate(':::display:content:ObjectHaveUpdate')
                 . '<br />' . $this->getDisplayObject_DEPRECATED($UpdateID, $param2),
                 $param
             );
@@ -5687,7 +5687,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($instance->getID() == '0')
             return '';
 
-        return $this->convertUpdateImage($instance, $this->_traductionInstance->getTraduction($instance->getName('all')), 'iconInlineDisplay');
+        return $this->convertUpdateImage($instance, $this->_traductionInstance->getTranslate($instance->getName('all')), 'iconInlineDisplay');
     }
 
     public function displayInlineInfoFace(): void
@@ -5698,7 +5698,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertInlineInfoFace(): string
     {
         $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IINFO);
-        return $this->convertUpdateImage($icon, $this->_traductionInstance->getTraduction('::::INFO'), 'iconInlineDisplay');
+        return $this->convertUpdateImage($icon, $this->_traductionInstance->getTranslate('::::INFO'), 'iconInlineDisplay');
     }
 
     public function displayInlineOKFace(): void
@@ -5709,7 +5709,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertInlineOKFace(): string
     {
         $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IOK);
-        return $this->convertUpdateImage($icon, $this->_traductionInstance->getTraduction('::::OK'), 'iconInlineDisplay');
+        return $this->convertUpdateImage($icon, $this->_traductionInstance->getTranslate('::::OK'), 'iconInlineDisplay');
     }
 
     public function displayInlineWarningFace(): void
@@ -5720,7 +5720,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertInlineWarningFace(): string
     {
         $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IWARN);
-        return $this->convertUpdateImage($icon, $this->_traductionInstance->getTraduction('::::WARN'), 'iconInlineDisplay');
+        return $this->convertUpdateImage($icon, $this->_traductionInstance->getTranslate('::::WARN'), 'iconInlineDisplay');
     }
 
     public function displayInlineErrorFace(): void
@@ -5731,7 +5731,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertInlineErrorFace(): string
     {
         $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IERR);
-        return $this->convertUpdateImage($icon, $this->_traductionInstance->getTraduction('::::ERROR'), 'iconInlineDisplay');
+        return $this->convertUpdateImage($icon, $this->_traductionInstance->getTranslate('::::ERROR'), 'iconInlineDisplay');
     }
 
     public function displayInlineLastAction(): void
@@ -6035,7 +6035,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         $desc = '';
         if (isset($item['desc']))
-            $desc = $this->_traductionInstance->getTraduction($item['desc']);
+            $desc = $this->_traductionInstance->getTranslate($item['desc']);
 
         $icon = '';
         if (isset($item['icon']))
@@ -6119,7 +6119,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                                     ':::display:content:warningTaggedWarning',
                                     'iconInlineDisplay');
                                 echo ' ';
-                                $this->_traductionInstance->echoTraduction(':::display:content:warningTaggedWarning'); ?></p>
+                                $this->_traductionInstance->echoTranslate(':::display:content:warningTaggedWarning'); ?></p>
                         </div>
                         <?php
                     }
@@ -6134,7 +6134,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                                     ':::display:content:errorBan',
                                     'iconInlineDisplay');
                                 echo ' ';
-                                $this->_traductionInstance->echoTraduction(':::display:content:errorBan'); ?></p>
+                                $this->_traductionInstance->echoTranslate(':::display:content:errorBan'); ?></p>
                         </div>
                         <?php
                     }
@@ -6149,7 +6149,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                                     ':::display:content:ObjectProctected',
                                     'iconInlineDisplay');
                                 echo ' ';
-                                $this->_traductionInstance->echoTraduction(':::display:content:ObjectProctected'); ?></p>
+                                $this->_traductionInstance->echoTranslate(':::display:content:ObjectProctected'); ?></p>
                         </div>
                         <?php
                     }
@@ -6166,7 +6166,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                                 else
                                     $icon = $this->_nebuleInstance->newObject($action['icon']);
                                 $actionIcon = $this->convertUpdateImage($icon, $action['name'], 'iconInlineDisplay');
-                                $actionName = $this->_traductionInstance->getTraduction($action['name']);
+                                $actionName = $this->_traductionInstance->getTranslate($action['name']);
                                 echo '<p>' . $actionIcon . ' ' . $this->convertHypertextLink($actionName, $action['link']) . "</p>\n";
                                 unset($actionIcon, $actionName);
                             }
