@@ -972,7 +972,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
 
             input[type=password], input[type=text], input[type=email] {
-                padding: 6px;
+                /*padding: 6px;*/
             }
 
             /* Le bloc d'entête */
@@ -1701,6 +1701,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         DisplayIconApplication::displayCSS();
         DisplayContent::displayCSS();
         DisplayNotify::displayCSS();
+        DisplayQuery::displayCSS();
     }
 
     /**
@@ -6279,5 +6280,20 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::SecurityChecks', $param);
         }
         return $error;
+    }
+
+    static public function docDispTitle(int $level, string $id, string $title): void {
+        if ($level > 7
+            || $level < 1
+            || $id == ''
+            || $title == ''
+        ) {
+            echo "\n<br /><br /><i>Invalid title!</i><br /><br />";
+            return;
+        }
+        $dId=strtolower($id);
+        $uId=strtoupper($id);
+
+        echo "<h$level id=\"$dId\"></h$level><p>--<br /><br /><br /></p><h$level>$uId / $title</h$level>\n";
     }
 }

@@ -1389,7 +1389,9 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
 
     private function _setFlagState(): void
     {
-        if ($this->_nid->getMarkDanger())
+        if ($this->_nid === null)
+            $this->setFlagState('n');
+        elseif ($this->_nid->getMarkDanger())
             $this->setFlagState('e');
         elseif ($this->_nid->getMarkWarning())
             $this->setFlagState('w');

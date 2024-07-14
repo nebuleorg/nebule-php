@@ -10,6 +10,7 @@ use Nebule\Library\DisplayList;
 use Nebule\Library\DisplayMenu;
 use Nebule\Library\DisplayNotify;
 use Nebule\Library\DisplayObject;
+use Nebule\Library\DisplayQuery;
 use Nebule\Library\DisplaySecurity;
 use Nebule\Library\DisplayTitle;
 use Nebule\Library\Entity;
@@ -584,32 +585,22 @@ class ModuleAutent extends Modules
         $this->_displayAddEID($instanceList, $this->_applicationInstance->getCurrentObjectInstance(), false);
         $this->_displayAddEID($instanceList, $this->_nebuleInstance->getCurrentEntityPrivateKeyInstance(), true);
         $this->_displayAddButton($instanceList, ':::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
-        $instanceList->display();
-
         if ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')
-            && $this->_applicationInstance->getCheckSecurityAll() == 'OK')
-        {
-            ?>
-
-            <form method="post"
-                  action="?<?php echo References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
-                      . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
-                      . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this->MODULE_REGISTERED_VIEWS[1]
-                      . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getInstanceEntity()
-                      . '&' . References::COMMAND_SWITCH_TO_ENTITY; ?>">
-                <input type="hidden" name="id" value="<?php echo $this->_nebuleInstance->getInstanceEntity(); ?>">
-                <label>
-                    <input type="password" name="<?php echo References::COMMAND_SELECT_PASSWORD; ?>"
-                </label>
-                <input type="submit" value="Unlock">
-            </form>
-            <?php
-        } else {
-            $notify = new DisplayNotify($this->_applicationInstance);
-            $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
-            $notify->setMessage(':::err_NotPermit');
-            $notify->display();
-        }
+            && $this->_applicationInstance->getCheckSecurityAll() == 'OK') {
+            $instancePassword = new DisplayQuery($this->_applicationInstance);
+            $instancePassword->setMessage('::::Password');
+            $instancePassword->setType(DisplayQuery::TYPE_PASSWORD);
+            $instancePassword->setLink(References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
+                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getInstanceEntity()
+                . '&' . References::COMMAND_SWITCH_TO_ENTITY);
+            $instancePassword->setHiddenName('id');
+            $instancePassword->setHiddenValue($this->_nebuleInstance->getInstanceEntity());
+            $instanceList->addItem($instancePassword);
+        } else
+            $this->_displayAddButton($instanceList, ':::err_NotPermit', DisplayItemIconMessage::TYPE_ERROR, '');
+        $instanceList->display();
     }
 
     /**

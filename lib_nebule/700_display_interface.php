@@ -237,40 +237,41 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
             case self::TYPE_OK:
                 $this->_type = 'Ok';
                 $this->_iconText = '::::OK';
-                $icon = Displays::DEFAULT_ICON_IOK;
+                $icon = self::ICON_OK_RID;
                 break;
             case self::TYPE_WARN:
                 $this->_type = 'Warn';
                 $this->_iconText = '::::WARN';
-                $icon = Displays::DEFAULT_ICON_IWARN;
+                $icon = self::ICON_WARN_RID;
                 break;
             case self::TYPE_ERROR:
                 $this->_type = 'Error';
                 $this->_iconText = '::::ERROR';
-                $icon = Displays::DEFAULT_ICON_IERR;
+                $icon = self::ICON_ERROR_RID;
                 break;
             case self::TYPE_MESSAGE:
                 $this->_type = 'Message';
                 $this->_iconText = '::::INFORMATION';
-                $icon = Displays::DEFAULT_ICON_IINFO;
+                $icon = self::ICON_INFORMATION_RID;
                 break;
             case self::TYPE_GO:
                 $this->_type = 'Go';
                 $this->_iconText = '::::GO';
-                $icon = Displays::DEFAULT_ICON_IPLAY;
+                $icon = self::ICON_GO_RID;
                 break;
             case self::TYPE_BACK:
                 $this->_type = 'Back';
                 $this->_iconText = '::::BACK';
-                $icon = Displays::DEFAULT_ICON_IBACK;
+                $icon = self::ICON_BACK_RID;
                 break;
             default:
                 $this->_type = 'Information';
                 $this->_iconText = '::::INFORMATION';
-                $icon = Displays::DEFAULT_ICON_IINFO;
+                $icon = self::ICON_INFORMATION_RID;
                 break;
         }
-        $this->_icon = $this->_nebuleInstance->newObject($icon);
+        $rid = $this->_nebuleInstance->newObject($icon);
+        $this->_icon = $rid->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE);
     }
 }
 

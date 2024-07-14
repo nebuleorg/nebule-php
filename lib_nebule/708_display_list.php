@@ -30,6 +30,7 @@ class DisplayList extends DisplayItemSizeable implements DisplayInterface
         $result .= '<div class="listContent">' . "\n";
         $result .= "\n";
         foreach ($this->_list as $item){
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('get code from ' . get_class($item), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '52d6f3ea');
             if ($item instanceof DisplayInformation) {
                 $item->setSize($this->_sizeCSS);
                 $item->setDisplayAlone(false);
@@ -39,6 +40,10 @@ class DisplayList extends DisplayItemSizeable implements DisplayInterface
                 // $item->setDisplayAlone(false); TODO
                 $result .= $item->getHTML();
             } elseif ($item instanceof DisplaySecurity) {
+                $item->setSize($this->_sizeCSS);
+                $item->setDisplayAlone(false);
+                $result .= $item->getHTML();
+            } elseif ($item instanceof DisplayQuery) {
                 $item->setSize($this->_sizeCSS);
                 $item->setDisplayAlone(false);
                 $result .= $item->getHTML();
@@ -53,7 +58,11 @@ class DisplayList extends DisplayItemSizeable implements DisplayInterface
     }
 
     public function addItem(DisplayItem $item): void {
-        if ($item instanceof DisplayInformation || $item instanceof DisplayObject || $item instanceof DisplaySecurity)
+        if ($item instanceof DisplayInformation
+            || $item instanceof DisplayObject
+            || $item instanceof DisplaySecurity
+            || $item instanceof DisplayQuery
+        )
             $this->_list[] = $item;
     }
 

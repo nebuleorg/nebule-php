@@ -3463,7 +3463,7 @@ class Node implements nodeInterface
      * @param string $socialClass
      * @return Node
      */
-    public function getReferencedObjectInstance(string $reference, string $socialClass = ''): Node
+    public function getReferencedObjectInstance(string $reference = '', string $socialClass = ''): Node
     {
         return $this->_nebuleInstance->convertIdToTypedObjectInstance($this->getReferencedObjectID($reference, $socialClass));
     }

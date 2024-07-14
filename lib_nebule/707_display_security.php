@@ -169,12 +169,12 @@ class DisplaySecurity extends DisplayItemIconMessageSizeable implements DisplayI
 
     public function setDisplayOK(bool $enable): void
     {
-        $this->_displayOk = $enable; // FIXME
+        $this->_displayOk = $enable;
     }
 
     public function setDisplayFull(bool $enable): void
     {
-        $this->_displayFull = $enable; // FIXME
+        $this->_displayFull = $enable;
     }
 
     public static function displayCSS(): void

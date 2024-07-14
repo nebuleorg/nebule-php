@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
+use Nebule\Application\Autent\Display;
 use Nebule\Library\nebule;
 use const Nebule\Bootstrap\LIB_ARG_BOOTSTRAP_BREAK;
 use const Nebule\Bootstrap\LIB_ARG_FLUSH_SESSION;
@@ -1845,7 +1846,7 @@ abstract class Applications implements applicationInterface
     {
         ?>
 
-        <h2 id="oa">OA / Application</h2>
+        <?php Displays::docDispTitle(2, 'oa', 'Application'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Une application permet d'interagir avec les objets et liens.</p>
         <p>Une application qui ne fait que lire des objets et liens, ou retransmettre des liens déjà signés, est dite
@@ -1855,7 +1856,7 @@ abstract class Applications implements applicationInterface
             c'est aussi un robot. Le déverrouillage de cette entité peut cependant bénéficier de protections
             particulières.</p>
 
-        <h3 id="oaf">OAF / Fonctionnement</h3>
+        <?php Displays::docDispTitle(3, 'oaf', 'Fonctionnement'); ?>
         <p>Dans la construction du code, il y a quatre niveaux. Chaque niveau de code est constitué d’un et un seul
             objet nebule ou fichier utilisé. Une seule application est utilisée à un instant donné, mais il peut y avoir
             plusieurs modules utilisés par l’application. Les niveaux :</p>
@@ -1887,34 +1888,34 @@ abstract class Applications implements applicationInterface
         <p>Elles dépendent respectivement des classes de l’application de référence Applications, Displays, Actions et
             Traductions dans la librairie nebule.</p>
 
-        <h3 id="oan">OAN / Nommage</h3>
+        <?php Displays::docDispTitle(3, 'oan', 'Nommage'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h3 id="oap">OAP / Protection</h3>
+        <?php Displays::docDispTitle(3, 'oap', 'Protection'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h3 id="oad">OAD / Dissimulation</h3>
+        <?php Displays::docDispTitle(3, 'oad', 'Dissimulation'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h3 id="oal">OAL / Liens</h3>
+        <?php Displays::docDispTitle(3, 'oal', 'Liens'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h3 id="oac">OAC / Création</h3>
+        <?php Displays::docDispTitle(3, 'oac', 'Création'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h3 id="oas">OAS / Stockage</h3>
+        <?php Displays::docDispTitle(3, 'oas', 'Stockage'); ?>
         <p>Voir <a href="#oos">OOS</a>, pas de particularité de stockage.</p>
 
-        <h3 id="oat">OAT / Transfert</h3>
+        <?php Displays::docDispTitle(3, 'oat', 'Transfert'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h3 id="oar">OAR / Réservation</h3>
+        <?php Displays::docDispTitle(3, 'oar', 'Réservation'); ?>
         <p>Les objets réservés spécifiquement pour les applications :</p>
         <ul>
             <li>nebule/objet/applications</li>
         </ul>
 
-        <h3 id="oai">OAI / Interface</h3>
+        <?php Displays::docDispTitle(3, 'oai', 'Interface'); ?>
         <p>Une interface est un programme dédié aux interactions entre deux milieux différents.</p>
         <p>Une interface permet à une entité, c'est-à-dire un utilisateur ou un robot, d'interagir avec une application.
             Cela peut être vu comme une extension de l'application.</p>
@@ -1977,24 +1978,24 @@ abstract class Applications implements applicationInterface
             </div>
         </div>
 
-        <h4 id="oain">OAIN / Nommage</h4>
+        <?php Displays::docDispTitle(4, 'oain', 'Nommage'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="oaip">OAIP / Protection</h4>
+        <?php Displays::docDispTitle(4, 'oaip', 'Protection'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="oaid">OAID / Dissimulation</h4>
+        <?php Displays::docDispTitle(4, 'oaid', 'Dissimulation'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="oail">OAIL / Liens</h4>
+        <?php Displays::docDispTitle(4, 'oail', 'Liens'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="oaic">OAIC / Création</h4>
+        <?php Displays::docDispTitle(4, 'oaic', 'Création'); ?>
         <p>La création d'une application se passe en trois parties. Il faut créer un objet de référence de la nouvelle
             application. Il faut lui affecter un objet de code, objet de code qui sera mise à jour plus tard. Enfin il
             faut enregistrer l'application pour la rendre disponible.</p>
 
-        <h5 id="oaicr">OAICR / Référence</h5>
+        <?php Displays::docDispTitle(5, 'oaicr', 'Référence'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Cette partie est à faire au début lorsque l’on veut rendre visible et utiliser la nouvelle application. Elle
             ne sera plus refaite par la suite. Le but est de permettre au <i>bootstrap</i> de retrouver l’application et
@@ -2068,7 +2069,7 @@ abstract class Applications implements applicationInterface
         </ul>
         <p>Pour que ces liens soient reconnus par le bootstrap, ils doivent tous être signés d’une autorité locale.</p>
 
-        <h5 id="oaicc">OAICC / Code</h5>
+        <?php Displays::docDispTitle(5, 'oaicc', 'Code'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>La création de la base d’une application est simple, il suffit de copier le modèle d’application dans un
             nouveau fichier et dans un premier temps d’adapter les variables et la fonction d’affichage.</p>
@@ -2285,7 +2286,7 @@ class Traduction extends Traductions
 }
 </pre>
 
-        <h5 id="oaice">OAICE / Enregistrement</h5>
+        <?php Displays::docDispTitle(5, 'oaice', 'Enregistrement'); ?>
         <p>Le lien d'enregistrement de l'application :</p>
         <ul>
             <li>Signature du lien</li>
@@ -2298,16 +2299,16 @@ class Traduction extends Traductions
         </ul>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="oaiu">OAIU / Mise à Jour</h4>
+        <?php Displays::docDispTitle(4, 'oaiu', 'Mise à Jour'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="oais">OAIS / Stockage</h4>
+        <?php Displays::docDispTitle(4, 'oais', 'Stockage'); ?>
         <p>Voir <a href="#oos">OOS</a>, pas de particularité de stockage.</p>
 
-        <h4 id="oait">OAIT / Transfert</h4>
+        <?php Displays::docDispTitle(4, 'oait', 'Transfert'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="oair">OAIR / Réservation</h4>
+        <?php Displays::docDispTitle(4, 'oair', 'Réservation'); ?>
         <p>Les objets réservés spécifiquement pour les applications :</p>
         <ul>
             <li>nebule/objet/interface/web/php/bootstrap</li>
@@ -2317,55 +2318,55 @@ class Traduction extends Traductions
             <li>nebule/objet/interface/web/php/applications/active</li>
         </ul>
 
-        <h4 id="oaig">OAIG / Applications d'Interfaçage Génériques</h4>
+        <?php Displays::docDispTitle(4, 'oaig', "Applications d'Interfaçage Génériques"); ?>
         <p>Ces applications sont développées dans le cadre de <i>nebule</i> et sont librement mises à disposition (sous
             license).</p>
         <p>Le nom de ces applications est toujours en minuscule.</p>
 
-        <h5 id="oaigb">OAIGB / Nb - bootstrap</h5>
+        <?php Displays::docDispTitle(5, 'oaigb', 'Nb - bootstrap'); ?>
         <p>voir <a href="#oab">OAB</a></p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h5 id="oaiga">OAIGA / Au - authen</h5>
+        <?php Displays::docDispTitle(5, 'oaiga', 'Au - authen'); ?>
         <p>IID=9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h5 id="oaigs">OAIGS / Sy - sylabe</h5>
+        <?php Displays::docDispTitle(5, 'oaigs', 'Sy - sylabe'); ?>
         <p>IID=c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h5 id="oaigk">OAIGK / Kl - klicty</h5>
+        <?php Displays::docDispTitle(5, 'oaigk', 'Kl - klicty'); ?>
         <p>IID=d0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h5 id="oaigm">OAIGM / Me - messae</h5>
+        <?php Displays::docDispTitle(5, 'oaigm', 'Me - messae'); ?>
         <p>IID=2060a0d21853a42093f01d2e4809c2a5e9300b4ec31afbaf18af66ec65586d6c78b2823a.none.288</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h5 id="oaign">OAIGN / Ne - neblog</h5>
+        <?php Displays::docDispTitle(5, 'oaign', 'Ne - neblog'); ?>
         <p>IID=05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h5 id="oaigq">OAIGQ / Qa - qantion</h5>
+        <?php Displays::docDispTitle(5, 'oaigq', 'Qa - qantion'); ?>
         <p>IID=20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h5 id="oaigo">OAIGO / No - option</h5>
+        <?php Displays::docDispTitle(5, 'oaigo', 'No - option'); ?>
         <p>IID=555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h5 id="oaigu">OAIGU / Nu - upload</h5>
+        <?php Displays::docDispTitle(5, 'oaigu', 'Nu - upload'); ?>
         <p>IID=6666661d0923f08d50de4d70be7dc3014e73de3325b6c7b16efd1a6f5a12f5957b68336d.none.288</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="oaio">OAIO / Implémentation des Options</h4>
+        <?php Displays::docDispTitle(4, 'oaio', 'Implémentation des Options'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="oaia">OAIA / Implémentation des Actions</h4>
+        <?php Displays::docDispTitle(4, 'oaia', 'Implémentation des Actions'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h3 id="oab">OAB / Bootstrap</h3>
-        <h4 id="oabd">OABD / Description</h4>
+        <?php Displays::docDispTitle(3, 'oab', 'Bootstrap'); ?>
+        <?php Displays::docDispTitle(4, 'oabd', 'Description'); ?>
         <p>Le <i>bootstrap</i> est un programme autonome de <i>nebule</i> constitué d'un seul et unique fichier écrit en
             PHP.</p>
         <p>Il constitue le point d'entrée par défaut de toute connexion des utilisateurs ou robots vers l'instance,
@@ -2377,7 +2378,7 @@ class Traduction extends Traductions
         <p>Il est aussi en charge de trouver les dernières versions de la bibliothèque
             <?php echo \Nebule\Library\nebule::NEBULE_LICENCE_NAME; ?> et des applications de manière sécurisée.</p>
 
-        <h4 id="oabi">OABI / Installation</h4>
+        <?php Displays::docDispTitle(4, 'oabi', 'Installation'); ?>
         <p>Le <i>bootstrap</i> nécessite pour fonctionner un serveur Web avec PHP pré-installé. Il peut être hébergé sur
             le site principal, dans un sous-domaine ou un sous-dossier de site Web. Il nécessite le droit d'écriture sur
             le dossier le contenant au moins le temps du premier démarrage.</p>
@@ -2408,7 +2409,7 @@ class Traduction extends Traductions
             de positionner l'option <b>permitWrite</b> à <i>false</i> dans le fichier de configuration. Voir
             <a href="#cco">CCO</a> pour changer la configuration.</p>
 
-        <h4 id="oabf">OABF / Premier démarrage</h4>
+        <?php Displays::docDispTitle(4, 'oabf', 'Premier démarrage'); ?>
         <p>Lors du premier démarrage (firstboot), c'est-à-dire lorsque l'on appelle le <i>bootstrap</i> via le serveur
             Web PHP, il va se charger de préparer l'environnement nécessaire au bon fonctionnement d'une instance
             <i>nebule</i>.
@@ -2429,7 +2430,7 @@ class Traduction extends Traductions
         <p>Au besoin, un certain nombre de ces dossiers et fichiers peuvent être pré-initialisé lorsque l'on dépose le
             <i>bootstrap</i> sur le serveur Web. Mais cela n'est pas le fonctionnement normal.</p>
 
-        <h4 id="oabm">OABM / Commandes</h4>
+        <?php Displays::docDispTitle(4, 'oabm', 'Commandes'); ?>
         <p>Il est possible d'interagir avec le <i>bootstrap></i> au moyen de commandes dans l'URL.</p>
         <p>Liste des commandes :</p>
         <ul>
@@ -2459,11 +2460,11 @@ class Traduction extends Traductions
         <p><b>ATTENTION</b> : si la bibliothèque ne peut être chargée, le <i>bootstrap</i> renverra systématiquement sur
             la page d'interruption ! Voir <a href="#oabb">OABB</a>.</p>
 
-        <h4 id="oabc">OABC / Configuration</h4>
+        <?php Displays::docDispTitle(4, 'oabc', 'Configuration'); ?>
         <p>Le <i>bootstrap</i> obéit aux mêmes options que la bibliothèque et les applications. Voir
             <a href="#cco">CCO</a>.</p>
 
-        <h4 id="oabb">OABB / Interruption</h4>
+        <?php Displays::docDispTitle(4, 'oabb', 'Interruption'); ?>
         <p>La présence de la commande <i><?php echo LIB_ARG_BOOTSTRAP_BREAK; ?></i> sur l'URL déclenche l'affichage
             d'une page d'interruption dédiée du <i>bootstrap</i>.</p>
         <p>En cas de problème lors de l'initialisation du <i>bootstrap</i> ou de la bibliothèque, le <i>bootstrap</i>
@@ -2549,14 +2550,14 @@ tE=0.0632s
         </pre>
         <p style="color: red; font-weight: bold">À compléter avec la description des lignes...</p>
 
-        <h4 id="oabe">OABE / Applications externes</h4>
+        <?php Displays::docDispTitle(4, 'oabe', 'Applications externes'); ?>
         <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=RID</i> sur l'URL permet de passer
             vers l'application référencée par ce RID.
             Pour les applications externes, le RID est l'objet de référence de l'application. Chaque application dispose
             d'un RID unique avec une valeur assez longue pour éviter toute collision avec une autre application.</p>
         <p>Voir <a href="#oa">OA</a>, <a href="#oail">OAIL</a> et <a href="#oabn">OABN</a>.</p>
 
-        <h4 id="oaba">OABA / Applications intégrées</h4>
+        <?php Displays::docDispTitle(4, 'oaba', 'Applications intégrées'); ?>
         <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=RID</i> sur l'URL permet de passer
             vers l'application référencée par ce RID.
             Pour les applications internes, le RID est l'objet de référence interne de l'application sur un seul
@@ -2565,61 +2566,61 @@ tE=0.0632s
             applications internes peuvent être bloquées par des options de configuration.</p>
         <p>Ci-dessous les différentes applications.</p>
 
-        <h5 id="oaba0">OABA0 / Application 0</h5>
+        <?php Displays::docDispTitle(5, 'oaba0', 'Application 0'); ?>
         <p>C'est l'application par défaut pour les instances sans interaction. La page Web délivrée est minimaliste.</p>
         <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=0</i> sur l'URL déclenche l'affichage
             de cette page dédiée du <i>bootstrap</i>.</p>
         <p>Son accès peut être bloqué par l'option <b>permitApplication1</b> à <i>false</i> ou un lien équivalent.</p>
 
-        <h5 id="oaba1">OABA1 / Application 1</h5>
+        <?php Displays::docDispTitle(5, 'oaba1', 'Application 1'); ?>
         <p>C'est l'application de sélection et de navigation et les différentes applications.</p>
         <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=1</i> sur l'URL déclenche l'affichage
             de cette page dédiée du <i>bootstrap</i>.</p>
         <p>Son accès peut être bloqué par l'option <b>permitApplication1</b> à <i>false</i> ou un lien équivalent.</p>
 
-        <h5 id="oaba2">OABA2 / Application 2</h5>
+        <?php Displays::docDispTitle(5, 'oaba2', 'Application 2'); ?>
         <p>C'est une application minimale d'authentification des utilisateurs sur les entités.</p>
         <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=2</i> sur l'URL déclenche l'affichage
             de cette page dédiée du <i>bootstrap</i>.</p>
         <p>Son accès peut être bloqué par l'option <b>permitApplication2</b> à <i>false</i> ou un lien équivalent.</p>
 
-        <h5 id="oaba3">OABA3 / Application 3</h5>
+        <?php Displays::docDispTitle(5, 'oaba3', 'Application 3'); ?>
         <p>C'est l'application d'affichage de la documentation technique.</p>
         <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=3</i> sur l'URL déclenche l'affichage
             de cette page dédiée du <i>bootstrap</i>.</p>
         <p>Son accès peut être bloqué par l'option <b>permitApplication3</b> à <i>false</i> ou un lien équivalent.</p>
 
-        <h5 id="oaba4">OABA4 / Application 4</h5>
+        <?php Displays::docDispTitle(5, 'oaba4', 'Application 4'); ?>
         <p>C'est une application qui permet de voir de façon simplifiée les blocs de liens.</p>
         <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=4</i> sur l'URL déclenche l'affichage
             de cette page dédiée du <i>bootstrap</i>.</p>
         <p>Son accès peut être bloqué par l'option <b>permitApplication4</b> à <i>false</i> ou un lien équivalent.</p>
         <p>Elle est désactivée par défaut.</p>
 
-        <h5 id="oaba5">OABA5 / Application 5</h5>
+        <?php Displays::docDispTitle(5, 'oaba5', 'Application 5'); ?>
         <p>Son accès peut être bloqué par l'option <b>permitApplication5</b> à <i>false</i> ou un lien équivalent.</p>
         <p>Non utilisé, redirigé vers l'application 0.</p>
 
-        <h5 id="oaba6">OABA6 / Application 6</h5>
+        <?php Displays::docDispTitle(5, 'oaba6', 'Application 6'); ?>
         <p>Son accès peut être bloqué par l'option <b>permitApplication6</b> à <i>false</i> ou un lien équivalent.</p>
         <p>Non utilisé, redirigé vers l'application 0.</p>
 
-        <h5 id="oaba7">OABA7 / Application 7</h5>
+        <?php Displays::docDispTitle(5, 'oaba7', 'Application 7'); ?>
         <p>Son accès peut être bloqué par l'option <b>permitApplication7</b> à <i>false</i> ou un lien équivalent.</p>
         <p>Non utilisé, redirigé vers l'application 0.</p>
 
-        <h5 id="oaba8">OABA8 / Application 8</h5>
+        <?php Displays::docDispTitle(5, 'oaba8', 'Application 8'); ?>
         <p>Son accès peut être bloqué par l'option <b>permitApplication8</b> à <i>false</i> ou un lien équivalent.</p>
         <p>Non utilisé, redirigé vers l'application 0.</p>
 
-        <h5 id="oaba9">OABA9 / Application 9</h5>
+        <?php Displays::docDispTitle(5, 'oaba9', 'Application 9'); ?>
         <p>C'est une application utilisée pour le déverminage du code.</p>
         <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=9</i> sur l'URL déclenche l'affichage
             de cette page dédiée du <i>bootstrap</i>.</p>
         <p>Son accès peut être bloqué par l'option <b>permitApplication9</b> à <i>false</i> ou un lien équivalent.</p>
         <p>Elle est désactivée par défaut.</p>
 
-        <h4 id="oabn">OABN / Fonctionnement nominal</h4>
+        <?php Displays::docDispTitle(4, 'oabn', 'Fonctionnement nominal'); ?>
         <p>Le <i>bootstrap</i> mémorise la dernière application utilisée, externe ou intégrée, et va représenter la même
             application à l'utilisateur jusqu'à déconnexion de la session à l'instance ou vidage du cache ou problème.
             C'est le fonctionnement nominal pour un utilisateur.</p>
@@ -2637,11 +2638,11 @@ tE=0.0632s
         </ul>
         <p>Voir <a href="#oail">OAIL</a>.</p>
 
-        <h3 id="oal">OAL / Librairie</h3>
-        <h4 id="oald">OALD / Description</h4>
+        <?php Displays::docDispTitle(3, 'oal', 'Librairie'); ?>
+        <?php Displays::docDispTitle(4, 'oald', 'Description'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="oalc">OALC / Configuration</h4>
+        <?php Displays::docDispTitle(4, 'oalc', 'Configuration'); ?>
         <p>La bibliothèque obéit aux mêmes options que le <i>bootstrap</i> et les applications. Voir
             <a href="#cco">CCO</a>.</p>
 
