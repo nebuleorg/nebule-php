@@ -143,7 +143,7 @@ abstract class Translates
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load translates', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Load translates', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c845beb4');
         // Détecte si les modules sont activés.
         if ($this->_applicationInstance->getUseModules())
             $this->_useModules = true;
@@ -214,7 +214,7 @@ abstract class Translates
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load translates', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Load translates', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd7a202e0');
         // Détecte si les modules sont activés.
         if ($this->_applicationInstance->getUseModules()) {
             $this->_useModules = true;
