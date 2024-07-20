@@ -105,6 +105,8 @@ abstract class Applications implements applicationInterface
      *
      * Par défault les applications n'utilisent pas les modules externes.
      *
+     * Si false, ne charge pas les modules de traduction.
+     *
      * @var boolean
      */
     protected $_useExternalModules = false;
@@ -131,28 +133,21 @@ abstract class Applications implements applicationInterface
      */
     public function initialisation(): void
     {
-        global $applicationTranslateInstance, $applicationDisplayInstance, $applicationActionInstance;
+        global $applicationTranslateInstance, $applicationDisplayInstance, $applicationActionInstance; // FIXME maybe without global vars ?
 
-        // S'autoréférence pour être capable de se transmettre aux objets.
         $this->_applicationInstance = $this;
         $this->_applicationNamespace = '\\Nebule\\Application\\' . strtoupper(substr(static::APPLICATION_NAME, 0, 1)) . strtolower(substr(static::APPLICATION_NAME, 1));
 
-        // Charge l'instance de métrologie et de journalisation.
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-
-        // Retrouve tout le nécessaire au fonctionnement de l'application sauf les instances.
         $this->_findEnvironment();
 
-        // Si c'est le téléchargement d'un objet ou de ses liens, on ne fait pas le chargement de l'affichage.
         if ($this->_findAskDownload())
-            return;
+            return; // Do nothing more on app.
 
-        // Récupère les instances.
         $this->_translateInstance = $applicationTranslateInstance;
         $this->_displayInstance = $applicationDisplayInstance;
         $this->_actionInstance = $applicationActionInstance;
 
-        // Charge les modules au besoin. Avant les initialisations.
         $this->_loadModules();
     }
 
@@ -447,7 +442,7 @@ abstract class Applications implements applicationInterface
      */
     protected function _findCurrentEntity(): void
     {
-        $this->_metrologyInstance->addLog('Find current entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Find current entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '639622a1');
         
         $arg_ent = filter_input(INPUT_GET, References::COMMAND_SELECT_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         if ($arg_ent === false || $arg_ent === null)
@@ -457,21 +452,16 @@ abstract class Applications implements applicationInterface
             && ($this->_nebuleInstance->getIoInstance()->checkObjectPresent($arg_ent)
                 || $this->_nebuleInstance->getIoInstance()->checkLinkPresent($arg_ent)
             )
-        ) // Si la variable est un objet avec ou sans liens.
-        {
-            // Ecrit l'objet dans la variable.
+        ) {
             $this->_currentEntity = $arg_ent;
             $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($arg_ent);
-            // Ecrit l'objet dans la session.
             $this->_nebuleInstance->setSessionStore('sylabeSelectedEntity', $arg_ent);
         } else {
-            // Sinon vérifie si une valeur n'est pas mémorisée dans la session.
             $cache = $this->_nebuleInstance->getSessionStore('sylabeSelectedEntity');
-            // Si il existe une variable de session pour l'objet en cours, la lit.
             if ($cache !== false && $cache != '') {
                 $this->_currentEntity = $cache;
                 $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($cache);
-            } else // Sinon selectionne l'entite courante par défaut.
+            } else
             {
                 $this->_currentEntity = $this->_nebuleInstance->getCurrentEntity();
                 $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($this->_nebuleInstance->getCurrentEntity());
@@ -732,22 +722,18 @@ abstract class Applications implements applicationInterface
             return;
         $this->_loadModulesOK = true;
 
-        // Vérifie si les modules internes sont activés.
         if (!$this->_useModules) {
             $this->_metrologyInstance->addLog('Do not load internal modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bcc98872');
             return;
         }
 
-        // Charge les modules internes.
         $this->_loadDefaultModules();
 
-        // Vérifie si les modules externes sont activés.
         if (!$this->_useExternalModules) {
             $this->_metrologyInstance->addLog('Do not load external modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7b3af452');
             return;
         }
 
-        // Charge les modules externes.
         $this->_findModulesRID();
         $this->_findModulesUpdateID();
         $this->_initModules();
@@ -792,7 +778,6 @@ abstract class Applications implements applicationInterface
     {
         global $bootstrapApplicationIID;
 
-        // Vérifie si les modules sont activés.
         if (!$this->_useModules || !$this->_useExternalModules)
             return;
 
@@ -843,11 +828,8 @@ abstract class Applications implements applicationInterface
         $listed = array();
         foreach ($this->_listModulesInitRID as $moduleID) {
             // Vérifie l'ID. Un module chargé par défaut est déjà chargé et à un ID = 0.
-            if ($moduleID == '0'
-                || $moduleID == ''
-            ) {
+            if ($moduleID == '0' || $moduleID == '' )
                 continue;
-            }
 
             $moduleRID = $moduleID;
 

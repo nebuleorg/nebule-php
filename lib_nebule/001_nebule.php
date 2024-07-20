@@ -699,6 +699,7 @@ class nebule
 
     /**
      * Nouvelle instance d'un objet.
+     * FIXME à supprimer.
      *
      * @param string $oid
      * @return Node|nodeInterface
@@ -711,6 +712,7 @@ class nebule
 
     /**
      * Nouvelle instance d'une entité.
+     * FIXME à supprimer.
      *
      * @param string $nid
      * @return Entity|nodeInterface
@@ -722,6 +724,7 @@ class nebule
 
     /**
      * Nouvelle instance d'un groupe.
+     * FIXME à supprimer.
      *
      * @param string $nid
      * @return Group|nodeInterface
@@ -733,6 +736,7 @@ class nebule
 
     /**
      * Nouvelle instance d'une conversation.
+     * FIXME à supprimer.
      *
      * @param string $nid
      * @return Conversation|nodeInterface
@@ -744,6 +748,7 @@ class nebule
 
     /**
      * Nouvelle instance d'une monnaie.
+     * FIXME à supprimer.
      *
      * @param string $nid
      * @return Currency|nodeInterface
@@ -755,6 +760,7 @@ class nebule
 
     /**
      * Nouvelle instance d'un jeton.
+     * FIXME à supprimer.
      *
      * @param string $nid
      * @return Token|nodeInterface
@@ -766,6 +772,7 @@ class nebule
 
     /**
      * Nouvelle instance d'un sac de jetons.
+     * FIXME à supprimer.
      *
      * @param string $nid
      * @return TokenPool|nodeInterface
@@ -776,18 +783,8 @@ class nebule
     }
 
     /**
-     * Nouvelle instance d'un portefeuille.
-     *
-     * @param string $nid
-     * @return Wallet|nodeInterface
-     */
-    public function newWallet(string $nid): Wallet
-    {
-        return $this->_cacheInstance->newNode($nid, Cache::TYPE_WALLET);
-    }
-
-    /**
      * Nouvelle instance d'un lien.
+     * FIXME à supprimer.
      *
      * @param string $link
      * @return BlocLink
@@ -795,18 +792,6 @@ class nebule
     public function newBlockLink(string $link): BlocLink
     {
         return $this->_cacheInstance->newBlockLink($link, Cache::TYPE_LINK);
-    }
-
-    /**
-     * Nouvelle instance d'une transaction.
-     * Attention, c'est un lien !
-     *
-     * @param string $link
-     * @return BlocLink
-     */
-    public function newTransaction(string $link): BlocLink
-    {
-        return $this->_cacheInstance->newBlockLink($link, Cache::TYPE_TRANSACTION);
     }
 
 
@@ -2392,6 +2377,7 @@ class nebule
 
     /**
      * Ajoute les autorités locales par défaut.
+     * TODO move to 007_authorities.php
      *
      * @return void
      */
@@ -2429,6 +2415,7 @@ class nebule
     /**
      * Ajoute si autorisé l'entité instance du serveur comme autorité locale.
      * Désactivé automatiquement en mode récupération.
+     * TODO move to 007_authorities.php
      *
      * @return void
      */
@@ -2457,6 +2444,7 @@ class nebule
     /**
      * Ajoute si autorisé l'entité par défaut comme autorité locale.
      * Désactivé automatiquement en mode récupération.
+     * TODO move to 007_authorities.php
      *
      * @return void
      */
@@ -2484,6 +2472,7 @@ class nebule
 
     /**
      * Ajoute des autres entités marquées comme autorités locales.
+     * TODO move to 007_authorities.php
      *
      * @return void
      */
@@ -2536,6 +2525,7 @@ class nebule
 
     /**
      * Lit la liste des ID des autorités.
+     * TODO move to 007_authorities.php
      *
      * @return array:string
      */
@@ -2546,6 +2536,7 @@ class nebule
 
     /**
      * Lit la liste des instances des autorités.
+     * TODO move to 007_authorities.php
      *
      * @return array:Entity
      */
@@ -2556,6 +2547,7 @@ class nebule
 
     /**
      * Lit la liste des ID des autorités locales.
+     * TODO move to 007_authorities.php
      *
      * @return array:string
      */
@@ -2566,6 +2558,7 @@ class nebule
 
     /**
      * Lit la liste des instances des autorités locales.
+     * TODO move to 007_authorities.php
      *
      * @return array:Entity
      */
@@ -2576,6 +2569,7 @@ class nebule
 
     /**
      * Lit la liste des autorités locales déclarants des autorités locales.
+     * TODO move to 007_authorities.php
      *
      * @return array:string
      */
@@ -2586,6 +2580,7 @@ class nebule
 
     /**
      * Lit la liste des ID des autorités locales.
+     * TODO move to 007_authorities.php
      *
      * @return array:string
      */
@@ -2596,6 +2591,7 @@ class nebule
 
     /**
      * Lit la liste des instances des autorités locales.
+     * TODO move to 007_authorities.php
      *
      * @return array:Entity
      */

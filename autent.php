@@ -72,7 +72,7 @@ class Application extends Applications
      * @see Applications::_useExternalModules
      * @var boolean
      */
-    protected $_useExternalModules = false;
+    protected $_useExternalModules = true;
 
     /**
      * Liste des noms des modules par défaut.

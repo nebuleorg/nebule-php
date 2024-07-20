@@ -210,7 +210,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
             $this->_currentDisplayLanguage = $this->_traductionInstance->getCurrentLanguage();
             $this->_currentDisplayLanguageInstance = $this->_traductionInstance->getCurrentLanguageInstance();
             $this->_displayLanguageList = $this->_traductionInstance->getLanguageList();
-            $this->_displayLanguageInstanceList = $this->_traductionInstance->getLanguageInstanceList();
+            $this->_displayLanguageInstanceList = $this->_traductionInstance->getLanguageModuleInstanceList();
         }
     }
 
@@ -253,7 +253,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
             $this->_currentDisplayLanguage = $this->_traductionInstance->getCurrentLanguage();
             $this->_currentDisplayLanguageInstance = $this->_traductionInstance->getCurrentLanguageInstance();
             $this->_displayLanguageList = $this->_traductionInstance->getLanguageList();
-            $this->_displayLanguageInstanceList = $this->_traductionInstance->getLanguageInstanceList();
+            $this->_displayLanguageInstanceList = $this->_traductionInstance->getLanguageModuleInstanceList();
         }
     }
 
