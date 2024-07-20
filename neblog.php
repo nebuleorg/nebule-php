@@ -46,7 +46,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240714';
+    const APPLICATION_VERSION = '020240720';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2024';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -1757,39 +1757,13 @@ class Translate extends Translates
         parent::__construct($applicationInstance);
     }
 
-    /**
-     * La langue d'affichage de l'interface.
-     *
-     * Dans cette application la langue est forcée à sa valeur par défaut.
-     *
-     * @return void
-     */
-    /*protected function _findCurrentLanguage()
-    {
-        $this->_currentLanguage = $this->_defaultLanguage;
-        $this->_currentLanguageInstance = $this->_defaultLanguageInstance;
-    }*/
 
-
-    /**
-     * Initialisation de la table de traduction.
-     */
-    /*protected function _initTable()
-    {
-        $this->_table['fr-fr']['::::INFO'] = 'Information';
-        $this->_table['en-en']['::::INFO'] = 'Information';
-        $this->_table['es-co']['::::INFO'] = 'Information';
-        $this->_table['fr-fr']['::::OK'] = 'OK';
-        $this->_table['en-en']['::::OK'] = 'OK';
-        $this->_table['es-co']['::::OK'] = 'OK';
-        $this->_table['fr-fr']['::::INFORMATION'] = 'Message';
-        $this->_table['en-en']['::::INFORMATION'] = 'Message';
-        $this->_table['es-co']['::::INFORMATION'] = 'Mensaje';
-        $this->_table['fr-fr']['::::WARN'] = 'ATTENTION !';
-        $this->_table['en-en']['::::WARN'] = 'WARNING!';
-        $this->_table['es-co']['::::WARN'] = '¡ADVERTENCIA!';
-        $this->_table['fr-fr']['::::ERROR'] = 'ERREUR !';
-        $this->_table['en-en']['::::ERROR'] = 'ERROR!';
-        $this->_table['es-co']['::::ERROR'] = '¡ERROR!';
-    }*/
+    CONST TRANSLATE_TABLE = [
+        'fr-fr' => [
+        ],
+        'en-en' => [
+        ],
+        'es-co' => [
+        ],
+    ];
 }

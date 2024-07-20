@@ -154,7 +154,7 @@ abstract class Translates
         $this->_findCurrentLanguage();
         $this->_findIcons();
         $this->_findCurrentIcon();
-        $this->_initTable();
+        $this->_initTable_DEPRECATED();
 
         // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.
         // Les instances interdépendantes doivent être synchronisées.
@@ -226,7 +226,7 @@ abstract class Translates
         $this->_findCurrentLanguage();
         $this->_findIcons();
         $this->_findCurrentIcon();
-        $this->_initTable();
+        $this->_initTable_DEPRECATED();
 
         // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.
         // Les instances interdépendantes doivent être synchronisées.
@@ -435,10 +435,10 @@ abstract class Translates
 
     private function _getTranslateWithoutModules(string $text, string $lang): string {
         $result = '';
-        if (isset($this->_table[$lang][$text]))
-            $result = $this->_table[$lang][$text];
-        elseif (isset($this->_table[$this->_defaultLanguage][$text]))
-            $result = $this->_table[$this->_defaultLanguage][$text];
+        if (isset(self::TRANSLATE_TABLE[$lang][$text]))
+            $result = self::TRANSLATE_TABLE[$lang][$text];
+        elseif (isset(self::TRANSLATE_TABLE[$this->_defaultLanguage][$text]))
+            $result = self::TRANSLATE_TABLE[$this->_defaultLanguage][$text];
         return $result;
     }
 
@@ -607,15 +607,25 @@ abstract class Translates
      */
     protected $_table = array();
 
+    CONST TRANSLATE_TABLE = [
+        'fr-fr' => [
+            '::Welcome' => 'Bienvenue',
+        ],
+        'en-en' => [
+            '::Welcome' => 'Welcome',
+        ],
+        'es-co' => [
+            '::Welcome' => 'Bienvenido',
+        ],
+    ];
+
     /**
      * Initialisation de la table de traduction.
      *
      * @return void
      */
-    protected function _initTable()
+    protected function _initTable_DEPRECATED()
     {
-        $this->_table['fr-fr']['::Welcome'] = 'Bienvenue';
-        $this->_table['en-en']['::Welcome'] = 'Welcome';
-        $this->_table['es-co']['::Welcome'] = 'Bienvenido';
+        $this->_table = self::TRANSLATE_TABLE;
     }
 }

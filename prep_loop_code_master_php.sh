@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020240708
+# Version 020240720
 
 export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
@@ -285,9 +285,14 @@ EOF
   echo " > new klicty : ${klicty_hash}"
   cp "${WORKSPACE}/klicty.php" "o/${klicty_hash}"
 
-  messae_hash=$(sha256sum "${WORKSPACE}/messae.php" | cut -d' ' -f1)'.sha2.256'
+  cat "${WORKSPACE}/messae.php" > "/tmp/messae.php"
+  { tail +4 "${WORKSPACE}/module_admin.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/module_objects.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection '; } >> "/tmp/messae.php"
+  messae_hash=$(sha256sum "/tmp/messae.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new messae : ${messae_hash}"
-  cp "${WORKSPACE}/messae.php" "o/${messae_hash}"
+  cp "/tmp/messae.php" "o/${messae_hash}"
 
   qantion_hash=$(sha256sum "${WORKSPACE}/qantion.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new qantion : ${qantion_hash}"

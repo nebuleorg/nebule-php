@@ -28,7 +28,7 @@ class ModuleManage extends Modules
     protected $MODULE_COMMAND_NAME = 'modmanager';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:manage:ModuleDescription';
-    protected $MODULE_VERSION = '020240714';
+    protected $MODULE_VERSION = '020240720';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
     protected $MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256';
@@ -71,7 +71,7 @@ class ModuleManage extends Modules
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
-        $this->_initTable();
+        $this->_initTable_DEPRECATED();
         $this->_hashModule = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
     }
 
@@ -1074,102 +1074,90 @@ class ModuleManage extends Modules
     }
 
 
-    /**
-     * Initialisation de la table de traduction.
-     *
-     * @return void
-     */
-    protected function _initTable(): void
-    {
-        $this->_table['fr-fr']['::sylabe:module:manage:ModuleName'] = 'Module des modules';
-        $this->_table['en-en']['::sylabe:module:manage:ModuleName'] = 'Module of modules';
-        $this->_table['es-co']['::sylabe:module:manage:ModuleName'] = 'Module of modules';
-        $this->_table['fr-fr']['::sylabe:module:manage:MenuName'] = 'Modules';
-        $this->_table['en-en']['::sylabe:module:manage:MenuName'] = 'Modules';
-        $this->_table['es-co']['::sylabe:module:manage:MenuName'] = 'Modules';
-        $this->_table['fr-fr']['::sylabe:module:manage:ModuleDescription'] = 'Module de gestion des modules.';
-        $this->_table['en-en']['::sylabe:module:manage:ModuleDescription'] = 'Module to manage modules.';
-        $this->_table['es-co']['::sylabe:module:manage:ModuleDescription'] = 'Module to manage modules.';
-        $this->_table['fr-fr']['::sylabe:module:manage:ModuleHelp'] = 'Ce module permet de voir les modules détectés par une application.';
-        $this->_table['en-en']['::sylabe:module:manage:ModuleHelp'] = 'This module permit to see modules detected by an application.';
-        $this->_table['es-co']['::sylabe:module:manage:ModuleHelp'] = 'This module permit to see modules detected by an application.';
-
-        $this->_table['fr-fr']['::sylabe:module:manage:AppTitle1'] = 'Modules';
-        $this->_table['en-en']['::sylabe:module:manage:AppTitle1'] = 'Modules';
-        $this->_table['es-co']['::sylabe:module:manage:AppTitle1'] = 'Modules';
-        $this->_table['fr-fr']['::sylabe:module:manage:AppDesc1'] = 'Module de gestion des modules.';
-        $this->_table['en-en']['::sylabe:module:manage:AppDesc1'] = 'Manage modules.';
-        $this->_table['es-co']['::sylabe:module:manage:AppDesc1'] = 'Manage modules.';
-
-        $this->_table['fr-fr']['::sylabe:module:manage:Module'] = 'Le module';
-        $this->_table['en-en']['::sylabe:module:manage:Module'] = 'The module';
-        $this->_table['es-co']['::sylabe:module:manage:Module'] = 'El modulo';
-        $this->_table['fr-fr']['::sylabe:module:manage:Modules'] = 'Les modules';
-        $this->_table['en-en']['::sylabe:module:manage:Modules'] = 'The modules';
-        $this->_table['es-co']['::sylabe:module:manage:Modules'] = 'Los modulos';
-
-        $this->_table['fr-fr']['::sylabe:module:manage:display:noModule'] = 'Pas de module.';
-        $this->_table['en-en']['::sylabe:module:manage:display:noModule'] = 'No module.';
-        $this->_table['es-co']['::sylabe:module:manage:display:noModule'] = 'No modulo.';
-
-        $this->_table['fr-fr']['::sylabe:module:manage:display:integratedModule'] = "Ce module est intégré à l'application, il ne peut pas être modifié.";
-        $this->_table['en-en']['::sylabe:module:manage:display:integratedModule'] = "This module is integrated to the application, it can't be modified.";
-        $this->_table['es-co']['::sylabe:module:manage:display:integratedModule'] = "This module is integrated to the application, it can't be modified.";
-
-        $this->_table['fr-fr']['::sylabe:module:manage:ModuleValid'] = 'Module valide.';
-        $this->_table['en-en']['::sylabe:module:manage:ModuleValid'] = 'Valid module';
-        $this->_table['es-co']['::sylabe:module:manage:ModuleValid'] = 'Valid module';
-        $this->_table['fr-fr']['::sylabe:module:manage:ModuleInvalid'] = 'Module invalide !';
-        $this->_table['en-en']['::sylabe:module:manage:ModuleInvalid'] = 'Invalid module!';
-        $this->_table['es-co']['::sylabe:module:manage:ModuleInvalid'] = 'Invalid module!';
-        $this->_table['fr-fr']['::sylabe:module:manage:ModuleEnabled'] = 'Module activé.';
-        $this->_table['en-en']['::sylabe:module:manage:ModuleEnabled'] = 'Module enabled.';
-        $this->_table['es-co']['::sylabe:module:manage:ModuleEnabled'] = 'Module enabled.';
-        $this->_table['fr-fr']['::sylabe:module:manage:ModuleDisabled'] = 'Module désactivé !';
-        $this->_table['en-en']['::sylabe:module:manage:ModuleDisabled'] = 'Module disabled!';
-        $this->_table['es-co']['::sylabe:module:manage:ModuleDisabled'] = 'Module disabled!';
-
-        $this->_table['fr-fr']['::sylabe:module:manage:ModuleEnable'] = 'Activer ?.';
-        $this->_table['en-en']['::sylabe:module:manage:ModuleEnable'] = 'Enable?';
-        $this->_table['es-co']['::sylabe:module:manage:ModuleEnable'] = 'Enable?';
-        $this->_table['fr-fr']['::sylabe:module:manage:ModuleDisable'] = 'Désactivé ?';
-        $this->_table['en-en']['::sylabe:module:manage:ModuleDisable'] = 'Disable?';
-        $this->_table['es-co']['::sylabe:module:manage:ModuleDisable'] = 'Disable?';
-
-        $this->_table['fr-fr']['::sylabe:module:manage:display:noModule'] = 'Pas de module !';
-        $this->_table['en-en']['::sylabe:module:manage:display:noModule'] = 'No module!';
-        $this->_table['es-co']['::sylabe:module:manage:display:noModule'] = 'No modulo!';
-        $this->_table['fr-fr']['::sylabe:module:manage:display:noCode'] = 'Pas de code !';
-        $this->_table['en-en']['::sylabe:module:manage:display:noCode'] = 'No code!';
-        $this->_table['es-co']['::sylabe:module:manage:display:noCode'] = 'No code!';
-
-        $this->_table['fr-fr']['::sylabe:module:manage:syncModule'] = 'Synchroniser le module';
-        $this->_table['en-en']['::sylabe:module:manage:syncModule'] = 'Synchronize the module';
-        $this->_table['es-co']['::sylabe:module:manage:syncModule'] = 'Synchronize the module';
-        $this->_table['fr-fr']['::sylabe:module:manage:syncModules'] = 'Synchroniser les modules';
-        $this->_table['en-en']['::sylabe:module:manage:syncModules'] = 'Synchronize the modules';
-        $this->_table['es-co']['::sylabe:module:manage:syncModules'] = 'Synchronize the modules';
-        $this->_table['fr-fr']['::sylabe:module:manage:changeCode'] = 'Mettre à jour le code';
-        $this->_table['en-en']['::sylabe:module:manage:changeCode'] = 'Update the code';
-        $this->_table['es-co']['::sylabe:module:manage:changeCode'] = 'Update the code';
-
-        $this->_table['fr-fr']['::sylabe:module:manage:create:createModule'] = 'Créer un module';
-        $this->_table['en-en']['::sylabe:module:manage:create:createModule'] = 'Create a module';
-        $this->_table['es-co']['::sylabe:module:manage:create:createModule'] = 'Create a module';
-        $this->_table['fr-fr']['::sylabe:module:manage:create:addModuleCode'] = 'Ajouter un code';
-        $this->_table['en-en']['::sylabe:module:manage:create:addModuleCode'] = 'Add a code';
-        $this->_table['es-co']['::sylabe:module:manage:create:addModuleCode'] = 'Add a code';
-        $this->_table['fr-fr']['::sylabe:module:manage:create:nom'] = 'Nom';
-        $this->_table['en-en']['::sylabe:module:manage:create:nom'] = 'Name';
-        $this->_table['es-co']['::sylabe:module:manage:create:nom'] = 'Name';
-        $this->_table['fr-fr']['::sylabe:module:manage:create:Desc'] = 'Description';
-        $this->_table['en-en']['::sylabe:module:manage:create:Desc'] = 'Description';
-        $this->_table['es-co']['::sylabe:module:manage:create:Desc'] = 'Description';
-        $this->_table['fr-fr']['::sylabe:module:manage:create:SubmitCreate'] = 'Créer';
-        $this->_table['en-en']['::sylabe:module:manage:create:SubmitCreate'] = 'Create';
-        $this->_table['es-co']['::sylabe:module:manage:create:SubmitCreate'] = 'Create';
-        $this->_table['fr-fr']['::sylabe:module:manage:create:SubmitChange'] = 'Changer';
-        $this->_table['en-en']['::sylabe:module:manage:create:SubmitChange'] = 'Change';
-        $this->_table['es-co']['::sylabe:module:manage:create:SubmitChange'] = 'Change';
-    }
+    CONST TRANSLATE_TABLE = [
+        'fr-fr' => [
+            '::sylabe:module:manage:ModuleName' => 'Module des modules',
+            '::sylabe:module:manage:MenuName' => 'Modules',
+            '::sylabe:module:manage:ModuleDescription' => 'Module de gestion des modules.',
+            '::sylabe:module:manage:ModuleHelp' => 'Ce module permet de voir les modules détectés par une application.',
+            '::sylabe:module:manage:AppTitle1' => 'Modules',
+            '::sylabe:module:manage:AppDesc1' => 'Module de gestion des modules.',
+            '::sylabe:module:manage:Module' => 'Le module',
+            '::sylabe:module:manage:Modules' => 'Les modules',
+            '::sylabe:module:manage:display:noModule' => 'Pas de module.',
+            '::sylabe:module:manage:display:integratedModule' => "Ce module est intégré à l'application, il ne peut pas être modifié.",
+            '::sylabe:module:manage:ModuleValid' => 'Module valide.',
+            '::sylabe:module:manage:ModuleInvalid' => 'Module invalide !',
+            '::sylabe:module:manage:ModuleEnabled' => 'Module activé.',
+            '::sylabe:module:manage:ModuleDisabled' => 'Module désactivé !',
+            '::sylabe:module:manage:ModuleEnable' => 'Activer ?.',
+            '::sylabe:module:manage:ModuleDisable' => 'Désactivé ?',
+            '::sylabe:module:manage:display:noCode' => 'Pas de code !',
+            '::sylabe:module:manage:syncModule' => 'Synchroniser le module',
+            '::sylabe:module:manage:syncModules' => 'Synchroniser les modules',
+            '::sylabe:module:manage:changeCode' => 'Mettre à jour le code',
+            '::sylabe:module:manage:create:createModule' => 'Créer un module',
+            '::sylabe:module:manage:create:addModuleCode' => 'Ajouter un code',
+            '::sylabe:module:manage:create:nom' => 'Nom',
+            '::sylabe:module:manage:create:Desc' => 'Description',
+            '::sylabe:module:manage:create:SubmitCreate' => 'Créer',
+            '::sylabe:module:manage:create:SubmitChange' => 'Changer',
+        ],
+        'en-en' => [
+            '::sylabe:module:manage:ModuleName' => 'Module of modules',
+            '::sylabe:module:manage:MenuName' => 'Modules',
+            '::sylabe:module:manage:ModuleDescription' => 'Module to manage modules.',
+            '::sylabe:module:manage:ModuleHelp' => 'This module permit to see modules detected by an application.',
+            '::sylabe:module:manage:AppTitle1' => 'Modules',
+            '::sylabe:module:manage:AppDesc1' => 'Manage modules.',
+            '::sylabe:module:manage:Module' => 'The module',
+            '::sylabe:module:manage:Modules' => 'The modules',
+            '::sylabe:module:manage:display:noModule' => 'No module.',
+            '::sylabe:module:manage:display:integratedModule' => "This module is integrated to the application, it can't be modified.",
+            '::sylabe:module:manage:ModuleValid' => 'Valid module',
+            '::sylabe:module:manage:ModuleInvalid' => 'Invalid module!',
+            '::sylabe:module:manage:ModuleEnabled' => 'Module enabled.',
+            '::sylabe:module:manage:ModuleDisabled' => 'Module disabled!',
+            '::sylabe:module:manage:ModuleEnable' => 'Enable?',
+            '::sylabe:module:manage:ModuleDisable' => 'Disable?',
+            '::sylabe:module:manage:display:noCode' => 'No code!',
+            '::sylabe:module:manage:syncModule' => 'Synchronize the module',
+            '::sylabe:module:manage:syncModules' => 'Synchronize the modules',
+            '::sylabe:module:manage:changeCode' => 'Update the code',
+            '::sylabe:module:manage:create:createModule' => 'Create a module',
+            '::sylabe:module:manage:create:addModuleCode' => 'Add a code',
+            '::sylabe:module:manage:create:nom' => 'Name',
+            '::sylabe:module:manage:create:Desc' => 'Description',
+            '::sylabe:module:manage:create:SubmitCreate' => 'Create',
+            '::sylabe:module:manage:create:SubmitChange' => 'Change',
+        ],
+        'es-co' => [
+            '::sylabe:module:manage:ModuleName' => 'Module of modules',
+            '::sylabe:module:manage:MenuName' => 'Modules',
+            '::sylabe:module:manage:ModuleDescription' => 'Module to manage modules.',
+            '::sylabe:module:manage:ModuleHelp' => 'This module permit to see modules detected by an application.',
+            '::sylabe:module:manage:AppTitle1' => 'Modules',
+            '::sylabe:module:manage:AppDesc1' => 'Manage modules.',
+            '::sylabe:module:manage:Module' => 'El modulo',
+            '::sylabe:module:manage:Modules' => 'Los modulos',
+            '::sylabe:module:manage:display:noModule' => 'No modulo.',
+            '::sylabe:module:manage:display:integratedModule' => "This module is integrated to the application, it can't be modified.",
+            '::sylabe:module:manage:ModuleValid' => 'Valid module',
+            '::sylabe:module:manage:ModuleInvalid' => 'Invalid module!',
+            '::sylabe:module:manage:ModuleEnabled' => 'Module enabled.',
+            '::sylabe:module:manage:ModuleDisabled' => 'Module disabled!',
+            '::sylabe:module:manage:ModuleEnable' => 'Enable?',
+            '::sylabe:module:manage:ModuleDisable' => 'Disable?',
+            '::sylabe:module:manage:display:noCode' => 'No code!',
+            '::sylabe:module:manage:syncModule' => 'Synchronize the module',
+            '::sylabe:module:manage:syncModules' => 'Synchronize the modules',
+            '::sylabe:module:manage:changeCode' => 'Update the code',
+            '::sylabe:module:manage:create:createModule' => 'Create a module',
+            '::sylabe:module:manage:create:addModuleCode' => 'Add a code',
+            '::sylabe:module:manage:create:nom' => 'Name',
+            '::sylabe:module:manage:create:Desc' => 'Description',
+            '::sylabe:module:manage:create:SubmitCreate' => 'Create',
+            '::sylabe:module:manage:create:SubmitChange' => 'Change',
+        ],
+    ];
 }

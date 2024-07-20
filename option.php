@@ -42,7 +42,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240714';
+    const APPLICATION_VERSION = '020240720';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -2066,105 +2066,99 @@ class Translate extends Translates
         parent::__construct($applicationInstance);
     }
 
-
-    /**
-     * Initialisation de la table de traduction.
-     */
-    protected function _initTable()
-    {
-        $this->_table['fr-fr']['::::INFO'] = 'Information';
-        $this->_table['en-en']['::::INFO'] = 'Information';
-        $this->_table['es-co']['::::INFO'] = 'Information';
-        $this->_table['fr-fr']['::::OK'] = 'OK';
-        $this->_table['en-en']['::::OK'] = 'OK';
-        $this->_table['es-co']['::::OK'] = 'OK';
-        $this->_table['fr-fr']['::::INFORMATION'] = 'Message';
-        $this->_table['en-en']['::::INFORMATION'] = 'Message';
-        $this->_table['es-co']['::::INFORMATION'] = 'Mensaje';
-        $this->_table['fr-fr']['::::WARN'] = 'ATTENTION !';
-        $this->_table['en-en']['::::WARN'] = 'WARNING!';
-        $this->_table['es-co']['::::WARN'] = '¡ADVERTENCIA!';
-        $this->_table['fr-fr']['::::ERROR'] = 'ERREUR !';
-        $this->_table['en-en']['::::ERROR'] = 'ERROR!';
-        $this->_table['es-co']['::::ERROR'] = '¡ERROR!';
-
-        $this->_table['fr-fr']['::::RESCUE'] = 'Mode de sauvetage !';
-        $this->_table['en-en']['::::RESCUE'] = 'Rescue mode!';
-        $this->_table['es-co']['::::RESCUE'] = '¡Modo de rescate!';
-
-        $this->_table['fr-fr'][':::warn_ServNotPermitWrite'] = "Ce serveur n'autorise pas les modifications.";
-        $this->_table['fr-fr'][':::warn_flushSessionAndCache'] = "Toutes les données de connexion ont été effacées.";
-        $this->_table['fr-fr'][':::err_NotPermit'] = 'Non autorisé sur ce serveur !';
-        $this->_table['fr-fr'][':::act_chk_errCryptHash'] = "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !";
-        $this->_table['fr-fr'][':::act_chk_warnCryptHashkey'] = "La taille de l'empreinte cryptographique est trop petite !";
-        $this->_table['fr-fr'][':::act_chk_errCryptHashkey'] = "La taille de l'empreinte cryptographique est invalide !";
-        $this->_table['fr-fr'][':::act_chk_errCryptSym'] = "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !";
-        $this->_table['fr-fr'][':::act_chk_warnCryptSymkey'] = "La taille de clé de chiffrement cryptographique symétrique est trop petite !";
-        $this->_table['fr-fr'][':::act_chk_errCryptSymkey'] = "La taille de clé de chiffrement cryptographique symétrique est invalide !";
-        $this->_table['fr-fr'][':::act_chk_errCryptAsym'] = "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !";
-        $this->_table['fr-fr'][':::act_chk_warnCryptAsymkey'] = "La taille de clé de chiffrement cryptographique asymétrique est trop petite !";
-        $this->_table['fr-fr'][':::act_chk_errCryptAsymkey'] = "La taille de clé de chiffrement cryptographique asymétrique est invalide !";
-        $this->_table['fr-fr'][':::act_chk_errBootstrap'] = "L'empreinte cryptographique du bootstrap est invalide !";
-        $this->_table['fr-fr'][':::act_chk_warnSigns'] = 'La vérification des signatures de liens est désactivée !';
-        $this->_table['fr-fr'][':::act_chk_errSigns'] = 'La vérification des signatures de liens ne fonctionne pas !';
-        $this->_table['en-en'][':::warn_ServNotPermitWrite'] = 'This server do not permit modifications.';
-        $this->_table['en-en'][':::warn_flushSessionAndCache'] = 'All datas of this connexion have been flushed.';
-        $this->_table['en-en'][':::err_NotPermit'] = 'Non autorisé sur ce serveur !';
-        $this->_table['en-en'][':::act_chk_errCryptHash'] = "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !";
-        $this->_table['en-en'][':::act_chk_warnCryptHashkey'] = "La taille de l'empreinte cryptographique est trop petite !";
-        $this->_table['en-en'][':::act_chk_errCryptHashkey'] = "La taille de l'empreinte cryptographique est invalide !";
-        $this->_table['en-en'][':::act_chk_errCryptSym'] = "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !";
-        $this->_table['en-en'][':::act_chk_warnCryptSymkey'] = "La taille de clé de chiffrement cryptographique symétrique est trop petite !";
-        $this->_table['en-en'][':::act_chk_errCryptSymkey'] = "La taille de clé de chiffrement cryptographique symétrique est invalide !";
-        $this->_table['en-en'][':::act_chk_errCryptAsym'] = "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !";
-        $this->_table['en-en'][':::act_chk_warnCryptAsymkey'] = "La taille de clé de chiffrement cryptographique asymétrique est trop petite !";
-        $this->_table['en-en'][':::act_chk_errCryptAsymkey'] = "La taille de clé de chiffrement cryptographique asymétrique est invalide !";
-        $this->_table['en-en'][':::act_chk_errBootstrap'] = "L'empreinte cryptographique du bootstrap est invalide !";
-        $this->_table['en-en'][':::act_chk_warnSigns'] = 'La vérification des signatures de liens est désactivée !';
-        $this->_table['en-en'][':::act_chk_errSigns'] = 'La vérification des signatures de liens ne fonctionne pas !';
-        $this->_table['es-co'][':::warn_ServNotPermitWrite'] = 'This server do not permit modifications.';
-        $this->_table['es-co'][':::warn_flushSessionAndCache'] = 'All datas of this connexion have been flushed';
-        $this->_table['es-co'][':::err_NotPermit'] = 'Non autorisé sur ce serveur !';
-        $this->_table['es-co'][':::act_chk_errCryptHash'] = "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !";
-        $this->_table['es-co'][':::act_chk_warnCryptHashkey'] = "La taille de l'empreinte cryptographique est trop petite !";
-        $this->_table['es-co'][':::act_chk_errCryptHashkey'] = "La taille de l'empreinte cryptographique est invalide !";
-        $this->_table['es-co'][':::act_chk_errCryptSym'] = "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !";
-        $this->_table['es-co'][':::act_chk_warnCryptSymkey'] = "La taille de clé de chiffrement cryptographique symétrique est trop petite !";
-        $this->_table['es-co'][':::act_chk_errCryptSymkey'] = "La taille de clé de chiffrement cryptographique symétrique est invalide !";
-        $this->_table['es-co'][':::act_chk_errCryptAsym'] = "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !";
-        $this->_table['es-co'][':::act_chk_warnCryptAsymkey'] = "La taille de clé de chiffrement cryptographique asymétrique est trop petite !";
-        $this->_table['es-co'][':::act_chk_errCryptAsymkey'] = "La taille de clé de chiffrement cryptographique asymétrique est invalide !";
-        $this->_table['es-co'][':::act_chk_errBootstrap'] = "L'empreinte cryptographique du bootstrap est invalide !";
-        $this->_table['es-co'][':::act_chk_warnSigns'] = 'La vérification des signatures de liens est désactivée !';
-        $this->_table['es-co'][':::act_chk_errSigns'] = 'La vérification des signatures de liens ne fonctionne pas !';
-
-        $this->_table['fr-fr'][':::display:object:flag:protected'] = 'Forced on environment file.';
-        $this->_table['en-en'][':::display:object:flag:protected'] = 'Forced on environment file.';
-        $this->_table['es-co'][':::display:object:flag:protected'] = 'Forced on environment file.';
-        $this->_table['fr-fr'][':::display:object:flag:unprotected'] = 'Not forced.';
-        $this->_table['en-en'][':::display:object:flag:unprotected'] = 'Not forced.';
-        $this->_table['es-co'][':::display:object:flag:unprotected'] = 'Not forced.';
-
-        $this->_table['fr-fr'][':::display:object:flag:obfuscated'] = 'Cet objet est dissimulé.';
-        $this->_table['en-en'][':::display:object:flag:obfuscated'] = 'This object is obfuscated.';
-        $this->_table['es-co'][':::display:object:flag:obfuscated'] = 'Este objeto está oculto.';
-        $this->_table['fr-fr'][':::display:object:flag:unobfuscated'] = "Cet objet n'est pas dissimulé.";
-        $this->_table['en-en'][':::display:object:flag:unobfuscated'] = 'This object is not obfuscated.';
-        $this->_table['es-co'][':::display:object:flag:unobfuscated'] = 'Este objeto no está oculto.';
-        $this->_table['fr-fr'][':::display:object:flag:locked'] = 'Cet entité est déverrouillée.';
-        $this->_table['en-en'][':::display:object:flag:locked'] = 'This entity is unlocked.';
-        $this->_table['es-co'][':::display:object:flag:locked'] = 'Esta entidad está desbloqueada.';
-        $this->_table['fr-fr'][':::display:object:flag:unlocked'] = 'Cet entité est verrouillée.';
-        $this->_table['en-en'][':::display:object:flag:unlocked'] = 'This entity is locked.';
-        $this->_table['es-co'][':::display:object:flag:unlocked'] = 'Esta entidad está bloqueada.';
-
-        $this->_table['fr-fr'][':::display:content:OK'] = "Le contenu de l'objet est valide.";
-        $this->_table['en-en'][':::display:content:OK'] = 'The object content is valid.';
-        $this->_table['es-co'][':::display:content:OK'] = 'The object content is valid.';
-
-        $this->_table['fr-fr']['::EmptyList'] = 'Liste vide.';
-        $this->_table['en-en']['::EmptyList'] = 'Empty list.';
-        $this->_table['es-co']['::EmptyList'] = 'Empty list.';
-
-    }
+    CONST TRANSLATE_TABLE = [
+        'fr-fr' => [
+            '::::INFO' => 'Information',
+            '::::OK' => 'OK',
+            '::::INFORMATION' => 'Message',
+            '::::WARN' => 'ATTENTION !',
+            '::::ERROR' => 'ERREUR !',
+            '::::RESCUE' => 'Mode de sauvetage !',
+            ':::warn_ServNotPermitWrite' => "Ce serveur n'autorise pas les modifications.",
+            ':::warn_flushSessionAndCache' => "Toutes les données de connexion ont été effacées.",
+            ':::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            ':::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            ':::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            ':::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            ':::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            ':::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            ':::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            ':::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            ':::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            ':::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            ':::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            ':::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            ':::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+            ':::display:object:flag:protected' => 'Forced on environment file.',
+            ':::display:object:flag:unprotected' => 'Not forced.',
+            ':::display:object:flag:obfuscated' => 'Cet objet est dissimulé.',
+            ':::display:object:flag:unobfuscated' => "Cet objet n'est pas dissimulé.",
+            ':::display:object:flag:locked' => 'Cet entité est déverrouillée.',
+            ':::display:object:flag:unlocked' => 'Cet entité est verrouillée.',
+            ':::display:content:OK' => "Le contenu de l'objet est valide.",
+            '::EmptyList' => 'Liste vide.',
+        ],
+        'en-en' => [
+            '::::INFO' => 'Information',
+            '::::OK' => 'OK',
+            '::::INFORMATION' => 'Message',
+            '::::WARN' => 'WARNING!',
+            '::::ERROR' => 'ERROR!',
+            '::::RESCUE' => 'Rescue mode!',
+            ':::warn_ServNotPermitWrite' => 'This server do not permit modifications.',
+            ':::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed.',
+            ':::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            ':::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            ':::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            ':::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            ':::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            ':::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            ':::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            ':::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            ':::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            ':::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            ':::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            ':::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            ':::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+            ':::display:object:flag:protected' => 'Forced on environment file.',
+            ':::display:object:flag:unprotected' => 'Not forced.',
+            ':::display:object:flag:obfuscated' => 'This object is obfuscated.',
+            ':::display:object:flag:unobfuscated' => 'This object is not obfuscated.',
+            ':::display:object:flag:locked' => 'This entity is unlocked.',
+            ':::display:object:flag:unlocked' => 'This entity is locked.',
+            ':::display:content:OK' => 'The object content is valid.',
+            '::EmptyList' => 'Empty list.',
+        ],
+        'es-co' => [
+            '::::INFO' => 'Information',
+            '::::OK' => 'OK',
+            '::::INFORMATION' => 'Mensaje',
+            '::::WARN' => '¡ADVERTENCIA!',
+            '::::ERROR' => '¡ERROR!',
+            '::::RESCUE' => '¡Modo de rescate!',
+            ':::warn_ServNotPermitWrite' => 'This server do not permit modifications.',
+            ':::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed',
+            ':::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            ':::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            ':::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            ':::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            ':::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            ':::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            ':::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            ':::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            ':::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            ':::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            ':::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            ':::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            ':::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+            ':::display:object:flag:protected' => 'Forced on environment file.',
+            ':::display:object:flag:unprotected' => 'Not forced.',
+            ':::display:object:flag:obfuscated' => 'Este objeto está oculto.',
+            ':::display:object:flag:unobfuscated' => 'Este objeto no está oculto.',
+            ':::display:object:flag:locked' => 'Esta entidad está desbloqueada.',
+            ':::display:object:flag:unlocked' => 'Esta entidad está bloqueada.',
+            ':::display:content:OK' => 'The object content is valid.',
+            '::EmptyList' => 'Empty list.',
+        ],
+    ];
 }

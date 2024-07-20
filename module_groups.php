@@ -24,7 +24,7 @@ class ModuleGroups extends Modules
     protected $MODULE_COMMAND_NAME = 'grp';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:groups:ModuleDescription';
-    protected $MODULE_VERSION = '020240714';
+    protected $MODULE_VERSION = '020240720';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
     protected $MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -56,7 +56,7 @@ class ModuleGroups extends Modules
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
-        $this->_initTable();
+        $this->_initTable_DEPRECATED();
         $this->_hashGroup = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
         $this->_hashGroupObject = $this->_nebuleInstance->newObject($this->_hashGroup);
         $this->_hashGroupClosed = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
@@ -950,117 +950,108 @@ class ModuleGroups extends Modules
     }
 
 
-    /**
-     * Initialisation de la table de traduction.
-     *
-     * @return void
-     */
-    protected function _initTable(): void
-    {
-        $this->_table['fr-fr']['::sylabe:module:groups:ModuleName'] = 'Module des groupes';
-        $this->_table['en-en']['::sylabe:module:groups:ModuleName'] = 'Groups module';
-        $this->_table['es-co']['::sylabe:module:groups:ModuleName'] = 'Groups module';
-        $this->_table['fr-fr']['::sylabe:module:groups:MenuName'] = 'Groupes';
-        $this->_table['en-en']['::sylabe:module:groups:MenuName'] = 'Groups';
-        $this->_table['es-co']['::sylabe:module:groups:MenuName'] = 'Groups';
-        $this->_table['fr-fr']['::sylabe:module:groups:ModuleDescription'] = 'Module de gestion des groupes.';
-        $this->_table['en-en']['::sylabe:module:groups:ModuleDescription'] = 'Groups management module.';
-        $this->_table['es-co']['::sylabe:module:groups:ModuleDescription'] = 'Groups management module.';
-        $this->_table['fr-fr']['::sylabe:module:groups:ModuleHelp'] = "Ce module permet de voir et de gérer les groupes.";
-        $this->_table['en-en']['::sylabe:module:groups:ModuleHelp'] = 'This module permit to see and manage groups.';
-        $this->_table['es-co']['::sylabe:module:groups:ModuleHelp'] = 'This module permit to see and manage groups.';
-
-        $this->_table['fr-fr']['::sylabe:module:groups:AppTitle1'] = 'Groupes';
-        $this->_table['en-en']['::sylabe:module:groups:AppTitle1'] = 'Groups';
-        $this->_table['es-co']['::sylabe:module:groups:AppTitle1'] = 'Groups';
-        $this->_table['fr-fr']['::sylabe:module:groups:AppDesc1'] = 'Gestion des groupes.';
-        $this->_table['en-en']['::sylabe:module:groups:AppDesc1'] = 'Manage groups.';
-        $this->_table['es-co']['::sylabe:module:groups:AppDesc1'] = 'Manage groups.';
-
-        $this->_table['fr-fr']['::sylabe:module:groups:display:Groups'] = 'Les groupes';
-        $this->_table['en-en']['::sylabe:module:groups:display:Groups'] = 'The groups';
-        $this->_table['es-co']['::sylabe:module:groups:display:Groups'] = 'The groups';
-        $this->_table['fr-fr']['::sylabe:module:groups:display:MyGroups'] = 'Mes groupes';
-        $this->_table['en-en']['::sylabe:module:groups:display:MyGroups'] = 'My groups';
-        $this->_table['es-co']['::sylabe:module:groups:display:MyGroups'] = 'My groups';
-        $this->_table['fr-fr']['::sylabe:module:groups:display:seeAsGroup'] = 'Voir comme groupe';
-        $this->_table['en-en']['::sylabe:module:groups:display:seeAsGroup'] = 'See as group';
-        $this->_table['es-co']['::sylabe:module:groups:display:seeAsGroup'] = 'See as group';
-
-        $this->_table['fr-fr']['::sylabe:module:groups:display:seenFromOthers'] = 'Vu depuis les autres entités';
-        $this->_table['en-en']['::sylabe:module:groups:display:seenFromOthers'] = 'Seen from others entities';
-        $this->_table['es-co']['::sylabe:module:groups:display:seenFromOthers'] = 'Seen from others entities';
-        $this->_table['fr-fr']['::sylabe:module:groups:display:otherGroups'] = 'Les groupes des autres entités';
-        $this->_table['en-en']['::sylabe:module:groups:display:otherGroups'] = 'Groups of other entities';
-        $this->_table['es-co']['::sylabe:module:groups:display:otherGroups'] = 'Groups of other entities';
-
-        $this->_table['fr-fr']['::sylabe:module:groups:display:createGroup'] = 'Créer un groupe';
-        $this->_table['en-en']['::sylabe:module:groups:display:createGroup'] = 'Create a group';
-        $this->_table['es-co']['::sylabe:module:groups:display:createGroup'] = 'Create a group';
-        $this->_table['fr-fr']['::sylabe:module:groups:display:AddMarkedObjects'] = 'Ajouter les objets marqués';
-        $this->_table['en-en']['::sylabe:module:groups:display:AddMarkedObjects'] = 'Add marked objects';
-        $this->_table['es-co']['::sylabe:module:groups:display:AddMarkedObjects'] = 'Add marked objects';
-        $this->_table['fr-fr']['::sylabe:module:groups:display:deleteGroup'] = 'Supprimer le groupe';
-        $this->_table['en-en']['::sylabe:module:groups:display:deleteGroup'] = 'Delete group';
-        $this->_table['es-co']['::sylabe:module:groups:display:deleteGroup'] = 'Delete group';
-
-        $this->_table['fr-fr']['::sylabe:module:groups:display:createTheGroup'] = 'Créer le groupe';
-        $this->_table['en-en']['::sylabe:module:groups:display:createTheGroup'] = 'Create the group';
-        $this->_table['es-co']['::sylabe:module:groups:display:createTheGroup'] = 'Create the group';
-        $this->_table['fr-fr']['::sylabe:module:groups:display:nom'] = 'Nom';
-        $this->_table['en-en']['::sylabe:module:groups:display:nom'] = 'Name';
-        $this->_table['es-co']['::sylabe:module:groups:display:nom'] = 'Name';
-        $this->_table['fr-fr']['::sylabe:module:groups:display:OKCreateGroup'] = 'Le groupe a été créé.';
-        $this->_table['en-en']['::sylabe:module:groups:display:OKCreateGroup'] = 'The group have been created.';
-        $this->_table['es-co']['::sylabe:module:groups:display:OKCreateGroup'] = 'The group have been created.';
-        $this->_table['fr-fr']['::sylabe:module:groups:display:notOKCreateGroup'] = "Le groupe n'a pas été créé ! %s";
-        $this->_table['en-en']['::sylabe:module:groups:display:notOKCreateGroup'] = 'The group have not been created! %s';
-        $this->_table['es-co']['::sylabe:module:groups:display:notOKCreateGroup'] = 'The group have not been created! %s';
-
-        $this->_table['fr-fr']['::sylabe:module:groups:display:noGroup'] = 'Pas de groupe.';
-        $this->_table['en-en']['::sylabe:module:groups:display:noGroup'] = 'No group.';
-        $this->_table['es-co']['::sylabe:module:groups:display:noGroup'] = 'No group.';
-        $this->_table['fr-fr']['::sylabe:module:groups:display:noGroupMember'] = 'Pas de membre.';
-        $this->_table['en-en']['::sylabe:module:groups:display:noGroupMember'] = 'No member.';
-        $this->_table['es-co']['::sylabe:module:groups:display:noGroupMember'] = 'No member.';
-
-        $this->_table['fr-fr']['::sylabe:module:groups:display:makeGroup'] = 'Faire de cet objet un groupe';
-        $this->_table['en-en']['::sylabe:module:groups:display:makeGroup'] = 'Make this object a group';
-        $this->_table['es-co']['::sylabe:module:groups:display:makeGroup'] = 'Make this object a group';
-        $this->_table['fr-fr']['::sylabe:module:groups:display:makeGroupMe'] = 'Faire de cet objet un groupe pour moi aussi';
-        $this->_table['en-en']['::sylabe:module:groups:display:makeGroupMe'] = 'Make this object a group for me too';
-        $this->_table['es-co']['::sylabe:module:groups:display:makeGroupMe'] = 'Make this object a group for me too';
-        $this->_table['fr-fr']['::sylabe:module:groups:display:unmakeGroup'] = 'Ne plus faire de cet objet un groupe';
-        $this->_table['en-en']['::sylabe:module:groups:display:unmakeGroup'] = 'Unmake this object a group';
-        $this->_table['es-co']['::sylabe:module:groups:display:unmakeGroup'] = 'Unmake this object a group';
-        $this->_table['fr-fr']['::sylabe:module:groups:display:useAsGroupOpened'] = 'Utiliser comme groupe ouvert';
-        $this->_table['en-en']['::sylabe:module:groups:display:useAsGroupOpened'] = 'Use as group opened';
-        $this->_table['es-co']['::sylabe:module:groups:display:useAsGroupOpened'] = 'Use as group opened';
-        $this->_table['fr-fr']['::sylabe:module:groups:display:useAsGroupClosed'] = 'Utiliser comme groupe fermé';
-        $this->_table['en-en']['::sylabe:module:groups:display:useAsGroupClosed'] = 'Use as group closed';
-        $this->_table['es-co']['::sylabe:module:groups:display:useAsGroupClosed'] = 'Use as group closed';
-
-        $this->_table['fr-fr']['::sylabe:module:groups:display:refuseGroup'] = 'Refuser cet objet comme un groupe';
-        $this->_table['en-en']['::sylabe:module:groups:display:refuseGroup'] = 'Refuse this object as group';
-        $this->_table['es-co']['::sylabe:module:groups:display:refuseGroup'] = 'Refuse this object as group';
-        $this->_table['fr-fr']['::sylabe:module:groups:display:removeFromGroup'] = 'Retirer du groupe';
-        $this->_table['en-en']['::sylabe:module:groups:display:removeFromGroup'] = 'Remove from group';
-        $this->_table['es-co']['::sylabe:module:groups:display:removeFromGroup'] = 'Remove from group';
-
-        $this->_table['fr-fr']['::sylabe:module:groups:display:isGroup'] = 'est un groupe.';
-        $this->_table['en-en']['::sylabe:module:groups:display:isGroup'] = 'is a group.';
-        $this->_table['es-co']['::sylabe:module:groups:display:isGroup'] = 'is a group.';
-        $this->_table['fr-fr']['::sylabe:module:groups:display:isGroupToOther'] = 'est un groupe de';
-        $this->_table['en-en']['::sylabe:module:groups:display:isGroupToOther'] = 'is a group of';
-        $this->_table['es-co']['::sylabe:module:groups:display:isGroupToOther'] = 'is a group of';
-        $this->_table['fr-fr']['::sylabe:module:groups:display:isNotGroup'] = "n'est pas un groupe.";
-        $this->_table['en-en']['::sylabe:module:groups:display:isNotGroup'] = 'is not a group.';
-        $this->_table['es-co']['::sylabe:module:groups:display:isNotGroup'] = 'is not a group.';
-        $this->_table['fr-fr']['::sylabe:module:groups:display:thisIsGroup'] = "C'est un groupe.";
-        $this->_table['en-en']['::sylabe:module:groups:display:thisIsGroup'] = 'This is a group.';
-        $this->_table['es-co']['::sylabe:module:groups:display:thisIsGroup'] = 'This is a group.';
-        $this->_table['fr-fr']['::sylabe:module:groups:display:thisIsNotGroup'] = "Ce n'est pas un groupe.";
-        $this->_table['en-en']['::sylabe:module:groups:display:thisIsNotGroup'] = 'This is not a group.';
-        $this->_table['es-co']['::sylabe:module:groups:display:thisIsNotGroup'] = 'This is not a group.';
-    }
+    CONST TRANSLATE_TABLE = [
+        'fr-fr' => [
+            '::sylabe:module:groups:ModuleName' => 'Module des groupes',
+            '::sylabe:module:groups:MenuName' => 'Groupes',
+            '::sylabe:module:groups:ModuleDescription' => 'Module de gestion des groupes.',
+            '::sylabe:module:groups:ModuleHelp' => "Ce module permet de voir et de gérer les groupes.",
+            '::sylabe:module:groups:AppTitle1' => 'Groupes',
+            '::sylabe:module:groups:AppDesc1' => 'Gestion des groupes.',
+            '::sylabe:module:groups:display:Groups' => 'Les groupes',
+            '::sylabe:module:groups:display:MyGroups' => 'Mes groupes',
+            '::sylabe:module:groups:display:seeAsGroup' => 'Voir comme groupe',
+            '::sylabe:module:groups:display:seenFromOthers' => 'Vu depuis les autres entités',
+            '::sylabe:module:groups:display:otherGroups' => 'Les groupes des autres entités',
+            '::sylabe:module:groups:display:createGroup' => 'Créer un groupe',
+            '::sylabe:module:groups:display:AddMarkedObjects' => 'Ajouter les objets marqués',
+            '::sylabe:module:groups:display:deleteGroup' => 'Supprimer le groupe',
+            '::sylabe:module:groups:display:createTheGroup' => 'Créer le groupe',
+            '::sylabe:module:groups:display:nom' => 'Nom',
+            '::sylabe:module:groups:display:OKCreateGroup' => 'Le groupe a été créé.',
+            '::sylabe:module:groups:display:notOKCreateGroup' => "Le groupe n'a pas été créé ! %s",
+            '::sylabe:module:groups:display:noGroup' => 'Pas de groupe.',
+            '::sylabe:module:groups:display:noGroupMember' => 'Pas de membre.',
+            '::sylabe:module:groups:display:makeGroup' => 'Faire de cet objet un groupe',
+            '::sylabe:module:groups:display:makeGroupMe' => 'Faire de cet objet un groupe pour moi aussi',
+            '::sylabe:module:groups:display:unmakeGroup' => 'Ne plus faire de cet objet un groupe',
+            '::sylabe:module:groups:display:useAsGroupOpened' => 'Utiliser comme groupe ouvert',
+            '::sylabe:module:groups:display:useAsGroupClosed' => 'Utiliser comme groupe fermé',
+            '::sylabe:module:groups:display:refuseGroup' => 'Refuser cet objet comme un groupe',
+            '::sylabe:module:groups:display:removeFromGroup' => 'Retirer du groupe',
+            '::sylabe:module:groups:display:isGroup' => 'est un groupe.',
+            '::sylabe:module:groups:display:isGroupToOther' => 'est un groupe de',
+            '::sylabe:module:groups:display:isNotGroup' => "n'est pas un groupe.",
+            '::sylabe:module:groups:display:thisIsGroup' => "C'est un groupe.",
+            '::sylabe:module:groups:display:thisIsNotGroup' => "Ce n'est pas un groupe.",
+        ],
+        'en-en' => [
+            '::sylabe:module:groups:ModuleName' => 'Groups module',
+            '::sylabe:module:groups:MenuName' => 'Groups',
+            '::sylabe:module:groups:ModuleDescription' => 'Groups management module.',
+            '::sylabe:module:groups:ModuleHelp' => 'This module permit to see and manage groups.',
+            '::sylabe:module:groups:AppTitle1' => 'Groups',
+            '::sylabe:module:groups:AppDesc1' => 'Manage groups.',
+            '::sylabe:module:groups:display:Groups' => 'The groups',
+            '::sylabe:module:groups:display:MyGroups' => 'My groups',
+            '::sylabe:module:groups:display:seeAsGroup' => 'See as group',
+            '::sylabe:module:groups:display:seenFromOthers' => 'Seen from others entities',
+            '::sylabe:module:groups:display:otherGroups' => 'Groups of other entities',
+            '::sylabe:module:groups:display:createGroup' => 'Create a group',
+            '::sylabe:module:groups:display:AddMarkedObjects' => 'Add marked objects',
+            '::sylabe:module:groups:display:deleteGroup' => 'Delete group',
+            '::sylabe:module:groups:display:createTheGroup' => 'Create the group',
+            '::sylabe:module:groups:display:nom' => 'Name',
+            '::sylabe:module:groups:display:OKCreateGroup' => 'The group have been created.',
+            '::sylabe:module:groups:display:notOKCreateGroup' => 'The group have not been created! %s',
+            '::sylabe:module:groups:display:noGroup' => 'No group.',
+            '::sylabe:module:groups:display:noGroupMember' => 'No member.',
+            '::sylabe:module:groups:display:makeGroup' => 'Make this object a group',
+            '::sylabe:module:groups:display:makeGroupMe' => 'Make this object a group for me too',
+            '::sylabe:module:groups:display:unmakeGroup' => 'Unmake this object a group',
+            '::sylabe:module:groups:display:useAsGroupOpened' => 'Use as group opened',
+            '::sylabe:module:groups:display:useAsGroupClosed' => 'Use as group closed',
+            '::sylabe:module:groups:display:refuseGroup' => 'Refuse this object as group',
+            '::sylabe:module:groups:display:removeFromGroup' => 'Remove from group',
+            '::sylabe:module:groups:display:isGroup' => 'is a group.',
+            '::sylabe:module:groups:display:isGroupToOther' => 'is a group of',
+            '::sylabe:module:groups:display:isNotGroup' => 'is not a group.',
+            '::sylabe:module:groups:display:thisIsGroup' => 'This is a group.',
+            '::sylabe:module:groups:display:thisIsNotGroup' => 'This is not a group.',
+        ],
+        'es-co' => [
+            '::sylabe:module:groups:ModuleName' => 'Groups module',
+            '::sylabe:module:groups:MenuName' => 'Groups',
+            '::sylabe:module:groups:ModuleDescription' => 'Groups management module.',
+            '::sylabe:module:groups:ModuleHelp' => 'This module permit to see and manage groups.',
+            '::sylabe:module:groups:AppTitle1' => 'Groups',
+            '::sylabe:module:groups:AppDesc1' => 'Manage groups.',
+            '::sylabe:module:groups:display:Groups' => 'The groups',
+            '::sylabe:module:groups:display:MyGroups' => 'My groups',
+            '::sylabe:module:groups:display:seeAsGroup' => 'See as group',
+            '::sylabe:module:groups:display:seenFromOthers' => 'Seen from others entities',
+            '::sylabe:module:groups:display:otherGroups' => 'Groups of other entities',
+            '::sylabe:module:groups:display:createGroup' => 'Create a group',
+            '::sylabe:module:groups:display:AddMarkedObjects' => 'Add marked objects',
+            '::sylabe:module:groups:display:deleteGroup' => 'Delete group',
+            '::sylabe:module:groups:display:createTheGroup' => 'Create the group',
+            '::sylabe:module:groups:display:nom' => 'Name',
+            '::sylabe:module:groups:display:OKCreateGroup' => 'The group have been created.',
+            '::sylabe:module:groups:display:notOKCreateGroup' => 'The group have not been created! %s',
+            '::sylabe:module:groups:display:noGroup' => 'No group.',
+            '::sylabe:module:groups:display:noGroupMember' => 'No member.',
+            '::sylabe:module:groups:display:makeGroup' => 'Make this object a group',
+            '::sylabe:module:groups:display:makeGroupMe' => 'Make this object a group for me too',
+            '::sylabe:module:groups:display:unmakeGroup' => 'Unmake this object a group',
+            '::sylabe:module:groups:display:useAsGroupOpened' => 'Use as group opened',
+            '::sylabe:module:groups:display:useAsGroupClosed' => 'Use as group closed',
+            '::sylabe:module:groups:display:refuseGroup' => 'Refuse this object as group',
+            '::sylabe:module:groups:display:removeFromGroup' => 'Remove from group',
+            '::sylabe:module:groups:display:isGroup' => 'is a group.',
+            '::sylabe:module:groups:display:isGroupToOther' => 'is a group of',
+            '::sylabe:module:groups:display:isNotGroup' => 'is not a group.',
+            '::sylabe:module:groups:display:thisIsGroup' => 'This is a group.',
+            '::sylabe:module:groups:display:thisIsNotGroup' => 'This is not a group.',
+        ],
+    ];
 }

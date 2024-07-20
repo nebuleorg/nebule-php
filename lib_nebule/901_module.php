@@ -147,7 +147,7 @@ abstract class Modules implements moduleInterface
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
-        $this->_initTable();
+        $this->_initTable_DEPRECATED();
     }
 
 
@@ -416,8 +416,8 @@ abstract class Modules implements moduleInterface
         if ($lang == '')
             $lang = $this->_translateInstance->getCurrentLanguage();
 
-        if (isset($this->_table[$lang][$text]))
-            $result = $this->_table[$lang][$text];
+        if (isset(self::TRANSLATE_TABLE[$lang][$text]))
+            $result = self::TRANSLATE_TABLE[$lang][$text];
         return $result;
     }
 
@@ -475,33 +475,41 @@ abstract class Modules implements moduleInterface
         $newLink->write();
     }
 
+    CONST TRANSLATE_TABLE = [
+        'fr-fr' => [
+            '::nebule:modules::ModuleName' => 'Module des modules',
+            '::nebule:modules::MenuName' => 'Modules',
+            '::nebule:modules::ModuleDescription' => 'Module de gestion des modules.',
+            '::nebule:modules::ModuleHelp' => 'Cette application permet de voir les modules détectés par sylabe.',
+            '::nebule:modules::AppTitle1' => 'Modules',
+            '::nebule:modules::AppDesc1' => 'Module de gestion des modules.',
+        ],
+        'en-en' => [
+            '::nebule:modules::ModuleName' => 'Module of modules',
+            '::nebule:modules::MenuName' => 'Modules',
+            '::nebule:modules::ModuleDescription' => 'Module to manage modules.',
+            '::nebule:modules::ModuleHelp' => 'This application permit to see modules detected by sylabe.',
+            '::nebule:modules::AppTitle1' => 'Modules',
+            '::nebule:modules::AppDesc1' => 'Manage modules.',
+        ],
+        'es-co' => [
+            '::nebule:modules::ModuleName' => 'Module of modules',
+            '::nebule:modules::MenuName' => 'Modules',
+            '::nebule:modules::ModuleDescription' => 'Module to manage modules.',
+            '::nebule:modules::ModuleHelp' => 'This application permit to see modules detected by sylabe.',
+            '::nebule:modules::AppDesc1' => 'Manage modules.',
+            '::nebule:modules::AppTitle1' => 'Modules',
+        ],
+    ];
 
     /**
      * Initialisation de la table de traduction.
      *
      * @return void
      */
-    protected function _initTable(): void
+    protected function _initTable_DEPRECATED(): void
     {
-        $this->_table['fr-fr']['::nebule:modules::ModuleName'] = 'Module des modules';
-        $this->_table['en-en']['::nebule:modules::ModuleName'] = 'Module of modules';
-        $this->_table['es-co']['::nebule:modules::ModuleName'] = 'Module of modules';
-        $this->_table['fr-fr']['::nebule:modules::MenuName'] = 'Modules';
-        $this->_table['en-en']['::nebule:modules::MenuName'] = 'Modules';
-        $this->_table['es-co']['::nebule:modules::MenuName'] = 'Modules';
-        $this->_table['fr-fr']['::nebule:modules::ModuleDescription'] = 'Module de gestion des modules.';
-        $this->_table['en-en']['::nebule:modules::ModuleDescription'] = 'Module to manage modules.';
-        $this->_table['es-co']['::nebule:modules::ModuleDescription'] = 'Module to manage modules.';
-        $this->_table['fr-fr']['::nebule:modules::ModuleHelp'] = 'Cette application permet de voir les modules détectés par sylabe.';
-        $this->_table['en-en']['::nebule:modules::ModuleHelp'] = 'This application permit to see modules detected by sylabe.';
-        $this->_table['es-co']['::nebule:modules::ModuleHelp'] = 'This application permit to see modules detected by sylabe.';
-
-        $this->_table['fr-fr']['::nebule:modules::AppTitle1'] = 'Modules';
-        $this->_table['en-en']['::nebule:modules::AppTitle1'] = 'Modules';
-        $this->_table['es-co']['::nebule:modules::AppTitle1'] = 'Modules';
-        $this->_table['fr-fr']['::nebule:modules::AppDesc1'] = 'Module de gestion des modules.';
-        $this->_table['en-en']['::nebule:modules::AppDesc1'] = 'Manage modules.';
-        $this->_table['es-co']['::nebule:modules::AppDesc1'] = 'Manage modules.';
+        $this->_table = self::TRANSLATE_TABLE;
     }
 
 

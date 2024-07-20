@@ -26,7 +26,7 @@ class ModuleNeblog extends Modules
     protected $MODULE_COMMAND_NAME = 'log';
     protected $MODULE_DEFAULT_VIEW = 'blog';
     protected $MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    protected $MODULE_VERSION = '020240227';
+    protected $MODULE_VERSION = '020240720';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
     protected $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -438,47 +438,45 @@ class ModuleNeblog extends Modules
     }
 
 
-
-    /**
-     * Initialisation de la table de traduction.
-     *
-     * @return void
-     */
-    protected function _initTable(): void
-    {
-        $this->_table['fr-fr']['::neblog:module:objects:ModuleName'] = 'Module des blogs';
-        $this->_table['en-en']['::neblog:module:objects:ModuleName'] = 'Blogs module';
-        $this->_table['es-co']['::neblog:module:objects:ModuleName'] = 'Módulo de blogs';
-        $this->_table['fr-fr']['::neblog:module:objects:MenuName'] = 'Blogs';
-        $this->_table['en-en']['::neblog:module:objects:MenuName'] = 'Blogs';
-        $this->_table['es-co']['::neblog:module:objects:MenuName'] = 'Blogs';
-        $this->_table['fr-fr']['::neblog:module:objects:ModuleDescription'] = 'Module de gestion des blogs.';
-        $this->_table['en-en']['::neblog:module:objects:ModuleDescription'] = 'Blogs management module.';
-        $this->_table['es-co']['::neblog:module:objects:ModuleDescription'] = 'Módulo de gestión de blogs.';
-        $this->_table['fr-fr']['::neblog:module:objects:ModuleHelp'] = "Ce module permet de voir et de gérer les blogs.";
-        $this->_table['en-en']['::neblog:module:objects:ModuleHelp'] = 'This module permit to see and manage blogs.';
-        $this->_table['es-co']['::neblog:module:objects:ModuleHelp'] = 'This module permit to see and manage blogs.';
-
-        $this->_table['fr-fr']['::neblog:module:blog:dispblog'] = 'Display blog';
-        $this->_table['en-en']['::neblog:module:blog:dispblog'] = 'Display blog';
-        $this->_table['es-co']['::neblog:module:blog:dispblog'] = 'Display blog';
-        $this->_table['fr-fr']['::neblog:module:list:listblog'] = 'List blogs';
-        $this->_table['en-en']['::neblog:module:list:listblog'] = 'List blogs';
-        $this->_table['es-co']['::neblog:module:list:listblog'] = 'List blogs';
-        $this->_table['fr-fr']['::neblog:module:new:newblog'] = 'New blog';
-        $this->_table['en-en']['::neblog:module:new:newblog'] = 'New blog';
-        $this->_table['es-co']['::neblog:module:new:newblog'] = 'New blog';
-        $this->_table['fr-fr']['::neblog:module:modify:modblog'] = 'Modify blog';
-        $this->_table['en-en']['::neblog:module:modify:modblog'] = 'Modify blog';
-        $this->_table['es-co']['::neblog:module:modify:modblog'] = 'Modify blog';
-        $this->_table['fr-fr']['::neblog:module:delete:delblog'] = 'Delete blog';
-        $this->_table['en-en']['::neblog:module:delete:delblog'] = 'Delete blog';
-        $this->_table['es-co']['::neblog:module:delete:delblog'] = 'Delete blog';
-        $this->_table['fr-fr']['::neblog:module:about:title'] = 'A propos';
-        $this->_table['en-en']['::neblog:module:about:title'] = 'About';
-        $this->_table['es-co']['::neblog:module:about:title'] = 'About';
-        $this->_table['fr-fr']['::neblog:module:about:desc'] = 'Ceci est un gestionnaire/afficheur de weblog basé sur nebule.';
-        $this->_table['en-en']['::neblog:module:about:desc'] = 'This is a manager/reader for weblog based on nebule.';
-        $this->_table['es-co']['::neblog:module:about:desc'] = 'This is a manager/reader for weblog based on nebule.';
-    }
+    CONST TRANSLATE_TABLE = [
+        'fr-fr' => [
+            '::neblog:module:objects:ModuleName' => 'Module des blogs',
+            '::neblog:module:objects:MenuName' => 'Blogs',
+            '::neblog:module:objects:ModuleDescription' => 'Module de gestion des blogs.',
+            '::neblog:module:objects:ModuleHelp' => "Ce module permet de voir et de gérer les blogs.",
+            '::neblog:module:blog:dispblog' => 'Display blog',
+            '::neblog:module:list:listblog' => 'List blogs',
+            '::neblog:module:new:newblog' => 'New blog',
+            '::neblog:module:modify:modblog' => 'Modify blog',
+            '::neblog:module:delete:delblog' => 'Delete blog',
+            '::neblog:module:about:title' => 'A propos',
+            '::neblog:module:about:desc' => 'Ceci est un gestionnaire/afficheur de weblog basé sur nebule.',
+        ],
+        'en-en' => [
+            '::neblog:module:objects:ModuleName' => 'Blogs module',
+            '::neblog:module:objects:MenuName' => 'Blogs',
+            '::neblog:module:objects:ModuleDescription' => 'Blogs management module.',
+            '::neblog:module:objects:ModuleHelp' => 'This module permit to see and manage blogs.',
+            '::neblog:module:blog:dispblog' => 'Display blog',
+            '::neblog:module:list:listblog' => 'List blogs',
+            '::neblog:module:new:newblog' => 'New blog',
+            '::neblog:module:modify:modblog' => 'Modify blog',
+            '::neblog:module:delete:delblog' => 'Delete blog',
+            '::neblog:module:about:title' => 'About',
+            '::neblog:module:about:desc' => 'This is a manager/reader for weblog based on nebule.',
+        ],
+        'es-co' => [
+            '::neblog:module:objects:ModuleName' => 'Módulo de blogs',
+            '::neblog:module:objects:MenuName' => 'Blogs',
+            '::neblog:module:objects:ModuleDescription' => 'Módulo de gestión de blogs.',
+            '::neblog:module:objects:ModuleHelp' => 'This module permit to see and manage blogs.',
+            '::neblog:module:blog:dispblog' => 'Display blog',
+            '::neblog:module:list:listblog' => 'List blogs',
+            '::neblog:module:new:newblog' => 'New blog',
+            '::neblog:module:modify:modblog' => 'Modify blog',
+            '::neblog:module:delete:delblog' => 'Delete blog',
+            '::neblog:module:about:title' => 'About',
+            '::neblog:module:about:desc' => 'This is a manager/reader for weblog based on nebule.',
+        ],
+    ];
 }

@@ -26,7 +26,7 @@ class ModuleObjects extends Modules
     protected $MODULE_COMMAND_NAME = 'obj';
     protected $MODULE_DEFAULT_VIEW = 'disp';
     protected $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    protected $MODULE_VERSION = '020240714';
+    protected $MODULE_VERSION = '020240720';
     protected $MODULE_AUTHOR = 'Projet nebule';
     protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
     protected $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -1359,160 +1359,147 @@ class ModuleObjects extends Modules
     }
 
 
-    /**
-     * Initialisation de la table de traduction.
-     *
-     * @return void
-     */
-    protected function _initTable(): void
-    {
-        $this->_table['fr-fr']['::sylabe:module:objects:ModuleName'] = 'Module des objets';
-        $this->_table['en-en']['::sylabe:module:objects:ModuleName'] = 'Objects module';
-        $this->_table['es-co']['::sylabe:module:objects:ModuleName'] = 'Módulo de objetos';
-        $this->_table['fr-fr']['::sylabe:module:objects:MenuName'] = 'Objets';
-        $this->_table['en-en']['::sylabe:module:objects:MenuName'] = 'Objects';
-        $this->_table['es-co']['::sylabe:module:objects:MenuName'] = 'Objetos';
-        $this->_table['fr-fr']['::sylabe:module:objects:ModuleDescription'] = 'Module de gestion des objets.';
-        $this->_table['en-en']['::sylabe:module:objects:ModuleDescription'] = 'Object management module.';
-        $this->_table['es-co']['::sylabe:module:objects:ModuleDescription'] = 'Módulo de gestión de objetos.';
-        $this->_table['fr-fr']['::sylabe:module:objects:ModuleHelp'] = "Ce module permet de voir et de gérer les objets.";
-        $this->_table['en-en']['::sylabe:module:objects:ModuleHelp'] = 'This module permit to see and manage objects.';
-        $this->_table['es-co']['::sylabe:module:objects:ModuleHelp'] = 'This module permit to see and manage objects.';
-
-        $this->_table['fr-fr']['::sylabe:module:objects:AppTitle1'] = 'Objets';
-        $this->_table['en-en']['::sylabe:module:objects:AppTitle1'] = 'Objects';
-        $this->_table['es-co']['::sylabe:module:objects:AppTitle1'] = 'Objetos';
-        $this->_table['fr-fr']['::sylabe:module:objects:AppDesc1'] = 'Affiche les objets.';
-        $this->_table['en-en']['::sylabe:module:objects:AppDesc1'] = 'Display objects.';
-        $this->_table['es-co']['::sylabe:module:objects:AppDesc1'] = 'Display objects.';
-
-        $this->_table['fr-fr']['::sylabe:module:objects:DisplayObject'] = "Afficher l'objet";
-        $this->_table['en-en']['::sylabe:module:objects:DisplayObject'] = 'Display object';
-        $this->_table['es-co']['::sylabe:module:objects:DisplayObject'] = 'Display object';
-        $this->_table['fr-fr']['::sylabe:module:objects:DisplayObjectUpdated'] = "Afficher l'objet à jour";
-        $this->_table['en-en']['::sylabe:module:objects:DisplayObjectUpdated'] = 'Display updated object';
-        $this->_table['es-co']['::sylabe:module:objects:DisplayObjectUpdated'] = 'Display updated object';
-        $this->_table['fr-fr']['::sylabe:module:objects:ObjectDescription'] = 'Afficher la description';
-        $this->_table['en-en']['::sylabe:module:objects:ObjectDescription'] = 'Display description';
-        $this->_table['es-co']['::sylabe:module:objects:ObjectDescription'] = 'Display description';
-        $this->_table['fr-fr']['::sylabe:module:objects:ObjectRelations'] = 'Relations';
-        $this->_table['en-en']['::sylabe:module:objects:ObjectRelations'] = 'Relations';
-        $this->_table['es-co']['::sylabe:module:objects:ObjectRelations'] = 'Relations';
-
-        $this->_table['fr-fr']['::sylabe:module:objects:ObjectDelete'] = 'Supprimer';
-        $this->_table['en-en']['::sylabe:module:objects:ObjectDelete'] = 'Delete';
-        $this->_table['es-co']['::sylabe:module:objects:ObjectDelete'] = 'Delete';
-        $this->_table['fr-fr']['::sylabe:module:objects:ObjectDownload'] = 'Télécharger';
-        $this->_table['en-en']['::sylabe:module:objects:ObjectDownload'] = 'Download';
-        $this->_table['es-co']['::sylabe:module:objects:ObjectDownload'] = 'Download';
-
-        $this->_table['fr-fr']['::sylabe:module:objects:LinksSrc'] = 'Source des liens bruts.';
-        $this->_table['en-en']['::sylabe:module:objects:LinksSrc'] = 'Source of raw links.';
-        $this->_table['es-co']['::sylabe:module:objects:LinksSrc'] = 'Fuente de enlaces primas.';
-
-        $this->_table['fr-fr']['::sylabe:module:objects:DisplayAsObject'] = 'Voir comme objet';
-        $this->_table['en-en']['::sylabe:module:objects:DisplayAsObject'] = 'See as object';
-        $this->_table['es-co']['::sylabe:module:objects:DisplayAsObject'] = 'See as object';
-        $this->_table['fr-fr']['::sylabe:module:objects:DisplayNewObject'] = 'Voir le nouvel objet';
-        $this->_table['en-en']['::sylabe:module:objects:DisplayNewObject'] = 'See the new object';
-        $this->_table['es-co']['::sylabe:module:objects:DisplayNewObject'] = 'See the new object';
-
-        $this->_table['fr-fr']['::sylabe:module:objects:Actions'] = "Actions sur l'objet";
-        $this->_table['en-en']['::sylabe:module:objects:Actions'] = 'Actions on object';
-        $this->_table['es-co']['::sylabe:module:objects:Actions'] = 'Actions on object';
-        $this->_table['fr-fr']['::sylabe:module:objects:ActionsDesc'] = 'Les actions simples sur cet objet.';
-        $this->_table['en-en']['::sylabe:module:objects:ActionsDesc'] = 'Simple actions on this object.';
-        $this->_table['es-co']['::sylabe:module:objects:ActionsDesc'] = 'Simple actions on this object.';
-
-        $this->_table['fr-fr']['::sylabe:module:objects:ExtendedActions'] = "Actions étendues sur l'objet";
-        $this->_table['en-en']['::sylabe:module:objects:ExtendedActions'] = 'Extended actions on object';
-        $this->_table['es-co']['::sylabe:module:objects:ExtendedActions'] = 'Extended actions on object';
-        $this->_table['fr-fr']['::sylabe:module:objects:ExtendedActionsDesc'] = 'Les actions avancées sur cet objet.';
-        $this->_table['en-en']['::sylabe:module:objects:ExtendedActionsDesc'] = 'Advanced actions on this object.';
-        $this->_table['es-co']['::sylabe:module:objects:ExtendedActionsDesc'] = 'Advanced actions on this object.';
-
-        $this->_table['fr-fr']['::sylabe:module:objects:Description'] = "Description de l'objet";
-        $this->_table['en-en']['::sylabe:module:objects:Description'] = 'Object description';
-        $this->_table['es-co']['::sylabe:module:objects:Description'] = 'Object description';
-        $this->_table['fr-fr']['::sylabe:module:objects:DescriptionDesc'] = "Les propriétés de l'objet.";
-        $this->_table['en-en']['::sylabe:module:objects:DescriptionDesc'] = "Object's properties.";
-        $this->_table['es-co']['::sylabe:module:objects:DescriptionDesc'] = "Object's properties.";
-        $this->_table['fr-fr']['::sylabe:module:objects:Nothing'] = 'Rien à afficher.';
-        $this->_table['en-en']['::sylabe:module:objects:Nothing'] = 'Nothing to display.';
-        $this->_table['es-co']['::sylabe:module:objects:Nothing'] = 'Nothing to display.';
-
-        $this->_table['fr-fr']['::sylabe:module:objects:Action:Download'] = "Télécharger l'objet.";
-        $this->_table['en-en']['::sylabe:module:objects:Action:Download'] = 'Download object.';
-        $this->_table['es-co']['::sylabe:module:objects:Action:Download'] = 'Download object.';
-
-        $this->_table['fr-fr']['::sylabe:module:objects:Desc:Attrib'] = 'Propriété';
-        $this->_table['en-en']['::sylabe:module:objects:Desc:Attrib'] = 'Attribut';
-        $this->_table['es-co']['::sylabe:module:objects:Desc:Attrib'] = 'Attribut';
-        $this->_table['fr-fr']['::sylabe:module:objects:Desc:Value'] = 'Valeur';
-        $this->_table['en-en']['::sylabe:module:objects:Desc:Value'] = 'Value';
-        $this->_table['es-co']['::sylabe:module:objects:Desc:Value'] = 'Value';
-        $this->_table['fr-fr']['::sylabe:module:objects:Desc:Signer'] = 'Emetteur';
-        $this->_table['en-en']['::sylabe:module:objects:Desc:Signer'] = 'Sender';
-        $this->_table['es-co']['::sylabe:module:objects:Desc:Signer'] = 'Sender';
-
-        $this->_table['fr-fr']['::sylabe:module:objects:Protection'] = 'Protection';
-        $this->_table['en-en']['::sylabe:module:objects:Protection'] = 'Protection';
-        $this->_table['es-co']['::sylabe:module:objects:Protection'] = 'Protection';
-        $this->_table['fr-fr']['::sylabe:module:objects:ShareProtection'] = 'Partager la protection';
-        $this->_table['en-en']['::sylabe:module:objects:ShareProtection'] = 'Share protection';
-        $this->_table['es-co']['::sylabe:module:objects:ShareProtection'] = 'Share protection';
-        $this->_table['fr-fr']['::sylabe:module:objects:ShareObjectProtection'] = "Partager la protection de l'objet";
-        $this->_table['en-en']['::sylabe:module:objects:ShareObjectProtection'] = 'Share protection of this objet';
-        $this->_table['es-co']['::sylabe:module:objects:ShareObjectProtection'] = 'Share protection of this objet';
-        $this->_table['fr-fr']['::sylabe:module:objects:ShareProtectionToGroup'] = 'Partager la protection';
-        $this->_table['en-en']['::sylabe:module:objects:ShareProtectionToGroup'] = 'Share protection';
-        $this->_table['es-co']['::sylabe:module:objects:ShareProtectionToGroup'] = 'Share protection';
-        $this->_table['fr-fr']['::sylabe:module:objects:ShareProtectionToEntity'] = 'Partager la protection';
-        $this->_table['en-en']['::sylabe:module:objects:ShareProtectionToEntity'] = 'Share protection';
-        $this->_table['es-co']['::sylabe:module:objects:ShareProtectionToEntity'] = 'Share protection';
-        $this->_table['fr-fr']['::WarningSharedProtection'] = "Lorsque la protection d'un objet est partagée, son annulation est incertaine !";
-        $this->_table['en-en']['::WarningSharedProtection'] = 'When protection of an object is shared, its cancellation is uncertain!';
-        $this->_table['es-co']['::WarningSharedProtection'] = 'Donde se comparte la protección de un objeto, su cancelación esta incierto!';
-        $this->_table['fr-fr']['::RemoveShareProtect'] = 'Annuler le partage de protection';
-        $this->_table['en-en']['::RemoveShareProtect'] = 'Cancel share protection';
-        $this->_table['es-co']['::RemoveShareProtect'] = 'Cancel share protection';
-        $this->_table['fr-fr']['::ProtectObject'] = "Protéger l'objet";
-        $this->_table['en-en']['::ProtectObject'] = 'Protect the object';
-        $this->_table['es-co']['::ProtectObject'] = 'Protect the object';
-        $this->_table['fr-fr']['::ProtectedObject'] = 'Cet objet est protégé.';
-        $this->_table['en-en']['::ProtectedObject'] = 'This object is protected.';
-        $this->_table['es-co']['::ProtectedObject'] = 'This object is protected.';
-        $this->_table['fr-fr']['::ProtectedID'] = 'ID objet en clair';
-        $this->_table['en-en']['::ProtectedID'] = 'Clear object ID';
-        $this->_table['es-co']['::ProtectedID'] = 'Clear object ID';
-        $this->_table['fr-fr']['::UnprotectedID'] = 'ID objet chiffré';
-        $this->_table['en-en']['::UnprotectedID'] = 'Encrypted object ID';
-        $this->_table['es-co']['::UnprotectedID'] = 'Encrypted object ID';
-        $this->_table['fr-fr']['::UnprotectedObject'] = "Cet objet n'est pas protégé.";
-        $this->_table['en-en']['::UnprotectedObject'] = 'This object is not protected.';
-        $this->_table['es-co']['::UnprotectedObject'] = 'This object is not protected.';
-        $this->_table['fr-fr']['::UnprotectObject'] = "Déprotéger l'objet";
-        $this->_table['en-en']['::UnprotectObject'] = 'Unprotect the object';
-        $this->_table['es-co']['::UnprotectObject'] = 'Unprotect the object';
-        $this->_table['fr-fr']['::WarningProtectObject'] = "La protection d'un objet déjà existant est incertaine !";
-        $this->_table['en-en']['::WarningProtectObject'] = 'The protection of an existing object is uncertain!';
-        $this->_table['es-co']['::WarningProtectObject'] = 'The protection of an existing object is uncertain!';
-        $this->_table['fr-fr']['::WarningDoNotProtectEntity'] = "La protection d'une entité la rend indisponible !";
-        $this->_table['en-en']['::WarningDoNotProtectEntity'] = 'The protection of an entity make it unavailable!';
-        $this->_table['es-co']['::WarningDoNotProtectEntity'] = 'The protection of an entity make it unavailable!';
-        $this->_table['fr-fr']['::ErrorCantProtectObject'] = 'Cet objet ne peut pas être protégé.';
-        $this->_table['en-en']['::ErrorCantProtectObject'] = "This object can't be protected.";
-        $this->_table['es-co']['::ErrorCantProtectObject'] = "This object can't be protected.";
-
-        $this->_table['fr-fr']['::sylabe:module:objects:AttribNotDisplayable'] = 'Propriété non affichable !';
-        $this->_table['en-en']['::sylabe:module:objects:AttribNotDisplayable'] = 'Attribut not displayable!';
-        $this->_table['es-co']['::sylabe:module:objects:AttribNotDisplayable'] = 'Attribut not displayable!';
-
-        $this->_table['fr-fr']['::GroupeFerme'] = 'Groupe fermé';
-        $this->_table['en-en']['::GroupeFerme'] = 'Closed group';
-        $this->_table['es-co']['::GroupeFerme'] = 'Closed group';
-        $this->_table['fr-fr']['::GroupeOuvert'] = 'Groupe ouvert';
-        $this->_table['en-en']['::GroupeOuvert'] = 'Opened group';
-        $this->_table['es-co']['::GroupeOuvert'] = 'Opened group';
-    }
+    CONST TRANSLATE_TABLE = [
+        'fr-fr' => [
+            '::sylabe:module:objects:ModuleName' => 'Module des objets',
+            '::sylabe:module:objects:MenuName' => 'Objets',
+            '::sylabe:module:objects:ModuleDescription' => 'Module de gestion des objets.',
+            '::sylabe:module:objects:ModuleHelp' => "Ce module permet de voir et de gérer les objets.",
+            '::sylabe:module:objects:AppTitle1' => 'Objets',
+            '::sylabe:module:objects:AppDesc1' => 'Affiche les objets.',
+            '::sylabe:module:objects:DisplayObject' => "Afficher l'objet",
+            '::sylabe:module:objects:DisplayObjectUpdated' => "Afficher l'objet à jour",
+            '::sylabe:module:objects:ObjectDescription' => 'Afficher la description',
+            '::sylabe:module:objects:ObjectRelations' => 'Relations',
+            '::sylabe:module:objects:ObjectDelete' => 'Supprimer',
+            '::sylabe:module:objects:ObjectDownload' => 'Télécharger',
+            '::sylabe:module:objects:LinksSrc' => 'Source des liens bruts.',
+            '::sylabe:module:objects:DisplayAsObject' => 'Voir comme objet',
+            '::sylabe:module:objects:DisplayNewObject' => 'Voir le nouvel objet',
+            '::sylabe:module:objects:Actions' => "Actions sur l'objet",
+            '::sylabe:module:objects:ActionsDesc' => 'Les actions simples sur cet objet.',
+            '::sylabe:module:objects:ExtendedActions' => "Actions étendues sur l'objet",
+            '::sylabe:module:objects:ExtendedActionsDesc' => 'Les actions avancées sur cet objet.',
+            '::sylabe:module:objects:Description' => "Description de l'objet",
+            '::sylabe:module:objects:DescriptionDesc' => "Les propriétés de l'objet.",
+            '::sylabe:module:objects:Nothing' => 'Rien à afficher.',
+            '::sylabe:module:objects:Action:Download' => "Télécharger l'objet.",
+            '::sylabe:module:objects:Desc:Attrib' => 'Propriété',
+            '::sylabe:module:objects:Desc:Value' => 'Valeur',
+            '::sylabe:module:objects:Desc:Signer' => 'Emetteur',
+            '::sylabe:module:objects:Protection' => 'Protection',
+            '::sylabe:module:objects:ShareProtection' => 'Partager la protection',
+            '::sylabe:module:objects:ShareObjectProtection' => "Partager la protection de l'objet",
+            '::sylabe:module:objects:ShareProtectionToGroup' => 'Partager la protection',
+            '::sylabe:module:objects:ShareProtectionToEntity' => 'Partager la protection',
+            '::WarningSharedProtection' => "Lorsque la protection d'un objet est partagée, son annulation est incertaine !",
+            '::RemoveShareProtect' => 'Annuler le partage de protection',
+            '::ProtectObject' => "Protéger l'objet",
+            '::ProtectedObject' => 'Cet objet est protégé.',
+            '::ProtectedID' => 'ID objet en clair',
+            '::UnprotectedID' => 'ID objet chiffré',
+            '::UnprotectedObject' => "Cet objet n'est pas protégé.",
+            '::UnprotectObject' => "Déprotéger l'objet",
+            '::WarningProtectObject' => "La protection d'un objet déjà existant est incertaine !",
+            '::WarningDoNotProtectEntity' => "La protection d'une entité la rend indisponible !",
+            '::ErrorCantProtectObject' => 'Cet objet ne peut pas être protégé.',
+            '::sylabe:module:objects:AttribNotDisplayable' => 'Propriété non affichable !',
+            '::GroupeFerme' => 'Groupe fermé',
+            '::GroupeOuvert' => 'Groupe ouvert',
+        ],
+        'en-en' => [
+            '::sylabe:module:objects:ModuleName' => 'Objects module',
+            '::sylabe:module:objects:MenuName' => 'Objects',
+            '::sylabe:module:objects:ModuleDescription' => 'Object management module.',
+            '::sylabe:module:objects:ModuleHelp' => 'This module permit to see and manage objects.',
+            '::sylabe:module:objects:AppTitle1' => 'Objects',
+            '::sylabe:module:objects:AppDesc1' => 'Display objects.',
+            '::sylabe:module:objects:DisplayObject' => 'Display object',
+            '::sylabe:module:objects:DisplayObjectUpdated' => 'Display updated object',
+            '::sylabe:module:objects:ObjectDescription' => 'Display description',
+            '::sylabe:module:objects:ObjectRelations' => 'Relations',
+            '::sylabe:module:objects:ObjectDelete' => 'Delete',
+            '::sylabe:module:objects:ObjectDownload' => 'Download',
+            '::sylabe:module:objects:LinksSrc' => 'Source of raw links.',
+            '::sylabe:module:objects:DisplayAsObject' => 'See as object',
+            '::sylabe:module:objects:DisplayNewObject' => 'See the new object',
+            '::sylabe:module:objects:Actions' => 'Actions on object',
+            '::sylabe:module:objects:ActionsDesc' => 'Simple actions on this object.',
+            '::sylabe:module:objects:ExtendedActions' => 'Extended actions on object',
+            '::sylabe:module:objects:ExtendedActionsDesc' => 'Advanced actions on this object.',
+            '::sylabe:module:objects:Description' => 'Object description',
+            '::sylabe:module:objects:DescriptionDesc' => "Object's properties.",
+            '::sylabe:module:objects:Nothing' => 'Nothing to display.',
+            '::sylabe:module:objects:Action:Download' => 'Download object.',
+            '::sylabe:module:objects:Desc:Attrib' => 'Attribut',
+            '::sylabe:module:objects:Desc:Value' => 'Value',
+            '::sylabe:module:objects:Desc:Signer' => 'Sender',
+            '::sylabe:module:objects:Protection' => 'Protection',
+            '::sylabe:module:objects:ShareProtection' => 'Share protection',
+            '::sylabe:module:objects:ShareObjectProtection' => 'Share protection of this objet',
+            '::sylabe:module:objects:ShareProtectionToGroup' => 'Share protection',
+            '::sylabe:module:objects:ShareProtectionToEntity' => 'Share protection',
+            '::WarningSharedProtection' => 'When protection of an object is shared, its cancellation is uncertain!',
+            '::RemoveShareProtect' => 'Cancel share protection',
+            '::ProtectObject' => 'Protect the object',
+            '::ProtectedObject' => 'This object is protected.',
+            '::ProtectedID' => 'Clear object ID',
+            '::UnprotectedID' => 'Encrypted object ID',
+            '::UnprotectedObject' => 'This object is not protected.',
+            '::UnprotectObject' => 'Unprotect the object',
+            '::WarningProtectObject' => 'The protection of an existing object is uncertain!',
+            '::WarningDoNotProtectEntity' => 'The protection of an entity make it unavailable!',
+            '::ErrorCantProtectObject' => "This object can't be protected.",
+            '::sylabe:module:objects:AttribNotDisplayable' => 'Attribut not displayable!',
+            '::GroupeFerme' => 'Closed group',
+            '::GroupeOuvert' => 'Opened group',
+        ],
+        'es-co' => [
+            '::sylabe:module:objects:ModuleName' => 'Módulo de objetos',
+            '::sylabe:module:objects:MenuName' => 'Objetos',
+            '::sylabe:module:objects:ModuleDescription' => 'Módulo de gestión de objetos.',
+            '::sylabe:module:objects:ModuleHelp' => 'This module permit to see and manage objects.',
+            '::sylabe:module:objects:AppTitle1' => 'Objetos',
+            '::sylabe:module:objects:AppDesc1' => 'Display objects.',
+            '::sylabe:module:objects:DisplayObject' => 'Display object',
+            '::sylabe:module:objects:DisplayObjectUpdated' => 'Display updated object',
+            '::sylabe:module:objects:ObjectDescription' => 'Display description',
+            '::sylabe:module:objects:ObjectRelations' => 'Relations',
+            '::sylabe:module:objects:ObjectDelete' => 'Delete',
+            '::sylabe:module:objects:ObjectDownload' => 'Download',
+            '::sylabe:module:objects:LinksSrc' => 'Fuente de enlaces primas.',
+            '::sylabe:module:objects:DisplayAsObject' => 'See as object',
+            '::sylabe:module:objects:DisplayNewObject' => 'See the new object',
+            '::sylabe:module:objects:Actions' => 'Actions on object',
+            '::sylabe:module:objects:ActionsDesc' => 'Simple actions on this object.',
+            '::sylabe:module:objects:ExtendedActions' => 'Extended actions on object',
+            '::sylabe:module:objects:ExtendedActionsDesc' => 'Advanced actions on this object.',
+            '::sylabe:module:objects:Description' => 'Object description',
+            '::sylabe:module:objects:DescriptionDesc' => "Object's properties.",
+            '::sylabe:module:objects:Nothing' => 'Nothing to display.',
+            '::sylabe:module:objects:Action:Download' => 'Download object.',
+            '::sylabe:module:objects:Desc:Attrib' => 'Attribut',
+            '::sylabe:module:objects:Desc:Value' => 'Value',
+            '::sylabe:module:objects:Desc:Signer' => 'Sender',
+            '::sylabe:module:objects:Protection' => 'Protection',
+            '::sylabe:module:objects:ShareProtection' => 'Share protection',
+            '::sylabe:module:objects:ShareObjectProtection' => 'Share protection of this objet',
+            '::sylabe:module:objects:ShareProtectionToGroup' => 'Share protection',
+            '::sylabe:module:objects:ShareProtectionToEntity' => 'Share protection',
+            '::WarningSharedProtection' => 'Donde se comparte la protección de un objeto, su cancelación esta incierto!',
+            '::RemoveShareProtect' => 'Cancel share protection',
+            '::ProtectObject' => 'Protect the object',
+            '::ProtectedObject' => 'This object is protected.',
+            '::ProtectedID' => 'Clear object ID',
+            '::UnprotectedID' => 'Encrypted object ID',
+            '::UnprotectedObject' => 'This object is not protected.',
+            '::UnprotectObject' => 'Unprotect the object',
+            '::WarningProtectObject' => 'The protection of an existing object is uncertain!',
+            '::WarningDoNotProtectEntity' => 'The protection of an entity make it unavailable!',
+            '::ErrorCantProtectObject' => "This object can't be protected.",
+            '::sylabe:module:objects:AttribNotDisplayable' => 'Attribut not displayable!',
+            '::GroupeFerme' => 'Closed group',
+            '::GroupeOuvert' => 'Opened group',
+        ],
+    ];
 }

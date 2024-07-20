@@ -54,7 +54,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240714';
+    const APPLICATION_VERSION = '020240720';
     const APPLICATION_LICENCE = 'GNU GPL 2023-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -326,96 +326,96 @@ class Translate extends Translates
     }
 
 
-    /**
-     * Initialisation de la table de traduction.
-     */
-    protected function _initTable()
-    {
-        $this->_table['fr-fr']['::::INFO'] = 'Information';
-        $this->_table['en-en']['::::INFO'] = 'Information';
-        $this->_table['es-co']['::::INFO'] = 'Information';
-        $this->_table['fr-fr']['::::OK'] = 'OK';
-        $this->_table['en-en']['::::OK'] = 'OK';
-        $this->_table['es-co']['::::OK'] = 'OK';
-        $this->_table['fr-fr']['::::INFORMATION'] = 'Message';
-        $this->_table['en-en']['::::INFORMATION'] = 'Message';
-        $this->_table['es-co']['::::INFORMATION'] = 'Mensaje';
-        $this->_table['fr-fr']['::::WARN'] = 'ATTENTION !';
-        $this->_table['en-en']['::::WARN'] = 'WARNING!';
-        $this->_table['es-co']['::::WARN'] = '¡ADVERTENCIA!';
-        $this->_table['fr-fr']['::::ERROR'] = 'ERREUR !';
-        $this->_table['en-en']['::::ERROR'] = 'ERROR!';
-        $this->_table['es-co']['::::ERROR'] = '¡ERROR!';
+    CONST TRANSLATE_TABLE = [
+        'fr-fr' => [
+            '::::INFO' => 'Information',
+            '::::OK' => 'OK',
+            '::::INFORMATION' => 'Message',
+            '::::WARN' => 'ATTENTION !',
+            '::::ERROR' => 'ERREUR !',
+            '::::RESCUE' => 'Mode de sauvetage !',
+            ':::login' => 'Se connecter',
+            ':::logout' => 'Se déconnecter',
+            ':::return' => 'Retour',
+            '::::SecurityChecks' => 'Tests de sécurité',
+            ':::warn_ServNotPermitWrite' => "Ce serveur n'autorise pas les modifications !",
+            ':::warn_flushSessionAndCache' => "Toutes les données de connexion ont été effacées !",
+            ':::info_OnlySignedLinks' => 'Uniquement des liens signés !',
+            ':::info_OnlyLinksFromCodeMaster' => 'Uniquement les liens signés du maître du code !',
+            ':::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            ':::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            ':::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            ':::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            ':::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            ':::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            ':::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            ':::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            ':::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            ':::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            ':::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            ':::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            ':::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+        ],
+        'en-en' => [
+            '::::INFO' => 'Information',
+            '::::OK' => 'OK',
+            '::::INFORMATION' => 'Message',
+            '::::WARN' => 'WARNING!',
+            '::::ERROR' => 'ERROR!',
+            '::::RESCUE' => 'Rescue mode!',
+            ':::login' => 'Connecting',
+            ':::logout' => 'Disconnecting',
+            ':::return' => 'Return',
+            '::::SecurityChecks' => 'Security checks',
+            ':::warn_ServNotPermitWrite' => 'This server do not permit modifications!',
+            ':::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed!',
+            ':::info_OnlySignedLinks' => 'Only signed links!',
+            ':::info_OnlyLinksFromCodeMaster' => 'Only links signed by the code master!',
+            ':::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            ':::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            ':::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            ':::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            ':::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            ':::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            ':::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            ':::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            ':::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            ':::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            ':::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            ':::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            ':::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+        ],
+        'es-co' => [
+            '::::INFO' => 'Information',
+            '::::OK' => 'OK',
+            '::::INFORMATION' => 'Mensaje',
+            '::::WARN' => '¡ADVERTENCIA!',
+            '::::ERROR' => '¡ERROR!',
+            '::::RESCUE' => '¡Modo de rescate!',
+            ':::login' => 'Connecting',
+            ':::logout' => 'Disconnecting',
+            ':::return' => 'Return',
+            '::::SecurityChecks' => 'Controles de seguridad',
+            ':::warn_ServNotPermitWrite' => 'This server do not permit modifications!',
+            ':::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed!',
+            ':::info_OnlySignedLinks' => 'Only signed links!',
+            ':::info_OnlyLinksFromCodeMaster' => 'Only links signed by the code master!',
+            ':::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            ':::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            ':::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            ':::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            ':::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            ':::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            ':::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            ':::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            ':::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            ':::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            ':::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            ':::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            ':::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+        ],
+    ];
 
-        $this->_table['fr-fr']['::::RESCUE'] = 'Mode de sauvetage !';
-        $this->_table['en-en']['::::RESCUE'] = 'Rescue mode!';
-        $this->_table['es-co']['::::RESCUE'] = '¡Modo de rescate!';
-
-        $this->_table['fr-fr'][':::login'] = 'Se connecter';
-        $this->_table['en-en'][':::login'] = 'Connecting';
-        $this->_table['es-co'][':::login'] = 'Connecting';
-        $this->_table['fr-fr'][':::logout'] = 'Se déconnecter';
-        $this->_table['en-en'][':::logout'] = 'Disconnecting';
-        $this->_table['es-co'][':::logout'] = 'Disconnecting';
-        $this->_table['fr-fr'][':::return'] = 'Retour';
-        $this->_table['en-en'][':::return'] = 'Return';
-        $this->_table['es-co'][':::return'] = 'Return';
-
-        $this->_table['fr-fr']['::::SecurityChecks'] = 'Tests de sécurité';
-        $this->_table['fr-fr'][':::warn_ServNotPermitWrite'] = "Ce serveur n'autorise pas les modifications !";
-        $this->_table['fr-fr'][':::warn_flushSessionAndCache'] = "Toutes les données de connexion ont été effacées !";
-        $this->_table['fr-fr'][':::info_OnlySignedLinks'] = 'Uniquement des liens signés !';
-        $this->_table['fr-fr'][':::info_OnlyLinksFromCodeMaster'] = 'Uniquement les liens signés du maître du code !';
-        $this->_table['fr-fr'][':::err_NotPermit'] = 'Non autorisé sur ce serveur !';
-        $this->_table['fr-fr'][':::act_chk_errCryptHash'] = "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !";
-        $this->_table['fr-fr'][':::act_chk_warnCryptHashkey'] = "La taille de l'empreinte cryptographique est trop petite !";
-        $this->_table['fr-fr'][':::act_chk_errCryptHashkey'] = "La taille de l'empreinte cryptographique est invalide !";
-        $this->_table['fr-fr'][':::act_chk_errCryptSym'] = "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !";
-        $this->_table['fr-fr'][':::act_chk_warnCryptSymkey'] = "La taille de clé de chiffrement cryptographique symétrique est trop petite !";
-        $this->_table['fr-fr'][':::act_chk_errCryptSymkey'] = "La taille de clé de chiffrement cryptographique symétrique est invalide !";
-        $this->_table['fr-fr'][':::act_chk_errCryptAsym'] = "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !";
-        $this->_table['fr-fr'][':::act_chk_warnCryptAsymkey'] = "La taille de clé de chiffrement cryptographique asymétrique est trop petite !";
-        $this->_table['fr-fr'][':::act_chk_errCryptAsymkey'] = "La taille de clé de chiffrement cryptographique asymétrique est invalide !";
-        $this->_table['fr-fr'][':::act_chk_errBootstrap'] = "L'empreinte cryptographique du bootstrap est invalide !";
-        $this->_table['fr-fr'][':::act_chk_warnSigns'] = 'La vérification des signatures de liens est désactivée !';
-        $this->_table['fr-fr'][':::act_chk_errSigns'] = 'La vérification des signatures de liens ne fonctionne pas !';
-        $this->_table['en-en']['::::SecurityChecks']='Security checks';
-        $this->_table['en-en'][':::warn_ServNotPermitWrite'] = 'This server do not permit modifications!';
-        $this->_table['en-en'][':::warn_flushSessionAndCache'] = 'All datas of this connexion have been flushed!';
-        $this->_table['en-en'][':::info_OnlySignedLinks'] = 'Only signed links!';
-        $this->_table['en-en'][':::info_OnlyLinksFromCodeMaster'] = 'Only links signed by the code master!';
-        $this->_table['en-en'][':::err_NotPermit'] = 'Non autorisé sur ce serveur !';
-        $this->_table['en-en'][':::act_chk_errCryptHash'] = "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !";
-        $this->_table['en-en'][':::act_chk_warnCryptHashkey'] = "La taille de l'empreinte cryptographique est trop petite !";
-        $this->_table['en-en'][':::act_chk_errCryptHashkey'] = "La taille de l'empreinte cryptographique est invalide !";
-        $this->_table['en-en'][':::act_chk_errCryptSym'] = "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !";
-        $this->_table['en-en'][':::act_chk_warnCryptSymkey'] = "La taille de clé de chiffrement cryptographique symétrique est trop petite !";
-        $this->_table['en-en'][':::act_chk_errCryptSymkey'] = "La taille de clé de chiffrement cryptographique symétrique est invalide !";
-        $this->_table['en-en'][':::act_chk_errCryptAsym'] = "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !";
-        $this->_table['en-en'][':::act_chk_warnCryptAsymkey'] = "La taille de clé de chiffrement cryptographique asymétrique est trop petite !";
-        $this->_table['en-en'][':::act_chk_errCryptAsymkey'] = "La taille de clé de chiffrement cryptographique asymétrique est invalide !";
-        $this->_table['en-en'][':::act_chk_errBootstrap'] = "L'empreinte cryptographique du bootstrap est invalide !";
-        $this->_table['en-en'][':::act_chk_warnSigns'] = 'La vérification des signatures de liens est désactivée !';
-        $this->_table['en-en'][':::act_chk_errSigns'] = 'La vérification des signatures de liens ne fonctionne pas !';
-        $this->_table['es-co']['::::SecurityChecks']='Controles de seguridad';
-        $this->_table['es-co'][':::warn_ServNotPermitWrite'] = 'This server do not permit modifications!';
-        $this->_table['es-co'][':::warn_flushSessionAndCache'] = 'All datas of this connexion have been flushed!';
-        $this->_table['es-co'][':::info_OnlySignedLinks'] = 'Only signed links!';
-        $this->_table['es-co'][':::info_OnlyLinksFromCodeMaster'] = 'Only links signed by the code master!';
-        $this->_table['es-co'][':::err_NotPermit'] = 'Non autorisé sur ce serveur !';
-        $this->_table['es-co'][':::act_chk_errCryptHash'] = "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !";
-        $this->_table['es-co'][':::act_chk_warnCryptHashkey'] = "La taille de l'empreinte cryptographique est trop petite !";
-        $this->_table['es-co'][':::act_chk_errCryptHashkey'] = "La taille de l'empreinte cryptographique est invalide !";
-        $this->_table['es-co'][':::act_chk_errCryptSym'] = "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !";
-        $this->_table['es-co'][':::act_chk_warnCryptSymkey'] = "La taille de clé de chiffrement cryptographique symétrique est trop petite !";
-        $this->_table['es-co'][':::act_chk_errCryptSymkey'] = "La taille de clé de chiffrement cryptographique symétrique est invalide !";
-        $this->_table['es-co'][':::act_chk_errCryptAsym'] = "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !";
-        $this->_table['es-co'][':::act_chk_warnCryptAsymkey'] = "La taille de clé de chiffrement cryptographique asymétrique est trop petite !";
-        $this->_table['es-co'][':::act_chk_errCryptAsymkey'] = "La taille de clé de chiffrement cryptographique asymétrique est invalide !";
-        $this->_table['es-co'][':::act_chk_errBootstrap'] = "L'empreinte cryptographique du bootstrap est invalide !";
-        $this->_table['es-co'][':::act_chk_warnSigns'] = 'La vérification des signatures de liens est désactivée !';
-        $this->_table['es-co'][':::act_chk_errSigns'] = 'La vérification des signatures de liens ne fonctionne pas !';
-    }
 }
 
 
@@ -672,18 +672,24 @@ class ModuleAutent extends Modules {
     }
 
 
-    protected function _initTable(): void {
-        $this->_table['fr-fr']['::sylabe:module:objects:ModuleName'] = 'Module des blogs'; # FIXME
-        $this->_table['en-en']['::sylabe:module:objects:ModuleName'] = 'Blogs module';
-        $this->_table['es-co']['::sylabe:module:objects:ModuleName'] = 'Módulo de blogs';
-        $this->_table['fr-fr']['::sylabe:module:objects:MenuName'] = 'Blogs';
-        $this->_table['en-en']['::sylabe:module:objects:MenuName'] = 'Blogs';
-        $this->_table['es-co']['::sylabe:module:objects:MenuName'] = 'Blogs';
-        $this->_table['fr-fr']['::sylabe:module:objects:ModuleDescription'] = 'Module de gestion des blogs.';
-        $this->_table['en-en']['::sylabe:module:objects:ModuleDescription'] = 'Blogs management module.';
-        $this->_table['es-co']['::sylabe:module:objects:ModuleDescription'] = 'Módulo de gestión de blogs.';
-        $this->_table['fr-fr']['::sylabe:module:objects:ModuleHelp'] = "Ce module permet de voir et de gérer les blogs.";
-        $this->_table['en-en']['::sylabe:module:objects:ModuleHelp'] = 'This module permit to see and manage blogs.';
-        $this->_table['es-co']['::sylabe:module:objects:ModuleHelp'] = 'This module permit to see and manage blogs.';
-    }
+    CONST TRANSLATE_TABLE = [
+        'fr-fr' => [
+            '::sylabe:module:objects:ModuleName' => 'Module des blogs',
+            '::sylabe:module:objects:MenuName' => 'Blogs',
+            '::sylabe:module:objects:ModuleDescription' => 'Module de gestion des blogs.',
+            '::sylabe:module:objects:ModuleHelp' => "Ce module permet de voir et de gérer les blogs.",
+        ],
+        'en-en' => [
+            '::sylabe:module:objects:ModuleName' => 'Blogs module',
+            '::sylabe:module:objects:MenuName' => 'Blogs',
+            '::sylabe:module:objects:ModuleDescription' => 'Blogs management module.',
+            '::sylabe:module:objects:ModuleHelp' => 'This module permit to see and manage blogs.',
+        ],
+        'es-co' => [
+            '::sylabe:module:objects:ModuleName' => 'Módulo de blogs',
+            '::sylabe:module:objects:MenuName' => 'Blogs',
+            '::sylabe:module:objects:ModuleDescription' => 'Módulo de gestión de blogs.',
+            '::sylabe:module:objects:ModuleHelp' => 'This module permit to see and manage blogs.',
+        ],
+    ];
 }

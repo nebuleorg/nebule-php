@@ -46,7 +46,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240714';
+    const APPLICATION_VERSION = '020240720';
     const APPLICATION_LICENCE = 'GNU GPL 2013-2024';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -2281,64 +2281,23 @@ class ModuleHelp extends Modules
         <?php
     }
 
-
-    /**
-     * Initialisation de la table de traduction.
-     *
-     * @return void
-     */
-    protected function _initTable(): void
-    {
-        $this->_table['fr-fr']['::sylabe:module:help:ModuleName'] = "Module d'aide";
-        $this->_table['en-en']['::sylabe:module:help:ModuleName'] = 'Help module';
-        $this->_table['es-co']['::sylabe:module:help:ModuleName'] = 'Módulo de ayuda';
-        $this->_table['fr-fr']['::sylabe:module:help:MenuName'] = 'Aide';
-        $this->_table['en-en']['::sylabe:module:help:MenuName'] = 'Help';
-        $this->_table['es-co']['::sylabe:module:help:MenuName'] = 'Ayuda';
-        $this->_table['fr-fr']['::sylabe:module:help:ModuleDescription'] = "Module d'aide en ligne.";
-        $this->_table['en-en']['::sylabe:module:help:ModuleDescription'] = 'Online help module.';
-        $this->_table['es-co']['::sylabe:module:help:ModuleDescription'] = 'Módulo de ayuda en línea.';
-        $this->_table['fr-fr']['::sylabe:module:help:ModuleHelp'] = "Ce module permet d'afficher de l'aide générale sur l'interface.";
-        $this->_table['en-en']['::sylabe:module:help:ModuleHelp'] = 'This module permit to display general help about the interface.';
-        $this->_table['es-co']['::sylabe:module:help:ModuleHelp'] = 'Esta modulo te permite ver la ayuda general sobre la interfaz.';
-
-        $this->_table['fr-fr']['::sylabe:module:help:AppTitle1'] = 'Aide';
-        $this->_table['en-en']['::sylabe:module:help:AppTitle1'] = 'Help';
-        $this->_table['es-co']['::sylabe:module:help:AppTitle1'] = 'Ayuda';
-        $this->_table['fr-fr']['::sylabe:module:help:AppDesc1'] = "Affiche l'aide en ligne.";
-        $this->_table['en-en']['::sylabe:module:help:AppDesc1'] = 'Display online help.';
-        $this->_table['es-co']['::sylabe:module:help:AppDesc1'] = 'Muestra la ayuda en línea.';
-
-        $this->_table['fr-fr']['::sylabe:module:help:Bienvenue'] = 'Bienvenue sur <b>sylabe</b>.';
-        $this->_table['en-en']['::sylabe:module:help:Bienvenue'] = 'Welcome to <b>sylabe</b>.';
-        $this->_table['es-co']['::sylabe:module:help:Bienvenue'] = 'Bienviedo en <b>sylabe</b>.';
-
-        $this->_table['fr-fr']['::sylabe:module:help:Langue'] = 'Langue';
-        $this->_table['en-en']['::sylabe:module:help:Langue'] = 'Language';
-        $this->_table['es-co']['::sylabe:module:help:Langue'] = 'Idioma';
-        $this->_table['fr-fr']['::sylabe:module:help:ChangerLangue'] = 'Changer de langue';
-        $this->_table['en-en']['::sylabe:module:help:ChangerLangue'] = 'Change language';
-        $this->_table['es-co']['::sylabe:module:help:ChangerLangue'] = 'Cambio de idioma';
-
-        $this->_table['fr-fr']['::sylabe:module:help:About'] = 'A propos';
-        $this->_table['en-en']['::sylabe:module:help:About'] = 'About';
-        $this->_table['es-co']['::sylabe:module:help:About'] = 'About';
-
-        $this->_table['fr-fr']['::sylabe:module:help:Bootstrap'] = 'Bootstrap';
-        $this->_table['en-en']['::sylabe:module:help:Bootstrap'] = 'Bootstrap';
-        $this->_table['es-co']['::sylabe:module:help:Bootstrap'] = 'Bootstrap';
-
-        $this->_table['fr-fr']['::sylabe:module:help:Demarrage'] = 'Démarrage';
-        $this->_table['en-en']['::sylabe:module:help:Demarrage'] = 'Start';
-        $this->_table['es-co']['::sylabe:module:help:Demarrage'] = 'Comienzo';
-        $this->_table['fr-fr']['::sylabe:module:help:AideGenerale'] = 'Aide générale';
-        $this->_table['en-en']['::sylabe:module:help:AideGenerale'] = 'General help';
-        $this->_table['es-co']['::sylabe:module:help:AideGenerale'] = 'Ayuda general';
-        $this->_table['fr-fr']['::sylabe:module:help:APropos'] = 'A propos';
-        $this->_table['en-en']['::sylabe:module:help:APropos'] = 'About';
-        $this->_table['es-co']['::sylabe:module:help:APropos'] = 'Acerca';
-
-        $this->_table['fr-fr']['::sylabe:module:help:APropos:Text'] = "Le projet <i>sylabe</i> est une implémentation logicielle basée sur le projet nebule.<br />
+    CONST TRANSLATE_TABLE = [
+        'fr-fr' => [
+            '::sylabe:module:help:ModuleName' => "Module d'aide",
+            '::sylabe:module:help:MenuName' => 'Aide',
+            '::sylabe:module:help:ModuleDescription' => "Module d'aide en ligne.",
+            '::sylabe:module:help:ModuleHelp' => "Ce module permet d'afficher de l'aide générale sur l'interface.",
+            '::sylabe:module:help:AppTitle1' => 'Aide',
+            '::sylabe:module:help:AppDesc1' => "Affiche l'aide en ligne.",
+            '::sylabe:module:help:Bienvenue' => 'Bienvenue sur <b>sylabe</b>.',
+            '::sylabe:module:help:Langue' => 'Langue',
+            '::sylabe:module:help:ChangerLangue' => 'Changer de langue',
+            '::sylabe:module:help:About' => 'A propos',
+            '::sylabe:module:help:Bootstrap' => 'Bootstrap',
+            '::sylabe:module:help:Demarrage' => 'Démarrage',
+            '::sylabe:module:help:AideGenerale' => 'Aide générale',
+            '::sylabe:module:help:APropos' => 'A propos',
+            '::sylabe:module:help:APropos:Text' => "Le projet <i>sylabe</i> est une implémentation logicielle basée sur le projet nebule.<br />
 Cette implémentation en php est voulue comme une référence des possibilités offertes par les objets et les liens tels que définis dans nebule.<br />
 <br />
 Le projet <i>nebule</i> crée un réseau. Non un réseau de machines mais un réseau de données.<br />
@@ -2366,9 +2325,32 @@ Chacun peut devenir individuellement actif.<br />
 <br />
 Enfin, si un jour nebule s’étend à toutes les machines et que toutes ces machines l’implémentent nativement, alors le projet sylabe disparaîtra.
 Il aura rempli sa mission : permettre une transition douce vers nebule.<br />
-Il sera vu comme bizarrerie symptomatique d’une époque.";
-
-        $this->_table['en-en']['::sylabe:module:help:APropos:Text'] = 'The <i>sylabe</i> project is a software implementation based on nebule project.<br />
+Il sera vu comme bizarrerie symptomatique d’une époque.",
+            '::sylabe:module:help:APropos:Liens' => 'Voir aussi :<br /><a href="http://blog.sylabe.org/">Le blog du projet sylabe</a><br /><a href="http://blog.nebule.org/">Le blog du projet nebule</a>',
+            '::sylabe:module:help:AideGenerale:Text' => "Le logiciel est composé de trois parties :<br />
+1. le bandeau du haut qui contient le menu de l'application et l'entité en cours.<br />
+2. la partie centrale qui contient le contenu à afficher, les objets, les actions, etc...<br />
+3. le bandeau du bas qui apparaît lorsqu'une action est réalisée.<br />
+<br />
+D'un point de vue général, tout ce qui est sur fond clair concerne une action en cours ou l'objet en cours d'utilisation. Et tout ce qui est sur fond noir concerne l'interface globale ou d'autres actions non liées à ce que l'on fait.<br />
+Le menu en haut à gauche est le meilleur moyen de se déplacer dans l'interface.",
+        ],
+        'en-en' => [
+            '::sylabe:module:help:ModuleName' => 'Help module',
+            '::sylabe:module:help:MenuName' => 'Help',
+            '::sylabe:module:help:ModuleDescription' => 'Online help module.',
+            '::sylabe:module:help:ModuleHelp' => 'This module permit to display general help about the interface.',
+            '::sylabe:module:help:AppTitle1' => 'Help',
+            '::sylabe:module:help:AppDesc1' => 'Display online help.',
+            '::sylabe:module:help:Bienvenue' => 'Welcome to <b>sylabe</b>.',
+            '::sylabe:module:help:Langue' => 'Language',
+            '::sylabe:module:help:ChangerLangue' => 'Change language',
+            '::sylabe:module:help:About' => 'About',
+            '::sylabe:module:help:Bootstrap' => 'Bootstrap',
+            '::sylabe:module:help:Demarrage' => 'Start',
+            '::sylabe:module:help:AideGenerale' => 'General help',
+            '::sylabe:module:help:APropos' => 'About',
+            '::sylabe:module:help:APropos:Text' => 'The <i>sylabe</i> project is a software implementation based on nebule project.<br />
 This php implementation is intended to be a reference of the potential of objects and relationships as defined in nebule.<br />
 <br />
 The <i>nebule</i> project create a network. Not a network of computers but a network of datas.<br />
@@ -2396,9 +2378,32 @@ Each individual can become active.<br />
 <br />
 Finally, if one day nebule extends to all machines and all these machines implement it natively, then the project sylabe will disappear.
 He will have served its purpose: to allow a smooth transition to nebule.<br />
-It will be seen as symptomatic of an era oddity.';
-
-        $this->_table['es-co']['::sylabe:module:help:APropos:Text'] = 'El proyecto <i>sylabe</i> es un proyecto basado nebule implementación de software.<br />
+It will be seen as symptomatic of an era oddity.',
+            '::sylabe:module:help:APropos:Liens' => 'See also :<br /><a href="http://blog.sylabe.org/">The blog of sylabe projet</a><br /><a href="http://blog.nebule.org/">the blog of nebule projet</a>',
+            '::sylabe:module:help:AideGenerale:Text' => 'The software is composed of three parts:<br />
+1. the top banner that contains the application menu and the current entity.<br />
+2. <br />
+3. <br />
+<br />
+<br />
+',
+        ],
+        'es-co' => [
+            '::sylabe:module:help:ModuleName' => 'Módulo de ayuda',
+            '::sylabe:module:help:MenuName' => 'Ayuda',
+            '::sylabe:module:help:ModuleDescription' => 'Módulo de ayuda en línea.',
+            '::sylabe:module:help:ModuleHelp' => 'Esta modulo te permite ver la ayuda general sobre la interfaz.',
+            '::sylabe:module:help:AppTitle1' => 'Ayuda',
+            '::sylabe:module:help:AppDesc1' => 'Muestra la ayuda en línea.',
+            '::sylabe:module:help:Bienvenue' => 'Bienviedo en <b>sylabe</b>.',
+            '::sylabe:module:help:Langue' => 'Idioma',
+            '::sylabe:module:help:ChangerLangue' => 'Cambio de idioma',
+            '::sylabe:module:help:About' => 'About',
+            '::sylabe:module:help:Bootstrap' => 'Bootstrap',
+            '::sylabe:module:help:Demarrage' => 'Comienzo',
+            '::sylabe:module:help:AideGenerale' => 'Ayuda general',
+            '::sylabe:module:help:APropos' => 'Acerca',
+            '::sylabe:module:help:APropos:Text' => 'El proyecto <i>sylabe</i> es un proyecto basado nebule implementación de software.<br />
 Esta aplicación php está pensado como una referencia del potencial de los objetos y las relaciones como se define en nebule.<br />
 <br />
 Sistemas informáticos actuales son incapaces de gestionar directamente los objetos y enlaces. Por tanto, no es posible utilizar nebule nativo.
@@ -2424,34 +2429,15 @@ Cada individuo puede llegar a ser activo.<br />
 <br />
 Por último, si un día nebule se extiende a todas las máquinas y todas estas máquinas implementar de forma nativa, entonces el proyecto sylabe desaparecer.
 Él habrá cumplido su propósito: permitir una transición suave a nebule.
-Se verá como un síntoma de una rareza era.';
-
-        $this->_table['fr-fr']['::sylabe:module:help:APropos:Liens'] = 'Voir aussi :<br /><a href="http://blog.sylabe.org/">Le blog du projet sylabe</a><br /><a href="http://blog.nebule.org/">Le blog du projet nebule</a>';
-        $this->_table['en-en']['::sylabe:module:help:APropos:Liens'] = 'See also :<br /><a href="http://blog.sylabe.org/">The blog of sylabe projet</a><br /><a href="http://blog.nebule.org/">the blog of nebule projet</a>';
-        $this->_table['es-co']['::sylabe:module:help:APropos:Liens'] = 'Ver también :<br /><a href="http://blog.sylabe.org/">El blog del proyecto sylabe</a><br /><a href="http://blog.nebule.org/">El blog del proyecto nebule</a>';
-
-        $this->_table['fr-fr']['::sylabe:module:help:AideGenerale:Text'] = "Le logiciel est composé de trois parties :<br />
-1. le bandeau du haut qui contient le menu de l'application et l'entité en cours.<br />
-2. la partie centrale qui contient le contenu à afficher, les objets, les actions, etc...<br />
-3. le bandeau du bas qui apparaît lorsqu'une action est réalisée.<br />
-<br />
-D'un point de vue général, tout ce qui est sur fond clair concerne une action en cours ou l'objet en cours d'utilisation. Et tout ce qui est sur fond noir concerne l'interface globale ou d'autres actions non liées à ce que l'on fait.<br />
-Le menu en haut à gauche est le meilleur moyen de se déplacer dans l'interface.";
-
-        $this->_table['en-en']['::sylabe:module:help:AideGenerale:Text'] = 'The software is composed of three parts:<br />
-1. the top banner that contains the application menu and the current entity.<br />
-2. <br />
-3. <br />
-<br />
-<br />
-';
-
-        $this->_table['es-co']['::sylabe:module:help:AideGenerale:Text'] = 'El software se compone de tres partes:<br />
+Se verá como un síntoma de una rareza era.',
+            '::sylabe:module:help:APropos:Liens' => 'Ver también :<br /><a href="http://blog.sylabe.org/">El blog del proyecto sylabe</a><br /><a href="http://blog.nebule.org/">El blog del proyecto nebule</a>',
+            '::sylabe:module:help:AideGenerale:Text' => 'El software se compone de tres partes:<br />
 1. el banner superior que contiene el menu de la aplicacion y la entidad actual.<br />
 2. <br />
 3. <br />
 <br />
 <br />
-';
-    }
+',
+        ],
+    ];
 }
