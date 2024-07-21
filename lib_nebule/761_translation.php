@@ -1,7 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
-use Nebule\Library\nebule;
+
+use Nebule\Application\Autent\Translate;
 
 /**
  * Classe Traductions
@@ -13,124 +14,224 @@ use Nebule\Library\nebule;
  */
 abstract class Translates
 {
-    /* ---------- ---------- ---------- ---------- ----------
-	 * Constantes.
-	 *
-	 * Leur modification change profondément le comportement de l'application.
-	 *
-	 * Si déclarées 'const' ou 'static' elles ne sont pas remplacée dans les classes enfants
-	 *   lorsque l'on appelle des fonctions de la classe parente non écrite dans la classe enfant...
-	 */
-    /**
-     * Langue par défaut.
-     *
-     * @var string
-     */
-    protected $DEFAULT_LANGUAGE = 'en-en';
-
-    /**
-     * Commande de sélection de la langue.
-     * @var string
-     */
     const DEFAULT_COMMAND_LANGUAGE = 'lang';
+    const DEFAULT_LANGUAGE = 'en-en';
+    CONST TRANSLATE_TABLE = [
+        'fr-fr' => [
+            '::::Welcome' => 'Bienvenue',
+            '::::INFO' => 'Information',
+            '::::OK' => 'OK',
+            '::::INFORMATION' => 'Message',
+            '::::WARN' => 'ATTENTION !',
+            '::::ERROR' => 'ERREUR !',
+            '::::RESCUE' => 'Mode de sauvetage !',
+            '::::GO' => 'Avancer',
+            '::::BACK' => 'Revenir',
+            '::::SecurityChecks' => 'Tests de sécurité',
+            '::::icon:DEFAULT_ICON_LO' => 'Objet',
+            '::::HtmlHeadDescription' => 'Page web cliente sylabe pour nebule.',
+            '::::Experimental' => '[Experimental]',
+            '::::Developpement' => '[En cours de développement]',
+            '::::help' => 'Aide',
+            '::::Password' => 'Mot de passe',
+            '::::IDprivateKey' => 'ID privé',
+            '::::IDpublicKey' => 'ID public',
+            '::::display:content:errorBan' => 'Cet objet est banni, il ne peut pas être affiché !',
+            '::::display:content:warningTaggedWarning' => 'Cet objet est marqué comme dangereux, attention à son contenu !',
+            '::::display:content:ObjectProctected' => 'Cet objet est protégé !',
+            '::::display:content:warningObjectProctected' => 'Cet objet est marqué comme protégé, attention à la divulgation de son contenu en public !!!',
+            '::::display:content:OK' => 'Cet objet est valide, son contenu a été vérifié.',
+            '::::display:content:warningTooBig' => "Cet objet est trop volumineux, son contenu n'a pas été vérifié !",
+            '::::display:content:errorNotDisplayable' => 'Cet objet ne peut pas être affiché !',
+            '::::display:content:errorNotAvailable' => "Cet objet n'est pas disponible, il ne peut pas être affiché !",
+            '::::display:content:notAnObject' => "Cet objet de référence n'a pas de contenu.",
+            '::::display:content:ObjectHaveUpdate' => 'Cet objet a été mis à jour vers :',
+            '::::display:content:Activated' => 'Cet objet est activé.',
+            '::::display:content:NotActivated' => 'Cet objet est désactivé.',
+            '::::display:link:OK' => 'Ce lien est valide.',
+            '::::display:link:errorInvalid' => "Ce lien n'est pas valide !",
+            '::::warn_ServNotPermitWrite' => "Ce serveur n'autorise pas les modifications.",
+            '::::warn_flushSessionAndCache' => "Toutes les données de connexion ont été effacées.",
+            '::::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            '::::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            '::::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            '::::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            '::::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            '::::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            '::::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+            '::::info_OnlySignedLinks' => 'Uniquement des liens signés !',
+            '::::info_OnlyLinksFromCodeMaster' => 'Uniquement les liens signés du maître du code !',
+            '::::display:object:flag:protected' => 'Cet objet est protégé.',
+            '::::display:object:flag:unprotected' => "Cet objet n'est pas protégé.",
+            '::::display:object:flag:obfuscated' => 'Cet objet est dissimulé.',
+            '::::display:object:flag:unobfuscated' => "Cet objet n'est pas dissimulé.",
+            '::::display:object:flag:locked' => 'Cet entité est déverrouillée.',
+            '::::display:object:flag:unlocked' => 'Cet entité est verrouillée.',
+            '::::display:object:flag:activated' => 'Cet objet est activé.',
+            '::::display:object:flag:unactivated' => "Cet objet n'est pas activé.",
+            '::::yes' => 'Oui',
+            '::::no' => 'Non',
+            '::::lock' => 'Verrouiller',
+            '::::unlock' => 'Déverrouiller',
+            '::::entity:locked' => 'Entité verrouillée. Déverrouiller ?',
+            '::::entity:unlocked' => 'Entité déverrouillée. Verrouiller ?',
+        ],
+        'en-en' => [
+            '::::Welcome' => 'Welcome',
+            '::::INFO' => 'Information',
+            '::::OK' => 'OK',
+            '::::INFORMATION' => 'Message',
+            '::::WARN' => 'WARNING!',
+            '::::ERROR' => 'ERROR!',
+            '::::RESCUE' => 'Rescue mode!',
+            '::::GO' => 'Continue',
+            '::::BACK' => 'Go back',
+            '::::SecurityChecks' => 'Security checks',
+            '::::icon:DEFAULT_ICON_LO' => 'Object',
+            '::::HtmlHeadDescription' => 'Client web page sylabe for nebule.',
+            '::::Experimental' => '[Experimental]',
+            '::::Developpement' => '[Under developpement]',
+            '::::help' => 'Help',
+            '::::Password' => 'Password',
+            '::::IDprivateKey' => 'Private ID',
+            '::::IDpublicKey' => 'Public ID',
+            '::::display:content:errorBan' => "This object is banned, it can't be displayed!",
+            '::::display:content:warningTaggedWarning' => "This object is marked as dangerous, be carfull with it's content!",
+            '::::display:content:ObjectProctected' => "This object is marked as protected!",
+            '::::display:content:warningObjectProctected' => "This object is marked as protected, be careful when it's content is displayed in public!",
+            '::::display:content:OK' => "This object is valid, it's content have been checked.",
+            '::::display:content:warningTooBig' => "This object is too big, it's content have not been checked!",
+            '::::display:content:errorNotDisplayable' => "This object can't be displayed!",
+            '::::display:content:errorNotAvailable' => "This object is not available, it can't be displayed!",
+            '::::display:content:notAnObject' => 'This reference object do not have content.',
+            '::::display:content:ObjectHaveUpdate' => 'This object have been updated to:',
+            '::::display:content:Activated' => 'This object is activated.',
+            '::::display:content:NotActivated' => 'This object is not activated.',
+            '::::display:link:OK' => 'This link is valid.',
+            '::::display:link:errorInvalid' => 'This link is invalid!',
+            '::::warn_ServNotPermitWrite' => 'This server do not permit modifications.',
+            '::::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed.',
+            '::::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            '::::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            '::::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            '::::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            '::::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            '::::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            '::::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+            '::::info_OnlySignedLinks' => 'Only signed links!',
+            '::::info_OnlyLinksFromCodeMaster' => 'Only links signed by the code master!',
+            '::::display:object:flag:protected' => 'This object is protected.',
+            '::::display:object:flag:unprotected' => 'This object is not protected.',
+            '::::display:object:flag:obfuscated' => 'This object is obfuscated.',
+            '::::display:object:flag:unobfuscated' => 'This object is not obfuscated.',
+            '::::display:object:flag:locked' => 'This entity is unlocked.',
+            '::::display:object:flag:unlocked' => 'This entity is locked.',
+            '::::display:object:flag:activated' => 'This object is activated.',
+            '::::display:object:flag:unactivated' => 'This object is not activated.',
+            '::::yes' => 'Yes',
+            '::::no' => 'No',
+            '::::lock' => 'Locking',
+            '::::unlock' => 'Unlocking',
+            '::::entity:locked' => 'Entity locked. Unlock?',
+            '::::entity:unlocked' => 'Entity unlocked. Lock?',
+        ],
+        'es-co' => [
+            '::::Welcome' => 'Bienvenido',
+            '::::INFO' => 'Information',
+            '::::OK' => 'OK',
+            '::::INFORMATION' => 'Mensaje',
+            '::::WARN' => '¡ADVERTENCIA!',
+            '::::ERROR' => '¡ERROR!',
+            '::::RESCUE' => '¡Modo de rescate!',
+            '::::GO' => 'Avanzar',
+            '::::BACK' => 'Volver atrás',
+            '::::SecurityChecks' => 'Controles de seguridad',
+            '::::icon:DEFAULT_ICON_LO' => 'Objeto',
+            '::::HtmlHeadDescription' => 'Página web cliente sylabe para nebule.',
+            '::::Experimental' => '[Experimental]',
+            '::::Developpement' => '[Under developpement]',
+            '::::help' => 'Ayuda',
+            '::::Password' => 'Contraseña',
+            '::::IDprivateKey' => 'ID privé',
+            '::::IDpublicKey' => 'ID public',
+            '::::display:content:errorBan' => "This object is banned, it can't be displayed!",
+            '::::display:content:warningTaggedWarning' => "This object is marked as dangerous, be carfull with it's content!",
+            '::::display:content:ObjectProctected' => "This object is marked as protected!",
+            '::::display:content:warningObjectProctected' => "This object is marked as protected, be careful when it's content is displayed in public!",
+            '::::display:content:OK' => "This object is valid, it's content have been checked.",
+            '::::display:content:warningTooBig' => "This object is too big, it's content have not been checked!",
+            '::::display:content:errorNotDisplayable' => "This object can't be displayed!",
+            '::::display:content:errorNotAvailable' => "This object is not available, it can't be displayed!",
+            '::::display:content:notAnObject' => 'This reference object do not have content.',
+            '::::display:content:ObjectHaveUpdate' => 'This object have been updated to:',
+            '::::display:content:Activated' => 'This object is activated.',
+            '::::display:content:NotActivated' => 'This object is not activated.',
+            '::::display:link:OK' => 'This link is valid.',
+            '::::display:link:errorInvalid' => 'This link is invalid!',
+            '::::warn_ServNotPermitWrite' => 'This server do not permit modifications.',
+            '::::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed',
+            '::::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            '::::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            '::::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            '::::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            '::::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            '::::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            '::::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+            '::::info_OnlySignedLinks' => 'Only signed links!',
+            '::::info_OnlyLinksFromCodeMaster' => 'Only links signed by the code master!',
+            '::::display:object:flag:protected' => 'Este objeto está protegido.',
+            '::::display:object:flag:unprotected' => 'Este objeto no está protegido.',
+            '::::display:object:flag:obfuscated' => 'Este objeto está oculto.',
+            '::::display:object:flag:unobfuscated' => 'Este objeto no está oculto.',
+            '::::display:object:flag:locked' => 'Esta entidad está desbloqueada.',
+            '::::display:object:flag:unlocked' => 'Esta entidad está bloqueada.',
+            '::::display:object:flag:activated' => 'Este objeto está activado.',
+            '::::display:object:flag:unactivated' => 'Este objeto no está activado.',
+            '::::yes' => 'Si',
+            '::::no' => 'No',
+            '::::lock' => 'Locking',
+            '::::unlock' => 'Unlocking',
+            '::::entity:locked' => 'Entidad bloqueada. Desbloquear?',
+            '::::entity:unlocked' => 'Entidad desbloqueada. Bloquear?',
+        ],
+    ];
 
-    /**
-     * Liste des languages supportés.
-     *
-     * @var array
-     */
-    protected $LANGUAGE_LIST = array('en-en');
+    protected bool $_useModules = false;
+    protected ?nebule $_nebuleInstance = null;
+    protected ?Applications $_applicationInstance = null;
+    protected ?ApplicationModules $_applicationModulesInstance = null;
+    protected ?Metrology $_metrologyInstance = null;
+    protected string $_currentLanguage = '';
+    protected string $_currentLanguageIcon = '';
+    protected string $_defaultLanguage = '';
+    protected array $_languageList = array();
+    protected ?Translates $_currentLanguageInstance = null;
+    protected ?Translates $_defaultLanguageInstance = null;
 
-    /**
-     * Liste des icônes des languages supportés.
-     *
-     * @var array
-     */
-    protected $LANGUAGE_ICON_LIST = array('en-en' => '7796077f1b865951946dd40ab852f6f4d21e702e7c4f47bd5fa6cb9ce94a4c5f');
-
-
-    /* ---------- ---------- ---------- ---------- ----------
-	 * Variables.
-	 *
-	 * Les valeurs par défaut sont indicatives. Ne pas les replacer.
-	 * Les variables sont systématiquement recalculées.
-	 */
-    /**
-     * Paramètre d'activation de la gestion des modules.
-     *
-     * @var boolean
-     */
-    protected $_useModules = false;
-
-    /**
-     * L'instance de la librairie nebule.
-     *
-     * @var nebule
-     */
-    protected $_nebuleInstance;
-
-    /**
-     * L'instance de l'application.
-     *
-     * @var Applications
-     */
-    protected $_applicationInstance;
-
-    /**
-     * L'instance de la métrologie.
-     *
-     * @var Metrology
-     */
-    protected $_metrologyInstance;
-
-    /**
-     * Langue sélectionnée.
-     *
-     * @var string
-     */
-    protected $_currentLanguage;
-
-    /**
-     * Icône de la langue sélectionnée.
-     *
-     * @var string
-     */
-    protected $_currentLanguageIcon;
-
-    /**
-     * Langue par défaut.
-     *
-     * @var string
-     */
-    protected $_defaultLanguage;
-
-    /**
-     * Liste des langues disponibles.
-     *
-     * @var array of string
-     */
-    protected $_languageList = array();
-
-    /**
-     * Liste des icônes des langues disponibles.
-     *
-     * @var array of string
-     */
-    protected $_languageIconList = array();
-
-    protected $_languageModuleInstanceList = array();
-    protected $_currentLanguageInstance;
-    protected $_defaultLanguageInstance;
-
-
-    /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
-    public function __construct(Applications $applicationInstance)
-    {
+    public function __construct(Applications $applicationInstance) { $this->_applicationInstance = $applicationInstance; }
+    public function __destruct() { return true; }
+    public function __toString() { return 'Traduction'; }
+    public function __sleep() { return array(); }
+    public function __wakeup() {
+        global $applicationInstance;
         $this->_applicationInstance = $applicationInstance;
     }
 
@@ -139,120 +240,30 @@ abstract class Translates
      *
      * @return void
      */
-    public function initialisation()
-    {
+    public function initialisation(): void {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_metrologyInstance->addLog('Load translates', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c845beb4');
+        $this->_applicationModulesInstance = $this->_applicationInstance->getApplicationModulesInstance();
 
-        if ($this->_applicationInstance->getUseModules())
+        if ($this->_applicationModulesInstance->getUseModules())
             $this->_useModules = true;
 
-        $this->_findLanguageModuleInstanceList();
         $this->_findDefaultLanguage();
         $this->_findLanguages();
         $this->_findCurrentLanguage();
-        $this->_findIcons();
-        $this->_findCurrentIcon();
-        $this->_initTable_DEPRECATED();
-
-        // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.
-        // Les instances interdépendantes doivent être synchronisées.
-    }
-
-    /**
-     * Fonction de suppression de l'instance.
-     *
-     * @return boolean
-     */
-    public function __destruct()
-    {
-        return true;
-    }
-
-    /**
-     * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return 'Traduction';
-    }
-
-    /**
-     * Fonction de mise en sommeil.
-     *
-     * @return array:string
-     */
-    public function __sleep()
-    {
-        return array();
-    }
-
-    /**
-     * Fonction de réveil.
-     *
-     * Récupère l'instance de la librairie nebule et de l'application.
-     *
-     * @return null
-     */
-    public function __wakeup()
-    {
-        global $applicationInstance;
-
-        $this->_applicationInstance = $applicationInstance;
-    }
-
-    /**
-     * Initialisation des variables et instances interdépendantes.
-     * @return void
-     * @todo à optimiser avec __wakeup et __sleep.
-     *
-     */
-    public function initialisation2()
-    {
-        $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load translates', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd7a202e0');
-
-        if ($this->_applicationInstance->getUseModules()) {
-            $this->_useModules = true;
-        }
-
-        $this->_findLanguageModuleInstanceList();
-        $this->_findDefaultLanguage();
-        $this->_findLanguages();
-        $this->_findCurrentLanguage();
-        $this->_findIcons();
-        $this->_findCurrentIcon();
-        $this->_initTable_DEPRECATED();
 
         // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.
         // Les instances interdépendantes doivent être synchronisées.
     }
 
 
-    protected function _findLanguageModuleInstanceList(): void {
-        $list = $this->_applicationInstance->getModulesListInstances();
-        foreach ($list as $module) {
-            if ($module->getType() == 'Traduction')
-                $this->_languageModuleInstanceList[] = $module;
-        }
-    }
 
-
-    /**
-     * Cherche la langue par défaut.
-     *
-     * @return void
-     */
-    protected function _findDefaultLanguage()
-    {
-        $this->_defaultLanguage = $this->DEFAULT_LANGUAGE;
+    protected function _findDefaultLanguage(): void {
+        $this->_defaultLanguage = self::DEFAULT_LANGUAGE;
 
         if ($this->_useModules) {
-            foreach ($this->_languageModuleInstanceList as $module) {
+            foreach ($this->_applicationModulesInstance->getModulesTranslateListInstances() as $module) {
                 if ($module->getCommandName() == $this->_defaultLanguage) {
                     $this->_defaultLanguageInstance = $module;
                 }
@@ -262,23 +273,17 @@ abstract class Translates
     }
 
 
-    /**
-     * Cherche les langues disponibles.
-     *
-     * @return void
-     */
-    protected function _findLanguages()
-    {
+    protected function _findLanguages(): void {
         if ($this->_useModules) {
-            foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
+            foreach ($this->_applicationModulesInstance->getModulesListInstances() as $module) {
                 if ($module->getType() == 'traduction') {
                     $this->_languageList[$module->getCommandName()] = $module->getCommandName();
-                    $this->_languageModuleInstanceList[$module->getCommandName()] = $module;
+                    $this->_applicationModulesInstance->getModulesTranslateListInstances()[$module->getCommandName()] = $module;
                     $this->_metrologyInstance->addLog('Find new language : ' . $module->getCommandName(), Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '7e21187d');
                 }
             }
         } else
-            $this->_languageList = $this->LANGUAGE_LIST;
+            $this->_languageList = array(self::DEFAULT_LANGUAGE);
     }
 
 
@@ -290,47 +295,40 @@ abstract class Translates
      *
      * @return void
      */
-    protected function _findCurrentLanguage()
-    {
-        // Lit et nettoye le contenu de la variable GET.
+    protected function _findCurrentLanguage(): void {
         $arg_lang = filter_input(INPUT_GET, self::DEFAULT_COMMAND_LANGUAGE, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 
-        // Test la forme.
         if ($arg_lang != ''
             && strlen($arg_lang) != 5
             && substr($arg_lang, 2, 1) != '-'
         )
             $arg_lang = '';
 
-        // Recherche un langage connu.
         $ok_lang = false;
         $lang_instance = '';
         foreach ($this->_languageList as $lang) {
             if ($arg_lang == $lang) {
                 $ok_lang = true;
                 if ($this->_useModules)
-                    $lang_instance = $this->_languageModuleInstanceList[$lang];
+                    $lang_instance = $this->_applicationModulesInstance->getModulesTranslateListInstances()[$lang];
                 break;
             }
         }
 
-        // Si le langage est connu.
         if ($ok_lang) {
-            $this->_currentLanguage = $arg_lang; // Ecrit le langage dans la variable.
+            $this->_currentLanguage = $arg_lang;
             $this->_currentLanguageInstance = $lang_instance;
-            // Ecrit le langage dans la session.
             $this->_nebuleInstance->setSessionStore($this->_applicationInstance->getClassName() . 'DisplayLanguage', $arg_lang);
         } else {
             $cache = $this->_nebuleInstance->getSessionStore($this->_applicationInstance->getClassName() . 'DisplayLanguage');
-            // S'il existe une variable de session pour le mode d'affichage, la lit.
             if ($cache !== false
                 && $cache != ''
             ) {
                 $this->_currentLanguage = $cache;
-                $this->_currentLanguageInstance = $this->_languageModuleInstanceList[$cache]; // FIXME en-en not exist
+                $this->_currentLanguageInstance = $this->_applicationModulesInstance->getModulesTranslateListInstances()[$cache]; // FIXME en-en not exist
             } else {
                 $this->_currentLanguage = $this->_defaultLanguage;
-                $this->_currentLanguageInstance = $this->_languageModuleInstanceList[$this->_defaultLanguage];
+                $this->_currentLanguageInstance = $this->_applicationModulesInstance->getModulesTranslateListInstances()[$this->_defaultLanguage];
                 $this->_nebuleInstance->setSessionStore($this->_applicationInstance->getClassName() . 'DisplayLanguage', $this->_defaultLanguage);
             }
             unset($cache);
@@ -339,159 +337,66 @@ abstract class Translates
         $this->_metrologyInstance->addLog('Find current language : ' . $this->_currentLanguage, Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '0edc11b2');
     }
 
-
-    /**
-     * Retourne la liste des langues.
-     *
-     * @return array of string
-     */
-    public function getLanguageList(): array
-    {
-        return $this->_languageList;
-    }
-
-    public function getDefaultLanguage(): string
-    {
-        return $this->_defaultLanguage;
-    }
-
-    public function getCurrentLanguage(): string
-    {
-        return $this->_currentLanguage;
-    }
-
-    public function getCurrentLanguageIcon(): string
-    {
-        return $this->_currentLanguageIcon;
-    }
-
-    public function getLanguageIcon($lang): string
-    {
-        $result = $this->_languageIconList[$this->_currentLanguage];
-        if (isset($this->_languageIconList[$lang]))
-            $result = $this->_languageIconList[$lang];
-        return $result;
-    }
-
-    public function getLanguageModuleInstanceList()
-    {
-        return $this->_languageModuleInstanceList;
-    }
-
-    public function getCurrentLanguageInstance()
-    {
-        return $this->_currentLanguageInstance;
-    }
-
-    public function getDefaultLanguageInstance()
-    {
-        return $this->_defaultLanguageInstance;
-    }
+    public function getLanguageList(): array { return $this->_languageList; }
+    public function getDefaultLanguage(): string { return $this->_defaultLanguage; }
+    public function getCurrentLanguage(): string { return $this->_currentLanguage; }
+    public function getCurrentLanguageIcon(): string { return $this->_currentLanguageIcon; }
+    public function getLanguageModuleInstanceList(): array { return $this->_applicationModulesInstance->getModulesTranslateListInstances(); }
+    public function getCurrentLanguageInstance(): Translates { return $this->_currentLanguageInstance; }
+    public function getDefaultLanguageInstance(): Translates  { return $this->_defaultLanguageInstance; }
 
 
-    /**
-     * La traduction de textes recherche une traduction pour le langage en cours.
-     * Sans module :
-     * 1) Recherche le texte traduit dans le langage courant.
-     * 2) Si aucune traduction n'est trouvée, retourne le texte traduit dans le langage par défaut.
-     * 3) Si aucune traduction n'est trouvée, retourne le texte non traduit.
-     * Avec modules :
-     * 1) Recherche le texte traduit le module de traduction pour le langage courant.
-     * 2) Si pas trouvé, recherche dans le module utilisé à l'affichage pour le langage courant.
-     * 3) Si pas trouvé, recherche dans le module de traduction pour le langage par défaut.
-     * 4) Si pas trouvé, recherche dans le module utilisé à l'affichage pour le langage par défaut.
-     * 5) Si pas trouvé, recherche dans tous les modules disponibles pour le langage courant.
-     * 6) Si pas trouvé, recherche dans tous les modules disponibles pour le langage par défaut.
-     * 7) Si pas trouvé, retourne le texte d'origine.
-     * Un module, s'il n'est pas dédié à la traduction, ne doit prendre en charge que la translation des textes
-     *   qui le concerne. Mais il peut traduire ces textes dans plusieurs langues.
-     * Un texte qui commence par '<' est considéré comme une balise et n'est pas traduit.
-     *
-     * @param string $text
-     * @param string $lang
-     * @return string
-     */
-    public function getTranslate(string $text, string $lang = ''): string
-    {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('translate : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $result = trim(filter_var($text, FILTER_SANITIZE_STRING));
+    public function getTranslate(string $text, string $lang = ''): string {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('translate (' . $lang .  ') : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        // Sélectionne le langage de traduction.
         if ($lang == '')
             $lang = $this->_currentLanguage;
 
-        // Si le texte est une balise, comme par '<', ne fait pas la traduction.
         if (substr($text, 0, 1) == '<')
+            return $text;
+
+        if (substr($text, 0, 4) == '::::' && isset(Translates::TRANSLATE_TABLE[$lang][$text]))
+            return Translates::TRANSLATE_TABLE[$lang][$text];
+        if (substr($text, 0, 3) == ':::' && isset(Translate::TRANSLATE_TABLE[$lang][$text]))
+            return Translate::TRANSLATE_TABLE[$lang][$text];
+        if (substr($text, 0, 2) == '::' && isset($this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[$lang][$text]))
+            return $this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[$lang][$text];
+
+        $result = $this->_getTranslateFromModules($text, $lang);
+        if ($result != '')
             return $result;
 
-        if (!$this->_useModules)
-            $result = $this->_getTranslateWithoutModules($text, $lang);
-        else
-            $result = $this->_getTranslateWithModules($text, $lang);
+        if ($lang == self::DEFAULT_LANGUAGE)
+            return $text;
 
-        $this->_metrologyInstance->addLog('End find traduction : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8bc50088');
-        return $result;
-    }
+        if (substr($text, 0, 4) == '::::' && isset(Translates::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text]))
+            return Translates::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];
+        if (substr($text, 0, 3) == ':::' && isset(Translate::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text]))
+            return Translate::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];
+        if (substr($text, 0, 2) == '::' && isset($this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text]))
+            return $this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];
 
-    private function _getTranslateWithoutModules(string $text, string $lang): string {
-        $result = '';
-        if (isset(self::TRANSLATE_TABLE[$lang][$text]))
-            $result = self::TRANSLATE_TABLE[$lang][$text];
-        elseif (isset(self::TRANSLATE_TABLE[$this->_defaultLanguage][$text]))
-            $result = self::TRANSLATE_TABLE[$this->_defaultLanguage][$text];
-        return $result;
-    }
-
-    private function _getTranslateWithModules(string $text, string $lang): string {
-        // 1) Appel le module de traduction avec la langue en cours.
-        $result = $this->_getTranslateFromModules($text, $lang);
-
-        // 2) Si rien trouvé, appel le module d'affichage en cours avec la langue en cours.
-        if ($result == '')
-            $result = $this->_getTranslateFromDisplayModules($text, $lang);
-
-        // 3) Si rien trouvé, appel le module de traduction avec la langue par défaut.
-        if ($result == '')
-            $result = $this->_getTranslateFromModulesWithDefault($text, $lang);
-
-        // 4) Si rien trouvé, appel le module d'affichage en cours avec la langue par défaut.
-        if ($result == '')
-            $result = $this->_getTranslateFromDisplayModulesWithDefault($text, $lang);
-
-        // 5) Si rien trouvé, appel tous les modules avec la langue en cours.
-        if ($result == '')
-            $result = $this->_getTranslateFromAllModules($text, $lang);
-
-        // 6) Si rien trouvé, appel tous les modules avec la langue par défaut.
-        if ($result == '')
-            $result = $this->_getTranslateFromAllModulesWithDefault($text, $lang);
-
-        // 7) Par défaut si rien trouvé renvoie le texte originel.
-        if ($result == '') {
-            $result = $text;
-            $this->_metrologyInstance->addLog('no translate, keep same value : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '74bd1f3a');
-        }
-
-        return $result;
+        $this->_metrologyInstance->addLog('no translate, keep same value : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '74bd1f3a');
+        return $text;
     }
 
     private function _getTranslateFromModules(string $text, string $lang): string {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('translate (' . $lang .  ') : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $result = '';
-        foreach ($this->_languageModuleInstanceList as $module) {
-            if ($module->getCommandName() == $lang) {
-                $result = $module->getTraduction($text, $lang);
-                $this->_metrologyInstance->addLog('module 1 find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '65349a7b');
+        foreach ($this->_applicationModulesInstance->getModulesTranslateListInstances() as $module) {
+            if ($module->getCommandName() == $lang && isset($module::TRANSLATE_TABLE[$lang][$text])) {
+                $result = $module::TRANSLATE_TABLE[$lang][$text];
+                $this->_metrologyInstance->addLog('find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '65349a7b');
             }
         }
-        if ($result == $text)
-            $result = '';
         return $result;
     }
 
     private function _getTranslateFromDisplayModules(string $text, string $lang): string {
-        if (!is_a($this->_applicationInstance->getCurrentModuleInstance(), '\Nebule\Library\Modules'))
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('translate (' . $lang .  ') : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!is_a($this->_applicationModulesInstance->getCurrentModuleInstance(), '\Nebule\Library\Modules'))
             return '';
-        $result = $this->_applicationInstance->getCurrentModuleInstance()->getTranslateInstance($text, $lang);
+        $result = $this->_applicationModulesInstance->getCurrentModuleInstance()->getTranslateInstance($text, $lang);
         $this->_metrologyInstance->addLog('module 2 find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8811cb6a');
         if ($result == $text)
             $result = '';
@@ -499,10 +404,11 @@ abstract class Translates
     }
 
     private function _getTranslateFromModulesWithDefault(string $text, string $lang): string {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('translate (' . $lang .  ') : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($lang == $this->_defaultLanguage)
             return '';
         $result = '';
-        foreach ($this->_languageModuleInstanceList as $module) {
+        foreach ($this->_applicationModulesInstance->getModulesTranslateListInstances() as $module) {
             if ($module->getCommandName() == $this->_defaultLanguage) {
                 $result = $module->getTraduction($text, $this->_defaultLanguage);
                 $this->_metrologyInstance->addLog('module 3 find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'de331d22');
@@ -514,11 +420,12 @@ abstract class Translates
     }
 
     private function _getTranslateFromDisplayModulesWithDefault(string $text, string $lang): string {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('translate (' . $lang .  ') : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($lang == $this->_defaultLanguage)
             return '';
-        if (!is_a($this->_applicationInstance->getCurrentModuleInstance(), '\Nebule\Library\Modules'))
+        if (!is_a($this->_applicationModulesInstance->getCurrentModuleInstance(), '\Nebule\Library\Modules'))
             return '';
-        $result = $this->_applicationInstance->getCurrentModuleInstance()->getTranslateInstance($text, $this->_defaultLanguage);
+        $result = $this->_applicationModulesInstance->getCurrentModuleInstance()->getTranslateInstance($text, $this->_defaultLanguage);
         $this->_metrologyInstance->addLog('module 4 find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c9a49d75');
         if ($result == $text)
             $result = '';
@@ -526,8 +433,9 @@ abstract class Translates
     }
 
     private function _getTranslateFromAllModules(string $text, string $lang): string {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('translate (' . $lang .  ') : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $result = '';
-        foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
+        foreach ($this->_applicationModulesInstance->getModulesListInstances() as $module) {
             $result = $module->getTranslateInstance($text, $lang);
             $this->_metrologyInstance->addLog('module 5 find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e25be65f');
             if ($result != $text)
@@ -539,10 +447,11 @@ abstract class Translates
     }
 
     private function _getTranslateFromAllModulesWithDefault(string $text, string $lang): string {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('translate (' . $lang .  ') : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($lang == $this->_defaultLanguage)
             return '';
         $result = '';
-        foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
+        foreach ($this->_applicationModulesInstance->getModulesListInstances() as $module) {
             $result = $module->getTranslateInstance($text, $this->_defaultLanguage);
             $this->_metrologyInstance->addLog('module 6 find translate : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '5b607293');
             if ($result != $text)
@@ -551,81 +460,5 @@ abstract class Translates
         if ($result == $text)
             $result = '';
         return $result;
-    }
-
-    /**
-     * Affiche un texte préalablement traduit.
-     * Le texte peut se voir forcé sa couleur.
-     * Certaines séquences peuvent être remplacées par des valeurs, les arguments.
-     *
-     * @param string      $text
-     * @param string      $arg1
-     * @param string      $arg2
-     * @param string      $arg3
-     * @param string      $arg4
-     * @param string      $arg5
-     * @param string      $arg6
-     * @param string      $arg7
-     * @param string      $arg8
-     * @param string|null $arg9
-     * @return void
-     */
-    public function echoTranslate(string $text,
-                                  string $arg1 = '',
-                                  string $arg2 = '',
-                                  string $arg3 = '',
-                                  string $arg4 = '',
-                                  string $arg5 = '',
-                                  string $arg6 = '',
-                                  string $arg7 = '',
-                                  string $arg8 = '',
-                                  string $arg9 = '')
-    {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('translate : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        echo sprintf($this->getTranslate($text), $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9);
-    }
-
-    protected function _findIcons()
-    {
-        if ($this->_useModules) {
-            foreach ($this->_languageModuleInstanceList as $module)
-                $this->_languageIconList[$module->getCommandName()] = $module->getLogo();
-        } else
-            $this->_languageIconList = $this->LANGUAGE_ICON_LIST;
-    }
-
-    protected function _findCurrentIcon()
-    {
-        $this->_currentLanguageIcon = $this->_languageIconList[$this->_currentLanguage];
-    }
-
-
-    /**
-     * Table des traductions.
-     *
-     * @var array
-     */
-    protected $_table = array();
-
-    CONST TRANSLATE_TABLE = [
-        'fr-fr' => [
-            '::Welcome' => 'Bienvenue',
-        ],
-        'en-en' => [
-            '::Welcome' => 'Welcome',
-        ],
-        'es-co' => [
-            '::Welcome' => 'Bienvenido',
-        ],
-    ];
-
-    /**
-     * Initialisation de la table de traduction.
-     *
-     * @return void
-     */
-    protected function _initTable_DEPRECATED()
-    {
-        $this->_table = self::TRANSLATE_TABLE;
     }
 }

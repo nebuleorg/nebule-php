@@ -31,94 +31,20 @@ abstract class Applications implements applicationInterface
     const APPLICATION_NODE = 'undef';
     const APPLICATION_CODING = 'application/x-httpd-php';
 
-    /* ---------- ---------- ---------- ---------- ----------
-	 * Variables.
-	 *
-	 * Les valeurs par défaut sont indicatives. Ne pas les replacer.
-	 * Les variables sont systématiquement recalculées.
-	 */
-    /**
-     * Instance en cours (application).
-     *
-     * @var Applications
-     */
-    protected $_applicationInstance = null;
-
-    /**
-     * @var string
-     */
-    protected $_applicationNamespace = null;
-
-    /**
-     * Instance de la librairie en cours.
-     *
-     * @var nebule
-     */
-    protected $_nebuleInstance = null;
-
-    /**
-     * Instance de gestion de la configuration et des options.
-     *
-     * @var Configuration
-     */
-    protected $_configurationInstance = null;
-
-    /**
-     * Instance de la métrologie.
-     *
-     * @var Metrology
-     */
-    protected $_metrologyInstance = null;
-
-    /**
-     * Instance de l'affichage de l'application.
-     *
-     * @var Displays
-     */
-    protected $_displayInstance = null;
-
-    /**
-     * Instance des actions de l'application.
-     *
-     * @var Actions
-     */
-    protected $_actionInstance = null;
-
-    /**
-     * Instance de traduction linguistique de l'application.
-     *
-     * @var Translates
-     */
-    protected $_translateInstance = null;
-
-    /**
-     * Paramètre d'activation de la gestion des modules dans l'application et la traduction.
-     *
-     * Par défault les applications n'utilisent pas les modules.
-     *
-     * @var boolean
-     */
-    protected $_useModules = false;
-
-    /**
-     * Paramètre d'activation de la gestion des modules externes (dans des objets) dans l'application et la traduction.
-     *
-     * Par défault les applications n'utilisent pas les modules externes.
-     *
-     * Si false, ne charge pas les modules de traduction.
-     *
-     * @var boolean
-     */
-    protected $_useExternalModules = false;
+    protected ?Applications $_applicationInstance = null;
+    protected ?nebule $_nebuleInstance = null;
+    protected ?Configuration $_configurationInstance = null;
+    protected ?Metrology $_metrologyInstance = null;
+    protected ?Displays $_displayInstance = null;
+    protected ?Actions $_actionInstance = null;
+    protected ?Translates $_translateInstance = null;
+    protected ?ApplicationModules $_applicationModulesInstance = null;
+    protected string $_applicationNamespace = '';
+    protected bool $_useModules = false;
+    protected bool $_useTranslateModules = true;
+    protected bool $_useExternalModules = false;
 
 
-    
-    /**
-     * Constructeur.
-     *
-     * @param nebule $nebuleInstance
-     * @return void
-     */
     public function __construct(nebule $nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
@@ -126,11 +52,6 @@ abstract class Applications implements applicationInterface
         $this->_applicationNamespace = '\\Nebule\\Application\\' . strtoupper(substr(static::APPLICATION_NAME, 0, 1)) . strtolower(substr(static::APPLICATION_NAME, 1));
     }
 
-    /**
-     * Initialisation des variables et instances.
-     *
-     * @return void
-     */
     public function initialisation(): void
     {
         global $applicationTranslateInstance, $applicationDisplayInstance, $applicationActionInstance; // FIXME maybe without global vars ?
@@ -147,227 +68,49 @@ abstract class Applications implements applicationInterface
         $this->_translateInstance = $applicationTranslateInstance;
         $this->_displayInstance = $applicationDisplayInstance;
         $this->_actionInstance = $applicationActionInstance;
+        $this->_applicationModulesInstance = new ApplicationModules($this, $this->_listInternalModules);
 
         $this->_loadModules();
     }
 
-    /**
-     * Fonction de suppression de l'instance.
-     *
-     * @return boolean
-     */
-    public function __destruct()
-    {
-        return true;
-    }
-
-    /**
-     * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
-     *
-     * @return string
-     */
-    public function __toString(): string
-    {
-        global $applicationName;
-        return $applicationName;
-    }
-
-    /**
-     * Fonction de mise en sommeil.
-     *
-     * Vide par défaut, est remplacé par l'application.
-     *
-     * @return array:string
-     */
-    public function __sleep(): array
-    {
-        return array();
-    }
-
-    /**
-     * Fonction de réveil.
-     *
-     * Récupère l'instance de la librairie nebule.
-     *
-     * @return void
-     */
+    public function __destruct() { return true; }
+    public function __toString(): string { return static::class; }
+    public function __sleep(): array { return array(); }
     public function __wakeup()
     {
         global $nebuleInstance;
-
         $this->_nebuleInstance = $nebuleInstance;
         $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
     }
 
 
-    /**
-     * Retourne le nom de la classe de l'application.
-     *
-     * @return string
-     */
-    public function getClassName(): string
-    {
-        //global $applicationName;
-        //return $applicationName;
-        return static::class;
-    }
+    public function getClassName(): string { return static::class; }
+    public function getName(): string { return static::APPLICATION_NAME; }
+    public function getNamespace(): string { return $this->_applicationNamespace; }
+    public function getNebuleInstance(): nebule { return $this->_nebuleInstance; }
+    public function getDisplayInstance(): Displays { return $this->_displayInstance; }
+    public function getTranslateInstance(): Translates { return $this->_translateInstance; }
+    public function getMetrologyInstance(): Metrology { return $this->_metrologyInstance; }
+    public function getActionInstance(): Actions { return $this->_actionInstance; }
+    public function getApplicationModulesInstance(): ApplicationModules { return $this->_applicationModulesInstance; }
+    public function getCurrentObjectID(): string { return $this->_nebuleInstance->getCurrentObject(); }
+    public function getCurrentObjectInstance(): Node { return $this->_nebuleInstance->getCurrentObjectInstance(); }
+    public function getUseModules(): bool { return $this->_useModules; }
+    public function getUseTranslateModules(): bool { return $this->_useTranslateModules; }
+    public function getUseExternalModules(): bool { return $this->_useExternalModules; }
 
-    /**
-     * Get the app name.
-     * @return string
-     */
-    public function getName(): string
-    {
-        return static::APPLICATION_NAME;
-    }
-
-    /**
-     * Get the app namespace.
-     * @return string
-     */
-    public function getNamespace(): string
-    {
-        return $this->_applicationNamespace;
-    }
-
-    /**
-     * Lit l'instance de la librairie nebule.
-     *
-     * @return nebule
-     */
-    public function getNebuleInstance(): nebule
-    {
-        return $this->_nebuleInstance;
-    }
-
-    /**
-     * Lit l'instance d'affichage de l'application.
-     *
-     * @return Displays
-     */
-    public function getDisplayInstance(): Displays
-    {
-        return $this->_displayInstance;
-    }
-
-    /**
-     * Lit l'instance de traduction linguistique de l'application.
-     *
-     * @return Translates
-     */
-    public function getTranslateInstance(): Translates
-    {
-        return $this->_translateInstance;
-    }
-
-    /**
-     * Lit l'instance de métrologie.
-     *
-     * @return Metrology
-     */
-    public function getMetrologyInstance(): Metrology
-    {
-        return $this->_metrologyInstance;
-    }
-
-    /**
-     * Lit l'instance des actions de l'application.
-     *
-     * @return Actions
-     */
-    public function getActionInstance(): Actions
-    {
-        return $this->_actionInstance;
-    }
-
-    /**
-     * Retourne l'objet en cours d'utilisation.
-     *
-     * @return string
-     */
-    public function getCurrentObjectID(): string
-    {
-        return $this->_nebuleInstance->getCurrentObject();
-    }
-
-    /**
-     * Retourne l'instance de l'objet en cours d'utilisation.
-     *
-     * @return Node
-     */
-    public function getCurrentObjectInstance(): Node
-    {
-        return $this->_nebuleInstance->getCurrentObjectInstance();
-    }
-
-    /**
-     * Retourne si les modules sont activés dans l'application.
-     *
-     * @return bool
-     */
-    public function getUseModules(): bool
-    {
-        return $this->_useModules;
-    }
-
-    /**
-     * Retourne si les modules externes sont activés dans l'application.
-     *
-     * @return bool
-     */
-    public function getUseExternalModules(): bool
-    {
-        return $this->_useExternalModules;
-    }
-
-
-    /**
-     * Recherche toutes les données nécessaires aux applications.
-     *
-     * @return void
-     */
     protected function _findEnvironment(): void
     {
         $this->_findURL();
         $this->_findCurrentEntity();
     }
 
-    /**
-     * Le protocol de l'URL HTTP demandée.
-     *
-     * @var string
-     */
-    protected $_urlProtocol;
-    /**
-     * Le nom de serveur public de l'URL HTTP demandée.
-     *
-     * @var string
-     */
-    protected $_urlHost;
-    /**
-     * Le nom de fichier de l'URL HTTP demandée.
-     *
-     * @var string
-     */
-    protected $_urlBasename;
-    /**
-     * Le chemin de l'URL HTTP demandée.
-     *
-     * @var string
-     */
-    protected $_urlPath;
-    /**
-     * Le nom de serveur public de l'URL HTTP demandée.
-     *
-     * @var string
-     */
-    protected $_urlHostname;
+    protected string $_urlProtocol;
+    protected string $_urlHost;
+    protected string $_urlBasename;
+    protected string $_urlPath;
+    protected string $_urlHostname;
 
-    /**
-     * Extrait l'URL de connexion au serveur.
-     *
-     * @return void
-     */
     protected function _findURL(): void
     {
         if (isset($_SERVER['HTTPS'])
@@ -384,58 +127,34 @@ abstract class Applications implements applicationInterface
         $this->_urlHostname = $this->_urlProtocol . '://' . $this->_urlHost . $this->_urlPath;
     }
 
-    /**
-     * Retourne le protocol de l'URL HTTP demandée.
-     *
-     * @return string
-     */
     public function getUrlProtocol(): string
     {
         return $this->_urlProtocol;
     }
 
-    /**
-     * Retourne le nom de serveur public de l'URL HTTP demandée.
-     *
-     * @return string
-     */
     public function getUrlHost(): string
     {
         return $this->_urlHost;
     }
 
-    /**
-     * Retourne le chemin de l'URL HTTP demandée.
-     *
-     * @return string
-     */
     public function getUrlBasename(): string
     {
         return $this->_urlBasename;
     }
 
-    /**
-     * Retourne le nom de serveur public de l'URL HTTP demandée.
-     *
-     * @return string
-     */
     public function getUrlPath(): string
     {
         return $this->_urlPath;
     }
 
-    /**
-     * Extrait l'URL de connexion au serveur.
-     *
-     * @return string
-     */
     public function getUrlHostname(): string
     {
         return $this->_urlHostname;
     }
 
 
-    protected $_currentEntity, $_currentEntityInstance;
+    protected string $_currentEntityOID;
+    protected ?Node $_currentEntityInstance;
 
     /**
      * Recherche l'entité en cours d'utilisation.
@@ -453,17 +172,17 @@ abstract class Applications implements applicationInterface
                 || $this->_nebuleInstance->getIoInstance()->checkLinkPresent($arg_ent)
             )
         ) {
-            $this->_currentEntity = $arg_ent;
+            $this->_currentEntityOID = $arg_ent;
             $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($arg_ent);
             $this->_nebuleInstance->setSessionStore('sylabeSelectedEntity', $arg_ent);
         } else {
             $cache = $this->_nebuleInstance->getSessionStore('sylabeSelectedEntity');
             if ($cache !== false && $cache != '') {
-                $this->_currentEntity = $cache;
+                $this->_currentEntityOID = $cache;
                 $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($cache);
             } else
             {
-                $this->_currentEntity = $this->_nebuleInstance->getCurrentEntity();
+                $this->_currentEntityOID = $this->_nebuleInstance->getCurrentEntity();
                 $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($this->_nebuleInstance->getCurrentEntity());
                 $this->_nebuleInstance->setSessionStore('sylabeSelectedEntity', $this->_nebuleInstance->getCurrentEntity());
             }
@@ -474,7 +193,7 @@ abstract class Applications implements applicationInterface
 
     public function getCurrentEntityID(): string
     {
-        return $this->_currentEntity;
+        return $this->_currentEntityOID;
     }
 
     public function getCurrentEntityInstance(): Node
@@ -605,120 +324,25 @@ abstract class Applications implements applicationInterface
     }
 
 
-    /**
-     * Liste des noms des modules internes à l'application.
-     * Cette liste est à fournir par l'application en cours.
-     *
-     * Ces modules ne sont pas des objets à part entière, mais ils sont intégrés à l'objet de l'application.
-     *
-     * @var array of string
-     */
-    protected $_listInternalModules = array();
+    // TODO finir l'export de la gestion des modules dans la classe ApplicationModules.
+    protected array $_listInternalModules = array();
+    protected array $_listExternalModules = array();
+    protected array $_listModulesName = array();
+    protected array $_listModulesInstance = array();
+    protected array $_listModulesSignerRID = array();
+    protected array $_listModulesInitRID = array();
+    protected array $_listModulesRID = array();
+    protected array $_listModulesTranslateRID = array();
+    protected array $_listModulesTranslateOID = array();
+    protected array $_listModulesTranslateInstance = array();
+    protected array $_listModulesID = array();
+    protected array $_listModulesValid = array();
+    protected array $_listModulesEnabled = array();
+    protected ?Modules $_currentModuleInstance = null;
+    protected bool $_loadModulesOK = false;
 
-    /**
-     * Liste des noms des modules externes à l'application.
-     * Cette liste est à fournir par l'application en cours.
-     *
-     * C'est la liste des modules que la librairie va charger pour une application donnée.
-     *
-     * Ces modules sont des objets à part entière, ils doivent être trouvés avant le chargement de l'application.
-     *
-     * @var array of string
-     */
-    protected $_listExternalModules = array();
-
-    /**
-     * Liste des noms des modules chargés.
-     * Trié par ordre numérique d'arrivée.
-     *
-     * @var array of string
-     */
-    protected $_listModulesName = array();
-
-    /**
-     * Liste des instances des modules chargés.
-     * Trié par noms de modules.
-     *
-     * @var array of Modules
-     */
-    protected $_listModulesInstance = array();
-
-    /**
-     * Liste des signataires des modules (RID).
-     * Trié par noms de modules.
-     * A 0 si le module est chargé par défaut.
-     *
-     * @var array of string
-     */
-    protected $_listModulesSignerRID = array();
-
-    /**
-     * Liste des ID originaux (de référence) des modules chargés.
-     * Trié par noms de modules.
-     * A 0 si le module est chargé par défaut.
-     *
-     * @var array of string
-     */
-    protected $_listModulesInitRID = array();
-
-    /**
-     * Liste des ID de référence finaux des modules chargés.
-     * Trié par noms de modules.
-     * A 0 si le module est chargé par défaut.
-     *
-     * @var array of string
-     */
-    protected $_listModulesRID = array();
-
-    /**
-     * Liste des ID mis à jour des modules chargés.
-     * Trié par noms de modules.
-     * A 0 si le module est chargé par défaut.
-     *
-     * @var array of string
-     */
-    protected $_listModulesID = array();
-
-    /**
-     * Liste la validité des modules chargés.
-     * Trié par noms de modules.
-     *
-     * @var array of string
-     */
-    protected $_listModulesValid = array();
-
-    /**
-     * Liste l'activation des modules chargés.
-     * Trié par noms de modules.
-     *
-     * @var array of string
-     */
-    protected $_listModulesEnabled = array();
-
-    /**
-     * Le module en cours d'utilisation.
-     * Cette variable ne peut pas être initialisée avec l'instance de l'application
-     *   parce qu'il faut l'instance Display qui n'est pas encore prête.
-     *
-     * @var Modules
-     */
-    protected $_currentModuleInstance = null;
-
-    /**
-     * Variable de suivi du chargement des modules pour éviter des doublons.
-     *
-     * @var boolean
-     */
-    protected $_loadModulesOK = false;
-
-    /**
-     * Chargement des modules.
-     *
-     * @return void
-     */
-    protected function _loadModules(): void
-    {
-        if ($this->_loadModulesOK)
+    protected function _loadModules(): void {
+        /*if ($this->_loadModulesOK)
             return;
         $this->_loadModulesOK = true;
 
@@ -726,8 +350,15 @@ abstract class Applications implements applicationInterface
             $this->_metrologyInstance->addLog('Do not load internal modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bcc98872');
             return;
         }
-
         $this->_loadDefaultModules();
+
+        if (!$this->_useTranslateModules) {
+            $this->_metrologyInstance->addLog('Do not load external translate modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b2f83669');
+            return;
+        }
+        $this->_listModulesTranslateRID = $this->_findModulesTranslateRID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_TRANSLATE);
+        $this->_listModulesTranslateOID = $this->_findModulesTranslateUpdateID();
+        $this->_listModulesTranslateInstance = $this->_initModulesTranslate();
 
         if (!$this->_useExternalModules) {
             $this->_metrologyInstance->addLog('Do not load external modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7b3af452');
@@ -736,19 +367,12 @@ abstract class Applications implements applicationInterface
 
         $this->_findModulesRID();
         $this->_findModulesUpdateID();
-        $this->_initModules();
+        $this->_initModules();*/
     }
 
-    /**
-     * Charge et initialise les modules internes par défaut.
-     *
-     * @return void
-     */
-    protected function _loadDefaultModules(): void
-    {
-        if (!$this->_useModules)
+    protected function _loadDefaultModules(): void {
+        /*if (!$this->_useModules)
             return;
-
         $this->getMetrologyInstance()->addLog('Load default modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '93eb59aa');
 
         foreach ($this->_listInternalModules as $moduleName) {
@@ -764,38 +388,62 @@ abstract class Applications implements applicationInterface
             $this->_listModulesSignerRID[$moduleFullName] = '0';
             $this->_listModulesValid[$moduleFullName] = true;
         }
-
-        $this->_metrologyInstance->addLog('Default modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '050783df');
+        $this->_metrologyInstance->addLog('Default modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '050783df');*/
     }
 
-    /**
-     * Recherche les ID de référence des modules externes configurés.
-     * Extrait la liste des modules depuis les liens de l'objet de référence.
-     *
-     * @return void
-     */
+    protected function _findModulesTranslateRID(string $rid): array {
+        global $bootstrapApplicationIID;
+
+        $result = array();
+        /*$object = new Node($this->_nebuleInstance, $bootstrapApplicationIID);
+        $hashRef = $this->_nebuleInstance->getCryptoInstance()->hash($rid);
+        $links = $object->getLinksOnFields('', '', 'f', $bootstrapApplicationIID, '', $hashRef);
+
+        foreach ($links as $link) {
+            $module = $link->getParsed()['bl/rl/nid2'];
+            foreach ($this->_nebuleInstance->getLocalAuthorities() as $authority) {
+                if (isset($link->getParsed()['bs/rs1/eid'])
+                    && $link->getParsed()['bs/rs1/eid'] == $authority
+                    && $module != '0'
+                    && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($module)
+                ) {
+                    $this->getMetrologyInstance()->addLog('Find modules translate ' . $module, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8babe773');
+                    $result[$module] = $module;
+                    $this->_listModulesSignerRID[$module] = $link->getParsed()['bs/rs1/eid'];
+                    break;
+                }
+            }
+        }*/
+        return $result;
+    }
+
+    protected function _findModulesTranslateUpdateID(): array {
+        return array(); // TODO
+    }
+
+    protected function _initModulesTranslate(): array {
+        return array(); // TODO
+    }
+
     protected function _findModulesRID(): void
     {
-        global $bootstrapApplicationIID;
+        /*global $bootstrapApplicationIID;
 
         if (!$this->_useModules || !$this->_useExternalModules)
             return;
 
         $this->getMetrologyInstance()->addLog('Find option modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '226ce8be');
 
-        // Extrait les modules référencés.
         $object = $this->_nebuleInstance->newObject($bootstrapApplicationIID);
-        $hashRef = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
+        $hashRef = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
         $links = $object->getLinksOnFields('', '', 'f', $bootstrapApplicationIID, '', $hashRef);
 
-        // Lit les ID des modules.
         foreach ($links as $link) {
-            // Filtre sur le signataire.
             $ok = false;
             $module = $link->getParsed()['bl/rl/nid2'];
-            foreach ($this->_nebuleInstance->getLocalAuthorities() as $autority) {
+            foreach ($this->_nebuleInstance->getLocalAuthorities() as $authority) {
                 if (isset($link->getParsed()['bs/rs1/eid'])
-                    && $link->getParsed()['bs/rs1/eid'] == $autority
+                    && $link->getParsed()['bs/rs1/eid'] == $authority
                     && $module != '0'
                     && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($module)
                 ) {
@@ -808,18 +456,12 @@ abstract class Applications implements applicationInterface
                 $this->_listModulesInitRID[$module] = $module;
                 $this->_listModulesSignerRID[$module] = $link->getParsed()['bs/rs1/eid'];
             }
-        }
+        }*/
     }
 
-    /**
-     * Recherche les mises à jour des modules externes à partir des ID de référence.
-     * @return void
-     * @todo
-     *
-     */
     protected function _findModulesUpdateID(): void
     {
-        if (!$this->_useModules || !$this->_useExternalModules)
+        /*if (!$this->_useModules || !$this->_useExternalModules)
             return;
 
         $this->getMetrologyInstance()->addLog('Find modules updates', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '19029717');
@@ -852,8 +494,8 @@ abstract class Applications implements applicationInterface
             // Cherche une mise à jour.
             $updateModule = $moduleID;
             if ($okNotListed) {
-                $updateModule = $instanceModule->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES, 'authority');
-                $updateSigner = $instanceModule->getReferencedSignerID(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES, 'authority');
+                $updateModule = $instanceModule->getReferencedObjectID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES, 'authority');
+                $updateSigner = $instanceModule->getReferencedSignerID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES, 'authority');
             }
             if ($updateModule != $moduleID
                 && $updateModule != '0'
@@ -922,39 +564,24 @@ abstract class Applications implements applicationInterface
                 $this->_listModulesValid[$name] = false;
             }
             $this->getMetrologyInstance()->addLog('End load module ' . $moduleID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ef4207a5');
-        }
+        }*/
     }
 
-    /**
-     * Recherche le nom de la classe dans un objet.
-     *
-     * @param string $id
-     * @return null|string
-     */
-    protected function _getObjectClassName(string $id): ?string
+    /*protected function _getObjectClassName(string $id): ?string
     {
         $readValue = $this->_nebuleInstance->getIoInstance()->getObject($id);
         $startValue = strpos($readValue, 'class');
         $trimLine = substr($readValue, $startValue, 128);
         $arrayValue = explode(' ', $trimLine);
         return $arrayValue[1];
-    }
+    }*/
 
-    /**
-     * Load and init external modules for the application.
-     * Some modules are loaded before by default with _loadDefaultModules() depending on the list '_listInternalModules' give by le app.
-     *
-     * TODO gérer le chargement uniquement des modules listés dans _listExternalModules, si disponibles.
-     * TODO prévoir un renforcement de la recherche avec les RID des modules...
-     *
-     * @return void
-     */
     protected function _initModules(): void
     {
-        if (!$this->_useModules || !$this->_useExternalModules)
+        /*if (!$this->_useModules || !$this->_useExternalModules)
             return;
 
-        $this->getMetrologyInstance()->addLog('Load optionals modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2df08836');
+        $this->getMetrologyInstance()->addLog('load optionals modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2df08836');
 
         // Liste toutes les classes module* et les charges une à une.
         $list = get_declared_classes();
@@ -964,7 +591,7 @@ abstract class Applications implements applicationInterface
             $moduleFullName = '\\' . $class;
             $moduleNamespace = preg_replace('/(.+\W)\w+/', '$1', $class);
             $moduleName = preg_replace('/.+\W(\w+)/', '$1', $class);
-            $this->getMetrologyInstance()->addLog('Find on list ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9a744ec7');
+            $this->getMetrologyInstance()->addLog('find on list class=' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9a744ec7');
             // Ne regarde que les classes qui sont des modules d'après le nom.
             if (substr('\\' . $class, 0, $sizeModuleHead) == $searchModuleHead
                 && ($moduleNamespace == $this->_applicationNamespace || $moduleNamespace == 'Nebule\\Modules\\')
@@ -981,28 +608,26 @@ abstract class Applications implements applicationInterface
 
                 // Vérifie si c'est une dépendance de la classe Modules.
                 if (is_a($instance, 'Nebule\\Library\\Modules')) {
-                    $this->getMetrologyInstance()->addLog('Loaded module ' . $moduleFullName, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '130bc586');
+                    $this->getMetrologyInstance()->addLog('loaded module ' . $moduleFullName, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '130bc586');
                     $instance->initialisation();
                     $this->_listModulesName[$moduleName] = $moduleFullName;
                     $this->_listModulesInstance[$moduleFullName] = $instance;
                     $this->_listModulesEnabled[$moduleFullName] = true; // @todo à revoir...
+                    if ($instance->getType() == 'Traduction') {
+                        $this->_metrologyInstance->addLog('add translate module', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '6770ac3f');
+                        $this->_listModulesTranslateInstance[$moduleFullName] = $instance;
+                    }
                 }
             }
         }
 
-        $this->_metrologyInstance->addLog('Optionals modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '0237217e');
+        $this->_metrologyInstance->addLog('Optionals modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '0237217e');*/
     }
 
-    /**
-     * Lit si le module est activé.
-     * Ne pend en charge que les modules activables, c'est-à-dire non intégrés à l'application.
-     *
-     * @param Node $module
-     * @return boolean
-     */
     public function getIsModuleActivated(Node $module): bool
     {
-        $hashActivation = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MOD_ACTIVE);
+        return $this->_applicationModulesInstance->getIsModuleActivated($module);
+        /*$hashActivation = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MOD_ACTIVE);
 
         // Liste les modules reconnue par une entité locale.
         $linksList = $module->getLinksOnFields('', '', 'f', $module->getID(), $hashActivation, $module->getID());
@@ -1013,89 +638,53 @@ abstract class Applications implements applicationInterface
                 return true;
             }
         }
-        return false;
+        return false;*/
     }
 
-    /**
-     * Liste les noms des modules disponibles.
-     *
-     * @return array of string
-     */
     public function getModulesListNames(): array
     {
-        return $this->_listModulesName;
+        return $this->_applicationModulesInstance->getModulesListNames();
     }
 
-    /**
-     * Liste les instances des modules disponibles. Les noms sont ceux générés par getType().
-     *
-     * @return array of Modules
-     */
     public function getModulesListInstances(): array
     {
-        return $this->_listModulesInstance;
+        return $this->_applicationModulesInstance->getModulesListInstances();
     }
 
-    /**
-     * Liste les ID des modules disponibles.
-     *
-     * @return array of string
-     */
-    public function getModulesListID(): array
+    public function getModulesTranslateListInstances(): array
     {
-        return $this->_listModulesID;
+        return $this->_applicationModulesInstance->getModulesTranslateListInstances();
     }
 
-    /**
-     * Liste les ID de référence des modules disponibles.
-     *
-     * @return array of string
-     */
+    public function getModulesListOID(): array
+    {
+        return $this->_applicationModulesInstance->getModulesListOID();
+    }
+
     public function getModulesListRID(): array
     {
-        return $this->_listModulesRID;
+        return $this->_applicationModulesInstance->getModulesListRID();
     }
 
-    /**
-     * Liste les signataires des modules disponibles (RID).
-     *
-     * @return array of string
-     */
     public function getModulesListSignersRID(): array
     {
-        return $this->_listModulesSignerRID;
+        return $this->_applicationModulesInstance->getModulesListSignersRID();
     }
 
-    /**
-     * Liste la validité des modules disponibles.
-     *
-     * @return array of string
-     */
     public function getModulesListValid(): array
     {
-        return $this->_listModulesValid;
+        return $this->_applicationModulesInstance->getModulesListValid();
     }
 
-    /**
-     * Liste l'activation des modules disponibles.
-     *
-     * @return array of string
-     */
     public function getModulesListEnabled(): array
     {
-        return $this->_listModulesEnabled;
+        return $this->_applicationModulesInstance->getModulesListEnabled();
     }
 
-    /**
-     * Vérifie si le module est chargé. Le module est recherché sur le nom de sa classe.
-     * Si non trouvé, retourne false.
-     *
-     * @param string $name
-     * @return boolean
-     */
     public function isModuleLoaded(string $name): bool
     {
-        if (!$this->_useModules)
+        return $this->_applicationModulesInstance->getIsModuleLoaded($name);
+        /*if (!$this->_useModules)
             return false;
 
         if ($name == ''
@@ -1109,18 +698,13 @@ abstract class Applications implements applicationInterface
         $fullname = substr($this->_applicationNamespace, 1) . '\\' . $name;
         if (in_array($fullname, $classes))
             return true;
-        return false;
+        return false;*/
     }
 
-    /**
-     * Retourne le module en cours d'utilisation.
-     * Si les modules ne sont pas utilisés, retourne false.
-     *
-     * @return Modules|null
-     */
     public function getCurrentModuleInstance(): ?Modules
     {
-        if (!$this->_useModules)
+        return $this->_applicationModulesInstance->getCurrentModuleInstance();
+        /*if (!$this->_useModules)
             return null;
 
         if ($this->_currentModuleInstance != null
@@ -1135,21 +719,13 @@ abstract class Applications implements applicationInterface
                 break;
             }
         }
-        return $result;
+        return $result;*/
     }
 
-    /**
-     * Return the instance of a module with this name.
-     * Can use long name (with namespace) or short name.
-     *
-     * If not found, return false... but sure this will be a problem after...
-     *
-     * @param string $name
-     * @return Modules|null
-     */
     public function getModule(string $name): ?Modules
     {
-        if (!$this->_useModules || $name == '')
+        return $this->_applicationModulesInstance->getModule($name);
+        /*if (!$this->_useModules || $name == '')
             return null;
 
         // Try with long name.
@@ -1170,7 +746,7 @@ abstract class Applications implements applicationInterface
         }
         // If not... bad day for the reste!
         $this->_metrologyInstance->addLog('Module ' . $name . ' not found', Metrology::LOG_LEVEL_ERROR, __METHOD__, '82cd76b7');
-        return null;
+        return null;*/
     }
 
 
@@ -1203,46 +779,15 @@ abstract class Applications implements applicationInterface
 
 
 
-    /*
-	 * Tests de sécurité génériques.
-	 */
-    /**
-     * Etat général de la sécurité.
-     * Si au moins un des états de sécurité change, l'état général prend la valeur la plus critique des états.
-     *
-     * @var string
-     */
-    protected $_checkSecurityAll = "OK";
-
-    /**
-     * Retourne l'état de sécurité général.
-     *
-     * @return string
-     */
+    protected string $_checkSecurityAll = "OK";
     public function getCheckSecurityAll(): string
     {
         return $this->_checkSecurityAll;
     }
-
-    /**
-     * Fait un état complet de la sécurité.
-     *
-     * Nécessite la métrologie et la traduction.
-     *
-     * @return void
-     */
     public function checkSecurity(): void
     {
         $this->_checkSecurity();
     }
-
-    /**
-     * Fait un état complet de la sécurité.
-     *
-     * Nécessite la métrologie et la traduction.
-     *
-     * @return void
-     */
     protected function _checkSecurity(): void
     {
         $this->_checkSecurityBootstrap();
@@ -1276,50 +821,18 @@ abstract class Applications implements applicationInterface
             $this->_metrologyInstance->addLog('general security ERROR', Metrology::LOG_LEVEL_ERROR, __METHOD__, '7f72506b');
         }
     }
-
-    // Test de consistance du bootstrap.
-
-    /**
-     * Etat de sécurité du bootstrap.
-     *
-     * @var string
-     */
-    protected $_checkSecurityBootstrap = "ERROR";
-    /**
-     * Message de l'état de sécurité du bootstrap.
-     *
-     * @var string
-     */
-    protected $_checkSecurityBootstrapMessage = ":::act_chk_errBootstrap";
-
-    /**
-     * Retourne l'état de sécurité du bootstrap.
-     *
-     * @return string
-     */
+    protected string $_checkSecurityBootstrap = "ERROR";
+    protected string $_checkSecurityBootstrapMessage = "::::act_chk_errBootstrap";
     public function getCheckSecurityBootstrap(): string
     {
         return $this->_checkSecurityBootstrap;
     }
-
-    /**
-     * Retourne le message de l'état de sécurité du bootstrap.
-     *
-     * @return string
-     */
     public function getCheckSecurityBootstrapMessage(): string
     {
         return $this->_checkSecurityBootstrapMessage;
     }
-
-    /**
-     * Recherche l'état de sécurité du bootstrap.
-     *
-     * @return void
-     */
     protected function _checkSecurityBootstrap(): void
     {
-
         $this->_checkSecurityBootstrap = 'OK';
         $this->_checkSecurityBootstrapMessage = "OK";
 
@@ -1355,51 +868,21 @@ abstract class Applications implements applicationInterface
 			)
 		{
 			$this->_checkSecurityBootstrap = 'WARN';
-			$this->_checkSecurityBootstrapMessage = ":::act_chk_errBootstrap";
+			$this->_checkSecurityBootstrapMessage = "::::act_chk_errBootstrap";
 			$this->_metrologyInstance->addLog('SECURITY WARN Bootstrap', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
 		}*/
     }
 
-    // Test de la crypto de prise d'empreinte.
-
-    /**
-     * Etat de sécurité des fonctions de prise d'empreinte cryptographique.
-     *
-     * @var string
-     */
-    protected $_checkSecurityCryptoHash = 'WARN';
-    /**
-     * Message de l'état de sécurité des fonctions de prise d'empreinte cryptographique.
-     *
-     * @var string
-     */
-    protected $_checkSecurityCryptoHashMessage = 'HASH Unchecked';
-
-    /**
-     * Retourne l'état de sécurité des fonctions de prise d'empreinte cryptographique.
-     *
-     * @return string
-     */
+    protected string $_checkSecurityCryptoHash = 'WARN';
+    protected string $_checkSecurityCryptoHashMessage = 'HASH Unchecked';
     public function getCheckSecurityCryptoHash(): string
     {
         return $this->_checkSecurityCryptoHash;
     }
-
-    /**
-     * Retourne le message de l'état de sécurité des fonctions de prise d'empreinte cryptographique.
-     *
-     * @return string
-     */
     public function getCheckSecurityCryptoHashMessage(): string
     {
         return $this->_checkSecurityCryptoHashMessage;
     }
-
-    /**
-     * Recherche l'état de sécurité des fonctions de prise d'empreinte cryptographique.
-     *
-     * @return void
-     */
     protected function _checkSecurityCryptoHash(): void
     {
         if (true || $this->_nebuleInstance->getCryptoInstance()->checkHashFunction()) { // TODO
@@ -1408,51 +891,21 @@ abstract class Applications implements applicationInterface
             $this->_metrologyInstance->addLog('SECURITY OK Hash Crypto', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '46f04cd0');
         } else {
             $this->_checkSecurityCryptoHash = 'ERROR';
-            $this->_checkSecurityCryptoHashMessage = ':::act_chk_errCryptHash';
+            $this->_checkSecurityCryptoHashMessage = '::::act_chk_errCryptHash';
             $this->_metrologyInstance->addLog('SECURITY ERROR Hash Crypto', Metrology::LOG_LEVEL_ERROR, __METHOD__, '3b3440f7');
         }
     }
 
-    // Test de la crypto symétrique.
-
-    /**
-     * Etat de sécurité des fonctions cryptographiques symétriques.
-     *
-     * @var string
-     */
-    protected $_checkSecurityCryptoSym = 'WARN';
-    /**
-     * Message de l'état de sécurité des fonctions cryptographiques symétriques.
-     *
-     * @var string
-     */
-    protected $_checkSecurityCryptoSymMessage = 'SYM Unchecked';
-
-    /**
-     * Retourne l'état de sécurité des fonctions cryptographiques symétriques.
-     *
-     * @return string
-     */
+    protected string $_checkSecurityCryptoSym = 'WARN';
+    protected string $_checkSecurityCryptoSymMessage = 'SYM Unchecked';
     public function getCheckSecurityCryptoSym(): string
     {
         return $this->_checkSecurityCryptoSym;
     }
-
-    /**
-     * Retourne le message de l'état de sécurité des fonctions cryptographiques symétriques.
-     *
-     * @return string
-     */
     public function getCheckSecurityCryptoSymMessage(): string
     {
         return $this->_checkSecurityCryptoSymMessage;
     }
-
-    /**
-     * Recherche l'état de sécurité des fonctions cryptographiques symétriques.
-     *
-     * @return void
-     */
     protected function _checkSecurityCryptoSym(): void
     {
         if (true || $this->_nebuleInstance->getCryptoInstance()->checkSymmetricFunction()) { // TODO
@@ -1461,51 +914,21 @@ abstract class Applications implements applicationInterface
             $this->_metrologyInstance->addLog('SECURITY OK Sym Crypto', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'acc2b1c1');
         } else {
             $this->_checkSecurityCryptoSym = 'ERROR';
-            $this->_checkSecurityCryptoSymMessage = ':::act_chk_errCryptSym';
+            $this->_checkSecurityCryptoSymMessage = '::::act_chk_errCryptSym';
             $this->_metrologyInstance->addLog('SECURITY ERROR Sym Crypto', Metrology::LOG_LEVEL_ERROR, __METHOD__, '50a09db3');
         }
     }
 
-    // Test de la crypto asymétrique.
-
-    /**
-     * Etat de sécurité des fonctions cryptographiques asymétriques.
-     *
-     * @var string
-     */
-    protected $_checkSecurityCryptoAsym = 'WARN';
-    /**
-     * Message de l'état de sécurité des fonctions cryptographiques asymétriques.
-     *
-     * @var string
-     */
-    protected $_checkSecurityCryptoAsymMessage = 'ASYM Unchecked';
-
-    /**
-     * Retourne l'état de sécurité des fonctions cryptographiques asymétriques.
-     *
-     * @return string
-     */
+    protected string $_checkSecurityCryptoAsym = 'WARN';
+    protected string $_checkSecurityCryptoAsymMessage = 'ASYM Unchecked';
     public function getCheckSecurityCryptoAsym(): string
     {
         return $this->_checkSecurityCryptoAsym;
     }
-
-    /**
-     * Retourne le message de l'état de sécurité des fonctions cryptographiques asymétriques.
-     *
-     * @return string
-     */
     public function getCheckSecurityCryptoAsymMessage(): string
     {
         return $this->_checkSecurityCryptoAsymMessage;
     }
-
-    /**
-     * Recherche l'état de sécurité des fonctions cryptographiques asymétriques.
-     *
-     * @return void
-     */
     protected function _checkSecurityCryptoAsym(): void
     {
         if (true || $this->_nebuleInstance->getCryptoInstance()->checkAsymmetricFunction()) { // TODO
@@ -1514,51 +937,21 @@ abstract class Applications implements applicationInterface
             $this->_metrologyInstance->addLog('SECURITY OK Asym Crypto', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0af33bed');
         } else {
             $this->_checkSecurityCryptoAsym = 'ERROR';
-            $this->_checkSecurityCryptoAsymMessage = ':::act_chk_errCryptAsym';
+            $this->_checkSecurityCryptoAsymMessage = '::::act_chk_errCryptAsym';
             $this->_metrologyInstance->addLog('SECURITY ERROR Asym Crypto', Metrology::LOG_LEVEL_ERROR, __METHOD__, '12ba7b66');
         }
     }
 
-    // Test de la signature.
-
-    /**
-     * Etat de sécurité des fonctions de signature.
-     *
-     * @var string
-     */
-    protected $_checkSecuritySign = 'WARN';
-    /**
-     * Message de l'état de sécurité des fonctions de signature.
-     *
-     * @var string
-     */
-    protected $_checkSecuritySignMessage = 'SIGN Unchecked';
-
-    /**
-     * Retourne l'état de sécurité des fonctions de signature.
-     *
-     * @return string
-     */
+    protected string $_checkSecuritySign = 'WARN';
+    protected string $_checkSecuritySignMessage = 'SIGN Unchecked';
     public function getCheckSecuritySign(): string
     {
         return $this->_checkSecuritySign;
     }
-
-    /**
-     * Retourne le message de l'état de sécurité des fonctions de signature.
-     *
-     * @return string
-     */
     public function getCheckSecuritySignMessage(): string
     {
         return $this->_checkSecuritySignMessage;
     }
-
-    /**
-     * Recherche l'état de sécurité des fonctions de signature.
-     *
-     * @return void
-     */
     protected function _checkSecuritySign(): void
     {
         if ($this->_nebuleInstance->getCryptoInstance()->checkFunction($this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm'), Crypto::TYPE_ASYMMETRIC)) {
@@ -1567,13 +960,13 @@ abstract class Applications implements applicationInterface
             $this->_metrologyInstance->addLog('SECURITY OK Sign', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '148b111d');
         } else {
             $this->_checkSecuritySign = 'ERROR';
-            $this->_checkSecuritySignMessage = ':::act_chk_errSigns';
+            $this->_checkSecuritySignMessage = '::::act_chk_errSigns';
             $this->_metrologyInstance->addLog('SECURITY ERROR Sign', Metrology::LOG_LEVEL_ERROR, __METHOD__, '70b97981');
         }
  /*       $this->_checkSecuritySign = 'WARN';
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckSignOnVerify')) {
             $this->_checkSecuritySign = 'WARN';
-            $this->_checkSecuritySignMessage = ':::act_chk_warnSigns';
+            $this->_checkSecuritySignMessage = '::::act_chk_warnSigns';
         } else {
             $validLink = 'nebule:link/2:0_0>020210714/l>88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>4fcc946ef03dff882c0b6a1717c99c0ce57639e99d1f52509e846874c98dad5abd28685c9d065b4ef0e9fefbbee217e91fc4a72ecac81712e1e2c14bd06612e71e9afdb09ef1c10e68117fe8edc4f93510318719d0a6d7436a1802cd38f814cba8503ef24d50aeca961825bc39b169acbe52240fa8528a44f387ee5dff0e096a2ab49a0b181fa688678540dfc409000104a6ab77c44a4495ac98d48f35658238c99f5b1f83d04c3309412ebf26b7b23c18bdde43b964ebb6b28b60393b4c343f567137461743153091039c07e35432fa7d0b46b729f65c11960cbda5cb78f3d8da52aaf662724e771125cce2fb99ef1409fbb23840872c6557fe63f2b25c8fc49b6b5663a44cdf2e829ffa9698cc121648136fd102333a556a97ac5b208a6b6fa584e239a35237fe9c38fd09fbe4c0580ca538d92c4e29d5e22ce4846df2563dc4cb39a599b92f22018b4973b768cf59cb8f517f3adae3ee21b7c43a812ec6c245fe548e6187a0e07ce6a0af38c40ccd24383216cbd312322e1583d5d358ccdc9911b67fdbf7d13b9f57a0a17a42f736be9dbd383fd9e7c0ce2589fbd6550a8e07ab90618302956a1bf69e76aaf3da829e1af4f7c7ceff169ce5e698ebe1987fa1b694c6b25130c0be5bbfdfe4a8594e54067abe235bf796cf455a84906d02ebc79e3feaa069db7c4adac872c104bfcbc08b2dfbcc3c9fd6aa465fb9d86c7f26.sha2.512';
             $invalidLink = 'nebule:link/2:0_0>020210714/l>88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>5d5b09f6dcb2d53a5fffc60c4ac0d55fabdf556069d6631545f42aa6e3500f2e.sha2.256>8e2adbda190535721fc8fceead980361e33523e97a9748aba95642f8310eb5ec.sha2.256_88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256>4fcc946ef03dff882c0b6a1717c99c0ce57639e99d1f52509e846874c98dad5abd28685c9d065b4ef0e9fefbbee217e91fc4a72ecac81712e1e2c14bd06612e71e9afdb09ef1c10e68117fe8edc4f93510318719d0a6d7436a1802cd38f814cba8503ef24d50aeca961825bc39b169acbe52240fa8528a44f387ee5dff0e096a2ab49a0b181fa688678540dfc409000104a6ab77c44a4495ac98d48f35658238c99f5b1f83d04c3309412ebf26b7b23c18bdde43b964ebb6b28b60393b4c343f567137461743153091039c07e35432fa7d0b46b729f65c11960cbda5cb78f3d8da52aaf662724e771125cce2fb99ef1409fbb23840872c6557fe63f2b25c8fc49b6b5663a44cdf2e829ffa9698cc121648136fd102333a556a97ac5b208a6b6fa584e239a35237fe9c38fd09fbe4c0580ca538d92c4e29d5e22ce4846df2563dc4cb39a599b92f22018b4973b768cf59cb8f517f3adae3ee21b7c43a812ec6c245fe548e6187a0e07ce6a0af38c40ccd24383216cbd312322e1583d5d358ccdc9911b67fdbf7d13b9f57a0a17a42f736be9dbd383fd9e7c0ce2589fbd6550a8e07ab90618302956a1bf69e76aaf3da829e1af4f7c7ceff169ce5e698ebe1987fa1b694c6b25130c0be5bbfdfe4a8594e54067abe235bf796cf455a84906d02ebc79e3feaa069db7c4adac872c104bfcbc08b2dfbcc3c9fd6aa465fb9d86c7f27.sha2.512';
@@ -1584,7 +977,7 @@ abstract class Applications implements applicationInterface
                 || $instanceInvalidLink->getSigned() === true
             ) {
                 $this->_checkSecuritySign = 'ERROR';
-                $this->_checkSecuritySignMessage = ':::act_chk_errSigns';
+                $this->_checkSecuritySignMessage = '::::act_chk_errSigns';
                 $this->_metrologyInstance->addLog('SECURITY ERROR Sign', Metrology::LOG_LEVEL_ERROR, __METHOD__, '70b97981');
             } else {
                 $this->_checkSecuritySign = 'OK';
@@ -1595,46 +988,16 @@ abstract class Applications implements applicationInterface
         }*/
     }
 
-    // Test de l'URL.
-
-    /**
-     * Etat de sécurité de l'URL.
-     *
-     * @var string
-     */
-    protected $_checkSecurityURL = 'OK';
-    /**
-     * Message de l'état de sécurité de l'URL.
-     *
-     * @var string
-     */
-    protected $_checkSecurityURLMessage = 'OK';
-
-    /**
-     * Retourne l'état de sécurité de l'URL.
-     *
-     * @return string
-     */
+    protected string $_checkSecurityURL = 'OK';
+    protected string $_checkSecurityURLMessage = 'OK';
     public function getCheckSecurityURL(): string
     {
         return $this->_checkSecurityURL;
     }
-
-    /**
-     * Retourne le message de l'état de sécurité de l'URL.
-     *
-     * @return string
-     */
     public function getCheckSecurityURLMessage(): string
     {
         return $this->_checkSecurityURLMessage;
     }
-
-    /**
-     * Recherche l'état de sécurité de l'URL.
-     *
-     * @return void
-     */
     protected function _checkSecurityURL(): void
     {
         $this->_checkSecurityURL = 'OK';
@@ -1645,9 +1008,9 @@ abstract class Applications implements applicationInterface
             $this->_checkSecurityURLMessage = $this->_translateInstance->getTranslate('Connexion non sécurisée')
                 . '. ' . $this->_translateInstance->getTranslate('Essayer plutôt')
                 . ' <a href="https://' . $this->_urlHost . '/' . $this->_urlBasename . '">https://' . $this->_urlHost . '/</a>';
-            $this->_metrologyInstance->addLog('SECURITY WARN URL', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('SECURITY WARN URL', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'a4f9a7e0');
         } else {
-            $this->_metrologyInstance->addLog('SECURITY OK URL', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('SECURITY OK URL', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '98045f5f');
         }
     }
 
@@ -2228,43 +1591,31 @@ class Action extends Actions
 class Traduction extends Traductions
 {
 	/**
-	 * Constructeur.
-	 *
-	 * @param Application $applicationInstance
-	 * @return void
-	 */
-	public function __construct(Application $applicationInstance)
-	{
-		$this->_applicationInstance = $applicationInstance;
-	}
-
-
-
-	/**
 	 * Initialisation de la table de traduction.
 	 */
-	protected function _initTable()
-	{
-		$this->_table['fr-fr']['::::INFO']='Information';
-		$this->_table['en-en']['::::INFO']='Information';
-		$this->_table['es-co']['::::INFO']='Information';
-		$this->_table['fr-fr']['::::OK']='OK';
-		$this->_table['en-en']['::::OK']='OK';
-		$this->_table['es-co']['::::OK']='OK';
-		$this->_table['fr-fr']['::::INFORMATION']='Message';
-		$this->_table['en-en']['::::INFORMATION']='Message';
-		$this->_table['es-co']['::::INFORMATION']='Mensaje';
-		$this->_table['fr-fr']['::::WARN']='ATTENTION !';
-		$this->_table['en-en']['::::WARN']='WARNING!';
-		$this->_table['es-co']['::::WARN']='¡ADVERTENCIA!';
-		$this->_table['fr-fr']['::::ERROR']='ERREUR !';
-		$this->_table['en-en']['::::ERROR']='ERROR!';
-		$this->_table['es-co']['::::ERROR']='¡ERROR!';
-
-		$this->_table['fr-fr']['::::RESCUE']='Mode de sauvetage !';
-		$this->_table['en-en']['::::RESCUE']='Rescue mode!';
-		$this->_table['es-co']['::::RESCUE']='¡Modo de rescate!';
-	}
+    CONST TRANSLATE_TABLE = [
+        'fr-fr' => [
+            '::::INFO' => 'Information',
+            '::::OK' => 'OK',
+            '::::INFORMATION' => 'Message',
+            '::::WARN' => 'ATTENTION !',
+            '::::ERROR' => 'ERREUR !',
+        ],
+        'en-en' => [
+            '::::INFO' => 'Information',
+            '::::OK' => 'OK',
+            '::::INFORMATION' => 'Message',
+            '::::WARN' => 'WARNING!',
+            '::::ERROR' => 'ERROR!',
+        ],
+        'es-co' => [
+            '::::INFO' => 'Information',
+            '::::OK' => 'OK',
+            '::::INFORMATION' => 'Mensaje',
+            '::::WARN' => '¡ADVERTENCIA!',
+            '::::ERROR' => '¡ERROR!',
+        ],
+    ];
 }
 </pre>
 

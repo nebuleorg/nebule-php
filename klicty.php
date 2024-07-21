@@ -44,7 +44,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240720';
+    const APPLICATION_VERSION = '020240721';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2024';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -623,62 +623,6 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         }
     }
 
-    /**
-     * Initialisation des variables et instances interdépendantes.
-     *
-     * @return void
-     */
-    public function initialisation2(): void
-    {
-        $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
-        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000'); // Log
-        $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
-        $this->_actionInstance = $this->_applicationInstance->getActionInstance();
-        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
-
-        $this->setHtlinkObjectPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkGroupPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkConversationPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkEntityPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkCurrencyPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkTokenPoolPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkTokenPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkTransactionPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkWalletPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-
-        $this->_findLogoApplication();
-        $this->_findLogoApplicationLink();
-        $this->_findLogoApplicationName();
-        $this->_findCurrentDisplayView();
-//        $this->_findCurrentAction();
-        $this->_findInlineContentID();
-
-        // Si en mode téléchargement d'objet ou de lien, pas de traduction.
-        if ($this->_traductionInstance !== null) {
-            $this->_currentDisplayLanguage = $this->_traductionInstance->getCurrentLanguage();
-        }
-    }
-
 
     /**
      * Revérifie le verrouillage de l'entité en cours.
@@ -800,7 +744,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             <link rel="icon" type="image/png" href="favicon.png"/>
             <meta name="keywords" content="<?php echo Application::APPLICATION_SURNAME; ?>"/>
             <meta name="description" content="<?php echo Application::APPLICATION_NAME . ' - ';
-            $this->_traductionInstance->echoTranslate('::::HtmlHeadDescription'); ?>"/>
+            echo $this->_traductionInstance->getTranslate('::::HtmlHeadDescription'); ?>"/>
             <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
             <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
             <?php
@@ -1462,7 +1406,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 <img alt="<?php echo Application::APPLICATION_NAME; ?>" src="<?php echo $this->_logoApplication; ?>"/><br/>
                 <?php echo Application::APPLICATION_NAME; ?><br/>
                 (c) <?php echo Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR; ?><br/>
-                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::Version');
+                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::Version');
                 echo ' : ' . Application::APPLICATION_VERSION . ' ' . $this->_configurationInstance->getOptionAsString('codeBranch'); ?><br/>
                 <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo Application::APPLICATION_WEBSITE; ?></a>
             </div>
@@ -1482,7 +1426,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         '::EntitiesGroupAdd',
                         '::Help',
                         ':::SelectLanguage',
-                        '::Lock');
+                        '::::lock');
                     $modulesIcon = array(
                         self::DEFAULT_ICON_LSTOBJ,
                         self::DEFAULT_ICON_ADDOBJ,
@@ -1606,10 +1550,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityURLMessage());
         }
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')) {
-            $this->displayMessageWarning_DEPRECATED(':::warn_ServNotPermitWrite');
+            $this->displayMessageWarning_DEPRECATED('::::warn_ServNotPermitWrite');
         }
         if ($this->_nebuleInstance->getFlushCache()) {
-            $this->displayMessageWarning_DEPRECATED(':::warn_flushSessionAndCache');
+            $this->displayMessageWarning_DEPRECATED('::::warn_flushSessionAndCache');
         }
     }
 
@@ -2149,14 +2093,14 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             <input type="checkbox"
                                    name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_GROUP_CLOSED; ?>"
                                    value="y" checked>
-                            <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::GroupeFerme'); ?>
+                            <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::GroupeFerme'); ?>
                         </div>
-                        <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::Nom'); ?>
+                        <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::Nom'); ?>
                         <input type="text"
                                name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_GROUP_NAME; ?>"
                                size="20" value="" class="klictyModuleEntityInput"><br/>
                         <input type="submit"
-                               value="<?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::CreateTheGroup'); ?>"
+                               value="<?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::CreateTheGroup'); ?>"
                                class="klictyModuleEntityInput">
                     </form>
                     <?php
@@ -2173,7 +2117,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     'informationType' => 'error',
                     'displayRatio' => 'long',
                 );
-                echo $this->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
+                echo $this->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
             }
         }
     }
@@ -2287,7 +2231,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
             if ($this->_unlocked && $id == $this->_nebuleInstance->getCurrentEntity()) {
                 // Verrouiller l'entité.
-                $actionList[3]['name'] = '::Lock';
+                $actionList[3]['name'] = '::::lock';
                 $actionList[3]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
                 $actionList[3]['desc'] = '';
                 $actionList[3]['css'] = 'oneAction-bg-warn';
@@ -2394,7 +2338,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                               . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                               . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                         <input type="submit"
-                               value="<?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::AddToGroup'); ?>"
+                               value="<?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::AddToGroup'); ?>"
                                class="klictyModuleEntityInput">
                         <select
                                 name="<?php echo Actions::DEFAULT_COMMAND_ACTION_ADD_TO_GROUP; ?>"
@@ -2669,44 +2613,44 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     <input type="file"
                            name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_FILE; ?>"/><br/>
                     <div class="floatRight textAlignRight">
-                        <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::SubmitProtectFile'); ?>
+                        <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::SubmitProtectFile'); ?>
                         <input type="checkbox"
                                name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_PROTECT; ?>"
                                value="y"><br/>
-                        <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::SubmitLiveTimeFile'); ?>
+                        <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::SubmitLiveTimeFile'); ?>
                         :
                         <select
                                 name="<?php echo Action::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LIFETIME; ?>"
                                 class="klictyInput">
                             <option value="1h">
-                                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::1h'); ?>
+                                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::1h'); ?>
                             </option>
                             <option value="2h">
-                                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::2h'); ?>
+                                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::2h'); ?>
                             </option>
                             <option value="1d">
-                                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::1d'); ?>
+                                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::1d'); ?>
                             </option>
                             <option value="2d">
-                                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::2d'); ?>
+                                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::2d'); ?>
                             </option>
                             <option value="1w">
-                                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::1w'); ?>
+                                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::1w'); ?>
                             </option>
                             <option value="2w">
-                                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::2w'); ?>
+                                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::2w'); ?>
                             </option>
                             <option value="1m" selected>
-                                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::1m'); ?>
+                                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::1m'); ?>
                             </option>
                             <option value="2m">
-                                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::2m'); ?>
+                                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::2m'); ?>
                             </option>
                             <option value="1y">
-                                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::1y'); ?>
+                                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::1y'); ?>
                             </option>
                             <option value="2y">
-                                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::2y'); ?>
+                                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::2y'); ?>
                             </option>
                         </select><?php /* <br />
 					<?php $this->_applicationInstance->getTranslateInstance()->echoTraduction('::SubmitShowTimeFile'); ?> :
@@ -2729,14 +2673,14 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 					</select> */ ?>
                     </div>
                     <input type="submit"
-                           value="<?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::SubmitFile') ?>"/><br/>
+                           value="<?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::SubmitFile') ?>"/><br/>
                     <br/>&nbsp;
                 </form>
             </div>
             <?php
             $this->displayMessageInformation_DEPRECATED($this->_applicationInstance->getTranslateInstance()->getTranslate('::UploadMaxFileSize') . ' : ' . $this->_configurationInstance->getOptionUntyped('klictyIOReadMaxDataPHP') . 'o');
         } else {
-            $this->displayMessageError_DEPRECATED(':::err_NotPermit');
+            $this->displayMessageError_DEPRECATED('::::err_NotPermit');
         }
     }
 
@@ -2829,12 +2773,12 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         <table>
                             <tr>
                                 <td></td>
-                                <td><?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::Prenom'); ?></td>
-                                <td><?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::Nom'); ?></td>
+                                <td><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::Prenom'); ?></td>
+                                <td><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::Nom'); ?></td>
                             </tr>
                             <tr>
                                 <td>
-                                    <b><?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::Nommage'); ?></b>
+                                    <b><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::Nommage'); ?></b>
                                 </td>
                                 <td><input type="text"
                                            name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME; ?>"
@@ -2848,7 +2792,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             </tr>
                             <tr>
                                 <td>
-                                    <b><?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::Password'); ?></b>
+                                    <b><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::::Password'); ?></b>
                                 </td>
                                 <td colspan=2><input type="password"
                                                      name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1; ?>"
@@ -2856,7 +2800,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             </tr>
                             <tr>
                                 <td>
-                                    <b><?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::Confirmation'); ?></b>
+                                    <b><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::Confirmation'); ?></b>
                                 </td>
                                 <td colspan=2><input type="password"
                                                      name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2; ?>"
@@ -2868,7 +2812,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             <tr>
                                 <td></td>
                                 <td><input type="submit"
-                                           value="<?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::CreateAnEntity'); ?>"
+                                           value="<?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::CreateAnEntity'); ?>"
                                            class="klictyModuleEntityInput"></td>
                             </tr>
                         </table>
@@ -2887,7 +2831,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     'informationType' => 'error',
                     'displayRatio' => 'long',
                 );
-                echo $this->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
+                echo $this->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
             }
         }
     }
@@ -2915,11 +2859,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     <table>
                         <tr>
                             <td></td>
-                            <td><?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::EntityLocalisation'); ?></td>
+                            <td><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::EntityLocalisation'); ?></td>
                         </tr>
                         <tr>
                             <td>
-                                <b><?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::URL'); ?> </b>
+                                <b><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::URL'); ?> </b>
                             </td>
                             <td><input type="text"
                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_NEW_ENTITY; ?>"
@@ -2931,7 +2875,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         <tr>
                             <td></td>
                             <td><input type="submit"
-                                       value="<?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::SynchronizeEntity'); ?>"
+                                       value="<?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::SynchronizeEntity'); ?>"
                                        class="klictyModuleEntityInput"></td>
                         </tr>
                     </table>
@@ -2949,7 +2893,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
+            echo $this->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
         }
     }
 
@@ -2974,11 +2918,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 <div class="text">
                     <table border="0">
                         <tr>
-                            <td><?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::ProtectedID'); ?></td>
+                            <td><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::ProtectedID'); ?></td>
                             <td>&nbsp;<?php $this->displayInlineObjectColorIconName($object->getProtectedID()); ?></td>
                         </tr>
                         <tr>
-                            <td><?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::UnprotectedID'); ?></td>
+                            <td><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::UnprotectedID'); ?></td>
                             <td>
                                 &nbsp;<?php $this->displayInlineObjectColorIconName($object->getUnprotectedID()); ?></td>
                         </tr>
@@ -3004,7 +2948,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $this->registerInlineContentID('objectprotectionshareto');
             }
         } else {
-            $this->displayMessageError_DEPRECATED(':::display:content:errorNotAvailable');
+            $this->displayMessageError_DEPRECATED('::::display:content:errorNotAvailable');
         }
     }
 
@@ -3278,10 +3222,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             )
         ) {
             $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_KEY);
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayTitle_DEPRECATED('::EntityUnlocked', $icon);
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayTitle_DEPRECATED('::::entity:unlocked', $icon);
         } else {
             $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_ENTITY_LOCK);
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayTitle_DEPRECATED('::EntityLocked', $icon);
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayTitle_DEPRECATED('::::entity:locked', $icon);
         }
 
         // Extrait les états de tests en warning ou en erreur.
@@ -3340,8 +3284,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             ) {
                 // Propose de la verrouiller.
                 $list = array();
-                $list[0]['title'] = $this->_traductionInstance->getTranslate('::Lock');
-                $list[0]['desc'] = $this->_traductionInstance->getTranslate('::EntityUnlocked');
+                $list[0]['title'] = $this->_traductionInstance->getTranslate('::::lock');
+                $list[0]['desc'] = $this->_traductionInstance->getTranslate('::::entity:unlocked');
                 $list[0]['icon'] = Displays::DEFAULT_ICON_ENTITY_LOCK;
                 $list[0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
                     . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
@@ -3366,7 +3310,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 echo '<div class="objectTitleText objectTitleMediumText objectTitleText0 informationTitleText">' . "\n";
 
                 echo '<div class="objectTitleRefs objectTitleMediumRefs informationTitleRefs informationTitleRefs' . $idCheck . '" id="klictyModuleEntityConnect">' . "\n";
-                echo $this->_traductionInstance->getTranslate('::Password') . "<br />\n";
+                echo $this->_traductionInstance->getTranslate('::::Password') . "<br />\n";
                 echo '</div>' . "\n";
 
                 echo '<div class="objectTitleName objectTitleMediumName informationTitleName informationTitleName' . $idCheck . ' informationTitleMediumName" id="klictyModuleEntityConnect">' . "\n";
@@ -3377,7 +3321,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     <input type="hidden" name="ent"
                            value="<?php echo $this->_applicationInstance->getCurrentEntityID(); ?>">
                     <input type="password" name="pwd">
-                    <input type="submit" value="<?php echo $this->_traductionInstance->getTranslate('::Unlock'); ?>">
+                    <input type="submit" value="<?php echo $this->_traductionInstance->getTranslate('::::unlock'); ?>">
                 </form>
                 <?php
                 echo '</div>' . "\n";
@@ -3398,8 +3342,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             ) {
                 // Propose de la verrouiller.
                 $list = array();
-                $list[0]['title'] = $this->_traductionInstance->getTranslate('::Lock');
-                $list[0]['desc'] = $this->_traductionInstance->getTranslate('::EntityUnlocked');
+                $list[0]['title'] = $this->_traductionInstance->getTranslate('::::lock');
+                $list[0]['desc'] = $this->_traductionInstance->getTranslate('::::entity:unlocked');
                 $list[0]['icon'] = Displays::DEFAULT_ICON_ENTITY_LOCK;
                 $list[0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
                     . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
@@ -3414,7 +3358,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     'displaySize' => 'medium',
                     'displayRatio' => 'short',
                 );
-                echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
+                echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
             }
         }
     }
@@ -3439,15 +3383,15 @@ private function _displayContentAbout()
     <div id="iconsWelcome">
         <div id="iconWelcome1">
             <?php $this->displayUpdateImage($iconLL, '::Share', 'iconNormalDisplay') ?><br/>
-            <?php $this->_traductionInstance->echoTranslate('::Share'); ?>
+            <?php echo $this->_traductionInstance->getTranslate('::Share'); ?>
         </div>
         <div id="iconWelcome2">
             <?php $this->displayUpdateImage($iconLK, '::Protection', 'iconNormalDisplay') ?><br/>
-            <?php $this->_traductionInstance->echoTranslate('::Protection'); ?>
+            <?php echo $this->_traductionInstance->getTranslate('::Protection'); ?>
         </div>
         <div id="iconWelcome3">
             <?php $this->displayUpdateImage($iconTIME, '::TimeLimited', 'iconNormalDisplay') ?><br/>
-            <?php $this->_traductionInstance->echoTranslate('::TimeLimited'); ?>
+            <?php echo $this->_traductionInstance->getTranslate('::TimeLimited'); ?>
         </div>
     </div>
 
@@ -3541,7 +3485,7 @@ private function _displayContentAbout()
     ?>
 
     <div id="welcomeFooter">
-        <p><?php $this->_traductionInstance->echoTranslate('::Citation'); ?></p>
+        <p><?php echo $this->_traductionInstance->getTranslate('::Citation'); ?></p>
         <p>
             <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo Application::APPLICATION_SURNAME; ?> <img
                         alt="<?php echo Application::APPLICATION_SURNAME; ?>"
@@ -3619,13 +3563,13 @@ private function _displayContentAbout()
 		$this->_traductionInstance->echoTraduction('%01.0f liens vérifiés,','',$this->_bootstrapInstance->getMetrologyInstance()->getLinkVerify()); echo ' ';
 		$this->_traductionInstance->echoTraduction('%01.0f objets vérifiés.','',$this->_bootstrapInstance->getMetrologyInstance()->getObjectVerify()); echo "<br />\n";*/
                     echo 'Lib nebule : ';
-                    $this->_traductionInstance->echoTranslate('%01.0f liens lus,', $this->_metrologyInstance->getLinkRead());
+                    echo $this->_traductionInstance->getTranslate('%01.0f liens lus,', $this->_metrologyInstance->getLinkRead());
                     echo ' ';
-                    $this->_traductionInstance->echoTranslate('%01.0f liens vérifiés,', $this->_metrologyInstance->getLinkVerify());
+                    echo $this->_traductionInstance->getTranslate('%01.0f liens vérifiés,', $this->_metrologyInstance->getLinkVerify());
                     echo ' ';
-                    $this->_traductionInstance->echoTranslate('%01.0f objets lus.', $this->_metrologyInstance->getObjectRead());
+                    echo $this->_traductionInstance->getTranslate('%01.0f objets lus.', $this->_metrologyInstance->getObjectRead());
                     echo ' ';
-                    $this->_traductionInstance->echoTranslate('%01.0f objets vérifiés.', $this->_metrologyInstance->getObjectVerify());
+                    echo $this->_traductionInstance->getTranslate('%01.0f objets vérifiés.', $this->_metrologyInstance->getObjectVerify());
                     echo "<br />\n";
                     // Calcul de temps de chargement de la page - stop
                     /*		$bootstrapTimeList = $this->_bootstrapInstance->getMetrologyInstance()->getTimeArray();
@@ -3648,7 +3592,7 @@ private function _displayContentAbout()
                     foreach ($klictyTimeList as $time) {
                         $klicty_time_total = $klicty_time_total + $time;
                     }
-                    $this->_traductionInstance->echoTranslate('Le serveur à pris %01.4fs pour calculer la page.', $klicty_time_total);
+                    echo $this->_traductionInstance->getTranslate('Le serveur à pris %01.4fs pour calculer la page.', $klicty_time_total);
                     echo ' (';
                     foreach ($klictyTimeList as $time) {
                         echo sprintf(" %1.4fs", $time);
@@ -3741,12 +3685,12 @@ private function _displayContentAbout()
                 <?php
                 switch ($status) {
                     case 'notPresent':
-                        $msg = $this->_traductionInstance->getTranslate(':::display:content:errorNotAvailable');
+                        $msg = $this->_traductionInstance->getTranslate('::::display:content:errorNotAvailable');
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'tooBig':
                         if ($this->_configurationInstance->getOptionUntyped('klictyDisplayUnverifyLargeContent')) {
-                            $msg = $this->_traductionInstance->getTranslate(':::display:content:warningTooBig');
+                            $msg = $this->_traductionInstance->getTranslate('::::display:content:warningTooBig');
                             $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         } else {
                             $msg = $this->_traductionInstance->getTranslate(':::display:content:errorTooBig');
@@ -3754,19 +3698,19 @@ private function _displayContentAbout()
                         }
                         break;
                     case 'warning':
-                        $msg = $this->_traductionInstance->getTranslate(':::display:content:warningTaggedWarning');
+                        $msg = $this->_traductionInstance->getTranslate('::::display:content:warningTaggedWarning');
                         $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         break;
                     case 'danger':
-                        $msg = $this->_traductionInstance->getTranslate(':::display:content:errorBan');
+                        $msg = $this->_traductionInstance->getTranslate('::::display:content:errorBan');
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'protected':
-                        $msg = $this->_traductionInstance->getTranslate(':::display:content:ObjectProctected');
+                        $msg = $this->_traductionInstance->getTranslate('::::display:content:ObjectProctected');
                         $this->displayIcon(self::DEFAULT_ICON_IOK, $msg, 'iconNormalDisplay');
                         break;
                     default:
-                        $msg = $this->_traductionInstance->getTranslate(':::display:content:OK');
+                        $msg = $this->_traductionInstance->getTranslate('::::display:content:OK');
                         $this->displayIcon(self::DEFAULT_ICON_IOK, $msg, 'iconNormalDisplay');
                         break;
                 }
@@ -4068,10 +4012,10 @@ private function _displayContentAbout()
                                 $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IWARN);
                                 $this->displayUpdateImage(
                                     $icon,
-                                    ':::display:content:warningTaggedWarning',
+                                    '::::display:content:warningTaggedWarning',
                                     'iconInlineDisplay');
                                 echo ' ';
-                                $this->_traductionInstance->echoTranslate(':::display:content:warningTaggedWarning'); ?></p>
+                                echo $this->_traductionInstance->getTranslate('::::display:content:warningTaggedWarning'); ?></p>
                         </div>
                         <?php
                     }
@@ -4083,10 +4027,10 @@ private function _displayContentAbout()
                                 $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IERR);
                                 $this->displayUpdateImage(
                                     $icon,
-                                    ':::display:content:errorBan',
+                                    '::::display:content:errorBan',
                                     'iconInlineDisplay');
                                 echo ' ';
-                                $this->_traductionInstance->echoTranslate(':::display:content:errorBan'); ?></p>
+                                echo $this->_traductionInstance->getTranslate('::::display:content:errorBan'); ?></p>
                         </div>
                         <?php
                     }
@@ -4098,10 +4042,10 @@ private function _displayContentAbout()
                                 $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LK);
                                 $this->displayUpdateImage(
                                     $icon,
-                                    ':::display:content:ObjectProctected',
+                                    '::::display:content:ObjectProctected',
                                     'iconInlineDisplay');
                                 echo ' ';
-                                $this->_traductionInstance->echoTranslate(':::display:content:ObjectProctected'); ?></p>
+                                echo $this->_traductionInstance->getTranslate('::::display:content:ObjectProctected'); ?></p>
                         </div>
                         <?php
                     }
@@ -4833,43 +4777,10 @@ class Action extends Actions
  */
 class Translate extends Translates
 {
-    /**
-     * Langue par défaut.
-     *
-     * @var string
-     */
-    protected $DEFAULT_LANGUAGE = 'fr-fr';
-
-    /**
-     * Liste des languages supportés.
-     *
-     * @var array
-     */
-    protected $LANGUAGE_LIST = array('fr-fr', 'en-en', 'es-co');
-
-    /**
-     * Liste des icônes des languages supportés.
-     *
-     * @var array
-     */
-    protected $LANGUAGE_ICON_LIST = array(
-        'fr-fr' => 'b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac',
-        'en-en' => '7796077f1b865951946dd40ab852f6f4d21e702e7c4f47bd5fa6cb9ce94a4c5f',
-        'es-co' => '7425a5a9dfdaaa084fba0dff69b3a6267a90ef42cb0fa093d5a4b47a8bc062dd');
-
-
-    /**
-     * Constructeur.
-     *
-     * @param Application $applicationInstance
-     * @return void
-     */
     public function __construct(Application $applicationInstance)
     {
         parent::__construct($applicationInstance);
     }
-
-
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
@@ -4879,7 +4790,7 @@ class Translate extends Translates
             '::About' => 'A propos',
             '::Help' => 'Aide',
             '::menu' => 'Menu',
-//        ':::err_NotPermit' => 'Non autorisé !',
+//        '::::err_NotPermit' => 'Non autorisé !',
             ':::Flush' => 'Réinitialisation',
             '::Share' => 'Partage',
             '::Protection' => 'Protection',
@@ -4923,11 +4834,10 @@ Toutes les entités de recouvrement sont affichées ici, aucune n'est cachée.",
             '::EntityAdd' => 'Créer une entité',
             '::EntityAddError' => "Erreur lors de la création de l'entité !",
             '::EntitySync' => 'Synchroniser une entité',
-//        '::Password' => 'Mot de passe',
-            '::EntityLocked' => 'Entité verrouillée. Déverrouiller ?',
-            '::EntityUnlocked' => 'Entité déverrouillée. Verrouiller ?',
-            '::Lock' => 'Verrouiller',
-            '::Unlock' => 'Déverrouiller',
+            '::::entity:locked' => 'Entité verrouillée. Déverrouiller ?',
+            '::::entity:unlocked' => 'Entité déverrouillée. Verrouiller ?',
+            '::::lock' => 'Verrouiller',
+            '::::unlock' => 'Déverrouiller',
             #'::ListOrAddObject']='Lister mes objets ou en ajouter un nouveau :',
             '::OKConnect' => 'Connexion réussi !',
             '::ConnectWith' => 'Se connecter avec cette entité',
@@ -4965,7 +4875,6 @@ Toutes les entités de recouvrement sont affichées ici, aucune n'est cachée.",
             '::Prenom' => 'Prénom',
             '::Nom' => 'Nom',
             '::Nommage' => 'Nommage',
-            '::Password' => 'Mot de passe',
             '::Confirmation' => 'Confirmation',
             '::CreateAnEntity' => 'Créer une entité',
             '::CreateTheGroup' => 'Créer le groupe',
@@ -5025,37 +4934,37 @@ Toutes les entités de recouvrement sont affichées ici, aucune n'est cachée.",
             '::MarkAdd' => 'Marquer',
             '::MarkRemove' => 'Démarquer',
             '::MarkRemoveAll' => 'Démarquer tout',
-            ':::display:content:errorBan' => 'Cet objet est banni, il ne peut pas être affiché !',
-            ':::display:content:warningTaggedWarning' => 'Cet objet est marqué comme dangereux, attention à son contenu !',
-            ':::display:content:ObjectProctected' => 'Cet objet est protégé !',
-            ':::display:content:warningObjectProctected' => 'Cet objet est marqué comme protégé, attention à la divulgation de son contenu en public !!!',
-            ':::display:content:OK' => 'Cet objet est valide, son contenu a été vérifié.',
-            ':::display:content:warningTooBig' => "Cet objet est trop volumineux, son contenu n'a pas été vérifié !",
-            ':::display:content:errorNotDisplayable' => 'Cet objet ne peut pas être affiché !',
-            ':::display:content:errorNotAvailable' => "Cet objet n'est pas disponible, il ne peut pas être affiché !",
-            ':::display:content:errorNotAvailableS' => "Cet objet n'est pas disponible !",
-            ':::display:content:ObjectHaveUpdate' => 'Cet objet a été mis à jour vers :',
-            ':::warn_ServNotPermitWrite' => "Ce serveur n'autorise pas les modifications.",
-            ':::warn_flushSessionAndCache' => "Toutes les données de connexion ont été effacées.",
-            ':::err_NotPermit' => 'Non autorisé sur ce serveur !',
-            ':::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
-            ':::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
-            ':::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
-            ':::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
-            ':::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
-            ':::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
-            ':::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
-            ':::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
-            ':::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
-            ':::display:object:flag:protected' => 'Cet objet est protégé.',
-            ':::display:object:flag:unprotected' => "Cet objet n'est pas protégé.",
-            ':::display:object:flag:obfuscated' => 'Cet objet est dissimulé.',
-            ':::display:object:flag:unobfuscated' => "Cet objet n'est pas dissimulé.",
-            ':::display:object:flag:locked' => 'Cet entité est déverrouillée.',
-            ':::display:object:flag:unlocked' => 'Cet entité est verrouillée.',
+            '::::display:content:errorBan' => 'Cet objet est banni, il ne peut pas être affiché !',
+            '::::display:content:warningTaggedWarning' => 'Cet objet est marqué comme dangereux, attention à son contenu !',
+            '::::display:content:ObjectProctected' => 'Cet objet est protégé !',
+            '::::display:content:warningObjectProctected' => 'Cet objet est marqué comme protégé, attention à la divulgation de son contenu en public !!!',
+            '::::display:content:OK' => 'Cet objet est valide, son contenu a été vérifié.',
+            '::::display:content:warningTooBig' => "Cet objet est trop volumineux, son contenu n'a pas été vérifié !",
+            '::::display:content:errorNotDisplayable' => 'Cet objet ne peut pas être affiché !',
+            '::::display:content:errorNotAvailable' => "Cet objet n'est pas disponible, il ne peut pas être affiché !",
+            '::::display:content:errorNotAvailableS' => "Cet objet n'est pas disponible !",
+            '::::display:content:ObjectHaveUpdate' => 'Cet objet a été mis à jour vers :',
+            '::::warn_ServNotPermitWrite' => "Ce serveur n'autorise pas les modifications.",
+            '::::warn_flushSessionAndCache' => "Toutes les données de connexion ont été effacées.",
+            '::::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            '::::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            '::::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            '::::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            '::::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            '::::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            '::::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+            '::::display:object:flag:protected' => 'Cet objet est protégé.',
+            '::::display:object:flag:unprotected' => "Cet objet n'est pas protégé.",
+            '::::display:object:flag:obfuscated' => 'Cet objet est dissimulé.',
+            '::::display:object:flag:unobfuscated' => "Cet objet n'est pas dissimulé.",
+            '::::display:object:flag:locked' => 'Cet entité est déverrouillée.',
+            '::::display:object:flag:unlocked' => 'Cet entité est verrouillée.',
             Application::REFERENCE_OBJECT_TEXT => 'Texte brute',
             'application/x-pem-file' => 'Entité',
             'image/jpeg' => 'Image JPEG',
@@ -5079,7 +4988,7 @@ Toutes les entités de recouvrement sont affichées ici, aucune n'est cachée.",
             '::About' => 'About',
             '::Help' => 'Help',
             '::menu' => 'Menu',
-//        ':::err_NotPermit' => 'Unauthorized!',
+//        '::::err_NotPermit' => 'Unauthorized!',
             ':::Flush' => 'Flush',
             '::Share' => 'Share',
             '::Protection' => 'Protection',
@@ -5123,11 +5032,10 @@ All recovery entities are displayed here, none are hidden.",
             '::EntityAdd' => 'Create an entity',
             '::EntityAddError' => 'Create entity error!',
             '::EntitySync' => 'Synchronize an entity',
-//        '::Password' => 'Password',
-            '::EntityLocked' => 'Entity locked. Unlock?',
-            '::EntityUnlocked' => 'Entity unlocked. Lock?',
-            '::Lock' => 'Lock',
-            '::Unlock' => 'Unlock',
+            '::::entity:locked' => 'Entity locked. Unlock?',
+            '::::entity:unlocked' => 'Entity unlocked. Lock?',
+            '::::lock' => 'Lock',
+            '::::unlock' => 'Unlock',
             #'::ListOrAddObject']='List my objects or add a new one:',
             '::OKConnect' => 'Login successful!',
             '::ConnectWith' => 'Connect with this entity',
@@ -5165,7 +5073,6 @@ All recovery entities are displayed here, none are hidden.",
             '::Prenom' => 'First name',
             '::Nom' => 'Name',
             '::Nommage' => 'Naming',
-            '::Password' => 'Password',
             '::Confirmation' => 'Confirmation',
             '::CreateAnEntity' => 'Create an entity',
             '::CreateTheGroup' => 'Create the group',
@@ -5225,37 +5132,37 @@ All recovery entities are displayed here, none are hidden.",
             '::MarkAdd' => 'Mark',
             '::MarkRemove' => 'Unmark',
             '::MarkRemoveAll' => 'Unmark all',
-            ':::display:content:errorBan' => "This object is banned, it can't be displayed!",
-            ':::display:content:warningTaggedWarning' => "This object is marked as dangerous, be carfull with it's content!",
-            ':::display:content:ObjectProctected' => "This object is marked as protected!",
-            ':::display:content:warningObjectProctected' => "This object is marked as protected, be careful when it's content is displayed in public!",
-            ':::display:content:OK' => "This object is valid, it's content have been checked!",
-            ':::display:content:warningTooBig' => "This object is too big, it's content have not been checked!",
-            ':::display:content:errorNotDisplayable' => "This object can't be displayed!",
-            ':::display:content:errorNotAvailable' => "This object is not available, it can't be displayed!",
-            ':::display:content:errorNotAvailableS' => "This object is not available!",
-            ':::display:content:ObjectHaveUpdate' => 'This object have been updated to:',
-            ':::warn_ServNotPermitWrite' => 'This server do not permit modifications.',
-            ':::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed.',
-            ':::err_NotPermit' => 'Non autorisé sur ce serveur !',
-            ':::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
-            ':::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
-            ':::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
-            ':::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
-            ':::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
-            ':::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
-            ':::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
-            ':::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
-            ':::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
-            ':::display:object:flag:protected' => 'This object is protected.',
-            ':::display:object:flag:unprotected' => 'This object is not protected.',
-            ':::display:object:flag:obfuscated' => 'This object is obfuscated.',
-            ':::display:object:flag:unobfuscated' => 'This object is not obfuscated.',
-            ':::display:object:flag:locked' => 'This entity is unlocked.',
-            ':::display:object:flag:unlocked' => 'This entity is locked.',
+            '::::display:content:errorBan' => "This object is banned, it can't be displayed!",
+            '::::display:content:warningTaggedWarning' => "This object is marked as dangerous, be carfull with it's content!",
+            '::::display:content:ObjectProctected' => "This object is marked as protected!",
+            '::::display:content:warningObjectProctected' => "This object is marked as protected, be careful when it's content is displayed in public!",
+            '::::display:content:OK' => "This object is valid, it's content have been checked!",
+            '::::display:content:warningTooBig' => "This object is too big, it's content have not been checked!",
+            '::::display:content:errorNotDisplayable' => "This object can't be displayed!",
+            '::::display:content:errorNotAvailable' => "This object is not available, it can't be displayed!",
+            '::::display:content:errorNotAvailableS' => "This object is not available!",
+            '::::display:content:ObjectHaveUpdate' => 'This object have been updated to:',
+            '::::warn_ServNotPermitWrite' => 'This server do not permit modifications.',
+            '::::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed.',
+            '::::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            '::::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            '::::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            '::::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            '::::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            '::::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            '::::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+            '::::display:object:flag:protected' => 'This object is protected.',
+            '::::display:object:flag:unprotected' => 'This object is not protected.',
+            '::::display:object:flag:obfuscated' => 'This object is obfuscated.',
+            '::::display:object:flag:unobfuscated' => 'This object is not obfuscated.',
+            '::::display:object:flag:locked' => 'This entity is unlocked.',
+            '::::display:object:flag:unlocked' => 'This entity is locked.',
             Application::REFERENCE_OBJECT_TEXT => 'RAW text',
             'application/x-pem-file' => 'Entity',
             'image/jpeg' => 'JPEG picture',
@@ -5279,7 +5186,7 @@ All recovery entities are displayed here, none are hidden.",
             '::About' => 'About',
             '::Help' => 'Help',
             '::menu' => 'Menu',
-//        ':::err_NotPermit' => 'Unauthorized!',
+//        '::::err_NotPermit' => 'Unauthorized!',
             ':::Flush' => 'Flush',
             '::Share' => 'Share',
             '::Protection' => 'Protection',
@@ -5323,11 +5230,10 @@ All recovery entities are displayed here, none are hidden.",
             '::EntityAdd' => 'Create an entity',
             '::EntityAddError' => 'Create  entity error!',
             '::EntitySync' => 'Synchronize an entity',
-//        '::Password' => 'Password',
-            '::EntityLocked' => 'Entidad bloqueada. Desbloquear?',
-            '::EntityUnlocked' => 'Entidad desbloqueada. Bloquear?',
-            '::Lock' => 'Lock',
-            '::Unlock' => 'Unlock',
+            '::::entity:locked' => 'Entidad bloqueada. Desbloquear?',
+            '::::entity:unlocked' => 'Entidad desbloqueada. Bloquear?',
+            '::::lock' => 'Lock',
+            '::::unlock' => 'Unlock',
             #'::ListOrAddObject']='List my objects or add a new one:',
             '::OKConnect' => 'Login successful!',
             '::ConnectWith' => 'Connect with this entity',
@@ -5365,7 +5271,6 @@ All recovery entities are displayed here, none are hidden.",
             '::Prenom' => 'First name',
             '::Nom' => 'Name',
             '::Nommage' => 'Naming',
-            '::Password' => 'Password',
             '::Confirmation' => 'Confirmation',
             '::CreateAnEntity' => 'Create an entity',
             '::CreateTheGroup' => 'Create the group',
@@ -5425,37 +5330,37 @@ All recovery entities are displayed here, none are hidden.",
             '::MarkAdd' => 'Mark',
             '::MarkRemove' => 'Unmark',
             '::MarkRemoveAll' => 'Unmark all',
-            ':::display:content:errorBan' => "This object is banned, it can't be displayed!",
-            ':::display:content:warningTaggedWarning' => "This object is marked as dangerous, be carfull with it's content!",
-            ':::display:content:ObjectProctected' => "This object is marked as protected!",
-            ':::display:content:warningObjectProctected' => "This object is marked as protected, be careful when it's content is displayed in public!",
-            ':::display:content:OK' => "This object is valid, it's content have been checked!",
-            ':::display:content:warningTooBig' => "This object is too big, it's content have not been checked!",
-            ':::display:content:errorNotDisplayable' => "This object can't be displayed!",
-            ':::display:content:errorNotAvailable' => "This object is not available, it can't be displayed!",
-            ':::display:content:errorNotAvailableS' => "This object is not available!",
-            ':::display:content:ObjectHaveUpdate' => 'This object have been updated to:',
-            ':::warn_ServNotPermitWrite' => 'This server do not permit modifications.',
-            ':::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed',
-            ':::err_NotPermit' => 'Non autorisé sur ce serveur !',
-            ':::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
-            ':::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
-            ':::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
-            ':::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
-            ':::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
-            ':::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
-            ':::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
-            ':::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
-            ':::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
-            ':::display:object:flag:protected' => 'Este objeto está protegido.',
-            ':::display:object:flag:unprotected' => 'Este objeto no está protegido.',
-            ':::display:object:flag:obfuscated' => 'Este objeto está oculto.',
-            ':::display:object:flag:unobfuscated' => 'Este objeto no está oculto.',
-            ':::display:object:flag:locked' => 'Esta entidad está desbloqueada.',
-            ':::display:object:flag:unlocked' => 'Esta entidad está bloqueada.',
+            '::::display:content:errorBan' => "This object is banned, it can't be displayed!",
+            '::::display:content:warningTaggedWarning' => "This object is marked as dangerous, be carfull with it's content!",
+            '::::display:content:ObjectProctected' => "This object is marked as protected!",
+            '::::display:content:warningObjectProctected' => "This object is marked as protected, be careful when it's content is displayed in public!",
+            '::::display:content:OK' => "This object is valid, it's content have been checked!",
+            '::::display:content:warningTooBig' => "This object is too big, it's content have not been checked!",
+            '::::display:content:errorNotDisplayable' => "This object can't be displayed!",
+            '::::display:content:errorNotAvailable' => "This object is not available, it can't be displayed!",
+            '::::display:content:errorNotAvailableS' => "This object is not available!",
+            '::::display:content:ObjectHaveUpdate' => 'This object have been updated to:',
+            '::::warn_ServNotPermitWrite' => 'This server do not permit modifications.',
+            '::::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed',
+            '::::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            '::::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            '::::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            '::::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            '::::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            '::::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            '::::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+            '::::display:object:flag:protected' => 'Este objeto está protegido.',
+            '::::display:object:flag:unprotected' => 'Este objeto no está protegido.',
+            '::::display:object:flag:obfuscated' => 'Este objeto está oculto.',
+            '::::display:object:flag:unobfuscated' => 'Este objeto no está oculto.',
+            '::::display:object:flag:locked' => 'Esta entidad está desbloqueada.',
+            '::::display:object:flag:unlocked' => 'Esta entidad está bloqueada.',
             Application::REFERENCE_OBJECT_TEXT => 'Texto en bruto',
             'application/x-pem-file' => 'Entidad',
             'image/jpeg' => 'JPEG gráfico',

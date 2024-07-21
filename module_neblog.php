@@ -20,20 +20,20 @@ use Nebule\Library\Node;
  */
 class ModuleNeblog extends Modules
 {
-    protected $MODULE_TYPE = 'Application';
-    protected $MODULE_NAME = '::neblog:module:objects:ModuleName';
-    protected $MODULE_MENU_NAME = '::neblog:module:objects:MenuName';
-    protected $MODULE_COMMAND_NAME = 'log';
-    protected $MODULE_DEFAULT_VIEW = 'blog';
-    protected $MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    protected $MODULE_VERSION = '020240720';
-    protected $MODULE_AUTHOR = 'Projet nebule';
-    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
-    protected $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
-    protected $MODULE_HELP = '::neblog:module:objects:ModuleHelp';
-    protected $MODULE_INTERFACE = '3.0';
+    protected string $MODULE_TYPE = 'Application';
+    protected string $MODULE_NAME = '::neblog:module:objects:ModuleName';
+    protected string $MODULE_MENU_NAME = '::neblog:module:objects:MenuName';
+    protected string $MODULE_COMMAND_NAME = 'log';
+    protected string $MODULE_DEFAULT_VIEW = 'blog';
+    protected string $MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
+    protected string $MODULE_VERSION = '020240720';
+    protected string $MODULE_AUTHOR = 'Projet nebule';
+    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
+    protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
+    protected string $MODULE_HELP = '::neblog:module:objects:ModuleHelp';
+    protected string $MODULE_INTERFACE = '3.0';
 
-    protected $MODULE_REGISTERED_VIEWS = array(
+    protected array $MODULE_REGISTERED_VIEWS = array(
         'blog',
         'list',
         'new',
@@ -41,7 +41,7 @@ class ModuleNeblog extends Modules
         'delete',
         'about',
     );
-    protected $MODULE_REGISTERED_ICONS = array(
+    protected array $MODULE_REGISTERED_ICONS = array(
         Displays::DEFAULT_ICON_LO,
         Displays::DEFAULT_ICON_LSTOBJ,
         Displays::DEFAULT_ICON_ADDOBJ,
@@ -49,10 +49,10 @@ class ModuleNeblog extends Modules
         Displays::DEFAULT_ICON_LD,
         Displays::DEFAULT_ICON_HELP,
     );
-    protected $MODULE_APP_TITLE_LIST = array();
-    protected $MODULE_APP_ICON_LIST = array();
-    protected $MODULE_APP_DESC_LIST = array();
-    protected $MODULE_APP_VIEW_LIST = array();
+    protected array $MODULE_APP_TITLE_LIST = array();
+    protected array $MODULE_APP_ICON_LIST = array();
+    protected array $MODULE_APP_DESC_LIST = array();
+    protected array $MODULE_APP_VIEW_LIST = array();
 
     const DEFAULT_ATTRIBS_DISPLAY_NUMBER = 10;
 
@@ -345,7 +345,7 @@ class ModuleNeblog extends Modules
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:about:title', $icon, false);
 
         echo '<div>';
-        echo '<p>' . $this->_traduction('::neblog:module:about:desc') . '</p>';
+        echo '<p>' . $this->_translateInstance->getTranslate('::neblog:module:about:desc') . '</p>';
         echo '</div>';
     }
 

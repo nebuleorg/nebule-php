@@ -451,71 +451,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
     /**
-     * Initialisation des variables et instances interdépendantes.
-     * @return void
-     * TODO à optimiser avec __wakeup et __sleep.
-     *
-     */
-    public function initialisation2(): void
-    {
-        global $applicationName;
-
-        $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
-        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '4bffc1e9');
-        $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
-        $this->_actionInstance = $this->_applicationInstance->getActionInstance();
-        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
-
-        $this->setHtlinkObjectPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkGroupPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkConversationPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkEntityPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkCurrencyPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkTokenPoolPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkTokenPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkTransactionPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkWalletPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
-            . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-
-        $this->_findCurrentApplication();
-        $this->_findCurrentDisplayMode();
-        $this->_findCurrentModule();
-        $this->_findCurrentDisplayView();
-        $this->_findInlineContentID();
-
-        // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.
-        // Les instances interdépendantes doivent être synchronisées.
-    }
-
-    /**
      * Retourne la liste des objets nécessaires au bon fonctionnement de l'application.
      *
      * Vide par défaut, est remplacé par l'application.
@@ -2238,7 +2173,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 }
             } else {
                 $notify = new DisplayNotify($this->_applicationInstance);
-                $notify->setMessage(':::display:content:errorNotAvailable');
+                $notify->setMessage('::::display:content:errorNotAvailable');
                 $notify->setType(DisplayNotify::TYPE_ERROR);
                 $result .= $notify->getHTML();
             }
@@ -2388,14 +2323,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($danger) {
 
             $notify = new DisplayNotify($this->_applicationInstance);
-            $notify->setMessage(':::display:content:errorBan');
+            $notify->setMessage('::::display:content:errorBan');
             $notify->setType(DisplayNotify::TYPE_ERROR);
             $result .= $notify->getHTML();
         } elseif ($protected
             && $nid == $object->getProtectedID()
         ) {
             $notify = new DisplayNotify($this->_applicationInstance);
-            $notify->setMessage(':::display:content:warningObjectProctected');
+            $notify->setMessage('::::display:content:warningObjectProctected');
             $notify->setType(DisplayNotify::TYPE_WARN);
             $result .= $notify->getHTML();
             $unprotectedObject = $this->_nebuleInstance->newObject($object->getUnprotectedID());
@@ -2416,7 +2351,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         } elseif ($ispresent) {
             if ($warning) {
                 $notify = new DisplayNotify($this->_applicationInstance);
-                $notify->setMessage(':::display:content:warningTaggedWarning');
+                $notify->setMessage('::::display:content:warningTaggedWarning');
                 $notify->setType(DisplayNotify::TYPE_WARN);
                 $result .= $notify->getHTML();
             }
@@ -2425,7 +2360,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 && $permitWarnProtected
             ) {
                 $notify = new DisplayNotify($this->_applicationInstance);
-                $notify->setMessage(':::display:content:warningObjectProctected');
+                $notify->setMessage('::::display:content:warningObjectProctected');
                 $notify->setType(DisplayNotify::TYPE_WARN);
                 $result .= $notify->getHTML();
             }
@@ -2441,12 +2376,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     else {
                         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
                             $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage(':::display:content:warningTooBig');
+                            $notify->setMessage('::::display:content:warningTooBig');
                             $notify->setType(DisplayNotify::TYPE_WARN);
                             $result .= $notify->getHTML();
                         } else {
                             $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage(':::display:content:errorNotDisplayable');
+                            $notify->setMessage('::::display:content:errorNotDisplayable');
                             $notify->setType(DisplayNotify::TYPE_ERROR);
                             $result .= $notify->getHTML();
                         }
@@ -2459,12 +2394,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     else {
                         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
                             $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage(':::display:content:warningTooBig');
+                            $notify->setMessage('::::display:content:warningTooBig');
                             $notify->setType(DisplayNotify::TYPE_WARN);
                             $result .= $notify->getHTML();
                         } else {
                             $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage(':::display:content:errorNotDisplayable');
+                            $notify->setMessage('::::display:content:errorNotDisplayable');
                             $notify->setType(DisplayNotify::TYPE_ERROR);
                             $result .= $notify->getHTML();
                         }
@@ -2482,12 +2417,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     else {
                         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
                             $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage(':::display:content:warningTooBig');
+                            $notify->setMessage('::::display:content:warningTooBig');
                             $notify->setType(DisplayNotify::TYPE_WARN);
                             $result .= $notify->getHTML();
                         } else {
                             $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage(':::display:content:errorNotDisplayable');
+                            $notify->setMessage('::::display:content:errorNotDisplayable');
                             $notify->setType(DisplayNotify::TYPE_ERROR);
                             $result .= $notify->getHTML();
                         }
@@ -2501,13 +2436,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     else {
                         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
                             $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage(':::display:content:warningTooBig');
+                            $notify->setMessage('::::display:content:warningTooBig');
                             $notify->setType(DisplayNotify::TYPE_WARN);
                             $result .= $notify->getHTML();
                         }
                         else {
                             $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage(':::display:content:errorNotAvailable');
+                            $notify->setMessage('::::display:content:errorNotAvailable');
                             $notify->setType(DisplayNotify::TYPE_ERROR);
                             $result .= $notify->getHTML();
                         }
@@ -2520,12 +2455,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     else {
                         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
                             $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage(':::display:content:warningTooBig');
+                            $notify->setMessage('::::display:content:warningTooBig');
                             $notify->setType(DisplayNotify::TYPE_WARN);
                             $result .= $notify->getHTML();
                         } else {
                             $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage(':::display:content:errorNotDisplayable');
+                            $notify->setMessage('::::display:content:errorNotDisplayable');
                             $notify->setType(DisplayNotify::TYPE_ERROR);
                             $result .= $notify->getHTML();
                         }
@@ -2533,20 +2468,20 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     break;
                 case nebule::REFERENCE_OBJECT_CRYPT_RSA :
                     $notify = new DisplayNotify($this->_applicationInstance);
-                    $notify->setMessage(':::display:content:warningObjectProctected');
+                    $notify->setMessage('::::display:content:warningObjectProctected');
                     $notify->setType(DisplayNotify::TYPE_WARN);
                     $result .= $notify->getHTML();
                     break;
                 default :
                     $notify = new DisplayNotify($this->_applicationInstance);
-                    $notify->setMessage(':::display:content:errorNotDisplayable');
+                    $notify->setMessage('::::display:content:errorNotDisplayable');
                     $notify->setType(DisplayNotify::TYPE_WARN);
                     $result .= $notify->getHTML();
                     break;
             }
         } else {
             $notify = new DisplayNotify($this->_applicationInstance);
-            $notify->setMessage(':::display:content:errorNotAvailable');
+            $notify->setMessage('::::display:content:errorNotAvailable');
             $notify->setType(DisplayNotify::TYPE_ERROR);
             $result .= $notify->getHTML();
         }
@@ -3379,10 +3314,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *     Par défaut vide : calcul la description de l'état de l'objet.
      *     Le texte de ces état est traduit.
      *     Par défaut est calculé par rapport à flagState :
-     *       - e : ':::display:content:errorBan'
-     *       - w : ':::display:content:warningTaggedWarning'
-     *       - n : ':::display:content:errorNotAvailable'
-     *       - o : ':::display:content:OK'
+     *       - e : '::::display:content:errorBan'
+     *       - w : '::::display:content:warningTaggedWarning'
+     *       - n : '::::display:content:errorNotAvailable'
+     *       - o : '::::display:content:OK'
      *     String
      * - flagMessage : Détermine un message à afficher au niveau des flags dépliés.
      *     enableDisplayFlags doit être à true.
@@ -3853,9 +3788,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 || trim($param['flagProtectionText']) == ''
             ) {
                 if ($param['flagProtection'])
-                    $param['flagProtectionText'] = ':::display:object:flag:protected';
+                    $param['flagProtectionText'] = '::::display:object:flag:protected';
                 else
-                    $param['flagProtectionText'] = ':::display:object:flag:unprotected';
+                    $param['flagProtectionText'] = '::::display:object:flag:unprotected';
             }
             if (isset($param['flagProtectionLink']))
                 $param['flagProtectionLink'] = trim(filter_var($param['flagProtectionLink'], FILTER_SANITIZE_URL));
@@ -3885,9 +3820,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 || trim($param['flagObfuscateText']) == ''
             ) {
                 if ($param['flagObfuscate'])
-                    $param['flagObfuscateText'] = ':::display:object:flag:obfuscated';
+                    $param['flagObfuscateText'] = '::::display:object:flag:obfuscated';
                 else
-                    $param['flagObfuscateText'] = ':::display:object:flag:unobfuscated';
+                    $param['flagObfuscateText'] = '::::display:object:flag:unobfuscated';
             }
             if (isset($param['flagObfuscateLink']))
                 $param['flagObfuscateLink'] = trim(filter_var($param['flagObfuscateLink'], FILTER_SANITIZE_URL));
@@ -4100,7 +4035,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 'displayRatio' => $param['displayRatio'],
                 'informationType' => 'warn',
             );
-            $objectContent = $this->getDisplayInformation_DEPRECATED(':::display:content:ObjectProctected', $paramInfo);
+            $objectContent = $this->getDisplayInformation_DEPRECATED('::::display:content:ObjectProctected', $paramInfo);
         } else
             $objectContent = $this->getDisplayObjectContent($messageInstance, $param['displaySize'], $param['displayRatio'], false);
 
@@ -4162,13 +4097,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     $result .= $this->_getDisplayObjectFlag(
                         false,
                         self::DEFAULT_ICON_IOK,
-                        ':::display:link:OK',
+                        '::::display:link:OK',
                         '');
                 } else {
                     $result .= $this->_getDisplayObjectFlag(
                         false,
                         self::DEFAULT_ICON_IERR,
-                        ':::display:link:errorInvalid',
+                        '::::display:link:errorInvalid',
                         '');
                 }
             }
@@ -4580,7 +4515,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 }
             } else {
                 $notify = new DisplayNotify($this->_applicationInstance);
-                $notify->setMessage(':::display:content:errorNotAvailable');
+                $notify->setMessage('::::display:content:errorNotAvailable');
                 $notify->setType(DisplayNotify::TYPE_ERROR);
                 $result .= $notify->getHTML();
             }
@@ -4668,27 +4603,27 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Affichage du contenu.
         if ($danger) {
             $param['informationType'] = 'error';
-            $result .= $this->getDisplayInformation_DEPRECATED(':::display:content:errorBan', $param);
-            $result .= $this->getDisplayInformation_DEPRECATED(':::display:content:errorNotAvailable', $param);
+            $result .= $this->getDisplayInformation_DEPRECATED('::::display:content:errorBan', $param);
+            $result .= $this->getDisplayInformation_DEPRECATED('::::display:content:errorNotAvailable', $param);
         } elseif ($protected
             && !$this->_unlocked
         ) {
             $param['informationType'] = 'warn';
-            $result .= $this->getDisplayInformation_DEPRECATED(':::display:content:ObjectProctected', $param);
+            $result .= $this->getDisplayInformation_DEPRECATED('::::display:content:ObjectProctected', $param);
             $result .= "<br />\n";
             $param['informationType'] = 'error';
-            $result .= $this->getDisplayInformation_DEPRECATED(':::display:content:errorNotAvailable', $param);
+            $result .= $this->getDisplayInformation_DEPRECATED('::::display:content:errorNotAvailable', $param);
         } elseif ($ispresent) {
             if ($warning) {
                 $param['informationType'] = 'warn';
-                $result .= $this->getDisplayInformation_DEPRECATED(':::display:content:warningTaggedWarning', $param);
+                $result .= $this->getDisplayInformation_DEPRECATED('::::display:content:warningTaggedWarning', $param);
             }
             if ($protected
                 && $this->_unlocked
                 && $permitWarnProtected
             ) {
                 $param['informationType'] = 'warn';
-                $result .= $this->getDisplayInformation_DEPRECATED(':::display:content:warningObjectProctected', $param);
+                $result .= $this->getDisplayInformation_DEPRECATED('::::display:content:warningObjectProctected', $param);
             }
 
             switch ($typemime) {
@@ -4700,7 +4635,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                             . '" alt="Image ' . $id . '"></div>' . "\n";
                     } else {
                         $param['informationType'] = 'error';
-                        $result .= $this->getDisplayInformation_DEPRECATED(':::display:content:errorNotDisplayable', $param);
+                        $result .= $this->getDisplayInformation_DEPRECATED('::::display:content:errorNotDisplayable', $param);
                     }
                     break;
                 case nebule::REFERENCE_OBJECT_TEXT :
@@ -4709,7 +4644,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $result .= '<div class="objectContentObject objectContentText"><p>' . $content . '</p></div>' . "\n";
                     } else {
                         $param['informationType'] = 'error';
-                        $result .= $this->getDisplayInformation_DEPRECATED(':::display:content:errorNotDisplayable', $param);
+                        $result .= $this->getDisplayInformation_DEPRECATED('::::display:content:errorNotDisplayable', $param);
                     }
                     unset($content);
                     break;
@@ -4726,7 +4661,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $result .= '<div class="objectContentObject objectContentCode"><pre>' . $content . '</pre></div>' . "\n";
                     else {
                         $param['informationType'] = 'error';
-                        $result .= $this->getDisplayInformation_DEPRECATED(':::display:content:errorNotDisplayable', $param);
+                        $result .= $this->getDisplayInformation_DEPRECATED('::::display:content:errorNotDisplayable', $param);
                     }
                     unset($content);
                     break;
@@ -4736,7 +4671,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $result .= '<div class="objectContentObject objectContentAudio"><audio controls><source src="?o=' . $id . '" type="audio/mp3" />' . $this->_traductionInstance->getTranslate(':::warn_NoAudioTagSupport') . '</audio></div>' . "\n";
                     else {
                         $param['informationType'] = 'error';
-                        $result .= $this->getDisplayInformation_DEPRECATED(':::display:content:errorNotDisplayable', $param);
+                        $result .= $this->getDisplayInformation_DEPRECATED('::::display:content:errorNotDisplayable', $param);
                     }
                     break;
                 case nebule::REFERENCE_OBJECT_OGG :
@@ -4745,21 +4680,21 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $result .= '<div class="objectContentObject objectContentAudio"><audio controls><source src="?o=' . $id . '" type="audio/ogg" />' . $this->_traductionInstance->getTranslate(':::warn_NoAudioTagSupport') . '</audio></div>' . "\n";
                     else {
                         $param['informationType'] = 'error';
-                        $result .= $this->getDisplayInformation_DEPRECATED(':::display:content:errorNotDisplayable', $param);
+                        $result .= $this->getDisplayInformation_DEPRECATED('::::display:content:errorNotDisplayable', $param);
                     }
                     break;
                 case nebule::REFERENCE_OBJECT_CRYPT_RSA :
                     $param['informationType'] = 'warn';
-                    $result .= $this->getDisplayInformation_DEPRECATED(':::display:content:ObjectProctected', $param);
+                    $result .= $this->getDisplayInformation_DEPRECATED('::::display:content:ObjectProctected', $param);
                     break;
                 default :
                     $param['informationType'] = 'error';
-                    $result .= $this->getDisplayInformation_DEPRECATED(':::display:content:errorNotDisplayable', $param);
+                    $result .= $this->getDisplayInformation_DEPRECATED('::::display:content:errorNotDisplayable', $param);
                     break;
             }
         } else {
             $param['informationType'] = 'error';
-            $result .= $this->getDisplayInformation_DEPRECATED(':::display:content:errorNotAvailable', $param);
+            $result .= $this->getDisplayInformation_DEPRECATED('::::display:content:errorNotAvailable', $param);
         }
 
         // Recherche si l'objet a une mise à jour.
@@ -4779,7 +4714,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $result .= "</div>\n";
             $result .= '<div class="objectContent">' . "\n";
             $result .= $this->getDisplayInformation_DEPRECATED(
-                $this->_applicationInstance->getTranslateInstance()->getTranslate(':::display:content:ObjectHaveUpdate')
+                $this->_applicationInstance->getTranslateInstance()->getTranslate('::::display:content:ObjectHaveUpdate')
                 . '<br />' . $this->getDisplayObject_DEPRECATED($UpdateID, $param2),
                 $param
             );
@@ -6116,10 +6051,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                                 $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IWARN);
                                 $this->displayUpdateImage(
                                     $icon,
-                                    ':::display:content:warningTaggedWarning',
+                                    '::::display:content:warningTaggedWarning',
                                     'iconInlineDisplay');
                                 echo ' ';
-                                $this->_traductionInstance->echoTranslate(':::display:content:warningTaggedWarning'); ?></p>
+                                echo $this->_traductionInstance->getTranslate('::::display:content:warningTaggedWarning'); ?></p>
                         </div>
                         <?php
                     }
@@ -6131,10 +6066,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                                 $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_IERR);
                                 $this->displayUpdateImage(
                                     $icon,
-                                    ':::display:content:errorBan',
+                                    '::::display:content:errorBan',
                                     'iconInlineDisplay');
                                 echo ' ';
-                                $this->_traductionInstance->echoTranslate(':::display:content:errorBan'); ?></p>
+                                echo $this->_traductionInstance->getTranslate('::::display:content:errorBan'); ?></p>
                         </div>
                         <?php
                     }
@@ -6146,10 +6081,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                                 $icon = $this->_nebuleInstance->newObject(self::DEFAULT_ICON_LK);
                                 $this->displayUpdateImage(
                                     $icon,
-                                    ':::display:content:ObjectProctected',
+                                    '::::display:content:ObjectProctected',
                                     'iconInlineDisplay');
                                 echo ' ';
-                                $this->_traductionInstance->echoTranslate(':::display:content:ObjectProctected'); ?></p>
+                                echo $this->_traductionInstance->getTranslate('::::display:content:ObjectProctected'); ?></p>
                         </div>
                         <?php
                     }
@@ -6266,12 +6201,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         }
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')) {
             $param['informationType'] = 'warn';
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED(':::warn_ServNotPermitWrite', $param);
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::warn_ServNotPermitWrite', $param);
             $error = 'wr';
         }
         if ($this->_nebuleInstance->getFlushCache()) {
             $param['informationType'] = 'warn';
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED(':::warn_flushSessionAndCache', $param);
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::warn_flushSessionAndCache', $param);
             $error = 'wr';
         }
         if ( $displayOk && $error == 'ok')

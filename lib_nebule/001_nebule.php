@@ -112,8 +112,6 @@ class nebule
     const REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS = 'nebule/objet/interface/web/php/applications';
     const REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT = 'nebule/objet/interface/web/php/applications/direct';
     const REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE = 'nebule/objet/interface/web/php/applications/active';
-    const REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES = 'nebule/objet/interface/web/php/applications/modules';
-    const REFERENCE_NEBULE_OBJET_INTERFACE_APP_MOD_ACTIVE = 'nebule/objet/interface/web/php/applications/modules/active';
     const REFERENCE_NEBULE_OBJET_NOEUD = 'nebule/objet/noeud';
     const REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE = 'nebule/objet/image/reference';
     const REFERENCE_NEBULE_OBJET_EMOTION = 'nebule/objet/emotion';
@@ -197,6 +195,7 @@ class nebule
         'nebule/objet/interface/web/php/applications/direct',
         'nebule/objet/interface/web/php/applications/active',
         'nebule/objet/interface/web/php/applications/modules',
+        'nebule/objet/interface/web/php/applications/modules/traduction',
         'nebule/objet/interface/web/php/applications/modules/active',
         'nebule/objet/noeud',
         'nebule/objet/image/reference',
@@ -231,70 +230,18 @@ class nebule
         'nebule/reference',
     );
 
-    // Définition des variables.
-    /**
-     * Auto-référence de l'instance de la bibliothèque nebule.
-     *
-     * @var nebule
-     */
-    private $_nebuleInstance;
-
-    /**
-     * Instance de gestion de la métrologie, des journaux et des statistiques internes.
-     *
-     * @var ?Metrology
-     */
-    private $_metrologyInstance = null;
-
-    /**
-     * Instance de gestion de la configuration et des options.
-     *
-     * @var ?Configuration
-     */
-    private $_configurationInstance = null;
-
-    /**
-     * Instance de gestion du cache.
-     *
-     * @var ?Cache
-     */
-    private $_cacheInstance = null;
-
-    /**
-     * Instance de gestion des tickets.
-     *
-     * @var ?Ticketing
-     */
-    private $_ticketingInstance = null;
-
-    /**
-     * Instance des entrées/sorties.
-     *
-     * @var ?ioInterface
-     */
-    private $_ioInstance = null;
-
-    /**
-     * Instance de gestion de la cryptographie.
-     *
-     * @var ?CryptoInterface
-     */
-    private $_cryptoInstance = null;
-
-    /**
-     * Instance de gestion des relations sociales des liens.
-     *
-     * @var ?SocialInterface
-     */
-    private $_socialInstance = null;
-
-    private $_flushCache = false;
+    private nebule $_nebuleInstance;
+    private ?Metrology $_metrologyInstance = null;
+    private ?Configuration $_configurationInstance = null;
+    private ?Cache $_cacheInstance = null;
+    private ?Ticketing $_ticketingInstance = null;
+    private ?ioInterface $_ioInstance = null;
+    private ?CryptoInterface $_cryptoInstance = null;
+    private ?SocialInterface $_socialInstance = null;
+    private bool $_flushCache = false;
 
 
 
-    /**
-     * Constructeur.
-     */
     public function __construct()
     {
         global $metrologyStartTime;
@@ -311,11 +258,6 @@ class nebule
         $this->_initialisation();
     }
 
-    /**
-     * Fonction de suppression de l'instance.
-     *
-     * @return boolean
-     */
     public function __destruct()
     {
         $this->_saveCurrentsObjectsOnSessionBuffer();
@@ -323,11 +265,6 @@ class nebule
         return true;
     }
 
-    /**
-     * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
-     *
-     * @return string
-     */
     public function __toString()
     {
         return self::NEBULE_LICENCE_NAME;

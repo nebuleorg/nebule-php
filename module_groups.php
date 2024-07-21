@@ -18,29 +18,29 @@ use Nebule\Library\Node;
  */
 class ModuleGroups extends Modules
 {
-    protected $MODULE_TYPE = 'Application';
-    protected $MODULE_NAME = '::sylabe:module:groups:ModuleName';
-    protected $MODULE_MENU_NAME = '::sylabe:module:groups:MenuName';
-    protected $MODULE_COMMAND_NAME = 'grp';
-    protected $MODULE_DEFAULT_VIEW = 'disp';
-    protected $MODULE_DESCRIPTION = '::sylabe:module:groups:ModuleDescription';
-    protected $MODULE_VERSION = '020240720';
-    protected $MODULE_AUTHOR = 'Projet nebule';
-    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
-    protected $MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
-    protected $MODULE_HELP = '::sylabe:module:groups:ModuleHelp';
-    protected $MODULE_INTERFACE = '3.0';
+    protected string $MODULE_TYPE = 'Application';
+    protected string $MODULE_NAME = '::sylabe:module:groups:ModuleName';
+    protected string $MODULE_MENU_NAME = '::sylabe:module:groups:MenuName';
+    protected string $MODULE_COMMAND_NAME = 'grp';
+    protected string $MODULE_DEFAULT_VIEW = 'disp';
+    protected string $MODULE_DESCRIPTION = '::sylabe:module:groups:ModuleDescription';
+    protected string $MODULE_VERSION = '020240720';
+    protected string $MODULE_AUTHOR = 'Projet nebule';
+    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
+    protected string $MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
+    protected string $MODULE_HELP = '::sylabe:module:groups:ModuleHelp';
+    protected string $MODULE_INTERFACE = '3.0';
 
-    protected $MODULE_REGISTERED_VIEWS = array('list', 'listall', 'setgroup', 'unsetgroup', 'addmarked', 'disp');
-    protected $MODULE_REGISTERED_ICONS = array(
+    protected array $MODULE_REGISTERED_VIEWS = array('list', 'listall', 'setgroup', 'unsetgroup', 'addmarked', 'disp');
+    protected array $MODULE_REGISTERED_ICONS = array(
         '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256',    // 0 : Icône des groupes.
         '819babe3072d50f126a90c982722568a7ce2ddd2b294235f40679f9d220e8a0a.sha2.256',    // 1 : Créer un groupe.
         'a269514d2b940d8269993a6f0138f38bbb86e5ac387dcfe7b810bf871002edf3.sha2.256',    // 2 : Ajouter objets marqués.
     );
-    protected $MODULE_APP_TITLE_LIST = array('::sylabe:module:groups:AppTitle1');
-    protected $MODULE_APP_ICON_LIST = array('0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256');
-    protected $MODULE_APP_DESC_LIST = array('::sylabe:module:groups:AppDesc1');
-    protected $MODULE_APP_VIEW_LIST = array('list');
+    protected array $MODULE_APP_TITLE_LIST = array('::sylabe:module:groups:AppTitle1');
+    protected array $MODULE_APP_ICON_LIST = array('0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256');
+    protected array $MODULE_APP_DESC_LIST = array('::sylabe:module:groups:AppDesc1');
+    protected array $MODULE_APP_VIEW_LIST = array('list');
 
     private $_hashGroup, $_hashGroupClosed, $_hashGroupObject, $_hashGroupClosedObject;
 
@@ -554,7 +554,7 @@ class ModuleGroups extends Modules
 					$list[$i]['entity'] = $instanceEntity;
 					$list[$i]['icon'] = '';
 					$list[$i]['htlink'] = '';
-					$list[$i]['desc'] = $this->_traduction($closed);
+					$list[$i]['desc'] = $this->_translateInstance->getTranslate($closed);
 					$list[$i]['actions'] = array();
 					if ( $this->_unlocked )
 					{
@@ -616,7 +616,7 @@ class ModuleGroups extends Modules
                     <?php
                     $this->_applicationInstance->getDisplayInstance()->displayInlineObjectColorName($this->_applicationInstance->getCurrentObjectInstance());
                     echo ' ';
-                    $this->_echoTraduction('::sylabe:module:groups:display:isGroup');
+                    echo $this->_translateInstance->getTranslate('::sylabe:module:groups:display:isGroup');
                     ?>
                 </p>
             </div>
@@ -629,7 +629,7 @@ class ModuleGroups extends Modules
                     <?php
                     $this->_applicationInstance->getDisplayInstance()->displayInlineObjectColorName($this->_applicationInstance->getCurrentObjectInstance());
                     echo ' ';
-                    $this->_echoTraduction('::sylabe:module:groups:display:isGroupToOther');
+                    echo $this->_translateInstance->getTranslate('::sylabe:module:groups:display:isGroupToOther');
                     echo ' ';
                     $this->_applicationInstance->getDisplayInstance()->displayInlineObjectColorIconName($this->_applicationInstance->getCurrentObjectInstance()); // Modifié !!!
                     echo '.';
@@ -645,7 +645,7 @@ class ModuleGroups extends Modules
                     <?php
                     $this->_applicationInstance->getDisplayInstance()->displayInlineObjectColorName($this->_applicationInstance->getCurrentObjectInstance());
                     echo ' ';
-                    $this->_echoTraduction('::sylabe:module:groups:display:isNotGroup');
+                    echo $this->_translateInstance->getTranslate('::sylabe:module:groups:display:isNotGroup');
                     ?>
                 </p>
             </div>
@@ -685,21 +685,21 @@ class ModuleGroups extends Modules
                         <input type="checkbox"
                                name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP_CLOSED; ?>"
                                value="y" checked>
-                        <?php $this->_echoTraduction('::GroupeFerme'); ?>
+                        <?php echo $this->_translateInstance->getTranslate('::GroupeFerme'); ?>
                     </div>
-                    <?php $this->_echoTraduction('::sylabe:module:groups:display:nom'); ?>
+                    <?php echo $this->_translateInstance->getTranslate('::sylabe:module:groups:display:nom'); ?>
                     <input type="text"
                            name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP_NAME; ?>"
                            size="20" value="" class="klictyModuleEntityInput"><br/>
                     <input type="submit"
-                           value="<?php $this->_echoTraduction('::sylabe:module:groups:display:createTheGroup'); ?>"
+                           value="<?php echo $this->_translateInstance->getTranslate('::sylabe:module:groups:display:createTheGroup'); ?>"
                            class="klictyModuleEntityInput">
                 </form>
                 </p>
             </div>
             <?php
         } else {
-            $this->_applicationInstance->getDisplayInstance()->displayMessageError_DEPRECATED(':::err_NotPermit');
+            $this->_applicationInstance->getDisplayInstance()->displayMessageError_DEPRECATED('::::err_NotPermit');
         }
     }
 
@@ -851,7 +851,7 @@ class ModuleGroups extends Modules
                             $list[$i]['entity'] = $instanceSigner;
                             $list[$i]['icon'] = '';
                             $list[$i]['htlink'] = '';
-                            $list[$i]['desc'] = $this->_traduction($closed);
+                            $list[$i]['desc'] = $this->_translateInstance->getTranslate($closed);
                             $list[$i]['actions'] = array();
 
                             // Supprimer le groupe.
@@ -915,7 +915,7 @@ class ModuleGroups extends Modules
                         $list[$i]['entity'] = $instanceSigner;
                         $list[$i]['icon'] = '';
                         $list[$i]['htlink'] = '';
-                        $list[$i]['desc'] = $this->_traduction($closed);
+                        $list[$i]['desc'] = $this->_translateInstance->getTranslate($closed);
                         $list[$i]['actions'] = array();
 
                         // Supprimer le groupe.

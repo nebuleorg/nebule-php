@@ -8,6 +8,7 @@ use Nebule\Library\Metrology;
 use Nebule\Library\Modules;
 use Nebule\Library\nebule;
 use Nebule\Library\Node;
+use Nebule\Library\References;
 
 /**
  * Ce module permet de gérer les applications.
@@ -22,28 +23,28 @@ use Nebule\Library\Node;
  */
 class ModuleManage extends Modules
 {
-    protected $MODULE_TYPE = 'Application';
-    protected $MODULE_NAME = '::sylabe:module:manage:ModuleName';
-    protected $MODULE_MENU_NAME = '::sylabe:module:manage:MenuName';
-    protected $MODULE_COMMAND_NAME = 'modmanager';
-    protected $MODULE_DEFAULT_VIEW = 'disp';
-    protected $MODULE_DESCRIPTION = '::sylabe:module:manage:ModuleDescription';
-    protected $MODULE_VERSION = '020240720';
-    protected $MODULE_AUTHOR = 'Projet nebule';
-    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
-    protected $MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256';
-    protected $MODULE_HELP = '::sylabe:module:manage:ModuleHelp';
-    protected $MODULE_INTERFACE = '3.0';
+    protected string $MODULE_TYPE = 'Application';
+    protected string $MODULE_NAME = '::sylabe:module:manage:ModuleName';
+    protected string $MODULE_MENU_NAME = '::sylabe:module:manage:MenuName';
+    protected string $MODULE_COMMAND_NAME = 'modmanager';
+    protected string $MODULE_DEFAULT_VIEW = 'disp';
+    protected string $MODULE_DESCRIPTION = '::sylabe:module:manage:ModuleDescription';
+    protected string $MODULE_VERSION = '020240721';
+    protected string $MODULE_AUTHOR = 'Projet nebule';
+    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
+    protected string $MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256';
+    protected string $MODULE_HELP = '::sylabe:module:manage:ModuleHelp';
+    protected string $MODULE_INTERFACE = '3.0';
 
-    protected $MODULE_REGISTERED_VIEWS = array('list', 'disp', 'add', 'cod');
-    protected $MODULE_REGISTERED_ICONS = array(
+    protected array $MODULE_REGISTERED_VIEWS = array('list', 'disp', 'add', 'cod');
+    protected array $MODULE_REGISTERED_ICONS = array(
         '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256',    // 0 Module
         '37be5ba2a53e9835dbb0ff67a0ece1cc349c311660e4779680ee2daa4ac45636.sha2.256',    // 1 Ajout d'un module
     );
-    protected $MODULE_APP_TITLE_LIST = array('::sylabe:module:manage:AppTitle1');
-    protected $MODULE_APP_ICON_LIST = array('8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256');
-    protected $MODULE_APP_DESC_LIST = array('::sylabe:module:manage:AppDesc1');
-    protected $MODULE_APP_VIEW_LIST = array('list');
+    protected array $MODULE_APP_TITLE_LIST = array('::sylabe:module:manage:AppTitle1');
+    protected array $MODULE_APP_ICON_LIST = array('8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256');
+    protected array $MODULE_APP_DESC_LIST = array('::sylabe:module:manage:AppDesc1');
+    protected array $MODULE_APP_VIEW_LIST = array('list');
 
     // Constantes spécifiques à la création de liens.
     const DEFAULT_COMMAND_ACTION_NOM = 'actaddnam';
@@ -71,8 +72,7 @@ class ModuleManage extends Modules
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
-        $this->_initTable_DEPRECATED();
-        $this->_hashModule = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
+        $this->_hashModule = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
     }
 
 
@@ -452,7 +452,7 @@ class ModuleManage extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
 
             return;
         }
@@ -594,7 +594,7 @@ class ModuleManage extends Modules
         $classNameCommand = $this->getExtractCommandDisplayModule();
 
         $listModulesInstances = $this->_applicationInstance->getModulesListInstances();
-        $listModulesID = $this->_applicationInstance->getModulesListID();
+        $listModulesID = $this->_applicationInstance->getModulesListOID();
         $listModulesRID = $this->_applicationInstance->getModulesListRID();
         $listModulesEnabled = $this->_applicationInstance->getModulesListEnabled();
         $listModulesValid = $this->_applicationInstance->getModulesListValid();
@@ -621,7 +621,7 @@ class ModuleManage extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
 
             return;
         }
@@ -641,7 +641,7 @@ class ModuleManage extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
 
             return;
         }
@@ -807,11 +807,11 @@ class ModuleManage extends Modules
                     )
                     && $rid != '0'
                 ) {
-                    $hashActivation = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MOD_ACTIVE);
+                    $hashActivation = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MOD_ACTIVE);
                     $dispHook = array(
                         'hookType' => 'Self',
                         'cssid' => '',
-                        'moduleName' => $this->_traduction($this->MODULE_NAME),
+                        'moduleName' => $this->_translateInstance->getTranslate($this->MODULE_NAME),
                     );
                     if (isset($listModulesEnabled[$className])
                         && $listModulesEnabled[$className]
@@ -822,8 +822,8 @@ class ModuleManage extends Modules
                             . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $rid . '_' . $hashActivation . '_' . $rid
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         $dispHook['icon'] = Displays::DEFAULT_ICON_IOK;
-                        $dispHook['name'] = $this->_traduction('::sylabe:module:manage:ModuleEnabled');
-                        $dispHook['desc'] = $this->_traduction('::sylabe:module:manage:ModuleDisable');
+                        $dispHook['name'] = $this->_translateInstance->getTranslate('::sylabe:module:manage:ModuleEnabled');
+                        $dispHook['desc'] = $this->_translateInstance->getTranslate('::sylabe:module:manage:ModuleDisable');
                     } else {
                         $dispHook['link'] = '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
@@ -831,8 +831,8 @@ class ModuleManage extends Modules
                             . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $rid . '_' . $hashActivation . '_' . $rid
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         $dispHook['icon'] = Displays::DEFAULT_ICON_IERR;
-                        $dispHook['name'] = $this->_traduction('::sylabe:module:manage:ModuleDisabled');
-                        $dispHook['desc'] = $this->_traduction('::sylabe:module:manage:ModuleEnable');
+                        $dispHook['name'] = $this->_translateInstance->getTranslate('::sylabe:module:manage:ModuleDisabled');
+                        $dispHook['desc'] = $this->_translateInstance->getTranslate('::sylabe:module:manage:ModuleEnable');
                     }
                     echo $this->_displayInstance->getDisplayHookAction($dispHook, true, 'MediumShort');
                 } else {
@@ -904,14 +904,14 @@ class ModuleManage extends Modules
 			$dispHook = array(
 					'hookType' => 'Self',
 					'cssid' => '',
-					'moduleName' => $this->_traduction($this->MODULE_NAME),
+					'moduleName' => $this->_translateInstance->getTranslate($this->MODULE_NAME),
 					'link' => '/?'.Displays::DEFAULT_DISPLAY_COMMAND_MODE.'='.$this->MODULE_COMMAND_NAME
 							.'&'.Displays::DEFAULT_DISPLAY_COMMAND_VIEW.'='.$this->MODULE_REGISTERED_VIEWS[1]
 							.'&'.self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE.'='.$className
 							.'&'.Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION.'='.$rid
 							.$this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(),
 					'icon' => Display::DEFAULT_ICON_SYNOBJ,
-					'name' => $this->_traduction('::sylabe:module:manage:syncModule'),
+					'name' => $this->_translateInstance->getTranslate('::sylabe:module:manage:syncModule'),
 					'desc' => '',
 			);
 			echo $this->_display->getDisplayHookAction($dispHook, true, 'MediumShort');
@@ -950,16 +950,16 @@ class ModuleManage extends Modules
                           action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                               . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
                               . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
-                        <?php $this->_echoTraduction('::sylabe:module:manage:create:nom'); ?><br/>
+                        <?php echo $this->_translateInstance->getTranslate('::sylabe:module:manage:create:nom'); ?><br/>
                         <input type="text"
                                name="<?php echo self::DEFAULT_COMMAND_ACTION_NOM; ?>"
-                               size="80" value="<?php $this->_echoTraduction('::sylabe:module:manage:create:nom'); ?>"/><br/>
+                               size="80" value="<?php echo $this->_translateInstance->getTranslate('::sylabe:module:manage:create:nom'); ?>"/><br/>
                         RID<br/>
                         <input type="text"
                                name="<?php echo self::DEFAULT_COMMAND_ACTION_RID; ?>"
                                size="80" value=""/><br/>
                         <input type="submit"
-                               value="<?php $this->_echoTraduction('::sylabe:module:manage:create:SubmitCreate') ?>"/>
+                               value="<?php echo $this->_translateInstance->getTranslate('::sylabe:module:manage:create:SubmitCreate') ?>"/>
                     </form>
                 </div>
             </div>
@@ -971,7 +971,7 @@ class ModuleManage extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
         }
     }
 
@@ -1048,7 +1048,7 @@ class ModuleManage extends Modules
                                    name="<?php echo self::DEFAULT_COMMAND_ACTION_ID; ?>"
                                    size="80" value=""/><br/>
                             <input type="submit"
-                                   value="<?php $this->_echoTraduction('::sylabe:module:manage:create:SubmitChange') ?>"/>
+                                   value="<?php echo $this->_translateInstance->getTranslate('::sylabe:module:manage:create:SubmitChange') ?>"/>
                         </form>
                     </div>
                 </div>
@@ -1069,7 +1069,7 @@ class ModuleManage extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'short',
             );
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
         }
     }
 

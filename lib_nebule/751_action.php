@@ -243,26 +243,6 @@ abstract class Actions
         $this->_configuration = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
     }
 
-    /**
-     * Initialisation des variables et instances interdépendantes.
-     * @return void
-     * @todo à optimiser avec __wakeup et __sleep.
-     *
-     */
-    public function initialisation2()
-    {
-        $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Load actions', Metrology::LOG_LEVEL_DEBUG);
-        $this->_traduction = $this->_applicationInstance->getTranslateInstance();
-        $this->_display = $this->_applicationInstance->getDisplayInstance();
-        $this->_metrology = $this->_applicationInstance->getMetrologyInstance();
-        $this->_io = $this->_nebuleInstance->getIoInstance();
-        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
-
-        // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.
-        // Les instances interdépendantes doivent être synchronisées.
-    }
-
 
     /**
      * Traitement des actions génériques.

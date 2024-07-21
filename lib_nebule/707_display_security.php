@@ -129,7 +129,7 @@ class DisplaySecurity extends DisplayItemIconMessageSizeable implements DisplayI
             $result .= $instance->getHTML();
         }
 
-        $instance->setMessage(':::warn_ServNotPermitWrite');
+        $instance->setMessage('::::warn_ServNotPermitWrite');
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')) {
             $instance->setType(DisplayItemIconMessage::TYPE_WARN);
             $error = 'wr';
@@ -139,7 +139,7 @@ class DisplaySecurity extends DisplayItemIconMessageSizeable implements DisplayI
             $result .= $instance->getHTML();
         }
 
-        $instance->setMessage(':::warn_flushSessionAndCache');
+        $instance->setMessage('::::warn_flushSessionAndCache');
         if ($this->_nebuleInstance->getFlushCache()) {
             $instance->setType(DisplayItemIconMessage::TYPE_WARN);
             $error = 'wr';

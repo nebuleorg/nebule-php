@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
-use Nebule\Library\nebule;
 
 /**
  * Classe Modules
@@ -13,114 +12,36 @@ use Nebule\Library\nebule;
  */
 abstract class Modules implements moduleInterface
 {
-    /* ---------- ---------- ---------- ---------- ----------
-	 * Constantes.
-	 *
-	 * Leur modification change profondément le comportement de l'application.
-	 *
-	 * Si déclarées 'const' ou 'static' elles ne sont pas remplacée dans les classes enfants
-	 * lorsque l'on appelle des fonctions de la classe parente non écrite dans la classe enfant...
-	 */
-    /**
-     * Le type de module.
-     * None : Le module est chargé, mais n'est pas utilisé après.
-     * Application : Le module est chargé puis appelé aux emplacements dédiés aux applications.
-     *     Il est aussi utilisé pour les traductions qui le concerne.
-     * Traduction : Le module est chargé puis utilisé pour toute traduction.
-     *
-     * @var string
-     */
-    protected $MODULE_TYPE = 'None'; // None | Application | Traduction
+    protected string $MODULE_TYPE = 'None'; // None | Application | Traduction
 
-    /**
-     * Le nom du module. Ce nom est généralement proche du nom de la classe.
-     *
-     * @var string
-     */
-    protected $MODULE_NAME = 'None';
+    protected string $MODULE_NAME = 'None';
+    protected string $MODULE_MENU_NAME = 'None';
+    protected string $MODULE_COMMAND_NAME = 'none';
+    protected string $MODULE_DEFAULT_VIEW = 'disp';
+    protected string $MODULE_DESCRIPTION = 'Description';
+    protected string $MODULE_VERSION = '020240721';
+    protected string $MODULE_AUTHOR = 'Projet nebule';
+    protected string $MODULE_LICENCE = '(c) GLPv3 sylabe 2013-2024';
+    protected string $MODULE_LOGO = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c.sha2.256';
+    protected string $MODULE_HELP = 'Help';
+    protected string $MODULE_INTERFACE = '2.0';
 
-    protected $MODULE_MENU_NAME = 'None';
-    protected $MODULE_COMMAND_NAME = 'none';
-    protected $MODULE_DEFAULT_VIEW = 'disp';
-    protected $MODULE_DESCRIPTION = 'Description';
-    protected $MODULE_VERSION = '020160925';
-    protected $MODULE_AUTHOR = 'Projet nebule';
-    protected $MODULE_LICENCE = '(c) GLPv3 sylabe 2013-2016';
-    protected $MODULE_LOGO = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c';
-    protected $MODULE_HELP = 'Help';
-    protected $MODULE_INTERFACE = '2.0';
-
-    protected $MODULE_REGISTERED_VIEWS = array('disp');
-    protected $MODULE_REGISTERED_ICONS = array();
-    protected $MODULE_APP_TITLE_LIST = array();
-    protected $MODULE_APP_ICON_LIST = array();
-    protected $MODULE_APP_DESC_LIST = array();
-    protected $MODULE_APP_VIEW_LIST = array();
+    protected array $MODULE_REGISTERED_VIEWS = array('disp');
+    protected array $MODULE_REGISTERED_ICONS = array();
+    protected array $MODULE_APP_TITLE_LIST = array();
+    protected array $MODULE_APP_ICON_LIST = array();
+    protected array $MODULE_APP_DESC_LIST = array();
+    protected array $MODULE_APP_VIEW_LIST = array();
 
     const DEFAULT_COMMAND_ACTION_DISPLAY_MODULE = 'name';
 
-
-    /* ---------- ---------- ---------- ---------- ----------
-	 * Variables.
-	 *
-	 * Les valeurs par défaut sont indicatives. Ne pas les replacer.
-	 * Les variables sont systématiquement recalculées.
-	 */
-    /**
-     * Instance de l'application.
-     *
-     * @var Applications
-     */
-    protected $_applicationInstance = null;
-
-    /**
-     * Instance de la librairie nebule.
-     *
-     * @var nebule
-     */
-    protected $_nebuleInstance = null;
-
-    /**
-     * Instance de gestion de la configuration et des options.
-     *
-     * @var Configuration
-     */
-    protected $_configurationInstance = null;
-
-    /**
-     * Instance de la classe d'affichage.
-     *
-     * @var Displays
-     */
-    protected $_displayInstance = null;
-
-    /**
-     * Instance de la classe de traduction.
-     *
-     * @var Translates
-     */
-    protected $_translateInstance = null;
-
-    /**
-     * Instance de la métrologie.
-     *
-     * @var Metrology
-     */
-    protected $_metrologyInstance = null;
-
-    /**
-     * Etat de verrouillage de l'entité en cours.
-     *
-     * @var boolean
-     */
-    protected $_unlocked = false;
-
-    /**
-     * Table des traductions spécifiques au module.
-     *
-     * @var array of string
-     */
-    protected $_table = array();
+    protected ?Applications $_applicationInstance = null;
+    protected ?nebule $_nebuleInstance = null;
+    protected ?Configuration $_configurationInstance = null;
+    protected ?Displays $_displayInstance = null;
+    protected ?Translates $_translateInstance = null;
+    protected ?Metrology $_metrologyInstance = null;
+    protected bool $_unlocked = false;
 
 
     /**
@@ -147,7 +68,6 @@ abstract class Modules implements moduleInterface
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
-        $this->_initTable_DEPRECATED();
     }
 
 
@@ -275,24 +195,6 @@ abstract class Modules implements moduleInterface
         return array();
     }
 
-    /**
-     * Add functionalities on hooks, only for translation modules.
-     *
-     * @param string $hookName
-     * @return array
-     */
-    public function getHookListTranslation(string $hookName): array
-    {
-        $hookArray = array();
-        if ($hookName == 'helpLanguages') {
-            $hookArray[0]['name'] = $this->_traduction('::::Bienvenue', $this->MODULE_COMMAND_NAME);
-            $hookArray[0]['icon'] = $this->MODULE_LOGO;
-            $hookArray[0]['desc'] = $this->_traduction('::translateModule:' . $this->MODULE_COMMAND_NAME . ':ModuleDescription', $this->MODULE_COMMAND_NAME);
-            $hookArray[0]['link'] = '?mod=hlp&view=lang&' . Translates::DEFAULT_COMMAND_LANGUAGE . '=' . $this->MODULE_COMMAND_NAME;
-        }
-        return $hookArray;
-    }
-
 
     /**
      * Affichage de la page par défaut. FIXME à vider
@@ -319,9 +221,9 @@ abstract class Modules implements moduleInterface
     /**
      * Cache de la lecture de la commande d'action d'affichage du module.
      *
-     * @var string
+     * @var ?string
      */
-    private $_commandActionDisplayModuleCache = null;
+    private ?string $_commandActionDisplayModuleCache = null;
 
     /**
      * Extrait en vue d'un affichage dans le module un texte/objet à afficher.
@@ -335,12 +237,9 @@ abstract class Modules implements moduleInterface
         if ($this->_commandActionDisplayModuleCache != null)
             return $this->_commandActionDisplayModuleCache;
 
-        // Vérifie que l'on est en vue affichage de module.
         if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]) {
-            // Lit et nettoye le contenu de la variable GET.
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE, FILTER_SANITIZE_STRING));
 
-            // Ecriture des variables.
             if ($arg != '') {
                 $return = $arg;
             }
@@ -348,7 +247,6 @@ abstract class Modules implements moduleInterface
             unset($arg);
         }
 
-        // Mise en cache.
         $this->_commandActionDisplayModuleCache = $return;
 
         return $return;
@@ -421,29 +319,6 @@ abstract class Modules implements moduleInterface
         return $result;
     }
 
-    /**
-     * Traduction interne à la classe.
-     *
-     * @param string $text
-     * @param string $lang
-     * @return string
-     */
-    protected function _traduction(string $text, string $lang = ''): string
-    {
-        return $this->_translateInstance->getTranslate($text, $lang);
-    }
-
-    /**
-     * Affichage du texte traduit, interne à la classe.
-     *
-     * @param string $text
-     * @return void
-     */
-    protected function _echoTraduction(string $text): void
-    {
-        $this->_translateInstance->echoTranslate($text);
-    }
-
 
     /**
      * Créer un lien.
@@ -459,7 +334,7 @@ abstract class Modules implements moduleInterface
      */
     protected function _createLink_DEPRECATED(string $signer, string $date, string $action, string $source, string $target, string $meta, bool $obfuscate = false): void
     {
-        // Génère le lien.
+        /*// Génère le lien.
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new Link($this->_nebuleInstance, $link);
 
@@ -472,7 +347,7 @@ abstract class Modules implements moduleInterface
         }
 
         // Ecrit le lien.
-        $newLink->write();
+        $newLink->write();*/
     }
 
     CONST TRANSLATE_TABLE = [
@@ -501,16 +376,6 @@ abstract class Modules implements moduleInterface
             '::nebule:modules::AppTitle1' => 'Modules',
         ],
     ];
-
-    /**
-     * Initialisation de la table de traduction.
-     *
-     * @return void
-     */
-    protected function _initTable_DEPRECATED(): void
-    {
-        $this->_table = self::TRANSLATE_TABLE;
-    }
 
 
     /**

@@ -205,10 +205,10 @@ namespace Nebule\Library;
  *      Par défaut vide : calcul la description de l'état de l'objet.
  *      Le texte de ces état est traduit.
  *      Par défaut est calculé par rapport à flagState :
- *        - e : ':::display:content:errorBan'
- *        - w : ':::display:content:warningTaggedWarning'
- *        - n : ':::display:content:errorNotAvailable'
- *        - o : ':::display:content:OK'
+ *        - e : '::::display:content:errorBan'
+ *        - w : '::::display:content:warningTaggedWarning'
+ *        - n : '::::display:content:errorNotAvailable'
+ *        - o : '::::display:content:OK'
  *      String
  *  - flagMessage : Détermine un message à afficher au niveau des flags dépliés.
  *      enableDisplayFlags doit être à true.
@@ -407,18 +407,18 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     private $_appShortname = '';
     private $_flagProtection = false;
     private $_flagProtectionIcon = null;
-    private $_flagProtectionText = ':::display:object:flag:unprotected';
+    private $_flagProtectionText = '::::display:object:flag:unprotected';
     private $_flagProtectionLink = '';
     private $_flagObfuscate = false;
     private $_flagObfuscateIcon = null;
-    private $_flagObfuscateText = ':::display:object:flag:unobfuscated';
+    private $_flagObfuscateText = '::::display:object:flag:unobfuscated';
     private $_flagObfuscateLink = '';
     private $_flagUnlocked = false;
     private $_flagUnlockedIcon = null;
-    private $_flagUnlockedText = ':::display:object:flag:locked';
+    private $_flagUnlockedText = '::::display:object:flag:locked';
     private $_flagUnlockedLink = '';
     private $_flagActivated = false;
-    private $_flagActivatedText = ':::display:object:flag:unactivated';
+    private $_flagActivatedText = '::::display:object:flag:unactivated';
     private $_flagState = '';
     private $_flagStateIcon = null;
     private $_flagStateText = '';
@@ -586,9 +586,9 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
                         $this->_flagActivatedText,
                         $this->_flagActivatedText);
                     if ($this->_flagActivated)
-                        $menuContent .= $this->_traductionInstance->getTranslate(':::display:object:flag:activated');
+                        $menuContent .= $this->_traductionInstance->getTranslate('::::display:object:flag:activated');
                     else
-                        $menuContent .= $this->_traductionInstance->getTranslate(':::display:object:flag:unactivated');
+                        $menuContent .= $this->_traductionInstance->getTranslate('::::display:object:flag:unactivated');
                     $menuContent .= '</div>' . "\n";
                 }
                 if ($this->_flagMessage != '') {
@@ -783,8 +783,8 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
                         $titleFlagsContent .= $this->_getObjectFlagHTML(
                             $this->_flagActivated,
                             Displays::DEFAULT_ICON_LL,
-                            ':::display:object:flag:unactivated',
-                            ':::display:object:flag:activated');
+                            '::::display:object:flag:unactivated',
+                            '::::display:object:flag:activated');
                     }
                     if ($this->_displayFlagEmotions)
                         $titleFlagsContent .= $this->_getObjectFlagEmotionsHTML($this->_nid, false);
@@ -1257,9 +1257,9 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     private function _setFlagProtection(): void
     {
         if ($this->_flagProtection)
-            $this->_flagProtectionText = ':::display:object:flag:protected';
+            $this->_flagProtectionText = '::::display:object:flag:protected';
         else
-            $this->_flagProtectionText = ':::display:object:flag:unprotected';
+            $this->_flagProtectionText = '::::display:object:flag:unprotected';
     }
 
     public function setFlagProtectionIcon(?Node $oid): void
@@ -1297,9 +1297,9 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     private function _setFlagObfuscate(): void
     {
         if ($this->_flagObfuscate)
-            $this->_flagObfuscateText = ':::display:object:flag:obfuscated';
+            $this->_flagObfuscateText = '::::display:object:flag:obfuscated';
         else
-            $this->_flagObfuscateText = ':::display:object:flag:unobfuscated';
+            $this->_flagObfuscateText = '::::display:object:flag:unobfuscated';
     }
 
     public function setFlagObfuscateIcon(?Node $oid): void
@@ -1336,9 +1336,9 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     private function _setFlagUnlocked(): void
     {
         if ($this->_flagUnlocked)
-            $this->_flagUnlockedText = ':::display:object:flag:locked';
+            $this->_flagUnlockedText = '::::display:object:flag:locked';
         else
-            $this->_flagUnlockedText = ':::display:object:flag:unlocked';
+            $this->_flagUnlockedText = '::::display:object:flag:unlocked';
     }
 
     public function setFlagUnlockedIcon(?Node $oid): void
@@ -1371,9 +1371,9 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     private function _setActivated(): void
     {
         if ($this->_flagActivated)
-            $this->_flagActivatedText = ':::display:object:flag:activated';
+            $this->_flagActivatedText = '::::display:object:flag:activated';
         else
-            $this->_flagActivatedText = ':::display:object:flag:unactivated';
+            $this->_flagActivatedText = '::::display:object:flag:unactivated';
     }
     
     public function setActivatedText(string $text): void
@@ -1406,19 +1406,19 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         if ($state == 'e') {
             $this->_flagState = 'e';
             $this->_flagStateIcon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IERR);
-            $this->_flagStateText = ':::display:content:errorBan';
+            $this->_flagStateText = '::::display:content:errorBan';
         } elseif ($state == 'w') {
             $this->_flagState = 'w';
             $this->_flagStateIcon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IWARN);
-            $this->_flagStateText = ':::display:content:warningTaggedWarning';
+            $this->_flagStateText = '::::display:content:warningTaggedWarning';
         } elseif ($state == 'o') {
             $this->_flagState = 'o';
             $this->_flagStateIcon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IOK);
-            $this->_flagStateText = ':::display:content:OK';
+            $this->_flagStateText = '::::display:content:OK';
         } else {
             $this->_flagState = 'n';
             $this->_flagStateIcon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IERR);
-            $this->_flagStateText = ':::display:content:errorNotAvailable';
+            $this->_flagStateText = '::::display:content:errorNotAvailable';
         }
     }
 

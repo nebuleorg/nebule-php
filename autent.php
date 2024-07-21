@@ -54,32 +54,15 @@ class Application extends Applications
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240720';
+    const APPLICATION_VERSION = '020240721';
     const APPLICATION_LICENCE = 'GNU GPL 2023-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
     const APPLICATION_CODING = 'application/x-httpd-php';
 
-    /**
-     * {@inheritDoc}
-     * @see Applications::_useModules
-     * @var boolean
-     */
-    protected $_useModules = true;
-
-    /**
-     * {@inheritDoc}
-     * @see Applications::_useExternalModules
-     * @var boolean
-     */
-    protected $_useExternalModules = true;
-
-    /**
-     * Liste des noms des modules par défaut.
-     *
-     * @var array
-     */
-    protected $_listInternalModules = array(
+    protected bool $_useModules = true;
+    protected bool $_useExternalModules = true;
+    protected array $_listInternalModules = array(
         'ModuleAutent',
     );
 
@@ -312,110 +295,74 @@ class Action extends Actions
  */
 class Translate extends Translates
 {
-    /**
-     * La langue d'affichage de l'interface.
-     *
-     * Dans cette application la langue est forcée à sa valeur par défaut.
-     *
-     * @return void
-     */
-    protected function _findCurrentLanguage()
-    {
-        $this->_currentLanguage = $this->_defaultLanguage;
-        $this->_currentLanguageInstance = $this->_defaultLanguageInstance;
-    }
-
-
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::::INFO' => 'Information',
-            '::::OK' => 'OK',
-            '::::INFORMATION' => 'Message',
-            '::::WARN' => 'ATTENTION !',
-            '::::ERROR' => 'ERREUR !',
-            '::::RESCUE' => 'Mode de sauvetage !',
             ':::login' => 'Se connecter',
             ':::logout' => 'Se déconnecter',
-            ':::return' => 'Retour',
-            '::::SecurityChecks' => 'Tests de sécurité',
-            ':::warn_ServNotPermitWrite' => "Ce serveur n'autorise pas les modifications !",
-            ':::warn_flushSessionAndCache' => "Toutes les données de connexion ont été effacées !",
-            ':::info_OnlySignedLinks' => 'Uniquement des liens signés !',
-            ':::info_OnlyLinksFromCodeMaster' => 'Uniquement les liens signés du maître du code !',
-            ':::err_NotPermit' => 'Non autorisé sur ce serveur !',
-            ':::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
-            ':::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
-            ':::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
-            ':::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
-            ':::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
-            ':::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
-            ':::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
-            ':::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
-            ':::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+            ':::return' => "Revenir à l'application",
+            '::::warn_ServNotPermitWrite' => "Ce serveur n'autorise pas les modifications !",
+            '::::warn_flushSessionAndCache' => "Toutes les données de connexion ont été effacées !",
+            '::::info_OnlySignedLinks' => 'Uniquement des liens signés !',
+            '::::info_OnlyLinksFromCodeMaster' => 'Uniquement les liens signés du maître du code !',
+            '::::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            '::::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            '::::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            '::::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            '::::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            '::::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            '::::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
         ],
         'en-en' => [
-            '::::INFO' => 'Information',
-            '::::OK' => 'OK',
-            '::::INFORMATION' => 'Message',
-            '::::WARN' => 'WARNING!',
-            '::::ERROR' => 'ERROR!',
-            '::::RESCUE' => 'Rescue mode!',
             ':::login' => 'Connecting',
             ':::logout' => 'Disconnecting',
-            ':::return' => 'Return',
-            '::::SecurityChecks' => 'Security checks',
-            ':::warn_ServNotPermitWrite' => 'This server do not permit modifications!',
-            ':::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed!',
-            ':::info_OnlySignedLinks' => 'Only signed links!',
-            ':::info_OnlyLinksFromCodeMaster' => 'Only links signed by the code master!',
-            ':::err_NotPermit' => 'Non autorisé sur ce serveur !',
-            ':::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
-            ':::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
-            ':::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
-            ':::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
-            ':::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
-            ':::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
-            ':::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
-            ':::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
-            ':::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+            ':::return' => 'Return to application',
+            '::::warn_ServNotPermitWrite' => 'This server do not permit modifications!',
+            '::::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed!',
+            '::::info_OnlySignedLinks' => 'Only signed links!',
+            '::::info_OnlyLinksFromCodeMaster' => 'Only links signed by the code master!',
+            '::::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            '::::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            '::::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            '::::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            '::::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            '::::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            '::::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
         ],
         'es-co' => [
-            '::::INFO' => 'Information',
-            '::::OK' => 'OK',
-            '::::INFORMATION' => 'Mensaje',
-            '::::WARN' => '¡ADVERTENCIA!',
-            '::::ERROR' => '¡ERROR!',
-            '::::RESCUE' => '¡Modo de rescate!',
             ':::login' => 'Connecting',
             ':::logout' => 'Disconnecting',
-            ':::return' => 'Return',
-            '::::SecurityChecks' => 'Controles de seguridad',
-            ':::warn_ServNotPermitWrite' => 'This server do not permit modifications!',
-            ':::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed!',
-            ':::info_OnlySignedLinks' => 'Only signed links!',
-            ':::info_OnlyLinksFromCodeMaster' => 'Only links signed by the code master!',
-            ':::err_NotPermit' => 'Non autorisé sur ce serveur !',
-            ':::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
-            ':::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
-            ':::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
-            ':::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
-            ':::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
-            ':::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
-            ':::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
-            ':::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
-            ':::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+            ':::return' => 'Return to application',
+            '::::warn_ServNotPermitWrite' => 'This server do not permit modifications!',
+            '::::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed!',
+            '::::info_OnlySignedLinks' => 'Only signed links!',
+            '::::info_OnlyLinksFromCodeMaster' => 'Only links signed by the code master!',
+            '::::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            '::::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            '::::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            '::::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            '::::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            '::::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            '::::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
         ],
     ];
-
 }
 
 
@@ -428,29 +375,29 @@ class Translate extends Translates
  * @link www.nebule.org
  */
 class ModuleAutent extends Modules {
-    protected $MODULE_TYPE = 'Application';
-    protected $MODULE_NAME = '::sylabe:module:objects:ModuleName';
-    protected $MODULE_MENU_NAME = '::sylabe:module:objects:MenuName';
-    protected $MODULE_COMMAND_NAME = 'autent';
-    protected $MODULE_DEFAULT_VIEW = 'desc';
-    protected $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    protected $MODULE_VERSION = '020240601';
-    protected $MODULE_AUTHOR = 'Projet nebule';
-    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
-    protected $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
-    protected $MODULE_HELP = '::sylabe:module:objects:ModuleHelp';
-    protected $MODULE_INTERFACE = '3.0';
+    protected string $MODULE_TYPE = 'Application';
+    protected string $MODULE_NAME = '::sylabe:module:objects:ModuleName';
+    protected string $MODULE_MENU_NAME = '::sylabe:module:objects:MenuName';
+    protected string $MODULE_COMMAND_NAME = 'autent';
+    protected string $MODULE_DEFAULT_VIEW = 'desc';
+    protected string $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
+    protected string $MODULE_VERSION = '020240601';
+    protected string $MODULE_AUTHOR = 'Projet nebule';
+    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
+    protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
+    protected string $MODULE_HELP = '::sylabe:module:objects:ModuleHelp';
+    protected string $MODULE_INTERFACE = '3.0';
 
-    protected $MODULE_REGISTERED_VIEWS = array('desc', 'unlock', 'logout');
-    protected $MODULE_REGISTERED_ICONS = array(
+    protected array $MODULE_REGISTERED_VIEWS = array('desc', 'unlock', 'logout');
+    protected array $MODULE_REGISTERED_ICONS = array(
         '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 0 : Objet.
         '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 1 : Objet.
         '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 2 : Objet.
     );
-    protected $MODULE_APP_TITLE_LIST = array();
-    protected $MODULE_APP_ICON_LIST = array();
-    protected $MODULE_APP_DESC_LIST = array();
-    protected $MODULE_APP_VIEW_LIST = array();
+    protected array $MODULE_APP_TITLE_LIST = array();
+    protected array $MODULE_APP_ICON_LIST = array();
+    protected array $MODULE_APP_DESC_LIST = array();
+    protected array $MODULE_APP_VIEW_LIST = array();
 
     const DEFAULT_ATTRIBS_DISPLAY_NUMBER = 10;
 
@@ -538,7 +485,7 @@ class ModuleAutent extends Modules {
             || $this->_applicationInstance->getCheckSecurityAll() != 'OK'
         ) {
             $htlink = '/?f';
-            $title = ':::err_NotPermit';
+            $title = '::::err_NotPermit';
             $type = DisplayItemIconMessage::TYPE_ERROR;
         } elseif ($this->_unlocked) {
             $htlink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
@@ -589,7 +536,7 @@ class ModuleAutent extends Modules {
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getInstanceEntity()
                 . '&' . References::COMMAND_SWITCH_TO_ENTITY);
         else
-            $this->_displayAddButton($instanceList, ':::err_NotPermit', DisplayItemIconMessage::TYPE_ERROR, '');
+            $this->_displayAddButton($instanceList, '::::err_NotPermit', DisplayItemIconMessage::TYPE_ERROR, '');
         $this->_displayAddButton($instanceList,
             ':::return',
             DisplayItemIconMessage::TYPE_BACK,
@@ -604,14 +551,14 @@ class ModuleAutent extends Modules {
         $this->_metrologyInstance->addLog('Display logout ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '833de289');
 
         $title = new DisplayTitle($this->_applicationInstance);
-        $title->setTitle(':::logout');
+        $title->setTitle('::::logout');
         $title->display();
 
         $instanceList = new DisplayList($this->_applicationInstance);
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
         $this->_displayAddSecurity($instanceList, false);
         $this->_displayAddEID($instanceList, $this->_applicationInstance->getCurrentObjectInstance(), false);
-        $this->_displayAddButton($instanceList, ':::logout', DisplayItemIconMessage::TYPE_PLAY, '/?f');
+        $this->_displayAddButton($instanceList, '::::logout', DisplayItemIconMessage::TYPE_PLAY, '/?f');
         $this->_displayAddButton($instanceList, ':::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
         $instanceList->display();
     }
@@ -674,22 +621,10 @@ class ModuleAutent extends Modules {
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::sylabe:module:objects:ModuleName' => 'Module des blogs',
-            '::sylabe:module:objects:MenuName' => 'Blogs',
-            '::sylabe:module:objects:ModuleDescription' => 'Module de gestion des blogs.',
-            '::sylabe:module:objects:ModuleHelp' => "Ce module permet de voir et de gérer les blogs.",
         ],
         'en-en' => [
-            '::sylabe:module:objects:ModuleName' => 'Blogs module',
-            '::sylabe:module:objects:MenuName' => 'Blogs',
-            '::sylabe:module:objects:ModuleDescription' => 'Blogs management module.',
-            '::sylabe:module:objects:ModuleHelp' => 'This module permit to see and manage blogs.',
         ],
         'es-co' => [
-            '::sylabe:module:objects:ModuleName' => 'Módulo de blogs',
-            '::sylabe:module:objects:MenuName' => 'Blogs',
-            '::sylabe:module:objects:ModuleDescription' => 'Módulo de gestión de blogs.',
-            '::sylabe:module:objects:ModuleHelp' => 'This module permit to see and manage blogs.',
         ],
     ];
 }

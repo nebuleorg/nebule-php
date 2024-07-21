@@ -17,33 +17,33 @@ use Nebule\Library\Node;
  */
 class ModuleAdmin extends Modules
 {
-    protected $MODULE_TYPE = 'Application';
-    protected $MODULE_NAME = '::sylabe:module:admin:ModuleName';
-    protected $MODULE_MENU_NAME = '::sylabe:module:admin:MenuName';
-    protected $MODULE_COMMAND_NAME = 'adm';
-    protected $MODULE_DEFAULT_VIEW = 'options';
-    protected $MODULE_DESCRIPTION = '::sylabe:module:admin:ModuleDescription';
-    protected $MODULE_VERSION = '020240720';
-    protected $MODULE_AUTHOR = 'Projet nebule';
-    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
-    protected $MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256';
-    protected $MODULE_HELP = '::sylabe:module:admin:ModuleHelp';
-    protected $MODULE_INTERFACE = '3.0';
+    protected string $MODULE_TYPE = 'Application';
+    protected string $MODULE_NAME = '::sylabe:module:admin:ModuleName';
+    protected string $MODULE_MENU_NAME = '::sylabe:module:admin:MenuName';
+    protected string $MODULE_COMMAND_NAME = 'adm';
+    protected string $MODULE_DEFAULT_VIEW = 'options';
+    protected string $MODULE_DESCRIPTION = '::sylabe:module:admin:ModuleDescription';
+    protected string $MODULE_VERSION = '020240720';
+    protected string $MODULE_AUTHOR = 'Projet nebule';
+    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
+    protected string $MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256';
+    protected string $MODULE_HELP = '::sylabe:module:admin:ModuleHelp';
+    protected string $MODULE_INTERFACE = '3.0';
 
-    protected $MODULE_REGISTERED_VIEWS = array(
+    protected array $MODULE_REGISTERED_VIEWS = array(
         'appopt',
         'nebopt',
         'admins',
         'recovery',
     );
-    protected $MODULE_REGISTERED_ICONS = array(
+    protected array $MODULE_REGISTERED_ICONS = array(
         '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256',    // 0 : Icône admin.
         '3edf52669e7284e4cefbdbb00a8b015460271765e97a0d6ce6496b11fe530ce1.sha2.256',    // 1 : Icône liste entités.
     );
-    protected $MODULE_APP_TITLE_LIST = array('::sylabe:module:admin:AppTitle1');
-    protected $MODULE_APP_ICON_LIST = array('1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256');
-    protected $MODULE_APP_DESC_LIST = array('::sylabe:module:admin:AppDesc1');
-    protected $MODULE_APP_VIEW_LIST = array('options');
+    protected array $MODULE_APP_TITLE_LIST = array('::sylabe:module:admin:AppTitle1');
+    protected array $MODULE_APP_ICON_LIST = array('1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256');
+    protected array $MODULE_APP_DESC_LIST = array('::sylabe:module:admin:AppDesc1');
+    protected array $MODULE_APP_VIEW_LIST = array('options');
 
 
     /**
@@ -244,7 +244,7 @@ class ModuleAdmin extends Modules
                 $optionType = $listOptionsType[$optionName];
                 $optionDefaultValue = $listOptionsDefaultValue[$optionName];
                 $optionDefaultDisplay = (string)$optionDefaultValue;
-                $optionDescription = $this->_traduction($listOptionsDescription[$optionName]);
+                $optionDescription = $this->_translateInstance->getTranslate($listOptionsDescription[$optionName]);
 
                 $list[$i]['information'] = $optionName . ' = ' . $optionValueDisplay;//.'<br />'.$optionDescription;
                 $list[$i]['param'] = $param;
@@ -262,7 +262,7 @@ class ModuleAdmin extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
         }
     }
 
@@ -329,7 +329,7 @@ class ModuleAdmin extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
         }
     }
 
@@ -399,7 +399,7 @@ class ModuleAdmin extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
         }
     }
 
@@ -470,7 +470,7 @@ class ModuleAdmin extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
         }
     }
 

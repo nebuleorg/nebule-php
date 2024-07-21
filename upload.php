@@ -165,9 +165,9 @@ class Display extends Displays
                             'displayRatio' => 'short',
                         );
                         if ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')) {
-                            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED(':::info_OnlySignedLinks', $param);
+                            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::info_OnlySignedLinks', $param);
                         } else {
-                            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED(':::info_OnlyLinksFromCodeMaster', $param);
+                            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::info_OnlyLinksFromCodeMaster', $param);
                         }
                     }
                     ?>
@@ -219,7 +219,7 @@ class Display extends Displays
                         'informationType' => 'error',
                         'displayRatio' => 'short',
                     );
-                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
+                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
                 }
                 ?>
             </div>
@@ -313,20 +313,6 @@ class Action extends Actions
  */
 class Translate extends Translates
 {
-    /**
-     * La langue d'affichage de l'interface.
-     *
-     * Dans cette application la langue est forcée à sa valeur par défaut.
-     *
-     * @return void
-     */
-    protected function _findCurrentLanguage()
-    {
-        $this->_currentLanguage = $this->_defaultLanguage;
-        $this->_currentLanguageInstance = $this->_defaultLanguageInstance;
-    }
-
-
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
             '::::INFO' => 'Information',
@@ -335,23 +321,23 @@ class Translate extends Translates
             '::::WARN' => 'ATTENTION !',
             '::::ERROR' => 'ERREUR !',
             '::::RESCUE' => 'Mode de sauvetage !',
-            ':::warn_ServNotPermitWrite' => "Ce serveur n'autorise pas les modifications !",
-            ':::warn_flushSessionAndCache' => "Toutes les données de connexion ont été effacées !",
-            ':::info_OnlySignedLinks' => 'Uniquement des liens signés !',
-            ':::info_OnlyLinksFromCodeMaster' => 'Uniquement les liens signés du maître du code !',
-            ':::err_NotPermit' => 'Non autorisé sur ce serveur !',
-            ':::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
-            ':::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
-            ':::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
-            ':::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
-            ':::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
-            ':::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
-            ':::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
-            ':::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
-            ':::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+            '::::warn_ServNotPermitWrite' => "Ce serveur n'autorise pas les modifications !",
+            '::::warn_flushSessionAndCache' => "Toutes les données de connexion ont été effacées !",
+            '::::info_OnlySignedLinks' => 'Uniquement des liens signés !',
+            '::::info_OnlyLinksFromCodeMaster' => 'Uniquement les liens signés du maître du code !',
+            '::::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            '::::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            '::::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            '::::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            '::::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            '::::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            '::::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
         ],
         'en-en' => [
             '::::INFO' => 'Information',
@@ -360,23 +346,23 @@ class Translate extends Translates
             '::::WARN' => 'WARNING!',
             '::::ERROR' => 'ERROR!',
             '::::RESCUE' => 'Rescue mode!',
-            ':::warn_ServNotPermitWrite' => 'This server do not permit modifications!',
-            ':::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed!',
-            ':::info_OnlySignedLinks' => 'Only signed links!',
-            ':::info_OnlyLinksFromCodeMaster' => 'Only links signed by the code master!',
-            ':::err_NotPermit' => 'Non autorisé sur ce serveur !',
-            ':::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
-            ':::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
-            ':::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
-            ':::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
-            ':::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
-            ':::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
-            ':::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
-            ':::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
-            ':::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+            '::::warn_ServNotPermitWrite' => 'This server do not permit modifications!',
+            '::::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed!',
+            '::::info_OnlySignedLinks' => 'Only signed links!',
+            '::::info_OnlyLinksFromCodeMaster' => 'Only links signed by the code master!',
+            '::::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            '::::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            '::::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            '::::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            '::::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            '::::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            '::::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
         ],
         'es-co' => [
             '::::INFO' => 'Information',
@@ -385,23 +371,23 @@ class Translate extends Translates
             '::::WARN' => '¡ADVERTENCIA!',
             '::::ERROR' => '¡ERROR!',
             '::::RESCUE' => '¡Modo de rescate!',
-            ':::warn_ServNotPermitWrite' => 'This server do not permit modifications!',
-            ':::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed!',
-            ':::info_OnlySignedLinks' => 'Only signed links!',
-            ':::info_OnlyLinksFromCodeMaster' => 'Only links signed by the code master!',
-            ':::err_NotPermit' => 'Non autorisé sur ce serveur !',
-            ':::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
-            ':::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
-            ':::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
-            ':::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
-            ':::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
-            ':::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
-            ':::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
-            ':::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
-            ':::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
-            ':::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+            '::::warn_ServNotPermitWrite' => 'This server do not permit modifications!',
+            '::::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed!',
+            '::::info_OnlySignedLinks' => 'Only signed links!',
+            '::::info_OnlyLinksFromCodeMaster' => 'Only links signed by the code master!',
+            '::::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            '::::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            '::::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            '::::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            '::::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            '::::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            '::::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            '::::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
         ],
     ];
 }

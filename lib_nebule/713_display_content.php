@@ -78,7 +78,7 @@ class DisplayContent extends DisplayItemIconMessageSizeable implements DisplayIn
                 $result .= "</div>\n";
             }
         } else
-            $result .= $this->convertLineMessage(':::display:content:errorNotAvailable', 'error');
+            $result .= $this->convertLineMessage('::::display:content:errorNotAvailable', 'error');
         return $result;
     }
 

@@ -46,7 +46,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240720';
+    const APPLICATION_VERSION = '020240721';
     const APPLICATION_LICENCE = 'GNU GPL 2013-2024';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -75,7 +75,7 @@ class Application extends Applications implements applicationInterface
      *
      * @var boolean
      */
-    protected $_useModules = true;
+    protected bool $_useModules = true;
 
     /**
      * Paramètre d'activation de la gestion des modules externes (dans des objets) dans l'application et la traduction.
@@ -84,14 +84,14 @@ class Application extends Applications implements applicationInterface
      *
      * @var boolean
      */
-    protected $_useExternalModules = true;
+    protected bool $_useExternalModules = true;
 
     /**
      * Liste des noms des modules par défaut.
      *
      * @var array
      */
-    protected $_listInternalModules = array(
+    protected array $_listInternalModules = array(
         'ModuleManage',
         'ModuleHelp',
         'ModuleEntities',
@@ -359,49 +359,6 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         }
     }
 
-    /**
-     * Initialisation des variables et instances interdépendantes.
-     *
-     * @return void
-     */
-    public function initialisation2(): void
-    {
-        $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
-        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'c51ba49d');
-        $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
-        $this->_actionInstance = $this->_applicationInstance->getActionInstance();
-        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
-
-        // Vide, est surchargé juste avant l'affichage.
-        $this->setHtlinkObjectPrefix('?');
-        $this->setHtlinkGroupPrefix('?');
-        $this->setHtlinkConversationPrefix('?');
-        $this->setHtlinkEntityPrefix('?');
-        $this->setHtlinkCurrencyPrefix('?');
-        $this->setHtlinkTokenPoolPrefix('?');
-        $this->setHtlinkTokenPrefix('?');
-        $this->setHtlinkTransactionPrefix('?');
-        $this->setHtlinkWalletPrefix('?');
-
-        $this->_findLogoApplication();
-        $this->_findLogoApplicationLink();
-        $this->_findLogoApplicationName();
-        $this->_findCurrentDisplayMode();
-        $this->_findCurrentModule();
-        $this->_findCurrentDisplayView();
-        $this->_findInlineContentID();
-
-        // Si en mode téléchargement d'objet ou de lien, pas de traduction.
-        if ($this->_traductionInstance !== null) {
-            $this->_currentDisplayLanguage = $this->_traductionInstance->getCurrentLanguage();
-            $this->_currentDisplayLanguageInstance = $this->_traductionInstance->getCurrentLanguageInstance();
-            $this->_displayLanguageList = $this->_traductionInstance->getLanguageList();
-            $this->_displayLanguageInstanceList = $this->_traductionInstance->getLanguageModuleInstanceList();
-        }
-    }
-
 
 
     /*
@@ -573,7 +530,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
             <link rel="icon" type="image/png" href="favicon.png"/>
             <meta name="keywords" content="<?php echo Application::APPLICATION_SURNAME; ?>"/>
             <meta name="description" content="<?php echo Application::APPLICATION_NAME . ' - ';
-            $this->_traductionInstance->echoTranslate('::::HtmlHeadDescription'); ?>"/>
+            echo $this->_traductionInstance->getTranslate('::::HtmlHeadDescription'); ?>"/>
             <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
             <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
             <?php
@@ -1377,7 +1334,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 <img alt="<?php echo Application::APPLICATION_NAME; ?>" src="<?php echo $this->_logoApplication; ?>"/><br/>
                 <?php echo Application::APPLICATION_NAME; ?><br/>
                 (c) <?php echo Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR; ?><br/>
-                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::Version');
+                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::Version');
                 echo ' : ' . Application::APPLICATION_VERSION; ?><br/>
                 <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo Application::APPLICATION_WEBSITE; ?></a>
             </div>
@@ -1641,13 +1598,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 		$this->_traductionInstance->echoTraduction('%01.0f liens vérifiés,','',$this->_bootstrapInstance->getMetrologyInstance()->getLinkVerify()); echo ' ';
 		$this->_traductionInstance->echoTraduction('%01.0f objets vérifiés.','',$this->_bootstrapInstance->getMetrologyInstance()->getObjectVerify()); echo "<br />\n";*/
                     echo 'Lib nebule : ';
-                    $this->_traductionInstance->echoTranslate('%01.0f liens lus,', $this->_metrologyInstance->getLinkRead());
+                    echo $this->_traductionInstance->getTranslate('%01.0f liens lus,', $this->_metrologyInstance->getLinkRead());
                     echo ' ';
-                    $this->_traductionInstance->echoTranslate('%01.0f liens vérifiés,', $this->_metrologyInstance->getLinkVerify());
+                    echo $this->_traductionInstance->getTranslate('%01.0f liens vérifiés,', $this->_metrologyInstance->getLinkVerify());
                     echo ' ';
-                    $this->_traductionInstance->echoTranslate('%01.0f objets lus.', $this->_metrologyInstance->getObjectRead());
+                    echo $this->_traductionInstance->getTranslate('%01.0f objets lus.', $this->_metrologyInstance->getObjectRead());
                     echo ' ';
-                    $this->_traductionInstance->echoTranslate('%01.0f objets vérifiés.', $this->_metrologyInstance->getObjectVerify());
+                    echo $this->_traductionInstance->getTranslate('%01.0f objets vérifiés.', $this->_metrologyInstance->getObjectVerify());
                     echo "<br />\n";
                     // Calcul de temps de chargement de la page - stop
                     /*		$bootstrapTimeList = $this->_bootstrapInstance->getMetrologyInstance()->getTimeArray();
@@ -1670,7 +1627,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                     foreach ($sylabeTimeList as $time) {
                         $sylabe_time_total = $sylabe_time_total + $time;
                     }
-                    $this->_traductionInstance->echoTranslate('Le serveur à pris %01.4fs pour calculer la page.', $sylabe_time_total);
+                    echo $this->_traductionInstance->getTranslate('Le serveur à pris %01.4fs pour calculer la page.', $sylabe_time_total);
                     echo ' (';
                     foreach ($sylabeTimeList as $time) {
                         echo sprintf(" %1.4fs", $time);
@@ -1777,12 +1734,12 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 <?php
                 switch ($status) {
                     case 'notPresent':
-                        $msg = $this->_traductionInstance->getTranslate(':::display:content:errorNotAvailable');
+                        $msg = $this->_traductionInstance->getTranslate('::::display:content:errorNotAvailable');
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'tooBig':
                         if ($this->_configurationInstance->getOptionUntyped('sylabeDisplayUnverifyLargeContent')) {
-                            $msg = $this->_traductionInstance->getTranslate(':::display:content:warningTooBig');
+                            $msg = $this->_traductionInstance->getTranslate('::::display:content:warningTooBig');
                             $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         } else {
                             $msg = $this->_traductionInstance->getTranslate(':::display:content:errorTooBig');
@@ -1790,19 +1747,19 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                         }
                         break;
                     case 'warning':
-                        $msg = $this->_traductionInstance->getTranslate(':::display:content:warningTaggedWarning');
+                        $msg = $this->_traductionInstance->getTranslate('::::display:content:warningTaggedWarning');
                         $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         break;
                     case 'danger':
-                        $msg = $this->_traductionInstance->getTranslate(':::display:content:errorBan');
+                        $msg = $this->_traductionInstance->getTranslate('::::display:content:errorBan');
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'notAnObject':
-                        $msg = $this->_traductionInstance->getTranslate(':::display:content:notAnObject');
+                        $msg = $this->_traductionInstance->getTranslate('::::display:content:notAnObject');
                         $this->displayIcon(self::DEFAULT_ICON_ALPHA_COLOR, $msg, 'iconNormalDisplay');
                         break;
                     default:
-                        $msg = $this->_traductionInstance->getTranslate(':::display:content:OK');
+                        $msg = $this->_traductionInstance->getTranslate('::::display:content:OK');
                         $this->displayIcon(self::DEFAULT_ICON_IOK, $msg, 'iconNormalDisplay');
                         break;
                 }
@@ -1976,26 +1933,10 @@ class Action extends Actions
  */
 class Translate extends Translates
 {
-    /**
-     * Langue par défaut.
-     *
-     * @var string
-     */
-    protected $DEFAULT_LANGUAGE = 'fr-fr';
-
-
-    /**
-     * Constructeur.
-     *
-     * @param Application $applicationInstance
-     * @return void
-     */
     public function __construct(Application $applicationInstance)
     {
         parent::__construct($applicationInstance);
     }
-
-    // Tout par défaut.
 }
 
 
@@ -2009,30 +1950,30 @@ class Translate extends Translates
  */
 class ModuleHelp extends Modules
 {
-    protected $MODULE_TYPE = 'Application';
-    protected $MODULE_NAME = '::sylabe:module:help:ModuleName';
-    protected $MODULE_MENU_NAME = '::sylabe:module:help:MenuName';
-    protected $MODULE_COMMAND_NAME = 'hlp';
-    protected $MODULE_DEFAULT_VIEW = '1st';
-    protected $MODULE_DESCRIPTION = '::sylabe:module:help:ModuleDescription';
-    protected $MODULE_VERSION = '020230110';
-    protected $MODULE_AUTHOR = 'Projet nebule';
-    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2023';
-    protected $MODULE_LOGO = '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d.sha2.256';
-    protected $MODULE_HELP = '::sylabe:module:help:ModuleHelp';
-    protected $MODULE_INTERFACE = '3.0';
+    protected string $MODULE_TYPE = 'Application';
+    protected string $MODULE_NAME = '::sylabe:module:help:ModuleName';
+    protected string $MODULE_MENU_NAME = '::sylabe:module:help:MenuName';
+    protected string $MODULE_COMMAND_NAME = 'hlp';
+    protected string $MODULE_DEFAULT_VIEW = '1st';
+    protected string $MODULE_DESCRIPTION = '::sylabe:module:help:ModuleDescription';
+    protected string $MODULE_VERSION = '020230110';
+    protected string $MODULE_AUTHOR = 'Projet nebule';
+    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2023';
+    protected string $MODULE_LOGO = '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d.sha2.256';
+    protected string $MODULE_HELP = '::sylabe:module:help:ModuleHelp';
+    protected string $MODULE_INTERFACE = '3.0';
 
-    protected $MODULE_REGISTERED_VIEWS = array('1st', 'hlp', 'lang', 'about');
-    protected $MODULE_REGISTERED_ICONS = array(
+    protected array $MODULE_REGISTERED_VIEWS = array('1st', 'hlp', 'lang', 'about');
+    protected array $MODULE_REGISTERED_ICONS = array(
         '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d.sha2.256',    // 0 : icône d'aide.
         '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c.sha2.256',    // 1 : module
         'd7f68db0a1d0977fb8e521fd038b18cd601946aa0e26071ff8c02c160549633b.sha2.256',    // 2 : bootstrap (metrologie)
         '3638230cde600865159d5b5f7993d8a3310deb35aa1f6f8f57429b16472e03d6.sha2.256',    // 3 : world
     );
-    protected $MODULE_APP_TITLE_LIST = array('::sylabe:module:help:AppTitle1');
-    protected $MODULE_APP_ICON_LIST = array('1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d.sha2.256');
-    protected $MODULE_APP_DESC_LIST = array('::sylabe:module:help:AppDesc1');
-    protected $MODULE_APP_VIEW_LIST = array('hlp');
+    protected array $MODULE_APP_TITLE_LIST = array('::sylabe:module:help:AppTitle1');
+    protected array $MODULE_APP_ICON_LIST = array('1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d.sha2.256');
+    protected array $MODULE_APP_DESC_LIST = array('::sylabe:module:help:AppDesc1');
+    protected array $MODULE_APP_VIEW_LIST = array('hlp');
 
 
     /**
@@ -2155,7 +2096,7 @@ class ModuleHelp extends Modules
             $this->_applicationInstance->getDisplayInstance()->displayHypertextLink(
                 $this->_applicationInstance->getDisplayInstance()->convertUpdateImage(
                     $this->_nebuleInstance->newObject(Display::DEFAULT_ICON_LSTENT),
-                    $this->_traduction('Entités')),
+                    $this->_translateInstance->getTranslate('Entités')),
                 '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=list'); ?>
 
@@ -2165,7 +2106,7 @@ class ModuleHelp extends Modules
             $this->_applicationInstance->getDisplayInstance()->displayHypertextLink(
                 $this->_applicationInstance->getDisplayInstance()->convertUpdateImage(
                     $this->_nebuleInstance->newObject($this->MODULE_LOGO),
-                    $this->_traduction('::sylabe:module:help:AideGenerale')),
+                    $this->_translateInstance->getTranslate('::sylabe:module:help:AideGenerale')),
                 '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=hlp'); ?>
 
@@ -2175,14 +2116,14 @@ class ModuleHelp extends Modules
             $this->_applicationInstance->getDisplayInstance()->displayHypertextLink(
                 $this->_applicationInstance->getDisplayInstance()->convertUpdateImage(
                     $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[3]),
-                    $this->_traduction('::sylabe:module:help:ChangerLangue')),
+                    $this->_translateInstance->getTranslate('::sylabe:module:help:ChangerLangue')),
                 '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=lang'); ?>
 
         </div>
         <div class="sylabeModuleHelpText1stT">
             <p>
-                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::sylabe:module:help:Bienvenue') ?>
+                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::sylabe:module:help:Bienvenue') ?>
                 <br/>
             </p>
         </div>
@@ -2225,7 +2166,7 @@ class ModuleHelp extends Modules
         ?>
         <div class="text">
             <p>
-                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::sylabe:module:help:AideGenerale:Text') ?>
+                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::sylabe:module:help:AideGenerale:Text') ?>
             </p>
         </div>
         <?php
@@ -2272,10 +2213,10 @@ class ModuleHelp extends Modules
         ?>
         <div class="text">
             <p>
-                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::sylabe:module:help:APropos:Text') ?>
+                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::sylabe:module:help:APropos:Text') ?>
             </p>
             <p>
-                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::sylabe:module:help:APropos:Liens') ?>
+                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::sylabe:module:help:APropos:Liens') ?>
             </p>
         </div>
         <?php

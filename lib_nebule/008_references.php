@@ -98,6 +98,7 @@ class References
     const REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT = 'nebule/objet/interface/web/php/applications/direct';
     const REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE = 'nebule/objet/interface/web/php/applications/active';
     const REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES = 'nebule/objet/interface/web/php/applications/modules';
+    const REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_TRANSLATE = 'nebule/objet/interface/web/php/applications/modules/traduction';
     const REFERENCE_NEBULE_OBJET_INTERFACE_APP_MOD_ACTIVE = 'nebule/objet/interface/web/php/applications/modules/active';
     const REFERENCE_NEBULE_OBJET_NOEUD = 'nebule/objet/noeud';
     const REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE = 'nebule/objet/image/reference';

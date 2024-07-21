@@ -20,31 +20,31 @@ use Nebule\Library\References;
  */
 class ModuleObjects extends Modules
 {
-    protected $MODULE_TYPE = 'Application';
-    protected $MODULE_NAME = '::sylabe:module:objects:ModuleName';
-    protected $MODULE_MENU_NAME = '::sylabe:module:objects:MenuName';
-    protected $MODULE_COMMAND_NAME = 'obj';
-    protected $MODULE_DEFAULT_VIEW = 'disp';
-    protected $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    protected $MODULE_VERSION = '020240720';
-    protected $MODULE_AUTHOR = 'Projet nebule';
-    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
-    protected $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
-    protected $MODULE_HELP = '::sylabe:module:objects:ModuleHelp';
-    protected $MODULE_INTERFACE = '3.0';
+    protected string $MODULE_TYPE = 'Application';
+    protected string $MODULE_NAME = '::sylabe:module:objects:ModuleName';
+    protected string $MODULE_MENU_NAME = '::sylabe:module:objects:MenuName';
+    protected string $MODULE_COMMAND_NAME = 'obj';
+    protected string $MODULE_DEFAULT_VIEW = 'disp';
+    protected string $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
+    protected string $MODULE_VERSION = '020240721';
+    protected string $MODULE_AUTHOR = 'Projet nebule';
+    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
+    protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
+    protected string $MODULE_HELP = '::sylabe:module:objects:ModuleHelp';
+    protected string $MODULE_INTERFACE = '3.0';
 
-    protected $MODULE_REGISTERED_VIEWS = array('disp', 'desc', 'nav', 'prot', 'sprot');
-    protected $MODULE_REGISTERED_ICONS = array(
+    protected array $MODULE_REGISTERED_VIEWS = array('disp', 'desc', 'nav', 'prot', 'sprot');
+    protected array $MODULE_REGISTERED_ICONS = array(
         '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 0 : Objet.
         '2e836dd0ca088d84cbc472093a14445e5c81ee0998293b46a479fedc41adf10d.sha2.256',    // 1 : Loupe.
         '06cac4acb887cff2c7ba6653f865d800276a4e9d493a3be4e1b05d107f5ecbaf.sha2.256',    // 2 : Fork.
         '6d1d397afbc0d2f6866acd1a30ac88abce6a6c4c2d495179504c2dcb09d707c1.sha2.256',    // 3 : Protection d'un objet.
         '1c6db1c9b3b52a9b68d19c936d08697b42595bec2f0adf16e8d9223df3a4e7c5.sha2.256',    // 4 : Clé.
     );
-    protected $MODULE_APP_TITLE_LIST = array();
-    protected $MODULE_APP_ICON_LIST = array();
-    protected $MODULE_APP_DESC_LIST = array();
-    protected $MODULE_APP_VIEW_LIST = array();
+    protected array $MODULE_APP_TITLE_LIST = array();
+    protected array $MODULE_APP_ICON_LIST = array();
+    protected array $MODULE_APP_DESC_LIST = array();
+    protected array $MODULE_APP_VIEW_LIST = array();
 
     const DEFAULT_ATTRIBS_DISPLAY_NUMBER = 10;
 
@@ -666,7 +666,7 @@ class ModuleObjects extends Modules
                             <div class="sylabeModuleObjectsDescDate"><?php $display->displayDate($link->getDate()); ?></div>
                             <div class="sylabeModuleObjectsDescSigner"><?php $display->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleObjectsDescContent">
-                                <span class="sylabeModuleObjectsDescAttrib"><?php $this->_applicationInstance->getTranslateInstance()->echoTranslate($attribName); ?></span>
+                                <span class="sylabeModuleObjectsDescAttrib"><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate($attribName); ?></span>
                                 =
                                 <span class="sylabeModuleObjectsDescValue"><?php echo $value; ?></span>
                             </div>
@@ -698,7 +698,7 @@ class ModuleObjects extends Modules
                             <div class="sylabeModuleObjectsDescContent">
 		<span class="sylabeModuleObjectsDescEmotion">
 			<?php $display->displayReferenceImage($emotionsIcons[$emotion], $emotionsList[$hashValue]); ?>
-            <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate($emotionsList[$hashValue]); ?>
+            <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate($emotionsList[$hashValue]); ?>
 		</span>
                             </div>
                         </div>
@@ -729,7 +729,7 @@ class ModuleObjects extends Modules
                             <div class="sylabeModuleObjectsDescDate"><?php $display->displayDate($link->getDate()); ?></div>
                             <div class="sylabeModuleObjectsDescSigner"><?php $display->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleObjectsDescContent">
-                                <span class="sylabeModuleObjectsDescAttrib"><?php $this->_echoTraduction('::sylabe:module:objects:AttribNotDisplayable'); ?></span>
+                                <span class="sylabeModuleObjectsDescAttrib"><?php echo $this->_translateInstance->getTranslate('::sylabe:module:objects:AttribNotDisplayable'); ?></span>
                             </div>
                         </div>
                         <?php

@@ -21,21 +21,21 @@ use Nebule\Library\References;
  */
 class ModuleEntities extends Modules
 {
-    protected $MODULE_TYPE = 'Application';
-    protected $MODULE_NAME = '::sylabe:module:entities:ModuleName';
-    protected $MODULE_MENU_NAME = '::sylabe:module:entities:MenuName';
-    protected $MODULE_COMMAND_NAME = 'ent';
-    protected $MODULE_DEFAULT_VIEW = 'disp';
-    protected $MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
-    protected $MODULE_VERSION = '020240720';
-    protected $MODULE_AUTHOR = 'Projet nebule';
-    protected $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
-    protected $MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
-    protected $MODULE_HELP = '::sylabe:module:entities:ModuleHelp';
-    protected $MODULE_INTERFACE = '3.0';
+    protected string $MODULE_TYPE = 'Application';
+    protected string $MODULE_NAME = '::sylabe:module:entities:ModuleName';
+    protected string $MODULE_MENU_NAME = '::sylabe:module:entities:MenuName';
+    protected string $MODULE_COMMAND_NAME = 'ent';
+    protected string $MODULE_DEFAULT_VIEW = 'disp';
+    protected string $MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
+    protected string $MODULE_VERSION = '020240721';
+    protected string $MODULE_AUTHOR = 'Projet nebule';
+    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
+    protected string $MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
+    protected string $MODULE_HELP = '::sylabe:module:entities:ModuleHelp';
+    protected string $MODULE_INTERFACE = '3.0';
 
-    protected $MODULE_REGISTERED_VIEWS = array('list', 'disp', 'auth', 'crea', 'srch', 'logs', 'acts', 'prop', 'klst', 'ulst', 'slst', 'kblst');
-    protected $MODULE_REGISTERED_ICONS = array(
+    protected array $MODULE_REGISTERED_VIEWS = array('list', 'disp', 'auth', 'crea', 'srch', 'logs', 'acts', 'prop', 'klst', 'ulst', 'slst', 'kblst');
+    protected array $MODULE_REGISTERED_ICONS = array(
         '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256',    // 0 entité (personnage)
         '6d1d397afbc0d2f6866acd1a30ac88abce6a6c4c2d495179504c2dcb09d707c1.sha2.256',    // 1 lien chiffrement/protection
         '7e9726b5aec1b2ab45c70f882f56ea0687c27d0739022e907c50feb87dfaf37d.sha2.256',    // 2 lien mise à jour
@@ -49,10 +49,10 @@ class ModuleEntities extends Modules
         '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256',    // 10 entité (objet)
         'de62640d07ac4cb2f50169fa361e062ed3595be1e973c55eb3ef623ed5661947.sha2.256',    // 11 verrouillage entité.
     );
-    protected $MODULE_APP_TITLE_LIST = array('::sylabe:module:entities:AppTitle1');
-    protected $MODULE_APP_ICON_LIST = array('94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256');
-    protected $MODULE_APP_DESC_LIST = array('::sylabe:module:entities:AppDesc1');
-    protected $MODULE_APP_VIEW_LIST = array('list');
+    protected array $MODULE_APP_TITLE_LIST = array('::sylabe:module:entities:AppTitle1');
+    protected array $MODULE_APP_ICON_LIST = array('94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256');
+    protected array $MODULE_APP_DESC_LIST = array('::sylabe:module:entities:AppDesc1');
+    protected array $MODULE_APP_VIEW_LIST = array('list');
 
     const COMMAND_LOGOUT_ENTITY = 'logout';
     const COMMAND_SWITCH_TO_ENTITY = 'switch';
@@ -887,10 +887,10 @@ class ModuleEntities extends Modules
             )
         ) {
             $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[9]);
-            echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::EntityUnlocked', $icon, false);
+            echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::::entity:unlocked', $icon, false);
         } else {
             $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[11]);
-            echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::EntityLocked', $icon, false);
+            echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::::entity:locked', $icon, false);
         }
 
         // Extrait les états de tests en warning ou en erreur.
@@ -945,8 +945,8 @@ class ModuleEntities extends Modules
         ) {
             // Propose de la verrouiller.
             $list = array();
-            $list[0]['title'] = $this->_traduction('::Lock');
-            $list[0]['desc'] = $this->_traduction('::EntityUnlocked');
+            $list[0]['title'] = $this->_translateInstance->getTranslate('::::lock');
+            $list[0]['desc'] = $this->_translateInstance->getTranslate('::::entity:unlocked');
             $list[0]['icon'] = $this->MODULE_REGISTERED_ICONS[11];
             $list[0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2]
@@ -973,7 +973,7 @@ class ModuleEntities extends Modules
                 echo '<div class="objectTitleText objectTitleMediumText objectTitleText0 informationTitleText">' . "\n";
 
                 echo '<div class="objectTitleRefs objectTitleMediumRefs informationTitleRefs informationTitleRefs' . $idCheck . '" id="sylabeModuleEntityConnect">' . "\n";
-                echo $this->_traduction('::Password') . "<br />\n";
+                echo $this->_translateInstance->getTranslate('::::Password') . "<br />\n";
                 echo '</div>' . "\n";
 
                 echo '<div class="objectTitleName objectTitleMediumName informationTitleName informationTitleName' . $idCheck . ' informationTitleMediumName" id="sylabeModuleEntityConnect">' . "\n";
@@ -984,7 +984,7 @@ class ModuleEntities extends Modules
                           . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_displayEntity; ?>">
                     <input type="hidden" name="ent" value="<?php echo $this->_displayEntity; ?>">
                     <input type="password" name="<?php echo References::COMMAND_SELECT_PASSWORD; ?>">
-                    <input type="submit" value="<?php echo $this->_traduction('::Unlock'); ?>">
+                    <input type="submit" value="<?php echo $this->_translateInstance->getTranslate('::::unlock'); ?>">
                 </form>
                 <?php
                 echo '</div>' . "\n";
@@ -1005,7 +1005,7 @@ class ModuleEntities extends Modules
                     'displaySize' => 'medium',
                     'displayRatio' => 'short',
                 );
-                echo $this->_displayInstance->getDisplayInformation_DEPRECATED(':::err_NotPermit', $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
             }
         }
     }
@@ -1034,12 +1034,12 @@ class ModuleEntities extends Modules
             <p>
                 <?php
                 if ($entity == $this->_nebuleInstance->getCurrentEntity() && $this->_unlocked) {
-                    $this->_applicationInstance->getTranslateInstance()->echoTranslate(
+                    echo $this->_applicationInstance->getTranslateInstance()->getTranslate(
                         '::sylabe:module:entities:DisplayEntityMessages',
                         $this->_displayInstance->convertInlineObjectColorIconName($instance));
                     $dispWarn = false;
                 } else {
-                    $this->_applicationInstance->getTranslateInstance()->echoTranslate(
+                    echo $this->_applicationInstance->getTranslateInstance()->getTranslate(
                         '::sylabe:module:entities:DisplayEntityPublicMessages',
                         $this->_displayInstance->convertInlineObjectColorIconName($instance));
                     $dispWarn = true;
@@ -1052,7 +1052,7 @@ class ModuleEntities extends Modules
         // Si besoin, affiche le message d'information.
         if ($dispWarn) {
             $this->_displayInstance->displayMessageInformation_DEPRECATED(
-                $this->_traduction('::sylabe:module:entities:DisplayEntityPublicMessagesWarning'));
+                $this->_translateInstance->getTranslate('::sylabe:module:entities:DisplayEntityPublicMessagesWarning'));
         }
         unset($dispWarn);
 
@@ -1136,10 +1136,10 @@ class ModuleEntities extends Modules
                                 echo "\n"; ?>
                             </p>
                             <p class="sylabeModuleEntityActionTitle">
-                                <?php $this->_echoTraduction('::sylabe:module:entities:Obfuscated'); ?>
+                                <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:Obfuscated'); ?>
                             </p>
                             <p class="sylabeModuleEntityActionFromTo">
-                                <?php $this->_echoTraduction('::sylabe:module:entities:From'); ?>
+                                <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:From'); ?>
                                 &nbsp;<?php $this->_displayInstance->displayInlineObjectColorIconName($signer); ?><br/>
                             </p>
                         </div>
@@ -1162,10 +1162,10 @@ class ModuleEntities extends Modules
                                 echo "\n"; ?>
                             </p>
                             <p class="sylabeModuleEntityActionTitle">
-                                <?php $this->_echoTraduction('::sylabe:module:entities:Protected'); ?>
+                                <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:Protected'); ?>
                             </p>
                             <p class="sylabeModuleEntityActionFromTo">
-                                <?php $this->_echoTraduction('::sylabe:module:entities:From'); ?>
+                                <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:From'); ?>
                                 &nbsp;<?php $this->_displayInstance->displayInlineObjectColorIconName($signer); ?><br/>
                             </p>
                         </div>
@@ -1194,10 +1194,10 @@ class ModuleEntities extends Modules
                                 <?php echo $objectInstance->getFullName('all'); ?>
                             </p>
                             <p class="sylabeModuleEntityActionType">
-                                <?php echo $this->_applicationInstance->getTranslateInstance()->echoTranslate($objectInstance->getType('all')); ?>
+                                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate($objectInstance->getType('all')); ?>
                             </p>
                             <p class="sylabeModuleEntityActionFromTo">
-                                <?php $this->_echoTraduction('::sylabe:module:entities:From'); ?>
+                                <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:From'); ?>
                                 &nbsp;<?php $this->_displayInstance->displayInlineObjectColorIconName($signer); ?><br/>
                             </p>
                         </div>
@@ -1247,7 +1247,7 @@ class ModuleEntities extends Modules
                 // Vérifie si l'objet courant est une entité, affiche les messages de cette entité.
                 if ($typemime == 'application/x-pem-file' && $ispresent) {
                     $entity = $this->_nebuleInstance->newEntity($id);
-                    $this->_applicationInstance->getTranslateInstance()->echoTranslate(
+                    echo $this->_applicationInstance->getTranslateInstance()->getTranslate(
                         '::sylabe:module:entities:DisplayEntityPublicMessages',
                         $this->_displayInstance->convertInlineObjectColorIconName($entity));
                     $dispWarn = true;
@@ -1257,11 +1257,11 @@ class ModuleEntities extends Modules
                     $id = $this->_nebuleInstance->getCurrentEntity();
                     $owned = true;
                     if ($this->_unlocked) {
-                        $this->_applicationInstance->getTranslateInstance()->echoTranslate(
+                        echo $this->_applicationInstance->getTranslateInstance()->getTranslate(
                             '::sylabe:module:entities:DisplayEntityMessages',
                             $this->_displayInstance->convertInlineObjectColorIconName($entity));
                     } else {
-                        $this->_applicationInstance->getTranslateInstance()->echoTranslate(
+                        echo $this->_applicationInstance->getTranslateInstance()->getTranslate(
                             '::sylabe:module:entities:DisplayEntityPublicMessages',
                             $this->_displayInstance->convertInlineObjectColorIconName($entity));
                         $dispWarn = true;
@@ -1275,7 +1275,7 @@ class ModuleEntities extends Modules
         // Si besoin, affiche le message d'information.
         if ($dispWarn) {
             $this->_displayInstance->displayMessageInformation_DEPRECATED(
-                $this->_traduction('::sylabe:module:entities:DisplayEntityPublicMessagesWarning'));
+                $this->_translateInstance->getTranslate('::sylabe:module:entities:DisplayEntityPublicMessagesWarning'));
         }
         unset($dispWarn);
 
@@ -1311,7 +1311,7 @@ class ModuleEntities extends Modules
                             <?php echo $objectInstance->getType('all'); ?>
                         </p>
                         <p class="sylabeModuleEntityActionFromTo">
-                            <?php $this->_echoTraduction('::sylabe:module:entities:To'); ?>
+                            <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:To'); ?>
                             &nbsp;<?php $this->_displayInstance->displayInlineObjectColorIconName($source); ?><br/>
                         </p>
                     </div>
@@ -1763,7 +1763,7 @@ class ModuleEntities extends Modules
                     'displaySize' => 'medium',
                     'displayRatio' => 'long',
                     'objectIcon' => $this->MODULE_REGISTERED_ICONS[0],
-                    'status' => $this->_traduction('ID public'),
+                    'status' => $this->_translateInstance->getTranslate('ID public'),
                 );
 
                 // Ajoute l'ID privé de l'entité.
@@ -1788,12 +1788,12 @@ class ModuleEntities extends Modules
                     'displaySize' => 'medium',
                     'displayRatio' => 'long',
                     'objectIcon' => $this->MODULE_REGISTERED_ICONS[9],
-                    'status' => $this->_traduction('ID prive'),
+                    'status' => $this->_translateInstance->getTranslate('ID prive'),
                 );
                 unset($privInstance);
             } else {
                 // Affiche un message d'erreur.
-                $list[0]['information'] = $this->_traduction('::sylabe:module:entities:EntityNotCreated') . ' : "' . $this->_createEntityErrorMessage . '"';
+                $list[0]['information'] = $this->_translateInstance->getTranslate('::sylabe:module:entities:EntityNotCreated') . ' : "' . $this->_createEntityErrorMessage . '"';
                 $list[0]['param']['informationType'] = 'error';
                 $list[0]['param']['displayRatio'] = 'long';
             }
@@ -1829,13 +1829,13 @@ class ModuleEntities extends Modules
                         <div class="sylabeModuleEntityCreate" id="sylabeModuleEntityCreateNames">
                             <div class="sylabeModuleEntityCreateHeader">
                                 <p>
-                                    <?php $this->_echoTraduction('::sylabe:module:entities:CreateEntityNommage'); ?>
+                                    <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateEntityNommage'); ?>
 
                                 </p>
                             </div>
                             <div class="sylabeModuleEntityCreateProperty">
                                 <div class="sylabeModuleEntityCreatePropertyName">
-                                    <?php $this->_echoTraduction('nebule/objet/prefix'); ?>
+                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/prefix'); ?>
 
                                 </div>
                                 <input type="text"
@@ -1846,7 +1846,7 @@ class ModuleEntities extends Modules
                             </div>
                             <div class="sylabeModuleEntityCreateProperty">
                                 <div class="sylabeModuleEntityCreatePropertyName">
-                                    <?php $this->_echoTraduction('nebule/objet/prenom'); ?>
+                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/prenom'); ?>
 
                                 </div>
                                 <input type="text"
@@ -1857,7 +1857,7 @@ class ModuleEntities extends Modules
                             </div>
                             <div class="sylabeModuleEntityCreateProperty">
                                 <div class="sylabeModuleEntityCreatePropertyName">
-                                    <?php $this->_echoTraduction('nebule/objet/surnom'); ?>
+                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/surnom'); ?>
 
                                 </div>
                                 <input type="text"
@@ -1868,7 +1868,7 @@ class ModuleEntities extends Modules
                             </div>
                             <div class="sylabeModuleEntityCreateProperty">
                                 <div class="sylabeModuleEntityCreatePropertyName">
-                                    <?php $this->_echoTraduction('nebule/objet/nom'); ?>
+                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/nom'); ?>
 
                                 </div>
                                 <input type="text"
@@ -1879,7 +1879,7 @@ class ModuleEntities extends Modules
                             </div>
                             <div class="sylabeModuleEntityCreateProperty">
                                 <div class="sylabeModuleEntityCreatePropertyName">
-                                    <?php $this->_echoTraduction('nebule/objet/suffix'); ?>
+                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/suffix'); ?>
                                 </div>
                                 <input type="text"
                                        name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_SUFFIX; ?>"
@@ -1892,7 +1892,7 @@ class ModuleEntities extends Modules
                             <div class="sylabeModuleEntityCreateProperty">
                                 <div class="sylabeModuleEntityCreatePropertyName"
                                      id="sylabeModuleEntityCreatePropertyNamePWD1">
-                                    <?php $this->_echoTraduction('::Password'); ?>
+                                    <?php echo $this->_translateInstance->getTranslate('::::Password'); ?>
 
                                 </div>
                                 <input type="password"
@@ -1904,7 +1904,7 @@ class ModuleEntities extends Modules
                             <div class="sylabeModuleEntityCreateProperty">
                                 <div class="sylabeModuleEntityCreatePropertyName"
                                      id="sylabeModuleEntityCreatePropertyNamePWD2">
-                                    <?php $this->_echoTraduction('::sylabe:module:entities:CreateEntityConfirm'); ?>
+                                    <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateEntityConfirm'); ?>
 
                                 </div>
                                 <input type="password"
@@ -1917,13 +1917,13 @@ class ModuleEntities extends Modules
                         <div class="sylabeModuleEntityCreate" id="sylabeModuleEntityCreateOther">
                             <div class="sylabeModuleEntityCreateHeader">
                                 <p>
-                                    <?php $this->_echoTraduction('::sylabe:module:entities:CreateEntityOther'); ?>
+                                    <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateEntityOther'); ?>
 
                                 </p>
                             </div>
                             <div class="sylabeModuleEntityCreateProperty">
                                 <div class="sylabeModuleEntityCreatePropertyName">
-                                    <?php $this->_echoTraduction('::sylabe:module:entities:CreateEntityAlgorithm'); ?>
+                                    <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateEntityAlgorithm'); ?>
 
                                 </div>
                                 <select
@@ -1938,36 +1938,36 @@ class ModuleEntities extends Modules
                             </div>
                             <div class="sylabeModuleEntityCreateProperty">
                                 <div class="sylabeModuleEntityCreatePropertyName">
-                                    <?php $this->_echoTraduction('nebule/objet/entite/type'); ?>
+                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/entite/type'); ?>
 
                                 </div>
                                 <select
                                     name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_TYPE; ?>"
                                     class="sylabeModuleEntityCreatePropertyEntry">
                                     <option value="undef" selected>
-                                        <?php $this->_echoTraduction('::sylabe:module:entities:CreateEntityTypeUndefined'); ?>
+                                        <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateEntityTypeUndefined'); ?>
 
                                     </option>
                                     <option value="human">
-                                        <?php $this->_echoTraduction('::sylabe:module:entities:CreateEntityTypeHuman'); ?>
+                                        <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateEntityTypeHuman'); ?>
 
                                     </option>
                                     <option value="robot">
-                                        <?php $this->_echoTraduction('::sylabe:module:entities:CreateEntityTypeRobot'); ?>
+                                        <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateEntityTypeRobot'); ?>
 
                                     </option>
                                 </select>
                             </div>
                             <div class="sylabeModuleEntityCreateProperty">
                                 <div class="sylabeModuleEntityCreatePropertyName">
-                                    <?php $this->_echoTraduction('::sylabe:module:entities:CreateEntityAutonomy'); ?>
+                                    <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateEntityAutonomy'); ?>
 
                                 </div>
                                 <select
                                     name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_AUTONOMY; ?>"
                                     class="sylabeModuleEntityCreatePropertyEntry">
                                     <option value="y" selected>
-                                        <?php $this->_echoTraduction('::yes'); ?>
+                                        <?php echo $this->_translateInstance->getTranslate('::::yes'); ?>
 
                                     </option>
                                 </select>
@@ -1975,7 +1975,7 @@ class ModuleEntities extends Modules
                         </div>
                         <div class="sylabeModuleEntityCreateSubmit">
                             <input type="submit"
-                                   value="<?php $this->_echoTraduction('::sylabe:module:entities:CreateTheEntity'); ?>"
+                                   value="<?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateTheEntity'); ?>"
                                    class="sylabeModuleEntityCreateSubmitEntry"/>
                         </div>
                     </form>
@@ -2022,20 +2022,20 @@ class ModuleEntities extends Modules
                            value="<?php echo $this->_nebuleInstance->getCurrentEntity(); ?>">
                     <table border="0" padding="2px">
                         <tr>
-                            <td align="right"><?php $this->_echoTraduction('::sylabe:module:entities:Search:URL') ?>
+                            <td align="right"><?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:Search:URL') ?>
                             </td>
                             <td>:</td>
                             <td><input type="text" name="srchurl" size="80"
                                        value="<?php echo $this->_searchEntityURL; ?>"></td>
                         </tr>
                         <tr>
-                            <td align="right"><?php $this->_echoTraduction('::sylabe:module:entities:Search:AndOr') ?>
+                            <td align="right"><?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:Search:AndOr') ?>
                             </td>
                             <td></td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td align="right"><?php $this->_echoTraduction('::sylabe:module:entities:Search:ID') ?>
+                            <td align="right"><?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:Search:ID') ?>
                             </td>
                             <td>:</td>
                             <td><input type="text" name="srchid" size="80"
@@ -2045,7 +2045,7 @@ class ModuleEntities extends Modules
                             <td></td>
                             <td></td>
                             <td><input type="submit"
-                                       value="<?php $this->_echoTraduction('::sylabe:module:entities:Search:Submit'); ?>">
+                                       value="<?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:Search:Submit'); ?>">
                             </td>
                         </tr>
                     </table>
@@ -2102,7 +2102,7 @@ class ModuleEntities extends Modules
             // A affiner...
             //
             $this->_displayInstance->displayMessageWarning_DEPRECATED(
-                $this->_traduction('::sylabe:module:objects:warning:ObjectHaveUpdate'));
+                $this->_translateInstance->getTranslate('::sylabe:module:objects:warning:ObjectHaveUpdate'));
         }
         unset($update);
 
@@ -2240,7 +2240,7 @@ class ModuleEntities extends Modules
                             <div class="sylabeModuleEntityDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
                             <div class="sylabeModuleEntityDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleEntityDescContent">
-                                <span class="sylabeModuleEntityDescAttrib"><?php $this->_applicationInstance->getTranslateInstance()->echoTranslate($attribName); ?></span>
+                                <span class="sylabeModuleEntityDescAttrib"><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate($attribName); ?></span>
                                 =
                                 <span class="sylabeModuleEntityDescValue"><?php echo $attribValue; ?></span>
                             </div>
@@ -2272,7 +2272,7 @@ class ModuleEntities extends Modules
                             <div class="sylabeModuleEntityDescContent">
 		<span class="sylabeModuleEntityDescEmotion">
 			<?php $this->_displayInstance->displayReferenceImage($emotionsIcons[$emotion], $emotionsList[$hashValue]); ?>
-            <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate($emotionsList[$hashValue]); ?>
+            <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate($emotionsList[$hashValue]); ?>
 		</span>
                             </div>
                         </div>
@@ -2303,7 +2303,7 @@ class ModuleEntities extends Modules
                             <div class="sylabeModuleEntityDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
                             <div class="sylabeModuleEntityDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleEntityDescContent">
-                                <span class="sylabeModuleEntityDescAttrib"><?php $this->_echoTraduction('::sylabe:module:entities:AttribNotDisplayable'); ?></span>
+                                <span class="sylabeModuleEntityDescAttrib"><?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:AttribNotDisplayable'); ?></span>
                             </div>
                         </div>
                         <?php

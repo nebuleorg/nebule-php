@@ -46,7 +46,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240720';
+    const APPLICATION_VERSION = '020240721';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2024';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -59,14 +59,14 @@ class Application extends Applications
      *
      * @var boolean
      */
-    protected $_useModules = true;
+    protected bool $_useModules = true;
 
     /**
      * Liste des noms des modules par défaut.
      *
      * @var array
      */
-    protected $_listInternalModules = array(
+    protected array $_listInternalModules = array(
         'ModuleNeblog',
         'ModuleTranslateFRFR',
     );
@@ -214,49 +214,6 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
         }
     }
 
-    /**
-     * Initialisation des variables et instances interdépendantes.
-     *
-     * @return void
-     */
-    public function initialisation2(): void
-    {
-        $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
-        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'c51ba49d');
-        $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
-        $this->_actionInstance = $this->_applicationInstance->getActionInstance();
-        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
-
-        // Vide, est surchargé juste avant l'affichage.
-        $this->setHtlinkObjectPrefix('?');
-        $this->setHtlinkGroupPrefix('?');
-        $this->setHtlinkConversationPrefix('?');
-        $this->setHtlinkEntityPrefix('?');
-        $this->setHtlinkCurrencyPrefix('?');
-        $this->setHtlinkTokenPoolPrefix('?');
-        $this->setHtlinkTokenPrefix('?');
-        $this->setHtlinkTransactionPrefix('?');
-        $this->setHtlinkWalletPrefix('?');
-
-        $this->_findLogoApplication();
-        $this->_findLogoApplicationLink();
-        $this->_findLogoApplicationName();
-        $this->_findCurrentDisplayMode();
-        $this->_findCurrentModule();
-        $this->_findCurrentDisplayView();
-        $this->_findInlineContentID();
-
-        // Si en mode téléchargement d'objet ou de lien, pas de traduction.
-        if ($this->_traductionInstance !== null) {
-            $this->_currentDisplayLanguage = $this->_traductionInstance->getCurrentLanguage();
-            $this->_currentDisplayLanguageInstance = $this->_traductionInstance->getCurrentLanguageInstance();
-            $this->_displayLanguageList = $this->_traductionInstance->getLanguageList();
-            $this->_displayLanguageInstanceList = $this->_traductionInstance->getLanguageModuleInstanceList();
-        }
-    }
-
 
 
     /*
@@ -352,7 +309,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
             <link rel="icon" type="image/png" href="favicon.png"/>
             <meta name="keywords" content="<?php echo Application::APPLICATION_SURNAME; ?>"/>
             <meta name="description" content="<?php echo Application::APPLICATION_NAME . ' - ';
-            $this->_traductionInstance->echoTranslate('::::HtmlHeadDescription'); ?>"/>
+            echo $this->_traductionInstance->getTranslate('::::HtmlHeadDescription'); ?>"/>
             <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
             <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
             <?php
@@ -1156,7 +1113,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                 <img alt="<?php echo Application::APPLICATION_NAME; ?>" src="<?php echo $this->_logoApplication; ?>"/><br/>
                 <?php echo Application::APPLICATION_NAME; ?><br/>
                 (c) <?php echo Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR; ?><br/>
-                <?php $this->_applicationInstance->getTranslateInstance()->echoTranslate('::Version');
+                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::Version');
                 echo ' : ' . Application::APPLICATION_VERSION; ?><br/>
                 <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo Application::APPLICATION_WEBSITE; ?></a>
             </div>
@@ -1416,13 +1373,13 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                 <p>
                     <?php
                     echo 'Lib nebule : ';
-                    $this->_traductionInstance->echoTranslate('%01.0f liens lus,', $this->_metrologyInstance->getLinkRead());
+                    echo $this->_traductionInstance->getTranslate('%01.0f liens lus,', $this->_metrologyInstance->getLinkRead());
                     echo ' ';
-                    $this->_traductionInstance->echoTranslate('%01.0f liens vérifiés,', $this->_metrologyInstance->getLinkVerify());
+                    echo $this->_traductionInstance->getTranslate('%01.0f liens vérifiés,', $this->_metrologyInstance->getLinkVerify());
                     echo ' ';
-                    $this->_traductionInstance->echoTranslate('%01.0f objets lus.', $this->_metrologyInstance->getObjectRead());
+                    echo $this->_traductionInstance->getTranslate('%01.0f objets lus.', $this->_metrologyInstance->getObjectRead());
                     echo ' ';
-                    $this->_traductionInstance->echoTranslate('%01.0f objets vérifiés.', $this->_metrologyInstance->getObjectVerify());
+                    echo $this->_traductionInstance->getTranslate('%01.0f objets vérifiés.', $this->_metrologyInstance->getObjectVerify());
                     echo "<br />\n";
                     // Calcul de temps de chargement de la page - stop
                     $this->_metrologyInstance->addTime();
@@ -1431,7 +1388,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                     foreach ($sylabeTimeList as $time) {
                         $sylabe_time_total = $sylabe_time_total + $time;
                     }
-                    $this->_traductionInstance->echoTranslate('Le serveur à pris %01.4fs pour calculer la page.', $sylabe_time_total);
+                    echo $this->_traductionInstance->getTranslate('Le serveur à pris %01.4fs pour calculer la page.', $sylabe_time_total);
                     echo ' (';
                     foreach ($sylabeTimeList as $time) {
                         echo sprintf(" %1.4fs", $time);
@@ -1538,12 +1495,12 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                 <?php
                 switch ($status) {
                     case 'notPresent':
-                        $msg = $this->_traductionInstance->getTranslate(':::display:content:errorNotAvailable');
+                        $msg = $this->_traductionInstance->getTranslate('::::display:content:errorNotAvailable');
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'tooBig':
                         if ($this->_configurationInstance->getOptionUntyped('sylabeDisplayUnverifyLargeContent')) {
-                            $msg = $this->_traductionInstance->getTranslate(':::display:content:warningTooBig');
+                            $msg = $this->_traductionInstance->getTranslate('::::display:content:warningTooBig');
                             $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         } else {
                             $msg = $this->_traductionInstance->getTranslate(':::display:content:errorTooBig');
@@ -1551,19 +1508,19 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                         }
                         break;
                     case 'warning':
-                        $msg = $this->_traductionInstance->getTranslate(':::display:content:warningTaggedWarning');
+                        $msg = $this->_traductionInstance->getTranslate('::::display:content:warningTaggedWarning');
                         $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         break;
                     case 'danger':
-                        $msg = $this->_traductionInstance->getTranslate(':::display:content:errorBan');
+                        $msg = $this->_traductionInstance->getTranslate('::::display:content:errorBan');
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'notAnObject':
-                        $msg = $this->_traductionInstance->getTranslate(':::display:content:notAnObject');
+                        $msg = $this->_traductionInstance->getTranslate('::::display:content:notAnObject');
                         $this->displayIcon(self::DEFAULT_ICON_ALPHA_COLOR, $msg, 'iconNormalDisplay');
                         break;
                     default:
-                        $msg = $this->_traductionInstance->getTranslate(':::display:content:OK');
+                        $msg = $this->_traductionInstance->getTranslate('::::display:content:OK');
                         $this->displayIcon(self::DEFAULT_ICON_IOK, $msg, 'iconNormalDisplay');
                         break;
                 }
@@ -1738,20 +1695,6 @@ class Action extends Actions
  */
 class Translate extends Translates
 {
-    /**
-     * Langue par défaut.
-     *
-     * @var string
-     */
-    protected $DEFAULT_LANGUAGE = 'fr-fr';
-
-
-    /**
-     * Constructeur.
-     *
-     * @param Application $applicationInstance
-     * @return void
-     */
     public function __construct(Application $applicationInstance)
     {
         parent::__construct($applicationInstance);
