@@ -258,8 +258,7 @@ $bootstrapApplicationIID = '0';
 
 /**
  * ID de l'application mémorisée dans la session PHP.
- * @noinspection PhpUnusedLocalVariableInspection
- */
+ * @ */
 $bootstrapApplicationOID = '0';
 
 /**

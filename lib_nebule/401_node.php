@@ -3352,6 +3352,28 @@ class Node implements nodeInterface
         return $list;
     }
 
+    public function getReferencedObjectListID(string $reference = '', string $socialClass = ''): array
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        // Liste les liens à la recherche de la propriété.
+        $links = $this->_getReferencedByLinks($reference);
+
+        if (sizeof($links) == 0)
+            return $this->_id;
+
+        // Fait un tri par pertinence sociale.
+        $this->_social->arraySocialFilter($links, $socialClass);
+
+        // Extrait le dernier de la liste.
+        $link = end($links);
+        unset($links);
+
+        if (!is_a($link, 'Nebule\Library\Link'))
+            return $this->_id;
+
+        return $link->getParsed()['bl/rl/nid2'];
+    }
+
     /**
      * Cherche l'ID de l'objet par référence.
      * Si pas trouvé, retourne l'ID de l'objet sur lequel s'effectue la recherche.

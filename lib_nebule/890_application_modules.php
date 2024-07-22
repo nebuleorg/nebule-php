@@ -21,6 +21,7 @@ class ApplicationModules
     protected ?Displays $_displayInstance = null;
     protected ?Actions $_actionInstance = null;
     protected ?Translates $_translateInstance = null;
+    protected ?Cache $_cacheInstance = null;
     protected string $_applicationNamespace = '';
     protected array $_listInternalModules = array();
     protected array $_listExternalModules = array();
@@ -32,6 +33,7 @@ class ApplicationModules
     protected array $_listModulesTranslateRID = array();
     protected array $_listModulesTranslateOID = array();
     protected array $_listModulesTranslateInstance = array();
+    protected array $_listModulesExternalRID = array();
     protected array $_listModulesID = array();
     protected array $_listModulesValid = array();
     protected array $_listModulesEnabled = array();
@@ -46,53 +48,29 @@ class ApplicationModules
         $this->_applicationInstance = $applicationInstance;
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_configurationInstance = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
-        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
-        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_applicationNamespace = '\\Nebule\\Application\\' . strtoupper(substr(Application::APPLICATION_NAME, 0, 1)) . strtolower(substr(Application::APPLICATION_NAME, 1));
+        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
+        $this->_cacheInstance = $this->_nebuleInstance->getCacheInstance();
 
         $this->_useModules = $this->_applicationInstance->getUseModules();
         $this->_useTranslateModules = $this->_applicationInstance->getUseTranslateModules();
         $this->_useExternalModules = $this->_applicationInstance->getUseExternalModules();
 
         $this->_listInternalModules = $listInternalModules;
-        $this->_loadModules();
+        $this->_initDefaultModules();
+        $this->_iniTranslateModules();
+        $this->_iniExternalModules();
     }
 
-    protected function _loadModules(): void {
-        if ($this->_loadModulesOK)
-            return;
-        $this->_loadModulesOK = true;
+    protected function _initDefaultModules(): void {
+        $this->_metrologyInstance->addLog('load default modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (!$this->_useModules) {
             $this->_metrologyInstance->addLog('Do not load internal modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bcc98872');
             return;
         }
-        $this->_loadDefaultModules();
-
-        if (!$this->_useTranslateModules) {
-            $this->_metrologyInstance->addLog('Do not load external translate modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b2f83669');
-            return;
-        }
-        $this->_listModulesTranslateRID = $this->_findModulesTranslateRID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_TRANSLATE);
-        $this->_listModulesTranslateOID = $this->_findModulesTranslateUpdateID();
-        $this->_listModulesTranslateInstance = $this->_initModulesTranslate();
-
-        if (!$this->_useExternalModules) {
-            $this->_metrologyInstance->addLog('Do not load external modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7b3af452');
-            return;
-        }
-
-        $this->_findModulesRID();
-        $this->_findModulesUpdateID();
-        $this->_initModules();
-    }
-
-    protected function _loadDefaultModules(): void {
-        if (!$this->_useModules)
-            return;
-        $this->_metrologyInstance->addLog('Load default modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '93eb59aa');
-
         foreach ($this->_listInternalModules as $moduleName) {
             $this->_metrologyInstance->addTime();
             $moduleFullName = $this->_applicationNamespace . '\\' . $moduleName;
@@ -106,13 +84,38 @@ class ApplicationModules
             $this->_listModulesSignerRID[$moduleFullName] = '0';
             $this->_listModulesValid[$moduleFullName] = true;
         }
-        $this->_metrologyInstance->addLog('Default modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '050783df');
+        $this->_metrologyInstance->addLog('default modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '050783df');
     }
 
-    protected function _findModulesTranslateRID(string $rid): array {
+    protected function _iniTranslateModules(): void {
+        $this->_metrologyInstance->addLog('load translate modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
+        if (!$this->_useModules || !$this->_useTranslateModules)
+            return;
+        $this->_listModulesTranslateRID = $this->_findModulesByRID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_TRANSLATE);
+        $this->_listModulesTranslateOID = $this->_findModulesTranslateUpdateID();
+        $this->_listModulesTranslateInstance = $this->_initModulesTranslate();
+        $this->_metrologyInstance->addLog('translate modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '7e7aeaed');
+    }
+
+    protected function _iniExternalModules(): void {
+        $this->_metrologyInstance->addLog('load external modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
+        if (!$this->_useModules || !$this->_useExternalModules)
+            return;
+        $this->_listModulesExternalRID = $this->_findModulesByRID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
+        $this->_findModulesUpdateID();
+        $this->_initModules();
+        $this->_metrologyInstance->addLog('external modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'a95de198');
+    }
+
+    protected function _findModulesByRID(string $rid): array {
         global $bootstrapApplicationIID;
 
-        $result = array();
+        $instanceRID = $this->_cacheInstance->newNode(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
+        return $instanceRID->getReferencedObjectListID($rid, 'authority'); // FIXME social
+
+        /*$result = array();
         $object = new Node($this->_nebuleInstance, $bootstrapApplicationIID);
         $hashRef = $this->_nebuleInstance->getCryptoInstance()->hash($rid);
         $links = $object->getLinksOnFields('', '', 'f', $bootstrapApplicationIID, '', $hashRef);
@@ -132,7 +135,7 @@ class ApplicationModules
                 }
             }
         }
-        return $result;
+        return $result;*/
     }
 
     protected function _findModulesTranslateUpdateID(): array {

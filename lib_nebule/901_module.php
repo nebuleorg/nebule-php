@@ -41,6 +41,7 @@ abstract class Modules implements moduleInterface
     protected ?Displays $_displayInstance = null;
     protected ?Translates $_translateInstance = null;
     protected ?Metrology $_metrologyInstance = null;
+    protected ?Cache $_cacheInstance = null;
     protected bool $_unlocked = false;
 
 
@@ -67,6 +68,7 @@ abstract class Modules implements moduleInterface
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
+        $this->_cacheInstance = $this->_nebuleInstance->getCacheInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
     }
 
