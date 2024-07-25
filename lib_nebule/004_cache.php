@@ -322,7 +322,7 @@ class Cache
      * @param string $type
      * @return node
      */
-    public function newNode(string $nid, string $type = self::TYPE_NODE): node
+    public function newNode(string $nid, string $type = Cache::TYPE_NODE): node
     {
         if ($nid == '')
             $nid = '0';
@@ -384,7 +384,7 @@ class Cache
      * @param string $type
      * @return boolean
      */
-    public function unsetCache(string $item, string $type = self::TYPE_NODE): bool
+    public function unsetCache(string $item, string $type = Cache::TYPE_NODE): bool
     {
         $this->_filterNodeType($type);
 

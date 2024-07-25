@@ -2974,11 +2974,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             return $this->_cacheIconByReference[$rid->getID()];
 
         // Sinon, lit l'id de l'objet référencé.
-        $uid = $rid->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'myself');
+        $uid = $rid->getReferencedOrSelfNID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'myself');
         if ($uid == $rid->getID())
-            $uid = $rid->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
+            $uid = $rid->getReferencedOrSelfNID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
         if ($uid == $rid->getID())
-            $uid = $rid->getReferencedObjectID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'all'); // FIXME peut-être trop...
+            $uid = $rid->getReferencedOrSelfNID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'all'); // FIXME peut-être trop...
 
         // Mémorise le résultat.
         if ($useBuffer)

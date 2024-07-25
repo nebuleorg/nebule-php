@@ -30,11 +30,10 @@ class ApplicationModules
     protected array $_listModulesSignerRID = array();
     protected array $_listModulesInitRID = array();
     protected array $_listModulesRID = array();
+    protected array $_listModulesOID = array();
     protected array $_listModulesTranslateRID = array();
     protected array $_listModulesTranslateOID = array();
     protected array $_listModulesTranslateInstance = array();
-    protected array $_listModulesExternalRID = array();
-    protected array $_listModulesID = array();
     protected array $_listModulesValid = array();
     protected array $_listModulesEnabled = array();
     protected ?Modules $_currentModuleInstance = null;
@@ -59,92 +58,85 @@ class ApplicationModules
         $this->_useExternalModules = $this->_applicationInstance->getUseExternalModules();
 
         $this->_listInternalModules = $listInternalModules;
-        $this->_initDefaultModules();
-        $this->_iniTranslateModules();
-        $this->_iniExternalModules();
+        $this->_initInternalModules();
+        $this->_initTranslateModules();
+        $this->_initExternalModules();
     }
 
-    protected function _initDefaultModules(): void {
-        $this->_metrologyInstance->addLog('load default modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-
+    protected function _initInternalModules(): void {
         if (!$this->_useModules) {
-            $this->_metrologyInstance->addLog('Do not load internal modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bcc98872');
+            $this->_metrologyInstance->addLog('Do not load modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bcc98872');
             return;
         }
+        $this->_metrologyInstance->addLog('load default modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
         foreach ($this->_listInternalModules as $moduleName) {
             $this->_metrologyInstance->addTime();
             $moduleFullName = $this->_applicationNamespace . '\\' . $moduleName;
-            $this->_metrologyInstance->addLog('Loaded module ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '4879c453');
+            $this->_metrologyInstance->addLog('loaded internal module ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '4879c453');
             $instance = new $moduleFullName($this->_applicationInstance);
             $instance->initialisation();
             $this->_listModulesName[$moduleName] = $moduleFullName;
             $this->_listModulesInstance[$moduleFullName] = $instance;
             $this->_listModulesInitRID[$moduleFullName] = '0';
-            $this->_listModulesID[$moduleFullName] = '0';
+            $this->_listModulesOID[$moduleFullName] = '0';
             $this->_listModulesSignerRID[$moduleFullName] = '0';
             $this->_listModulesValid[$moduleFullName] = true;
         }
-        $this->_metrologyInstance->addLog('default modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '050783df');
+        $this->_metrologyInstance->addLog('internal modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '050783df');
     }
 
-    protected function _iniTranslateModules(): void {
-        $this->_metrologyInstance->addLog('load translate modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-
+    protected function _initTranslateModules(): void {
         if (!$this->_useModules || !$this->_useTranslateModules)
             return;
-        $this->_listModulesTranslateRID = $this->_findModulesByRID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_TRANSLATE);
-        $this->_listModulesTranslateOID = $this->_findModulesTranslateUpdateID();
-        $this->_listModulesTranslateInstance = $this->_initModulesTranslate();
+        $this->_metrologyInstance->addLog('load translate modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
+        $instanceRID = $this->_cacheInstance->newNode(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
+        $links = $instanceRID->getReferencedLinks(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_TRANSLATE, 'authority');
+        foreach ($links as $link) {
+            $moduleInstanceRID = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2']);
+            $moduleInstanceOID = $this->_cacheInstance->newNode($moduleInstanceRID->getReferencedOrSelfNID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES));
+            if ($moduleInstanceRID->getID() == '0'
+                || $moduleInstanceOID->getID() == '0'
+                || !$moduleInstanceOID->checkPresent()
+            )
+                continue;
+            $moduleID = $moduleInstanceOID->getID();
+            $this->_metrologyInstance->addLog('Load translate module ' . $moduleID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '6d2f16cb');
+            include('o/' . $moduleID);                // @todo A modifier, passer par IO.
+            $this->_listModulesTranslateRID[] = $moduleInstanceRID->getID();
+            $this->_listModulesTranslateOID[] = $moduleID;
+        }
+        $list = get_declared_classes();
+
         $this->_metrologyInstance->addLog('translate modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '7e7aeaed');
     }
 
-    protected function _iniExternalModules(): void {
-        $this->_metrologyInstance->addLog('load external modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-
+    protected function _initExternalModules(): void {
         if (!$this->_useModules || !$this->_useExternalModules)
             return;
-        $this->_listModulesExternalRID = $this->_findModulesByRID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
-        $this->_findModulesUpdateID();
-        $this->_initModules();
+        $this->_metrologyInstance->addLog('load external modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
+        $instanceRID = $this->_cacheInstance->newNode(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
+        $links = $instanceRID->getReferencedLinks(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES, 'authority');
+        foreach ($links as $link) {
+            $moduleInstanceRID = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2']);
+            $moduleInstanceOID = $this->_cacheInstance->newNode($moduleInstanceRID->getReferencedOrSelfNID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES));
+            if ($moduleInstanceRID->getID() == '0'
+                || $moduleInstanceOID->getID() == '0'
+                || !$moduleInstanceOID->checkPresent()
+            )
+                continue;
+            $moduleID = $moduleInstanceOID->getID();
+            $this->_metrologyInstance->addLog('Load external module ' . $moduleID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '06a13897');
+            include('o/' . $moduleID);                // @todo A modifier, passer par IO.
+            $this->_listModulesRID[] = $moduleInstanceRID->getID();
+            $this->_listModulesOID[] = $moduleID;
+        }
         $this->_metrologyInstance->addLog('external modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'a95de198');
     }
 
-    protected function _findModulesByRID(string $rid): array {
-        global $bootstrapApplicationIID;
 
-        $instanceRID = $this->_cacheInstance->newNode(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
-        return $instanceRID->getReferencedObjectListID($rid, 'authority'); // FIXME social
-
-        /*$result = array();
-        $object = new Node($this->_nebuleInstance, $bootstrapApplicationIID);
-        $hashRef = $this->_nebuleInstance->getCryptoInstance()->hash($rid);
-        $links = $object->getLinksOnFields('', '', 'f', $bootstrapApplicationIID, '', $hashRef);
-
-        foreach ($links as $link) {
-            $module = $link->getParsed()['bl/rl/nid2'];
-            foreach ($this->_nebuleInstance->getLocalAuthorities() as $authority) {
-                if (isset($link->getParsed()['bs/rs1/eid'])
-                    && $link->getParsed()['bs/rs1/eid'] == $authority
-                    && $module != '0'
-                    && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($module)
-                ) {
-                    $this->_metrologyInstance->addLog('Find modules translate ' . $module, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8babe773');
-                    $result[$module] = $module;
-                    $this->_listModulesSignerRID[$module] = $link->getParsed()['bs/rs1/eid'];
-                    break;
-                }
-            }
-        }
-        return $result;*/
-    }
-
-    protected function _findModulesTranslateUpdateID(): array {
-        return array(); // TODO
-    }
-
-    protected function _initModulesTranslate(): array {
-        return array(); // TODO
-    }
 
     protected function _findModulesRID(): void
     {
@@ -215,8 +207,8 @@ class ApplicationModules
             // Cherche une mise à jour.
             $updateModule = $moduleID;
             if ($okNotListed) {
-                $updateModule = $instanceModule->getReferencedObjectID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES, 'authority');
-                $updateSigner = $instanceModule->getReferencedSignerID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES, 'authority');
+                $updateModule = $instanceModule->getReferencedOrSelfNID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES, 'authority');
+                $updateSigner = $instanceModule->getReferencedSID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES, 'authority');
             }
             if ($updateModule != $moduleID
                 && $updateModule != '0'
@@ -271,7 +263,7 @@ class ApplicationModules
                     }
 
                     // Enregistre le module.
-                    $this->_listModulesID[$name] = $moduleID;
+                    $this->_listModulesOID[$name] = $moduleID;
                     $this->_listModulesRID[$name] = $moduleRID;
                     $this->_listModulesValid[$name] = true;
                     $this->_listModulesSignerRID[$name] = $this->_listModulesSignerRID[$moduleRID];
@@ -397,7 +389,7 @@ class ApplicationModules
 
     public function getModulesListOID(): array
     {
-        return $this->_listModulesID;
+        return $this->_listModulesOID;
     }
 
     public function getModulesListRID(): array

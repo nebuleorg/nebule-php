@@ -1789,7 +1789,7 @@ class Node implements nodeInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return false; // FIXME disabled!
 
-        if ($this->_markProtectedChecked === true
+        /*if ($this->_markProtectedChecked === true
             && $this->_cacheCurrentEntityUnlocked === $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             if ($this->_cacheMarkProtected === true) {
@@ -1931,7 +1931,7 @@ class Node implements nodeInterface
 
         // Résultat.
         $this->_cacheMarkProtected = $result;
-        return $result;
+        return $result;*/
     }
 
     /**
@@ -1943,8 +1943,8 @@ class Node implements nodeInterface
     {
         return ''; // FIXME disabled!
 
-        $this->_getMarkProtected();
-        return $this->_idProtected;
+        //$this->_getMarkProtected();
+        //return $this->_idProtected;
     }
 
     /**
@@ -1955,8 +1955,8 @@ class Node implements nodeInterface
     {
         return ''; // FIXME disabled!
 
-        $this->_getMarkProtected();
-        return $this->_idUnprotected;
+        //$this->_getMarkProtected();
+        //return $this->_idUnprotected;
     }
 
     /**
@@ -1970,7 +1970,7 @@ class Node implements nodeInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return false; // FIXME disabled!
 
-        if ($this->_id == '0')
+        /*if ($this->_id == '0')
             return false;
         if (!$this->_io->checkObjectPresent($this->_id)
             && !$this->_haveData
@@ -2176,7 +2176,7 @@ class Node implements nodeInterface
 
             return true;
         }
-        return false;
+        return false;*/
     }
 
     /**
@@ -2188,7 +2188,7 @@ class Node implements nodeInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return false; // FIXME disabled!
 
-        // Vérifie que l'objet est protégé et que l'on peut y acceder.
+        /*// Vérifie que l'objet est protégé et que l'on peut y acceder.
         if (!$this->_getMarkProtected()
             || $this->_idProtected == '0'
             || $this->_idUnprotected == '0'
@@ -2201,7 +2201,7 @@ class Node implements nodeInterface
 
         // TODO
 
-        return false;
+        return false;*/
     }
 
     /**
@@ -2217,7 +2217,7 @@ class Node implements nodeInterface
         return false; // FIXME disabled!
 
         // TODO
-        return false;
+        //return false;
     }
 
     /**
@@ -2231,7 +2231,7 @@ class Node implements nodeInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return false; // FIXME disabled!
 
-        if (is_string($entity)) {
+        /*if (is_string($entity)) {
             $entity = $this->_nebuleInstance->newEntity($entity);
         }
         if (!is_a($entity, 'entity'))
@@ -2320,7 +2320,7 @@ class Node implements nodeInterface
         // Ecrit le lien.
         $newLink->write();
 
-        return true;
+        return true;*/
     }
 
     /**
@@ -2336,7 +2336,7 @@ class Node implements nodeInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return false; // FIXME disabled!
 
-        if (is_string($entity))
+        /*if (is_string($entity))
             $entity = $this->_nebuleInstance->newEntity($entity);
         if (!is_a($entity, 'entity'))
             $entity = $this->_nebuleInstance->newEntity($entity->getID());
@@ -2414,7 +2414,7 @@ class Node implements nodeInterface
         }
         unset($links);
 
-        return true;
+        return true;*/
     }
 
 
@@ -2573,7 +2573,9 @@ class Node implements nodeInterface
      */
     public function setMarkEmotion(string $emotion, bool $obfuscate = false, string $context = ''): bool
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        return false; // FIXME disabled
+
+        /*$this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Vérifie que l'émotion existe.
         if ($emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE
             && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE
@@ -2617,7 +2619,7 @@ class Node implements nodeInterface
             $newLink->setObfuscate();
         $newLink->write();
 
-        return true;
+        return true;*/
     }
 
     /**
@@ -2632,7 +2634,9 @@ class Node implements nodeInterface
      */
     public function unsetMarkEmotion(string $emotion, bool $obfuscate = false, string $entity = ''): bool
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        return false; // FIXME disabled
+
+        /*$this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Vérifie que l'émotion existe.
         if ($emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE
             && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE
@@ -2673,7 +2677,7 @@ class Node implements nodeInterface
             $newLink->setObfuscate();
         $newLink->write();
 
-        return true;
+        return true;*/
     }
 
 
@@ -3291,24 +3295,16 @@ class Node implements nodeInterface
 
 
 
-    /**
-     * Liste les liens des objets par référence, référencés par l'objet instancié.
-     * Si le type de référence $reference n'est pas précisée, utilise nebule::REFERENCE_NEBULE_REFERENCE.
-     *
-     * @param string $reference
-     * @return array:string
-     */
     private function _getReferencedByLinks(string $reference = ''): array
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        // Si pas de référence, utilise la référence par défaut.
+
         if ($reference == '')
             $reference = nebule::REFERENCE_NEBULE_REFERENCE;
 
         if (!self::checkNID($reference))
             $reference = $this->_nebuleInstance->getNIDfromData($reference);
 
-        // Liste les liens à la recherche de la propriété.
         $list = array();
         $filter = array(
             'bl/rl/req' => 'f',
@@ -3321,25 +3317,16 @@ class Node implements nodeInterface
         return $list;
     }
 
-    /**
-     * Liste les liens des objets par référence, les objets qui référencent l'objet instancié.
-     * Si le type de référence $reference n'est pas précisée, utilise nebule::REFERENCE_NEBULE_REFERENCE.
-     *
-     * @param string $reference
-     * @return array:string
-     */
     private function _getReferenceToLinks(string $reference = ''): array
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        // Si pas de référence, utilise la référence par défaut.
+
         if ($reference == '')
             $reference = nebule::REFERENCE_NEBULE_REFERENCE;
 
-        // Converti au besoin en hash.
-        if (!ctype_xdigit($reference))
+        if (!self::checkNID($reference))
             $reference = $this->_nebuleInstance->getNIDfromData($reference);
 
-        // Liste les liens à la recherche de la propriété.
         $list = array();
         $filter = array(
             'bl/rl/req' => 'f',
@@ -3352,127 +3339,77 @@ class Node implements nodeInterface
         return $list;
     }
 
+    public function getReferencedLinks(string $reference = '', string $socialClass = ''): array
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
+        $links = $this->_getReferencedByLinks($reference);
+        $this->_social->arraySocialFilter($links, $socialClass);
+        return $links;
+    }
+
     public function getReferencedObjectListID(string $reference = '', string $socialClass = ''): array
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        // Liste les liens à la recherche de la propriété.
-        $links = $this->_getReferencedByLinks($reference);
 
-        if (sizeof($links) == 0)
-            return $this->_id;
+        $links = $this->getReferencedLinks($reference, $socialClass);
 
-        // Fait un tri par pertinence sociale.
         $this->_social->arraySocialFilter($links, $socialClass);
 
-        // Extrait le dernier de la liste.
+        if (sizeof($links) == 0)
+            return array($this->_id);
+
+        return $links;
+    }
+
+    public function getByReferencedNID(string $reference = '', string $socialClass = ''): string
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
+        $links = $this->getReferencedObjectListID($reference, $socialClass);
         $link = end($links);
-        unset($links);
-
         if (!is_a($link, 'Nebule\Library\Link'))
-            return $this->_id;
-
+            return '';
         return $link->getParsed()['bl/rl/nid2'];
     }
 
-    /**
-     * Cherche l'ID de l'objet par référence.
-     * Si pas trouvé, retourne l'ID de l'objet sur lequel s'effectue la recherche.
-     * Si le type de référence $reference n'est pas précisée, utilise nebule::REFERENCE_NEBULE_REFERENCE.
-     *
-     * @param string $reference
-     * @param string $socialClass
-     * @return string
-     */
-    public function getReferencedObjectID(string $reference = '', string $socialClass = ''): string
+    public function getReferencedOrSelfNID(string $reference = '', string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        // Liste les liens à la recherche de la propriété.
-        $links = $this->_getReferencedByLinks($reference);
 
-        if (sizeof($links) == 0)
+        $nid = $this->getByReferencedNID($reference, $socialClass);
+        if ($nid == '')
             return $this->_id;
-
-        // Fait un tri par pertinence sociale.
-        $this->_social->arraySocialFilter($links, $socialClass);
-
-        // Extrait le dernier de la liste.
-        $link = end($links);
-        unset($links);
-
-        if (!is_a($link, 'Nebule\Library\Link'))
-            return $this->_id;
-
-        return $link->getParsed()['bl/rl/nid2'];
+        return $nid;
     }
 
-    /**
-     * Cherche l'ID du signataire de l'objet par référence.
-     * Si pas trouvé, retourne 0.
-     * Si le type de référence $reference n'est pas précisée, utilise nebule::REFERENCE_NEBULE_REFERENCE.
-     *
-     * @param string $reference
-     * @param string $socialClass
-     * @return string
-     */
-    public function getReferencedSignerID(string $reference = '', string $socialClass = ''): string
+    public function getReferencedSID(string $reference = '', string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        // Liste les liens à la recherche de la propriété.
-        $links = $this->_getReferencedByLinks($reference);
 
-        if (sizeof($links) == 0)
-            return '0';
-
-        // Fait un tri par pertinence sociale.
-        $this->_social->arraySocialFilter($links, $socialClass);
-
-        /**
-         * Extrait le dernier de la liste.
-         *
-         * @var Link
-         */
+        $links = $this->getReferencedLinks($reference, $socialClass);
         $link = end($links);
-        unset($links);
-
-        if (!is_a($link, 'link'))
-            return '0';
-
+        if (!is_a($link, 'Nebule\Library\Link'))
+            return '';
         return $link->getParsed()['bs/rs1/eid'];
     }
 
-    /**
-     * Cherche la liste des ID des signataires de l'objet par référence.
-     * Si pas trouvé, retourne 0.
-     * Si le type de référence $reference n'est pas précisée, utilise nebule::REFERENCE_NEBULE_REFERENCE.
-     *
-     * @param string $reference
-     * @param string $socialClass
-     * @return array:string
-     */
-    public function getReferencedListSignersID(string $reference = '', string $socialClass = ''): array
+    public function getReferencedListSID(string $reference = '', string $socialClass = ''): array
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
+        $links = $this->getReferencedLinks($reference, $socialClass);
+        $link = end($links);
         $list = array();
-
-        // Liste les liens à la recherche de la propriété.
-        $links = $this->_getReferencedByLinks($reference);
-
-        if (sizeof($links) == 0)
-            return $list;
-
-        // Fait un tri par pertinence sociale.
-        $this->_social->arraySocialFilter($links, $socialClass);
-
-        // Extrait les signataires de la liste.
         $listOK = array();
+        if (!is_a($link, 'Nebule\Library\Link'))
+            return array();
         foreach ($links as $link) {
             if (!isset($listOK[$link->getParsed()['bs/rs1/eid']])) {
                 $list[] = $link->getParsed()['bs/rs1/eid'];
                 $listOK[$link->getParsed()['bs/rs1/eid']] = true;
             }
         }
-        unset($links, $listOK);
-
         return $list;
     }
 
@@ -3487,7 +3424,7 @@ class Node implements nodeInterface
      */
     public function getReferencedObjectInstance(string $reference = '', string $socialClass = ''): Node
     {
-        return $this->_nebuleInstance->convertIdToTypedObjectInstance($this->getReferencedObjectID($reference, $socialClass));
+        return $this->_nebuleInstance->convertIdToTypedObjectInstance($this->getReferencedOrSelfNID($reference, $socialClass));
     }
 
     /**
@@ -3500,16 +3437,15 @@ class Node implements nodeInterface
      * @param string $socialClass
      * @return boolean
      */
-    public function getIsReferencedBy(string $reference = '', string $socialClass = ''): bool
+    public function getIsReferencedBy(string $reference = '', string $socialClass = 'all'): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        // Liste les liens à la recherche de la propriété.
+
         $links = $this->_getReferencedByLinks($reference);
 
         if (sizeof($links) == 0)
             return false;
 
-        // Fait un tri par pertinence sociale.
         $this->_social->arraySocialFilter($links, $socialClass);
 
         if (sizeof($links) == 0)
@@ -3527,7 +3463,7 @@ class Node implements nodeInterface
      * @param string $socialClass
      * @return boolean
      */
-    public function getIsReferenceTo(string $reference = '', string $socialClass = ''): bool
+    public function getIsReferenceTo(string $reference = '', string $socialClass = 'all'): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Liste les liens à la recherche de la propriété.
@@ -3785,14 +3721,11 @@ class Node implements nodeInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->writeLink('d>' . $this->_id);
 
-        // Lit les liens.
         $links = array();
         $this->getLinks($links, array(), false);
         $entity = $this->_nebuleInstance->getCurrentEntity();
         foreach ($links as $link) {
-            // Vérifie si l'entité signataire du lien est l'entité courante.
             if ($link->getParsed()['bs/rs1/eid'] != $entity) {
-                // Si ce n'est pas l'entité courante, quitte.
                 unset($links, $entity, $link);
                 return false;
             }
@@ -3800,13 +3733,10 @@ class Node implements nodeInterface
 
         unset($links, $entity, $link);
 
-        // Supprime l'objet.
         $r = $this->_io->unsetObject($this->_id);
 
-        // Métrologie.
         $this->_metrology->addAction('delobj', $this->_id, $r);
 
-        // Supprime les liens de l'objet.
         $this->_io->linksDelect($this->_id);
 
         return $r;

@@ -278,7 +278,7 @@ abstract class Translates
             foreach ($this->_applicationModulesInstance->getModulesListInstances() as $module) {
                 if ($module->getType() == 'traduction') {
                     $this->_languageList[$module->getCommandName()] = $module->getCommandName();
-                    $this->_applicationModulesInstance->getModulesTranslateListInstances()[$module->getCommandName()] = $module;
+                    $this->_applicationModulesInstance->getModulesTranslateListInstances()[$module->getCommandName()];
                     $this->_metrologyInstance->addLog('Find new language : ' . $module->getCommandName(), Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '7e21187d');
                 }
             }
