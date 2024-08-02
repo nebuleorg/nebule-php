@@ -9,7 +9,6 @@ use Nebule\Library\Entity;
 use Nebule\Library\Actions;
 use Nebule\Library\Applications;
 use Nebule\Library\Displays;
-//use Nebule\Library\Modules;
 use Nebule\Library\Node;
 use Nebule\Library\Translates;
 use const Nebule\Bootstrap\BOOTSTRAP_NAME;
@@ -44,11 +43,16 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240721';
+    const APPLICATION_VERSION = '020240802';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2024';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
     const APPLICATION_CODING = 'application/x-httpd-php';
+    const USE_MODULES = false;
+    const USE_MODULES_TRANSLATE = false;
+    const USE_MODULES_EXTERNAL = false;
+    const LIST_MODULES_INTERNAL = array();
+    const LIST_MODULES_EXTERNAL = array();
 
     const APPLICATION_LICENCE_NAME = 'klicty'; // FIXME en double
     const APPLICATION_LICENCE_LOGO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAA

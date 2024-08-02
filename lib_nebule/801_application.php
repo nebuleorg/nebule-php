@@ -30,6 +30,11 @@ abstract class Applications implements applicationInterface
     const APPLICATION_WEBSITE = 'undef';
     const APPLICATION_NODE = 'undef';
     const APPLICATION_CODING = 'application/x-httpd-php';
+    const USE_MODULES = false;
+    const USE_MODULES_TRANSLATE = false;
+    const USE_MODULES_EXTERNAL = false;
+    const LIST_MODULES_INTERNAL = array();
+    const LIST_MODULES_EXTERNAL = array();
 
     protected ?Applications $_applicationInstance = null;
     protected ?nebule $_nebuleInstance = null;
@@ -40,9 +45,6 @@ abstract class Applications implements applicationInterface
     protected ?Translates $_translateInstance = null;
     protected ?ApplicationModules $_applicationModulesInstance = null;
     protected string $_applicationNamespace = '';
-    protected bool $_useModules = false;
-    protected bool $_useTranslateModules = true;
-    protected bool $_useExternalModules = false;
 
 
     public function __construct(nebule $nebuleInstance)
@@ -68,7 +70,7 @@ abstract class Applications implements applicationInterface
         $this->_translateInstance = $applicationTranslateInstance;
         $this->_displayInstance = $applicationDisplayInstance;
         $this->_actionInstance = $applicationActionInstance;
-        $this->_applicationModulesInstance = new ApplicationModules($this, $this->_listInternalModules);
+        $this->_applicationModulesInstance = new ApplicationModules($this);
 
         $this->_loadModules();
     }
@@ -95,9 +97,6 @@ abstract class Applications implements applicationInterface
     public function getApplicationModulesInstance(): ApplicationModules { return $this->_applicationModulesInstance; }
     public function getCurrentObjectID(): string { return $this->_nebuleInstance->getCurrentObject(); }
     public function getCurrentObjectInstance(): Node { return $this->_nebuleInstance->getCurrentObjectInstance(); }
-    public function getUseModules(): bool { return $this->_useModules; }
-    public function getUseTranslateModules(): bool { return $this->_useTranslateModules; }
-    public function getUseExternalModules(): bool { return $this->_useExternalModules; }
 
     protected function _findEnvironment(): void
     {
@@ -346,13 +345,13 @@ abstract class Applications implements applicationInterface
             return;
         $this->_loadModulesOK = true;
 
-        if (!$this->_useModules) {
+        if (!static::USE_MODULES) {
             $this->_metrologyInstance->addLog('Do not load internal modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bcc98872');
             return;
         }
         $this->_loadDefaultModules();
 
-        if (!$this->_useTranslateModules) {
+        if (!static::USE_MODULES_TRANSLATE) {
             $this->_metrologyInstance->addLog('Do not load external translate modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b2f83669');
             return;
         }
@@ -360,7 +359,7 @@ abstract class Applications implements applicationInterface
         $this->_listModulesTranslateOID = $this->_findModulesTranslateUpdateID();
         $this->_listModulesTranslateInstance = $this->_initModulesTranslate();
 
-        if (!$this->_useExternalModules) {
+        if (!static::USE_MODULES_EXTERNAL) {
             $this->_metrologyInstance->addLog('Do not load external modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7b3af452');
             return;
         }
@@ -371,7 +370,7 @@ abstract class Applications implements applicationInterface
     }
 
     protected function _loadDefaultModules(): void {
-        /*if (!$this->_useModules)
+        /*if (!static::USE_MODULES)
             return;
         $this->getMetrologyInstance()->addLog('Load default modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '93eb59aa');
 
@@ -429,7 +428,7 @@ abstract class Applications implements applicationInterface
     {
         /*global $bootstrapApplicationIID;
 
-        if (!$this->_useModules || !$this->_useExternalModules)
+        if (!static::USE_MODULES || !static::USE_MODULES_EXTERNAL)
             return;
 
         $this->getMetrologyInstance()->addLog('Find option modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '226ce8be');
@@ -461,7 +460,7 @@ abstract class Applications implements applicationInterface
 
     protected function _findModulesUpdateID(): void
     {
-        /*if (!$this->_useModules || !$this->_useExternalModules)
+        /*if (!static::USE_MODULES || !static::USE_MODULES_EXTERNAL)
             return;
 
         $this->getMetrologyInstance()->addLog('Find modules updates', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '19029717');
@@ -578,7 +577,7 @@ abstract class Applications implements applicationInterface
 
     protected function _initModules(): void
     {
-        /*if (!$this->_useModules || !$this->_useExternalModules)
+        /*if (!static::USE_MODULES || !static::USE_MODULES_EXTERNAL)
             return;
 
         $this->getMetrologyInstance()->addLog('load optionals modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2df08836');
@@ -684,7 +683,7 @@ abstract class Applications implements applicationInterface
     public function isModuleLoaded(string $name): bool
     {
         return $this->_applicationModulesInstance->getIsModuleLoaded($name);
-        /*if (!$this->_useModules)
+        /*if (!static::USE_MODULES)
             return false;
 
         if ($name == ''
@@ -704,7 +703,7 @@ abstract class Applications implements applicationInterface
     public function getCurrentModuleInstance(): ?Modules
     {
         return $this->_applicationModulesInstance->getCurrentModuleInstance();
-        /*if (!$this->_useModules)
+        /*if (!static::USE_MODULES)
             return null;
 
         if ($this->_currentModuleInstance != null
@@ -725,7 +724,7 @@ abstract class Applications implements applicationInterface
     public function getModule(string $name): ?Modules
     {
         return $this->_applicationModulesInstance->getModule($name);
-        /*if (!$this->_useModules || $name == '')
+        /*if (!static::USE_MODULES || $name == '')
             return null;
 
         // Try with long name.
@@ -1213,15 +1212,21 @@ abstract class Applications implements applicationInterface
         </ul>
         <p>Les applications sont toutes construites sur le même modèle et dépendent (extend) toutes des mêmes classes de
             l’application de référence dans la librairie nebule.</p>
-        <p>Chaque application doit mettre en place les variables personnalisées :</p>
+        <p>Chaque application doit mettre en place les constantes personnalisées :</p>
         <ul>
-            <li>$applicationName</li>
-            <li>$applicationSurname</li>
-            <li>$applicationDescription</li>
-            <li>$applicationVersion</li>
-            <li>$applicationLicence</li>
-            <li>$applicationAuthor</li>
-            <li>$applicationWebsite</li>
+            <li>APPLICATION_NAME</li>
+            <li>APPLICATION_SURNAME</li>
+            <li>APPLICATION_AUTHOR</li>
+            <li>APPLICATION_VERSION</li>
+            <li>APPLICATION_LICENCE</li>
+            <li>APPLICATION_WEBSITE</li>
+            <li>APPLICATION_NODE</li>
+            <li>APPLICATION_CODING</li>
+            <li>USE_MODULES</li>
+            <li>USE_MODULES_TRANSLATE</li>
+            <li>USE_MODULES_EXTERNAL</li>
+            <li>LIST_MODULES_INTERNAL</li>
+            <li>LIST_MODULES_EXTERNAL</li>
         </ul>
         <p>Chaque application doit mettre en place les classes :</p>
         <ul>
@@ -1432,45 +1437,47 @@ abstract class Applications implements applicationInterface
         <p>Exemple de modèle d'application :</p>
         <pre>
 &lt;?php
-// ------------------------------------------------------------------------------------------
-$applicationName		= 'Share';
-$applicationSurname		= 'Share All';
-$applicationDescription	= 'Web page for sharing all you want.';
-$applicationVersion		= '020210410';
-$applicationLicence		= 'GNU GPL 2021';
-$applicationAuthor		= 'Me';
-$applicationWebsite		= 'notme.nebule.org';
-// ------------------------------------------------------------------------------------------
-
-
+declare(strict_types=1);
+namespace Nebule\Application\share;
+use Nebule\Library\Metrology;
+use Nebule\Library\Actions;
+use Nebule\Library\Applications;
+use Nebule\Library\Displays;
+use Nebule\Library\References;
+use Nebule\Library\Translates;
 
 /*
- ------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
  /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
- ------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
 
-     .     [FR] Toute modification de ce code entrainera une modification de son empreinte
-    / \           et entrainera donc automatiquement son invalidation !
-   / V \   [EN] Any changes to this code will cause a chage in its footprint and therefore
-  /__°__\         automatically result in its invalidation!
-     N     [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
-     N            tanto lugar automáticamente a su anulación!
-     N
-     N                                                                       Projet nebule
- ----N-------------------------------------------------------------------------------------
- /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
- ------------------------------------------------------------------------------------------
- */
+ [FR] Toute modification de ce code entrainera une modification de son empreinte
+      et entrainera donc automatiquement son invalidation !
+ [EN] Any changes to this code will cause a change in its footprint and therefore
+      automatically result in its invalidation!
+ [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
+      tanto lugar automáticamente a su anulación!
 
+------------------------------------------------------------------------------------------
+*/
 
+class Application extends Applications
+{
+    const APPLICATION_NAME = 'share';
+    const APPLICATION_SURNAME = 'nebule/share';
+    const APPLICATION_AUTHOR = 'Projet nebule';
+    const APPLICATION_VERSION = '020240802';
+    const APPLICATION_LICENCE = 'GNU GPL 2024-2024';
+    const APPLICATION_WEBSITE = 'www.neblog.org';
+    const APPLICATION_NODE = '70428bfe9e818c0140c06fd681a669370158f1290e589594e9397e567b020796cb29.sha2.256';
+    const APPLICATION_CODING = 'application/x-httpd-php';
+    const USE_MODULES = true;
+    const USE_MODULES_TRANSLATE = true;
+    const USE_MODULES_EXTERNAL = false;
+    const LIST_MODULES_INTERNAL = array('module_neblog', 'module_lang_fr-fr');
+    const LIST_MODULES_EXTERNAL = array();
+// ------------------------------------------------------------------------------------------
 
-/**
- * Classe Application
- * @author Me
- *
- * Le coeur de l'application.
- *
- */
 class Application extends Applications
 {
 	/**
@@ -1487,12 +1494,6 @@ class Application extends Applications
 	// Tout par défaut.
 }
 
-
-
-/**
- * Classe Display
- * @author Me
- */
 class Display extends Displays
 {
 	const DEFAULT_LOGO_BOOTSTRAP = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaX
@@ -1533,12 +1534,6 @@ hBCAAAAJhx/QGiUnc0nJCIeAAAAABJRU5ErkJggg==';
 	}
 }
 
-
-
-/**
- * Classe Action
- * @author Me
- */
 class Action extends Actions
 {
 	const ACTION_APPLY_DELAY = 5;
@@ -1582,12 +1577,6 @@ class Action extends Actions
 	}
 }
 
-
-
-/**
- * Classe Traduction
- * @author Me
- */
 class Traduction extends Traductions
 {
 	/**

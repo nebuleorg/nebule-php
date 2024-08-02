@@ -46,11 +46,25 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240721';
+    const APPLICATION_VERSION = '020240802';
     const APPLICATION_LICENCE = 'GNU GPL 2013-2024';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
     const APPLICATION_CODING = 'application/x-httpd-php';
+    const USE_MODULES = true;
+    const USE_MODULES_TRANSLATE = true;
+    const USE_MODULES_EXTERNAL = true;
+    const LIST_MODULES_INTERNAL = array(
+        'module_manage',
+        'module_admin',
+        'module_objects',
+        'module_groups',
+        'module_entities',
+        'module_lang_fr-fr',
+    );
+    const LIST_MODULES_EXTERNAL = array(
+        'module_neblog'
+    );
 
     const APPLICATION_ENVIRONMENT_FILE = 'nebule.env';
     const APPLICATION_DEFAULT_DISPLAY_ONLINE_HELP = true;
@@ -67,40 +81,6 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_DEFAULT_LOG_UNLOCK_ENTITY = false;
     const APPLICATION_DEFAULT_LOG_LOCK_ENTITY = false;
     const APPLICATION_DEFAULT_LOAD_MODULES = 'd6105350a2680281474df5438ddcb3979e5575afba6fda7f646886e78394a4fb.sha2.256';
-
-    /**
-     * Paramètre d'activation de la gestion des modules dans l'application et la traduction.
-     *
-     * L'application sylabe a besoin des modules.
-     *
-     * @var boolean
-     */
-    protected bool $_useModules = true;
-
-    /**
-     * Paramètre d'activation de la gestion des modules externes (dans des objets) dans l'application et la traduction.
-     *
-     * Par défault les applications n'utilisent pas les modules externes.
-     *
-     * @var boolean
-     */
-    protected bool $_useExternalModules = true;
-
-    /**
-     * Liste des noms des modules par défaut.
-     *
-     * @var array
-     */
-    protected array $_listInternalModules = array(
-        'ModuleManage',
-        'ModuleHelp',
-        'ModuleEntities',
-        'ModuleGroups',
-        'ModuleObjects',
-        'ModuleAdmin',
-        'ModuleNeblog',
-        'ModuleTranslateFRFR',
-    );
 
 
     private $_listOptions = array(

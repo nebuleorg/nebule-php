@@ -2,8 +2,6 @@
 declare(strict_types=1);
 namespace Nebule\Library;
 
-use Nebule\Application\Autent\Application;
-
 /**
  * Classe de référence de gestion des modules des applications.
  *
@@ -23,8 +21,6 @@ class ApplicationModules
     protected ?Translates $_translateInstance = null;
     protected ?Cache $_cacheInstance = null;
     protected string $_applicationNamespace = '';
-    protected array $_listInternalModules = array();
-    protected array $_listExternalModules = array();
     protected array $_listModulesName = array();
     protected array $_listModulesInstance = array();
     protected array $_listModulesSignerRID = array();
@@ -38,11 +34,8 @@ class ApplicationModules
     protected array $_listModulesEnabled = array();
     protected ?Modules $_currentModuleInstance = null;
     protected bool $_loadModulesOK = false;
-    private bool $_useModules = false;
-    private bool $_useTranslateModules = false;
-    private bool $_useExternalModules = false;
 
-    public function __construct(Applications $applicationInstance, array $listInternalModules)
+    public function __construct(Applications $applicationInstance)
     {
         $this->_applicationInstance = $applicationInstance;
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
@@ -53,24 +46,19 @@ class ApplicationModules
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_cacheInstance = $this->_nebuleInstance->getCacheInstance();
 
-        $this->_useModules = $this->_applicationInstance->getUseModules();
-        $this->_useTranslateModules = $this->_applicationInstance->getUseTranslateModules();
-        $this->_useExternalModules = $this->_applicationInstance->getUseExternalModules();
-
-        $this->_listInternalModules = $listInternalModules;
         $this->_initInternalModules();
         $this->_initTranslateModules();
         $this->_initExternalModules();
     }
 
     protected function _initInternalModules(): void {
-        if (!$this->_useModules) {
+        if (!Application::USE_MODULES) {
             $this->_metrologyInstance->addLog('Do not load modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bcc98872');
             return;
         }
         $this->_metrologyInstance->addLog('load default modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        foreach ($this->_listInternalModules as $moduleName) {
+        foreach (Application::LIST_MODULES_INTERNAL as $moduleName) {
             $this->_metrologyInstance->addTime();
             $moduleFullName = $this->_applicationNamespace . '\\' . $moduleName;
             $this->_metrologyInstance->addLog('loaded internal module ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '4879c453');
@@ -87,7 +75,7 @@ class ApplicationModules
     }
 
     protected function _initTranslateModules(): void {
-        if (!$this->_useModules || !$this->_useTranslateModules)
+        if (!Application::USE_MODULES || !Application::USE_MODULES_TRANSLATE)
             return;
         $this->_metrologyInstance->addLog('load translate modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
@@ -113,7 +101,7 @@ class ApplicationModules
     }
 
     protected function _initExternalModules(): void {
-        if (!$this->_useModules || !$this->_useExternalModules)
+        if (!Application::USE_MODULES || !Application::USE_MODULES_EXTERNAL)
             return;
         $this->_metrologyInstance->addLog('load external modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
@@ -142,7 +130,7 @@ class ApplicationModules
     {
         global $bootstrapApplicationIID;
 
-        if (!$this->_useModules || !$this->_useExternalModules)
+        if (!Application::USE_MODULES || !Application::USE_MODULES_EXTERNAL)
             return;
 
         $this->_metrologyInstance->addLog('Find option modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '226ce8be');
@@ -174,7 +162,7 @@ class ApplicationModules
 
     protected function _findModulesUpdateID(): void
     {
-        if (!$this->_useModules || !$this->_useExternalModules)
+        if (!Application::USE_MODULES || !Application::USE_MODULES_EXTERNAL)
             return;
 
         $this->_metrologyInstance->addLog('Find modules updates', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '19029717');
@@ -306,7 +294,7 @@ class ApplicationModules
      */
     protected function _initModules(): void
     {
-        if (!$this->_useModules || !$this->_useExternalModules)
+        if (!Application::USE_MODULES || !Application::USE_MODULES_EXTERNAL)
             return;
 
         $this->_metrologyInstance->addLog('load optionals modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2df08836');
@@ -368,10 +356,6 @@ class ApplicationModules
         return false;
     }
 
-    public function getUseModules(): bool { return $this->_useModules; }
-    public function getUseTranslateModules(): bool { return $this->_useTranslateModules; }
-    public function getUseExternalModules(): bool { return $this->_useExternalModules; }
-
     public function getModulesListNames(): array
     {
         return $this->_listModulesName;
@@ -421,7 +405,7 @@ class ApplicationModules
      */
     public function getIsModuleLoaded(string $name): bool
     {
-        if (!$this->_useModules)
+        if (!Application::USE_MODULES)
             return false;
 
         if ($name == ''
@@ -446,7 +430,7 @@ class ApplicationModules
      */
     public function getCurrentModuleInstance(): ?Modules
     {
-        if (!$this->_useModules)
+        if (!Application::USE_MODULES)
             return null;
 
         if ($this->_currentModuleInstance != null
@@ -475,7 +459,7 @@ class ApplicationModules
      */
     public function getModule(string $name): ?Modules
     {
-        if (!$this->_useModules || $name == '')
+        if (!Application::USE_MODULES || $name == '')
             return null;
 
         // Try with long name.

@@ -513,13 +513,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $displayClass = $this->_applicationInstance->getNamespace() . '\\Display';
 
         // If we don't use modules, list of modes must not be empty.
-        if (!$this->_applicationInstance->getUseModules() && sizeof($this->_listDisplayModes) == 0) {
+        if (!Application::USE_MODULES && sizeof($this->_listDisplayModes) == 0) {
             $this->_metrologyInstance->addLog('Search mode, no module and no mode', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ddcc0850');
             return;
         }
 
         // If we use modules, extract name of modes from modules.
-        if ($this->_applicationInstance->getUseModules()) {
+        if (Application::USE_MODULES) {
             // Extract list of modules, must not be empty.
             $listModules = $this->_applicationInstance->getModulesListInstances();
             if (sizeof($listModules) == 0)
@@ -580,7 +580,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     protected function _findCurrentModule(): void
     {
         // Récupère l'instance du module en cours.
-        if ($this->_applicationInstance->getUseModules()) {
+        if (Application::USE_MODULES) {
             foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
                 if ($module->getCommandName() == $this->_currentDisplayMode && strtolower($module->getType()) == 'application') {
                     $this->_metrologyInstance->addLog('Find current module name : ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '7cd85d87');
@@ -633,13 +633,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         global $applicationName;
 
         // If we don't use modules, list of modes must not be empty.
-        if (!$this->_applicationInstance->getUseModules() && sizeof($this->_listDisplayModes) == 0) {
+        if (!Application::USE_MODULES && sizeof($this->_listDisplayModes) == 0) {
             $this->_metrologyInstance->addLog('Search view, no module and no mode', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '82b83c17');
             return;
         }
 
         // Vérifie la liste des modules si activée.
-        if ($this->_applicationInstance->getUseModules() && sizeof($this->_applicationInstance->getModulesListInstances()) == 0) {
+        if (Application::USE_MODULES && sizeof($this->_applicationInstance->getModulesListInstances()) == 0) {
             $this->_metrologyInstance->addLog('Search view, module but no mode', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '21dc60cc');
             return;
         }
@@ -650,7 +650,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $list_views_names = array();
 
         // Si activé, extrait les modes.
-        if ($this->_applicationInstance->getUseModules() && is_a($this->_currentModuleInstance, '\Nebule\Library\Modules')) {
+        if (Application::USE_MODULES && is_a($this->_currentModuleInstance, '\Nebule\Library\Modules')) {
             $this->_metrologyInstance->addLog('Search view on ' . $this->_currentModuleInstance->getName(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '0acf655b');
             // Lit les vues déclarées.
             $list_views_names = $this->_currentModuleInstance->getRegisteredViews();
@@ -687,7 +687,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             else // Sinon active la vue par defaut.
             {
                 // Si activé, extrait les modes.
-                if ($this->_applicationInstance->getUseModules() && is_a($this->_currentModuleInstance, 'Nebule\Library\Modules'))
+                if (Application::USE_MODULES && is_a($this->_currentModuleInstance, 'Nebule\Library\Modules'))
                     $this->_currentDisplayView = $this->_currentModuleInstance->getDefaultView();
                 else
                     $this->_currentDisplayView = self::DEFAULT_DISPLAY_VIEW;

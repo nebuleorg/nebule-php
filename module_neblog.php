@@ -2,12 +2,9 @@
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
 use Nebule\Application\Neblog\Action;
-use Nebule\Application\Neblog\Display;
-use Nebule\Library\Actions;
 use Nebule\Library\Displays;
 use Nebule\Library\Metrology;
 use Nebule\Library\Modules;
-use Nebule\Library\nebule;
 use Nebule\Library\Node;
 
 /**
@@ -26,7 +23,7 @@ class ModuleNeblog extends Modules
     protected string $MODULE_COMMAND_NAME = 'log';
     protected string $MODULE_DEFAULT_VIEW = 'blog';
     protected string $MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020240720';
+    protected string $MODULE_VERSION = '020240802';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';

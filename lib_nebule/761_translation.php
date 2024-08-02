@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Nebule\Library;
 
+use Nebule\Application\Autent\Application;
 use Nebule\Application\Autent\Translate;
 
 /**
@@ -246,9 +247,6 @@ abstract class Translates
         $this->_metrologyInstance->addLog('Load translates', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c845beb4');
         $this->_applicationModulesInstance = $this->_applicationInstance->getApplicationModulesInstance();
 
-        if ($this->_applicationModulesInstance->getUseModules())
-            $this->_useModules = true;
-
         $this->_findDefaultLanguage();
         $this->_findLanguages();
         $this->_findCurrentLanguage();
@@ -262,7 +260,7 @@ abstract class Translates
     protected function _findDefaultLanguage(): void {
         $this->_defaultLanguage = self::DEFAULT_LANGUAGE;
 
-        if ($this->_useModules) {
+        if (Application::USE_MODULES) {
             foreach ($this->_applicationModulesInstance->getModulesTranslateListInstances() as $module) {
                 if ($module->getCommandName() == $this->_defaultLanguage) {
                     $this->_defaultLanguageInstance = $module;
@@ -274,7 +272,7 @@ abstract class Translates
 
 
     protected function _findLanguages(): void {
-        if ($this->_useModules) {
+        if (Application::USE_MODULES) {
             foreach ($this->_applicationModulesInstance->getModulesListInstances() as $module) {
                 if ($module->getType() == 'traduction') {
                     $this->_languageList[$module->getCommandName()] = $module->getCommandName();
@@ -309,7 +307,7 @@ abstract class Translates
         foreach ($this->_languageList as $lang) {
             if ($arg_lang == $lang) {
                 $ok_lang = true;
-                if ($this->_useModules)
+                if (Application::USE_MODULES)
                     $lang_instance = $this->_applicationModulesInstance->getModulesTranslateListInstances()[$lang];
                 break;
             }

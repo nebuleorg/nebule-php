@@ -46,30 +46,16 @@ class Application extends Applications
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240721';
+    const APPLICATION_VERSION = '020240802';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2024';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
     const APPLICATION_CODING = 'application/x-httpd-php';
-
-    /**
-     * Paramètre d'activation de la gestion des modules dans l'application et la traduction.
-     *
-     * L'application sylabe a besoin des modules.
-     *
-     * @var boolean
-     */
-    protected bool $_useModules = true;
-
-    /**
-     * Liste des noms des modules par défaut.
-     *
-     * @var array
-     */
-    protected array $_listInternalModules = array(
-        'ModuleNeblog',
-        'ModuleTranslateFRFR',
-    );
+    const USE_MODULES = true;
+    const USE_MODULES_TRANSLATE = true;
+    const USE_MODULES_EXTERNAL = false;
+    const LIST_MODULES_INTERNAL = array('module_neblog', 'module_lang_fr-fr');
+    const LIST_MODULES_EXTERNAL = array();
 
     /**
      * Constructeur.

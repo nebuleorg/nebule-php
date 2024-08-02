@@ -8,7 +8,6 @@ use Nebule\Library\nebule;
 use Nebule\Library\Actions;
 use Nebule\Library\Applications;
 use Nebule\Library\Displays;
-//use Nebule\Library\Modules;
 use Nebule\Library\Node;
 use Nebule\Library\Translates;
 
@@ -42,13 +41,14 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240720';
+    const APPLICATION_VERSION = '020240802';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
     const APPLICATION_CODING = 'application/x-httpd-php';
-
-    // All default.
+    const USE_MODULES = false;
+    const USE_MODULES_TRANSLATE = false;
+    const USE_MODULES_EXTERNAL = false;
 }
 
 
