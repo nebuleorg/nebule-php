@@ -703,7 +703,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
      *
      * @var array of string
      */
-    protected $_listDisplayViews = array(
+    protected array $_listDisplayViews = array(
         self::DEFAULT_ABOUT_COMMAND,
         self::DEFAULT_OBJECT_LIST_COMMAND,
         self::DEFAULT_ENTITY_LIST_COMMAND,

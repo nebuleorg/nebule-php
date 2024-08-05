@@ -94,7 +94,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
      *
      * @var array of string
      */
-    protected $_listDisplayViews = array(
+    protected array $_listDisplayViews = array(
         self::VIEW_MENU,
         self::VIEW_OPTIONS,
         self::VIEW_APPLICATIONS,

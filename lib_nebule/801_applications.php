@@ -1,8 +1,6 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
-use Nebule\Application\Autent\Display;
-use Nebule\Library\nebule;
 use const Nebule\Bootstrap\LIB_ARG_BOOTSTRAP_BREAK;
 use const Nebule\Bootstrap\LIB_ARG_FLUSH_SESSION;
 use const Nebule\Bootstrap\LIB_ARG_INLINE_DISPLAY;

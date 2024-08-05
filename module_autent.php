@@ -23,7 +23,7 @@ use Nebule\Library\References;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleAutent extends Modules {
+class ModuleAutent extends \Nebule\Library\Modules {
     protected string $MODULE_TYPE = 'Application';
     protected string $MODULE_NAME = '::sylabe:module:objects:ModuleName';
     protected string $MODULE_MENU_NAME = '::sylabe:module:objects:MenuName';

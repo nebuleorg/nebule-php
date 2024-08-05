@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020240802
+# Version 020240805
 
 export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
@@ -258,7 +258,7 @@ EOF
       echo "//   ${bname}";
       echo "//   0${bstat}";
       echo "//   ${library_hash}";
-      tail +4 "${F}" | grep -v '^use Nebule\\Library' | grep -v '/** @noinspection '; } >> "${WORKSPACE}/lib_nebule.php"
+      tail +4 "${F}" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection '; } >> "${WORKSPACE}/lib_nebule.php"
   done
   library_hash=$(sha256sum "${WORKSPACE}/lib_nebule.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new library : ${library_hash}"

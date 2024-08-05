@@ -260,7 +260,7 @@ abstract class Translates
     protected function _findDefaultLanguage(): void {
         $this->_defaultLanguage = self::DEFAULT_LANGUAGE;
 
-        if (Application::USE_MODULES) {
+        if ($this->_applicationInstance::USE_MODULES) {
             foreach ($this->_applicationModulesInstance->getModulesTranslateListInstances() as $module) {
                 if ($module->getCommandName() == $this->_defaultLanguage) {
                     $this->_defaultLanguageInstance = $module;
@@ -272,7 +272,7 @@ abstract class Translates
 
 
     protected function _findLanguages(): void {
-        if (Application::USE_MODULES) {
+        if ($this->_applicationInstance::USE_MODULES) {
             foreach ($this->_applicationModulesInstance->getModulesListInstances() as $module) {
                 if ($module->getType() == 'traduction') {
                     $this->_languageList[$module->getCommandName()] = $module->getCommandName();
@@ -307,7 +307,7 @@ abstract class Translates
         foreach ($this->_languageList as $lang) {
             if ($arg_lang == $lang) {
                 $ok_lang = true;
-                if (Application::USE_MODULES)
+                if ($this->_applicationInstance::USE_MODULES)
                     $lang_instance = $this->_applicationModulesInstance->getModulesTranslateListInstances()[$lang];
                 break;
             }
@@ -353,10 +353,12 @@ abstract class Translates
         if (substr($text, 0, 1) == '<')
             return $text;
 
+        $classAppTranslate = $this->_applicationInstance->getNamespace() . '\\' . 'Translate';
+
         if (substr($text, 0, 4) == '::::' && isset(Translates::TRANSLATE_TABLE[$lang][$text]))
             return Translates::TRANSLATE_TABLE[$lang][$text];
-        if (substr($text, 0, 3) == ':::' && isset(Translate::TRANSLATE_TABLE[$lang][$text]))
-            return Translate::TRANSLATE_TABLE[$lang][$text];
+        if (substr($text, 0, 3) == ':::' && isset($classAppTranslate::TRANSLATE_TABLE[$lang][$text]))
+            return $classAppTranslate::TRANSLATE_TABLE[$lang][$text];
         if (substr($text, 0, 2) == '::' && isset($this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[$lang][$text]))
             return $this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[$lang][$text];
 
@@ -369,8 +371,8 @@ abstract class Translates
 
         if (substr($text, 0, 4) == '::::' && isset(Translates::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text]))
             return Translates::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];
-        if (substr($text, 0, 3) == ':::' && isset(Translate::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text]))
-            return Translate::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];
+        if (substr($text, 0, 3) == ':::' && isset($classAppTranslate::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text]))
+            return $classAppTranslate::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];
         if (substr($text, 0, 2) == '::' && isset($this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text]))
             return $this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];
 

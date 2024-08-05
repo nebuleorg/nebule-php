@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Autent;
-use Nebule\Library\DisplayItemIconMessage;
+use Nebule\Library\DisplayItemIconMessage; // For application and module autent
 use Nebule\Library\DisplayNotify;
 use Nebule\Library\Metrology;
 use Nebule\Library\Actions;
@@ -9,6 +9,15 @@ use Nebule\Library\Applications;
 use Nebule\Library\Displays;
 use Nebule\Library\References;
 use Nebule\Library\Translates;
+use Nebule\Library\Node; // For module autent
+use Nebule\Library\Modules; // For module autent
+use Nebule\Library\DisplayInformation; // For module autent
+use Nebule\Library\DisplayItem; // For module autent
+use Nebule\Library\DisplayList; // For module autent
+use Nebule\Library\DisplayObject; // For module autent
+use Nebule\Library\DisplayQuery; // For module autent
+use Nebule\Library\DisplaySecurity; // For module autent
+use Nebule\Library\DisplayTitle; // For module autent
 
 /*
 ------------------------------------------------------------------------------------------
@@ -48,7 +57,7 @@ class Application extends Applications
     const USE_MODULES = true;
     const USE_MODULES_TRANSLATE = true;
     const USE_MODULES_EXTERNAL = true;
-    const LIST_MODULES_INTERNAL = array('module_autent');
+    const LIST_MODULES_INTERNAL = array('ModuleAutent');
     const LIST_MODULES_EXTERNAL = array();
 }
 

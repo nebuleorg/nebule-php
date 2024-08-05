@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace Nebule\Library;
 
+//use Nebule\Application\Autent\Application;
+
 /**
  * Classe de référence de gestion des modules des applications.
  *
@@ -41,7 +43,7 @@ class ApplicationModules
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_configurationInstance = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_applicationNamespace = '\\Nebule\\Application\\' . strtoupper(substr(Application::APPLICATION_NAME, 0, 1)) . strtolower(substr(Application::APPLICATION_NAME, 1));
+        $this->_applicationNamespace = $applicationInstance->getNamespace();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_cacheInstance = $this->_nebuleInstance->getCacheInstance();
@@ -52,18 +54,32 @@ class ApplicationModules
     }
 
     protected function _initInternalModules(): void {
-        if (!Application::USE_MODULES) {
+        if (!$this->_applicationInstance::USE_MODULES) {
             $this->_metrologyInstance->addLog('Do not load modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bcc98872');
             return;
         }
         $this->_metrologyInstance->addLog('load default modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        foreach (Application::LIST_MODULES_INTERNAL as $moduleName) {
+        foreach ($this->_applicationInstance::LIST_MODULES_INTERNAL as $moduleName) {
             $this->_metrologyInstance->addTime();
             $moduleFullName = $this->_applicationNamespace . '\\' . $moduleName;
             $this->_metrologyInstance->addLog('loaded internal module ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '4879c453');
-            $instance = new $moduleFullName($this->_applicationInstance);
-            $instance->initialisation();
+            try {
+                $instance = new $moduleFullName($this->_applicationInstance);
+            } catch (\Error $e) {
+                $this->_metrologyInstance->addLog('error instancing class=' . $moduleFullName .' ('  . $e->getCode() . ') : ' . $e->getFile()
+                    . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                    . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '6e8ba898');
+                continue;
+            }
+            try {
+                $instance->initialisation();
+            } catch (\Error $e) {
+                $this->_metrologyInstance->addLog('error initialisation class=' . $moduleFullName .' ('  . $e->getCode() . ') : ' . $e->getFile()
+                    . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                    . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '0d36b043');
+                continue;
+            }
             $this->_listModulesName[$moduleName] = $moduleFullName;
             $this->_listModulesInstance[$moduleFullName] = $instance;
             $this->_listModulesInitRID[$moduleFullName] = '0';
@@ -75,7 +91,7 @@ class ApplicationModules
     }
 
     protected function _initTranslateModules(): void {
-        if (!Application::USE_MODULES || !Application::USE_MODULES_TRANSLATE)
+        if (!$this->_applicationInstance::USE_MODULES || !$this->_applicationInstance::USE_MODULES_TRANSLATE)
             return;
         $this->_metrologyInstance->addLog('load translate modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
@@ -101,7 +117,7 @@ class ApplicationModules
     }
 
     protected function _initExternalModules(): void {
-        if (!Application::USE_MODULES || !Application::USE_MODULES_EXTERNAL)
+        if (!$this->_applicationInstance::USE_MODULES || !$this->_applicationInstance::USE_MODULES_EXTERNAL)
             return;
         $this->_metrologyInstance->addLog('load external modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
@@ -130,7 +146,7 @@ class ApplicationModules
     {
         global $bootstrapApplicationIID;
 
-        if (!Application::USE_MODULES || !Application::USE_MODULES_EXTERNAL)
+        if (!$this->_applicationInstance::USE_MODULES || !$this->_applicationInstance::USE_MODULES_EXTERNAL)
             return;
 
         $this->_metrologyInstance->addLog('Find option modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '226ce8be');
@@ -162,7 +178,7 @@ class ApplicationModules
 
     protected function _findModulesUpdateID(): void
     {
-        if (!Application::USE_MODULES || !Application::USE_MODULES_EXTERNAL)
+        if (!$this->_applicationInstance::USE_MODULES || !$this->_applicationInstance::USE_MODULES_EXTERNAL)
             return;
 
         $this->_metrologyInstance->addLog('Find modules updates', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '19029717');
@@ -294,7 +310,7 @@ class ApplicationModules
      */
     protected function _initModules(): void
     {
-        if (!Application::USE_MODULES || !Application::USE_MODULES_EXTERNAL)
+        if (!$this->_applicationInstance::USE_MODULES || !$this->_applicationInstance::USE_MODULES_EXTERNAL)
             return;
 
         $this->_metrologyInstance->addLog('load optionals modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2df08836');
@@ -405,7 +421,7 @@ class ApplicationModules
      */
     public function getIsModuleLoaded(string $name): bool
     {
-        if (!Application::USE_MODULES)
+        if (!$this->_applicationInstance::USE_MODULES)
             return false;
 
         if ($name == ''
@@ -430,7 +446,7 @@ class ApplicationModules
      */
     public function getCurrentModuleInstance(): ?Modules
     {
-        if (!Application::USE_MODULES)
+        if (!$this->_applicationInstance::USE_MODULES)
             return null;
 
         if ($this->_currentModuleInstance != null
@@ -459,7 +475,7 @@ class ApplicationModules
      */
     public function getModule(string $name): ?Modules
     {
-        if (!Application::USE_MODULES || $name == '')
+        if (!$this->_applicationInstance::USE_MODULES || $name == '')
             return null;
 
         // Try with long name.
