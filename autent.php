@@ -155,7 +155,6 @@ class Display extends Displays
         </style>
         <?php
 
-        // Ajout de la partie CSS du module en cours d'utilisation, si présent.
         foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
             if ($module->getCommandName() == $this->_currentDisplayMode) {
                 $module->getCSS();

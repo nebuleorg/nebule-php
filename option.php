@@ -9,6 +9,7 @@ use Nebule\Library\Actions;
 use Nebule\Library\Applications;
 use Nebule\Library\Displays;
 use Nebule\Library\Node;
+use Nebule\Library\References;
 use Nebule\Library\Translates;
 
 /*
@@ -41,7 +42,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240802';
+    const APPLICATION_VERSION = '020240807';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -89,11 +90,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
     // Application de référence pour les visualisations d'objets.
     const REFERENCE_DISPLAY_APPLICATION = 'dd11110000000000006e6562756c65206170706c69636174696f6e73000000000000dd1111';
 
-    /**
-     * Liste des vues disponibles.
-     *
-     * @var array of string
-     */
+    protected array $_listDisplayModes = array('disp');
     protected array $_listDisplayViews = array(
         self::VIEW_MENU,
         self::VIEW_OPTIONS,
@@ -133,427 +130,6 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
             <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
             <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
             <?php $this->commonCSS(); ?>
-            <style>
-                .layout-content {
-                    max-width: 86%;
-                }
-
-                .layout-content > div {
-                    min-width: 400px;
-                    margin-bottom: 20px;
-                    text-align: left;
-                    color: #ababab;
-                    white-space: normal;
-                }
-
-                .header-center > div {
-                    margin: auto 3px 3px 3px;
-                    overflow: hidden;
-                    white-space: nowrap;
-                    color: #454545;
-                    text-align: center;
-                }
-
-                h1 {
-                    font-family: monospace;
-                    font-size: 1.8em;
-                    font-weight: normal;
-                    color: #ababab;
-                    margin-top: 10px;
-                }
-
-                h2 {
-                    font-family: monospace;
-                    font-size: 1.4em;
-                    color: #ababab;
-                    font-weight: normal;
-                    clear: both;
-                    margin-top: 24px;
-                    margin-bottom: 8px;
-                    margin-left: 32px;
-                }
-
-                .layout-header {
-                    border-bottom-style: solid;
-                    border-bottom-color: #222222;
-                    border-bottom-width: 3px;
-                }
-
-                .header-right {
-                    width: 136px;
-                }
-
-                .headerunlock {
-                    position: fixed;
-                    top: 0;
-                    text-align: center;
-                    width: 100%;
-                    padding: 3px;
-                    background: #ababab;
-                    border-bottom-style: solid;
-                    border-bottom-color: #e0000e;
-                    border-bottom-width: 3px;
-                    margin: 0px;
-                }
-
-                .headerunlock a:link, .headerunlock a:visited {
-                    font-weight: bold;
-                    text-decoration: none;
-                    color: #ff4000;
-                    font-size: 1.4em;
-                }
-
-                .headerunlock a:hover, .headerunlock a:active {
-                    font-weight: bold;
-                    text-decoration: underline;
-                    color: #ff4000;
-                    font-size: 1.4em;
-                }
-
-                .headerunlockother {
-                    position: fixed;
-                    top: 0;
-                    text-align: center;
-                    width: 100%;
-                    padding: 3px;
-                    background: #ababab;
-                    border-bottom-style: solid;
-                    border-bottom-color: #0e00e0;
-                    border-bottom-width: 3px;
-                    margin: 0px;
-                }
-
-                .headerunlockother a:link, .headerunlockother a:visited {
-                    font-weight: bold;
-                    text-decoration: none;
-                    color: #ff4000;
-                    font-size: 1.4em;
-                }
-
-                .headerunlockother a:hover, .headerunlockother a:active {
-                    font-weight: bold;
-                    text-decoration: underline;
-                    color: #ff4000;
-                    font-size: 1.4em;
-                }
-
-                .layout-footer {
-                    border-top-style: solid;
-                    border-top-color: #222222;
-                    border-top-width: 3px;
-                }
-
-                .footerunlock {
-                    position: fixed;
-                    bottom: 0;
-                    text-align: center;
-                    width: 100%;
-                    padding: 3px;
-                    background: #ababab;
-                    border-top-style: solid;
-                    border-top-color: #e0000e;
-                    border-top-width: 3px;
-                    margin: 0px;
-                }
-
-                .footerunlockother {
-                    position: fixed;
-                    bottom: 0;
-                    text-align: center;
-                    width: 100%;
-                    padding: 3px;
-                    background: #ababab;
-                    border-top-style: solid;
-                    border-top-color: #0e00e0;
-                    border-top-width: 3px;
-                    margin: 0px;
-                }
-
-                .textListObjects {
-                    background: none;
-                }
-
-                .objectDisplayMediumLong {
-                    width: 100%;
-                }
-
-                #sync {
-                    clear: both;
-                    width: 100%;
-                    height: 100px;
-                }
-
-                #error {
-                    color: #ffffff;
-                    font-weight: bold;
-                }
-
-                #actions, #apps, #recoveries, #authorities, #options, #help, #select, #menuSelect, #end {
-                    clear: both;
-                    padding: 10px;
-                    padding-right: 20px;
-                    padding-left: 20px;
-                }
-
-                .optionItem, .recoveryItem, .appItem {
-                    width: 98%;
-                    min-height: 74px;
-                    margin: 5px;
-                    margin-left: 1%;
-                    margin-right: 1%;
-                    padding: 0;
-                    background: #ababab;
-                    text-align: left;
-                    color: #454545;
-                }
-
-                .optionLogo, .appLogo {
-                    float: left;
-                    width: 64px;
-                    height: 64px;
-                    margin: 0;
-                }
-
-                .optionInfos, .recoveryInfos, .authorityInfos, .appInfos {
-                    padding: 5px;
-                    overflow: hidden;
-                }
-
-                .optionInfos .name {
-                    margin-bottom: 5px;
-                }
-
-                .optionInfos .namevalue {
-                    font-weight: bold;
-                    color: #000000;
-                }
-
-                .optionInfos .type {
-                    font-style: italic;
-                    float: right;
-                    margin-left: 10px;
-                }
-
-                .optionInfos .type img {
-                    height: 16px;
-                    width: 16px;
-                }
-
-                .optionInfos .currentvalue {
-                    font-weight: bold;
-                }
-
-                .optionInfos .currentvaluechanged {
-                    font-weight: bold;
-                    color: #ffffff;
-                }
-
-                .optionItem .desc {
-                    clear: both;
-                    padding: 5px;
-                }
-
-                .appItemList {
-                    clear: both;
-                    background: #ababab;
-                    color: #454545;
-                    margin: 8px;
-                    min-height: 80px;
-                }
-
-                .appLink {
-                    float: left;
-                    margin-right: 8px;
-                    height: 64px;
-                    width: 64px;
-                    padding: 8px;
-                    color: #ffffff;
-                    overflow: hidden;
-                }
-
-                .appInfos a:link, .appInfos a:visited {
-                    font-weight: normal;
-                    text-decoration: none;
-                    color: #454545;
-                }
-
-                .appInfos a:hover, .appInfos a:active {
-                    font-weight: normal;
-                    text-decoration: underline;
-                    color: #ffffff;
-                }
-
-                .appRef, .authorityID, .recoveryID {
-                    font-size: 0.6em;
-                }
-
-                .appSigner {
-                    margin-bottom: 5px;
-                }
-
-                .appName, .authorityName, .recoveryName {
-                    font-weight: bold;
-                    font-size: 1.4em;
-                }
-
-                .appShortname {
-                    font-size: 1.6em;
-                    font-weight: normal;
-                    text-decoration: none;
-                    color: #ffffff;
-                    margin: 0;
-                }
-
-                .appTitle {
-                    font-weight: bold;
-                }
-
-                .appActions, .recoveryActions, .authorityActions {
-                    float: right;
-                    margin-right: 8px;
-                }
-
-                .appActions img {
-                    margin: 3px;
-                }
-
-                .authorityItemList, .recoveryItemList {
-                    clear: both;
-                    background: #ababab;
-                    color: #454545;
-                    margin: 8px;
-                    padding: 0;
-                    min-height: 64px;
-                }
-
-                .authorityLogo, .recoveryLogo {
-                    float: left;
-                    width: 128px;
-                    height: 64px;
-                    margin: 0;
-                }
-
-                #helppart {
-                    clear: both;
-                    padding-top: 10px
-                }
-
-                #helppart img {
-                    width: 16px;
-                    height: 16px;
-                    margin: 0;
-                    margin: 2px;
-                    margin-right: 5px;
-                }
-
-                #syncallapps {
-                    margin: 10px;
-                    clear: both;
-                }
-
-                #syncallapps img {
-                    margin-right: 5px;
-                }
-
-                #select a:link, #select a:visited, #syncallapps a:link, #syncallapps a:visited, #help a:link, #help a:visited {
-                    color: #ababab;
-                }
-
-                #select a:hover, #select a:active, #syncallapps a:hover, #syncallapps a:active, #help a:hover, #help a:active {
-                    color: #ffffff;
-                }
-
-                #check {
-                    clear: both;
-                    padding: 0;
-                    padding-top: 40px;
-                    padding-bottom: 20px;
-                }
-
-                #menuSelect a:link, #menuSelect a:visited {
-                    color: #454545;
-                }
-
-                #menuSelect a:hover, #menuSelect a:active {
-                    color: #ffffff;
-                }
-
-                .oneAction {
-                    margin: 2px;
-                    padding: 5px;
-                    float: left;
-                    background: #ababab;
-                    width: 206px;
-                    min-height: 64px;
-                }
-
-                @media screen and (max-height: 500px) {
-                    .oneAction {
-                        padding: 0;
-                        padding-top: 0;
-                        padding-bottom: 0;
-                        width: 186px;
-                        min-height: 32px;
-                    }
-                }
-
-                @media screen and (max-width: 575px) {
-                    .oneAction {
-                        padding: 0;
-                        padding-top: 0;
-                        padding-bottom: 0;
-                        width: 186px;
-                        min-height: 32px;
-                    }
-                }
-
-                .oneAction-icon {
-                    float: left;
-                    margin-right: 5px;
-                }
-
-                .oneAction-icon img {
-                    height: 64px;
-                    width: 64px;
-                }
-
-                @media screen and (max-height: 500px) {
-                    .oneAction-icon img {
-                        height: 32px;
-                        width: 32px;
-                    }
-                }
-
-                @media screen and (max-width: 575px) {
-                    .oneAction-icon img {
-                        height: 32px;
-                        width: 32px;
-                    }
-                }
-
-                .oneAction-title p {
-                    font-size: 1.1em;
-                    font-weight: bold;
-                }
-
-                input {
-                    background: #bbbbbb;
-                    color: #454545;
-                    margin: 2px;
-                    border: 0;
-                    box-shadow: unset;
-                    padding: 1px;
-                    background-origin: border-box;
-                }
-
-                input[type=submit] {
-                    font-weight: bold;
-                }
-
-                input[type=password], input[type=text], input[type=email] {
-                    padding: 2px;
-                }
-            </style>
         </head>
         <body>
         <div class="layout-header header<?php if ($this->_unlocked) {
@@ -652,6 +228,435 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         } else
             $this->_displayChecks();
         $this->_htmlEnd();
+
+    }
+
+    public function displayCSS(): void
+    {
+        ?>
+
+        <style>
+            .layout-content {
+                max-width: 86%;
+            }
+
+            .layout-content > div {
+                min-width: 400px;
+                margin-bottom: 20px;
+                text-align: left;
+                color: #ababab;
+                white-space: normal;
+            }
+
+            .header-center > div {
+                margin: auto 3px 3px 3px;
+                overflow: hidden;
+                white-space: nowrap;
+                color: #454545;
+                text-align: center;
+            }
+
+            h1 {
+                font-family: monospace;
+                font-size: 1.8em;
+                font-weight: normal;
+                color: #ababab;
+                margin-top: 10px;
+            }
+
+            h2 {
+                font-family: monospace;
+                font-size: 1.4em;
+                color: #ababab;
+                font-weight: normal;
+                clear: both;
+                margin-top: 24px;
+                margin-bottom: 8px;
+                margin-left: 32px;
+            }
+
+            .layout-header {
+                border-bottom-style: solid;
+                border-bottom-color: #222222;
+                border-bottom-width: 3px;
+            }
+
+            .header-right {
+                width: 136px;
+            }
+
+            .headerunlock {
+                position: fixed;
+                top: 0;
+                text-align: center;
+                width: 100%;
+                padding: 3px;
+                background: #ababab;
+                border-bottom-style: solid;
+                border-bottom-color: #e0000e;
+                border-bottom-width: 3px;
+                margin: 0px;
+            }
+
+            .headerunlock a:link, .headerunlock a:visited {
+                font-weight: bold;
+                text-decoration: none;
+                color: #ff4000;
+                font-size: 1.4em;
+            }
+
+            .headerunlock a:hover, .headerunlock a:active {
+                font-weight: bold;
+                text-decoration: underline;
+                color: #ff4000;
+                font-size: 1.4em;
+            }
+
+            .headerunlockother {
+                position: fixed;
+                top: 0;
+                text-align: center;
+                width: 100%;
+                padding: 3px;
+                background: #ababab;
+                border-bottom-style: solid;
+                border-bottom-color: #0e00e0;
+                border-bottom-width: 3px;
+                margin: 0px;
+            }
+
+            .headerunlockother a:link, .headerunlockother a:visited {
+                font-weight: bold;
+                text-decoration: none;
+                color: #ff4000;
+                font-size: 1.4em;
+            }
+
+            .headerunlockother a:hover, .headerunlockother a:active {
+                font-weight: bold;
+                text-decoration: underline;
+                color: #ff4000;
+                font-size: 1.4em;
+            }
+
+            .layout-footer {
+                border-top-style: solid;
+                border-top-color: #222222;
+                border-top-width: 3px;
+            }
+
+            .footerunlock {
+                position: fixed;
+                bottom: 0;
+                text-align: center;
+                width: 100%;
+                padding: 3px;
+                background: #ababab;
+                border-top-style: solid;
+                border-top-color: #e0000e;
+                border-top-width: 3px;
+                margin: 0px;
+            }
+
+            .footerunlockother {
+                position: fixed;
+                bottom: 0;
+                text-align: center;
+                width: 100%;
+                padding: 3px;
+                background: #ababab;
+                border-top-style: solid;
+                border-top-color: #0e00e0;
+                border-top-width: 3px;
+                margin: 0px;
+            }
+
+            .textListObjects {
+                background: none;
+            }
+
+            .objectDisplayMediumLong {
+                width: 100%;
+            }
+
+            #sync {
+                clear: both;
+                width: 100%;
+                height: 100px;
+            }
+
+            #error {
+                color: #ffffff;
+                font-weight: bold;
+            }
+
+            #actions, #apps, #recoveries, #authorities, #options, #help, #select, #menuSelect, #end {
+                clear: both;
+                padding: 10px;
+                padding-right: 20px;
+                padding-left: 20px;
+            }
+
+            .optionItem, .recoveryItem, .appItem {
+                width: 98%;
+                min-height: 74px;
+                margin: 5px;
+                margin-left: 1%;
+                margin-right: 1%;
+                padding: 0;
+                background: #ababab;
+                text-align: left;
+                color: #454545;
+            }
+
+            .optionLogo, .appLogo {
+                float: left;
+                width: 64px;
+                height: 64px;
+                margin: 0;
+            }
+
+            .optionInfos, .recoveryInfos, .authorityInfos, .appInfos {
+                padding: 5px;
+                overflow: hidden;
+            }
+
+            .optionInfos .name {
+                margin-bottom: 5px;
+            }
+
+            .optionInfos .namevalue {
+                font-weight: bold;
+                color: #000000;
+            }
+
+            .optionInfos .type {
+                font-style: italic;
+                float: right;
+                margin-left: 10px;
+            }
+
+            .optionInfos .type img {
+                height: 16px;
+                width: 16px;
+            }
+
+            .optionInfos .currentvalue {
+                font-weight: bold;
+            }
+
+            .optionInfos .currentvaluechanged {
+                font-weight: bold;
+                color: #ffffff;
+            }
+
+            .optionItem .desc {
+                clear: both;
+                padding: 5px;
+            }
+
+            .appItemList {
+                clear: both;
+                background: #ababab;
+                color: #454545;
+                margin: 8px;
+                min-height: 80px;
+            }
+
+            .appLink {
+                float: left;
+                margin-right: 8px;
+                height: 64px;
+                width: 64px;
+                padding: 8px;
+                color: #ffffff;
+                overflow: hidden;
+            }
+
+            .appInfos a:link, .appInfos a:visited {
+                font-weight: normal;
+                text-decoration: none;
+                color: #454545;
+            }
+
+            .appInfos a:hover, .appInfos a:active {
+                font-weight: normal;
+                text-decoration: underline;
+                color: #ffffff;
+            }
+
+            .appRef, .authorityID, .recoveryID {
+                font-size: 0.6em;
+            }
+
+            .appSigner {
+                margin-bottom: 5px;
+            }
+
+            .appName, .authorityName, .recoveryName {
+                font-weight: bold;
+                font-size: 1.4em;
+            }
+
+            .appShortname {
+                font-size: 1.6em;
+                font-weight: normal;
+                text-decoration: none;
+                color: #ffffff;
+                margin: 0;
+            }
+
+            .appTitle {
+                font-weight: bold;
+            }
+
+            .appActions, .recoveryActions, .authorityActions {
+                float: right;
+                margin-right: 8px;
+            }
+
+            .appActions img {
+                margin: 3px;
+            }
+
+            .authorityItemList, .recoveryItemList {
+                clear: both;
+                background: #ababab;
+                color: #454545;
+                margin: 8px;
+                padding: 0;
+                min-height: 64px;
+            }
+
+            .authorityLogo, .recoveryLogo {
+                float: left;
+                width: 128px;
+                height: 64px;
+                margin: 0;
+            }
+
+            #helppart {
+                clear: both;
+                padding-top: 10px
+            }
+
+            #helppart img {
+                width: 16px;
+                height: 16px;
+                margin: 0;
+                margin: 2px;
+                margin-right: 5px;
+            }
+
+            #syncallapps {
+                margin: 10px;
+                clear: both;
+            }
+
+            #syncallapps img {
+                margin-right: 5px;
+            }
+
+            #select a:link, #select a:visited, #syncallapps a:link, #syncallapps a:visited, #help a:link, #help a:visited {
+                color: #ababab;
+            }
+
+            #select a:hover, #select a:active, #syncallapps a:hover, #syncallapps a:active, #help a:hover, #help a:active {
+                color: #ffffff;
+            }
+
+            #check {
+                clear: both;
+                padding: 0;
+                padding-top: 40px;
+                padding-bottom: 20px;
+            }
+
+            #menuSelect a:link, #menuSelect a:visited {
+                color: #454545;
+            }
+
+            #menuSelect a:hover, #menuSelect a:active {
+                color: #ffffff;
+            }
+
+            .oneAction {
+                margin: 2px;
+                padding: 5px;
+                float: left;
+                background: #ababab;
+                width: 206px;
+                min-height: 64px;
+            }
+
+            @media screen and (max-height: 500px) {
+                .oneAction {
+                    padding: 0;
+                    padding-top: 0;
+                    padding-bottom: 0;
+                    width: 186px;
+                    min-height: 32px;
+                }
+            }
+
+            @media screen and (max-width: 575px) {
+                .oneAction {
+                    padding: 0;
+                    padding-top: 0;
+                    padding-bottom: 0;
+                    width: 186px;
+                    min-height: 32px;
+                }
+            }
+
+            .oneAction-icon {
+                float: left;
+                margin-right: 5px;
+            }
+
+            .oneAction-icon img {
+                height: 64px;
+                width: 64px;
+            }
+
+            @media screen and (max-height: 500px) {
+                .oneAction-icon img {
+                    height: 32px;
+                    width: 32px;
+                }
+            }
+
+            @media screen and (max-width: 575px) {
+                .oneAction-icon img {
+                    height: 32px;
+                    width: 32px;
+                }
+            }
+
+            .oneAction-title p {
+                font-size: 1.1em;
+                font-weight: bold;
+            }
+
+            input {
+                background: #bbbbbb;
+                color: #454545;
+                margin: 2px;
+                border: 0;
+                box-shadow: unset;
+                padding: 1px;
+                background-origin: border-box;
+            }
+
+            input[type=submit] {
+                font-weight: bold;
+            }
+
+            input[type=password], input[type=text], input[type=email] {
+                padding: 2px;
+            }
+        </style>
+        <?php
     }
 
 

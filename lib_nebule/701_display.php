@@ -203,151 +203,36 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 	 * Les valeurs par défaut sont indicatives. Ne pas les replacer.
 	 * Les variables sont systématiquement recalculées.
 	 */
-    /**
-     * Instance nebule.
-     *
-     * @var nebule
-     */
-    protected $_nebuleInstance;
-
-    /**
-     * Instance de gestion de la configuration et des options.
-     *
-     * @var Configuration
-     */
-    protected $_configurationInstance;
-
-    /**
-     * Instance sylabe.
-     *
-     * @var Applications
-     */
-    protected $_applicationInstance;
-
-    /**
-     * Instance de metrologie.
-     *
-     * @var Metrology
-     */
-    protected $_metrologyInstance;
-
-    /**
-     * Instance des I/O (entrées/sorties).
-     *
-     * @var IO
-     */
-    protected $_ioInstance;
-
-    /**
-     * Instance de traduction.
-     *
-     * @var Translates
-     */
-    protected $_traductionInstance;
-
-    /**
-     * Etat de verrouillage de l'entité en cours.
-     *
-     * @var boolean
-     */
-    protected $_unlocked = false;
-
-    /**
-     * Instance des actions.
-     *
-     * @var Actions
-     */
-    protected $_actionInstance;
-
-    /**
-     * La base du lien hypertexte pour les objets.
-     *
-     * @var string
-     */
-    protected $_htlinkObjectPrefix = '';
-
-    /**
-     * La base du lien hypertexte pour les groupes.
-     *
-     * @var string
-     */
-    protected $_htlinkGroupPrefix = '';
-
-    /**
-     * La base du lien hypertexte pour les conversations.
-     *
-     * @var string
-     */
-    protected $_htlinkConversationPrefix = '';
-
-    /**
-     * La base du lien hypertexte pour les entités.
-     *
-     * @var string
-     */
-    protected $_htlinkEntityPrefix = '';
-
-    /**
-     * La base du lien hypertexte pour les monnaies.
-     *
-     * @var string
-     */
-    protected $_htlinkCurrencyPrefix = '';
-
-    /**
-     * La base du lien hypertexte pour les sacs de jetons.
-     *
-     * @var string
-     */
-    protected $_htlinkTokenPoolPrefix = '';
-
-    /**
-     * La base du lien hypertexte pour les jetons.
-     *
-     * @var string
-     */
-    protected $_htlinkTokenPrefix = '';
-
-    /**
-     * La base du lien hypertexte pour les transactions.
-     *
-     * @var string
-     */
-    protected $_htlinkTransactionPrefix = '';
-
-    /**
-     * La base du lien hypertexte pour les portefeuilles.
-     *
-     * @var string
-     */
-    protected $_htlinkWalletPrefix = '';
-
-    protected $_currentDisplayLanguage;
-
-    protected $_currentDisplayLanguageInstance;
-
-    protected $_displayLanguageList = array();
-
-    protected $_displayLanguageInstanceList = array();
+    protected ?nebule $_nebuleInstance = null;
+    protected ?Configuration $_configurationInstance = null;
+    protected ?Applications $_applicationInstance = null;
+    protected ?Metrology $_metrologyInstance = null;
+    protected ?IO $_ioInstance = null;
+    protected ?Translates $_traductionInstance = null;
+    protected ?Actions $_actionInstance = null;
+    protected bool $_unlocked = false;
+    protected string $_htlinkObjectPrefix = '';
+    protected string $_htlinkGroupPrefix = '';
+    protected string $_htlinkConversationPrefix = '';
+    protected string $_htlinkEntityPrefix = '';
+    protected string $_htlinkCurrencyPrefix = '';
+    protected string $_htlinkTokenPoolPrefix = '';
+    protected string $_htlinkTokenPrefix = '';
+    protected string $_htlinkTransactionPrefix = '';
+    protected string $_htlinkWalletPrefix = '';
+    protected string $_currentDisplayLanguage;
+    protected string $_currentDisplayLanguageInstance;
+    protected array $_displayLanguageList = array();
+    protected array $_displayLanguageInstanceList = array();
 
 
-    /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
+
     public function __construct(Applications $applicationInstance)
     {
         $this->_applicationInstance = $applicationInstance;
         $this->_configurationInstance = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
     }
 
-    /**
-     * Initialisation des variables et instances interdépendantes.
-     *
-     * @return void
-     */
     public function initialisation(): void
     {
         global $applicationName;
@@ -476,7 +361,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         return $this->_currentApplicationIID;
     }
-
 
     protected string $_currentDisplayMode = '';
     protected array $_listDisplayModes = array();
@@ -1618,7 +1502,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function displayCSS(): void
     {
-        // Cette fonction doit être surchargée par l'application avec ses styles propres.
+        // This function must be overloaded by applications.
     }
 
 
