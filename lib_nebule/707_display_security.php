@@ -18,9 +18,9 @@ namespace Nebule\Library;
  */
 class DisplaySecurity extends DisplayItemIconMessageSizeable implements DisplayInterface
 {
-    private $_displayAlone = true;
-    private $_displayOk = true;
-    private $_displayFull = false;
+    private bool $_displayAlone = true;
+    private bool $_displayOk = true;
+    private bool $_displayFull = false;
 
     public function getHTML(): string
     {

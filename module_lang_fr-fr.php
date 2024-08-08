@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
+use Nebule\Library\ModuleTranslates;
 use Nebule\Library\nebule;
 
 /**

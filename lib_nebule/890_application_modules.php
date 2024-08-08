@@ -49,12 +49,14 @@ class ApplicationModules
         $this->_cacheInstance = $this->_nebuleInstance->getCacheInstance();
 
         $this->_initInternalModules();
-        $this->_initTranslateModules();
         $this->_initExternalModules();
+        $this->_initTranslateModules();
     }
 
     protected function _initInternalModules(): void {
-        if (!$this->_applicationInstance::USE_MODULES) {
+        if (!$this->_applicationInstance::USE_MODULES
+            || !$this->_configurationInstance->getOptionAsBoolean('permitApplicationModules')
+        ) {
             $this->_metrologyInstance->addLog('Do not load modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bcc98872');
             return;
         }
@@ -90,8 +92,40 @@ class ApplicationModules
         $this->_metrologyInstance->addLog('internal modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '050783df');
     }
 
+    protected function _initExternalModules(): void {
+        if (!$this->_applicationInstance::USE_MODULES
+            || !$this->_applicationInstance::USE_MODULES_EXTERNAL
+            || !$this->_configurationInstance->getOptionAsBoolean('permitApplicationModules')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitApplicationModulesExternal')
+        )
+            return;
+        $this->_metrologyInstance->addLog('load external modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
+        $instanceRID = $this->_cacheInstance->newNode(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
+        $links = $instanceRID->getReferencedLinks(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES, 'authority');
+        foreach ($links as $link) {
+            $moduleInstanceRID = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2']);
+            $moduleInstanceOID = $this->_cacheInstance->newNode($moduleInstanceRID->getReferencedOrSelfNID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES));
+            if ($moduleInstanceRID->getID() == '0'
+                || $moduleInstanceOID->getID() == '0'
+                || !$moduleInstanceOID->checkPresent()
+            )
+                continue;
+            $moduleID = $moduleInstanceOID->getID();
+            $this->_metrologyInstance->addLog('Load external module ' . $moduleID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '06a13897');
+            include('o/' . $moduleID);                // @todo A modifier, passer par IO.
+            $this->_listModulesRID[] = $moduleInstanceRID->getID();
+            $this->_listModulesOID[] = $moduleID;
+        }
+        $this->_metrologyInstance->addLog('external modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'a95de198');
+    }
+
     protected function _initTranslateModules(): void {
-        if (!$this->_applicationInstance::USE_MODULES || !$this->_applicationInstance::USE_MODULES_TRANSLATE)
+        if (!$this->_applicationInstance::USE_MODULES
+            || !$this->_applicationInstance::USE_MODULES_TRANSLATE
+            || !$this->_configurationInstance->getOptionAsBoolean('permitApplicationModules')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitApplicationModulesTranslate')
+        )
             return;
         $this->_metrologyInstance->addLog('load translate modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
@@ -114,30 +148,6 @@ class ApplicationModules
         $list = get_declared_classes();
 
         $this->_metrologyInstance->addLog('translate modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '7e7aeaed');
-    }
-
-    protected function _initExternalModules(): void {
-        if (!$this->_applicationInstance::USE_MODULES || !$this->_applicationInstance::USE_MODULES_EXTERNAL)
-            return;
-        $this->_metrologyInstance->addLog('load external modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-
-        $instanceRID = $this->_cacheInstance->newNode(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
-        $links = $instanceRID->getReferencedLinks(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES, 'authority');
-        foreach ($links as $link) {
-            $moduleInstanceRID = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2']);
-            $moduleInstanceOID = $this->_cacheInstance->newNode($moduleInstanceRID->getReferencedOrSelfNID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES));
-            if ($moduleInstanceRID->getID() == '0'
-                || $moduleInstanceOID->getID() == '0'
-                || !$moduleInstanceOID->checkPresent()
-            )
-                continue;
-            $moduleID = $moduleInstanceOID->getID();
-            $this->_metrologyInstance->addLog('Load external module ' . $moduleID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '06a13897');
-            include('o/' . $moduleID);                // @todo A modifier, passer par IO.
-            $this->_listModulesRID[] = $moduleInstanceRID->getID();
-            $this->_listModulesOID[] = $moduleID;
-        }
-        $this->_metrologyInstance->addLog('external modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'a95de198');
     }
 
 

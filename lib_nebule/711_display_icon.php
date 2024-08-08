@@ -18,12 +18,12 @@ namespace Nebule\Library;
  */
 class DisplayIcon extends DisplayItemIconable implements DisplayInterface
 {
-    private $_nid = null;
-    private $_name = '';
-    private $_type = '';
-    private $_displayActions = false;
-    private $_actionsID = '';
-    private $_displayJS = true;
+    private ?Node $_nid = null;
+    private string $_name = '';
+    private string $_type = '';
+    private bool $_displayActions = false;
+    private string $_actionsID = '';
+    private bool $_displayJS = true;
 
     protected function _init(): void
     {
@@ -31,6 +31,7 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
         $this->setEnableJS();
         $this->setActionsID();
         $this->setIconText('[I]');
+        $this->setSize();
     }
 
     public function getHTML(): string
@@ -42,7 +43,7 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
         }
 
         $result = '<img title="' . $this->_name . '"' . $this->_styleCSS;
-        $result .= ' alt="' . $this->_iconText . '" src="' . $this->_getNidIconHTML($this->_nid, $this->_icon) . '"';
+        $result .= ' alt="' . $this->_iconText . '" src="' . $this->_getNidIconHTML($this->_nid, $this->_icon) . '" class="iconFace' . $this->_sizeCSS . '"';
         if ($this->_classCSS != '')
             $result .= ' class="' . $this->_classCSS . '"';
         if ($this->_idCSS != '')
@@ -71,6 +72,8 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
     public function setType(string $type = ''): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set type ' . $type, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->_nid === null)
+            return;
         if ($type == '')
             $this->_type = $this->_nid->getType($this->_social);
         else
@@ -80,6 +83,8 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
     public function setName(string $name = ''): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set name ' . $name, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->_nid === null)
+            return;
         if ($name != '')
             $this->_name = trim(filter_var($name, FILTER_SANITIZE_STRING));
         else
@@ -89,6 +94,8 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
     public function setStyleCSS(string $style = ''): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set style CSS ' . $style, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->_nid === null)
+            return;
         $this->_styleCSS = ' style="background:#'
             . $this->_nid->getPrimaryColor()
             . trim(filter_var($style, FILTER_SANITIZE_STRING))
@@ -124,6 +131,36 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
 
     public static function displayCSS(): void
     {
-        echo ''; // TODO
+        ?>
+
+        <style type="text/css">
+            /* CSS for DisplayColor(). */
+
+            .iconFaceTiny {
+                height: 16px;
+                font-size: 16px;
+            }
+
+            .iconFaceSmall {
+                height: 32px;
+                font-size: 32px;
+            }
+
+            .iconFaceMedium {
+                height: 64px;
+                font-size: 64px;
+            }
+
+            .iconFaceLarge {
+                height: 128px;
+                font-size: 128px;
+            }
+
+            .iconFaceFull {
+                height: 256px;
+                font-size: 256px;
+            }
+
+        <?php
     }
 }

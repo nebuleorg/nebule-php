@@ -418,10 +418,32 @@ abstract class Modules implements moduleInterface
         ?>
 
         <h3 id="oam">OAM / Module</h3>
-        <p>Le module est une classe enfant de la classe Modules. Cela permet d'étendre les fonctionnalités d'une
+        <p>Le module est une classe enfant de la classe <i>Modules</i>. Cela permet d'étendre les fonctionnalités d'une
             application. Un module peut être par défaut présent dans une application, c'est-à-dire présent dans l'objet
             de l'application. Dans ce cas son nom doit être présent dans la liste des modules intégrés à l'application.
             </p>
+        <p>Il y a plusieurs types de modules dans une application. :</p>
+        <ul>
+            <li>Le type interne (internal) correspond aux modules intégrés dans l'objet de l'application.</li>
+            <li>Le type externe (external) correspond uax modules non intégrés dans l'objet de l'application. Ils sont
+                détectés par des liens dédiés et chargés puis instanciés par l'application.</li>
+            <li>Le type traduction (translate) correspond aux modules externes à l'application et dédiés à la
+                traduction, mais avec des capacités réduites.</li>
+        </ul>
+        <p>Pour qu'une application puisse utiliser des modules, elle doit permettre l'utilisation des modules. De façon
+            globale, des options permettent d'utiliser des modules ou non, elles sont prioritaires sur le choix des
+            applications.</p>
+        <p>Pour activer les modules, internes et/ou externes, dans la classe <i>Application</i> d'une application, il
+            faut positionner la constante <b>USE_MODULES = true</b>. L'option <i>permitApplicationModules</i> doit être
+            à true. Les modules internes sont intégrés par défaut dans l'objet d'une application. Pour être utilisé, ils
+            doivent tous être déclarés dans la constance <b>LIST_MODULES_INTERNAL</b> sous forme d'une liste.</p>
+        <p>Les modules externes peuvent être pris en compte via le lien des modules si la constance
+            <b>USE_MODULES_EXTERNAL = true</b> en plus de la <b>USE_MODULES = true</b>. Les options
+            <i>permitApplicationModules</i> et <i>permitApplicationModulesExternal</i> doivent être à true.</p>
+        <p>Les modules externes de traduction peuvent être pris en compte via le lien des modules si la constance
+            <b>USE_MODULES_TRANSLATE = true</b> en plus de la <b>USE_MODULES = true</b>. Ces modules n'ont aucun code
+            exécuté et exposent uniquement un tableau avec des traductions. Les options <i>permitApplicationModules</i>
+            et <i>permitApplicationModulesTranslate</i> doivent être à true.</p>
         <p>A faire...</p>
 
         <h4 id="oamn">OAMN / Nommage</h4>
@@ -437,13 +459,8 @@ abstract class Modules implements moduleInterface
         <p>A faire...</p>
 
         <h4 id="oamc">OAMC / Création</h4>
-        <p>Les modules sont chargés par la classe Applications dont hérite toutes les applications. </p>
-        <p>Pour activer les modules, dans la classe Application d'une application, il faut positionner la variable
-            <b>$_useModules = true</b>b></p>
-        <p>Si des modules sont intégrés (interne) par défaut dans l'objet d'une application, pour être utilisé, ils doivent tous
-            être déclarés dans la variable <b>$_listInternalModules</b> sous forme d'une liste.</p>
-        <p>Les modules externes, ils peuvent être pris en compte via le lien des modules si <b>$_useExternalModules =
-                true</b></p>
+        <p>Un module est une classe enfant de la classe <i>Modules</i> ou de la classe <i>ModuleTranslates</i>.</p>
+        <p>Les modules sont chargés par la classe <i>Applications</i> dont hérite toutes les applications. </p>
         <p>Liste des liens à générer lors de la création d'un module.</p>
         <p>A faire...</p>
 

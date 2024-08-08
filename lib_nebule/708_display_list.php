@@ -16,9 +16,9 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class DisplayList extends DisplayItemSizeable implements DisplayInterface
+class DisplayList extends DisplayItem implements DisplayInterface
 {
-    private $_list = array();
+    private array $_list = array();
 
     public function getHTML(): string {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');

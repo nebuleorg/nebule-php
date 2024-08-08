@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace Nebule\Application\Option;
 use Nebule\Library\Configuration;
+use Nebule\Library\DisplayColor;
+use Nebule\Library\DisplayItem;
 use Nebule\Library\Entity;
 use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
@@ -1088,7 +1090,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
         <div id="options">
             <?php
-            $listOptions = Configuration::getListOptions();
+            $listOptions = Configuration::getListOptionsName();
             $listCategoriesOptions = Configuration::getListCategoriesOptions();
             $listOptionsCategory = Configuration::getListOptionsCategory();
             $listOptionsType = Configuration::getListOptionsType();
@@ -1153,15 +1155,19 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                     $isDefault = true;
                     if ($optionValue != $optionDefaultValue)
                         $isDefault = false;
+
+                    $instanceColorCategory = new DisplayColor($this->_applicationInstance);
+                    $instanceColorCategory->setNID($optionID);
+                    $instanceColorCategory->setSize(DisplayItem::SIZE_MEDIUM);
                     ?>
 
                     <div class="optionItem">
                         <a name="<?php echo $optionName; ?>"></a>
-                        <div class="optionLogo"><?php $this->displayObjectColor($optionID, '/'); ?></div>
+                        <div class="optionLogo"><?php $instanceColorCategory->display(); ?></div>
                         <div class="optionInfos">
                             <div class="type"><?php echo $optionCriticality; ?>, <?php echo $optionWritableDisplay; ?>
                                 <img src="o/<?php echo self::DEFAULT_ICON_ALPHA_COLOR; ?>"
-                                     style="background:<?php if ($isDefault) echo self::DEFAULT_ICON_COLOR; else echo $optionColorOnChange; ?>"/>
+                                     style="background:<?php if ($isDefault) echo self::DEFAULT_ICON_COLOR; else echo $optionColorOnChange; ?>;height:16px;width:16px;"/>
                             </div>
                             <div class="name">Option <span class="namevalue"><?php echo $optionName; ?></span></div>
                             <div class="type">Type <?php echo $optionType; ?></div>
@@ -1270,7 +1276,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                      style="background:<?php echo self::CAREFUL_ICON_COLOR; ?>">Option don't have it's default value but
                 it's important. Change the default value may reduce availability or stability.<br/>
                 <img src="o/<?php echo self::DEFAULT_ICON_ALPHA_COLOR; ?>"
-                     style="background:<?php echo self::CRITICAL_ICON_COLOR; ?>">Option don't have it's default value
+                     style="background:<?php echo self::CRITICAL_ICON_COLOR; ?>">Option don't have it's default value,
                 but it's critical for the security. Be sure it's not a error.
             </div>
             <div id="helppart">
@@ -1978,7 +1984,7 @@ class Action extends Actions
             $argValue = trim(filter_input(INPUT_GET, self::COMMAND_OPTION_VALUE, FILTER_SANITIZE_STRING));
 
             // Récupère les noms des options connues et vérifie que l'option demandée en fait partie.
-            $listOptions = $this->_configuration->getListOptions();
+            $listOptions = $this->_configuration->getListOptionsName();
             $okOption = false;
             foreach ($listOptions as $option) {
                 if ($argName == $option) {

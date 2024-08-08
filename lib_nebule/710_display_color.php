@@ -20,17 +20,18 @@ class DisplayColor extends DisplayItemCSS implements DisplayInterface
 {
     const ICON_ALPHA_COLOR_OID = '87b260416aa0f50736d3ca51bcb6aae3eff373bf471d5662883b8b6797e73e85.sha2.256';
 
-    private $_nid = null;
-    private $_name = '';
-    private $_displayActions = false;
-    private $_actionsID = '';
-    private $_displayJS = true;
+    private ?Node $_nid = null;
+    private string $_name = '';
+    private bool $_displayActions = false;
+    private string $_actionsID = '';
+    private bool $_displayJS = true;
 
     protected function _init(): void
     {
         $this->setSocial();
         $this->setEnableJS();
         $this->setActionsID();
+        $this->setSize();
     }
 
     public function getHTML(): string
@@ -42,7 +43,7 @@ class DisplayColor extends DisplayItemCSS implements DisplayInterface
         }
 
         $result = '<img title="' . $this->_name . '"' . $this->_styleCSS;
-        $result .= ' alt="[C]" src="o/' . self::ICON_ALPHA_COLOR_OID . '"';
+        $result .= ' alt="[C]" src="o/' . self::ICON_ALPHA_COLOR_OID . '" class="iconColor' . $this->_sizeCSS . '"';
         if ($this->_classCSS != '')
             $result .= ' class="' . $this->_classCSS . '"';
         if ($this->_idCSS != '')
@@ -70,6 +71,8 @@ class DisplayColor extends DisplayItemCSS implements DisplayInterface
     public function setName(string $name = ''): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set name ' . $name, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->_nid === null)
+            return;
         if ($name != '')
             $this->_name = trim(filter_var($name, FILTER_SANITIZE_STRING));
         else
@@ -79,6 +82,8 @@ class DisplayColor extends DisplayItemCSS implements DisplayInterface
     public function setStyleCSS(string $style = ''): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set style CSS ' . $style, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->_nid === null)
+            return;
         $this->_styleCSS = ' style="background:#'
             . $this->_nid->getPrimaryColor()
             . trim(filter_var($style, FILTER_SANITIZE_STRING))
@@ -114,6 +119,36 @@ class DisplayColor extends DisplayItemCSS implements DisplayInterface
 
     public static function displayCSS(): void
     {
-        echo ''; // TODO
+        ?>
+
+        <style type="text/css">
+            /* CSS for DisplayColor(). */
+
+            .iconColorTiny {
+                height: 16px;
+                font-size: 16px;
+            }
+
+            .iconColorSmall {
+                height: 32px;
+                font-size: 32px;
+            }
+
+            .iconColorMedium {
+                height: 64px;
+                font-size: 64px;
+            }
+
+            .iconColorLarge {
+                height: 128px;
+                font-size: 128px;
+            }
+
+            .iconColorFull {
+                height: 256px;
+                font-size: 256px;
+            }
+
+        <?php
     }
 }

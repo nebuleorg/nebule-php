@@ -18,23 +18,25 @@ interface DisplayInterface
 
 abstract class DisplayItem implements DisplayInterface
 {
-    public const RATIO_SQUARE = 'square';
     public const SIZE_SMALL = 'small';
-    public const RATIO_SHORT = 'short';
     public const SIZE_LARGE = 'large';
     public const SIZE_TINY = 'tiny';
     public const SIZE_MEDIUM = 'medium';
     public const SIZE_FULL = 'full';
+    public const RATIO_SQUARE = 'square';
+    public const RATIO_SHORT = 'short';
     public const RATIO_LONG = 'long';
 
-    protected $_nebuleInstance;
-    protected $_displayInstance;
-    protected $_applicationInstance;
-    protected $_configurationInstance;
-    protected $_metrologyInstance;
-    protected $_traductionInstance;
-    protected $_unlocked;
-    protected $_social = '';
+    protected ?nebule $_nebuleInstance = null;
+    protected ?Displays $_displayInstance = null;
+    protected ?Applications $_applicationInstance = null;
+    protected ?Configuration $_configurationInstance = null;
+    protected ?Metrology $_metrologyInstance = null;
+    protected ?Translates $_traductionInstance = null;
+    protected bool $_unlocked = false;
+    protected string $_social = '';
+    protected string $_sizeCSS = '';
+    protected string $_ratioCSS = '';
 
     public function __construct(Applications $applicationInstance) // Should not be overridden by children classes.
     {
@@ -79,13 +81,51 @@ abstract class DisplayItem implements DisplayInterface
         if ($this->_social == '')
             $this->_social = 'all';
     }
+
+    public function setSize(string $size = ''): void
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set size ' . $size, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        switch (strtolower($size)) {
+            case DisplayItem::SIZE_TINY:
+                $this->_sizeCSS = 'Tiny';
+                break;
+            case DisplayItem::SIZE_SMALL:
+                $this->_sizeCSS = 'Small';
+                break;
+            case DisplayItem::SIZE_LARGE:
+                $this->_sizeCSS = 'Large';
+                break;
+            case DisplayItem::SIZE_FULL:
+                $this->_sizeCSS = 'Full';
+                break;
+            default:
+                $this->_sizeCSS = 'Medium';
+                break;
+        }
+    }
+
+    public function setRatio(string $ratio = ''): void
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Set ratio ' . $ratio, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        switch (strtolower($ratio)) {
+            case DisplayItem::RATIO_SQUARE:
+                $this->_ratioCSS = 'Square';
+                break;
+            case DisplayItem::RATIO_LONG:
+                $this->_ratioCSS = 'Long';
+                break;
+            default:
+                $this->_ratioCSS = 'Short';
+                break;
+        }
+    }
 }
 
 abstract class DisplayItemCSS extends DisplayItem
 {
-    protected $_classCSS = '';
-    protected $_idCSS = '';
-    protected $_styleCSS = '';
+    protected string $_classCSS = '';
+    protected string $_idCSS = '';
+    protected string $_styleCSS = '';
 
     public function setClassCSS(string $class = ''): void
     {
@@ -110,9 +150,9 @@ abstract class DisplayItemCSS extends DisplayItem
 
 abstract class DisplayItemIconable extends DisplayItemCSS
 {
-    protected $_icon = null;
-    protected $_iconUpdate = true;
-    protected $_iconText = '';
+    protected ?Node $_icon = null;
+    protected bool $_iconUpdate = true;
+    protected string $_iconText = '';
 
     public function setIcon(?Node $oid, bool $update = true): void
     {
@@ -210,9 +250,9 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
     public const ICON_PLAY_RID = '73745872cd2b46a40992470eaa6dd1e5ca1face3c38a1da7650d4040d82193b9021d.none.272';
     public const ICON_BACK_RID = '8ade584d3aa420335a7af82da4438654b891985777cc05bf6cbe86ebe328e31f1cc4.none.272';
 
-    protected $_message = '';
-    protected $_link = '';
-    protected $_type = '';
+    protected string $_message = '';
+    protected string $_link = '';
+    protected string $_type = '';
 
     public function setMessage(string $message,
                                string $arg1 = '',
@@ -275,55 +315,10 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
     }
 }
 
-abstract class DisplayItemSizeable extends DisplayItem
-{
-
-    protected $_sizeCSS = '';
-    protected $_ratioCSS = '';
-
-    public function setSize(string $size = ''): void
-    {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('set size ' . $size, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        switch (strtolower($size)) {
-            case DisplayItem::SIZE_TINY:
-                $this->_sizeCSS = 'Tiny';
-                break;
-            case DisplayItem::SIZE_SMALL:
-                $this->_sizeCSS = 'Small';
-                break;
-            case DisplayItem::SIZE_LARGE:
-                $this->_sizeCSS = 'Large';
-                break;
-            case DisplayItem::SIZE_FULL:
-                $this->_sizeCSS = 'Full';
-                break;
-            default:
-                $this->_sizeCSS = 'Medium';
-                break;
-        }
-    }
-
-    public function setRatio(string $ratio = ''): void
-    {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Set ratio ' . $ratio, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        switch (strtolower($ratio)) {
-            case DisplayItem::RATIO_SQUARE:
-                $this->_ratioCSS = 'Square';
-                break;
-            case DisplayItem::RATIO_LONG:
-                $this->_ratioCSS = 'Long';
-                break;
-            default:
-                $this->_ratioCSS = 'Short';
-                break;
-        }
-    }
-}
-
 abstract class DisplayItemIconMessageSizeable extends DisplayItemIconMessage
 {
-    protected $_sizeCSS = '';
-    protected $_ratioCSS = '';
+    protected string $_sizeCSS = '';
+    protected string $_ratioCSS = '';
 
     public function setSize(string $size = ''): void
     {

@@ -65,6 +65,9 @@ class Configuration
         'permitLogs',
         'permitLogsOnDebugFile',
         'permitJavaScript',
+        'permitApplicationModules',
+        'permitApplicationModulesExternal',
+        'permitApplicationModulesTranslate',
         'codeBranch',
         'logsLevel',
         'modeRescue',
@@ -180,6 +183,9 @@ class Configuration
         'permitLogs' => 'Logs',
         'permitLogsOnDebugFile' => 'Logs',
         'permitJavaScript' => 'Display',
+        'permitApplicationModules' => 'Applications',
+        'permitApplicationModulesExternal' => 'Applications',
+        'permitApplicationModulesTranslate' => 'Applications',
         'codeBranch' => 'Global',
         'logsLevel' => 'Logs',
         'modeRescue' => 'Global',
@@ -279,6 +285,9 @@ class Configuration
         'permitLogs' => 'boolean',
         'permitLogsOnDebugFile' => 'boolean',
         'permitJavaScript' => 'boolean',
+        'permitApplicationModules' => 'boolean',
+        'permitApplicationModulesExternal' => 'boolean',
+        'permitApplicationModulesTranslate' => 'boolean',
         'codeBranch' => 'string',
         'logsLevel' => 'string',
         'modeRescue' => 'boolean',
@@ -374,6 +383,9 @@ class Configuration
         'permitLogs' => false,
         'permitLogsOnDebugFile' => false,
         'permitJavaScript' => false,
+        'permitApplicationModules' => false,
+        'permitApplicationModulesExternal' => false,
+        'permitApplicationModulesTranslate' => false,
         'codeBranch' => false,
         'logsLevel' => false,
         'modeRescue' => false,
@@ -468,6 +480,9 @@ class Configuration
         'permitLogs' => 'true',
         'permitLogsOnDebugFile' => 'false',
         'permitJavaScript' => 'true',
+        'permitApplicationModules' => 'true',
+        'permitApplicationModulesExternal' => 'false',
+        'permitApplicationModulesTranslate' => 'true',
         'codeBranch' => 'develop',
         'logsLevel' => 'NORMAL',
         'modeRescue' => 'false',
@@ -562,6 +577,9 @@ class Configuration
         'permitLogs' => 'useful',
         'permitLogsOnDebugFile' => 'careful',
         'permitJavaScript' => 'careful',
+        'permitApplicationModules' => 'careful',
+        'permitApplicationModulesExternal' => 'critical',
+        'permitApplicationModulesTranslate' => 'careful',
         'codeBranch' => 'careful',
         'logsLevel' => 'useful',
         'modeRescue' => 'critical',
@@ -656,6 +674,9 @@ class Configuration
         'permitLogs' => 'Activate more logs (syslog) on internal process.',
         'permitLogsOnDebugFile' => 'Activate debug logs to logfile o/log.',
         'permitJavaScript' => 'Activate by default JavaScript (JS) on web pages.',
+        'permitApplicationModules' => 'Permit any application to use internal modules and/or external modules (with permitApplicationModulesTranslate).',
+        'permitApplicationModulesExternal' => 'Permit any application to use external modules (need permitApplicationModules).',
+        'permitApplicationModulesTranslate' => 'Permit any application to use external translate modules (limited) (need permitApplicationModules).',
         'codeBranch' => 'Level quality of used code.',
         'logsLevel' => 'Select verbosity of logs. Select on NORMAL, ERROR, FUNCTION and DEBUG.',
         'modeRescue' => 'Activate the rescue mode. Follow only links from globals authorities for applications detection.',
@@ -697,138 +718,56 @@ class Configuration
         'subordinationEntity' => 'Define the external entity which can modify writeable options on this server instance.',
     );
 
-    /**
-     * Instance de la librairie en cours.
-     *
-     * @var nebule
-     */
-    protected $_nebuleInstance;
-
-    /**
-     * Instance de la métrologie.
-     *
-     * @var Metrology
-     */
-    private $_metrologyInstance;
-
-    /**
-     * Verrou des modifications des options dans le cache.
-     * @var boolean
-     */
-    private $_overwriteOptionCacheLock = false;
-
-    /**
-     * Verrouillage de la recherche d'option via les liens.
-     * Anti-boucle infinie.
-     *
-     * @var boolean
-     */
-    private $_optionsByLinksIsInUse = false;
-
-    /**
-     * Le cache des options déjà lues.
-     *
-     * @var array
-     */
-    private $_optionCache = array();
-
-    /**
-     * Marque la fin de l'initialisation.
-     * C'est nécessaire pour certaines parties qui nécessitent l'accès à la journalisation, mais trop tôt.
-     * C'est le cas dans la lecture des options dans les liens.
-     *
-     * @var boolean
-     */
-    private $_permitOptionsByLinks = false;
+    protected ?nebule $_nebuleInstance = null;
+    private ?Metrology $_metrologyInstance = null;
+    private bool $_overwriteOptionCacheLock = false;
+    private bool $_optionsByLinksIsInUse = false;
+    private array $_optionCache = array();
+    private bool $_permitOptionsByLinks = false;
 
 
 
-    /**
-     * Constructeur.
-     *
-     * @param nebule $nebuleInstance
-     */
     public function __construct(nebule $nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
     }
 
-    /**
-     * Donne la liste des noms des options disponibles.
-     *
-     * @return array
-     */
-    public static function getListOptions(): array
+    public static function getListOptionsName(): array
     {
         return self::OPTIONS_LIST;
     }
 
-    /**
-     * Donne la liste de catégories d'options.
-     *
-     * @return array
-     */
     public static function getListCategoriesOptions(): array
     {
         return self::OPTIONS_CATEGORIES;
     }
 
-    /**
-     * Donne la liste de catégorisation des options disponibles.
-     *
-     * @return array
-     */
     public static function getListOptionsCategory(): array
     {
         return self::OPTIONS_CATEGORY;
     }
 
-    /**
-     * Donne la liste des types des options disponibles.
-     *
-     * @return array
-     */
     public static function getListOptionsType(): array
     {
         return self::OPTIONS_TYPE;
     }
 
-    /**
-     * Donne la liste de capacité d'écriture des options disponibles.
-     *
-     * @return array
-     */
     public static function getListOptionsWritable(): array
     {
         return self::OPTIONS_WRITABLE;
     }
 
-    /**
-     * Donne la liste des valeurs par défaut des options disponibles.
-     *
-     * @return array
-     */
     public static function getListOptionsDefaultValue(): array
     {
         return self::OPTIONS_DEFAULT_VALUE;
     }
 
-    /**
-     * Donne la liste de criticité des options disponibles.
-     *
-     * @return array
-     */
     public static function getListOptionsCriticality(): array
     {
         return self::OPTIONS_CRITICALITY;
     }
 
-    /**
-     * Donne la liste des descriptions des options disponibles.
-     *
-     * @return array
-     */
     public static function getListOptionsDescription(): array
     {
         return self::OPTIONS_DESCRIPTION;

@@ -1235,6 +1235,8 @@ abstract class Applications implements applicationInterface
         </ul>
         <p>Elles dépendent respectivement des classes de l’application de référence Applications, Displays, Actions et
             Traductions dans la librairie nebule.</p>
+        <p>Les applications peuvent gérer des modules pour les rendre plus souples dans leur fonctionnement et
+            adaptatives. CF <a href="#oam">OAM</a>.</p>
 
         <?php Displays::docDispTitle(3, 'oan', 'Nommage'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>

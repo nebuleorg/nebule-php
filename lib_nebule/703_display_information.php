@@ -77,7 +77,7 @@ namespace Nebule\Library;
  */
 class DisplayInformation extends DisplayItemIconMessageSizeable implements DisplayInterface
 {
-    private $_displayAlone = false;
+    private bool $_displayAlone = false;
 
     protected function _init(): void
     {
