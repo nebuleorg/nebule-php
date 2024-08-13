@@ -36,7 +36,7 @@ class Localisation extends Node implements nodeInterface
 
         if ($this->_id != '0')
         {
-            $this->_localisation = trim(strtolower($this->_io->getObject($this->_id)));
+            $this->_localisation = trim(strtolower($this->_ioInstance->getObject($this->_id)));
             $this->_parseURL();
         }
     }
@@ -110,7 +110,7 @@ class Localisation extends Node implements nodeInterface
 
     private function _addPonderate($time)
     {
-        if ($this->_configuration->getOptionAsBoolean('permitLocalisationStats')) {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitLocalisationStats')) {
             return false;
         }
 

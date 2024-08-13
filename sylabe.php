@@ -273,7 +273,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
      *
      * @var array
      */
-    protected $_neededObjectsList = array(
+    protected array $_neededObjectsList = array(
         self::DEFAULT_LOGO_MENUS,
         self::DEFAULT_ICON_ALPHA_COLOR,
         self::DEFAULT_ICON_LC,

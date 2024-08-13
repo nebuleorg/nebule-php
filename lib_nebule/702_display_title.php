@@ -25,8 +25,8 @@ namespace Nebule\Library;
  */
 class DisplayTitle extends DisplayItemIconable implements DisplayInterface
 {
-    private $_title = '';
-    private $_displayEntity = false;
+    private string $_title = '';
+    private bool $_displayEntity = false;
 
     public function getHTML(): string
     {
@@ -59,7 +59,7 @@ class DisplayTitle extends DisplayItemIconable implements DisplayInterface
 
     private function _getTitleHTML(&$result)
     {
-        $result .= '   <h1>' . $this->_title . "</h1>\n";
+        $result .= '<h1>' . $this->_title . "</h1>\n";
     }
 
     private function _getEntityHTML(&$result)

@@ -61,229 +61,38 @@ class Node implements nodeInterface
         '_isWallet',
     );
 
-    /**
-     * Instance de la bilbiothèque nebule en PHP POO.
-     *
-     * @var nebule $_nebuleInstance
-     */
-    protected $_nebuleInstance;
-
-    /**
-     * Instance de la métrologie.
-     *
-     * @var Metrology $_metrology
-     */
-    protected $_metrology;
-
-    /**
-     * Instance de gestion de la configuration et des options.
-     *
-     * @var Configuration
-     */
-    protected $_configuration;
-
-    /**
-     * Instance de gestion du cache.
-     *
-     * @var Cache
-     */
-    protected $_cache;
-
-    /**
-     * Instance des I/O (entrées/sorties).
-     *
-     * @var ioInterface $_io
-     */
-    protected $_io;
-
-    /**
-     * Instance de la cryptographie.
-     *
-     * @var CryptoInterface $_crypto
-     */
-    protected $_crypto;
-
-    /**
-     * Instance sociale.
-     *
-     * @var SocialInterface $_social
-     */
-    protected $_social;
-
-    /**
-     * if buffering content is permitted.
-     *
-     * @var boolean $_permitBuffer
-     */
-    protected $_permitBuffer;
-
-    /**
-     * Identifiant de l'objet.
-     * Si à 0, l'objet est invalide.
-     *
-     * @var string $_id
-     */
-    protected $_id = '0';
-
-    /**
-     * Le nom complet.
-     * Forme : prénom préfix/nom.suffix surnom
-     *
-     * @var string $_fullname
-     */
-    protected $_fullname;
-
-    /**
-     * Cache.
-     *
-     * @var array $_cachePropertyLink
-     */
-    protected $_cachePropertyLink = array();
-
-    /**
-     * Cache.
-     *
-     * @var array $_cachePropertiesLinks
-     */
-    protected $_cachePropertiesLinks = array();
-
-    /**
-     * Cache.
-     *
-     * @var array $_cachePropertyID
-     */
-    protected $_cachePropertyID = array();
-
-    /**
-     * Cache.
-     *
-     * @var array $_cachePropertiesID
-     */
-    protected $_cachePropertiesID = array();
-
-    /**
-     * Cache.
-     *
-     * @var array $_cacheProperty
-     */
-    protected $_cacheProperty = array();
-
-    /**
-     * Cache.
-     *
-     * @var array $_cacheProperties
-     */
-    protected $_cacheProperties = array();
-
-    /**
-     * Cache.
-     *
-     * @var string $_cacheUpdate
-     */
-    protected $_cacheUpdate = '';
-
-    /**
-     * Cache.
-     *
-     * @var boolean $_cacheMarkDanger
-     */
-    protected $_cacheMarkDanger = false;
-
-    /**
-     * Cache.
-     *
-     * @var boolean $_cacheMarkWarning
-     */
-    protected $_cacheMarkWarning = false;
-
-    /**
-     * Cache.
-     *
-     * @var boolean $_cacheMarkProtected
-     */
-    protected $_cacheMarkProtected = false;
-
-    /**
-     * Identifiant de l'objet ayant le contenu protégé (chiffré).
-     *
-     * @var string $_idProtected
-     */
-    protected $_idProtected = '0';
-
-    /**
-     * Identifiant de l'objet ayant le contenu non protégé (en clair).
-     *
-     * @var string $_idUnprotected
-     */
-    protected $_idUnprotected = '0';
-
-    /**
-     * Identifiant de l'objet ayant le contenu de la clé protégée de déchiffrement de l'objet.
-     *
-     * @var string $_idProtectedKey
-     */
-    protected $_idProtectedKey = '0';
-
-    /**
-     * Identifiant de l'objet ayant le contenu de la clé non protégée de déchiffrement de l'objet.
-     *
-     * @var string $_idUnprotectedKey
-     */
-    protected $_idUnprotectedKey = '0';
-
-    /**
-     * Marqueur de détection de la protection de l'objet.
-     *
-     * @var boolean $_markProtectedChecked
-     */
-    protected $_markProtectedChecked = false;
-
-    /**
-     *
-     * @var bool $_cacheCurrentEntityUnlocked
-     */
-    protected $_cacheCurrentEntityUnlocked = null;
-
-    /**
-     * Copie des données non encodées.
-     * Ne pas mettre en cache de session PHP.
-     *
-     * @var string|null
-     */
-    protected $_data = null;
-
-    /**
-     * Des données non encodées sont présentes.
-     * Ne pas mettre en cache de session PHP.
-     *
-     * @var string
-     */
-    protected $_haveData = false;
-
-    /**
-     * Copie des données encodées.
-     * Ne pas mettre en cache de session PHP.
-     *
-     * @var string|null
-     */
-    protected $_code = '';
-
-    /**
-     * Des données encodées sont présentes.
-     * Ne pas mettre en cache de session PHP.
-     *
-     * @var boolean
-     */
-    protected $_haveCode = false;
-
-    /**
-     *
-     * @var array
-     */
-    protected $_usedUpdate = array();
-
-
-    protected $_isNew = false;
+    protected ?nebule $_nebuleInstance = null;
+    protected ?Metrology $_metrologyInstance = null;
+    protected ?Configuration $_configurationInstance = null;
+    protected ?Cache $_cacheInstance = null;
+    protected ?ioInterface $_ioInstance = null;
+    protected ?CryptoInterface $_cryptoInstance = null;
+    protected ?SocialInterface $_socialInstance = null;
+    protected bool $_permitBuffer = false;
+    protected string $_id = '0';
+    protected string $_fullName = '';
+    protected array $_cachePropertyLink = array();
+    protected array $_cachePropertiesLinks = array();
+    protected array $_cachePropertyID = array();
+    protected array $_cachePropertiesID = array();
+    protected array $_cacheProperty = array();
+    protected array $_cacheProperties = array();
+    protected string $_cacheUpdate = '';
+    protected bool $_cacheMarkDanger = false;
+    protected bool $_cacheMarkWarning = false;
+    protected bool $_cacheMarkProtected = false;
+    protected string $_idProtected = '0';
+    protected string $_idUnprotected = '0';
+    protected string $_idProtectedKey = '0';
+    protected string $_idUnprotectedKey = '0';
+    protected bool $_markProtectedChecked = false;
+    protected ?bool $_cacheCurrentEntityUnlocked = null;
+    protected ?string $_data = null;
+    protected bool $_haveData = false;
+    protected string $_code = '';
+    protected bool $_haveCode = false;
+    protected array $_usedUpdate = array();
+    protected bool $_isNew = false;
 
     /**
      * Create instance of a node or derivative.
@@ -304,7 +113,7 @@ class Node implements nodeInterface
         if (self::checkNID($id, false, false)
         ) {
             $this->_id = $id;
-            $this->_metrology->addLog('New instance ' . get_class($this) . ' nid=' . $id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7fb8f6e3');
+            $this->_metrologyInstance->addLog('New instance ' . get_class($this) . ' nid=' . $id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7fb8f6e3');
         } elseif ($id == '0')
         {
             $this->_id = '0';
@@ -360,13 +169,13 @@ class Node implements nodeInterface
     protected function _initialisation($nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_cache = $nebuleInstance->getCacheInstance();
-        $this->_io = $nebuleInstance->getIoInstance();
-        $this->_crypto = $nebuleInstance->getCryptoInstance();
-        $this->_social = $nebuleInstance->getSocialInstance();
-        $this->_permitBuffer = $this->_configuration->getOptionAsBoolean('permitBufferIO');
+        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
+        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
+        $this->_cacheInstance = $nebuleInstance->getCacheInstance();
+        $this->_ioInstance = $nebuleInstance->getIoInstance();
+        $this->_cryptoInstance = $nebuleInstance->getCryptoInstance();
+        $this->_socialInstance = $nebuleInstance->getSocialInstance();
+        $this->_permitBuffer = $this->_configurationInstance->getOptionAsBoolean('permitBufferIO');
     }
 
     /**
@@ -395,8 +204,8 @@ class Node implements nodeInterface
         )
             return false;
 
-        if (!$this->_configuration->checkBooleanOptions(array('permitCreateObject'))) {
-            $this->_metrology->addLog('Create object no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '83a27d1e');
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitCreateObject'))) {
+            $this->_metrologyInstance->addLog('Create object no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '83a27d1e');
             $this->_id = '0';
             return false;
         }
@@ -540,7 +349,7 @@ class Node implements nodeInterface
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $algo = $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_HASH, 'all');
-        $this->_metrology->addLog('Object ' . $this->_id . ' hash = ' . $algo, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Object ' . $this->_id . ' hash = ' . $algo, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         if ($algo != '')
             return $algo;
@@ -572,7 +381,7 @@ class Node implements nodeInterface
      */
     public function checkObjectHaveLinks(): bool
     {
-        return $this->_io->checkLinkPresent($this->_id);
+        return $this->_ioInstance->checkLinkPresent($this->_id);
     }
 
     /**
@@ -630,7 +439,7 @@ class Node implements nodeInterface
         array_multisort($date, SORT_STRING, SORT_ASC, $links);
 
         // Fait un tri par pertinence sociale.
-        $this->_social->arraySocialFilter($links, $socialClass);
+        $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         // Mémorise le résultat dans le cache.
         //if ($this->_permitBuffer)
@@ -744,7 +553,7 @@ class Node implements nodeInterface
             return array();
 
         // Fait un tri par pertinence sociale.
-        $this->_social->arraySocialFilter($list, $socialClass);
+        $this->_socialInstance->arraySocialFilter($list, $socialClass);
 
         // Extrait les ID des objets de propriété.
         foreach ($list as $i => $l)
@@ -822,7 +631,7 @@ class Node implements nodeInterface
             return array();
 
         // Fait un tri par pertinence sociale.
-        $this->_social->arraySocialFilter($links, $socialClass);
+        $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         // Extrait le contenu des objets de propriété.
         foreach ($links as $i => $l)
@@ -947,7 +756,7 @@ class Node implements nodeInterface
             return false;
 
         $propertyOID = $this->_nebuleInstance->getNIDfromData($property);
-        $this->_io->setObject($propertyOID, $property);
+        $this->_ioInstance->setObject($propertyOID, $property);
         $propertyRID = $this->_nebuleInstance->getNIDfromData($type);
         $link = 'l>' . $this->_id . '>' . $propertyOID . '>' . $propertyRID;
         $newBlockLink = new blocLink($this->_nebuleInstance, 'new');
@@ -1192,10 +1001,10 @@ class Node implements nodeInterface
     public function getFullName(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (isset($this->_fullname)
-            && trim($this->_fullname) != ''
+        if (isset($this->_fullName)
+            && trim($this->_fullName) != ''
         )
-            return $this->_fullname;
+            return $this->_fullName;
 
         $fullname = $this->getName($socialClass);
 
@@ -1215,7 +1024,7 @@ class Node implements nodeInterface
         if ($surname != '')
             $fullname = $fullname . ' ' . $surname;
 
-        $this->_fullname = $fullname;
+        $this->_fullName = $fullname;
         return $fullname;
     }
 
@@ -1332,7 +1141,7 @@ class Node implements nodeInterface
         }
 
         // Fait un tri par pertinance sociale.
-        $this->_social->arraySocialFilter($links, $socialClass);
+        $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
@@ -1368,7 +1177,7 @@ class Node implements nodeInterface
         }
 
         // Fait un tri par pertinance sociale.
-        $this->_social->arraySocialFilter($links, $socialClass);
+        $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
@@ -1430,7 +1239,7 @@ class Node implements nodeInterface
         }
 
         // Fait un tri par pertinance sociale.
-        $this->_social->arraySocialFilter($links, $socialClass);
+        $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
@@ -1467,7 +1276,7 @@ class Node implements nodeInterface
         }
 
         // Fait un tri par pertinance sociale.
-        $this->_social->arraySocialFilter($links, $socialClass);
+        $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
@@ -1604,13 +1413,13 @@ class Node implements nodeInterface
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($list) == 0
-            && $this->_configuration->getOptionAsBoolean('permitListOtherHash')
+            && $this->_configurationInstance->getOptionAsBoolean('permitListOtherHash')
         ) {
             // A faire...
         }
 
         // Fait un tri par pertinance sociale.
-        $this->_social->arraySocialFilter($list);
+        $this->_socialInstance->arraySocialFilter($list);
 
         // Si pas marqué, tout va bien. Résultat négatif.
         if (sizeof($list) == 0)
@@ -1667,13 +1476,13 @@ class Node implements nodeInterface
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($list) == 0
-            && $this->_configuration->getOptionAsBoolean('permitListOtherHash')
+            && $this->_configurationInstance->getOptionAsBoolean('permitListOtherHash')
         ) {
             // A faire...
         }
 
         // Fait un tri par pertinance sociale.
-        $this->_social->arraySocialFilter($list);
+        $this->_socialInstance->arraySocialFilter($list);
 
         // Si pas marqué, tout va bien. Résultat négatif.
         if (sizeof($list) == 0)
@@ -2502,13 +2311,13 @@ class Node implements nodeInterface
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($list) == 0
-            && $this->_configuration->getOptionAsBoolean('permitListOtherHash')
+            && $this->_configurationInstance->getOptionAsBoolean('permitListOtherHash')
         ) {
             // A faire...
         }
 
         // Fait un tri par pertinance sociale.
-        $this->_social->arraySocialFilter($list, $socialClass);
+        $this->_socialInstance->arraySocialFilter($list, $socialClass);
 
         return $list;
     }
@@ -2752,36 +2561,36 @@ class Node implements nodeInterface
         if ($this->_haveData)
             return true;
 
-        if (!$this->_io->checkObjectPresent($this->_id))
+        if (!$this->_ioInstance->checkObjectPresent($this->_id))
             return false;
 
         // Si c'est l'objet 0, le supprime.
         if ($this->_id == '0' || !$this->checkNID($this->_id)) {
             $this->_data = null;
-            $this->_metrology->addLog('Delete object 0', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Delete object 0', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             $nid = '0';
-            $this->_io->unsetObject($nid);
+            $this->_ioInstance->unsetObject($nid);
             return false;
         }
 
-        if ($this->_configuration->getOptionAsBoolean('permitSynchronizeLink'))
+        if ($this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink'))
             $this->syncLinks(false);
 
-        if ($this->_configuration->getOptionAsBoolean('permitDeleteObjectOnUnknownHash'))
-            $hashAlgo = $this->_configuration->getOptionAsString('cryptoHashAlgorithm');
+        if ($this->_configurationInstance->getOptionAsBoolean('permitDeleteObjectOnUnknownHash'))
+            $hashAlgo = $this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm');
         else
             return false;
 
         // Extrait le contenu de l'objet, si possible.
-        $this->_metrology->addObjectRead(); // Metrologie.
-        $this->_data = $this->_io->getObject($this->_id);
+        $this->_metrologyInstance->addObjectRead(); // Metrologie.
+        $this->_data = $this->_ioInstance->getObject($this->_id);
         if ($this->_data === false) {
-            $this->_metrology->addLog('Cant read object ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Cant read object ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_data = null;
             return false;
         }
-        $limit = $this->_configuration->getOptionUntyped('DEFAULT_IO_READ_MAX_DATA');
-        $this->_metrology->addLog('Object size ' . $this->_id . ' ' . strlen($this->_data) . '/' . $limit, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $limit = $this->_configurationInstance->getOptionUntyped('DEFAULT_IO_READ_MAX_DATA');
+        $this->_metrologyInstance->addLog('Object size ' . $this->_id . ' ' . strlen($this->_data) . '/' . $limit, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         // Vérifie la taille.
         if (strlen($this->_data) > $limit) {
@@ -2793,22 +2602,22 @@ class Node implements nodeInterface
         $hash = $this->_nebuleInstance->getNIDfromData($this->_data, $hashAlgo);
         if ($hash == $this->_id) // Si l'objet est valide.
         {
-            $this->_metrology->addObjectVerify(); // Metrologie.
+            $this->_metrologyInstance->addObjectVerify(); // Metrologie.
             $this->_haveData = true;
             return true;
         }
 
         // Si la vérification est désactivée, quitte.
-        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash')) {
-            $this->_metrology->addLog('Warning - Invalid object hash ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
+            $this->_metrologyInstance->addLog('Warning - Invalid object hash ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_haveData = true;
             return true;
         }
 
         // Sinon l'objet est présent mais invalide, le supprime.
         $this->_data = null;
-        $this->_metrology->addLog('Delete unconsistency object ' . $this->_id . ' ' . $hashAlgo . ':' . $hash, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
-        $this->_io->unsetObject($this->_id);
+        $this->_metrologyInstance->addLog('Delete unconsistency object ' . $this->_id . ' ' . $hashAlgo . ':' . $hash, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+        $this->_ioInstance->unsetObject($this->_id);
         return false;
     }
 
@@ -2855,42 +2664,42 @@ class Node implements nodeInterface
         if ($this->_haveData)
             return $this->_data;
 
-        if (!$this->_io->checkObjectPresent($this->_id))
+        if (!$this->_ioInstance->checkObjectPresent($this->_id))
             return null;
 
         // Si c'est l'objet 0, le supprime.
         if ($this->_id == '0' || !$this->checkNID($this->_id)) {
             $this->_data = null;
-            $this->_metrology->addLog('Delete object 0', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'f8873320');
+            $this->_metrologyInstance->addLog('Delete object 0', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'f8873320');
             $nid = '0';
-            $this->_io->unsetObject($nid);
+            $this->_ioInstance->unsetObject($nid);
             return null;
         }
 
-        if ($this->_configuration->getOptionAsBoolean('permitSynchronizeLink'))
+        if ($this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink'))
             $this->syncLinks(false);
 
-        if ($this->_configuration->getOptionAsBoolean('permitDeleteObjectOnUnknownHash'))
-            $hashAlgo = $this->_configuration->getOptionAsString('cryptoHashAlgorithm');
+        if ($this->_configurationInstance->getOptionAsBoolean('permitDeleteObjectOnUnknownHash'))
+            $hashAlgo = $this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm');
         else
             return null;
 
         // Prépare la limite de lecture.
-        $maxLimit = $this->_configuration->getOptionAsInteger('ioReadMaxData');
+        $maxLimit = $this->_configurationInstance->getOptionAsInteger('ioReadMaxData');
         if ($limit == 0
             || $limit > $maxLimit
         )
             $limit = $maxLimit;
 
         // Extrait le contenu de l'objet, si possible.
-        $this->_metrology->addObjectRead(); // Metrologie.
-        $this->_data = $this->_io->getObject($this->_id, $limit);
+        $this->_metrologyInstance->addObjectRead(); // Metrologie.
+        $this->_data = $this->_ioInstance->getObject($this->_id, $limit);
         if ($this->_data === false) {
-            $this->_metrology->addLog('Cant read object ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Cant read object ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_data = null;
             return null;
         }
-        $this->_metrology->addLog('Object read size ' . $this->_id . ' ' . strlen($this->_data) . '/' . $maxLimit, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Object read size ' . $this->_id . ' ' . strlen($this->_data) . '/' . $maxLimit, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         // Vérifie la taille. Si trop grand mais qu'une limite est imposé, quitte sans vérifier l'empreinte.
         if (strlen($this->_data) >= $limit
@@ -2904,22 +2713,22 @@ class Node implements nodeInterface
         $hash = $this->_nebuleInstance->getNIDfromData($this->_data, $hashAlgo);
         if ($hash == $this->_id) // Si l'objet est valide.
         {
-            $this->_metrology->addObjectVerify(); // Metrologie.
+            $this->_metrologyInstance->addObjectVerify(); // Metrologie.
             $this->_haveData = true;
             return $this->_data;
         }
 
         // Si la vérification est désactivée, quitte.
-        if (!$this->_configuration->getOptionAsBoolean('permitCheckObjectHash')) {
-            $this->_metrology->addLog('Warning - Invalid object hash ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
+            $this->_metrologyInstance->addLog('Warning - Invalid object hash ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_haveData = true;
             return $this->_data;
         }
 
         // Sinon l'objet est présent mais invalide, le supprime.
         $this->_data = null;
-        $this->_metrology->addLog('Delete unconsistency object ' . $this->_id . ' ' . $hashAlgo . ':' . $hash, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
-        $this->_io->unsetObject($this->_id);
+        $this->_metrologyInstance->addLog('Delete unconsistency object ' . $this->_id . ' ' . $hashAlgo . ':' . $hash, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+        $this->_ioInstance->unsetObject($this->_id);
         return null;
     }
 
@@ -2954,15 +2763,15 @@ class Node implements nodeInterface
 
         $permitTroncate = false; // @todo à retirer.
 
-        $this->_metrology->addLog('Get protected content : ' . $this->_idUnprotected, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Get protected content : ' . $this->_idUnprotected, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         // Lit la clé chiffrée.
-        $codeKey = $this->_io->getObject($this->_idProtectedKey, 0);
+        $codeKey = $this->_ioInstance->getObject($this->_idProtectedKey, 0);
         // Calcul l'empreinte de la clé chiffrée.
         $hash = $this->_nebuleInstance->getNIDfromData($codeKey);
         if ($hash != $this->_idProtectedKey) {
-            $this->_metrology->addLog('Error get protected key content : ' . $this->_idProtectedKey, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-            $this->_metrology->addLog('Protected key content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Error get protected key content : ' . $this->_idProtectedKey, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Protected key content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             return null;
         }
 
@@ -2971,27 +2780,27 @@ class Node implements nodeInterface
         // Calcul l'empreinte de la clé.
         $hash = $this->_nebuleInstance->getNIDfromData($key);
         if ($hash != $this->_idUnprotectedKey) {
-            $this->_metrology->addLog('Error get unprotected key content : ' . $this->_idUnprotectedKey, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-            $this->_metrology->addLog('Unprotected key content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Error get unprotected key content : ' . $this->_idUnprotectedKey, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Unprotected key content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             return null;
         }
 
         // Lit l'objet chiffré.
-        $code = $this->_io->getObject($this->_idProtected, $limit);
+        $code = $this->_ioInstance->getObject($this->_idProtected, $limit);
         // Calcul l'empreinte des données.
         $hash = $this->_nebuleInstance->getNIDfromData($code);
         if ($hash != $this->_idProtected) {
-            $this->_metrology->addLog('Error get protected data content : ' . $this->_idProtected, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-            $this->_metrology->addLog('Protected data content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Error get protected data content : ' . $this->_idProtected, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Protected data content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             return null;
         }
 
-        $data = $this->_crypto->decrypt($code, $this->_configuration->getOptionAsString('cryptoSymmetricAlgorithm'), $key);
+        $data = $this->_cryptoInstance->decrypt($code, $this->_configurationInstance->getOptionAsString('cryptoSymmetricAlgorithm'), $key);
         // Calcul l'empreinte des données.
         $hash = $this->_nebuleInstance->getNIDfromData($data);
         if ($hash != $this->_idUnprotected) {
-            $this->_metrology->addLog('Error get unprotected data content : ' . $this->_idUnprotected, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-            $this->_metrology->addLog('Unprotected data content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Error get unprotected data content : ' . $this->_idUnprotected, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Unprotected data content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             return null;
         }
 
@@ -3011,7 +2820,7 @@ class Node implements nodeInterface
     {
         $this->_data = null;
         $this->_haveData = false;
-        $this->_code = null;
+        $this->_code = '';
         $this->_haveCode = false;
     }
 
@@ -3025,7 +2834,7 @@ class Node implements nodeInterface
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($id == ''
-            || !$this->_io->checkObjectPresent($id)
+            || !$this->_ioInstance->checkObjectPresent($id)
         )
             return '';
 
@@ -3034,7 +2843,7 @@ class Node implements nodeInterface
         if (extension_loaded('mbstring'))
             $text = mb_convert_encoding($text, 'UTF-8');
         else
-            $this->_metrology->addLog('mbstring extension not installed or activated!', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c2becfad');
+            $this->_metrologyInstance->addLog('mbstring extension not installed or activated!', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c2becfad');
 
         unset($instance);
         return $text;
@@ -3049,11 +2858,11 @@ class Node implements nodeInterface
     public function readOneLineAsText(int $limit = 0): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_io->checkObjectPresent($this->_id))
+        if (!$this->_ioInstance->checkObjectPresent($this->_id))
             return '';
 
         if ($limit == 0)
-            $limit = $this->_configuration->getOptionUntyped('ioReadMaxData');
+            $limit = $this->_configurationInstance->getOptionUntyped('ioReadMaxData');
         if ($limit < 4)
             $limit = 4;
 
@@ -3061,7 +2870,7 @@ class Node implements nodeInterface
         if (extension_loaded('mbstring'))
             $text = mb_convert_encoding($text, 'UTF-8');
         else
-            $this->_metrology->addLog('mbstring extension not installed or activated!', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c2becfad');
+            $this->_metrologyInstance->addLog('mbstring extension not installed or activated!', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c2becfad');
 
         if (strlen($text) > $limit)
             $text = substr($text, 0, ($limit - 3)) . '...';
@@ -3078,7 +2887,7 @@ class Node implements nodeInterface
     public function readAsText(int $limit = 0): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_io->checkObjectPresent($this->_id))
+        if (!$this->_ioInstance->checkObjectPresent($this->_id))
             return '';
         if ($limit < 4)
             $limit = 4;
@@ -3087,7 +2896,7 @@ class Node implements nodeInterface
         if (extension_loaded('mbstring'))
             $text = mb_convert_encoding($text, 'UTF-8');
         else
-            $this->_metrology->addLog('mbstring extension not installed or activated!', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c2becfad');
+            $this->_metrologyInstance->addLog('mbstring extension not installed or activated!', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c2becfad');
 
         if (strlen($text) > $limit)
             $text = substr($text, 0, ($limit - 3)) . '...';
@@ -3106,21 +2915,21 @@ class Node implements nodeInterface
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_id == '0'
-            || !$this->_io->checkLinkPresent($this->_id)
+            || !$this->_ioInstance->checkLinkPresent($this->_id)
         )
             return;
 
-        if (!$this->_configuration->getOptionAsBoolean('permitListInvalidLinks'))
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitListInvalidLinks'))
             $withInvalidLinks = false;
 
-        $lines = $this->_io->getBlockLinks($this->_id, '', 0);
+        $lines = $this->_ioInstance->getBlockLinks($this->_id, '', 0);
         if (sizeof($lines) == 0)
             return;
 
         foreach ($lines as $line)
         {
 //$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK line=' . $line, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
-            $bloc = $this->_cache->newBlockLink($line, Cache::TYPE_BLOCLINK);
+            $bloc = $this->_cacheInstance->newBlockLink($line, Cache::TYPE_BLOCLINK);
             if ($bloc->getValidStructure()
                 && ( $bloc->getValid() || $withInvalidLinks )
             )
@@ -3131,7 +2940,7 @@ class Node implements nodeInterface
                 $links = array_merge($links, $newLinks);
             }
             else
-                $this->_cache->unsetCache($line, Cache::TYPE_BLOCLINK);
+                $this->_cacheInstance->unsetCache($line, Cache::TYPE_BLOCLINK);
         }
     }
 
@@ -3195,7 +3004,7 @@ class Node implements nodeInterface
     public function getLinksOnFields(string $eid = '', string $chr = '', string $req = '', string $nid1 = '', string $nid2 = '', string $nid3 = '', string $nid4 = ''): array
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_io->checkLinkPresent($this->_id))
+        if (!$this->_ioInstance->checkLinkPresent($this->_id))
             return array();
 
         $links = array();
@@ -3258,7 +3067,7 @@ class Node implements nodeInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $level++;
         $links = array();
-        if ($level < $this->_configuration->getOptionAsInteger('linkMaxFollowedUpdates'))
+        if ($level < $this->_configurationInstance->getOptionAsInteger('linkMaxFollowedUpdates'))
         {
             $filter = array(
                 'bl/rl/req' => 'u',
@@ -3267,7 +3076,7 @@ class Node implements nodeInterface
                 'bl/rl/nid4' => '',
             );
             $this->getLinks($links, $filter, false);
-            $this->_social->arraySocialFilter($links, $social);
+            $this->_socialInstance->arraySocialFilter($links, $social);
             $this->_arrayDateSort($links);
         }
 
@@ -3282,12 +3091,12 @@ class Node implements nodeInterface
             $exclude[$nid2] = null;
         }
 
-        if (!$present || $this->_io->checkObjectPresent($nid))
+        if (!$present || $this->_ioInstance->checkObjectPresent($nid))
             return $nid;
         elseif ($synchro) {
-            $instance = $this->_cache->newNode($nid);
+            $instance = $this->_cacheInstance->newNode($nid);
             $instance->syncObject();
-            if ($this->_io->checkObjectPresent($nid))
+            if ($this->_ioInstance->checkObjectPresent($nid))
                 return $nid;
         }
         return '';
@@ -3344,7 +3153,7 @@ class Node implements nodeInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $links = $this->_getReferencedByLinks($reference);
-        $this->_social->arraySocialFilter($links, $socialClass);
+        $this->_socialInstance->arraySocialFilter($links, $socialClass);
         return $links;
     }
 
@@ -3354,7 +3163,7 @@ class Node implements nodeInterface
 
         $links = $this->getReferencedLinks($reference, $socialClass);
 
-        $this->_social->arraySocialFilter($links, $socialClass);
+        $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         if (sizeof($links) == 0)
             return array($this->_id);
@@ -3446,7 +3255,7 @@ class Node implements nodeInterface
         if (sizeof($links) == 0)
             return false;
 
-        $this->_social->arraySocialFilter($links, $socialClass);
+        $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         if (sizeof($links) == 0)
             return false;
@@ -3473,7 +3282,7 @@ class Node implements nodeInterface
             return false;
 
         // Fait un tri par pertinence sociale.
-        $this->_social->arraySocialFilter($links, $socialClass);
+        $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         if (sizeof($links) == 0)
             return false;
@@ -3499,7 +3308,7 @@ class Node implements nodeInterface
             return $this->_id;
 
         // Fait un tri par pertinence sociale.
-        $this->_social->arraySocialFilter($links, $socialClass);
+        $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         // Extrait le dernier de la liste.
         $link = end($links);
@@ -3526,11 +3335,11 @@ class Node implements nodeInterface
             $hardSync = false;
 
         // Vérifie que l'objet ne soit pas déjà présent.
-        if ($this->_io->checkObjectPresent($this->_id))
+        if ($this->_ioInstance->checkObjectPresent($this->_id))
             return true;
 
         // Vérifie si autorisé.
-        if (!$this->_configuration->checkBooleanOptions(array('permitWriteObject','permitSynchronizeObject')))
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWriteObject','permitSynchronizeObject')))
             return false;
 
         // Liste les liens à la recherche de la propriété de localisation.
@@ -3544,7 +3353,7 @@ class Node implements nodeInterface
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($links) == 0
-            && $this->_configuration->getOptionAsBoolean('permitListOtherHash')
+            && $this->_configurationInstance->getOptionAsBoolean('permitListOtherHash')
         ) {
             // A faire...
         }
@@ -3562,9 +3371,9 @@ class Node implements nodeInterface
         // Synchronisation
         foreach ($localisations as $localisation) {
             // Lecture de l'objet.
-            $data = $this->_io->getObject($this->_id, 0, $localisation);
+            $data = $this->_ioInstance->getObject($this->_id, 0, $localisation);
             // Ecriture de l'objet.
-            $this->_io->setObject($this->_id, $data);
+            $this->_ioInstance->setObject($this->_id, $data);
         }
 
         unset($localisations, $localisation);
@@ -3590,7 +3399,7 @@ class Node implements nodeInterface
         $this->syncLinkAntiLoop = true;
 
         // Vérifie si autorisé.
-        if (!$this->_configuration->checkBooleanOptions(array('permitWriteLink','permitSynchronizeLink')))
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWriteLink','permitSynchronizeLink')))
             return false;
 
         // Liste les liens à la recherche de la propriété de localisation.
@@ -3620,8 +3429,8 @@ class Node implements nodeInterface
 
         // Synchronisation
         foreach ($localisations as $localisation) {
-            $links = $this->_io->getBlockLinks($this->_id, $localisation);
-            $this->_metrology->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $links = $this->_ioInstance->getBlockLinks($this->_id, $localisation);
+            $this->_metrologyInstance->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
             foreach ($links as $link) {
                 $linkInstance = $this->_nebuleInstance->newBlockLink($link);
@@ -3662,23 +3471,23 @@ class Node implements nodeInterface
             // Vérifie si l'entité signataire du lien est l'entité courante.
             if ($link->getParsed()['bs/rs1/eid'] != $entity) {
                 // Si ce n'est pas l'entité courante, quitte.
-                $this->_metrology->addAction('delobj', $id, false);
+                $this->_metrologyInstance->addAction('delobj', $id, false);
                 $deleteObject = false;
             }
         }
 
         if ($deleteObject) {
             // Supprime l'objet.
-            $r1 = $this->_io->unsetObject($id); // FIXME declare vars r1 r2
+            $r1 = $this->_ioInstance->unsetObject($id); // FIXME declare vars r1 r2
             $r2 = true;
 
             // Métrologie.
-            $this->_metrology->addAction('delobj', $id, $r1);
+            $this->_metrologyInstance->addAction('delobj', $id, $r1);
         }
 
         // Si protégé.
         if ($protected) {
-            $this->_metrology->addLog('Delete protected object ' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Delete protected object ' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             $id = $this->_idProtected;
 
             $this->writeLink('d>' . $this->_id);
@@ -3691,17 +3500,17 @@ class Node implements nodeInterface
                 // Vérifie si l'entité signataire du lien est l'entité courante.
                 if ($link->getParsed()['bs/rs1/eid'] != $entity) {
                     // Si ce n'est pas l'entité courante, quitte.
-                    $this->_metrology->addAction('delobj', $id, false);
+                    $this->_metrologyInstance->addAction('delobj', $id, false);
                     $deleteObject = false;
                 }
             }
 
             if ($deleteObject) {
                 // Supprime l'objet.
-                $r2 = $this->_io->unsetObject($id);
+                $r2 = $this->_ioInstance->unsetObject($id);
 
                 // Métrologie.
-                $this->_metrology->addAction('delobj', $id, $r2);
+                $this->_metrologyInstance->addAction('delobj', $id, $r2);
             }
         }
         unset($links, $entity, $link, $deleteObject);
@@ -3733,11 +3542,11 @@ class Node implements nodeInterface
 
         unset($links, $entity, $link);
 
-        $r = $this->_io->unsetObject($this->_id);
+        $r = $this->_ioInstance->unsetObject($this->_id);
 
-        $this->_metrology->addAction('delobj', $this->_id, $r);
+        $this->_metrologyInstance->addAction('delobj', $this->_id, $r);
 
-        $this->_io->linksDelect($this->_id);
+        $this->_ioInstance->linksDelect($this->_id);
 
         return $r;
     }
@@ -3753,9 +3562,9 @@ class Node implements nodeInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->writeLink('d>' . $this->_id);
 
-        $r = $this->_io->unsetObject($this->_id);
+        $r = $this->_ioInstance->unsetObject($this->_id);
 
-        $this->_metrology->addAction('delobj', $this->_id, $r);
+        $this->_metrologyInstance->addAction('delobj', $this->_id, $r);
 
         return $r;
     }
@@ -3768,10 +3577,10 @@ class Node implements nodeInterface
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Supprime l'objet.
-        $this->_io->unsetObject($this->_id);
+        $this->_ioInstance->unsetObject($this->_id);
 
         // Supprime les liens de l'objet.
-        $this->_io->flushLinks($this->_id);
+        $this->_ioInstance->flushLinks($this->_id);
     }
 
     /**
@@ -3800,26 +3609,26 @@ class Node implements nodeInterface
     public function write(): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configuration->checkBooleanOptions(array('permitWrite','permitWriteObject'))) {
-            $this->_metrology->addLog('Write object no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite','permitWriteObject'))) {
+            $this->_metrologyInstance->addLog('Write object no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             return false;
         } // @TODO
 
         // Si protégé.
         if ($this->_cacheMarkProtected) {
-            $this->_metrology->addAction('addobj', $this->_id, false);
-            $this->_metrology->addLog('Write objet error, protected.', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addAction('addobj', $this->_id, false);
+            $this->_metrologyInstance->addLog('Write objet error, protected.', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             return false;
         }
 
         // Si pas de données.
         if (!$this->_haveData) {
-            $this->_metrology->addAction('addobj', '0', false);
-            $this->_metrology->addLog('Write objet error, no data.', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addAction('addobj', '0', false);
+            $this->_metrologyInstance->addLog('Write objet error, no data.', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             return false;
         }
 
-        $ok = $this->_io->setObject($this->_id, $this->_data);
+        $ok = $this->_ioInstance->setObject($this->_id, $this->_data);
 
         // vide les données.
         if (strlen($this->_data) > 1000000)
@@ -3828,8 +3637,8 @@ class Node implements nodeInterface
             $this->_haveData = false;
         }
 
-        $this->_metrology->addAction('addobj', $this->_id, $ok);
-        $this->_metrology->addLog('OK write objet ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addAction('addobj', $this->_id, $ok);
+        $this->_metrologyInstance->addLog('OK write objet ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         return $ok;
     }
@@ -3837,8 +3646,8 @@ class Node implements nodeInterface
     public function writeLink(string $rl, bool $obfuscated = false, string $date = ''): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configuration->checkBooleanOptions(array('unlocked','permitWrite','permitWriteLink'))) {
-            $this->_metrology->addLog('Write link not authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+        if (!$this->_configurationInstance->checkBooleanOptions(array('unlocked','permitWrite','permitWriteLink'))) {
+            $this->_metrologyInstance->addLog('Write link not authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             return false;
         }
 

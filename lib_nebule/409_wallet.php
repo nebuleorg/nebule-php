@@ -65,7 +65,7 @@ class Wallet extends Entity implements nodeInterface
      */
     protected function _localConstruct(): void
     {
-        if ($this->_configuration->getOptionAsBoolean('permitCurrency'))
+        if ($this->_configurationInstance->getOptionAsBoolean('permitCurrency'))
         {
             $this->_id = '0';
             $this->_isNew = false;
@@ -89,14 +89,14 @@ class Wallet extends Entity implements nodeInterface
      */
     private function _createNewWallet(array $param, bool $protected = false, bool $obfuscated = false): bool
     {
-        $this->_metrology->addLog('Ask create wallet', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+        $this->_metrologyInstance->addLog('Ask create wallet', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         // Vérifie que l'on puisse créer un sac de jetons.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitCurrency')
-            && $this->_configuration->getOptionAsBoolean('permitWriteCurrency')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitCurrency')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteCurrency')
             && $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             // Génère la nouveau sac de jetons.
@@ -104,12 +104,12 @@ class Wallet extends Entity implements nodeInterface
 
             // Si la génération s'est mal passée.
             if ($this->_id == '0') {
-                $this->_metrology->addLog('Create wallet error on generation', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+                $this->_metrologyInstance->addLog('Create wallet error on generation', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
                 $this->_id = '0';
                 return false;
             }
         } else {
-            $this->_metrology->addLog('Create wallet error not autorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Create wallet error not autorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
             $this->_id = '0';
             return false;
         }

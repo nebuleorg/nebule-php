@@ -548,7 +548,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
      *
      * @var array
      */
-    protected $_neededObjectsList = array(
+    protected array $_neededObjectsList = array(
         self::DEFAULT_LOGO_MENUS,
         self::DEFAULT_ICON_ALPHA_COLOR,
         self::DEFAULT_ICON_LC,

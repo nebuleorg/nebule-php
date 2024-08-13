@@ -4,6 +4,9 @@ namespace Nebule\Application\Option;
 use Nebule\Library\Configuration;
 use Nebule\Library\DisplayColor;
 use Nebule\Library\DisplayItem;
+use Nebule\Library\DisplayList;
+use Nebule\Library\DisplayObject;
+use Nebule\Library\DisplayTitle;
 use Nebule\Library\Entity;
 use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
@@ -65,11 +68,22 @@ class Application extends Applications
  */
 class Display extends Displays
 {
-    // Logo de l'application.
-    const DEFAULT_LOGO_APP0 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfgDA0VKApKb6LRAAAEwklEQVRo3u2Zb2hbVRTAz0uWpFvSZmYlbdpXaiZz1jVtYxO2NYRMq5S1tJQNHGwy/FLwSwduUMSgzj/ph4IdpiDC8EuRDZVJXe1mYJ3Emq4l0TRLaofBxrF0GSFGEhtsmmXxQ7HvvvdukpeXp1bs/XYP557ze+/de+455xFwHv7VIQLYBvjPAJAye7uzb1hH5NUgYFjn7LO3kzLuVglum/C45ozR1CYmAGLxi07r7RzWlK1lwFKtAsjmXAt295WIYAC3jh3SUTM8AuX+rzHnP/yFQAC5t+jz1VQ4KiZUSrlcIgHIZFKpeCKbI9UKOcP428Vt7+CzcRTyp7TUTCytkO55bPsY/o0Ao3q+xrmsLLoJ
-b/R0Gvg/37Tn+akyNmGlePZE8z62PBzxhjwrnthi8n4aoE52oMpQbajXa0kNU7PT4Fd2fPp7ltcbqBR//9K+x+my9YzD/ZHvWhS/olv9SmuXUSqhS4O/tH+SH6EAgP8k8+knZwdn7q4VfqWNFWPm3g66LBDUXcqnL4Yj+b49Gv0AwpHBz1/zJh4W++qJh5eXQ8vG2qpKSqbeY1aMB0sCGNWffBadz/ufufRDguvW8yU/9L6gImsoyd46ZdLxoOgnoMd8atz0dE7xOAE9z2HPD/2OEKE3Ht79vJ+Pe4DOqXk/Tn5Id1yDBThjxKmHI5YJvlHAMhHGXsmoJxGVbpjacMrW6+lHfAHSj6zXcXJTG5WybAIMNYsxqc7k7Pi9ciL9+L3JWczOJ4aaWQCt9WzF9czgTLmXzeDMeoYtpbxtArhCsThTzeEuFnaKj7trDjdTFou7Qqw4cDO6e62pZtdOVPHsV8FU+RduYvWUke7+otPqZ72BHLx+236Dvv/zxfzSxrUoehZWU/SMkpYPvLd0J0TNv
-CGhkg7UUjhKT2hpADlAT4JnRSgA1JKYyBXKiFRKZFlMMIAY3gMGQI4k1otJoQBQS3J5QQAJkkzcTwsFgFqSSLZ2VpxBoladTCgnqKVMpiBACgk8B6qEAkAtpVIFAeJI1mOoFgoAtRRPFAAgIIscUkO9YACIpWyOyAdAgK2FVFNzvVYoANQSqba1EDiAjfoeLbBJTbdaCPfdarRgUcgHLCjC5m04rBs4grYXAACqMpeXywd4v2N/AzrftbOpZvcf01HGG+htYboH6DI2VpTrvrGii5VrVqtMWtYn+OYOe7FUMmYuF2DMzCzVAAB8KyyAkUAW03nq7TjdUI770w3MMm3jJIwEWADhtGsBZ8J2VMY7XMtEtqM4uWshnMYcQ7sbp0xqnP18AZz97IKd6QkBuBKZw1YyB3XTPbyaEz0HdfjSDO0g5inPR/Wv9tHLM8tEKQWKTOTsp7u/cPWst4Tq2PHArNhbh3yImpef/DXqS3Ldel+eePoJeqvm1LdbtEGxlVs0QjSpAAJB3k2qf6ZNl7dHtF
-nfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8usbXeaHrnRfoqLraLngIAgI+XAj/VishaEQEQi3/w9flFnNZMTPrbRosjm/tu4dzkOTcXAIL7r1tSNtTcWu8KWf25vMZsOpPWtzISCHOuK4ntf8f/e4A/AcO8sjeKv7mpAAAAAElFTkSuQmCC';
+    const DEFAULT_LOGO_APP0 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAAAAmJLR0QA/4ePzL8AAAA
+JcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfgDA0VKApKb6LRAAAEwklEQVRo3u2Zb2hbVRTAz0uWpFvSZmYlbdpXaiZz1jVtYxO2NYRMq5S1tJQNHGwy/FL
+wSwduUMSgzj/ph4IdpiDC8EuRDZVJXe1mYJ3Emq4l0TRLaofBxrF0GSFGEhtsmmXxQ7HvvvdukpeXp1bs/XYP557ze+/de+455xFwHv7VIQLYBvjPAJAye7u
+zb1hH5NUgYFjn7LO3kzLuVglum/C45ozR1CYmAGLxi07r7RzWlK1lwFKtAsjmXAt295WIYAC3jh3SUTM8AuX+rzHnP/yFQAC5t+jz1VQ4KiZUSrlcIgHIZFK
+peCKbI9UKOcP428Vt7+CzcRTyp7TUTCytkO55bPsY/o0Ao3q+xrmsLLoJb/R0Gvg/37Tn+akyNmGlePZE8z62PBzxhjwrnthi8n4aoE52oMpQbajXa0kNU7P
+T4Fd2fPp7ltcbqBR//9K+x+my9YzD/ZHvWhS/olv9SmuXUSqhS4O/tH+SH6EAgP8k8+knZwdn7q4VfqWNFWPm3g66LBDUXcqnL4Yj+b49Gv0AwpHBz1/zJh4
+W++qJh5eXQ8vG2qpKSqbeY1aMB0sCGNWffBadz/ufufRDguvW8yU/9L6gImsoyd46ZdLxoOgnoMd8atz0dE7xOAE9z2HPD/2OEKE3Ht79vJ+Pe4DOqXk/Tn5
+Id1yDBThjxKmHI5YJvlHAMhHGXsmoJxGVbpjacMrW6+lHfAHSj6zXcXJTG5WybAIMNYsxqc7k7Pi9ciL9+L3JWczOJ4aaWQCt9WzF9czgTLmXzeDMeoYtpbx
+tArhCsThTzeEuFnaKj7trDjdTFou7Qqw4cDO6e62pZtdOVPHsV8FU+RduYvWUke7+otPqZ72BHLx+236Dvv/zxfzSxrUoehZWU/SMkpYPvLd0J0TNvCGhkg7
+UUjhKT2hpADlAT4JnRSgA1JKYyBXKiFRKZFlMMIAY3gMGQI4k1otJoQBQS3J5QQAJkkzcTwsFgFqSSLZ2VpxBoladTCgnqKVMpiBACgk8B6qEAkAtpVIFAeJ
+I1mOoFgoAtRRPFAAgIIscUkO9YACIpWyOyAdAgK2FVFNzvVYoANQSqba1EDiAjfoeLbBJTbdaCPfdarRgUcgHLCjC5m04rBs4grYXAACqMpeXywd4v2N/Azr
+ftbOpZvcf01HGG+htYboH6DI2VpTrvrGii5VrVqtMWtYn+OYOe7FUMmYuF2DMzCzVAAB8KyyAkUAW03nq7TjdUI770w3MMm3jJIwEWADhtGsBZ8J2VMY7XMt
+EtqM4uWshnMYcQ7sbp0xqnP18AZz97IKd6QkBuBKZw1YyB3XTPbyaEz0HdfjSDO0g5inPR/Wv9tHLM8tEKQWKTOTsp7u/cPWst4Tq2PHArNhbh3yImpef/DX
+qS3Ldel+eePoJeqvm1LdbtEGxlVs0QjSpAAJB3k2qf6ZNl7dHtFnfBpXJw/v5ub9wNd/WKykpxR8fLoPLyu1m9Q5+y378WSKm/7DIZOmhR1CAOT+9f/bmZ+8
+usbXeaHrnRfoqLraLngIAgI+XAj/VishaEQEQi3/w9flFnNZMTPrbRosjm/tu4dzkOTcXAIL7r1tSNtTcWu8KWf25vMZsOpPWtzISCHOuK4ntf8f/e4A/AcO
+8sjeKv7mpAAAAAElFTkSuQmCC';
     const DEFAULT_LOGO_MENU = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABAElEQVR42u3XvQmEQBC
 G4e8OYxuwEvvYMu1DBDESw2VRtwLB0L30ghMM5Eb0nVTx52Fm9Hs555IeXG89vAAAAAAAAAAAAAAAAAAAAAB4YmVnXMQ5Z/LwVVXZd4DVy591b3YAAAAAAID
 1p8jy3tlVHoQRAAAAsgBZgCzADgAAAADIAmQBRgAAAMgCZAGyADsAAAAAIAuQBRgBAAC4fhY4UkVRqCzLQ+eGENS27b06IMaopmm0LMvuOdu2yXuvYRjuOQL
@@ -152,34 +166,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                 &nbsp;
             </div>
             <div class="header-center">
-                <div>
-                    <?php
-                    if ($username != $userID) {
-                        echo $username;
-                    } else {
-                        echo '/';
-                    }
-                    echo '<br />' . $userID . '<br />';
-
-                    if ($this->_unlocked) {
-                        echo '&gt;&nbsp;';
-                        $this->_applicationInstance->getDisplayInstance()->displayHypertextLink('Lock', '?' . References::COMMAND_AUTH_ENTITY_LOGOUT . '&' . References::COMMAND_FLUSH);
-                        echo '&nbsp;&lt;';
-                    } else {
-                        ?>
-
-                        <form method="post"
-                              action="?<?php echo References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getInstanceEntity() . '&' . References::COMMAND_SWITCH_TO_ENTITY; ?>">
-                            <input type="hidden" name="id" value="<?php echo $this->_nebuleInstance->getInstanceEntity(); ?>">
-                            <label>
-                                <input type="password" name="pwd">
-                            </label>
-                            <input type="submit" value="Unlock">
-                        </form>
-                        <?php
-                    }
-                    ?>
-                </div>
+                &nbsp;
             </div>
         </div>
         <div class="layout-footer footer<?php if ($this->_unlocked) {
@@ -1084,14 +1071,15 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
      */
     private function _displayOptions()
     {
-        // Titre
-        echo $this->getDisplayTitle_DEPRECATED('Options', null, false);
+        $instanceTitle = new DisplayTitle($this->_applicationInstance);
+        $instanceTitle->setTitle('Options');
+        $instanceTitle->setIcon(null);
+        $instanceTitle->setEnableEntity(true);
+        $instanceTitle->display();
         ?>
 
         <div id="options">
             <?php
-            $listOptions = Configuration::getListOptionsName();
-            $listCategoriesOptions = Configuration::getListCategoriesOptions();
             $listOptionsCategory = Configuration::getListOptionsCategory();
             $listOptionsType = Configuration::getListOptionsType();
             $listOptionsWritable = Configuration::getListOptionsWritable();
@@ -1100,18 +1088,17 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
             $listOptionsDescription = Configuration::getListOptionsDescription();
 
             // Liste toutes les catégories.
-            foreach ($listCategoriesOptions as $optionCategory) {
-                ?>
+            foreach (Configuration::OPTIONS_CATEGORIES as $optionCategory) {
+                $instanceTitle->setTitle($optionCategory);
+                $icon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_LL);
+                $instanceTitle->setIcon($icon);
+                $instanceTitle->setEnableEntity(false);
+                $instanceTitle->display();
 
-                <h2>&gt; <?php echo $optionCategory; ?></h2>
-                <?php
-                // Liste toutes lies options de la catégorie.
-                foreach ($listOptions as $optionName) {
-                    // Vérifie que l'option est dans la catégorie en cours.
+                foreach (Configuration::OPTIONS_LIST as $optionName) {
                     if ($listOptionsCategory[$optionName] != $optionCategory)
                         continue;
 
-                    // Extrait les propriétés de l'option.
                     $optionValue = $this->_configurationInstance->getOptionUntyped($optionName);
                     $optionID = $this->_nebuleInstance->newObject($this->_nebuleInstance->getNIDfromData($optionName, 'sha2.256'));
                     $optionValueDisplay = (string)$optionValue;
@@ -1155,6 +1142,25 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                     $isDefault = true;
                     if ($optionValue != $optionDefaultValue)
                         $isDefault = false;
+
+
+                    $instanceList = new DisplayList($this->_applicationInstance);
+                    $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+                    $instanceList->setRatio(DisplayItem::RATIO_SHORT);
+                    $instanceOption = new DisplayObject($this->_applicationInstance);
+                    $instanceOption->setEnableNID(false);
+                    $instanceID = $this->_nebuleInstance->getCacheInstance()->newNode('0');
+                    $instanceID->setContent($optionName);
+                    $instanceOption->setNID($instanceID);
+                    $instanceOption->setEnableName(true);
+                    $instanceOption->setName($optionName);
+                    $instanceOption->setEnableColor(true);
+                    $instanceOption->setEnableIcon(false);
+                    $instanceOption->setEnableStatus();
+                    $instanceOption->setStatus($listOptionsType[$optionName]);
+                    $instanceList->addItem($instanceOption);
+                    $instanceList->display();
+
 
                     $instanceColorCategory = new DisplayColor($this->_applicationInstance);
                     $instanceColorCategory->setNID($optionID);
@@ -1958,9 +1964,8 @@ class Action extends Actions
                 $this->_metrologyInstance->addLog('input ' . self::COMMAND_OPTION_NAME . ' ask change option value=' . $argValue, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'cfebc367');
             }
 
-            $listOptions = $this->_configurationInstance->getListOptionsName();
             $okOption = false;
-            foreach ($listOptions as $option) {
+            foreach (Configuration::OPTIONS_LIST as $option) {
                 if ($argName == $option) {
                     $okOption = true;
                     break;
