@@ -49,7 +49,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240802';
+    const APPLICATION_VERSION = '020240813';
     const APPLICATION_LICENCE = 'GNU GPL 2023-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -217,13 +217,6 @@ class Display extends Displays
     private function _displayContent()
     {
         $module = $this->_applicationInstance->getModule('ModuleAutent');
-
-        # TODO
-        if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK))
-            $argBack = trim(filter_input(INPUT_GET, References::COMMAND_APPLICATION_BACK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        else
-            $argBack = '1';
-        $argLogout = filter_has_var(INPUT_GET, References::COMMAND_AUTH_ENTITY_LOGOUT);
 
         if ($module != null) {
             $module->displayModule();

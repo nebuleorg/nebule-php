@@ -248,11 +248,11 @@ class Action extends Actions
      */
     public function genericActions()
     {
-        $this->_metrology->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         // Rien.
 
-        $this->_metrology->addLog('Generic actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Generic actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
     }
 
 
@@ -266,14 +266,14 @@ class Action extends Actions
      */
     public function specialActions()
     {
-        $this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         // Vérifie que l'action de chargement de lien soit permise.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
-            && $this->_configuration->getOptionAsBoolean('permitUploadLink')
-            && ($this->_configuration->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
-                || $this->_configuration->getOptionAsBoolean('permitPublicUploadLink')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink')
+            && ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+                || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_unlocked
             )
         ) {
@@ -281,7 +281,7 @@ class Action extends Actions
             $this->_extractActionUploadLink();
             $this->_extractActionUploadFileLinks();
 
-            $this->_metrology->addLog('Router Special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Router Special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
             // Liens pré-signés.
             if ($this->_actionUploadLinkInstance != ''
@@ -298,7 +298,7 @@ class Action extends Actions
             }
         }
 
-        $this->_metrology->addLog('Special actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Special actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
     }
 }
 

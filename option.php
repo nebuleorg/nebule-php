@@ -44,7 +44,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240807';
+    const APPLICATION_VERSION = '020240813';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -1891,52 +1891,40 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
  */
 class Action extends Actions
 {
-    // Les commandes.
     const COMMAND_OPTION_NAME = 'name';
     const COMMAND_OPTION_VALUE = 'value';
 
-    /**
-     * Traitement des actions génériques.
-     */
     public function genericActions()
     {
-        $this->_metrology->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1f5dd135');
+        $this->_metrologyInstance->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1f5dd135');
 
-        // Vérifie que l'entité instance locale du serveur est déverrouillée et que le ticket est valide.
         if ($this->_unlocked
             && $this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getInstanceEntity()
             && $this->_nebuleInstance->getTicketingInstance()->checkActionTicket()
-            && $this->_configuration->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink'))
+            && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink'))
         ) {
-            // Extrait les actions.
             $this->_extractActionChangeOption();
             $this->_extractActionSignLink1();
 
-            // Traite les options.
             if ($this->_actionOptionName != '')
                 $this->_actionChangeOption();
 
-            // Traite les liens.
             if ($this->_unlocked
-                && $this->_configuration->getOptionAsBoolean('permitUploadLink')
+                && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink')
                 && $this->_actionSignLinkInstance1 != ''
                 && is_a($this->_actionSignLinkInstance1, 'Link') // FIXME la classe
             )
                 $this->_actionSignLink($this->_actionSignLinkInstance1);
         }
 
-        $this->_metrology->addLog('Generic actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bb221384');
+        $this->_metrologyInstance->addLog('Generic actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bb221384');
     }
 
 
-    /**
-     * Traitement des actions spéciales, qui peuvent être réalisées sans entité déverrouillée.
-     */
     public function specialActions()
     {
-        $this->_metrology->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4e9ebfc1');
+        $this->_metrologyInstance->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4e9ebfc1');
 
-        // Vérifie que le ticket est valide.
         if ($this->_nebuleInstance->getTicketingInstance()->checkActionTicket()) {
             $this->_extractActionSynchronizeApplication();
 
@@ -1944,47 +1932,33 @@ class Action extends Actions
                 $this->_actionSynchronizeApplication();
         }
 
-        $this->_metrology->addLog('Special actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1bb0ef71');
+        $this->_metrologyInstance->addLog('Special actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1bb0ef71');
     }
 
 
-    /**
-     * Nom de l'option à modifier.
-     *
-     * @var string
-     */
-    protected $_actionOptionName = '';
-    /**
-     * Valeur de l'option à modifier.
-     *
-     * @var string
-     */
-    protected $_actionOptionValue = '';
 
-    /**
-     * Extrait pour action si on doit modifier une option.
-     *
-     * @return void
-     */
+    protected string $_actionOptionName = '';
+    protected string $_actionOptionValue = '';
+
     protected function _extractActionChangeOption()
     {
-        // Vérifie que l'écriture d'objets soit authorisée.
-        if ($this->_configuration->checkBooleanOptions(array('permitWrite', 'permitWriteLink'))
+        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink'))
             && $this->_unlocked
         ) {
-            $this->_metrology->addLog('Extract action change option', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '62a03a08');
+            $this->_metrologyInstance->addLog('Extract action change option', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '62a03a08');
 
-            /*
-			 *  ------------------------------------------------------------------------------------------
-			 *  DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER DANGER
-			 *  ------------------------------------------------------------------------------------------
-			 */
-            // Lit et nettoye le contenu des variables GET.
-            $argName = trim(filter_input(INPUT_GET, self::COMMAND_OPTION_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            $argValue = trim(filter_input(INPUT_GET, self::COMMAND_OPTION_VALUE, FILTER_SANITIZE_STRING));
+            $argName = '';
+            if (filter_has_var(INPUT_GET, self::COMMAND_OPTION_NAME)) {
+                $argName = trim(filter_input(INPUT_GET, self::COMMAND_OPTION_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+                $this->_metrologyInstance->addLog('input ' . self::COMMAND_OPTION_NAME . ' ask change option name=' . $argName, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '64c852fb');
+            }
+            $argValue = '';
+            if (filter_has_var(INPUT_GET, self::COMMAND_OPTION_VALUE)) {
+                $argValue = trim(filter_input(INPUT_GET, self::COMMAND_OPTION_VALUE, FILTER_SANITIZE_STRING));
+                $this->_metrologyInstance->addLog('input ' . self::COMMAND_OPTION_NAME . ' ask change option value=' . $argValue, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'cfebc367');
+            }
 
-            // Récupère les noms des options connues et vérifie que l'option demandée en fait partie.
-            $listOptions = $this->_configuration->getListOptionsName();
+            $listOptions = $this->_configurationInstance->getListOptionsName();
             $okOption = false;
             foreach ($listOptions as $option) {
                 if ($argName == $option) {
@@ -1993,7 +1967,6 @@ class Action extends Actions
                 }
             }
 
-            // Enregistre le nom et la valeur.
             if ($argName != ''
                 && $argValue != ''
                 && $okOption
@@ -2006,22 +1979,17 @@ class Action extends Actions
     }
 
 
-    /**
-     * Modification de l'option.
-     *
-     * @return void
-     */
     protected function _actionChangeOption()
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisés.
-        if ($this->_configuration->checkBooleanOptions(array('permitWrite', 'permitWriteLink'))
+        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink'))
             && $this->_actionOptionName != ''
             && $this->_unlocked
         ) {
-            $this->_metrology->addLog('Action change option ' . $this->_actionOptionName . ' = ' . $this->_actionOptionValue, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ae2be3f7');
+            $this->_metrologyInstance->addLog('Action change option ' . $this->_actionOptionName . ' = ' . $this->_actionOptionValue, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ae2be3f7');
 
             // Vérifie que l'option est du bon type.
-            $listOptionsType = $this->_configuration->getListOptionsType();
+            $listOptionsType = $this->_configurationInstance->getListOptionsType();
             $okOption = false;
             $value = null;
             $type = $listOptionsType[$this->_actionOptionName];
@@ -2042,15 +2010,15 @@ class Action extends Actions
             if ($okOption
                 && $value !== null
             ) {
-                $this->_configuration->setOptionEnvironment($this->_actionOptionName, $value);
+                $this->_configurationInstance->setOptionEnvironment($this->_actionOptionName, $value);
 
-                $this->_display->displayInlineAllActions();
+                $this->_displayInstance->displayInlineAllActions();
 
-                $this->_metrology->addLog('Action change option ok', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0db1fc8f');
+                $this->_metrologyInstance->addLog('Action change option ok', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0db1fc8f');
             }
 
             // Affichage des actions.
-            $this->_display->displayInlineAllActions();
+            $this->_displayInstance->displayInlineAllActions();
         }
     }
 }
@@ -2066,12 +2034,6 @@ class Action extends Actions
  */
 class Translate extends Translates
 {
-    /**
-     * Constructeur.
-     *
-     * @param Application $applicationInstance
-     * @return void
-     */
     public function __construct(Application $applicationInstance)
     {
         parent::__construct($applicationInstance);

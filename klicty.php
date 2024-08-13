@@ -4560,12 +4560,12 @@ class Action extends Actions
     protected function _extractActionUploadFile()
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
-            $this->_metrology->addLog('Extract action upload file', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000'); // Log
+            $this->_metrologyInstance->addLog('Extract action upload file', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000'); // Log
 
             /*
 			 *  ------------------------------------------------------------------------------------------
@@ -4588,7 +4588,7 @@ class Action extends Actions
                 // Si le fichier est bien téléchargé.
                 if (file_exists($uppath)) {
                     // Si le fichier n'est pas trop gros.
-                    if ($upsize <= $this->_configuration->getOptionUntyped('klictyIOReadMaxDataPHP')) {
+                    if ($upsize <= $this->_configurationInstance->getOptionUntyped('klictyIOReadMaxDataPHP')) {
                         // Lit le type mime.
                         $finfo = finfo_open(FILEINFO_MIME_TYPE);
                         $uptype = finfo_file($finfo, $uppath);
@@ -4648,12 +4648,12 @@ class Action extends Actions
     protected function _actionUploadFile(): void
     {
         // Vérifie que la création d'objet soit authorisée.
-        if ($this->_configuration->getOptionAsBoolean('permitWrite')
-            && $this->_configuration->getOptionAsBoolean('permitWriteObject')
-            && $this->_configuration->getOptionAsBoolean('permitWriteLink')
+        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             && $this->_unlocked
         ) {
-            $this->_metrology->addLog('Action upload file', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000'); // Log
+            $this->_metrologyInstance->addLog('Action upload file', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000'); // Log
 
             // Lit le contenu du fichier.
             $data = file_get_contents($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['tmp_name']);
@@ -4764,7 +4764,7 @@ class Action extends Actions
             unset($date, $signer, $source, $target, $meta, $link, $newLink, $textID);
 
             // Affichage des actions.
-            $this->_display->displayInlineAllActions();
+            $this->_displayInstance->displayInlineAllActions();
         }
     }
 }

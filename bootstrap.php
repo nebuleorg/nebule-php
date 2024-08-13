@@ -82,35 +82,18 @@ $loggerSessionID = bin2hex(openssl_random_pseudo_bytes(6, $false));
 $metrologyStartTime = microtime(true);
 $permitLogsOnDebugFile = false;
 
-/**
- * Switch log prefix from one app to another.
- *
- * @param string $name
- * @return void
- */
 function log_init(string $name): void
 {
     global $loggerSessionID;
     openlog($name . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
 }
 
-/**
- * Switch log prefix from one app to another.
- *
- * @param string $name
- * @return void
- */
 function log_reopen(string $name): void
 {
     closelog();
     log_init($name);
 }
 
-/**
- * If permitted, write debug level logs to debug file.
- *
- * @return void
- */
 function log_initDebugFile(): void
 {
     global $metrologyStartTime, $permitLogsOnDebugFile;
@@ -126,35 +109,16 @@ function log_initDebugFile(): void
     }
 }
 
-/**
- * Add message to logs.
- *
- * @param string $message
- * @param string $level
- * @param string $function
- * @param string $id
- * @return void
- */
 function log_add(string $message, string $level = 'msg', string $function = '', string $id = '00000000'): void
 {
     global $metrologyStartTime, $permitLogsOnDebugFile;
     syslog(LOG_INFO, 'LogT=' . sprintf('%01.6f', microtime(true) - $metrologyStartTime) . ' LogL="' . $level . '" LogI="' . $id . '" LogF="' . $function . '" LogM="' . $message . '"');
 
-    // If permitted, write debug level logs to debug file.
     if ($permitLogsOnDebugFile)
         file_put_contents(LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE, 'LogT=' . sprintf('%01.6f', microtime(true) - $metrologyStartTime) . ' LogL="' . $level . '" LogI="' . $id . '" LogF="' . $function . '" LogM="' . $message . "\"\n", FILE_APPEND);
 }
 
-/**
- * Add message to logs and display it.
- *
- * @param string $message
- * @param string $level
- * @param string $function
- * @param string $id
- * @return void
- */
-function log_addDisp(string $message, string $level = 'msg', string $function = '', string $id = '00000000'): void
+function log_addAndDisplay(string $message, string $level = 'msg', string $function = '', string $id = '00000000'): void
 {
     log_add($message, $level, $function, $id);
     echo "$level($function) : $id : $message";
@@ -502,9 +466,9 @@ const LIB_ARG_INLINE_DISPLAY = 'i';
 /** @noinspection PhpUnusedLocalVariableInspection */
 const LIB_ARG_STATIC_DISPLAY = 's'; // TODO not used yet
 const LIB_ARG_FIRST_PUPPETMASTER_EID = 'bootstrapfirstpuppetmastereid';
-const LIB_ARG_FIRST_PUPPETMASTER_LOC = 'bootstrapfirstpuppetmasterlocation';
-const LIB_ARG_FIRST_SUBORD_EID = 'bootstrapfirstsubordinationeid';
-const LIB_ARG_FIRST_SUBORD_LOC = 'bootstrapfirstsubordinationlocation';
+const LIB_ARG_FIRST_PUPPETMASTER_LOCATION = 'bootstrapfirstpuppetmasterlocation';
+const LIB_ARG_FIRST_SUBORDINATION_EID = 'bootstrapfirstsubordinationeid';
+const LIB_ARG_FIRST_SUBORDINATION_LOCATION = 'bootstrapfirstsubordinationlocation';
 
 const BREAK_DESCRIPTIONS = array(
     '00' => 'unknown buggy interrupt reason',
@@ -1261,8 +1225,6 @@ function lib_init(): bool
     }
 
     $libraryRescueMode = lib_getModeRescue();
-    if ($libraryRescueMode)
-        log_add('lib init : rescue mode activated', 'warn', __FUNCTION__, 'ad7056e9');
 
     lib_setServerEntity($libraryRescueMode);
     lib_setDefaultEntity($libraryRescueMode);
@@ -1326,11 +1288,6 @@ function lib_setDefaultEntity(bool $rescueMode): void
         $nebuleLocalAuthorities[] = $nebuleDefaultEntity;
 }
 
-/**
- * Get and check public entity.
- *
- * @return void
- */
 function lib_setPublicEntity(): void
 {
     global $nebulePublicEntity,
@@ -1339,25 +1296,23 @@ function lib_setPublicEntity(): void
         $nebulePublicEntity = $nebuleDefaultEntity;
 }
 
-/**
- * Check rescue mode asked and authorized.
- * Can be activated by option modeRescue.
- * Can be activated by line argument if permitted by option permitOnlineRescue.
- * This rescue mode is useful when the code loaded crash.
- * By default, rescue mode is not activated.
- *
- * @return bool
- */
 function lib_getModeRescue(): bool
 {
+    $askRescue = false;
+    if (filter_has_var(INPUT_GET, LIB_ARG_RESCUE_MODE)
+        || filter_has_var(INPUT_POST, LIB_ARG_RESCUE_MODE)) {
+        log_add('input ' . LIB_ARG_RESCUE_MODE . ' ask rescue mode', 'info', __FUNCTION__, 'a94208b9');
+        $askRescue = true;
+    }
+
     if (lib_getOption('modeRescue') === true
         || (lib_getOption('permitOnlineRescue') === true
-            && (filter_has_var(INPUT_GET, LIB_ARG_RESCUE_MODE)
-                || filter_has_var(INPUT_POST, LIB_ARG_RESCUE_MODE)
-            )
+            && $askRescue
         )
-    )
+    ) {
+        log_add('lib init : rescue mode activated', 'warn', __FUNCTION__, 'ad7056e9');
         return true;
+    }
     return false;
 }
 
@@ -1382,7 +1337,6 @@ function io_open(): bool
  */
 function io_checkLinkFolder(): bool
 {
-    // Check if exist.
     if (!file_exists(LIB_LOCAL_LINKS_FOLDER))
         io_createLinkFolder();
     if (!file_exists(LIB_LOCAL_LINKS_FOLDER) || !is_dir(LIB_LOCAL_LINKS_FOLDER)) {
@@ -1390,7 +1344,6 @@ function io_checkLinkFolder(): bool
         return false;
     }
 
-    // Check writeability.
     if (lib_getOption('permitWrite') && lib_getOption('permitWriteLink')) {
         $data = crypto_getPseudoRandom(2048);
         $name = LIB_LOCAL_LINKS_FOLDER . '/writest' . bin2hex(crypto_getPseudoRandom(8));
@@ -4257,34 +4210,28 @@ function bootstrap_getFlushSession(bool $forceFlush = false): void
 
     session_start();
 
+    $askFlush = false;
     if (filter_has_var(INPUT_GET, LIB_ARG_FLUSH_SESSION)
         || filter_has_var(INPUT_POST, LIB_ARG_FLUSH_SESSION)
-        || $forceFlush
     ) {
-        log_add('ask flush session', 'warn', __FUNCTION__, '4abe475a');
+        log_add('input ' . LIB_ARG_FLUSH_SESSION . ' ask flush session', 'warn', __FUNCTION__, '4abe475a');
+        $askFlush = true;
+    }
+    
+    if (($askFlush || $forceFlush) && (isset($_SESSION['sessionOk']) || bootstrap_getUserBreak())) {
+        $bootstrapFlush = true;
 
-        if (isset($_SESSION['OKsession'])
-            || filter_has_var(INPUT_GET, LIB_ARG_BOOTSTRAP_BREAK)
-            || filter_has_var(INPUT_POST, LIB_ARG_BOOTSTRAP_BREAK)
-        ) {
-            $bootstrapFlush = true;
-            log_add('flush session', 'info', __FUNCTION__, '5d008c11');
-
-            // flush and reopen session.
-            session_unset();
-            session_destroy();
-            session_write_close();
-            setcookie(session_name(), '', 0, '/');
-            session_regenerate_id(true);
-            session_start();
-        } else
-            $_SESSION['OKsession'] = true;
+        session_unset();
+        session_destroy();
+        session_write_close();
+        setcookie(session_name(), '', 0, '/');
+        session_regenerate_id(true);
+        session_start();
     } else
-        $_SESSION['OKsession'] = true;
+        $_SESSION['sessionOk'] = true;
 
     session_write_close();
 
-    // Désactivation des envois liés à la session après le premier usage. Evite tout un tas de logs inutiles.
     session_cache_limiter('');
     ini_set('session.use_cookies', '0');
     ini_set('session.use_only_cookies', '0');
@@ -4315,18 +4262,16 @@ function bootstrap_getUpdate(): void
     if (filter_has_var(INPUT_GET, LIB_ARG_UPDATE_APPLICATION)
         || filter_has_var(INPUT_POST, LIB_ARG_UPDATE_APPLICATION)
     ) {
-        log_add('ask update', 'warn', __FUNCTION__, 'ac8a2330');
+        log_add('input ' . LIB_ARG_UPDATE_APPLICATION . ' ask update', 'warn', __FUNCTION__, 'ac8a2330');
 
         session_start();
 
-        // Si la mise à jour est demandée mais pas déjà faite.
         if (!isset($_SESSION['askUpdate'])) {
             $bootstrapUpdate = true;
             log_add('update', 'info', __FUNCTION__, 'f2ef6dc2');
             $_SESSION['askUpdate'] = true;
-        } else {
+        } else
             unset($_SESSION['askUpdate']);
-        }
 
         session_write_close();
     }
@@ -4349,13 +4294,14 @@ function bootstrap_getSwitchApplication(): void
     elseif (filter_has_var(INPUT_POST, LIB_ARG_SWITCH_APPLICATION))
         $arg = trim(filter_input(INPUT_POST, LIB_ARG_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
+    if ($arg != '')
+        log_add('input ' . LIB_ARG_SWITCH_APPLICATION . ' ask switch application to ' . $arg, 'info', __FUNCTION__, 'd1a3f3f9');
+
     if (!app_checkOID($arg))
         return;
 
-    if (app_getActivate($arg)) {
+    if (app_getActivate($arg))
         $bootstrapSwitchApplication = $arg;
-        log_add('ask switch application to ' . $bootstrapSwitchApplication, 'info', __FUNCTION__, 'd1a3f3f9');
-    }
 }
 
 /**
@@ -4892,19 +4838,19 @@ function bootstrap_initApplication(bool $run): void
 
     // Check
     if (! is_a($applicationInstance, 'Nebule\Library\Applications')) {
-        log_addDisp('error init application', 'error', __FUNCTION__, '41ba02a9');
+        log_addAndDisplay('error init application', 'error', __FUNCTION__, '41ba02a9');
         return;
     }
     if (! is_a($applicationTranslateInstance, 'Nebule\Library\Translates')) {
-        log_addDisp('error init translates', 'error', __FUNCTION__, 'd121af4c');
+        log_addAndDisplay('error init translates', 'error', __FUNCTION__, 'd121af4c');
         return;
     }
     if (! is_a($applicationDisplayInstance, 'Nebule\Library\Displays')) {
-        log_addDisp('error init displays', 'error', __FUNCTION__, '4bb6af65');
+        log_addAndDisplay('error init displays', 'error', __FUNCTION__, '4bb6af65');
         return;
     }
     if (! is_a($applicationActionInstance, 'Nebule\Library\Actions')) {
-        log_addDisp('error init actions', 'error', __FUNCTION__, '308b8a96');
+        log_addAndDisplay('error init actions', 'error', __FUNCTION__, '308b8a96');
         return;
     }
 
@@ -4974,14 +4920,6 @@ function bootstrap_saveApplication(): void
  TODO.
  ------------------------------------------------------------------------------------------
  */
-
-/**
- * Add a break on the bootstrap.
- * In the end, this stop the loading of any application code and show the bootstrap break page.
- *
- * @param string $errorCode
- * @param string $function
- */
 function bootstrap_setBreak(string $errorCode, string $function): void
 {
     global $bootstrapBreak;
@@ -4994,12 +4932,16 @@ function bootstrap_setBreak(string $errorCode, string $function): void
     log_add('bootstrap break code=' . $errorCode . ' : ' . $errorDesc, 'error', $function, '100000' . $errorCode);
 }
 
-function bootstrap_getUserBreak(): void
+function bootstrap_getUserBreak(): bool
 {
     if (filter_has_var(INPUT_GET, LIB_ARG_BOOTSTRAP_BREAK)
         || filter_has_var(INPUT_POST, LIB_ARG_BOOTSTRAP_BREAK)
-    )
+    ) {
+        log_add('input ' . LIB_ARG_BOOTSTRAP_BREAK . ' ask bootstrap break', 'info', __FUNCTION__, '5d008c11');
         bootstrap_setBreak('11', __FUNCTION__);
+        return true;
+    }
+    return false;
 }
 
 function bootstrap_getInlineDisplay(): void
@@ -5008,8 +4950,10 @@ function bootstrap_getInlineDisplay(): void
 
     if (filter_has_var(INPUT_GET, LIB_ARG_INLINE_DISPLAY)
         || filter_has_var(INPUT_POST, LIB_ARG_INLINE_DISPLAY)
-    )
+    ) {
+        log_add('input ' . LIB_ARG_INLINE_DISPLAY . ' ask inline display', 'info', __FUNCTION__, '82311cae');
         $bootstrapInlineDisplay = true;
+    }
 }
 
 function bootstrap_checkFingerprint(): bool
@@ -6590,7 +6534,7 @@ function bootstrap_firstDisplay4Puppetmaster(): bool
 
     if (!file_exists(LIB_LOCAL_ENVIRONMENT_FILE)) {
         if (!filter_has_var(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_EID)) {
-            log_add('ask puppetmaster eid', 'info', __FUNCTION__, '70a99b83');
+            log_add('query puppetmaster eid', 'info', __FUNCTION__, '70a99b83');
             ?>
             <form action="" method="get">
                 <div>
@@ -6600,7 +6544,7 @@ function bootstrap_firstDisplay4Puppetmaster(): bool
                 </div>
                 <div>
                     <label for="loc">Location :</label>
-                    <input type="text" id="loc" name="<?php echo LIB_ARG_FIRST_PUPPETMASTER_LOC; ?>"
+                    <input type="text" id="loc" name="<?php echo LIB_ARG_FIRST_PUPPETMASTER_LOCATION; ?>"
                            value="<?php echo LIB_DEFAULT_PUPPETMASTER_LOCATION; ?>"/>
                 </div>
                 <div class="button">
@@ -6612,38 +6556,35 @@ function bootstrap_firstDisplay4Puppetmaster(): bool
             $ok = false;
         } else {
             $argEID = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            if (ent_checkIsPublicKey($argEID)) {
+            log_add('input ' . LIB_ARG_FIRST_PUPPETMASTER_EID . ' ask define alternative puppetmaster eid=' . $argEID, 'warn', __FUNCTION__, '10a0bd6d');
+            $argLocation = LIB_DEFAULT_PUPPETMASTER_LOCATION;
+            if (ent_checkIsPublicKey($argEID))
                 $firstAlternativePuppetmasterEid = $argEID;
-            }
-            if (filter_has_var(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_LOC)) {
+            if (filter_has_var(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_LOCATION)) {
                 echo 'try alternative puppetmaster eid : ' . $argEID . ' ';
                 if (nod_checkNID($argEID, false)) {
                     $firstAlternativePuppetmasterEid = $argEID;
-                    $argLoc = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_LOC, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-                    if (strlen($argLoc) != 0 && filter_var($argLoc, FILTER_VALIDATE_URL) !== false) {
+                    $argLocation = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_LOCATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+                    log_add('input ' . LIB_ARG_FIRST_PUPPETMASTER_LOCATION . ' ask define alternative puppetmaster location=' . $argLocation, 'info', __FUNCTION__, '6d54e19e');
+                    if (strlen($argLocation) != 0 && filter_var($argLocation, FILTER_VALIDATE_URL) !== false) {
                         echo 'sync...';
-                        obj_getDistantContent($argEID, array($argLoc));
-                        lnk_getDistantOnLocations($argEID, array($argLoc));
+                        obj_getDistantContent($argEID, array($argLocation));
+                        lnk_getDistantOnLocations($argEID, array($argLocation));
                     }
                 }
                 if (!ent_checkIsPublicKey($argEID)) {
                     log_add('unable to find alternative puppetmaster eid', 'error', __FUNCTION__, '102c9011');
                     echo " <span class=\"error\">invalid!</span>\n";
-                    $argLoc = LIB_DEFAULT_PUPPETMASTER_LOCATION; // TODO not really used ...
                     $firstAlternativePuppetmasterEid = LIB_DEFAULT_PUPPETMASTER_EID;
                 }
                 echo "<br />\n";
-                log_add('define alternative puppetmaster eid = ' . $firstAlternativePuppetmasterEid, 'warn', __FUNCTION__, '10a0bd6d');
                 echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ' . $firstAlternativePuppetmasterEid . "<br />\n";
-                log_add('define alternative puppetmaster location = ' . $argLoc, 'info', __FUNCTION__, '6d54e19e');
-                echo 'location on &nbsp;&nbsp;&nbsp;&nbsp; : ' . $argLoc . "\n";
+                echo 'location on &nbsp;&nbsp;&nbsp;&nbsp; : ' . $argLocation . "\n";
             } else
                 echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ' . $firstAlternativePuppetmasterEid . "\n";
         }
-    } else {
-        $firstpuppetmasterOid = lib_getOption('puppetmaster');
-        echo 'forced to ' . $firstpuppetmasterOid . "\n";
-    }
+    } else
+        echo 'forced to ' . lib_getOption('puppetmaster') . "\n";
 
     echo "</div>\n";
 
@@ -6861,17 +6802,17 @@ function bootstrap_firstDisplay7Subordination(): bool
     echo '<span class="partstitle">#7 subordination</span><br/>' . "\n";
 
     if (!file_exists(LIB_LOCAL_ENVIRONMENT_FILE)) {
-        if (!filter_has_var(INPUT_GET, LIB_ARG_FIRST_SUBORD_EID)) {
-            log_add('ask subordination eid', 'info', __FUNCTION__, '213a735c');
+        if (!filter_has_var(INPUT_GET, LIB_ARG_FIRST_SUBORDINATION_EID)) {
+            log_add('query subordination eid', 'info', __FUNCTION__, '213a735c');
             ?>
             <form action="" method="get">
                 <div>
                     <label for="oid">EID &nbsp;&nbsp;&nbsp;&nbsp; :</label>
-                    <input type="text" id="eid" name="<?php echo LIB_ARG_FIRST_SUBORD_EID; ?>"/>
+                    <input type="text" id="eid" name="<?php echo LIB_ARG_FIRST_SUBORDINATION_EID; ?>"/>
                 </div>
                 <div>
                     <label for="loc">Location :</label>
-                    <input type="text" id="loc" name="<?php echo LIB_ARG_FIRST_SUBORD_LOC; ?>"/>
+                    <input type="text" id="loc" name="<?php echo LIB_ARG_FIRST_SUBORDINATION_LOCATION; ?>"/>
                     <input type="hidden" id="puppetmaster" name="<?php echo LIB_ARG_FIRST_PUPPETMASTER_EID; ?>"
                            value="<?php echo $firstAlternativePuppetmasterEid; ?>"/>
                 </div>
@@ -6883,27 +6824,27 @@ function bootstrap_firstDisplay7Subordination(): bool
             <?php
             $ok = false;
         } else {
-            $argEID = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_SUBORD_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $argEID = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_SUBORDINATION_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            log_add('input ' . LIB_ARG_FIRST_SUBORDINATION_EID . ' ask define subordination eid=' . $argEID, 'warn', __FUNCTION__, 'a875618e');
             if (nod_checkNID($argEID, false)) {
                 echo 'try alternative subordination eid : ' . $argEID . ' ';
                 $firstSubordinationEID = $argEID;
-                $argLoc = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_SUBORD_LOC, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-                if (strlen($argLoc) != 0 && filter_var($argLoc, FILTER_VALIDATE_URL) !== false) {
+                $argLocation = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_SUBORDINATION_LOCATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+                log_add('input ' . LIB_ARG_FIRST_SUBORDINATION_LOCATION . ' ask define subordination location=' . $argLocation, 'info', __FUNCTION__, 'c1c943a5');
+                if (strlen($argLocation) != 0 && filter_var($argLocation, FILTER_VALIDATE_URL) !== false) {
                     echo 'sync...';
-                    obj_getDistantContent($argEID, array($argLoc));
-                    lnk_getDistantOnLocations($argEID, array($argLoc));
+                    obj_getDistantContent($argEID, array($argLocation));
+                    lnk_getDistantOnLocations($argEID, array($argLocation));
                 }
             } else {
                 log_add('unable to find subordination eid', 'error', __FUNCTION__, '5cd18917');
                 echo " <span class=\"error\">invalid!</span>\n";
-                $argLoc = '';
+                $argLocation = '';
                 $firstSubordinationEID = '';
             }
             echo "<br />\n";
-            log_add('define subordination eid = ' . $firstSubordinationEID, 'warn', __FUNCTION__, 'a875618e');
             echo 'subordination to : ' . $firstSubordinationEID . "<br />\n";
-            log_add('define subordination location = ' . $argLoc, 'info', __FUNCTION__, 'c1c943a5');
-            echo 'location on &nbsp;&nbsp;&nbsp;&nbsp; : ' . $argLoc . "\n";
+            echo 'location on &nbsp;&nbsp;&nbsp;&nbsp; : ' . $argLocation . "\n";
         }
     } else {
         $firstSubordinationEID = lib_getOption('subordinationEntity');
@@ -7269,7 +7210,6 @@ function bootstrap_displayRouter(): void
         return;
     }
 
-    // Close I/O of PHP PP library.
     io_close();
 
     // Display only server entity if asked.
@@ -7277,6 +7217,7 @@ function bootstrap_displayRouter(): void
     if (filter_has_var(INPUT_GET, LIB_LOCAL_ENTITY_FILE)
         || filter_has_var(INPUT_POST, LIB_LOCAL_ENTITY_FILE)
     ) {
+        log_add('input ' . LIB_LOCAL_ENTITY_FILE . ' ask display local entity only', 'info', __FUNCTION__, 'dcfc2e74');
         bootstrap_displayLocalEntity();
         return;
     }

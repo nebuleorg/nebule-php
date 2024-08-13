@@ -11,7 +11,6 @@ use Nebule\Library\Displays;
 use Nebule\Library\DisplaySecurity;
 use Nebule\Library\DisplayTitle;
 use Nebule\Library\Metrology;
-use Nebule\Library\Modules;
 use Nebule\Library\Node;
 use Nebule\Library\References;
 
@@ -30,7 +29,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
     protected string $MODULE_COMMAND_NAME = 'autent';
     protected string $MODULE_DEFAULT_VIEW = 'desc';
     protected string $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020240802';
+    protected string $MODULE_VERSION = '020240813';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -48,9 +47,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
     protected array $MODULE_APP_DESC_LIST = array();
     protected array $MODULE_APP_VIEW_LIST = array();
 
-    const DEFAULT_ATTRIBS_DISPLAY_NUMBER = 10;
-
-    private $_comebackAppId = '';
+    private string $_comebackAppId = '';
 
     /**
      * Ajout de fonctionnalités à des points d'ancrage.
@@ -69,7 +66,6 @@ class ModuleAutent extends \Nebule\Library\Modules {
         switch ($hookName) {
             case 'selfMenu':
             case 'selfMenuBlog':
-                //$instance = $this->_applicationInstance->getCurrentObjectInstance();
                 $instance = $this->_nebuleInstance->newObject($object);
                 $id = $instance->getID();
 
@@ -85,17 +81,14 @@ class ModuleAutent extends \Nebule\Library\Modules {
      * @return void
      */
     public function displayModule(): void {
-        if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK))
+        if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK)) {
             $this->_comebackAppId = trim(filter_input(INPUT_GET, References::COMMAND_APPLICATION_BACK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $this->_metrologyInstance->addLog('input ' . References::COMMAND_APPLICATION_BACK . ' ask application to come back rid=' . $this->_comebackAppId, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'dade09c2');
+        }
         else
             $this->_comebackAppId = '1';
         if ($this->_comebackAppId == '')
             $this->_comebackAppId = '1';
-
-        /*$instance = new DisplayNotify($this->_applicationInstance);
-        $instance->setMessage('under construction!');
-        $instance->setType(DisplayItemIconMessage::TYPE_WARN);
-        $instance->display();*/
 
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[1]:
@@ -124,7 +117,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
      * Display view to describe entity state.
      */
     private function _displayInfo(): void {
-        $this->_metrologyInstance->addLog('Display desc ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '1f00a8b1');
+        $this->_metrologyInstance->addLog('display desc ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '1f00a8b1');
 
         $title = new DisplayTitle($this->_applicationInstance);
         $title->setTitle('::::INFO');
@@ -133,17 +126,17 @@ class ModuleAutent extends \Nebule\Library\Modules {
         if (! $this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')
             || $this->_applicationInstance->getCheckSecurityAll() != 'OK'
         ) {
-            $htlink = '/?f';
+            $urlLink = '/?f';
             $title = '::::err_NotPermit';
             $type = DisplayItemIconMessage::TYPE_ERROR;
         } elseif ($this->_unlocked) {
-            $htlink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
+            $urlLink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this->MODULE_REGISTERED_VIEWS[2];
             $title = ':::logout';
             $type = DisplayItemIconMessage::TYPE_ERROR;
         } else {
-            $htlink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
+            $urlLink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this->MODULE_REGISTERED_VIEWS[1];
             $title = ':::login';
@@ -154,7 +147,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
         $this->_displayAddSecurity($instanceList, false);
         $this->_displayAddEID($instanceList, $this->_applicationInstance->getCurrentObjectInstance(), false);
-        $this->_displayAddButton($instanceList, $title, $type, $htlink);
+        $this->_displayAddButton($instanceList, $title, $type, $urlLink);
         $this->_displayAddButton($instanceList, ':::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
         $instanceList->display();
     }
@@ -200,14 +193,14 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $this->_metrologyInstance->addLog('Display logout ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '833de289');
 
         $title = new DisplayTitle($this->_applicationInstance);
-        $title->setTitle('::::logout');
+        $title->setTitle(':::logout');
         $title->display();
 
         $instanceList = new DisplayList($this->_applicationInstance);
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
         $this->_displayAddSecurity($instanceList, false);
         $this->_displayAddEID($instanceList, $this->_applicationInstance->getCurrentObjectInstance(), false);
-        $this->_displayAddButton($instanceList, '::::logout', DisplayItemIconMessage::TYPE_PLAY, '/?f');
+        $this->_displayAddButton($instanceList, ':::logout', DisplayItemIconMessage::TYPE_PLAY, '/?f');
         $this->_displayAddButton($instanceList, ':::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
         $instanceList->display();
     }
