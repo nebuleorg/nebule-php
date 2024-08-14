@@ -21,19 +21,20 @@ namespace Nebule\Library;
  */
 class DisplayQuery extends DisplayItemIconMessageSizeable implements DisplayInterface
 {
-    public const TYPE_QUERY = 'query';
-    public const TYPE_PASSWORD = 'password';
+    public const QUERY_STRING = 'query';
+    public const QUERY_PASSWORD = 'password';
+    public const QUERY_BOOLEAN = 'boolean';
     public const ICON_QUERY_RID = '16e9a40a7f705f9c3871d13ce78b9f016f6166c2214b293e5a38964502a5ff9a05bb.none.272';
     public const ICON_PASSWORD_RID = 'ebde500081ce0916fb54efc3a900472be9fadee2dfcf988e3b5b721ebf00d687f655.none.272';
 
-    private $_displayAlone = false;
-    private $_displayPassword = '';
-    private $_hiddenName = 'id';
-    private $_hiddenValue = 'none';
+    private bool $_displayAlone = false;
+    private string $_displayPassword = '';
+    private string $_hiddenName = 'id';
+    private string $_hiddenValue = 'none';
 
     protected function _init(): void
     {
-        $this->setType(self::TYPE_QUERY);
+        $this->setType(self::QUERY_STRING);
         $this->setSize();
         $this->setRatio();
     }
@@ -125,11 +126,17 @@ class DisplayQuery extends DisplayItemIconMessageSizeable implements DisplayInte
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set type ' . $type, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch (strtolower($type)) {
-            case self::TYPE_PASSWORD:
+            case self::QUERY_PASSWORD:
                 $this->_type = 'Password';
                 $this->_iconText = '::::Password';
                 $icon = self::ICON_PASSWORD_RID;
                 $this->_displayPassword = 'type="password" ';
+                break;
+            case self::QUERY_BOOLEAN:
+                $this->_type = 'Boolean';
+                $this->_iconText = '::::Switch';
+                $icon = self::ICON_QUERY_RID;
+                $this->_displayPassword = 'type="bool" '; // FIXME
                 break;
             default:
                 $this->_type = 'Query';

@@ -171,7 +171,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
             && $this->_applicationInstance->getCheckSecurityAll() == 'OK')
             $this->_displayAddButtonQuery($instanceList,
                 '::::Password',
-                DisplayQuery::TYPE_PASSWORD,
+                DisplayQuery::QUERY_PASSWORD,
                 References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]

@@ -3,9 +3,13 @@ declare(strict_types=1);
 namespace Nebule\Application\Option;
 use Nebule\Library\Configuration;
 use Nebule\Library\DisplayColor;
+use Nebule\Library\DisplayInformation;
 use Nebule\Library\DisplayItem;
+use Nebule\Library\DisplayItemIconMessage;
 use Nebule\Library\DisplayList;
+use Nebule\Library\DisplayNotify;
 use Nebule\Library\DisplayObject;
+use Nebule\Library\DisplayQuery;
 use Nebule\Library\DisplayTitle;
 use Nebule\Library\Entity;
 use Nebule\Library\Metrology;
@@ -18,18 +22,18 @@ use Nebule\Library\References;
 use Nebule\Library\Translates;
 
 /*
-------------------------------------------------------------------------------------------
- /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
-------------------------------------------------------------------------------------------
-
- [FR] Toute modification de ce code entrainera une modification de son empreinte
-      et entrainera donc automatiquement son invalidation !
- [EN] Any changes to this code will cause a change in its footprint and therefore
-      automatically result in its invalidation!
- [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
-      tanto lugar automáticamente a su anulación!
-
-------------------------------------------------------------------------------------------
+|------------------------------------------------------------------------------------------
+| /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
+|------------------------------------------------------------------------------------------
+|
+|  [FR] Toute modification de ce code entrainera une modification de son empreinte
+|       et entrainera donc automatiquement son invalidation !
+|  [EN] Any changes to this code will cause a change in its footprint and therefore
+|       automatically result in its invalidation!
+|  [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
+|       tanto lugar automáticamente a su anulación!
+|
+|------------------------------------------------------------------------------------------
 */
 
 
@@ -47,10 +51,10 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240813';
+    const APPLICATION_VERSION = '020240814';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
-    const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
+    const APPLICATION_NODE = '555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288';
     const APPLICATION_CODING = 'application/x-httpd-php';
     const USE_MODULES = false;
     const USE_MODULES_TRANSLATE = false;
@@ -89,12 +93,6 @@ G4e8OYxuwEvvYMu1DBDESw2VRtwLB0L30ghMM5Eb0nVTx52Fm9Hs555IeXG89vAAAAAAAAAAAAAAAAAA
 1p8jy3tlVHoQRAAAAsgBZgCzADgAAAADIAmQBRgAAAMgCZAGyADsAAAAAIAuQBRgBAAC4fhY4UkVRqCzLQ+eGENS27b06IMaopmm0LMvuOdu2yXuvYRjuOQL
 TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAACwrA/2026oVwXU/wAAAABJRU5ErkJggg==';
 
-    // Couleurs des icônes.
-    const DEFAULT_ICON_COLOR = '#537053';
-    const CRITICAL_ICON_COLOR = '#ff0000';
-    const CAREFUL_ICON_COLOR = '#ffaa00';
-    const USEFUL_ICON_COLOR = '#535370';
-
     // Les vues.
     const VIEW_MENU = 'menu';
     const VIEW_GLOBAL_AUTHORITIES = 'gauth';
@@ -105,6 +103,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
     // Application de référence pour les visualisations d'objets.
     const REFERENCE_DISPLAY_APPLICATION = 'dd11110000000000006e6562756c65206170706c69636174696f6e73000000000000dd1111';
+    const REFERENCE_AUTHENTICATION_APPLICATION = '2';
 
     protected array $_listDisplayModes = array('disp');
     protected array $_listDisplayViews = array(
@@ -1064,11 +1063,6 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
     }
 
 
-    /**
-     * Affiche les options par catégorie.
-     *
-     * @return void
-     */
     private function _displayOptions()
     {
         $instanceTitle = new DisplayTitle($this->_applicationInstance);
@@ -1080,14 +1074,6 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
         <div id="options">
             <?php
-            $listOptionsCategory = Configuration::getListOptionsCategory();
-            $listOptionsType = Configuration::getListOptionsType();
-            $listOptionsWritable = Configuration::getListOptionsWritable();
-            $listOptionsDefaultValue = Configuration::getListOptionsDefaultValue();
-            $listOptionsCriticality = Configuration::getListOptionsCriticality();
-            $listOptionsDescription = Configuration::getListOptionsDescription();
-
-            // Liste toutes les catégories.
             foreach (Configuration::OPTIONS_CATEGORIES as $optionCategory) {
                 $instanceTitle->setTitle($optionCategory);
                 $icon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_LL);
@@ -1096,174 +1082,119 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                 $instanceTitle->display();
 
                 foreach (Configuration::OPTIONS_LIST as $optionName) {
-                    if ($listOptionsCategory[$optionName] != $optionCategory)
+                    if (Configuration::OPTIONS_CATEGORY[$optionName] != $optionCategory)
                         continue;
 
-                    $optionValue = $this->_configurationInstance->getOptionUntyped($optionName);
-                    $optionID = $this->_nebuleInstance->newObject($this->_nebuleInstance->getNIDfromData($optionName, 'sha2.256'));
-                    $optionValueDisplay = (string)$optionValue;
-                    $optionType = $listOptionsType[$optionName];
-                    $optionWritable = $listOptionsWritable[$optionName];
-                    $optionWritableDisplay = 'writable';
-                    $optionDefaultValue = $listOptionsDefaultValue[$optionName];
-                    $optionDefaultDisplay = (string)$optionDefaultValue;
-                    $optionCriticality = $listOptionsCriticality[$optionName];
-                    $optionDescription = $listOptionsDescription[$optionName];
-                    $optionLocked = ($this->_configurationInstance->getOptionFromEnvironmentUntyped($optionName) !== null);
-
-                    // Prépare l'affichage du status de verrouillage ou de lecture seule.
-                    if ($optionLocked)
-                        $optionWritableDisplay = 'forced';
-                    elseif (!$optionWritable)
-                        $optionWritableDisplay = 'locked';
-
-                    // Prépare l'affichage des booléens.
-                    if ($optionType == 'boolean') {
-                        $optionValueDisplay = 'false';
-                        if ($optionValue)
-                            $optionValueDisplay = 'true';
-                        $optionDefaultDisplay = 'false';
-                        if ($optionDefaultValue)
-                            $optionDefaultDisplay = 'true';
-                    }
-
-                    // Prépare la couleur du status de l'option.
-                    if ($optionCriticality == 'critical')
-                        $optionColorOnChange = self::CRITICAL_ICON_COLOR;
-                    elseif ($optionCriticality == 'careful')
-                        $optionColorOnChange = self::CAREFUL_ICON_COLOR;
-                    else // $optionCriticity == 'useful'
-                    {
-                        $optionColorOnChange = self::USEFUL_ICON_COLOR;
-                        $optionCriticality = 'useful';
-                    }
-
-                    // Détermine si l'option a sa valeur par défaut.
-                    $isDefault = true;
-                    if ($optionValue != $optionDefaultValue)
-                        $isDefault = false;
-
+                    $optionID = $this->_nebuleInstance->newObject($this->_nebuleInstance->getNIDfromData($optionName, 'sha2.256')); // FIXME test debug
 
                     $instanceList = new DisplayList($this->_applicationInstance);
-                    $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
-                    $instanceList->setRatio(DisplayItem::RATIO_SHORT);
+
                     $instanceOption = new DisplayObject($this->_applicationInstance);
                     $instanceOption->setEnableNID(false);
                     $instanceID = $this->_nebuleInstance->getCacheInstance()->newNode('0');
                     $instanceID->setContent($optionName);
-                    $instanceOption->setNID($instanceID);
+$this->_metrologyInstance->addLog('MARK name=' . $optionName . ' nid=' . $instanceID->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000'); // FIXME bugg
+                    //$instanceOption->setNID($instanceID);
+                    $instanceOption->setNID($optionID);
                     $instanceOption->setEnableName(true);
                     $instanceOption->setName($optionName);
                     $instanceOption->setEnableColor(true);
                     $instanceOption->setEnableIcon(false);
-                    $instanceOption->setEnableStatus();
-                    $instanceOption->setStatus($listOptionsType[$optionName]);
+                    $instanceOption->setRatio(DisplayItem::RATIO_SHORT);
+                    //$instanceOption->display();
                     $instanceList->addItem($instanceOption);
+
+                    $instanceState = new DisplayInformation($this->_applicationInstance);
+                    if ($this->_configurationInstance->getOptionAsString($optionName) == Configuration::OPTIONS_DEFAULT_VALUE[$optionName]) {
+                        $instanceState->setType(DisplayItemIconMessage::TYPE_OK);
+                        $instanceState->setMessage(Configuration::OPTIONS_CRITICALITY[$optionName] . ', by default');
+                    } elseif (Configuration::OPTIONS_CRITICALITY[$optionName] == 'critical') {
+                        $instanceState->setType(DisplayItemIconMessage::TYPE_ERROR);
+                        $instanceState->setMessage(Configuration::OPTIONS_CRITICALITY[$optionName] . ', changed');
+                    } elseif (Configuration::OPTIONS_CRITICALITY[$optionName] == 'careful') {
+                        $instanceState->setType(DisplayItemIconMessage::TYPE_WARN);
+                        $instanceState->setMessage(Configuration::OPTIONS_CRITICALITY[$optionName] . ', changed');
+                    } else {
+                        $instanceState->setType(DisplayItemIconMessage::TYPE_PLAY);
+                        $instanceState->setMessage(Configuration::OPTIONS_CRITICALITY[$optionName] . ', changed');
+                    }
+                    $instanceState->setRatio(DisplayItem::RATIO_SHORT);
+                    $instanceState->setIconText('Status');
+                    $instanceList->addItem($instanceState);
+
+                    $instanceCategory = new DisplayInformation($this->_applicationInstance);
+                    $instanceCategory->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+                    $instanceCategory->setMessage($optionCategory);
+                    $instanceCategory->setRatio(DisplayItem::RATIO_SHORT);
+                    $instanceCategory->setIconText('Category');
+                    $instanceList->addItem($instanceCategory);
+
+                    $instanceType = new DisplayInformation($this->_applicationInstance);
+                    $instanceType->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+                    $instanceType->setMessage(Configuration::OPTIONS_TYPE[$optionName]);
+                    $instanceType->setRatio(DisplayItem::RATIO_SHORT);
+                    $instanceType->setIconText('Type');
+                    $instanceList->addItem($instanceType);
+
+                    if (!Configuration::OPTIONS_WRITABLE[$optionName]) {
+                        $instanceQuery = new DisplayInformation($this->_applicationInstance);
+                        $instanceQuery->setType(DisplayItemIconMessage::TYPE_WARN);
+                        $instanceQuery->setMessage('Not writeable');
+                    } elseif (Configuration::getOptionFromEnvironmentAsStringStatic($optionName) != '') { // FIXME ne fonctionne pas
+                        $instanceQuery = new DisplayInformation($this->_applicationInstance);
+                        $instanceQuery->setType(DisplayItemIconMessage::TYPE_WARN);
+                        $instanceQuery->setMessage('Forced on config file');
+                    } elseif ($this->_unlocked
+                        && $this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getInstanceEntity() // FIXME doit être dans la liste des entités autorisées
+                    ) {
+                        $instanceQuery = new DisplayQuery($this->_applicationInstance);
+                        $instanceQuery->setType(DisplayQuery::QUERY_STRING);
+                        $instanceQuery->setMessage('Change value');
+                    } else {
+                        $instanceQuery = new DisplayInformation($this->_applicationInstance);
+                        $instanceQuery->setType(DisplayItemIconMessage::TYPE_BACK);
+                        $instanceQuery->setLink('?'
+                            . References::COMMAND_SWITCH_APPLICATION . '=' . self::REFERENCE_AUTHENTICATION_APPLICATION
+                            . '&' . References::COMMAND_APPLICATION_BACK . '=' . Application::APPLICATION_NODE);
+                        $instanceQuery->setMessage('Not connected');
+                    }
+                    $instanceQuery->setRatio(DisplayItem::RATIO_SHORT);
+                    $instanceQuery->setIconText('Change value');
+                    $instanceList->addItem($instanceQuery);
+
+                    $instanceValue = new DisplayInformation($this->_applicationInstance);
+                    if ($this->_configurationInstance->getOptionAsString($optionName) == Configuration::OPTIONS_DEFAULT_VALUE[$optionName]) {
+                        $instanceValue->setType(DisplayItemIconMessage::TYPE_OK);
+                        $instanceValue->setMessage('Is default value');
+                        $instanceValue->setRatio(DisplayItem::RATIO_SHORT);
+                    } else {
+                        $instanceValue->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+                        $instanceValue->setMessage('"' . $this->_configurationInstance->getOptionAsString($optionName) . '"');
+                        $instanceValue->setRatio(DisplayItem::RATIO_LONG);
+                    }
+                    $instanceValue->setIconText('Curent value');
+                    $instanceList->addItem($instanceValue);
+
+                    $instanceDefault = new DisplayInformation($this->_applicationInstance);
+                    $instanceDefault->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+                    $instanceDefault->setMessage('"' . Configuration::OPTIONS_DEFAULT_VALUE[$optionName] . '"');
+                    $instanceDefault->setRatio(DisplayItem::RATIO_LONG);
+                    $instanceDefault->setIconText('Default value');
+                    $instanceList->addItem($instanceDefault);
+
+                    $instanceDesc = new DisplayInformation($this->_applicationInstance);
+                    $instanceDesc->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+                    $instanceDesc->setMessage(Configuration::OPTIONS_DESCRIPTION[$optionName]);
+                    $instanceDesc->setRatio(DisplayItem::RATIO_LONG);
+                    $instanceDesc->setIconText('Description');
+                    $instanceList->addItem($instanceDesc);
+
+                    $instanceList->setSize(DisplayItem::SIZE_SMALL);
                     $instanceList->display();
 
+                    echo "<br /><br />\n";
 
-                    $instanceColorCategory = new DisplayColor($this->_applicationInstance);
-                    $instanceColorCategory->setNID($optionID);
-                    $instanceColorCategory->setSize(DisplayItem::SIZE_MEDIUM);
-                    ?>
-
-                    <div class="optionItem">
-                        <a name="<?php echo $optionName; ?>"></a>
-                        <div class="optionLogo"><?php $instanceColorCategory->display(); ?></div>
-                        <div class="optionInfos">
-                            <div class="type"><?php echo $optionCriticality; ?>, <?php echo $optionWritableDisplay; ?>
-                                <img src="o/<?php echo self::DEFAULT_ICON_ALPHA_COLOR; ?>"
-                                     style="background:<?php if ($isDefault) echo self::DEFAULT_ICON_COLOR; else echo $optionColorOnChange; ?>;height:16px;width:16px;"/>
-                            </div>
-                            <div class="name">Option <span class="namevalue"><?php echo $optionName; ?></span></div>
-                            <div class="type">Type <?php echo $optionType; ?></div>
-                            <div class="current">Current = <span
-                                        class="currentvalue<?php if (!$isDefault) echo 'changed'; ?>"><?php echo $optionValueDisplay; ?></span>
-                            </div>
-                            <?php
-                            if (!$isDefault) {
-                                ?>
-
-                                <div class="default">Default = <?php echo $optionDefaultDisplay; ?></div>
-                                <?php
-                            } else {
-                                ?>
-
-                                <div class="default">Default.</div>
-                                <?php
-                            }
-                            ?>
-
-                            <div class="change">
-                                <?php
-                                // Si on ne peut écrire.
-                                if (!$optionWritable
-                                    || $optionLocked
-                                ) {
-                                    ?>
-
-                                    &nbsp;
-                                    <?php
-                                } elseif (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')) {
-                                    ?>
-
-                                    Global write lock.
-                                    <?php
-                                } elseif (!$this->_unlocked
-                                    || $this->_nebuleInstance->getCurrentEntity() != $this->_nebuleInstance->getInstanceEntity()
-                                ) {
-                                    ?>
-
-                                    Need local instance entity unlocked to modify this option.
-                                    <?php
-                                } else {
-                                    ?>
-
-                                    <form method="get" action="">
-                                        <input type="hidden" name="<?php echo Action::COMMAND_OPTION_NAME; ?>"
-                                               value="<?php echo $optionName; ?>">
-                                        <input type="hidden" name="<?php echo References::COMMAND_SELECT_TICKET; ?>"
-                                               value="<?php echo $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
-                                        <?php
-                                        if ($optionType == 'string') {
-                                            ?>
-
-                                            <input type="text" name="<?php echo Action::COMMAND_OPTION_VALUE; ?>"
-                                                   size="40">
-                                            <?php
-                                        } elseif ($optionType == 'boolean') {
-                                            ?>
-
-                                            <input type="hidden" name="<?php echo Action::COMMAND_OPTION_VALUE; ?>"
-                                                   value="<?php if ($optionValue === false) echo 'true'; else echo 'false'; ?>">
-                                            <?php
-                                        } elseif ($optionType == 'integer') {
-                                            ?>
-
-                                            <input type="text" name="<?php echo Action::COMMAND_OPTION_VALUE; ?>"
-                                                   size="8">
-                                            <?php
-                                        } else {
-                                            ?>
-
-                                            What!?
-                                            <?php
-                                        }
-                                        ?>
-
-                                        <input type="submit" value="<?php echo 'Change'; ?>">
-                                    </form>
-                                    <?php
-                                }
-                                ?>
-
-                            </div>
-                        </div>
-                        <div class="desc">
-                            <?php echo $optionDescription; ?>
-                        </div>
-                    </div>
-                    <?php
+                    unset ($instanceList, $instanceOption, $instanceID, $instanceState, $instanceCategory, $instanceType, $instanceQuery, $instanceValue, $instanceDefault, $instanceDesc);
                 }
             }
             ?>
@@ -1272,19 +1203,6 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         <div style="clear:both;"></div>
 
         <div id="help">
-            <div id="helppart">
-                <img src="o/<?php echo self::DEFAULT_ICON_ALPHA_COLOR; ?>"
-                     style="background:<?php echo self::DEFAULT_ICON_COLOR; ?>">Option have it's default value.<br/>
-                <img src="o/<?php echo self::DEFAULT_ICON_ALPHA_COLOR; ?>"
-                     style="background:<?php echo self::USEFUL_ICON_COLOR; ?>">Option don't have it's default value and
-                it's useful.<br/>
-                <img src="o/<?php echo self::DEFAULT_ICON_ALPHA_COLOR; ?>"
-                     style="background:<?php echo self::CAREFUL_ICON_COLOR; ?>">Option don't have it's default value but
-                it's important. Change the default value may reduce availability or stability.<br/>
-                <img src="o/<?php echo self::DEFAULT_ICON_ALPHA_COLOR; ?>"
-                     style="background:<?php echo self::CRITICAL_ICON_COLOR; ?>">Option don't have it's default value,
-                but it's critical for the security. Be sure it's not a error.
-            </div>
             <div id="helppart">
                 Type of an option can be 'string', 'boolean' or 'integer'. The type is defined by construct and can't be
                 changed.

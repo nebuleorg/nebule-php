@@ -9,7 +9,7 @@ $nebuleSurname = 'nebule/library';
 /** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleDescription = 'Library of functions for nebule in php object-oriented.';
 $nebuleAuthor = 'Projet nebule';
-$nebuleLibVersion = '020240813';
+$nebuleLibVersion = '020240814';
 $nebuleLicence = 'GNU GPL 2010-2024';
 $nebuleWebsite = 'www.nebule.org';
 // ----------------------------------------------------------------------------------------
@@ -17,18 +17,18 @@ $nebuleWebsite = 'www.nebule.org';
 
 
 /*
-------------------------------------------------------------------------------------------
- /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
-------------------------------------------------------------------------------------------
-
- [FR] Toute modification de ce code entrainera une modification de son empreinte
-      et entrainera donc automatiquement son invalidation !
- [EN] Any changes to this code will cause a change in its footprint and therefore
-      automatically result in its invalidation!
- [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
-      tanto lugar automáticamente a su anulación!
-
-------------------------------------------------------------------------------------------
+|------------------------------------------------------------------------------------------
+| /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
+|------------------------------------------------------------------------------------------
+|
+|  [FR] Toute modification de ce code entrainera une modification de son empreinte
+|       et entrainera donc automatiquement son invalidation !
+|  [EN] Any changes to this code will cause a change in its footprint and therefore
+|       automatically result in its invalidation!
+|  [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
+|       tanto lugar automáticamente a su anulación!
+|
+|------------------------------------------------------------------------------------------
 */
 
 

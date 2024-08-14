@@ -1018,14 +1018,11 @@ class Configuration
                 if ($l == '' || substr($l, 0, 1) == "#")
                     continue;
 
-                $fname = trim(filter_var(strtok($l, '='), FILTER_SANITIZE_STRING));
-                $fvalue = trim(filter_var(strtok('='), FILTER_SANITIZE_STRING));
-                if ($fname == $name) {
-                    return $fvalue;
-                    break;
-                }
+                $nameOnFile = trim(filter_var(strtok($l, '='), FILTER_SANITIZE_STRING));
+                $value = trim(filter_var(strtok('='), FILTER_SANITIZE_STRING));
+                if ($nameOnFile == $name)
+                    return $value;
             }
-            unset($file);
         }
         return '';
     }

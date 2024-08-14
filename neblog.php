@@ -17,18 +17,18 @@ use const Nebule\Bootstrap\BOOTSTRAP_WEBSITE;
 use const Nebule\Bootstrap\LIB_BOOTSTRAP_ICON;
 
 /*
-------------------------------------------------------------------------------------------
- /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
-------------------------------------------------------------------------------------------
-
- [FR] Toute modification de ce code entrainera une modification de son empreinte
-      et entrainera donc automatiquement son invalidation !
- [EN] Any changes to this code will cause a change in its footprint and therefore
-      automatically result in its invalidation!
- [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
-      tanto lugar automáticamente a su anulación!
-
-------------------------------------------------------------------------------------------
+|------------------------------------------------------------------------------------------
+| /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
+|------------------------------------------------------------------------------------------
+|
+|  [FR] Toute modification de ce code entrainera une modification de son empreinte
+|       et entrainera donc automatiquement son invalidation !
+|  [EN] Any changes to this code will cause a change in its footprint and therefore
+|       automatically result in its invalidation!
+|  [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
+|       tanto lugar automáticamente a su anulación!
+|
+|------------------------------------------------------------------------------------------
 */
 
 
@@ -46,10 +46,10 @@ class Application extends Applications
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240802';
+    const APPLICATION_VERSION = '020240814';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2024';
     const APPLICATION_WEBSITE = 'www.neblog.org';
-    const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
+    const APPLICATION_NODE = '05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288';
     const APPLICATION_CODING = 'application/x-httpd-php';
     const USE_MODULES = true;
     const USE_MODULES_TRANSLATE = true;
@@ -173,15 +173,15 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
 
         // Vide, est surchargé juste avant l'affichage.
-        $this->setHtlinkObjectPrefix('?');
-        $this->setHtlinkGroupPrefix('?');
-        $this->setHtlinkConversationPrefix('?');
-        $this->setHtlinkEntityPrefix('?');
-        $this->setHtlinkCurrencyPrefix('?');
-        $this->setHtlinkTokenPoolPrefix('?');
-        $this->setHtlinkTokenPrefix('?');
-        $this->setHtlinkTransactionPrefix('?');
-        $this->setHtlinkWalletPrefix('?');
+        $this->setUrlLinkObjectPrefix('?');
+        $this->setUrlLinkGroupPrefix('?');
+        $this->setUrlLinkConversationPrefix('?');
+        $this->setUrlLinkEntityPrefix('?');
+        $this->setUrlLinkCurrencyPrefix('?');
+        $this->setUrlLinkTokenPoolPrefix('?');
+        $this->setUrlLinkTokenPrefix('?');
+        $this->setUrlLinkTransactionPrefix('?');
+        $this->setUrlLinkWalletPrefix('?');
 
         $this->_findLogoApplication();
         $this->_findLogoApplicationLink();

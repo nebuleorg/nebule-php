@@ -198,15 +198,15 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     protected ?Translates $_traductionInstance = null;
     protected ?Actions $_actionInstance = null;
     protected bool $_unlocked = false;
-    protected string $_htlinkObjectPrefix = '';
-    protected string $_htlinkGroupPrefix = '';
-    protected string $_htlinkConversationPrefix = '';
-    protected string $_htlinkEntityPrefix = '';
-    protected string $_htlinkCurrencyPrefix = '';
-    protected string $_htlinkTokenPoolPrefix = '';
-    protected string $_htlinkTokenPrefix = '';
-    protected string $_htlinkTransactionPrefix = '';
-    protected string $_htlinkWalletPrefix = '';
+    protected string $_urlLinkObjectPrefix = '';
+    protected string $_urlLinkGroupPrefix = '';
+    protected string $_urlLinkConversationPrefix = '';
+    protected string $_urlLinkEntityPrefix = '';
+    protected string $_urlLinkCurrencyPrefix = '';
+    protected string $_urlLinkTokenPoolPrefix = '';
+    protected string $_urlLinkTokenPrefix = '';
+    protected string $_urlLinkTransactionPrefix = '';
+    protected string $_urlLinkWalletPrefix = '';
     protected string $_currentDisplayLanguage;
     protected string $_currentDisplayLanguageInstance;
     protected array $_displayLanguageList = array();
@@ -232,39 +232,39 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
 
-        $this->setHtlinkObjectPrefix('?'
+        $this->setUrlLinkObjectPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkGroupPrefix('?'
+        $this->setUrlLinkGroupPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkConversationPrefix('?'
+        $this->setUrlLinkConversationPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkEntityPrefix('?'
+        $this->setUrlLinkEntityPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkCurrencyPrefix('?'
+        $this->setUrlLinkCurrencyPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkTokenPoolPrefix('?'
+        $this->setUrlLinkTokenPoolPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkTokenPrefix('?'
+        $this->setUrlLinkTokenPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkTransactionPrefix('?'
+        $this->setUrlLinkTransactionPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkWalletPrefix('?'
+        $this->setUrlLinkWalletPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
@@ -1818,49 +1818,49 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         return $this->_traductionInstance->getTranslate($text);
     }
 
-    public function setHtlinkObjectPrefix(string $htlink): void
+    public function setUrlLinkObjectPrefix(string $htlink): void
     {
-        $this->_htlinkObjectPrefix = $htlink;
+        $this->_urlLinkObjectPrefix = $htlink;
     }
 
-    public function setHtlinkGroupPrefix(string $htlink): void
+    public function setUrlLinkGroupPrefix(string $htlink): void
     {
-        $this->_htlinkGroupPrefix = $htlink;
+        $this->_urlLinkGroupPrefix = $htlink;
     }
 
-    public function setHtlinkConversationPrefix(string $htlink): void
+    public function setUrlLinkConversationPrefix(string $htlink): void
     {
-        $this->_htlinkConversationPrefix = $htlink;
+        $this->_urlLinkConversationPrefix = $htlink;
     }
 
-    public function setHtlinkEntityPrefix(string $htlink): void
+    public function setUrlLinkEntityPrefix(string $htlink): void
     {
-        $this->_htlinkEntityPrefix = $htlink;
+        $this->_urlLinkEntityPrefix = $htlink;
     }
 
-    public function setHtlinkCurrencyPrefix(string $htlink): void
+    public function setUrlLinkCurrencyPrefix(string $htlink): void
     {
-        $this->_htlinkCurrencyPrefix = $htlink;
+        $this->_urlLinkCurrencyPrefix = $htlink;
     }
 
-    public function setHtlinkTokenPoolPrefix(string $htlink): void
+    public function setUrlLinkTokenPoolPrefix(string $htlink): void
     {
-        $this->_htlinkTokenPoolPrefix = $htlink;
+        $this->_urlLinkTokenPoolPrefix = $htlink;
     }
 
-    public function setHtlinkTokenPrefix(string $htlink): void
+    public function setUrlLinkTokenPrefix(string $htlink): void
     {
-        $this->_htlinkTokenPrefix = $htlink;
+        $this->_urlLinkTokenPrefix = $htlink;
     }
 
-    public function setHtlinkTransactionPrefix(string $htlink): void
+    public function setUrlLinkTransactionPrefix(string $htlink): void
     {
-        $this->_htlinkTransactionPrefix = $htlink;
+        $this->_urlLinkTransactionPrefix = $htlink;
     }
 
-    public function setHtlinkWalletPrefix(string $htlink): void
+    public function setUrlLinkWalletPrefix(string $htlink): void
     {
-        $this->_htlinkWalletPrefix = $htlink;
+        $this->_urlLinkWalletPrefix = $htlink;
     }
 
     public function echoTraduction(string $text, string $color = '', string $arg1 = '', string $arg2 = '',
@@ -2621,22 +2621,22 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($htlink != '')
             return $htlink;
         if (is_a($object, 'Nebule\Library\Entity')) // TODO switch !
-            return $this->_htlinkEntityPrefix . $object->getID();
+            return $this->_urlLinkEntityPrefix . $object->getID();
         elseif (is_a($object, 'Nebule\Library\Conversation'))
-            return $this->_htlinkConversationPrefix . $object->getID();
+            return $this->_urlLinkConversationPrefix . $object->getID();
         elseif (is_a($object, 'Nebule\Library\Group'))
-            return $this->_htlinkGroupPrefix . $object->getID();
+            return $this->_urlLinkGroupPrefix . $object->getID();
         elseif (is_a($object, 'Nebule\Library\Wallet'))
-            return $this->_htlinkWalletPrefix . $object->getID();
+            return $this->_urlLinkWalletPrefix . $object->getID();
         elseif (is_a($object, 'Nebule\Library\Transaction'))
-            return $this->_htlinkTransactionPrefix . $object->getID();
+            return $this->_urlLinkTransactionPrefix . $object->getID();
         elseif (is_a($object, 'Nebule\Library\Token'))
-            return $this->_htlinkTokenPrefix . $object->getID();
+            return $this->_urlLinkTokenPrefix . $object->getID();
         elseif (is_a($object, 'Nebule\Library\TokenPool'))
-            return $this->_htlinkTokenPoolPrefix . $object->getID();
+            return $this->_urlLinkTokenPoolPrefix . $object->getID();
         elseif (is_a($object, 'Nebule\Library\Currency'))
-            return $this->_htlinkCurrencyPrefix . $object->getID();
-        return $this->_htlinkObjectPrefix . $object->getID();
+            return $this->_urlLinkCurrencyPrefix . $object->getID();
+        return $this->_urlLinkObjectPrefix . $object->getID();
     }
 
 

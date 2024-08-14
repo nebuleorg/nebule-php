@@ -15,7 +15,7 @@ class App2
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240226';
+    const APPLICATION_VERSION = '020240814';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -27,20 +27,23 @@ class App2
     {
         global $nebuleServerEntity;
 
-        // Initialisation des logs
         \Nebule\Bootstrap\log_reopen('app2');
         \Nebule\Bootstrap\log_add('Loading', 'info', __FUNCTION__, 'cb4450a2');
 
-        if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK))
+        if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK)) {
             $argBack = trim(filter_input(INPUT_GET, References::COMMAND_APPLICATION_BACK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            \Nebule\Bootstrap\log_add('input ' . References::COMMAND_APPLICATION_BACK . ' ask come back to application nid=' . $argBack, 'info', __FUNCTION__, 'a8a5401d');
+        }
         else
             $argBack = '1';
-        if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK))
+        if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_ENTITY)) {
             $argEnt = trim(filter_input(INPUT_GET, References::COMMAND_SELECT_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            \Nebule\Bootstrap\log_add('input ' . References::COMMAND_SELECT_ENTITY . ' ask use entity eid=' . $argEnt, 'info', __FUNCTION__, '425694ce');
+        }
         else
             $argEnt = $nebuleServerEntity;
         $argLogout = filter_has_var(INPUT_GET, References::COMMAND_AUTH_ENTITY_LOGOUT);
-        $args = '?a=' . self::DEFAULT_REDIRECT_AUTH_APP;
+        $args = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . self::DEFAULT_REDIRECT_AUTH_APP;
         $args .= '&' . References::COMMAND_APPLICATION_BACK . '=' . $argBack;
         $args .= '&' . References::COMMAND_SELECT_ENTITY . '=' . $argEnt;
         $args .= '&mod=auth&view=';

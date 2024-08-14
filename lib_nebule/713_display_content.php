@@ -18,7 +18,7 @@ namespace Nebule\Library;
  */
 class DisplayContent extends DisplayItemIconMessageSizeable implements DisplayInterface
 {
-    private $_nid = null;
+    private ?Node $_nid = null;
     
     protected function _init(): void
     {

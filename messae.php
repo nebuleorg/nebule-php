@@ -15,18 +15,18 @@ use Nebule\Library\Translates;
 use const Nebule\Bootstrap\BOOTSTRAP_NAME;
 
 /*
-------------------------------------------------------------------------------------------
- /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
-------------------------------------------------------------------------------------------
-
- [FR] Toute modification de ce code entrainera une modification de son empreinte
-      et entrainera donc automatiquement son invalidation !
- [EN] Any changes to this code will cause a change in its footprint and therefore
-      automatically result in its invalidation!
- [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
-      tanto lugar automáticamente a su anulación!
-
-------------------------------------------------------------------------------------------
+|------------------------------------------------------------------------------------------
+| /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
+|------------------------------------------------------------------------------------------
+|
+|  [FR] Toute modification de ce code entrainera une modification de son empreinte
+|       et entrainera donc automatiquement son invalidation !
+|  [EN] Any changes to this code will cause a change in its footprint and therefore
+|       automatically result in its invalidation!
+|  [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
+|       tanto lugar automáticamente a su anulación!
+|
+|------------------------------------------------------------------------------------------
 */
 
 
@@ -44,10 +44,10 @@ class Application extends Applications
     const APPLICATION_NAME = 'messae';
     const APPLICATION_SURNAME = 'nebule/messae';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240802';
+    const APPLICATION_VERSION = '020240814';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.messae.org';
-    const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
+    const APPLICATION_NODE = '2060a0d21853a42093f01d2e4809c2a5e9300b4ec31afbaf18af66ec65586d6c78b2823a.none.288';
     const APPLICATION_CODING = 'application/x-httpd-php';
     const USE_MODULES = true;
     const USE_MODULES_TRANSLATE = true;
@@ -182,15 +182,15 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
 
         // Vide, est surchargé juste avant l'affichage.
-        $this->setHtlinkObjectPrefix('?');
-        $this->setHtlinkGroupPrefix('?');
-        $this->setHtlinkConversationPrefix('?');
-        $this->setHtlinkEntityPrefix('?');
-        $this->setHtlinkCurrencyPrefix('?');
-        $this->setHtlinkTokenPoolPrefix('?');
-        $this->setHtlinkTokenPrefix('?');
-        $this->setHtlinkTransactionPrefix('?');
-        $this->setHtlinkWalletPrefix('?');
+        $this->setUrlLinkObjectPrefix('?');
+        $this->setUrlLinkGroupPrefix('?');
+        $this->setUrlLinkConversationPrefix('?');
+        $this->setUrlLinkEntityPrefix('?');
+        $this->setUrlLinkCurrencyPrefix('?');
+        $this->setUrlLinkTokenPoolPrefix('?');
+        $this->setUrlLinkTokenPrefix('?');
+        $this->setUrlLinkTransactionPrefix('?');
+        $this->setUrlLinkWalletPrefix('?');
 
         $this->_findLogoApplication();
         $this->_findLogoApplicationLink();
@@ -280,79 +280,79 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     protected function _preDisplay(): void
     {
         // Préfix pour les objets. Les modules sont chargés, on peut les utiliser.
-        $this->setHtlinkObjectPrefix('?'
+        $this->setUrlLinkObjectPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         // Préfix pour les groupes.
         if ($this->_applicationInstance->isModuleLoaded('ModuleGroups')) {
-            $this->setHtlinkGroupPrefix('?'
+            $this->setUrlLinkGroupPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleGroups')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleGroups')->getDefaultView()
                 . '&' . References::COMMAND_SELECT_GROUP . '=');
         } else {
-            $this->setHtlinkGroupPrefix('?'
+            $this->setUrlLinkGroupPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
                 . '&' . References::COMMAND_SELECT_OBJECT . '=');
         }
         // Préfix pour les conversations.
         if ($this->_applicationInstance->isModuleLoaded('ModuleMessenger')) {
-            $this->setHtlinkConversationPrefix('?'
+            $this->setUrlLinkConversationPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleMessenger')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleMessenger')->getDefaultView()
                 . '&' . References::COMMAND_SELECT_CONVERSATION . '=');
         } else {
-            $this->setHtlinkConversationPrefix('?'
+            $this->setUrlLinkConversationPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
                 . '&' . References::COMMAND_SELECT_OBJECT . '=');
         }
         // Préfix pour les entités.
-        $this->setHtlinkEntityPrefix('?'
+        $this->setUrlLinkEntityPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getDefaultView()
             . '&' . References::COMMAND_SELECT_ENTITY . '=');
         // Préfix pour les monnaies.
         if ($this->_applicationInstance->isModuleLoaded('Moduleqantion')) {
-            $this->setHtlinkCurrencyPrefix('?'
+            $this->setUrlLinkCurrencyPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getRegisteredViews()[3]
                 . '&' . References::COMMAND_SELECT_CURRENCY . '=');
-            $this->setHtlinkTokenPoolPrefix('?'
+            $this->setUrlLinkTokenPoolPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getRegisteredViews()[8]
                 . '&' . References::COMMAND_SELECT_TOKENPOOL . '=');
-            $this->setHtlinkTokenPrefix('?'
+            $this->setUrlLinkTokenPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getRegisteredViews()[13]
                 . '&' . References::COMMAND_SELECT_TOKEN . '=');
-            $this->setHtlinkTransactionPrefix('?'
+            $this->setUrlLinkTransactionPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getRegisteredViews()[19]
                 . '&' . References::COMMAND_SELECT_TRANSACTION . '=');
-            $this->setHtlinkWalletPrefix('?'
+            $this->setUrlLinkWalletPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Moduleqantion')->getRegisteredViews()[23]
                 . '&' . References::COMMAND_SELECT_WALLET . '=');
         } else {
-            $this->setHtlinkCurrencyPrefix('?'
+            $this->setUrlLinkCurrencyPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
                 . '&' . References::COMMAND_SELECT_OBJECT . '=');
-            $this->setHtlinkTokenPoolPrefix('?'
+            $this->setUrlLinkTokenPoolPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
                 . '&' . References::COMMAND_SELECT_OBJECT . '=');
-            $this->setHtlinkTokenPrefix('?'
+            $this->setUrlLinkTokenPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
                 . '&' . References::COMMAND_SELECT_OBJECT . '=');
-            $this->setHtlinkTransactionPrefix('?'
+            $this->setUrlLinkTransactionPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
                 . '&' . References::COMMAND_SELECT_OBJECT . '=');
-            $this->setHtlinkWalletPrefix('?'
+            $this->setUrlLinkWalletPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleObjects')->getDefaultView()
                 . '&' . References::COMMAND_SELECT_OBJECT . '=');

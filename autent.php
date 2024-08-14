@@ -20,18 +20,18 @@ use Nebule\Library\DisplaySecurity; // For module autent
 use Nebule\Library\DisplayTitle; // For module autent
 
 /*
-------------------------------------------------------------------------------------------
- /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
-------------------------------------------------------------------------------------------
-
- [FR] Toute modification de ce code entrainera une modification de son empreinte
-      et entrainera donc automatiquement son invalidation !
- [EN] Any changes to this code will cause a change in its footprint and therefore
-      automatically result in its invalidation!
- [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
-      tanto lugar automáticamente a su anulación!
-
-------------------------------------------------------------------------------------------
+|------------------------------------------------------------------------------------------
+| /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
+|------------------------------------------------------------------------------------------
+|
+|  [FR] Toute modification de ce code entrainera une modification de son empreinte
+|       et entrainera donc automatiquement son invalidation !
+|  [EN] Any changes to this code will cause a change in its footprint and therefore
+|       automatically result in its invalidation!
+|  [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
+|       tanto lugar automáticamente a su anulación!
+|
+|------------------------------------------------------------------------------------------
 */
 
 
@@ -49,10 +49,10 @@ class Application extends Applications
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240813';
+    const APPLICATION_VERSION = '020240814';
     const APPLICATION_LICENCE = 'GNU GPL 2023-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
-    const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
+    const APPLICATION_NODE = '9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288';
     const APPLICATION_CODING = 'application/x-httpd-php';
     const USE_MODULES = true;
     const USE_MODULES_TRANSLATE = true;

@@ -14,18 +14,18 @@ use Nebule\Library\Translates;
 use const Nebule\Bootstrap\BOOTSTRAP_NAME;
 
 /*
-------------------------------------------------------------------------------------------
- /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
-------------------------------------------------------------------------------------------
-
- [FR] Toute modification de ce code entrainera une modification de son empreinte
-      et entrainera donc automatiquement son invalidation !
- [EN] Any changes to this code will cause a change in its footprint and therefore
-      automatically result in its invalidation!
- [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
-      tanto lugar automáticamente a su anulación!
-
-------------------------------------------------------------------------------------------
+|------------------------------------------------------------------------------------------
+| /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
+|------------------------------------------------------------------------------------------
+|
+|  [FR] Toute modification de ce code entrainera une modification de son empreinte
+|       et entrainera donc automatiquement son invalidation !
+|  [EN] Any changes to this code will cause a change in its footprint and therefore
+|       automatically result in its invalidation!
+|  [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
+|       tanto lugar automáticamente a su anulación!
+|
+|------------------------------------------------------------------------------------------
 */
 
 
@@ -43,10 +43,10 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240802';
+    const APPLICATION_VERSION = '020240814';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2024';
     const APPLICATION_WEBSITE = 'www.klicty.org';
-    const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
+    const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
     const APPLICATION_CODING = 'application/x-httpd-php';
     const USE_MODULES = false;
     const USE_MODULES_TRANSLATE = false;
@@ -586,31 +586,31 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
 
-        $this->setHtlinkObjectPrefix('?'
+        $this->setUrlLinkObjectPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkGroupPrefix('?'
+        $this->setUrlLinkGroupPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkConversationPrefix('?'
+        $this->setUrlLinkConversationPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkEntityPrefix('?'
+        $this->setUrlLinkEntityPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkCurrencyPrefix('?'
+        $this->setUrlLinkCurrencyPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkTokenPoolPrefix('?'
+        $this->setUrlLinkTokenPoolPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkTokenPrefix('?'
+        $this->setUrlLinkTokenPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkTransactionPrefix('?'
+        $this->setUrlLinkTransactionPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setHtlinkWalletPrefix('?'
+        $this->setUrlLinkWalletPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
 

@@ -127,32 +127,32 @@ class CryptoSoftware extends Crypto implements CryptoInterface
         $algo = 'sha256';
 
         // Génère une graine avec la date pour le compteur interne.
-        $intcount = date(DATE_ATOM) . microtime(false) . $nebuleSurname . $nebuleLibVersion . $this->_nebuleInstance->getInstanceEntity();
+        $internalCounter = date(DATE_ATOM) . microtime(false) . $nebuleSurname . $nebuleLibVersion . $this->_nebuleInstance->getInstanceEntity();
 
         // Boucle de remplissage.
         while (strlen($result) < $size) {
-            $diffsize = $size - strlen($result);
+            $diffSize = $size - strlen($result);
 
             // Fait évoluer le compteur interne.
-            $intcount = hash($algo, $intcount);
+            $internalCounter = hash($algo, $internalCounter);
 
             // Fait diverger le compteur interne pour la sortie.
             // La concaténation avec un texte empêche de remonter à la valeur du compteur interne.
-            $outvalue = pack("H*", hash($algo, $intcount . 'liberté égalité fraternité'));
+            $exitValue = pack("H*", hash($algo, $internalCounter . 'liberté égalité fraternité'));
 
             // Tronc au besoin la taille de la sortie.
-            if (strlen($outvalue) > $diffsize) {
-                $outvalue = substr($outvalue, 0, $diffsize);
-            }
+            if (strlen($exitValue) > $diffSize)
+                $exitValue = substr($exitValue, 0, $diffSize);
 
             // Ajoute la sortie au résultat final.
-            $result .= $outvalue;
+            $result .= $exitValue;
         }
 
         // Nettoyage.
-        unset($intcount, $outvalue, $diffsize);
+        unset($internalCounter, $exitValue, $diffSize);
 
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Calculated rand : ' . strlen($result) . '/' . $size, Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('calculated pseudo random count : ' . strlen($result), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '017fc207');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('calculated pseudo random entropy : ' . self::getEntropyStatic($result), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8c154c7b');
         return $result;
     }
 
