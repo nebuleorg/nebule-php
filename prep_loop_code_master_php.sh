@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020240805
+# Version 020240814
 
 export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
@@ -315,6 +315,10 @@ EOF
   neblog_hash=$(sha256sum "/tmp/neblog.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new neblog : ${neblog_hash}"
   cp "/tmp/neblog.php" "o/${neblog_hash}"
+
+  belzbu_hash=$(sha256sum "${WORKSPACE}/belzbu.php" | cut -d' ' -f1)'.sha2.256'
+  echo " > new belzbu : ${belzbu_hash}"
+  cp "${WORKSPACE}/belzbu.php" "o/${belzbu_hash}"
 
   echo ' > links'
   links=(

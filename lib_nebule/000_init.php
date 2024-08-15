@@ -21,12 +21,14 @@ $nebuleWebsite = 'www.nebule.org';
 | /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
 |------------------------------------------------------------------------------------------
 |
-|  [FR] Toute modification de ce code entrainera une modification de son empreinte
-|       et entrainera donc automatiquement son invalidation !
-|  [EN] Any changes to this code will cause a change in its footprint and therefore
-|       automatically result in its invalidation!
+|  [FR] Toute modification de ce code entraînera une modification de son empreinte
+|       et entraînera donc automatiquement son invalidation !
+|  [EN] Any modification of this code will result in a modification of its footprint
+|       and will therefore automatically result in its invalidation!
 |  [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
 |       tanto lugar automáticamente a su anulación!
+|  [UA] Будь-яка модифікація цього коду призведе до зміни його посадкового місця і,
+|       отже, автоматично призведе до його недійсності!
 |
 |------------------------------------------------------------------------------------------
 */
