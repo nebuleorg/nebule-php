@@ -21,12 +21,14 @@ use const Nebule\Bootstrap\LIB_BOOTSTRAP_ICON;
 | /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
 |------------------------------------------------------------------------------------------
 |
-|  [FR] Toute modification de ce code entrainera une modification de son empreinte
-|       et entrainera donc automatiquement son invalidation !
-|  [EN] Any changes to this code will cause a change in its footprint and therefore
-|       automatically result in its invalidation!
+|  [FR] Toute modification de ce code entraînera une modification de son empreinte
+|       et entraînera donc automatiquement son invalidation !
+|  [EN] Any modification of this code will result in a modification of its hash digest
+|       and will therefore automatically result in its invalidation!
 |  [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
 |       tanto lugar automáticamente a su anulación!
+|  [UA] Будь-яка модифікація цього коду призведе до зміни його відбитку пальця і,
+|       відповідно, автоматично призведе до його анулювання!
 |
 |------------------------------------------------------------------------------------------
 */
@@ -46,7 +48,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240814';
+    const APPLICATION_VERSION = '020240815';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2024';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288';

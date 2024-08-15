@@ -18,12 +18,14 @@ use const Nebule\Bootstrap\BOOTSTRAP_NAME;
 | /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
 |------------------------------------------------------------------------------------------
 |
-|  [FR] Toute modification de ce code entrainera une modification de son empreinte
-|       et entrainera donc automatiquement son invalidation !
-|  [EN] Any changes to this code will cause a change in its footprint and therefore
-|       automatically result in its invalidation!
+|  [FR] Toute modification de ce code entraînera une modification de son empreinte
+|       et entraînera donc automatiquement son invalidation !
+|  [EN] Any modification of this code will result in a modification of its hash digest
+|       and will therefore automatically result in its invalidation!
 |  [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
 |       tanto lugar automáticamente a su anulación!
+|  [UA] Будь-яка модифікація цього коду призведе до зміни його відбитку пальця і,
+|       відповідно, автоматично призведе до його анулювання!
 |
 |------------------------------------------------------------------------------------------
 */
@@ -43,7 +45,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240814';
+    const APPLICATION_VERSION = '020240815';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2024';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';

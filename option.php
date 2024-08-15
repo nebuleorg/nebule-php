@@ -26,12 +26,14 @@ use Nebule\Library\Translates;
 | /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
 |------------------------------------------------------------------------------------------
 |
-|  [FR] Toute modification de ce code entrainera une modification de son empreinte
-|       et entrainera donc automatiquement son invalidation !
-|  [EN] Any changes to this code will cause a change in its footprint and therefore
-|       automatically result in its invalidation!
+|  [FR] Toute modification de ce code entraînera une modification de son empreinte
+|       et entraînera donc automatiquement son invalidation !
+|  [EN] Any modification of this code will result in a modification of its hash digest
+|       and will therefore automatically result in its invalidation!
 |  [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
 |       tanto lugar automáticamente a su anulación!
+|  [UA] Будь-яка модифікація цього коду призведе до зміни його відбитку пальця і,
+|       відповідно, автоматично призведе до його анулювання!
 |
 |------------------------------------------------------------------------------------------
 */
@@ -51,7 +53,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240814';
+    const APPLICATION_VERSION = '020240815';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288';
