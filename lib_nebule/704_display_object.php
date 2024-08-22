@@ -634,6 +634,8 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             }
 
             if ($this->_displayJS) {
+                $divMenuContentOpen = '';
+                $divMenuContentClose = '';
                 $divTitleMenuOpen = '  <div class="objectTitleMenuContentLayout" id="objectTitleMenu-' . $this->_actionsID . '" '
                     . "onclick=\"display_hide('objectTitleMenu-" . $this->_actionsID . "');\" >\n";
                 $divTitleMenuOpen .= '   <div class="objectTitleMenuContent">' . "\n";
@@ -1105,11 +1107,11 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
 
     public function setNID(?Node $nid): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('set nid ' . gettype($nid), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($nid === null)
+        if ($nid === null) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('set nid=null', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
             $this->_nid = null;
-        elseif ($nid->getID() != '0' && is_a($nid, 'Nebule\Library\Node') && $nid->checkPresent()) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('set nid ' . $nid->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ce973fae');
+        } elseif ($nid->getID() != '0' && is_a($nid, 'Nebule\Library\Node')) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('set ' . get_class($nid) . ' nid=' . $nid->getID(), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
             $this->_nid = $nid;
             $this->setType();
             $this->setName();
@@ -1190,6 +1192,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     
     public function setType(string $type = ''): void
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set type ' . $type, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($type == '')
             $this->_type = $this->_nid->getType($this->_social);
         else
@@ -1198,6 +1201,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     
     public function setName(string $name = ''): void
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set name ' . $name, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($name != '')
             $this->_name = trim(filter_var($name, FILTER_SANITIZE_STRING));
         else {
@@ -1210,6 +1214,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
 
     public function setAppShortName(string $name): void
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set shortname ' . $name, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($name != '')
             $this->_appShortname = trim(filter_var($name, FILTER_SANITIZE_STRING));
         else {
@@ -1237,6 +1242,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
 
     public function setLink(string $link): void
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set link ' . $link, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_link = trim(filter_var($link, FILTER_SANITIZE_URL));
     }
 
@@ -1246,7 +1252,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             $this->_displayFlagProtection = $enable;
         
         if ($enable) {
-            $this->_flagProtectionIcon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_LK);
+            $this->_flagProtectionIcon = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_LINK_LK));
         }
     }
 
@@ -1266,8 +1272,14 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
 
     public function setFlagProtectionIcon(?Node $oid): void
     {
-        if ($oid->getID() != '0' && is_a($oid, 'Nebule\Library\Node') && $oid->checkPresent())
+        if ($oid === null) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('set nid=null', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+            $this->_flagProtectionIcon = null;
+        }
+        elseif ($oid->getID() != '0' && is_a($oid, 'Nebule\Library\Node') && $oid->checkPresent()) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('set ' . get_class($oid) . ' oid=' . $oid->getID(), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
             $this->_flagProtectionIcon = $oid;
+        }
     }
 
     public function setFlagProtectionText(string $text): void
@@ -1286,7 +1298,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             $this->_displayFlagObfuscate = $enable;
 
         if ($enable) {
-            $this->_flagObfuscateIcon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_LC);
+            $this->_flagObfuscateIcon = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_LINK_LC));
         }
     }
 
@@ -1306,17 +1318,25 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
 
     public function setFlagObfuscateIcon(?Node $oid): void
     {
-        if ($oid->getID() != '0' && is_a($oid, 'Nebule\Library\Node') && $oid->checkPresent())
+        if ($oid === null) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('set nid=null', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+            $this->_flagObfuscateIcon = null;
+        }
+        elseif ($oid->getID() != '0' && is_a($oid, 'Nebule\Library\Node') && $oid->checkPresent()) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('set ' . get_class($oid) . ' oid=' . $oid->getID(), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
             $this->_flagObfuscateIcon = $oid;
+        }
     }
 
     public function setFlagObfuscateText(string $text): void
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set obfuscate text ' . $text, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_flagObfuscateText = trim(filter_var($text, FILTER_SANITIZE_STRING));
     }
 
     public function setFlagObfuscateLink(string $link): void
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set obfuscate link ' . $link, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_flagObfuscateLink = trim(filter_var($link, FILTER_SANITIZE_URL));
     }
 
@@ -1325,7 +1345,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         $this->_displayFlagUnlocked = $enable;
 
         if ($enable){
-            $this->_flagUnlockedIcon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_KEY);
+            $this->_flagUnlockedIcon = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_KEY));
         }
     }
 
@@ -1345,17 +1365,25 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
 
     public function setFlagUnlockedIcon(?Node $oid): void
     {
-        if ($oid->getID() != '0' && is_a($oid, 'Nebule\Library\Node') && $oid->checkPresent())
+        if ($oid === null) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('set nid=null', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+            $this->_flagUnlockedIcon = null;
+        }
+        elseif ($oid->getID() != '0' && is_a($oid, 'Nebule\Library\Node') && $oid->checkPresent()) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('set ' . get_class($oid) . ' oid=' . $oid->getID(), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
             $this->_flagUnlockedIcon = $oid;
+        }
     }
 
     public function setFlagUnlockedText(string $text): void
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set unlocked text ' . $text, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_flagUnlockedText = trim(filter_var($text, FILTER_SANITIZE_STRING));
     }
 
     public function setFlagUnlockedLink(string $link): void
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set unlocked link ' . $link, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_flagUnlockedLink = trim(filter_var($link, FILTER_SANITIZE_URL));
     }
 
@@ -1407,19 +1435,19 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     {
         if ($state == 'e') {
             $this->_flagState = 'e';
-            $this->_flagStateIcon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IERR);
+            $this->_flagStateIcon = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_INFO_ERROR));
             $this->_flagStateText = '::::display:content:errorBan';
         } elseif ($state == 'w') {
             $this->_flagState = 'w';
-            $this->_flagStateIcon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IWARN);
+            $this->_flagStateIcon = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_INFO_WARN));
             $this->_flagStateText = '::::display:content:warningTaggedWarning';
         } elseif ($state == 'o') {
             $this->_flagState = 'o';
-            $this->_flagStateIcon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IOK);
+            $this->_flagStateIcon = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_INFO_OK));
             $this->_flagStateText = '::::display:content:OK';
         } else {
             $this->_flagState = 'n';
-            $this->_flagStateIcon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IERR);
+            $this->_flagStateIcon = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Displays::REFERENCE_ICON_INFO_ERROR));
             $this->_flagStateText = '::::display:content:errorNotAvailable';
         }
     }
@@ -1447,15 +1475,20 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
 
     public function setFlagMessage(string $text): void
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set flag message ' . $text, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_flagMessage = trim(filter_var($text, FILTER_SANITIZE_STRING));
     }
 
     public function setFlagTargetObject(?Node $nid): void
     {
-        if ($nid === null)
+        if ($nid === null) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('set nid=null', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
             $this->_flagTargetObject = null;
-        elseif ($nid->getID() != '0' && is_a($nid, 'Nebule\Library\Node') && $nid->checkPresent())
+        }
+        elseif ($nid->getID() != '0' && is_a($nid, 'Nebule\Library\Node')) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('set ' . get_class($nid) . ' nid=' . $nid->getID(), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
             $this->_flagTargetObject = $nid;
+        }
     }
 
     public function setEnableSelfHook(bool $enable = true): void

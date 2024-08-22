@@ -120,6 +120,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     const DEFAULT_ICON_TIME = '108033240730a0b19e96c82d85802f53c348e446441525696744f7102070b0ed.sha2.256';
     const DEFAULT_ICON_APPLICATION = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c.sha2.256';
 
+    const REFERENCE_ICON_KEY = 'ebde500081ce0916fb54efc3a900472be9fadee2dfcf988e3b5b721ebf00d687f655.none.272';
     // Références des icônes des liens.
     const REFERENCE_ICON_LINK_LC = '6e6562756c652f6c69656e2f6c630000000000000000000000000000000000000000.none.272';
     const REFERENCE_ICON_LINK_LD = '6e6562756c652f6c69656e2f6c640000000000000000000000000000000000000000.none.272';
@@ -148,6 +149,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     const REFERENCE_ICON_EMOTION_DEGOUT1 = '65646f677475656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000000001.none.272';
     const REFERENCE_ICON_EMOTION_COLERE1 = '6f63656c6572656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000000001.none.272';
     const REFERENCE_ICON_EMOTION_INTERET1 = '6e696574657274656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000001.none.272';
+
+    const REFERENCE_ICON_INFO_INFO = '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_INFO_OK = '69636f6e206f6b000000000000000000000000000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_INFO_WARN = '69636f6e207761726e696e6700000000000000000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_INFO_ERROR = '69636f6e206572726f72000000000000000000000000000000000000000000000000.none.272';
+    const REFERENCE_ICON_INFO_PLAY = '73745872cd2b46a40992470eaa6dd1e5ca1face3c38a1da7650d4040d82193b9021d.none.272';
+    const REFERENCE_ICON_INFO_BACK = '8ade584d3aa420335a7af82da4438654b891985777cc05bf6cbe86ebe328e31f1cc4.none.272';
+    const REFERENCE_ICON_INFO_QUERY = '16e9a40a7f705f9c3871d13ce78b9f016f6166c2214b293e5a38964502a5ff9a05bb.none.272';
 
 
 
@@ -2534,9 +2543,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($oid->getID() == '0')
             return '';
 
-        $uid = $this->_getImageByReference($oid);
+        $uid = $this->getImageByReference($oid);
 
-        if ($uid == $oid->getID())
+        if ($uid->getID() == $oid->getID())
             $newObjectInstance = $oid;
         else
             $newObjectInstance = $this->_nebuleInstance->newObject($uid);
@@ -2741,7 +2750,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @var array
      */
-    private $_cacheIconUpdate = array();
+    private array $_cacheIconUpdate = array();
 
     public function getImageUpdate($object, bool $useBuffer = true): string
     {
@@ -2784,17 +2793,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         return $update;
     }
 
-    /**
-     * Tableau de cache des icônes déjà recherchées par référence.
-     *
-     * @var array
-     */
-    private $_cacheIconByReference = array();
-
-    public function getImageByReference(Node $rid, bool $useBuffer = true): string
-    {
-        return $this->_getImageByReference($rid, $useBuffer);
-    }
+    private array $_cacheIconByReference = array();
 
     /**
      * Recherche par référence une image.
@@ -2802,34 +2801,29 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @param string|Node $rid
      * @param boolean     $useBuffer
-     * @return string
+     * @return Node
      */
-    private function _getImageByReference(Node $rid, bool $useBuffer = true): string
+    public function getImageByReference(Node $rid, bool $useBuffer = true): Node
     {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer'))
             $useBuffer = false;
 
         if ($rid->getID() == '0')
-            return '';
+            return $rid;
 
-        // Si présent dans le cache, utilise la valeur stockée.
-        if ($useBuffer
-            && isset($this->_cacheIconByReference[$rid->getID()])
-        )
-            return $this->_cacheIconByReference[$rid->getID()];
+        if ($useBuffer && isset($this->_cacheIconByReference[$rid->getID()]))
+            return new Node($this->_nebuleInstance, $this->_cacheIconByReference[$rid->getID()]);
 
-        // Sinon, lit l'id de l'objet référencé.
         $uid = $rid->getReferencedOrSelfNID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'myself');
         if ($uid == $rid->getID())
             $uid = $rid->getReferencedOrSelfNID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
         if ($uid == $rid->getID())
             $uid = $rid->getReferencedOrSelfNID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'all'); // FIXME peut-être trop...
 
-        // Mémorise le résultat.
         if ($useBuffer)
             $this->_cacheIconByReference[$rid->getID()] = $uid;
 
-        return $uid;
+        return new Node($this->_nebuleInstance, $uid);
     }
 
     /**
@@ -4990,11 +4984,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         ) {
             if ($instance->getSigned()) {
                 $contantDisplayValid .= '<img title="OK" ';
-                $contantDisplayValid .= 'alt="[O]" src="o/' . $this->_getImageByReference($this->_nebuleInstance->newObject(DisplayInformation::ICON_OK_RID)) . '" ';
+                $contantDisplayValid .= 'alt="[O]" src="o/' . $this->getImageByReference($this->_nebuleInstance->newObject(DisplayItemIconMessage::ICON_OK_RID))->getID() . '" ';
                 $contantDisplayValid .= '/>';
             } else {
                 $contantDisplayValid .= '<img title="ERROR" ';
-                $contantDisplayValid .= 'alt="[E]" src="o/' . $this->_getImageByReference($this->_nebuleInstance->newObject(DisplayInformation::ICON_ERROR_RID)) . '" ';
+                $contantDisplayValid .= 'alt="[E]" src="o/' . $this->getImageByReference($this->_nebuleInstance->newObject(DisplayItemIconMessage::ICON_ERROR_RID))->getID() . '" ';
                 $contantDisplayValid .= '/>';
             }
 
@@ -5037,7 +5031,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
             $contantDisplayAction .= '<img title="Action ' . $instance->getParsed()['bl/rl/req'] . '" ';
             $contantDisplayAction .= 'alt="[' . $instance->getParsed()['bl/rl/req'] . ']" ';
-            $contantDisplayAction .= 'src="o/' . $this->_getImageByReference($this->_nebuleInstance->newObject($icon)) . '" />';
+            $contantDisplayAction .= 'src="o/' . $this->getImageByReference($this->_nebuleInstance->newObject($icon))->getID() . '" />';
 
             $object = $this->_nebuleInstance->newObject($instance->getParsed()['bl/rl/nid1']);
             $contantDisplaySource .= '<img title="' . $object->getFullName();
@@ -5055,11 +5049,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $contantDisplayMeta .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
         } else {
             $contantDisplayIcon .= '<img title="ERROR" ';
-            $contantDisplayIcon .= 'alt="[E]" src="o/' . $this->_getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_LINK_LL)) . '" ';
+            $contantDisplayIcon .= 'alt="[E]" src="o/' . $this->getImageByReference($this->_nebuleInstance->newObject(self::REFERENCE_ICON_LINK_LL))->getID() . '" ';
             $contantDisplayIcon .= '/>';
 
             $contantDisplayValid .= '<img title="ERROR" ';
-            $contantDisplayValid .= 'alt="[E]" src="o/' . $this->_getImageByReference($this->_nebuleInstance->newObject(DisplayInformation::ICON_ERROR_RID)) . '" ';
+            $contantDisplayValid .= 'alt="[E]" src="o/' . $this->getImageByReference($this->_nebuleInstance->newObject(DisplayItemIconMessage::ICON_ERROR_RID))->getID() . '" ';
             $contantDisplayValid .= '/>';
         }
 

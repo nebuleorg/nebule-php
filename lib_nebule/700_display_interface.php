@@ -192,7 +192,7 @@ abstract class DisplayItemIconable extends DisplayItemCSS
         if (is_a($rid, 'Nebule\Library\Node'))
             $oid = $rid::DEFAULT_ICON_RID;
         else
-            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Node::DEFAULT_ICON_RID));
+            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Node::DEFAULT_ICON_RID))->getID();
         return $this->_nebuleInstance->newObject($oid);
     }
 

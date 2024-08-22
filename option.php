@@ -53,7 +53,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240815';
+    const APPLICATION_VERSION = '020240822';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288';
@@ -715,76 +715,91 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
      */
     private function _displayGlobalAuthorities()
     {
-        // Titre
-        echo $this->getDisplayTitle_DEPRECATED('Global authorities', null, false);
+        $instanceTitle = new DisplayTitle($this->_applicationInstance);
+        $instanceTitle->setTitle('Global authorities');
+        $instanceTitle->setIcon(null);
+        $instanceTitle->setEnableEntity(true);
+        $instanceTitle->display();
 
-        $param = array(
-            'enableDisplayColor' => true,
-            'enableDisplayIcon' => true,
-            'enableDisplayRefs' => false,
-            'enableDisplayName' => true,
-            'enableDisplayID' => false,
-            'enableDisplayFlags' => true,
-            'enableDisplayFlagProtection' => true,
-            'enableDisplayFlagObfuscate' => false,
-            'enableDisplayFlagUnlocked' => true,
-            'enableDisplayFlagState' => true,
-            'enableDisplayFlagEmotions' => false,
-            'enableDisplayStatus' => false,
-            'enableDisplayContent' => false,
-            'enableDisplayJS' => false,
-            'enableDisplayLink2Object' => true,
-            'displaySize' => 'medium',
-            'displayRatio' => 'short',
-            'status' => '',
-            'flagProtection' => false,
-        );
-
-        $list = array();
-        $i = 0;
-
-        // Puppetmaster
-        $list[$i]['object'] = $this->_nebuleInstance->getPuppetmasterInstance();
-        $list[$i]['param'] = $param;
-        $list[$i]['param']['flagProtection'] = true;
+        $instanceList = new DisplayList($this->_applicationInstance);
+        $instanceEntity = new DisplayObject($this->_applicationInstance);
+        $instanceEntity->setNID($this->_nebuleInstance->getPuppetmasterInstance());
+        $instanceEntity->setEnableNID(false);
+        $instanceEntity->setEnableName(true);
+        $instanceEntity->setEnableColor(true);
+        $instanceEntity->setEnableIcon(true);
+        $instanceEntity->setEnableFlags(true);
+        $instanceEntity->setEnableFlagProtection(true);
+        $instanceEntity->setFlagProtection(true);
+        $instanceEntity->setEnableFlagObfuscate(false);
+        $instanceEntity->setEnableFlagUnlocked(true);
+        $instanceEntity->setEnableFlagState(true);
+        $instanceEntity->setEnableFlagEmotions(false);
+        $instanceEntity->setEnableStatus(true);
+        $instanceEntity->setEnableContent(false);
+        $instanceEntity->setEnableActions(true);
+        $instanceEntity->setEnableJS(false);
+        $instanceEntity->setEnableRefs(false);
+        $instanceEntity->setEnableLink2Refs(false);
+        $instanceEntity->setEnableLink(true);
+        $instanceEntity->setStatus('');
+        $message = '';
         if ($this->_nebuleInstance->getPuppetmaster() == $this->_nebuleInstance->getInstanceEntity())
-            $list[$i]['param']['flagMessage'] = 'Instance entity';
+            $message = 'Instance entity';
         if ($this->_nebuleInstance->getPuppetmaster() == $this->_nebuleInstance->getDefaultEntity()) {
-            if ($list[$i]['param']['flagMessage'] != '')
-                $list[$i]['param']['flagMessage'] .= ', ';
-            $list[$i]['param']['flagMessage'] .= 'Default entity';
+            if ($message != '')
+                $message .= ', ';
+            $message .= 'Default entity';
         }
-
-        // Security and code masters
+        $instanceEntity->setFlagMessage($message); // FIXME me fonctionne pas
+        $instanceEntity->setRatio(DisplayItem::RATIO_SHORT);
+        $instanceEntity->setSize(DisplayItem::SIZE_MEDIUM);
+        $instanceList->addItem($instanceEntity);
         foreach (array_merge($this->_nebuleInstance->getSecurityAuthoritiesInstance(), $this->_nebuleInstance->getCodeAuthoritiesInstance()) as $instance)
         {
-            $i++;
-            $list[$i]['object'] = $instance;
-            $list[$i]['param'] = $param;
-            $list[$i]['param']['enableDisplayRefs'] = true;
-            $list[$i]['param']['objectRefs'][0] = $this->_nebuleInstance->getPuppetmasterInstance();
+            $instanceEntity = new DisplayObject($this->_applicationInstance);
+            $instanceEntity->setNID($instance);
+            $instanceEntity->setEnableNID(false);
+            $instanceEntity->setEnableName(true);
+            $instanceEntity->setEnableColor(true);
+            $instanceEntity->setEnableIcon(true);
+            $instanceEntity->setEnableFlags(true);
+            $instanceEntity->setEnableFlagProtection(true);
+            $instanceEntity->setEnableFlagObfuscate(false);
+            $instanceEntity->setEnableFlagUnlocked(true);
+            $instanceEntity->setEnableFlagState(true);
+            $instanceEntity->setEnableFlagEmotions(false);
+            $instanceEntity->setEnableStatus(true);
+            $instanceEntity->setEnableContent(false);
+            $instanceEntity->setEnableActions(true);
+            $instanceEntity->setEnableJS(false);
+            $instanceEntity->setEnableRefs(true);
+            $instanceEntity->setEnableLink2Refs(false);
+            $instanceEntity->setRefs(array('0' => $this->_nebuleInstance->getPuppetmasterInstance(),));
+            $instanceEntity->setEnableLink(true);
+            $instanceEntity->setStatus('');
+            $message = '';
             if ($instance->getID() == $this->_nebuleInstance->getInstanceEntity())
-                $list[$i]['param']['flagMessage'] = 'Instance entity';
+                $message = 'Instance entity';
             if ($instance->getID() == $this->_nebuleInstance->getDefaultEntity()) {
-                if ($list[$i]['param']['flagMessage'] != '')
-                    $list[$i]['param']['flagMessage'] .= ', ';
-                $list[$i]['param']['flagMessage'] .= 'Default entity';
+                if ($message != '')
+                    $message .= ', ';
+                $message .= 'Default entity';
             }
+            $instanceEntity->setFlagMessage($message);
+            $instanceEntity->setRatio(DisplayItem::RATIO_SHORT);
+            $instanceEntity->setSize(DisplayItem::SIZE_MEDIUM);
+            $instanceList->addItem($instanceEntity);
         }
+        $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+        $instanceList->display();
 
-        // Display list.
-        echo $this->getDisplayObjectsList($list, 'medium');
-
-        // Display information.
-        $param = array(
-            'enableDisplayAlone' => true,
-            'enableDisplayIcon' => true,
-            'informationType' => 'information',
-            'displayRatio' => 'long',
-        );
-        $message = "The global authorities are entities with specials capabilities on common things like code.";
-        $message .= " Global authorities can't be removed or disabled.";
-        echo $this->getDisplayInformation_DEPRECATED($message, $param);
+        $instanceMessage = new DisplayInformation($this->_applicationInstance);
+        $instanceMessage->setMessage("The global authorities are entities with specials capabilities on common things like code. Global authorities can't be removed or disabled.");
+        $instanceMessage->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+        $instanceMessage->setDisplayAlone(true);
+        $instanceMessage->setSize(DisplayItem::SIZE_SMALL);
+        $instanceMessage->display();
     }
 
 
@@ -799,8 +814,11 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
     {
         $refAuthority = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
 
-        // Titre
-        echo $this->getDisplayTitle_DEPRECATED('Primary local authorities', null, false);
+        $instanceTitle = new DisplayTitle($this->_applicationInstance);
+        $instanceTitle->setTitle('Primary local authorities');
+        $instanceTitle->setIcon(null);
+        $instanceTitle->setEnableEntity(true);
+        $instanceTitle->display();
 
         $listEntities = $this->_nebuleInstance->getLocalPrimaryAuthoritiesInstance();
         $listOkEntities = array(
@@ -1049,19 +1067,17 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
             unset($list, $listEntities, $listSigners);
         }
 
-        $param = array(
-            'enableDisplayAlone' => true,
-            'enableDisplayIcon' => true,
-            'informationType' => 'information',
-            'displayRatio' => 'long',
-        );
-        $message = "The local authorities are entities with specials capabilities on local server.<br /><br />\n";
-        $message .= "There are two levels of local authorities:<br />\n";
-        $message .= " 1: Local forced authorities defined by options, known as primary local authorities.<br />\n";
-        $message .= " 2: Local authorities defined by links from primary local authorities, known as secondary local authorities.<br /><br />\n";
-        $message .= "An entity can be added as secondary authority and later can be removed.<br />\n";
-        $message .= " Primary authorities can't be removed, they are forced by two options on the environment file : 'permitInstanceEntityAsAuthority' and 'permitDefaultEntityAsAuthority'.";
-        echo $this->getDisplayInformation_DEPRECATED($message, $param);
+        $instanceMessage = new DisplayInformation($this->_applicationInstance);
+        $instanceMessage->setMessage("The local authorities are entities with specials capabilities on local server.<br /><br />
+There are two levels of local authorities:<br />
+ 1: Local forced authorities defined by options, known as primary local authorities.<br />
+ 2: Local authorities defined by links from primary local authorities, known as secondary local authorities.<br /><br />
+An entity can be added as secondary authority and later can be removed.<br />
+Primary authorities can't be removed, they are forced by two options on the environment file : 'permitInstanceEntityAsAuthority' and 'permitDefaultEntityAsAuthority'.");
+        $instanceMessage->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+        $instanceMessage->setDisplayAlone(true);
+        $instanceMessage->setSize(DisplayItem::SIZE_SMALL);
+        $instanceMessage->display();
     }
 
 
@@ -1087,23 +1103,20 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                     if (Configuration::OPTIONS_CATEGORY[$optionName] != $optionCategory)
                         continue;
 
-                    $optionID = $this->_nebuleInstance->newObject($this->_nebuleInstance->getNIDfromData($optionName, 'sha2.256')); // FIXME test debug
-
                     $instanceList = new DisplayList($this->_applicationInstance);
 
-                    $instanceOption = new DisplayObject($this->_applicationInstance);
-                    $instanceOption->setEnableNID(false);
                     $instanceID = $this->_nebuleInstance->getCacheInstance()->newNode('0');
                     $instanceID->setContent($optionName);
-$this->_metrologyInstance->addLog('MARK name=' . $optionName . ' nid=' . $instanceID->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000'); // FIXME bugg
-                    //$instanceOption->setNID($instanceID);
-                    $instanceOption->setNID($optionID);
+                    $instanceOption = new DisplayObject($this->_applicationInstance);
+                    $instanceOption->setNID($instanceID);
+                    $instanceOption->setEnableNID(false);
                     $instanceOption->setEnableName(true);
                     $instanceOption->setName($optionName);
                     $instanceOption->setEnableColor(true);
                     $instanceOption->setEnableIcon(false);
-                    $instanceOption->setRatio(DisplayItem::RATIO_SHORT);
-                    //$instanceOption->display();
+                    $instanceOption->setEnableLink(false);
+                    $instanceOption->setEnableJS(false);
+                    $instanceOption->setRatio(DisplayItem::RATIO_LONG);
                     $instanceList->addItem($instanceOption);
 
                     $instanceState = new DisplayInformation($this->_applicationInstance);
@@ -1199,40 +1212,48 @@ $this->_metrologyInstance->addLog('MARK name=' . $optionName . ' nid=' . $instan
                     unset ($instanceList, $instanceOption, $instanceID, $instanceState, $instanceCategory, $instanceType, $instanceQuery, $instanceValue, $instanceDefault, $instanceDesc);
                 }
             }
-            ?>
 
-        </div>
-        <div style="clear:both;"></div>
+            $instanceList = new DisplayList($this->_applicationInstance);
 
-        <div id="help">
-            <div id="helppart">
-                Type of an option can be 'string', 'boolean' or 'integer'. The type is defined by construct and can't be
-                changed.
-            </div>
-            <div id="helppart">
-                Status of an option can be :<br/>
+            $instanceMessage1 = new DisplayInformation($this->_applicationInstance);
+            $instanceMessage1->setMessage("Type of an option can be 'string', 'boolean' or 'integer'. The type is defined by construct and can't be changed.");
+            $instanceMessage1->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+            $instanceMessage1->setRatio(DisplayItem::RATIO_LONG);
+            $instanceList->addItem($instanceMessage1);
+
+            $instanceMessage2 = new DisplayInformation($this->_applicationInstance);
+            $instanceMessage2->setMessage("Status of an option can be :<br/>
                 - useful : it's value have to be changed for normal operation.<br/>
                 - carful : it's value can be changed for normal operation but be careful this may reduce availability or
                 stability.<br/>
                 - critical : it's value should not be changed for normal operation, it's critical for the security. Be
-                sure it's not a error.
-            </div>
-            <div id="helppart">
-                Protection of an option can be :<br/>
-                - writable : the value can be change with a link.<br/>
+                sure it's not an error.");
+            $instanceMessage2->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+            $instanceMessage2->setRatio(DisplayItem::RATIO_LONG);
+            $instanceList->addItem($instanceMessage2);
+
+            $instanceMessage3 = new DisplayInformation($this->_applicationInstance);
+            $instanceMessage3->setMessage("Protection of an option can be :<br/>
+                - writable : the value can be changed with a link.<br/>
                 - forced : the value have been changed in the local environment file. It can't be change by link.<br/>
                 - locked : the option is defined as it's value can't be changed by link. It can be overridden in the
-                local environment file.
-            </div>
-        </div>
-        <?php
+                local environment file.");
+            $instanceMessage3->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+            $instanceMessage3->setRatio(DisplayItem::RATIO_LONG);
+            $instanceList->addItem($instanceMessage3);
+
+            $instanceList->setSize(DisplayItem::SIZE_SMALL);
+            $instanceList->display();
     }
 
 
     private function _displayApplications()
     {
-        // Titre
-        echo $this->getDisplayTitle_DEPRECATED('Applications', null, false);
+        $instanceTitle = new DisplayTitle($this->_applicationInstance);
+        $instanceTitle->setTitle('Applications');
+        $instanceTitle->setIcon(null);
+        $instanceTitle->setEnableEntity(true);
+        $instanceTitle->display();
         ?>
 
         <div id="apps">
@@ -1406,9 +1427,9 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
                         <div class="appActions">
                             <?php
                             if ($activated)
-                                echo $this->convertInlineIconFace(Displays::DEFAULT_ICON_IOK) . 'Enabled';
+                                echo $this->convertInlineIconFace(Displays::DEFAULT_ICON_IOK) . 'Enabled'; // FIXME replace with REFERENCE_ICON_INFO_OK
                             else
-                                echo $this->convertInlineIconFace(Displays::DEFAULT_ICON_IERR) . 'Disabled';
+                                echo $this->convertInlineIconFace(Displays::DEFAULT_ICON_IERR) . 'Disabled'; // FIXME replace with REFERENCE_ICON_INFO_ERROR
 
                             echo "<br />\n";
 
@@ -1518,8 +1539,8 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
             At any time you can switch to another application and come back later to the first one without losing work
             in progress or authentication.<br/>
             <br/>
-            An application can be <?php echo $this->convertInlineIconFace(Displays::DEFAULT_ICON_IOK) . 'enabled'; ?>
-            or <?php echo $this->convertInlineIconFace(Displays::DEFAULT_ICON_IERR) . 'disabled'; ?>.<br/>
+            An application can be <?php echo $this->convertInlineIconFace(Displays::REFERENCE_ICON_INFO_OK) . 'enabled'; ?>
+            or <?php echo $this->convertInlineIconFace(Displays::REFERENCE_ICON_INFO_ERROR) . 'disabled'; ?>.<br/>
             To be usable, each application have to be enabled on the list here. Without activation, the bootstrap refuse
             to load an application.<br/>
             To be enabled, an application have to be activated with a link generated by a local authority.<br/>
@@ -1547,8 +1568,11 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
      */
     private function _displayRecovery()
     {
-        // Titre
-        echo $this->getDisplayTitle_DEPRECATED('Local recovery', null, false);
+        $instanceTitle = new DisplayTitle($this->_applicationInstance);
+        $instanceTitle->setTitle('Local recovery');
+        $instanceTitle->setIcon(null);
+        $instanceTitle->setEnableEntity(true);
+        $instanceTitle->display();
 
         $listAuthorities = $this->_nebuleInstance->getAuthorities();
         $listOkEntities = array();
