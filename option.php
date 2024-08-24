@@ -53,7 +53,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240822';
+    const APPLICATION_VERSION = '020240824';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288';
@@ -209,7 +209,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                     $this->_displayApplications();
                     break;
                 case self::VIEW_RECOVERY:
-                    $this->_displayRecovery();
+                    $this->_displayRecoveryEntities();
                     break;
                 default:
                     $this->_displayMenu();
@@ -650,7 +650,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
     }
 
 
-    private function _displayActions()
+    private function _displayActions(): void
     {
         ?>
 
@@ -667,7 +667,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
     }
 
 
-    private function _displayMenu()
+    private function _displayMenu(): void
     {
         $list = array();
         $list[0]['icon'] = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_LL);
@@ -713,7 +713,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
      *
      * @return void
      */
-    private function _displayGlobalAuthorities()
+    private function _displayGlobalAuthorities(): void
     {
         $instanceTitle = new DisplayTitle($this->_applicationInstance);
         $instanceTitle->setTitle('Global authorities');
@@ -723,72 +723,16 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
         $instanceList = new DisplayList($this->_applicationInstance);
         $instanceEntity = new DisplayObject($this->_applicationInstance);
-        $instanceEntity->setNID($this->_nebuleInstance->getPuppetmasterInstance());
-        $instanceEntity->setEnableNID(false);
-        $instanceEntity->setEnableName(true);
-        $instanceEntity->setEnableColor(true);
-        $instanceEntity->setEnableIcon(true);
-        $instanceEntity->setEnableFlags(true);
-        $instanceEntity->setEnableFlagProtection(true);
+        $this->_setCommonEntityFlags($instanceEntity, $this->_nebuleInstance->getPuppetmasterInstance());
         $instanceEntity->setFlagProtection(true);
-        $instanceEntity->setEnableFlagObfuscate(false);
-        $instanceEntity->setEnableFlagUnlocked(true);
-        $instanceEntity->setEnableFlagState(true);
-        $instanceEntity->setEnableFlagEmotions(false);
-        $instanceEntity->setEnableStatus(true);
-        $instanceEntity->setEnableContent(false);
-        $instanceEntity->setEnableActions(true);
-        $instanceEntity->setEnableJS(false);
         $instanceEntity->setEnableRefs(false);
-        $instanceEntity->setEnableLink2Refs(false);
-        $instanceEntity->setEnableLink(true);
-        $instanceEntity->setStatus('');
-        $message = '';
-        if ($this->_nebuleInstance->getPuppetmaster() == $this->_nebuleInstance->getInstanceEntity())
-            $message = 'Instance entity';
-        if ($this->_nebuleInstance->getPuppetmaster() == $this->_nebuleInstance->getDefaultEntity()) {
-            if ($message != '')
-                $message .= ', ';
-            $message .= 'Default entity';
-        }
-        $instanceEntity->setFlagMessage($message); // FIXME me fonctionne pas
-        $instanceEntity->setRatio(DisplayItem::RATIO_SHORT);
-        $instanceEntity->setSize(DisplayItem::SIZE_MEDIUM);
         $instanceList->addItem($instanceEntity);
         foreach (array_merge($this->_nebuleInstance->getSecurityAuthoritiesInstance(), $this->_nebuleInstance->getCodeAuthoritiesInstance()) as $instance)
         {
             $instanceEntity = new DisplayObject($this->_applicationInstance);
-            $instanceEntity->setNID($instance);
-            $instanceEntity->setEnableNID(false);
-            $instanceEntity->setEnableName(true);
-            $instanceEntity->setEnableColor(true);
-            $instanceEntity->setEnableIcon(true);
-            $instanceEntity->setEnableFlags(true);
-            $instanceEntity->setEnableFlagProtection(true);
-            $instanceEntity->setEnableFlagObfuscate(false);
-            $instanceEntity->setEnableFlagUnlocked(true);
-            $instanceEntity->setEnableFlagState(true);
-            $instanceEntity->setEnableFlagEmotions(false);
-            $instanceEntity->setEnableStatus(true);
-            $instanceEntity->setEnableContent(false);
-            $instanceEntity->setEnableActions(true);
-            $instanceEntity->setEnableJS(false);
+            $this->_setCommonEntityFlags($instanceEntity, $instance);
             $instanceEntity->setEnableRefs(true);
-            $instanceEntity->setEnableLink2Refs(false);
             $instanceEntity->setRefs(array('0' => $this->_nebuleInstance->getPuppetmasterInstance(),));
-            $instanceEntity->setEnableLink(true);
-            $instanceEntity->setStatus('');
-            $message = '';
-            if ($instance->getID() == $this->_nebuleInstance->getInstanceEntity())
-                $message = 'Instance entity';
-            if ($instance->getID() == $this->_nebuleInstance->getDefaultEntity()) {
-                if ($message != '')
-                    $message .= ', ';
-                $message .= 'Default entity';
-            }
-            $instanceEntity->setFlagMessage($message);
-            $instanceEntity->setRatio(DisplayItem::RATIO_SHORT);
-            $instanceEntity->setSize(DisplayItem::SIZE_MEDIUM);
             $instanceList->addItem($instanceEntity);
         }
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
@@ -796,10 +740,46 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
         $instanceMessage = new DisplayInformation($this->_applicationInstance);
         $instanceMessage->setMessage("The global authorities are entities with specials capabilities on common things like code. Global authorities can't be removed or disabled.");
-        $instanceMessage->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+        $instanceMessage->setType(DisplayItemIconMessage::TYPE_MESSAGE);
         $instanceMessage->setDisplayAlone(true);
         $instanceMessage->setSize(DisplayItem::SIZE_SMALL);
         $instanceMessage->display();
+    }
+
+    private function _setCommonEntityFlags(DisplayObject $instance, Entity $eid):void {
+        $instance->setNID($eid);
+        $instance->setEnableNID(false);
+        $instance->setEnableName(true);
+        $instance->setEnableColor(true);
+        $instance->setEnableIcon(true);
+        $instance->setEnableFlags(true);
+        $instance->setEnableFlagProtection(true);
+        $instance->setEnableFlagObfuscate(false);
+        $instance->setEnableFlagUnlocked(true);
+        $instance->setEnableFlagState(true);
+        $instance->setEnableFlagEmotions(false);
+        $instance->setEnableStatus(true);
+        $instance->setEnableContent(false);
+        $instance->setEnableActions(true);
+        $instance->setEnableJS(false);
+        $instance->setEnableLink2Refs(false);
+        $instance->setEnableLink(true);
+        $instance->setStatus('');
+        $instance->setFlagMessage($this->_getIsInstanceOrDefault($eid)); // FIXME me fonctionne pas
+        $instance->setRatio(DisplayItem::RATIO_SHORT);
+        $instance->setSize(DisplayItem::SIZE_MEDIUM);
+    }
+
+    private function _getIsInstanceOrDefault(Entity $eid): string {
+        $message = '';
+        if ($eid->getID() == $this->_nebuleInstance->getInstanceEntity())
+            $message = 'Instance entity';
+        if ($eid->getID() == $this->_nebuleInstance->getDefaultEntity()) {
+            if ($message != '')
+                $message .= ', ';
+            $message .= 'Default entity';
+        }
+        return $message;
     }
 
 
@@ -810,192 +790,95 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
      *
      * @return void
      */
-    private function _displayLocalAuthorities()
+    private function _displayLocalAuthorities(): void
     {
         $refAuthority = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
 
+        // Primary local authorities
         $instanceTitle = new DisplayTitle($this->_applicationInstance);
         $instanceTitle->setTitle('Primary local authorities');
         $instanceTitle->setIcon(null);
         $instanceTitle->setEnableEntity(true);
         $instanceTitle->display();
 
-        $listEntities = $this->_nebuleInstance->getLocalPrimaryAuthoritiesInstance();
         $listOkEntities = array(
             $this->_nebuleInstance->getPuppetmaster() => true,
-        /*    $this->_nebuleInstance->getSecurityMaster() => true,
-            $this->_nebuleInstance->getCodeMaster() => true,
-            $this->_nebuleInstance->getDirectoryMaster() => true,
-            $this->_nebuleInstance->getTimeMaster() => true,*/
         );
         foreach (array_merge(
                 $this->_nebuleInstance->getSecurityAuthorities(),
                 $this->_nebuleInstance->getCodeAuthorities(),
                 $this->_nebuleInstance->getDirectoryAuthorities(),
-                $this->_nebuleInstance->getTimeAuthorities())
-            as $id)
-        {
+                $this->_nebuleInstance->getTimeAuthorities()) as $id)
             $listOkEntities[$id] = true;
-        }
 
-        // Affiche les entités autorités.
-        $list = array();
-        $i = 0;
-
-        foreach ($listEntities as $instance) {
-            $id = $instance->getID();
-            if (!isset($listOkEntities[$id])
+        $instanceList = new DisplayList($this->_applicationInstance);
+        foreach ($this->_nebuleInstance->getLocalPrimaryAuthoritiesInstance() as $instance) {
+            if (!isset($listOkEntities[$instance->getID()])
                 && $instance->getType('all') == Entity::ENTITY_TYPE
                 && $instance->getIsPublicKey()
             ) {
-                $list[$i]['object'] = $instance;
-                $list[$i]['param'] = array(
-                    'enableDisplayColor' => true,
-                    'enableDisplayIcon' => true,
-                    'enableDisplayRefs' => false,
-                    'enableDisplayName' => true,
-                    'enableDisplayID' => false,
-                    'enableDisplayFlags' => true,
-                    'enableDisplayFlagProtection' => true,
-                    'enableDisplayFlagObfuscate' => false,
-                    'enableDisplayFlagUnlocked' => true,
-                    'enableDisplayFlagState' => true,
-                    'enableDisplayFlagEmotions' => false,
-                    'enableDisplayStatus' => false,
-                    'enableDisplayContent' => false,
-                    'enableDisplayJS' => false,
-                    'enableDisplayLink2Object' => true,
-                    'displaySize' => 'medium',
-                    'displayRatio' => 'short',
-                    'status' => '',
-                    'flagProtection' => false,
-                );
-
-                if ($id == $this->_nebuleInstance->getInstanceEntity()
-                    && $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
-                ) {
-                    $list[$i]['param']['flagMessage'] = 'Instance entity';
-                    $list[$i]['param']['flagProtection'] = true;
-                }
-                if ($id == $this->_nebuleInstance->getDefaultEntity()
-                    && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
-                ) {
-                    if ($list[$i]['param']['flagMessage'] != '') {
-                        $list[$i]['param']['flagMessage'] .= ', ';
-                    }
-                    $list[$i]['param']['flagMessage'] .= 'Default entity';
-                    $list[$i]['param']['flagProtection'] = true;
-                }
-
-                // Marque comme vu.
-                $listOkEntities[$id] = true;
-                $i++;
+                $instanceEntity = new DisplayObject($this->_applicationInstance);
+                $this->_setCommonEntityFlags($instanceEntity, $instance);
+                $instanceEntity->setFlagProtection(true);
+                $instanceEntity->setEnableRefs(false);
+                $instanceList->addItem($instanceEntity);
             }
+            $listOkEntities[$instance->getID()] = true;
         }
-        unset($instance, $id);
+        $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+        $instanceList->display();
 
-        // Affichage
-        echo $this->getDisplayObjectsList($list, 'medium');
-        unset($list);
-
-        // Titre des entités secondaires.
-        echo $this->getDisplayTitle_DEPRECATED('Secondary local authorities', null, false);
+        // Secondary local authorities
+        $instanceTitle->setTitle('Secondary local authorities');
+        $instanceTitle->display();
 
         if ($this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities')) {
-            // Liste les entités marquées comme entités de recouvrement.
-            $listEntities = $this->_nebuleInstance->getLocalAuthoritiesInstance();
-            $listSigners = $this->_nebuleInstance->getLocalAuthoritiesSigners();
-
-            // Affiche les entités autorités.
-            $list = array();
-            $i = 0;
-
-            foreach ($listEntities as $instance) {
-                $id = $instance->getID();
-                if (!isset($listOkEntities[$id])
+            $instanceList = new DisplayList($this->_applicationInstance);
+            foreach ($this->_nebuleInstance->getLocalPrimaryAuthoritiesInstance() as $instance) {
+                if (!isset($listOkEntities[$instance->getID()])
                     && $instance->getType('all') == Entity::ENTITY_TYPE
                     && $instance->getIsPublicKey()
                 ) {
-                    $list[$i]['object'] = $instance;
-                    $list[$i]['param'] = array(
-                        'enableDisplayColor' => true,
-                        'enableDisplayIcon' => true,
-                        'enableDisplayRefs' => true,
-                        'enableDisplayName' => true,
-                        'enableDisplayID' => false,
-                        'enableDisplayFlags' => true,
-                        'enableDisplayFlagProtection' => false,
-                        'enableDisplayFlagObfuscate' => false,
-                        'enableDisplayFlagUnlocked' => true,
-                        'enableDisplayFlagState' => true,
-                        'enableDisplayFlagEmotions' => false,
-                        'enableDisplayStatus' => false,
-                        'enableDisplayContent' => false,
-                        'enableDisplayJS' => false,
-                        'enableDisplayLink2Object' => true,
-                        'displaySize' => 'medium',
-                        'displayRatio' => 'short',
-                        'status' => '',
-                        'flagProtection' => false,
-                    );
-
-                    if ($this->_unlocked
-                        && $listSigners[$id] == $this->_nebuleInstance->getCurrentEntity()
-                        && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitUploadLink'))
-                        && ($id != $this->_nebuleInstance->getInstanceEntity()
-                            || !$this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
-                        )
-                        && ($id != $this->_nebuleInstance->getDefaultEntity()
-                            || !$this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
-                        )
+                    $instanceEntity = new DisplayObject($this->_applicationInstance);
+                    $this->_setCommonEntityFlags($instanceEntity, $instance);
+                    $instanceEntity->setFlagProtection(true);
+                    $instanceEntity->setEnableRefs(true);
+                    $instanceEntity->setRefs($this->_nebuleInstance->getLocalAuthoritiesSigners()[$instance->getID()]);
+                    if ($this->_permitAction($instance)
+                        && $this->_nebuleInstance->getLocalAuthoritiesSigners()[$instance->getID()] == $this->_nebuleInstance->getCurrentEntity()
                     ) {
-                        $list[$i]['param']['selfHookList'][0]['name'] = 'Remove';
-                        $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LX;
-                        $list[$i]['param']['selfHookList'][0]['link'] = '/?'
-                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refAuthority
+                        $list[0]['name'] = 'Remove';
+                        $list[0]['icon'] = Displays::DEFAULT_ICON_LX;
+                        $list[0]['link'] = '/?'
+                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_nebuleInstance->getInstanceEntity() . '_' . $instance->getID() . '_' . $refAuthority
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                        $instanceEntity->setSelfHookList($list);
                     }
-
-                    // Marque comme vu.
-                    $listOkEntities[$id] = true;
-                    $i++;
+                    $instanceList->addItem($instanceEntity);
                 }
+                $listOkEntities[$instance->getID()] = true;
             }
-            unset($instance, $id);
-
             if ($this->_unlocked) {
-                // Ajoute le message.
-                $list[$i]['information'] = 'On authority removing, need a second page reload to update the liste.';
-                $list[$i]['param']['enableDisplayIcon'] = true;
-                $list[$i]['param']['informationType'] = 'information';
+                $instanceWarn = new DisplayInformation($this->_applicationInstance);
+                $instanceWarn->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+                $instanceWarn->setMessage('On authority removing, need a second page reload to update the liste.');
+                $instanceWarn->setRatio(DisplayItem::RATIO_SHORT);
+                $instanceList->addItem($instanceWarn);
             }
-
-            // Affichage
-            echo $this->getDisplayObjectsList($list, 'medium');
-            unset($list, $listEntities, $listSigners);
+            $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+            $instanceList->setEnableWarnIfEmpty(true);
+            $instanceList->display();
         } else {
-            $param = array(
-                'enableDisplayAlone' => true,
-                'enableDisplayIcon' => true,
-                'informationType' => 'warn',
-            );
-            echo $this->getDisplayInformation_DEPRECATED('Not authorized!', $param);
+            $instanceWarn = new DisplayInformation($this->_applicationInstance);
+            $instanceWarn->setType(DisplayItemIconMessage::TYPE_WARN);
+            $instanceWarn->setMessage('::::err_NotPermit');
+            $instanceWarn->setRatio(DisplayItem::RATIO_SHORT);
+            $instanceWarn->display();
         }
 
         // Affiche les entités à ajouter.
-        if ($this->_unlocked
+        if ($this->_permitAction($this->_nebuleInstance->getCurrentEntityInstance())
             && $this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities')
-            && (
-                ($this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getInstanceEntity()
-                    && $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
-                )
-                ||
-                ($this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getDefaultEntity()
-                    && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
-                )
-            )
-            && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitUploadLink'))
-            //&& $this->_configuration->getOption('permitRecoveryEntities')
         ) {
 
             // Titre
@@ -1067,21 +950,51 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
             unset($list, $listEntities, $listSigners);
         }
 
-        $instanceMessage = new DisplayInformation($this->_applicationInstance);
-        $instanceMessage->setMessage("The local authorities are entities with specials capabilities on local server.<br /><br />
-There are two levels of local authorities:<br />
+        $instanceList = new DisplayList($this->_applicationInstance);
+        $instanceMessage1 = new DisplayInformation($this->_applicationInstance);
+        $instanceMessage1->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceMessage1->setMessage("The local authorities are entities with specials capabilities on local server.");
+        $instanceMessage1->setRatio(DisplayItem::SIZE_SMALL);
+        $instanceMessage1->setIconText('Type');
+        $instanceList->addItem($instanceMessage1);
+        $instanceMessage2 = new DisplayInformation($this->_applicationInstance);
+        $instanceMessage2->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceMessage2->setMessage("There are two levels of local authorities:<br />
  1: Local forced authorities defined by options, known as primary local authorities.<br />
- 2: Local authorities defined by links from primary local authorities, known as secondary local authorities.<br /><br />
-An entity can be added as secondary authority and later can be removed.<br />
+ 2: Local authorities defined by links from primary local authorities, known as secondary local authorities.");
+        $instanceMessage2->setRatio(DisplayItem::SIZE_SMALL);
+        $instanceMessage2->setIconText('Type');
+        $instanceList->addItem($instanceMessage2);
+        $instanceMessage3 = new DisplayInformation($this->_applicationInstance);
+        $instanceMessage3->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceMessage3->setMessage("An entity can be added as secondary authority and later can be removed.<br />
 Primary authorities can't be removed, they are forced by two options on the environment file : 'permitInstanceEntityAsAuthority' and 'permitDefaultEntityAsAuthority'.");
-        $instanceMessage->setType(DisplayItemIconMessage::TYPE_INFORMATION);
-        $instanceMessage->setDisplayAlone(true);
-        $instanceMessage->setSize(DisplayItem::SIZE_SMALL);
-        $instanceMessage->display();
+        $instanceMessage3->setRatio(DisplayItem::SIZE_SMALL);
+        $instanceMessage3->setIconText('Type');
+        $instanceList->addItem($instanceMessage3);
+        $instanceList->setSize(DisplayItem::SIZE_SMALL);
+        $instanceList->display();
+    }
+
+    private function _permitAction(Entity $eid): bool {
+        if ($this->_unlocked
+            && (
+                ($eid->getID() == $this->_nebuleInstance->getInstanceEntity()
+                    && $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
+                )
+                ||
+                ($eid->getID() == $this->_nebuleInstance->getDefaultEntity()
+                    && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
+                )
+            )
+            && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitUploadLink'))
+        )
+            return true;
+        return false;
     }
 
 
-    private function _displayOptions()
+    private function _displayOptions(): void
     {
         $instanceTitle = new DisplayTitle($this->_applicationInstance);
         $instanceTitle->setTitle('Options');
@@ -1217,7 +1130,7 @@ Primary authorities can't be removed, they are forced by two options on the envi
 
             $instanceMessage1 = new DisplayInformation($this->_applicationInstance);
             $instanceMessage1->setMessage("Type of an option can be 'string', 'boolean' or 'integer'. The type is defined by construct and can't be changed.");
-            $instanceMessage1->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+            $instanceMessage1->setType(DisplayItemIconMessage::TYPE_MESSAGE);
             $instanceMessage1->setRatio(DisplayItem::RATIO_LONG);
             $instanceList->addItem($instanceMessage1);
 
@@ -1228,7 +1141,7 @@ Primary authorities can't be removed, they are forced by two options on the envi
                 stability.<br/>
                 - critical : it's value should not be changed for normal operation, it's critical for the security. Be
                 sure it's not an error.");
-            $instanceMessage2->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+            $instanceMessage2->setType(DisplayItemIconMessage::TYPE_MESSAGE);
             $instanceMessage2->setRatio(DisplayItem::RATIO_LONG);
             $instanceList->addItem($instanceMessage2);
 
@@ -1238,7 +1151,7 @@ Primary authorities can't be removed, they are forced by two options on the envi
                 - forced : the value have been changed in the local environment file. It can't be change by link.<br/>
                 - locked : the option is defined as it's value can't be changed by link. It can be overridden in the
                 local environment file.");
-            $instanceMessage3->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+            $instanceMessage3->setType(DisplayItemIconMessage::TYPE_MESSAGE);
             $instanceMessage3->setRatio(DisplayItem::RATIO_LONG);
             $instanceList->addItem($instanceMessage3);
 
@@ -1247,7 +1160,7 @@ Primary authorities can't be removed, they are forced by two options on the envi
     }
 
 
-    private function _displayApplications()
+    private function _displayApplications(): void
     {
         $instanceTitle = new DisplayTitle($this->_applicationInstance);
         $instanceTitle->setTitle('Applications');
@@ -1566,7 +1479,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
      *
      * @return void
      */
-    private function _displayRecovery()
+    private function _displayRecoveryEntities(): void
     {
         $instanceTitle = new DisplayTitle($this->_applicationInstance);
         $instanceTitle->setTitle('Local recovery');
@@ -1579,116 +1492,54 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
         foreach ($listAuthorities as $eid)
             $listOkEntities[$eid] = true;
 
-        // Liste les entités marquées comme entités de recouvrement.
-        $listEntities = $this->_nebuleInstance->getRecoveryEntitiesInstance();
-        $listSigners = $this->_nebuleInstance->getRecoveryEntitiesSigners();
-
-        // Affiche les entités de recouvrement.
         if ($this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities')) {
             $refRecovery = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
-            $list = array();
-            $i = 0;
 
-            foreach ($listEntities as $instance) {
-                $id = $instance->getID();
-                if (!isset($listOkEntities[$id])
+            $instanceList = new DisplayList($this->_applicationInstance);
+            foreach ($this->_nebuleInstance->getRecoveryEntitiesInstance() as $instance) {
+                if (!isset($listOkEntities[$instance->getID()])
                     && $instance->getType('all') == Entity::ENTITY_TYPE
                     && $instance->getIsPublicKey()
                 ) {
-                    $list[$i]['object'] = $instance;
-                    $list[$i]['param'] = array(
-                        'enableDisplayColor' => true,
-                        'enableDisplayIcon' => true,
-                        'enableDisplayRefs' => false,
-                        'enableDisplayName' => true,
-                        'enableDisplayID' => false,
-                        'enableDisplayFlags' => true,
-                        'enableDisplayFlagProtection' => true,
-                        'enableDisplayFlagObfuscate' => false,
-                        'enableDisplayFlagUnlocked' => true,
-                        'enableDisplayFlagState' => true,
-                        'enableDisplayFlagEmotions' => false,
-                        'enableDisplayStatus' => false,
-                        'enableDisplayContent' => false,
-                        'enableDisplayJS' => false,
-                        'enableDisplayLink2Object' => true,
-                        'displaySize' => 'medium',
-                        'displayRatio' => 'short',
-                        'status' => '',
-                        'flagProtection' => false,
-                    );
-
-                    if ($id == $this->_nebuleInstance->getInstanceEntity()
-                        && $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsRecovery')
+                    $instanceEntity = new DisplayObject($this->_applicationInstance);
+                    $this->_setCommonEntityFlags($instanceEntity, $instance);
+                    $instanceEntity->setFlagProtection(true);
+                    $instanceEntity->setEnableRefs(true);
+                    $instanceEntity->setRefs($this->_nebuleInstance->getRecoveryEntitiesSigners()[$instance->getID()]);
+                    if ($this->_permitAction($instance)
+                        && $this->_nebuleInstance->getLocalAuthoritiesSigners()[$instance->getID()] == $this->_nebuleInstance->getCurrentEntity()
                     ) {
-                        $list[$i]['param']['flagMessage'] = 'Instance entity';
-                        $list[$i]['param']['flagProtection'] = true;
-                    }
-                    if ($id == $this->_nebuleInstance->getDefaultEntity()
-                        && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsRecovery')
-                    ) {
-                        if ($list[$i]['param']['flagMessage'] != '') {
-                            $list[$i]['param']['flagMessage'] .= ', ';
-                        }
-                        $list[$i]['param']['flagMessage'] .= 'Default entity';
-                        $list[$i]['param']['flagProtection'] = true;
-                    }
-
-                    if ($this->_unlocked
-                        && $listSigners[$id] == $this->_nebuleInstance->getCurrentEntity()
-                        && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitUploadLink'))
-                        && ($id != $this->_nebuleInstance->getInstanceEntity()
-                            || !$this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsRecovery')
-                        )
-                        && ($id != $this->_nebuleInstance->getDefaultEntity()
-                            || !$this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsRecovery')
-                        )
-                    ) {
-                        $list[$i]['param']['selfHookList'][0]['name'] = 'Remove';
-                        $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LX;
-                        $list[$i]['param']['selfHookList'][0]['link'] = '/?'
-                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_nebuleInstance->getInstanceEntity() . '_' . $id . '_' . $refRecovery
+                        $list[0]['name'] = 'Remove';
+                        $list[0]['icon'] = Displays::DEFAULT_ICON_LX;
+                        $list[0]['link'] = '/?'
+                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_nebuleInstance->getInstanceEntity() . '_' . $instance->getID() . '_' . $refRecovery
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                        $instanceEntity->setSelfHookList($list);
                     }
-
-                    // Marque comme vu.
-                    $listOkEntities[$id] = true;
-                    $i++;
+                    $instanceList->addItem($instanceEntity);
                 }
+                $listOkEntities[$instance->getID()] = true;
             }
-            unset($instance, $id);
-
             if ($this->_unlocked) {
-                // Ajoute le message.
-                $list[$i]['information'] = 'On recovery removing, need a second page reload to update the liste.';
-                $list[$i]['param']['enableDisplayIcon'] = true;
-                $list[$i]['param']['informationType'] = 'information';
+                $instanceWarn = new DisplayInformation($this->_applicationInstance);
+                $instanceWarn->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+                $instanceWarn->setMessage('On authority removing, need a second page reload to update the liste.');
+                $instanceList->addItem($instanceWarn);
             }
-
-            // Affichage
-            echo $this->getDisplayObjectsList($list, 'medium');
-            unset($list);
+            $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+            $instanceList->setEnableWarnIfEmpty(true);
+            $instanceList->display();
         } else {
-            $param = array(
-                'enableDisplayAlone' => true,
-                'enableDisplayIcon' => true,
-                'informationType' => 'warn',
-            );
-            echo $this->getDisplayInformation_DEPRECATED('Not authorized!', $param);
+            $instanceWarn = new DisplayInformation($this->_applicationInstance);
+            $instanceWarn->setType(DisplayItemIconMessage::TYPE_WARN);
+            $instanceWarn->setMessage('::::err_NotPermit');
+            $instanceWarn->setRatio(DisplayItem::RATIO_SHORT);
+            $instanceWarn->display();
         }
 
         // Affiche les entités à ajouter.
-        if ($this->_unlocked
-            && (
-                ($this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getInstanceEntity()
-                    && $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
-                )
-                ||
-                ($this->_nebuleInstance->getCurrentEntity() == $this->_nebuleInstance->getDefaultEntity()
-                    && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
-                )
-            )
-            && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitUploadLink', 'permitRecoveryEntities'))
+        if ($this->_permitAction($this->_nebuleInstance->getCurrentEntityInstance())
+            && $this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities')
         ) {
             // Titre
             echo $this->getDisplayTitle_DEPRECATED('Add entities as recovery', null, false);
@@ -1755,32 +1606,36 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
             unset($list);
         }
 
-        $param = array(
-            'enableDisplayAlone' => true,
-            'enableDisplayIcon' => true,
-            'informationType' => 'information',
-            'displayRatio' => 'long',
-        );
-        $message = "The recovery entities can, if needed, unprotect an object.";
-        $message .= " This can be a security choise in an enterprise or legal contraint in some contries.";
-        echo $this->getDisplayInformation_DEPRECATED($message, $param);
-        $param['informationType'] = 'warn';
-        $message = "Whatever the entity that protect an object, the protection is automatically and silently shared with recovery entities.";
-        $message .= " All recovery entities are displayed here, none are hidden.";
-        echo $this->getDisplayInformation_DEPRECATED($message, $param);
-        $param['informationType'] = 'information';
-        $message = "An entity can be added as recovery entity and later can be removed.";
-        $message .= " Entities marqued as instance entity or default entity can't be removed, they are forced by two options on the environment file : 'permitInstanceEntityAsRecovery' and 'permitDefaultEntityAsRecovery'.";
-        echo $this->getDisplayInformation_DEPRECATED($message, $param);
+        $instanceList = new DisplayList($this->_applicationInstance);
+        $instanceMessage1 = new DisplayInformation($this->_applicationInstance);
+        $instanceMessage1->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceMessage1->setMessage("The recovery entities can, if needed, unprotect an object. This can be a security choose in an enterprise or legal contraint in some countries.");
+        $instanceMessage1->setRatio(DisplayItem::SIZE_SMALL);
+        $instanceMessage1->setIconText('Type');
+        $instanceList->addItem($instanceMessage1);
+        $instanceMessage2 = new DisplayInformation($this->_applicationInstance);
+        $instanceMessage2->setType(DisplayItemIconMessage::TYPE_WARN);
+        $instanceMessage2->setMessage("Whatever the entity that protect an object, the protection is automatically and silently shared with recovery entities. All recovery entities are displayed here, none are hidden.");
+        $instanceMessage2->setRatio(DisplayItem::SIZE_SMALL);
+        $instanceMessage2->setIconText('Type');
+        $instanceList->addItem($instanceMessage2);
+        $instanceMessage3 = new DisplayInformation($this->_applicationInstance);
+        $instanceMessage3->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceMessage3->setMessage("An entity can be added as recovery entity and later can be removed. Entities marqued as instance entity or default entity can't be removed, they are forced by two options on the environment file : 'permitInstanceEntityAsRecovery' and 'permitDefaultEntityAsRecovery'.");
+        $instanceMessage3->setRatio(DisplayItem::SIZE_SMALL);
+        $instanceMessage3->setIconText('Type');
+        $instanceList->addItem($instanceMessage3);
+        $instanceList->setSize(DisplayItem::SIZE_SMALL);
+        $instanceList->display();
     }
 
 
-    private function _displayEnd()
+    private function _displayEnd(): void
     {
     }
 
 
-    private function _displayChecks()
+    private function _displayChecks(): void
     {
         ?>
 
@@ -1819,7 +1674,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
     }
 
 
-    private function _htmlEnd()
+    private function _htmlEnd(): void
     {
         ?>
         </div>
@@ -1990,97 +1845,13 @@ class Translate extends Translates
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::::INFO' => 'Information',
-            '::::OK' => 'OK',
-            '::::INFORMATION' => 'Message',
-            '::::WARN' => 'ATTENTION !',
-            '::::ERROR' => 'ERREUR !',
-            '::::RESCUE' => 'Mode de sauvetage !',
-            '::::warn_ServNotPermitWrite' => "Ce serveur n'autorise pas les modifications.",
-            '::::warn_flushSessionAndCache' => "Toutes les données de connexion ont été effacées.",
-            '::::err_NotPermit' => 'Non autorisé sur ce serveur !',
-            '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
-            '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
-            '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
-            '::::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
-            '::::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
-            '::::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
-            '::::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
-            '::::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
-            '::::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
-            '::::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
-            '::::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
-            '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
-            '::::display:object:flag:protected' => 'Forced on environment file.',
-            '::::display:object:flag:unprotected' => 'Not forced.',
-            '::::display:object:flag:obfuscated' => 'Cet objet est dissimulé.',
-            '::::display:object:flag:unobfuscated' => "Cet objet n'est pas dissimulé.",
-            '::::display:object:flag:locked' => 'Cet entité est déverrouillée.',
-            '::::display:object:flag:unlocked' => 'Cet entité est verrouillée.',
-            '::::display:content:OK' => "Le contenu de l'objet est valide.",
-            '::EmptyList' => 'Liste vide.',
+            '::INFO' => 'Information',
         ],
         'en-en' => [
-            '::::INFO' => 'Information',
-            '::::OK' => 'OK',
-            '::::INFORMATION' => 'Message',
-            '::::WARN' => 'WARNING!',
-            '::::ERROR' => 'ERROR!',
-            '::::RESCUE' => 'Rescue mode!',
-            '::::warn_ServNotPermitWrite' => 'This server do not permit modifications.',
-            '::::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed.',
-            '::::err_NotPermit' => 'Non autorisé sur ce serveur !',
-            '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
-            '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
-            '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
-            '::::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
-            '::::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
-            '::::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
-            '::::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
-            '::::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
-            '::::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
-            '::::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
-            '::::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
-            '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
-            '::::display:object:flag:protected' => 'Forced on environment file.',
-            '::::display:object:flag:unprotected' => 'Not forced.',
-            '::::display:object:flag:obfuscated' => 'This object is obfuscated.',
-            '::::display:object:flag:unobfuscated' => 'This object is not obfuscated.',
-            '::::display:object:flag:locked' => 'This entity is unlocked.',
-            '::::display:object:flag:unlocked' => 'This entity is locked.',
-            '::::display:content:OK' => 'The object content is valid.',
-            '::EmptyList' => 'Empty list.',
+            '::INFO' => 'Information',
         ],
         'es-co' => [
-            '::::INFO' => 'Information',
-            '::::OK' => 'OK',
-            '::::INFORMATION' => 'Mensaje',
-            '::::WARN' => '¡ADVERTENCIA!',
-            '::::ERROR' => '¡ERROR!',
-            '::::RESCUE' => '¡Modo de rescate!',
-            '::::warn_ServNotPermitWrite' => 'This server do not permit modifications.',
-            '::::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed',
-            '::::err_NotPermit' => 'Non autorisé sur ce serveur !',
-            '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
-            '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
-            '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
-            '::::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
-            '::::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
-            '::::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
-            '::::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
-            '::::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
-            '::::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
-            '::::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
-            '::::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
-            '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
-            '::::display:object:flag:protected' => 'Forced on environment file.',
-            '::::display:object:flag:unprotected' => 'Not forced.',
-            '::::display:object:flag:obfuscated' => 'Este objeto está oculto.',
-            '::::display:object:flag:unobfuscated' => 'Este objeto no está oculto.',
-            '::::display:object:flag:locked' => 'Esta entidad está desbloqueada.',
-            '::::display:object:flag:unlocked' => 'Esta entidad está bloqueada.',
-            '::::display:content:OK' => 'The object content is valid.',
-            '::EmptyList' => 'Empty list.',
+            '::INFO' => 'Information',
         ],
     ];
 }

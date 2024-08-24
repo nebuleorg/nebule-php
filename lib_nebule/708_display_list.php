@@ -23,6 +23,14 @@ class DisplayList extends DisplayItem implements DisplayInterface
     public function getHTML(): string {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
+        if (sizeof($this->_list) == 0 && $this->_enableWarnIfEmpty)
+        {
+            $instanceWarn = new DisplayInformation($this->_applicationInstance);
+            $instanceWarn->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+            $instanceWarn->setMessage('::::list:empty');
+            $instanceWarn->setRatio(DisplayItem::RATIO_SHORT);
+            $this->_list[] = $instanceWarn;
+        }
         if (sizeof($this->_list) == 0)
             return '';
 
@@ -64,6 +72,13 @@ class DisplayList extends DisplayItem implements DisplayInterface
             || $item instanceof DisplayQuery
         )
             $this->_list[] = $item;
+    }
+
+    private bool $_enableWarnIfEmpty = false;
+
+    public function setEnableWarnIfEmpty(bool $enable = true): void
+    {
+        $this->_enableWarnIfEmpty = $enable;
     }
 
     public static function displayCSS(): void {

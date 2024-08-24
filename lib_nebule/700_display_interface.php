@@ -265,6 +265,17 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
         $this->_message = sprintf($this->_traductionInstance->getTranslate($message), $arg1, $arg2, $arg3, $arg4, $arg5);
     }
 
+    public function setBrutMessage(string $message,
+                               string $arg1 = '',
+                               string $arg2 = '',
+                               string $arg3 = '',
+                               string $arg4 = '',
+                               string $arg5 = ''): void
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set brut message ' . $message, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_message = sprintf($message, $arg1, $arg2, $arg3, $arg4, $arg5);
+    }
+
     public function setLink(string $link): void
     {
         $this->_link = trim(filter_var($link, FILTER_SANITIZE_URL));

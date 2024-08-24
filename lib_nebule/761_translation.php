@@ -76,6 +76,7 @@ abstract class Translates
             '::::display:object:flag:unlocked' => 'Cet entité est verrouillée.',
             '::::display:object:flag:activated' => 'Cet objet est activé.',
             '::::display:object:flag:unactivated' => "Cet objet n'est pas activé.",
+            '::::list:empty' => 'Liste vide',
             '::::yes' => 'Oui',
             '::::no' => 'Non',
             '::::lock' => 'Verrouiller',
@@ -141,6 +142,7 @@ abstract class Translates
             '::::display:object:flag:unlocked' => 'This entity is locked.',
             '::::display:object:flag:activated' => 'This object is activated.',
             '::::display:object:flag:unactivated' => 'This object is not activated.',
+            '::::list:empty' => 'Empty list',
             '::::yes' => 'Yes',
             '::::no' => 'No',
             '::::lock' => 'Locking',
@@ -206,6 +208,7 @@ abstract class Translates
             '::::display:object:flag:unlocked' => 'Esta entidad está bloqueada.',
             '::::display:object:flag:activated' => 'Este objeto está activado.',
             '::::display:object:flag:unactivated' => 'Este objeto no está activado.',
+            '::::list:empty' => 'Empty list',
             '::::yes' => 'Si',
             '::::no' => 'No',
             '::::lock' => 'Locking',
@@ -359,7 +362,9 @@ abstract class Translates
             return Translates::TRANSLATE_TABLE[$lang][$text];
         if (substr($text, 0, 3) == ':::' && isset($classAppTranslate::TRANSLATE_TABLE[$lang][$text]))
             return $classAppTranslate::TRANSLATE_TABLE[$lang][$text];
-        if (substr($text, 0, 2) == '::' && isset($this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[$lang][$text]))
+        if (substr($text, 0, 2) == '::'
+            && is_a($this->_applicationModulesInstance->getCurrentModuleInstance(), '\Nebule\Library\Translates')
+            && isset($this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[$lang][$text]))
             return $this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[$lang][$text];
 
         $result = $this->_getTranslateFromModules($text, $lang);
@@ -373,7 +378,9 @@ abstract class Translates
             return Translates::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];
         if (substr($text, 0, 3) == ':::' && isset($classAppTranslate::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text]))
             return $classAppTranslate::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];
-        if (substr($text, 0, 2) == '::' && isset($this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text]))
+        if (substr($text, 0, 2) == '::'
+            && is_a($this->_applicationModulesInstance->getCurrentModuleInstance(), '\Nebule\Library\Translates')
+            && isset($this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text]))
             return $this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];
 
         $this->_metrologyInstance->addLog('no translate, keep same value : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '74bd1f3a');
